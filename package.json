@@ -9,13 +9,13 @@
 		"@testing-library/user-event": "^13.2.1",
 		"axios": "^0.24.0",
 		"bootstrap": "^5.1.3",
-		"bootstrap-select": "^1.13.18",
 		"classnames": "^2.3.1",
 		"formik": "^2.2.9",
 		"jwt-decode": "^3.1.2",
 		"lodash": "^4.17.21",
 		"prop-types": "^15.7.2",
 		"react": "^17.0.2",
+		"react-bootstrap": "^2.0.4",
 		"react-dom": "^17.0.2",
 		"react-redux": "^7.2.6",
 		"react-router-dom": "^6.2.1",
@@ -33,7 +33,8 @@
 	},
 	"lint-staged": {
 		"src/**/*.{js, jsx}": "eslint --cache --fix",
-		"src/**/*.{js,jsx,json,scss,css}": "prettier --write"
+		"src/**/*.{js,jsx,json,scss,css}": "prettier --write",
+		"*.js": "eslint --cache --fix"
 	},
 	"huskey": {
 		"pre-commit": "lint-staged && git add ."
@@ -80,7 +81,7 @@
 		"eslint-plugin-prefer-object-spread": "^1.2.1",
 		"eslint-plugin-prettier": "^4.0.0",
 		"eslint-plugin-react": "^7.26.1",
-		"husky": "^7.0.4",
+		"husky": "^7.0.0",
 		"lint-staged": "^11.2.6",
 		"node-sass": "^6.0.1",
 		"prettier": "^2.4.1"
