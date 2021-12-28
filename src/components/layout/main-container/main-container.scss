@@ -1,0 +1,17 @@
+@import "src/scss/abstracts/_global.scss";
+.mainContainer {
+	display: flex;
+}
+
+
+.mainContainer__right{
+	width: 20%;
+	max-width: 280px;
+}
+
+.mainContainer__main{
+	flex-grow: 1;
+	margin-right: 2.5em;
+}
+
+

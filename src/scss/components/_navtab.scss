@@ -1,0 +1,40 @@
+@import "./../abstracts/variables";
+.nav-tabs {
+	border-bottom: 2px solid #f1f1f5;
+	background-color: $white;
+	.nav-link.active,
+	.nav-item.show .nav-link {
+		&.active {
+			position: relative;
+			color: $ash;
+			&::after {
+				position: absolute;
+				bottom: 0;
+				left: 0;
+				margin-bottom: -2px;
+				content: "";
+				display: block;
+				width: 100%;
+				height: 4px;
+				border-radius: 8px;
+				background-color: $primary;
+			}
+		}
+	}
+
+	.nav-link {
+		border: none;
+		padding: 1.5rem 1rem;
+	}
+}
+
+.nav-link {
+	color: $ash-placeholder;
+	&:hover {
+		color: $ash;
+	}
+}
+
+.tab-content{
+	background-color: $white;
+}

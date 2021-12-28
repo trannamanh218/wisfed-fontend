@@ -1,0 +1,14 @@
+@import "src/scss/abstracts/_global.scss";
+
+.layout {
+	width: 80%;
+	margin: 0 auto;
+	min-height: 100vh;
+	background-color: $secondary;
+}
+
+@media only screen and (max-width: 1440px) {
+	.layout {
+		width: 100%;
+	}
+}

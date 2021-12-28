@@ -1,0 +1,69 @@
+{
+	"env": {
+		"node": true,
+		"commonjs": true,
+		"browser": true,
+		"es6": true
+	},
+	"settings": {
+		"react": {
+			"version": "detect"
+		}
+	},
+	"extends": ["eslint:recommended", "plugin:react/recommended", "prettier"],
+	"parserOptions": {
+		"ecmaFeatures": {
+			"jsx": true
+		},
+		"ecmaVersion": 8,
+		"sourceType": "module"
+	},
+	"parser": "@babel/eslint-parser",
+	"plugins": ["react"],
+	"rules": {
+		"semi": "warn",
+		"no-console": "warn",
+		"no-var": "warn",
+		"prefer-const": "warn",
+		"no-unused-labels": "warn",
+		"no-unused-vars": "warn",
+		"no-mixed-spaces-and-tabs": "off",
+		"jsx-a11y/anchor-is-valid": [
+			"off",
+			{
+				"components": ["Link"],
+				"specialLink": ["hrefLeft", "hrefRight"],
+				"aspects": ["noHref", "invalidHref", "preferButton"]
+			}
+		],
+		"max-params": ["warn", 5],
+		"max-lines": [
+			"warn",
+			{
+				"max": 500,
+				"skipBlankLines": true,
+				"skipComments": true
+			}
+		],
+		"no-tabs": 0,
+		"react/prop-types": "warn",
+		"no-useless-escape": "off",
+		"react/display-name": "off",
+		"react/no-unescaped-entities": "off",
+		"react/react-in-jsx-scope": "off",
+		"react/no-multi-comp": [
+			"warn",
+			{
+				"ignoreStateless": true
+			}
+		],
+		"react/no-redundant-should-component-update": "warn",
+		"react/no-unused-prop-types": "off",
+		"react/no-unused-state": "off",
+		"react/no-find-dom-node": "off",
+		"react/no-deprecated": "off",
+		"react/no-prototype-builtins": "off",
+		"indent": ["off", "tab"],
+		"no-prototype-builtins": "off"
+	}
+}
