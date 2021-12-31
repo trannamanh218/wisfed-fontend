@@ -1,4 +1,5 @@
-import DropdownButtonCustom from 'components/dropdown-button-custom';
+import DropdownIconButton from 'components/dropdown-status-book';
+import StatusBookModal from 'components/status-book-modal';
 import React from 'react';
 import './newfeed.scss';
 
@@ -11,7 +12,9 @@ const NewFeed = () => {
 				illum repellendus corporis itaque dolores! Placeat, repellat ipsam quisquam veniam ab dolor ut
 				perferendis expedita consequatur. Temporibus nam, nobis harum natus aspernatur aliquid maiores.
 			</p>
-			<DropdownButtonCustom></DropdownButtonCustom>
+			<DropdownIconButton></DropdownIconButton>
+			<br />
+			<StatusBookModal />
 		</div>
 	);
 };

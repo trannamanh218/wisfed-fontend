@@ -1,0 +1,32 @@
+@use 'sass:math';
+
+@each $name, $color in $theme-colors {
+	.btn-#{$name} {
+		&:hover,
+		&:focus {
+			background-color: $color;
+		}
+
+		@if $color == $light {
+			color: $ash;
+			&:hover,
+			&:focus {
+				color: $ash;
+			}
+		} @else {
+			color: $white;
+			&:hover,
+			&:focus {
+				color: $white;
+			}
+		}
+	}
+}
+
+.btn {
+	padding: 1rem 4rem;
+	border-radius: 12px;
+	&:focus {
+		box-shadow: unset;
+	}
+}

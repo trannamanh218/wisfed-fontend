@@ -1,0 +1,70 @@
+@import 'src/scss/abstracts/_global.scss';
+
+.btn-status {
+	font-size: 1rem;
+	padding: 1.5em 4em;
+	width: 210px;
+	color: inherit;
+}
+
+.status-book-modal {
+	.modal-dialog {
+		max-width: 400px;
+		margin: 0 auto;
+	}
+	.modal-body {
+		padding: 2.5rem 2rem;
+	}
+
+	&__input {
+		width: 100%;
+		height: 56px;
+		padding-left: 1.5em;
+		border-radius: 12px;
+		background-color: $ash-background;
+		font-size: 1rem;
+		&:focus {
+			outline: none;
+		}
+	}
+
+	&__addBtn {
+		width: 100%;
+		height: 56px;
+		margin: 0.5em 0;
+		border-radius: 12px;
+		display: flex;
+		align-items: center;
+		border: 1px solid $ash-line;
+		color: $ash-body;
+		font-weight: 600;
+		.add-icon {
+			font-size: 2.5rem;
+			margin: 0 0.5em;
+			color: #000;
+		}
+	}
+
+	&__confirm {
+		width: 100%;
+	}
+}
+
+.error-message {
+	display: inline-block;
+	margin-top: 0.5rem;
+	margin-right: 0.25rem;
+	color: $red;
+	font-size: 12px;
+}
+
+@media only screen and (max-width: 1200px) {
+	.btn-status {
+		width: 130px;
+	}
+}
+@media only screen and (max-width: 768px) {
+	.btn-status {
+		width: 120px;
+	}
+}

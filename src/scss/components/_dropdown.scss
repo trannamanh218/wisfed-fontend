@@ -1,17 +1,14 @@
-@import "src/scss/abstracts/_global.scss";
-
 .dropdown--custom {
 	position: relative;
 	display: inline-block;
-	background-color: $primary;
 	box-shadow: 0px 0px 32px rgba(0, 0, 0, 0.04);
 	border-radius: 12px;
-	color: $white;
 }
 
 .dropdown--custom__btn {
 	font-size: 1rem;
 	padding: 1.5em 4em;
+	width: 210px;
 	color: inherit;
 }
 
@@ -22,7 +19,7 @@
 	display: block;
 	width: 12px;
 	height: 100%;
-	background-image: url("../../assets/images/caret-down.png");
+	background-image: url('../../assets/images/caret-down.png');
 	background-repeat: no-repeat;
 	background-size: contain;
 	background-position: center;
@@ -47,22 +44,35 @@
 	font-weight: 600;
 	line-height: 2;
 	color: $ash;
-	&:hover {
-		background-color: rgba($primary, 0.2);
-	}
+	cursor: pointer;
+	display: flex;
+	align-items: center;
 	&.active-item {
 		color: $ash;
+	}
+	svg {
+		width: 1.25rem;
+		height: 1.25rem;
+		margin-right: 10px;
 	}
 }
 
 .dropdonw--custom__icon {
-	width: 18px;
-	height: 18px;
+	width: 1.25rem;
+	height: 1.25rem;
 	position: absolute;
 	top: 50%;
 	left: 20%;
 	transform: translate(-50%, -50%);
-	path {
-		fill: inherit;
+}
+
+@media only screen and (max-width: 1200px) {
+	.dropdown--custom__btn {
+		width: 130px;
+	}
+}
+@media only screen and (max-width: 768px) {
+	.dropdown--custom__btn {
+		width: 120px;
 	}
 }

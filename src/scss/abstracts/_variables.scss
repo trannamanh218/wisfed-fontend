@@ -1,12 +1,27 @@
 // colors
 $primary: #e0af7e;
 $secondary: #fbf7f2;
-$warning: "#FFDF9A";
+$warning: #ffdf9a;
 $success: #008a00;
 $success-dark: #067306;
 $blue: #0576f0;
 $ash: #2d2c42;
+$ash-body: #4e4b66;
 $ash-label: #6e7191;
 $ash-placeholder: #a0a3bd;
-$ash-background: #F7F7FC;
-$white: #FFFFFF;
+$ash-background: #f7f7fc;
+$ash-line: #d9dbe9;
+$white: #ffffff;
+$red: red;
+
+// custom theme for bootstrap
+$theme-colors: (
+	'primary': $primary,
+	'secondary': $secondary,
+	'success': $success,
+	'success-dark': $success-dark,
+	'warning': $warning,
+	'info': $blue,
+	'light': $white,
+	'dark': $ash,
+);
