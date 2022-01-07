@@ -1,4 +1,253 @@
-@import "src/scss/abstracts/_global.scss";
+@import 'src/scss/abstracts/_global.scss';
+p {
+	margin: 0 !important;
+}
 
-.sidebar{
+.sidebar__block {
+	margin-bottom: 60px;
+}
+
+.sidebar__block__title {
+	font-size: 1.25rem;
+	font-weight: 600;
+	margin-bottom: 24px;
+	color: #2d2c42;
+}
+
+.group-short-cut__item {
+	display: flex;
+	align-items: center;
+	margin-bottom: 40px;
+	cursor: pointer;
+}
+
+.group-short-cut__item__logo {
+	margin-right: 12px;
+	svg {
+		width: 24px;
+		height: 24px;
+	}
+}
+
+.group-short-cut__item__name {
+	color: #4e4b66;
+	font-size: 0.81rem;
+	line-height: 1.37rem;
+}
+
+.group-short-cut__view-more {
+	display: flex;
+	align-items: center;
+	cursor: pointer;
+}
+
+.fa-chevron-down {
+	margin-right: 15px;
+	color: #2d2c42;
+}
+
+.sidebar__view-more-btn {
+	font-size: 13px;
+	line-height: 22px;
+	&--black {
+		color: #2d2c42;
+	}
+	&--blue {
+		width: 100%;
+		display: flex;
+		justify-content: flex-end;
+		color: #0576f0;
+		text-decoration: underline;
+	}
+}
+
+.quotes__content {
+	background-color: white;
+	padding: 20px 16px;
+	border-radius: 16px;
+	line-height: 24px;
+	margin-bottom: 20px;
+}
+
+.quotes__content__author-name {
+	display: flex;
+	justify-content: flex-end;
+}
+
+.personal-category__box {
+	display: flex;
+	flex-direction: column;
+	gap: 32px;
+	margin-bottom: 20px;
+}
+
+.personal-category__item {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.personal-category__item__title {
+	color: #2d2c42;
+}
+
+.personal-category__item__quantity {
+	color: #a0a3bd;
+}
+
+// reading book
+.reading-book__box {
+	display: flex;
+	justify-content: space-between;
+	gap: 18px;
+}
+
+.reading-book__information {
+	padding-top: 8px;
+	font-size: 13px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.reading-book__information__book-name {
+	color: #2d2c42;
+	font-weight: 600;
+	line-height: 22px;
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 2;
+	overflow: hidden;
+}
+
+.reading-book__information__author {
+	line-height: 22px;
+	color: #6e7191;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	max-width: 146px;
+}
+
+.reading-book__information__current-progress {
+	margin: 14px 0 8px;
+	.progress {
+		height: 5.3px;
+		border-radius: 2.7px;
+		margin-bottom: 3px;
+		.progress-bar {
+			border-radius: 2.7px;
+		}
+	}
+}
+
+.reading-book__progress-percent {
+	font-weight: 600;
+	line-height: 14px;
+	color: #6e7191;
+}
+
+.reading-book__update-progress {
+	border: #e0af7e 2px solid;
+	border-radius: 8px;
+	flex-grow: 1;
+	font-weight: 600;
+	color: #b38c64;
+}
+
+// wants to read
+.wants-to-read__thumbnail {
+	margin-right: 20px;
+}
+
+.slick-arrow {
+	display: flex !important;
+	justify-content: center;
+	border-radius: 50%;
+	background-color: rgba(20, 20, 43, 0.4) !important;
+	z-index: 1000;
+	width: 32px !important;
+	height: 32px !important;
+	padding: 0.3rem !important;
+	&:before {
+		display: none;
+	}
+	&:hover {
+		background-color: rgba(20, 20, 43, 0.7) !important;
+	}
+}
+
+.slick-prev {
+	left: 4% !important;
+}
+
+.slick-next {
+	right: 4% !important;
+}
+
+// read challenge
+.read-challenge__box {
+	background-color: white;
+	border-radius: 16px;
+	padding: 20px 16px;
+}
+
+.read-challenge__description {
+	font-size: 15px;
+	line-height: 24px;
+	color: #6e7191;
+	letter-spacing: 0.75px;
+	margin-bottom: 20px;
+}
+
+.read-challenge__input {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 14px;
+	margin-bottom: 16px;
+}
+
+.read-challenge__input__button-element {
+	width: 32px;
+	height: 32px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	color: #2d2c42;
+	font-size: 16px;
+	font-weight: 600;
+	background-color: #eff0f6;
+	border-radius: 50%;
+}
+
+.read-challenge__input__input-element {
+	width: 40px;
+	border: none;
+	outline: none;
+	text-align: center;
+	color: #2d2c42;
+	font-size: 16px;
+	font-weight: 600;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+	-webkit-appearance: none;
+	margin: 0;
+}
+
+input[type='number'] {
+	-moz-appearance: textfield;
+}
+
+.read-challenge__start-challenge-btn {
+	padding: 9px;
+	border: #e0af7e 2px solid;
+	border-radius: 8px;
+	width: 100%;
+	color: #b38c64;
+	font-size: 13px;
+	line-height: 22px;
+	font-weight: 600;
 }

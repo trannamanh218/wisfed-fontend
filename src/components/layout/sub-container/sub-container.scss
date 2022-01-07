@@ -1,17 +1,16 @@
-@import "src/scss/abstracts/_global.scss";
+@import 'src/scss/abstracts/_global.scss';
 
 .subContainer {
 	display: flex;
+	justify-content: space-between;
 	padding: 40px;
 
 	&__left,
 	&__right {
 		width: 20%;
-		max-width: 280px;
 	}
 
 	&__main {
-		margin: 0 3.75em;
-		flex-grow: 1;
+		width: 51.3%;
 	}
 }
