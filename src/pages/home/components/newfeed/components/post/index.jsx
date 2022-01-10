@@ -1,12 +1,13 @@
 import avatar from 'assets/images/avatar.png';
 import RatingStar from 'components/rating-star/index';
 import sampleBookImg from 'assets/images/sample-book-img.jpg';
-import { Like, Comment, ActionPlus, Share } from 'components/svg';
+import { Like, Comment, ActionPlus, Share, LikeFill } from 'components/svg';
 import { useState, useRef } from 'react';
 import DropdownIconButton from 'components/dropdown-status-book';
 
 function Post() {
 	const [commentContent, setCommentContent] = useState('');
+	const [liked, setLiked] = useState(false);
 
 	const commentArea = useRef(null);
 
@@ -50,15 +51,15 @@ function Post() {
 						<span>
 							When literature student Anastasia Steele goes to house of interview young entrepreneur
 							Christian Grey, she is encounters a man who is beautiful, brilliant, and only one
-							intimidating. The unworldly housing...
+							intimidaing...
 						</span>
 						<button className='post__book__description__continue-reading'>Continue reading</button>
 					</div>
 				</div>
 			</div>
 			<div className='post__options'>
-				<div className='post__options__item'>
-					<Like />
+				<div className='post__options__item ' onClick={() => setLiked(!liked)}>
+					{liked ? <LikeFill /> : <Like />}
 					<div className='post__options__action-name'>12 Likes</div>
 				</div>
 				<div className='post__options__item'>

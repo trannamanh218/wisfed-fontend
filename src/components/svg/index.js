@@ -15,6 +15,7 @@ import { ReactComponent as Comment } from 'assets/icons/comment.svg';
 import { ReactComponent as ActionPlus } from 'assets/icons/action-plus.svg';
 import { ReactComponent as Share } from 'assets/icons/share.svg';
 import { ReactComponent as Configure } from 'assets/icons/configure.svg';
+import { ReactComponent as LikeFill } from 'assets/icons/like-fill.svg';
 
 export {
 	HomeIcon,
@@ -34,4 +35,5 @@ export {
 	ActionPlus,
 	Share,
 	Configure,
+	LikeFill,
 };

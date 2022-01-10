@@ -11,7 +11,16 @@ function ReadChallenge() {
 		if (inputValue.length > 3) {
 			setInputValue(inputValue.slice(0, 3));
 		}
+		if (inputValue % 1 !== 0) {
+			setInputValue(Math.floor(inputValue));
+		}
 	}, [inputValue]);
+
+	const inputOnBlur = () => {
+		if (inputValue === '') {
+			setInputValue(0);
+		}
+	};
 
 	return (
 		<div className='sidebar__block'>
@@ -28,11 +37,12 @@ function ReadChallenge() {
 							&#8722;
 						</button>
 						<input
-							id='myTextBox'
 							type='number'
 							value={inputValue}
 							className='read-challenge__input__input-element'
 							onChange={e => setInputValue(e.target.value)}
+							onFocus={() => setInputValue('')}
+							onBlur={inputOnBlur}
 						/>
 						<button
 							className='read-challenge__input__button-element'

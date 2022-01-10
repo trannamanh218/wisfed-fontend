@@ -1,5 +1,5 @@
-import DropdownIconButton from 'components/dropdown-status-book';
-import StatusBookModal from 'components/status-book-modal';
+// import DropdownIconButton from 'components/dropdown-status-book';
+// import StatusBookModal from 'components/status-book-modal';
 import React from 'react';
 import './newfeed.scss';
 import { BookIcon, Hashtag, Feather, CategoryIcon, Configure } from 'components/svg';
@@ -52,9 +52,9 @@ const NewFeed = () => {
 				<Post key={index} />
 			))}
 
-			<DropdownIconButton></DropdownIconButton>
+			{/* <DropdownIconButton></DropdownIconButton>
 			<br />
-			<StatusBookModal />
+			<StatusBookModal /> */}
 		</div>
 	);
 };

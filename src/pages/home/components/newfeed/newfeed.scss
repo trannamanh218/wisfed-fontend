@@ -237,6 +237,11 @@
 	color: #6e7191;
 	font-weight: 600;
 	cursor: pointer;
+	user-select: none;
+	svg {
+		width: 24px;
+		height: 24px;
+	}
 }
 
 .post__comments-box {

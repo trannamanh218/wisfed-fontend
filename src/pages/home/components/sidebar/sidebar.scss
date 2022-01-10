@@ -14,11 +14,28 @@ p {
 	color: #2d2c42;
 }
 
+.group-short-cut__items-box {
+	margin-bottom: 40px;
+	overflow: hidden;
+	color: red;
+	&.view-more {
+		max-height: 799px;
+		transition: all 0.5s ease-out;
+	}
+	&.view-less {
+		max-height: 212px;
+		transition: all 0.5s ease-in;
+	}
+}
+
 .group-short-cut__item {
 	display: flex;
 	align-items: center;
 	margin-bottom: 40px;
 	cursor: pointer;
+	&:hover .group-short-cut__item__name {
+		font-weight: 600;
+	}
 }
 
 .group-short-cut__item__logo {
@@ -41,9 +58,16 @@ p {
 	cursor: pointer;
 }
 
-.fa-chevron-down {
+.group-short-cut__view-more__icon {
 	margin-right: 15px;
 	color: #2d2c42;
+	transition: all 0.5s linear;
+	&.view-more {
+		transform: rotate(0);
+	}
+	&.view-less {
+		transform: rotate(180deg);
+	}
 }
 
 .sidebar__view-more-btn {
@@ -99,10 +123,10 @@ p {
 .reading-book__box {
 	display: flex;
 	justify-content: space-between;
-	gap: 18px;
 }
 
 .reading-book__information {
+	width: 53%;
 	padding-top: 8px;
 	font-size: 13px;
 	display: flex;
