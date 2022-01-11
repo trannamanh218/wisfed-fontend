@@ -3,16 +3,26 @@ import StatusItem from './StatusItem';
 import PropsTypes from 'prop-types';
 
 const BookShelvesList = ({ list }) => {
-	return (
-		<div className='status-book-wrapper'>
-			<h4 className='status-book__title'>Giá sách của tôi</h4>
+	const renderList = listData => {
+		return (
 			<ul className='status-book__list status-book__list--shelves'>
-				{list.map(item => (
+				{listData.map(item => (
 					<StatusItem key={item.id} item={item} />
 				))}
 			</ul>
+		);
+	};
+
+	return (
+		<div className='status-book-wrapper'>
+			<h4 className='status-book__title'>Giá sách của tôi</h4>
+			{list.length ? renderList(list) : null}
 		</div>
 	);
+};
+
+BookShelvesList.defaultProps = {
+	list: [],
 };
 
 BookShelvesList.propTypes = {

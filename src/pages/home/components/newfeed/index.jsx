@@ -51,10 +51,6 @@ const NewFeed = () => {
 			{[...Array(5)].map((item, index) => (
 				<Post key={index} />
 			))}
-
-			{/* <DropdownIconButton></DropdownIconButton>
-			<br />
-			<StatusBookModal /> */}
 		</div>
 	);
 };

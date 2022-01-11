@@ -3,7 +3,7 @@ import PropsTypes from 'prop-types';
 
 const StatusItem = ({ item }) => {
 	return (
-		<li className='status-item'>
+		<li className='status-item' data-testid='status-item-book-shelve'>
 			<label className='status-item__title'>{item.title}</label>
 			<span className='custom-checkbox'>
 				<label className='custom-checkbox__container'>
