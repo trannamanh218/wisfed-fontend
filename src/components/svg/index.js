@@ -7,6 +7,15 @@ import { ReactComponent as LogoIcon } from 'assets/icons/logo.svg';
 import { ReactComponent as CircleCheckIcon } from 'assets/icons/circleCheck.svg';
 import { ReactComponent as CoffeeCupIcon } from 'assets/icons/coffeeCup.svg';
 import { ReactComponent as TargetIcon } from 'assets/icons/target.svg';
+import { ReactComponent as Hashtag } from 'assets/icons/hashtag.svg';
+import { ReactComponent as Feather } from 'assets/icons/feather.svg';
+import { ReactComponent as Star } from 'assets/icons/star.svg';
+import { ReactComponent as Like } from 'assets/icons/like.svg';
+import { ReactComponent as Comment } from 'assets/icons/comment.svg';
+import { ReactComponent as ActionPlus } from 'assets/icons/action-plus.svg';
+import { ReactComponent as Share } from 'assets/icons/share.svg';
+import { ReactComponent as Configure } from 'assets/icons/configure.svg';
+import { ReactComponent as LikeFill } from 'assets/icons/like-fill.svg';
 
 export {
 	HomeIcon,
@@ -18,4 +27,13 @@ export {
 	CircleCheckIcon,
 	CoffeeCupIcon,
 	TargetIcon,
+	Hashtag,
+	Feather,
+	Star,
+	Like,
+	Comment,
+	ActionPlus,
+	Share,
+	Configure,
+	LikeFill,
 };

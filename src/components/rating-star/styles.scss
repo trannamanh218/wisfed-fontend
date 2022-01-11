@@ -1,0 +1,21 @@
+.rating-btn {
+	background-color: transparent;
+	border: none;
+	outline: none;
+	cursor: pointer;
+	padding-right: 4px;
+}
+.on {
+	svg {
+		path {
+			fill: #ffdf9a;
+		}
+	}
+}
+.off {
+	svg {
+		path {
+			fill: #d9dbe9;
+		}
+	}
+}
