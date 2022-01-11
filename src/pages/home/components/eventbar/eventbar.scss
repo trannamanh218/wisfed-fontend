@@ -1,0 +1,42 @@
+@import 'src/scss/abstracts/_global.scss';
+
+.event-and-rank-bar__block {
+	margin: 24px 0 60px;
+}
+
+.event-and-rank-bar__block__title {
+	font-size: 1.25rem;
+	font-weight: 600;
+	margin-bottom: 24px;
+	color: #2d2c42;
+}
+
+.event-and-rank-bar__content {
+	padding: 20px 16px;
+	background-color: white;
+	border-radius: 16px;
+	img {
+		width: 100%;
+	}
+}
+
+.event-bar__name {
+	font-size: 0.94rem;
+	line-height: 1.5rem;
+	margin-bottom: 20px;
+	color: #2d2c42;
+	letter-spacing: 0.75px;
+}
+
+.event-bar__join-event {
+	width: 100%;
+	margin-top: 20px;
+	padding: 9px;
+	border: #e0af7e 2px solid;
+	border-radius: 8px;
+	width: 100%;
+	color: #b38c64;
+	font-size: 0.81rem;
+	line-height: 1.37rem;
+	font-weight: 600;
+}
