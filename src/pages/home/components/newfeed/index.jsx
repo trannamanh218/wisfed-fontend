@@ -14,6 +14,8 @@ const NewFeed = () => {
 			</p>
 			<DropdownIconButton></DropdownIconButton>
 			<br />
+			<br />
+			<br />
 			<StatusBookModal />
 		</div>
 	);

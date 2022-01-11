@@ -3,17 +3,32 @@
 .btn-status {
 	font-size: 1rem;
 	padding: 1.5em 4em;
-	width: 210px;
+	width: 180px;
 	color: inherit;
+	&.btn {
+		display: flex;
+		justify-content: center;
+	}
+
+	&__icon {
+		width: 1.25rem;
+		height: 1.25rem;
+		display: inline-block;
+		margin: 0 0.8em 0 -0.5em;
+	}
 }
 
 .status-book-modal {
 	.modal-dialog {
 		max-width: 400px;
-		margin: 0 auto;
+		margin: 2.5rem auto;
 	}
 	.modal-body {
 		padding: 2.5rem 2rem;
+	}
+
+	form {
+		margin: 0.5em 0;
 	}
 
 	&__input {
@@ -58,13 +73,8 @@
 	font-size: 12px;
 }
 
-@media only screen and (max-width: 1200px) {
-	.btn-status {
-		width: 130px;
-	}
-}
 @media only screen and (max-width: 768px) {
 	.btn-status {
-		width: 120px;
+		width: 160px;
 	}
 }

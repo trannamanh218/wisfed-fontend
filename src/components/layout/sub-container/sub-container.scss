@@ -1,4 +1,4 @@
-@import "src/scss/abstracts/_global.scss";
+@import 'src/scss/abstracts/_global.scss';
 
 .subContainer {
 	display: flex;
@@ -13,5 +13,15 @@
 	&__main {
 		margin: 0 3.75em;
 		flex-grow: 1;
+	}
+}
+
+@media screen and (max-width: 768px) {
+	.subContainer {
+		flex-wrap: wrap;
+		&__main {
+			margin: 0;
+			flex-grow: 1;
+		}
 	}
 }

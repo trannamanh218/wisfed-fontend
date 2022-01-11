@@ -1,22 +1,17 @@
 import { CircleCheckIcon } from 'components/svg';
-import { Form, Formik, Field } from 'formik';
-import Validation from 'helpers/Validation';
-import React, { useRef, useState } from 'react';
+import WrapIcon from 'components/wrap-icon';
+import React, { useState } from 'react';
 import { Modal } from 'react-bootstrap';
-import BookShelvesList from './components/BookShelvesList';
-import StatusBookList from './components/StatusBookList';
-
+import StatusModalContainer from './StatusModalContainer';
 import './status-book-modal.scss';
 
 const StatusBookModal = () => {
-	const [show, setShow] = useState(true);
-	const [status, setStatus] = useState({
+	const [modalShow, setModalShow] = useState(false);
+	const [currentStatus, setCurrentStatus] = useState({
 		'title': 'Đã đọc',
 		'value': 'readAlready',
 		'icon': CircleCheckIcon,
 	});
-
-	const inputRef = useRef(null);
 
 	const [bookShelves, setBookShelves] = useState([
 		{
@@ -35,8 +30,8 @@ const StatusBookModal = () => {
 
 	const [showInput, setShowInput] = useState(false);
 
-	const handleClose = () => setShow(false);
-	const handleShow = () => setShow(true);
+	const handleClose = () => setModalShow(false);
+	const handleShow = () => setModalShow(true);
 
 	const addBookShelves = () => {
 		if (!showInput) {
@@ -44,62 +39,56 @@ const StatusBookModal = () => {
 		}
 	};
 
-	const handleSubmit = values => {
-		if (values.title) {
-			const id = Math.floor(Math.random() * 100000);
-			const newTitle = { ...values, id };
-			setBookShelves(prev => [...prev, newTitle]);
-		}
+	const updateBookShelve = title => {
+		const id = Math.floor(Math.random() * 100000);
+		const data = { title, id };
+		setBookShelves(prev => [...prev, data]);
+	};
 
-		setShowInput(false);
+	const handleConfirm = () => {
+		setModalShow(false);
+	};
+
+	const handleChangeStatus = data => {
+		setCurrentStatus(data);
 	};
 
 	return (
 		<>
-			<button className='btn btn-status btn-primary' onClick={handleShow}>
-				{status.title}
+			<button className='btn btn-status btn-primary' data-testid='btn-modal' onClick={handleShow}>
+				<WrapIcon className='btn-status__icon' component={currentStatus.icon} />
+				<span>{currentStatus.title}</span>
 			</button>
-			<Modal className='status-book-modal' show={show} onHide={handleClose} keyboard={false} centered>
+			<Modal
+				id='status-book-modal'
+				className='status-book-modal'
+				show={modalShow}
+				onHide={handleClose}
+				keyboard={false}
+				centered
+			>
 				<Modal.Body>
-					<StatusBookList />
+					<StatusModalContainer
+						currentStatus={currentStatus}
+						handleChangeStatus={handleChangeStatus}
+						bookShelves={bookShelves}
+						updateBookShelve={updateBookShelve}
+						addBookShelves={addBookShelves}
+						setBookShelves={setBookShelves}
+						handleConfirm={handleConfirm}
+					/>
+					{/* <StatusBookList currentStatus={currentStatus} handleChangeStatus={handleChangeStatus} />
 					{bookShelves.length && <BookShelvesList list={bookShelves} />}
-					{showInput && (
-						<Formik
-							initialValues={{
-								title: '',
-							}}
-							validationSchema={Validation.titleBookShelve()}
-							onSubmit={handleSubmit}
-						>
-							{({ errors, touched }) => (
-								<Form
-								//   onSubmit={handleSubmit}
-								//   onKeyDown={(e) => {
-								// 	if (e.key === 'Enter') {
-								// 	  handleSubmit();
-								// 	}
-								//   }}
-								>
-									<Field
-										name='title'
-										className='status-book-modal__input'
-										placeholder='Nhập để thêm giá sách'
-										ref={inputRef}
-									/>
-									{errors.title && touched.title ? (
-										<small className='error-message'>{errors.title}</small>
-									) : null}
-								</Form>
-							)}
-						</Formik>
-					)}
-					<button className='status-book-modal__addBtn' onClick={addBookShelves}>
-						<span className='add-icon'>+</span>
-						<span>Thêm giá sách</span>
-					</button>
-					<button className='status-book-modal__confirm btn btn-primary' type='submit'>
+					<AddBookShelveForm
+						showInput={showInput}
+						updateBookShelve={updateBookShelve}
+						addBookShelves={addBookShelves}
+						setBookShelves={setBookShelves}
+						setShowInput={setShowInput}
+					/>
+					<button className='status-book-modal__confirm btn btn-primary' onClick={handleConfirm}>
 						Xác nhận
-					</button>
+					</button> */}
 				</Modal.Body>
 			</Modal>
 		</>
