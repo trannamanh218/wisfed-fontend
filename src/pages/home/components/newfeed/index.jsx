@@ -1,56 +1,89 @@
-// import DropdownIconButton from 'components/dropdown-status-book';
-// import StatusBookModal from 'components/status-book-modal';
-import React from 'react';
+import React, { useState } from 'react';
 import './newfeed.scss';
-import { BookIcon, Hashtag, Feather, CategoryIcon, Configure } from 'components/svg';
-import avatar from 'assets/images/avatar.png';
+import { Configure } from 'components/svg';
 import Post from './components/post';
+import CreatPost from './components/creat-post';
+import avatar from 'assets/images/avatar.png';
+import sampleBookImg from 'assets/images/sample-book-img.jpg';
+
+const DATA = [
+	{
+		id: 1,
+		userAvatar: avatar,
+		userName: 'Trần Văn Đức',
+		bookImage: sampleBookImg,
+		bookName: 'House of the Witch',
+		isLike: true,
+		likes: 15,
+	},
+	{
+		id: 2,
+		userAvatar: avatar,
+		userName: 'Nguyễn Như Quỳnh',
+		bookImage: sampleBookImg,
+		bookName: 'House of the Witch',
+		isLike: false,
+		likes: 10,
+	},
+	{
+		id: 3,
+		userAvatar: avatar,
+		userName: 'Trần Văn Đức',
+		bookImage: sampleBookImg,
+		bookName: 'House of the Witch',
+		isLike: true,
+		likes: 6,
+	},
+	{
+		id: 4,
+		userAvatar: avatar,
+		userName: 'Trần Văn Đức',
+		bookImage: sampleBookImg,
+		bookName: 'House of the Witch',
+		isLike: false,
+		likes: 3,
+	},
+	{
+		id: 5,
+		userAvatar: avatar,
+		userName: 'Trần Văn Đức',
+		bookImage: sampleBookImg,
+		bookName: 'House of the Witch',
+		isLike: false,
+		likes: 7,
+	},
+];
 
 const NewFeed = () => {
+	const [postData, setPostData] = useState(DATA);
+
+	const likeAction = param => {
+		if (param.isLike) {
+			param.isLike = false;
+			param.likes -= 1;
+		} else {
+			param.isLike = true;
+			param.likes += 1;
+		}
+		const newData = [...postData];
+		for (let i = 0; i < newData.length; i++) {
+			if (param.id === newData[i].id) {
+				newData[i] = param;
+			}
+		}
+		setPostData(newData);
+	};
+
 	return (
 		<div className='newfeed'>
 			<div className='newfeed__header'>
 				<p>Bảng tin</p>
 				<Configure />
 			</div>
-			<div className='newfeed__creat-post'>
-				<div className='newfeed__creat-post__avatar-and-input'>
-					<div className='newfeed__creat-post__avatar'>
-						<img src={avatar} alt='' />
-					</div>
-					<input className='newfeed__creat-post__input' placeholder='Tạo bài viết của bạn ...' />
-				</div>
-				<div className='newfeed__creat-post__options'>
-					<div className='newfeed__creat-post__options__item'>
-						<div className='newfeed__creat-post__options__item__logo'>
-							<BookIcon className='newfeed__creat-post__options__item__logo--book' />
-						</div>
-						<span>Sách</span>
-					</div>
-					<div className='newfeed__creat-post__options__item'>
-						<div className='newfeed__creat-post__options__item__logo'>
-							<Feather />
-						</div>
-						<span>Tác giả</span>
-					</div>
-					<div className='newfeed__creat-post__options__item'>
-						<div className='newfeed__creat-post__options__item__logo'>
-							<CategoryIcon className='newfeed__creat-post__options__item__logo--category' />
-						</div>
-						<span>Chủ đề</span>
-					</div>
-					<div className='newfeed__creat-post__options__item'>
-						<div className='newfeed__creat-post__options__item__logo'>
-							<Hashtag className='newfeed__creat-post__options__item__logo--hashtag' />
-						</div>
-						<span>Hashtag</span>
-					</div>
-				</div>
-			</div>
+			<CreatPost />
 
-			{[...Array(5)].map((item, index) => (
-				<Post key={index} />
-			))}
+			{postData.length > 0 &&
+				postData.map(item => <Post key={item.id} postInformations={item} likeAction={likeAction} />)}
 		</div>
 	);
 };

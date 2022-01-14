@@ -1,13 +1,12 @@
-import avatar from 'assets/images/avatar.png';
 import RatingStar from 'components/rating-star/index';
-import sampleBookImg from 'assets/images/sample-book-img.jpg';
-import { Like, Comment, ActionPlus, Share, LikeFill } from 'components/svg';
+import PropTypes from 'prop-types';
+
+import { Like, Comment, Share, LikeFill } from 'components/svg';
 import { useState, useRef } from 'react';
 import DropdownIconButton from 'components/dropdown-status-book';
 
-function Post() {
+function Post({ postInformations, likeAction }) {
 	const [commentContent, setCommentContent] = useState('');
-	const [liked, setLiked] = useState(false);
 
 	const commentArea = useRef(null);
 
@@ -21,10 +20,12 @@ function Post() {
 		<div className='post__container'>
 			<div className='post__user-status'>
 				<div className='post__user-status__avatar'>
-					<img src={avatar} alt='' />
+					<img data-testid='post__user-avatar' src={postInformations.userAvatar} alt='' />
 				</div>
 				<div className='post__user-status__name-and-post-time-status'>
-					<div className='post__user-status__name'>Trần Văn Đức</div>
+					<div data-testid='post__user-name' className='post__user-status__name'>
+						{postInformations.userName}
+					</div>
 					<div className='post__user-status__post-time-status'>
 						<span>1 giờ trước</span>
 						<div className='post__user-status__post-time-status__online-dot'></div>
@@ -35,12 +36,14 @@ function Post() {
 			<div className='post__description'>Saw this place today, it looks even better in-person!</div>
 			<div className='post__book-container'>
 				<div className='post__book__image'>
-					<img src={sampleBookImg} alt='' />
+					<img data-testid='post__book__image' src={postInformations.bookImage} alt='' />
 				</div>
 				<div className='post__book__informations'>
 					<div className='post__book__name-and-author'>
-						<div className='post__book__name'>House of the Witch</div>
-						<div className='post__book__author'>By Christ Bohajalian</div>
+						<div data-testid='post__book__name' className='post__book__name'>
+							{postInformations.bookName}
+						</div>
+						<div className='post__book__author'>Tác giả Christ Bohajalian</div>
 					</div>
 					<div className='post__book__button-and-rating'>
 						<DropdownIconButton />
@@ -58,9 +61,13 @@ function Post() {
 				</div>
 			</div>
 			<div className='post__options'>
-				<div className='post__options__item ' onClick={() => setLiked(!liked)}>
-					{liked ? <LikeFill /> : <Like />}
-					<div className='post__options__action-name'>12 Likes</div>
+				<div
+					data-testid='post__options__like-btn'
+					className='post__options__item '
+					onClick={() => likeAction(postInformations)}
+				>
+					{postInformations.isLike ? <LikeFill /> : <Like />}
+					<div className='post__options__action-name'>{postInformations.likes} Thích</div>
 				</div>
 				<div className='post__options__item'>
 					<Comment />
@@ -70,14 +77,10 @@ function Post() {
 					<Share />
 					<div className='post__options__action-name'>54 Chia sẻ</div>
 				</div>
-				<div className='post__options__item'>
-					<ActionPlus />
-					<div className='post__options__action-name'>10 Add sách</div>
-				</div>
 			</div>
 			<div className='post__comments-box'>
 				<div className='post__comments-box__avatar'>
-					<img src={avatar} alt='' />
+					<img src={postInformations.userAvatar} alt='' />
 				</div>
 				<textarea
 					ref={commentArea}
@@ -91,5 +94,9 @@ function Post() {
 		</div>
 	);
 }
+Post.propTypes = {
+	postInformations: PropTypes.object,
+	likeAction: PropTypes.func,
+};
 
 export default Post;

@@ -211,7 +211,7 @@
 	line-height: 1.5rem;
 	letter-spacing: 0.75px;
 	overflow: hidden;
-	p {
+	span {
 		color: #6e7191;
 	}
 }
@@ -219,6 +219,7 @@
 .post__book__description__continue-reading {
 	color: #0576f0;
 	text-decoration: underline;
+	margin-left: 12px;
 }
 
 .post__options {

@@ -31,12 +31,14 @@ function ReadChallenge() {
 					<img style={{ marginBottom: '24px', width: '100%' }} src={readChallengeImg} alt='' />
 					<div className='read-challenge__input'>
 						<button
+							data-testid='read-challenge__decrease-btn'
 							className='read-challenge__input__button-element'
 							onClick={() => setInputValue(Number(inputValue) - 1)}
 						>
 							&#8722;
 						</button>
 						<input
+							data-testid='read-challenge__input'
 							type='number'
 							value={inputValue}
 							className='read-challenge__input__input-element'
@@ -45,6 +47,7 @@ function ReadChallenge() {
 							onBlur={inputOnBlur}
 						/>
 						<button
+							data-testid='read-challenge__increase-btn'
 							className='read-challenge__input__button-element'
 							onClick={() => setInputValue(Number(inputValue) + 1)}
 						>

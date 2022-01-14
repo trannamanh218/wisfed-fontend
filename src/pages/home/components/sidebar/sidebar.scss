@@ -63,10 +63,10 @@ p {
 	color: #2d2c42;
 	transition: all 0.5s linear;
 	&.view-more {
-		transform: rotate(0);
+		transform: rotate(180deg);
 	}
 	&.view-less {
-		transform: rotate(180deg);
+		transform: rotate(0);
 	}
 }
 
