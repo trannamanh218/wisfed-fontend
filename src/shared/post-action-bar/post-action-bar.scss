@@ -1,0 +1,34 @@
+@import 'src/scss/abstracts/_variables.scss';
+
+.post-action-bar {
+	display: flex;
+	align-items: center;
+	gap: 2rem;
+	padding: 20px 16px;
+	border-top: #f1f1f5 1px solid;
+}
+
+.post-action-bar__item {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	font-size: 0.81rem;
+	color: #6e7191;
+	font-weight: 600;
+	cursor: pointer;
+	-webkit-user-select: none;
+	user-select: none;
+	svg {
+		width: 24px;
+		height: 24px;
+	}
+
+	.like-icon {
+		&.active {
+			path {
+				stroke: none;
+				fill: $primary;
+			}
+		}
+	}
+}

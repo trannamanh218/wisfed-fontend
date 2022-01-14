@@ -1,0 +1,39 @@
+@import 'src/scss/abstracts/_variables.scss';
+
+.book-slider__title {
+	font-size: 1.25rem;
+	font-weight: 600;
+	margin-bottom: 24px;
+	color: #2d2c42;
+}
+
+.book-slider {
+	.book-image {
+		margin-right: 20px;
+	}
+
+	.slick-prev {
+		left: 4% !important;
+	}
+
+	.slick-next {
+		right: 4% !important;
+	}
+
+	.slick-arrow {
+		display: flex !important;
+		justify-content: center;
+		border-radius: 50%;
+		background-color: rgba(20, 20, 43, 0.4) !important;
+		z-index: 1000;
+		width: 32px !important;
+		height: 32px !important;
+		padding: 0.3rem !important;
+		&:before {
+			display: none;
+		}
+		&:hover {
+			background-color: rgba(20, 20, 43, 0.7) !important;
+		}
+	}
+}
