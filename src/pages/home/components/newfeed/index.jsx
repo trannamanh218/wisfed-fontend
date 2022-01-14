@@ -1,5 +1,3 @@
-// import DropdownIconButton from 'components/dropdown-status-book';
-// import StatusBookModal from 'components/status-book-modal';
 import React from 'react';
 import './newfeed.scss';
 import { BookIcon, Hashtag, Feather, CategoryIcon, Configure } from 'components/svg';
@@ -16,7 +14,7 @@ const NewFeed = () => {
 			<div className='newfeed__creat-post'>
 				<div className='newfeed__creat-post__avatar-and-input'>
 					<div className='newfeed__creat-post__avatar'>
-						<img src={avatar} alt='' />
+						<img src={avatar} alt='avatar' />
 					</div>
 					<input className='newfeed__creat-post__input' placeholder='Tạo bài viết của bạn ...' />
 				</div>

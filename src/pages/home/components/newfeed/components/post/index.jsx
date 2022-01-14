@@ -1,7 +1,7 @@
 import avatar from 'assets/images/avatar.png';
 import RatingStar from 'components/rating-star/index';
 import sampleBookImg from 'assets/images/sample-book-img.jpg';
-import { Like, Comment, ActionPlus, Share, LikeFill } from 'components/svg';
+import { Like, Comment, Share, LikeFill } from 'components/svg';
 import { useState, useRef } from 'react';
 import DropdownIconButton from 'components/dropdown-status-book';
 
@@ -60,20 +60,20 @@ function Post() {
 			<div className='post__options'>
 				<div className='post__options__item ' onClick={() => setLiked(!liked)}>
 					{liked ? <LikeFill /> : <Like />}
-					<div className='post__options__action-name'>12 Likes</div>
+					<div className='post__options__action-name'>12 Thích</div>
 				</div>
 				<div className='post__options__item'>
 					<Comment />
-					<div className='post__options__action-name'>7 Comments</div>
+					<div className='post__options__action-name'>7 Bình luận</div>
 				</div>
 				<div className='post__options__item'>
 					<Share />
 					<div className='post__options__action-name'>54 Chia sẻ</div>
 				</div>
-				<div className='post__options__item'>
+				{/* <div className='post__options__item'>
 					<ActionPlus />
 					<div className='post__options__action-name'>10 Add sách</div>
-				</div>
+				</div> */}
 			</div>
 			<div className='post__comments-box'>
 				<div className='post__comments-box__avatar'>

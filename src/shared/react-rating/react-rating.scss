@@ -1,0 +1,14 @@
+@import 'src/scss/abstracts/_variables.scss';
+
+.star-icon {
+	width: 24px;
+	path {
+		fill: $ash-line;
+	}
+
+	&.fill {
+		path {
+			fill: $warning;
+		}
+	}
+}

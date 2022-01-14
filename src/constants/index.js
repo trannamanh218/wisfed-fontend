@@ -17,3 +17,5 @@ export const readingStatus = [
 		'icon': TargetIcon,
 	},
 ];
+
+export const colorVarients = ['primary', 'secondary', 'success', 'success-dark', 'warning', 'info', 'light', 'dark'];
