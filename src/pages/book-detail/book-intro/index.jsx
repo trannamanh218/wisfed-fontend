@@ -1,15 +1,15 @@
 import React from 'react';
 import bookImg from 'assets/images/book1.png';
-import StatusBookModal from 'components/status-book-modal';
 import { CircleCheckIcon } from 'components/svg';
 import shareIcon from 'assets/icons/share.svg';
+import StatusButton from 'components/status-button';
 
 const BookIntro = () => {
 	return (
 		<div className='book-intro'>
 			<div className='book-intro__image'>
 				<img src={bookImg} alt='book-image' />
-				<StatusBookModal />
+				<StatusButton />
 			</div>
 			<div className='book-intro__content'>
 				<h1 className='book-intro__name'>

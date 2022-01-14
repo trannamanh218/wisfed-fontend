@@ -1,9 +1,9 @@
 import avatar from 'assets/images/avatar.png';
-import RatingStar from 'components/rating-star/index';
 import sampleBookImg from 'assets/images/sample-book-img.jpg';
 import { Like, Comment, Share, LikeFill } from 'components/svg';
 import { useState, useRef } from 'react';
-import DropdownIconButton from 'components/dropdown-status-book';
+import StatusButton from 'components/status-button';
+import ReactRating from 'shared/react-rating';
 
 function Post() {
 	const [commentContent, setCommentContent] = useState('');
@@ -43,8 +43,8 @@ function Post() {
 						<div className='post__book__author'>By Christ Bohajalian</div>
 					</div>
 					<div className='post__book__button-and-rating'>
-						<DropdownIconButton />
-						<RatingStar ratingStatus={false} ratingValue={4} />
+						<StatusButton />
+						<ReactRating initialRating={3.5} readonly={false} fractions={2} />
 						<div className='post__book__rating__number'>(09 đánh giá)</div>
 					</div>
 					<div className='post__book__description'>

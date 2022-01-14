@@ -1,4 +1,4 @@
-import { fireEvent, render, waitFor, screen } from '@testing-library/react';
+import { fireEvent, render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import AddBookShelveForm from 'components/status-book-modal/components/add-book-shelve-form/AddBookShelveForm';
 import React from 'react';
