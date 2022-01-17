@@ -10,7 +10,7 @@ function GroupShortcuts() {
 			<h4 className='sidebar__block__title'>Lối tắt nhóm</h4>
 			<div className='sidebar__block__content'>
 				<div className={'group-short-cut__items-box ' + `${viewMoreGroupsStatus ? 'view-more' : 'view-less'}`}>
-					{[...Array(10)].map((item, index) => (
+					{[...Array(9)].map((item, index) => (
 						<div key={index} className='group-short-cut__item'>
 							<div className='group-short-cut__item__logo'>
 								<BookIcon />
