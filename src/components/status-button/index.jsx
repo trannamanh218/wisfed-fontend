@@ -3,9 +3,9 @@ import WrapIcon from 'components/wrap-icon';
 import React, { useState } from 'react';
 import { Modal } from 'react-bootstrap';
 import StatusModalContainer from './StatusModalContainer';
-import './status-book-modal.scss';
+import './status-button.scss';
 
-const StatusBookModal = () => {
+const StatusButton = () => {
 	const [modalShow, setModalShow] = useState(false);
 	const [currentStatus, setCurrentStatus] = useState({
 		'title': 'Đã đọc',
@@ -77,7 +77,7 @@ const StatusBookModal = () => {
 						setBookShelves={setBookShelves}
 						handleConfirm={handleConfirm}
 					/>
-					{/* <StatusBookList currentStatus={currentStatus} handleChangeStatus={handleChangeStatus} />
+					{/* <StatusButtonList currentStatus={currentStatus} handleChangeStatus={handleChangeStatus} />
 					{bookShelves.length && <BookShelvesList list={bookShelves} />}
 					<AddBookShelveForm
 						showInput={showInput}
@@ -95,4 +95,4 @@ const StatusBookModal = () => {
 	);
 };
 
-export default StatusBookModal;
+export default StatusButton;

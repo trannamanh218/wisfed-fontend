@@ -60,10 +60,10 @@ const NewFeed = () => {
 	const likeAction = param => {
 		if (param.isLike) {
 			param.isLike = false;
-			param.likes -= 1;
+			param.likes--;
 		} else {
 			param.isLike = true;
-			param.likes += 1;
+			param.likes++;
 		}
 		const newData = [...postData];
 		for (let i = 0; i < newData.length; i++) {

@@ -1,9 +1,8 @@
-import RatingStar from 'components/rating-star/index';
 import PropTypes from 'prop-types';
-
 import { Like, Comment, Share, LikeFill } from 'components/svg';
 import { useState, useRef } from 'react';
-import DropdownIconButton from 'components/dropdown-status-book';
+import StatusButton from 'components/status-button';
+import ReactRating from 'shared/react-rating';
 
 function Post({ postInformations, likeAction }) {
 	const [commentContent, setCommentContent] = useState('');
@@ -46,8 +45,8 @@ function Post({ postInformations, likeAction }) {
 						<div className='post__book__author'>Tác giả Christ Bohajalian</div>
 					</div>
 					<div className='post__book__button-and-rating'>
-						<DropdownIconButton />
-						<RatingStar ratingStatus={false} ratingValue={4} />
+						<StatusButton />
+						<ReactRating initialRating={3.3} readonly={true} fractions={2} />
 						<div className='post__book__rating__number'>(09 đánh giá)</div>
 					</div>
 					<div className='post__book__description'>
@@ -71,12 +70,16 @@ function Post({ postInformations, likeAction }) {
 				</div>
 				<div className='post__options__item'>
 					<Comment />
-					<div className='post__options__action-name'>7 Comments</div>
+					<div className='post__options__action-name'>7 Bình luận</div>
 				</div>
 				<div className='post__options__item'>
 					<Share />
 					<div className='post__options__action-name'>54 Chia sẻ</div>
 				</div>
+				{/* <div className='post__options__item'>
+					<ActionPlus />
+					<div className='post__options__action-name'>10 Add sách</div>
+				</div> */}
 			</div>
 			<div className='post__comments-box'>
 				<div className='post__comments-box__avatar'>
