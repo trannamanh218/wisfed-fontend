@@ -1,6 +1,6 @@
 import arrowNext from 'assets/images/arrow-chevron-forward.png';
 import arrowPrev from 'assets/images/arrow-chevron-back.png';
-import PropsTypes from 'prop-types';
+import PropTypes from 'prop-types';
 
 function SlideNextBtn({ className, style, onClick }) {
 	return (
@@ -78,14 +78,14 @@ const wantsToReadSlideSettings = {
 	],
 };
 SlideNextBtn.propTypes = {
-	className: PropsTypes.string,
-	style: PropsTypes.object,
-	onClick: PropsTypes.func,
+	className: PropTypes.string,
+	style: PropTypes.object,
+	onClick: PropTypes.func,
 };
 SlidePrevBtn.propTypes = {
-	className: PropsTypes.string,
-	style: PropsTypes.object,
-	onClick: PropsTypes.func,
+	className: PropTypes.string,
+	style: PropTypes.object,
+	onClick: PropTypes.func,
 };
 
 export default wantsToReadSlideSettings;

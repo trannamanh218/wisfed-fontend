@@ -1,6 +1,6 @@
 import { act, fireEvent, render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import StatusModalContainer from 'components/status-book-modal/StatusModalContainer';
+import StatusModalContainer from 'components/status-button/StatusModalContainer';
 import { CoffeeCupIcon, TargetIcon } from 'components/svg';
 
 describe('Status book list', () => {

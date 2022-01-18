@@ -8,7 +8,7 @@ function ReadingBook() {
 			<div className='sidebar__block__content'>
 				<div className='reading-book__box'>
 					<div className='reading-book__thumbnail'>
-						<img src={sampleBookImg} alt='' />
+						<img data-testid='reading-book__book-img' src={sampleBookImg} alt='' />
 					</div>
 					<div className='reading-book__information'>
 						<div>
