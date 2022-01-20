@@ -1,5 +1,5 @@
 import { render } from '@testing-library/react';
-import ReadingBook from 'pages/home/components/sidebar/components/reading-book';
+import ReadingBook from 'shared/reading-book';
 
 describe('sách đang đọc', () => {
 	it('check source ảnh bìa sách', () => {

@@ -1,5 +1,5 @@
 import { render } from '@testing-library/react';
-import ReadChallenge from 'pages/home/components/sidebar/components/read-challenge';
+import ReadChallenge from 'shared/read-challenge';
 import userEvent from '@testing-library/user-event';
 
 describe('check các trường hợp khi nhập đầu vào ô input thử thách đọc', () => {

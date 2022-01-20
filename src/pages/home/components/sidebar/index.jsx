@@ -1,8 +1,8 @@
 import './sidebar.scss';
 import '@fortawesome/fontawesome-free/css/all.min.css';
-import ReadingBook from './components/reading-book';
+import ReadingBook from 'shared/reading-book';
 import TheBooksWantsToRead from './components/the-books-wants-to-read';
-import ReadChallenge from './components/read-challenge';
+import ReadChallenge from 'shared/read-challenge';
 import GroupShortcuts from './components/group-shortcuts';
 
 const Sidebar = () => {

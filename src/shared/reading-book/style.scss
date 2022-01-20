@@ -1,0 +1,79 @@
+.reading-book {
+	margin-bottom: 60px;
+}
+
+.reading-book__title {
+	font-size: 1.25rem;
+	font-weight: 600;
+	margin-bottom: 24px;
+	color: #2d2c42;
+}
+
+.reading-book__box {
+	display: flex;
+	justify-content: space-between;
+}
+
+.reading-book__thumbnail {
+	height: 162px;
+	max-width: 108px;
+	img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+}
+
+.reading-book__information {
+	width: 53%;
+	padding-top: 8px;
+	font-size: 13px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.reading-book__information__book-name {
+	color: #2d2c42;
+	font-weight: 600;
+	line-height: 22px;
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 2;
+	overflow: hidden;
+}
+
+.reading-book__information__author {
+	line-height: 22px;
+	color: #6e7191;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	max-width: 146px;
+}
+
+.reading-book__information__current-progress {
+	.progress {
+		height: 5.3px;
+		border-radius: 2.7px;
+		margin-bottom: 3px;
+		.progress-bar {
+			border-radius: 2.7px;
+		}
+	}
+}
+
+.reading-book__progress-percent {
+	font-weight: 600;
+	line-height: 14px;
+	color: #6e7191;
+}
+
+.reading-book__update-progress {
+	border: #e0af7e 2px solid;
+	border-radius: 8px;
+	line-height: 1.375rem;
+	padding: 8px;
+	font-weight: 600;
+	color: #b38c64;
+}
