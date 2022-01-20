@@ -4,11 +4,13 @@ import ReadingBook from 'shared/reading-book';
 import TheBooksWantsToRead from './components/the-books-wants-to-read';
 import ReadChallenge from 'shared/read-challenge';
 import GroupShortcuts from './components/group-shortcuts';
+import ReviewRating from 'shared/review-rating';
 
 const Sidebar = () => {
 	return (
 		<div className='sidebar'>
 			<GroupShortcuts />
+			<ReviewRating />
 			<div className='sidebar__block'>
 				<h4 className='sidebar__block__title'>Quotes</h4>
 				<div className='sidebar__block__content'>

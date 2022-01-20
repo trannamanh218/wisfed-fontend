@@ -1,7 +1,7 @@
 import React from 'react';
 import Slider from 'react-slick';
 import PropsTypes from 'prop-types';
-import BookImage from 'shared/book-image';
+import BookThumbnail from 'shared/book-thumbnail';
 import arrowNext from 'assets/images/arrow-chevron-forward.png';
 import arrowPrev from 'assets/images/arrow-chevron-back.png';
 import './book-slider.scss';
@@ -15,7 +15,7 @@ const BookSlider = ({ list, title }) => {
 				<div className='book-slider__content'>
 					<Slider {...settingSlider}>
 						{list.map((item, index) => (
-							<BookImage key={index} source={item.source} name={item.name} size='sm' />
+							<BookThumbnail key={index} source={item.source} name={item.name} size='sm' />
 						))}
 					</Slider>
 				</div>
