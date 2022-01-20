@@ -1,0 +1,24 @@
+@import 'src/scss/abstracts/_variables.scss';
+
+.setting-more {
+	position: relative;
+	&__btn {
+		width: 2.4rem;
+		height: 2.4rem;
+		padding: 0.5em;
+		margin-bottom: 1em;
+		border-radius: 50%;
+		background-color: rgba($white-off, 0.4);
+		display: flex;
+		align-items: center;
+		justify-content: space-around;
+	}
+
+	&__dot {
+		width: 5px;
+		height: 5px;
+		border-radius: 50%;
+		display: inline-block;
+		background-color: $white;
+	}
+}

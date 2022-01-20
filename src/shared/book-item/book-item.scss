@@ -1,0 +1,81 @@
+@import 'src/scss/abstracts/_variables.scss';
+
+.book-item {
+	max-width: 200px;
+	cursor: pointer;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	&__container {
+		position: relative;
+	}
+
+	&__name {
+		display: -webkit-box;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp: 2;
+		max-height: 3rem;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		margin-top: 1.25em;
+		font-size: 1rem;
+		font-weight: 600;
+		line-height: 1.5;
+		text-align: center;
+		color: $ash;
+	}
+
+	&__author,
+	&__text {
+		font-size: 0.825rem;
+		font-weight: 500;
+		line-height: 1.5;
+	}
+
+	&__author {
+		color: $ash-label;
+		margin: 0.5em 0;
+	}
+
+	&__text {
+		color: $ash-placeholder;
+		margin-top: 0.5em;
+	}
+
+	&__overlay {
+		position: absolute;
+		inset: 0;
+		bottom: 20%;
+		display: flex;
+		margin-right: 12px;
+		padding-top: 12px;
+		flex-direction: column;
+		align-items: center;
+
+		.btn-status {
+			padding: 1em 0.5em;
+			width: 170px;
+			color: $white;
+			margin-top: auto;
+			margin-right: -12px;
+		}
+
+		.setting-more {
+			margin-left: auto;
+		}
+	}
+
+	&__icon {
+		width: 2.4rem;
+		height: 2.4rem;
+		padding: 0.5em;
+		margin-top: 0.5em;
+		margin-left: auto;
+		border-radius: 50%;
+		background-color: rgba($white-off, 0.4);
+		display: flex;
+		align-items: center;
+		justify-content: space-around;
+	}
+}

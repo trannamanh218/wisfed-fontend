@@ -8,7 +8,7 @@ const BookIntro = () => {
 	return (
 		<div className='book-intro'>
 			<div className='book-intro__image'>
-				<img src={bookImg} alt='book-image' />
+				<img src={bookImg} alt='book-thumbnail' />
 				<StatusButton />
 			</div>
 			<div className='book-intro__content'>

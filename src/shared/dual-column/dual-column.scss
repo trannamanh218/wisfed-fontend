@@ -1,0 +1,28 @@
+@import 'src/scss/abstracts/_variables.scss';
+
+.dualColumn-list {
+	width: 100%;
+	border-radius: 16px;
+	overflow: hidden;
+}
+
+.dualColumn-item {
+	width: 17.5rem;
+	padding: 1em 1em 0.5em;
+	display: flex;
+	color: $ash;
+	line-height: 1.5;
+	justify-content: space-between;
+
+	&__title {
+		display: inline-block;
+		font-weight: 500;
+		font-size: 0.825rem;
+	}
+
+	&__number {
+		display: inline-block;
+		font-weight: 600;
+		font-size: 0.825rem;
+	}
+}

@@ -1,15 +1,17 @@
 @import 'src/scss/abstracts/_variables.scss';
 
-.book-image {
+.book-thumbnail {
 	display: inline-block;
 	border-radius: 8px;
 	overflow: hidden;
+	cursor: pointer;
 	img {
 		width: 100%;
 		height: 100%;
+		object-fit: cover;
 	}
 
-	&.book-image {
+	&.book-thumbnail {
 		&-sm {
 			width: $width-book-sm;
 			height: 1.5 * $width-book-sm;

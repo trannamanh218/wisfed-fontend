@@ -14,7 +14,8 @@ $ash-label: #6e7191;
 $ash-placeholder: #a0a3bd;
 $ash-background: #f7f7fc;
 $ash-line: #d9dbe9;
-$ash-background: #eff0f7;
+// $ash-background: #eff0f7;
+$white-off: #fcfcfc;
 $white: #ffffff;
 $red: red;
 
@@ -36,3 +37,7 @@ $theme-colors: (
 $width-book-sm: 108px;
 $width-book-md: 160px;
 $width-book-lg: 200px;
+
+$width-avatar-sm: 36px;
+$width-avatar-md: 48px;
+$width-avatar-lg: 100px;
