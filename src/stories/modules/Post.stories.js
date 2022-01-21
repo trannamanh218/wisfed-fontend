@@ -1,4 +1,4 @@
-import Post from 'pages/home/components/newfeed/components/post';
+import Post from 'shared/post';
 
 export default {
 	title: 'Components/Modules/Post',
@@ -20,7 +20,9 @@ HasShareBook.args = {
 		bookImage: '/images/book1.jpg',
 		bookName: 'House of the Witch',
 		isLike: true,
-		likes: 15,
+		likeNumber: 15,
+		commentNumber: 1,
+		shareNumber: 3,
 	},
 	likeAction: postInformations => {
 		return postInformations;
@@ -36,7 +38,9 @@ HasNotShareBook.args = {
 		bookImage: '',
 		bookName: '',
 		isLike: true,
-		likes: 15,
+		likeNumber: 15,
+		commentNumber: 1,
+		shareNumber: 3,
 	},
 	likeAction: postInformations => {
 		return postInformations;

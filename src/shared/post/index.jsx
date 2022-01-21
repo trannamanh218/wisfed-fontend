@@ -1,8 +1,9 @@
 import './post.scss';
 import PropTypes from 'prop-types';
-import { Like, Comment, Share, LikeFill } from 'components/svg';
 import { useState, useRef } from 'react';
-import PostBook from 'pages/home/components/newfeed/components/post-book';
+import PostBook from 'shared/post-book';
+import PostActionBar from 'shared/post-action-bar';
+
 function Post({ postInformations, likeAction }) {
 	const [commentContent, setCommentContent] = useState('');
 
@@ -35,7 +36,7 @@ function Post({ postInformations, likeAction }) {
 
 			{postInformations.bookImage !== '' && <PostBook postInformations={postInformations} />}
 
-			<div className='post__options'>
+			{/* <div className='post__options'>
 				<div
 					data-testid='post__options__like-btn'
 					className='post__options__item '
@@ -51,12 +52,13 @@ function Post({ postInformations, likeAction }) {
 				<div className='post__options__item'>
 					<Share />
 					<div className='post__options__action-name'>54 Chia sẻ</div>
-				</div>
-				{/* <div className='post__options__item'>
+				</div> */}
+			{/* <div className='post__options__item'>
 					<ActionPlus />
 					<div className='post__options__action-name'>10 Add sách</div>
 				</div> */}
-			</div>
+			{/* </div> */}
+			<PostActionBar postInformations={postInformations} likeAction={likeAction} />
 			<div className='post__comments-box'>
 				<div className='post__comments-box__avatar'>
 					<img src={postInformations.userAvatar} alt='' />

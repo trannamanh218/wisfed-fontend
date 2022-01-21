@@ -12,20 +12,20 @@ const Template = args => <PostActionBar {...args} />;
 
 export const Default = Template.bind({});
 Default.args = {
-	data: {
+	postInformations: {
 		isLike: false,
-		likeNumbers: 0,
-		commentNumbers: 0,
-		shareNumbers: 0,
+		likeNumber: 0,
+		commentNumber: 0,
+		shareNumber: 0,
 	},
 };
 
 export const Custom = Template.bind({});
 Custom.args = {
-	data: {
+	postInformations: {
 		isLike: true,
-		likeNumbers: 12,
-		commentNumbers: 10,
-		shareNumbers: 27,
+		likeNumber: 12,
+		commentNumber: 10,
+		shareNumber: 27,
 	},
 };

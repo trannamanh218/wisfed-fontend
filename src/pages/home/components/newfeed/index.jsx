@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './newfeed.scss';
 import { Configure } from 'components/svg';
-import Post from './components/post';
+import Post from '../../../../shared/post';
 import CreatPost from './components/creat-post';
 import avatar from 'assets/images/avatar.png';
 import sampleBookImg from 'assets/images/sample-book-img.jpg';
@@ -14,7 +14,9 @@ const DATA = [
 		bookImage: sampleBookImg,
 		bookName: 'House of the Witch',
 		isLike: true,
-		likes: 15,
+		likeNumber: 12,
+		commentNumber: 10,
+		shareNumber: 27,
 	},
 	{
 		id: 2,
@@ -23,7 +25,9 @@ const DATA = [
 		bookImage: sampleBookImg,
 		bookName: 'House of the Witch',
 		isLike: false,
-		likes: 10,
+		likeNumber: 12,
+		commentNumber: 10,
+		shareNumber: 27,
 	},
 	{
 		id: 3,
@@ -32,7 +36,9 @@ const DATA = [
 		bookImage: sampleBookImg,
 		bookName: 'House of the Witch',
 		isLike: true,
-		likes: 6,
+		likeNumber: 12,
+		commentNumber: 10,
+		shareNumber: 27,
 	},
 	{
 		id: 4,
@@ -41,7 +47,9 @@ const DATA = [
 		bookImage: sampleBookImg,
 		bookName: 'House of the Witch',
 		isLike: false,
-		likes: 3,
+		likeNumber: 12,
+		commentNumber: 10,
+		shareNumber: 27,
 	},
 	{
 		id: 5,
@@ -50,7 +58,9 @@ const DATA = [
 		bookImage: sampleBookImg,
 		bookName: 'House of the Witch',
 		isLike: false,
-		likes: 7,
+		likeNumber: 12,
+		commentNumber: 10,
+		shareNumber: 27,
 	},
 ];
 
@@ -60,10 +70,10 @@ const NewFeed = () => {
 	const likeAction = param => {
 		if (param.isLike) {
 			param.isLike = false;
-			param.likes--;
+			param.likeNumber--;
 		} else {
 			param.isLike = true;
-			param.likes++;
+			param.likeNumber++;
 		}
 		const newData = [...postData];
 		for (let i = 0; i < newData.length; i++) {
