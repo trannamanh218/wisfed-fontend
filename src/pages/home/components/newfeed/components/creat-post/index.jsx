@@ -1,5 +1,6 @@
 import { BookIcon, Hashtag, Feather, CategoryIcon } from 'components/svg';
 import avatar from 'assets/images/avatar.png';
+// import CreatPostModalContent from '../creat-post-modal-content';
 
 function CreatPost() {
 	return (
@@ -36,6 +37,9 @@ function CreatPost() {
 					<span>Hashtag</span>
 				</div>
 			</div>
+			{/* <div className='newfeed__creat-post__modal'>
+				<CreatPostModalContent />
+			</div> */}
 		</div>
 	);
 }

@@ -16,6 +16,10 @@ import { ReactComponent as ActionPlus } from 'assets/icons/action-plus.svg';
 import { ReactComponent as Share } from 'assets/icons/share.svg';
 import { ReactComponent as Configure } from 'assets/icons/configure.svg';
 import { ReactComponent as LikeFill } from 'assets/icons/like-fill.svg';
+import { ReactComponent as CloseX } from 'assets/icons/closeX.svg';
+import { ReactComponent as WorldNet } from 'assets/icons/world-net.svg';
+import { ReactComponent as PodCast } from 'assets/icons/pod-cast.svg';
+import { ReactComponent as Lock } from 'assets/icons/lock.svg';
 
 export {
 	HomeIcon,
@@ -36,4 +40,8 @@ export {
 	Share,
 	Configure,
 	LikeFill,
+	CloseX,
+	WorldNet,
+	PodCast,
+	Lock,
 };

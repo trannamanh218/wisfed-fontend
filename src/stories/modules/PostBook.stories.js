@@ -1,4 +1,4 @@
-import PostBook from 'pages/home/components/newfeed/components/post-book';
+import PostBook from 'shared/post-book';
 
 export default {
 	title: 'Components/Modules/Post Book',
