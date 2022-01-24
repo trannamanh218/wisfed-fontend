@@ -3,32 +3,34 @@ import PropsTypes from 'prop-types';
 import './button.scss';
 import classNames from 'classnames';
 
-const Button = ({ content, handleClick, size, varient, isOutline }) => {
-	const className = classNames({
+const Button = ({ children, onClick, size, varient, isOutline, className }) => {
+	const classNameButton = classNames({
 		'btn': size === 'md',
 		[`btn btn-${size}`]: size !== 'md',
 		[`btn-outline-${varient}`]: isOutline,
 		[`btn-${varient}`]: !isOutline,
+		[`${className}`]: className,
 	});
 
 	return (
-		<button className={className} onClick={handleClick}>
-			{content}
+		<button className={classNameButton} onClick={onClick}>
+			{children}
 		</button>
 	);
 };
 
 Button.defaultProps = {
-	content: 'Click  me!',
-	handleClick: () => {},
+	children: 'Click  me!',
+	onClick: () => {},
 	size: 'md',
 	varient: 'primary',
 	isOutline: false,
+	className: '',
 };
 
 Button.propTypes = {
-	content: PropsTypes.string.isRequired,
-	handleClick: PropsTypes.func,
+	children: PropsTypes.node.isRequired,
+	onClick: PropsTypes.func,
 	size: PropsTypes.oneOf(['sm', 'md', 'lg']),
 	varient: PropsTypes.oneOf([
 		'primary',
@@ -43,6 +45,7 @@ Button.propTypes = {
 		'dark',
 	]),
 	isOutline: PropsTypes.bool,
+	className: PropsTypes.string,
 };
 
 export default Button;

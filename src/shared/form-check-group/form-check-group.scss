@@ -1,0 +1,23 @@
+@import 'src/scss/abstracts/_variables.scss';
+
+.form-check-custom {
+	max-width: 312px;
+	display: flex;
+	align-items: center;
+	gap: 1.125em;
+	border-radius: 12px;
+	&:hover {
+		background-color: $secondary;
+		.form-check-label--custom {
+			color: $primary-dark;
+		}
+	}
+}
+
+.form-check .form-check-input {
+	margin-left: 0;
+}
+
+.form-check-label--custom {
+	padding: 1em 0;
+}

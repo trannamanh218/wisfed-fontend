@@ -35,7 +35,8 @@ const listData = [
 		total: 2000,
 	},
 ];
-console.log(listData);
 Custom.args = {
 	list: listData,
+	ratingLevel: 4.2,
+	ratingTotal: 3200,
 };

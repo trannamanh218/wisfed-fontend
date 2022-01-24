@@ -6,6 +6,11 @@
 		&:focus {
 			background-color: $color;
 		}
+		&:active {
+			&:focus {
+				box-shadow: unset;
+			}
+		}
 
 		@if $color == $light {
 			color: $ash;
@@ -30,7 +35,7 @@
 }
 
 .btn {
-	padding: 0.75rem 1.25rem;
+	padding: 0.875rem 1.25rem;
 	border-radius: 12px;
 	border-width: 2px;
 	font-weight: 600;
