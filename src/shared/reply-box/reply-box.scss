@@ -3,6 +3,10 @@
 .reply-box {
 	display: flex;
 	gap: 0.7em;
+	.user-avatar {
+		margin-top: 5px;
+	}
+
 	&__textarea {
 		border: 1px solid $ash-line;
 		width: 41.5rem;
@@ -17,6 +21,7 @@
 		outline: none;
 		position: relative;
 		color: $ash;
+		resize: none;
 		&::placeholder {
 			color: $ash-placeholder;
 		}

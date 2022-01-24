@@ -1,0 +1,21 @@
+.creat-post-modal-content__main__body__user-info__share-mode {
+	max-width: 300px;
+	background-color: #fcfcfc;
+	border-radius: 8px;
+	position: relative;
+}
+
+.creat-post-modal-content__main__body__user-info__share-mode__list {
+	overflow: hidden;
+	position: absolute;
+	top: 0;
+	left: 0;
+	&.show {
+		max-height: 130px;
+		transition: all 1s ease-out;
+	}
+	&.hide {
+		max-height: 0;
+		transition: all 0.1s ease-in;
+	}
+}

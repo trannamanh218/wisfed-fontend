@@ -1,9 +1,18 @@
 import { render } from '@testing-library/react';
-import ReadingBook from 'pages/home/components/sidebar/components/reading-book';
+import ReadingBook from 'shared/reading-book';
 
 describe('sách đang đọc', () => {
 	it('check source ảnh bìa sách', () => {
-		const { getByTestId } = render(<ReadingBook />);
+		const { getByTestId } = render(
+			<ReadingBook
+				bookData={{
+					avatar: '/images/book1.jpg',
+					name: 'Những phát minh của nhà khoa học Tesla ',
+					author: 'Đỗ Gia',
+				}}
+				percent={30}
+			/>
+		);
 		const bookImg = getByTestId('reading-book__book-img');
 		expect(bookImg.getAttribute('src').length).toBeGreaterThan(0);
 	});

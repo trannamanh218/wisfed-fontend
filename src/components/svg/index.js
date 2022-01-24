@@ -18,6 +18,10 @@ import { ReactComponent as Configure } from 'assets/icons/configure.svg';
 import { ReactComponent as LikeFill } from 'assets/icons/like-fill.svg';
 import { ReactComponent as Add } from 'assets/icons/add.svg';
 import { ReactComponent as Minus } from 'assets/icons/minus.svg';
+import { ReactComponent as CloseX } from 'assets/icons/closeX.svg';
+import { ReactComponent as WorldNet } from 'assets/icons/world-net.svg';
+import { ReactComponent as PodCast } from 'assets/icons/pod-cast.svg';
+import { ReactComponent as Lock } from 'assets/icons/lock.svg';
 
 export {
 	HomeIcon,
@@ -40,4 +44,8 @@ export {
 	LikeFill,
 	Add,
 	Minus,
+	CloseX,
+	WorldNet,
+	PodCast,
+	Lock,
 };

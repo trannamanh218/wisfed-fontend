@@ -1,13 +1,7 @@
 import React from 'react';
-import QuoteCard from 'shared/quote-card';
 
 const Category = () => {
-	return (
-		<div>
-			This is a category page
-			<QuoteCard />
-		</div>
-	);
+	return <div>This is a category page</div>;
 };
 
 export default Category;

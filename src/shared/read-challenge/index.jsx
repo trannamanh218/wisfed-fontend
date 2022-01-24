@@ -1,3 +1,4 @@
+import './style.scss';
 import readChallengeImg from 'assets/images/read-challenge-img.jpg';
 import { useEffect, useState } from 'react';
 
@@ -23,9 +24,9 @@ function ReadChallenge() {
 	};
 
 	return (
-		<div className='sidebar__block'>
-			<h4 className='sidebar__block__title'>Thử thách đọc</h4>
-			<div className='sidebar__block__content'>
+		<div className='read-challenge'>
+			<h4 className='read-challenge__title'>Thử thách đọc</h4>
+			<div className='read-challenge__content'>
 				<div className='read-challenge__box'>
 					<div className='read-challenge__description'>Thử thách bản thân bạn để đọc nhiều sách hơn!</div>
 					<img style={{ marginBottom: '24px', width: '100%' }} src={readChallengeImg} alt='' />
