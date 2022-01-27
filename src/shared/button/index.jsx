@@ -1,5 +1,5 @@
 import React from 'react';
-import PropsTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import './button.scss';
 import classNames from 'classnames';
 
@@ -29,10 +29,10 @@ Button.defaultProps = {
 };
 
 Button.propTypes = {
-	children: PropsTypes.node.isRequired,
-	onClick: PropsTypes.func,
-	size: PropsTypes.oneOf(['sm', 'md', 'lg']),
-	varient: PropsTypes.oneOf([
+	children: PropTypes.node.isRequired,
+	onClick: PropTypes.func,
+	size: PropTypes.oneOf(['sm', 'md', 'lg']),
+	varient: PropTypes.oneOf([
 		'primary',
 		'primary-light',
 		'primary-dark',
@@ -44,8 +44,8 @@ Button.propTypes = {
 		'light',
 		'dark',
 	]),
-	isOutline: PropsTypes.bool,
-	className: PropsTypes.string,
+	isOutline: PropTypes.bool,
+	className: PropTypes.string,
 };
 
 export default Button;

@@ -1,17 +1,19 @@
-@import "src/scss/abstracts/_global.scss";
+@import 'src/scss/abstracts/_global.scss';
 .mainContainer {
+	padding: 2.5rem 5.625rem;
 	display: flex;
+	justify-content: space-between;
+	flex-wrap: wrap;
+	overflow: hidden;
 }
 
-
-.mainContainer__right{
-	width: 20%;
+.mainContainer__right {
+	width: 280px;
 	max-width: 280px;
 }
 
-.mainContainer__main{
-	flex-grow: 1;
+.mainContainer__main {
+	max-width: 58rem;
 	margin-right: 2.5em;
+	overflow: hidden;
 }
-
-

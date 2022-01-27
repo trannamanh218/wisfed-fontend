@@ -1,4 +1,4 @@
-import PropsTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import React from 'react';
 import BadgeList from 'shared/badge-list';
 import QuoteActionBar from 'shared/quote-action-bar';
@@ -42,8 +42,8 @@ QuoteCard.defaultProps = {
 };
 
 QuoteCard.propTypes = {
-	data: PropsTypes.object,
-	badges: PropsTypes.array,
+	data: PropTypes.object,
+	badges: PropTypes.array,
 };
 
 export default QuoteCard;

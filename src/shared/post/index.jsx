@@ -3,8 +3,9 @@ import PropTypes from 'prop-types';
 import { useState, useRef } from 'react';
 import PostBook from 'shared/post-book';
 import PostActionBar from 'shared/post-action-bar';
+import classNames from 'classnames';
 
-function Post({ postInformations, likeAction }) {
+function Post({ postInformations, likeAction, className }) {
 	const [commentContent, setCommentContent] = useState('');
 
 	const commentArea = useRef(null);
@@ -16,7 +17,7 @@ function Post({ postInformations, likeAction }) {
 	};
 
 	return (
-		<div className='post__container'>
+		<div className={classNames('post__container', { [`${className}`]: className })}>
 			<div className='post__user-status'>
 				<div className='post__user-status__avatar'>
 					<img data-testid='post__user-avatar' src={postInformations.userAvatar} alt='' />
@@ -78,6 +79,7 @@ function Post({ postInformations, likeAction }) {
 Post.propTypes = {
 	postInformations: PropTypes.object,
 	likeAction: PropTypes.func,
+	className: PropTypes.string,
 };
 
 export default Post;

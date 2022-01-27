@@ -22,6 +22,9 @@ import { ReactComponent as CloseX } from 'assets/icons/closeX.svg';
 import { ReactComponent as WorldNet } from 'assets/icons/world-net.svg';
 import { ReactComponent as PodCast } from 'assets/icons/pod-cast.svg';
 import { ReactComponent as Lock } from 'assets/icons/lock.svg';
+import { ReactComponent as Heart } from 'assets/icons/heart.svg';
+import { ReactComponent as Eye } from 'assets/icons/eye.svg';
+import { ReactComponent as HiddenEye } from 'assets/icons/hide-eye.svg';
 
 export {
 	HomeIcon,
@@ -48,4 +51,7 @@ export {
 	WorldNet,
 	PodCast,
 	Lock,
+	Heart,
+	Eye,
+	HiddenEye,
 };

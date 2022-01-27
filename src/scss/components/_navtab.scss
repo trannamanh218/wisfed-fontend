@@ -1,6 +1,8 @@
 .nav-tabs {
 	border-bottom: 2px solid #f1f1f5;
 	background-color: $white;
+	border-top-left-radius: 16px;
+	border-top-right-radius: 16px;
 	.nav-link.active,
 	.nav-item.show .nav-link {
 		&.active {
@@ -36,4 +38,5 @@
 
 .tab-content {
 	background-color: $white;
+	padding-bottom: 2.5rem;
 }

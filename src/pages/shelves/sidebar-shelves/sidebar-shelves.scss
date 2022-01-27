@@ -1,0 +1,13 @@
+@import 'src/scss/abstracts/_variables.scss';
+.sidebar-shelves {
+	display: flex;
+	flex-direction: column;
+	gap: 3.75rem;
+
+	&__reading__status {
+		margin-top: 1rem;
+		h4 {
+			margin-bottom: 1.5rem;
+		}
+	}
+}

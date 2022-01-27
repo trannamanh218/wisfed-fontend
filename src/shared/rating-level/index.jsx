@@ -1,7 +1,7 @@
 import React from 'react';
 import LinearProgressBar from 'shared/linear-progress-bar';
 import { Star } from 'components/svg';
-import PropsTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import { formatNumberToWord } from 'helpers/Common';
 import './rating-level.scss';
 
@@ -30,10 +30,10 @@ RatingLevel.defaultProps = {
 };
 
 RatingLevel.propTypes = {
-	data: PropsTypes.shape({
-		level: PropsTypes.number,
-		percent: PropsTypes.number,
-		total: PropsTypes.number,
+	data: PropTypes.shape({
+		level: PropTypes.number,
+		percent: PropTypes.number,
+		total: PropTypes.number,
 	}),
 };
 

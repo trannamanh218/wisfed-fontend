@@ -1,5 +1,5 @@
 import React from 'react';
-import PropsTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import './sub-container.scss';
 
 const SubContainer = ({ left, main, right }) => {
@@ -13,9 +13,9 @@ const SubContainer = ({ left, main, right }) => {
 };
 
 SubContainer.propTypes = {
-	left: PropsTypes.any.isRequired,
-	main: PropsTypes.any.isRequired,
-	right: PropsTypes.any.isRequired,
+	left: PropTypes.any.isRequired,
+	main: PropTypes.any.isRequired,
+	right: PropTypes.any.isRequired,
 };
 
 export default SubContainer;

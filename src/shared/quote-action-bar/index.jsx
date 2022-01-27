@@ -1,6 +1,6 @@
 import React from 'react';
 import { Like, Comment, Share } from 'components/svg';
-import PropsTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import './quote-action-bar.scss';
 import arrowImage from 'assets/icons/arrow.svg';
@@ -59,9 +59,9 @@ QuoteActionBar.defaultProps = {
 };
 
 QuoteActionBar.propTypes = {
-	data: PropsTypes.object,
-	isDetail: PropsTypes.bool,
-	handleLikeQuote: PropsTypes.func,
+	data: PropTypes.object,
+	isDetail: PropTypes.bool,
+	handleLikeQuote: PropTypes.func,
 };
 
 export default QuoteActionBar;

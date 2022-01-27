@@ -2,6 +2,30 @@
 
 .sidebar__block {
 	margin-bottom: 60px;
+	.slick-arrow {
+		display: flex !important;
+		justify-content: center;
+		border-radius: 50%;
+		background-color: rgba(20, 20, 43, 0.4) !important;
+		z-index: 1000;
+		width: 32px !important;
+		height: 32px !important;
+		padding: 0.3rem !important;
+		&:before {
+			display: none;
+		}
+		&:hover {
+			background-color: rgba(20, 20, 43, 0.7) !important;
+		}
+	}
+
+	.slick-prev {
+		left: 4% !important;
+	}
+
+	.slick-next {
+		right: 4% !important;
+	}
 }
 
 .sidebar__block__title {
@@ -118,29 +142,4 @@
 // wants to read
 .wants-to-read__thumbnail {
 	margin-right: 20px;
-}
-
-.slick-arrow {
-	display: flex !important;
-	justify-content: center;
-	border-radius: 50%;
-	background-color: rgba(20, 20, 43, 0.4) !important;
-	z-index: 1000;
-	width: 32px !important;
-	height: 32px !important;
-	padding: 0.3rem !important;
-	&:before {
-		display: none;
-	}
-	&:hover {
-		background-color: rgba(20, 20, 43, 0.7) !important;
-	}
-}
-
-.slick-prev {
-	left: 4% !important;
-}
-
-.slick-next {
-	right: 4% !important;
 }

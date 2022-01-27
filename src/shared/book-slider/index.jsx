@@ -1,21 +1,22 @@
 import React from 'react';
 import Slider from 'react-slick';
-import PropsTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import BookThumbnail from 'shared/book-thumbnail';
 import arrowNext from 'assets/images/arrow-chevron-forward.png';
 import arrowPrev from 'assets/images/arrow-chevron-back.png';
 import './book-slider.scss';
+import classNames from 'classnames';
 
-const BookSlider = ({ list, title }) => {
+const BookSlider = ({ list, title, className, size = 'sm' }) => {
 	const settingSlider = settings();
 	if (list && list.length) {
 		return (
-			<div className='book-slider'>
+			<div className={classNames('book-slider', { [`${className}`]: className })}>
 				<h4 className='book-slider__title'>{title}</h4>
 				<div className='book-slider__content'>
 					<Slider {...settingSlider}>
 						{list.map((item, index) => (
-							<BookThumbnail key={index} source={item.source} name={item.name} size='sm' />
+							<BookThumbnail key={index} source={item.source} name={item.name} size={size} />
 						))}
 					</Slider>
 				</div>
@@ -24,7 +25,7 @@ const BookSlider = ({ list, title }) => {
 	}
 
 	return (
-		<div className='book-slider'>
+		<div className={classNames('book-slider', { [`${className}`]: className })}>
 			<h4 className='book-slider__title'>Sách muốn đọc</h4>
 			<p>Không có dữ liệu</p>
 		</div>
@@ -112,23 +113,26 @@ function settings() {
 BookSlider.defaultProps = {
 	list: [],
 	title: 'Sách muốn đọc',
+	className: '',
 };
 
 BookSlider.propTypes = {
-	list: PropsTypes.array.isRequired,
-	title: PropsTypes.string.isRequired,
+	list: PropTypes.array.isRequired,
+	title: PropTypes.string.isRequired,
+	className: PropTypes.string,
+	size: PropTypes.oneOf(['sm', 'md', 'lg']),
 };
 
 SlideNextBtn.propTypes = {
-	className: PropsTypes.string,
-	style: PropsTypes.object,
-	onClick: PropsTypes.func,
+	className: PropTypes.string,
+	style: PropTypes.object,
+	onClick: PropTypes.func,
 };
 
 SlidePrevBtn.propTypes = {
-	className: PropsTypes.string,
-	style: PropsTypes.object,
-	onClick: PropsTypes.func,
+	className: PropTypes.string,
+	style: PropTypes.object,
+	onClick: PropTypes.func,
 };
 
 export default BookSlider;

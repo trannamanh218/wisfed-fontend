@@ -1,11 +1,12 @@
 import React from 'react';
 import SearchIcon from 'assets/icons/search.svg';
-import PropsTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import './search-field.scss';
+import classNames from 'classnames';
 
-const SearchField = ({ placeholder = 'Nhập thông tin tìm kiếm...', handleChange }) => {
+const SearchField = ({ placeholder = 'Nhập thông tin tìm kiếm...', handleChange, className }) => {
 	return (
-		<div className='search-field'>
+		<div className={classNames('search-field', { [`${className}`]: className })}>
 			<img className='search-field__icon' src={SearchIcon} alt='search-icon' />
 			<input className='search-field__input' placeholder={placeholder} onChange={handleChange} />
 		</div>
@@ -13,8 +14,9 @@ const SearchField = ({ placeholder = 'Nhập thông tin tìm kiếm...', handleC
 };
 
 SearchField.propTypes = {
-	placeholder: PropsTypes.string,
-	handleChange: PropsTypes.func,
+	placeholder: PropTypes.string,
+	handleChange: PropTypes.func,
+	className: PropTypes.string,
 };
 
 export default SearchField;

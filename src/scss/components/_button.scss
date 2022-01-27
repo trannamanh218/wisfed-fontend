@@ -32,6 +32,15 @@
 			}
 		}
 	}
+
+	.btn-outline-#{$name} {
+		&:active,
+		&.active {
+			&:focus {
+				box-shadow: unset;
+			}
+		}
+	}
 }
 
 .btn {

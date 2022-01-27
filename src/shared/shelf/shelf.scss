@@ -1,0 +1,8 @@
+.shelf {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 1rem;
+	.book-item {
+		margin-bottom: 2rem;
+	}
+}

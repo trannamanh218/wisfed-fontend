@@ -1,0 +1,15 @@
+@import 'src/scss/abstracts/_variables.scss';
+
+.review {
+	max-width: 58rem;
+	margin: 0 auto;
+	padding: 2.5rem 0;
+	&__header {
+		display: flex;
+		align-items: center;
+		gap: 2.25rem;
+		h4 {
+			margin: 0;
+		}
+	}
+}

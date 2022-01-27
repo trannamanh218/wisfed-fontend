@@ -19,3 +19,5 @@ export const readingStatus = [
 ];
 
 export const colorVarients = ['primary', 'secondary', 'success', 'success-dark', 'warning', 'info', 'light', 'dark'];
+export const DEFAULT_TOGGLE_ROWS = 3;
+export const NUMBER_ROWS = 10;

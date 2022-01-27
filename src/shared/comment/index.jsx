@@ -1,7 +1,7 @@
 import React from 'react';
 import { Badge } from 'react-bootstrap';
 import UserAvatar from 'shared/user-avatar';
-import PropsTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import './comment.scss';
 
 const Comment = props => {
@@ -48,15 +48,15 @@ Comment.defaultProps = {
 };
 
 Comment.propTypes = {
-	data: PropsTypes.shape({
-		avatar: PropsTypes.string,
-		isAuthor: PropsTypes.bool,
-		author: PropsTypes.string.isRequired,
-		content: PropsTypes.string.isRequired,
-		duration: PropsTypes.number.isRequired,
+	data: PropTypes.shape({
+		avatar: PropTypes.string,
+		isAuthor: PropTypes.bool,
+		author: PropTypes.string.isRequired,
+		content: PropTypes.string.isRequired,
+		duration: PropTypes.number.isRequired,
 	}),
-	handleLike: PropsTypes.func,
-	handleReply: PropsTypes.func,
+	handleLike: PropTypes.func,
+	handleReply: PropTypes.func,
 };
 
 export default Comment;
