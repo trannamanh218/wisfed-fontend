@@ -22,6 +22,8 @@ import { ReactComponent as CloseX } from 'assets/icons/closeX.svg';
 import { ReactComponent as WorldNet } from 'assets/icons/world-net.svg';
 import { ReactComponent as PodCast } from 'assets/icons/pod-cast.svg';
 import { ReactComponent as Lock } from 'assets/icons/lock.svg';
+import { ReactComponent as Image } from 'assets/icons/image.svg';
+import { ReactComponent as TwoDots } from 'assets/icons/two-dots.svg';
 
 export {
 	HomeIcon,
@@ -48,4 +50,6 @@ export {
 	WorldNet,
 	PodCast,
 	Lock,
+	Image,
+	TwoDots,
 };
