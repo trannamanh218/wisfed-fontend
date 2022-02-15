@@ -7,15 +7,15 @@ function CreatPost() {
 	const [showModalCreatPost, setShowModalCreatPost] = useState(false);
 
 	const creatPostModalContainer = useRef(null);
+	const scrollBlocked = useRef(false);
 
 	const safeDocument = typeof document !== 'undefined' ? document : {};
-	const scrollBlocked = useRef(false);
 	const { body } = safeDocument;
 	const html = safeDocument.documentElement;
 
 	useEffect(() => {
 		if (showModalCreatPost) {
-			creatPostModalContainer.current.addEventListener('click', e => {
+			creatPostModalContainer.current.addEventListener('mousedown', e => {
 				if (e.target === creatPostModalContainer.current) {
 					setShowModalCreatPost(false);
 				}

@@ -15,11 +15,14 @@ import { useEffect, useRef, useState } from 'react';
 import classNames from 'classnames';
 import avatar from 'assets/images/avatar.png';
 import PropTypes from 'prop-types';
-
+import CreatPostSubModal from './sub-modal';
 function CreatPostModalContent({ hideCreatPostModal }) {
 	const [shareMode, setShareMode] = useState('public');
 	const [show, setShow] = useState(false);
 	const [showTextFieldEditPlaceholder, setShowTextFieldEditPlaceholder] = useState(true);
+	const [showMainModal, setShowMainModal] = useState(true);
+	const [option, setOption] = useState('');
+	const [images, setImages] = useState([]);
 
 	const textFieldEdit = useRef(null);
 
@@ -70,9 +73,50 @@ function CreatPostModalContent({ hideCreatPostModal }) {
 		}
 	};
 
+	const backToMainModal = () => {
+		setShowMainModal(true);
+	};
+
+	const addOptionsToPost = param => {
+		setOption(param);
+		setShowMainModal(false);
+	};
+
+	const onChangeImages = e => {
+		const obj = Object.entries(e.target.files);
+		let newArrayFile = [...images];
+		obj.forEach(item => newArrayFile.push(item[1]));
+		setImages(newArrayFile);
+	};
+
+	useEffect(() => {
+		if (images.length === 1) {
+			document.querySelector('.img-0').style.inset = '0%';
+		} else if (images.length === 2) {
+			document.querySelector('.img-0').style.inset = '0% 0% 50% 0%';
+			document.querySelector('.img-1').style.inset = '50% 0% 0% 0%';
+		} else if (images.length === 3) {
+			document.querySelector('.img-0').style.inset = '0% 0% 33.335% 0%';
+			document.querySelector('.img-1').style.inset = '66.67% 50% 0% 0%';
+			document.querySelector('.img-2').style.inset = '66.67% 0% 0% 50%';
+		} else if (images.length === 4) {
+			document.querySelector('.img-0').style.inset = '0% 0% 33.335% 0%';
+			document.querySelector('.img-1').style.inset = '66.67% 66.67% 0% 0%';
+			document.querySelector('.img-2').style.inset = '66.67% 33.335% 0% 33.335%';
+			document.querySelector('.img-3').style.inset = '66.67% 0% 0% 66.67%';
+		} else if (images.length > 4) {
+			document.querySelector('.img-0').style.inset = '0% 50% 50% 0%';
+			document.querySelector('.img-1').style.inset = '50% 50% 0% 0%';
+			document.querySelector('.img-2').style.inset = '0% 0% 66.67% 50%';
+			document.querySelector('.img-3').style.inset = '33.335% 0% 33.335% 50%';
+			document.querySelector('.img-4').style.inset = '66.67% 0% 0% 50%';
+		}
+	}, [images]);
+
 	return (
 		<div className='creat-post-modal-content'>
-			<div className='creat-post-modal-content__main'>
+			{/* main modal */}
+			<div className={classNames('creat-post-modal-content__main', { 'hide': !showMainModal })}>
 				<div className='creat-post-modal-content__main__header'>
 					<div style={{ visibility: 'hidden' }} className='creat-post-modal-content__main__close'>
 						<CloseX />
@@ -160,14 +204,12 @@ function CreatPostModalContent({ hideCreatPostModal }) {
 							</div>
 						</div>
 					</div>
-					<div className='creat-post-modal-content__main__body__text-field-box'>
-						<div className='creat-post-modal-content__main__body__text-field-edit-wrapper'>
-							<div
-								className='creat-post-modal-content__main__body__text-field-edit'
-								contentEditable={true}
-								ref={textFieldEdit}
-							></div>
-						</div>
+					<div className='creat-post-modal-content__main__body__text-field-edit-wrapper'>
+						<div
+							className='creat-post-modal-content__main__body__text-field-edit'
+							contentEditable={true}
+							ref={textFieldEdit}
+						></div>
 						<div
 							className={classNames('creat-post-modal-content__main__body__text-field-placeholder', {
 								'hide': !showTextFieldEditPlaceholder,
@@ -175,24 +217,68 @@ function CreatPostModalContent({ hideCreatPostModal }) {
 						>
 							Hãy chia sẻ cảm nhận của bạn về cuốn sách
 						</div>
+						<div
+							className={classNames('creat-post-modal-content__main__body__image-container', {
+								'one-image': images.length === 1,
+								'more-one-image': images.length > 1,
+							})}
+						>
+							<div className='creat-post-modal-content__main__body__image-box'>
+								{images.length > 0 &&
+									images.map((image, index) => (
+										<div
+											key={index}
+											className={`creat-post-modal-content__main__body__image img-${index}`}
+										>
+											<img src={URL.createObjectURL(image)} alt='image' />
+										</div>
+									))}
+							</div>
+						</div>
 					</div>
 				</div>
 				<div className='creat-post-modal-content__main__options-and-submit'>
 					<div className='creat-post-modal-content__main__options'>
 						<span>Thêm vào bài viết</span>
 						<div className='creat-post-modal-content__main__options__items'>
-							<button className='creat-post-modal-content__main__options__item-add-to-post'>
+							<button
+								className='creat-post-modal-content__main__options__item-add-to-post'
+								onClick={() => addOptionsToPost('add-book')}
+							>
 								<BookIcon />
 							</button>
-							<button className='creat-post-modal-content__main__options__item-add-to-post'>
+							<button
+								className='creat-post-modal-content__main__options__item-add-to-post'
+								onClick={() => addOptionsToPost('add-author')}
+							>
 								<Feather className='item-add-to-post-svg' />
 							</button>
-							<button className='creat-post-modal-content__main__options__item-add-to-post'>
+							<button
+								className='creat-post-modal-content__main__options__item-add-to-post'
+								onClick={() => addOptionsToPost('add-topic')}
+							>
 								<CategoryIcon className='item-add-to-post-svg' />
 							</button>
-							<button className='creat-post-modal-content__main__options__item-add-to-post'>
-								<Image />
+							<button
+								className='creat-post-modal-content__main__options__item-add-to-post'
+								onClick={() => addOptionsToPost('add-friends')}
+							>
+								<GroupIcon className='item-add-to-post-svg' />
 							</button>
+							<label
+								htmlFor='image-upload'
+								className='creat-post-modal-content__main__options__item-add-to-post'
+							>
+								<Image />
+							</label>
+							<input
+								id='image-upload'
+								type='file'
+								onChange={onChangeImages}
+								accept='image/png, image/gif, image/jpeg'
+								multiple
+							/>
+
 							<button className='creat-post-modal-content__main__options__item-add-to-post'>
 								<TwoDots />
 							</button>
@@ -200,6 +286,10 @@ function CreatPostModalContent({ hideCreatPostModal }) {
 					</div>
 					<button className='creat-post-modal-content__main__submit'>Đăng</button>
 				</div>
+			</div>
+			{/* sub modal */}
+			<div className={classNames('creat-post-modal-content__substitute', { 'show': !showMainModal })}>
+				<CreatPostSubModal option={option} backToMainModal={backToMainModal} />
 			</div>
 		</div>
 	);

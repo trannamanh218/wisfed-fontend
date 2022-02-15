@@ -29,6 +29,9 @@
 	align-items: center;
 	gap: 16px;
 	margin-bottom: 20px;
+	input {
+		cursor: pointer;
+	}
 }
 
 .newfeed__creat-post__avatar {
