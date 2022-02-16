@@ -10,6 +10,7 @@ import {
 	Feather,
 	Image,
 	TwoDots,
+	Pencil,
 } from 'components/svg';
 import { useEffect, useRef, useState } from 'react';
 import classNames from 'classnames';
@@ -82,7 +83,7 @@ function CreatPostModalContent({ hideCreatPostModal }) {
 		setShowMainModal(false);
 	};
 
-	const onChangeImages = e => {
+	const addImages = e => {
 		const obj = Object.entries(e.target.files);
 		let newArrayFile = [...images];
 		obj.forEach(item => newArrayFile.push(item[1]));
@@ -112,6 +113,18 @@ function CreatPostModalContent({ hideCreatPostModal }) {
 			document.querySelector('.img-4').style.inset = '66.67% 0% 0% 50%';
 		}
 	}, [images]);
+
+	const removeImages = () => {
+		document.getElementById('image-upload').value = '';
+		setImages([]);
+	};
+
+	const deleteImage = imageIndex => {
+		console.log(imageIndex);
+		const newImagesArray = [...images];
+		newImagesArray.splice(imageIndex, 1);
+		setImages(newImagesArray);
+	};
 
 	return (
 		<div className='creat-post-modal-content'>
@@ -224,15 +237,68 @@ function CreatPostModalContent({ hideCreatPostModal }) {
 							})}
 						>
 							<div className='creat-post-modal-content__main__body__image-box'>
-								{images.length > 0 &&
-									images.map((image, index) => (
-										<div
-											key={index}
-											className={`creat-post-modal-content__main__body__image img-${index}`}
+								{images.length > 0 && images.length < 6 ? (
+									<>
+										{images.map((image, index) => (
+											<div
+												key={index}
+												className={`creat-post-modal-content__main__body__image img-${index}`}
+											>
+												<img src={URL.createObjectURL(image)} alt='image' />
+											</div>
+										))}
+									</>
+								) : (
+									<>
+										{images.length >= 6 && (
+											<>
+												{images.map((image, index) => {
+													if (index < 4) {
+														return (
+															<div
+																key={index}
+																className={`creat-post-modal-content__main__body__image img-${index}`}
+															>
+																<img src={URL.createObjectURL(image)} alt='image' />
+															</div>
+														);
+													}
+												})}
+												<div className={`creat-post-modal-content__main__body__image img-4`}>
+													<img src={URL.createObjectURL(images[4])} alt='image' />
+													<div className='creat-post-modal-content__main__body__image-over'>
+														+{images.length - 5}
+													</div>
+												</div>
+											</>
+										)}
+									</>
+								)}
+
+								<div className='creat-post-modal-content__main__body__image-options'>
+									<div className='creat-post-modal-content__main__body__image-options__block-left'>
+										<button
+											className='creat-post-modal-content__main__body__image-options__button'
+											onClick={() => addOptionsToPost('modify-images')}
 										>
-											<img src={URL.createObjectURL(image)} alt='image' />
-										</div>
-									))}
+											<Pencil />
+											<span>Chỉnh sửa tất cả</span>
+										</button>
+										<label
+											htmlFor='image-upload'
+											className='creat-post-modal-content__main__body__image-options__button'
+										>
+											<Image />
+											<span>Thêm ảnh</span>
+										</label>
+									</div>
+									<button
+										className='creat-post-modal-content__main__body__image-options__delete-image'
+										onClick={removeImages}
+									>
+										<CloseX />
+									</button>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -274,7 +340,7 @@ function CreatPostModalContent({ hideCreatPostModal }) {
 							<input
 								id='image-upload'
 								type='file'
-								onChange={onChangeImages}
+								onChange={addImages}
 								accept='image/png, image/gif, image/jpeg'
 								multiple
 							/>
@@ -289,7 +355,12 @@ function CreatPostModalContent({ hideCreatPostModal }) {
 			</div>
 			{/* sub modal */}
 			<div className={classNames('creat-post-modal-content__substitute', { 'show': !showMainModal })}>
-				<CreatPostSubModal option={option} backToMainModal={backToMainModal} />
+				<CreatPostSubModal
+					option={option}
+					backToMainModal={backToMainModal}
+					images={images}
+					deleteImage={deleteImage}
+				/>
 			</div>
 		</div>
 	);

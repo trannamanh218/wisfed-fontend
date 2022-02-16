@@ -26,6 +26,7 @@ import { ReactComponent as Image } from 'assets/icons/image.svg';
 import { ReactComponent as TwoDots } from 'assets/icons/two-dots.svg';
 import { ReactComponent as BackArrow } from 'assets/icons/back-arrow.svg';
 import { ReactComponent as Search } from 'assets/icons/search.svg';
+import { ReactComponent as Pencil } from 'assets/icons/pencil.svg';
 
 export {
 	HomeIcon,
@@ -56,4 +57,5 @@ export {
 	TwoDots,
 	BackArrow,
 	Search,
+	Pencil,
 };
