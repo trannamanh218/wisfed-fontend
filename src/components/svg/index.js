@@ -22,6 +22,10 @@ import { ReactComponent as CloseX } from 'assets/icons/closeX.svg';
 import { ReactComponent as WorldNet } from 'assets/icons/world-net.svg';
 import { ReactComponent as PodCast } from 'assets/icons/pod-cast.svg';
 import { ReactComponent as Lock } from 'assets/icons/lock.svg';
+import { ReactComponent as Image } from 'assets/icons/image.svg';
+import { ReactComponent as TwoDots } from 'assets/icons/two-dots.svg';
+import { ReactComponent as BackArrow } from 'assets/icons/back-arrow.svg';
+import { ReactComponent as Search } from 'assets/icons/search.svg';
 import { ReactComponent as Heart } from 'assets/icons/heart.svg';
 import { ReactComponent as Eye } from 'assets/icons/eye.svg';
 import { ReactComponent as HiddenEye } from 'assets/icons/hide-eye.svg';
@@ -58,13 +62,17 @@ export {
 	WorldNet,
 	PodCast,
 	Lock,
+	Image,
+	TwoDots,
+	BackArrow,
+	Search,
+	Pencil,
 	Heart,
 	Eye,
 	HiddenEye,
 	Clock,
 	Restrict,
 	QuoteIcon,
-	Pencil,
 	Global,
 	Forward,
 	CheckIcon,
