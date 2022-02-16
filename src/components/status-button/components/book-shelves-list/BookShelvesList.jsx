@@ -1,6 +1,6 @@
 import React from 'react';
 import StatusItem from './StatusItem';
-import PropsTypes from 'prop-types';
+import PropTypes from 'prop-types';
 
 const BookShelvesList = ({ list }) => {
 	const renderList = listData => {
@@ -26,7 +26,7 @@ BookShelvesList.defaultProps = {
 };
 
 BookShelvesList.propTypes = {
-	list: PropsTypes.array.isRequired,
+	list: PropTypes.array.isRequired,
 };
 
 export default BookShelvesList;

@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import UserAvatar from 'shared/user-avatar';
-import PropsTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import './reply-box.scss';
 
 const ReplyBox = ({ handleChange }) => {
@@ -34,7 +34,7 @@ ReplyBox.defaultProps = {
 };
 
 ReplyBox.propTypes = {
-	handleChange: PropsTypes.func,
+	handleChange: PropTypes.func,
 };
 
 export default ReplyBox;

@@ -3,12 +3,12 @@ import PropTypes from 'prop-types';
 import FormCheckGroup from 'shared/form-check-group';
 import { Form } from 'react-bootstrap';
 
-const MultipleCheckbox = ({ list, name }) => {
+const MultipleCheckbox = ({ list, name, value }) => {
 	if (list && list.length) {
 		return (
 			<Form className='multiple-checkbox'>
 				{list.map((item, index) => (
-					<FormCheckGroup key={index} data={item} name={name} type='checkbox' />
+					<FormCheckGroup key={index} data={item} name={name} value={value} type='checkbox' />
 				))}
 			</Form>
 		);

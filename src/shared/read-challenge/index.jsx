@@ -25,7 +25,7 @@ function ReadChallenge() {
 
 	return (
 		<div className='read-challenge'>
-			<h4 className='read-challenge__title'>Thử thách đọc</h4>
+			<h4 className='read-challenge__title'>Mục tiêu đọc sách</h4>
 			<div className='read-challenge__content'>
 				<div className='read-challenge__box'>
 					<div className='read-challenge__description'>Thử thách bản thân bạn để đọc nhiều sách hơn!</div>

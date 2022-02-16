@@ -1,0 +1,21 @@
+.form-field {
+	width: 100%;
+	background-color: $ash-background;
+	border-radius: 12px;
+	overflow: hidden;
+}
+
+.form-field-textarea {
+	width: 100%;
+	padding: 0.75rem 1rem;
+	outline: none;
+	background-color: inherit;
+	resize: none;
+}
+
+.form-field-label {
+	font-size: 0.875rem;
+	font-weight: 600;
+	line-height: 1.5;
+	color: $ash;
+}

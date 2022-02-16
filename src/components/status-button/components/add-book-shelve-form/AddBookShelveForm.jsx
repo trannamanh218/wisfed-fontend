@@ -1,7 +1,7 @@
 import { Field, Form, Formik } from 'formik';
 import { titleBookShelve } from 'helpers/Validation';
 import React from 'react';
-import PropsTypes from 'prop-types';
+import PropTypes from 'prop-types';
 
 const AddBookShelveForm = ({ updateBookShelve, setShowInput, showInput, addBookShelves }) => {
 	const handleSubmit = values => {
@@ -57,10 +57,10 @@ const AddBookShelveForm = ({ updateBookShelve, setShowInput, showInput, addBookS
 };
 
 AddBookShelveForm.propTypes = {
-	updateBookShelve: PropsTypes.func,
-	setShowInput: PropsTypes.func,
-	showInput: PropsTypes.bool,
-	addBookShelves: PropsTypes.func,
+	updateBookShelve: PropTypes.func,
+	setShowInput: PropTypes.func,
+	showInput: PropTypes.bool,
+	addBookShelves: PropTypes.func,
 };
 
 export default AddBookShelveForm;

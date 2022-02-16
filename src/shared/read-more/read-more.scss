@@ -1,0 +1,12 @@
+@import 'src/scss/abstracts/_variables.scss';
+
+.read-more {
+	font-size: 1rem;
+	line-height: 1.5;
+	text-align: justify;
+
+	&__btn {
+		margin-left: 5px;
+		color: $blue;
+	}
+}

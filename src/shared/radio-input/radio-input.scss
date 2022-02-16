@@ -1,0 +1,29 @@
+@import 'src/scss/abstracts/_variables.scss';
+
+.radio-input {
+	&-container {
+		&.form-check {
+			&:hover {
+				background-color: unset;
+				.form-check-label--custom {
+					color: unset;
+				}
+			}
+		}
+	}
+	&.form-check-input:checked[type='radio'] {
+		background-image: url('../../assets/icons/check-default.svg') !important;
+		background-color: unset !important;
+		border: 2px solid $ash !important;
+		background-size: 10px 10px;
+	}
+
+	&.form-check-input:checked[type='radio'] ~ .form-check-label {
+		color: $ash !important;
+	}
+
+	&.was-validated .form-check-input:valid,
+	&.form-check-input.is-valid ~ .form-check-label {
+		color: $ash-placeholder;
+	}
+}

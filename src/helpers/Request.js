@@ -6,10 +6,8 @@ class Request {
 	constructor() {
 		this.token = '';
 		const token = Storage.getAccessToken();
-		this.partition = process.env.REACT_APP_PARTITION;
 		const headers = {
 			'Content-Type': 'application/json',
-			'Partition': this.partition,
 		};
 
 		if (token) {
@@ -27,8 +25,9 @@ class Request {
 			transformResponse: [
 				data => {
 					if (data) {
-						if (!data.hasOwnProperty('success') || data.success) return data;
-						else {
+						if (!data.hasOwnProperty('success') || data.success) {
+							return JSON.parse(data).data;
+						} else {
 							const err = { response: { data } };
 							throw err;
 						}

@@ -1,5 +1,5 @@
 import React from 'react';
-import PropsTypes from 'prop-types';
+import PropTypes from 'prop-types';
 
 const StatusItem = ({ item }) => {
 	return (
@@ -16,7 +16,7 @@ const StatusItem = ({ item }) => {
 };
 
 StatusItem.propTypes = {
-	item: PropsTypes.object.isRequired,
+	item: PropTypes.object.isRequired,
 };
 
 export default StatusItem;

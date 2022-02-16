@@ -23,7 +23,7 @@
 }
 
 .form-check-input:checked[type='radio'] {
-	background-image: unset !important;
+	background-image: unset;
 	border: none;
 }
 
@@ -47,6 +47,7 @@
 	align-items: center;
 	gap: 1.125em;
 	border-radius: 12px;
+	padding-left: 1.5rem;
 	&:hover {
 		background-color: $secondary;
 		.form-check-label--custom {

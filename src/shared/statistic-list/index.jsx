@@ -1,13 +1,14 @@
 import React from 'react';
-import PropsTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import DualColumn from 'shared/dual-column';
+import classNames from 'classnames';
 import './statistic-list.scss';
 
 const StatisticList = props => {
-	const { background, list, title, isBackground } = props;
+	const { background, list, title, isBackground, className } = props;
 
 	return (
-		<div className='statistic'>
+		<div className={classNames('statistic', { [`${className}`]: className })}>
 			<h4 className={`statistic-title ${isBackground ? 'custom' : ''}`}>{title}</h4>
 			<DualColumn list={list} isBackground={isBackground} background={background} />
 		</div>
@@ -18,13 +19,15 @@ StatisticList.defaultProps = {
 	list: [],
 	background: 'light',
 	title: 'Tên chủ đề',
+	className: '',
 };
 
 StatisticList.propTypes = {
-	list: PropsTypes.array,
-	title: PropsTypes.string.isRequired,
-	isBackground: PropsTypes.bool.isRequired,
-	background: PropsTypes.oneOf([
+	list: PropTypes.array,
+	title: PropTypes.string.isRequired,
+	isBackground: PropTypes.bool.isRequired,
+	className: PropTypes.string,
+	background: PropTypes.oneOf([
 		'primary',
 		'primary-light',
 		'primary-dark',

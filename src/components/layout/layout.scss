@@ -1,7 +1,7 @@
-@import "src/scss/abstracts/_global.scss";
+@import 'src/scss/abstracts/_global.scss';
 
 .layout {
-	width: 80%;
+	max-width: 1440px;
 	margin: 0 auto;
 	min-height: 100vh;
 	background-color: $secondary;

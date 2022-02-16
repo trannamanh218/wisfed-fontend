@@ -1,0 +1,79 @@
+@import 'src/scss/abstracts/_variables.scss';
+
+.main-category-detail {
+	&__header {
+		display: flex;
+		align-items: center;
+		margin-bottom: 2rem;
+		h4 {
+			margin-bottom: 0;
+			margin-left: 20px;
+		}
+
+		.btn-like {
+			margin-left: auto;
+			width: 180px;
+			&:hover {
+				.heart-icon {
+					color: inherit;
+				}
+			}
+
+			&.active {
+				.heart-icon {
+					svg {
+						fill: $primary;
+						path {
+							stroke: none;
+						}
+					}
+				}
+			}
+
+			&.btn-outline-primary {
+				&.active {
+					background-color: unset;
+					color: $primary-dark;
+				}
+			}
+		}
+
+		.heart-icon {
+			display: inline-block;
+			margin-right: 0.825rem;
+			color: $primary;
+		}
+	}
+
+	&__intro {
+		padding: 1.5rem 2.5rem;
+		border-radius: 16px;
+		margin-bottom: 2.5rem;
+		background: $white;
+		font-size: 1rem;
+		font-weight: 400;
+		line-height: 1.5;
+		color: $ash-body;
+		text-align: justify;
+	}
+
+	&__container {
+		padding: 1.5rem 2.5rem;
+		background: $white;
+		border-radius: 16px;
+	}
+
+	&__allbook {
+		margin-top: 2.5rem;
+		text-align: right;
+		.books {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 1rem;
+		}
+
+		h4 {
+			text-align: left;
+		}
+	}
+}

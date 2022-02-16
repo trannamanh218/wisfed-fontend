@@ -1,5 +1,5 @@
 import React from 'react';
-import PropsTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import { Like, Comment, Share, LikeFill } from 'components/svg';
 import './post-action-bar.scss';
 
@@ -37,8 +37,8 @@ PostActionBar.defaultProps = {
 };
 
 PostActionBar.propTypes = {
-	postInformations: PropsTypes.object.isRequired,
-	likeAction: PropsTypes.func,
+	postInformations: PropTypes.object.isRequired,
+	likeAction: PropTypes.func,
 };
 
 export default PostActionBar;

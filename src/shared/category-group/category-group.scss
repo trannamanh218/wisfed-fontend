@@ -1,0 +1,29 @@
+@import 'src/scss/abstracts/_variables.scss';
+
+.category-group {
+	margin-top: 2.5rem;
+	text-align: right;
+	border-bottom: 1px solid $grey-border;
+	h4 {
+		text-align: left;
+	}
+	&__link {
+		display: inline-block;
+		margin-top: 2rem;
+		margin: 2rem 0 1.5rem;
+		font-size: 1rem;
+		font-weight: 600;
+		line-height: 1.5;
+		text-decoration: underline;
+		color: $blue;
+		&:hover {
+			color: $blue;
+		}
+	}
+
+	&__slider {
+		.book-thumbnail {
+			margin-right: 16px;
+		}
+	}
+}

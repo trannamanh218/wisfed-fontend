@@ -3,9 +3,11 @@ import WrapIcon from 'components/wrap-icon';
 import React, { useState } from 'react';
 import { Modal } from 'react-bootstrap';
 import StatusModalContainer from './StatusModalContainer';
+import classNames from 'classnames';
+import PropTypes from 'prop-types';
 import './status-button.scss';
 
-const StatusButton = () => {
+const StatusButton = ({ className }) => {
 	const [modalShow, setModalShow] = useState(false);
 	const [currentStatus, setCurrentStatus] = useState({
 		'title': 'Đã đọc',
@@ -55,7 +57,11 @@ const StatusButton = () => {
 
 	return (
 		<>
-			<button className='btn btn-status btn-primary' data-testid='btn-modal' onClick={handleShow}>
+			<button
+				className={classNames('btn btn-status btn-primary', { [`${className}`]: className })}
+				data-testid='btn-modal'
+				onClick={handleShow}
+			>
 				<WrapIcon className='btn-status__icon' component={currentStatus.icon} />
 				<span>{currentStatus.title}</span>
 			</button>
@@ -77,22 +83,14 @@ const StatusButton = () => {
 						setBookShelves={setBookShelves}
 						handleConfirm={handleConfirm}
 					/>
-					{/* <StatusButtonList currentStatus={currentStatus} handleChangeStatus={handleChangeStatus} />
-					{bookShelves.length && <BookShelvesList list={bookShelves} />}
-					<AddBookShelveForm
-						showInput={showInput}
-						updateBookShelve={updateBookShelve}
-						addBookShelves={addBookShelves}
-						setBookShelves={setBookShelves}
-						setShowInput={setShowInput}
-					/>
-					<button className='status-book-modal__confirm btn btn-primary' onClick={handleConfirm}>
-						Xác nhận
-					</button> */}
 				</Modal.Body>
 			</Modal>
 		</>
 	);
+};
+
+StatusButton.propTypes = {
+	className: PropTypes.string,
 };
 
 export default StatusButton;

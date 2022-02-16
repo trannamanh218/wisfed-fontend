@@ -4,8 +4,11 @@ import ReadingBook from 'shared/reading-book';
 import TheBooksWantsToRead from './components/the-books-wants-to-read';
 import ReadChallenge from 'shared/read-challenge';
 import GroupShortcuts from './components/group-shortcuts';
+import { useFetchQuoteRandom } from 'api/quote.hooks';
 
 const Sidebar = () => {
+	const { quoteRandom } = useFetchQuoteRandom();
+
 	return (
 		<div className='sidebar'>
 			<GroupShortcuts />
@@ -13,14 +16,14 @@ const Sidebar = () => {
 				<h4 className='sidebar__block__title'>Quotes</h4>
 				<div className='sidebar__block__content'>
 					<div className='quotes__content'>
-						<p>“Mỗi trang sách hay đều là một hành trình kỳ diệu”</p>
-						<p className='quotes__content__author-name'>James</p>
+						<p>{`“ ${quoteRandom?.quote} ”`}</p>
+						<p className='quotes__content__author-name'>{quoteRandom.authorName || ''}</p>
 					</div>
 					<button className='sidebar__view-more-btn--blue'>Xem thêm</button>
 				</div>
 			</div>
 			<div className='sidebar__block'>
-				<h4 className='sidebar__block__title'>Danh mục cá nhân</h4>
+				<h4 className='sidebar__block__title'>Giá sách</h4>
 				<div className='sidebar__block__content'>
 					<div className='personal-category__box'>
 						<div className='personal-category__item'>

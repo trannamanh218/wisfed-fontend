@@ -1,0 +1,23 @@
+.main-profile {
+	width: 100%;
+
+	.tab-pane {
+		&.active {
+			padding: 2.5rem;
+		}
+	}
+
+	&__tabs {
+		&.nav-tabs {
+			gap: 1.5rem;
+			.nav-link {
+				font-weight: 600;
+				line-height: 1.5;
+			}
+		}
+	}
+
+	.favorite-quotes {
+		margin-top: 3.75rem;
+	}
+}

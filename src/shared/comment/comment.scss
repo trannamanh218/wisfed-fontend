@@ -2,6 +2,7 @@
 
 .comment {
 	display: flex;
+	width: fit-content;
 	&__container {
 		max-width: 41.5rem;
 		margin-bottom: 0.3em;
