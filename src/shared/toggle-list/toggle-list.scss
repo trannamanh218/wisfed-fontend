@@ -1,0 +1,23 @@
+@import 'src/scss/abstracts/_variables.scss';
+
+.toggle-item,
+.toggle-btn {
+	font-size: 0.825rem;
+	font-weight: 500;
+	line-height: 1.5;
+}
+
+.toggle-item {
+	margin: 1.5rem 0;
+	color: $ash;
+	cursor: pointer;
+	&:hover {
+		font-weight: 600;
+	}
+}
+
+.toggle-btn {
+	.view-caret {
+		margin-right: 1rem;
+	}
+}

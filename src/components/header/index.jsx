@@ -18,7 +18,9 @@ const Header = () => {
 	return (
 		<div className='header'>
 			<div className='header__left'>
-				<LogoIcon className='header__logo' />
+				<Link to='/'>
+					<LogoIcon className='header__logo' />
+				</Link>
 				<div className='header__search'>
 					<img className='header__search__icon' src={SearchIcon} alt='search-icon' />
 					<input className='header__search__input' placeholder='Tìm kiếm trên Wisfeed' />
@@ -32,24 +34,26 @@ const Header = () => {
 					</Link>
 				</li>
 				<li className={classNames('header__nav__item', { active: activeLink === '/category' })}>
-					<Link className='header__nav__link' to='category'>
+					<Link className='header__nav__link' to='/category'>
 						<CategoryIcon className='header__nav__icon' />
 					</Link>
 				</li>
 				<li className={classNames('header__nav__item', { active: activeLink === '/shelves' })}>
-					<Link className='header__nav__link' to='shelves'>
+					<Link className='header__nav__link' to='/shelves'>
 						{activeLink === '/shelves' ? <BookFillIcon /> : <BookIcon />}
 					</Link>
 				</li>
 				<li className={classNames('header__nav__item', { active: activeLink === '/group' })}>
-					<Link className='header__nav__link' to='group'>
+					<Link className='header__nav__link' to='/group'>
 						<GroupIcon className='header__nav__icon' />
 					</Link>
 				</li>
 			</ul>
 			<div className='header__userInfo'>
 				<div className='header__notify__icon' />
-				<img className='header__avatar' src={avatar} alt='avatar' />
+				<Link to='/profile'>
+					<img className='header__avatar' src={avatar} alt='avatar' />
+				</Link>
 			</div>
 		</div>
 	);

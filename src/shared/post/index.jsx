@@ -36,29 +36,6 @@ function Post({ postInformations, likeAction, className }) {
 			<div className='post__description'>Saw this place today, it looks even better in-person!</div>
 
 			{postInformations.bookImage !== '' && <PostBook postInformations={postInformations} />}
-
-			{/* <div className='post__options'>
-				<div
-					data-testid='post__options__like-btn'
-					className='post__options__item '
-					onClick={() => likeAction(postInformations)}
-				>
-					{postInformations.isLike ? <LikeFill /> : <Like />}
-					<div className='post__options__action-name'>{postInformations.likes} Thích</div>
-				</div>
-				<div className='post__options__item'>
-					<Comment />
-					<div className='post__options__action-name'>7 Bình luận</div>
-				</div>
-				<div className='post__options__item'>
-					<Share />
-					<div className='post__options__action-name'>54 Chia sẻ</div>
-				</div> */}
-			{/* <div className='post__options__item'>
-					<ActionPlus />
-					<div className='post__options__action-name'>10 Add sách</div>
-				</div> */}
-			{/* </div> */}
 			<PostActionBar postInformations={postInformations} likeAction={likeAction} />
 			<div className='post__comments-box'>
 				<div className='post__comments-box__avatar'>

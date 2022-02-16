@@ -10,6 +10,7 @@
 
 :root {
 	--toggle-row: 3;
+	--placeholder-editor: '';
 }
 
 html {
@@ -115,4 +116,23 @@ h4 {
 	height: 38px;
 	border-radius: 50%;
 	background: #f5e7d8;
+	&.dropdown-toggle {
+		&::after {
+			display: none;
+		}
+	}
+}
+
+div[contenteditable='true'] {
+	-webkit-user-modify: read-write-plaintext-only;
+	line-height: 1.5;
+	color: $ash-body;
+	font-family: inherit;
+	outline: 0px solid transparent;
+	background-color: inherit;
+}
+
+.blank-content {
+	font-size: 0.875rem;
+	margin-bottom: 0.5rem;
 }

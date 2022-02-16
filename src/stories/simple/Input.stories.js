@@ -19,6 +19,5 @@ export const Default = Template.bind({});
 export const Gray = Template.bind({});
 Gray.args = {
 	placeholder: 'Vui lòng nhập thêm thông tin...',
-	backgroundColor: '#f7f7fc',
 	isBorder: false,
 };

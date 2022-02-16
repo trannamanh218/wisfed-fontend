@@ -8,7 +8,7 @@ const CategoryGroup = ({ list, title }) => {
 	return (
 		<div className='category-group'>
 			<BookSlider className='category-group__slider' title={title} list={list} size='lg' />
-			<Link to='/category/detail' className='category-group__link'>
+			<Link to='/' className='category-group__link'>
 				Xem tất cả
 			</Link>
 		</div>
@@ -17,6 +17,7 @@ const CategoryGroup = ({ list, title }) => {
 
 CategoryGroup.propTypes = {
 	list: PropTypes.array,
+	title: PropTypes.string,
 };
 
 export default CategoryGroup;

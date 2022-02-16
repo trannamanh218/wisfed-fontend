@@ -15,5 +15,6 @@
 .mainContainer__main {
 	max-width: 58rem;
 	margin-right: 2.5em;
-	overflow: hidden;
+	// overflow: hidden;
+	flex-grow: 1;
 }

@@ -6,7 +6,7 @@ import UserAvatar from 'shared/user-avatar';
 import './quote-card.scss';
 
 const QuoteCard = props => {
-	const { data, badges } = props;
+	const { data, badges, isDetail, quoteData } = props;
 	return (
 		<div className='quote-card'>
 			<p className='quote-body'>{data.content}</p>
@@ -22,7 +22,7 @@ const QuoteCard = props => {
 					<BadgeList list={badges} className='quote-footer__badge' />
 				</div>
 				<div className='quote-footer__right'>
-					<QuoteActionBar />
+					<QuoteActionBar data={quoteData} isDetail={isDetail} />
 				</div>
 			</div>
 		</div>
@@ -37,13 +37,23 @@ QuoteCard.defaultProps = {
 		avatar: '',
 		author: 'Mai Nguyễn',
 		bookName: 'Đắc nhân tâm',
+		quoteData: {
+			likeNumberss: 0,
+			shareNumbers: 0,
+			commentNumbers: 0,
+			isShare: false,
+			isLike: false,
+		},
 	},
+	isDetail: false,
 	badges: [{ title: 'lorem 1' }, { title: 'lorem2' }],
 };
 
 QuoteCard.propTypes = {
 	data: PropTypes.object,
 	badges: PropTypes.array,
+	isDetail: PropTypes.bool,
+	quoteData: PropTypes.object,
 };
 
 export default QuoteCard;

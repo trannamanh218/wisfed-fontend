@@ -1,0 +1,24 @@
+@import 'src/scss/abstracts/_variables.scss';
+
+.editor {
+	max-height: 300px;
+	padding: 0.5rem;
+	position: relative;
+	overflow-y: auto;
+	/* width */
+	&::-webkit-scrollbar {
+		width: 8px;
+	}
+
+	/* Track */
+	&::-webkit-scrollbar-track {
+		box-shadow: inset 0 0 10px $ash-line;
+		border-radius: 10px;
+	}
+
+	/* Handle */
+	&::-webkit-scrollbar-thumb {
+		background: #bcc0c4;
+		border-radius: 10px;
+	}
+}

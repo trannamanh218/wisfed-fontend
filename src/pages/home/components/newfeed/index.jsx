@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 import './newfeed.scss';
 import { Configure } from 'components/svg';
-import Post from '../../../../shared/post';
+import Post from 'shared/post';
 import CreatPost from './components/creat-post';
 import avatar from 'assets/images/avatar.png';
 import sampleBookImg from 'assets/images/sample-book-img.jpg';
+import { useEffect } from 'react';
+import { getPostList } from 'reducers/redux-utils/post';
+import { useDispatch } from 'react-redux';
 
 const DATA = [
 	{
@@ -66,6 +69,25 @@ const DATA = [
 
 const NewFeed = () => {
 	const [postData, setPostData] = useState(DATA);
+	const dispatch = useDispatch();
+
+	useEffect(() => {
+		getData();
+	}, []);
+
+	const getData = async () => {
+		const query = {
+			start: 0,
+			limit: 10,
+			sort: JSON.stringify([{ 'direction': 'DESC', 'property': 'createdAt' }]),
+		};
+
+		try {
+			await dispatch(getPostList(query));
+		} catch (err) {
+			return;
+		}
+	};
 
 	const likeAction = param => {
 		if (param.isLike) {

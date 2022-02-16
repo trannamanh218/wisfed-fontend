@@ -1,0 +1,17 @@
+@import 'src/scss/abstracts/_variables.scss';
+
+.sidebar-quote {
+	display: flex;
+	flex-direction: column;
+	gap: 3.75rem;
+	&__category {
+		margin-top: 1rem;
+	}
+
+	&__search {
+		width: 100%;
+		max-width: 280px;
+		border: 1px solid $ash-placeholder;
+		margin-bottom: 0.5rem;
+	}
+}

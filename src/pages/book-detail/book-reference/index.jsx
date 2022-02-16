@@ -3,7 +3,7 @@ import BookSlider from 'shared/book-slider';
 import StatisticList from 'shared/statistic-list';
 import './book-reference.scss';
 
-const BookReference = props => {
+const BookReference = () => {
 	const bookList = new Array(10).fill({ source: '/images/book1.jpg', name: 'Design pattern' });
 	const statisticList = [
 		{ name: 'Muốn đọc', quantity: 30 },

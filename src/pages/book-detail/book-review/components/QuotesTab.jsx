@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import FilterPane from 'shared/filter-pane';
 import FitlerOptions from 'shared/filter-options';
-import QuoteCard from 'shared/quote-card';
+import QuoteList from 'shared/quote-list';
 
 const QuotesTab = ({ list }) => {
 	const filterOptions = [
@@ -29,9 +29,7 @@ const QuotesTab = ({ list }) => {
 				className='quote-tab__filter__options'
 			/>
 
-			{list.length
-				? list.map((item, index) => <QuoteCard key={`quote-${index}`} data={item.data} badges={item.badges} />)
-				: null}
+			<QuoteList list={list} />
 		</FilterPane>
 	);
 };

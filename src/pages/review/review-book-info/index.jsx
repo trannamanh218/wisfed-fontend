@@ -7,7 +7,7 @@ import './review-book-info.scss';
 const ReviewBookInfo = () => {
 	return (
 		<div className='review-book-info'>
-			<BookThumbnail className='review-book-info__image' size='lg' />
+			<BookThumbnail className='review-book-info__image' size='lg' source='/images/book1.jpg' />
 			<div className='review-book-info__content'>
 				<h1 className='review-book-info__name'>
 					The Mystery of Briony Lodge - Bí mật của Briony Lodge bản dịch 2021

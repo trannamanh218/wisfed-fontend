@@ -1,15 +1,19 @@
 import Header from 'components/header';
 import React from 'react';
-import { Outlet } from "react-router-dom";
+import PropTypes from 'prop-types';
 import './layout.scss';
 
-const Layout = () => {
+const Layout = ({ children }) => {
 	return (
 		<div className='layout'>
-			<Header/>
-			<Outlet/>
+			<Header />
+			<div>{children}</div>
 		</div>
 	);
+};
+
+Layout.propTypes = {
+	children: PropTypes.any.isRequired,
 };
 
 export default Layout;
