@@ -1,6 +1,6 @@
 import WrapIcon from 'components/wrap-icon';
 import React from 'react';
-import PropsTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import './style.scss';
 
@@ -27,9 +27,9 @@ const StatusIconItem = ({ item, currentStatus, handleChangeStatus }) => {
 };
 
 StatusIconItem.propTypes = {
-	item: PropsTypes.object.isRequired,
-	currentStatus: PropsTypes.object.isRequired,
-	handleChangeStatus: PropsTypes.func,
+	item: PropTypes.object.isRequired,
+	currentStatus: PropTypes.object.isRequired,
+	handleChangeStatus: PropTypes.func,
 };
 
 export default StatusIconItem;

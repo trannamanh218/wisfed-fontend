@@ -1,7 +1,7 @@
 import React from 'react';
 import Rating from 'react-rating';
 import { Star } from 'components/svg';
-import PropsTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import './react-rating.scss';
 
 const ReactRating = ({ initialRating, stop = 5, handleChange, readonly, fractions }) => {
@@ -20,11 +20,11 @@ const ReactRating = ({ initialRating, stop = 5, handleChange, readonly, fraction
 };
 
 ReactRating.propTypes = {
-	initialRating: PropsTypes.number,
-	stop: PropsTypes.number,
-	fractions: PropsTypes.number,
-	handleChange: PropsTypes.func,
-	readonly: PropsTypes.bool,
+	initialRating: PropTypes.number,
+	stop: PropTypes.number,
+	fractions: PropTypes.number,
+	handleChange: PropTypes.func,
+	readonly: PropTypes.bool,
 };
 
 export default ReactRating;

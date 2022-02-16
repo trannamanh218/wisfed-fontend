@@ -1,0 +1,11 @@
+@import 'src/scss/abstracts/_variables.scss';
+
+.create-quote {
+	&__editor {
+		position: relative;
+	}
+
+	&__placeholder {
+		position: absolute;
+	}
+}

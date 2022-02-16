@@ -1,5 +1,5 @@
 import React from 'react';
-import PropsTypes from 'prop-types';
+import PropTypes from 'prop-types';
 
 const WrapIcon = ({ component: Component, ...rest }) => {
 	return (
@@ -10,8 +10,8 @@ const WrapIcon = ({ component: Component, ...rest }) => {
 };
 
 WrapIcon.propTypes = {
-	component: PropsTypes.any.isRequired,
-	rest: PropsTypes.any,
+	component: PropTypes.any.isRequired,
+	rest: PropTypes.any,
 };
 
 export default WrapIcon;

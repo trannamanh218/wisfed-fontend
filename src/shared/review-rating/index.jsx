@@ -1,13 +1,14 @@
 import React from 'react';
 import ReactRating from 'shared/react-rating';
-import PropsTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import RatingLevel from 'shared/rating-level';
+import classNames from 'classnames';
 import './review-rating.scss';
 
 const ReviewRating = props => {
-	const { list, ratingLevel, ratingTotal } = props;
+	const { list, ratingLevel, ratingTotal, className } = props;
 	return (
-		<div className='review-rating'>
+		<div className={classNames('review-rating', { [`${className}`]: className })}>
 			<div className='review-rating__left'>
 				<ReactRating readonly={true} initialRating={4.2} />
 				<p>{ratingLevel} sao</p>
@@ -24,12 +25,14 @@ ReviewRating.defaultProps = {
 	list: [],
 	ratingTotal: 0,
 	ratingLevel: 0,
+	className: '',
 };
 
 ReviewRating.propTypes = {
-	list: PropsTypes.array,
-	ratingTotal: PropsTypes.number,
-	ratingLevel: PropsTypes.number,
+	list: PropTypes.array,
+	ratingTotal: PropTypes.number,
+	ratingLevel: PropTypes.number,
+	className: PropTypes.string,
 };
 
 export default ReviewRating;

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import AddBookShelveForm from './components/add-book-shelve-form/AddBookShelveForm';
 import BookShelvesList from './components/book-shelves-list/BookShelvesList';
 import StatusBookList from './components/status-book/StatusBookList';
-import PropsTypes from 'prop-types';
+import PropTypes from 'prop-types';
 
 const StatusModalContainer = ({
 	currentStatus,
@@ -43,12 +43,12 @@ StatusModalContainer.defaultProps = {
 };
 
 StatusModalContainer.propTypes = {
-	currentStatus: PropsTypes.object,
-	handleChangeStatus: PropsTypes.func,
-	bookShelves: PropsTypes.array,
-	updateBookShelve: PropsTypes.func,
-	setBookShelves: PropsTypes.func,
-	handleConfirm: PropsTypes.func,
+	currentStatus: PropTypes.object,
+	handleChangeStatus: PropTypes.func,
+	bookShelves: PropTypes.array,
+	updateBookShelve: PropTypes.func,
+	setBookShelves: PropTypes.func,
+	handleConfirm: PropTypes.func,
 };
 
 export default StatusModalContainer;

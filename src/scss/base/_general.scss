@@ -8,6 +8,11 @@
 	box-sizing: border-box;
 }
 
+:root {
+	--toggle-row: 3;
+	--placeholder-editor: '';
+}
+
 html {
 	width: 100%;
 	height: 100%;
@@ -78,7 +83,56 @@ button {
 a {
 	text-decoration: none;
 	color: inherit;
+	cursor: pointer;
 	&:hover {
 		color: inherit;
 	}
+}
+
+h4 {
+	font-size: 1.25rem;
+	font-weight: 600;
+	margin-bottom: 24px;
+	color: $ash;
+}
+
+.view-all-link {
+	display: block;
+	margin-top: 2rem;
+	margin: 2rem 0 0;
+	font-size: 1rem;
+	font-weight: 600;
+	line-height: 1.5;
+	text-decoration: underline;
+	color: $blue;
+	text-align: right;
+	&:hover {
+		color: $blue;
+	}
+}
+
+.filter-pane__btn {
+	width: 38px;
+	height: 38px;
+	border-radius: 50%;
+	background: #f5e7d8;
+	&.dropdown-toggle {
+		&::after {
+			display: none;
+		}
+	}
+}
+
+div[contenteditable='true'] {
+	-webkit-user-modify: read-write-plaintext-only;
+	line-height: 1.5;
+	color: $ash-body;
+	font-family: inherit;
+	outline: 0px solid transparent;
+	background-color: inherit;
+}
+
+.blank-content {
+	font-size: 0.875rem;
+	margin-bottom: 0.5rem;
 }

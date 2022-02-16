@@ -26,7 +26,16 @@ import { ReactComponent as Image } from 'assets/icons/image.svg';
 import { ReactComponent as TwoDots } from 'assets/icons/two-dots.svg';
 import { ReactComponent as BackArrow } from 'assets/icons/back-arrow.svg';
 import { ReactComponent as Search } from 'assets/icons/search.svg';
+import { ReactComponent as Heart } from 'assets/icons/heart.svg';
+import { ReactComponent as Eye } from 'assets/icons/eye.svg';
+import { ReactComponent as HiddenEye } from 'assets/icons/hide-eye.svg';
+import { ReactComponent as Clock } from 'assets/icons/clock.svg';
+import { ReactComponent as Restrict } from 'assets/icons/restrict.svg';
 import { ReactComponent as Pencil } from 'assets/icons/pencil.svg';
+import { ReactComponent as QuoteIcon } from 'assets/icons/quote.svg';
+import { ReactComponent as Global } from 'assets/icons/global.svg';
+import { ReactComponent as Forward } from 'assets/icons/forward.svg';
+import { ReactComponent as CheckIcon } from 'assets/icons/check.svg';
 
 export {
 	HomeIcon,
@@ -58,4 +67,13 @@ export {
 	BackArrow,
 	Search,
 	Pencil,
+	Heart,
+	Eye,
+	HiddenEye,
+	Clock,
+	Restrict,
+	QuoteIcon,
+	Global,
+	Forward,
+	CheckIcon,
 };

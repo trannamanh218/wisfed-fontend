@@ -1,0 +1,27 @@
+@import 'src/scss/abstracts/_variables.scss';
+
+.quote-links {
+	&__card {
+		border-radius: 16px;
+		background-color: $white;
+	}
+
+	&__item {
+		padding: 1.5rem 1rem;
+
+		&:not(:last-of-type) {
+			border-bottom: 1px solid $grey-border;
+		}
+
+		&__content {
+			font-size: 1rem;
+			font-weight: 600;
+			line-height: 1.5;
+		}
+
+		span {
+			font-size: 0.75rem;
+			color: $ash-label;
+		}
+	}
+}

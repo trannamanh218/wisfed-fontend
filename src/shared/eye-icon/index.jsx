@@ -1,11 +1,14 @@
 import React from 'react';
-import eyeIcon from 'assets/images/eye.svg';
-import hideEyeIcon from 'assets/images/hide-eye.svg';
-import PropsTypes from 'prop-types';
+import PropTypes from 'prop-types';
+import { Eye, HiddenEye } from 'components/svg';
 import './eye-icon.scss';
 
 const EyeIcon = ({ isPublic, handlePublic }) => {
-	return <img className='eye-icon' src={isPublic ? eyeIcon : hideEyeIcon} alt='eye' onClick={handlePublic} />;
+	return (
+		<span className='eye-icon' onClick={handlePublic}>
+			{isPublic ? <Eye /> : <HiddenEye />}
+		</span>
+	);
 };
 
 EyeIcon.defaultProps = {
@@ -14,8 +17,8 @@ EyeIcon.defaultProps = {
 };
 
 EyeIcon.propTypes = {
-	isPublic: PropsTypes.bool.isRequired,
-	handlePublic: PropsTypes.func,
+	isPublic: PropTypes.bool.isRequired,
+	handlePublic: PropTypes.func,
 };
 
 export default EyeIcon;

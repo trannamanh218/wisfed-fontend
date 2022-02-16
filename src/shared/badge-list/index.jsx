@@ -1,6 +1,6 @@
 import React from 'react';
 import { Badge } from 'react-bootstrap';
-import PropsTypes from 'prop-types';
+import PropTypes from 'prop-types';
 
 const BadgeList = ({ list, className }) => {
 	if (list && list.length) {
@@ -20,8 +20,8 @@ BadgeList.defaultProps = {
 };
 
 BadgeList.propType = {
-	list: PropsTypes.array,
-	className: PropsTypes.string,
+	list: PropTypes.array,
+	className: PropTypes.string,
 };
 
 export default BadgeList;

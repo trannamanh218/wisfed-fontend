@@ -1,11 +1,11 @@
 import React from 'react';
 import defaultAvatar from 'assets/images/avatar.jpeg';
-import PropsTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import './user-avatar.scss';
 
 const UserAvatar = ({ source, name, size, handleClick, className }) => {
 	return (
-		<div className={`user-avatar user-avatar-${size} ${className ? className : null}`} onClick={handleClick}>
+		<div className={`user-avatar user-avatar-${size} ${className ? className : ''}`} onClick={handleClick}>
 			<img
 				className='user-avatar__img'
 				src={source || defaultAvatar}
@@ -24,11 +24,11 @@ UserAvatar.defaultProps = {
 };
 
 UserAvatar.propTypes = {
-	source: PropsTypes.string.isRequired,
-	name: PropsTypes.string,
-	size: PropsTypes.oneOf(['sm', 'md', 'lg']),
-	handleClick: PropsTypes.func,
-	className: PropsTypes.string,
+	source: PropTypes.string.isRequired,
+	name: PropTypes.string,
+	size: PropTypes.oneOf(['sm', 'md', 'lg', 'xl']),
+	handleClick: PropTypes.func,
+	className: PropTypes.string,
 };
 
 export default UserAvatar;

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import BookThumbnail from 'shared/book-thumbnail';
 import ReactRating from 'shared/react-rating';
-import PropsTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import './book-item.scss';
 import SettingMore from 'shared/setting-more';
 import EyeIcon from 'shared/eye-icon';
@@ -59,14 +59,14 @@ BookItem.defaultProps = {
 };
 
 BookItem.propTypes = {
-	data: PropsTypes.shape({
-		source: PropsTypes.string.isRequired,
-		name: PropsTypes.string,
-		author: PropsTypes.string.isRequired,
-		rating: PropsTypes.number.isRequired,
-		isPublic: PropsTypes.bool,
+	data: PropTypes.shape({
+		source: PropTypes.string.isRequired,
+		name: PropTypes.string,
+		author: PropTypes.string.isRequired,
+		rating: PropTypes.number.isRequired,
+		isPublic: PropTypes.bool,
 	}),
-	isMyShelve: PropsTypes.bool,
-	handleClick: PropsTypes.func,
+	isMyShelve: PropTypes.bool,
+	handleClick: PropTypes.func,
 };
 export default BookItem;

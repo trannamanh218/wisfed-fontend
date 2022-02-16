@@ -214,6 +214,8 @@ function CreatPostSubModal({ option, backToMainModal, images, deleteImage }) {
 CreatPostSubModal.propTypes = {
 	option: PropTypes.string,
 	backToMainModal: PropTypes.func,
+	images: PropTypes.array,
+	deleteImage: PropTypes.func,
 };
 
 export default CreatPostSubModal;
