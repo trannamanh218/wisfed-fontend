@@ -32,50 +32,50 @@ const settingsSlider = {
 	touchMove: true,
 	nextArrow: <SlideNextBtn />,
 	prevArrow: <SlidePrevBtn />,
-	responsive: [
-		{
-			breakpoint: 1025,
-			settings: {
-				slidesToShow: 3,
-				slidesToScroll: 3,
-			},
-		},
-		{
-			breakpoint: 992,
-			settings: {
-				slidesToShow: 2,
-				slidesToScroll: 2,
-			},
-		},
-		{
-			breakpoint: 769,
-			settings: {
-				slidesToShow: 2,
-				slidesToScroll: 2,
-			},
-		},
-		{
-			breakpoint: 576,
-			settings: {
-				slidesToShow: 2,
-				slidesToScroll: 2,
-			},
-		},
-		{
-			breakpoint: 420,
-			settings: {
-				slidesToShow: 1,
-				slidesToScroll: 1,
-			},
-		},
-		{
-			breakpoint: 320,
-			settings: {
-				slidesToShow: 1,
-				slidesToScroll: 1,
-			},
-		},
-	],
+	// responsive: [
+	// 	{
+	// 		breakpoint: 1025,
+	// 		settings: {
+	// 			slidesToShow: 3,
+	// 			slidesToScroll: 3,
+	// 		},
+	// 	},
+	// 	{
+	// 		breakpoint: 992,
+	// 		settings: {
+	// 			slidesToShow: 2,
+	// 			slidesToScroll: 2,
+	// 		},
+	// 	},
+	// 	{
+	// 		breakpoint: 769,
+	// 		settings: {
+	// 			slidesToShow: 2,
+	// 			slidesToScroll: 2,
+	// 		},
+	// 	},
+	// 	{
+	// 		breakpoint: 576,
+	// 		settings: {
+	// 			slidesToShow: 2,
+	// 			slidesToScroll: 2,
+	// 		},
+	// 	},
+	// 	{
+	// 		breakpoint: 420,
+	// 		settings: {
+	// 			slidesToShow: 1,
+	// 			slidesToScroll: 1,
+	// 		},
+	// 	},
+	// 	{
+	// 		breakpoint: 320,
+	// 		settings: {
+	// 			slidesToShow: 1,
+	// 			slidesToScroll: 1,
+	// 		},
+	// 	},
+	// ],
 };
 
 SlideNextBtn.propTypes = {

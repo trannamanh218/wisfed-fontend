@@ -4,6 +4,7 @@ import { useEffect, useState, useRef } from 'react';
 import classNames from 'classnames';
 import Slider from 'react-slick';
 import settingsSlider from './settingsSlider';
+import PropTypes from 'prop-types';
 
 function CreatQuotesModal({ hideCreatQuotesModal }) {
 	const [showTextFieldEditPlaceholder, setShowTextFieldEditPlaceholder] = useState(true);
@@ -36,6 +37,9 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 		'to bottom right, #C5FFAA, #00BAC6',
 		'to bottom right, #FDFD9B, #F9F906, #C7C705',
 	];
+
+	const authorData = ['Nguyễn Hiến Lê', 'Quang Huy', 'Đỗ Gia'];
+
 	useEffect(() => {
 		textFieldEdit.current.focus();
 	}, [backgroundColor]);
@@ -209,5 +213,9 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 		</div>
 	);
 }
+
+CreatQuotesModal.propTypes = {
+	hideCreatQuotesModal: PropTypes.func,
+};
 
 export default CreatQuotesModal;

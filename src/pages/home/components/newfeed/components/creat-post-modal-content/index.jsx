@@ -85,7 +85,7 @@ function CreatPostModalContent({ hideCreatPostModal }) {
 
 	const addImages = e => {
 		const obj = Object.entries(e.target.files);
-		let newArrayFile = [...images];
+		const newArrayFile = [...images];
 		obj.forEach(item => newArrayFile.push(item[1]));
 		setImages(newArrayFile);
 	};
