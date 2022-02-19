@@ -120,7 +120,6 @@ function CreatPostModalContent({ hideCreatPostModal }) {
 	};
 
 	const deleteImage = imageIndex => {
-		console.log(imageIndex);
 		const newImagesArray = [...images];
 		newImagesArray.splice(imageIndex, 1);
 		setImages(newImagesArray);

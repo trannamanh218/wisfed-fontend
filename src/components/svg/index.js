@@ -36,6 +36,8 @@ import { ReactComponent as QuoteIcon } from 'assets/icons/quote.svg';
 import { ReactComponent as Global } from 'assets/icons/global.svg';
 import { ReactComponent as Forward } from 'assets/icons/forward.svg';
 import { ReactComponent as CheckIcon } from 'assets/icons/check.svg';
+import { ReactComponent as WeatherStars } from 'assets/icons/weather-stars.svg';
+import { ReactComponent as BackChevron } from 'assets/icons/back-chevron.svg';
 
 export {
 	HomeIcon,
@@ -76,4 +78,6 @@ export {
 	Global,
 	Forward,
 	CheckIcon,
+	WeatherStars,
+	BackChevron,
 };

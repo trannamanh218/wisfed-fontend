@@ -1,0 +1,283 @@
+@import 'src/scss/abstracts/_global.scss';
+
+.creat-quotes-modal-container {
+	width: 100%;
+	height: 100%;
+	position: fixed;
+	top: 0;
+	left: 0;
+	display: flex;
+	justify-content: center;
+	z-index: 1000;
+	background-color: rgba(217, 219, 233, 0.5);
+	overflow-y: auto;
+	padding: 80px;
+}
+
+.creat-quotes-modal-content {
+	width: 640px;
+	height: fit-content;
+	background-color: white;
+	border-radius: 16px;
+	position: relative;
+	overflow: hidden;
+}
+
+// creat quotes header
+.creat-quotes-modal__header {
+	padding: 16px 24px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	h5 {
+		margin: 0;
+		font-weight: 600;
+		color: $ash;
+		line-height: 2rem;
+		font-size: 1.25rem;
+	}
+}
+
+.creat-quotes-modal__header__close {
+	padding: 8px;
+	background-color: #eff0f6;
+	border-radius: 50%;
+	svg {
+		width: 20px;
+		height: 20px;
+	}
+}
+
+// creat quotes body
+.creat-quotes-modal__body {
+	border-top: #f1f1f5 1px solid;
+	border-bottom: #f1f1f5 1px solid;
+}
+
+.creat-quotes-modal__body__text-field-edit-wrapper {
+	width: 100%;
+	position: relative;
+	&.default {
+		height: 150px;
+		margin-top: 20px;
+		padding: 0 8px 0 24px;
+	}
+	&.has-background {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		height: 300px;
+		padding: 24px 8px 24px 24px;
+	}
+}
+
+.creat-quotes-modal__body__text-field-edit {
+	width: 100%;
+	outline: none;
+	z-index: 1000;
+	position: relative;
+	overflow-x: hidden;
+	overflow-y: scroll;
+	&.default {
+		min-height: 50px;
+		max-height: 150px;
+		color: $ash;
+		line-height: 1.5rem;
+	}
+	&.has-background {
+		min-height: 32px;
+		max-height: 240px;
+		color: white;
+		font-size: 20px;
+		font-weight: 600;
+		line-height: 32px;
+		text-align: center;
+		padding-right: 8px;
+	}
+}
+
+.creat-quotes-modal__body__text-field-edit::-webkit-scrollbar {
+	width: 8px;
+}
+
+.creat-quotes-modal__body__text-field-edit::-webkit-scrollbar-thumb {
+	border-radius: 10px;
+	background-color: #cfcfcf;
+}
+
+.creat-quotes-modal__body__text-field-edit::-webkit-scrollbar-track {
+	background-color: transparent;
+}
+
+.creat-quotes-modal__body__text-field-placeholder {
+	position: absolute;
+	z-index: 1;
+	&.default {
+		top: 0;
+		left: 24px;
+		line-height: 1.5rem;
+		color: #a0a3bd;
+	}
+	&.has-background {
+		width: 100%;
+		height: 100%;
+		top: 0;
+		left: 0;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		font-size: 20px;
+		font-weight: 600;
+		line-height: 32px;
+		color: white;
+		opacity: 0.7;
+	}
+	&.hide {
+		display: none;
+	}
+}
+
+//-----------------------------------------------------------------------------
+
+.creat-quotes-modal__body__select-background-container {
+	position: relative;
+	margin: 16px 24px 0 24px;
+	.slick-arrow {
+		display: flex !important;
+		justify-content: center;
+		border-radius: 50%;
+		background-color: rgba(20, 20, 43, 0.4) !important;
+		z-index: 1000;
+		width: 24px !important;
+		height: 24px !important;
+		padding: 0.3rem !important;
+		&:before {
+			display: none;
+		}
+		&:hover {
+			background-color: rgba(20, 20, 43, 0.7) !important;
+		}
+	}
+
+	.slick-prev {
+		left: 47px !important;
+	}
+
+	.slick-next {
+		right: 47px !important;
+	}
+
+	.slick-disabled {
+		display: none !important;
+	}
+
+	.slick-list {
+		padding: 4px 0 4px 18px;
+		height: 52px;
+	}
+}
+
+.creat-quotes-modal__body__select-background-button-box {
+	z-index: 1500;
+	background-color: white;
+	position: absolute;
+	left: -24px;
+	width: 92px;
+	padding: 4px 0;
+	display: flex;
+	justify-content: center;
+}
+
+.creat-quotes-modal__body__select-background {
+	border-radius: 50%;
+	padding: 12px;
+
+	svg {
+		width: 20px;
+		height: 20px;
+	}
+	&.open-button {
+		background-image: linear-gradient(to right, #fec790, #f991f7);
+	}
+	&.close-button {
+		background-color: #eff0f6;
+	}
+}
+
+.creat-quotes-modal__body__select-background-box {
+	margin-left: 50px;
+	transition: all 0.4s ease-in;
+	max-width: 100%;
+	transform: translateX(-100%);
+	visibility: hidden;
+	&.show {
+		transform: translateX(0%);
+		visibility: visible;
+	}
+}
+
+.creat-quotes-modal__body__select-background-box-item {
+	margin-right: 24px;
+	button {
+		width: 44px;
+		height: 44px;
+		outline: transparent 4px solid !important;
+		border-radius: 8px;
+		&.active {
+			outline: #e0af7e 4px solid !important;
+		}
+	}
+}
+
+//-----------------------------------------------------------------------------
+
+.creat-quotes-modal__body__add-options {
+	padding: 0 24px 24px;
+}
+
+.creat-quotes-modal__body__option-item {
+	margin-top: 32px;
+}
+
+.creat-quotes-modal__body__option-item__title {
+	font-size: 14px;
+	font-weight: 600;
+	line-height: 1.25rem;
+}
+
+.creat-quotes-modal__body__option-item__search-container {
+	margin-top: 16px;
+	padding: 16px 24px;
+	border-radius: 12px;
+	background-color: $ash-background;
+	display: flex;
+	align-items: center;
+	svg {
+		width: 18px;
+		height: 18px;
+	}
+	input {
+		width: 95%;
+		background-color: unset;
+		margin-left: 16px;
+		outline: none;
+		font-size: 14px;
+	}
+}
+
+// creat quotes footer
+.creat-quotes-modal__footer {
+	padding: 24px;
+	button {
+		width: 100%;
+		padding: 16px;
+		border-radius: 12px;
+		background-color: $ash-line;
+		color: $ash-placeholder;
+		font-weight: 600;
+		&.active {
+			background-color: $primary;
+			color: white;
+		}
+	}
+}
