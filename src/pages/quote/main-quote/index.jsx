@@ -3,7 +3,6 @@ import BackButton from 'shared/back-button';
 import FilterQuotePane from 'shared/fitler-quote-pane';
 import QuoteCard from 'shared/quote-card';
 import SearchField from 'shared/search-field';
-import CreateQuote from '../create-quote';
 import './main-quote.scss';
 
 const MainQuote = () => {
@@ -40,7 +39,6 @@ const MainQuote = () => {
 				<h4>Quotes của Adam</h4>
 				<SearchField className='main-quote__search' placeholder='Tìm kiếm theo sách, tác giả, chủ đề ...' />
 			</div>
-			<CreateQuote />
 			<FilterQuotePane
 				filterOptions={filterOptions}
 				handleChangeOption={handleChangeOption}
