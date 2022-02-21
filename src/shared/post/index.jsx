@@ -4,10 +4,11 @@ import { useState, useRef } from 'react';
 import PostBook from 'shared/post-book';
 import PostActionBar from 'shared/post-action-bar';
 import classNames from 'classnames';
+import UserAvatar from 'shared/user-avatar';
+import { calculateDurationTime } from 'helpers/Common';
 
 function Post({ postInformations, likeAction, className }) {
 	const [commentContent, setCommentContent] = useState('');
-
 	const commentArea = useRef(null);
 
 	const updateCommentCotent = e => {
@@ -19,27 +20,30 @@ function Post({ postInformations, likeAction, className }) {
 	return (
 		<div className={classNames('post__container', { [`${className}`]: className })}>
 			<div className='post__user-status'>
-				<div className='post__user-status__avatar'>
-					<img data-testid='post__user-avatar' src={postInformations.userAvatar} alt='' />
-				</div>
+				<UserAvatar
+					data-testid='post__user-avatar'
+					className='post__user-status__avatar'
+					source={postInformations?.userAvatar}
+				/>
+
 				<div className='post__user-status__name-and-post-time-status'>
 					<div data-testid='post__user-name' className='post__user-status__name'>
-						{postInformations.userName}
+						{postInformations.actor}
 					</div>
 					<div className='post__user-status__post-time-status'>
-						<span>1 giờ trước</span>
+						<span>{calculateDurationTime(postInformations.time)}</span>
 						<div className='post__user-status__post-time-status__online-dot'></div>
 						<span style={{ color: '#656773' }}>Cập nhật tiến độ đọc sách</span>
 					</div>
 				</div>
 			</div>
-			<div className='post__description'>Saw this place today, it looks even better in-person!</div>
+			<div className='post__description'>{postInformations.message}</div>
 
-			{postInformations.bookImage !== '' && <PostBook postInformations={postInformations} />}
+			{postInformations.book && <PostBook postInformations={postInformations} />}
 			<PostActionBar postInformations={postInformations} likeAction={likeAction} />
 			<div className='post__comments-box'>
 				<div className='post__comments-box__avatar'>
-					<img src={postInformations.userAvatar} alt='' />
+					<UserAvatar size='sm' source={postInformations.userAvatar} />
 				</div>
 				<textarea
 					ref={commentArea}

@@ -7,7 +7,7 @@ import arrowPrev from 'assets/images/arrow-chevron-back.png';
 import './book-slider.scss';
 import classNames from 'classnames';
 
-const BookSlider = ({ list, title, className, size = 'sm' }) => {
+const BookSlider = ({ list, title = '', className, size = 'sm', ...rest }) => {
 	const settingSlider = settings();
 	if (list && list.length) {
 		return (
@@ -16,7 +16,15 @@ const BookSlider = ({ list, title, className, size = 'sm' }) => {
 				<div className='book-slider__content'>
 					<Slider {...settingSlider}>
 						{list.map((item, index) => (
-							<BookThumbnail key={index} source={item.source} name={item.name} size={size} />
+							<BookThumbnail
+								key={index}
+								{...item}
+								data={item}
+								source={item.source}
+								name={item.name}
+								size={size}
+								{...rest}
+							/>
 						))}
 					</Slider>
 				</div>
@@ -26,7 +34,6 @@ const BookSlider = ({ list, title, className, size = 'sm' }) => {
 
 	return (
 		<div className={classNames('book-slider', { [`${className}`]: className })}>
-			<h4 className='book-slider__title'>Sách muốn đọc</h4>
 			<p>Không có dữ liệu</p>
 		</div>
 	);
@@ -112,13 +119,13 @@ function settings() {
 
 BookSlider.defaultProps = {
 	list: [],
-	title: 'Sách muốn đọc',
+	title: '',
 	className: '',
 };
 
 BookSlider.propTypes = {
 	list: PropTypes.array.isRequired,
-	title: PropTypes.string.isRequired,
+	title: PropTypes.string,
 	className: PropTypes.string,
 	size: PropTypes.oneOf(['sm', 'md', 'lg']),
 };

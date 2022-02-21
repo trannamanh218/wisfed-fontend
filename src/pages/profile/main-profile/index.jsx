@@ -12,6 +12,7 @@ const MainProfile = () => {
 		<div className='main-profile'>
 			<PersonalInfo />
 			<Tabs className='main-profile__tabs' defaultActiveKey={'infor'}>
+				{/*Notes: Chỉ hiển thị khi user là tác giả, không public */}
 				<Tab eventKey='books' title='Sách của tác giả'>
 					Lorem ipsum dolor sit amet.
 				</Tab>

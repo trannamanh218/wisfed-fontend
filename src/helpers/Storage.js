@@ -11,18 +11,6 @@ class Storage {
 		return this.setItem('accessToken', value);
 	}
 
-	sessionPartitionStorage() {
-		return this.sessionPartition('partition');
-	}
-
-	getPartition() {
-		return this.getItem('partition');
-	}
-
-	setPartition(value) {
-		return this.setItem('partition', value);
-	}
-
 	setRefreshToken(value) {
 		return this.setItem('refreshToken', value);
 	}

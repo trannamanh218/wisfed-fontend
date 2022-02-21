@@ -10,9 +10,10 @@ import MyQuote from 'pages/quote/my-quote';
 import Review from 'pages/review';
 import BookShelves from 'pages/shelves';
 import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { Routes, Route } from 'react-router-dom';
 import { login } from 'reducers/redux-utils/auth';
+import { ToastContainer } from 'react-toastify';
 import 'scss/main.scss';
 
 function App() {
@@ -20,8 +21,8 @@ function App() {
 
 	useEffect(() => {
 		const params = {
-			email: 'thuyheobeo@gmail.com',
-			password: '12345678',
+			email: 'admin@gmail.com',
+			password: '123456',
 		};
 
 		fetchLogin(params);
@@ -36,19 +37,32 @@ function App() {
 	};
 
 	return (
-		<Routes>
-			<Route path='/category' element={<Category />} />
-			<Route path='/category/detail' element={<CategoryDetail />} />
-			<Route path='/shelves' element={<BookShelves />} />
-			<Route path='/group' element={<Group />} />
-			<Route path='/book/detail' element={<BookDetail />} />
-			<Route path='/review' element={<Review />} />
-			<Route path='/quote' element={<Quote />} />
-			<Route path='/quote/me' element={<MyQuote />} />
-			<Route path='/quote/detail' element={<QuoteDetail />} />
-			<Route path='/profile' element={<Profile />} />
-			<Route path='/' element={<Home />} />
-		</Routes>
+		<div>
+			<ToastContainer
+				position='top-center'
+				autoClose={5000}
+				hideProgressBar={false}
+				newestOnTop={false}
+				closeOnClick
+				rtl={false}
+				pauseOnFocusLoss
+				draggable
+				pauseOnHover
+			/>
+			<Routes>
+				<Route path='/category' element={<Category />} />
+				<Route path='/category/detail' element={<CategoryDetail />} />
+				<Route path='/shelves' element={<BookShelves />} />
+				<Route path='/group' element={<Group />} />
+				<Route path='/book/detail' element={<BookDetail />} />
+				<Route path='/review' element={<Review />} />
+				<Route path='/quote' element={<Quote />} />
+				<Route path='/quote/me' element={<MyQuote />} />
+				<Route path='/quote/detail' element={<QuoteDetail />} />
+				<Route path='/profile' element={<Profile />} />
+				<Route path='/' element={<Home />} />
+			</Routes>
+		</div>
 	);
 }
 

@@ -1,13 +1,14 @@
-import React, { useState } from 'react';
-import './newfeed.scss';
-import { Configure } from 'components/svg';
-import Post from 'shared/post';
-import CreatPost from './components/creat-post';
+import { useFetchActivities } from 'api/activity.hooks';
 import avatar from 'assets/images/avatar.png';
 import sampleBookImg from 'assets/images/sample-book-img.jpg';
-import { useEffect } from 'react';
-import { getPostList } from 'reducers/redux-utils/post';
-import { useDispatch } from 'react-redux';
+import { Configure } from 'components/svg';
+import { generateQueryString } from 'helpers/Common';
+import _ from 'lodash';
+import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
+import Post from 'shared/post';
+import CreatPost from './components/creat-post';
+import './newfeed.scss';
 
 const DATA = [
 	{
@@ -69,25 +70,15 @@ const DATA = [
 
 const NewFeed = () => {
 	const [postData, setPostData] = useState(DATA);
-	const dispatch = useDispatch();
+	const [isNewPost, setIsNewPost] = useState(false);
+	const { userInfo = {} } = useSelector(state => state.auth);
+	const query = generateQueryString({
+		start: 0,
+		limit: 0,
+		sort: JSON.stringify([{ 'direction': 'DESC', 'property': 'createdAt' }]),
+	});
 
-	useEffect(() => {
-		getData();
-	}, []);
-
-	const getData = async () => {
-		const query = {
-			start: 0,
-			limit: 10,
-			sort: JSON.stringify([{ 'direction': 'DESC', 'property': 'createdAt' }]),
-		};
-
-		try {
-			await dispatch(getPostList(query));
-		} catch (err) {
-			return;
-		}
-	};
+	const { activity: postList } = useFetchActivities(query, isNewPost);
 
 	const likeAction = param => {
 		if (param.isLike) {
@@ -106,16 +97,20 @@ const NewFeed = () => {
 		setPostData(newData);
 	};
 
+	const onChangeNewPost = () => {
+		setIsNewPost(true);
+	};
+
 	return (
 		<div className='newfeed'>
 			<div className='newfeed__header'>
 				<p>Bảng tin</p>
 				<Configure />
 			</div>
-			<CreatPost />
+			{!_.isEmpty(userInfo) && <CreatPost onChangeNewPost={onChangeNewPost} />}
 
-			{postData.length > 0 &&
-				postData.map(item => <Post key={item.id} postInformations={item} likeAction={likeAction} />)}
+			{postList.length > 0 &&
+				postList.map(item => <Post key={item.id} postInformations={item} likeAction={likeAction} />)}
 		</div>
 	);
 };

@@ -50,6 +50,41 @@
 	padding: 24px 10px 24px 24px;
 	border-top: #f1f1f5 1px solid;
 	border-bottom: #f1f1f5 1px solid;
+	.tagged {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 10px;
+		margin-bottom: 1.5rem;
+	}
+
+	.badge {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		width: fit-content;
+		gap: 5px;
+		padding: 0.75rem 1.25rem;
+		border-radius: 10px;
+		font-size: 0.75rem;
+
+		svg {
+			width: 16px;
+			height: 16px;
+			path {
+				stroke: currentColor;
+			}
+		}
+	}
+
+	.tagged-book {
+		display: inline-block;
+		margin-bottom: 1.125rem;
+		color: $blue;
+	}
+
+	.post-edit-book {
+		margin-right: 14px;
+	}
 }
 
 .creat-post-modal-content__main__body__user-info {
@@ -123,6 +158,12 @@
 	i {
 		color: #4e4b66;
 		margin-left: 12px;
+	}
+
+	svg {
+		path {
+			stroke: $ash;
+		}
 	}
 	&.show {
 		display: block;
@@ -348,17 +389,19 @@
 			stroke: $ash;
 		}
 	}
+
 	&.active {
 		background-color: $primary;
+
 		svg {
 			path {
-				fill: white;
+				fill: $white-off;
 			}
 		}
 		.item-add-to-post-svg {
 			path {
 				fill: none;
-				stroke: white;
+				stroke: $white-off;
 			}
 		}
 	}
@@ -374,9 +417,12 @@
 	font-weight: 600;
 	line-height: 1.5rem;
 	color: #a0a3bd;
+	cursor: not-allowed;
+
 	&.active {
 		background-color: $primary;
 		color: #fcfcfc;
+		cursor: pointer;
 	}
 }
 
@@ -439,6 +485,36 @@
 		line-height: 1.5rem;
 		font-size: 1rem;
 		color: $ash;
+	}
+
+	.tagged {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 10px;
+		margin-bottom: 1.5rem;
+	}
+
+	.badge {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		width: fit-content;
+		gap: 5px;
+		padding: 0.75rem 1.25rem;
+		border-radius: 10px;
+		font-size: 0.75rem;
+
+		svg {
+			width: 16px;
+			height: 16px;
+			path {
+				stroke: currentColor;
+			}
+		}
+	}
+
+	.badge-book {
+		margin-bottom: 1.5rem;
 	}
 }
 
@@ -523,8 +599,8 @@
 
 .creat-post-modal-content__substitute__suggest-author-container {
 	display: flex;
-	justify-content: space-between;
 	margin-top: 32px;
+	gap: 1rem;
 }
 
 .creat-post-modal-content__substitute__suggest-author-item {
@@ -633,5 +709,33 @@
 		font-size: 14px;
 		font-weight: 600;
 		user-select: none;
+	}
+}
+
+.upload-image {
+	padding: 68px 0;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	background-color: $ash-background;
+	font-size: 1rem;
+	line-height: 1.5;
+	&__wrapper {
+		width: 100%;
+		border-radius: 12px;
+		border: #f1f1f5 1px solid;
+		padding: 10px;
+	}
+	&__icon {
+		margin-bottom: 1.25rem;
+	}
+	span {
+		color: $ash-label;
+	}
+
+	&__options {
+		width: fit-content;
+		height: fit-content;
+		overflow: hidden;
 	}
 }

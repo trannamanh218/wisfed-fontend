@@ -1,37 +1,25 @@
-import './style.scss';
-import { BackArrow, CloseX, Search } from 'components/svg';
-import { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
-import Slider from 'react-slick';
-import BookThumbnail from 'shared/book-thumbnail';
-import UserAvatar from 'shared/user-avatar';
-import settingsSlider from './settingsSlider';
-import noSearchResult from 'assets/images/no-search-result.png';
 import classNames from 'classnames';
+import { BackArrow, CloseX, Search } from 'components/svg';
+import _ from 'lodash';
+import PropTypes from 'prop-types';
+import { useCallback, useEffect, useRef } from 'react';
+import SuggestSection from './SuggestSection';
+import TaggedList from './TaggedList';
 
-function CreatPostSubModal({ option, backToMainModal, images, deleteImage }) {
-	const [optionName, setOptionName] = useState('');
-	const [inputSearchValue, setInputSearchValue] = useState('');
-	const [searchResult, setSearchResult] = useState([]);
-	// const [suggests, setSuggests] = useState([]);
-
-	useEffect(() => {
-		if (option === 'add-book') {
-			setOptionName('sách');
-		} else if (option === 'add-topic') {
-			setOptionName('chủ đề');
-		} else if (option === 'add-author') {
-			setOptionName('tác giả');
-		} else if (option === 'add-friends') {
-			setOptionName('bạn bè');
-		} else {
-			setOptionName('Chỉnh sửa ảnh');
-		}
-	}, [option]);
-
-	const updateInputSearchValue = e => {
-		setInputSearchValue(e.target.value);
-	};
+import './style.scss';
+function CreatPostSubModal(props) {
+	const {
+		option,
+		backToMainModal,
+		images,
+		deleteImage,
+		fetchSuggestion,
+		suggestionData,
+		handleAddToPost,
+		taggedData,
+		removeTaggedItem,
+	} = props;
+	const inputRef = useRef();
 
 	useEffect(() => {
 		if (images.length === 0) {
@@ -39,126 +27,28 @@ function CreatPostSubModal({ option, backToMainModal, images, deleteImage }) {
 		}
 	}, [images]);
 
-	const renderNoSearchResultText = () => {
-		switch (option) {
-			case 'add-book':
-				return <span>Không tìm thấy cuốn sách nào</span>;
-			case 'add-author':
-				return <span>Không tìm thấy tác giả</span>;
-			case 'add-friends':
-				return <span>Không tìm thấy bạn bè</span>;
-			case 'add-topic':
-				return <span>Không tìm thấy chủ đề</span>;
-		}
+	useEffect(() => {
+		fetchSuggestion('', option);
+	}, [option]);
+
+	const debounceSearch = useCallback(_.debounce(fetchSuggestion, 1000), []);
+
+	const updateInputSearchValue = e => {
+		debounceSearch(e.target.value, option);
 	};
 
-	const renderSearchResult = () => {
-		return (
-			<>
-				{inputSearchValue.trim().length > 0 ? (
-					<>
-						{searchResult.length > 0 ? (
-							<></>
-						) : (
-							<div className='creat-post-modal-content__substitute__no-search-result'>
-								<img src={noSearchResult} alt='no search result' />
-								{renderNoSearchResultText()}
-							</div>
-						)}
-					</>
-				) : (
-					<>{renderSuggest()}</>
-				)}
-			</>
-		);
-	};
-
-	const renderSuggest = () => {
-		switch (option) {
-			case 'add-book':
-				return (
-					<>
-						<h5>Gợi ý</h5>
-						{/* {suggests.length > 0 && ( */}
-						<Slider
-							{...settingsSlider}
-							className='creat-post-modal-content__substitute__suggest-book-container'
-						>
-							{[...Array(10)].map((item, index) => (
-								<div className='creat-post-modal-content__substitute__suggest-book-item' key={index}>
-									<BookThumbnail size='md' />
-									<div className='creat-post-modal-content__substitute__suggest-book-infomations'>
-										<div className='creat-post-modal-content__substitute__suggest-book-infomations__name'>
-											The Vegetarian A Novel Han Kang A Novel Han Kang
-										</div>
-										<div className='creat-post-modal-content__substitute__suggest-book-infomations__author'>
-											Han Kang Kang
-										</div>
-									</div>
-								</div>
-							))}
-						</Slider>
-						{/* )} */}
-					</>
-				);
-			case 'add-author':
-				return (
-					<>
-						<h5>Gợi ý</h5>
-						<div className='creat-post-modal-content__substitute__suggest-author-container'>
-							{[...Array(5)].map((item, index) => (
-								<div className='creat-post-modal-content__substitute__suggest-author-item' key={index}>
-									<UserAvatar size='lg' />
-									<div className='creat-post-modal-content__substitute__suggest-author__name'>
-										Nguyễn Thu Phương
-									</div>
-								</div>
-							))}
-						</div>
-					</>
-				);
-			case 'add-topic':
-				return (
-					<>
-						<h5>Gợi ý</h5>
-						<div className='creat-post-modal-content__substitute__suggest-topic-container'>
-							{[...Array(10)].map((item, index) => (
-								<button
-									className='creat-post-modal-content__substitute__suggest-topic-item'
-									key={index}
-								>
-									Kinh doanh
-								</button>
-							))}
-						</div>
-					</>
-				);
-			case 'add-friends':
-				return (
-					<>
-						<h5>Gợi ý</h5>
-						<div className='creat-post-modal-content__substitute__suggest-author-container'>
-							{[...Array(5)].map((item, index) => (
-								<div className='creat-post-modal-content__substitute__suggest-author-item' key={index}>
-									<UserAvatar size='lg' />
-									<div className='creat-post-modal-content__substitute__suggest-author__name'>
-										Trần Văn Đức
-									</div>
-								</div>
-							))}
-						</div>
-					</>
-				);
-		}
+	const handleComplete = () => {
+		backToMainModal();
+		inputRef.current.value = '';
 	};
 
 	return (
 		<>
 			<div className='creat-post-modal-content__substitute__header'>
-				<button className='creat-post-modal-content__substitute__back' onClick={backToMainModal}>
+				<button className='creat-post-modal-content__substitute__back' onClick={handleComplete}>
 					<BackArrow />
 				</button>
-				<h5>{option === 'modify-images' ? optionName : `Thêm ${optionName} vào bài viết`}</h5>
+				<h5>{option.value === 'modify-images' ? option.title : `Thêm ${option.title} vào bài viết`}</h5>
 				<button style={{ visibility: 'hidden' }} className='creat-post-modal-content__substitute__back'>
 					<BackArrow />
 				</button>
@@ -196,15 +86,43 @@ function CreatPostSubModal({ option, backToMainModal, images, deleteImage }) {
 						<div className='creat-post-modal-content__substitute__search-bar'>
 							<Search />
 							<input
+								ref={inputRef}
 								className='creat-post-modal-content__substitute__search-bar__input'
-								placeholder={`Tìm kiếm ${optionName} để thêm vào bài viết`}
-								value={inputSearchValue}
+								placeholder={`Tìm kiếm ${option.title} để thêm vào bài viết`}
 								onChange={updateInputSearchValue}
 							/>
 						</div>
-						<button className='creat-post-modal-content__substitute__search-bar__button'>Xong</button>
+						<button
+							className='creat-post-modal-content__substitute__search-bar__button'
+							onClick={handleComplete}
+						>
+							Xong
+						</button>
 					</div>
-					<div className='creat-post-modal-content__substitute__search-result'>{renderSearchResult()}</div>
+					<div className='creat-post-modal-content__substitute__search-result'>
+						{option.value === 'add-book' && !_.isEmpty(taggedData['add-book']) && (
+							<span
+								className='badge bg-primary-light badge-book'
+								onClick={() => removeTaggedItem(taggedData['add-book'], 'add-book')}
+							>
+								<span>{taggedData['add-book'].name}</span>
+								<CloseX />
+							</span>
+						)}
+						<TaggedList taggedData={taggedData} removeTaggedItem={removeTaggedItem} type={option.value} />
+
+						{suggestionData && suggestionData.length !== 0 && !inputRef.current.value && <h5>Gợi ý</h5>}
+						{suggestionData && suggestionData.length !== 0 && inputRef.current.value && (
+							<h5>Kết quả tìm kiếm</h5>
+						)}
+
+						<SuggestSection
+							option={option}
+							list={suggestionData}
+							handleAddToPost={handleAddToPost}
+							taggedData={taggedData}
+						/>
+					</div>
 				</div>
 			)}
 		</>
@@ -212,10 +130,15 @@ function CreatPostSubModal({ option, backToMainModal, images, deleteImage }) {
 }
 
 CreatPostSubModal.propTypes = {
-	option: PropTypes.string,
+	option: PropTypes.object,
 	backToMainModal: PropTypes.func,
 	images: PropTypes.array,
 	deleteImage: PropTypes.func,
+	suggestionData: PropTypes.array,
+	fetchSuggestion: PropTypes.func.isRequired,
+	handleAddToPost: PropTypes.func.isRequired,
+	taggedData: PropTypes.object,
+	removeTaggedItem: PropTypes.func,
 };
 
 export default CreatPostSubModal;
