@@ -1,31 +1,96 @@
-import './style.scss';
+import avatar from 'assets/images/avatar.png';
+import classNames from 'classnames';
 import {
-	CloseX,
-	WorldNet,
-	GroupIcon,
-	PodCast,
-	Lock,
 	BookIcon,
 	CategoryIcon,
+	CloseX,
 	Feather,
+	GroupIcon,
 	Image,
-	TwoDots,
+	Lock,
 	Pencil,
+	PodCast,
+	TwoDots,
+	WorldNet,
 } from 'components/svg';
-import { useEffect, useRef, useState } from 'react';
-import classNames from 'classnames';
-import avatar from 'assets/images/avatar.png';
+import { STATUS_IDLE, STATUS_LOADING, STATUS_SUCCESS } from 'constants';
+import _ from 'lodash';
 import PropTypes from 'prop-types';
+import { useEffect, useRef, useState } from 'react';
+import { Form } from 'react-bootstrap';
+import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
+import { createActivity, getSuggestionForPost } from 'reducers/redux-utils/activity';
+import PostEditBook from 'shared/post-edit-book';
+import OptionsPost from './OptionsPost';
+import ShareModeComponent from './ShareModeComponent';
+import './style.scss';
 import CreatPostSubModal from './sub-modal';
-function CreatPostModalContent({ hideCreatPostModal }) {
-	const [shareMode, setShareMode] = useState('public');
+import TaggedList from './TaggedList';
+import UploadImage from './UploadImage';
+
+function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option, onChangeOption, onChangeNewPost }) {
+	const [shareMode, setShareMode] = useState({ value: 'public', title: 'Mọi người', icon: <WorldNet /> });
 	const [show, setShow] = useState(false);
 	const [showTextFieldEditPlaceholder, setShowTextFieldEditPlaceholder] = useState(true);
-	const [showMainModal, setShowMainModal] = useState(true);
-	const [option, setOption] = useState('');
+	const [showMainModal, setShowMainModal] = useState(showModalCreatPost);
+	const [suggestionData, setSuggestionData] = useState([]);
 	const [images, setImages] = useState([]);
+	const mentionData = useRef({});
+	const [taggedData, setTaggedData] = useState({
+		'add-book': {},
+		'add-author': [],
+		'add-friends': [],
+		'add-topic': [],
+	});
 
+	const [status, setStatus] = useState(STATUS_IDLE);
+	const [showUpload, setShowUpload] = useState(false);
+	const dispatch = useDispatch();
 	const textFieldEdit = useRef(null);
+
+	const { userInfo } = useSelector(state => state.auth);
+
+	const optionList = [
+		{
+			value: 'add-book',
+			title: 'sách',
+			icon: <BookIcon />,
+			message: 'Không tìm thấy cuốn sách nào',
+		},
+
+		{
+			value: 'add-author',
+			title: 'tác giả',
+			icon: <Feather className='item-add-to-post-svg' />,
+			message: 'Không tìm thấy tác giả',
+		},
+		{
+			value: 'add-topic',
+			title: 'chủ đề',
+			icon: <CategoryIcon className='item-add-to-post-svg' />,
+			message: 'Không tìm thấy chủ đề',
+		},
+		{
+			value: 'add-friends',
+			title: 'bạn bè',
+			icon: <GroupIcon className='item-add-to-post-svg' />,
+			message: 'Không tìm thấy bạn bè',
+		},
+		{
+			value: 'modify-images',
+			title: 'chỉnh sửa ảnh',
+			icon: <Image />,
+			message: '',
+		},
+	];
+
+	const shareModeList = [
+		{ value: 'public', title: 'Mọi người', icon: <WorldNet /> },
+		{ value: 'friends', title: 'Bạn bè', icon: <GroupIcon /> },
+		{ value: 'followers', title: 'Người Follow', icon: <PodCast /> },
+		{ value: 'private', title: 'Chỉ mình tôi', icon: <Lock /> },
+	];
 
 	useEffect(() => {
 		textFieldEdit.current.focus();
@@ -33,61 +98,24 @@ function CreatPostModalContent({ hideCreatPostModal }) {
 
 	useEffect(() => {
 		textFieldEdit.current.addEventListener('input', () => {
-			if (textFieldEdit.current.innerText.length > 0) {
-				setShowTextFieldEditPlaceholder(false);
-			} else {
-				setShowTextFieldEditPlaceholder(true);
-			}
+			handlePlaceholder();
 		});
+
+		return document.removeEventListener('input', handlePlaceholder);
 	}, [showTextFieldEditPlaceholder]);
 
-	const renderShareModeSelected = () => {
-		switch (shareMode) {
-			case 'public':
-				return (
-					<>
-						<WorldNet />
-						<span>Mọi người</span>
-					</>
-				);
-			case 'friends':
-				return (
-					<>
-						<GroupIcon className='group-icon-svg' />
-						<span>Bạn bè</span>
-					</>
-				);
-			case 'followers':
-				return (
-					<>
-						<PodCast />
-						<span>Người Follow</span>
-					</>
-				);
-			case 'private':
-				return (
-					<>
-						<Lock />
-						<span>Chỉ mình tôi</span>
-					</>
-				);
+	useEffect(() => {
+		if (!_.isEmpty(option)) {
+			setShowMainModal(prev => !prev);
 		}
-	};
+	}, [option]);
 
-	const backToMainModal = () => {
-		setShowMainModal(true);
-	};
-
-	const addOptionsToPost = param => {
-		setOption(param);
-		setShowMainModal(false);
-	};
-
-	const addImages = e => {
-		const obj = Object.entries(e.target.files);
-		let newArrayFile = [...images];
-		obj.forEach(item => newArrayFile.push(item[1]));
-		setImages(newArrayFile);
+	const handlePlaceholder = () => {
+		if (textFieldEdit.current.innerText.length > 0) {
+			setShowTextFieldEditPlaceholder(false);
+		} else {
+			setShowTextFieldEditPlaceholder(true);
+		}
 	};
 
 	useEffect(() => {
@@ -114,16 +142,129 @@ function CreatPostModalContent({ hideCreatPostModal }) {
 		}
 	}, [images]);
 
+	const fetchSuggestion = async (input, option) => {
+		try {
+			const data = await dispatch(getSuggestionForPost({ input, option, userInfo })).unwrap();
+			setSuggestionData(data.rows);
+		} catch (err) {
+			return err;
+		}
+	};
+
+	const backToMainModal = () => {
+		setShowMainModal(true);
+	};
+
+	const addOptionsToPost = param => {
+		onChangeOption(param);
+	};
+
+	const addImages = e => {
+		const obj = Object.entries(e.target.files);
+		const newArrayFile = [...images];
+		obj.forEach(item => newArrayFile.push(item[1]));
+		setImages(newArrayFile);
+	};
+
+	const handleOpenUploadImage = () => {
+		setShowUpload(prev => !prev);
+	};
+
 	const removeImages = () => {
 		document.getElementById('image-upload').value = '';
 		setImages([]);
 	};
 
 	const deleteImage = imageIndex => {
-		console.log(imageIndex);
 		const newImagesArray = [...images];
 		newImagesArray.splice(imageIndex, 1);
 		setImages(newImagesArray);
+	};
+
+	const handleAddToPost = data => {
+		const newData = { ...taggedData };
+
+		if (option.value === 'add-author' || option.value === 'add-friends' || option.value === 'add-topic') {
+			const listData = [...taggedData[option.value]];
+			const lastItem = listData[listData.length - 1];
+
+			if (!listData.length || (!_.isEmpty(lastItem) && lastItem.id !== data.id)) {
+				listData.push(data);
+			}
+
+			newData[option.value] = listData;
+		} else if (option.value === 'add-book') {
+			newData[option.value] = data;
+		}
+
+		setTaggedData(newData);
+	};
+
+	const removeTaggedItem = (data, type) => {
+		if (type !== 'add-book') {
+			const currentTaggedList = taggedData[type];
+			const newList = currentTaggedList.filter(item => item.id !== data.id);
+			setTaggedData(prev => ({ ...prev, [type]: newList }));
+		} else {
+			setTaggedData(prev => ({ ...prev, [type]: {} }));
+		}
+	};
+
+	const onCreatePost = () => {
+		let mentionsUser = [];
+		let mentionsAuthor = [];
+
+		if (taggedData['add-friends'].length) {
+			mentionsUser = taggedData['add-friends'].map(item => item.id);
+		}
+		if (taggedData['add-author'].length) {
+			mentionsAuthor = taggedData['add-author'].map(item => item.id);
+		}
+
+		const params = {
+			msg: textFieldEdit?.current?.innerHTML,
+			mentionsUser,
+			mentionsAuthor,
+			image: [],
+		};
+
+		if (taggedData['add-book']) {
+			params['bookId'] = taggedData['add-book'].id;
+		}
+
+		// thieu tag topic
+		if (params.msg && (params.mentionsAuthor.length || params.bookId)) {
+			setStatus(STATUS_LOADING);
+
+			dispatch(createActivity(params))
+				.unwrap()
+				.then(() => {
+					setStatus(STATUS_SUCCESS);
+					toast.success('Tạo post thành công!');
+					onChangeNewPost();
+				})
+				.catch(err => {
+					const statusCode = err?.statusCode || 500;
+					setStatus(statusCode);
+					toast.error('Tạo post thất bại!');
+				})
+				.finally(() => {
+					hideCreatPostModal();
+					onChangeOption({});
+				});
+		}
+	};
+
+	const checkActive = () => {
+		let isActive = false;
+
+		if (
+			textFieldEdit.current?.innerHTML &&
+			(!_.isEmpty(taggedData['add-book']) || taggedData['add-author'].length)
+		) {
+			isActive = true;
+		}
+		return isActive;
 	};
 
 	return (
@@ -139,219 +280,207 @@ function CreatPostModalContent({ hideCreatPostModal }) {
 						<CloseX />
 					</button>
 				</div>
-				<div className='creat-post-modal-content__main__body'>
-					<div className='creat-post-modal-content__main__body__user-info'>
-						<div className='creat-post-modal-content__main__body__user-info__block-left'>
-							<img src={avatar} alt='' />
-						</div>
-						<div className='creat-post-modal-content__main__body__user-info__block-right'>
-							<p>Trần Thị Hoa</p>
-							<div className='creat-post-modal-content__main__body__user-info__share-mode-container'>
-								<div
-									className={classNames(
-										'creat-post-modal-content__main__body__user-info__share-mode',
-										{
-											'show': show,
-											'hide': !show,
-										}
-									)}
-									onClick={() => setShow(!show)}
-								>
-									<div className='creat-post-modal-content__main__body__user-info__share-mode__selected'>
-										{renderShareModeSelected()}
-										<div>
-											<i className='fas fa-caret-down'></i>
-										</div>
-									</div>
+				<Form
+					onSubmit={e => {
+						e.preventDefault();
+						onCreatePost();
+					}}
+				>
+					<div className='creat-post-modal-content__main__body'>
+						<div className='creat-post-modal-content__main__body__user-info'>
+							<div className='creat-post-modal-content__main__body__user-info__block-left'>
+								<img src={avatar} alt='avatar' />
+							</div>
+							<div className='creat-post-modal-content__main__body__user-info__block-right'>
+								<p>
+									{userInfo.fullName || userInfo.lastName || userInfo.firstName || 'Không xác định'}
+								</p>
+								<div className='creat-post-modal-content__main__body__user-info__share-mode-container'>
 									<div
 										className={classNames(
-											'creat-post-modal-content__main__body__user-info__share-mode__list',
+											'creat-post-modal-content__main__body__user-info__share-mode',
 											{
 												'show': show,
 												'hide': !show,
 											}
 										)}
+										onClick={() => setShow(!show)}
 									>
-										<div
-											className={classNames(
-												'creat-post-modal-content__main__body__user-info__share-mode__select-item',
-												{ 'show': shareMode !== 'public', 'hide': shareMode === 'public' }
-											)}
-											onClick={() => setShareMode('public')}
-										>
-											<WorldNet />
-											<span>Mọi người</span>
-										</div>
-										<div
-											className={classNames(
-												'creat-post-modal-content__main__body__user-info__share-mode__select-item',
-												{ 'show': shareMode !== 'friends', 'hide': shareMode === 'friends' }
-											)}
-											onClick={() => setShareMode('friends')}
-										>
-											<GroupIcon className='group-icon-svg' />
-											<span>Bạn bè</span>
-										</div>
-										<div
-											className={classNames(
-												'creat-post-modal-content__main__body__user-info__share-mode__select-item',
-												{ 'show': shareMode !== 'followers', 'hide': shareMode === 'followers' }
-											)}
-											onClick={() => setShareMode('followers')}
-										>
-											<PodCast />
-											<span>Người Follow</span>
-										</div>
-										<div
-											className={classNames(
-												'creat-post-modal-content__main__body__user-info__share-mode__select-item',
-												{ 'show': shareMode !== 'private', 'hide': shareMode === 'private' }
-											)}
-											onClick={() => setShareMode('private')}
-										>
-											<Lock />
-											<span>Chỉ mình tôi</span>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div className='creat-post-modal-content__main__body__text-field-edit-wrapper'>
-						<div
-							className='creat-post-modal-content__main__body__text-field-edit'
-							contentEditable={true}
-							ref={textFieldEdit}
-						></div>
-						<div
-							className={classNames('creat-post-modal-content__main__body__text-field-placeholder', {
-								'hide': !showTextFieldEditPlaceholder,
-							})}
-						>
-							Hãy chia sẻ cảm nhận của bạn về cuốn sách
-						</div>
-						<div
-							className={classNames('creat-post-modal-content__main__body__image-container', {
-								'one-image': images.length === 1,
-								'more-one-image': images.length > 1,
-							})}
-						>
-							<div className='creat-post-modal-content__main__body__image-box'>
-								{images.length > 0 && images.length < 6 ? (
-									<>
-										{images.map((image, index) => (
-											<div
-												key={index}
-												className={`creat-post-modal-content__main__body__image img-${index}`}
-											>
-												<img src={URL.createObjectURL(image)} alt='image' />
+										<div className='creat-post-modal-content__main__body__user-info__share-mode__selected'>
+											{shareMode.icon}
+											<span>{shareMode.title}</span>
+											<div>
+												<i className='fas fa-caret-down'></i>
 											</div>
-										))}
-									</>
-								) : (
-									<>
-										{images.length >= 6 && (
-											<>
-												{images.map((image, index) => {
-													if (index < 4) {
-														return (
-															<div
-																key={index}
-																className={`creat-post-modal-content__main__body__image img-${index}`}
-															>
-																<img src={URL.createObjectURL(image)} alt='image' />
-															</div>
-														);
-													}
-												})}
-												<div className={`creat-post-modal-content__main__body__image img-4`}>
-													<img src={URL.createObjectURL(images[4])} alt='image' />
-													<div className='creat-post-modal-content__main__body__image-over'>
-														+{images.length - 5}
-													</div>
-												</div>
-											</>
-										)}
-									</>
-								)}
-
-								<div className='creat-post-modal-content__main__body__image-options'>
-									<div className='creat-post-modal-content__main__body__image-options__block-left'>
-										<button
-											className='creat-post-modal-content__main__body__image-options__button'
-											onClick={() => addOptionsToPost('modify-images')}
+										</div>
+										<div
+											className={classNames(
+												'creat-post-modal-content__main__body__user-info__share-mode__list',
+												{
+													'show': show,
+													'hide': !show,
+												}
+											)}
 										>
-											<Pencil />
-											<span>Chỉnh sửa tất cả</span>
-										</button>
-										<label
-											htmlFor='image-upload'
-											className='creat-post-modal-content__main__body__image-options__button'
-										>
-											<Image />
-											<span>Thêm ảnh</span>
-										</label>
+											<ShareModeComponent
+												list={shareModeList}
+												shareMode={shareMode}
+												setShareMode={setShareMode}
+											/>
+										</div>
 									</div>
-									<button
-										className='creat-post-modal-content__main__body__image-options__delete-image'
-										onClick={removeImages}
-									>
-										<CloseX />
-									</button>
 								</div>
 							</div>
 						</div>
-					</div>
-				</div>
-				<div className='creat-post-modal-content__main__options-and-submit'>
-					<div className='creat-post-modal-content__main__options'>
-						<span>Thêm vào bài viết</span>
-						<div className='creat-post-modal-content__main__options__items'>
-							<button
-								className='creat-post-modal-content__main__options__item-add-to-post'
-								onClick={() => addOptionsToPost('add-book')}
+						<div className='creat-post-modal-content__main__body__text-field-edit-wrapper'>
+							<div
+								className='creat-post-modal-content__main__body__text-field-edit'
+								contentEditable={true}
+								ref={textFieldEdit}
+							></div>
+							<div
+								className={classNames('creat-post-modal-content__main__body__text-field-placeholder', {
+									'hide': !showTextFieldEditPlaceholder,
+								})}
 							>
-								<BookIcon />
-							</button>
-							<button
-								className='creat-post-modal-content__main__options__item-add-to-post'
-								onClick={() => addOptionsToPost('add-author')}
+								Hãy chia sẻ cảm nhận của bạn về cuốn sách
+							</div>
+							{/* <div
+								className={classNames('creat-post-modal-content__main__body__image-container', {
+									'one-image': images.length === 1,
+									'more-one-image': images.length > 1,
+								})}
 							>
-								<Feather className='item-add-to-post-svg' />
-							</button>
-							<button
-								className='creat-post-modal-content__main__options__item-add-to-post'
-								onClick={() => addOptionsToPost('add-topic')}
-							>
-								<CategoryIcon className='item-add-to-post-svg' />
-							</button>
-							<button
-								className='creat-post-modal-content__main__options__item-add-to-post'
-								onClick={() => addOptionsToPost('add-friends')}
-							>
-								<GroupIcon className='item-add-to-post-svg' />
-							</button>
-							<label
-								htmlFor='image-upload'
-								className='creat-post-modal-content__main__options__item-add-to-post'
-							>
-								<Image />
-							</label>
-							<input
-								id='image-upload'
-								type='file'
-								onChange={addImages}
-								accept='image/png, image/gif, image/jpeg'
-								multiple
+								<div className='creat-post-modal-content__main__body__image-box'>
+									{images.length > 0 && images.length < 6 ? (
+										<>
+											{images.map((image, index) => (
+												<div
+													key={index}
+													className={`creat-post-modal-content__main__body__image img-${index}`}
+												>
+													<img src={URL.createObjectURL(image)} alt='image' />
+												</div>
+											))}
+										</>
+									) : (
+										<>
+											{images.length >= 6 && (
+												<>
+													{images.map((image, index) => {
+														if (index < 4) {
+															return (
+																<div
+																	key={index}
+																	className={`creat-post-modal-content__main__body__image img-${index}`}
+																>
+																	<img src={URL.createObjectURL(image)} alt='image' />
+																</div>
+															);
+														}
+													})}
+													<div
+														className={`creat-post-modal-content__main__body__image img-4`}
+													>
+														<img src={URL.createObjectURL(images[4])} alt='image' />
+														<div className='creat-post-modal-content__main__body__image-over'>
+															+{images.length - 5}
+														</div>
+													</div>
+												</>
+											)}
+										</>
+									)}
+									<div className='creat-post-modal-content__main__body__image-options'>
+										<div className='creat-post-modal-content__main__body__image-options__block-left'>
+											<button
+												className='creat-post-modal-content__main__body__image-options__button'
+												onClick={() => addOptionsToPost(optionList[length - 1])}
+											>
+												<Pencil />
+												<span>Chỉnh sửa tất cả</span>
+											</button>
+											<label
+												htmlFor='image-upload'
+												className='creat-post-modal-content__main__body__image-options__button'
+											>
+												<Image />
+												<span>Thêm ảnh</span>
+											</label>
+										</div>
+										<button
+											className='creat-post-modal-content__main__body__image-options__delete-image'
+											onClick={removeImages}
+										>
+											<CloseX />
+										</button>
+									</div>
+								</div>
+							</div> */}
+							{!_.isEmpty(taggedData['add-book']) && (
+								<a href='#' className='tagged-book'>
+									{taggedData['add-book'].name}
+								</a>
+							)}
+							<TaggedList
+								taggedData={taggedData}
+								removeTaggedItem={removeTaggedItem}
+								type={'add-author'}
+							/>
+							<TaggedList
+								taggedData={taggedData}
+								removeTaggedItem={removeTaggedItem}
+								type={'add-topic'}
 							/>
 
-							<button className='creat-post-modal-content__main__options__item-add-to-post'>
-								<TwoDots />
-							</button>
+							{!_.isEmpty(taggedData['add-book']) && <PostEditBook data={taggedData['add-book']} />}
+							{showUpload && <UploadImage addOptionsToPost={addOptionsToPost} optionList={optionList} />}
 						</div>
 					</div>
-					<button className='creat-post-modal-content__main__submit'>Đăng</button>
-				</div>
+
+					<div className='creat-post-modal-content__main__options-and-submit'>
+						<div className='creat-post-modal-content__main__options'>
+							<span>Thêm vào bài viết</span>
+							<div className='creat-post-modal-content__main__options__items'>
+								<OptionsPost
+									list={optionList}
+									addOptionsToPost={addOptionsToPost}
+									taggedData={taggedData}
+								/>
+								<label
+									htmlFor='image-upload'
+									className='creat-post-modal-content__main__options__item-add-to-post'
+									onClick={handleOpenUploadImage}
+								>
+									<Image />
+								</label>
+								{/* <input
+									id='image-upload'
+									type='file'
+									onChange={addImages}
+									accept='image/png, image/gif, image/jpeg'
+									multiple
+								/> */}
+
+								<button className='creat-post-modal-content__main__options__item-add-to-post'>
+									<TwoDots />
+								</button>
+							</div>
+						</div>
+						<button
+							className={classNames('creat-post-modal-content__main__submit', {
+								'active': checkActive(),
+							})}
+							type='submit'
+							onSubmit={e => {
+								e.preventDefault();
+								onCreatePost();
+							}}
+						>
+							Đăng
+						</button>
+					</div>
+				</Form>
 			</div>
 			{/* sub modal */}
 			<div className={classNames('creat-post-modal-content__substitute', { 'show': !showMainModal })}>
@@ -360,6 +489,13 @@ function CreatPostModalContent({ hideCreatPostModal }) {
 					backToMainModal={backToMainModal}
 					images={images}
 					deleteImage={deleteImage}
+					optionList={optionList}
+					fetchSuggestion={fetchSuggestion}
+					suggestionData={suggestionData}
+					handleAddToPost={handleAddToPost}
+					mentionData={mentionData.current}
+					taggedData={taggedData}
+					removeTaggedItem={removeTaggedItem}
 				/>
 			</div>
 		</div>
@@ -368,6 +504,10 @@ function CreatPostModalContent({ hideCreatPostModal }) {
 
 CreatPostModalContent.propTypes = {
 	hideCreatPostModal: PropTypes.func,
+	showModalCreatPost: PropTypes.bool,
+	option: PropTypes.object,
+	onChangeOption: PropTypes.func,
+	onChangeNewPost: PropTypes.func,
 };
 
 export default CreatPostModalContent;

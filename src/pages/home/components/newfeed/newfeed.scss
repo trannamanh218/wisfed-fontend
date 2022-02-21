@@ -35,13 +35,8 @@
 }
 
 .newfeed__creat-post__avatar {
-	width: 6.2%;
-	border-radius: 50%;
-	overflow: hidden;
-	img {
-		width: 100%;
-		object-fit: cover;
-	}
+	width: 40px;
+	height: 40px;
 }
 
 .newfeed__creat-post__input {
@@ -95,6 +90,11 @@
 		path {
 			stroke: $primary;
 			fill: $primary;
+		}
+	}
+	&--friend {
+		path {
+			stroke: $primary;
 		}
 	}
 }

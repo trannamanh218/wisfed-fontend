@@ -2,14 +2,16 @@ import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { LogoIcon, BookFillIcon, BookIcon, CategoryIcon, GroupIcon, HomeIcon } from 'components/svg';
 import SearchIcon from 'assets/icons/search.svg';
-import avatar from 'assets/images/avatar.png';
 import classNames from 'classnames';
 import './header.scss';
+import { useSelector } from 'react-redux';
+import UserAvatar from 'shared/user-avatar';
 
 const Header = () => {
 	const [activeLink, setActiveLink] = useState('/');
 	const location = useLocation();
 	const { pathname } = location;
+	const { userInfo } = useSelector(state => state.auth);
 
 	useEffect(() => {
 		setActiveLink(pathname);
@@ -52,7 +54,7 @@ const Header = () => {
 			<div className='header__userInfo'>
 				<div className='header__notify__icon' />
 				<Link to='/profile'>
-					<img className='header__avatar' src={avatar} alt='avatar' />
+					<UserAvatar className='header__avatar' source={userInfo?.avatarImage} />
 				</Link>
 			</div>
 		</div>
