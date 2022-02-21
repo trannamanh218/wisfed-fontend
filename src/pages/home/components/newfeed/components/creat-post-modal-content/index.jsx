@@ -216,7 +216,11 @@ function CreatPostModalContent({ hideCreatPostModal }) {
 							</div>
 						</div>
 					</div>
-					<div className='creat-post-modal-content__main__body__text-field-edit-wrapper'>
+					<div
+						className={classNames('creat-post-modal-content__main__body__text-field-edit-wrapper', {
+							'has-images': images.length > 0,
+						})}
+					>
 						<div
 							className='creat-post-modal-content__main__body__text-field-edit'
 							contentEditable={true}
@@ -332,7 +336,9 @@ function CreatPostModalContent({ hideCreatPostModal }) {
 							</button>
 							<label
 								htmlFor='image-upload'
-								className='creat-post-modal-content__main__options__item-add-to-post'
+								className={classNames('creat-post-modal-content__main__options__item-add-to-post', {
+									'active': images.length > 0,
+								})}
 							>
 								<Image />
 							</label>
@@ -349,7 +355,13 @@ function CreatPostModalContent({ hideCreatPostModal }) {
 							</button>
 						</div>
 					</div>
-					<button className='creat-post-modal-content__main__submit'>Đăng</button>
+					<button
+						className={`creat-post-modal-content__main__submit ${
+							images.length > 0 || showTextFieldEditPlaceholder === false ? 'active' : ''
+						}`}
+					>
+						Đăng
+					</button>
 				</div>
 			</div>
 			{/* sub modal */}

@@ -5,6 +5,7 @@ import classNames from 'classnames';
 import Slider from 'react-slick';
 import settingsSlider from './settingsSlider';
 import PropTypes from 'prop-types';
+import avatar from 'assets/images/avatar2.png';
 
 function CreatQuotesModal({ hideCreatQuotesModal }) {
 	const [showTextFieldEditPlaceholder, setShowTextFieldEditPlaceholder] = useState(true);
@@ -15,6 +16,7 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 	const [inputTopicValue, setInputTopicValue] = useState('');
 	const [inputKeywordValue, setInputKeywordValue] = useState('');
 	const [colorActiveIndex, setColorActiveIndex] = useState(-1);
+	const [authorAdded, setAuthorAdded] = useState('');
 
 	const textFieldEdit = useRef(null);
 	const sliderRef = useRef(null);
@@ -37,8 +39,6 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 		'to bottom right, #C5FFAA, #00BAC6',
 		'to bottom right, #FDFD9B, #F9F906, #C7C705',
 	];
-
-	const authorData = ['Nguyễn Hiến Lê', 'Quang Huy', 'Đỗ Gia'];
 
 	useEffect(() => {
 		textFieldEdit.current.focus();
@@ -65,6 +65,11 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 	const changeBackground = (item, index) => {
 		setBackgroundColor(item);
 		setColorActiveIndex(index);
+	};
+
+	const addAuthor = authorName => {
+		setAuthorAdded(authorName);
+		setInputAuthorValue('');
 	};
 
 	return (
@@ -158,13 +163,39 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 					<div className='creat-quotes-modal__body__option-item'>
 						<div className='creat-quotes-modal__body__option-item__title'>Tác giả</div>
 						<div className='creat-quotes-modal__body__option-item__search-container'>
-							<Search />
-							<input
-								placeholder='Tìm kiếm và thêm tác giả'
-								value={inputAuthorValue}
-								onChange={e => setInputAuthorValue(e.target.value)}
-							/>
+							{authorAdded ? (
+								<div className='creat-quotes-modal__body__option-item__author-added'>
+									<span>{authorAdded}</span>
+									<button onClick={() => setAuthorAdded('')}>
+										<CloseX />
+									</button>
+								</div>
+							) : (
+								<>
+									<Search />
+									<input
+										placeholder='Tìm kiếm và thêm tác giả'
+										value={inputAuthorValue}
+										onChange={e => setInputAuthorValue(e.target.value)}
+									/>
+								</>
+							)}
 						</div>
+
+						{inputAuthorValue.trim() !== '' && (
+							<div className='creat-quotes-modal__body__option-item__search-result'>
+								{[...Array(5)].map((item, index) => (
+									<div
+										className='creat-quotes-modal__author-item'
+										key={index}
+										onClick={() => addAuthor('Nguyễn Hiến Lê')}
+									>
+										<img src={avatar} alt='author' />
+										<div className='creat-quotes-modal__author__name'>Nguyễn Hiến Lê</div>
+									</div>
+								))}
+							</div>
+						)}
 					</div>
 					<div className='creat-quotes-modal__body__option-item'>
 						<div className='creat-quotes-modal__body__option-item__title'>*Sách (Bắt buộc)</div>

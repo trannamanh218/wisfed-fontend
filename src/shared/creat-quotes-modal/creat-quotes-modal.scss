@@ -265,6 +265,39 @@
 	}
 }
 
+.creat-quotes-modal__body__option-item__author-added {
+	width: 100%;
+	display: flex;
+	justify-content: space-between;
+}
+
+.creat-quotes-modal__body__option-item__search-result {
+	display: flex;
+	justify-content: space-between;
+	margin-top: 24px;
+}
+
+.creat-quotes-modal__author-item {
+	max-width: 100px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	cursor: pointer;
+	img {
+		width: 80px;
+		height: 80px;
+	}
+}
+
+.creat-quotes-modal__author__name {
+	font-size: 14px;
+	line-height: 20px;
+	text-align: center;
+	color: $ash-label;
+	font-weight: 600;
+	margin-top: 8px;
+}
+
 // creat quotes footer
 .creat-quotes-modal__footer {
 	padding: 24px;
