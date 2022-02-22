@@ -7,6 +7,7 @@ import LinearProgressBar from 'shared/linear-progress-bar';
 
 const PostEditBook = props => {
 	const { data } = props;
+	// rating là rating của user cho cuốn sách, không phải rating tổng)
 	return (
 		<div className='post-edit-book'>
 			<BookThumbnail source={data?.images[0]} />
