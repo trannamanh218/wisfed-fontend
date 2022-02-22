@@ -54,7 +54,7 @@ function CreatPostSubModal(props) {
 				</button>
 			</div>
 
-			{option === 'modify-images' ? (
+			{option.value === 'modify-images' ? (
 				<>
 					<div className='creat-post-modal-content__substitute__body__modify-images-container'>
 						<div
