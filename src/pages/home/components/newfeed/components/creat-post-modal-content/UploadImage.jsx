@@ -11,7 +11,7 @@ import classNames from 'classnames';
 // const MAX_FILES = 5;
 
 const UploadImage = props => {
-	// const { addOptionsToPost, optionList, handleOpenUploadImage } = props;
+	const { addOptionsToPost, optionList, handleOpenUploadImage } = props;
 	const dispatch = useDispatch();
 	const [images, setImages] = useState([]);
 
@@ -150,7 +150,12 @@ const UploadImage = props => {
 						<div className='creat-post-modal-content__main__body__image-options__block-left'>
 							<button
 								className='creat-post-modal-content__main__body__image-options__button'
-								// onClick={() => addOptionsToPost(optionList[length - 1])}
+								onClick={() =>
+									addOptionsToPost({
+										value: 'modify-images',
+										title: 'chỉnh sửa ảnh',
+									})
+								}
 							>
 								<Pencil />
 								<span>Chỉnh sửa tất cả</span>
