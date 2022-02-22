@@ -110,19 +110,16 @@ function CreatPost({ onChangeNewPost }) {
 
 	return (
 		<div className='newfeed__creat-post'>
-			{!showModalCreatPost ? (
-				<>
-					<div className='newfeed__creat-post__avatar-and-input'>
-						<UserAvatar className='newfeed__creat-post__avatar' source={userInfo?.avatarImage} />
-						<input
-							className='newfeed__creat-post__input'
-							placeholder='Tạo bài viết của bạn ...'
-							onClick={() => setShowModalCreatPost(true)}
-						/>
-					</div>
-					<div className='newfeed__creat-post__options'>{renderOptionList()}</div>
-				</>
-			) : (
+			<div className='newfeed__creat-post__avatar-and-input'>
+				<UserAvatar className='newfeed__creat-post__avatar' source={userInfo?.avatarImage} />
+				<input
+					className='newfeed__creat-post__input'
+					placeholder='Tạo bài viết của bạn ...'
+					onClick={() => setShowModalCreatPost(true)}
+				/>
+			</div>
+			<div className='newfeed__creat-post__options'>{renderOptionList()}</div>
+			{showModalCreatPost && (
 				<div className='newfeed__creat-post__modal' ref={creatPostModalContainer}>
 					<CreatPostModalContent
 						hideCreatPostModal={hideCreatPostModal}

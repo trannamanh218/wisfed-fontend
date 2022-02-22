@@ -1,18 +1,6 @@
 import avatar from 'assets/images/avatar.png';
 import classNames from 'classnames';
-import {
-	BookIcon,
-	CategoryIcon,
-	CloseX,
-	Feather,
-	GroupIcon,
-	Image,
-	Lock,
-	Pencil,
-	PodCast,
-	TwoDots,
-	WorldNet,
-} from 'components/svg';
+import { BookIcon, CategoryIcon, CloseX, Feather, GroupIcon, Image, Lock, PodCast, WorldNet } from 'components/svg';
 import { STATUS_IDLE, STATUS_LOADING, STATUS_SUCCESS } from 'constants';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
@@ -473,10 +461,6 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 									accept='image/png, image/gif, image/jpeg'
 									multiple
 								/> */}
-
-								<button className='creat-post-modal-content__main__options__item-add-to-post'>
-									<TwoDots />
-								</button>
 							</div>
 						</div>
 						<button
