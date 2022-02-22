@@ -273,17 +273,18 @@
 
 .creat-quotes-modal__body__option-item__search-result {
 	display: flex;
-	justify-content: space-between;
+	gap: 23px;
 	margin-top: 24px;
 }
 
 .creat-quotes-modal__author-item {
-	max-width: 100px;
+	width: 100px;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	cursor: pointer;
 	img {
+		border-radius: 50%;
 		width: 80px;
 		height: 80px;
 	}

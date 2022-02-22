@@ -6,6 +6,8 @@ import Slider from 'react-slick';
 import settingsSlider from './settingsSlider';
 import PropTypes from 'prop-types';
 import avatar from 'assets/images/avatar2.png';
+import { getSuggestion } from 'reducers/redux-utils/activity';
+import { useDispatch, useSelector } from 'react-redux';
 
 function CreatQuotesModal({ hideCreatQuotesModal }) {
 	const [showTextFieldEditPlaceholder, setShowTextFieldEditPlaceholder] = useState(true);
@@ -16,10 +18,14 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 	const [inputTopicValue, setInputTopicValue] = useState('');
 	const [inputKeywordValue, setInputKeywordValue] = useState('');
 	const [colorActiveIndex, setColorActiveIndex] = useState(-1);
+	const [authorSearchedList, setAuthorSearchedList] = useState([]);
 	const [authorAdded, setAuthorAdded] = useState('');
 
 	const textFieldEdit = useRef(null);
 	const sliderRef = useRef(null);
+
+	const userInfo = useSelector(state => state.auth.userInfo);
+	const dispatch = useDispatch();
 
 	const colorData = [
 		'to bottom right, #FE7B59, #FE497A, #FD169C',
@@ -52,14 +58,34 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 		}
 	}, [showTextFieldBackgroundSelect]);
 
-	useEffect(() => {
-		textFieldEdit.current.addEventListener('input', () => {
-			if (textFieldEdit.current.innerText.length > 0) {
-				setShowTextFieldEditPlaceholder(false);
+	const handleTextFieldEditEvents = () => {
+		if (textFieldEdit.current.innerText.length > 0) {
+			setShowTextFieldEditPlaceholder(false);
+			if (textFieldEdit.current.innerText.length > 500) {
+				textFieldEdit.current.addEventListener('keypress', disableEventsListener, true);
+				textFieldEdit.current.addEventListener('paste', disableEventsListener, true);
+				textFieldEdit.current.innerText = textFieldEdit.current.innerText.slice(0, 500);
 			} else {
-				setShowTextFieldEditPlaceholder(true);
+				textFieldEdit.current.removeEventListener('keypress', disableEventsListener, true);
+				textFieldEdit.current.removeEventListener('paste', disableEventsListener, true);
 			}
-		});
+		} else {
+			setShowTextFieldEditPlaceholder(true);
+		}
+	};
+
+	const disableEventsListener = e => {
+		e.stopPropagation();
+		e.preventDefault();
+	};
+
+	useEffect(() => {
+		textFieldEdit.current.addEventListener('input', handleTextFieldEditEvents);
+		textFieldEdit.current.addEventListener('keypress', handleTextFieldEditEvents);
+		return () => {
+			textFieldEdit.current.removeEventListener('input', handleTextFieldEditEvents);
+			textFieldEdit.current.removeEventListener('keypress', handleTextFieldEditEvents);
+		};
 	}, [showTextFieldEditPlaceholder]);
 
 	const changeBackground = (item, index) => {
@@ -70,6 +96,20 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 	const addAuthor = authorName => {
 		setAuthorAdded(authorName);
 		setInputAuthorValue('');
+	};
+
+	const getSuggestionForCreatQuotes = async (input, option) => {
+		try {
+			const data = await dispatch(getSuggestion({ input, option, userInfo })).unwrap();
+			setAuthorSearchedList(data.rows.slice(0, 5));
+		} catch (err) {
+			return err;
+		}
+	};
+
+	const searchAuthor = e => {
+		setInputAuthorValue(e.target.value);
+		getSuggestionForCreatQuotes(e.target.value, { value: 'add-author' });
 	};
 
 	return (
@@ -99,7 +139,7 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 								'hide': !showTextFieldEditPlaceholder,
 							})}
 						>
-							Nội dung Quotes của bạn
+							Nội dung Quotes của bạn (Dưới 500 ký tự)
 						</div>
 					</div>
 				) : (
@@ -114,7 +154,7 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 								'hide': !showTextFieldEditPlaceholder,
 							})}
 						>
-							Nội dung Quotes của bạn
+							Nội dung Quotes của bạn (Dưới 500 ký tự)
 						</div>
 					</div>
 				)}
@@ -176,7 +216,7 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 									<input
 										placeholder='Tìm kiếm và thêm tác giả'
 										value={inputAuthorValue}
-										onChange={e => setInputAuthorValue(e.target.value)}
+										onChange={searchAuthor}
 									/>
 								</>
 							)}
@@ -184,14 +224,14 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 
 						{inputAuthorValue.trim() !== '' && (
 							<div className='creat-quotes-modal__body__option-item__search-result'>
-								{[...Array(5)].map((item, index) => (
+								{authorSearchedList.map(item => (
 									<div
 										className='creat-quotes-modal__author-item'
-										key={index}
-										onClick={() => addAuthor('Nguyễn Hiến Lê')}
+										key={item.id}
+										onClick={() => addAuthor(`${item.firstName} ${item.lastName}`)}
 									>
-										<img src={avatar} alt='author' />
-										<div className='creat-quotes-modal__author__name'>Nguyễn Hiến Lê</div>
+										<img src={item.avatarImage || avatar} alt='author' />
+										<div className='creat-quotes-modal__author__name'>{`${item.firstName} ${item.lastName}`}</div>
 									</div>
 								))}
 							</div>

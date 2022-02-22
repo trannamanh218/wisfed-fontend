@@ -8,7 +8,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Form } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-import { createActivity, getSuggestionForPost } from 'reducers/redux-utils/activity';
+import { createActivity, getSuggestion } from 'reducers/redux-utils/activity';
 import PostEditBook from 'shared/post-edit-book';
 import OptionsPost from './OptionsPost';
 import ShareModeComponent from './ShareModeComponent';
@@ -144,7 +144,7 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 
 	const fetchSuggestion = async (input, option) => {
 		try {
-			const data = await dispatch(getSuggestionForPost({ input, option, userInfo })).unwrap();
+			const data = await dispatch(getSuggestion({ input, option, userInfo })).unwrap();
 			setSuggestionData(data.rows);
 		} catch (err) {
 			return err;
