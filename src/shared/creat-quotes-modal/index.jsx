@@ -27,6 +27,7 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 	const [topicSearchedList, setTopicSearchedList] = useState([]);
 	const [topicAddedList, setTopicAddedList] = useState([]);
 	const [hashTagsAdded, setHashTagsAdded] = useState('');
+	const [getDataFinish, setGetDataFinish] = useState(false);
 
 	const textFieldEdit = useRef(null);
 	const sliderRef = useRef(null);
@@ -115,6 +116,8 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 			}
 		} catch (err) {
 			return err;
+		} finally {
+			setGetDataFinish(true);
 		}
 	};
 
@@ -124,6 +127,7 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 	);
 
 	const searchAuthor = e => {
+		setGetDataFinish(false);
 		setAuthorSearchedList([]);
 		setInputAuthorValue(e.target.value);
 		debounceSearch(e.target.value, { value: 'add-author' });
@@ -136,6 +140,7 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 	};
 
 	const searchBook = e => {
+		setGetDataFinish(false);
 		setBookSearchedList([]);
 		setInputBookValue(e.target.value);
 		debounceSearch(e.target.value, { value: 'add-book' });
@@ -148,6 +153,7 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 	};
 
 	const searchTopic = e => {
+		setGetDataFinish(false);
 		setTopicSearchedList([]);
 		setInputTopicValue(e.target.value);
 		debounceSearch(e.target.value, { value: 'add-topic' });
@@ -172,7 +178,8 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 		topicArrayTemp.push(toppicName);
 		setTopicAddedList(topicArrayTemp);
 		setInputTopicValue('');
-		setBookSearchedList([]);
+		setTopicSearchedList([]);
+		topicInputWrapper.current.style.width = '0.5ch';
 	};
 
 	const removeTopic = index => {
@@ -180,6 +187,10 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 		const topicArr = [...topicAddedList];
 		topicArr.splice(index, 1);
 		setTopicAddedList(topicArr);
+	};
+
+	const renderNoSearchResult = () => {
+		return <div className='creat-quotes-modal__no-search-result'>Không có kết quả phù hợp</div>;
 	};
 
 	return (
@@ -291,23 +302,29 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 								</>
 							)}
 						</div>
-						{inputAuthorValue.trim() !== '' && authorSearchedList.length > 0 && (
-							<div className='creat-quotes-modal__body__option-item__search-result'>
-								{authorSearchedList.map(item => (
-									<div
-										className='creat-quotes-modal__searched-item author'
-										key={item.id}
-										onClick={() => addAuthor(`${item.firstName} ${item.lastName}`)}
-									>
-										<img
-											className='creat-quotes-modal__author__avatar'
-											src={item.avatarImage || avatarTest}
-											alt='author'
-										/>
-										<div className='creat-quotes-modal__author__name'>{`${item.firstName} ${item.lastName}`}</div>
+						{inputAuthorValue.trim() !== '' && getDataFinish && (
+							<>
+								{authorSearchedList.length > 0 ? (
+									<div className='creat-quotes-modal__body__option-item__search-result'>
+										{authorSearchedList.map(item => (
+											<div
+												className='creat-quotes-modal__searched-item author'
+												key={item.id}
+												onClick={() => addAuthor(`${item.firstName} ${item.lastName}`)}
+											>
+												<img
+													className='creat-quotes-modal__author__avatar'
+													src={item.avatarImage || avatarTest}
+													alt='author'
+												/>
+												<div className='creat-quotes-modal__author__name'>{`${item.firstName} ${item.lastName}`}</div>
+											</div>
+										))}
 									</div>
-								))}
-							</div>
+								) : (
+									<>{renderNoSearchResult()}</>
+								)}
+							</>
 						)}
 					</div>
 					<div className='creat-quotes-modal__body__option-item'>
@@ -331,26 +348,32 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 								</>
 							)}
 						</div>
-						{inputBookValue.trim() !== '' && bookSearchedList.length > 0 && (
-							<div className='creat-quotes-modal__body__option-item__search-result'>
-								{bookSearchedList.map(item => (
-									<div
-										className='creat-quotes-modal__searched-item book'
-										key={item.id}
-										onClick={() => addBook(item.name)}
-									>
-										<img
-											className='creat-quotes-modal__book__image'
-											src={item?.frontBookCover || item?.images[0] || bookSample}
-											alt='book'
-										/>
-										<div className='creat-quotes-modal__book__name'>{item?.name}</div>
-										<div className='creat-quotes-modal__book__author'>
-											{item?.authors[0]?.authorName}
-										</div>
+						{inputBookValue.trim() !== '' && getDataFinish && (
+							<>
+								{bookSearchedList.length > 0 ? (
+									<div className='creat-quotes-modal__body__option-item__search-result'>
+										{bookSearchedList.map(item => (
+											<div
+												className='creat-quotes-modal__searched-item book'
+												key={item.id}
+												onClick={() => addBook(item.name)}
+											>
+												<img
+													className='creat-quotes-modal__book__image'
+													src={item?.frontBookCover || item?.images[0] || bookSample}
+													alt='book'
+												/>
+												<div className='creat-quotes-modal__book__name'>{item?.name}</div>
+												<div className='creat-quotes-modal__book__author'>
+													{item?.authors[0]?.authorName}
+												</div>
+											</div>
+										))}
 									</div>
-								))}
-							</div>
+								) : (
+									<>{renderNoSearchResult()}</>
+								)}
+							</>
 						)}
 					</div>
 					<div className='creat-quotes-modal__body__option-item'>
@@ -392,18 +415,24 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 								</>
 							)}
 						</div>
-						{inputTopicValue.trim() !== '' && topicSearchedList.length > 0 && (
-							<div className='creat-quotes-modal__body__option-item__search-result topic'>
-								{topicSearchedList.map(item => (
-									<div
-										className='creat-quotes-modal__searched-item topic'
-										key={item.id}
-										onClick={() => addTopic(item)}
-									>
-										{item.name}
+						{inputTopicValue.trim() !== '' && getDataFinish && (
+							<>
+								{topicSearchedList.length > 0 ? (
+									<div className='creat-quotes-modal__body__option-item__search-result topic'>
+										{topicSearchedList.map(item => (
+											<div
+												className='creat-quotes-modal__searched-item topic'
+												key={item.id}
+												onClick={() => addTopic(item)}
+											>
+												{item.name}
+											</div>
+										))}
 									</div>
-								))}
-							</div>
+								) : (
+									<>{renderNoSearchResult()}</>
+								)}
+							</>
 						)}
 					</div>
 					<div className='creat-quotes-modal__body__option-item'>
