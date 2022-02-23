@@ -1,13 +1,15 @@
 import './creat-quotes-modal.scss';
 import { CloseX, WeatherStars, BackChevron, Search } from 'components/svg';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 import classNames from 'classnames';
 import Slider from 'react-slick';
 import settingsSlider from './settingsSlider';
 import PropTypes from 'prop-types';
-import avatar from 'assets/images/avatar2.png';
+import avatarTest from 'assets/images/avatar2.png';
+import bookSample from 'assets/images/sample-book-img.jpg';
 import { getSuggestion } from 'reducers/redux-utils/activity';
 import { useDispatch, useSelector } from 'react-redux';
+import _ from 'lodash';
 
 function CreatQuotesModal({ hideCreatQuotesModal }) {
 	const [showTextFieldEditPlaceholder, setShowTextFieldEditPlaceholder] = useState(true);
@@ -20,9 +22,17 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 	const [colorActiveIndex, setColorActiveIndex] = useState(-1);
 	const [authorSearchedList, setAuthorSearchedList] = useState([]);
 	const [authorAdded, setAuthorAdded] = useState('');
+	const [bookSearchedList, setBookSearchedList] = useState([]);
+	const [bookAdded, setBookAdded] = useState('');
+	const [topicSearchedList, setTopicSearchedList] = useState([]);
+	const [topicAddedList, setTopicAddedList] = useState([]);
+	const [hashTagsAdded, setHashTagsAdded] = useState('');
 
 	const textFieldEdit = useRef(null);
 	const sliderRef = useRef(null);
+	const topicInputContainer = useRef(null);
+	const topicInputWrapper = useRef(null);
+	const topicInput = useRef(null);
 
 	const userInfo = useSelector(state => state.auth.userInfo);
 	const dispatch = useDispatch();
@@ -93,23 +103,83 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 		setColorActiveIndex(index);
 	};
 
-	const addAuthor = authorName => {
-		setAuthorAdded(authorName);
-		setInputAuthorValue('');
-	};
-
 	const getSuggestionForCreatQuotes = async (input, option) => {
 		try {
 			const data = await dispatch(getSuggestion({ input, option, userInfo })).unwrap();
-			setAuthorSearchedList(data.rows.slice(0, 5));
+			if (option.value === 'add-author') {
+				setAuthorSearchedList(data.rows.slice(0, 5));
+			} else if (option.value === 'add-book') {
+				setBookSearchedList(data.rows.slice(0, 3));
+			} else if (option.value === 'add-topic') {
+				setTopicSearchedList(data.rows.slice(0, 5));
+			}
 		} catch (err) {
 			return err;
 		}
 	};
 
+	const debounceSearch = useCallback(
+		_.debounce((inputValue, option) => getSuggestionForCreatQuotes(inputValue, option), 700),
+		[]
+	);
+
 	const searchAuthor = e => {
+		setAuthorSearchedList([]);
 		setInputAuthorValue(e.target.value);
-		getSuggestionForCreatQuotes(e.target.value, { value: 'add-author' });
+		debounceSearch(e.target.value, { value: 'add-author' });
+	};
+
+	const addAuthor = authorName => {
+		setAuthorAdded(authorName);
+		setInputAuthorValue('');
+		setAuthorSearchedList([]);
+	};
+
+	const searchBook = e => {
+		setBookSearchedList([]);
+		setInputBookValue(e.target.value);
+		debounceSearch(e.target.value, { value: 'add-book' });
+	};
+
+	const addBook = bookName => {
+		setBookAdded(bookName);
+		setInputBookValue('');
+		setBookSearchedList([]);
+	};
+
+	const searchTopic = e => {
+		setTopicSearchedList([]);
+		setInputTopicValue(e.target.value);
+		debounceSearch(e.target.value, { value: 'add-topic' });
+		topicInputWrapper.current.style.width = topicInput.current.value.length + 0.5 + 'ch';
+	};
+
+	const focusTopicInput = () => {
+		topicInput.current.focus();
+	};
+
+	useEffect(() => {
+		if (topicInputContainer.current) {
+			topicInputContainer.current.addEventListener('click', focusTopicInput);
+			return () => {
+				topicInputContainer.current.removeEventListener('click', focusTopicInput);
+			};
+		}
+	}, []);
+
+	const addTopic = toppicName => {
+		const topicArrayTemp = [...topicAddedList];
+		topicArrayTemp.push(toppicName);
+		setTopicAddedList(topicArrayTemp);
+		setInputTopicValue('');
+		setBookSearchedList([]);
+	};
+
+	const removeTopic = index => {
+		console.log(index);
+		const topicArr = [...topicAddedList];
+		topicArr.splice(index, 1);
+		setTopicAddedList(topicArr);
 	};
 
 	return (
@@ -204,7 +274,7 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 						<div className='creat-quotes-modal__body__option-item__title'>Tác giả</div>
 						<div className='creat-quotes-modal__body__option-item__search-container'>
 							{authorAdded ? (
-								<div className='creat-quotes-modal__body__option-item__author-added'>
+								<div className='creat-quotes-modal__body__option-item-added'>
 									<span>{authorAdded}</span>
 									<button onClick={() => setAuthorAdded('')}>
 										<CloseX />
@@ -221,16 +291,19 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 								</>
 							)}
 						</div>
-
-						{inputAuthorValue.trim() !== '' && (
+						{inputAuthorValue.trim() !== '' && authorSearchedList.length > 0 && (
 							<div className='creat-quotes-modal__body__option-item__search-result'>
 								{authorSearchedList.map(item => (
 									<div
-										className='creat-quotes-modal__author-item'
+										className='creat-quotes-modal__searched-item author'
 										key={item.id}
 										onClick={() => addAuthor(`${item.firstName} ${item.lastName}`)}
 									>
-										<img src={item.avatarImage || avatar} alt='author' />
+										<img
+											className='creat-quotes-modal__author__avatar'
+											src={item.avatarImage || avatarTest}
+											alt='author'
+										/>
 										<div className='creat-quotes-modal__author__name'>{`${item.firstName} ${item.lastName}`}</div>
 									</div>
 								))}
@@ -240,24 +313,98 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 					<div className='creat-quotes-modal__body__option-item'>
 						<div className='creat-quotes-modal__body__option-item__title'>*Sách (Bắt buộc)</div>
 						<div className='creat-quotes-modal__body__option-item__search-container'>
-							<Search />
-							<input
-								placeholder='Tìm kiếm và thêm sách'
-								value={inputBookValue}
-								onChange={e => setInputBookValue(e.target.value)}
-							/>
+							{bookAdded ? (
+								<div className='creat-quotes-modal__body__option-item-added'>
+									<span>{bookAdded}</span>
+									<button onClick={() => setBookAdded('')}>
+										<CloseX />
+									</button>
+								</div>
+							) : (
+								<>
+									<Search />
+									<input
+										placeholder='Tìm kiếm và thêm sách'
+										value={inputBookValue}
+										onChange={searchBook}
+									/>
+								</>
+							)}
 						</div>
+						{inputBookValue.trim() !== '' && bookSearchedList.length > 0 && (
+							<div className='creat-quotes-modal__body__option-item__search-result'>
+								{bookSearchedList.map(item => (
+									<div
+										className='creat-quotes-modal__searched-item book'
+										key={item.id}
+										onClick={() => addBook(item.name)}
+									>
+										<img
+											className='creat-quotes-modal__book__image'
+											src={item?.frontBookCover || item?.images[0] || bookSample}
+											alt='book'
+										/>
+										<div className='creat-quotes-modal__book__name'>{item?.name}</div>
+										<div className='creat-quotes-modal__book__author'>
+											{item?.authors[0]?.authorName}
+										</div>
+									</div>
+								))}
+							</div>
+						)}
 					</div>
 					<div className='creat-quotes-modal__body__option-item'>
 						<div className='creat-quotes-modal__body__option-item__title'>Chủ đề</div>
-						<div className='creat-quotes-modal__body__option-item__search-container'>
-							<Search />
-							<input
-								placeholder='Tìm kiếm và thêm chủ đề'
-								value={inputTopicValue}
-								onChange={e => setInputTopicValue(e.target.value)}
-							/>
+						<div
+							className='creat-quotes-modal__body__option-item__search-container'
+							style={topicAddedList.length > 0 ? { padding: '8px 24px' } : {}}
+							ref={topicInputContainer}
+						>
+							{topicAddedList.length > 0 ? (
+								<div className='creat-quotes-modal__body__option-topics-added'>
+									{topicAddedList.map((item, index) => (
+										<div
+											key={item.id}
+											className='creat-quotes-modal__body__option-topics-added__item'
+										>
+											<div>{item.name}</div>
+											<button onClick={() => removeTopic(index)}>
+												<CloseX />
+											</button>
+										</div>
+									))}
+									<div
+										ref={topicInputWrapper}
+										className='topic-input-wrapper'
+										style={{ width: '8px' }}
+									>
+										<input value={inputTopicValue} onChange={searchTopic} ref={topicInput} />
+									</div>
+								</div>
+							) : (
+								<>
+									<Search />
+									<input
+										placeholder='Tìm kiếm và thêm chủ đề'
+										value={inputTopicValue}
+										onChange={searchTopic}
+									/>
+								</>
+							)}
 						</div>
+						{inputTopicValue.trim() !== '' && topicSearchedList.length > 0 && (
+							<div className='creat-quotes-modal__body__option-item__search-result topic'>
+								{topicSearchedList.map(item => (
+									<div
+										className='creat-quotes-modal__searched-item topic'
+										key={item.id}
+										onClick={() => addTopic(item)}
+									>
+										{item.name}
+									</div>
+								))}
+							</div>
+						)}
 					</div>
 					<div className='creat-quotes-modal__body__option-item'>
 						<div className='creat-quotes-modal__body__option-item__title'>Từ khóa</div>
@@ -273,11 +420,7 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 				</div>
 			</div>
 			<div className='creat-quotes-modal__footer'>
-				<button
-					className={
-						inputAuthorValue || inputBookValue || inputTopicValue || inputKeywordValue ? 'active' : ''
-					}
-				>
+				<button className={!showTextFieldEditPlaceholder && bookAdded !== '' ? 'active' : ''}>
 					Tạo Quotes
 				</button>
 			</div>
