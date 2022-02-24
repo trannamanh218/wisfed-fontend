@@ -9,7 +9,6 @@ import { uploadImage } from 'reducers/redux-utils/common';
 import './style.scss';
 import classNames from 'classnames';
 // const MAX_FILES = 5;
-
 const UploadImage = props => {
 	const { addOptionsToPost, optionList, handleOpenUploadImage } = props;
 	const dispatch = useDispatch();
@@ -45,14 +44,14 @@ const UploadImage = props => {
 		};
 
 		addImages(acceptedFiles);
-		dispatch(uploadImage(params))
-			.unwrap()
-			.then(() => {
-				// console.log(res);
-			})
-			.catch(() => {
-				// console.log(err	);
-			});
+		// dispatch(uploadImage(params))
+		// 	.unwrap()
+		// 	.then((res) => {
+		// 		console.log(res);
+		// 	})
+		// 	.catch((err) => {
+		// 		console.log(err	);
+		// 	});
 		// 		const fileList = acceptedFiles.slice(0, MAX_FILES).map(item => {
 		// 			const params = {
 		// 				data: { file: item, type: 'books' },
@@ -99,7 +98,7 @@ const UploadImage = props => {
 	};
 
 	const removeImages = () => {
-		document.getElementById('image-upload').value = '';
+		document.getElementsByClassName('creat-post-modal-content__main__body__image-containe').innerHTML = '';
 		setImages([]);
 	};
 

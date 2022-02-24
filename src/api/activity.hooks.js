@@ -1,3 +1,4 @@
+import { STATUS_SUCCESS } from 'constants';
 import { STATUS_LOADING } from 'constants';
 import { STATUS_IDLE } from 'constants';
 import { parsedQueryString } from 'helpers/Common';
@@ -23,6 +24,7 @@ export const useFetchActivities = (query = '', isNewPost) => {
 			try {
 				const data = await dispatch(getActivityList(queryObj)).unwrap();
 				setActivity(data);
+				setStatus(STATUS_SUCCESS);
 			} catch (err) {
 				const statusCode = err?.statusCode || 500;
 				setStatus(statusCode);

@@ -15,6 +15,7 @@ const BookThumbnail = props => {
 					handleClick(data);
 				}
 			}}
+			title={name}
 		>
 			<img
 				src={images[0] || source || bookImage}
@@ -26,7 +27,7 @@ const BookThumbnail = props => {
 };
 
 BookThumbnail.propTypes = {
-	source: PropTypes.string.isRequired,
+	source: PropTypes.string,
 	images: PropTypes.array,
 	name: PropTypes.string,
 	size: PropTypes.oneOf(['sm', 'md', 'lg']),

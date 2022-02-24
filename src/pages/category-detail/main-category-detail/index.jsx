@@ -1,6 +1,10 @@
+import React, { Fragment, useCallback, useEffect, useRef, useState } from 'react';
+import { useFetchCategoryDetail } from 'api/category.hook';
 import classNames from 'classnames';
 import { Heart } from 'components/svg';
-import React, { Fragment, useState } from 'react';
+import { NUMBER_OF_BOOKS } from 'constants';
+import _ from 'lodash';
+import { useNavigate, useParams } from 'react-router-dom';
 import BackButton from 'shared/back-button';
 import BookThumbnail from 'shared/book-thumbnail';
 import Button from 'shared/button';
@@ -8,11 +12,46 @@ import CategoryGroup from 'shared/category-group';
 import FilterPane from 'shared/filter-pane';
 import Post from 'shared/post';
 import SearchField from 'shared/search-field';
+import RouteLink from 'helpers/RouteLink';
 import './main-category-detail.scss';
+import SearchBook from './SearchBook';
 
 const MainCategoryDetail = () => {
+	const { id } = useParams();
+	const { categoryInfo } = useFetchCategoryDetail(id);
+	const { books = [] } = categoryInfo;
+	const topBooks = books.slice(0, 10);
+	const [bookList, setBookList] = useState(books.slice(0, 10));
 	const [isLike, setIsLike] = useState(false);
-	const list = Array.from(Array(5)).fill({
+	const [searchBooks, setSearchBooks] = useState([]);
+	const navigate = useNavigate();
+	const [inputSearch, setInputSearch] = useState('');
+
+	useEffect(() => {
+		if (books && books.length) {
+			const data = books.slice(0, NUMBER_OF_BOOKS);
+			setBookList(data);
+		}
+		if (!_.isEmpty(categoryInfo)) {
+			navigate(RouteLink.categoryDetail(categoryInfo.id, categoryInfo.name));
+		}
+	}, [categoryInfo]);
+
+	const handleLikeCategory = () => {
+		setIsLike(!isLike);
+	};
+
+	const handleViewMore = () => {
+		const currentLength = bookList.length;
+		const total = books.length;
+		if (currentLength < total) {
+			const moreData = books.slice(currentLength, currentLength + NUMBER_OF_BOOKS);
+			const data = bookList.concat(moreData);
+			setBookList(data);
+		}
+	};
+
+	const postList = Array.from(Array(5)).fill({
 		id: 1,
 		userAvatar: '/images/avatar.png',
 		userName: 'Trần Văn Đức',
@@ -24,16 +63,26 @@ const MainCategoryDetail = () => {
 		shareNumber: 3,
 	});
 
-	const bookList = new Array(16).fill({ source: '/images/book1.jpg', name: 'Design pattern' });
-
-	const handleLikeCategory = () => {
-		setIsLike(!isLike);
+	const filterBooks = name => {
+		let results = [];
+		if (books && books.length && name) {
+			results = books.filter(book => book.name.toLowerCase().includes(name.trim().toLowerCase()));
+			setSearchBooks(results);
+		}
 	};
+
+	const debounceSearch = useCallback(_.debounce(filterBooks, 500), []);
+
+	const handleSearch = e => {
+		debounceSearch(e.target.value);
+		setInputSearch(e.target.value);
+	};
+
 	return (
 		<div className='main-category-detail'>
 			<div className='main-category-detail__header'>
 				<BackButton />
-				<h4>Chủ đề kinh doanh</h4>
+				<h4>{categoryInfo.name}</h4>
 				<Button
 					className={classNames('btn-like', { 'active': isLike })}
 					isOutline={true}
@@ -46,36 +95,29 @@ const MainCategoryDetail = () => {
 				</Button>
 			</div>
 
-			<p className='main-category-detail__intro'>
-				Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quibusdam, consequatur! Excepturi, quasi,
-				nesciunt iusto enim veniam totam quod veritatis aliquam in, non mollitia dolorem optio laudantium dolore
-				odio perferendis a? Sequi et non minima incidunt placeat voluptatum iure, ullam, aut, odit fugit
-				obcaecati quos nam ut vitae? Ab ratione iure, hic asperiores optio rerum dolorem vel quaerat tempore
-				enim. Optio. Perferendis quidem aliquam odit quis magnam quia nostrum velit unde non nam? Consequatur,
-				ullam neque similique minus enim voluptate ad hic tenetur sequi et fugiat! Consequuntur velit laborum
-				que vero beatae provident odio!
-			</p>
+			<p className='main-category-detail__intro'>{categoryInfo.description || 'Chưa cập nhật'}</p>
 
 			<div className='main-category-detail__container'>
-				<SearchField placeholder='Tìm kiếm sách trong chủ đề kinh doanh' />
-				{[...Array(1)].map((_, index) => (
-					<CategoryGroup key={`category-group-${index}`} list={bookList} title='Đọc nhiều nhất tuần này' />
-				))}
+				<SearchField placeholder='Tìm kiếm sách trong chủ đề kinh doanh' handleChange={handleSearch} />
+				{inputSearch && <SearchBook list={searchBooks} />}
+				<CategoryGroup key={`category-group`} list={topBooks} title='Đọc nhiều nhất tuần này' />
 				<div className='main-category-detail__allbook'>
 					<h4>Tất cả sách chủ đề kinh doanh</h4>
 					<div className='books'>
 						{bookList.map((item, index) => (
-							<BookThumbnail key={index} source={item.source} size='lg' />
+							<BookThumbnail key={index} {...item} source={item.source} size='lg' />
 						))}
 					</div>
-					<a className='view-all-link'>Xem tất cả</a>
+					<a className='view-all-link' onClick={handleViewMore}>
+						Xem tất cả
+					</a>
 				</div>
 			</div>
 
 			<FilterPane title='Bài viết hay nhất'>
 				<div className='main-category-detail__posts'>
-					{list && list.length
-						? list.map((item, index) => (
+					{postList && postList.length
+						? postList.map((item, index) => (
 								<Fragment key={`post-${index}`}>
 									<Post className='post__container--category' postInformations={item} />
 								</Fragment>

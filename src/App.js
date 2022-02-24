@@ -32,7 +32,8 @@ function App() {
 		try {
 			await dispatch(login(params)).unwrap();
 		} catch (err) {
-			return;
+			const statusCode = err?.statusCode || 500;
+			return statusCode;
 		}
 	};
 
@@ -51,7 +52,8 @@ function App() {
 			/>
 			<Routes>
 				<Route path='/category' element={<Category />} />
-				<Route path='/category/detail' element={<CategoryDetail />} />
+				<Route path='/category/detail/:id' element={<CategoryDetail />} />
+				<Route path='/category/detail/:id/:slug' element={<CategoryDetail />} />
 				<Route path='/shelves' element={<BookShelves />} />
 				<Route path='/group' element={<Group />} />
 				<Route path='/book/detail' element={<BookDetail />} />

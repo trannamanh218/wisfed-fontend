@@ -10,10 +10,12 @@ const QuotesLinks = ({ title, list, className }) => {
 			<div className={classNames('quote-links', { [`${className}`]: className })}>
 				<h4>{title}</h4>
 				<div className='quote-links__card'>
-					{list.map((item, index) => (
-						<div className='quote-links__item' key={index}>
-							<p className='quote-links__item__content'>{`\"${item.content}\"`}</p>
-							<span className='quote-links__item__sub'>{`${item.author}, ${item.book}`}</span>
+					{list.map(item => (
+						<div className='quote-links__item' key={item.id}>
+							<p className='quote-links__item__content'>{`\"${item?.quote}\"`}</p>
+							<span className='quote-links__item__sub'>{`${
+								item.authorName ? `${item.authorName},` : ''
+							} ${item?.book?.name || ''}`}</span>
 						</div>
 					))}
 				</div>
@@ -35,7 +37,7 @@ QuotesLinks.defaultProps = {
 QuotesLinks.propTypes = {
 	title: PropTypes.string,
 	list: PropTypes.array,
-	className: PropTypes.array,
+	className: PropTypes.string,
 };
 
 export default QuotesLinks;

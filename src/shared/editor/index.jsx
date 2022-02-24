@@ -1,9 +1,8 @@
 import React, { useRef } from 'react';
-import PropTypes from 'prop-types';
 import { useEffect } from 'react';
 import './editor.scss';
 
-const Editor = props => {
+const Editor = () => {
 	const editorRef = useRef(null);
 
 	useEffect(() => {

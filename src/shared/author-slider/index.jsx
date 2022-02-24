@@ -15,11 +15,17 @@ const AuthorSlider = ({ list, title, className, size = 'sm' }) => {
 				<h4 className='author-slider__title'>{title}</h4>
 				<div className='author-slider__content'>
 					<Slider {...settingSlider}>
-						{list.map((item, index) => (
-							<div key={index}>
+						{list.map(item => (
+							<div key={item.id}>
 								<div className='author-slider__item'>
-									<UserAvatar source={item.source} name={item.name} size={size} />
-									<p className='author-slider__item__creator'>Ms. Mai Phương</p>
+									<UserAvatar
+										{...item}
+										name={item.fullName || item.lastName || item.firstName || 'Không xác định'}
+										size={size}
+									/>
+									<p className='author-slider__item__creator'>
+										{item.fullName || item.lastName || item.firstName || 'Không xác định'}
+									</p>
 								</div>
 							</div>
 						))}
