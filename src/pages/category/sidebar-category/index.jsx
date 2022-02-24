@@ -1,4 +1,7 @@
+import { useFetchViewMoreCategories } from 'api/category.hook';
+import { MAX_PER_PAGE } from 'constants';
 import React from 'react';
+import { useState } from 'react';
 import StatisticList from 'shared/statistic-list';
 import TopicColumn from 'shared/topic-column';
 import './sidebar-category.scss';
@@ -19,9 +22,16 @@ const SidebarCategory = () => {
 		{ name: 'Trinh thám', quantity: 30 },
 	];
 
-	const topicList = Array.from(Array(45)).map((_, index) => ({
-		name: `Kinh doanh ${index}`,
-	}));
+	const [currentPage, setCurrentPage] = useState(1);
+	const {
+		categoryData: { rows = [], count = 0 },
+	} = useFetchViewMoreCategories(currentPage, MAX_PER_PAGE, '[]');
+
+	const handleViewMore = () => {
+		if (rows.length < count) {
+			setCurrentPage(prev => prev + 1);
+		}
+	};
 
 	return (
 		<div className='sidebar-category'>
@@ -32,7 +42,12 @@ const SidebarCategory = () => {
 				isBackground={false}
 				list={statisticList}
 			/>
-			<TopicColumn className='sidebar-category__topics' topics={topicList} title='Tất cả chủ đề' />
+			<TopicColumn
+				className='sidebar-category__topics'
+				topics={rows}
+				title='Tất cả chủ đề'
+				handleViewMore={handleViewMore}
+			/>
 		</div>
 	);
 };

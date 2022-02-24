@@ -1,4 +1,11 @@
-import React from 'react';
+import { useFetchOtherCategories } from 'api/category.hook';
+import { useFetchGroups } from 'api/group.hooks';
+import { useFetchQuotes } from 'api/quote.hooks';
+import { useFetchUsers } from 'api/user.hook';
+import { MAX_PER_PAGE } from 'constants';
+import _ from 'lodash';
+import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import AuthorSlider from 'shared/author-slider';
 import GroupLinks from 'shared/group-links';
 import NewsLinks from 'shared/news-links';
@@ -7,26 +14,46 @@ import TopicColumn from 'shared/topic-column';
 import './sidebar-category-detail.scss';
 
 const SidebarCategoryDetail = () => {
-	const topicList = Array.from(Array(45)).map((_, index) => ({
-		name: `Kinh doanh ${index}`,
-	}));
+	const { categoryInfo } = useSelector(state => state.category);
+	const [currentPage, setCurrentPage] = useState(1);
+	const [name, setName] = useState();
 
-	const quoteList = [...Array(5)].map((_, index) => ({
-		author: 'Nguyen Hiến Lê',
-		book: 'Đắc nhân tâm',
-		content: 'Mỗi trang sách hay đều là một hành trình kỳ diệu',
-		id: index,
-	}));
-	const groupList = [...Array(5)].map((_, index) => ({
-		name: `Tâm sự kinh doanh ${index}`,
-		id: index,
-	}));
+	useEffect(() => {
+		if (!_.isEmpty(categoryInfo)) {
+			setName(categoryInfo.name);
+		}
+	}, [categoryInfo]);
 
-	const authorList = new Array(10).fill({ source: '/images/book1.jpg', name: 'Design pattern' });
+	const {
+		otherCategories: { rows: categoriesList = [], count: totalCategory = 0 },
+	} = useFetchOtherCategories(currentPage, MAX_PER_PAGE, name);
+
+	const {
+		quoteData: { rows: quoteList = [] },
+	} = useFetchQuotes(1, 5);
+
+	const {
+		groups: { rows: groupList = [] },
+	} = useFetchGroups(1, 5, '[]');
+
+	const {
+		usersData: { rows: authorList = [] },
+	} = useFetchUsers(1, 10, "[{ 'operator': 'search', 'value': 'author', 'property': 'role'}]");
+
+	const viewMoreCategories = () => {
+		if (currentPage < totalCategory) {
+			setCurrentPage(prev => prev + 1);
+		}
+	};
 
 	return (
 		<div className='sidebar-category-detail'>
-			<TopicColumn className='sidebar-category__topics' topics={topicList} title='Chủ đề khác' />
+			<TopicColumn
+				className='sidebar-category__topics'
+				topics={categoriesList}
+				handleViewMore={viewMoreCategories}
+				title='Chủ đề khác'
+			/>
 			<AuthorSlider title='Tác giả nổi bật' list={authorList} size='lg' />
 			<div className='sidebar-category-detail__quotes'>
 				<QuotesLinks list={quoteList} title='Quotes' className='sidebar-category-detail__quotes' />

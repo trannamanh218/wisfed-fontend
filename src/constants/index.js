@@ -21,6 +21,8 @@ export const readingStatus = [
 export const colorVarients = ['primary', 'secondary', 'success', 'success-dark', 'warning', 'info', 'light', 'dark'];
 export const DEFAULT_TOGGLE_ROWS = 3;
 export const NUMBER_ROWS = 10;
+export const MAX_PER_PAGE = 20;
+export const NUMBER_OF_BOOKS = 16;
 
 export const DEFAULT_TOGGLE_SINGLE_COLUMN_ROW = 6;
 export const YEAR_LIMIT = 1904;

@@ -4,11 +4,12 @@ import PropTypes from 'prop-types';
 import caretIcon from 'assets/images/caret.png';
 import './topic-column.scss';
 
-const TopicColumn = ({ topics, className, title }) => {
+const TopicColumn = ({ topics, className, title, handleViewMore }) => {
 	const [isExpand, setIsExpand] = useState(false);
 
-	const handleViewMore = () => {
+	const handleExpand = () => {
 		setIsExpand(prev => !prev);
+		handleViewMore();
 	};
 
 	if (topics && topics.length) {
@@ -22,7 +23,7 @@ const TopicColumn = ({ topics, className, title }) => {
 						</div>
 					))}
 				</div>
-				<button className='topic-column__btn' onClick={handleViewMore}>
+				<button className='topic-column__btn' onClick={handleExpand}>
 					<img
 						className={classNames('view-caret', { 'view-more': isExpand })}
 						src={caretIcon}
@@ -40,13 +41,15 @@ const TopicColumn = ({ topics, className, title }) => {
 TopicColumn.defaultProps = {
 	topics: [],
 	className: '',
-	title: 'Chủ đề khác',
+	title: '',
+	handleViewMore: () => {},
 };
 
 TopicColumn.propTypes = {
 	topics: PropTypes.array.isRequired,
 	className: PropTypes.string,
 	title: PropTypes.string,
+	handleViewMore: PropTypes.func,
 };
 
 export default TopicColumn;
