@@ -1,5 +1,5 @@
 import './creat-quotes-modal.scss';
-import { CloseX, WeatherStars, BackChevron, Search } from 'components/svg';
+import { CloseX, WeatherStars, BackChevron, Search, CheckIcon } from 'components/svg';
 import { useEffect, useState, useRef, useCallback } from 'react';
 import classNames from 'classnames';
 import Slider from 'react-slick';
@@ -18,7 +18,7 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 	const [inputAuthorValue, setInputAuthorValue] = useState('');
 	const [inputBookValue, setInputBookValue] = useState('');
 	const [inputTopicValue, setInputTopicValue] = useState('');
-	const [inputKeywordValue, setInputKeywordValue] = useState('');
+	const [inputHashtagValue, setInputHashtagValue] = useState('');
 	const [colorActiveIndex, setColorActiveIndex] = useState(-1);
 	const [authorSearchedList, setAuthorSearchedList] = useState([]);
 	const [authorAdded, setAuthorAdded] = useState('');
@@ -26,7 +26,6 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 	const [bookAdded, setBookAdded] = useState('');
 	const [topicSearchedList, setTopicSearchedList] = useState([]);
 	const [topicAddedList, setTopicAddedList] = useState([]);
-	const [hashTagsAdded, setHashTagsAdded] = useState('');
 	const [getDataFinish, setGetDataFinish] = useState(false);
 
 	const textFieldEdit = useRef(null);
@@ -173,18 +172,22 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 		}
 	}, []);
 
-	const addTopic = toppicName => {
-		const topicArrayTemp = [...topicAddedList];
-		topicArrayTemp.push(toppicName);
-		setTopicAddedList(topicArrayTemp);
-		setInputTopicValue('');
-		setTopicSearchedList([]);
-		topicInputWrapper.current.style.width = '0.5ch';
+	const addTopic = topic => {
+		if (topicAddedList.filter(topicAdded => topicAdded.id === topic.id).length > 0) {
+			removeTopic(topic.id);
+		} else {
+			const topicArrayTemp = [...topicAddedList];
+			topicArrayTemp.push(topic);
+			setTopicAddedList(topicArrayTemp);
+			setInputTopicValue('');
+			setTopicSearchedList([]);
+			topicInputWrapper.current.style.width = '0.5ch';
+		}
 	};
 
-	const removeTopic = index => {
-		console.log(index);
+	const removeTopic = topicId => {
 		const topicArr = [...topicAddedList];
+		const index = topicArr.findIndex(item => item.id === topicId);
 		topicArr.splice(index, 1);
 		setTopicAddedList(topicArr);
 	};
@@ -305,7 +308,7 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 						{inputAuthorValue.trim() !== '' && getDataFinish && (
 							<>
 								{authorSearchedList.length > 0 ? (
-									<div className='creat-quotes-modal__body__option-item__search-result'>
+									<div className='creat-quotes-modal__body__option-item__search-result author'>
 										{authorSearchedList.map(item => (
 											<div
 												className='creat-quotes-modal__searched-item author'
@@ -351,7 +354,7 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 						{inputBookValue.trim() !== '' && getDataFinish && (
 							<>
 								{bookSearchedList.length > 0 ? (
-									<div className='creat-quotes-modal__body__option-item__search-result'>
+									<div className='creat-quotes-modal__body__option-item__search-result book'>
 										{bookSearchedList.map(item => (
 											<div
 												className='creat-quotes-modal__searched-item book'
@@ -385,13 +388,13 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 						>
 							{topicAddedList.length > 0 ? (
 								<div className='creat-quotes-modal__body__option-topics-added'>
-									{topicAddedList.map((item, index) => (
+									{topicAddedList.map(item => (
 										<div
 											key={item.id}
 											className='creat-quotes-modal__body__option-topics-added__item'
 										>
 											<div>{item.name}</div>
-											<button onClick={() => removeTopic(index)}>
+											<button onClick={() => removeTopic(item.id)}>
 												<CloseX />
 											</button>
 										</div>
@@ -425,7 +428,16 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 												key={item.id}
 												onClick={() => addTopic(item)}
 											>
-												{item.name}
+												<span>{item.name}</span>
+												<>
+													{topicAddedList.filter(topicAdded => topicAdded.id === item.id)
+														.length > 0 && (
+														<>
+															<div className='creat-quotes-modal__checked-topic'></div>
+															<CheckIcon />
+														</>
+													)}
+												</>
 											</div>
 										))}
 									</div>
@@ -441,8 +453,8 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 							<input
 								style={{ margin: '0' }}
 								placeholder='Nhập từ khóa'
-								value={inputKeywordValue}
-								onChange={e => setInputKeywordValue(e.target.value)}
+								value={inputHashtagValue}
+								onChange={e => setInputHashtagValue(e.target.value)}
 							/>
 						</div>
 					</div>

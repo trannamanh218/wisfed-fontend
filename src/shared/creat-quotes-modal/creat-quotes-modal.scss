@@ -324,9 +324,14 @@
 .creat-quotes-modal__body__option-item__search-result {
 	display: flex;
 	margin-top: 24px;
-	justify-content: space-between;
+	&.author {
+		gap: 23px;
+	}
+	&.book {
+		gap: 56px;
+	}
 	&.topic {
-		margin-top: 0;
+		margin-top: 8px;
 		justify-content: flex-start;
 		flex-wrap: wrap;
 	}
@@ -337,6 +342,7 @@
 	flex-direction: column;
 	align-items: center;
 	cursor: pointer;
+	// overflow: hidden;
 	&.author {
 		width: 100px;
 	}
@@ -347,9 +353,28 @@
 		padding: 16px;
 		color: $primary;
 		border: $primary 2px solid;
-		border-radius: 12px;
-		margin: 24px 16px 0 0;
+		border-radius: 8px;
+		margin: 16px 16px 0 0;
+		position: relative;
+		svg {
+			width: 8px;
+			height: 8px;
+			position: absolute;
+			top: 2px;
+			right: 4px;
+			path {
+				stroke: white;
+			}
+		}
 	}
+}
+
+.creat-quotes-modal__checked-topic {
+	position: absolute;
+	top: 0px;
+	right: 0px;
+	border-top: 20px $primary solid;
+	border-left: 26px transparent solid;
 }
 
 .creat-quotes-modal__author__avatar {
