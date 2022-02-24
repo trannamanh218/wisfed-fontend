@@ -12,6 +12,16 @@ export const getQuoteList = createAsyncThunk('quote/get quote list', async (para
 	}
 });
 
+export const creatQuotes = createAsyncThunk('quote/creat quotes', async (data, { rejectWithValue }) => {
+	try {
+		const response = await Request.makePost(quoteAPI, data);
+		return response.data;
+	} catch (err) {
+		const error = JSON.parse(err.response);
+		return rejectWithValue(error);
+	}
+});
+
 const quoteSlice = createSlice({
 	name: 'quoteSlice',
 	initialState: {

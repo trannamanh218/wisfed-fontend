@@ -10,6 +10,8 @@ import bookSample from 'assets/images/sample-book-img.jpg';
 import { getSuggestion } from 'reducers/redux-utils/activity';
 import { useDispatch, useSelector } from 'react-redux';
 import _ from 'lodash';
+import { creatQuotes } from 'reducers/redux-utils/quote/index';
+import { toast } from 'react-toastify';
 
 function CreatQuotesModal({ hideCreatQuotesModal }) {
 	const [showTextFieldEditPlaceholder, setShowTextFieldEditPlaceholder] = useState(true);
@@ -23,10 +25,11 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 	const [authorSearchedList, setAuthorSearchedList] = useState([]);
 	const [authorAdded, setAuthorAdded] = useState('');
 	const [bookSearchedList, setBookSearchedList] = useState([]);
-	const [bookAdded, setBookAdded] = useState('');
+	const [bookAdded, setBookAdded] = useState({});
 	const [topicSearchedList, setTopicSearchedList] = useState([]);
 	const [topicAddedList, setTopicAddedList] = useState([]);
 	const [getDataFinish, setGetDataFinish] = useState(false);
+	const [topicAddedIdList, setTopicAddedIdList] = useState([]);
 
 	const textFieldEdit = useRef(null);
 	const sliderRef = useRef(null);
@@ -113,8 +116,8 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 			} else if (option.value === 'add-topic') {
 				setTopicSearchedList(data.rows.slice(0, 5));
 			}
-		} catch (err) {
-			return err;
+		} catch {
+			toast.error('Lỗi hệ thống');
 		} finally {
 			setGetDataFinish(true);
 		}
@@ -145,8 +148,8 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 		debounceSearch(e.target.value, { value: 'add-book' });
 	};
 
-	const addBook = bookName => {
-		setBookAdded(bookName);
+	const addBook = book => {
+		setBookAdded(book);
 		setInputBookValue('');
 		setBookSearchedList([]);
 	};
@@ -192,8 +195,35 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 		setTopicAddedList(topicArr);
 	};
 
+	useEffect(() => {
+		const topicIdArr = [];
+		for (let i = 0; i < topicAddedList.length; i++) {
+			topicIdArr.push(topicAddedList[i].id);
+		}
+		setTopicAddedIdList(topicIdArr);
+	}, [topicAddedList]);
+
 	const renderNoSearchResult = () => {
 		return <div className='creat-quotes-modal__no-search-result'>Không có kết quả phù hợp</div>;
+	};
+
+	const creatQuotesFnc = async () => {
+		try {
+			const data = {
+				'quote': textFieldEdit.current.innerText,
+				'bookId': bookAdded.id,
+				'authorName': authorAdded,
+				'categories': topicAddedIdList,
+				'tag': inputHashtagValue,
+			};
+			const response = await dispatch(creatQuotes(data)).unwrap();
+			if (response) {
+				toast.success('Tạo quotes thành công');
+			}
+			hideCreatQuotesModal();
+		} catch {
+			toast.error('Lỗi hệ thống');
+		}
 	};
 
 	return (
@@ -333,10 +363,10 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 					<div className='creat-quotes-modal__body__option-item'>
 						<div className='creat-quotes-modal__body__option-item__title'>*Sách (Bắt buộc)</div>
 						<div className='creat-quotes-modal__body__option-item__search-container'>
-							{bookAdded ? (
+							{!_.isEmpty(bookAdded) ? (
 								<div className='creat-quotes-modal__body__option-item-added'>
-									<span>{bookAdded}</span>
-									<button onClick={() => setBookAdded('')}>
+									<span>{bookAdded.name}</span>
+									<button onClick={() => setBookAdded({})}>
 										<CloseX />
 									</button>
 								</div>
@@ -359,7 +389,7 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 											<div
 												className='creat-quotes-modal__searched-item book'
 												key={item.id}
-												onClick={() => addBook(item.name)}
+												onClick={() => addBook(item)}
 											>
 												<img
 													className='creat-quotes-modal__book__image'
@@ -461,7 +491,10 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 				</div>
 			</div>
 			<div className='creat-quotes-modal__footer'>
-				<button className={!showTextFieldEditPlaceholder && bookAdded !== '' ? 'active' : ''}>
+				<button
+					className={!showTextFieldEditPlaceholder && !_.isEmpty(bookAdded) ? 'active' : ''}
+					onClick={creatQuotesFnc}
+				>
 					Tạo Quotes
 				</button>
 			</div>

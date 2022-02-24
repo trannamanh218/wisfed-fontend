@@ -1,22 +1,47 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import BackButton from 'shared/back-button';
 import FilterQuotePane from 'shared/fitler-quote-pane';
 import QuoteCard from 'shared/quote-card';
 import SearchField from 'shared/search-field';
 import './main-my-quote.scss';
+import { getQuoteList } from 'reducers/redux-utils/quote';
+import { toast } from 'react-toastify';
+import { useDispatch } from 'react-redux';
 
 const MainMyQuote = () => {
-	const quotesList = new Array(4).fill({
-		data: {
-			content: `Lorem ipsum dolor sit amet consectetur adipisicing elit. Veniam velit nemo voluptate. Eaque tenetur
-			dolore qui doloribus modi alias labore deleniti quisquam sunt. Accusantium, accusamus eius ipsum optio
-			distinctio laborum.`,
-			avatar: '',
-			author: 'Mai Nguyễn',
-			bookName: 'Đắc nhân tâm',
-		},
-		badges: [{ title: 'Marketing' }, { title: 'Phát triển bản thân' }],
-	});
+	const [myQuoteList, setMyQuoteList] = useState([]);
+	const [hasMore, setHasMore] = useState(true);
+
+	const callApiStart = useRef(0);
+	const callApiPerPage = useRef(10);
+
+	const dispatch = useDispatch();
+
+	useEffect(() => {
+		getMyQuoteList();
+	}, []);
+
+	const getMyQuoteList = async () => {
+		try {
+			const params = {
+				start: callApiStart.current,
+				sort: JSON.stringify([{ property: 'createdAt', direction: 'DESC' }]),
+				filter: JSON.stringify([
+					{ operator: 'eq', value: 'bfdb3971-de4c-4c2b-bbbe-fbb36770031a', property: 'createdBy' },
+				]),
+			};
+			const quotesList = await dispatch(getQuoteList(params)).unwrap();
+			const { rows: quotes, count: totalQuote } = quotesList;
+			if (quotes.length && callApiStart.current < totalQuote) {
+				callApiStart.current += callApiPerPage.current;
+				setMyQuoteList(myQuoteList.concat(quotes));
+			} else {
+				setHasMore(false);
+			}
+		} catch {
+			toast.error('Lỗi hệ thống');
+		}
+	};
 
 	const filterOptions = [
 		{ id: 1, title: 'Của tôi', value: 'me' },
@@ -43,8 +68,8 @@ const MainMyQuote = () => {
 				handleChangeOption={handleChangeOption}
 				defaultOption={defaultOption}
 			>
-				{quotesList.length &&
-					quotesList.map((item, index) => <QuoteCard key={index} data={item.data} badges={item.badges} />)}
+				{myQuoteList.length &&
+					myQuoteList.map(item => <QuoteCard key={item.id} data={item.data} badges={item.badges} />)}
 			</FilterQuotePane>
 		</div>
 	);
