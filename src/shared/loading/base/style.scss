@@ -1,0 +1,25 @@
+@import 'src/scss/abstracts/_mixins.scss';
+
+.base-loading {
+	position: absolute;
+	inset: 0;
+	background-color: rgba(0, 0, 0, 0.7);
+	visibility: hidden;
+	opacity: 0;
+	-webkit-transition: all 0.3s;
+	-moz-transition: all 0.3s;
+	transition: all 0.3s;
+	z-index: 1003;
+	&.show {
+		visibility: visible;
+		opacity: 1;
+	}
+}
+
+.base-loading__content {
+	@include position-fixed(50%, 50%);
+	transform: translate(-50%, -50%);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}

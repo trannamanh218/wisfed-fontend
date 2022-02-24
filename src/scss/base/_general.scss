@@ -24,6 +24,24 @@ body {
 	font-family: 'Montserrat', sans-serif;
 	font-weight: 400;
 	line-height: 1;
+	&::-webkit-scrollbar {
+		width: 8px;
+	}
+
+	/* Track */
+	&::-webkit-scrollbar-track {
+		background: #f1f1f1;
+		border-radius: 8px;
+	}
+
+	/* Handle */
+	&::-webkit-scrollbar-thumb {
+		background: #606060;
+		border-radius: 8px;
+		&:hover {
+			background: rgba(#606060, 0.85);
+		}
+	}
 }
 
 article,
@@ -135,4 +153,9 @@ div[contenteditable='true'] {
 .blank-content {
 	font-size: 0.875rem;
 	margin-bottom: 0.5rem;
+}
+
+.modal-portal-open {
+	overflow: hidden;
+	padding-right: 0.5rem;
 }

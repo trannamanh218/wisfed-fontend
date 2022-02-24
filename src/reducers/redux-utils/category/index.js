@@ -12,10 +12,9 @@ export const getCategoryList = createAsyncThunk('categroy/getCategoryList', asyn
 	}
 });
 
-export const getDetailCategory = createAsyncThunk('categroy/getCategoryDetail', async (params, { rejectWithValue }) => {
-	const { id, ...query } = params;
+export const getCategoryDetail = createAsyncThunk('categroy/getCategoryDetail', async (id, { rejectWithValue }) => {
 	try {
-		const response = await Request.makeGet(categoryDetailAPI(id), query);
+		const response = await Request.makeGet(categoryDetailAPI(id), {});
 		return response.data;
 	} catch (err) {
 		const error = JSON.parse(err.response);
@@ -27,10 +26,34 @@ const categorySlice = createSlice({
 	name: 'category',
 	initialState: {
 		isFetching: false,
-		categoriesData: {},
+		categoriesData: {
+			rows: [],
+			count: 0,
+		},
+		categoryInfo: {},
 		error: {},
+	},
+	reducers: {
+		updateAllCategoryData: (state, action) => {
+			state.categoriesData = action.payload;
+		},
+	},
+	extraReducers: {
+		[getCategoryDetail.pending]: state => {
+			state.isFetching = true;
+		},
+		[getCategoryDetail.fulfilled]: (state, action) => {
+			state.isFetching = false;
+			state.categoryInfo = action.payload;
+			state.error = {};
+		},
+		[getCategoryDetail.rejected]: (state, action) => {
+			state.isFetching = false;
+			state.error = action.payload;
+		},
 	},
 });
 
 const category = categorySlice.reducer;
+export const { updateAllCategoryData } = categorySlice.actions;
 export default category;

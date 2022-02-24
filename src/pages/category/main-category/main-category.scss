@@ -5,5 +5,23 @@
 		background: $white;
 		border-radius: 16px;
 		padding: 1.5rem 2.5rem;
+
+		.infinite-scroll-component {
+			overflow: hidden !important;
+		}
+	}
+
+	.blank-content {
+		margin-top: 1.5rem;
+	}
+
+	.book-thumbnail {
+		border: 1px solid $ash-line;
+		img {
+			&:hover {
+				transform: scale(1.1);
+				transition: all 0.2s ease-out;
+			}
+		}
 	}
 }

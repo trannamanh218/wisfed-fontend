@@ -32,7 +32,7 @@ NewsLinks.defaultProps = {
 NewsLinks.propTypes = {
 	title: PropTypes.string,
 	list: PropTypes.array,
-	className: PropTypes.array,
+	className: PropTypes.string,
 };
 
 export default NewsLinks;

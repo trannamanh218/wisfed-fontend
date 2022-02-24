@@ -58,3 +58,8 @@
 	font-family: $font-family, 'sans-serif';
 }
 
+@mixin position-fixed($top, $left) {
+	position: fixed;
+	top: $top;
+	left: $left;
+}
