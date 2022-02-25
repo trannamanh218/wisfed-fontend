@@ -12,6 +12,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import _ from 'lodash';
 import { creatQuotes } from 'reducers/redux-utils/quote/index';
 import { toast } from 'react-toastify';
+import { handleAfterCreatQuote } from 'reducers/redux-utils/quote';
 
 function CreatQuotesModal({ hideCreatQuotesModal }) {
 	const [showTextFieldEditPlaceholder, setShowTextFieldEditPlaceholder] = useState(true);
@@ -215,12 +216,14 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 				'authorName': authorAdded,
 				'categories': topicAddedIdList,
 				'tag': inputHashtagValue,
+				'background': backgroundColor,
 			};
 			const response = await dispatch(creatQuotes(data)).unwrap();
 			if (response) {
 				toast.success('Tạo quotes thành công');
 			}
 			hideCreatQuotesModal();
+			dispatch(handleAfterCreatQuote());
 		} catch {
 			toast.error('Lỗi hệ thống');
 		}

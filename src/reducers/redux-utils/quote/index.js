@@ -28,7 +28,15 @@ const quoteSlice = createSlice({
 		isFetching: false,
 		quotesData: {},
 		error: {},
+		resetQuoteList: false,
 	},
+
+	reducers: {
+		handleAfterCreatQuote: state => {
+			state.resetQuoteList = !state.resetQuoteList;
+		},
+	},
+
 	extraReducers: {
 		[getQuoteList.pending]: state => {
 			state.isFetching = true;
@@ -46,4 +54,5 @@ const quoteSlice = createSlice({
 	},
 });
 
+export const { handleAfterCreatQuote } = quoteSlice.actions;
 export default quoteSlice.reducer;
