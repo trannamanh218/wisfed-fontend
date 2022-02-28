@@ -9,6 +9,7 @@ import QuoteDetail from 'pages/quote-detail';
 import MyQuote from 'pages/quote/my-quote';
 import Review from 'pages/review';
 import BookShelves from 'pages/shelves';
+import ConfirmMyBook from 'pages/confirm-my-book';
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { Routes, Route } from 'react-router-dom';
@@ -62,6 +63,7 @@ function App() {
 				<Route path='/quote/me' element={<MyQuote />} />
 				<Route path='/quote/detail' element={<QuoteDetail />} />
 				<Route path='/profile' element={<Profile />} />
+				<Route path='/confirm-my-book' element={<ConfirmMyBook />} />
 				<Route path='/' element={<Home />} />
 			</Routes>
 		</div>
