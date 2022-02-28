@@ -168,6 +168,12 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 	};
 
 	useEffect(() => {
+		if (topicInput.current) {
+			topicInput.current.focus();
+		}
+	}, [topicAddedList.length]);
+
+	useEffect(() => {
 		if (topicInputContainer.current) {
 			topicInputContainer.current.addEventListener('click', focusTopicInput);
 			return () => {
