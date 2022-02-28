@@ -113,7 +113,6 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 			const url = textFieldEdit.current.innerText.match(urlRegex);
 			if (url !== null) {
 				setUrlAddedArray(url);
-				getPreviewUrlFnc(url[url.length - 1]);
 				setHasUrl(true);
 			} else {
 				setHasUrl(false);
@@ -123,6 +122,12 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 		}, 1000),
 		[]
 	);
+
+	useEffect(() => {
+		if (urlAddedArray.length > 0) {
+			getPreviewUrlFnc(urlAddedArray[urlAddedArray.length - 1]);
+		}
+	}, [urlAddedArray.length]);
 
 	const getPreviewUrlFnc = async url => {
 		setFetchingUrlInfo(true);
