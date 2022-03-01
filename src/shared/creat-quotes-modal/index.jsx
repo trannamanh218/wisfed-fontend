@@ -171,7 +171,7 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 		if (topicInput.current) {
 			topicInput.current.focus();
 		}
-	}, [topicAddedList.length]);
+	}, [topicAddedList]);
 
 	useEffect(() => {
 		if (topicInputContainer.current) {

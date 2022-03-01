@@ -316,8 +316,6 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 		return isActive;
 	};
 
-	console.log(urlAddedArray);
-
 	return (
 		<div className='creat-post-modal-content'>
 			{/* main modal */}
