@@ -89,6 +89,9 @@
 			padding: 12px 16px;
 			border-radius: 12px;
 			line-height: 19px;
+			max-width: 160px;
+			overflow: hidden;
+			text-overflow: ellipsis;
 		}
 	}
 }

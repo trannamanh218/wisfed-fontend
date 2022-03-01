@@ -38,7 +38,7 @@ const QuoteCard = props => {
 			</div>
 			<div className='quote-footer'>
 				<div className='quote-footer__left'>
-					<BadgeList list={data.categories} className='quote-footer__badge' />
+					<BadgeList list={data.categories.slice(0, 2)} className='quote-footer__badge' />
 				</div>
 				<div
 					className={classNames('quote-footer__right', {
