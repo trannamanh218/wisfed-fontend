@@ -5,6 +5,7 @@ import book from './book';
 import category from './category';
 import user from './user';
 import activity from './activity';
+import quote from './quote';
 
 const rootReducer = {
 	auth,
@@ -14,6 +15,7 @@ const rootReducer = {
 	category,
 	user,
 	activity,
+	quote,
 };
 
 export default rootReducer;

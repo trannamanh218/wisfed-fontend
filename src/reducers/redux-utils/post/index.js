@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { postAPI, postDetailAPI } from 'constants/apiURL';
+import { postAPI, postDetailAPI, previewLink } from 'constants/apiURL';
 import Request from 'helpers/Request';
 
 export const getPostList = createAsyncThunk('post/getPostList', async (params, { rejectWithValue }) => {
@@ -25,6 +25,16 @@ export const getPostDetail = createAsyncThunk('post/getPostDetail', async (id, {
 export const createPost = createAsyncThunk('post/createPost', async (params, { rejectWithValue }) => {
 	try {
 		const response = await Request.makeGet(postAPI);
+		return response.data;
+	} catch (err) {
+		const error = JSON.parse(err.response);
+		return rejectWithValue(error);
+	}
+});
+
+export const getPreviewUrl = createAsyncThunk('post/getPreviewUrl', async (data, { rejectWithValue }) => {
+	try {
+		const response = await Request.makePost(previewLink, data);
 		return response.data;
 	} catch (err) {
 		const error = JSON.parse(err.response);

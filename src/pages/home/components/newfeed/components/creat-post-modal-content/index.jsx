@@ -8,7 +8,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Form } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-import { createActivity, getSuggestionForPost } from 'reducers/redux-utils/activity';
+import { createActivity, getSuggestion } from 'reducers/redux-utils/activity';
 import PostEditBook from 'shared/post-edit-book';
 import OptionsPost from './OptionsPost';
 import ShareModeComponent from './ShareModeComponent';
@@ -16,6 +16,9 @@ import './style.scss';
 import CreatPostSubModal from './sub-modal';
 import TaggedList from './TaggedList';
 import UploadImage from './UploadImage';
+import PreviewLink from './PreviewLink';
+import { getPreviewUrl } from 'reducers/redux-utils/post';
+import { useCallback } from 'react';
 
 function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option, onChangeOption, onChangeNewPost }) {
 	const [shareMode, setShareMode] = useState({ value: 'public', title: 'Mọi người', icon: <WorldNet /> });
@@ -31,6 +34,10 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 		'add-friends': [],
 		'add-topic': [],
 	});
+	const [fetchingUrlInfo, setFetchingUrlInfo] = useState(false);
+	const [hasUrl, setHasUrl] = useState(false);
+	const [urlAdded, setUrlAdded] = useState({});
+	const [urlAddedArray, setUrlAddedArray] = useState([]);
 
 	const [status, setStatus] = useState(STATUS_IDLE);
 	const [showUpload, setShowUpload] = useState(false);
@@ -87,6 +94,7 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 	useEffect(() => {
 		textFieldEdit.current.addEventListener('input', () => {
 			handlePlaceholder();
+			detectUrl();
 		});
 
 		return document.removeEventListener('input', handlePlaceholder);
@@ -97,6 +105,47 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 			setShowMainModal(prev => !prev);
 		}
 	}, [option]);
+
+	const detectUrl = useCallback(
+		_.debounce(() => {
+			const urlRegex =
+				/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g;
+			const url = textFieldEdit.current.innerText.match(urlRegex);
+			if (url !== null) {
+				setUrlAddedArray(url);
+				setHasUrl(true);
+			} else {
+				setHasUrl(false);
+				setUrlAdded({});
+				setUrlAddedArray([]);
+			}
+		}, 1000),
+		[]
+	);
+
+	useEffect(() => {
+		if (urlAddedArray.length > 0) {
+			getPreviewUrlFnc(urlAddedArray[urlAddedArray.length - 1]);
+		}
+	}, [urlAddedArray.length]);
+
+	const getPreviewUrlFnc = async url => {
+		setFetchingUrlInfo(true);
+		const data = { 'url': url };
+		try {
+			const res = await dispatch(getPreviewUrl(data)).unwrap();
+			setUrlAdded(res);
+		} catch (err) {
+			const obj = { url: url, title: url, images: [] };
+			setUrlAdded(obj);
+		} finally {
+			setFetchingUrlInfo(false);
+		}
+	};
+
+	const removeUrlPreview = () => {
+		setHasUrl(false);
+	};
 
 	// const addOptionsToPost = param => {
 	// 	setOption(param);
@@ -144,7 +193,7 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 
 	const fetchSuggestion = async (input, option) => {
 		try {
-			const data = await dispatch(getSuggestionForPost({ input, option, userInfo })).unwrap();
+			const data = await dispatch(getSuggestion({ input, option, userInfo })).unwrap();
 			setSuggestionData(data.rows);
 		} catch (err) {
 			return err;
@@ -332,7 +381,11 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 								</div>
 							</div>
 						</div>
-						<div className='creat-post-modal-content__main__body__text-field-edit-wrapper'>
+						<div
+							className={classNames('creat-post-modal-content__main__body__text-field-edit-wrapper', {
+								'height-higher': showUpload || hasUrl,
+							})}
+						>
 							<div
 								className='creat-post-modal-content__main__body__text-field-edit'
 								contentEditable={true}
@@ -435,6 +488,13 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 
 							{!_.isEmpty(taggedData['add-book']) && <PostEditBook data={taggedData['add-book']} />}
 							{showUpload && <UploadImage addOptionsToPost={addOptionsToPost} optionList={optionList} />}
+							{hasUrl && !showUpload && (
+								<PreviewLink
+									urlData={urlAdded}
+									isFetching={fetchingUrlInfo}
+									removeUrlPreview={removeUrlPreview}
+								/>
+							)}
 						</div>
 					</div>
 

@@ -10,13 +10,19 @@
 .quote-action__item {
 	display: flex;
 	align-items: center;
-	gap: 0.75em;
-	font-size: 0.8rem;
+	gap: 12px;
+	font-size: 13px;
 	color: #6e7191;
 	font-weight: 600;
 	cursor: pointer;
 	-webkit-user-select: none;
 	user-select: none;
+
+	span {
+		line-height: 24px;
+		vertical-align: middle;
+	}
+
 	svg {
 		width: 24px;
 		height: 24px;
@@ -31,13 +37,13 @@
 		}
 	}
 
-	a {
+	button {
+		font-weight: 600;
 		color: $blue;
-		cursor: pointer;
-	}
-
-	img {
-		margin-left: 0.8em;
+		.quote-action__right-arrow {
+			margin-left: 12px;
+			height: 16px;
+		}
 	}
 }
 
