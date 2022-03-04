@@ -7,9 +7,13 @@ import { useDropzone } from 'react-dropzone';
 import _ from 'lodash';
 import { useCallback, useState } from 'react';
 import classNames from 'classnames';
+import { uploadMultiFile } from 'reducers/redux-utils/common';
+import { useDispatch } from 'react-redux';
 
 function MainConfirmMyBook() {
 	const [images, setImages] = useState([]);
+
+	const dispatch = useDispatch();
 
 	const onDrop = useCallback(acceptedFiles => {
 		if (!_.isEmpty(acceptedFiles)) {
@@ -19,6 +23,19 @@ function MainConfirmMyBook() {
 	});
 
 	const { getRootProps, getInputProps } = useDropzone({ accept: 'image/*', onDrop, multiple: true });
+
+	const submitConfirm = async () => {
+		try {
+			const data = [];
+			for (let i = 0; i < images.length; i++) {
+				data.push(images[i]);
+			}
+			const imagesUploaded = await dispatch(uploadMultiFile(data));
+			console.log(imagesUploaded);
+		} catch {
+			console.log('error catch');
+		}
+	};
 
 	return (
 		<div className='main-confirm-my-book'>
@@ -135,7 +152,7 @@ function MainConfirmMyBook() {
 							</div>
 						)}
 					</>
-					<button className='main-confirm-my-book__confirm__submit'>
+					<button className='main-confirm-my-book__confirm__submit' onClick={submitConfirm}>
 						<CircleCheckIcon />
 						<span>Gửi xác thực</span>
 					</button>

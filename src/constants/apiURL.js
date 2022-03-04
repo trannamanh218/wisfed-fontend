@@ -20,6 +20,7 @@ export const groupDetailAPI = id => `/api/v1/groups/${id}`;
 export const bookAPI = '/api/v1/books';
 export const bookDetailAPI = id => `/api/v1/books/${id}`;
 export const bookElasticSearchAPI = '/api/v1/books/search';
+export const creatBookCopyright = '/api/v1/bookCopyrights';
 
 // category
 export const categoryAPI = '/api/v1/categories';
