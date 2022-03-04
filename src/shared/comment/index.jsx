@@ -1,14 +1,25 @@
 import classNames from 'classnames';
+import { calculateDurationTime } from 'helpers/Common';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Badge } from 'react-bootstrap';
+import { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
+import { updateReactionActivity } from 'reducers/redux-utils/activity';
 import UserAvatar from 'shared/user-avatar';
 import './comment.scss';
 
 const Comment = props => {
-	const { data, handleReply, handleLike, postData, index, parentData, indexParent } = props;
+	const { data, handleReply, postData, index, parentData, indexParent } = props;
 	const isAuthor = postData.origin.split(':')[1] === data.user.id;
+	const { userInfo } = useSelector(state => state.auth);
+	const dispatch = useDispatch();
+
+	const handleLike = () => {
+		const params = { commentId: data.id };
+		dispatch(updateReactionActivity(params)).unwrap();
+	};
 
 	return (
 		<div className={classNames('comment', { 'comment--secondary': !_.isEmpty(parentData) })}>
@@ -33,13 +44,20 @@ const Comment = props => {
 				</div>
 
 				<ul className='comment__action'>
-					<li className='comment__item' onClick={handleLike}>
+					<li
+						className={classNames('comment__item', {
+							'active': data.like && data.updateBy === userInfo.id,
+						})}
+						onClick={handleLike}
+					>
 						Thích
 					</li>
 					<li className='comment__item' onClick={() => handleReply(data, index, parentData, indexParent)}>
 						Phản hồi
 					</li>
-					<li className='comment__item comment__item--timeline'>{`${0} giờ`}</li>
+					<li className='comment__item comment__item--timeline'>
+						{`${calculateDurationTime(data.createdAt)}`}
+					</li>
 				</ul>
 			</div>
 		</div>
@@ -48,7 +66,6 @@ const Comment = props => {
 
 Comment.defaultProps = {
 	data: {},
-	handleLike: () => {},
 	handleReply: () => {},
 	index: 0,
 	parentData: {},
@@ -58,7 +75,6 @@ Comment.defaultProps = {
 Comment.propTypes = {
 	data: PropTypes.object,
 	postData: PropTypes.object,
-	handleLike: PropTypes.func,
 	handleReply: PropTypes.func,
 	index: PropTypes.number,
 	parentData: PropTypes.object,

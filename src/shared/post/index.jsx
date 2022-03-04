@@ -47,7 +47,7 @@ function Post({ postInformations, className, isUpdateProgressReading = false }) 
 		dispatch(createComment(params))
 			.unwrap()
 			.then(res => {
-				const propertyComment = ['activityId', 'content', 'getstreamId', 'reply', 'id'];
+				const propertyComment = ['activityId', 'content', 'getstreamId', 'reply', 'id', 'createdAt'];
 				const newComment = _.pick(res, propertyComment);
 				newComment.user = userInfo;
 				newComment.replyComments = [];
