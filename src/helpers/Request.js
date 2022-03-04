@@ -1,5 +1,4 @@
 import axios, { CancelToken } from 'axios';
-import _ from 'lodash';
 import Storage from './Storage';
 const source = null;
 

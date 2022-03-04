@@ -25,7 +25,7 @@ const QuoteCard = props => {
 
 			<div className='quote-card__author'>
 				<div className='quote-card__author__avatar'>
-					<UserAvatar size='sm' avatarImage={data.user.avatarImage} />
+					<UserAvatar size='sm' avatarImage={data?.user?.avatarImage} />
 				</div>
 				<div className='quote-card__author__detail'>
 					<p
@@ -34,12 +34,12 @@ const QuoteCard = props => {
 					>
 						Quotes này tạo bởi
 					</p>
-					<p className='quote-card__author__detail__name'>{data.user.fullName}</p>
+					<p className='quote-card__author__detail__name'>{data?.user?.fullName}</p>
 				</div>
 			</div>
 			<div className='quote-footer'>
 				<div className='quote-footer__left'>
-					<BadgeList list={data.categories.slice(0, 2)} className='quote-footer__badge' />
+					<BadgeList list={data?.categories?.slice(0, 2)} className='quote-footer__badge' />
 				</div>
 				<div
 					className={classNames('quote-footer__right', {

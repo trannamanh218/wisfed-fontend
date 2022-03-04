@@ -8,7 +8,7 @@ const QuoteList = ({ list }) => {
 		return (
 			<div className='quote-list'>
 				{list.map((item, index) => (
-					<QuoteCard key={`quote-${index}`} data={item.data} badges={item.badges} />
+					<QuoteCard key={`quote-${index}`} data={item.data || item} badges={item.badges} />
 				))}
 			</div>
 		);
