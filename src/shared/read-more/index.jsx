@@ -8,6 +8,7 @@ const ReadMore = ({ text, length = 450 }) => {
 	const handleShow = () => {
 		setShowLess(prev => !prev);
 	};
+
 	return (
 		<p className={classNames('read-more')}>
 			{showLess ? `${text.slice(0, length)}...` : text}

@@ -4,10 +4,10 @@ import BookReview from 'pages/book-detail/book-review';
 
 const BookInfo = () => {
 	return (
-		<div>
+		<>
 			<BookIntro />
 			<BookReview />
-		</div>
+		</>
 	);
 };
 

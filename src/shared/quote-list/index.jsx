@@ -14,7 +14,7 @@ const QuoteList = ({ list }) => {
 		);
 	}
 
-	return <p>Không có dữ liệu</p>;
+	return <p className='blank-content'>Không có dữ liệu</p>;
 };
 
 QuoteList.propTypes = {

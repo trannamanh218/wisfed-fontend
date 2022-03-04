@@ -13,7 +13,7 @@ const PostEditBook = props => {
 			<BookThumbnail source={data?.images[0]} />
 			<div className='post-edit-book__informations'>
 				<div className='post-edit-book__name-and-author'>
-					<div data-testid='post-edit-book__name' className='post-edit-book__name'>
+					<div data-testid='post-edit-book__name' className='post-edit-book__name' title={data.name}>
 						{data.name}
 					</div>
 					<div className='post-edit-book__author'>{data.author || 'Tác giả: Chưa xác định'}</div>

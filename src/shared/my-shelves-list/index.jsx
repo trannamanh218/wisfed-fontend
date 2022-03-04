@@ -4,6 +4,7 @@ import Button from 'shared/button';
 import { Field, Form, Formik } from 'formik';
 import Input from 'shared/input';
 import StatisticList from 'shared/statistic-list';
+import { titleBookShelve } from 'helpers/Validation';
 import './my-shelves-list.scss';
 
 const MyShelvesList = ({ list }) => {
@@ -22,6 +23,7 @@ const MyShelvesList = ({ list }) => {
 				initialValues={{
 					title: '',
 				}}
+				validationSchema={titleBookShelve}
 				onSubmit={handleSubmit}
 			>
 				<Form>

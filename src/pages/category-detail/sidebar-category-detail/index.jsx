@@ -11,17 +11,26 @@ import GroupLinks from 'shared/group-links';
 import NewsLinks from 'shared/news-links';
 import QuotesLinks from 'shared/quote-links';
 import TopicColumn from 'shared/topic-column';
+import { Circle as CircleLoading } from 'shared/loading';
+import PropTypes from 'prop-types';
 import './sidebar-category-detail.scss';
+import { STATUS_LOADING } from 'constants';
 
-const SidebarCategoryDetail = () => {
+const SidebarCategoryDetail = ({ status, viewCategoryDetail }) => {
 	const { categoryInfo } = useSelector(state => state.category);
 	const [currentPage, setCurrentPage] = useState(1);
 	const [name, setName] = useState();
 
 	useEffect(() => {
-		if (!_.isEmpty(categoryInfo)) {
+		let isMount = true;
+		if (isMount && !_.isEmpty(categoryInfo)) {
 			setName(categoryInfo.name);
+			setCurrentPage(1);
 		}
+
+		return () => {
+			isMount = false;
+		};
 	}, [categoryInfo]);
 
 	const {
@@ -46,13 +55,19 @@ const SidebarCategoryDetail = () => {
 		}
 	};
 
+	if (_.isEmpty(categoryInfo)) {
+		return '';
+	}
+
 	return (
 		<div className='sidebar-category-detail'>
+			<CircleLoading loading={status === STATUS_LOADING} />
 			<TopicColumn
 				className='sidebar-category__topics'
+				title='Chủ đề khác'
 				topics={categoriesList}
 				handleViewMore={viewMoreCategories}
-				title='Chủ đề khác'
+				viewCategoryDetail={viewCategoryDetail}
 			/>
 			<AuthorSlider title='Tác giả nổi bật' list={authorList} size='lg' />
 			<div className='sidebar-category-detail__quotes'>
@@ -64,6 +79,9 @@ const SidebarCategoryDetail = () => {
 	);
 };
 
-SidebarCategoryDetail.propTypes = {};
+SidebarCategoryDetail.propTypes = {
+	status: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+	viewCategoryDetail: PropTypes.func,
+};
 
 export default SidebarCategoryDetail;
