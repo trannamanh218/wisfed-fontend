@@ -20,7 +20,7 @@ export const groupDetailAPI = id => `/api/v1/groups/${id}`;
 export const bookAPI = '/api/v1/books';
 export const bookDetailAPI = id => `/api/v1/books/${id}`;
 export const bookElasticSearchAPI = '/api/v1/books/search';
-export const creatBookCopyright = '/api/v1/bookCopyrights';
+export const creatBookCopyrightsAPI = '/api/v1/bookCopyrights';
 
 // category
 export const categoryAPI = '/api/v1/categories';
@@ -37,6 +37,6 @@ export const makeFriendAPI = `/api/v1/users/friendRequest`;
 //activity
 export const activityAPI = '/api/v1/getstream';
 
-// upload
+// upload files
 export const uploadImageAPI = '/api/v1/upload/image';
 export const uploadMultipleImageAPI = '/api/v1/upload/multiple';

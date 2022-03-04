@@ -7,8 +7,9 @@ import { useDropzone } from 'react-dropzone';
 import _ from 'lodash';
 import { useCallback, useState } from 'react';
 import classNames from 'classnames';
-import { uploadMultiFile } from 'reducers/redux-utils/common';
+import { uploadMultiFile, creatBookCopyrights } from 'reducers/redux-utils/common';
 import { useDispatch } from 'react-redux';
+import { toast } from 'react-toastify';
 
 function MainConfirmMyBook() {
 	const [images, setImages] = useState([]);
@@ -30,10 +31,24 @@ function MainConfirmMyBook() {
 			for (let i = 0; i < images.length; i++) {
 				data.push(images[i]);
 			}
-			const imagesUploaded = await dispatch(uploadMultiFile(data));
-			console.log(imagesUploaded);
+			const imagesUploadedData = await dispatch(uploadMultiFile(data)).unwrap();
+			const imagesUploaded = [];
+			imagesUploadedData.forEach(item => imagesUploaded.push(item.streamPath));
+			const dataCopyrights = {
+				'bookId': 7,
+				'content': 'string',
+				'documents': imagesUploaded,
+				'phone': '0142154152',
+				'address': 'dsafsfsaff',
+				'status': 'pending',
+			};
+			const creatBookCopyrightsResponse = await dispatch(creatBookCopyrights(dataCopyrights)).unwrap();
+			if (creatBookCopyrightsResponse) {
+				toast.success('Gửi Yêu cầu thành công');
+				setImages([]);
+			}
 		} catch {
-			console.log('error catch');
+			toast.error('Gửi yêu cầu không thành công');
 		}
 	};
 
