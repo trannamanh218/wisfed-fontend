@@ -306,6 +306,7 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 							<button
 								style={{
 									border: '#d9dbe9 4px solid',
+									background: 'white',
 								}}
 								onClick={() => changeBackground('', -1)}
 							></button>
