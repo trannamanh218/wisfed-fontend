@@ -7,15 +7,43 @@ import './main-quote.scss';
 
 const MainQuote = () => {
 	const quotesList = new Array(4).fill({
-		data: {
-			content: `Lorem ipsum dolor sit amet consectetur adipisicing elit. Veniam velit nemo voluptate. Eaque tenetur
-			dolore qui doloribus modi alias labore deleniti quisquam sunt. Accusantium, accusamus eius ipsum optio
-			distinctio laborum.`,
-			avatar: '',
-			author: 'Mai Nguyễn',
-			bookName: 'Đắc nhân tâm',
+		id: 20,
+		bookId: 77999,
+		authorName: 'Yuval Noah Harari',
+		quote: 'lieu thi an nhieu',
+		background: 'to bottom right, #3F74D0, #69C8DE, #A6E1CF',
+		tagId: 10,
+		createdBy: 'bfdb3971-de4c-4c2b-bbbe-fbb36770031a',
+		updatedBy: 'bfdb3971-de4c-4c2b-bbbe-fbb36770031a',
+		createdAt: '2022-02-25T07:55:10.538Z',
+		updatedAt: '2022-02-25T07:55:10.538Z',
+		book: {
+			name: 'Lãng Khách Kenshin Tập 22: Trận Chiến Tam Cực',
+			description:
+				'Lãng Khách Kenshin Tập 22: Trận Chiến Tam Cực,Nhằm  phá  vỡ  cục  diện  bế  tắc  của  trận chiến,  Sangou  Iwanbou  cùng  Gein  đã nhảy  xuống  đất.  Trận  chiến  phân  thành  ba cực!  Sanosuke  đấu  Inui  Banjin,  Yahiko  đấu Otowa,  còn  Kenshin  đấu  với  Iwanbou  số  ba! Tình hình mỗi trận đấu sẽ ra sao!?',
+			frontBookCover: null,
+			categoryId: 16,
+			verify: false,
 		},
-		badges: [{ title: 'Marketing' }, { title: 'Phát triển bản thân' }],
+		user: {
+			fullName: 'admin user1',
+			email: 'admin@gmail.com',
+			avatarImage:
+				'https://images.unsplash.com/photo-1469474968028-56623f02e42e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1174&q=80',
+		},
+		categories: [
+			{
+				quoteId: 20,
+				category: {
+					name: 'Manga-Commic',
+					slug: null,
+				},
+			},
+		],
+		tag: {
+			name: 'hot',
+			slug: 'hot',
+		},
 	});
 
 	const filterOptions = [

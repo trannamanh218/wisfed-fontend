@@ -8,6 +8,7 @@ import classNames from 'classnames';
 
 const QuoteCard = props => {
 	const { data, isDetail, quoteData } = props;
+
 	return (
 		<div
 			className='quote-card'
@@ -15,11 +16,11 @@ const QuoteCard = props => {
 		>
 			<div
 				className={classNames('quote-card__quote-content', {
-					'white-color': data.background !== '',
+					'white-color': data.background,
 				})}
 			>
 				<p>{`"${data.quote}"`}</p>
-				<p style={{ textDecoration: 'underline' }}>{`${data.authorName} - ${data.book.name}`}</p>
+				<p style={{ textDecoration: 'underline' }}>{`${data.authorName} - ${data.book?.name}`}</p>
 			</div>
 
 			<div className='quote-card__author'>
