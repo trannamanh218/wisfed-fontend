@@ -6,6 +6,8 @@ import category from './category';
 import user from './user';
 import activity from './activity';
 import quote from './quote';
+import library from './library';
+import comment from './comment';
 
 const rootReducer = {
 	auth,
@@ -16,6 +18,8 @@ const rootReducer = {
 	user,
 	activity,
 	quote,
+	library,
+	comment,
 };
 
 export default rootReducer;

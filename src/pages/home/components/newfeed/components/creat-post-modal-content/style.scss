@@ -247,7 +247,7 @@
 	border-radius: 12px;
 	border: #f1f1f5 1px solid;
 	padding: 10px;
-	display: none;
+
 	&.one-image {
 		display: block;
 		height: 400px;
@@ -632,14 +632,14 @@
 	font-weight: 600;
 }
 
-// sub-modify-images
-.creat-post-modal-content__substitute__body__modify-images-container {
+// sub-modifyImages
+.creat-post-modal-content__substitute__body__modifyImages-container {
 	padding: 16px 4px 16px 16px;
 	border-top: #f1f1f5 1px solid;
 	border-bottom: #f1f1f5 1px solid;
 }
 
-.creat-post-modal-content__substitute__body__modify-images-box {
+.creat-post-modal-content__substitute__body__modifyImages-box {
 	display: grid;
 	grid-gap: 4px;
 	max-height: 400px;
@@ -653,17 +653,17 @@
 	}
 }
 
-.creat-post-modal-content__substitute__body__modify-images-box::-webkit-scrollbar {
+.creat-post-modal-content__substitute__body__modifyImages-box::-webkit-scrollbar {
 	width: 8px;
 	background-color: #f5f5f5;
 }
 
-.creat-post-modal-content__substitute__body__modify-images-box::-webkit-scrollbar-thumb {
+.creat-post-modal-content__substitute__body__modifyImages-box::-webkit-scrollbar-thumb {
 	border-radius: 10px;
 	background-color: #cfcfcf;
 }
 
-.creat-post-modal-content__substitute__body__modify-images-box::-webkit-scrollbar-track {
+.creat-post-modal-content__substitute__body__modifyImages-box::-webkit-scrollbar-track {
 	background-color: white;
 }
 
@@ -697,7 +697,7 @@
 	}
 }
 
-.creat-post-modal-content__substitute__body__modify-images-confirm {
+.creat-post-modal-content__substitute__body__modifyImages-confirm {
 	padding: 20px 28px;
 	display: flex;
 	justify-content: flex-end;
