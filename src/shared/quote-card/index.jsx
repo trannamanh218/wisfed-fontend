@@ -4,24 +4,47 @@ import BadgeList from 'shared/badge-list';
 import QuoteActionBar from 'shared/quote-action-bar';
 import UserAvatar from 'shared/user-avatar';
 import './quote-card.scss';
+import classNames from 'classnames';
 
 const QuoteCard = props => {
-	const { data, badges, isDetail, quoteData } = props;
+	const { data, isDetail, quoteData } = props;
 	return (
-		<div className='quote-card'>
-			<p className='quote-body'>{data.content}</p>
-			<div className='quote-author'>
-				<UserAvatar size='sm' className='quote-author__avatar' />
-				<div className='quote-author__detail'>
-					<span className='author'>{data.author}</span>
-					<p>{data.bookName}</p>
+		<div
+			className='quote-card'
+			style={data.background !== '' ? { backgroundImage: `linear-gradient(${data.background})` } : {}}
+		>
+			<div
+				className={classNames('quote-card__quote-content', {
+					'white-color': data.background !== '',
+				})}
+			>
+				<p>{`"${data.quote}"`}</p>
+				<p style={{ textDecoration: 'underline' }}>{`${data.authorName} - ${data.book.name}`}</p>
+			</div>
+
+			<div className='quote-card__author'>
+				<div className='quote-card__author__avatar'>
+					<UserAvatar size='sm' avatarImage={data.user.avatarImage} />
+				</div>
+				<div className='quote-card__author__detail'>
+					<p
+						className='quote-card__author__detail__text'
+						style={data.background !== '' ? { color: '#fcfcfc' } : {}}
+					>
+						Quotes này tạo bởi
+					</p>
+					<p className='quote-card__author__detail__name'>{data.user.fullName}</p>
 				</div>
 			</div>
 			<div className='quote-footer'>
 				<div className='quote-footer__left'>
-					<BadgeList list={badges} className='quote-footer__badge' />
+					<BadgeList list={data.categories} className='quote-footer__badge' />
 				</div>
-				<div className='quote-footer__right'>
+				<div
+					className={classNames('quote-footer__right', {
+						'white-color-children': data.background !== '',
+					})}
+				>
 					<QuoteActionBar data={quoteData} isDetail={isDetail} />
 				</div>
 			</div>

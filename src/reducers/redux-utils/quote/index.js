@@ -12,13 +12,31 @@ export const getQuoteList = createAsyncThunk('quote/get quote list', async (para
 	}
 });
 
+export const creatQuotes = createAsyncThunk('quote/creat quotes', async (data, { rejectWithValue }) => {
+	try {
+		const response = await Request.makePost(quoteAPI, data);
+		return response.data;
+	} catch (err) {
+		const error = JSON.parse(err.response);
+		return rejectWithValue(error);
+	}
+});
+
 const quoteSlice = createSlice({
 	name: 'quoteSlice',
 	initialState: {
 		isFetching: false,
 		quotesData: {},
 		error: {},
+		resetQuoteList: false,
 	},
+
+	reducers: {
+		handleAfterCreatQuote: state => {
+			state.resetQuoteList = !state.resetQuoteList;
+		},
+	},
+
 	extraReducers: {
 		[getQuoteList.pending]: state => {
 			state.isFetching = true;
@@ -36,4 +54,5 @@ const quoteSlice = createSlice({
 	},
 });
 
+export const { handleAfterCreatQuote } = quoteSlice.actions;
 export default quoteSlice.reducer;

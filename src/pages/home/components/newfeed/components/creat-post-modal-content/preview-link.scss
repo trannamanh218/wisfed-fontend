@@ -1,0 +1,138 @@
+@import 'src/scss/abstracts/_global.scss';
+
+.preview-link {
+	width: 100%;
+	border-radius: 12px;
+	border: #f1f1f5 1px solid;
+	padding: 12px;
+}
+
+// loading
+.preview-link-loading {
+	height: 155px;
+	background-color: #f7f7fc;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.lds-ellipsis {
+	display: inline-block;
+	position: relative;
+	width: 80px;
+	height: 80px;
+}
+.lds-ellipsis div {
+	position: absolute;
+	top: 33px;
+	width: 13px;
+	height: 13px;
+	border-radius: 50%;
+	background: $ash-line;
+	animation-timing-function: cubic-bezier(0, 1, 1, 0);
+}
+.lds-ellipsis div:nth-child(1) {
+	left: 8px;
+	animation: lds-ellipsis1 0.4s infinite;
+}
+.lds-ellipsis div:nth-child(2) {
+	left: 8px;
+	animation: lds-ellipsis2 0.4s infinite;
+}
+.lds-ellipsis div:nth-child(3) {
+	left: 32px;
+	animation: lds-ellipsis2 0.4s infinite;
+}
+.lds-ellipsis div:nth-child(4) {
+	left: 56px;
+	animation: lds-ellipsis3 0.4s infinite;
+}
+@keyframes lds-ellipsis1 {
+	0% {
+		transform: scale(0);
+	}
+	100% {
+		transform: scale(1);
+	}
+}
+@keyframes lds-ellipsis3 {
+	0% {
+		transform: scale(1);
+	}
+	100% {
+		transform: scale(0);
+	}
+}
+@keyframes lds-ellipsis2 {
+	0% {
+		transform: translate(0, 0);
+	}
+	100% {
+		transform: translate(24px, 0);
+	}
+}
+
+// content
+
+.preview-link__content {
+	position: relative;
+}
+
+.preview-link__image {
+	height: 280px;
+	img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+}
+
+.preview-link__information {
+	background-color: #f7f7fc;
+	padding: 16px;
+	user-select: none;
+	&__domain {
+		text-transform: uppercase;
+		color: $ash-label;
+		line-height: 19px;
+		font-size: 13px;
+	}
+	&__title {
+		color: $ash;
+		line-height: 24px;
+		margin-top: 4px;
+		font-weight: 600;
+		font-size: 16px;
+		display: -webkit-box;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp: 2;
+		overflow: hidden;
+	}
+	&__description {
+		color: $ash-label;
+		line-height: 19px;
+		font-size: 13px;
+		margin-top: 4px;
+		display: -webkit-box;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp: 2;
+		overflow: hidden;
+	}
+}
+
+.preview-link__close-btn {
+	position: absolute;
+	top: 12px;
+	right: 12px;
+	padding: 4px;
+	background-color: white;
+	border-radius: 50%;
+	border: #e6e6e6 1px solid;
+	svg {
+		width: 20px;
+		height: 20px;
+	}
+	&:hover {
+		background-color: #f2f2f2;
+	}
+}

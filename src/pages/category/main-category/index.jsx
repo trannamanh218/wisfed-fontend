@@ -6,42 +6,21 @@ import CategoryGroup from 'shared/category-group';
 import LoadingIndicator from 'shared/loading-indicator';
 import SearchField from 'shared/search-field';
 import SearchCategory from './SearchCategory';
-import { useDispatch } from 'react-redux';
-import { getCategoryDetail } from 'reducers/redux-utils/category';
-import { STATUS_IDLE } from 'constants';
 import { STATUS_LOADING } from 'constants';
-import { STATUS_SUCCESS } from 'constants';
 import { Circle as CircleLoading } from 'shared/loading';
-import { useNavigate } from 'react-router-dom';
-import RouteLink from 'helpers/RouteLink';
+import PropTypes from 'prop-types';
 import './main-category.scss';
 
-const MainCategory = () => {
+const MainCategory = ({ status, viewCategoryDetail }) => {
 	const [inputValue, setInputValue] = useState('');
 	const { categories, fetchData, hasMore } = useFetchAllCategoriesWithBooks();
 	const { searchCategories, fetchFilterData, hasMoreFilterData } = useFetchFilterCategories(inputValue);
-	const [status, setStatus] = useState([STATUS_IDLE]);
-
-	const dispatch = useDispatch();
-	const navigate = useNavigate();
 
 	const changeHandler = event => {
 		setInputValue(event.target.value);
 	};
 
 	const debouncedChangeHandler = useCallback(_.debounce(changeHandler, 1000), []);
-
-	const viewCategoryDetail = async data => {
-		setStatus(STATUS_LOADING);
-		try {
-			await dispatch(getCategoryDetail(data.id)).unwrap();
-			setStatus(STATUS_SUCCESS);
-			navigate(RouteLink.categoryDetail(data.id, data.name));
-		} catch (err) {
-			const statusCode = err?.statusCode || 500;
-			setStatus(statusCode);
-		}
-	};
 
 	if (!inputValue) {
 		return (
@@ -85,6 +64,9 @@ const MainCategory = () => {
 	);
 };
 
-MainCategory.propTypes = {};
+MainCategory.propTypes = {
+	status: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+	viewCategoryDetail: PropTypes.func,
+};
 
 export default MainCategory;

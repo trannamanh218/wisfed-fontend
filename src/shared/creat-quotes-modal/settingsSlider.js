@@ -29,7 +29,7 @@ const settingsSlider = {
 	autoplay: false,
 	swipeToSlide: true,
 	variableWidth: true,
-	touchMove: true,
+	touchMove: false,
 	nextArrow: <SlideNextBtn />,
 	prevArrow: <SlidePrevBtn />,
 	// responsive: [

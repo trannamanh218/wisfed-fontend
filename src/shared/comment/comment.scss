@@ -3,6 +3,7 @@
 .comment {
 	display: flex;
 	width: fit-content;
+	margin-bottom: 1.25rem;
 	&__container {
 		max-width: 41.5rem;
 		margin-bottom: 0.3em;
@@ -10,6 +11,15 @@
 		border-radius: 16px;
 		background-color: $ash-background;
 		font-size: 0.825rem;
+	}
+
+	&--secondary {
+		padding-left: 1.25rem;
+	}
+
+	&__header {
+		display: flex;
+		align-items: center;
 	}
 	&__avatar {
 		flex-shrink: 0;
@@ -33,6 +43,7 @@
 		font-weight: 500;
 		line-height: 1.5;
 		color: $ash-body;
+		word-break: break-word;
 	}
 
 	&__action {
@@ -45,6 +56,7 @@
 	}
 
 	&__item {
+		cursor: pointer;
 		&--timeline {
 			font-weight: 500;
 			color: $ash-placeholder;

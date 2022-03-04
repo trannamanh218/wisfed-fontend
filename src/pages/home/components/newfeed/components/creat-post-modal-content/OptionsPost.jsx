@@ -9,22 +9,25 @@ const OptionsPost = ({ list, addOptionsToPost, taggedData }) => {
 	return list.map((item, index) => {
 		if (index < lastIndex) {
 			let isActive = false;
-			if (item.value === 'add-book') {
+			if (item.value === 'addBook') {
 				isActive = _.isEmpty(taggedData[item.value]) === true ? false : true;
 			} else {
 				isActive = taggedData[item.value].length > 0 ? true : false;
 			}
 
 			return (
-				<button
+				<span
 					className={classNames('creat-post-modal-content__main__options__item-add-to-post', {
 						'active': isActive,
 					})}
-					onClick={() => addOptionsToPost(item)}
+					onClick={e => {
+						e.stopPropagation();
+						addOptionsToPost(item);
+					}}
 					key={item.value || index}
 				>
 					{item.icon}
-				</button>
+				</span>
 			);
 		}
 		return null;

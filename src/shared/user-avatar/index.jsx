@@ -3,7 +3,7 @@ import defaultAvatar from 'assets/images/avatar.jpeg';
 import PropTypes from 'prop-types';
 import './user-avatar.scss';
 
-const UserAvatar = ({ avatarImage, source, name, size, handleClick, className }) => {
+const UserAvatar = ({ avatarImage, name, size, handleClick, className, source }) => {
 	return (
 		<div className={`user-avatar user-avatar-${size} ${className ? className : ''}`} onClick={handleClick}>
 			<img
@@ -17,11 +17,11 @@ const UserAvatar = ({ avatarImage, source, name, size, handleClick, className })
 };
 
 UserAvatar.defaultProps = {
-	source: '',
 	name: 'avatar',
 	size: 'md',
 	handleClick: () => {},
 	avatarImage: '',
+	source: '',
 };
 
 UserAvatar.propTypes = {

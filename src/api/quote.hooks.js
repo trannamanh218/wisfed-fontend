@@ -48,22 +48,29 @@ export const useFetchQuotes = (current = 1, perPage = 10, filter = '[]') => {
 		setRetry(prev => !prev);
 	}, [setRetry]);
 
-	useEffect(async () => {
-		setStatus(STATUS_LOADING);
-		const query = generateQuery(current, perPage, filter);
+	useEffect(() => {
+		let isMount = true;
+		if (isMount) {
+			setStatus(STATUS_LOADING);
+			const query = generateQuery(current, perPage, filter);
 
-		async function fetchData() {
-			try {
-				const data = await dispatch(getQuoteList(query)).unwrap();
-				setQuoteData(data);
-				setStatus(STATUS_SUCCESS);
-			} catch (err) {
-				const statusCode = err?.statusCode || 500;
-				setStatus(statusCode);
-			}
+			const fetchData = async () => {
+				try {
+					const data = await dispatch(getQuoteList(query)).unwrap();
+					setQuoteData(data);
+					setStatus(STATUS_SUCCESS);
+				} catch (err) {
+					const statusCode = err?.statusCode || 500;
+					setStatus(statusCode);
+				}
+			};
+
+			fetchData();
 		}
 
-		fetchData();
+		return () => {
+			isMount = false;
+		};
 	}, [retry, current, perPage, filter]);
 
 	return { status, quoteData, retryRequest };

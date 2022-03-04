@@ -3,7 +3,7 @@ import { Like, Comment, Share } from 'components/svg';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import './quote-action-bar.scss';
-import arrowImage from 'assets/icons/arrow.svg';
+import { RightArrow } from 'components/svg';
 
 const QuoteActionBar = ({ data, isDetail, handleLikeQuote }) => {
 	const { isLike, likeNumbers, isShare, shareNumbers, commentNumbers } = data;
@@ -38,9 +38,10 @@ const QuoteActionBar = ({ data, isDetail, handleLikeQuote }) => {
 				<span className='quote-action__name'>{shareNumbers} Share</span>
 			</li>
 			<li className='quote-action__item'>
-				<a href='#'>
-					<span className='quote-action__name'>Chi tiết</span> <img src={arrowImage} alt='arrow' />
-				</a>
+				<button>
+					<span className='quote-action__name'>Chi tiết</span>
+					<RightArrow className='quote-action__right-arrow' />
+				</button>
 			</li>
 		</ul>
 	);

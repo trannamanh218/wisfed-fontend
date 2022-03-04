@@ -5,9 +5,14 @@ import MyShelvesList from 'shared/my-shelves-list';
 import QuotesLinks from 'shared/quote-links';
 import ReadChallenge from 'shared/read-challenge';
 import StatisticList from 'shared/statistic-list';
+import PropTypes from 'prop-types';
 import './sidebar-shelves.scss';
+import { useSelector } from 'react-redux';
 
 const SidebarShelves = () => {
+	const { libraryData } = useSelector(state => state.library);
+	const libraryList = libraryData.rows.map(item => ({ ...item, quantity: item.books.length }));
+
 	const statusList = [
 		{ name: 'Muốn đọc', quantity: 30 },
 		{ name: 'Đang đọc', quantity: 110 },
@@ -23,14 +28,6 @@ const SidebarShelves = () => {
 
 	const myComposing = new Array(10).fill({ source: '/images/book1.jpg', name: 'Design pattern' });
 
-	const shelfList = [
-		{ name: 'giasach2021', quantity: 30 },
-		{ name: 'sach cua toi', quantity: 110 },
-		{ name: 'tu sanch thang 1', quantity: 8 },
-		{ name: 'tu sanch thang 2', quantity: 8 },
-		{ name: 'tu sanch thang 3', quantity: 8 },
-	];
-
 	return (
 		<div className='sidebar-shelves'>
 			<StatisticList
@@ -40,7 +37,7 @@ const SidebarShelves = () => {
 				isBackground={true}
 				list={statusList}
 			/>
-			<MyShelvesList list={shelfList} />
+			<MyShelvesList list={libraryList} />
 			<QuotesLinks list={quoteList} title='Quotes' />
 			<div className='my-compose'>
 				<BookSlider title='Sách tôi là tác giả' list={myComposing} />
@@ -53,6 +50,8 @@ const SidebarShelves = () => {
 	);
 };
 
-SidebarShelves.propTypes = {};
+SidebarShelves.propTypes = {
+	libraryData: PropTypes.array,
+};
 
 export default SidebarShelves;

@@ -10,6 +10,7 @@
 .book-slider {
 	.book-thumbnail {
 		margin-right: 20px;
+		border: 1px solid $ash-line;
 	}
 
 	.slick-prev {
@@ -25,7 +26,7 @@
 		justify-content: center;
 		border-radius: 50%;
 		background-color: rgba(20, 20, 43, 0.4) !important;
-		z-index: 1000;
+		z-index: 500;
 		width: 32px !important;
 		height: 32px !important;
 		padding: 0.3rem !important;

@@ -1,5 +1,5 @@
-import { STATUS_SUCCESS } from 'constants';
-import { STATUS_IDLE } from 'constants';
+import { STATUS_SUCCESS, STATUS_IDLE } from 'constants';
+import { generateQuery } from 'helpers/Common';
 import _ from 'lodash';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -10,23 +10,13 @@ import { usePrevious } from 'shared/hooks';
 
 const fetchCategories = async (dispatch, pagination, filter = []) => {
 	const { current, perPage } = pagination;
-	const query = {
-		start: current > 1 ? (current - 1) * perPage : 0,
-		limit: perPage,
-		sort: JSON.stringify([{ property: 'createdAt', direction: 'DESC' }]),
-		filter: JSON.stringify(filter),
-	};
+	const query = generateQuery(current, perPage, JSON.stringify(filter));
 	const data = await dispatch(getCategoryList(query)).unwrap();
 	return data;
 };
 
 const fetchBook = (id, dispatch) => {
-	const query = {
-		start: 0,
-		limit: 10,
-		sort: JSON.stringify([{ property: 'createdAt', direction: 'DESC' }]),
-		filter: JSON.stringify([{ 'operator': 'eq', 'value': id, 'property': 'categoryId' }]),
-	};
+	const query = generateQuery(1, 10, JSON.stringify([{ 'operator': 'eq', 'value': id, 'property': 'categoryId' }]));
 	return dispatch(getBookList(query)).unwrap();
 };
 
@@ -275,11 +265,11 @@ export const useFetchCategoryDetail = id => {
 	const dispatch = useDispatch();
 
 	useEffect(() => {
+		let isMount = true;
 		if (categoryInfo.id !== id || _.isEmpty(categoryInfo)) {
 			const fetchCategoryDetail = async () => {
 				try {
 					await dispatch(getCategoryDetail(id)).unwrap();
-					setStatus(STATUS_SUCCESS);
 				} catch (err) {
 					toast.error('Lỗi hệ thống');
 					const statusCode = err?.statusCode || 500;
@@ -287,8 +277,13 @@ export const useFetchCategoryDetail = id => {
 				}
 			};
 
-			fetchCategoryDetail();
+			if (isMount) {
+				fetchCategoryDetail();
+			}
 		}
+		return () => {
+			isMount = false;
+		};
 	}, [id]);
 
 	return { categoryInfo, status };
@@ -297,6 +292,7 @@ export const useFetchCategoryDetail = id => {
 export const useFetchOtherCategories = (current, perPage, name) => {
 	const [otherCategories, setOtherCategories] = useState({ rows: [], count: 0 });
 	const [status, setStatus] = useState(STATUS_IDLE);
+	const [newName, setNewName] = useState('');
 	const dispatch = useDispatch();
 
 	const generateQuery = () => {
@@ -309,7 +305,19 @@ export const useFetchOtherCategories = (current, perPage, name) => {
 	};
 
 	useEffect(() => {
-		if (name) {
+		let isMount = true;
+		if (isMount) {
+			setNewName(name);
+			setOtherCategories({ rows: [], count: 0 });
+		}
+		return () => {
+			isMount = false;
+		};
+	}, [name]);
+
+	useEffect(() => {
+		let isMount = true;
+		if (newName && isMount) {
 			const fetchOtherCategories = async () => {
 				const query = generateQuery();
 				try {
@@ -327,7 +335,11 @@ export const useFetchOtherCategories = (current, perPage, name) => {
 
 			fetchOtherCategories();
 		}
-	}, [current, perPage, name]);
+
+		return () => {
+			isMount = false;
+		};
+	}, [current, perPage, newName]);
 
 	return { otherCategories, status };
 };

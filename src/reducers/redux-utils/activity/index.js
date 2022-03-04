@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { activityAPI, bookAPI, categoryAPI, friendAPI, userAPI } from 'constants/apiURL';
+import { activityAPI, bookAPI, categoryAPI, friendAPI, likeActivityAPI, userAPI } from 'constants/apiURL';
 import Request from 'helpers/Request';
 
 export const createActivity = createAsyncThunk('activity/createActivity', async (params, { rejectWithValue }) => {
@@ -28,11 +28,11 @@ export const getSuggestionForPost = createAsyncThunk(
 		const { input, option, userInfo } = params;
 		const filter = [];
 		let property = 'name';
-		if (option.value === 'add-friends' || option.value === 'add-author') {
+		if (option.value === 'addFriends' || option.value === 'addAuthor') {
 			property = 'email,fullName,firstName,lastName';
 		}
 
-		if (option.value === 'add-author') {
+		if (option.value === 'addAuthor') {
 			filter.push({ 'operator': 'search', 'value': 'author', 'property': 'role' });
 		}
 
@@ -50,22 +50,22 @@ export const getSuggestionForPost = createAsyncThunk(
 		try {
 			let data = [];
 			switch (option.value) {
-				case 'add-book': {
+				case 'addBook': {
 					const response = await Request.makeGet(bookAPI, query);
 					data = response.data;
 					break;
 				}
-				case 'add-topic': {
+				case 'addCategory': {
 					const response = await Request.makeGet(categoryAPI, query);
 					data = response.data;
 					break;
 				}
-				case 'add-author': {
+				case 'addAuthor': {
 					const response = await Request.makeGet(userAPI, query);
 					data = response.data;
 					break;
 				}
-				case 'add-friends': {
+				case 'addFriends': {
 					const response = await Request.makeGet(friendAPI(userInfo.id), query);
 					data = response.data;
 					break;
@@ -76,15 +76,46 @@ export const getSuggestionForPost = createAsyncThunk(
 			return data;
 		} catch (err) {
 			const error = JSON.stringify(err.response);
-			// console.log(err);
 			throw rejectWithValue(error);
 		}
 	}
 );
+
+export const updateReactionActivity = createAsyncThunk(
+	'activity/updateReactionActivity',
+	async (params, { rejectWithValue }) => {
+		try {
+			const response = await Request.makePatch(likeActivityAPI, params);
+			return response.data;
+		} catch (err) {
+			const error = JSON.stringify(err.response);
+			throw rejectWithValue(error);
+		}
+	}
+);
+
 const activitySlice = createSlice({
 	name: 'activity',
-	initialState: {},
-	error: {},
+	initialState: {
+		isFetching: false,
+		activityData: [],
+		error: {},
+	},
+	extraReducers: {
+		[getActivityList.pending]: state => {
+			state.isFetching = true;
+		},
+		[getActivityList.fulfilled]: (state, action) => {
+			state.isFetching = false;
+			state.activityData = action.payload;
+			state.error = {};
+		},
+		[getActivityList.rejected]: (state, action) => {
+			state.isFetching = false;
+			state.activityData = {};
+			state.error = action.payload;
+		},
+	},
 });
 
 const activity = activitySlice.reducer;

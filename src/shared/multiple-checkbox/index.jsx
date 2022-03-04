@@ -20,11 +20,13 @@ const MultipleCheckbox = ({ list, name, value }) => {
 MultipleCheckbox.defaultProps = {
 	list: [],
 	name: '',
+	value: '',
 };
 
 MultipleCheckbox.propTypes = {
 	list: PropTypes.array,
 	name: PropTypes.string,
+	value: PropTypes.any,
 };
 
 export default MultipleCheckbox;

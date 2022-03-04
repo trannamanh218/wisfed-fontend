@@ -24,6 +24,8 @@ function App() {
 		const params = {
 			email: 'admin@gmail.com',
 			password: '123456',
+			// email: 'nguyenhien@gmail.com',
+			// password: '123456',
 		};
 
 		fetchLogin(params);

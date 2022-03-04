@@ -14,20 +14,26 @@ export const useFetchGroups = (current = 1, perPage = 10, filter = '[]') => {
 	}, [setRetry]);
 
 	useEffect(async () => {
-		setStatus(STATUS_LOADING);
+		let isMount = true;
+		if (isMount) {
+			setStatus(STATUS_LOADING);
 
-		async function fetchData() {
-			try {
-				const data = await dispatch(getGroupList()).unwrap();
-				setGroups(data);
-				setStatus(STATUS_SUCCESS);
-			} catch (err) {
-				const statusCode = err?.statusCode || 500;
-				setStatus(statusCode);
-			}
+			const fetchData = async () => {
+				try {
+					const data = await dispatch(getGroupList()).unwrap();
+					setGroups(data);
+					setStatus(STATUS_SUCCESS);
+				} catch (err) {
+					const statusCode = err?.statusCode || 500;
+					setStatus(statusCode);
+				}
+			};
+
+			fetchData();
 		}
-
-		fetchData();
+		return () => {
+			isMount = false;
+		};
 	}, [retry, current, perPage, filter]);
 
 	return { status, groups, retryRequest };

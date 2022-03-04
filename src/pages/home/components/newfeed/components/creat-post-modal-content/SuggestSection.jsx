@@ -3,16 +3,18 @@ import PropTypes from 'prop-types';
 import noSearchResult from 'assets/images/no-search-result.png';
 import BookSlider from 'shared/book-slider';
 import UserAvatar from 'shared/user-avatar';
+import { useSelector } from 'react-redux';
 
 const SuggestSection = props => {
 	const { option, list, handleAddToPost } = props;
+	const { userInfo } = useSelector(state => state.auth);
 
 	if (list && list.length > 0) {
 		switch (option.value) {
-			case 'add-book': {
+			case 'addBook': {
 				return <BookSlider list={list} handleClick={handleAddToPost} />;
 			}
-			case 'add-author':
+			case 'addAuthor':
 				return (
 					<div>
 						<div className='creat-post-modal-content__substitute__suggest-author-container'>
@@ -32,7 +34,7 @@ const SuggestSection = props => {
 					</div>
 				);
 
-			case 'add-topic':
+			case 'addCategory':
 				return (
 					<div className='creat-post-modal-content__substitute__suggest-topic-container'>
 						{list.map(item => (
@@ -46,21 +48,24 @@ const SuggestSection = props => {
 						))}
 					</div>
 				);
-			case 'add-friends':
+			case 'addFriends':
 				return (
 					<div className='creat-post-modal-content__substitute__suggest-author-container'>
-						{list.map(item => (
-							<div
-								className='creat-post-modal-content__substitute__suggest-author-item'
-								key={item.id}
-								onClick={() => handleAddToPost(item)}
-							>
-								<UserAvatar size='lg' {...item} />
-								<div className='creat-post-modal-content__substitute__suggest-author__name'>
-									{item.fullName || item.lastName || 'Không xác định'}
+						{list.map(item => {
+							const friendInfo = userInfo?.id === item?.userOne?.id ? item?.userTwo : item?.userOne;
+							return (
+								<div
+									className='creat-post-modal-content__substitute__suggest-author-item'
+									key={item.id}
+									onClick={() => handleAddToPost(friendInfo)}
+								>
+									<UserAvatar size='lg' {...friendInfo} />
+									<div className='creat-post-modal-content__substitute__suggest-author__name'>
+										{friendInfo?.fullName || friendInfo?.lastName || 'Không xác định'}
+									</div>
 								</div>
-							</div>
-						))}
+							);
+						})}
 					</div>
 				);
 
@@ -69,7 +74,7 @@ const SuggestSection = props => {
 		}
 	}
 
-	if (option.value !== 'modify-images' || !list.length)
+	if (option.value !== 'modifyImages' || !list.length)
 		return (
 			<div className='creat-post-modal-content__substitute__no-search-result'>
 				<img src={noSearchResult} alt='no search result' />
