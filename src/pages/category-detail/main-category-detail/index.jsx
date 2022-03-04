@@ -1,4 +1,4 @@
-import React, { Fragment, useCallback, useEffect, useRef, useState } from 'react';
+import React, { Fragment, useCallback, useEffect, useState } from 'react';
 import { useFetchCategoryDetail } from 'api/category.hook';
 import classNames from 'classnames';
 import { Heart } from 'components/svg';

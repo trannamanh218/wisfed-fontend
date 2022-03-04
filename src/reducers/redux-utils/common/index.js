@@ -9,7 +9,7 @@ export const uploadImage = createAsyncThunk('common/uploadImage', async params =
 
 	try {
 		const response = await Request.makeUpload(uploadImageAPI, file, params);
-		console.log(response.data);
+
 		return response.data;
 	} catch (err) {
 		console.log(err);

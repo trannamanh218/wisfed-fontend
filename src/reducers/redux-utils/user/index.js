@@ -23,12 +23,13 @@ export const getFriendList = createAsyncThunk('user/getFriendList', async (param
 	}
 });
 
-export const makeFriendRequest = createAsyncThunk('user/makeFriendRequest', async params => {
+export const makeFriendRequest = createAsyncThunk('user/makeFriendRequest', async (params, { rejectWithValue }) => {
 	try {
 		const response = await Request.makePost(makeFriendAPI, params);
-		console.log(response);
+		return response.data;
 	} catch (err) {
-		console.log(err);
+		const error = JSON.parse(err.response);
+		throw rejectWithValue(error);
 	}
 });
 
