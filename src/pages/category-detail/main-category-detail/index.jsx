@@ -1,4 +1,4 @@
-import React, { Fragment, useCallback, useEffect, useRef, useState } from 'react';
+import React, { Fragment, useCallback, useEffect, useState } from 'react';
 import { useFetchCategoryDetail } from 'api/category.hook';
 import classNames from 'classnames';
 import { Heart } from 'components/svg';
@@ -15,17 +15,19 @@ import SearchField from 'shared/search-field';
 import RouteLink from 'helpers/RouteLink';
 import './main-category-detail.scss';
 import SearchBook from './SearchBook';
+import { useFetchBooks } from 'api/book.hooks';
 
 const MainCategoryDetail = () => {
 	const { id } = useParams();
 	const { categoryInfo } = useFetchCategoryDetail(id);
-	const { books = [] } = categoryInfo;
+	const books = categoryInfo?.books || [];
 	const topBooks = books.slice(0, 10);
 	const [bookList, setBookList] = useState(books.slice(0, 10));
 	const [isLike, setIsLike] = useState(false);
-	const [searchBooks, setSearchBooks] = useState([]);
 	const navigate = useNavigate();
 	const [inputSearch, setInputSearch] = useState('');
+	const [filter, setFilter] = useState('[]');
+	const { books: searchResults } = useFetchBooks(1, 10, filter);
 
 	useEffect(() => {
 		if (books && books.length) {
@@ -63,20 +65,34 @@ const MainCategoryDetail = () => {
 		shareNumber: 3,
 	});
 
-	const filterBooks = name => {
-		let results = [];
-		if (books && books.length && name) {
-			results = books.filter(book => book.name.toLowerCase().includes(name.trim().toLowerCase()));
-			setSearchBooks(results);
+	const updateInputSearch = value => {
+		setInputSearch(value);
+
+		if (value) {
+			const filterValue = [{ 'operator': 'eq', 'value': id, 'property': 'categoryId' }];
+			filterValue.push({ 'operator': 'search', 'value': value.trim(), 'property': 'name' });
+			setFilter(JSON.stringify(filterValue));
+		} else {
+			setFilter('[]');
 		}
 	};
 
-	const debounceSearch = useCallback(_.debounce(filterBooks, 500), []);
+	const debounceSearch = useCallback(_.debounce(updateInputSearch, 1000), []);
 
 	const handleSearch = e => {
 		debounceSearch(e.target.value);
-		setInputSearch(e.target.value);
 	};
+
+	if (_.isEmpty(categoryInfo)) {
+		return (
+			<div className='main-category-detail'>
+				<div className='main-category-detail__header'>
+					<BackButton />
+				</div>
+				<p className='main-category-detail__intro'>Không tìm thấy chủ đề</p>
+			</div>
+		);
+	}
 
 	return (
 		<div className='main-category-detail'>
@@ -99,10 +115,10 @@ const MainCategoryDetail = () => {
 
 			<div className='main-category-detail__container'>
 				<SearchField placeholder='Tìm kiếm sách trong chủ đề kinh doanh' handleChange={handleSearch} />
-				{inputSearch && <SearchBook list={searchBooks} />}
+				{inputSearch && <SearchBook list={searchResults} />}
 				<CategoryGroup key={`category-group`} list={topBooks} title='Đọc nhiều nhất tuần này' />
 				<div className='main-category-detail__allbook'>
-					<h4>Tất cả sách chủ đề kinh doanh</h4>
+					<h4>Tất cả sách chủ đề {categoryInfo.name ? categoryInfo.name.toLowerCase() : ''}</h4>
 					<div className='books'>
 						{bookList.map((item, index) => (
 							<BookThumbnail key={index} {...item} source={item.source} size='lg' />

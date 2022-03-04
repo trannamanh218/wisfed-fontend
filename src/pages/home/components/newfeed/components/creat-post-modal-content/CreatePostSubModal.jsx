@@ -5,27 +5,27 @@ import PropTypes from 'prop-types';
 import { useCallback, useEffect, useRef } from 'react';
 import SuggestSection from './SuggestSection';
 import TaggedList from './TaggedList';
-
 import './style.scss';
+
 function CreatPostSubModal(props) {
 	const {
 		option,
 		backToMainModal,
-		images,
 		deleteImage,
 		fetchSuggestion,
 		suggestionData,
 		handleAddToPost,
 		taggedData,
 		removeTaggedItem,
+		addOptionsToPost,
 	} = props;
 	const inputRef = useRef();
 
 	useEffect(() => {
-		if (images.length === 0) {
+		if (taggedData.addImages.length === 0) {
 			backToMainModal();
 		}
-	}, [images]);
+	}, [taggedData.addImages]);
 
 	useEffect(() => {
 		fetchSuggestion('', option);
@@ -38,6 +38,12 @@ function CreatPostSubModal(props) {
 	};
 
 	const handleComplete = () => {
+		if (option.value === 'modifyImages') {
+			addOptionsToPost({
+				value: 'addImages',
+				title: 'chỉnh sửa ảnh',
+			});
+		}
 		backToMainModal();
 		inputRef.current.value = '';
 	};
@@ -48,24 +54,28 @@ function CreatPostSubModal(props) {
 				<button className='creat-post-modal-content__substitute__back' onClick={handleComplete}>
 					<BackArrow />
 				</button>
-				<h5>{option.value === 'modify-images' ? option.title : `Thêm ${option.title} vào bài viết`}</h5>
+				<h5>
+					{option.value === 'modifyImages'
+						? `${option.title.charAt(0).toUpperCase() + option.title.slice(1)}`
+						: `Thêm ${option.title} vào bài viết`}
+				</h5>
 				<button style={{ visibility: 'hidden' }} className='creat-post-modal-content__substitute__back'>
 					<BackArrow />
 				</button>
 			</div>
 
-			{option.value === 'modify-images' ? (
+			{option.value === 'modifyImages' ? (
 				<>
-					<div className='creat-post-modal-content__substitute__body__modify-images-container'>
+					<div className='creat-post-modal-content__substitute__body__modifyImages-container'>
 						<div
-							className={classNames('creat-post-modal-content__substitute__body__modify-images-box', {
-								'one-or-two-images': images.length <= 2,
-								'more-two-images': images.length > 2,
+							className={classNames('creat-post-modal-content__substitute__body__modifyImages-box', {
+								'one-or-two-images': taggedData.addImages.length <= 2,
+								'more-two-images': taggedData.addImages.length > 2,
 							})}
 						>
-							{images.map((image, index) => (
+							{taggedData.addImages.map((image, index) => (
 								<div key={index} className='creat-post-modal-content__substitute__modify-image-item'>
-									<img src={URL.createObjectURL(image)} alt='image' />
+									<img src={image.streamPath} alt='image' />
 									<button
 										className='creat-post-modal-content__substitute__modify-image-item-delete'
 										onClick={() => deleteImage(index)}
@@ -76,8 +86,8 @@ function CreatPostSubModal(props) {
 							))}
 						</div>
 					</div>
-					<div className='creat-post-modal-content__substitute__body__modify-images-confirm'>
-						<button onClick={backToMainModal}>Xong</button>
+					<div className='creat-post-modal-content__substitute__body__modifyImages-confirm'>
+						<button onClick={handleComplete}>Xong</button>
 					</div>
 				</>
 			) : (
@@ -100,12 +110,12 @@ function CreatPostSubModal(props) {
 						</button>
 					</div>
 					<div className='creat-post-modal-content__substitute__search-result'>
-						{option.value === 'add-book' && !_.isEmpty(taggedData['add-book']) && (
+						{option.value === 'addBook' && !_.isEmpty(taggedData.addBook) && (
 							<span
 								className='badge bg-primary-light badge-book'
-								onClick={() => removeTaggedItem(taggedData['add-book'], 'add-book')}
+								onClick={() => removeTaggedItem(taggedData.addBook, 'addBook')}
 							>
-								<span>{taggedData['add-book'].name}</span>
+								<span>{taggedData.addBook.name}</span>
 								<CloseX />
 							</span>
 						)}
@@ -139,6 +149,7 @@ CreatPostSubModal.propTypes = {
 	handleAddToPost: PropTypes.func.isRequired,
 	taggedData: PropTypes.object,
 	removeTaggedItem: PropTypes.func,
+	addOptionsToPost: PropTypes.func,
 };
 
 export default CreatPostSubModal;

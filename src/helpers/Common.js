@@ -1,4 +1,3 @@
-import queryString from 'query-string';
 import moment from 'moment';
 import 'moment/locale/vi';
 moment.locale('vi');
@@ -36,14 +35,6 @@ export const formatNumberToWord = data => {
 	return 0;
 };
 
-export const generateQueryString = query => {
-	return queryString.stringify(query);
-};
-
-export const parsedQueryString = query => {
-	return queryString.parse(query);
-};
-
 export const calculateDurationTime = date => {
 	const end = new Date();
 	const start = new Date(date);
@@ -66,14 +57,14 @@ export const calculateDurationTime = date => {
 export const generateQuery = (
 	current = 1,
 	perPage = 10,
-	sort = '[{ "property": "createdAt", direction: "DESC }]',
-	filter = '[]'
+	filter = '[]',
+	sort = '[{ "property": "createdAt", direction: "DESC }]'
 ) => {
 	return {
 		start: current > 1 ? (current - 1) * perPage : 0,
 		limit: perPage,
-		sort,
 		filter,
+		sort,
 	};
 };
 
@@ -103,4 +94,31 @@ export const toSlug = str => {
 
 	// return
 	return str;
+};
+
+export const hasHTMLTags = string => {
+	const htmlTagReg = /(<([^>]+)>)/gi;
+	if (string && htmlTagReg.test(string)) {
+		return true;
+	}
+	return false;
+};
+
+export const strippedHTMLTags = string => {
+	const htmlTagReg = /(<([^>]+)>)/gi;
+	if (string && htmlTagReg.test(string)) {
+		return string.replace(htmlTagReg, '');
+	}
+	return string;
+};
+
+export const convertToPlainString = string => {
+	const htmlTagReg = /(<([^>]+)>)/gi;
+	if (string && htmlTagReg.test(string)) {
+		const temporalDiv = document.createElement('div');
+		temporalDiv.innerHTML = string;
+
+		return temporalDiv.textContent || temporalDiv.innerText || '';
+	}
+	return string;
 };

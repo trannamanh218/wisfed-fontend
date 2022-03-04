@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import caretIcon from 'assets/images/caret.png';
 import './topic-column.scss';
 
-const TopicColumn = ({ topics, className, title, handleViewMore }) => {
+const TopicColumn = ({ topics, className, title, handleViewMore, viewCategoryDetail }) => {
 	const [isExpand, setIsExpand] = useState(false);
 
 	const handleExpand = () => {
@@ -18,7 +18,14 @@ const TopicColumn = ({ topics, className, title, handleViewMore }) => {
 				<h4 className='topic-column__header'>{title}</h4>
 				<div className={classNames('topic-column__container', { 'expand': isExpand })}>
 					{topics.map((topic, index) => (
-						<div className='topic-column__item' key={index} title={topic.name}>
+						<div
+							className='topic-column__item'
+							key={index}
+							title={topic.name}
+							onClick={() => {
+								viewCategoryDetail(topic);
+							}}
+						>
 							<span>{topic.name}</span>
 						</div>
 					))}
@@ -43,6 +50,7 @@ TopicColumn.defaultProps = {
 	className: '',
 	title: '',
 	handleViewMore: () => {},
+	viewCategoryDetail: () => {},
 };
 
 TopicColumn.propTypes = {
@@ -50,6 +58,7 @@ TopicColumn.propTypes = {
 	className: PropTypes.string,
 	title: PropTypes.string,
 	handleViewMore: PropTypes.func,
+	viewCategoryDetail: PropTypes.func,
 };
 
 export default TopicColumn;

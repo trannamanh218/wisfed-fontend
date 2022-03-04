@@ -1,44 +1,39 @@
-import React from 'react';
 import PropTypes from 'prop-types';
-import { Like, Comment, Share, LikeFill } from 'components/svg';
+import React from 'react';
+import { Comment, Like, LikeFill, Share } from 'components/svg';
 import './post-action-bar.scss';
 
-const PostActionBar = ({ postInformations, likeAction }) => {
+const PostActionBar = ({ postData, handleLikeAction }) => {
 	return (
 		<div className='post-action-bar'>
-			<div
-				data-testid='post__options__like-btn'
-				className='post-action-bar__item'
-				onClick={() => likeAction(postInformations)}
-			>
-				{postInformations.isLike ? <LikeFill /> : <Like />}
-				<div className='post-action-bar__title'>{postInformations.likeNumber} Thích</div>
+			<div data-testid='post__options__like-btn' className='post-action-bar__item' onClick={handleLikeAction}>
+				{postData.isLike ? <LikeFill /> : <Like />}
+				<div className='post-action-bar__title'>{postData.like || 0} Thích</div>
 			</div>
 			<div className='post-action-bar__item'>
 				<Comment />
-				<div className='post-action-bar__title'>{postInformations.commentNumber} Bình luận</div>
+				<div className='post-action-bar__title'>{postData.comments || 0} Bình luận</div>
 			</div>
 			<div className='post-action-bar__item'>
 				<Share />
-				<div className='post-action-bar__title'>{postInformations.shareNumber} Chia sẻ</div>
+				<div className='post-action-bar__title'>{postData.share || 0} Chia sẻ</div>
 			</div>
 		</div>
 	);
 };
 
 PostActionBar.defaultProps = {
-	postInformations: {
-		isLike: false,
-		likeNumber: 0,
-		commentNumber: 0,
-		shareNumber: 0,
+	postData: {
+		like: 0,
+		comments: 0,
+		share: 0,
 	},
-	likeAction: () => {},
+	handleLikeAction: () => {},
 };
 
 PostActionBar.propTypes = {
-	postInformations: PropTypes.object.isRequired,
-	likeAction: PropTypes.func,
+	postData: PropTypes.object.isRequired,
+	handleLikeAction: PropTypes.func,
 };
 
 export default PostActionBar;

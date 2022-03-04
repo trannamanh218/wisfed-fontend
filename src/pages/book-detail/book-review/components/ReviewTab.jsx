@@ -4,16 +4,28 @@ import FilterPane from 'shared/filter-pane';
 import SearchField from 'shared/search-field';
 import Post from 'shared/post';
 import FitlerOptions from 'shared/filter-options';
+import { useSelector } from 'react-redux';
+import { useFetchReviewOfBook } from 'api/book.hooks';
 
-const ReviewTab = ({ list }) => {
+const ReviewTab = () => {
 	const filterOptions = [
-		{ id: 1, title: 'Tất cả', value: 'all' },
-		{ id: 2, title: 'Bạn bè', value: 'friends' },
-		{ id: 3, title: 'Người theo dõi', value: 'followers' },
+		{ id: 1, title: 'Tất cả', value: 'reviews' },
+		{ id: 2, title: 'Bạn bè', value: 'friendReviews' },
+		{ id: 3, title: 'Người theo dõi', value: 'followReviews' },
 	];
 
-	const [defaultOption, setDefaultOption] = useState({ id: 1, title: 'Tất cả', value: 'all' });
+	const [defaultOption, setDefaultOption] = useState({ id: 1, title: 'Tất cả', value: 'reviews' });
+	const { bookInfo } = useSelector(state => state.book);
 
+	const {
+		reviewData: { rows: reviewList = [] },
+	} = useFetchReviewOfBook(
+		bookInfo.id,
+		defaultOption.value,
+		1,
+		10,
+		JSON.stringify([{ 'operator': 'eq', 'value': bookInfo.id, 'property': 'bookId' }])
+	);
 	const handleChangeOption = (e, data) => {
 		if (data.value !== defaultOption.value) {
 			setDefaultOption(data);
@@ -33,9 +45,9 @@ const ReviewTab = ({ list }) => {
 				<SearchField placeholder='Tìm kiếm theo Hastag, tên người review ...' />
 			</div>
 			<div className='review-tab__list'>
-				{list && list.length
-					? list.map((item, index) => (
-							<Fragment key={`post-${index}`}>
+				{reviewList && reviewList.length
+					? reviewList.map(item => (
+							<Fragment key={`post-${item.id}`}>
 								<Post className='post-container--review' postInformations={item} />
 								<hr />
 							</Fragment>
