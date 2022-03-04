@@ -4,7 +4,7 @@ import LoadingIndicator from 'shared/loading-indicator';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import CategoryGroup from 'shared/category-group';
 
-const SearchCategory = ({ searchCategories, fetchFilterData, hasMoreFilterData }) => {
+const SearchCategory = ({ searchCategories, fetchFilterData, hasMoreFilterData, handleViewBookDetail }) => {
 	if (searchCategories.length) {
 		return (
 			<InfiniteScroll
@@ -15,7 +15,12 @@ const SearchCategory = ({ searchCategories, fetchFilterData, hasMoreFilterData }
 				pullDownToRefreshThreshold={50}
 			>
 				{searchCategories.map(category => (
-					<CategoryGroup key={`category-group-${category.id}`} list={category.books} title={category.name} />
+					<CategoryGroup
+						key={`category-group-${category.id}`}
+						list={category.books}
+						title={category.name}
+						handleViewBookDetail={handleViewBookDetail}
+					/>
 				))}
 			</InfiniteScroll>
 		);
@@ -27,12 +32,14 @@ const SearchCategory = ({ searchCategories, fetchFilterData, hasMoreFilterData }
 SearchCategory.defaultProps = {
 	searchCategories: [],
 	fetchFilterData: () => {},
+	handleViewBookDetail: () => {},
 	hasMoreFilterData: true,
 };
 
 SearchCategory.propTypes = {
 	searchCategories: PropTypes.array,
 	fetchFilterData: PropTypes.func,
+	handleViewBookDetail: PropTypes.func,
 	hasMoreFilterData: PropTypes.bool,
 };
 

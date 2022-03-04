@@ -7,7 +7,7 @@ import arrowPrev from 'assets/images/arrow-chevron-back.png';
 import './book-slider.scss';
 import classNames from 'classnames';
 
-const BookSlider = ({ list, title = '', className, size = 'sm', ...rest }) => {
+const BookSlider = ({ list, title = '', className, size = 'sm', handleViewBookDetail, ...rest }) => {
 	const settingSlider = settings();
 	if (list && list.length) {
 		return (
@@ -24,6 +24,7 @@ const BookSlider = ({ list, title = '', className, size = 'sm', ...rest }) => {
 								name={item.name}
 								size={size}
 								{...rest}
+								handleClick={handleViewBookDetail}
 							/>
 						))}
 					</Slider>
@@ -121,6 +122,7 @@ BookSlider.defaultProps = {
 	list: [],
 	title: '',
 	className: '',
+	handleViewBookDetail: () => {},
 };
 
 BookSlider.propTypes = {
@@ -128,6 +130,7 @@ BookSlider.propTypes = {
 	title: PropTypes.string,
 	className: PropTypes.string,
 	size: PropTypes.oneOf(['sm', 'md', 'lg']),
+	handleViewBookDetail: PropTypes.func,
 };
 
 SlideNextBtn.propTypes = {

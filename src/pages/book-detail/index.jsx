@@ -3,11 +3,13 @@ import MainContainer from 'components/layout/main-container';
 import NormalContainer from 'components/layout/normal-container';
 import _ from 'lodash';
 import React from 'react';
+import { useParams } from 'react-router-dom';
 import BookInfo from './book-info';
 import BookReference from './book-reference';
 
 function BookDetail() {
-	const { bookInfo } = useFetchBookDetail(55555);
+	const { id } = useParams();
+	const { bookInfo } = useFetchBookDetail(id);
 
 	if (_.isEmpty(bookInfo)) {
 		return (

@@ -1,11 +1,21 @@
 import { useFetchRelatedBooks } from 'api/book.hooks';
-import React from 'react';
-import { useSelector } from 'react-redux';
+import { STATUS_SUCCESS } from 'constants';
+import { STATUS_LOADING } from 'constants';
+import { STATUS_IDLE } from 'constants';
+import RouteLink from 'helpers/RouteLink';
+import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { getBookDetail } from 'reducers/redux-utils/book';
 import BookSlider from 'shared/book-slider';
 import StatisticList from 'shared/statistic-list';
+import { Circle as CircleLoading } from 'shared/loading';
 import './book-reference.scss';
 
 const BookReference = () => {
+	const [status, setStatus] = useState(STATUS_IDLE);
+	const dispatch = useDispatch();
+	const navigate = useNavigate();
 	const { bookInfo } = useSelector(state => state.book);
 	const { relatedBook } = useFetchRelatedBooks(bookInfo.categoryId);
 
@@ -16,14 +26,32 @@ const BookReference = () => {
 		{ name: 'Đã đọc', quantity: 8 },
 	];
 
+	const handleViewBookDetail = async data => {
+		setStatus(STATUS_LOADING);
+		try {
+			await dispatch(getBookDetail(data.id)).unwrap();
+			setStatus(STATUS_SUCCESS);
+			navigate(RouteLink.bookDetail(data.id, data.name));
+		} catch (err) {
+			const statusCode = err?.statusCode || 500;
+			setStatus(statusCode);
+		}
+	};
+
 	return (
 		<div className='book-reference'>
+			<CircleLoading loading={status === STATUS_LOADING} />
 			{/* sách của tac gia */}
 			<BookSlider className='book-reference__slider' title='Sách của Chris' list={bookList} />
 			{/* series sách đó */}
 			<BookSlider className='book-reference__slider' title='Seris dạy con làm giàu' list={bookList} />
 			{/*  */}
-			<BookSlider className='book-reference__slider' title='Gợi ý cùng thể loại' list={relatedBook} />
+			<BookSlider
+				className='book-reference__slider'
+				title='Gợi ý cùng thể loại'
+				list={relatedBook}
+				handleViewBookDetail={handleViewBookDetail}
+			/>
 
 			<h4>Bài viết nổi bật</h4>
 			<div className='card card-link book-reference__highlight__post'>
