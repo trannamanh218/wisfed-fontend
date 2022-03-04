@@ -21,7 +21,7 @@ function SlidePrevBtn({ className, style, onClick }) {
 const settingsSlider = {
 	dots: false,
 	speed: 600,
-	slidesToShow: 8,
+	slidesToShow: 7,
 	slidesToScroll: 5,
 	initialSlide: 0,
 	infinite: false,

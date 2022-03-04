@@ -172,7 +172,7 @@
 	}
 
 	.slick-list {
-		padding: 4px 0 4px 18px;
+		padding: 4px 0 4px 12px;
 		height: 52px;
 	}
 }
@@ -182,10 +182,8 @@
 	background-color: white;
 	position: absolute;
 	left: -24px;
-	width: 92px;
-	padding: 4px 0;
-	display: flex;
-	justify-content: center;
+	width: 80px;
+	padding: 4px 0 4px 24px;
 }
 
 .creat-quotes-modal__body__select-background {
@@ -205,7 +203,7 @@
 }
 
 .creat-quotes-modal__body__select-background-box {
-	margin-left: 50px;
+	margin-left: 56px;
 	transition: all 0.4s ease-in;
 	max-width: 100%;
 	transform: translateX(-100%);
@@ -213,6 +211,7 @@
 	&.show {
 		transform: translateX(0%);
 		visibility: visible;
+		box-shadow: inset 35px 0px 35px -35px rgba(0, 0, 0, 0.4), inset -35px 0px 35px -35px rgba(0, 0, 0, 0.4);
 	}
 }
 
