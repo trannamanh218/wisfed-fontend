@@ -1,0 +1,196 @@
+@import 'src/scss/abstracts/_global.scss';
+
+.main-confirm-my-book__back-btn {
+	display: flex;
+	align-items: center;
+	gap: 36px;
+	button {
+		padding: 8px;
+		border-radius: 50%;
+		background-color: #eff0f6;
+	}
+	span {
+		font-weight: 600;
+		font-size: 20px;
+		letter-spacing: 0.75px;
+	}
+}
+
+.main-confirm-my-book__book-info {
+	margin-top: 44px;
+	display: flex;
+	gap: 36px;
+}
+
+.main-confirm-my-book__hash-tags {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+}
+
+.main-confirm-my-book__hash-tag-item {
+	padding: 8px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	border-radius: 8px;
+	background-color: $primary-light;
+	color: $primary-dark;
+	font-size: 13px;
+}
+
+.main-confirm-my-book__book-name {
+	margin-top: 16px;
+	font-size: 24px;
+	line-height: 32px;
+	font-weight: 700;
+	color: $ash;
+}
+
+.main-confirm-my-book__author-name {
+	margin-top: 12px;
+	display: flex;
+	align-items: center;
+	gap: 16px;
+	color: $ash;
+}
+
+.main-confirm-my-book__description {
+	margin-top: 16px;
+}
+
+.main-confirm-my-book__check {
+	margin-top: 24px;
+	border-radius: 12px;
+	border: $success-dark 2px solid;
+	width: 200px;
+	padding: 16px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 16px;
+	line-height: 24px;
+	color: $success-dark;
+	font-weight: 600;
+	svg {
+		path {
+			stroke: $success-dark;
+		}
+	}
+}
+
+.main-confirm-my-book__terms {
+	margin-top: 40px;
+	border-radius: 16px;
+	background-color: white;
+	padding: 40px;
+	color: $ash;
+}
+
+.main-confirm-my-book__terms__header {
+	font-size: 20px;
+	line-height: 32px;
+	font-weight: 600;
+}
+
+.main-confirm-my-book__terms__body {
+	margin-top: 20px;
+	text-align: justify;
+	line-height: 24px;
+	color: $ash-body;
+}
+
+.main-confirm-my-book__terms__footer {
+	margin-top: 52px;
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+	gap: 16px;
+}
+
+.main-confirm-my-book__confirm {
+	margin-top: 56px;
+	padding: 0 40px;
+	display: flex;
+	justify-content: space-between;
+}
+
+.main-confirm-my-book__confirm {
+	&__text-1 {
+		font-weight: 600;
+		font-size: 20px;
+		line-height: 32px;
+		color: $ash;
+	}
+	&__text-2 {
+		line-height: 24px;
+		color: $ash-body;
+		margin: 16px 0 24px;
+	}
+}
+
+.main-confirm-my-book__confirm__upload-images {
+	width: fit-content;
+	border-radius: 12px;
+	border: $ash-line 2px solid;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 12px;
+	padding: 16px 24px;
+	color: $ash;
+	font-weight: 600;
+	svg {
+		path {
+			stroke: $ash;
+		}
+	}
+}
+
+.main-confirm-my-book__confirm__images-uploaded {
+	display: flex;
+	gap: 20px;
+	margin-top: 24px;
+}
+
+.main-confirm-my-book__confirm__image-item {
+	width: 120px;
+	height: fit-content;
+	max-height: 120px;
+	overflow: hidden;
+	border: $ash-line 1px solid;
+	position: relative;
+	img {
+		width: 100%;
+	}
+}
+
+.main-confirm-my-book__confirm__image-over {
+	position: absolute;
+	inset: 0;
+	background-color: rgba(0, 0, 0, 0.4);
+	justify-content: center;
+	align-items: center;
+	color: white;
+	font-size: 36px;
+	font-weight: 700;
+	letter-spacing: 5px;
+	display: none;
+	&.show {
+		display: flex;
+	}
+}
+
+.main-confirm-my-book__confirm__submit {
+	width: fit-content;
+	border-radius: 12px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 12px;
+	padding: 16px 32px;
+	color: white;
+	font-weight: 600;
+	background-color: $success-dark;
+	margin-top: 40px;
+}
