@@ -7,20 +7,22 @@ import BookThumbnail from 'shared/book-thumbnail';
 import ReactRating from 'shared/react-rating';
 import ReadMore from 'shared/read-more';
 import './book-intro.scss';
+import { useSelector } from 'react-redux';
+import _ from 'lodash';
+import { convertToPlainString } from 'helpers/Common';
 
 const BookIntro = () => {
+	const { bookInfo } = useSelector(state => state.book);
 	return (
 		<div className='book-intro'>
 			<div className='book-intro__image'>
-				<BookThumbnail name='book' source='../images/book1.jpg' size='lg' />
+				<BookThumbnail name='book' {...bookInfo} size='lg' />
 				<StatusButton className='book-intro__btn' />
 			</div>
 			<div className='book-intro__content'>
-				<h1 className='book-intro__name'>
-					The Mystery of Briony Lodge - Bí mật của Briony Lodge bản dịch 2021
-				</h1>
+				<h1 className='book-intro__name'>{bookInfo.name}</h1>
 				<div className='book-intro__author'>
-					<span>By Christ Bohajalian</span>
+					<span>Bởi {!_.isEmpty(bookInfo.authors) ? bookInfo.authors[0].authorName : 'Chưa cập nhật'} </span>
 					<CircleCheckIcon className='book-intro__check' />
 				</div>
 				<div className='book-intro__stars'>
@@ -30,21 +32,7 @@ const BookIntro = () => {
 				</div>
 
 				<div className='book-intro__description'>
-					<ReadMore
-						text={`	When literature student Anastasia Steele goes to house of interview young entrepreneur Christian
-						Grey, she is encounters a man who is beautiful, brilliant, and only one intimidating. The
-						unworldly housing When literature student Anastasia Steele goes to house of interview young
-						entrepreneur Christian Grey, she is encounters a man who is beautiful, brilliant, and only one
-						When literature student Anastasia Steele goes to house of interview young entrepreneur Christian
-						Grey, she is encounters a man who is beautiful, brilliant, and only one intimidating. The
-						unworldly housing When literature student Anastasia Steele goes to house of interview young
-						entrepreneur Christian Grey, she is encounters a man who is beautiful, brilliant, and only one
-						intimidating. Grey, she is encounters a man who is beautiful, brilliant, and only one
-						intimidating. The unworldly housing When literature student Anastasia Steele goes to house of
-						interview young entrepreneur Christian Grey, she is encounters a man who is beautiful,
-						brilliant, and only one intimidating.
-					`}
-					/>
+					<ReadMore text={convertToPlainString(bookInfo.description) || 'Chưa cập nhật'} />
 				</div>
 				<div className='book-intro__action'>
 					<div className='book-intro__share'>

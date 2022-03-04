@@ -1,33 +1,45 @@
+import classNames from 'classnames';
+import _ from 'lodash';
+import PropTypes from 'prop-types';
 import React from 'react';
 import { Badge } from 'react-bootstrap';
 import UserAvatar from 'shared/user-avatar';
-import PropTypes from 'prop-types';
 import './comment.scss';
 
 const Comment = props => {
-	const { data, handleReply, handleLike } = props;
-	const { isAuthor, author, content, duration, avatar } = data;
+	const { data, handleReply, handleLike, postData, index, parentData, indexParent } = props;
+	const isAuthor = postData.origin.split(':')[1] === data.user.id;
+
 	return (
-		<div className='comment'>
-			<UserAvatar className='comment__avatar' size='sm' source={avatar} />
+		<div className={classNames('comment', { 'comment--secondary': !_.isEmpty(parentData) })}>
+			<UserAvatar className='comment__avatar' size='sm' source={data.user?.avatarImage} />
 			<div className='comment__wrapper'>
 				<div className='comment__container'>
-					<span className='comment__author'>{author}</span>
-					{isAuthor && (
-						<Badge className='comment__badge' bg='primary-light'>
-							Tác giả
-						</Badge>
-					)}
-					<p className='comment__content'>{content}</p>
+					<div className='comment__header'>
+						<span className='comment__author'>
+							{data.user.name ||
+								data.user.fullName ||
+								data.user.lastName ||
+								data.user.firstName ||
+								'Không xác định'}
+						</span>
+						{isAuthor && (
+							<Badge className='comment__badge' bg='primary-light'>
+								Tác giả
+							</Badge>
+						)}
+					</div>
+					<p className='comment__content'>{data.content}</p>
 				</div>
+
 				<ul className='comment__action'>
 					<li className='comment__item' onClick={handleLike}>
 						Thích
 					</li>
-					<li className='comment__item' onClick={handleReply}>
+					<li className='comment__item' onClick={() => handleReply(data, index, parentData, indexParent)}>
 						Phản hồi
 					</li>
-					<li className='comment__item comment__item--timeline'>{`${duration} giờ`}</li>
+					<li className='comment__item comment__item--timeline'>{`${0} giờ`}</li>
 				</ul>
 			</div>
 		</div>
@@ -35,28 +47,22 @@ const Comment = props => {
 };
 
 Comment.defaultProps = {
-	data: {
-		avatar: '',
-		isAuthor: true,
-		author: 'User name 1',
-		content: `ipsum dolor sit amet consectetur adipisicing elit. Quidem eum error totam, iusto mollitia
-		nemo minus corporis deleniti ut minima?`,
-		duration: 16,
-	},
+	data: {},
 	handleLike: () => {},
 	handleReply: () => {},
+	index: 0,
+	parentData: {},
+	indexParent: null,
 };
 
 Comment.propTypes = {
-	data: PropTypes.shape({
-		avatar: PropTypes.string,
-		isAuthor: PropTypes.bool,
-		author: PropTypes.string.isRequired,
-		content: PropTypes.string.isRequired,
-		duration: PropTypes.number.isRequired,
-	}),
+	data: PropTypes.object,
+	postData: PropTypes.object,
 	handleLike: PropTypes.func,
 	handleReply: PropTypes.func,
+	index: PropTypes.number,
+	parentData: PropTypes.object,
+	indexParent: PropTypes.any,
 };
 
 export default Comment;

@@ -2,11 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { CloseX, Feather } from 'components/svg';
+import _ from 'lodash';
 
 const TaggedList = props => {
 	const { taggedData, removeTaggedItem, type } = props;
 
-	if (type) {
+	if (type && type !== 'addBook') {
 		const list = taggedData[type];
 		if (list && list.length) {
 			return (
@@ -17,7 +18,7 @@ const TaggedList = props => {
 							className={classNames('badge bg-primary-light', { [type]: type })}
 							onClick={() => removeTaggedItem(item, type)}
 						>
-							{type === 'add-author' && <Feather />}
+							{type === 'addAuthor' && <Feather />}
 							<span>
 								{item.name || item.fullName || item.lastName || item.firstName || 'Không xác định'}
 							</span>
@@ -28,6 +29,15 @@ const TaggedList = props => {
 			);
 		}
 
+		return '';
+	} else if (type && type === 'addBook') {
+		if (!_.isEmpty(taggedData.addBook)) {
+			return (
+				<a href='#' className='tagged-book'>
+					{taggedData.addBook.name}
+				</a>
+			);
+		}
 		return '';
 	}
 

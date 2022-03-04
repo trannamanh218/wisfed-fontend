@@ -18,26 +18,26 @@ function CreatPost({ onChangeNewPost }) {
 
 	const optionList = [
 		{
-			value: 'add-book',
+			value: 'addBook',
 			title: 'sách',
 			icon: <BookIcon className='newfeed__creat-post__options__item__logo--book' />,
 			message: 'Không tìm thấy cuốn sách nào',
 		},
 
 		{
-			value: 'add-author',
+			value: 'addAuthor',
 			title: 'tác giả',
 			icon: <Feather className='item-add-to-post-svg' />,
 			message: 'Không tìm thấy tác giả',
 		},
 		{
-			value: 'add-topic',
+			value: 'addCategory',
 			title: 'chủ đề',
 			icon: <CategoryIcon className='newfeed__creat-post__options__item__logo--category' />,
 			message: 'Không tìm thấy chủ đề',
 		},
 		{
-			value: 'add-friends',
+			value: 'addFriends',
 			title: 'bạn bè',
 			icon: <GroupIcon className='newfeed__creat-post__options__item__logo--friend' />,
 			message: 'Không tìm thấy bạn bè',

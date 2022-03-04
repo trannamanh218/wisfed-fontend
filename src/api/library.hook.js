@@ -1,11 +1,10 @@
 import { STATUS_IDLE, STATUS_LOADING, STATUS_SUCCESS } from 'constants';
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { getGroupList } from 'reducers/redux-utils/group';
+import { getLibraryList } from 'reducers/redux-utils/library';
 
-export const useFetchGroups = (current = 1, perPage = 10, filter = '[]') => {
+export const useFetchLibraries = (current = 1, perPage = 10, filter = '[]') => {
 	const [status, setStatus] = useState(STATUS_IDLE);
-	const [groups, setGroups] = useState({ rows: [], count: 0 });
 	const [retry, setRetry] = useState(false);
 	const dispatch = useDispatch();
 
@@ -20,8 +19,7 @@ export const useFetchGroups = (current = 1, perPage = 10, filter = '[]') => {
 
 			const fetchData = async () => {
 				try {
-					const data = await dispatch(getGroupList()).unwrap();
-					setGroups(data);
+					await dispatch(getLibraryList()).unwrap();
 					setStatus(STATUS_SUCCESS);
 				} catch (err) {
 					const statusCode = err?.statusCode || 500;
@@ -36,5 +34,5 @@ export const useFetchGroups = (current = 1, perPage = 10, filter = '[]') => {
 		};
 	}, [retry, current, perPage, filter]);
 
-	return { status, groups, retryRequest };
+	return { status, retryRequest };
 };

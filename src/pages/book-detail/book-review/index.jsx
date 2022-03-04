@@ -34,18 +34,6 @@ const BookReview = () => {
 		},
 	];
 
-	const listReview = Array.from(Array(5)).fill({
-		id: 1,
-		userAvatar: '/images/avatar.png',
-		userName: 'Trần Văn Đức',
-		bookImage: '',
-		bookName: '',
-		isLike: true,
-		likeNumber: 15,
-		commentNumber: 1,
-		shareNumber: 3,
-	});
-
 	const listQuote = Array.from(Array(5)).fill({
 		data: {
 			content: `Lorem ipsum dolor sit amet consectetur adipisicing elit. Veniam velit nemo voluptate. Eaque tenetur
@@ -62,7 +50,7 @@ const BookReview = () => {
 			<ReviewRating list={listRating} ratingLevel={4.2} ratingTotal={3200} className='book-review__rating' />
 			<Tabs className='book-review__tabs'>
 				<Tab eventKey='review' title='Review'>
-					<ReviewTab list={listReview} />
+					<ReviewTab />
 				</Tab>
 				<Tab eventKey='quotes' title='Quotes'>
 					<QuotesTab list={listQuote} />

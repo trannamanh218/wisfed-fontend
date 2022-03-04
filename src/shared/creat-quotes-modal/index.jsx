@@ -7,7 +7,7 @@ import settingsSlider from './settingsSlider';
 import PropTypes from 'prop-types';
 import avatarTest from 'assets/images/avatar2.png';
 import bookSample from 'assets/images/sample-book-img.jpg';
-import { getSuggestion } from 'reducers/redux-utils/activity';
+import { getSuggestionForPost } from 'reducers/redux-utils/activity';
 import { useDispatch, useSelector } from 'react-redux';
 import _ from 'lodash';
 import { creatQuotes } from 'reducers/redux-utils/quote/index';
@@ -109,7 +109,7 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 
 	const getSuggestionForCreatQuotes = async (input, option) => {
 		try {
-			const data = await dispatch(getSuggestion({ input, option, userInfo })).unwrap();
+			const data = await dispatch(getSuggestionForPost({ input, option, userInfo })).unwrap();
 			if (option.value === 'add-author') {
 				setAuthorSearchedList(data.rows.slice(0, 5));
 			} else if (option.value === 'add-book') {

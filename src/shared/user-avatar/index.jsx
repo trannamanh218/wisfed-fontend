@@ -3,12 +3,12 @@ import defaultAvatar from 'assets/images/avatar.jpeg';
 import PropTypes from 'prop-types';
 import './user-avatar.scss';
 
-const UserAvatar = ({ avatarImage, name, size, handleClick, className }) => {
+const UserAvatar = ({ avatarImage, name, size, handleClick, className, source }) => {
 	return (
 		<div className={`user-avatar user-avatar-${size} ${className ? className : ''}`} onClick={handleClick}>
 			<img
 				className='user-avatar__img'
-				src={avatarImage || defaultAvatar}
+				src={avatarImage || source || defaultAvatar}
 				alt={name}
 				onError={e => e.target.setAttribute('src', `${defaultAvatar}`)}
 			/>
@@ -21,6 +21,7 @@ UserAvatar.defaultProps = {
 	size: 'md',
 	handleClick: () => {},
 	avatarImage: '',
+	source: '',
 };
 
 UserAvatar.propTypes = {

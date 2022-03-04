@@ -2,6 +2,7 @@ import './preview-link.scss';
 import { useState, useEffect } from 'react';
 import _ from 'lodash';
 import { CloseX } from 'components/svg';
+import PropTypes from 'prop-types';
 
 function PreviewLink({ urlData, isFetching, removeUrlPreview }) {
 	const [domain, setDomain] = useState('');
@@ -49,5 +50,17 @@ function PreviewLink({ urlData, isFetching, removeUrlPreview }) {
 		</div>
 	);
 }
+
+PreviewLink.defaultProps = {
+	urlData: {},
+	isFetching: false,
+	removeUrlPreview: () => {},
+};
+
+PreviewLink.propTypes = {
+	urlData: PropTypes.object,
+	isFetching: PropTypes.bool,
+	removeUrlPreview: PropTypes.func,
+};
 
 export default PreviewLink;

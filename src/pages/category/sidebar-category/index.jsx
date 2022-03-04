@@ -4,9 +4,12 @@ import React from 'react';
 import { useState } from 'react';
 import StatisticList from 'shared/statistic-list';
 import TopicColumn from 'shared/topic-column';
+import PropTypes from 'prop-types';
+import { Circle as CircleLoading } from 'shared/loading';
+import { STATUS_LOADING } from 'constants';
 import './sidebar-category.scss';
 
-const SidebarCategory = () => {
+const SidebarCategory = ({ status, viewCategoryDetail }) => {
 	const statisticList = [
 		{ name: 'Trinh thám', quantity: 30 },
 		{ name: 'Gia đình', quantity: 110 },
@@ -35,6 +38,7 @@ const SidebarCategory = () => {
 
 	return (
 		<div className='sidebar-category'>
+			<CircleLoading loading={status === STATUS_LOADING} />
 			<StatisticList
 				title='Chủ đề yêu thích'
 				background='light'
@@ -47,11 +51,15 @@ const SidebarCategory = () => {
 				topics={rows}
 				title='Tất cả chủ đề'
 				handleViewMore={handleViewMore}
+				viewCategoryDetail={viewCategoryDetail}
 			/>
 		</div>
 	);
 };
 
-SidebarCategory.propTypes = {};
+SidebarCategory.propTypes = {
+	status: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+	viewCategoryDetail: PropTypes.func,
+};
 
 export default SidebarCategory;
