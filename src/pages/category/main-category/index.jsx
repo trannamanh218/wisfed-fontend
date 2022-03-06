@@ -11,7 +11,7 @@ import { Circle as CircleLoading } from 'shared/loading';
 import PropTypes from 'prop-types';
 import './main-category.scss';
 
-const MainCategory = ({ status, viewCategoryDetail }) => {
+const MainCategory = ({ status, handleViewBookDetail }) => {
 	const [inputValue, setInputValue] = useState('');
 	const { categories, fetchData, hasMore } = useFetchAllCategoriesWithBooks();
 	const { searchCategories, fetchFilterData, hasMoreFilterData } = useFetchFilterCategories(inputValue);
@@ -22,13 +22,13 @@ const MainCategory = ({ status, viewCategoryDetail }) => {
 
 	const debouncedChangeHandler = useCallback(_.debounce(changeHandler, 1000), []);
 
-	if (!inputValue) {
-		return (
-			<div className='main-category'>
-				<CircleLoading loading={status === STATUS_LOADING} />
-				<h4>Tất cả chủ đề</h4>
-				<div className='main-category__container'>
-					<SearchField placeholder='Tìm kiếm chủ đề' handleChange={debouncedChangeHandler} />
+	return (
+		<div className='main-category'>
+			<CircleLoading loading={status === STATUS_LOADING} />
+			<h4>Tất cả chủ đề</h4>
+			<div className='main-category__container'>
+				<SearchField placeholder='Tìm kiếm chủ đề' handleChange={debouncedChangeHandler} />
+				{!inputValue ? (
 					<InfiniteScroll
 						dataLength={categories.length}
 						next={fetchData}
@@ -41,24 +41,18 @@ const MainCategory = ({ status, viewCategoryDetail }) => {
 								list={category.books}
 								title={category.name}
 								data={category}
-								handleClick={viewCategoryDetail}
+								handleViewBookDetail={handleViewBookDetail}
 							/>
 						))}
 					</InfiniteScroll>
-				</div>
-			</div>
-		);
-	}
-	return (
-		<div className='main-category'>
-			<h4>Tất cả chủ đề</h4>
-			<div className='main-category__container'>
-				<SearchField placeholder='Tìm kiếm chủ đề' handleChange={debouncedChangeHandler} />
-				<SearchCategory
-					searchCategories={searchCategories}
-					fetchFilterData={fetchFilterData}
-					hasMoreFilterData={hasMoreFilterData}
-				/>
+				) : (
+					<SearchCategory
+						searchCategories={searchCategories}
+						fetchFilterData={fetchFilterData}
+						hasMoreFilterData={hasMoreFilterData}
+						handleViewBookDetail={handleViewBookDetail}
+					/>
+				)}
 			</div>
 		</div>
 	);
@@ -67,6 +61,7 @@ const MainCategory = ({ status, viewCategoryDetail }) => {
 MainCategory.propTypes = {
 	status: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
 	viewCategoryDetail: PropTypes.func,
+	handleViewBookDetail: PropTypes.func,
 };
 
 export default MainCategory;

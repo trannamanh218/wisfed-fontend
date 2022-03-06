@@ -16,8 +16,9 @@ import RouteLink from 'helpers/RouteLink';
 import './main-category-detail.scss';
 import SearchBook from './SearchBook';
 import { useFetchBooks } from 'api/book.hooks';
+import PropTypes from 'prop-types';
 
-const MainCategoryDetail = () => {
+const MainCategoryDetail = ({ handleViewBookDetail }) => {
 	const { id } = useParams();
 	const { categoryInfo } = useFetchCategoryDetail(id);
 	const books = categoryInfo?.books || [];
@@ -115,13 +116,25 @@ const MainCategoryDetail = () => {
 
 			<div className='main-category-detail__container'>
 				<SearchField placeholder='Tìm kiếm sách trong chủ đề kinh doanh' handleChange={handleSearch} />
-				{inputSearch && <SearchBook list={searchResults} />}
-				<CategoryGroup key={`category-group`} list={topBooks} title='Đọc nhiều nhất tuần này' />
+				{inputSearch && <SearchBook list={searchResults} handleViewBookDetail={handleViewBookDetail} />}
+				<CategoryGroup
+					key={`category-group`}
+					list={topBooks}
+					title='Đọc nhiều nhất tuần này'
+					handleViewBookDetail={handleViewBookDetail}
+				/>
 				<div className='main-category-detail__allbook'>
 					<h4>Tất cả sách chủ đề {categoryInfo.name ? categoryInfo.name.toLowerCase() : ''}</h4>
 					<div className='books'>
 						{bookList.map((item, index) => (
-							<BookThumbnail key={index} {...item} source={item.source} size='lg' />
+							<BookThumbnail
+								key={index}
+								{...item}
+								source={item.source}
+								size='lg'
+								data={item}
+								handleClick={handleViewBookDetail}
+							/>
 						))}
 					</div>
 					<a className='view-all-link' onClick={handleViewMore}>
@@ -145,6 +158,8 @@ const MainCategoryDetail = () => {
 	);
 };
 
-MainCategoryDetail.propTypes = {};
+MainCategoryDetail.propTypes = {
+	handleViewBookDetail: PropTypes.func,
+};
 
 export default MainCategoryDetail;

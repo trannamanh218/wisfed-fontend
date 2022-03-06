@@ -47,7 +47,7 @@ function Post({ postInformations, className, isUpdateProgressReading = false }) 
 		dispatch(createComment(params))
 			.unwrap()
 			.then(res => {
-				const propertyComment = ['activityId', 'content', 'getstreamId', 'reply', 'id'];
+				const propertyComment = ['activityId', 'content', 'getstreamId', 'reply', 'id', 'createdAt'];
 				const newComment = _.pick(res, propertyComment);
 				newComment.user = userInfo;
 				newComment.replyComments = [];
@@ -178,9 +178,8 @@ function Post({ postInformations, className, isUpdateProgressReading = false }) 
 			{postData.usersComments?.map((comment, index) => {
 				if (comment.content) {
 					return (
-						<>
+						<div key={`${comment.id}-${index}`}>
 							<Comment
-								key={`${comment.activityId}-${index}`}
 								data={comment}
 								postData={postData}
 								handleReply={handleReply}
@@ -191,7 +190,7 @@ function Post({ postInformations, className, isUpdateProgressReading = false }) 
 								if (childComment.content) {
 									return (
 										<Comment
-											key={`child-${childComment.activityId}-${childIndex}`}
+											key={`child-${comment.id}-${childComment.id}-${childIndex}`}
 											data={childComment}
 											postData={postData}
 											handleReply={handleReply}
@@ -204,7 +203,7 @@ function Post({ postInformations, className, isUpdateProgressReading = false }) 
 
 								return (
 									<CommentEditor
-										key={`child-${childComment.activityId}-${childIndex}`}
+										key={`editor-${comment.id}-${childIndex}`}
 										userInfo={userInfo}
 										postData={postData}
 										onCreateComment={onCreateComment}
@@ -215,13 +214,13 @@ function Post({ postInformations, className, isUpdateProgressReading = false }) 
 									/>
 								);
 							})}
-						</>
+						</div>
 					);
 				}
 
 				return (
 					<CommentEditor
-						key={`${comment.activityId}-${index}`}
+						key={`editor-${comment.activityId}-${index}`}
 						userInfo={userInfo}
 						postData={postData}
 						onCreateComment={onCreateComment}
@@ -231,12 +230,14 @@ function Post({ postInformations, className, isUpdateProgressReading = false }) 
 					/>
 				);
 			})}
+
 			<CommentEditor
 				userInfo={userInfo}
 				postData={postData}
 				onCreateComment={onCreateComment}
 				reply={null}
 				indexParent={null}
+				key='editor'
 			/>
 		</div>
 	);

@@ -1,7 +1,6 @@
 import axios, { CancelToken } from 'axios';
-import _ from 'lodash';
 import Storage from './Storage';
-let source = null;
+const source = null;
 
 class Request {
 	constructor() {
@@ -185,15 +184,12 @@ class Request {
 		return this.axios.delete(url, config).catch(this._onError);
 	}
 
-	makeUpload(url, file, config = {}) {
-		config = this._mapConfig(config);
-		config = Object.assign({ timeout: 1200000 }, config);
-		config = _.omit(config, ['Content-Type']);
-
+	makeUpload(url, files) {
 		const data = new FormData();
-		data.append('file', file);
-		source = CancelToken.source();
-		return this.axios.post(url, data, config).catch(this._onError);
+		files.forEach(file => {
+			data.append('file', file);
+		});
+		return this.axios.post(url, data).catch(this._onError);
 	}
 }
 

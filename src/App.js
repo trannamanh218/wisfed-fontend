@@ -9,6 +9,7 @@ import QuoteDetail from 'pages/quote-detail';
 import MyQuote from 'pages/quote/my-quote';
 import Review from 'pages/review';
 import BookShelves from 'pages/shelves';
+import ConfirmMyBook from 'pages/confirm-my-book';
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { Routes, Route } from 'react-router-dom';
@@ -58,12 +59,14 @@ function App() {
 				<Route path='/category/detail/:id/:slug' element={<CategoryDetail />} />
 				<Route path='/shelves' element={<BookShelves />} />
 				<Route path='/group' element={<Group />} />
-				<Route path='/book/detail' element={<BookDetail />} />
+				<Route path='/book/detail/:id' element={<BookDetail />} />
+				<Route path='/book/detail/:id/:slug' element={<BookDetail />} />
 				<Route path='/review' element={<Review />} />
 				<Route path='/quote' element={<Quote />} />
 				<Route path='/quote/me' element={<MyQuote />} />
 				<Route path='/quote/detail' element={<QuoteDetail />} />
 				<Route path='/profile' element={<Profile />} />
+				<Route path='/confirm-my-book' element={<ConfirmMyBook />} />
 				<Route path='/' element={<Home />} />
 			</Routes>
 		</div>

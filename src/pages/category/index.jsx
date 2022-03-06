@@ -9,6 +9,7 @@ import { STATUS_LOADING } from 'constants';
 import { getCategoryDetail } from 'reducers/redux-utils/category';
 import { STATUS_SUCCESS } from 'constants';
 import RouteLink from 'helpers/RouteLink';
+import { getBookDetail } from 'reducers/redux-utils/book';
 
 const Category = () => {
 	const [status, setStatus] = useState(STATUS_IDLE);
@@ -27,9 +28,27 @@ const Category = () => {
 		}
 	};
 
+	const handleViewBookDetail = async data => {
+		setStatus(STATUS_LOADING);
+		try {
+			await dispatch(getBookDetail(data.id)).unwrap();
+			setStatus(STATUS_SUCCESS);
+			navigate(RouteLink.bookDetail(data.id, data.name));
+		} catch (err) {
+			const statusCode = err?.statusCode || 500;
+			setStatus(statusCode);
+		}
+	};
+
 	return (
 		<MainContainer
-			main={<MainCategory status={status} viewCategoryDetail={viewCategoryDetail} />}
+			main={
+				<MainCategory
+					status={status}
+					viewCategoryDetail={viewCategoryDetail}
+					handleViewBookDetail={handleViewBookDetail}
+				/>
+			}
 			right={<SidebarCategory status={status} viewCategoryDetail={viewCategoryDetail} />}
 		/>
 	);
