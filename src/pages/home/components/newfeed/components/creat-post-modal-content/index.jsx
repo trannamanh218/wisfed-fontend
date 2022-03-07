@@ -125,7 +125,6 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 	useEffect(() => {
 		if (urlAddedArray.length > 0) {
 			getPreviewUrlFnc(urlAddedArray[urlAddedArray.length - 1]);
-			createSpanElements();
 		}
 	}, [urlAddedArray.length]);
 
