@@ -229,7 +229,6 @@
 	&.show {
 		transform: translateX(0%);
 		visibility: visible;
-		box-shadow: inset 35px 0px 35px -35px rgba(0, 0, 0, 0.4), inset -35px 0px 35px -35px rgba(0, 0, 0, 0.4);
 	}
 }
 

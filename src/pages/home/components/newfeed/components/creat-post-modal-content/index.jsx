@@ -14,7 +14,7 @@ import ShareModeComponent from './ShareModeComponent';
 import CreatPostSubModal from './CreatePostSubModal';
 import TaggedList from './TaggedList';
 import UploadImage from './UploadImage';
-import PreviewLink from './PreviewLink';
+import PreviewLink from 'shared/preview-link/PreviewLink';
 import { getPreviewUrl } from 'reducers/redux-utils/post';
 import { useCallback } from 'react';
 import { Circle as CircleLoading } from 'shared/loading';
@@ -272,6 +272,7 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 			mentionsAuthor: [],
 			mentionsCategory: [],
 			image: [],
+			preview: urlAdded,
 		};
 
 		if (taggedData.addFriends.length) {
