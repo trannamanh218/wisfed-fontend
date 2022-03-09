@@ -8,7 +8,7 @@ export const readingStatus = [
 	},
 	{
 		'title': 'Đã đọc',
-		'value': 'readAlready',
+		'value': 'read',
 		'icon': CircleCheckIcon,
 	},
 	{

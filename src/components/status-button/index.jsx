@@ -1,19 +1,39 @@
-import { CircleCheckIcon } from 'components/svg';
+import { CircleCheckIcon, CoffeeCupIcon, TargetIcon } from 'components/svg';
 import WrapIcon from 'components/wrap-icon';
 import React, { useState } from 'react';
 import { Modal } from 'react-bootstrap';
 import StatusModalContainer from './StatusModalContainer';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
+import { useSelector } from 'react-redux';
 import './status-button.scss';
-
-const StatusButton = ({ className }) => {
-	const [modalShow, setModalShow] = useState(false);
-	const [currentStatus, setCurrentStatus] = useState({
+import { useFetchLibraries } from 'api/library.hook';
+const STATUS_BOOK = {
+	'reading': {
+		'title': 'Đang đọc',
+		'value': 'reading',
+		'icon': CoffeeCupIcon,
+	},
+	'read': {
 		'title': 'Đã đọc',
-		'value': 'readAlready',
+		'value': 'read',
 		'icon': CircleCheckIcon,
-	});
+	},
+	'wantRead': {
+		'title': 'Muốn đọc',
+		'value': 'wantRead',
+		'icon': TargetIcon,
+	},
+};
+
+const StatusButton = ({ className, status = 'wantRead' }) => {
+	const { userInfo } = useSelector(state => state.auth);
+	const [modalShow, setModalShow] = useState(false);
+	const [currentStatus, setCurrentStatus] = useState(STATUS_BOOK[status]);
+
+	const filter = JSON.stringify([{ 'operator': 'eq', 'value': userInfo.id, 'property': 'createdBy' }]);
+	const { libraryData } = useFetchLibraries(1, 10, filter);
+	console.log(libraryData);
 
 	const [bookShelves, setBookShelves] = useState([
 		{
@@ -91,6 +111,7 @@ const StatusButton = ({ className }) => {
 
 StatusButton.propTypes = {
 	className: PropTypes.string,
+	status: PropTypes.oneOf(['read', 'reading', 'wantRead']),
 };
 
 export default StatusButton;

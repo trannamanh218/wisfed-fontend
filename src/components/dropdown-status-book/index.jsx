@@ -10,7 +10,7 @@ const DropdownIconButton = () => {
 	const { ref: showRef, isVisible: isShow, setIsVisible: setIsShow } = useVisible(false);
 	const [currentStatus, setCurrentStatus] = useState({
 		'title': 'Đã đọc',
-		'value': 'readAlready',
+		'value': 'read',
 		'icon': CircleCheckIcon,
 	});
 

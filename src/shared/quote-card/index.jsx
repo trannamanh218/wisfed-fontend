@@ -43,7 +43,7 @@ const QuoteCard = props => {
 				</div>
 				<div
 					className={classNames('quote-footer__right', {
-						'white-color-children': data.background !== '',
+						'white-color-children': data.background,
 					})}
 				>
 					<QuoteActionBar data={quoteData} isDetail={isDetail} />

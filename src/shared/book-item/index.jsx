@@ -29,7 +29,7 @@ const BookItem = props => {
 	return (
 		<div className='book-item' onClick={handleClick}>
 			<div className='book-item__container'>
-				<BookThumbnail size='lg' source={data.source} />
+				<BookThumbnail size='lg' {...data} />
 				<div className='book-item__overlay'>
 					<SettingMore />
 					{renderOverlay()}
@@ -39,9 +39,9 @@ const BookItem = props => {
 			<p className='book-item__name' title={data.name}>
 				{data.name}
 			</p>
-			<span className='book-item__author'>{data.author}</span>
+			<span className='book-item__author'>{data.author || 'Chưa cập nhật'}</span>
 			<ReactRating initialRating={4} readonly={true} />
-			<span className='book-item__text'>{`(Trung bình ${data.rating} sao)`}</span>
+			<span className='book-item__text'>{`(Trung bình ${data.rating || 4} sao)`}</span>
 		</div>
 	);
 };
@@ -60,10 +60,11 @@ BookItem.defaultProps = {
 
 BookItem.propTypes = {
 	data: PropTypes.shape({
-		source: PropTypes.string.isRequired,
+		source: PropTypes.string,
+		images: PropTypes.array,
 		name: PropTypes.string,
-		author: PropTypes.string.isRequired,
-		rating: PropTypes.number.isRequired,
+		author: PropTypes.string,
+		rating: PropTypes.number,
 		isPublic: PropTypes.bool,
 	}),
 	isMyShelve: PropTypes.bool,

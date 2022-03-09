@@ -25,7 +25,7 @@ UserAvatar.defaultProps = {
 };
 
 UserAvatar.propTypes = {
-	source: PropTypes.string.isRequired,
+	source: PropTypes.string,
 	name: PropTypes.string,
 	size: PropTypes.oneOf(['sm', 'md', 'lg', 'xl']),
 	handleClick: PropTypes.func,

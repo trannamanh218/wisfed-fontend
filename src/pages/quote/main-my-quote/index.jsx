@@ -3,11 +3,11 @@ import BackButton from 'shared/back-button';
 import FilterQuotePane from 'shared/fitler-quote-pane';
 import QuoteCard from 'shared/quote-card';
 import SearchField from 'shared/search-field';
-import './main-my-quote.scss';
 import { getQuoteList } from 'reducers/redux-utils/quote';
 import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import './main-my-quote.scss';
 
 const MainMyQuote = () => {
 	const [myQuoteList, setMyQuoteList] = useState([]);

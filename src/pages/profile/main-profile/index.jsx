@@ -5,16 +5,17 @@ import { Tab, Tabs } from 'react-bootstrap';
 import QuoteTab from './quote-tab';
 import FavoriteAuthorTab from './favorite-author-tab';
 import InforTab from './infor-tab';
+import BookTab from './book-tab';
 
 const MainProfile = () => {
 	const favoriteAuthors = [...Array(2)];
 	return (
 		<div className='main-profile'>
 			<PersonalInfo />
-			<Tabs className='main-profile__tabs' defaultActiveKey={'infor'}>
+			<Tabs className='main-profile__tabs' defaultActiveKey={'books'}>
 				{/*Notes: Chỉ hiển thị khi user là tác giả, không public */}
 				<Tab eventKey='books' title='Sách của tác giả'>
-					Lorem ipsum dolor sit amet.
+					<BookTab />
 				</Tab>
 				<Tab eventKey='shelves' title='Tủ sách'>
 					Lorem, ipsum dolor sit amet consectetur adipisicing.

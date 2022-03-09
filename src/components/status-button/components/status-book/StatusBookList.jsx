@@ -13,7 +13,7 @@ const StatusBookList = ({ currentStatus, handleChangeStatus }) => {
 		},
 		{
 			'title': 'Đã đọc',
-			'value': 'readAlready',
+			'value': 'read',
 			'icon': CircleCheckIcon,
 		},
 		{

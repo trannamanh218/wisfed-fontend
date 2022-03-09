@@ -52,6 +52,7 @@ export const libraryAPI = '/api/v1/libraries';
 export const libraryDetailAPI = id => `/api/v1/libraries/${id}`;
 export const addBookToLibraryAPI = id => `/api/v1/libraries/${id}/addBook`;
 export const removeBookFromLibraryAPI = id => `/api/v1/libraries/${id}/removeBook`;
+export const listBookLibraryAPI = '/api/v1/libraries/listBookLibrary';
 
 // comment activity
 export const commentActivityAPI = '/api/v1/commentActivities';

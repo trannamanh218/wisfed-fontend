@@ -1,11 +1,11 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { libraryAPI } from 'constants/apiURL';
+import { libraryAPI, listBookLibraryAPI } from 'constants/apiURL';
 import Request from 'helpers/Request';
 
 export const createLibrary = createAsyncThunk('library/createLibrary', async (params, { rejectWithValue }) => {
 	try {
 		const response = await Request.makePost(libraryAPI, params);
-		return response.data;
+		return { ...response.data, books: [] };
 	} catch (err) {
 		const error = JSON.parse(err.response);
 		return rejectWithValue(error);
@@ -21,6 +21,30 @@ export const getLibraryList = createAsyncThunk('library/getLibraryList', async (
 		return rejectWithValue(error);
 	}
 });
+
+export const addBookToLibrary = createAsyncThunk('library/addBookToLibrary', async (params, { rejectWithValue }) => {
+	const { id, ...data } = params;
+	try {
+		const response = await Request.makePost(addBookToLibrary(id), data);
+		return response.data;
+	} catch (err) {
+		const error = JSON.parse(err.response);
+		return rejectWithValue(error);
+	}
+});
+
+export const getListBookLibrary = createAsyncThunk(
+	'library/getListBookLibrary',
+	async (params, { rejectWithValue }) => {
+		try {
+			const response = await Request.makeGet(listBookLibraryAPI, params);
+			return response.data;
+		} catch (err) {
+			const error = JSON.parse(err.response);
+			return rejectWithValue(error);
+		}
+	}
+);
 
 const librarySlice = createSlice({
 	name: 'library',
@@ -44,6 +68,19 @@ const librarySlice = createSlice({
 		[getLibraryList.rejected]: (state, action) => {
 			state.isFetching = false;
 			state.libraryData = {};
+			state.error = action.payload;
+		},
+		[createLibrary.pending]: state => {
+			state.isFetching = true;
+		},
+		[createLibrary.fulfilled]: (state, action) => {
+			state.isFetching = false;
+			const newData = [...state.libraryData.rows, action.payload];
+			state.libraryData = { rows: newData, count: newData.length };
+			state.error = {};
+		},
+		[createLibrary.rejected]: (state, action) => {
+			state.isFetching = false;
 			state.error = action.payload;
 		},
 	},
