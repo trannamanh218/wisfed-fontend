@@ -15,6 +15,7 @@ import { useDispatch } from 'react-redux';
 import { Routes, Route } from 'react-router-dom';
 import { login } from 'reducers/redux-utils/auth';
 import { ToastContainer } from 'react-toastify';
+import Login from 'pages/login';
 import 'scss/main.scss';
 
 function App() {
@@ -67,6 +68,7 @@ function App() {
 				<Route path='/quote/detail' element={<QuoteDetail />} />
 				<Route path='/profile' element={<Profile />} />
 				<Route path='/confirm-my-book' element={<ConfirmMyBook />} />
+				<Route path='/login' element={<Login />} />
 				<Route path='/' element={<Home />} />
 			</Routes>
 		</div>

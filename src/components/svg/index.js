@@ -42,6 +42,8 @@ import { ReactComponent as Flag } from 'assets/icons/flag.svg';
 import { ReactComponent as Attach } from 'assets/icons/attach.svg';
 import { ReactComponent as RightArrow } from 'assets/icons/arrow.svg';
 import { ReactComponent as BoldCenterCircle } from 'assets/icons/bold-center-circle.svg';
+import { ReactComponent as FaceBookIcon } from 'assets/icons/FbIcon.svg';
+import { ReactComponent as GmailIcon } from 'assets/icons/flat-color-icons_google.svg';
 
 export {
 	HomeIcon,
@@ -88,4 +90,6 @@ export {
 	Attach,
 	RightArrow,
 	BoldCenterCircle,
+	FaceBookIcon,
+	GmailIcon,
 };

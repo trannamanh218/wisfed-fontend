@@ -1,0 +1,274 @@
+.login__container {
+	position: relative;
+}
+.login__header {
+	height: 120px;
+	background-color: #fbf7f2;
+	img {
+		height: 46px;
+		width: 173px;
+		margin-left: 200px;
+		margin-top: 40px;
+	}
+}
+
+.login__body {
+	margin-left: 200px;
+	margin-top: 82px;
+	margin-bottom: 83px;
+}
+
+.login__body-text1 {
+	font-family: 'Montserrat';
+	font-style: normal;
+	font-weight: 600;
+	font-size: 20px;
+	line-height: 32px;
+	letter-spacing: 0.75px;
+	display: flex;
+	align-items: center;
+	color: #2d2c42;
+}
+
+.login__body-text2 {
+	margin-top: 20px;
+	font-family: 'Montserrat';
+	font-style: normal;
+	font-weight: 500;
+	font-size: 15px;
+	line-height: 24px;
+	display: flex;
+	align-items: center;
+	letter-spacing: 0.75px;
+	color: #4e4b66;
+}
+
+.login__footer {
+	img {
+		height: 459px;
+		width: 100%;
+	}
+}
+
+.login__login-box {
+	position: absolute;
+	left: 840px;
+	top: 50px;
+	background-color: #fcfcfc;
+	padding: 54px 20px 76px 20px;
+	box-shadow: 0px 0px 32px rgba(0, 0, 0, 0.04);
+	border-radius: 12px;
+}
+
+.login {
+	display: flex;
+	width: 100%;
+	height: 100%;
+}
+
+.login__form__wrapper {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	width: 480px;
+	max-width: 480px;
+	margin-left: auto;
+	padding: 80px;
+	border-top-right-radius: 24px;
+	border-top-left-radius: 24px;
+	background-color: #fff;
+	text-align: right;
+	height: 100vh;
+}
+
+.login__form {
+	width: 100%;
+}
+
+.login__form__logo {
+	width: 200px;
+	height: auto;
+	margin-bottom: 80px;
+}
+
+.login__form__field {
+	margin-top: 19px;
+	text-align: left;
+}
+
+.login__form__group {
+	display: flex;
+	border-radius: 8px;
+	align-items: center;
+	overflow: hidden;
+	&.error {
+		border-color: red;
+	}
+}
+
+.login__form__link {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 45px;
+	margin-top: 12px;
+	color: #0576f0;
+}
+.login__form__input {
+	background-color: #eff0f6;
+	flex-grow: 1;
+	height: 56px;
+	padding: 0 12px;
+	border: none;
+	line-height: 40px;
+	border: none;
+	outline: none;
+	&::placeholder {
+		color: #121212;
+	}
+}
+
+.login__form__btn {
+	display: block;
+	width: 100%;
+	height: 56px;
+	padding: 116px, 24px, 16px, 24px;
+	margin-top: 28px;
+	background-color: #e0af7e;
+	border: none;
+	border-radius: 8px;
+	line-height: 1.5;
+	color: #fcfcfc;
+}
+.login__login-box__title {
+	font-family: 'Montserrat';
+	font-style: normal;
+	font-weight: 600;
+	font-size: 20px;
+	line-height: 32px;
+	display: flex;
+	align-items: center;
+	text-align: center;
+	letter-spacing: 0.75px;
+	color: #2d2c42;
+}
+
+.login__form-title {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-family: Montserrat;
+	font-style: normal;
+	font-weight: 600;
+	font-size: 18px;
+	line-height: 32px;
+	display: flex;
+	align-items: center;
+	text-align: center;
+	letter-spacing: 0.75px;
+	color: #2d2c42;
+	margin-top: 20px;
+}
+.login__register {
+	height: 56px;
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background-color: #18bb0c;
+	border-radius: 12px;
+	button {
+		color: #fcfcfc;
+	}
+}
+
+.login__fbIcon {
+	margin-left: -40px;
+	margin-right: 16px;
+}
+.GmailIcon {
+	margin-left: -60px;
+	margin-right: 16px;
+}
+
+.login-facebook {
+	background: #4666d5;
+	border-radius: 12px;
+	width: 360px;
+	height: 56px;
+	font-family: 'Montserrat';
+	font-style: normal;
+	font-weight: 600;
+	font-size: 13px;
+	line-height: 22px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	text-align: center;
+	letter-spacing: 0.25px;
+	margin-top: 32px;
+	button {
+		color: #f7f7fc;
+	}
+}
+.login-gmail {
+	margin-top: 20px;
+	background: #eff0f7;
+	border-radius: 12px;
+	width: 360px;
+	height: 56px;
+	font-family: 'Montserrat';
+	font-weight: 600;
+	font-size: 13px;
+	line-height: 22px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	text-align: center;
+	letter-spacing: 0.25px;
+	margin-bottom: 28px;
+	button {
+		color: #4e4b66;
+	}
+}
+
+// @include responsive(992px) {
+// 	.login__form__wrapper {
+// 		padding: 40px;
+// 	}
+// }
+//
+// @include responsive(768px) {
+// 	.login {
+// 		flex-direction: column;
+// 	}
+//
+// 	.login__form__wrapper {
+// 		width: 100%;
+// 		max-width: 100%;
+// 		flex-grow: 1;
+// 	}
+//
+// 	.login__form {
+// 		width: 70%;
+// 	}
+//
+// 	.login__form__logo {
+// 		margin-top: 25%;
+// 	}
+// }
+//
+// @include responsive(576px) {
+// 	.login__form {
+// 		width: 100%;
+// 	}
+// }
+//
+// @include responsive(420px) {
+// 	.login__form__wrapper {
+// 		padding: 20px;
+// 	}
+// 	.login__login__btn {
+// 		font-size: 12px;
+// 	}
+// }
