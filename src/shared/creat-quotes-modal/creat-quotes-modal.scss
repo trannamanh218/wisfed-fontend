@@ -294,14 +294,14 @@
 	}
 }
 
-.creat-quotes-modal__body__option-topics-added {
+.creat-quotes-modal__body__option-categories-added {
 	width: 100%;
 	display: flex;
 	gap: 16px;
 	flex-wrap: wrap;
 }
 
-.topic-input-wrapper {
+.category-input-wrapper {
 	padding: 12px 0;
 	height: 100%;
 	input {
@@ -313,7 +313,7 @@
 	}
 }
 
-.creat-quotes-modal__body__option-topics-added__item {
+.creat-quotes-modal__body__option-categories-added__item {
 	padding: 12px;
 	color: $primary-dark;
 	background-color: $primary-light;
@@ -347,7 +347,7 @@
 	&.book {
 		gap: 56px;
 	}
-	&.topic {
+	&.category {
 		margin-top: 8px;
 		justify-content: flex-start;
 		flex-wrap: wrap;
@@ -366,7 +366,7 @@
 	&.book {
 		width: 160px;
 	}
-	&.topic {
+	&.category {
 		padding: 16px;
 		color: $primary;
 		border: $primary 2px solid;
@@ -386,7 +386,7 @@
 	}
 }
 
-.creat-quotes-modal__checked-topic {
+.creat-quotes-modal__checked-category {
 	position: absolute;
 	top: 0px;
 	right: 0px;
