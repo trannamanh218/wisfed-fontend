@@ -20,23 +20,23 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 	const [backgroundColor, setBackgroundColor] = useState('');
 	const [inputAuthorValue, setInputAuthorValue] = useState('');
 	const [inputBookValue, setInputBookValue] = useState('');
-	const [inputTopicValue, setInputTopicValue] = useState('');
+	const [inputCategoryValue, setInputCategoryValue] = useState('');
 	const [inputHashtagValue, setInputHashtagValue] = useState('');
 	const [colorActiveIndex, setColorActiveIndex] = useState(-1);
 	const [authorSearchedList, setAuthorSearchedList] = useState([]);
 	const [authorAdded, setAuthorAdded] = useState('');
 	const [bookSearchedList, setBookSearchedList] = useState([]);
 	const [bookAdded, setBookAdded] = useState({});
-	const [topicSearchedList, setTopicSearchedList] = useState([]);
-	const [topicAddedList, setTopicAddedList] = useState([]);
+	const [categorySearchedList, setCategorySearchedList] = useState([]);
+	const [categoryAddedList, setCategoryAddedList] = useState([]);
 	const [getDataFinish, setGetDataFinish] = useState(false);
-	const [topicAddedIdList, setTopicAddedIdList] = useState([]);
+	const [categoryAddedIdList, setCategoryAddedIdList] = useState([]);
 
 	const textFieldEdit = useRef(null);
 	const sliderRef = useRef(null);
-	const topicInputContainer = useRef(null);
-	const topicInputWrapper = useRef(null);
-	const topicInput = useRef(null);
+	const categoryInputContainer = useRef(null);
+	const categoryInputWrapper = useRef(null);
+	const categoryInput = useRef(null);
 
 	const userInfo = useSelector(state => state.auth.userInfo);
 	const dispatch = useDispatch();
@@ -110,12 +110,12 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 	const getSuggestionForCreatQuotes = async (input, option) => {
 		try {
 			const data = await dispatch(getSuggestionForPost({ input, option, userInfo })).unwrap();
-			if (option.value === 'add-author') {
+			if (option.value === 'addAuthor') {
 				setAuthorSearchedList(data.rows.slice(0, 5));
-			} else if (option.value === 'add-book') {
+			} else if (option.value === 'addBook') {
 				setBookSearchedList(data.rows.slice(0, 3));
-			} else if (option.value === 'add-topic') {
-				setTopicSearchedList(data.rows.slice(0, 5));
+			} else if (option.value === 'addCategory') {
+				setCategorySearchedList(data.rows.slice(0, 5));
 			}
 		} catch {
 			toast.error('Lỗi hệ thống');
@@ -133,7 +133,7 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 		setGetDataFinish(false);
 		setAuthorSearchedList([]);
 		setInputAuthorValue(e.target.value);
-		debounceSearch(e.target.value, { value: 'add-author' });
+		debounceSearch(e.target.value, { value: 'addAuthor' });
 	};
 
 	const addAuthor = authorName => {
@@ -146,7 +146,7 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 		setGetDataFinish(false);
 		setBookSearchedList([]);
 		setInputBookValue(e.target.value);
-		debounceSearch(e.target.value, { value: 'add-book' });
+		debounceSearch(e.target.value, { value: 'addBook' });
 	};
 
 	const addBook = book => {
@@ -155,60 +155,60 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 		setBookSearchedList([]);
 	};
 
-	const searchTopic = e => {
+	const searchCategory = e => {
 		setGetDataFinish(false);
-		setTopicSearchedList([]);
-		setInputTopicValue(e.target.value);
-		debounceSearch(e.target.value, { value: 'add-topic' });
-		topicInputWrapper.current.style.width = topicInput.current.value.length + 0.5 + 'ch';
+		setCategorySearchedList([]);
+		setInputCategoryValue(e.target.value);
+		debounceSearch(e.target.value, { value: 'addCategory' });
+		categoryInputWrapper.current.style.width = categoryInput.current.value.length + 0.5 + 'ch';
 	};
 
-	const focusTopicInput = () => {
-		topicInput.current.focus();
+	const focusCategoryInput = () => {
+		categoryInput.current.focus();
 	};
 
 	useEffect(() => {
-		if (topicInput.current) {
-			topicInput.current.focus();
+		if (categoryInput.current) {
+			categoryInput.current.focus();
 		}
-	}, [topicAddedList]);
+	}, [categoryAddedList]);
 
 	useEffect(() => {
-		if (topicInputContainer.current) {
-			topicInputContainer.current.addEventListener('click', focusTopicInput);
+		if (categoryInputContainer.current) {
+			categoryInputContainer.current.addEventListener('click', focusCategoryInput);
 			return () => {
-				topicInputContainer.current.removeEventListener('click', focusTopicInput);
+				categoryInputContainer.current.removeEventListener('click', focusCategoryInput);
 			};
 		}
 	}, []);
 
-	const addTopic = topic => {
-		if (topicAddedList.filter(topicAdded => topicAdded.id === topic.id).length > 0) {
-			removeTopic(topic.id);
+	const addCategory = category => {
+		if (categoryAddedList.filter(categoryAdded => categoryAdded.id === category.id).length > 0) {
+			removeCategory(category.id);
 		} else {
-			const topicArrayTemp = [...topicAddedList];
-			topicArrayTemp.push(topic);
-			setTopicAddedList(topicArrayTemp);
-			setInputTopicValue('');
-			setTopicSearchedList([]);
-			topicInputWrapper.current.style.width = '0.5ch';
+			const categoryArrayTemp = [...categoryAddedList];
+			categoryArrayTemp.push(category);
+			setCategoryAddedList(categoryArrayTemp);
+			setInputCategoryValue('');
+			setCategorySearchedList([]);
+			categoryInputWrapper.current.style.width = '0.5ch';
 		}
 	};
 
-	const removeTopic = topicId => {
-		const topicArr = [...topicAddedList];
-		const index = topicArr.findIndex(item => item.id === topicId);
-		topicArr.splice(index, 1);
-		setTopicAddedList(topicArr);
+	const removeCategory = categoryId => {
+		const categoryArr = [...categoryAddedList];
+		const index = categoryArr.findIndex(item => item.id === categoryId);
+		categoryArr.splice(index, 1);
+		setCategoryAddedList(categoryArr);
 	};
 
 	useEffect(() => {
-		const topicIdArr = [];
-		for (let i = 0; i < topicAddedList.length; i++) {
-			topicIdArr.push(topicAddedList[i].id);
+		const categoryIdArr = [];
+		for (let i = 0; i < categoryAddedList.length; i++) {
+			categoryIdArr.push(categoryAddedList[i].id);
 		}
-		setTopicAddedIdList(topicIdArr);
-	}, [topicAddedList]);
+		setCategoryAddedIdList(categoryIdArr);
+	}, [categoryAddedList]);
 
 	const renderNoSearchResult = () => {
 		return <div className='creat-quotes-modal__no-search-result'>Không có kết quả phù hợp</div>;
@@ -220,7 +220,7 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 				'quote': textFieldEdit.current.innerText,
 				'bookId': bookAdded.id,
 				'authorName': authorAdded,
-				'categories': topicAddedIdList,
+				'categories': categoryAddedIdList,
 				'tag': inputHashtagValue,
 				'background': backgroundColor,
 			};
@@ -423,28 +423,32 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 						<div className='creat-quotes-modal__body__option-item__title'>Chủ đề</div>
 						<div
 							className='creat-quotes-modal__body__option-item__search-container'
-							style={topicAddedList.length > 0 ? { padding: '8px 24px' } : {}}
-							ref={topicInputContainer}
+							style={categoryAddedList.length > 0 ? { padding: '8px 24px' } : {}}
+							ref={categoryInputContainer}
 						>
-							{topicAddedList.length > 0 ? (
-								<div className='creat-quotes-modal__body__option-topics-added'>
-									{topicAddedList.map(item => (
+							{categoryAddedList.length > 0 ? (
+								<div className='creat-quotes-modal__body__option-categories-added'>
+									{categoryAddedList.map(item => (
 										<div
 											key={item.id}
-											className='creat-quotes-modal__body__option-topics-added__item'
+											className='creat-quotes-modal__body__option-categories-added__item'
 										>
 											<div>{item.name}</div>
-											<button onClick={() => removeTopic(item.id)}>
+											<button onClick={() => removeCategory(item.id)}>
 												<CloseX />
 											</button>
 										</div>
 									))}
 									<div
-										ref={topicInputWrapper}
-										className='topic-input-wrapper'
+										ref={categoryInputWrapper}
+										className='category-input-wrapper'
 										style={{ width: '8px' }}
 									>
-										<input value={inputTopicValue} onChange={searchTopic} ref={topicInput} />
+										<input
+											value={inputCategoryValue}
+											onChange={searchCategory}
+											ref={categoryInput}
+										/>
 									</div>
 								</div>
 							) : (
@@ -452,28 +456,29 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 									<Search />
 									<input
 										placeholder='Tìm kiếm và thêm chủ đề'
-										value={inputTopicValue}
-										onChange={searchTopic}
+										value={inputCategoryValue}
+										onChange={searchCategory}
 									/>
 								</>
 							)}
 						</div>
-						{inputTopicValue.trim() !== '' && getDataFinish && (
+						{inputCategoryValue.trim() !== '' && getDataFinish && (
 							<>
-								{topicSearchedList.length > 0 ? (
-									<div className='creat-quotes-modal__body__option-item__search-result topic'>
-										{topicSearchedList.map(item => (
+								{categorySearchedList.length > 0 ? (
+									<div className='creat-quotes-modal__body__option-item__search-result category'>
+										{categorySearchedList.map(item => (
 											<div
-												className='creat-quotes-modal__searched-item topic'
+												className='creat-quotes-modal__searched-item category'
 												key={item.id}
-												onClick={() => addTopic(item)}
+												onClick={() => addCategory(item)}
 											>
 												<span>{item.name}</span>
 												<>
-													{topicAddedList.filter(topicAdded => topicAdded.id === item.id)
-														.length > 0 && (
+													{categoryAddedList.filter(
+														categoryAdded => categoryAdded.id === item.id
+													).length > 0 && (
 														<>
-															<div className='creat-quotes-modal__checked-topic'></div>
+															<div className='creat-quotes-modal__checked-category'></div>
 															<CheckIcon />
 														</>
 													)}
