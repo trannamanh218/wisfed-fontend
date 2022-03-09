@@ -35,7 +35,7 @@ $wallpaper-height: 350px;
 
 	&__detail {
 		display: flex;
-		flex-wrap: wrap;
+		// flex-wrap: wrap;
 		&__left {
 			width: 25%;
 			flex-shrink: 0;
@@ -44,6 +44,7 @@ $wallpaper-height: 350px;
 		&__right {
 			flex-grow: 1;
 			max-width: 680px;
+			margin-left: 10px;
 		}
 
 		&__avatar {
