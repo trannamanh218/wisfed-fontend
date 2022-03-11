@@ -28,22 +28,40 @@
 
 	&__pane {
 		margin-top: 3rem;
-		padding: 2rem 2.625rem;
+		padding: 2rem 40px;
 		border-radius: 16px;
 		background-color: $white;
 
 		.comment {
-			margin-left: 2.5rem;
-			margin-right: auto;
-			margin-bottom: 1.25rem;
+			margin-left: 40px;
 		}
 
 		.quote-card {
-			margin: 0 auto 2.5rem;
+			margin: 0 auto 40px;
+			.quote-action-bar {
+				gap: 28px;
+			}
 		}
 
-		.reply-box {
-			margin-left: 2.5rem;
+		.comment-editor {
+			margin-left: 40px;
+		}
+	}
+}
+
+.main-quote-detail__reply {
+	margin: 0 0 32px 40px;
+}
+
+@media only screen and (max-width: 1366px) {
+	.main-quote-detail {
+		.quote-card {
+			.quote-action-bar {
+				gap: 12px;
+				.quote-action__item {
+					gap: 8px;
+				}
+			}
 		}
 	}
 }

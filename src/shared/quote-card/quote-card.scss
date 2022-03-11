@@ -76,11 +76,6 @@
 		.quote-action-bar {
 			padding: 0;
 		}
-		&.white-color-children {
-			span {
-				color: #fcfcfc;
-			}
-		}
 	}
 
 	&__badge {
@@ -93,11 +88,5 @@
 			overflow: hidden;
 			text-overflow: ellipsis;
 		}
-	}
-}
-
-.white-color {
-	p {
-		color: #fcfcfc;
 	}
 }

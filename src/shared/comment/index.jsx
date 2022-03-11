@@ -12,7 +12,7 @@ import './comment.scss';
 
 const Comment = props => {
 	const { data, handleReply, postData, index, parentData, indexParent } = props;
-	const isAuthor = postData.origin.split(':')[1] === data.user.id;
+	// const isAuthor = postData.origin.split(':')[1] === data.user.id;
 	const { userInfo } = useSelector(state => state.auth);
 	const dispatch = useDispatch();
 
@@ -34,11 +34,11 @@ const Comment = props => {
 								data.user.firstName ||
 								'Không xác định'}
 						</span>
-						{isAuthor && (
+						{/* {isAuthor && (
 							<Badge className='comment__badge' bg='primary-light'>
 								Tác giả
 							</Badge>
-						)}
+						)} */}
 					</div>
 					<p className='comment__content'>{data.content}</p>
 				</div>
