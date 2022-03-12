@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { quoteAPI, quoteDetailAPI } from 'constants/apiURL';
+import { quoteAPI, quoteDetailAPI, quoteCommentAPI } from 'constants/apiURL';
 import Request from 'helpers/Request';
 
 export const getQuoteList = createAsyncThunk('quote/get quote list', async (params, { rejectWithValue }) => {
@@ -22,13 +22,23 @@ export const creatQuotes = createAsyncThunk('quote/creat quotes', async (data, {
 	}
 });
 
-export const getQuoteDetail = createAsyncThunk('quote/get quote list', async (id, { rejectWithValue }) => {
+export const getQuoteDetail = createAsyncThunk('quote/get quote detail', async (id, { rejectWithValue }) => {
 	try {
 		const response = await Request.makeGet(quoteDetailAPI(id));
 		return response.data;
 	} catch (err) {
 		const error = JSON.parse(err.response);
 		throw rejectWithValue(error);
+	}
+});
+
+export const creatQuotesComment = createAsyncThunk('quote/creat quotes comment', async (data, { rejectWithValue }) => {
+	try {
+		const response = await Request.makePost(quoteCommentAPI, data);
+		return response.data;
+	} catch (err) {
+		const error = JSON.parse(err.response);
+		return rejectWithValue(error);
 	}
 });
 

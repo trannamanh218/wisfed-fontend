@@ -32,7 +32,7 @@
 		border-radius: 16px;
 		background-color: $white;
 
-		.comment {
+		.quote-comment {
 			margin-left: 40px;
 		}
 
@@ -51,6 +51,13 @@
 
 .main-quote-detail__reply {
 	margin: 0 0 32px 40px;
+}
+
+.main-quote-detail__reply-comment {
+	display: none;
+	&.show {
+		display: flex;
+	}
 }
 
 @media only screen and (max-width: 1366px) {

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Like, Comment, Share } from 'components/svg';
+import { Like, LikeFill, CommentSvg, Share } from 'components/svg';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import './quote-action-bar.scss';
@@ -13,11 +13,11 @@ const QuoteActionBar = ({ data, isDetail, handleLikeQuote }) => {
 		return (
 			<ul className='quote-action-bar'>
 				<li className='quote-action__item'>
-					<Like className='quote-icon active' />
+					<Like className='quote-icon' />
 					<span className='quote-action__name'>{like} Thích</span>
 				</li>
 				<li className='quote-action__item'>
-					<Comment className='quote-icon active' />
+					<CommentSvg className='quote-icon active' />
 					<span className='quote-action__name'>{comments} Bình luận</span>
 				</li>
 				<li className='quote-action__item'>

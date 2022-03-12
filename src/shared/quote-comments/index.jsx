@@ -1,20 +1,18 @@
 import classNames from 'classnames';
 import { calculateDurationTime } from 'helpers/Common';
-import _ from 'lodash';
 import PropTypes from 'prop-types';
-import React from 'react';
 import { Badge } from 'react-bootstrap';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
 import { updateReactionActivity } from 'reducers/redux-utils/activity';
 import UserAvatar from 'shared/user-avatar';
-import './comment.scss';
+import './quote-comment.scss';
 
-const Comment = props => {
-	const { data, handleReply, postData, index, parentData, indexParent } = props;
-	const isAuthor = postData.origin.split(':')[1] === data.user.id;
+const QuoteComment = ({ data, handleReply, quoteData, commentLv1Id }) => {
 	const { userInfo } = useSelector(state => state.auth);
 	const dispatch = useDispatch();
+
+	const isAuthor = data.createdBy === quoteData.createdBy;
 
 	const handleLike = () => {
 		const params = { commentId: data.id };
@@ -22,12 +20,12 @@ const Comment = props => {
 	};
 
 	return (
-		<div className={classNames('comment', { 'comment--secondary': !_.isEmpty(parentData) })}>
-			<UserAvatar className='comment__avatar' size='sm' source={data.user?.avatarImage} />
-			<div className='comment__wrapper'>
-				<div className='comment__container'>
-					<div className='comment__header'>
-						<span className='comment__author'>
+		<div className='quote-comment'>
+			<UserAvatar className='quote-comment__avatar' size='sm' source={data.user?.avatarImage} />
+			<div className='quote-comment__wrapper'>
+				<div className='quote-comment__container'>
+					<div className='quote-comment__header'>
+						<span className='quote-comment__author'>
 							{data.user.name ||
 								data.user.fullName ||
 								data.user.lastName ||
@@ -35,27 +33,27 @@ const Comment = props => {
 								'Không xác định'}
 						</span>
 						{isAuthor && (
-							<Badge className='comment__badge' bg='primary-light'>
+							<Badge className='quote-comment__badge' bg='primary-light'>
 								Tác giả
 							</Badge>
 						)}
 					</div>
-					<p className='comment__content'>{data.content}</p>
+					<p className='quote-comment__content'>{data.content}</p>
 				</div>
 
-				<ul className='comment__action'>
+				<ul className='quote-comment__action'>
 					<li
-						className={classNames('comment__item', {
+						className={classNames('quote-comment__item', {
 							'active': data.like && data.updateBy === userInfo.id,
 						})}
 						onClick={handleLike}
 					>
 						Thích
 					</li>
-					<li className='comment__item' onClick={() => handleReply(data, index, parentData, indexParent)}>
+					<li className='quote-comment__item' onClick={() => handleReply(commentLv1Id)}>
 						Phản hồi
 					</li>
-					<li className='comment__item comment__item--timeline'>
+					<li className='quote-comment__item quote-comment__item--timeline'>
 						{`${calculateDurationTime(data.createdAt)}`}
 					</li>
 				</ul>
@@ -64,21 +62,16 @@ const Comment = props => {
 	);
 };
 
-Comment.defaultProps = {
+QuoteComment.defaultProps = {
 	data: {},
 	handleReply: () => {},
-	index: 0,
-	parentData: {},
-	indexParent: null,
 };
 
-Comment.propTypes = {
+QuoteComment.propTypes = {
 	data: PropTypes.object,
-	postData: PropTypes.object,
+	quoteData: PropTypes.object,
 	handleReply: PropTypes.func,
-	index: PropTypes.number,
-	parentData: PropTypes.object,
-	indexParent: PropTypes.any,
+	commentLv1Id: PropTypes.number,
 };
 
-export default Comment;
+export default QuoteComment;

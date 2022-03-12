@@ -1,17 +1,17 @@
 import { Forward } from 'components/svg';
 import React, { useState, useEffect } from 'react';
 import BackButton from 'shared/back-button';
-import Comment from 'shared/comment';
+import QuoteComment from 'shared/quote-comments';
 import QuoteCard from 'shared/quote-card';
 import './main-quote-detail.scss';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getQuoteDetail } from 'reducers/redux-utils/quote';
+import { getQuoteDetail, creatQuotesComment } from 'reducers/redux-utils/quote';
 import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 import _ from 'lodash';
 import CommentEditor from 'shared/comment-editor';
 import { useSelector } from 'react-redux';
-import { createComment } from 'reducers/redux-utils/comment';
+import classNames from 'classnames';
 
 const MainQuoteDetail = () => {
 	const { id } = useParams();
@@ -20,7 +20,8 @@ const MainQuoteDetail = () => {
 	const userInfo = useSelector(state => state.auth.userInfo);
 
 	const [quoteData, setQuoteData] = useState({});
-	const [hasReplyCommentId, setHasReplyCommentId] = useState([]);
+	const [commentLv1IdArray, setCommentLv1IdArray] = useState([]);
+	const [replyingCommentId, setReplyingCommentId] = useState(0);
 
 	useEffect(() => {
 		window.scrollTo(0, 0);
@@ -42,94 +43,40 @@ const MainQuoteDetail = () => {
 
 	useEffect(() => {
 		if (quoteData?.commentQuotes?.length > 0) {
-			const hasReplyCommentIdTemp = [];
+			const commentLv1IdTemp = [];
 			for (let i = 0; i < quoteData.commentQuotes.length; i++) {
 				if (
-					quoteData.commentQuotes[i].reply &&
-					!hasReplyCommentIdTemp.includes(quoteData.commentQuotes[i].reply)
+					quoteData.commentQuotes[i].reply === null &&
+					!commentLv1IdTemp.includes(quoteData.commentQuotes[i].id)
 				) {
-					hasReplyCommentIdTemp.push(quoteData.commentQuotes[i].reply);
+					commentLv1IdTemp.push(quoteData.commentQuotes[i].id);
 				}
 			}
-			setHasReplyCommentId(hasReplyCommentIdTemp);
+			setCommentLv1IdArray(commentLv1IdTemp);
 		}
 	}, [quoteData.commentQuotes]);
 
-	const onCreateComment = (content, reply, parentData, indexParent) => {
+	const onCreateComment = async (content, reply) => {
 		const params = {
-			activityId: quoteData.activityId,
+			quoteId: Number(id),
 			content: content,
 			mediaUrl: [],
-			reply,
+			reply: reply,
 		};
-
-		dispatch(createComment(params))
-			.unwrap()
-			.then(res => {
-				const propertyComment = ['activityId', 'content', 'getstreamId', 'reply', 'id', 'createdAt'];
-				const newComment = _.pick(res, propertyComment);
-				newComment.user = userInfo;
-				newComment.replyComments = [];
-
-				let usersComments = [];
-				if (_.isEmpty(parentData)) {
-					usersComments = [...quoteData.usersComments, newComment];
-				} else {
-					const replyComments = [...parentData.replyComments.slice(0, -1), newComment];
-					usersComments = [
-						...quoteData.usersComments.slice(0, indexParent),
-						{ ...parentData, replyComments },
-						...quoteData.usersComments.slice(indexParent + 1),
-					];
-				}
-
-				setQuoteData(prev => ({ ...prev, usersComments, comments: ++prev.comments }));
-			})
-			.catch(err => {
-				return err;
-			});
-	};
-
-	const handleReply = (data, index, parentData, indexParent) => {
-		const newData = {
-			content: '',
-			reply: parentData.id || data.id,
-			activityId: quoteData.activityId,
-			user: { ...userInfo },
-			replyComments: [],
-		};
-
-		let usersComments = [];
-		const isValid = _.isEmpty(parentData) ? isValidToAddReply(data) : isValidToAddReply(parentData);
-
-		if (isValid) {
-			if (_.isEmpty(parentData)) {
-				const replyComments = [...data.replyComments, newData];
-
-				usersComments = [
-					...quoteData.usersComments.slice(0, index),
-					{ ...data, replyComments },
-					...quoteData.usersComments.slice(index + 1),
-				];
-			} else {
-				const replyComments = [...parentData.replyComments, newData];
-
-				usersComments = [
-					...quoteData.usersComments.slice(0, indexParent),
-					{ ...parentData, replyComments },
-					...quoteData.usersComments.slice(indexParent + 1),
-				];
+		try {
+			const res = await dispatch(creatQuotesComment(params));
+			if (!_.isEmpty(res)) {
+				getQuoteData();
 			}
-
-			return setQuoteData(prev => ({ ...prev, usersComments }));
+		} catch {
+			err => {
+				return err;
+			};
 		}
 	};
 
-	const isValidToAddReply = data => {
-		if (data && data.replyComments && data.replyComments.length) {
-			return data.replyComments.every(item => item.content);
-		}
-		return true;
+	const handleReply = cmtLv1Id => {
+		setReplyingCommentId(cmtLv1Id);
 	};
 
 	return (
@@ -150,55 +97,50 @@ const MainQuoteDetail = () => {
 					{quoteData.commentQuotes?.map((comment, index) => (
 						<div key={`${comment.id}-${index}`}>
 							{comment.reply === null && (
-								<Comment
+								<QuoteComment
+									commentLv1Id={comment.id}
 									data={comment}
-									postData={quoteData}
+									quoteData={quoteData}
 									handleReply={handleReply}
-									index={index}
-									indexParent={null}
 								/>
 							)}
-							{hasReplyCommentId.includes(comment.id) && (
-								<div className='main-quote-detail__reply'>
-									{quoteData.commentQuotes.map((commentChild, index) => {
-										if (commentChild.reply === comment.id) {
-											return (
-												<div key={commentChild.id}>
-													<div>
-														<Comment
-															data={commentChild}
-															postData={quoteData}
-															handleReply={handleReply}
-															index={index}
-															indexParent={null}
-														/>
-													</div>
+
+							<div className='main-quote-detail__reply'>
+								{quoteData.commentQuotes.map(commentChild => {
+									if (commentChild.reply === comment.id) {
+										return (
+											<div key={commentChild.id}>
+												<div>
+													<QuoteComment
+														commentLv1Id={comment.id}
+														data={commentChild}
+														quoteData={quoteData}
+														handleReply={handleReply}
+													/>
 												</div>
-											);
-										}
-									})}
+											</div>
+										);
+									}
+								})}
+								{commentLv1IdArray.includes(comment.id) && (
 									<CommentEditor
-										// key={`editor-${comment.id}-${childIndex}`}
 										userInfo={userInfo}
 										postData={quoteData}
 										onCreateComment={onCreateComment}
-										className='reply-comment'
-										// reply={childComment.reply}
-										parentData={comment}
-										indexParent={index}
+										className={classNames('main-quote-detail__reply-comment', {
+											'show': comment.id === replyingCommentId,
+										})}
+										reply={replyingCommentId}
 									/>
-								</div>
-							)}
+								)}
+							</div>
 						</div>
 					))}
-
-					<CommentEditor userInfo={userInfo} />
+					<CommentEditor userInfo={userInfo} reply={null} onCreateComment={onCreateComment} />
 				</div>
 			)}
 		</div>
 	);
 };
-
-MainQuoteDetail.propTypes = {};
 
 export default MainQuoteDetail;

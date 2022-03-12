@@ -8,7 +8,6 @@ import { getQuoteList } from 'reducers/redux-utils/quote';
 import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { Link } from 'react-router-dom';
 
 const MainMyQuote = () => {
 	const [myQuoteList, setMyQuoteList] = useState([]);

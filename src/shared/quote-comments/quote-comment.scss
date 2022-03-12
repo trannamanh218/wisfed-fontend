@@ -1,0 +1,65 @@
+@import 'src/scss/abstracts/_variables.scss';
+
+.quote-comment {
+	display: flex;
+	width: fit-content;
+	margin-bottom: 1.25rem;
+	&__container {
+		max-width: 41.5rem;
+		margin-bottom: 0.3em;
+		padding: 1em;
+		border-radius: 16px;
+		background-color: $ash-background;
+		font-size: 0.825rem;
+	}
+
+	&--secondary {
+		padding-left: 1.25rem;
+	}
+
+	&__header {
+		display: flex;
+		align-items: center;
+	}
+	&__avatar {
+		flex-shrink: 0;
+		margin-right: 0.5em;
+	}
+
+	&__author {
+		font-weight: 600;
+		line-height: 1.5;
+		color: $ash;
+	}
+
+	&__badge {
+		margin-left: 0.7em;
+		padding: 0.4em 0.6em;
+		font-size: 0.75rem;
+		font-weight: 500;
+	}
+
+	&__content {
+		font-weight: 500;
+		line-height: 1.5;
+		color: $ash-body;
+		word-break: break-word;
+	}
+
+	&__action {
+		display: flex;
+		gap: 1em;
+		font-size: 0.75rem;
+		font-weight: 600;
+		line-height: 1.5;
+		color: $ash-label;
+	}
+
+	&__item {
+		cursor: pointer;
+		&--timeline {
+			font-weight: 500;
+			color: $ash-placeholder;
+		}
+	}
+}
