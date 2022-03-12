@@ -93,7 +93,7 @@ const MainMyQuote = () => {
 				handleChangeOption={handleChangeOption}
 				defaultOption={defaultOption}
 			>
-				{myQuoteList.length && (
+				{myQuoteList.length > 0 && (
 					<InfiniteScroll
 						dataLength={myQuoteList.length}
 						next={getMyQuoteList}

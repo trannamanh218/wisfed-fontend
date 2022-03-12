@@ -6,14 +6,14 @@ import './quote-action-bar.scss';
 import { RightArrow } from 'components/svg';
 import { Link } from 'react-router-dom';
 
-const QuoteActionBar = ({ data, isDetail, handleLikeQuote }) => {
-	const { isLike, like, isShare, share, comments, id } = data;
+const QuoteActionBar = ({ data, isDetail, handleLikeQuote, isLiked }) => {
+	const { like, isShare, share, comments, id } = data;
 
 	if (isDetail) {
 		return (
 			<ul className='quote-action-bar'>
 				<li className='quote-action__item'>
-					<Like className='quote-icon' />
+					{isLiked ? <LikeFill /> : <Like />}
 					<span className='quote-action__name'>{like} Thích</span>
 				</li>
 				<li className='quote-action__item'>
@@ -31,7 +31,7 @@ const QuoteActionBar = ({ data, isDetail, handleLikeQuote }) => {
 	return (
 		<ul className='quote-action-bar'>
 			<li className='quote-action__item'>
-				<Like className={classNames('quote-icon', { 'active': isLike })} onClick={handleLikeQuote} />
+				{isLiked ? <LikeFill /> : <Like />}
 				<span className='quote-action__name'>{like} Thích</span>
 			</li>
 			<li className='quote-action__item'>
@@ -64,6 +64,7 @@ QuoteActionBar.propTypes = {
 	data: PropTypes.object,
 	isDetail: PropTypes.bool,
 	handleLikeQuote: PropTypes.func,
+	isLiked: PropTypes.bool,
 };
 
 export default QuoteActionBar;

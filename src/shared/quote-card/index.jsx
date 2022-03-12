@@ -5,9 +5,7 @@ import QuoteActionBar from 'shared/quote-action-bar';
 import UserAvatar from 'shared/user-avatar';
 import './quote-card.scss';
 
-const QuoteCard = props => {
-	const { data, isDetail } = props;
-
+const QuoteCard = ({ data, isDetail, isLiked }) => {
 	return (
 		<div
 			className='quote-card'
@@ -32,7 +30,7 @@ const QuoteCard = props => {
 					<BadgeList list={data?.categories?.slice(0, 2)} className='quote-footer__badge' />
 				</div>
 				<div className='quote-footer__right'>
-					<QuoteActionBar data={data} isDetail={isDetail} />
+					<QuoteActionBar data={data} isDetail={isDetail} isLiked={isLiked} />
 				</div>
 			</div>
 		</div>
@@ -55,6 +53,7 @@ QuoteCard.defaultProps = {
 QuoteCard.propTypes = {
 	data: PropTypes.object,
 	isDetail: PropTypes.bool,
+	isLiked: PropTypes.bool,
 };
 
 export default QuoteCard;

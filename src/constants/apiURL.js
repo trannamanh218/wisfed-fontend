@@ -34,6 +34,7 @@ export const categoryDetailAPI = id => `/api/v1/categories/${id}`;
 //user
 export const userAPI = '/api/v1/users';
 export const userDetailAPI = id => `/api/v1/users/${id}`;
+export const checkLikedAPI = '/api/v1/users/checkLiked';
 
 // friend
 export const friendAPI = id => `/api/v1/users/${id}/listFriend`;

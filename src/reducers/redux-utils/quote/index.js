@@ -49,7 +49,6 @@ const quoteSlice = createSlice({
 		quotesData: {},
 		error: {},
 		resetQuoteList: false,
-		toDetailFromMyQuotes: false,
 	},
 
 	reducers: {

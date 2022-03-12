@@ -12,6 +12,7 @@ import _ from 'lodash';
 import CommentEditor from 'shared/comment-editor';
 import { useSelector } from 'react-redux';
 import classNames from 'classnames';
+import { getCheckLiked } from 'reducers/redux-utils/user';
 
 const MainQuoteDetail = () => {
 	const { id } = useParams();
@@ -22,16 +23,30 @@ const MainQuoteDetail = () => {
 	const [quoteData, setQuoteData] = useState({});
 	const [commentLv1IdArray, setCommentLv1IdArray] = useState([]);
 	const [replyingCommentId, setReplyingCommentId] = useState(0);
+	const [isLiked, setIsLiked] = useState(false);
 
 	useEffect(() => {
 		window.scrollTo(0, 0);
 		getQuoteData();
+		checkQuoteLiked();
 	}, []);
 
 	const getQuoteData = async () => {
 		try {
 			const response = await dispatch(getQuoteDetail(id)).unwrap();
 			setQuoteData(response);
+		} catch {
+			toast.error('Lỗi hệ thống');
+		}
+	};
+
+	const checkQuoteLiked = async () => {
+		const params = { filter: JSON.stringify([{ 'operator': 'eq', 'value': id, 'property': 'quoteId' }]) };
+		try {
+			const res = await dispatch(getCheckLiked(params)).unwrap();
+			if (res.count > 0) {
+				setIsLiked(true);
+			}
 		} catch {
 			toast.error('Lỗi hệ thống');
 		}
@@ -93,7 +108,7 @@ const MainQuoteDetail = () => {
 			</div>
 			{!_.isEmpty(quoteData) && (
 				<div className='main-quote-detail__pane'>
-					<QuoteCard className='mx-auto' isDetail={true} data={quoteData} />
+					<QuoteCard className='mx-auto' isDetail={true} data={quoteData} isLiked={isLiked} />
 					{quoteData.commentQuotes?.map((comment, index) => (
 						<div key={`${comment.id}-${index}`}>
 							{comment.reply === null && (
