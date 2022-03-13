@@ -4,7 +4,7 @@ import BackButton from 'shared/back-button';
 import QuoteComment from 'shared/quote-comments';
 import QuoteCard from 'shared/quote-card';
 import './main-quote-detail.scss';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { getQuoteDetail, creatQuotesComment } from 'reducers/redux-utils/quote';
 import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
@@ -12,23 +12,19 @@ import _ from 'lodash';
 import CommentEditor from 'shared/comment-editor';
 import { useSelector } from 'react-redux';
 import classNames from 'classnames';
-import { getCheckLiked } from 'reducers/redux-utils/user';
 
 const MainQuoteDetail = () => {
 	const { id } = useParams();
 	const dispatch = useDispatch();
-	const navigate = useNavigate();
 	const userInfo = useSelector(state => state.auth.userInfo);
 
 	const [quoteData, setQuoteData] = useState({});
 	const [commentLv1IdArray, setCommentLv1IdArray] = useState([]);
 	const [replyingCommentId, setReplyingCommentId] = useState(0);
-	const [isLiked, setIsLiked] = useState(false);
 
 	useEffect(() => {
 		window.scrollTo(0, 0);
 		getQuoteData();
-		checkQuoteLiked();
 	}, []);
 
 	const getQuoteData = async () => {
@@ -38,22 +34,6 @@ const MainQuoteDetail = () => {
 		} catch {
 			toast.error('Lỗi hệ thống');
 		}
-	};
-
-	const checkQuoteLiked = async () => {
-		const params = { filter: JSON.stringify([{ 'operator': 'eq', 'value': id, 'property': 'quoteId' }]) };
-		try {
-			const res = await dispatch(getCheckLiked(params)).unwrap();
-			if (res.count > 0) {
-				setIsLiked(true);
-			}
-		} catch {
-			toast.error('Lỗi hệ thống');
-		}
-	};
-
-	const backFnc = () => {
-		navigate(-1);
 	};
 
 	useEffect(() => {
@@ -97,9 +77,7 @@ const MainQuoteDetail = () => {
 	return (
 		<div className='main-quote-detail'>
 			<div className='main-quote-detail__header'>
-				<button onClick={backFnc}>
-					<BackButton />
-				</button>
+				<BackButton />
 				<h4>Chi tiết Quote</h4>
 				<a className='main-quote-detail__link' href='#'>
 					<span>Xem tất cả của Adam Khort</span>
@@ -108,7 +86,7 @@ const MainQuoteDetail = () => {
 			</div>
 			{!_.isEmpty(quoteData) && (
 				<div className='main-quote-detail__pane'>
-					<QuoteCard className='mx-auto' isDetail={true} data={quoteData} isLiked={isLiked} />
+					<QuoteCard className='mx-auto' isDetail={true} data={quoteData} />
 					{quoteData.commentQuotes?.map((comment, index) => (
 						<div key={`${comment.id}-${index}`}>
 							{comment.reply === null && (

@@ -8,6 +8,7 @@ export const resetPasswordAPI = id => `/api/v1/auth/resetPassword/${id}`;
 export const quoteAPI = '/api/v1/quotes';
 export const quoteDetailAPI = id => `/api/v1/quotes/${id}`;
 export const quoteCommentAPI = '/api/v1/commentQuotes';
+export const likeQuoteAPI = id => `/api/v1/quotes/like/${id}`;
 
 // post
 export const postAPI = '/api/v1/posts';

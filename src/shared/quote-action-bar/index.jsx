@@ -6,15 +6,15 @@ import './quote-action-bar.scss';
 import { RightArrow } from 'components/svg';
 import { Link } from 'react-router-dom';
 
-const QuoteActionBar = ({ data, isDetail, handleLikeQuote, isLiked }) => {
-	const { like, isShare, share, comments, id } = data;
+const QuoteActionBar = ({ data, isDetail, likeUnlikeQuoteFnc, isLiked, likeNumber }) => {
+	const { isShare, share, comments, id } = data;
 
 	if (isDetail) {
 		return (
 			<ul className='quote-action-bar'>
-				<li className='quote-action__item'>
+				<li className='quote-action__item' onClick={() => likeUnlikeQuoteFnc(id)}>
 					{isLiked ? <LikeFill /> : <Like />}
-					<span className='quote-action__name'>{like} Thích</span>
+					<span className='quote-action__name'>{likeNumber} Thích</span>
 				</li>
 				<li className='quote-action__item'>
 					<CommentSvg className='quote-icon active' />
@@ -30,9 +30,9 @@ const QuoteActionBar = ({ data, isDetail, handleLikeQuote, isLiked }) => {
 
 	return (
 		<ul className='quote-action-bar'>
-			<li className='quote-action__item'>
+			<li className='quote-action__item' onClick={() => likeUnlikeQuoteFnc(id)}>
 				{isLiked ? <LikeFill /> : <Like />}
-				<span className='quote-action__name'>{like} Thích</span>
+				<span className='quote-action__name'>{likeNumber} Thích</span>
 			</li>
 			<li className='quote-action__item'>
 				<Share className={classNames('quote-icon', { 'active': isShare })} />
@@ -65,6 +65,8 @@ QuoteActionBar.propTypes = {
 	isDetail: PropTypes.bool,
 	handleLikeQuote: PropTypes.func,
 	isLiked: PropTypes.bool,
+	likeNumber: PropTypes.number,
+	likeUnlikeQuoteFnc: PropTypes.func,
 };
 
 export default QuoteActionBar;
