@@ -1,9 +1,12 @@
-import React, { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import FilterPane from 'shared/filter-pane';
 import FitlerOptions from 'shared/filter-options';
-import QuoteList from 'shared/quote-list';
-import { useFetchQuotes } from 'api/quote.hooks';
-import { useSelector } from 'react-redux';
+import QuoteCard from 'shared/quote-card';
+import InfiniteScroll from 'react-infinite-scroll-component';
+import { toast } from 'react-toastify';
+import { getQuoteList } from 'reducers/redux-utils/quote';
+import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 
 const QuotesTab = () => {
 	const filterOptions = [
@@ -13,15 +16,65 @@ const QuotesTab = () => {
 	];
 
 	const [defaultOption, setDefaultOption] = useState({ id: 1, title: 'Tất cả', value: 'all' });
-	const { bookInfo } = useSelector(state => state.book);
 
-	const {
-		quoteData: { rows: quoteList = [] },
-	} = useFetchQuotes(1, 10, JSON.stringify([{ 'operator': 'eq', 'value': bookInfo.id, 'property': 'bookId' }]));
+	const [myQuoteList, setMyQuoteList] = useState([]);
+	const [hasMore, setHasMore] = useState(true);
+
+	const callApiStart = useRef(10);
+	const callApiPerPage = useRef(10);
+
+	const resetQuoteList = useSelector(state => state.quote.resetQuoteList);
+
+	const dispatch = useDispatch();
+	const { id } = useParams();
 
 	const handleChangeOption = (e, data) => {
 		if (data.value !== defaultOption.value) {
 			setDefaultOption(data);
+		}
+	};
+
+	useEffect(() => {
+		callApiStart.current = 10;
+		getMyQuoteListFirstTime();
+	}, [resetQuoteList]);
+
+	const getMyQuoteListFirstTime = async () => {
+		try {
+			const params = {
+				start: 0,
+				limit: callApiPerPage.current,
+				sort: JSON.stringify([{ property: 'createdAt', direction: 'DESC' }]),
+				filter: JSON.stringify([{ operator: 'eq', value: id, property: 'bookId' }]),
+			};
+			const quotesList = await dispatch(getQuoteList(params)).unwrap();
+			if (quotesList.length) {
+				setMyQuoteList(quotesList);
+			} else {
+				setHasMore(false);
+			}
+		} catch {
+			toast.error('Lỗi hệ thống');
+		}
+	};
+
+	const getMyQuoteList = async () => {
+		try {
+			const params = {
+				start: callApiStart.current,
+				limit: callApiPerPage.current,
+				sort: JSON.stringify([{ property: 'createdAt', direction: 'DESC' }]),
+				filter: JSON.stringify([{ operator: 'eq', value: id, property: 'bookId' }]),
+			};
+			const quotesList = await dispatch(getQuoteList(params)).unwrap();
+			if (quotesList.length) {
+				callApiStart.current += callApiPerPage.current;
+				setMyQuoteList(myQuoteList.concat(quotesList));
+			} else {
+				setHasMore(false);
+			}
+		} catch {
+			toast.error('Lỗi hệ thống');
 		}
 	};
 
@@ -35,7 +88,20 @@ const QuotesTab = () => {
 				className='quote-tab__filter__options'
 			/>
 
-			<QuoteList list={quoteList} />
+			{myQuoteList.length > 0 ? (
+				<InfiniteScroll
+					dataLength={myQuoteList.length}
+					next={getMyQuoteList}
+					hasMore={hasMore}
+					loader={<h4>Loading...</h4>}
+				>
+					{myQuoteList.map(item => (
+						<QuoteCard key={item.id} data={item} />
+					))}
+				</InfiniteScroll>
+			) : (
+				<h5 style={{ margin: '2.5rem' }}>Không có dữ liệu</h5>
+			)}
 		</FilterPane>
 	);
 };
