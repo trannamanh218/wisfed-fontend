@@ -71,6 +71,7 @@ const bookSlice = createSlice({
 		booksData: { rows: [], count: 0 },
 		error: {},
 		bookInfo: {},
+		bookReviewData: {},
 	},
 	extraReducers: {
 		[getBookDetail.pending]: state => {
@@ -84,6 +85,19 @@ const bookSlice = createSlice({
 		[getBookDetail.rejected]: (state, action) => {
 			state.isFetching = false;
 			state.bookInfo = {};
+			state.error = action.payload;
+		},
+		[getReviewOfBook.pending]: state => {
+			state.isFetching = true;
+		},
+		[getReviewOfBook.fulfilled]: (state, action) => {
+			state.isFetching = false;
+			state.bookReviewData = action.payload;
+			state.error = {};
+		},
+		[getReviewOfBook.rejected]: (state, action) => {
+			state.isFetching = false;
+			state.bookReviewData = {};
 			state.error = action.payload;
 		},
 	},

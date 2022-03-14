@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Field, Form, Formik } from 'formik';
 import Input from 'shared/input';
 import StatisticList from 'shared/statistic-list';
-import { titleBookShelve } from 'helpers/Validation';
+import { nameBookShelve } from 'helpers/Validation';
 import { useDispatch } from 'react-redux';
 import { createLibrary } from 'reducers/redux-utils/library';
 import { toast } from 'react-toastify';
@@ -13,7 +13,7 @@ const MyShelvesList = ({ list }) => {
 	const dispatch = useDispatch();
 
 	const handleSubmit = async (values, { resetForm }) => {
-		const name = values.title.trim();
+		const name = values.name.trim();
 
 		if (name) {
 			const params = { name };
@@ -37,13 +37,13 @@ const MyShelvesList = ({ list }) => {
 			/>
 			<Formik
 				initialValues={{
-					title: '',
+					name: '',
 				}}
-				validationSchema={titleBookShelve}
+				validationSchema={nameBookShelve}
 				onSubmit={handleSubmit}
 			>
 				<Form>
-					<Field name='title'>
+					<Field name='name'>
 						{({ field, meta }) => {
 							return (
 								<>

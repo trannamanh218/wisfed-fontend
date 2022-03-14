@@ -20,7 +20,7 @@ const UploadImage = props => {
 	const uploadFiles = acceptedFiles => {
 		const fileList = acceptedFiles.map(item => {
 			const params = {
-				data: { file: item },
+				data: { file: [item] },
 				// onUploadProgress: progressEvent => {
 				// 	const { loaded, total } = progressEvent;
 				// 	const percent = Math.floor((loaded * 100) / total);
@@ -39,7 +39,8 @@ const UploadImage = props => {
 
 				setStatus(STATUS_SUCCESS);
 			})
-			.catch(() => {
+			.catch(err => {
+				console.log(err);
 				toast.error('Lỗi hệ thống không thể upload ảnh');
 			})
 			.finally(() => {

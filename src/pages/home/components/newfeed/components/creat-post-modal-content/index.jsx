@@ -20,6 +20,8 @@ import { useCallback } from 'react';
 import { Circle as CircleLoading } from 'shared/loading';
 import './style.scss';
 import UserAvatar from 'shared/user-avatar';
+import { addBookToLibrary, updateProgressReadingBook } from 'reducers/redux-utils/library';
+import { STATUS_BOOK } from 'constants';
 
 function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option, onChangeOption, onChangeNewPost }) {
 	const [shareMode, setShareMode] = useState({ value: 'public', title: 'Mọi người', icon: <WorldNet /> });
@@ -146,14 +148,14 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 	const placeCaretAtEnd = el => {
 		el.focus();
 		if (typeof window.getSelection != 'undefined' && typeof document.createRange != 'undefined') {
-			var range = document.createRange();
+			const range = document.createRange();
 			range.selectNodeContents(el);
 			range.collapse(false);
-			var sel = window.getSelection();
+			const sel = window.getSelection();
 			sel.removeAllRanges();
 			sel.addRange(range);
 		} else if (typeof document.body.createTextRange != 'undefined') {
-			var textRange = document.body.createTextRange();
+			const textRange = document.body.createTextRange();
 			textRange.moveToElementText(el);
 			textRange.collapse(false);
 			textRange.select();
@@ -177,18 +179,6 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 	const removeUrlPreview = () => {
 		setHasUrl(false);
 	};
-
-	// const addOptionsToPost = param => {
-	// 	setOption(param);
-	// 	setShowMainModal(false);
-	// };
-
-	// const addImages = e => {
-	// 	const obj = Object.entries(e.target.files);
-	// 	const newArrayFile = [...images];
-	// 	obj.forEach(item => newArrayFile.push(item[1]));
-	// 	setImages(newArrayFile);
-	// }
 
 	const handlePlaceholder = () => {
 		if (textFieldEdit.current.innerText.length > 0) {
@@ -296,29 +286,80 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 		return params;
 	};
 
+	const createNewActivity = params => {
+		return dispatch(createActivity(params))
+			.unwrap()
+			.then(() => {
+				setStatus(STATUS_SUCCESS);
+				toast.success('Tạo post thành công!');
+				onChangeNewPost();
+			})
+			.catch(err => {
+				const statusCode = err?.statusCode || 500;
+				setStatus(statusCode);
+				toast.error('Tạo post thất bại!');
+			})
+			.finally(() => {
+				hideCreatPostModal();
+				onChangeOption({});
+			});
+	};
+
 	const onCreatePost = () => {
 		const params = generateData();
 
 		// book, author , topic is required
 		if ((params.bookId || params.mentionsAuthor.length || params.mentionsCategory.length) && params.msg) {
-			setStatus(STATUS_LOADING);
+			// setStatus(STATUS_LOADING);
 
-			dispatch(createActivity(params))
-				.unwrap()
-				.then(() => {
-					setStatus(STATUS_SUCCESS);
-					toast.success('Tạo post thành công!');
-					onChangeNewPost();
-				})
-				.catch(err => {
-					const statusCode = err?.statusCode || 500;
-					setStatus(statusCode);
-					toast.error('Tạo post thất bại!');
-				})
-				.finally(() => {
-					hideCreatPostModal();
-					onChangeOption({});
-				});
+			if (params.bookId) {
+				if (!taggedData.addBook.params) {
+					toast.warning('Vui lòng chọn trạng thái và thư viện');
+					return;
+				} else if (taggedData.addBook.params && !taggedData.addBook.params.id) {
+					toast.warning('Vui lòng chọn trạng thái và thư viện');
+					return;
+				} else {
+					const addParams = _.pick(taggedData.addBook.params, ['id', 'bookId']);
+					// console.log(taggedData.addBook.params);
+					dispatch(addBookToLibrary(addParams))
+						.unwrap()
+						.then(res => {
+							return createNewActivity(params);
+						})
+						.catch(err => {
+							toast.error('Cập nhật trạng thái đọc sách không thành công');
+						});
+
+					const { status, bookId, id, progress } = taggedData.addBook.params;
+					// const updateParams = {id:bookId, progress, status};
+					// if(status === STATUS_BOOK.read && !progress){
+					// 	toast.warning('Số trang đọc không đúng');
+					// 	return;
+					// }
+
+					// dispatch(updateProgressReadingBook(updateParams)).unwrap().then(res => {
+					// 	return createNewActivity(params);
+					// }).catch(err => {
+					// 	console.log(err);
+					// 	toast.error('Lỗi không cập nhật được trạng thái đọc sách');
+					// });
+				}
+
+				// if (handleEditBook())
+				// 	handleEditBook()
+				// 		.then(res => {
+				// 			console.log('thành công');
+				// 			console.log(res);
+				// 			createNewActivity();
+				// 		})
+				// 		.catch(() => {
+				// 			toast.warn('Lỗi không tạo được post');
+				// 		});
+				// return;
+			}
+
+			// createActivity();
 		}
 	};
 
@@ -332,6 +373,18 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 			isActive = true;
 		}
 		return isActive;
+	};
+
+	const handleEditBook = async data => {
+		if (_.isEmpty(data)) {
+			toast.warning('Vui lòng chọn trạng thái và thư viện');
+		} else {
+			if (data.id) {
+				setTaggedData({ ...taggedData, addBook: { ...taggedData.addBook, params: data } });
+			}
+		}
+
+		return null;
 	};
 
 	return (
@@ -355,7 +408,6 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 				<Form
 					onSubmit={e => {
 						e.preventDefault();
-						onCreatePost();
 					}}
 					id='createPostForm'
 				>
@@ -408,7 +460,13 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 							>
 								Hãy chia sẻ cảm nhận của bạn về cuốn sách
 							</div>
-							<TaggedList taggedData={taggedData} removeTaggedItem={removeTaggedItem} type='addBook' />
+
+							{!_.isEmpty(taggedData.addBook) && (
+								<a href='#' className='tagged-book'>
+									{taggedData.addBook.name}
+								</a>
+							)}
+
 							<TaggedList taggedData={taggedData} removeTaggedItem={removeTaggedItem} type='addAuthor' />
 							<TaggedList
 								taggedData={taggedData}
@@ -416,7 +474,9 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 								type='addCategory'
 							/>
 
-							{!_.isEmpty(taggedData.addBook) && <PostEditBook data={taggedData.addBook} />}
+							{!_.isEmpty(taggedData.addBook) && (
+								<PostEditBook data={taggedData.addBook} handleEditBook={handleEditBook} />
+							)}
 							{showUpload && (
 								<UploadImage
 									addOptionsToPost={addOptionsToPost}
@@ -459,7 +519,7 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 							})}
 							type='submit'
 							form='createPostForm'
-							onSubmit={e => {
+							onClick={e => {
 								e.preventDefault();
 								onCreatePost();
 							}}
@@ -487,6 +547,7 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 					taggedData={taggedData}
 					removeTaggedItem={removeTaggedItem}
 					addOptionsToPost={addOptionsToPost}
+					showMainModal={showMainModal}
 				/>
 			</div>
 		</div>

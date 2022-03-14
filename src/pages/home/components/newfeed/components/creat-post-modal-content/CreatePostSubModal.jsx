@@ -6,6 +6,9 @@ import { useCallback, useEffect, useRef } from 'react';
 import SuggestSection from './SuggestSection';
 import TaggedList from './TaggedList';
 import './style.scss';
+import { useDispatch, useSelector } from 'react-redux';
+import { checkBookInLibrary } from 'reducers/redux-utils/library';
+import { generateQuery } from 'helpers/Common';
 
 function CreatPostSubModal(props) {
 	const {
@@ -20,6 +23,8 @@ function CreatPostSubModal(props) {
 		addOptionsToPost,
 	} = props;
 	const inputRef = useRef();
+	const dispatch = useDispatch();
+	const { userInfo } = useSelector(state => state.auth);
 
 	useEffect(() => {
 		if (taggedData.addImages.length === 0) {
@@ -37,7 +42,21 @@ function CreatPostSubModal(props) {
 		debounceSearch(e.target.value, option);
 	};
 
-	const handleComplete = () => {
+	const handleComplete = async () => {
+		if (!_.isEmpty(taggedData.addBook)) {
+			console.log(userInfo);
+			const filter = [
+				{ 'operator': 'eq', 'value': userInfo.id, 'property': 'updatedBy' },
+				{ 'operator': 'eq', 'value': taggedData.addBook.id, 'property': 'bookId' },
+			];
+			const query = generateQuery(1, 10, JSON.stringify(filter));
+			try {
+				await dispatch(checkBookInLibrary(query));
+			} catch (err) {
+				console.log(err);
+			}
+		}
+
 		if (option.value === 'modifyImages') {
 			addOptionsToPost({
 				value: 'addImages',

@@ -10,14 +10,24 @@ import './book-intro.scss';
 import { useSelector } from 'react-redux';
 import _ from 'lodash';
 import { convertToPlainString } from 'helpers/Common';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const BookIntro = () => {
 	const { bookInfo } = useSelector(state => state.book);
+	const location = useLocation();
+	const navigate = useNavigate();
+
+	const handleClick = () => {
+		if (location.pathname !== '/' || location.pathname !== '/home') {
+			navigate('/');
+		}
+	};
+
 	return (
 		<div className='book-intro'>
 			<div className='book-intro__image'>
 				<BookThumbnail name='book' {...bookInfo} size='lg' />
-				<StatusButton className='book-intro__btn' />
+				<StatusButton className='book-intro__btn' handleClick={handleClick} />
 			</div>
 			<div className='book-intro__content'>
 				<h1 className='book-intro__name'>{bookInfo.name}</h1>

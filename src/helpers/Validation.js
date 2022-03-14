@@ -1,6 +1,6 @@
 import * as yup from 'yup';
-export const titleBookShelve = yup.object().shape({
-	title: yup
+export const nameBookShelve = yup.object().shape({
+	name: yup
 		.string()
 		.transform(currentValue => {
 			return currentValue.replace(/  +/g, ' ').trim();

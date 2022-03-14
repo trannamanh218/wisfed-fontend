@@ -5,55 +5,49 @@ import { Modal } from 'react-bootstrap';
 import StatusModalContainer from './StatusModalContainer';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
-import { useSelector } from 'react-redux';
-import './status-button.scss';
+import { useDispatch, useSelector } from 'react-redux';
 import { useFetchLibraries } from 'api/library.hook';
-const STATUS_BOOK = {
+import './status-button.scss';
+import { createLibrary } from 'reducers/redux-utils/library';
+import { toast } from 'react-toastify';
+import { STATUS_BOOK } from 'constants';
+
+const STATUS_BOOK_OBJ = {
 	'reading': {
-		'title': 'Đang đọc',
-		'value': 'reading',
+		'name': 'Đang đọc',
+		'value': STATUS_BOOK.reading,
 		'icon': CoffeeCupIcon,
 	},
 	'read': {
-		'title': 'Đã đọc',
-		'value': 'read',
+		'name': 'Đã đọc',
+		'value': STATUS_BOOK.read,
 		'icon': CircleCheckIcon,
 	},
-	'wantRead': {
-		'title': 'Muốn đọc',
-		'value': 'wantRead',
+	'liked': {
+		'name': 'Muốn đọc',
+		'value': STATUS_BOOK.liked,
 		'icon': TargetIcon,
 	},
 };
 
-const StatusButton = ({ className, status = 'wantRead' }) => {
+const StatusButton = ({ className, status, handleClick, libraryId, onChangeLibrary }) => {
 	const { userInfo } = useSelector(state => state.auth);
 	const [modalShow, setModalShow] = useState(false);
-	const [currentStatus, setCurrentStatus] = useState(STATUS_BOOK[status]);
+	const [currentStatus, setCurrentStatus] = useState(STATUS_BOOK_OBJ[status]);
 
 	const filter = JSON.stringify([{ 'operator': 'eq', 'value': userInfo.id, 'property': 'createdBy' }]);
 	const { libraryData } = useFetchLibraries(1, 10, filter);
-	console.log(libraryData);
-
-	const [bookShelves, setBookShelves] = useState([
-		{
-			title: 'Sách2021',
-			id: 1,
-		},
-		{
-			title: 'tusach1',
-			id: 2,
-		},
-		{
-			title: 'tusach2',
-			id: 3,
-		},
-	]);
+	const dispatch = useDispatch();
 
 	const [showInput, setShowInput] = useState(false);
 
-	const handleClose = () => setModalShow(false);
-	const handleShow = () => setModalShow(true);
+	const handleClose = () => {
+		setModalShow(false);
+	};
+	const handleShow = e => {
+		e.stopPropagation();
+		setModalShow(true);
+	};
 
 	const addBookShelves = () => {
 		if (!showInput) {
@@ -61,14 +55,17 @@ const StatusButton = ({ className, status = 'wantRead' }) => {
 		}
 	};
 
-	const updateBookShelve = title => {
-		const id = Math.floor(Math.random() * 100000);
-		const data = { title, id };
-		setBookShelves(prev => [...prev, data]);
+	const updateBookShelve = async params => {
+		try {
+			await dispatch(createLibrary(params));
+		} catch (err) {
+			toast.error('Lỗi không tạo được tủ sách!');
+		}
 	};
 
 	const handleConfirm = () => {
 		setModalShow(false);
+		handleClick(currentStatus);
 	};
 
 	const handleChangeStatus = data => {
@@ -83,7 +80,7 @@ const StatusButton = ({ className, status = 'wantRead' }) => {
 				onClick={handleShow}
 			>
 				<WrapIcon className='btn-status__icon' component={currentStatus.icon} />
-				<span>{currentStatus.title}</span>
+				<span>{currentStatus.name}</span>
 			</button>
 			<Modal
 				id='status-book-modal'
@@ -97,11 +94,12 @@ const StatusButton = ({ className, status = 'wantRead' }) => {
 					<StatusModalContainer
 						currentStatus={currentStatus}
 						handleChangeStatus={handleChangeStatus}
-						bookShelves={bookShelves}
+						bookShelves={libraryData.rows}
 						updateBookShelve={updateBookShelve}
 						addBookShelves={addBookShelves}
-						setBookShelves={setBookShelves}
 						handleConfirm={handleConfirm}
+						onChangeLibrary={onChangeLibrary}
+						libraryId={libraryId}
 					/>
 				</Modal.Body>
 			</Modal>
@@ -109,9 +107,18 @@ const StatusButton = ({ className, status = 'wantRead' }) => {
 	);
 };
 
+StatusButton.defaultProps = {
+	className: '',
+	status: STATUS_BOOK.liked,
+	handleClick: () => {},
+	libraryId: null,
+};
+
 StatusButton.propTypes = {
 	className: PropTypes.string,
-	status: PropTypes.oneOf(['read', 'reading', 'wantRead']),
+	status: PropTypes.oneOf([STATUS_BOOK.read, STATUS_BOOK.reading, STATUS_BOOK.liked]),
+	handleClick: PropTypes.func,
+	libraryId: PropTypes.any,
 };
 
 export default StatusButton;

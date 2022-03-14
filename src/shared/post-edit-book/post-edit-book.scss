@@ -33,7 +33,12 @@
 		color: #6e7191;
 	}
 
-	&__button-and-rating {
+	&__action {
+		display: flex;
+		gap: 1.25rem;
+	}
+
+	&__rating {
 		display: flex;
 		flex-direction: column;
 		align-items: start;
@@ -57,7 +62,10 @@
 	}
 
 	&__input {
-		width: 30px;
+		outline: none;
+		min-width: 20px;
+		max-width: 50px;
+		// width: 30px;
 		// width: fit-content;
 	}
 
@@ -68,5 +76,10 @@
 		font-size: 0.875rem;
 		font-weight: 600;
 		color: $red;
+	}
+
+	small {
+		margin: 10px 0;
+		display: inline-block;
 	}
 }

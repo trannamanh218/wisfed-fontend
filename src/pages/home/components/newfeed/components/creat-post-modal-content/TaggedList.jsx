@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { CloseX, Feather } from 'components/svg';
-import _ from 'lodash';
 
 const TaggedList = props => {
 	const { taggedData, removeTaggedItem, type } = props;
@@ -30,17 +29,7 @@ const TaggedList = props => {
 		}
 
 		return '';
-	} else if (type && type === 'addBook') {
-		if (!_.isEmpty(taggedData.addBook)) {
-			return (
-				<a href='#' className='tagged-book'>
-					{taggedData.addBook.name}
-				</a>
-			);
-		}
-		return '';
 	}
-
 	return '';
 };
 

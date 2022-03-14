@@ -12,7 +12,7 @@ const SuggestSection = props => {
 	if (list && list.length > 0) {
 		switch (option.value) {
 			case 'addBook': {
-				return <BookSlider list={list} handleClick={handleAddToPost} />;
+				return <BookSlider list={list} handleViewBookDetail={handleAddToPost} />;
 			}
 			case 'addAuthor':
 				return (

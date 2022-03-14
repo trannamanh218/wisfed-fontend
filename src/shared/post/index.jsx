@@ -170,7 +170,7 @@ function Post({ postInformations, className, isUpdateProgressReading = false }) 
 				))}
 			</ul>
 
-			{postData.book && <PostBook data={postData.book} />}
+			{postData.book && <PostBook data={{ ...postData.book, bookLibrary: postData.bookLibrary }} />}
 
 			<GridImage images={postData.image} id={postData.id} />
 			<PostActionBar postData={postData} handleLikeAction={handleLikeAction} />

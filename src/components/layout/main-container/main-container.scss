@@ -8,7 +8,6 @@
 }
 
 .mainContainer__right {
-	width: 280px;
 	max-width: 280px;
 }
 
@@ -18,3 +17,40 @@
 	// overflow: hidden;
 	flex-grow: 1;
 }
+
+// @media only screen and (min-width: 992px) and (max-width: 1440px) {
+// 	.mainContainer {
+// 		padding: 2.5rem 4rem;
+// 		justify-content: center;
+// 	}
+//
+// 	.mainContainer__main {
+// 		max-width: 58rem;
+// 		margin: 0 auto;
+// 	}
+// }
+//
+// @media only screen and (min-width: 768px) {
+// 	.mainContainer {
+// 		padding: 2.5rem;
+// 		// justify-content: center;
+// 	}
+//
+// 	.mainContainer__main {
+// 		max-width: 45rem;
+// 		margin: 0 auto;
+// 	}
+// }
+//
+//
+// @media only screen and (max-width: 576px) {
+// 	.mainContainer {
+// 		padding: 2.5rem;
+// 		justify-content: center;
+// 	}
+//
+// 	.mainContainer__main {
+// 		max-width: 40rem;
+// 		margin: 0 auto;
+// 	}
+// }

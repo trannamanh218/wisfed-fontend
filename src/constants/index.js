@@ -1,19 +1,24 @@
 import { CoffeeCupIcon, CircleCheckIcon, TargetIcon } from 'components/svg';
+export const STATUS_BOOK = {
+	reading: 'reading',
+	read: 'read',
+	liked: 'liked',
+};
 
 export const readingStatus = [
 	{
-		'title': 'Đang đọc',
-		'value': 'reading',
+		'name': 'Đang đọc',
+		'value': STATUS_BOOK.reading,
 		'icon': CoffeeCupIcon,
 	},
 	{
-		'title': 'Đã đọc',
-		'value': 'read',
+		'name': 'Đã đọc',
+		'value': STATUS_BOOK.read,
 		'icon': CircleCheckIcon,
 	},
 	{
-		'title': 'Muốn đọc',
-		'value': 'wantRead',
+		'name': 'Muốn đọc',
+		'value': STATUS_BOOK.liked,
 		'icon': TargetIcon,
 	},
 ];

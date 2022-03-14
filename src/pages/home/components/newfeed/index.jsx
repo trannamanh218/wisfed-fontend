@@ -13,7 +13,7 @@ const NewFeed = () => {
 	const { activity: postList } = useFetchActivities(1, 10, '[]', isNewPost);
 
 	const onChangeNewPost = () => {
-		setIsNewPost(true);
+		setIsNewPost(!isNewPost);
 	};
 
 	return (

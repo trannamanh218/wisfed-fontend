@@ -9,8 +9,9 @@ const StatusModalContainer = ({
 	handleChangeStatus,
 	bookShelves,
 	updateBookShelve,
-	setBookShelves,
 	handleConfirm,
+	onChangeLibrary,
+	libraryId,
 }) => {
 	const [showInput, setShowInput] = useState(false);
 	const addBookShelves = () => {
@@ -22,15 +23,21 @@ const StatusModalContainer = ({
 	return (
 		<>
 			<StatusBookList currentStatus={currentStatus} handleChangeStatus={handleChangeStatus} />
-			<BookShelvesList list={bookShelves} />
+			<BookShelvesList list={bookShelves} onChangeLibrary={onChangeLibrary} libraryId={libraryId} />
 			<AddBookShelveForm
 				showInput={showInput}
 				updateBookShelve={updateBookShelve}
 				addBookShelves={addBookShelves}
-				setBookShelves={setBookShelves}
 				setShowInput={setShowInput}
 			/>
-			<button className='status-book-modal__confirm btn btn-primary' onClick={handleConfirm}>
+			<button
+				className='status-book-modal__confirm btn btn-primary'
+				onClick={e => {
+					e.preventDefault();
+					e.stopPropagation();
+					handleConfirm();
+				}}
+			>
 				Xác nhận
 			</button>
 		</>
@@ -38,7 +45,6 @@ const StatusModalContainer = ({
 };
 
 StatusModalContainer.defaultProps = {
-	bookShelves: [],
 	currentStatus: {},
 };
 
@@ -47,7 +53,6 @@ StatusModalContainer.propTypes = {
 	handleChangeStatus: PropTypes.func,
 	bookShelves: PropTypes.array,
 	updateBookShelve: PropTypes.func,
-	setBookShelves: PropTypes.func,
 	handleConfirm: PropTypes.func,
 };
 

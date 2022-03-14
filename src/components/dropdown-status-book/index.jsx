@@ -9,8 +9,8 @@ import './dropdown-status-book.scss';
 const DropdownIconButton = () => {
 	const { ref: showRef, isVisible: isShow, setIsVisible: setIsShow } = useVisible(false);
 	const [currentStatus, setCurrentStatus] = useState({
-		'title': 'Đã đọc',
-		'value': 'read',
+		'name': 'Đã đọc',
+		'value': STATUS_BOOK.read,
 		'icon': CircleCheckIcon,
 	});
 

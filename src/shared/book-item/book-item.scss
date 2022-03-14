@@ -59,6 +59,16 @@
 			color: $white;
 			margin-top: auto;
 			margin-right: -12px;
+			visibility: hidden;
+			display: none;
+			transition: all 0.2s ease-in-out;
+		}
+
+		&:hover {
+			.btn-status {
+				visibility: visible;
+				display: inline-block;
+			}
 		}
 
 		.setting-more {

@@ -1,3 +1,4 @@
+import { STATUS_BOOK } from 'constants';
 import { STATUS_IDLE, STATUS_LOADING, STATUS_SUCCESS } from 'constants';
 import { generateQuery } from 'helpers/Common';
 import { useCallback, useEffect, useState } from 'react';
@@ -24,7 +25,7 @@ export const useFetchLibraries = (current = 1, perPage = 10, filter = '[]') => {
 				const query = generateQuery(1, 10, filter);
 
 				try {
-					await dispatch(getLibraryList(query)).unwrap();
+					await dispatch(getLibraryList({ ...query, isAuth: true })).unwrap();
 					setStatus(STATUS_SUCCESS);
 				} catch (err) {
 					const statusCode = err?.statusCode || 500;
@@ -46,9 +47,9 @@ export const useFetchStatsReadingBooks = () => {
 	const [status, setStatus] = useState(STATUS_IDLE);
 	const [retry, setRetry] = useState(false);
 	const [readingData, setReadingData] = useState([
-		{ name: 'Muốn đọc', value: 'like', quantity: 0 },
-		{ name: 'Đang đọc', value: 'reading', quantity: 0 },
-		{ name: 'Đã đọc', value: 'read', quantity: 0 },
+		{ name: 'Muốn đọc', value: STATUS_BOOK.liked, quantity: 0 },
+		{ name: 'Đang đọc', value: STATUS_BOOK.reading, quantity: 0 },
+		{ name: 'Đã đọc', value: STATUS_BOOK.read, quantity: 0 },
 	]);
 	const dispatch = useDispatch();
 
@@ -72,7 +73,7 @@ export const useFetchStatsReadingBooks = () => {
 			const fetchData = async () => {
 				const queryLikeBook = createQuery('like');
 				const queryReadingBook = createQuery('reading');
-				const queryReadBook = createQuery('read');
+				const queryReadBook = createQuery(STATUS_BOOK.read);
 
 				const likedBookRequest = dispatch(getListBookLibrary(queryLikeBook)).unwrap();
 				const readingBookRequest = dispatch(getListBookLibrary(queryReadingBook)).unwrap();
@@ -82,8 +83,8 @@ export const useFetchStatsReadingBooks = () => {
 					.then(res => {
 						setReadingData([
 							{ name: 'Muốn đọc', value: 'like', quantity: res[0].count },
-							{ name: 'Đang đọc', value: 'reading', quantity: res[1].count },
-							{ name: 'Đã đọc', value: 'read', quantity: res[2].count },
+							{ name: 'Đang đọc', value: STATUS_BOOK.reading, quantity: res[1].count },
+							{ name: 'Đã đọc', value: STATUS_BOOK.read, quantity: res[2].count },
 						]);
 
 						setStatus(STATUS_SUCCESS);

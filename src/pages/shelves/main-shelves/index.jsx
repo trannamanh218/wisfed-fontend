@@ -1,57 +1,85 @@
-import { CloseX } from 'components/svg';
 import { generateQuery } from 'helpers/Common';
 import _ from 'lodash';
-import React, { useEffect, useRef, useState } from 'react';
-import { Modal, ModalBody } from 'react-bootstrap';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
-import { toast } from 'react-toastify';
-import { getListBookLibrary } from 'reducers/redux-utils/library';
+import { Link, useParams } from 'react-router-dom';
+import { getLibraryList, getListBookLibrary } from 'reducers/redux-utils/library';
 import Button from 'shared/button';
 import EyeIcon from 'shared/eye-icon';
-import { useModal } from 'shared/hooks';
 import PaginationGroup from 'shared/pagination-group';
 import SearchField from 'shared/search-field';
 import SelectBox from 'shared/select-box';
 import Shelf from 'shared/shelf';
 import './main-shelves.scss';
-import SearchBook from './SearchBook';
 
 const MainShelves = () => {
 	const [isPublic, setIsPublic] = useState(true);
-	const { modalOpen, toggleModal } = useModal(false);
 	const [allBooks, setAllBooks] = useState({ rows: [], count: 0 });
 	const [currentLibrary, setCurrentLibrary] = useState({ value: 'all', title: 'Tất cả' });
+	const [filter, setFilter] = useState('[]');
+	const [inputSearch, setInputSearch] = useState('');
+	const [isUpdate, setIsUpdate] = useState(false);
+	const [listLibrary, setListLibrary] = useState();
+	// const { books: searchResults } = useFetchBooks(1, 10, filter);
+
 	const params = useParams();
 	const dispatch = useDispatch();
 
 	const {
 		library: {
-			libraryData: { rows = [] },
+			libraryData: { rows: authLibraryList = [] },
+			otherLibraryData: { rows: otherLibraryList = [] },
 		},
 		auth: { userInfo = {} },
 	} = useSelector(state => state);
 
-	const libraryList = !_.isEmpty(rows)
-		? [{ value: 'all', title: 'Tất cả' }].concat(rows.map(item => ({ ...item, title: item.name, value: item.id })))
-		: [];
+	useEffect(() => {
+		if (params.id && params.id !== userInfo.id) {
+			const data = !_.isEmpty(otherLibraryList)
+				? [{ value: 'all', title: 'Tất cả' }].concat(
+						otherLibraryList.map(item => ({ ...item, title: item.name, value: item.id }))
+				  )
+				: [];
+			setListLibrary(data);
+		} else {
+			const data = !_.isEmpty(authLibraryList)
+				? [{ value: 'all', title: 'Tất cả' }].concat(
+						authLibraryList.map(item => ({ ...item, title: item.name, value: item.id }))
+				  )
+				: [];
+			setListLibrary(data);
+		}
+	}, [params]);
 
 	useEffect(() => {
 		const isMount = true;
 		if (isMount) {
 			const fetchData = async () => {
 				const filter = [];
-				if (_.isEmpty(params) && !_.isEmpty(userInfo)) {
+
+				if (_.isEmpty(params) && !_.isEmpty(userInfo) && currentLibrary.value === 'all') {
 					filter.push({ 'operator': 'eq', 'value': userInfo.id, 'property': 'updatedBy' });
 				}
 
+				if (!_.isEmpty(params)) {
+					filter.push({ 'operator': 'eq', 'value': params.id, 'property': 'updatedBy' });
+				}
+
 				if (currentLibrary.value !== 'all') {
-					filter.push({ 'operator': 'eq', 'value': currentLibrary.value, 'property': 'id' });
+					filter.push({ 'operator': 'eq', 'value': currentLibrary.value, 'property': 'libraryId' });
 				}
 
 				const query = generateQuery(1, 10, JSON.stringify(filter));
 				try {
 					const data = await dispatch(getListBookLibrary(query)).unwrap();
+					if (params.id && params.id !== userInfo.id) {
+						const queryLibrary = generateQuery(
+							1,
+							10,
+							JSON.stringify([{ 'operator': 'eq', 'value': params.id, 'property': 'createdBy' }])
+						);
+						await dispatch(getLibraryList({ isAuth: false, ...queryLibrary }));
+					}
 					setAllBooks(data);
 				} catch (err) {
 					return err;
@@ -60,7 +88,7 @@ const MainShelves = () => {
 
 			fetchData();
 		}
-	}, [currentLibrary]);
+	}, [currentLibrary, isUpdate, params]);
 
 	const handlePublic = () => {
 		setIsPublic(!isPublic);
@@ -70,44 +98,63 @@ const MainShelves = () => {
 		setCurrentLibrary(data);
 	};
 
+	const updateInputSearch = value => {
+		setInputSearch(value);
+
+		if (value) {
+			const filterValue = [{ 'operator': 'eq', 'value': userInfo.id, 'property': 'categoryId' }];
+			filterValue.push({ 'operator': 'search', 'value': value.trim(), 'property': 'name' });
+			setFilter(JSON.stringify(filterValue));
+		} else {
+			setFilter('[]');
+		}
+	};
+
+	const debounceSearch = useCallback(_.debounce(updateInputSearch, 1000), []);
+
+	const handleSearch = e => {
+		debounceSearch(e.target.value);
+	};
+
+	const handleRemoveBook = () => {
+		setIsUpdate(!isUpdate);
+	};
+
+	const checkAuthorize = () => {
+		if (_.isEmpty(params)) {
+			return true;
+		} else {
+			return userInfo.id === params.id;
+		}
+	};
+
 	return (
 		<div className='main-shelves'>
+			<h4>
+				<Link to='/shelves/c09fdf39-2691-44f4-96d6-e45c8f2afd63'>Tủ sách của Nguyễn HIến Lê</Link>
+			</h4>
 			<div className='main-shelves__header'>
 				<h4>Tủ sách của tôi</h4>
-				<SearchField placeholder='Tìm kiếm sách' className='main-shelves__search' />
+				<SearchField placeholder='Tìm kiếm sách' className='main-shelves__search' handleChange={handleSearch} />
 			</div>
 			<div className='main-shelves__pane'>
 				<div className='main-shelves__filters'>
 					<SelectBox
 						name='library'
-						list={libraryList}
+						list={listLibrary}
 						defaultOption={currentLibrary}
 						onChangeOption={onChangeLibrary}
 					/>
-					<Button className='btn-private' isOutline={true} onClick={handlePublic}>
-						<EyeIcon isPublic={isPublic} handlePublic={handlePublic} />
-						<span>{isPublic ? 'Công khai' : 'Không công khai'}</span>
-					</Button>
+					{checkAuthorize() && (
+						<Button className='btn-private' isOutline={true} onClick={handlePublic}>
+							<EyeIcon isPublic={isPublic} handlePublic={handlePublic} />
+							<span>{isPublic ? 'Công khai' : 'Không công khai'}</span>
+						</Button>
+					)}
 				</div>
 				{/* <SearchBook/> */}
-				<Shelf list={allBooks.rows} isMyShelve={true} />
+				<Shelf list={allBooks.rows} isMyShelve={checkAuthorize()} handleRemoveBook={handleRemoveBook} />
 				{allBooks.count > 10 && <PaginationGroup />}
-				<Modal className='main-shelves__modal' show={modalOpen} onHide={toggleModal} keyboard={false} centered>
-					<span className='btn-closeX' onClick={toggleModal}>
-						<CloseX />
-					</span>
-					<ModalBody>
-						<h4 className='main-shelves__modal__title'>Bạn có muốn xóa cuốn sách?</h4>
-						<p className='main-shelves__modal__subtitle'>
-							{' '}
-							Cuốn sách sẽ được xoá khỏi giá sách “giasach2022”
-						</p>
-						<button className='btn main-shelves__modal__btn-delete btn-danger'>Xóa</button>
-						<button className='btn-cancel' onClick={toggleModal}>
-							Không
-						</button>
-					</ModalBody>
-				</Modal>
 			</div>
 		</div>
 	);

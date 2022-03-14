@@ -64,7 +64,8 @@ function App() {
 				<Route path='/group' element={<Group />} />
 				<Route path='/book/detail/:id' element={<BookDetail />} />
 				<Route path='/book/detail/:id/:slug' element={<BookDetail />} />
-				<Route path='/review' element={<Review />} />
+				<Route path='/review/:id' element={<Review />} />
+				<Route path='/review/:id/:slug' element={<Review />} />
 				<Route path='/quote' element={<Quote />} />
 				<Route path='/quote/me' element={<MyQuote />} />
 				<Route path='/quote/detail' element={<QuoteDetail />} />

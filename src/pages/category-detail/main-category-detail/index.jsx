@@ -29,11 +29,11 @@ const MainCategoryDetail = ({ handleViewBookDetail }) => {
 	const topBooks = books.slice(0, 10);
 	const [bookList, setBookList] = useState(books.slice(0, 10));
 	const [isLike, setIsLike] = useState(false);
-	const navigate = useNavigate();
 	const [inputSearch, setInputSearch] = useState('');
 	const [filter, setFilter] = useState('[]');
 	const { modalOpen, setModalOpen, toggleModal } = useModal(false);
 	const { books: searchResults } = useFetchBooks(1, 10, filter);
+	const navigate = useNavigate();
 
 	const checkOptions = [
 		{
