@@ -33,7 +33,7 @@
 }
 
 .creat-quotes-modal-content {
-	width: 640px;
+	width: 636px;
 	height: fit-content;
 	background-color: white;
 	border-radius: 16px;
@@ -96,16 +96,15 @@
 	position: relative;
 	overflow-x: hidden;
 	overflow-y: scroll;
+	color: $ash-body;
 	&.default {
 		min-height: 50px;
 		max-height: 150px;
-		color: $ash;
 		line-height: 1.5rem;
 	}
 	&.has-background {
 		min-height: 32px;
 		max-height: 240px;
-		color: white;
 		font-size: 20px;
 		font-weight: 600;
 		line-height: 32px;
@@ -147,7 +146,7 @@
 		font-size: 20px;
 		font-weight: 600;
 		line-height: 32px;
-		color: white;
+		color: $ash-body;
 		opacity: 0.7;
 	}
 	&.hide {
@@ -160,39 +159,6 @@
 .creat-quotes-modal__body__select-background-container {
 	position: relative;
 	margin: 16px 24px 0 24px;
-	.slick-arrow {
-		display: flex !important;
-		justify-content: center;
-		border-radius: 50%;
-		background-color: rgba(20, 20, 43, 0.4) !important;
-		z-index: 1000;
-		width: 24px !important;
-		height: 24px !important;
-		padding: 0.3rem !important;
-		&:before {
-			display: none;
-		}
-		&:hover {
-			background-color: rgba(20, 20, 43, 0.7) !important;
-		}
-	}
-
-	.slick-prev {
-		left: 48px !important;
-	}
-
-	.slick-next {
-		right: 34px !important;
-	}
-
-	.slick-disabled {
-		display: none !important;
-	}
-
-	.slick-list {
-		padding: 4px 0 4px 12px;
-		height: 52px;
-	}
 }
 
 .creat-quotes-modal__body__select-background-button-box {
@@ -200,7 +166,7 @@
 	background-color: white;
 	position: absolute;
 	left: -24px;
-	width: 80px;
+	width: 92px;
 	padding: 4px 0 4px 24px;
 }
 
@@ -221,11 +187,15 @@
 }
 
 .creat-quotes-modal__body__select-background-box {
-	margin-left: 56px;
+	display: flex;
+	align-items: center;
+	gap: 24px;
+	margin-left: 68px;
 	transition: all 0.4s ease-in;
 	max-width: 100%;
 	transform: translateX(-100%);
 	visibility: hidden;
+	padding: 4px 0;
 	&.show {
 		transform: translateX(0%);
 		visibility: visible;
@@ -233,15 +203,12 @@
 }
 
 .creat-quotes-modal__body__select-background-box-item {
-	margin-right: 24px;
-	button {
-		width: 44px;
-		height: 44px;
-		outline: transparent 4px solid !important;
-		border-radius: 8px;
-		&.active {
-			outline: #e0af7e 4px solid !important;
-		}
+	width: 44px;
+	height: 44px;
+	outline: transparent 4px solid !important;
+	border-radius: 8px;
+	&.active {
+		outline: #e0af7e 4px solid !important;
 	}
 }
 
