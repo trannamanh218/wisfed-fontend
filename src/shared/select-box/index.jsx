@@ -9,14 +9,17 @@ import './select-box.scss';
 
 const SelectBox = ({ defaultOption, list, onChangeOption, name }) => {
 	const { ref, isVisible, setIsVisible } = useVisible(false);
-	const [activeItem, setActiveItem] = useState({ value: 1, title: 1 });
+	const [activeItem, setActiveItem] = useState({ value: 1, title: 1, id: 1 });
 
 	useEffect(() => {
 		setActiveItem(defaultOption);
 	}, [defaultOption]);
 
 	const handleSelect = item => {
-		if (activeItem.value !== item.value && item.value !== null) {
+		if (
+			(activeItem.value !== item.value && item.value !== null) ||
+			(activeItem.id !== item.id && item.id !== null)
+		) {
 			setActiveItem(item);
 			onChangeOption(item);
 		}
@@ -28,64 +31,36 @@ const SelectBox = ({ defaultOption, list, onChangeOption, name }) => {
 		setIsVisible(prev => !prev);
 	};
 
+	const isActive = item => {
+		return (item.value && item.value === activeItem.value) || (item.id && item.id === activeItem.id);
+	};
+
 	return (
 		<div className='select-box' ref={ref}>
 			<div className='select-box__btn' onClick={handleOpen}>
-				<span className='select-box__value'>{activeItem.title}</span>
+				<span className='select-box__value'>{activeItem.title || activeItem.name}</span>
 				<img className='select-box__icon' src={dropdownIcon} alt='dropdown' />
 			</div>
 			{isVisible && !_.isEmpty(list) && (
 				<ul className='select-box__list'>
-					{list.map(item => (
-						<li
-							className={classNames('select-box__item', { 'active': item.value === activeItem.value })}
-							key={`${name}-${item.title}`}
-							onClick={() => handleSelect(item)}
-						>
-							<span>{item.title}</span>
-							{item.value === activeItem.value && (
-								<span>
-									<CheckIcon />
-								</span>
-							)}
-						</li>
-					))}
-					{/* <li className='select-box__item active'>
-						<span>1</span>
-						<span>
-							<CheckIcon />
-						</span>
-					</li>
-					<li className='select-box__item'>
-						<span>1</span>
-					</li>
-					<li className='select-box__item'>
-						<span>1</span>
-					</li>
-					<li className='select-box__item'>
-						<span>1</span>
-					</li>
-					<li className='select-box__item'>
-						<span>1</span>
-					</li>
-					<li className='select-box__item'>
-						<span>1</span>
-					</li>
-					<li className='select-box__item'>
-						<span>1</span>
-					</li>
-					<li className='select-box__item'>
-						<span>1</span>
-					</li>
-					<li className='select-box__item'>
-						<span>1</span>
-					</li>
-					<li className='select-box__item'>
-						<span>1</span>
-					</li>
-					<li className='select-box__item'>
-						<span>1</span>
-					</li> */}
+					{list.map((item, index) => {
+						return (
+							<li
+								className={classNames('select-box__item', {
+									'active': isActive(item),
+								})}
+								key={`${name}-${index}`}
+								onClick={() => handleSelect(item)}
+							>
+								<span>{item.title || item.name}</span>
+								{isActive(item) && (
+									<span>
+										<CheckIcon />
+									</span>
+								)}
+							</li>
+						);
+					})}
 				</ul>
 			)}
 		</div>
@@ -94,13 +69,15 @@ const SelectBox = ({ defaultOption, list, onChangeOption, name }) => {
 
 SelectBox.propTypes = {
 	defaultOption: PropTypes.shape({
-		value: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-		title: PropTypes.string.isRequired,
+		value: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+		id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+		title: PropTypes.string,
 	}),
 	list: PropTypes.arrayOf(
 		PropTypes.shape({
-			value: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-			title: PropTypes.string.isRequired,
+			value: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+			id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+			title: PropTypes.string,
 		})
 	),
 	onChangeOption: PropTypes.func,

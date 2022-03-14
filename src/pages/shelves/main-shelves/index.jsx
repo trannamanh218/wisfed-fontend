@@ -3,7 +3,7 @@ import _ from 'lodash';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
-import { getLibraryList, getListBookLibrary } from 'reducers/redux-utils/library';
+import { getLibraryList, getListBookLibrary, updateOtherLibrary } from 'reducers/redux-utils/library';
 import Button from 'shared/button';
 import EyeIcon from 'shared/eye-icon';
 import PaginationGroup from 'shared/pagination-group';
@@ -12,10 +12,12 @@ import SelectBox from 'shared/select-box';
 import Shelf from 'shared/shelf';
 import './main-shelves.scss';
 
+const DEFAULT_LIBRARY = { value: 'all', title: 'Tất cả', id: 'all' };
+
 const MainShelves = () => {
 	const [isPublic, setIsPublic] = useState(true);
 	const [allBooks, setAllBooks] = useState({ rows: [], count: 0 });
-	const [currentLibrary, setCurrentLibrary] = useState({ value: 'all', title: 'Tất cả' });
+	const [currentLibrary, setCurrentLibrary] = useState({ value: 'all', title: 'Tất cả', id: 'all' });
 	const [filter, setFilter] = useState('[]');
 	const [inputSearch, setInputSearch] = useState('');
 	const [isUpdate, setIsUpdate] = useState(false);
@@ -26,29 +28,15 @@ const MainShelves = () => {
 	const dispatch = useDispatch();
 
 	const {
-		library: {
-			libraryData: { rows: authLibraryList = [] },
-			otherLibraryData: { rows: otherLibraryList = [] },
-		},
+		library: { libraryData, otherLibraryData },
 		auth: { userInfo = {} },
 	} = useSelector(state => state);
 
+	const otherLibraryList = !_.isEmpty(otherLibraryData.rows) ? [DEFAULT_LIBRARY].concat(otherLibraryData.rows) : [];
+	const authLibraryList = !_.isEmpty(libraryData.rows) ? [DEFAULT_LIBRARY].concat(libraryData.rows) : [];
+
 	useEffect(() => {
-		if (params.id && params.id !== userInfo.id) {
-			const data = !_.isEmpty(otherLibraryList)
-				? [{ value: 'all', title: 'Tất cả' }].concat(
-						otherLibraryList.map(item => ({ ...item, title: item.name, value: item.id }))
-				  )
-				: [];
-			setListLibrary(data);
-		} else {
-			const data = !_.isEmpty(authLibraryList)
-				? [{ value: 'all', title: 'Tất cả' }].concat(
-						authLibraryList.map(item => ({ ...item, title: item.name, value: item.id }))
-				  )
-				: [];
-			setListLibrary(data);
-		}
+		setCurrentLibrary(DEFAULT_LIBRARY);
 	}, [params]);
 
 	useEffect(() => {
@@ -57,7 +45,7 @@ const MainShelves = () => {
 			const fetchData = async () => {
 				const filter = [];
 
-				if (_.isEmpty(params) && !_.isEmpty(userInfo) && currentLibrary.value === 'all') {
+				if (_.isEmpty(params) && !_.isEmpty(userInfo) && currentLibrary.id === 'all') {
 					filter.push({ 'operator': 'eq', 'value': userInfo.id, 'property': 'updatedBy' });
 				}
 
@@ -65,8 +53,8 @@ const MainShelves = () => {
 					filter.push({ 'operator': 'eq', 'value': params.id, 'property': 'updatedBy' });
 				}
 
-				if (currentLibrary.value !== 'all') {
-					filter.push({ 'operator': 'eq', 'value': currentLibrary.value, 'property': 'libraryId' });
+				if (currentLibrary.id !== 'all') {
+					filter.push({ 'operator': 'eq', 'value': currentLibrary.id, 'property': 'libraryId' });
 				}
 
 				const query = generateQuery(1, 10, JSON.stringify(filter));
@@ -78,7 +66,8 @@ const MainShelves = () => {
 							10,
 							JSON.stringify([{ 'operator': 'eq', 'value': params.id, 'property': 'createdBy' }])
 						);
-						await dispatch(getLibraryList({ isAuth: false, ...queryLibrary }));
+						const otherLibraryData = await dispatch(getLibraryList(queryLibrary)).unwrap();
+						dispatch(updateOtherLibrary(otherLibraryData));
 					}
 					setAllBooks(data);
 				} catch (err) {
@@ -141,7 +130,7 @@ const MainShelves = () => {
 				<div className='main-shelves__filters'>
 					<SelectBox
 						name='library'
-						list={listLibrary}
+						list={checkAuthorize() ? authLibraryList : otherLibraryList}
 						defaultOption={currentLibrary}
 						onChangeOption={onChangeLibrary}
 					/>

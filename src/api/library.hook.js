@@ -4,7 +4,7 @@ import { generateQuery } from 'helpers/Common';
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { getLibraryList, getListBookLibrary } from 'reducers/redux-utils/library';
+import { getLibraryList, getListBookLibrary, updateAuthLibrary } from 'reducers/redux-utils/library';
 
 export const useFetchLibraries = (current = 1, perPage = 10, filter = '[]') => {
 	const [status, setStatus] = useState(STATUS_IDLE);
@@ -22,14 +22,17 @@ export const useFetchLibraries = (current = 1, perPage = 10, filter = '[]') => {
 			setStatus(STATUS_LOADING);
 
 			const fetchData = async () => {
-				const query = generateQuery(1, 10, filter);
+				if (filter !== '[]') {
+					const query = generateQuery(1, 10, filter);
 
-				try {
-					await dispatch(getLibraryList({ ...query, isAuth: true })).unwrap();
-					setStatus(STATUS_SUCCESS);
-				} catch (err) {
-					const statusCode = err?.statusCode || 500;
-					setStatus(statusCode);
+					try {
+						const data = await dispatch(getLibraryList(query)).unwrap();
+						dispatch(updateAuthLibrary(data));
+						setStatus(STATUS_SUCCESS);
+					} catch (err) {
+						const statusCode = err?.statusCode || 500;
+						setStatus(statusCode);
+					}
 				}
 			};
 

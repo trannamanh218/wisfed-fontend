@@ -16,6 +16,7 @@ import { Routes, Route } from 'react-router-dom';
 import { login } from 'reducers/redux-utils/auth';
 import { ToastContainer } from 'react-toastify';
 import 'scss/main.scss';
+import NotFound from 'pages/not-found';
 
 function App() {
 	const dispatch = useDispatch();
@@ -71,6 +72,7 @@ function App() {
 				<Route path='/quote/detail' element={<QuoteDetail />} />
 				<Route path='/profile' element={<Profile />} />
 				<Route path='/confirm-my-book' element={<ConfirmMyBook />} />
+				<Route path='/404' element={<NotFound />} />
 				<Route path='/' element={<Home />} />
 			</Routes>
 		</div>

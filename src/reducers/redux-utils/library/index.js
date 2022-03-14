@@ -19,13 +19,9 @@ export const createLibrary = createAsyncThunk('library/createLibrary', async (pa
 });
 
 export const getLibraryList = createAsyncThunk('library/getLibraryList', async (params, { rejectWithValue }) => {
-	const { isAuth, ...query } = params;
 	try {
-		const response = await Request.makeGet(libraryAPI, query);
-		return {
-			isAuth,
-			...response.data,
-		};
+		const response = await Request.makeGet(libraryAPI, params);
+		return response.data;
 	} catch (err) {
 		const error = JSON.parse(err.response);
 		return rejectWithValue(error);
@@ -84,22 +80,22 @@ export const removeBookFromLibrary = createAsyncThunk(
 	}
 );
 
-export const checkBookInLibrary = createAsyncThunk(
-	'library/checkBookInLibrary',
-	async (params, { dispatch, rejectWithValue }) => {
-		try {
-			const res = await dispatch(getListBookLibrary(params)).unwrap();
-			const { rows } = res;
-			if (rows && rows.length) {
-				// const library = {}
-				const libraryList = rows.map(library => ({}));
-			}
-			console.log(res);
-		} catch (err) {
-			console.log(err);
-		}
-	}
-);
+// export const checkBookInLibrary = createAsyncThunk(
+// 	'library/checkBookInLibrary',
+// 	async (params, { dispatch, rejectWithValue }) => {
+// 		try {
+// 			const res = await dispatch(getListBookLibrary(params)).unwrap();
+// 			const { rows } = res;
+// 			if (rows && rows.length) {
+// 				// const library = {}
+// 				const libraryList = rows.map(library => ({}));
+// 			}
+// 			console.log(res);
+// 		} catch (err) {
+// 			console.log(err);
+// 		}
+// 	}
+// );
 
 const librarySlice = createSlice({
 	name: 'library',
@@ -115,26 +111,17 @@ const librarySlice = createSlice({
 		},
 		error: {},
 	},
+	reducers: {
+		updateAuthLibrary: (state, action) => {
+			const { rows, count } = action.payload;
+			state.libraryData = { rows, count };
+		},
+		updateOtherLibrary: (state, action) => {
+			const { rows, count } = action.payload;
+			state.otherLibraryData = { rows, count };
+		},
+	},
 	extraReducers: {
-		[getLibraryList.pending]: state => {
-			state.isFetching = true;
-		},
-		[getLibraryList.fulfilled]: (state, action) => {
-			state.isFetching = false;
-			const { isAuth, rows, count } = action.payload;
-			if (isAuth) {
-				state.libraryData = { rows, count };
-			} else {
-				state.otherLibraryData = { rows, count };
-			}
-
-			state.error = {};
-		},
-		[getLibraryList.rejected]: (state, action) => {
-			state.isFetching = false;
-			state.libraryData = {};
-			state.error = action.payload;
-		},
 		[createLibrary.pending]: state => {
 			state.isFetching = true;
 		},
@@ -171,3 +158,4 @@ const librarySlice = createSlice({
 
 const library = librarySlice.reducer;
 export default library;
+export const { updateAuthLibrary, updateOtherLibrary } = librarySlice.actions;

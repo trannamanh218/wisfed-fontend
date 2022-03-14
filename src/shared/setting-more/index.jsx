@@ -11,8 +11,8 @@ import { removeBookFromLibrary } from 'reducers/redux-utils/library';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import './setting-more.scss';
-import { getReviewOfBook } from 'reducers/redux-utils/book';
-import { generateQuery } from 'helpers/Common';
+// import { getReviewOfBook } from 'reducers/redux-utils/book';
+// import { generateQuery } from 'helpers/Common';
 import { useNavigate } from 'react-router-dom';
 import RouteLink from 'helpers/RouteLink';
 

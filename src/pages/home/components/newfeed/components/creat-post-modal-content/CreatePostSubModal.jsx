@@ -7,7 +7,7 @@ import SuggestSection from './SuggestSection';
 import TaggedList from './TaggedList';
 import './style.scss';
 import { useDispatch, useSelector } from 'react-redux';
-import { checkBookInLibrary } from 'reducers/redux-utils/library';
+// import { checkBookInLibrary } from 'reducers/redux-utils/library';
 import { generateQuery } from 'helpers/Common';
 
 function CreatPostSubModal(props) {
@@ -43,19 +43,19 @@ function CreatPostSubModal(props) {
 	};
 
 	const handleComplete = async () => {
-		if (!_.isEmpty(taggedData.addBook)) {
-			console.log(userInfo);
-			const filter = [
-				{ 'operator': 'eq', 'value': userInfo.id, 'property': 'updatedBy' },
-				{ 'operator': 'eq', 'value': taggedData.addBook.id, 'property': 'bookId' },
-			];
-			const query = generateQuery(1, 10, JSON.stringify(filter));
-			try {
-				await dispatch(checkBookInLibrary(query));
-			} catch (err) {
-				console.log(err);
-			}
-		}
+		// if (!_.isEmpty(taggedData.addBook)) {
+		// 	console.log(userInfo);
+		// 	const filter = [
+		// 		{ 'operator': 'eq', 'value': userInfo.id, 'property': 'updatedBy' },
+		// 		{ 'operator': 'eq', 'value': taggedData.addBook.id, 'property': 'bookId' },
+		// 	];
+		// 	const query = generateQuery(1, 10, JSON.stringify(filter));
+		// 	try {
+		// 		await dispatch(checkBookInLibrary(query));
+		// 	} catch (err) {
+		// 		console.log(err);
+		// 	}
+		// }
 
 		if (option.value === 'modifyImages') {
 			addOptionsToPost({
