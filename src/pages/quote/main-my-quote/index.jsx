@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import BackButton from 'shared/back-button';
 import FilterQuotePane from 'shared/fitler-quote-pane';
 import QuoteCard from 'shared/quote-card';
@@ -93,7 +93,7 @@ const MainMyQuote = () => {
 				handleChangeOption={handleChangeOption}
 				defaultOption={defaultOption}
 			>
-				{myQuoteList.length && (
+				{myQuoteList.length > 0 && (
 					<InfiniteScroll
 						dataLength={myQuoteList.length}
 						next={getMyQuoteList}

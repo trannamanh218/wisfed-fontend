@@ -2,8 +2,6 @@ import './creat-quotes-modal.scss';
 import { CloseX, WeatherStars, BackChevron, Search, CheckIcon } from 'components/svg';
 import { useEffect, useState, useRef, useCallback } from 'react';
 import classNames from 'classnames';
-import Slider from 'react-slick';
-import settingsSlider from './settingsSlider';
 import PropTypes from 'prop-types';
 import avatarTest from 'assets/images/avatar2.png';
 import bookSample from 'assets/images/sample-book-img.jpg';
@@ -33,7 +31,6 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 	const [categoryAddedIdList, setCategoryAddedIdList] = useState([]);
 
 	const textFieldEdit = useRef(null);
-	const sliderRef = useRef(null);
 	const categoryInputContainer = useRef(null);
 	const categoryInputWrapper = useRef(null);
 	const categoryInput = useRef(null);
@@ -42,35 +39,18 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 	const dispatch = useDispatch();
 
 	const colorData = [
-		'to bottom right, #FE7B59, #FE497A, #FD169C',
-		'to right, #FEC790, #F991F7',
-		'to bottom right, #3F74D0, #69C8DE, #A6E1CF',
-		'to bottom right, #77C2F1, #FFB4ED',
+		'to bottom right, #E3F7FF, #FFD8C3',
+		'to bottom right, #FACEB8, #E6AFCC, #C8BEE5, #ACD1F1',
+		'to bottom right, #EDF7F8, #B5C7E1',
+		'to bottom right, #E6B2FD, #9559FF',
 		'to bottom right, #F9AB34, #FFE68E',
-		'to bottom right, #A058AE, #FC6C75, #FEAAAA',
+		'to bottom right, #FFD42A, #FFFC49',
 		'to bottom right, #C5FFAA, #00BAC6',
-		'to bottom right, #FDFD9B, #F9F906, #C7C705',
-		'to bottom right, #FE7B59, #FE497A, #FD169C',
-		'to right, #FEC790, #F991F7',
-		'to bottom right, #3F74D0, #69C8DE, #A6E1CF',
-		'to bottom right, #77C2F1, #FFB4ED',
-		'to bottom right, #F9AB34, #FFE68E',
-		'to bottom right, #A058AE, #FC6C75, #FEAAAA',
-		'to bottom right, #C5FFAA, #00BAC6',
-		'to bottom right, #FDFD9B, #F9F906, #C7C705',
 	];
 
 	useEffect(() => {
 		textFieldEdit.current.focus();
 	}, [backgroundColor]);
-
-	useEffect(() => {
-		if (!showTextFieldBackgroundSelect) {
-			setTimeout(() => {
-				sliderRef.current.slickGoTo(0);
-			}, 500);
-		}
-	}, [showTextFieldBackgroundSelect]);
 
 	const handleTextFieldEditEvents = () => {
 		if (textFieldEdit.current.innerText.length > 0) {
@@ -295,33 +275,31 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 						</button>
 					</div>
 
-					<Slider
+					<div
 						className={classNames('creat-quotes-modal__body__select-background-box', {
 							'show': showTextFieldBackgroundSelect,
 						})}
-						{...settingsSlider}
-						ref={sliderRef}
 					>
-						<div className='creat-quotes-modal__body__select-background-box-item'>
-							<button
-								style={{
-									border: '#d9dbe9 4px solid',
-									background: 'white',
-								}}
-								onClick={() => changeBackground('', -1)}
-							></button>
-						</div>
+						<button
+							className='creat-quotes-modal__body__select-background-box-item'
+							style={{
+								border: '#d9dbe9 4px solid',
+								background: 'white',
+							}}
+							onClick={() => changeBackground('', -1)}
+						></button>
 
 						{colorData.map((item, index) => (
-							<div key={index} className='creat-quotes-modal__body__select-background-box-item'>
-								<button
-									style={{ backgroundImage: `linear-gradient(${item})` }}
-									onClick={() => changeBackground(item, index)}
-									className={index === colorActiveIndex && 'active'}
-								></button>
-							</div>
+							<button
+								key={index}
+								style={{ backgroundImage: `linear-gradient(${item})` }}
+								onClick={() => changeBackground(item, index)}
+								className={classNames('creat-quotes-modal__body__select-background-box-item', {
+									'active': index === colorActiveIndex,
+								})}
+							></button>
 						))}
-					</Slider>
+					</div>
 				</div>
 				<div className='creat-quotes-modal__body__add-options'>
 					<div className='creat-quotes-modal__body__option-item'>
