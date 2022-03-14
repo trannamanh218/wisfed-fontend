@@ -46,7 +46,7 @@ const SettingMore = props => {
 	};
 
 	const hanldeReviewBook = () => {
-		navigate(RouteLink.reviewBookDetail('402', bookData.name));
+		navigate(RouteLink.reviewBookDetail('402', bookData?.name));
 	};
 
 	return (
@@ -87,7 +87,7 @@ const SettingMore = props => {
 						{`Cuốn sách sẽ được xoá khỏi giá sách `}
 						<br />
 						<br />
-						{`"${bookData.library.name}"`}
+						{`"${bookData?.library?.name}"`}
 					</p>
 					<button className='btn main-shelves__modal__btn-delete btn-danger' onClick={removeBook}>
 						Xóa
