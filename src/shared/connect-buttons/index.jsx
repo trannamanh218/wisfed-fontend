@@ -16,9 +16,6 @@ const ConnectButtons = ({ data, direction }) => {
 	};
 	return (
 		<div className={`connect-buttons ${direction}`}>
-			<Button className='connect-button follow' onClick={handleFollow}>
-				<span className='connect-button__content'>{infor.isFollow ? 'Hủy theo dõi' : 'Theo dõi'}</span>
-			</Button>
 			<Button className='connect-button' isOutline={true} name='friend' onClick={handleAddFriend}>
 				{!infor.isFriend ? (
 					<Add className='connect-button__icon' />
@@ -26,6 +23,9 @@ const ConnectButtons = ({ data, direction }) => {
 					<Minus className='connect-button__icon' />
 				)}
 				<span className='connect-button__content'>{infor.isFriend ? 'Huỷ kết bạn' : 'Thêm  bạn'}</span>
+			</Button>
+			<Button className='connect-button follow' onClick={handleFollow}>
+				<span className='connect-button__content'>{infor.isFollow ? 'Hủy theo dõi' : 'Theo dõi'}</span>
 			</Button>
 		</div>
 	);
@@ -36,7 +36,7 @@ ConnectButtons.defaultProps = {
 		isFriend: false,
 		isFollow: false,
 	},
-	direction: 'row',
+	direction: 'column',
 };
 
 ConnectButtons.propTypes = {

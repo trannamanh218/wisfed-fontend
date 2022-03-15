@@ -39,13 +39,13 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 	const dispatch = useDispatch();
 
 	const colorData = [
-		'to bottom right, #E3F7FF, #FFD8C3',
-		'to bottom right, #FACEB8, #E6AFCC, #C8BEE5, #ACD1F1',
-		'to bottom right, #EDF7F8, #B5C7E1',
-		'to bottom right, #E6B2FD, #9559FF',
-		'to bottom right, #F9AB34, #FFE68E',
-		'to bottom right, #FFD42A, #FFFC49',
-		'to bottom right, #C5FFAA, #00BAC6',
+		'100deg, #E3F7FF, #FFD8C3',
+		'100deg, #FACEB8, #E6AFCC, #C8BEE5, #ACD1F1',
+		'100deg, #EDF7F8, #B5C7E1',
+		'100deg, #77C2F1, #FFB4ED',
+		'100deg, #F9AB34, #FFE68E',
+		'100deg, #FFD42A, #FFFC49',
+		'100deg, #C5FFAA, #00BAC6',
 	];
 
 	useEffect(() => {

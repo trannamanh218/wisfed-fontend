@@ -4,7 +4,6 @@ $wallpaper-height: 350px;
 .personal-info {
 	margin-bottom: 3.25rem;
 	&__wallpaper {
-		max-width: 920px;
 		padding-top: $wallpaper-height;
 		background-size: cover;
 		background-repeat: no-repeat;
@@ -34,23 +33,30 @@ $wallpaper-height: 350px;
 	}
 
 	&__detail {
-		display: flex;
-		// flex-wrap: wrap;
-		&__left {
-			width: 25%;
-			flex-shrink: 0;
-		}
-
-		&__right {
-			flex-grow: 1;
-			max-width: 680px;
-			margin-left: 10px;
+		&__avatar-and-name {
+			display: flex;
+			width: 100%;
+			gap: 36px;
 		}
 
 		&__avatar {
 			width: fit-content;
-			margin: -3.75rem auto 1rem;
+			margin: -72px 10px 0 10px;
 			position: relative;
+		}
+
+		&__name {
+			width: 100%;
+		}
+
+		&__connect-buttons-and-introduction {
+			display: flex;
+			gap: 36px;
+			margin-top: 16px;
+		}
+
+		&__introduction {
+			flex-grow: 1;
 		}
 
 		.edit-avatar {
@@ -84,7 +90,6 @@ $wallpaper-height: 350px;
 			font-size: 0.875rem;
 			font-weight: 500;
 			color: $ash-label;
-			line-height: 20px;
 
 			&__pencil {
 				width: 20px;
@@ -94,9 +99,13 @@ $wallpaper-height: 350px;
 
 			span {
 				display: block;
-				margin-top: 0.5rem;
 			}
 		}
+	}
+
+	&__email {
+		color: $ash;
+		font-weight: 600;
 	}
 
 	.setting {
@@ -155,7 +164,6 @@ $wallpaper-height: 350px;
 	&__list {
 		display: flex;
 		gap: 2rem;
-		margin-top: 1rem;
 		margin-bottom: 1.2rem;
 	}
 
@@ -268,6 +276,14 @@ $wallpaper-height: 350px;
 				width: 18px;
 				height: 18px;
 			}
+		}
+	}
+}
+
+@media only screen and (max-width: 1366px) {
+	.personal-info {
+		&__list {
+			gap: 28px;
 		}
 	}
 }

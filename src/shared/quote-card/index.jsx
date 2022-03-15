@@ -63,9 +63,15 @@ const QuoteCard = ({ data, isDetail }) => {
 				</div>
 			</div>
 			<div className='quote-footer'>
-				<div className='quote-footer__left'>
-					<BadgeList list={data?.categories?.slice(0, 2)} className='quote-footer__badge' />
-				</div>
+				{isDetail ? (
+					<div className='quote-footer__left'>
+						<BadgeList list={data?.categories} className='quote-footer__badge' />
+					</div>
+				) : (
+					<div className='quote-footer__left'>
+						<BadgeList list={data?.categories?.slice(0, 2)} className='quote-footer__badge' />
+					</div>
+				)}
 				<div className='quote-footer__right'>
 					<QuoteActionBar
 						data={data}
