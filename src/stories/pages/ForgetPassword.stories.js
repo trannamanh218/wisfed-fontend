@@ -1,9 +1,9 @@
-import FogetPassWord from 'pages/foget-password';
+import ForgetPassword from 'pages/foget-password';
 export default {
 	title: 'Pages/foget-password',
-	component: FogetPassWord,
+	component: ForgetPassword,
 };
 
-const Template = () => <FogetPassWord />;
+const Template = () => <ForgetPassword />;
 
 export const Default = Template.bind({});
