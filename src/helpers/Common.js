@@ -41,7 +41,8 @@ export const calculateDurationTime = date => {
 	const duration = (end.getTime() - start.getTime()) / 1000;
 	const secondsPerMinute = 60;
 	const secondsPerHour = secondsPerMinute * 60;
-	const secondsPerDay = secondsPerMinute * 24;
+	const secondsPerDay = secondsPerHour * 24;
+	const secondsPerWeek = secondsPerDay * 7;
 
 	if (duration < secondsPerMinute) {
 		return 'Vừa xong';
@@ -49,6 +50,8 @@ export const calculateDurationTime = date => {
 		return `${Math.floor(duration / secondsPerMinute)} phút trước`;
 	} else if (duration < secondsPerDay) {
 		return `${Math.floor(duration / secondsPerHour)} giờ trước`;
+	} else if (duration < secondsPerWeek) {
+		return ` Khoảng ${Math.floor(duration / 86400)}  ngày trước`;
 	} else {
 		return `${moment(start).format('DD MMM')} lúc ${moment(start).format('kk:mm')}`;
 	}

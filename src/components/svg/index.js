@@ -41,7 +41,7 @@ import { ReactComponent as BackChevron } from 'assets/icons/back-chevron.svg';
 import { ReactComponent as Flag } from 'assets/icons/flag.svg';
 import { ReactComponent as Attach } from 'assets/icons/attach.svg';
 import { ReactComponent as RightArrow } from 'assets/icons/arrow.svg';
-
+import { ReactComponent as Notification } from 'assets/icons/Notification.svg';
 export {
 	HomeIcon,
 	CategoryIcon,
@@ -86,4 +86,5 @@ export {
 	Flag,
 	Attach,
 	RightArrow,
+	Notification,
 };

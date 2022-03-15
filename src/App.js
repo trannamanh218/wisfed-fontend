@@ -10,6 +10,7 @@ import MyQuote from 'pages/quote/my-quote';
 import Review from 'pages/review';
 import BookShelves from 'pages/shelves';
 import ConfirmMyBook from 'pages/confirm-my-book';
+import Notification from 'pages/notification/compornent-main';
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { Routes, Route } from 'react-router-dom';
@@ -22,8 +23,8 @@ function App() {
 
 	useEffect(() => {
 		const params = {
-			email: 'admin@gmail.com',
-			password: '123456',
+			email: 'register@gmail.com',
+			password: '12345678',
 			// email: 'nguyenhien@gmail.com',
 			// password: '123456',
 		};
@@ -54,6 +55,7 @@ function App() {
 				pauseOnHover
 			/>
 			<Routes>
+				<Route path='/notification' element={<Notification />} />
 				<Route path='/category' element={<Category />} />
 				<Route path='/category/detail/:id' element={<CategoryDetail />} />
 				<Route path='/category/detail/:id/:slug' element={<CategoryDetail />} />

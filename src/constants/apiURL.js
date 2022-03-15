@@ -56,3 +56,6 @@ export const removeBookFromLibraryAPI = id => `/api/v1/libraries/${id}/removeBoo
 // comment activity
 export const commentActivityAPI = '/api/v1/commentActivities';
 export const commentActivityDetailAPI = id => `/api/v1/commentActivities/${id}`;
+
+// notification
+export const nottificationAPI = '/api/v1/getstream/notiMention';

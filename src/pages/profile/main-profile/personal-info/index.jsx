@@ -4,7 +4,7 @@ import camera from 'assets/images/camera.png';
 import dots from 'assets/images/dots.png';
 import pencil from 'assets/images/pencil.png';
 import { Clock, CloseX, Pencil, QuoteIcon, Restrict } from 'components/svg';
-import React from 'react';
+import React, { useState } from 'react';
 import { Modal } from 'react-bootstrap';
 import Dropzone from 'react-dropzone';
 import ConnectButtons from 'shared/connect-buttons';
@@ -13,17 +13,27 @@ import ReadMore from 'shared/read-more';
 import UserAvatar from 'shared/user-avatar';
 import PersonalInfoForm from './PersonalInfoForm';
 import './personal-info.scss';
+import ModalFollowers from './modal-followers';
 
 const PersonalInfo = () => {
 	const { ref: settingsRef, isVisible: isSettingsVisible, setIsVisible: setSettingsVisible } = useVisible(false);
 	const { modalOpen, setModalOpen, toggleModal } = useModal(false);
-
+	const [idModalItem, setIdModalItem] = useState('');
+	const [modalFollowers, setModalFollowers] = useState(false);
+	const [modalWatching, setModalWatching] = useState(false);
 	const handleSettings = () => {
 		setSettingsVisible(prev => !prev);
 	};
 
 	const handleDrop = () => {};
-
+	const handleModalFollowwers = name => {
+		if (name === 'followers') {
+			setModalFollowers(true);
+		} else {
+			setModalWatching(true);
+		}
+		setIdModalItem(name);
+	};
 	return (
 		<div className='personal-info'>
 			<div className='personal-info__wallpaper' style={{ backgroundImage: `url(${background})` }}>
@@ -101,13 +111,19 @@ const PersonalInfo = () => {
 							<span className='number'>825</span>
 							<span>Bài viết</span>
 						</li>
-						<li className='personal-info__item'>
+						<li onClick={() => handleModalFollowwers('followers')} className='personal-info__item'>
 							<span className='number'>825</span>
 							<span>Người theo dõi</span>
+							{modalFollowers && (
+								<ModalFollowers idModalItem={idModalItem} setModalWatching={setModalFollowers} />
+							)}
 						</li>
-						<li className='personal-info__item'>
+						<li onClick={() => handleModalFollowwers('watching')} className='personal-info__item'>
 							<span className='number'>825</span>
 							<span>Đang theo dõi</span>
+							{modalWatching && (
+								<ModalFollowers idModalItem={idModalItem} setModalWatching={setModalWatching} />
+							)}
 						</li>
 						<li className='personal-info__item'>
 							<span className='number'>825</span>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { LogoIcon, BookFillIcon, BookIcon, CategoryIcon, GroupIcon, HomeIcon } from 'components/svg';
 import SearchIcon from 'assets/icons/search.svg';
@@ -6,16 +6,27 @@ import classNames from 'classnames';
 import './header.scss';
 import { useSelector } from 'react-redux';
 import UserAvatar from 'shared/user-avatar';
+import NotificationModal from 'pages/notification/';
+import { useDispatch } from 'react-redux';
+import { backgroundToggle } from 'reducers/redux-utils/notificaiton';
 
 const Header = () => {
 	const [activeLink, setActiveLink] = useState('/');
 	const location = useLocation();
 	const { pathname } = location;
 	const { userInfo } = useSelector(state => state.auth);
+	const dispatch = useDispatch();
+	const [modalNoti, setModalNotti] = useState(false);
+	const buttonModal = useRef(null);
 
 	useEffect(() => {
 		setActiveLink(pathname);
 	}, [pathname]);
+
+	const toglleModalNotify = () => {
+		setModalNotti(!modalNoti);
+		dispatch(backgroundToggle(modalNoti));
+	};
 
 	return (
 		<div className='header'>
@@ -52,7 +63,14 @@ const Header = () => {
 				</li>
 			</ul>
 			<div className='header__userInfo'>
-				<div className='header__notify__icon' />
+				<div>
+					<div
+						ref={buttonModal}
+						onClick={toglleModalNotify}
+						className={classNames('header__notify__icon', { 'header__notify__icon__active': modalNoti })}
+					/>
+					{modalNoti && <NotificationModal setModalNotti={setModalNotti} buttonModal={buttonModal} />}
+				</div>
 				<Link to='/profile'>
 					<UserAvatar className='header__avatar' source={userInfo?.avatarImage} />
 				</Link>

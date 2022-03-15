@@ -8,6 +8,7 @@ import activity from './activity';
 import quote from './quote';
 import library from './library';
 import comment from './comment';
+import notificationReducer from './notificaiton';
 
 const rootReducer = {
 	auth,
@@ -20,6 +21,7 @@ const rootReducer = {
 	quote,
 	library,
 	comment,
+	notificationReducer,
 };
 
 export default rootReducer;

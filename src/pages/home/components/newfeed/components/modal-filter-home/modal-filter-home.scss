@@ -1,0 +1,32 @@
+.modalfilterhome__container {
+	position: fixed;
+	top: 50%;
+	right: 50%;
+	background-color: #ffffff;
+	box-shadow: 0px 0px 32px rgba(0, 0, 0, 0.04);
+	border-radius: 8px;
+	max-width: 432px;
+	font-family: 'Montserrat';
+	font-style: normal;
+	&__title {
+		letter-spacing: 0.75px;
+		font-weight: 600;
+		font-size: 15px;
+		line-height: 24px;
+		margin: 20px 0;
+	}
+	&__title__two {
+		letter-spacing: 0.75px;
+		font-weight: 600;
+		font-size: 15px;
+		line-height: 24px;
+		color: #000000;
+		margin: 20px 0 20px -15px;
+	}
+}
+.status-book-modal .modal-body {
+	padding: 0;
+}
+.modalfilterhome__container__main {
+	padding: 48px 48px 0 48px;
+}
