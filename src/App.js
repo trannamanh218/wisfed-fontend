@@ -16,6 +16,8 @@ import { Routes, Route } from 'react-router-dom';
 import { login } from 'reducers/redux-utils/auth';
 import { ToastContainer } from 'react-toastify';
 import Login from 'pages/login';
+import Register from 'pages/register';
+import FogetPassWord from 'pages/foget-password';
 import 'scss/main.scss';
 
 function App() {
@@ -69,6 +71,8 @@ function App() {
 				<Route path='/profile' element={<Profile />} />
 				<Route path='/confirm-my-book' element={<ConfirmMyBook />} />
 				<Route path='/login' element={<Login />} />
+				<Route path='/register' element={<Register />} />
+				<Route path='/foget-password' element={<FogetPassWord />} />
 				<Route path='/' element={<Home />} />
 			</Routes>
 		</div>

@@ -11,13 +11,11 @@ function Login() {
 	return (
 		<div className='login__container'>
 			<div>
-				{' '}
 				<div className='login__header'>
 					<img src={Logo} alt='logo' />
 				</div>
 				<div className='login__body'>
 					<div>
-						{' '}
 						<span className='login__body-text1'>
 							Khám phá mạng xã hội về sách <br /> hàng đầu Việt Nam
 						</span>

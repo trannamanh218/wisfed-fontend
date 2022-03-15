@@ -124,7 +124,13 @@
 	border: none;
 	outline: none;
 	&::placeholder {
-		color: #121212;
+		color: #a0a3bd;
+		font-family: 'Montserrat';
+		font-style: normal;
+		font-weight: 500;
+		font-size: 13px;
+		line-height: 22px;
+		letter-spacing: 0.25;
 	}
 }
 
