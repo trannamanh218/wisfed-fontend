@@ -5,7 +5,7 @@ import classNames from 'classnames';
 function CreatNewPasswordForm() {
 	return (
 		<div className='forget__form__email'>
-			<Formik initialValues={{ email: '' }}>
+			<Formik initialValues={{ otp: '', password: '', password2: '' }}>
 				<Form className='forgetPassword__form'>
 					<div className='forget__name-title'>
 						<span>Xác nhận mật khẩu mới</span>
@@ -16,7 +16,7 @@ function CreatNewPasswordForm() {
 							tạo mật khẩu mới
 						</span>
 					</div>
-					<Field name='email'>
+					<Field name='otp'>
 						{({ field, meta }) => {
 							return (
 								<div className='forgetPassword__form__field'>
@@ -27,8 +27,8 @@ function CreatNewPasswordForm() {
 									>
 										<input
 											className='forgetPassword__form__input'
-											type='email'
-											placeholder='Số điện thoại hoặc Email đăng ký'
+											type='text'
+											placeholder='Nhập mã OTP'
 											{...field}
 											value={field.value}
 											autoComplete='false'
@@ -45,7 +45,7 @@ function CreatNewPasswordForm() {
 						<span>Không nhận được mã? Gửi lại</span>
 					</div>
 					<hr />
-					<Field name='email'>
+					<Field name='pasword'>
 						{({ field, meta }) => {
 							return (
 								<div className='forgetPassword__form__field'>
@@ -56,7 +56,7 @@ function CreatNewPasswordForm() {
 									>
 										<input
 											className='forgetPassword__form__input-password input-1'
-											type='email'
+											type='text'
 											placeholder='Mật khẩu mới'
 											{...field}
 											value={field.value}
@@ -70,7 +70,7 @@ function CreatNewPasswordForm() {
 							);
 						}}
 					</Field>
-					<Field name='email'>
+					<Field name='password2'>
 						{({ field, meta }) => {
 							return (
 								<div className='forgetPassword__form__field'>
@@ -81,7 +81,7 @@ function CreatNewPasswordForm() {
 									>
 										<input
 											className='forgetPassword__form__input-password'
-											type='email'
+											type='text'
 											placeholder='Xác nhận lại mật khẩu mới'
 											{...field}
 											value={field.value}
