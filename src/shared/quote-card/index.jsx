@@ -62,10 +62,15 @@ const QuoteCard = ({ data, isDetail }) => {
 					<p className='quote-card__author__detail__name'>{data?.user?.fullName}</p>
 				</div>
 			</div>
+			{isDetail && (
+				<div className='quote-card__categories-in-detail'>
+					<BadgeList list={data?.categories} className='quote-card__categories-badge' />
+				</div>
+			)}
 			<div className='quote-footer'>
 				{isDetail ? (
 					<div className='quote-footer__left'>
-						<BadgeList list={data?.categories} className='quote-footer__badge' />
+						{data?.tag !== null && <span className='quote-card__hashtag'>#{data.tag.name}</span>}
 					</div>
 				) : (
 					<div className='quote-footer__left'>
