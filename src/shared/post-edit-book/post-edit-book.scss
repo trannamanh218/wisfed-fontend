@@ -65,8 +65,7 @@
 		outline: none;
 		min-width: 20px;
 		max-width: 50px;
-		// width: 30px;
-		// width: fit-content;
+		border-bottom: 1px solid $ash-line;
 	}
 
 	&__message {
