@@ -15,9 +15,10 @@ import { useDispatch } from 'react-redux';
 import { Routes, Route } from 'react-router-dom';
 import { login } from 'reducers/redux-utils/auth';
 import { ToastContainer } from 'react-toastify';
+import PropTypes from 'prop-types';
 import 'scss/main.scss';
 
-function App() {
+function App({ children }) {
 	const dispatch = useDispatch();
 
 	useEffect(() => {
@@ -68,9 +69,14 @@ function App() {
 				<Route path='/profile' element={<Profile />} />
 				<Route path='/confirm-my-book' element={<ConfirmMyBook />} />
 				<Route path='/' element={<Home />} />
+				{children}
 			</Routes>
 		</div>
 	);
 }
+
+App.propTypes = {
+	children: PropTypes.any,
+};
 
 export default App;
