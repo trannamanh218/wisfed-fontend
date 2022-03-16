@@ -1,13 +1,48 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Logo from 'assets/images/Logo 2.png';
 import ImageLogin from 'assets/images/cover-sign 1.png';
 import { Formik, Field, Form } from 'formik';
 import '../login.scss';
 import classNames from 'classnames';
 import { Link } from 'react-router-dom';
+import Validation from 'helpers/Validation';
 import { FaceBookIcon, GmailIcon } from 'components/svg';
+import { toast } from 'react-toastify';
+import { login } from 'reducers/redux-utils/auth';
+import { useDispatch } from 'react-redux';
+import { unwrapResult } from '@reduxjs/toolkit';
+import ModalLogin from './ModalLogin';
+import { useNavigate } from 'react-router-dom';
 
 function LoginComponet() {
+	const [isShow, setIsShow] = useState(false);
+	const [dataModal, setDataModal] = useState({});
+	const dispatch = useDispatch();
+	const navigate = useNavigate();
+	const handleSubmit = async data => {
+		try {
+			const actionLogin = await dispatch(login(data));
+			const infoUser = unwrapResult(actionLogin);
+			if (infoUser) {
+				toast.success('Đăng nhập thành công');
+				navigate('/');
+			}
+		} catch {
+			setIsShow(true);
+			const newdata = {
+				title: 'Đăng nhập',
+				title2: 'thất bại',
+				isShowIcon: false,
+				scribe: 'Vui lòng kiểm tra lại tài khoản,',
+				scribe2: 'mật khẩu và thử đăng nhập lại',
+			};
+			setDataModal(newdata);
+		}
+	};
+
+	const handleChange = () => {
+		setIsShow(false);
+	};
 	return (
 		<div className='login__container'>
 			<div>
@@ -15,6 +50,7 @@ function LoginComponet() {
 					<img src={Logo} alt='logo' />
 				</div>
 				<div className='login__body'>
+					{isShow ? <ModalLogin data={dataModal} handleChange={handleChange} /> : ''}
 					<div>
 						<span className='login__body-text1'>
 							Khám phá mạng xã hội về sách <br /> hàng đầu Việt Nam
@@ -48,9 +84,13 @@ function LoginComponet() {
 					<div>
 						<span className='login__form-title'>Đăng nhập tài khoản Wisfeed</span>
 					</div>
-					<Formik initialValues={{ username: '', password: '' }}>
+					<Formik
+						initialValues={{ email: '', password: '' }}
+						onSubmit={handleSubmit}
+						validationSchema={Validation.login()}
+					>
 						<Form className='login__form'>
-							<Field name='username'>
+							<Field name='email'>
 								{({ field, meta }) => {
 									return (
 										<div className='login__form__field'>
@@ -99,7 +139,6 @@ function LoginComponet() {
 									</div>
 								)}
 							</Field>
-
 							<button className='login__form__btn'>Đăng nhập</button>
 						</Form>
 					</Formik>

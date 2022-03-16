@@ -24,7 +24,6 @@ export const login = createAsyncThunk('auth/login', async (params, { rejectWithV
 			Storage.setRefreshToken(refreshToken);
 			return data;
 		}
-
 		return {};
 	} catch (err) {
 		return rejectWithValue(err.response);
