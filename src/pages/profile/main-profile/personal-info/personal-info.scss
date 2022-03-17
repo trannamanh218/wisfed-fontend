@@ -4,12 +4,13 @@ $wallpaper-height: 350px;
 .personal-info {
 	margin-bottom: 3.25rem;
 	&__wallpaper {
-		padding-top: $wallpaper-height;
+		height: $wallpaper-height;
 		background-size: cover;
 		background-repeat: no-repeat;
 		background-position: 50% 50%;
 		display: flex;
 		justify-content: flex-end;
+		align-items: flex-end;
 		border-top-left-radius: 12px;
 		border-top-right-radius: 12px;
 	}
@@ -25,9 +26,15 @@ $wallpaper-height: 350px;
 			font-size: 1rem;
 			font-weight: 600;
 			color: $ash;
+			display: flex;
+			align-items: center;
 
 			img {
 				margin-right: 0.875rem;
+			}
+
+			span {
+				margin-top: 2px;
 			}
 		}
 	}
@@ -131,6 +138,7 @@ $wallpaper-height: 350px;
 			background-color: $white-off;
 			box-shadow: 0 0 20px 2px rgba($ash-placeholder, 0.4);
 			overflow: hidden;
+			z-index: 1000;
 		}
 
 		&-item {
@@ -184,7 +192,8 @@ $wallpaper-height: 350px;
 	&-form {
 		.form-field {
 			width: 420px;
-			overflow: hidden;
+			display: flex;
+			gap: 24px;
 			&--custom {
 				width: 100%;
 				display: block;
@@ -205,11 +214,31 @@ $wallpaper-height: 350px;
 			}
 
 			&-label {
-				margin-bottom: 1.25rem;
+				margin-bottom: 12px;
+			}
+
+			&-name {
+				display: flex;
+				gap: 24px;
+				justify-content: space-between;
+			}
+
+			&__cancel-btn {
+				color: #e61b00;
+				background-color: #eff0f6;
+				height: 34px;
+				border-radius: 12px;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				font-size: 14px;
+				padding: 0 12px;
+				cursor: pointer;
 			}
 
 			input {
 				height: 56px;
+				background-color: $ash-background;
 			}
 		}
 
@@ -222,6 +251,7 @@ $wallpaper-height: 350px;
 			align-items: center;
 			justify-content: center;
 			background-color: #eff0f6;
+			cursor: pointer;
 			svg {
 				width: 14px;
 				height: 14px;
@@ -246,6 +276,23 @@ $wallpaper-height: 350px;
 	}
 
 	&__modal {
+		&::-webkit-scrollbar {
+			width: 8px;
+		}
+
+		&::-webkit-scrollbar-track {
+			background: #f1f1f1;
+			border-radius: 8px;
+		}
+
+		&::-webkit-scrollbar-thumb {
+			background: #606060;
+			border-radius: 8px;
+			&:hover {
+				background: rgba(#606060, 0.85);
+			}
+		}
+
 		.modal-dialog {
 			max-width: 700px;
 		}
@@ -269,7 +316,7 @@ $wallpaper-height: 350px;
 
 		.close-btn {
 			background-color: #eff0f6;
-			padding: 1rem;
+			padding: 8px;
 			border-radius: 50%;
 
 			svg {
@@ -278,6 +325,21 @@ $wallpaper-height: 350px;
 			}
 		}
 	}
+}
+
+.form-field-filled__gender {
+	padding: 1rem 1.5rem;
+	border-radius: 12px;
+	background-color: #f7f7fc;
+	margin-right: 12px;
+	line-height: 1.5;
+}
+
+.form-field__no-data {
+	font-size: 14px;
+	height: 56px;
+	display: flex;
+	align-items: center;
 }
 
 @media only screen and (max-width: 1366px) {

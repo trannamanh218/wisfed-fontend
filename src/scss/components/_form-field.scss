@@ -1,8 +1,6 @@
 .form-field {
 	width: 100%;
-	background-color: $ash-background;
 	border-radius: 12px;
-	overflow: hidden;
 }
 
 .form-field-textarea {
@@ -11,6 +9,7 @@
 	outline: none;
 	background-color: inherit;
 	resize: none;
+	background-color: $ash-background;
 }
 
 .form-field-label {

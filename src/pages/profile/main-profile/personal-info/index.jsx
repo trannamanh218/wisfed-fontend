@@ -1,4 +1,3 @@
-import background from 'assets/images/background-profile.png';
 import camera from 'assets/images/camera.png';
 import dots from 'assets/images/dots.png';
 import pencil from 'assets/images/pencil.png';
@@ -30,32 +29,38 @@ const PersonalInfo = () => {
 		setSettingsVisible(prev => !prev);
 	};
 
-	const handleDrop = useCallback(async acceptedFile => {
+	const handleDrop = useCallback(async (acceptedFile, option) => {
 		if (!_.isEmpty(acceptedFile)) {
 			try {
 				const imageUploadedData = await dispatch(uploadImage(acceptedFile)).unwrap();
-				const data = { userId: userInfo.id, params: { avatarImage: imageUploadedData.streamPath } };
+				let params;
+				if (option === 'change-bgImage') {
+					params = { backgroundImage: imageUploadedData.streamPath };
+				} else {
+					params = { avatarImage: imageUploadedData.streamPath };
+				}
+				const data = { userId: userInfo.id, params: params };
 				const changeUserAvatar = await dispatch(editUserInfo(data)).unwrap();
 				if (!_.isEmpty(changeUserAvatar)) {
-					toast.success('Cập nhật ảnh đại diện thành công');
+					toast.success('Cập nhật ảnh thành công');
 					window.location.reload();
 				}
 			} catch {
-				toast.success('Cập nhật ảnh đại diện thất bại');
+				toast.success('Cập nhật ảnh thất bại');
 			}
 		}
 	});
 
 	return (
 		<div className='personal-info'>
-			<div className='personal-info__wallpaper' style={{ backgroundImage: `url(${background})` }}>
-				<Dropzone onDrop={handleDrop}>
+			<div className='personal-info__wallpaper' style={{ backgroundImage: `url(${userInfo.backgroundImage})` }}>
+				<Dropzone onDrop={acceptedFile => handleDrop(acceptedFile, 'change-bgImage')}>
 					{({ getRootProps, getInputProps }) => (
 						<div className='edit-wallpaper' {...getRootProps()}>
 							<input {...getInputProps()} />
 							<button className='edit-wallpaper__btn'>
 								<img src={camera} alt='camera' />
-								<span>Chỉnh sửa bài viết</span>
+								<span>Chỉnh sửa ảnh bìa</span>
 							</button>
 						</div>
 					)}
@@ -69,7 +74,7 @@ const PersonalInfo = () => {
 							source={userInfo.avatarImage}
 							className='personal-info__detail__avatar__user'
 						/>
-						<Dropzone onDrop={handleDrop}>
+						<Dropzone onDrop={acceptedFile => handleDrop(acceptedFile, 'change-avatarImage')}>
 							{({ getRootProps, getInputProps }) => (
 								<div className='edit-avatar' {...getRootProps()}>
 									<input {...getInputProps()} />
@@ -85,7 +90,7 @@ const PersonalInfo = () => {
 							<h4>{userInfo.fullName}</h4>
 							<div className='edit-name'>
 								<img className='edit-name__pencil' src={pencil} alt='pencil' />
-								<span>Chỉnh sửa tên</span>
+								<button onClick={toggleModal}>Chỉnh sửa tên</button>
 							</div>
 							<div ref={settingsRef} className='setting'>
 								<button className='setting-btn' onClick={handleSettings}>
@@ -166,7 +171,7 @@ const PersonalInfo = () => {
 					</button>
 				</Modal.Header>
 				<Modal.Body className='personal-info__modal__body'>
-					<PersonalInfoForm />
+					<PersonalInfoForm userData={userInfo} />
 				</Modal.Body>
 			</Modal>
 		</div>

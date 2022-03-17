@@ -22,15 +22,15 @@ const QuoteCard = ({ data, isDetail }) => {
 	}, []);
 
 	const checkQuoteLiked = async () => {
-		const params = { filter: JSON.stringify([{ 'operator': 'eq', 'value': data.id, 'property': 'quoteId' }]) };
-		try {
-			const res = await dispatch(getCheckLiked(params)).unwrap();
-			if (res.count > 0) {
-				setIsLiked(true);
-			}
-		} catch {
-			toast.error('Lỗi hệ thống');
-		}
+		// const params = { filter: JSON.stringify([{ 'operator': 'eq', 'value': data.id, 'property': 'quoteId' }]) };
+		// try {
+		// 	const res = await dispatch(getCheckLiked(params)).unwrap();
+		// 	if (res.count > 0) {
+		// 		setIsLiked(true);
+		// 	}
+		// } catch {
+		// 	toast.error('Lỗi hệ thống');
+		// }
 	};
 
 	const likeUnlikeQuoteFnc = async id => {
