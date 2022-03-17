@@ -1,6 +1,7 @@
 import React from 'react';
 import StatusItem from './StatusItem';
 import PropTypes from 'prop-types';
+import './style.scss';
 
 const BookShelvesList = ({ list, onChangeLibrary, libraryId }) => {
 	const renderList = listData => {

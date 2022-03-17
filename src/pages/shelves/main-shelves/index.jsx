@@ -1,74 +1,58 @@
+import { useFetchAuthLibraries } from 'api/library.hook';
 import { generateQuery } from 'helpers/Common';
 import _ from 'lodash';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
-import { getLibraryList, getListBookLibrary, updateOtherLibrary } from 'reducers/redux-utils/library';
+import { getAllBookInLirary, getListBookLibrary } from 'reducers/redux-utils/library';
 import Button from 'shared/button';
 import EyeIcon from 'shared/eye-icon';
 import PaginationGroup from 'shared/pagination-group';
 import SearchField from 'shared/search-field';
 import SelectBox from 'shared/select-box';
 import Shelf from 'shared/shelf';
+import PropTypes from 'prop-types';
 import './main-shelves.scss';
 
 const DEFAULT_LIBRARY = { value: 'all', title: 'Tất cả', id: 'all' };
 
-const MainShelves = () => {
+const MainShelves = ({ handleRemoveBook, isUpdate }) => {
 	const [isPublic, setIsPublic] = useState(true);
 	const [allBooks, setAllBooks] = useState({ rows: [], count: 0 });
 	const [currentLibrary, setCurrentLibrary] = useState({ value: 'all', title: 'Tất cả', id: 'all' });
 	const [filter, setFilter] = useState('[]');
 	const [inputSearch, setInputSearch] = useState('');
-	const [isUpdate, setIsUpdate] = useState(false);
-	const [listLibrary, setListLibrary] = useState();
-	// const { books: searchResults } = useFetchBooks(1, 10, filter);
 
 	const params = useParams();
 	const dispatch = useDispatch();
 
 	const {
-		library: { libraryData, otherLibraryData },
+		library: { libraryData },
 		auth: { userInfo = {} },
 	} = useSelector(state => state);
 
-	const otherLibraryList = !_.isEmpty(otherLibraryData.rows) ? [DEFAULT_LIBRARY].concat(otherLibraryData.rows) : [];
-	const authLibraryList = !_.isEmpty(libraryData.rows) ? [DEFAULT_LIBRARY].concat(libraryData.rows) : [];
+	const libraryList = !_.isEmpty(libraryData.rows) ? [DEFAULT_LIBRARY].concat(libraryData.rows) : [];
 
 	useEffect(() => {
 		setCurrentLibrary(DEFAULT_LIBRARY);
 	}, [params]);
 
+	useFetchAuthLibraries();
+
 	useEffect(() => {
 		const isMount = true;
 		if (isMount) {
 			const fetchData = async () => {
-				const filter = [];
-
-				if (_.isEmpty(params) && !_.isEmpty(userInfo) && currentLibrary.id === 'all') {
-					filter.push({ 'operator': 'eq', 'value': userInfo.id, 'property': 'updatedBy' });
-				}
-
-				if (!_.isEmpty(params)) {
-					filter.push({ 'operator': 'eq', 'value': params.id, 'property': 'updatedBy' });
-				}
-
-				if (currentLibrary.id !== 'all') {
-					filter.push({ 'operator': 'eq', 'value': currentLibrary.id, 'property': 'libraryId' });
-				}
-
-				const query = generateQuery(1, 10, JSON.stringify(filter));
+				const query = generateQuery(1, 10, filter);
+				const id = params.userId || userInfo.id;
 				try {
-					const data = await dispatch(getListBookLibrary(query)).unwrap();
-					if (params.id && params.id !== userInfo.id) {
-						const queryLibrary = generateQuery(
-							1,
-							10,
-							JSON.stringify([{ 'operator': 'eq', 'value': params.id, 'property': 'createdBy' }])
-						);
-						const otherLibraryData = await dispatch(getLibraryList(queryLibrary)).unwrap();
-						dispatch(updateOtherLibrary(otherLibraryData));
+					let data = { rows: [], count: 0 };
+					if (currentLibrary.value === 'all') {
+						data = await dispatch(getAllBookInLirary({ id, ...query })).unwrap();
+					} else {
+						data = await dispatch(getListBookLibrary({ id: currentLibrary.id, ...query })).unwrap();
 					}
+
 					setAllBooks(data);
 				} catch (err) {
 					return err;
@@ -77,7 +61,7 @@ const MainShelves = () => {
 
 			fetchData();
 		}
-	}, [currentLibrary, isUpdate, params]);
+	}, [currentLibrary, isUpdate, params, userInfo, filter]);
 
 	const handlePublic = () => {
 		setIsPublic(!isPublic);
@@ -91,7 +75,7 @@ const MainShelves = () => {
 		setInputSearch(value);
 
 		if (value) {
-			const filterValue = [{ 'operator': 'eq', 'value': userInfo.id, 'property': 'categoryId' }];
+			const filterValue = [];
 			filterValue.push({ 'operator': 'search', 'value': value.trim(), 'property': 'name' });
 			setFilter(JSON.stringify(filterValue));
 		} else {
@@ -105,15 +89,11 @@ const MainShelves = () => {
 		debounceSearch(e.target.value);
 	};
 
-	const handleRemoveBook = () => {
-		setIsUpdate(!isUpdate);
-	};
-
 	const checkAuthorize = () => {
 		if (_.isEmpty(params)) {
 			return true;
 		} else {
-			return userInfo.id === params.id;
+			return userInfo.id === params.userId;
 		}
 	};
 
@@ -130,7 +110,7 @@ const MainShelves = () => {
 				<div className='main-shelves__filters'>
 					<SelectBox
 						name='library'
-						list={checkAuthorize() ? authLibraryList : otherLibraryList}
+						list={libraryList}
 						defaultOption={currentLibrary}
 						onChangeOption={onChangeLibrary}
 					/>
@@ -149,6 +129,14 @@ const MainShelves = () => {
 	);
 };
 
-MainShelves.propTypes = {};
+MainShelves.defaultProps = {
+	isUpdate: false,
+	handleRemoveBook: () => {},
+};
+
+MainShelves.propTypes = {
+	isUpdate: PropTypes.bool,
+	handleRemoveBook: PropTypes.func,
+};
 
 export default MainShelves;

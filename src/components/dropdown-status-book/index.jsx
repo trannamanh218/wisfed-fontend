@@ -5,6 +5,7 @@ import React, { useState } from 'react';
 import { useVisible } from 'shared/hooks';
 import { readingStatus } from 'constants';
 import './dropdown-status-book.scss';
+import { STATUS_BOOK } from 'constants';
 
 const DropdownIconButton = () => {
 	const { ref: showRef, isVisible: isShow, setIsVisible: setIsShow } = useVisible(false);

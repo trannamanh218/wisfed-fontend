@@ -1,8 +1,12 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import {
+	addBookToDefaultLibraryAPI,
 	addBookToLibraryAPI,
+	allBookInLibraryAPI,
 	libraryAPI,
 	listBookLibraryAPI,
+	myLibraryAPI,
+	removeAllBookAPI,
 	removeBookFromLibraryAPI,
 	updateBookAPI,
 } from 'constants/apiURL';
@@ -28,6 +32,16 @@ export const getLibraryList = createAsyncThunk('library/getLibraryList', async (
 	}
 });
 
+export const getMyLibraryList = createAsyncThunk('library/getMyLibraryList', async (params, { rejectWithValue }) => {
+	try {
+		const response = await Request.makeGet(myLibraryAPI, params);
+		return response.data;
+	} catch (err) {
+		const error = JSON.parse(err.response);
+		return rejectWithValue(error);
+	}
+});
+
 export const addBookToLibrary = createAsyncThunk('library/addBookToLibrary', async (params, { rejectWithValue }) => {
 	const { id, ...data } = params;
 	try {
@@ -39,11 +53,43 @@ export const addBookToLibrary = createAsyncThunk('library/addBookToLibrary', asy
 	}
 });
 
+export const addBookToDefaultLibrary = createAsyncThunk(
+	'library/addBookToDefaultLibrary',
+	async (params, { rejectWithValue }) => {
+		const { type, ...data } = params;
+		try {
+			const response = await Request.makePost(addBookToDefaultLibraryAPI(type), data);
+			return response.data;
+		} catch (err) {
+			const error = JSON.parse(err.response);
+			return rejectWithValue(error);
+		}
+	}
+);
+
+export const getAllBookInLirary = createAsyncThunk(
+	'library/getAllBookInLibrary',
+	async (params, { rejectWithValue }) => {
+		const { id, ...data } = params;
+		if (id) {
+			try {
+				const response = await Request.makeGet(allBookInLibraryAPI(id), data);
+				return response.data;
+			} catch (err) {
+				const error = JSON.parse(err.response);
+				return rejectWithValue(error);
+			}
+		}
+		return {};
+	}
+);
+
 export const getListBookLibrary = createAsyncThunk(
 	'library/getListBookLibrary',
 	async (params, { rejectWithValue }) => {
+		const { id, ...query } = params;
 		try {
-			const response = await Request.makeGet(listBookLibraryAPI, params);
+			const response = await Request.makeGet(listBookLibraryAPI(id), query);
 			return response.data;
 		} catch (err) {
 			const error = JSON.parse(err.response);
@@ -80,22 +126,18 @@ export const removeBookFromLibrary = createAsyncThunk(
 	}
 );
 
-// export const checkBookInLibrary = createAsyncThunk(
-// 	'library/checkBookInLibrary',
-// 	async (params, { dispatch, rejectWithValue }) => {
-// 		try {
-// 			const res = await dispatch(getListBookLibrary(params)).unwrap();
-// 			const { rows } = res;
-// 			if (rows && rows.length) {
-// 				// const library = {}
-// 				const libraryList = rows.map(library => ({}));
-// 			}
-// 			console.log(res);
-// 		} catch (err) {
-// 			console.log(err);
-// 		}
-// 	}
-// );
+export const removeAllBookInLibraries = createAsyncThunk(
+	'library/removeAllBookInLibraries',
+	async (params, { rejectWithValue }) => {
+		try {
+			const response = await Request.makePost(removeAllBookAPI, params);
+			return response.data;
+		} catch (err) {
+			const error = JSON.parse(err.response);
+			return rejectWithValue(error);
+		}
+	}
+);
 
 const librarySlice = createSlice({
 	name: 'library',
@@ -105,20 +147,20 @@ const librarySlice = createSlice({
 			rows: [],
 			count: 0,
 		},
-		otherLibraryData: {
+		authLibraryData: {
 			rows: [],
 			count: 0,
 		},
+
 		error: {},
 	},
 	reducers: {
-		updateAuthLibrary: (state, action) => {
+		updateLibrary: (state, action) => {
 			const { rows, count } = action.payload;
 			state.libraryData = { rows, count };
 		},
-		updateOtherLibrary: (state, action) => {
-			const { rows, count } = action.payload;
-			state.otherLibraryData = { rows, count };
+		updateAuthLibrary: (state, action) => {
+			state.authLibraryData = action.payload;
 		},
 	},
 	extraReducers: {
@@ -158,4 +200,4 @@ const librarySlice = createSlice({
 
 const library = librarySlice.reducer;
 export default library;
-export const { updateAuthLibrary, updateOtherLibrary } = librarySlice.actions;
+export const { updateLibrary, updateAuthLibrary } = librarySlice.actions;

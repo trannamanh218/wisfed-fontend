@@ -17,12 +17,19 @@
 }
 
 .status-book-modal {
+	&.modal {
+		overflow-y: hidden;
+	}
 	.modal-dialog {
 		max-width: 400px;
 		margin: 2.5rem auto;
 	}
 	.modal-body {
 		padding: 2.5rem 2rem;
+	}
+
+	.modal-content {
+		border: none;
 	}
 
 	form {

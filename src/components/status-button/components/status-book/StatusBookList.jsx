@@ -19,7 +19,7 @@ const StatusBookList = ({ currentStatus, handleChangeStatus }) => {
 		},
 		{
 			'name': 'Muốn đọc',
-			'value': STATUS_BOOK.liked,
+			'value': STATUS_BOOK.wantToRead,
 			'icon': TargetIcon,
 		},
 	];

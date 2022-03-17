@@ -5,10 +5,18 @@
 	cursor: pointer;
 	display: flex;
 	flex-direction: column;
-	justify-content: center;
 	align-items: center;
 	&__container {
 		position: relative;
+		&:hover {
+			.setting-more {
+				display: inline-block;
+			}
+
+			.book-item__icon {
+				display: flex;
+			}
+		}
 	}
 
 	&__name {
@@ -35,12 +43,27 @@
 
 	&__author {
 		color: $ash-label;
-		margin: 0.5em 0;
+		margin: auto 0 0.5em;
 	}
 
 	&__text {
 		color: $ash-placeholder;
 		margin-top: 0.5em;
+	}
+
+	&__icon {
+		width: 2.4rem;
+		height: 2.4rem;
+		padding: 0.5em;
+		margin-top: 0.5em;
+		margin-left: auto;
+		border-radius: 50%;
+		background-color: rgba($white-off, 1);
+		border: 2px solid $ash-line;
+		display: none;
+		align-items: center;
+		justify-content: space-around;
+		color: $ash-placeholder;
 	}
 
 	&__overlay {
@@ -73,20 +96,7 @@
 
 		.setting-more {
 			margin-left: auto;
+			display: none;
 		}
-	}
-
-	&__icon {
-		width: 2.4rem;
-		height: 2.4rem;
-		padding: 0.5em;
-		margin-top: 0.5em;
-		margin-left: auto;
-		border-radius: 50%;
-		background-color: rgba($white-off, 0.4);
-		display: flex;
-		align-items: center;
-		justify-content: space-around;
-		color: $white;
 	}
 }

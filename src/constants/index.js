@@ -2,7 +2,7 @@ import { CoffeeCupIcon, CircleCheckIcon, TargetIcon } from 'components/svg';
 export const STATUS_BOOK = {
 	reading: 'reading',
 	read: 'read',
-	liked: 'liked',
+	wantToRead: 'wantToRead',
 };
 
 export const readingStatus = [
@@ -18,7 +18,7 @@ export const readingStatus = [
 	},
 	{
 		'name': 'Muốn đọc',
-		'value': STATUS_BOOK.liked,
+		'value': STATUS_BOOK.wantToRead,
 		'icon': TargetIcon,
 	},
 ];

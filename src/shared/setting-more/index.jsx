@@ -7,7 +7,7 @@ import trashIcon from 'assets/images/trash.png';
 import { Modal, ModalBody } from 'react-bootstrap';
 import { CloseX } from 'components/svg';
 import { useDispatch } from 'react-redux';
-import { removeBookFromLibrary } from 'reducers/redux-utils/library';
+import { removeAllBookInLibraries } from 'reducers/redux-utils/library';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import './setting-more.scss';
@@ -15,9 +15,11 @@ import './setting-more.scss';
 // import { generateQuery } from 'helpers/Common';
 import { useNavigate } from 'react-router-dom';
 import RouteLink from 'helpers/RouteLink';
+import StatusModalContainer from 'components/status-button/StatusModalContainer';
 
 const SettingMore = props => {
 	const { modalOpen, setModalOpen, toggleModal } = useModal(false);
+	const { modalOpen: openStatusModal, setModalOpen: setOpenStatusModal } = useModal(false);
 	const dispatch = useDispatch();
 	const { bookData, handleRemoveBook } = props;
 	const { ref, isVisible, setIsVisible } = useVisible(false);
@@ -33,9 +35,9 @@ const SettingMore = props => {
 	};
 
 	const removeBook = async () => {
-		const params = { id: bookData.library.id, bookId: bookData.id };
+		const params = { bookId: bookData.id };
 		try {
-			await dispatch(removeBookFromLibrary(params));
+			await dispatch(removeAllBookInLibraries(params)).unwrap();
 			handleRemoveBook();
 			toast.success('Xoá sách thành công');
 		} catch (err) {
@@ -49,8 +51,10 @@ const SettingMore = props => {
 		navigate(RouteLink.reviewBookDetail('402', bookData?.name));
 	};
 
+	const handleCloseStatusModal = () => {};
+
 	return (
-		<div className='setting-more' ref={ref}>
+		<div className='setting-more' ref={ref} onMouseLeave={() => setIsVisible(false)}>
 			<button className='setting-more__btn' onClick={handleClose}>
 				<span className='setting-more__dot' />
 				<span className='setting-more__dot' />
@@ -83,12 +87,7 @@ const SettingMore = props => {
 				</span>
 				<ModalBody>
 					<h4 className='main-shelves__modal__title'>Bạn có muốn xóa cuốn sách?</h4>
-					<p className='main-shelves__modal__subtitle'>
-						{`Cuốn sách sẽ được xoá khỏi giá sách `}
-						<br />
-						<br />
-						{`"${bookData?.library?.name}"`}
-					</p>
+					<p className='main-shelves__modal__subtitle'>Cuốn sách sẽ được xoá khỏi giá sách</p>
 					<button className='btn main-shelves__modal__btn-delete btn-danger' onClick={removeBook}>
 						Xóa
 					</button>
@@ -97,6 +96,28 @@ const SettingMore = props => {
 					</button>
 				</ModalBody>
 			</Modal>
+			{/*
+			<Modal
+				id='status-book-modal'
+				className='status-book-modal'
+				show={openStatusModal}
+				onHide={handleCloseStatusModal}
+				keyboard={false}
+				centered
+			>
+				<Modal.Body>
+					<StatusModalContainer
+						currentStatus={currentStatus}
+						handleChangeStatus={handleChangeStatus}
+						bookShelves={authLibraryData.rows}
+						updateBookShelve={updateBookShelve}
+						addBookShelves={addBookShelves}
+						handleConfirm={handleConfirm}
+						onChangeLibrary={onChangeLibrary}
+						libraryId={libraryId}
+					/>
+				</Modal.Body>
+			</Modal> */}
 		</div>
 	);
 };

@@ -11,7 +11,7 @@ import { useSelector } from 'react-redux';
 import { useFetchQuotes } from 'api/quote.hooks';
 import { useFetchStatsReadingBooks } from 'api/library.hook';
 
-const SidebarShelves = () => {
+const SidebarShelves = ({ isUpdate }) => {
 	const { userInfo } = useSelector(state => state.auth);
 	const { libraryData } = useSelector(state => state.library);
 	const libraryList = libraryData?.rows?.map(item => ({ ...item, quantity: item.books.length }));
@@ -21,7 +21,7 @@ const SidebarShelves = () => {
 		JSON.stringify([{ operator: 'eq', value: userInfo.id, property: 'createdBy' }])
 	);
 
-	const { readingData } = useFetchStatsReadingBooks();
+	const { readingData } = useFetchStatsReadingBooks(isUpdate);
 
 	const myComposing = new Array(10).fill({ source: '/images/book1.jpg', name: 'Design pattern' });
 
@@ -47,8 +47,14 @@ const SidebarShelves = () => {
 	);
 };
 
+SidebarShelves.defaultProps = {
+	libraryData: {},
+	isUpdate: false,
+};
+
 SidebarShelves.propTypes = {
-	libraryData: PropTypes.array,
+	libraryData: PropTypes.object,
+	isUpdate: PropTypes.bool,
 };
 
 export default SidebarShelves;

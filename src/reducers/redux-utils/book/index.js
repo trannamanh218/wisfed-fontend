@@ -72,6 +72,12 @@ const bookSlice = createSlice({
 		error: {},
 		bookInfo: {},
 		bookReviewData: {},
+		currentBook: { id: null },
+	},
+	reducers: {
+		updateCurrentBook: (state, action) => {
+			state.currentBook = action.payload;
+		},
 	},
 	extraReducers: {
 		[getBookDetail.pending]: state => {
@@ -80,6 +86,7 @@ const bookSlice = createSlice({
 		[getBookDetail.fulfilled]: (state, action) => {
 			state.isFetching = false;
 			state.bookInfo = action.payload;
+			state.currentBook = action.payload;
 			state.error = {};
 		},
 		[getBookDetail.rejected]: (state, action) => {
@@ -105,3 +112,4 @@ const bookSlice = createSlice({
 
 const book = bookSlice.reducer;
 export default book;
+export const { updateCurrentBook } = bookSlice.actions;

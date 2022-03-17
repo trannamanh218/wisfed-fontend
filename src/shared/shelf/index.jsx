@@ -11,7 +11,7 @@ const Shelf = ({ list, isMyShelve, handleClick, handleRemoveBook }) => {
 					<BookItem
 						key={item.id}
 						{...item}
-						data={{ ...item.book, library: item?.library }}
+						data={item}
 						isMyShelve={isMyShelve}
 						handleClick={handleClick}
 						handleRemoveBook={handleRemoveBook}

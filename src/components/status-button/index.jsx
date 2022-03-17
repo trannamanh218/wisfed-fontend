@@ -6,11 +6,11 @@ import StatusModalContainer from './StatusModalContainer';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
-import { useFetchLibraries } from 'api/library.hook';
-import './status-button.scss';
-import { createLibrary } from 'reducers/redux-utils/library';
+import { addBookToDefaultLibrary, createLibrary } from 'reducers/redux-utils/library';
 import { toast } from 'react-toastify';
 import { STATUS_BOOK } from 'constants';
+import _ from 'lodash';
+import './status-button.scss';
 
 const STATUS_BOOK_OBJ = {
 	'reading': {
@@ -23,23 +23,24 @@ const STATUS_BOOK_OBJ = {
 		'value': STATUS_BOOK.read,
 		'icon': CircleCheckIcon,
 	},
-	'liked': {
+	'wantToRead': {
 		'name': 'Muốn đọc',
-		'value': STATUS_BOOK.liked,
+		'value': STATUS_BOOK.wantToRead,
 		'icon': TargetIcon,
 	},
 };
 
 const StatusButton = ({ className, status, handleClick, libraryId, onChangeLibrary }) => {
-	const { userInfo } = useSelector(state => state.auth);
 	const [modalShow, setModalShow] = useState(false);
-	const [currentStatus, setCurrentStatus] = useState(STATUS_BOOK_OBJ[status]);
-
-	const filter = JSON.stringify([{ 'operator': 'eq', 'value': userInfo.id, 'property': 'createdBy' }]);
-	const { libraryData } = useFetchLibraries(1, 10, filter);
-	const dispatch = useDispatch();
-
+	const [currentStatus, setCurrentStatus] = useState(STATUS_BOOK_OBJ[status] || STATUS_BOOK_OBJ.wantToRead);
 	const [showInput, setShowInput] = useState(false);
+
+	const {
+		library: { authLibraryData },
+		book: { currentBook },
+	} = useSelector(state => state);
+
+	const dispatch = useDispatch();
 
 	const handleClose = () => {
 		setModalShow(false);
@@ -63,9 +64,21 @@ const StatusButton = ({ className, status, handleClick, libraryId, onChangeLibra
 		}
 	};
 
+	const updateStatusBook = async () => {
+		if (!_.isEmpty(currentBook)) {
+			try {
+				const params = { bookId: currentBook.id, type: currentStatus.value };
+				const data = await dispatch(addBookToDefaultLibrary(params)).unwrap();
+			} catch (err) {
+				// console.log(err);
+			}
+		}
+	};
+
 	const handleConfirm = () => {
-		setModalShow(false);
-		handleClick(currentStatus);
+		// setModalShow(false);
+		// handleClick(currentStatus);
+		updateStatusBook();
 	};
 
 	const handleChangeStatus = data => {
@@ -94,7 +107,7 @@ const StatusButton = ({ className, status, handleClick, libraryId, onChangeLibra
 					<StatusModalContainer
 						currentStatus={currentStatus}
 						handleChangeStatus={handleChangeStatus}
-						bookShelves={libraryData.rows}
+						bookShelves={authLibraryData.rows}
 						updateBookShelve={updateBookShelve}
 						addBookShelves={addBookShelves}
 						handleConfirm={handleConfirm}
@@ -109,14 +122,14 @@ const StatusButton = ({ className, status, handleClick, libraryId, onChangeLibra
 
 StatusButton.defaultProps = {
 	className: '',
-	status: STATUS_BOOK.liked,
+	status: STATUS_BOOK.wantToRead,
 	handleClick: () => {},
 	libraryId: null,
 };
 
 StatusButton.propTypes = {
 	className: PropTypes.string,
-	status: PropTypes.oneOf([STATUS_BOOK.read, STATUS_BOOK.reading, STATUS_BOOK.liked]),
+	status: PropTypes.oneOf([STATUS_BOOK.read, STATUS_BOOK.reading, STATUS_BOOK.wantToRead]),
 	handleClick: PropTypes.func,
 	libraryId: PropTypes.any,
 };

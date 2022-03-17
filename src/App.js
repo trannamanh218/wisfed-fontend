@@ -61,7 +61,7 @@ function App() {
 				<Route path='/category/detail/:id' element={<CategoryDetail />} />
 				<Route path='/category/detail/:id/:slug' element={<CategoryDetail />} />
 				<Route path='/shelves' element={<BookShelves />} />
-				<Route path='/shelves/:id' element={<BookShelves />} />
+				<Route path='/shelves/:userId' element={<BookShelves />} />
 				<Route path='/group' element={<Group />} />
 				<Route path='/book/detail/:id' element={<BookDetail />} />
 				<Route path='/book/detail/:id/:slug' element={<BookDetail />} />
