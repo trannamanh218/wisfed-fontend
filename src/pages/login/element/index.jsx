@@ -28,7 +28,6 @@ function LoginComponet() {
 				navigate('/');
 			}
 		} catch {
-			setIsShow(true);
 			const newdata = {
 				title: 'Đăng nhập',
 				title2: 'thất bại',
@@ -37,12 +36,14 @@ function LoginComponet() {
 				scribe2: 'mật khẩu và thử đăng nhập lại',
 			};
 			setDataModal(newdata);
+			setIsShow(true);
 		}
 	};
 
 	const handleChange = () => {
 		setIsShow(false);
 	};
+
 	return (
 		<div className='login__container'>
 			<div>
@@ -50,7 +51,7 @@ function LoginComponet() {
 					<img src={Logo} alt='logo' />
 				</div>
 				<div className='login__body'>
-					{isShow ? <ModalLogin data={dataModal} handleChange={handleChange} /> : ''}
+					{isShow && dataModal ? <ModalLogin data={dataModal} handleChange={handleChange} /> : ''}
 					<div>
 						<span className='login__body-text1'>
 							Khám phá mạng xã hội về sách <br /> hàng đầu Việt Nam
