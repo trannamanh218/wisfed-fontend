@@ -38,7 +38,7 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 	const [hasUrl, setHasUrl] = useState(false);
 	const [urlAdded, setUrlAdded] = useState({});
 	const [urlAddedArray, setUrlAddedArray] = useState([]);
-
+	const [oldUrlAddedArray, setOldUrlAddedArray] = useState([]);
 	const [status, setStatus] = useState(STATUS_IDLE);
 	const [showUpload, setShowUpload] = useState(false);
 	const dispatch = useDispatch();
@@ -97,7 +97,6 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 			detectUrl();
 			createSpanElements();
 		});
-
 		return () => {
 			document.removeEventListener('input', handlePlaceholder);
 		};
@@ -117,16 +116,19 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 			if (url !== null) {
 				setUrlAddedArray(url);
 				setHasUrl(true);
+			} else {
+				setUrlAddedArray([]);
 			}
 		}, 1000),
 		[]
 	);
 
 	useEffect(() => {
-		if (urlAddedArray.length > 0) {
+		if (!_.isEqual(urlAddedArray, oldUrlAddedArray)) {
 			getPreviewUrlFnc(urlAddedArray[urlAddedArray.length - 1]);
+			setOldUrlAddedArray(urlAddedArray);
 		}
-	}, [urlAddedArray.length]);
+	}, [urlAddedArray]);
 
 	const createSpanElements = () => {
 		const subStringArray = textFieldEdit.current.innerText.split(' ');

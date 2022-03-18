@@ -204,7 +204,7 @@ function Post({ postInformations, className, isUpdateProgressReading = false }) 
 			<GridImage images={postData.image} id={postData.id} />
 			{postData?.image?.length === 0 && !_.isEmpty(postData?.preview) && (
 				<>
-					{postData?.preview?.url.includes('https://www.youtube.com/') ? (
+					{videoId ? (
 						<iframe
 							className='post__video-youtube'
 							src={`//www.youtube.com/embed/${videoId}`}
