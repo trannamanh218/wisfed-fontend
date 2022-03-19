@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { friendAPI, makeFriendAPI, userAPI, checkLikedAPI, userDetailAPI } from 'constants/apiURL';
+import { friendAPI, makeFriendAPI, userAPI, checkLikedAPI, userDetailAPI, viewUserProfile } from 'constants/apiURL';
 import Request from 'helpers/Request';
 
 export const getUserList = createAsyncThunk('user/getUserList', async (params, { rejectWithValue }) => {
@@ -51,6 +51,16 @@ export const editUserInfo = createAsyncThunk('user/edit user info', async (data,
 	} catch (err) {
 		const error = JSON.parse(err.response);
 		return rejectWithValue(error);
+	}
+});
+
+export const getViewUserProfile = createAsyncThunk('user/view user profile', async (id, { rejectWithValue }) => {
+	try {
+		const response = await Request.makeGet(viewUserProfile(id));
+		return response.data;
+	} catch (err) {
+		const error = JSON.parse(err.response);
+		throw rejectWithValue(error);
 	}
 });
 

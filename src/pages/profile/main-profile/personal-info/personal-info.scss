@@ -209,8 +209,7 @@ $wallpaper-height: 350px;
 			}
 
 			&-wrapper--custom {
-				justify-content: flex-end;
-				margin-top: 1.5rem;
+				display: block;
 			}
 
 			&-label {
@@ -236,9 +235,33 @@ $wallpaper-height: 350px;
 				cursor: pointer;
 			}
 
+			&__buttons {
+				display: flex;
+				justify-content: flex-end;
+				gap: 1rem;
+				margin-top: 16px;
+				&.no-data {
+					justify-content: flex-start;
+					margin: 0;
+					gap: 1.5rem;
+				}
+			}
+
 			input {
 				height: 56px;
 				background-color: $ash-background;
+			}
+
+			.add-and-search-categories {
+				.add-and-search-categories__main-content {
+					padding: 12px 16px;
+					input {
+						height: 32px;
+					}
+					.add-and-search-categories__input {
+						height: fit-content;
+					}
+				}
 			}
 		}
 

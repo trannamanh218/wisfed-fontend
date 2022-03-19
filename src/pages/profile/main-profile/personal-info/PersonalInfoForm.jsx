@@ -1,11 +1,16 @@
 import { Global, Pencil } from 'components/svg';
 import { YEAR_LIMIT } from 'constants';
-import { useEffect, useState } from 'react';
-import { useRef } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 import { Form } from 'react-bootstrap';
 import Input from 'shared/input';
 import SelectBox from 'shared/select-box';
 import './personal-info.scss';
+import AddAndSearchCategories from 'shared/add-and-search-categories';
+import _ from 'lodash';
+import { toast } from 'react-toastify';
+import { getSuggestionForPost } from 'reducers/redux-utils/activity';
+import { useDispatch } from 'react-redux';
+import classNames from 'classnames';
 
 const PersonalInfoForm = ({ userData }) => {
 	const [userFirstName, setUserFirstName] = useState('');
@@ -20,9 +25,20 @@ const PersonalInfoForm = ({ userData }) => {
 	const [editAddress, setEditAddress] = useState(false);
 	const [userWorks, setUserWorks] = useState('');
 	const [editWorks, setEditWorks] = useState(false);
-	const [userFavouriteCategories, setUserFavouriteCategories] = useState('');
-	const [editFavouriteCategories, setEditFavouriteCategories] = useState(false);
+	const [userFavoriteCategories, setUserFavoriteCategories] = useState([]);
+	const [editFavoriteCategories, setEditFavoriteCategories] = useState(false);
+	const [categorySearchedList, setCategorySearchedList] = useState([]);
+	const [inputCategoryValue, setInputCategoryValue] = useState('');
+	const [getDataFinish, setGetDataFinish] = useState(false);
+	const [editDescriptions, setEditDescriptions] = useState(false);
+	const [userDescriptions, setUserDescriptions] = useState('');
 
+	const categoryInputContainer = useRef(null);
+	const categoryInputWrapper = useRef(null);
+	const categoryInput = useRef(null);
+	const textArea = useRef(null);
+
+	const dispatch = useDispatch();
 	const currentYear = new Date().getFullYear();
 
 	const days = [{ title: 'Ngày', value: null }].concat(
@@ -90,6 +106,10 @@ const PersonalInfoForm = ({ userData }) => {
 			setUserAddress(e.target.value);
 		} else if (option === 'edit-works') {
 			setUserWorks(e.target.value);
+		} else if (option === 'edit-descriptions') {
+			setUserDescriptions(e.target.value);
+			textArea.current.style.height = '96px';
+			textArea.current.style.height = textArea.current.scrollHeight + 'px';
 		}
 	};
 
@@ -118,8 +138,58 @@ const PersonalInfoForm = ({ userData }) => {
 		} else if (option === 'cancel-edit-works') {
 			setEditWorks(false);
 			setUserWorks('');
+		} else if (option === 'cancel-edit-favorite-categories') {
+			setEditFavoriteCategories(false);
+			setUserFavoriteCategories([]);
+		} else if (option === 'cancel-edit-descriptions') {
+			setEditDescriptions(false);
+			setUserDescriptions('');
 		}
 	};
+
+	const searchCategory = e => {
+		setGetDataFinish(false);
+		setCategorySearchedList([]);
+		setInputCategoryValue(e.target.value);
+		debounceSearch(e.target.value, { value: 'addCategory' });
+		categoryInputWrapper.current.style.width = categoryInput.current.value.length + 0.5 + 'ch';
+	};
+
+	const addCategory = category => {
+		if (userFavoriteCategories.filter(categoryAdded => categoryAdded.id === category.id).length > 0) {
+			removeCategory(category.id);
+		} else {
+			const categoryArrayTemp = [...userFavoriteCategories];
+			categoryArrayTemp.push(category);
+			setUserFavoriteCategories(categoryArrayTemp);
+			setInputCategoryValue('');
+			setCategorySearchedList([]);
+			categoryInputWrapper.current.style.width = '0.5ch';
+		}
+	};
+
+	const removeCategory = categoryId => {
+		const categoryArr = [...userFavoriteCategories];
+		const index = categoryArr.findIndex(item => item.id === categoryId);
+		categoryArr.splice(index, 1);
+		setUserFavoriteCategories(categoryArr);
+	};
+
+	const getSuggestionForCreatQuotes = async (input, option) => {
+		try {
+			const data = await dispatch(getSuggestionForPost({ input, option, userData })).unwrap();
+			setCategorySearchedList(data.rows);
+		} catch {
+			toast.error('Lỗi hệ thống');
+		} finally {
+			setGetDataFinish(true);
+		}
+	};
+
+	const debounceSearch = useCallback(
+		_.debounce((inputValue, option) => getSuggestionForCreatQuotes(inputValue, option), 700),
+		[]
+	);
 
 	return (
 		<Form className='personal-info-form'>
@@ -308,7 +378,7 @@ const PersonalInfoForm = ({ userData }) => {
 							<Input
 								type='text'
 								isBorder={false}
-								placeholder='Nhập côn việc'
+								placeholder='Nhập công việc'
 								value={userWorks}
 								handleChange={e => updateInputValue(e, 'edit-works')}
 							/>
@@ -340,50 +410,127 @@ const PersonalInfoForm = ({ userData }) => {
 				<label className='form-field-label'>Chủ đề yêu thích</label>
 				<div className='form-field-wrapper'>
 					<div className='form-field'>
-						<Input type='text' isBorder={false} placeholder='Nhập chủ đề yêu thích' value='Ha noi' />
+						{editFavoriteCategories ? (
+							<AddAndSearchCategories
+								categoryAddedList={userFavoriteCategories}
+								categorySearchedList={categorySearchedList}
+								addCategory={addCategory}
+								removeCategory={removeCategory}
+								getDataFinish={getDataFinish}
+								searchCategory={searchCategory}
+								inputCategoryValue={inputCategoryValue}
+								categoryInputContainer={categoryInputContainer}
+								categoryInputWrapper={categoryInputWrapper}
+								categoryInput={categoryInput}
+								hasSearchIcon={false}
+							/>
+						) : (
+							<>
+								{userData.favoriteCategories ? (
+									<Input type='text' isBorder={false} value='Ha noi' />
+								) : (
+									<div className='form-field__no-data '>Chưa có dữ liệu</div>
+								)}
+							</>
+						)}
 					</div>
 					<div className='btn-icon'>
 						<Global />
 					</div>
-					<div className='btn-icon'>
+					<div className='btn-icon' onClick={() => setEditFavoriteCategories(true)}>
 						<Pencil />
 					</div>
+					{editFavoriteCategories && (
+						<div
+							className='form-field__cancel-btn'
+							onClick={() => cancelEdit('cancel-edit-favorite-categories')}
+						>
+							Hủy
+						</div>
+					)}
 				</div>
 			</div>
 
 			<div className='form-field-group'>
 				<label className='form-field-label'>Giới thiệu</label>
-				<div className='form-field form-field--custom'>
-					<textarea
-						className='form-field-textarea'
-						rows={10}
-						placeholder='Nhập giới thiệu bản thân'
-						value='lorem nfken elkefv vrdne'
-					/>
-				</div>
-				<div className='form-field-wrapper form-field-wrapper--custom'>
-					<div className='btn-icon'>
-						<Global />
-					</div>
-					<div className='btn-icon'>
-						<Pencil />
+				<div
+					className={classNames('form-field-wrapper', {
+						'form-field-wrapper--custom': userData.descriptions || editDescriptions,
+					})}
+				>
+					{editDescriptions ? (
+						<div className='form-field--custom'>
+							<textarea
+								ref={textArea}
+								className='form-field-textarea'
+								rows={3}
+								placeholder='Nhập giới thiệu bản thân'
+								value={userDescriptions}
+								onChange={e => updateInputValue(e, 'edit-descriptions')}
+							/>
+						</div>
+					) : (
+						<>
+							{userData.descriptions ? (
+								<div className='form-field--custom'>
+									<div className='form-field-textarea'>{userData.descriptions}</div>
+								</div>
+							) : (
+								<div className='form-field'>
+									<div className='form-field__no-data '>Chưa có dữ liệu</div>
+								</div>
+							)}
+						</>
+					)}
+					<div
+						className={
+							editDescriptions || userData.descriptions
+								? 'form-field__buttons'
+								: 'form-field__buttons no-data'
+						}
+					>
+						<div className='btn-icon'>
+							<Global />
+						</div>
+						<div className='btn-icon'>
+							<Pencil onClick={() => setEditDescriptions(true)} />
+						</div>
+						{editDescriptions && (
+							<div
+								className='form-field__cancel-btn'
+								onClick={() => cancelEdit('cancel-edit-descriptions')}
+							>
+								Hủy
+							</div>
+						)}
 					</div>
 				</div>
 			</div>
 
 			<div className='form-field-group'>
 				<label className='form-field-label'>URL Mạng xã hội khác</label>
-				<div className='form-field-wrapper'>
-					<div className='form-field'>
-						<Input type='text' isBorder={false} placeholder='Nhập link' value='www.facebook.com/duyquang' />
+				{userData?.socials?.length > 0 ? (
+					<div className='form-field-wrapper'>
+						<div className='form-field'>
+							<Input
+								type='text'
+								isBorder={false}
+								placeholder='Nhập link'
+								value='www.facebook.com/duyquang'
+							/>
+						</div>
+						<div className='btn-icon'>
+							<Global />
+						</div>
+						<div className='btn-icon'>
+							<Pencil />
+						</div>
 					</div>
-					<div className='btn-icon'>
-						<Global />
+				) : (
+					<div className='form-field--custom'>
+						<div className='form-field-textarea'>{userData.descriptions}</div>
 					</div>
-					<div className='btn-icon'>
-						<Pencil />
-					</div>
-				</div>
+				)}
 			</div>
 			<div className='personal-info-form__btn__container'>
 				<button type='submit' className='personal-info__btn__submit'>

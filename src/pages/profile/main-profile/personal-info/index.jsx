@@ -2,7 +2,7 @@ import camera from 'assets/images/camera.png';
 import dots from 'assets/images/dots.png';
 import pencil from 'assets/images/pencil.png';
 import { Clock, CloseX, Pencil, QuoteIcon, Restrict } from 'components/svg';
-import { useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Modal } from 'react-bootstrap';
 import Dropzone from 'react-dropzone';
 import ConnectButtons from 'shared/connect-buttons';
@@ -11,19 +11,23 @@ import ReadMore from 'shared/read-more';
 import UserAvatar from 'shared/user-avatar';
 import PersonalInfoForm from './PersonalInfoForm';
 import './personal-info.scss';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { uploadImage } from 'reducers/redux-utils/common';
 import _ from 'lodash';
-import { editUserInfo } from 'reducers/redux-utils/user';
+import { editUserInfo, getViewUserProfile } from 'reducers/redux-utils/user';
 import { toast } from 'react-toastify';
 
 const PersonalInfo = () => {
 	const { ref: settingsRef, isVisible: isSettingsVisible, setIsVisible: setSettingsVisible } = useVisible(false);
 	const { modalOpen, setModalOpen, toggleModal } = useModal(false);
 
-	const userInfo = useSelector(state => state.auth.userInfo);
+	const [userInfo, setUserInfo] = useState({});
 
 	const dispatch = useDispatch();
+
+	useEffect(() => {
+		getUserProfile();
+	}, []);
 
 	const handleSettings = () => {
 		setSettingsVisible(prev => !prev);
@@ -46,10 +50,19 @@ const PersonalInfo = () => {
 					window.location.reload();
 				}
 			} catch {
-				toast.success('Cập nhật ảnh thất bại');
+				toast.error('Cập nhật ảnh thất bại');
 			}
 		}
 	});
+
+	const getUserProfile = async () => {
+		try {
+			const userData = await dispatch(getViewUserProfile('bfdb3971-de4c-4c2b-bbbe-fbb36770031a')).unwrap();
+			setUserInfo(userData);
+		} catch {
+			toast.error('Lỗi hệ thống');
+		}
+	};
 
 	return (
 		<div className='personal-info'>
@@ -133,20 +146,20 @@ const PersonalInfo = () => {
 					<div className='personal-info__detail__introduction'>
 						<ul className='personal-info__list'>
 							<li className='personal-info__item'>
-								<span className='number'>825</span>
+								<span className='number'>{userInfo.posts}</span>
 								<span>Bài viết</span>
 							</li>
 							<li className='personal-info__item'>
-								<span className='number'>825</span>
+								<span className='number'>{userInfo.follower}</span>
 								<span>Người theo dõi</span>
 							</li>
 							<li className='personal-info__item'>
-								<span className='number'>825</span>
+								<span className='number'>{userInfo.following}</span>
 								<span>Đang theo dõi</span>
 							</li>
 							<li className='personal-info__item'>
-								<span className='number'>825</span>
-								<span>Bạn bè (20 bạn chung)</span>
+								<span className='number'>{userInfo.friends}</span>
+								<span>Bạn bè ({userInfo.mutualFriends} bạn chung)</span>
 							</li>
 						</ul>
 						<ReadMore

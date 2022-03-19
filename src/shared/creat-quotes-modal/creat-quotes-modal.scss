@@ -226,10 +226,10 @@
 	font-size: 14px;
 	font-weight: 600;
 	line-height: 1.25rem;
+	margin-bottom: 16px;
 }
 
 .creat-quotes-modal__body__option-item__search-container {
-	margin-top: 16px;
 	padding: 16px 24px;
 	border-radius: 12px;
 	background-color: $ash-background;
@@ -245,6 +245,9 @@
 		margin-left: 16px;
 		outline: none;
 		font-size: 14px;
+		&::placeholder {
+			color: $ash-placeholder;
+		}
 	}
 }
 
@@ -253,53 +256,14 @@
 	display: flex;
 	justify-content: space-between;
 	color: $ash-body;
+	gap: 24px;
+	span {
+		line-height: 24px;
+		color: $ash-body;
+	}
 	svg {
 		path {
 			stroke: $ash-body;
-		}
-	}
-}
-
-.creat-quotes-modal__body__option-categories-added {
-	width: 100%;
-	display: flex;
-	gap: 16px;
-	flex-wrap: wrap;
-}
-
-.category-input-wrapper {
-	padding: 12px 0;
-	height: 100%;
-	input {
-		width: 100%;
-		outline: none;
-		font-size: 14px;
-		line-height: 22px;
-		background-color: transparent;
-	}
-}
-
-.creat-quotes-modal__body__option-categories-added__item {
-	padding: 12px;
-	color: $primary-dark;
-	background-color: $primary-light;
-	border-radius: 12px;
-	font-weight: 600;
-	font-size: 14px;
-	width: fit-content;
-	line-height: 22px;
-	display: flex;
-	align-items: center;
-	gap: 12px;
-	button {
-		display: flex;
-		align-items: center;
-		height: 100%;
-		svg {
-			path {
-				stroke: $primary-dark;
-				stroke-width: 3px;
-			}
 		}
 	}
 }
@@ -312,11 +276,6 @@
 	}
 	&.book {
 		gap: 56px;
-	}
-	&.category {
-		margin-top: 8px;
-		justify-content: flex-start;
-		flex-wrap: wrap;
 	}
 }
 
@@ -332,32 +291,6 @@
 	&.book {
 		width: 160px;
 	}
-	&.category {
-		padding: 16px;
-		color: $primary;
-		border: $primary 2px solid;
-		border-radius: 8px;
-		margin: 16px 16px 0 0;
-		position: relative;
-		svg {
-			width: 8px;
-			height: 8px;
-			position: absolute;
-			top: 2px;
-			right: 4px;
-			path {
-				stroke: white;
-			}
-		}
-	}
-}
-
-.creat-quotes-modal__checked-category {
-	position: absolute;
-	top: 0px;
-	right: 0px;
-	border-top: 20px $primary solid;
-	border-left: 26px transparent solid;
 }
 
 .creat-quotes-modal__author__avatar {
