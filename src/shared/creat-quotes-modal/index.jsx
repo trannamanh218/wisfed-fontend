@@ -30,6 +30,7 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 	const [categoryAddedList, setCategoryAddedList] = useState([]);
 	const [getDataFinish, setGetDataFinish] = useState(false);
 	const [categoryAddedIdList, setCategoryAddedIdList] = useState([]);
+	const [hashTagsAddedArray, setHashTagsAddedArray] = useState([]);
 
 	const textFieldEdit = useRef(null);
 	const categoryInputContainer = useRef(null);
@@ -176,15 +177,22 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 		return <div className='creat-quotes-modal__no-search-result'>Không có kết quả phù hợp</div>;
 	};
 
+	const updateHashTagsInputValue = e => {
+		const hashtagRegex = /\B(\#[a-zA-Z]+\b)(?!;)/g;
+		const hashTags = e.target.value.match(hashtagRegex);
+		setInputHashtagValue(e.target.value);
+		setHashTagsAddedArray(hashTags);
+	};
+
 	const creatQuotesFnc = async () => {
 		try {
 			const data = {
-				'quote': textFieldEdit.current.innerText,
-				'bookId': bookAdded.id,
-				'authorName': authorAdded,
-				'categories': categoryAddedIdList,
-				'tag': inputHashtagValue,
-				'background': backgroundColor,
+				quote: textFieldEdit.current.innerText,
+				bookId: bookAdded.id,
+				authorName: authorAdded,
+				categories: categoryAddedIdList,
+				tag: hashTagsAddedArray,
+				background: backgroundColor,
 			};
 			const response = await dispatch(creatQuotes(data)).unwrap();
 			if (response) {
@@ -402,7 +410,7 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 								style={{ margin: '0' }}
 								placeholder='Nhập từ khóa'
 								value={inputHashtagValue}
-								onChange={e => setInputHashtagValue(e.target.value)}
+								onChange={updateHashTagsInputValue}
 							/>
 						</div>
 					</div>

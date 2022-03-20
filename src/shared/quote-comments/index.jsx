@@ -1,22 +1,43 @@
+import { useState, useEffect } from 'react';
 import classNames from 'classnames';
 import { calculateDurationTime } from 'helpers/Common';
 import PropTypes from 'prop-types';
 import { Badge } from 'react-bootstrap';
 import { useDispatch } from 'react-redux';
-import { useSelector } from 'react-redux';
-import { updateReactionActivity } from 'reducers/redux-utils/activity';
 import UserAvatar from 'shared/user-avatar';
 import './quote-comment.scss';
+import { likeQuoteComment, checkLikeQuoteComment } from 'reducers/redux-utils/quote';
+import { toast } from 'react-toastify';
 
 const QuoteComment = ({ data, handleReply, quoteData, commentLv1Id }) => {
-	const { userInfo } = useSelector(state => state.auth);
+	const [isLiked, setIsLiked] = useState(false);
+
 	const dispatch = useDispatch();
 
 	const isAuthor = data.createdBy === quoteData.createdBy;
 
-	const handleLike = () => {
-		const params = { commentId: data.id };
-		dispatch(updateReactionActivity(params)).unwrap();
+	useEffect(() => {
+		checkQuoteCommentLiked();
+	}, []);
+
+	const checkQuoteCommentLiked = async () => {
+		try {
+			const res = await dispatch(checkLikeQuoteComment()).unwrap();
+			if (res.includes(data.id)) {
+				setIsLiked(true);
+			}
+		} catch {
+			toast.error('Lỗi hệ thống');
+		}
+	};
+
+	const handleLikeUnlikeQuoteCmt = async commentId => {
+		try {
+			const res = await dispatch(likeQuoteComment(commentId)).unwrap();
+			setIsLiked(res.liked);
+		} catch {
+			toast.error('Lỗi hệ thống');
+		}
 	};
 
 	return (
@@ -44,9 +65,9 @@ const QuoteComment = ({ data, handleReply, quoteData, commentLv1Id }) => {
 				<ul className='quote-comment__action'>
 					<li
 						className={classNames('quote-comment__item', {
-							'active': data.like && data.updateBy === userInfo.id,
+							'liked': isLiked,
 						})}
-						onClick={handleLike}
+						onClick={() => handleLikeUnlikeQuoteCmt(data.id)}
 					>
 						Thích
 					</li>

@@ -4,7 +4,7 @@ import BadgeList from 'shared/badge-list';
 import QuoteActionBar from 'shared/quote-action-bar';
 import UserAvatar from 'shared/user-avatar';
 import './quote-card.scss';
-import { getCheckLiked } from 'reducers/redux-utils/user';
+import { checkLikeQuote } from 'reducers/redux-utils/quote';
 import { toast } from 'react-toastify';
 import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
@@ -13,24 +13,31 @@ import { likeUnlikeQuote } from 'reducers/redux-utils/quote';
 const QuoteCard = ({ data, isDetail }) => {
 	const [isLiked, setIsLiked] = useState(false);
 	const [likeNumber, setLikeNumber] = useState(0);
+	const [hashTags, setHashTags] = useState([]);
 
 	const dispatch = useDispatch();
 
 	useEffect(() => {
+		if (data.tags.length > 0) {
+			const tagsArr = [];
+			data.tags.forEach(item => {
+				tagsArr.push('#' + item.tag.slug);
+			});
+			setHashTags(tagsArr);
+		}
 		checkQuoteLiked();
 		setLikeNumber(data.like);
 	}, []);
 
 	const checkQuoteLiked = async () => {
-		// const params = { filter: JSON.stringify([{ 'operator': 'eq', 'value': data.id, 'property': 'quoteId' }]) };
-		// try {
-		// 	const res = await dispatch(getCheckLiked(params)).unwrap();
-		// 	if (res.count > 0) {
-		// 		setIsLiked(true);
-		// 	}
-		// } catch {
-		// 	toast.error('Lỗi hệ thống');
-		// }
+		try {
+			const res = await dispatch(checkLikeQuote()).unwrap();
+			if (res.includes(data.id)) {
+				setIsLiked(true);
+			}
+		} catch {
+			toast.error('Lỗi hệ thống');
+		}
 	};
 
 	const likeUnlikeQuoteFnc = async id => {
@@ -70,7 +77,12 @@ const QuoteCard = ({ data, isDetail }) => {
 			<div className='quote-footer'>
 				{isDetail ? (
 					<div className='quote-footer__left'>
-						{/* {data?.tag !== null && <span className='quote-card__hashtag'>#{data.tag.name}</span>} */}
+						{hashTags.length > 0 &&
+							hashTags.map((tag, index) => (
+								<span className='quote-card__hashtag' key={index}>
+									{tag}
+								</span>
+							))}
 					</div>
 				) : (
 					<div className='quote-footer__left'>
