@@ -194,6 +194,10 @@ $wallpaper-height: 350px;
 			width: 420px;
 			display: flex;
 			gap: 24px;
+			&-group {
+				margin-bottom: 2.5rem;
+			}
+
 			&--custom {
 				width: 100%;
 				display: block;
@@ -203,8 +207,8 @@ $wallpaper-height: 350px;
 				display: flex;
 				align-items: center;
 				gap: 1.5rem;
-				&:not(&:last-of-type) {
-					margin-bottom: 2.5rem;
+				&.socials-link {
+					margin-bottom: 1rem;
 				}
 			}
 
@@ -217,13 +221,13 @@ $wallpaper-height: 350px;
 			}
 
 			&-name {
+				width: 100%;
 				display: flex;
 				gap: 24px;
 				justify-content: space-between;
 			}
 
-			&__cancel-btn {
-				color: #e61b00;
+			&__btn {
 				background-color: #eff0f6;
 				height: 34px;
 				border-radius: 12px;
@@ -233,6 +237,12 @@ $wallpaper-height: 350px;
 				font-size: 14px;
 				padding: 0 12px;
 				cursor: pointer;
+				&.cancel {
+					color: #e61b00;
+				}
+				&.save {
+					color: $success;
+				}
 			}
 
 			&__buttons {
@@ -244,6 +254,25 @@ $wallpaper-height: 350px;
 					justify-content: flex-start;
 					margin: 0;
 					gap: 1.5rem;
+				}
+			}
+
+			&-filled {
+				width: 100%;
+				height: 56px;
+				padding: 0 1em;
+				font-size: 0.94rem;
+				line-height: 1.5;
+				color: $ash;
+				border-radius: 15px;
+				background-color: #f7f7fc;
+				display: flex;
+				align-items: center;
+				user-select: none;
+				&.gender {
+					justify-content: center;
+					width: fit-content;
+					padding: 0 1.5rem;
 				}
 			}
 
@@ -348,14 +377,6 @@ $wallpaper-height: 350px;
 			}
 		}
 	}
-}
-
-.form-field-filled__gender {
-	padding: 1rem 1.5rem;
-	border-radius: 12px;
-	background-color: #f7f7fc;
-	margin-right: 12px;
-	line-height: 1.5;
 }
 
 .form-field__no-data {

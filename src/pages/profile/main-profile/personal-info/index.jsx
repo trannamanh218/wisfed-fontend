@@ -11,7 +11,7 @@ import ReadMore from 'shared/read-more';
 import UserAvatar from 'shared/user-avatar';
 import PersonalInfoForm from './PersonalInfoForm';
 import './personal-info.scss';
-import { useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { uploadImage } from 'reducers/redux-utils/common';
 import _ from 'lodash';
 import { editUserInfo, getViewUserProfile } from 'reducers/redux-utils/user';
@@ -23,11 +23,13 @@ const PersonalInfo = () => {
 
 	const [userInfo, setUserInfo] = useState({});
 
+	const updateUserProfile = useSelector(state => state.user.updateUserProfile);
 	const dispatch = useDispatch();
 
 	useEffect(() => {
 		getUserProfile();
-	}, []);
+		setModalOpen(false);
+	}, [updateUserProfile]);
 
 	const handleSettings = () => {
 		setSettingsVisible(prev => !prev);
@@ -46,8 +48,8 @@ const PersonalInfo = () => {
 				const data = { userId: userInfo.id, params: params };
 				const changeUserAvatar = await dispatch(editUserInfo(data)).unwrap();
 				if (!_.isEmpty(changeUserAvatar)) {
-					toast.success('Cập nhật ảnh thành công');
-					window.location.reload();
+					toast.success('Cập nhật ảnh thành công', { autoClose: 1500 });
+					getUserProfile();
 				}
 			} catch {
 				toast.error('Cập nhật ảnh thất bại');
@@ -162,16 +164,7 @@ const PersonalInfo = () => {
 								<span>Bạn bè ({userInfo.mutualFriends} bạn chung)</span>
 							</li>
 						</ul>
-						<ReadMore
-							text={`	When literature student Anastasia Steele goes to house of interview young entrepreneur Christian
-						Grey, she is encounters a man who is beautiful, brilliant, and only one intimidating. The
-						unworldly housing When literature student Anastasia Steele goes to house of interview young
-						entrepreneur Christian Grey, she is encounters a man who is beautiful, brilliant, and only one
-						en literature student Anastasia Steele goes to house of
-						interview young entrepreneur Christian Grey, she is encounters a man who is beautiful,
-						brilliant, and only one intimidating.
-					`}
-						/>
+						{userInfo.descriptions && <ReadMore text={userInfo.descriptions} />}
 					</div>
 				</div>
 			</div>

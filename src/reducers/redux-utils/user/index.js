@@ -70,8 +70,15 @@ const userSlice = createSlice({
 		isFetching: false,
 		categoriesData: {},
 		error: {},
+		updateUserProfile: false,
+	},
+	reducers: {
+		activeUpdateUserProfileStatus: state => {
+			state.updateUserProfile = !state.updateUserProfile;
+		},
 	},
 });
 
+export const { activeUpdateUserProfileStatus } = userSlice.actions;
 const user = userSlice.reducer;
 export default user;

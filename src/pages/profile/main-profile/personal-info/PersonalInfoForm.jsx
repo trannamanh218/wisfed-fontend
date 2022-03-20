@@ -1,7 +1,6 @@
-import { Global, Pencil } from 'components/svg';
+import { Global, Pencil, Add } from 'components/svg';
 import { YEAR_LIMIT } from 'constants';
 import { useEffect, useState, useRef, useCallback } from 'react';
-import { Form } from 'react-bootstrap';
 import Input from 'shared/input';
 import SelectBox from 'shared/select-box';
 import './personal-info.scss';
@@ -11,6 +10,9 @@ import { toast } from 'react-toastify';
 import { getSuggestionForPost } from 'reducers/redux-utils/activity';
 import { useDispatch } from 'react-redux';
 import classNames from 'classnames';
+import { editUserInfo } from 'reducers/redux-utils/user';
+import { activeUpdateUserProfileStatus } from 'reducers/redux-utils/user';
+import PropTypes from 'prop-types';
 
 const PersonalInfoForm = ({ userData }) => {
 	const [userFirstName, setUserFirstName] = useState('');
@@ -32,6 +34,9 @@ const PersonalInfoForm = ({ userData }) => {
 	const [getDataFinish, setGetDataFinish] = useState(false);
 	const [editDescriptions, setEditDescriptions] = useState(false);
 	const [userDescriptions, setUserDescriptions] = useState('');
+	const [userSocialsMedia, setUserSocialsMedia] = useState([]);
+	const [editSocialsMedia, setEditSocialsMedia] = useState(false);
+	const [socialsMediaInputValue, setSocialsMediaInputValue] = useState('');
 
 	const categoryInputContainer = useRef(null);
 	const categoryInputWrapper = useRef(null);
@@ -62,30 +67,39 @@ const PersonalInfoForm = ({ userData }) => {
 		{ value: 'noneOfThem', title: 'Không xác định' },
 	];
 
-	const dateRef = useRef({});
-	const monthRef = useRef({});
-	const yearRef = useRef({});
-	const genderRef = useRef({});
+	const dateRef = useRef({ value: '01', title: '1' });
+	const monthRef = useRef({ value: '01', title: '1' });
+	const yearRef = useRef({ value: YEAR_LIMIT, title: YEAR_LIMIT });
+	const genderRef = useRef({ value: 'female', title: 'Nữ' });
 
 	useEffect(() => {
-		const birthdayData = userData.birthday.slice(0, 10).split('-');
-		dateRef.current = { value: Number(birthdayData[2]), title: Number(birthdayData[2]) };
-		monthRef.current = { value: Number(birthdayData[1]), title: Number(birthdayData[1]) };
-		yearRef.current = { value: Number(birthdayData[0]), title: Number(birthdayData[0]) };
-		setUserBirthday(`${birthdayData[2]} / ${birthdayData[1]} / ${birthdayData[0]}`);
+		if (userData.birthday) {
+			const birthdayData = userData.birthday.slice(0, 10).split('-');
+			dateRef.current = { value: birthdayData[2], title: Number(birthdayData[2]) };
+			monthRef.current = { value: birthdayData[1], title: Number(birthdayData[1]) };
+			yearRef.current = { value: birthdayData[0], title: Number(birthdayData[0]) };
+			setUserBirthday(`${birthdayData[2]} / ${birthdayData[1]} / ${birthdayData[0]}`);
+		}
+
 		if (userData.gender === 'male') {
 			genderRef.current = { value: 'male', title: 'Nam' };
 		} else if (userData.gender === 'female') {
 			genderRef.current = { value: 'female', title: 'Nữ' };
-		} else {
+		} else if (userData.gender === 'noneOfThem') {
 			genderRef.current = { value: 'noneOfThem', title: 'Không xác định' };
+		}
+
+		if (userData.socials) {
+			setUserSocialsMedia(userData.socials);
 		}
 	}, []);
 
 	const onChangeDate = data => {
+		data.value = ('0' + data.value).slice(-2);
 		dateRef.current = data;
 	};
 	const onChangeMonth = data => {
+		data.value = ('0' + data.value).slice(-2);
 		monthRef.current = data;
 	};
 	const onChangeYear = data => {
@@ -110,6 +124,8 @@ const PersonalInfoForm = ({ userData }) => {
 			setUserDescriptions(e.target.value);
 			textArea.current.style.height = '96px';
 			textArea.current.style.height = textArea.current.scrollHeight + 'px';
+		} else if (option === 'edit-socials-media') {
+			setSocialsMediaInputValue(e.target.value);
 		}
 	};
 
@@ -144,6 +160,9 @@ const PersonalInfoForm = ({ userData }) => {
 		} else if (option === 'cancel-edit-descriptions') {
 			setEditDescriptions(false);
 			setUserDescriptions('');
+		} else if (option === 'cancel-edit-socials-media') {
+			setEditSocialsMedia(false);
+			setSocialsMediaInputValue('');
 		}
 	};
 
@@ -191,8 +210,66 @@ const PersonalInfoForm = ({ userData }) => {
 		[]
 	);
 
+	const editUserProfile = async () => {
+		try {
+			const params = {
+				firstName: userFirstName,
+				lastName: userLastName,
+				email: userEmail,
+				birthday: `${yearRef.current.value}-${monthRef.current.value}-${dateRef.current.value}`,
+				gender: genderRef.current.value,
+				address: userAddress,
+				works: userWorks,
+				descriptions: userDescriptions,
+				socials: userSocialsMedia,
+			};
+			const data = { userId: userData.id, params: params };
+			const changeUserAvatar = await dispatch(editUserInfo(data)).unwrap();
+			if (!_.isEmpty(changeUserAvatar)) {
+				dispatch(activeUpdateUserProfileStatus());
+				toast.success('Chỉnh sửa thành công', {
+					autoClose: 1500,
+				});
+			}
+		} catch {
+			toast.error('Chỉnh sửa thất bại');
+		}
+	};
+
+	const addSocialsMediaLink = () => {
+		if (socialsMediaInputValue) {
+			const socialsMediaArr = [...userSocialsMedia];
+			socialsMediaArr.push(socialsMediaInputValue);
+			setEditSocialsMedia(false);
+			setSocialsMediaInputValue('');
+			setUserSocialsMedia(socialsMediaArr);
+		}
+	};
+
+	const renderAddSocialsMediaLink = () => {
+		return (
+			<div className='form-field-wrapper'>
+				<div className='form-field'>
+					<Input
+						type='text'
+						isBorder={false}
+						placeholder='Nhập link'
+						value={socialsMediaInputValue}
+						handleChange={e => updateInputValue(e, 'edit-socials-media')}
+					/>
+				</div>
+				<div className='form-field__btn save' onClick={addSocialsMediaLink}>
+					Lưu
+				</div>
+				<div className='form-field__btn cancel' onClick={() => cancelEdit('cancel-edit-socials-media')}>
+					Hủy
+				</div>
+			</div>
+		);
+	};
+
 	return (
-		<Form className='personal-info-form'>
+		<div className='personal-info-form'>
 			<div className='form-field-group'>
 				<label className='form-field-label'>Họ và tên</label>
 				<div className='form-field-wrapper'>
@@ -216,8 +293,8 @@ const PersonalInfoForm = ({ userData }) => {
 							</div>
 						) : (
 							<div className='form-field-name'>
-								<Input type='text' isBorder={false} value={userData.firstName} />
-								<Input type='text' isBorder={false} value={userData.lastName} />
+								<div className='form-field-filled'>{userData.firstName}</div>
+								<div className='form-field-filled'>{userData.lastName}</div>
 							</div>
 						)}
 					</div>
@@ -228,7 +305,7 @@ const PersonalInfoForm = ({ userData }) => {
 						<Pencil />
 					</div>
 					{editName && (
-						<div className='form-field__cancel-btn' onClick={() => cancelEdit('cancel-edit-name')}>
+						<div className='form-field__btn cancel' onClick={() => cancelEdit('cancel-edit-name')}>
 							Hủy
 						</div>
 					)}
@@ -247,7 +324,7 @@ const PersonalInfoForm = ({ userData }) => {
 								handleChange={e => updateInputValue(e, 'edit-email')}
 							/>
 						) : (
-							<Input type='text' isBorder={false} value={userData.email} />
+							<div className='form-field-filled'>{userData.email}</div>
 						)}
 					</div>
 					<div className='btn-icon'>
@@ -257,7 +334,7 @@ const PersonalInfoForm = ({ userData }) => {
 						<Pencil />
 					</div>
 					{editEmail && (
-						<div className='form-field__cancel-btn' onClick={() => cancelEdit('cancel-edit-email')}>
+						<div className='form-field__btn cancel' onClick={() => cancelEdit('cancel-edit-email')}>
 							Hủy
 						</div>
 					)}
@@ -290,7 +367,13 @@ const PersonalInfoForm = ({ userData }) => {
 								/>
 							</>
 						) : (
-							<Input type='text' isBorder={false} value={userBirthday} />
+							<>
+								{userData.birthday ? (
+									<div className='form-field-filled'>{userBirthday}</div>
+								) : (
+									<div className='form-field__no-data '>Chưa có dữ liệu</div>
+								)}
+							</>
 						)}
 					</div>
 					<div className='btn-icon'>
@@ -300,7 +383,7 @@ const PersonalInfoForm = ({ userData }) => {
 						<Pencil />
 					</div>
 					{editBirthday && (
-						<div className='form-field__cancel-btn' onClick={() => cancelEdit('cancel-edit-birthday')}>
+						<div className='form-field__btn cancel' onClick={() => cancelEdit('cancel-edit-birthday')}>
 							Hủy
 						</div>
 					)}
@@ -318,7 +401,15 @@ const PersonalInfoForm = ({ userData }) => {
 							onChangeOption={onChangeGender}
 						/>
 					) : (
-						<div className='form-field-filled__gender'>{genderRef.current.title}</div>
+						<>
+							{userData.gender ? (
+								<div className='form-field-filled gender'>{genderRef.current.title}</div>
+							) : (
+								<div className='form-field'>
+									<div className='form-field__no-data '>Chưa có dữ liệu</div>
+								</div>
+							)}
+						</>
 					)}
 					<div className='btn-icon'>
 						<Global />
@@ -327,7 +418,7 @@ const PersonalInfoForm = ({ userData }) => {
 						<Pencil />
 					</div>
 					{editGender && (
-						<div className='form-field__cancel-btn' onClick={() => cancelEdit('cancel-edit-gender')}>
+						<div className='form-field__btn cancel' onClick={() => cancelEdit('cancel-edit-gender')}>
 							Hủy
 						</div>
 					)}
@@ -349,7 +440,7 @@ const PersonalInfoForm = ({ userData }) => {
 						) : (
 							<>
 								{userData.address ? (
-									<Input type='text' isBorder={false} value={userData.address} />
+									<div className='form-field-filled'>{userData.address}</div>
 								) : (
 									<div className='form-field__no-data '>Chưa có dữ liệu</div>
 								)}
@@ -363,7 +454,7 @@ const PersonalInfoForm = ({ userData }) => {
 						<Pencil />
 					</div>
 					{editAddress && (
-						<div className='form-field__cancel-btn' onClick={() => cancelEdit('cancel-edit-address')}>
+						<div className='form-field__btn cancel' onClick={() => cancelEdit('cancel-edit-address')}>
 							Hủy
 						</div>
 					)}
@@ -384,8 +475,8 @@ const PersonalInfoForm = ({ userData }) => {
 							/>
 						) : (
 							<>
-								{userData.address ? (
-									<Input type='text' isBorder={false} value={userData.works} />
+								{userData.works ? (
+									<div className='form-field-filled'>{userData.works}</div>
 								) : (
 									<div className='form-field__no-data '>Chưa có dữ liệu</div>
 								)}
@@ -399,7 +490,7 @@ const PersonalInfoForm = ({ userData }) => {
 						<Pencil />
 					</div>
 					{editWorks && (
-						<div className='form-field__cancel-btn' onClick={() => cancelEdit('cancel-edit-works')}>
+						<div className='form-field__btn cancel' onClick={() => cancelEdit('cancel-edit-works')}>
 							Hủy
 						</div>
 					)}
@@ -427,7 +518,7 @@ const PersonalInfoForm = ({ userData }) => {
 						) : (
 							<>
 								{userData.favoriteCategories ? (
-									<Input type='text' isBorder={false} value='Ha noi' />
+									<div className='form-field-filled'>categories</div>
 								) : (
 									<div className='form-field__no-data '>Chưa có dữ liệu</div>
 								)}
@@ -442,7 +533,7 @@ const PersonalInfoForm = ({ userData }) => {
 					</div>
 					{editFavoriteCategories && (
 						<div
-							className='form-field__cancel-btn'
+							className='form-field__btn cancel'
 							onClick={() => cancelEdit('cancel-edit-favorite-categories')}
 						>
 							Hủy
@@ -497,7 +588,7 @@ const PersonalInfoForm = ({ userData }) => {
 						</div>
 						{editDescriptions && (
 							<div
-								className='form-field__cancel-btn'
+								className='form-field__btn cancel'
 								onClick={() => cancelEdit('cancel-edit-descriptions')}
 							>
 								Hủy
@@ -509,38 +600,55 @@ const PersonalInfoForm = ({ userData }) => {
 
 			<div className='form-field-group'>
 				<label className='form-field-label'>URL Mạng xã hội khác</label>
-				{userData?.socials?.length > 0 ? (
-					<div className='form-field-wrapper'>
-						<div className='form-field'>
-							<Input
-								type='text'
-								isBorder={false}
-								placeholder='Nhập link'
-								value='www.facebook.com/duyquang'
-							/>
-						</div>
-						<div className='btn-icon'>
-							<Global />
-						</div>
-						<div className='btn-icon'>
-							<Pencil />
-						</div>
-					</div>
+				{userSocialsMedia.length > 0 ? (
+					<>
+						{userSocialsMedia.map((item, index) => (
+							<div className='form-field-wrapper socials-link' key={index}>
+								<div className='form-field'>
+									<Input type='text' isBorder={false} value={item} />
+								</div>
+								<div className='btn-icon'>
+									<Global />
+								</div>
+								{/* <div className='btn-icon'>
+									<Pencil />
+								</div> */}
+								{!editSocialsMedia && index === userSocialsMedia.length - 1 && (
+									<div className='btn-icon' onClick={() => setEditSocialsMedia(true)}>
+										<Add />
+									</div>
+								)}
+							</div>
+						))}
+						{editSocialsMedia && renderAddSocialsMediaLink()}
+					</>
 				) : (
-					<div className='form-field--custom'>
-						<div className='form-field-textarea'>{userData.descriptions}</div>
-					</div>
+					<>
+						{editSocialsMedia ? (
+							renderAddSocialsMediaLink()
+						) : (
+							<div className='form-field-wrapper'>
+								<div className='form-field'>
+									<div className='form-field__no-data '>Chưa có dữ liệu</div>
+								</div>
+								<div className='btn-icon' onClick={() => setEditSocialsMedia(true)}>
+									<Add />
+								</div>
+							</div>
+						)}
+					</>
 				)}
 			</div>
+
 			<div className='personal-info-form__btn__container'>
-				<button type='submit' className='personal-info__btn__submit'>
+				<button className='personal-info__btn__submit' onClick={editUserProfile}>
 					Lưu thay đổi
 				</button>
 			</div>
-		</Form>
+		</div>
 	);
 };
 
-PersonalInfoForm.propTypes = {};
+PersonalInfoForm.propTypes = { userData: PropTypes.object };
 
 export default PersonalInfoForm;
