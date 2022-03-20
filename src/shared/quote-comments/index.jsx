@@ -6,10 +6,10 @@ import { Badge } from 'react-bootstrap';
 import { useDispatch } from 'react-redux';
 import UserAvatar from 'shared/user-avatar';
 import './quote-comment.scss';
-import { likeQuoteComment, checkLikeQuoteComment } from 'reducers/redux-utils/quote';
+import { likeQuoteComment } from 'reducers/redux-utils/quote';
 import { toast } from 'react-toastify';
 
-const QuoteComment = ({ data, handleReply, quoteData, commentLv1Id }) => {
+const QuoteComment = ({ data, handleReply, quoteData, commentLv1Id, quoteCommentsLikedArray }) => {
 	const [isLiked, setIsLiked] = useState(false);
 
 	const dispatch = useDispatch();
@@ -17,19 +17,10 @@ const QuoteComment = ({ data, handleReply, quoteData, commentLv1Id }) => {
 	const isAuthor = data.createdBy === quoteData.createdBy;
 
 	useEffect(() => {
-		checkQuoteCommentLiked();
-	}, []);
-
-	const checkQuoteCommentLiked = async () => {
-		try {
-			const res = await dispatch(checkLikeQuoteComment()).unwrap();
-			if (res.includes(data.id)) {
-				setIsLiked(true);
-			}
-		} catch {
-			toast.error('Lỗi hệ thống');
+		if (quoteCommentsLikedArray.includes(data.id)) {
+			setIsLiked(true);
 		}
-	};
+	}, [quoteCommentsLikedArray]);
 
 	const handleLikeUnlikeQuoteCmt = async commentId => {
 		try {

@@ -12,6 +12,7 @@ import _ from 'lodash';
 import CommentEditor from 'shared/comment-editor';
 import { useSelector } from 'react-redux';
 import classNames from 'classnames';
+import { checkLikeQuoteComment } from 'reducers/redux-utils/quote';
 
 const MainQuoteDetail = () => {
 	const { id } = useParams();
@@ -22,16 +23,27 @@ const MainQuoteDetail = () => {
 	const [commentLv1IdArray, setCommentLv1IdArray] = useState([]);
 	const [replyingCommentId, setReplyingCommentId] = useState(0);
 	const [clickReply, setClickReply] = useState(false);
+	const [quoteCommentsLikedArray, setQuoteCommentsLikedArray] = useState([]);
 
 	useEffect(() => {
 		window.scrollTo(0, 0);
 		getQuoteData();
+		checkQuoteCommentLiked();
 	}, []);
 
 	const getQuoteData = async () => {
 		try {
 			const response = await dispatch(getQuoteDetail(id)).unwrap();
 			setQuoteData(response);
+		} catch {
+			toast.error('Lỗi hệ thống');
+		}
+	};
+
+	const checkQuoteCommentLiked = async () => {
+		try {
+			const res = await dispatch(checkLikeQuoteComment()).unwrap();
+			setQuoteCommentsLikedArray(res);
 		} catch {
 			toast.error('Lỗi hệ thống');
 		}
@@ -108,6 +120,7 @@ const MainQuoteDetail = () => {
 									data={comment}
 									quoteData={quoteData}
 									handleReply={handleReply}
+									quoteCommentsLikedArray={quoteCommentsLikedArray}
 								/>
 							)}
 
@@ -122,6 +135,7 @@ const MainQuoteDetail = () => {
 														data={commentChild}
 														quoteData={quoteData}
 														handleReply={handleReply}
+														quoteCommentsLikedArray={quoteCommentsLikedArray}
 													/>
 												</div>
 											</div>
