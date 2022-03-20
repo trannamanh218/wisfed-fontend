@@ -2,7 +2,7 @@ import camera from 'assets/images/camera.png';
 import dots from 'assets/images/dots.png';
 import pencil from 'assets/images/pencil.png';
 import { Clock, CloseX, Pencil, QuoteIcon, Restrict } from 'components/svg';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect } from 'react';
 import { Modal } from 'react-bootstrap';
 import Dropzone from 'react-dropzone';
 import ConnectButtons from 'shared/connect-buttons';
@@ -14,20 +14,19 @@ import './personal-info.scss';
 import { useSelector, useDispatch } from 'react-redux';
 import { uploadImage } from 'reducers/redux-utils/common';
 import _ from 'lodash';
-import { editUserInfo, getViewUserProfile } from 'reducers/redux-utils/user';
+import { editUserInfo } from 'reducers/redux-utils/user';
 import { toast } from 'react-toastify';
+import { activeUpdateUserProfileStatus } from 'reducers/redux-utils/user';
+import PropTypes from 'prop-types';
 
-const PersonalInfo = () => {
+const PersonalInfo = ({ userInfo }) => {
 	const { ref: settingsRef, isVisible: isSettingsVisible, setIsVisible: setSettingsVisible } = useVisible(false);
 	const { modalOpen, setModalOpen, toggleModal } = useModal(false);
-
-	const [userInfo, setUserInfo] = useState({});
 
 	const updateUserProfile = useSelector(state => state.user.updateUserProfile);
 	const dispatch = useDispatch();
 
 	useEffect(() => {
-		getUserProfile();
 		setModalOpen(false);
 	}, [updateUserProfile]);
 
@@ -49,22 +48,13 @@ const PersonalInfo = () => {
 				const changeUserAvatar = await dispatch(editUserInfo(data)).unwrap();
 				if (!_.isEmpty(changeUserAvatar)) {
 					toast.success('Cập nhật ảnh thành công', { autoClose: 1500 });
-					getUserProfile();
+					dispatch(activeUpdateUserProfileStatus());
 				}
 			} catch {
 				toast.error('Cập nhật ảnh thất bại');
 			}
 		}
 	});
-
-	const getUserProfile = async () => {
-		try {
-			const userData = await dispatch(getViewUserProfile('bfdb3971-de4c-4c2b-bbbe-fbb36770031a')).unwrap();
-			setUserInfo(userData);
-		} catch {
-			toast.error('Lỗi hệ thống');
-		}
-	};
 
 	return (
 		<div className='personal-info'>
@@ -184,6 +174,6 @@ const PersonalInfo = () => {
 	);
 };
 
-PersonalInfo.propTypes = {};
+PersonalInfo.propTypes = { userInfo: PropTypes.object };
 
 export default PersonalInfo;
