@@ -2,13 +2,24 @@ import BadgeList from 'shared/badge-list';
 import Input from 'shared/input';
 import './infor-tab.scss';
 import PropTypes from 'prop-types';
+import { useState, useEffect } from 'react';
+import { YEAR_LIMIT } from 'constants';
 
 const InforTab = ({ userInfo }) => {
-	const getGender = {
-		'female': 'Nữ',
-		'male': 'Nam',
-		'unidentified': 'Không xác định',
-	};
+	const [date, setDate] = useState(1);
+	const [month, setMonth] = useState(1);
+	const [year, setYear] = useState(YEAR_LIMIT);
+
+	const gender = { 'male': 'Nam', 'female': 'Nữ', 'other': 'Không xác định' };
+
+	useEffect(() => {
+		if (userInfo.birthday) {
+			const birthdayData = userInfo.birthday.slice(0, 10).split('-');
+			setDate(birthdayData[2]);
+			setMonth(birthdayData[1]);
+			setYear(birthdayData[0]);
+		}
+	}, [userInfo]);
 
 	return (
 		<div className='infor-tab'>
@@ -29,17 +40,16 @@ const InforTab = ({ userInfo }) => {
 							</div>
 						</div>
 					</div>
-					<div className='col-2'>
+					<div className='col-6 gender'>
 						<div className='form-field-group'>
 							<label className='form-field-label'>Giới tính</label>
+
 							<div className='form-field'>
-								<Input
-									type='text'
-									placeholder='Nhập giới tính'
-									isBorder={false}
-									disabled
-									value={getGender[userInfo.gender]}
-								/>
+								{userInfo.gender ? (
+									<div className='form-field-filled'>{gender[userInfo.gender]}</div>
+								) : (
+									<div className='form-field__no-data '>Chưa có dữ liệu</div>
+								)}
 							</div>
 						</div>
 					</div>
@@ -49,36 +59,58 @@ const InforTab = ({ userInfo }) => {
 					<div className='col-6'>
 						<div className='form-field-group'>
 							<label className='form-field-label'>Ngày sinh</label>
-							<div className='row'>
-								<div className='col-4 '>
-									<div className='form-field'>
-										<Input type='text' placeholder='Ngày' isBorder={false} disabled value={27} />
+							{userInfo.birthday ? (
+								<div className='row'>
+									<div className='col-4 '>
+										<div className='form-field'>
+											<Input
+												type='text'
+												placeholder='Ngày'
+												isBorder={false}
+												disabled
+												value={date}
+											/>
+										</div>
+									</div>
+									<div className='col-4 '>
+										<div className='form-field'>
+											<Input type='text' isBorder={false} disabled value={month} />
+										</div>
+									</div>
+									<div className='col-4 '>
+										<div className='form-field'>
+											<Input
+												type='text'
+												placeholder='Năm'
+												isBorder={false}
+												disabled
+												value={year}
+											/>
+										</div>
 									</div>
 								</div>
-								<div className='col-4 '>
-									<div className='form-field'>
-										<Input type='text' placeholder='Tháng' isBorder={false} disabled value={4} />
-									</div>
+							) : (
+								<div className='form-field'>
+									<div className='form-field__no-data '>Chưa có dữ liệu</div>
 								</div>
-								<div className='col-4 '>
-									<div className='form-field'>
-										<Input type='text' placeholder='Năm' isBorder={false} disabled value={1986} />
-									</div>
-								</div>
-							</div>
+							)}
 						</div>
 					</div>
 					<div className='col-6'>
 						<div className='form-field-group'>
 							<label className='form-field-label'>Địa chỉ</label>
 							<div className='form-field'>
-								<Input
-									type='text'
-									placeholder='Nhập địa chỉ'
-									isBorder={false}
-									disabled
-									value={userInfo.address}
-								/>
+								{userInfo.address ? (
+									<Input
+										type='text'
+										placeholder='Nhập địa chỉ'
+										isBorder={false}
+										disabled
+										value={userInfo.address}
+									/>
+								) : (
+									<div className='form-field__no-data '>Chưa có dữ liệu</div>
+								)}
 							</div>
 						</div>
 					</div>
@@ -89,21 +121,32 @@ const InforTab = ({ userInfo }) => {
 						<div className='form-field-group'>
 							<label className='form-field-label'>Công việc</label>
 							<div className='form-field'>
-								<Input type='text' isBorder={false} disabled value={userInfo.works} />
+								{userInfo.works ? (
+									<Input type='text' isBorder={false} disabled value={userInfo.works} />
+								) : (
+									<div className='form-field__no-data '>Chưa có dữ liệu</div>
+								)}
 							</div>
 						</div>
 					</div>
 					<div className='col-6'>
 						<div className='form-field-group'>
 							<label className='form-field-label'>URL Mạng xã hội khác</label>
-							<div className='form-field'>
-								{/* <Input
-									type='text'
-									isBorder={false}
-									disabled
-									value={userInfo?.socials[0]}
-								/> */}
-							</div>
+							{userInfo.socials ? (
+								<>
+									{userInfo.socials.map((item, index) => (
+										<div className='form-field-socials-link' key={index}>
+											<div className='form-field'>
+												<Input type='text' isBorder={false} value={item} />
+											</div>
+										</div>
+									))}
+								</>
+							) : (
+								<div className='form-field'>
+									<div className='form-field__no-data '>Chưa có dữ liệu</div>
+								</div>
+							)}
 						</div>
 					</div>
 				</div>
@@ -112,9 +155,15 @@ const InforTab = ({ userInfo }) => {
 					<div className='col-6'>
 						<div className='form-field-group'>
 							<label className='form-field-label '>Chủ đề yêu thích</label>
-							<div className='form-field form-field-flex '>
-								<BadgeList list={userInfo?.favoriteCategories} className='form-field-badge' />
-							</div>
+							{userInfo?.favoriteCategories ? (
+								<div className='form-field form-field-flex '>
+									<BadgeList list={userInfo.favoriteCategories} className='form-field-badge' />
+								</div>
+							) : (
+								<div className='form-field'>
+									<div className='form-field__no-data'>Chưa có dữ liệu</div>
+								</div>
+							)}
 						</div>
 					</div>
 					<div className='col-6'></div>
@@ -123,7 +172,13 @@ const InforTab = ({ userInfo }) => {
 					<div className='col-12'>
 						<div className='form-field-group'>
 							<label className='form-field-label'>Giới thiệu</label>
-							<div className='form-field-textarea'>{userInfo.descriptions}</div>
+							{userInfo.descriptions ? (
+								<div className='form-field-textarea'>{userInfo.descriptions}</div>
+							) : (
+								<div className='form-field'>
+									<div className='form-field__no-data'>Chưa có dữ liệu</div>
+								</div>
+							)}
 						</div>
 					</div>
 				</div>

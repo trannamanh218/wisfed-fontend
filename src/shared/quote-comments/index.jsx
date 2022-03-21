@@ -84,6 +84,7 @@ QuoteComment.propTypes = {
 	quoteData: PropTypes.object,
 	handleReply: PropTypes.func,
 	commentLv1Id: PropTypes.number,
+	quoteCommentsLikedArray: PropTypes.array,
 };
 
 export default QuoteComment;

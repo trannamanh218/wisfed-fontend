@@ -125,7 +125,7 @@ QuoteCard.defaultProps = {
 QuoteCard.propTypes = {
 	data: PropTypes.object,
 	isDetail: PropTypes.bool,
-	isLiked: PropTypes.bool,
+	likedArray: PropTypes.array,
 };
 
 export default QuoteCard;

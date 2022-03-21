@@ -269,6 +269,11 @@ $wallpaper-height: 350px;
 				display: flex;
 				align-items: center;
 				user-select: none;
+
+				&.email {
+					background-color: #d9dbe9;
+				}
+
 				&.gender {
 					justify-content: center;
 					width: fit-content;

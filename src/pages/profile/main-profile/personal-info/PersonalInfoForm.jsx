@@ -18,8 +18,6 @@ const PersonalInfoForm = ({ userData }) => {
 	const [userFirstName, setUserFirstName] = useState('');
 	const [userLastName, setUserLastName] = useState('');
 	const [editName, setEditName] = useState(false);
-	const [userEmail, setUserEmail] = useState('');
-	const [editEmail, setEditEmail] = useState(false);
 	const [userBirthday, setUserBirthday] = useState('');
 	const [editBirthday, setEditBirthday] = useState(false);
 	const [editGender, setEditGender] = useState(false);
@@ -64,7 +62,7 @@ const PersonalInfoForm = ({ userData }) => {
 	const genders = [
 		{ value: 'female', title: 'Nữ' },
 		{ value: 'male', title: 'Nam' },
-		{ value: 'noneOfThem', title: 'Không xác định' },
+		{ value: 'other', title: 'Không xác định' },
 	];
 
 	const dateRef = useRef({ value: '01', title: '1' });
@@ -85,8 +83,8 @@ const PersonalInfoForm = ({ userData }) => {
 			genderRef.current = { value: 'male', title: 'Nam' };
 		} else if (userData.gender === 'female') {
 			genderRef.current = { value: 'female', title: 'Nữ' };
-		} else if (userData.gender === 'noneOfThem') {
-			genderRef.current = { value: 'noneOfThem', title: 'Không xác định' };
+		} else if (userData.gender === 'other') {
+			genderRef.current = { value: 'other', title: 'Không xác định' };
 		}
 
 		if (userData.socials) {
@@ -114,8 +112,6 @@ const PersonalInfoForm = ({ userData }) => {
 			setUserFirstName(e.target.value);
 		} else if (option === 'edit-last-name') {
 			setUserLastName(e.target.value);
-		} else if (option === 'edit-email') {
-			setUserEmail(e.target.value);
 		} else if (option === 'edit-address') {
 			setUserAddress(e.target.value);
 		} else if (option === 'edit-works') {
@@ -134,9 +130,6 @@ const PersonalInfoForm = ({ userData }) => {
 			setEditName(false);
 			setUserFirstName('');
 			setUserLastName('');
-		} else if (option === 'cancel-edit-email') {
-			setEditEmail(false);
-			setUserEmail('');
 		} else if (option === 'cancel-edit-birthday') {
 			setEditBirthday(false);
 		} else if (option === 'cancel-edit-gender') {
@@ -146,7 +139,7 @@ const PersonalInfoForm = ({ userData }) => {
 			} else if (userData.gender === 'female') {
 				genderRef.current = { value: 'female', title: 'Nữ' };
 			} else {
-				genderRef.current = { value: 'noneOfThem', title: 'Không xác định' };
+				genderRef.current = { value: 'other', title: 'Không xác định' };
 			}
 		} else if (option === 'cancel-edit-address') {
 			setEditAddress(false);
@@ -215,7 +208,6 @@ const PersonalInfoForm = ({ userData }) => {
 			const params = {
 				firstName: userFirstName,
 				lastName: userLastName,
-				email: userEmail,
 				birthday: `${yearRef.current.value}-${monthRef.current.value}-${dateRef.current.value}`,
 				gender: genderRef.current.value,
 				address: userAddress,
@@ -315,29 +307,11 @@ const PersonalInfoForm = ({ userData }) => {
 				<label className='form-field-label'>Email</label>
 				<div className='form-field-wrapper'>
 					<div className='form-field'>
-						{editEmail ? (
-							<Input
-								type='text'
-								isBorder={false}
-								placeholder='Nhập email'
-								value={userEmail}
-								handleChange={e => updateInputValue(e, 'edit-email')}
-							/>
-						) : (
-							<div className='form-field-filled'>{userData.email}</div>
-						)}
+						<div className='form-field-filled email'>{userData.email}</div>
 					</div>
 					<div className='btn-icon'>
 						<Global />
 					</div>
-					<div className='btn-icon' onClick={() => setEditEmail(true)}>
-						<Pencil />
-					</div>
-					{editEmail && (
-						<div className='form-field__btn cancel' onClick={() => cancelEdit('cancel-edit-email')}>
-							Hủy
-						</div>
-					)}
 				</div>
 			</div>
 
