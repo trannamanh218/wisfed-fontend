@@ -1,9 +1,15 @@
+@import 'src/scss/abstracts/_variables.scss';
+
 .main-profile {
 	width: 100%;
 
 	.tab-pane {
 		&.active {
 			padding: 2.5rem;
+		}
+		&.post-tab-active {
+			padding: 2.5rem 0;
+			background-color: $secondary;
 		}
 	}
 

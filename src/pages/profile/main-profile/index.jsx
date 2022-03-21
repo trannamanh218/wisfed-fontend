@@ -6,6 +6,7 @@ import QuoteTab from './quote-tab';
 import FavoriteAuthorTab from './favorite-author-tab';
 import InforTab from './infor-tab';
 import Bookcase from './bookcase-tab';
+import PostTab from './post-tab';
 import { getViewUserProfile } from 'reducers/redux-utils/user';
 import { useSelector, useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
@@ -40,8 +41,8 @@ const MainProfile = () => {
 				<Tab eventKey='shelves' title='Tủ sách'>
 					<Bookcase />
 				</Tab>
-				<Tab eventKey='articles' title='Bài viết'>
-					Lorem, ipsum dolor sit amet consectetur adipisicing.
+				<Tab eventKey='post' title='Bài viết' className='post-tab-active'>
+					<PostTab />
 				</Tab>
 				<Tab eventKey='infor' title='Giới thiệu'>
 					<InforTab userInfo={userInfo} />
