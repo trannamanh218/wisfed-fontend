@@ -2,7 +2,7 @@ import classNames from 'classnames';
 import { BookIcon, CategoryIcon, CloseX, Feather, GroupIcon, Image, Lock, PodCast, WorldNet } from 'components/svg';
 import { STATUS_IDLE, STATUS_LOADING, STATUS_SUCCESS } from 'constants';
 import _ from 'lodash';
-import PropTypes from 'prop-types';
+import PropTypes, { element } from 'prop-types';
 import { useEffect, useRef, useState } from 'react';
 import { Form } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
@@ -145,18 +145,18 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 		placeCaretAtEnd(textFieldEdit.current);
 	};
 
-	const placeCaretAtEnd = el => {
-		el.focus();
+	const placeCaretAtEnd = element => {
+		element.focus();
 		if (typeof window.getSelection != 'undefined' && typeof document.createRange != 'undefined') {
 			const range = document.createRange();
-			range.selectNodeContents(el);
+			range.selectNodeContents(element);
 			range.collapse(false);
-			const sel = window.getSelection();
-			sel.removeAllRanges();
-			sel.addRange(range);
+			const selection = window.getSelection();
+			selection.removeAllRanges();
+			selection.addRange(range);
 		} else if (typeof document.body.createTextRange != 'undefined') {
 			const textRange = document.body.createTextRange();
-			textRange.moveToElementText(el);
+			textRange.moveToElementText(element);
 			textRange.collapse(false);
 			textRange.select();
 		}

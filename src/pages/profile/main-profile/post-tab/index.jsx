@@ -1,5 +1,6 @@
 import { useFetchActivities } from 'api/activity.hooks';
 import Post from 'shared/post';
+import './post-tab.scss';
 
 function PostTab() {
 	const { activity: postList } = useFetchActivities(0, 10, '[]');
