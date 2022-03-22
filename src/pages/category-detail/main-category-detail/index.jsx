@@ -94,8 +94,6 @@ const MainCategoryDetail = ({ handleViewBookDetail }) => {
 	});
 
 	const updateInputSearch = value => {
-		setInputSearch(value);
-
 		if (value) {
 			const filterValue = [{ 'operator': 'eq', 'value': id, 'property': 'categoryId' }];
 			filterValue.push({ 'operator': 'search', 'value': value.trim(), 'property': 'name' });
@@ -108,6 +106,7 @@ const MainCategoryDetail = ({ handleViewBookDetail }) => {
 	const debounceSearch = useCallback(_.debounce(updateInputSearch, 1000), []);
 
 	const handleSearch = e => {
+		setInputSearch(e.target.value);
 		debounceSearch(e.target.value);
 	};
 
@@ -146,7 +145,11 @@ const MainCategoryDetail = ({ handleViewBookDetail }) => {
 			<p className='main-category-detail__intro'>{categoryInfo.description || 'Chưa cập nhật'}</p>
 
 			<div className='main-category-detail__container'>
-				<SearchField placeholder='Tìm kiếm sách trong chủ đề kinh doanh' handleChange={handleSearch} />
+				<SearchField
+					placeholder='Tìm kiếm sách trong chủ đề kinh doanh'
+					handleChange={handleSearch}
+					value={inputSearch}
+				/>
 				{inputSearch && <SearchBook list={searchResults} handleViewBookDetail={handleViewBookDetail} />}
 				<CategoryGroup
 					key={`category-group`}

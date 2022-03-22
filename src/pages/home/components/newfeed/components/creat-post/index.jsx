@@ -4,13 +4,17 @@ import CreatPostModalContent from '../creat-post-modal-content';
 import { useSelector } from 'react-redux';
 import UserAvatar from 'shared/user-avatar';
 import PropTypes from 'prop-types';
+import _ from 'lodash';
 
 function CreatPost({ onChangeNewPost }) {
 	const [showModalCreatPost, setShowModalCreatPost] = useState(false);
 	const [option, setOption] = useState({});
 	const creatPostModalContainer = useRef(null);
 	const scrollBlocked = useRef(false);
-	const { userInfo } = useSelector(state => state.auth);
+	const {
+		auth: { userInfo },
+		book: { bookForCreatePost },
+	} = useSelector(state => state);
 
 	const safeDocument = typeof document !== 'undefined' ? document : {};
 	const { body } = safeDocument;
@@ -23,7 +27,6 @@ function CreatPost({ onChangeNewPost }) {
 			icon: <BookIcon className='newfeed__creat-post__options__item__logo--book' />,
 			message: 'Không tìm thấy cuốn sách nào',
 		},
-
 		{
 			value: 'addAuthor',
 			title: 'tác giả',
@@ -43,6 +46,12 @@ function CreatPost({ onChangeNewPost }) {
 			message: 'Không tìm thấy bạn bè',
 		},
 	];
+
+	useEffect(() => {
+		if (!_.isEmpty(bookForCreatePost)) {
+			setShowModalCreatPost(true);
+		}
+	}, [bookForCreatePost]);
 
 	useEffect(() => {
 		if (showModalCreatPost) {

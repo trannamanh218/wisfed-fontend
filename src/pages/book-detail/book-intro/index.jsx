@@ -27,7 +27,12 @@ const BookIntro = () => {
 		<div className='book-intro'>
 			<div className='book-intro__image'>
 				<BookThumbnail name='book' {...bookInfo} size='lg' />
-				<StatusButton className='book-intro__btn' handleClick={handleClick} />
+				<StatusButton
+					className='book-intro__btn'
+					handleClick={handleClick}
+					bookData={bookInfo}
+					status={bookInfo.status}
+				/>
 			</div>
 			<div className='book-intro__content'>
 				<h1 className='book-intro__name'>{bookInfo.name}</h1>

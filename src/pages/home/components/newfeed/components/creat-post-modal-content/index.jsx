@@ -20,8 +20,7 @@ import { useCallback } from 'react';
 import { Circle as CircleLoading } from 'shared/loading';
 import './style.scss';
 import UserAvatar from 'shared/user-avatar';
-import { addBookToLibrary, updateProgressReadingBook } from 'reducers/redux-utils/library';
-import { STATUS_BOOK } from 'constants';
+import { addBookToLibrary } from 'reducers/redux-utils/library';
 
 function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option, onChangeOption, onChangeNewPost }) {
 	const [shareMode, setShareMode] = useState({ value: 'public', title: 'Mọi người', icon: <WorldNet /> });
@@ -46,7 +45,10 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 	const dispatch = useDispatch();
 	const textFieldEdit = useRef(null);
 
-	const { userInfo } = useSelector(state => state.auth);
+	const {
+		auth: { userInfo },
+		book: { bookForCreatePost },
+	} = useSelector(state => state);
 
 	const optionList = [
 		{
@@ -92,6 +94,14 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 	useEffect(() => {
 		textFieldEdit.current.focus();
 	}, []);
+
+	useEffect(() => {
+		if (!_.isEmpty(bookForCreatePost)) {
+			const newData = { ...taggedData };
+			newData.addBook = bookForCreatePost;
+			setTaggedData(newData);
+		}
+	}, [bookForCreatePost]);
 
 	useEffect(() => {
 		textFieldEdit.current.addEventListener('input', () => {
@@ -324,14 +334,14 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 					// console.log(taggedData.addBook.params);
 					dispatch(addBookToLibrary(addParams))
 						.unwrap()
-						.then(res => {
+						.then(() => {
 							return createNewActivity(params);
 						})
-						.catch(err => {
+						.catch(() => {
 							toast.error('Cập nhật trạng thái đọc sách không thành công');
 						});
 
-					const { status, bookId, id, progress } = taggedData.addBook.params;
+					// const { status, bookId, id, progress } = taggedData.addBook.params;
 					// const updateParams = {id:bookId, progress, status};
 					// if(status === STATUS_BOOK.read && !progress){
 					// 	toast.warning('Số trang đọc không đúng');

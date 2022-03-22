@@ -3,12 +3,18 @@ import StatusItem from './StatusItem';
 import PropTypes from 'prop-types';
 import './style.scss';
 
-const BookShelvesList = ({ list, onChangeLibrary, libraryId }) => {
+const BookShelvesList = ({ list, onChangeLibrary, libraryId, onChangeShelves }) => {
 	const renderList = listData => {
 		return (
 			<ul className='status-book__list status-book__list--shelves'>
 				{listData.map(item => (
-					<StatusItem key={item.id} item={item} onChangeLibrary={onChangeLibrary} libraryId={libraryId} />
+					<StatusItem
+						key={item.id}
+						item={item}
+						onChangeLibrary={onChangeLibrary}
+						libraryId={libraryId}
+						onChangeShelves={onChangeShelves}
+					/>
 				))}
 			</ul>
 		);

@@ -58,6 +58,9 @@ export const myLibraryAPI = '/api/v1/libraries/mylib';
 export const addBookToDefaultLibraryAPI = type => `/api/v1/libraries/addBook/${type}`;
 export const allBookInLibraryAPI = id => `/api/v1/libraries/listBookAllLibrary/${id}`;
 export const removeAllBookAPI = '/api/v1/libraries/removeAllBook ';
+export const addRemoveBookAPI = id => `/api/v1/libraries/addRemoveBook/${id}`;
+export const checkBookLibraryAPI = id => `/api/v1/libraries/checkBookLibrary/${id}`;
+export const otherListBookInLibaries = id => `/api/v1/libraries/listBookBy/${id}`;
 
 // comment activity
 export const commentActivityAPI = '/api/v1/commentActivities';

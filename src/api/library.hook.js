@@ -5,7 +5,13 @@ import _ from 'lodash';
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { getAllBookInLirary, getLibraryList, updateAuthLibrary, updateLibrary } from 'reducers/redux-utils/library';
+import {
+	getAllBookInLirary,
+	getLibraryList,
+	getMyLibraryList,
+	updateAuthLibrary,
+	updateLibrary,
+} from 'reducers/redux-utils/library';
 
 export const useFetchLibraries = (current = 1, perPage = 10, filter = '[]') => {
 	const [status, setStatus] = useState(STATUS_IDLE);
@@ -199,6 +205,7 @@ export const useFetchMyLibraries = (current = 1, perPage = 10, isUpdate) => {
 export const useFetchAuthLibraries = (current = 1, perPage = 10) => {
 	const [status, setStatus] = useState(STATUS_IDLE);
 	const [retry, setRetry] = useState(false);
+	const [statusLibraries, setStatusLibraries] = useState([]);
 	const { userInfo } = useSelector(state => state.auth);
 	const dispatch = useDispatch();
 
@@ -213,15 +220,18 @@ export const useFetchAuthLibraries = (current = 1, perPage = 10) => {
 
 			const fetchData = async () => {
 				try {
-					const filter = [
-						{ 'operator': 'eq', 'value': false, 'property': 'isDefault' },
-						{ 'operator': 'eq', 'value': userInfo.id, 'property': 'createdBy' },
-					];
+					// 					const filter = [
+					// 						{ 'operator': 'eq', 'value': false, 'property': 'isDefault' },
+					// 						{ 'operator': 'eq', 'value': userInfo.id, 'property': 'createdBy' },
+					// 					];
+					//
+					// 					const query = generateQuery(1, 10, JSON.stringify(filter));
+					// const data = await dispatch(getLibraryList(query)).unwrap();
+					const data = await dispatch(getMyLibraryList()).unwrap();
+					const { rows } = data;
 
-					const query = generateQuery(1, 10, JSON.stringify(filter));
-					const data = await dispatch(getLibraryList(query)).unwrap();
-
-					dispatch(updateAuthLibrary(data));
+					dispatch(updateAuthLibrary({ rows: rows.custom, count: rows.custom.length }));
+					setStatusLibraries(rows.default);
 					setStatus(STATUS_SUCCESS);
 				} catch (err) {
 					const statusCode = err?.statusCode || 500;
@@ -236,5 +246,5 @@ export const useFetchAuthLibraries = (current = 1, perPage = 10) => {
 		};
 	}, [retry, current, perPage, userInfo]);
 
-	return { status, retryRequest };
+	return { status, retryRequest, statusLibraries };
 };

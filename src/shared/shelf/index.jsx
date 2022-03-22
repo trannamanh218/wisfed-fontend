@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import BookItem from 'shared/book-item';
 import './shelf.scss';
 
-const Shelf = ({ list, isMyShelve, handleClick, handleRemoveBook }) => {
+const Shelf = ({ list, isMyShelve, handleClick, handleUpdateLibrary }) => {
 	if (list && list.length) {
 		return (
 			<div className='shelf'>
@@ -14,7 +14,7 @@ const Shelf = ({ list, isMyShelve, handleClick, handleRemoveBook }) => {
 						data={item}
 						isMyShelve={isMyShelve}
 						handleClick={handleClick}
-						handleRemoveBook={handleRemoveBook}
+						handleUpdateLibrary={handleUpdateLibrary}
 					/>
 				))}
 			</div>
@@ -28,14 +28,14 @@ Shelf.defaultProps = {
 	list: [],
 	isMyShelve: false,
 	handleClick: () => {},
-	handleRemoveBook: () => {},
+	handleUpdateLibrary: () => {},
 };
 
 Shelf.propTypes = {
 	list: PropTypes.array,
 	isMyShelve: PropTypes.bool,
 	handleClick: PropTypes.func,
-	handleRemoveBook: PropTypes.func,
+	handleUpdateLibrary: PropTypes.func,
 };
 
 export default Shelf;

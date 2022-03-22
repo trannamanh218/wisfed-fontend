@@ -36,3 +36,6 @@ export const YEAR_LIMIT = 1904;
 export const STATUS_LOADING = 'LOADING';
 export const STATUS_IDLE = 'IDLE';
 export const STATUS_SUCCESS = 'SUCCESS';
+
+//library
+export const LIBRARY_LIMIT = 20;

@@ -4,12 +4,18 @@ import PropTypes from 'prop-types';
 import './search-field.scss';
 import classNames from 'classnames';
 
-const SearchField = ({ placeholder = 'Nhập thông tin tìm kiếm...', handleChange, className }) => {
+const SearchField = ({ placeholder = 'Nhập thông tin tìm kiếm...', handleChange, className, value = '' }) => {
 	const inputRef = useRef();
 	return (
 		<div className={classNames('search-field', { [`${className}`]: className })}>
 			<img className='search-field__icon' src={SearchIcon} alt='search-icon' />
-			<input ref={inputRef} className='search-field__input' placeholder={placeholder} onChange={handleChange} />
+			<input
+				ref={inputRef}
+				className='search-field__input'
+				placeholder={placeholder}
+				onChange={handleChange}
+				value={value}
+			/>
 		</div>
 	);
 };
@@ -18,6 +24,7 @@ SearchField.propTypes = {
 	placeholder: PropTypes.string,
 	handleChange: PropTypes.func,
 	className: PropTypes.string,
+	value: PropTypes.string,
 };
 
 export default SearchField;

@@ -1,6 +1,7 @@
 import { useFetchAuthLibraries } from 'api/library.hook';
 import { generateQuery } from 'helpers/Common';
 import _ from 'lodash';
+import PropTypes from 'prop-types';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
@@ -11,12 +12,12 @@ import PaginationGroup from 'shared/pagination-group';
 import SearchField from 'shared/search-field';
 import SelectBox from 'shared/select-box';
 import Shelf from 'shared/shelf';
-import PropTypes from 'prop-types';
+import SearchBook from './SearchBook';
 import './main-shelves.scss';
 
 const DEFAULT_LIBRARY = { value: 'all', title: 'Tất cả', id: 'all' };
 
-const MainShelves = ({ handleRemoveBook, isUpdate }) => {
+const MainShelves = ({ handleUpdateLibrary, isUpdate }) => {
 	const [isPublic, setIsPublic] = useState(true);
 	const [allBooks, setAllBooks] = useState({ rows: [], count: 0 });
 	const [currentLibrary, setCurrentLibrary] = useState({ value: 'all', title: 'Tất cả', id: 'all' });
@@ -35,6 +36,8 @@ const MainShelves = ({ handleRemoveBook, isUpdate }) => {
 
 	useEffect(() => {
 		setCurrentLibrary(DEFAULT_LIBRARY);
+		setFilter('[]');
+		setInputSearch('');
 	}, [params]);
 
 	useFetchAuthLibraries();
@@ -72,8 +75,6 @@ const MainShelves = ({ handleRemoveBook, isUpdate }) => {
 	};
 
 	const updateInputSearch = value => {
-		setInputSearch(value);
-
 		if (value) {
 			const filterValue = [];
 			filterValue.push({ 'operator': 'search', 'value': value.trim(), 'property': 'name' });
@@ -86,6 +87,7 @@ const MainShelves = ({ handleRemoveBook, isUpdate }) => {
 	const debounceSearch = useCallback(_.debounce(updateInputSearch, 1000), []);
 
 	const handleSearch = e => {
+		setInputSearch(e.target.value);
 		debounceSearch(e.target.value);
 	};
 
@@ -104,7 +106,12 @@ const MainShelves = ({ handleRemoveBook, isUpdate }) => {
 			</h4>
 			<div className='main-shelves__header'>
 				<h4>Tủ sách của tôi</h4>
-				<SearchField placeholder='Tìm kiếm sách' className='main-shelves__search' handleChange={handleSearch} />
+				<SearchField
+					placeholder='Tìm kiếm sách'
+					className='main-shelves__search'
+					handleChange={handleSearch}
+					value={inputSearch}
+				/>
 			</div>
 			<div className='main-shelves__pane'>
 				<div className='main-shelves__filters'>
@@ -121,8 +128,22 @@ const MainShelves = ({ handleRemoveBook, isUpdate }) => {
 						</Button>
 					)}
 				</div>
-				{/* <SearchBook/> */}
-				<Shelf list={allBooks.rows} isMyShelve={checkAuthorize()} handleRemoveBook={handleRemoveBook} />
+
+				{filter !== '[]' ? (
+					<SearchBook
+						inputSearch={inputSearch}
+						list={allBooks.rows}
+						isMyShelve={checkAuthorize()}
+						handleUpdateLibrary={handleUpdateLibrary}
+					/>
+				) : (
+					<Shelf
+						list={allBooks.rows}
+						isMyShelve={checkAuthorize()}
+						handleUpdateLibrary={handleUpdateLibrary}
+					/>
+				)}
+
 				{allBooks.count > 10 && <PaginationGroup />}
 			</div>
 		</div>
@@ -131,12 +152,12 @@ const MainShelves = ({ handleRemoveBook, isUpdate }) => {
 
 MainShelves.defaultProps = {
 	isUpdate: false,
-	handleRemoveBook: () => {},
+	handleUpdateLibrary: () => {},
 };
 
 MainShelves.propTypes = {
 	isUpdate: PropTypes.bool,
-	handleRemoveBook: PropTypes.func,
+	handleUpdateLibrary: PropTypes.func,
 };
 
 export default MainShelves;

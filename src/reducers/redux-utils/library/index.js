@@ -2,7 +2,9 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import {
 	addBookToDefaultLibraryAPI,
 	addBookToLibraryAPI,
+	addRemoveBookAPI,
 	allBookInLibraryAPI,
+	checkBookLibraryAPI,
 	libraryAPI,
 	listBookLibraryAPI,
 	myLibraryAPI,
@@ -59,7 +61,10 @@ export const addBookToDefaultLibrary = createAsyncThunk(
 		const { type, ...data } = params;
 		try {
 			const response = await Request.makePost(addBookToDefaultLibraryAPI(type), data);
-			return response.data;
+			return {
+				...response.data,
+				type,
+			};
 		} catch (err) {
 			const error = JSON.parse(err.response);
 			return rejectWithValue(error);
@@ -139,6 +144,30 @@ export const removeAllBookInLibraries = createAsyncThunk(
 	}
 );
 
+export const addRemoveBookInLibraries = createAsyncThunk(
+	'library/addRemoveBookInLibrary',
+	async (params, { rejectWithValue }) => {
+		const { id, ...data } = params;
+		try {
+			const response = await Request.makePost(addRemoveBookAPI(id), data);
+			return response.data;
+		} catch (err) {
+			const error = JSON.parse(err.response);
+			return rejectWithValue(error);
+		}
+	}
+);
+
+export const checkBookInLibraries = createAsyncThunk('library/checkBookInLibrarie', async (id, { rejectWithValue }) => {
+	try {
+		const response = await Request.makeGet(checkBookLibraryAPI(id));
+		return response.data;
+	} catch (err) {
+		const error = JSON.parse(err.response);
+		return rejectWithValue(error);
+	}
+});
+
 const librarySlice = createSlice({
 	name: 'library',
 	initialState: {
@@ -194,6 +223,15 @@ const librarySlice = createSlice({
 		[removeBookFromLibrary.rejected]: (state, action) => {
 			state.isFetching = false;
 			state.error = action.payload;
+		},
+		[addBookToDefaultLibrary.pending]: state => {
+			state.isFetching = true;
+		},
+		[addBookToDefaultLibrary.fulfilled]: state => {
+			state.isFetching = false;
+		},
+		[addBookToDefaultLibrary.pending]: state => {
+			state.isFetching = false;
 		},
 	},
 });

@@ -12,6 +12,7 @@ const StatusModalContainer = ({
 	handleConfirm,
 	onChangeLibrary,
 	libraryId,
+	onChangeShelves,
 }) => {
 	const [showInput, setShowInput] = useState(false);
 	const addBookShelves = () => {
@@ -23,7 +24,12 @@ const StatusModalContainer = ({
 	return (
 		<>
 			<StatusBookList currentStatus={currentStatus} handleChangeStatus={handleChangeStatus} />
-			<BookShelvesList list={bookShelves} onChangeLibrary={onChangeLibrary} libraryId={libraryId} />
+			<BookShelvesList
+				list={bookShelves}
+				onChangeLibrary={onChangeLibrary}
+				libraryId={libraryId}
+				onChangeShelves={onChangeShelves}
+			/>
 			<AddBookShelveForm
 				showInput={showInput}
 				updateBookShelve={updateBookShelve}

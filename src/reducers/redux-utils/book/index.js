@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import {
+	allBookInLibraryAPI,
 	bookAllReviewAPI,
 	bookAPI,
 	bookDetailAPI,
@@ -8,6 +9,8 @@ import {
 	bookFriendReviewAPi,
 } from 'constants/apiURL';
 import Request from 'helpers/Request';
+import _ from 'lodash';
+import { checkBookInLibraries } from '../library';
 
 export const getBookList = createAsyncThunk('book/getBookList', async (params, { rejectWithValue }) => {
 	try {
@@ -33,10 +36,21 @@ export const getElasticSearchBookList = createAsyncThunk(
 	}
 );
 
-export const getBookDetail = createAsyncThunk('book/getBookDetail', async (id, { rejectWithValue }) => {
+export const getBookDetail = createAsyncThunk('book/getBookDetail', async (params, { dispatch, rejectWithValue }) => {
+	const { id, ...query } = params;
+
 	try {
 		const response = await Request.makeGet(bookDetailAPI(id));
-		return response.data;
+		let status = null;
+
+		if (!_.isEmpty(query) && !_.isEmpty(query.userId)) {
+			const response_2 = await dispatch(checkBookInLibraries(id)).unwrap();
+			const { rows } = response_2;
+			const library = rows.find(item => item.library.isDefault);
+			status = library ? library.library.defaultType : null;
+		}
+
+		return { ...response.data, status };
 	} catch (err) {
 		const error = JSON.parse(err.response);
 		throw rejectWithValue(error);
@@ -73,10 +87,12 @@ const bookSlice = createSlice({
 		bookInfo: {},
 		bookReviewData: {},
 		currentBook: { id: null },
+		bookForCreatePost: {},
 	},
 	reducers: {
 		updateCurrentBook: (state, action) => {
-			state.currentBook = action.payload;
+			state.bookInfo = action.payload;
+			state.bookForCreatePost = action.payload;
 		},
 	},
 	extraReducers: {

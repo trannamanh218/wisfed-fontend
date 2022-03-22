@@ -9,7 +9,7 @@ import './book-item.scss';
 import _ from 'lodash';
 
 const BookItem = props => {
-	const { data, handleClick, isMyShelve, handleRemoveBook } = props;
+	const { data, handleClick, isMyShelve, handleUpdateLibrary } = props;
 	const [isPublic, setIsPublic] = useState(data.isPublic);
 
 	const handlePublic = () => {
@@ -33,7 +33,7 @@ const BookItem = props => {
 			<div className='book-item__container'>
 				<BookThumbnail size='lg' {...data} />
 				<div className='book-item__overlay'>
-					{isMyShelve && <SettingMore bookData={data} handleRemoveBook={handleRemoveBook} />}
+					{isMyShelve && <SettingMore bookData={data} handleUpdateLibrary={handleUpdateLibrary} />}
 					{renderOverlay()}
 				</div>
 			</div>
@@ -60,7 +60,7 @@ BookItem.defaultProps = {
 	},
 	isMyShelve: false,
 	handleClick: () => {},
-	handleRemoveBook: () => {},
+	handleUpdateLibrary: () => {},
 };
 
 BookItem.propTypes = {
@@ -74,6 +74,6 @@ BookItem.propTypes = {
 	}),
 	isMyShelve: PropTypes.bool,
 	handleClick: PropTypes.func,
-	handleRemoveBook: PropTypes.func,
+	handleUpdateLibrary: PropTypes.func,
 };
 export default BookItem;

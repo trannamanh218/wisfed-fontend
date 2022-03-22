@@ -60,7 +60,8 @@
 		border-radius: 50%;
 		background-color: rgba($white-off, 1);
 		border: 2px solid $ash-line;
-		display: none;
+		// display: none;
+		display: flex;
 		align-items: center;
 		justify-content: space-around;
 		color: $ash-placeholder;
@@ -82,8 +83,8 @@
 			color: $white;
 			margin-top: auto;
 			margin-right: -12px;
-			visibility: hidden;
-			display: none;
+			// visibility: hidden;
+			// display: none;
 			transition: all 0.2s ease-in-out;
 		}
 
@@ -96,7 +97,6 @@
 
 		.setting-more {
 			margin-left: auto;
-			display: none;
 		}
 	}
 }

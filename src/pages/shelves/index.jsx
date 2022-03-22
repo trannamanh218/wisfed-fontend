@@ -8,13 +8,13 @@ const BookShelves = () => {
 	const [isUpdate, setIsUpdate] = useState(false);
 	useFetchMyLibraries(isUpdate);
 
-	const handleRemoveBook = () => {
+	const handleUpdateLibrary = () => {
 		setIsUpdate(!isUpdate);
 	};
 
 	return (
 		<MainContainer
-			main={<MainShelves handleRemoveBook={handleRemoveBook} isUpdate={isUpdate} />}
+			main={<MainShelves handleUpdateLibrary={handleUpdateLibrary} isUpdate={isUpdate} />}
 			right={<SidebarShelves isUpdate={isUpdate} />}
 		/>
 	);

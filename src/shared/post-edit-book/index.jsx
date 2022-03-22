@@ -4,8 +4,6 @@ import BookThumbnail from 'shared/book-thumbnail';
 import ReactRating from 'shared/react-rating';
 import './post-edit-book.scss';
 import LinearProgressBar from 'shared/linear-progress-bar';
-import StatusButton from 'components/status-button';
-import { STATUS_BOOK } from 'constants';
 
 const PostEditBook = props => {
 	const { data, handleEditBook } = props;
@@ -75,12 +73,12 @@ const PostEditBook = props => {
 					</div>
 				</div>
 				<div className='post-edit-book__action'>
-					<StatusButton
+					{/* <StatusButton
 						libraryId={libraryId}
 						onChangeLibrary={onChangeLibrary}
 						handleClick={handleConfirm}
-						bookData={data}
-					/>
+						status = {data.status}
+					/> */}
 					<div className='post-edit-book__ratings'>
 						<ReactRating initialRating={3.3} readonly={true} fractions={2} />
 						<div className='post-edit-book__rating__number'>(4.2)(09 đánh giá)</div>
