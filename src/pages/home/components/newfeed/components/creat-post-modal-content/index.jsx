@@ -42,6 +42,7 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 
 	const [status, setStatus] = useState(STATUS_IDLE);
 	const [showUpload, setShowUpload] = useState(false);
+	const [validationInput, setValidationInput] = useState();
 	const dispatch = useDispatch();
 	const textFieldEdit = useRef(null);
 
@@ -98,7 +99,9 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 	useEffect(() => {
 		if (!_.isEmpty(bookForCreatePost)) {
 			const newData = { ...taggedData };
-			newData.addBook = bookForCreatePost;
+			const pages = { read: bookForCreatePost.page, reading: 0, wantToRead: 0 };
+			newData.addBook = { bookForCreatePost, progress: pages[bookForCreatePost.status] };
+
 			setTaggedData(newData);
 		}
 	}, [bookForCreatePost]);
@@ -378,11 +381,11 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 
 		if (
 			(!_.isEmpty(taggedData.addBook) || taggedData.addAuthor.length || taggedData.addCategory.length) &&
-			textFieldEdit.current?.innerHTML
+			textFieldEdit.current?.innerText
 		) {
 			isActive = true;
 		}
-		return isActive;
+		return isActive && !validationInput;
 	};
 
 	const handleEditBook = async data => {
@@ -395,6 +398,10 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 		}
 
 		return null;
+	};
+
+	const handleValidationInput = value => {
+		setValidationInput(value);
 	};
 
 	return (
@@ -485,7 +492,12 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 							/>
 
 							{!_.isEmpty(taggedData.addBook) && (
-								<PostEditBook data={taggedData.addBook} handleEditBook={handleEditBook} />
+								<PostEditBook
+									data={taggedData.addBook}
+									handleEditBook={handleEditBook}
+									handleValidationInput={handleValidationInput}
+									validationInput={validationInput}
+								/>
 							)}
 							{showUpload && (
 								<UploadImage
@@ -530,8 +542,10 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 							type='submit'
 							form='createPostForm'
 							onClick={e => {
-								e.preventDefault();
-								onCreatePost();
+								if (checkActive()) {
+									e.preventDefault();
+									onCreatePost();
+								}
 							}}
 						>
 							Đăng

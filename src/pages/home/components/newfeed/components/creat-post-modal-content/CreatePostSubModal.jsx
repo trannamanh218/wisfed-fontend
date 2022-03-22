@@ -6,9 +6,8 @@ import { useCallback, useEffect, useRef } from 'react';
 import SuggestSection from './SuggestSection';
 import TaggedList from './TaggedList';
 import './style.scss';
-import { useDispatch, useSelector } from 'react-redux';
-// import { checkBookInLibrary } from 'reducers/redux-utils/library';
-import { generateQuery } from 'helpers/Common';
+import { useDispatch } from 'react-redux';
+import { checkBookInLibraries } from 'reducers/redux-utils/library';
 
 function CreatPostSubModal(props) {
 	const {
@@ -24,7 +23,6 @@ function CreatPostSubModal(props) {
 	} = props;
 	const inputRef = useRef();
 	const dispatch = useDispatch();
-	const { userInfo } = useSelector(state => state.auth);
 
 	useEffect(() => {
 		if (taggedData.addImages.length === 0) {
@@ -42,20 +40,25 @@ function CreatPostSubModal(props) {
 		debounceSearch(e.target.value, option);
 	};
 
-	const handleComplete = async () => {
-		// if (!_.isEmpty(taggedData.addBook)) {
-		// 	console.log(userInfo);
-		// 	const filter = [
-		// 		{ 'operator': 'eq', 'value': userInfo.id, 'property': 'updatedBy' },
-		// 		{ 'operator': 'eq', 'value': taggedData.addBook.id, 'property': 'bookId' },
-		// 	];
-		// 	const query = generateQuery(1, 10, JSON.stringify(filter));
-		// 	try {
-		// 		await dispatch(checkBookInLibrary(query));
-		// 	} catch (err) {
-		// 		console.log(err);
-		// 	}
-		// }
+	const handleComplete = () => {
+		if (!_.isEmpty(taggedData.addBook)) {
+			if (taggedData.addBook.hasOwnProperty('status')) {
+				return;
+			} else {
+				dispatch(checkBookInLibraries(taggedData.addBook.id))
+					.unwrap()
+					.then(res => {
+						const { rows } = res;
+						const library = rows.find(item => item.library.isDefault);
+						const status = library ? library.library.defaultType : null;
+
+						const pages = { read: taggedData.addBook.page, reading: 0, wantToRead: 0 };
+
+						handleAddToPost({ ...taggedData.addBook, status, progress: pages[status] });
+					})
+					.catch(err => {});
+			}
+		}
 
 		if (option.value === 'modifyImages') {
 			addOptionsToPost({

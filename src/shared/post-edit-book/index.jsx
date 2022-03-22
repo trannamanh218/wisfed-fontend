@@ -1,56 +1,45 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import BookThumbnail from 'shared/book-thumbnail';
 import ReactRating from 'shared/react-rating';
 import './post-edit-book.scss';
 import LinearProgressBar from 'shared/linear-progress-bar';
+import { STATUS_BOOK } from 'constants';
 
 const PostEditBook = props => {
-	const { data, handleEditBook } = props;
-	const [validation, setValidation] = useState();
-	// rating là rating của user cho cuốn sách, không phải rating tổng)
-	const [libraryId, setLibraryId] = useState(null);
+	const { data, handleEditBook, handleValidationInput, validationInput } = props;
+	// rating là rating của user cho cuốn sách, không phải rating tổng -- rating 1 lần duy nhất)
 	const pageRef = useRef(0);
 	const [page, setPage] = useState(0);
+	const inputRef = useRef(null);
+
+	useEffect(() => {
+		inputRef.current.focus();
+	}, [data]);
 
 	const handleChange = e => {
 		const { value } = e.target;
 		const numberDigit = data.page.toString().split('').length;
 		const stringPattern = `^[0-9]{1,${numberDigit}}$`;
 		const patternRequire = new RegExp(stringPattern);
+		let message = '';
 		if (value) {
 			const numberOfPage = parseInt(value);
 			if (patternRequire.test(value) && numberOfPage <= data.page) {
-				setValidation('');
 				pageRef.current = numberOfPage;
 				setPage(numberOfPage);
 			} else {
-				if (numberOfPage > data.page) {
-					setValidation(`Số trang không vượt quá ${data.page}`);
-				} else {
-					setValidation('Vui lòng nhập số');
+				if (numberOfPage && numberOfPage > data.page) {
+					message = `Số trang không vượt quá ${data.page}`;
+				} else if (!numberOfPage) {
+					message = 'Vui lòng nhập số';
 				}
 
 				setPage(0);
 			}
 		}
-	};
 
-	const onChangeLibrary = id => {
-		setLibraryId(id);
-	};
-
-	const handleConfirm = status => {
-		if (!validation) {
-			const params = {
-				bookId: data.id,
-				id: libraryId,
-				progress: page,
-				status: status.value,
-			};
-
-			handleEditBook(params);
-		}
+		handleValidationInput(message);
 	};
 
 	return (
@@ -63,27 +52,34 @@ const PostEditBook = props => {
 					</div>
 					<div className='post-edit-book__author'>{data.author || 'Tác giả: Chưa xác định'}</div>
 					<div className='post-edit-book__edit'>
-						<LinearProgressBar />
+						<LinearProgressBar percent={(data.progress / data.page) * 100} />
 						<div className='post-edit-book__editor'>
-							<input className='post-edit-book__input' onChange={handleChange} />
+							{data.status === STATUS_BOOK.wantToRead || data.status === STATUS_BOOK.read ? (
+								<span>{data.progress}</span>
+							) : (
+								<input
+									ref={inputRef}
+									className='post-edit-book__input'
+									onChange={handleChange}
+									value={data.progress}
+									autoFocus
+								/>
+							)}
+
 							<span>/{data.page}</span>
 							<span className='post-edit-book__message'>Nhập số trang sách đã đọc</span>
 						</div>
-						<small className='post-edit-book__message'>{validation}</small>
+						<small className='post-edit-book__message'>{validationInput}</small>
 					</div>
 				</div>
-				<div className='post-edit-book__action'>
-					{/* <StatusButton
-						libraryId={libraryId}
-						onChangeLibrary={onChangeLibrary}
-						handleClick={handleConfirm}
-						status = {data.status}
-					/> */}
-					<div className='post-edit-book__ratings'>
-						<ReactRating initialRating={3.3} readonly={true} fractions={2} />
-						<div className='post-edit-book__rating__number'>(4.2)(09 đánh giá)</div>
+				{data.status === STATUS_BOOK.read ? (
+					<div className='post-edit-book__action'>
+						<div className='post-edit-book__ratings'>
+							<ReactRating initialRating={3.3} readonly={true} fractions={1} />
+							<div className='post-edit-book__rating__number'>(4.2)(09 đánh giá)</div>
+						</div>
 					</div>
-				</div>
+				) : null}
 			</div>
 		</div>
 	);

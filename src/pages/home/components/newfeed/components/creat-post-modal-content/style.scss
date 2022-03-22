@@ -420,12 +420,12 @@
 	font-weight: 600;
 	line-height: 1.5rem;
 	color: #a0a3bd;
-	cursor: not-allowed;
+	cursor: not-allowed !important;
 
 	&.active {
 		background-color: $primary;
 		color: #fcfcfc;
-		cursor: pointer;
+		cursor: pointer !important;
 	}
 }
 
@@ -506,6 +506,7 @@
 		padding: 0.75rem 1.25rem;
 		border-radius: 10px;
 		font-size: 0.75rem;
+		flex-wrap: wrap;
 
 		svg {
 			width: 16px;
@@ -518,6 +519,12 @@
 
 	.badge-book {
 		margin-bottom: 1.5rem;
+		max-width: 480px;
+		display: -webkit-box;
+		overflow: hidden;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp: 1;
+		text-overflow: ellipsis;
 	}
 }
 
