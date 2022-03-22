@@ -14,7 +14,7 @@ import ShareModeComponent from './ShareModeComponent';
 import CreatPostSubModal from './CreatePostSubModal';
 import TaggedList from './TaggedList';
 import UploadImage from './UploadImage';
-import PreviewLink from './PreviewLink';
+import PreviewLink from 'shared/preview-link/PreviewLink';
 import { getPreviewUrl } from 'reducers/redux-utils/post';
 import { useCallback } from 'react';
 import { Circle as CircleLoading } from 'shared/loading';
@@ -95,9 +95,12 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 		textFieldEdit.current.addEventListener('input', () => {
 			handlePlaceholder();
 			detectUrl();
+			createSpanElements();
 		});
 
-		return document.removeEventListener('input', handlePlaceholder);
+		return () => {
+			document.removeEventListener('input', handlePlaceholder);
+		};
 	}, [showTextFieldEditPlaceholder]);
 
 	useEffect(() => {
@@ -114,10 +117,6 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 			if (url !== null) {
 				setUrlAddedArray(url);
 				setHasUrl(true);
-			} else {
-				setHasUrl(false);
-				setUrlAdded({});
-				setUrlAddedArray([]);
 			}
 		}, 1000),
 		[]
@@ -128,6 +127,38 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 			getPreviewUrlFnc(urlAddedArray[urlAddedArray.length - 1]);
 		}
 	}, [urlAddedArray.length]);
+
+	const createSpanElements = () => {
+		const subStringArray = textFieldEdit.current.innerText.split(' ');
+		textFieldEdit.current.innerText = '';
+		const urlRegex = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g;
+		for (let i = 0; i < subStringArray.length; i++) {
+			if (subStringArray[i].match(urlRegex)) {
+				subStringArray[i] = `<span class="url-color">${subStringArray[i]}</span>`;
+			} else {
+				subStringArray[i] = `<span>${subStringArray[i]}</span>`;
+			}
+		}
+		textFieldEdit.current.innerHTML = subStringArray.join(' ');
+		placeCaretAtEnd(textFieldEdit.current);
+	};
+
+	const placeCaretAtEnd = el => {
+		el.focus();
+		if (typeof window.getSelection != 'undefined' && typeof document.createRange != 'undefined') {
+			const range = document.createRange();
+			range.selectNodeContents(el);
+			range.collapse(false);
+			const sel = window.getSelection();
+			sel.removeAllRanges();
+			sel.addRange(range);
+		} else if (typeof document.body.createTextRange != 'undefined') {
+			const textRange = document.body.createTextRange();
+			textRange.moveToElementText(el);
+			textRange.collapse(false);
+			textRange.select();
+		}
+	};
 
 	const getPreviewUrlFnc = async url => {
 		setFetchingUrlInfo(true);
@@ -241,6 +272,7 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 			mentionsAuthor: [],
 			mentionsCategory: [],
 			image: [],
+			preview: urlAdded,
 		};
 
 		if (taggedData.addFriends.length) {

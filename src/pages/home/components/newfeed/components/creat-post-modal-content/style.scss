@@ -228,6 +228,9 @@
 	margin-bottom: 16px;
 	position: relative;
 	overflow-x: hidden;
+	br {
+		display: none;
+	}
 }
 
 .creat-post-modal-content__main__body__text-field-placeholder {
@@ -738,4 +741,8 @@
 		height: fit-content;
 		overflow: hidden;
 	}
+}
+
+.url-color {
+	color: #0576f0;
 }

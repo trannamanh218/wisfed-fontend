@@ -11,7 +11,7 @@ import { ReactComponent as Hashtag } from 'assets/icons/hashtag.svg';
 import { ReactComponent as Feather } from 'assets/icons/feather.svg';
 import { ReactComponent as Star } from 'assets/icons/star.svg';
 import { ReactComponent as Like } from 'assets/icons/like.svg';
-import { ReactComponent as Comment } from 'assets/icons/comment.svg';
+import { ReactComponent as CommentSvg } from 'assets/icons/comment.svg';
 import { ReactComponent as ActionPlus } from 'assets/icons/action-plus.svg';
 import { ReactComponent as Share } from 'assets/icons/share.svg';
 import { ReactComponent as Configure } from 'assets/icons/configure.svg';
@@ -41,7 +41,8 @@ import { ReactComponent as BackChevron } from 'assets/icons/back-chevron.svg';
 import { ReactComponent as Flag } from 'assets/icons/flag.svg';
 import { ReactComponent as Attach } from 'assets/icons/attach.svg';
 import { ReactComponent as RightArrow } from 'assets/icons/arrow.svg';
-import { ReactComponent as Notification } from 'assets/icons/Notification.svg';
+import { ReactComponent as BoldCenterCircle } from 'assets/icons/bold-center-circle.svg';
+
 export {
 	HomeIcon,
 	CategoryIcon,
@@ -56,7 +57,7 @@ export {
 	Feather,
 	Star,
 	Like,
-	Comment,
+	CommentSvg,
 	ActionPlus,
 	Share,
 	Configure,
@@ -86,5 +87,5 @@ export {
 	Flag,
 	Attach,
 	RightArrow,
-	Notification,
+	BoldCenterCircle,
 };

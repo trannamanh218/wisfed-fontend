@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Comment, Like, LikeFill, Share } from 'components/svg';
+import { CommentSvg, Like, LikeFill, Share } from 'components/svg';
 import './post-action-bar.scss';
 
 const PostActionBar = ({ postData, handleLikeAction }) => {
@@ -11,7 +11,7 @@ const PostActionBar = ({ postData, handleLikeAction }) => {
 				<div className='post-action-bar__title'>{postData.like || 0} Thích</div>
 			</div>
 			<div className='post-action-bar__item'>
-				<Comment />
+				<CommentSvg />
 				<div className='post-action-bar__title'>{postData.comments || 0} Bình luận</div>
 			</div>
 			<div className='post-action-bar__item'>

@@ -1,12 +1,11 @@
 import React from 'react';
-import { BrowserRouter, Route } from 'react-router-dom';
+import { BrowserRouter, MemoryRouter, Route } from 'react-router-dom';
 import App from '../src/App';
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 import rootReducer from '../src/reducers/redux-utils';
 
 export const withRouter = (StoryFn, { parameters: { deeplink } }) => {
-
 	if (!deeplink) {
 		return (
 			<BrowserRouter>
@@ -16,9 +15,11 @@ export const withRouter = (StoryFn, { parameters: { deeplink } }) => {
 	}
 
 	return (
-		<BrowserRouter>
-			<App />
-		</BrowserRouter>
+		<MemoryRouter initialEntries={[encodeURI(route)]}>
+			<App>
+				<Route path={path} element={<StoryFn />} />
+			</App>
+		</MemoryRouter>
 	);
 };
 
@@ -38,6 +39,7 @@ export const withStore = (StoryFn, { parameters }) => {
 		</Provider>
 	);
 };
+
 
 // ordered from innermost to outermost, be careful with the order!
 export const globalDecorators = [withRouter, withStore];

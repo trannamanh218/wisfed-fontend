@@ -14,6 +14,7 @@ import PostActionBar from 'shared/post-action-bar';
 import PostBook from 'shared/post-book';
 import UserAvatar from 'shared/user-avatar';
 import './post.scss';
+import PreviewLink from 'shared/preview-link/PreviewLink';
 
 function Post({ postInformations, className, isUpdateProgressReading = false }) {
 	const [postData, setPostData] = useState({});
@@ -24,6 +25,21 @@ function Post({ postInformations, className, isUpdateProgressReading = false }) 
 		const isLike = hasLikedPost();
 		setPostData({ ...postInformations, isLike });
 	}, [postInformations]);
+
+	const directUrl = url => {
+		window.open(url, '_blank');
+	};
+
+	useEffect(() => {
+		const urlAddedArray = document.querySelectorAll('.url-color');
+		if (urlAddedArray.length > 0) {
+			for (let i = 0; i < urlAddedArray.length; i++) {
+				urlAddedArray[i].addEventListener('click', () => {
+					directUrl(urlAddedArray[i].innerText);
+				});
+			}
+		}
+	}, [postData]);
 
 	const hasLikedPost = () => {
 		const { usersLikePost } = postInformations;
@@ -154,7 +170,12 @@ function Post({ postInformations, className, isUpdateProgressReading = false }) 
 					</div>
 				</div>
 			</div>
-			<div className='post__description'>{postData.message || postData.content}</div>
+			<div
+				className='post__description'
+				dangerouslySetInnerHTML={{
+					__html: postData.message || postData.content,
+				}}
+			></div>
 			<ul className='tagged'>
 				{postData.mentionsAuthors?.map(item => (
 					<li key={item.id} className={classNames('badge bg-primary-light')}>
@@ -173,6 +194,11 @@ function Post({ postInformations, className, isUpdateProgressReading = false }) 
 			{postData.book && <PostBook data={postData.book} />}
 
 			<GridImage images={postData.image} id={postData.id} />
+			{postData?.image?.length === 0 && !_.isEmpty(postData.preview) && (
+				<div onClick={() => directUrl(postInformations.preview.url)}>
+					<PreviewLink isFetching={false} urlData={postInformations.preview} />
+				</div>
+			)}
 			<PostActionBar postData={postData} handleLikeAction={handleLikeAction} />
 
 			{postData.usersComments?.map((comment, index) => {
