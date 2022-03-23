@@ -91,7 +91,7 @@
 .group-short-cut__view-more__icon {
 	margin-right: 15px;
 	color: #2d2c42;
-	transition: all 0.3s ease-out;
+	transition: all 0.55s linear;
 	&.view-more {
 		transform: rotate(180deg);
 	}

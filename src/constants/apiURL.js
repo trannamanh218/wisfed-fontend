@@ -7,6 +7,8 @@ export const resetPasswordAPI = '/api/v1/auth/resetPassword/';
 // quote
 export const quoteAPI = '/api/v1/quotes';
 export const quoteDetailAPI = id => `/api/v1/quotes/${id}`;
+export const quoteCommentAPI = '/api/v1/commentQuotes';
+export const likeQuoteAPI = id => `/api/v1/quotes/like/${id}`;
 
 // post
 export const postAPI = '/api/v1/posts';
@@ -33,6 +35,7 @@ export const categoryDetailAPI = id => `/api/v1/categories/${id}`;
 //user
 export const userAPI = '/api/v1/users';
 export const userDetailAPI = id => `/api/v1/users/${id}`;
+export const checkLikedAPI = '/api/v1/users/checkLiked';
 
 // friend
 export const friendAPI = id => `/api/v1/users/${id}/listFriend`;

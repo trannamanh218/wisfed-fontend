@@ -20,9 +20,10 @@ import Register from 'pages/register/component';
 import ForgetPassWord from 'pages/foget-password/component';
 import ChooseTopic from 'pages/choose-topic';
 import Direct from 'pages/choose-topic/abc';
+import PropTypes from 'prop-types';
 import 'scss/main.scss';
 
-function App() {
+function App({ children }) {
 	const dispatch = useDispatch();
 
 	useEffect(() => {
@@ -69,7 +70,7 @@ function App() {
 				<Route path='/review' element={<Review />} />
 				<Route path='/quote' element={<Quote />} />
 				<Route path='/quote/me' element={<MyQuote />} />
-				<Route path='/quote/detail' element={<QuoteDetail />} />
+				<Route path='/quote/detail/:id' element={<QuoteDetail />} />
 				<Route path='/profile' element={<Profile />} />
 				<Route path='/confirm-my-book' element={<ConfirmMyBook />} />
 				<Route path='/login' element={<Login />} />
@@ -78,9 +79,14 @@ function App() {
 				<Route path='/choose-topic' element={<ChooseTopic />} />
 				<Route path='/direct' element={<Direct />} />
 				<Route path='/' element={<Home />} />
+				{children}
 			</Routes>
 		</div>
 	);
 }
+
+App.propTypes = {
+	children: PropTypes.any,
+};
 
 export default App;
