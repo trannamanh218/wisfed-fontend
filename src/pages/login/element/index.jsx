@@ -46,12 +46,17 @@ function LoginComponet() {
 
 	return (
 		<div className='login__container'>
+			{isShow && dataModal && (
+				<div className='login__container-modal'>
+					{' '}
+					<ModalLogin data={dataModal} handleChange={handleChange} />
+				</div>
+			)}
 			<div>
 				<div className='login__header'>
 					<img src={Logo} alt='logo' />
 				</div>
 				<div className='login__body'>
-					{isShow && dataModal ? <ModalLogin data={dataModal} handleChange={handleChange} /> : ''}
 					<div>
 						<span className='login__body-text1'>
 							Khám phá mạng xã hội về sách <br /> hàng đầu Việt Nam

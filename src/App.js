@@ -18,6 +18,8 @@ import { ToastContainer } from 'react-toastify';
 import Login from 'pages/login/element';
 import Register from 'pages/register/component';
 import ForgetPassWord from 'pages/foget-password/component';
+import ChooseTopic from 'pages/choose-topic';
+import Direct from 'pages/choose-topic/abc';
 import 'scss/main.scss';
 
 function App() {
@@ -73,6 +75,8 @@ function App() {
 				<Route path='/login' element={<Login />} />
 				<Route path='/register' element={<Register />} />
 				<Route path='/forget-password' element={<ForgetPassWord />} />
+				<Route path='/choose-topic' element={<ChooseTopic />} />
+				<Route path='/direct' element={<Direct />} />
 				<Route path='/' element={<Home />} />
 			</Routes>
 		</div>

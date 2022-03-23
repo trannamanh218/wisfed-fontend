@@ -2,7 +2,7 @@
 export const authAPI = '/api/v1/auth';
 export const registerAPI = '/api/v1/auth/register';
 export const forgotPasswordAPI = '/api/v1/auth/forgotPassword';
-export const resetPasswordAPI = id => `/api/v1/auth/resetPassword/${id}`;
+export const resetPasswordAPI = '/api/v1/auth/resetPassword/';
 
 // quote
 export const quoteAPI = '/api/v1/quotes';

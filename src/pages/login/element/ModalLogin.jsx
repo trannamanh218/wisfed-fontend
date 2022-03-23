@@ -10,9 +10,17 @@ export default function ModalLogin({ data, handleChange }) {
 	return (
 		<div className='modal__container'>
 			<div className='modal__closeButton' onClick={() => handleChange()}>
-				<button>
-					<CloseButtonIcon />
-				</button>
+				{location.pathname === '/register' && data.isShowIcon === true ? (
+					<Link to='/login'>
+						<button>
+							<CloseButtonIcon />
+						</button>
+					</Link>
+				) : (
+					<button>
+						<CloseButtonIcon />
+					</button>
+				)}
 			</div>
 			<div className='modal__body'>
 				<div className='modal__title'>
@@ -25,15 +33,15 @@ export default function ModalLogin({ data, handleChange }) {
 				<div className='modal__subcribe'>
 					<span>{data?.scribe}</span>
 					<br />
-					{location.pathname === '/register' && data.isShowIcon === true ? (
-						<span style={{ color: '#0576F0' }}>{data?.scribe2}</span>
+					{location.pathname !== '/login' && data.isShowIcon === true ? (
+						<span style={{ color: '#0576F0' }}>"{data?.scribe2}"</span>
 					) : (
-						<span>{data.scribe2}</span>
+						<span>{data?.scribe2}</span>
 					)}
 				</div>
 				<div className='modal__button-acept'>
 					{location.pathname === '/register' && data.isShowIcon === true ? (
-						<Link to='/login'>
+						<Link to={'login'}>
 							<button onClick={() => handleChange()}>Xác nhận</button>
 						</Link>
 					) : (

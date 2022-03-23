@@ -1,21 +1,57 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Formik, Field, Form } from 'formik';
 import classNames from 'classnames';
 import { useDispatch } from 'react-redux';
-
+import ModalLogin from 'pages/login/element/ModalLogin';
+import { forgotPassword } from 'reducers/redux-utils/auth';
 import { changeKey } from 'reducers/redux-utils/forget-password';
+import { useSelector } from 'react-redux';
+import { Circle } from 'shared/loading';
+import { emialValidate } from 'helpers/Validation';
+import { toast } from 'react-toastify';
 
 function ForgetpasswordFormComponent() {
+	const isFetching = useSelector(state => state.auth.isFetching);
 	const dispatch = useDispatch();
+	const [isShow, setIsShow] = useState(false);
+	const [dataModal, setDatamodal] = useState({});
 
-	const handleChange = () => {
+	const handleChangeModal = () => {
+		setIsShow(false);
 		dispatch(changeKey(true));
+	};
+
+	const handleSubmit = async data => {
+		localStorage.setItem('emailForgot', JSON.stringify(data.email));
+		try {
+			await dispatch(forgotPassword(data)).unwrap();
+			if (!isFetching) {
+				setTimeout(() => {
+					setIsShow(true);
+				}, 500);
+				setDatamodal({
+					title: 'Đã gửi mã',
+					title2: 'Xác Nhận',
+					isShowIcon: true,
+					scribe: 'Vui lòng kiểm tra hòm thư ',
+					scribe2: `${data.email}`,
+				});
+			}
+		} catch (err) {
+			toast.error('Lỗi hệ thống');
+		}
 	};
 
 	const RenderForm = () => {
 		return (
 			<div className='forget__form__email'>
-				<Formik initialValues={{ email: '' }}>
+				<Circle loading={isFetching} />
+				{isShow === true && dataModal && (
+					<div className='forgot__modal__container'>
+						<ModalLogin data={dataModal} handleChange={handleChangeModal} />
+					</div>
+				)}
+				<Formik initialValues={{ email: '' }} onSubmit={handleSubmit} validationSchema={emialValidate}>
 					<Form className='forgetPassword__form'>
 						<div className='forget__name-title'>
 							<span>Quên mật khẩu</span>
@@ -51,14 +87,7 @@ function ForgetpasswordFormComponent() {
 								);
 							}}
 						</Field>
-						<button
-							onClick={() => {
-								handleChange();
-							}}
-							className='forgetPassword__form__btn'
-						>
-							Lấy lại mật khẩu
-						</button>
+						<button className='forgetPassword__form__btn'>Lấy lại mật khẩu</button>
 					</Form>
 				</Formik>
 			</div>

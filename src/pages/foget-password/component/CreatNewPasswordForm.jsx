@@ -1,11 +1,95 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Formik, Field, Form } from 'formik';
 import classNames from 'classnames';
+import { resetPassword } from 'reducers/redux-utils/auth';
+import { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
+import ModalLogin from 'pages/login/element/ModalLogin';
+import { resetPasswordValidate } from 'helpers/Validation';
+import { forgotPassword } from 'reducers/redux-utils/auth';
 
 function CreatNewPasswordForm() {
+	const isFetching = useSelector(state => state.auth.isFetching);
+	const dispatch = useDispatch();
+	const [isShow, setIsShow] = useState(false);
+	const [dataModal, setDataModal] = useState({});
+	const newEmail = JSON.parse(localStorage.getItem('emailForgot'));
+	const [seconds, setSeconds] = useState(120);
+
+	const handleSubmit = async data => {
+		try {
+			const newData = {
+				email: newEmail,
+				...data,
+			};
+			await dispatch(resetPassword(newData)).unwrap();
+
+			setIsShow(true);
+			setDataModal({
+				title: 'Tạo mật khẩu',
+				title2: 'mới thành công',
+				isShowIcon: true,
+				scribe: 'Mật khẩu mới của bạn là',
+				scribe2: `${data.newPassword}`,
+			});
+		} catch (err) {
+			setIsShow(true);
+			setDataModal({
+				title: 'Tạo mật khẩu',
+				title2: ' mới thất bại',
+				isShowIcon: false,
+				scribe: 'Vui lòng kiểm tra vào thử lại',
+				scribe2: '',
+			});
+		}
+	};
+
+	const formatTime = number => {
+		const mins = Math.floor(number / 60)
+			.toString()
+			.padStart(2, '0');
+		const secondRemain = Math.floor(number % 60)
+			.toString()
+			.padStart(2, '0');
+		return `${mins}:${secondRemain}`;
+	};
+
+	const handleResendOTP = async () => {
+		await dispatch(forgotPassword(newEmail)).unwrap();
+	};
+
+	const renderResendOTP = () => {
+		if (seconds) {
+			return (
+				<>
+					<span>Gửi lại mã trong</span>
+					<span className='timer'>{formatTime(seconds)}</span>
+				</>
+			);
+		}
+		return (
+			<span className='resend' onClick={handleResendOTP}>
+				Gửi lại mã xác nhận
+			</span>
+		);
+	};
+
+	const handleChangeModal = () => {
+		setIsShow(false);
+	};
+
 	return (
 		<div className='forget__form__email'>
-			<Formik initialValues={{ otp: '', password: '', password2: '' }}>
+			{isShow && (
+				<div>
+					<ModalLogin data={dataModal} handleChange={handleChangeModal} />
+				</div>
+			)}
+			<Formik
+				initialValues={{ OTP: '', newPassword: '', confirmPassword: '' }}
+				onSubmit={handleSubmit}
+				validationSchema={resetPasswordValidate}
+			>
 				<Form className='forgetPassword__form'>
 					<div className='forget__name-title'>
 						<span>Xác nhận mật khẩu mới</span>
@@ -16,7 +100,7 @@ function CreatNewPasswordForm() {
 							tạo mật khẩu mới
 						</span>
 					</div>
-					<Field name='otp'>
+					<Field name='OTP'>
 						{({ field, meta }) => {
 							return (
 								<div className='forgetPassword__form__field'>
@@ -45,7 +129,7 @@ function CreatNewPasswordForm() {
 						<span>Không nhận được mã? Gửi lại</span>
 					</div>
 					<hr />
-					<Field name='pasword'>
+					<Field name='newPassword'>
 						{({ field, meta }) => {
 							return (
 								<div className='forgetPassword__form__field'>
@@ -56,7 +140,7 @@ function CreatNewPasswordForm() {
 									>
 										<input
 											className='forgetPassword__form__input-password input-1'
-											type='text'
+											type='password'
 											placeholder='Mật khẩu mới'
 											{...field}
 											value={field.value}
@@ -70,7 +154,7 @@ function CreatNewPasswordForm() {
 							);
 						}}
 					</Field>
-					<Field name='password2'>
+					<Field name='confirmPassword'>
 						{({ field, meta }) => {
 							return (
 								<div className='forgetPassword__form__field'>
@@ -81,7 +165,7 @@ function CreatNewPasswordForm() {
 									>
 										<input
 											className='forgetPassword__form__input-password'
-											type='text'
+											type='password'
 											placeholder='Xác nhận lại mật khẩu mới'
 											{...field}
 											value={field.value}

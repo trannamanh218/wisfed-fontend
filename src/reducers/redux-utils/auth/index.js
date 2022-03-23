@@ -1,6 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { authAPI } from 'constants/apiURL';
-import { registerAPI } from 'constants/apiURL';
+import { authAPI, forgotPasswordAPI, registerAPI, resetPasswordAPI } from 'constants/apiURL';
 import Request from 'helpers/Request';
 import Storage from 'helpers/Storage';
 import _ from 'lodash';
@@ -27,6 +26,25 @@ export const login = createAsyncThunk('auth/login', async (params, { rejectWithV
 		}
 		return {};
 	} catch (err) {
+		return rejectWithValue(err.response);
+	}
+});
+
+export const forgotPassword = createAsyncThunk('auth/forgotPassword', async (params, { rejectWithValue }) => {
+	try {
+		const response = await Request.makePost(forgotPasswordAPI, params);
+		return response;
+	} catch (err) {
+		return rejectWithValue(err.response);
+	}
+});
+
+export const resetPassword = createAsyncThunk('auth/resetPassword', async (params, { rejectWithValue }) => {
+	try {
+		const response = await Request.makePost(resetPasswordAPI, params);
+		return response;
+	} catch (err) {
+		console.log(err.response);
 		return rejectWithValue(err.response);
 	}
 });
@@ -61,6 +79,19 @@ const authSlice = createSlice({
 			state.error = {};
 		},
 		[register.rejected]: (state, action) => {
+			state.isFetching = false;
+			state.userInfo = {};
+			state.error = action.payload;
+		},
+		[forgotPassword.pending]: state => {
+			state.isFetching = true;
+		},
+		[forgotPassword.fulfilled]: (state, action) => {
+			state.isFetching = false;
+			state.userInfo = action.payload;
+			state.error = {};
+		},
+		[forgotPassword.rejected]: (state, action) => {
 			state.isFetching = false;
 			state.userInfo = {};
 			state.error = action.payload;

@@ -64,7 +64,7 @@ function RegisterComponent() {
 				<img src={Logo} alt='logo' />
 			</div>
 			{isShow ? (
-				<div className='container__modal'>
+				<div className='register__container-modal'>
 					<ModalLogin data={dataModal} handleChange={handleChange} />
 				</div>
 			) : (

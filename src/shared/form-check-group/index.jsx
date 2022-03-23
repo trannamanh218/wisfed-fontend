@@ -18,7 +18,7 @@ const FormCheckGroup = ({ type, handleChange, value, ...rest }) => {
 					onChange={handleChange}
 					defaultChecked={data.value === value}
 				/>
-				<Form.Check.Label className='form-check-label--custom'>{name}</Form.Check.Label>
+				<Form.Check.Label className='form-check-label--custom'>{data.title}</Form.Check.Label>
 			</Form.Check>
 		</div>
 	);
