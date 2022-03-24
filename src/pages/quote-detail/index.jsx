@@ -1,12 +1,10 @@
 import MainContainer from 'components/layout/main-container';
-import SidebarQuote from 'pages/quote/sidebar-quote';
+import SidebarMyQuote from 'shared/sidebar-my-quote';
 import React from 'react';
 import MainQuoteDetail from './main-quote-detail';
 
 const QuoteDetail = () => {
-	return <MainContainer main={<MainQuoteDetail />} right={<SidebarQuote />} />;
+	return <MainContainer main={<MainQuoteDetail />} right={<SidebarMyQuote />} />;
 };
-
-QuoteDetail.propTypes = {};
 
 export default QuoteDetail;

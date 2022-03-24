@@ -3,8 +3,7 @@
 .quote-action-bar {
 	display: flex;
 	align-items: center;
-	gap: 2em;
-	padding: 20px 16px;
+	gap: 32px;
 }
 
 .quote-action__item {
@@ -26,6 +25,7 @@
 	svg {
 		width: 24px;
 		height: 24px;
+		margin-left: 12px;
 	}
 
 	.quote-icon {
@@ -49,4 +49,10 @@
 
 .quote-action__name {
 	display: inline-block;
+}
+
+@media only screen and (max-width: 1366px) {
+	.quote-action-bar {
+		gap: 28px;
+	}
 }

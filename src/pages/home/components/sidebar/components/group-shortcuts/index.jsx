@@ -31,7 +31,7 @@ function GroupShortcuts() {
 						<p className='blank-content'>Không có dữ liệu</p>
 					)}
 				</div>
-				{!_.isEmpty(rows) && (
+				{rows.length > 4 && (
 					<button
 						className='group-short-cut__view-more '
 						onClick={() => setViewMoreGroupsStatus(!viewMoreGroupsStatus)}

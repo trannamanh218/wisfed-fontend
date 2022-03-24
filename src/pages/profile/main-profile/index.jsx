@@ -6,6 +6,7 @@ import QuoteTab from './quote-tab';
 import FavoriteAuthorTab from './favorite-author-tab';
 import InforTab from './infor-tab';
 import BookTab from './book-tab';
+import Bookcase from './bookcase-tab';
 
 const MainProfile = () => {
 	const favoriteAuthors = [...Array(2)];
@@ -18,7 +19,7 @@ const MainProfile = () => {
 					<BookTab />
 				</Tab>
 				<Tab eventKey='shelves' title='Tủ sách'>
-					Lorem, ipsum dolor sit amet consectetur adipisicing.
+					<Bookcase />
 				</Tab>
 				<Tab eventKey='articles' title='Bài viết'>
 					Lorem, ipsum dolor sit amet consectetur adipisicing.
