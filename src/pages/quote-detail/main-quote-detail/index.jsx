@@ -21,6 +21,7 @@ const MainQuoteDetail = () => {
 	const [quoteData, setQuoteData] = useState({});
 	const [commentLv1IdArray, setCommentLv1IdArray] = useState([]);
 	const [replyingCommentId, setReplyingCommentId] = useState(0);
+	const [clickReply, setClickReply] = useState(false);
 
 	useEffect(() => {
 		window.scrollTo(0, 0);
@@ -72,7 +73,19 @@ const MainQuoteDetail = () => {
 
 	const handleReply = cmtLv1Id => {
 		setReplyingCommentId(cmtLv1Id);
+		setClickReply(!clickReply);
 	};
+
+	useEffect(() => {
+		const textareaInCommentEdit = document.querySelector(`#textarea-${replyingCommentId}`);
+		if (textareaInCommentEdit) {
+			textareaInCommentEdit.focus();
+			window.scroll({
+				top: textareaInCommentEdit.offsetTop - 400,
+				behavior: 'smooth',
+			});
+		}
+	}, [replyingCommentId, clickReply]);
 
 	return (
 		<div className='main-quote-detail'>
@@ -124,6 +137,7 @@ const MainQuoteDetail = () => {
 											'show': comment.id === replyingCommentId,
 										})}
 										reply={replyingCommentId}
+										textareaId={`textarea-${comment.id}`}
 									/>
 								)}
 							</div>

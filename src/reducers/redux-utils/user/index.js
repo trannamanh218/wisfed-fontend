@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { friendAPI, makeFriendAPI, userAPI, checkLikedAPI } from 'constants/apiURL';
+import { friendAPI, makeFriendAPI, userAPI, checkLikedAPI, userDetailAPI } from 'constants/apiURL';
 import Request from 'helpers/Request';
 
 export const getUserList = createAsyncThunk('user/getUserList', async (params, { rejectWithValue }) => {
@@ -40,6 +40,17 @@ export const getCheckLiked = createAsyncThunk('user/check liked', async (params,
 	} catch (err) {
 		const error = JSON.parse(err.response);
 		throw rejectWithValue(error);
+	}
+});
+
+export const editUserInfo = createAsyncThunk('user/edit user info', async (data, { rejectWithValue }) => {
+	try {
+		const { userId, params } = data;
+		const response = await Request.makePatch(userDetailAPI(userId), params);
+		return response.data;
+	} catch (err) {
+		const error = JSON.parse(err.response);
+		return rejectWithValue(error);
 	}
 });
 

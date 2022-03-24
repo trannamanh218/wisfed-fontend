@@ -3,7 +3,7 @@ import UserAvatar from 'shared/user-avatar';
 import PropTypes from 'prop-types';
 import './comment-editor.scss';
 
-const CommentEditor = ({ userInfo, postData, onCreateComment, className, reply, parentData, indexParent }) => {
+const CommentEditor = ({ userInfo, onCreateComment, className, reply, parentData, indexParent, textareaId }) => {
 	const commentArea = useRef(null);
 
 	const onChangeComment = () => {
@@ -35,7 +35,7 @@ const CommentEditor = ({ userInfo, postData, onCreateComment, className, reply, 
 					rows='1'
 					onChange={onChangeComment}
 					name='content'
-					id={postData.id}
+					id={textareaId}
 					onKeyPress={handleKeyPress}
 				/>
 			</form>
@@ -55,12 +55,12 @@ CommentEditor.defaultProps = {
 
 CommentEditor.propTypes = {
 	userInfo: PropTypes.object,
-	postData: PropTypes.object,
 	onCreateComment: PropTypes.func,
 	className: PropTypes.string,
 	reply: PropTypes.any,
 	parentData: PropTypes.object,
 	indexParent: PropTypes.any,
+	textareaId: PropTypes.string,
 };
 
 export default CommentEditor;

@@ -62,10 +62,21 @@ const QuoteCard = ({ data, isDetail }) => {
 					<p className='quote-card__author__detail__name'>{data?.user?.fullName}</p>
 				</div>
 			</div>
-			<div className='quote-footer'>
-				<div className='quote-footer__left'>
-					<BadgeList list={data?.categories?.slice(0, 2)} className='quote-footer__badge' />
+			{isDetail && (
+				<div className='quote-card__categories-in-detail'>
+					<BadgeList list={data?.categories} className='quote-card__categories-badge' />
 				</div>
+			)}
+			<div className='quote-footer'>
+				{isDetail ? (
+					<div className='quote-footer__left'>
+						{data?.tag !== null && <span className='quote-card__hashtag'>#{data.tag.name}</span>}
+					</div>
+				) : (
+					<div className='quote-footer__left'>
+						<BadgeList list={data?.categories?.slice(0, 2)} className='quote-footer__badge' />
+					</div>
+				)}
 				<div className='quote-footer__right'>
 					<QuoteActionBar
 						data={data}
