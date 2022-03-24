@@ -8,23 +8,20 @@ import StatisticList from 'shared/statistic-list';
 import PropTypes from 'prop-types';
 import './sidebar-shelves.scss';
 import { useSelector } from 'react-redux';
+import { useFetchQuotes } from 'api/quote.hooks';
+import { useFetchStatsReadingBooks } from 'api/library.hook';
 
-const SidebarShelves = () => {
+const SidebarShelves = ({ isUpdate }) => {
+	const { userInfo } = useSelector(state => state.auth);
 	const { libraryData } = useSelector(state => state.library);
-	const libraryList = libraryData.rows.map(item => ({ ...item, quantity: item.books.length }));
+	const libraryList = libraryData?.rows?.map(item => ({ ...item, quantity: item.books.length }));
+	const { quoteData } = useFetchQuotes(
+		1,
+		3,
+		JSON.stringify([{ operator: 'eq', value: userInfo.id, property: 'createdBy' }])
+	);
 
-	const statusList = [
-		{ name: 'Muốn đọc', quantity: 30 },
-		{ name: 'Đang đọc', quantity: 110 },
-		{ name: 'Đã đọc', quantity: 8 },
-	];
-
-	const quoteList = [...Array(5)].map((_, index) => ({
-		author: 'Nguyen Hiến Lê',
-		book: 'Đắc nhân tâm',
-		content: 'Mỗi trang sách hay đều là một hành trình kỳ diệu',
-		id: index,
-	}));
+	const { readingData } = useFetchStatsReadingBooks(isUpdate);
 
 	const myComposing = new Array(10).fill({ source: '/images/book1.jpg', name: 'Design pattern' });
 
@@ -35,10 +32,10 @@ const SidebarShelves = () => {
 				title='Trạng thái đọc'
 				background='light'
 				isBackground={true}
-				list={statusList}
+				list={readingData}
 			/>
 			<MyShelvesList list={libraryList} />
-			<QuotesLinks list={quoteList} title='Quotes' />
+			<QuotesLinks list={quoteData} title='Quotes' />
 			<div className='my-compose'>
 				<BookSlider title='Sách tôi là tác giả' list={myComposing} />
 				<Link className='view-all-link' to='/'>
@@ -50,8 +47,14 @@ const SidebarShelves = () => {
 	);
 };
 
+SidebarShelves.defaultProps = {
+	libraryData: {},
+	isUpdate: false,
+};
+
 SidebarShelves.propTypes = {
-	libraryData: PropTypes.array,
+	libraryData: PropTypes.object,
+	isUpdate: PropTypes.bool,
 };
 
 export default SidebarShelves;

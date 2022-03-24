@@ -36,3 +36,26 @@ export const useFetchActivities = (current = 1, perPage = 10, filter = '[]', isN
 
 	return { status, activity, retryRequest, setActivity };
 };
+
+export const useFetchInfiniateActivities = filter => {
+	const [pagination, setPagination] = useState({ current: 1, perPage: 3 });
+	// const [hasMore, setHasMore] = useState(true);
+	const [postList, setPostList] = useState([]);
+	// const [status, setStatus] = useState(STATUS_IDLE);
+	const dispatch = useDispatch();
+
+	useEffect(() => {
+		getActivities();
+	}, [filter]);
+
+	const getActivities = async () => {
+		try {
+			const query = generateQuery(pagination.current, pagination.perPage, filter);
+			const data = await dispatch(getActivityList(query)).unwrap();
+		} catch (err) {
+			// console.log(err);
+		}
+	};
+
+	return { postList };
+};

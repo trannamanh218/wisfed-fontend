@@ -1,13 +1,14 @@
 import { Field, Form, Formik } from 'formik';
-import { titleBookShelve } from 'helpers/Validation';
+import { nameBookShelve } from 'helpers/Validation';
 import React from 'react';
 import PropTypes from 'prop-types';
 
 const AddBookShelveForm = ({ updateBookShelve, setShowInput, showInput, addBookShelves }) => {
 	const handleSubmit = values => {
-		const title = values.title.trim();
-		if (title) {
-			updateBookShelve(title);
+		const name = values.name.trim();
+		if (name) {
+			const params = { name };
+			updateBookShelve(params);
 		}
 		setShowInput(false);
 	};
@@ -16,14 +17,14 @@ const AddBookShelveForm = ({ updateBookShelve, setShowInput, showInput, addBookS
 		return (
 			<Formik
 				initialValues={{
-					title: '',
+					name: '',
 				}}
-				validationSchema={titleBookShelve}
+				validationSchema={nameBookShelve}
 				onSubmit={handleSubmit}
 			>
 				{({ handleSubmit }) => (
 					<Form data-testid='addShelveForm' onSubmit={handleSubmit}>
-						<Field name='title'>
+						<Field name='name'>
 							{({ field, meta }) => {
 								return (
 									<>

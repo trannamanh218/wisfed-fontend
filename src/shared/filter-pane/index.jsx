@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import './filter-pane.scss';
 
-const FilterPane = ({ children, title, subtitle }) => {
+const FilterPane = ({ children, title, subtitle, onFilter }) => {
 	return (
 		<div className='filter-pane'>
 			<div className='filter-pane__heading'>
@@ -11,7 +11,7 @@ const FilterPane = ({ children, title, subtitle }) => {
 					{title}
 					<span className='filter-pane__subtitle'>{subtitle}</span>
 				</h4>
-				<button className='filter-pane__btn'>
+				<button className='filter-pane__btn' onClick={onFilter}>
 					<Configure />
 				</button>
 			</div>
@@ -23,12 +23,14 @@ const FilterPane = ({ children, title, subtitle }) => {
 FilterPane.defaultProps = {
 	title: '',
 	subtitle: '',
+	onFilter: () => {},
 };
 
 FilterPane.propTypes = {
 	children: PropTypes.node.isRequired,
 	title: PropTypes.string,
 	subtitle: PropTypes.string,
+	onFilter: PropTypes.func,
 };
 
 export default FilterPane;

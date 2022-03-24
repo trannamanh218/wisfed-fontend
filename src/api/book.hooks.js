@@ -1,6 +1,5 @@
-import { STATUS_SUCCESS, STATUS_IDLE, STATUS_LOADING } from 'constants';
+import { STATUS_IDLE, STATUS_LOADING, STATUS_SUCCESS } from 'constants';
 import { generateQuery } from 'helpers/Common';
-import _ from 'lodash';
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
@@ -42,31 +41,36 @@ export const useFetchBooks = (current = 1, perPage = 10, filter = '[]') => {
 };
 
 export const useFetchBookDetail = id => {
-	const { bookInfo } = useSelector(state => state.book);
+	const {
+		book: { bookInfo = {} },
+		auth: { userInfo = {} },
+	} = useSelector(state => state);
 	const [status, setStatus] = useState(STATUS_IDLE);
 	const dispatch = useDispatch();
 
 	useEffect(() => {
 		let isMount = true;
-		if (bookInfo.id !== id || _.isEmpty(bookInfo)) {
-			const fetchBookDetail = async () => {
-				try {
-					await dispatch(getBookDetail(id)).unwrap();
-				} catch (err) {
-					toast.error('Lỗi hệ thống');
-					const statusCode = err?.statusCode || 500;
-					setStatus(statusCode);
-				}
-			};
 
-			if (isMount) {
-				fetchBookDetail();
+		const fetchBookDetail = async () => {
+			const params = { id, userId: userInfo.id };
+
+			try {
+				await dispatch(getBookDetail(params)).unwrap();
+			} catch (err) {
+				toast.error('Lỗi hệ thống');
+				const statusCode = err?.statusCode || 500;
+				setStatus(statusCode);
 			}
+		};
+
+		if (isMount) {
+			fetchBookDetail();
 		}
+
 		return () => {
 			isMount = false;
 		};
-	}, [id]);
+	}, [id, userInfo]);
 
 	return { bookInfo, status };
 };

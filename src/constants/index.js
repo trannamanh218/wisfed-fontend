@@ -1,19 +1,24 @@
 import { CoffeeCupIcon, CircleCheckIcon, TargetIcon } from 'components/svg';
+export const STATUS_BOOK = {
+	reading: 'reading',
+	read: 'read',
+	wantToRead: 'wantToRead',
+};
 
 export const readingStatus = [
 	{
-		'title': 'Đang đọc',
-		'value': 'reading',
+		'name': 'Đang đọc',
+		'value': STATUS_BOOK.reading,
 		'icon': CoffeeCupIcon,
 	},
 	{
-		'title': 'Đã đọc',
-		'value': 'readAlready',
+		'name': 'Đã đọc',
+		'value': STATUS_BOOK.read,
 		'icon': CircleCheckIcon,
 	},
 	{
-		'title': 'Muốn đọc',
-		'value': 'wantRead',
+		'name': 'Muốn đọc',
+		'value': STATUS_BOOK.wantToRead,
 		'icon': TargetIcon,
 	},
 ];
@@ -31,3 +36,6 @@ export const YEAR_LIMIT = 1904;
 export const STATUS_LOADING = 'LOADING';
 export const STATUS_IDLE = 'IDLE';
 export const STATUS_SUCCESS = 'SUCCESS';
+
+//library
+export const LIBRARY_LIMIT = 20;

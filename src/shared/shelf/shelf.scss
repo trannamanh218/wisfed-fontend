@@ -1,8 +1,14 @@
+@import 'src/scss/abstracts/_variables.scss';
+
 .shelf {
 	display: flex;
 	flex-wrap: wrap;
 	gap: 1rem;
 	.book-item {
 		margin-bottom: 2rem;
+	}
+
+	.book-thumbnail {
+		border: 1px solid $ash-line;
 	}
 }

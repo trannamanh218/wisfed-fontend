@@ -31,7 +31,7 @@ function ReadingBook({
 	);
 }
 ReadingBook.propTypes = {
-	bookData: PropTypes.object.isRequired,
+	bookData: PropTypes.object,
 	percent: PropTypes.number,
 };
 export default ReadingBook;

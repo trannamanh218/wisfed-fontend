@@ -80,7 +80,7 @@ function Post({ postInformations, className, isUpdateProgressReading = false }) 
 					];
 				}
 
-				setPostData(prev => ({ ...prev, usersComments, comments: ++prev.comments }));
+				setPostData(prev => ({ ...prev, usersComments, comments: prev.comments + 1 }));
 			})
 			.catch(err => {
 				return err;
@@ -191,7 +191,7 @@ function Post({ postInformations, className, isUpdateProgressReading = false }) 
 				))}
 			</ul>
 
-			{postData.book && <PostBook data={postData.book} />}
+			{postData.book && <PostBook data={{ ...postData.book, bookLibrary: postData.bookLibrary }} />}
 
 			<GridImage images={postData.image} id={postData.id} />
 			{postData?.image?.length === 0 && !_.isEmpty(postData.preview) && (

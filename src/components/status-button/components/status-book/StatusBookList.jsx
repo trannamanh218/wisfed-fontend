@@ -3,33 +3,34 @@ import React from 'react';
 import StatusIconItem from './StatusIconItem';
 import PropTypes from 'prop-types';
 import './style.scss';
+import { STATUS_BOOK } from 'constants';
 
 const StatusBookList = ({ currentStatus, handleChangeStatus }) => {
 	const list = [
 		{
-			'title': 'Đang đọc',
-			'value': 'reading',
+			'name': 'Đang đọc',
+			'value': STATUS_BOOK.reading,
 			'icon': CoffeeCupIcon,
 		},
 		{
-			'title': 'Đã đọc',
-			'value': 'readAlready',
+			'name': 'Đã đọc',
+			'value': STATUS_BOOK.read,
 			'icon': CircleCheckIcon,
 		},
 		{
-			'title': 'Muốn đọc',
-			'value': 'wantRead',
+			'name': 'Muốn đọc',
+			'value': STATUS_BOOK.wantToRead,
 			'icon': TargetIcon,
 		},
 	];
 
 	return (
 		<div className='status-book-wrapper'>
-			<h4 className='status-book__title'>Trạng thái cuốn sách</h4>
+			<h4 className='status-book__name'>Trạng thái cuốn sách</h4>
 			<ul className='status-book__list'>
 				{list.map(item => (
 					<StatusIconItem
-						key={item.title}
+						key={item.name}
 						item={item}
 						currentStatus={currentStatus}
 						handleChangeStatus={handleChangeStatus}

@@ -19,7 +19,7 @@ function BookDetail() {
 		);
 	}
 
-	return <MainContainer main={<BookInfo bookInfo={bookInfo} />} right={<BookReference />} />;
+	return <MainContainer main={<BookInfo />} right={<BookReference />} />;
 }
 
 export default BookDetail;

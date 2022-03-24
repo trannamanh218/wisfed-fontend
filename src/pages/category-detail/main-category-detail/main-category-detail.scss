@@ -86,4 +86,25 @@
 			}
 		}
 	}
+
+	&__modal {
+		.modal-content {
+			max-width: 380px;
+			.form-check {
+				padding-left: 3rem !important;
+			}
+		}
+
+		.modal-body {
+			padding: 3rem 2rem;
+		}
+
+		&__option__group {
+			margin-bottom: 1.75rem;
+		}
+
+		.btn-confirm {
+			width: 100%;
+		}
+	}
 }

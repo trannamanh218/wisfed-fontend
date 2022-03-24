@@ -49,7 +49,7 @@ const BookReview = () => {
 		<div className='book-review'>
 			<ReviewRating list={listRating} ratingLevel={4.2} ratingTotal={3200} className='book-review__rating' />
 			<Tabs className='book-review__tabs'>
-				<Tab eventKey='review' title='Review'>
+				<Tab eventKey='review' title='Reviews'>
 					<ReviewTab />
 				</Tab>
 				<Tab eventKey='quotes' title='Quotes'>
