@@ -25,6 +25,7 @@ export const creatBookCopyrightsAPI = '/api/v1/bookCopyrights';
 export const bookAllReviewAPI = id => `/api/v1/books/${id}/reviews`;
 export const bookFollowReviewAPi = id => `/api/v1/books/${id}/followReviews`;
 export const bookFriendReviewAPi = id => `/api/v1/books/${id}/friendReviews`;
+export const progressBookAPI = id => `/api/v1/books/updateBookProgress/${id}`;
 
 // category
 export const categoryAPI = '/api/v1/categories';

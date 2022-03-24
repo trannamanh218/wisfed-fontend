@@ -103,20 +103,6 @@ export const getListBookLibrary = createAsyncThunk(
 	}
 );
 
-export const updateProgressReadingBook = createAsyncThunk(
-	'library/updateProgressReadingBook',
-	async (params, { rejectWithValue }) => {
-		const { id, ...data } = params;
-		try {
-			const response = await Request.makePatch(updateBookAPI(id), data);
-			return response.data;
-		} catch (err) {
-			const error = JSON.parse(err.response);
-			return rejectWithValue(error);
-		}
-	}
-);
-
 export const removeBookFromLibrary = createAsyncThunk(
 	'library/updateProgressReadingBook',
 	async (params, { rejectWithValue }) => {

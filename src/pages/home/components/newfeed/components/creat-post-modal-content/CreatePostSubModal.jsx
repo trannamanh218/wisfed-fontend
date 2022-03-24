@@ -20,6 +20,8 @@ function CreatPostSubModal(props) {
 		taggedData,
 		removeTaggedItem,
 		addOptionsToPost,
+		taggedDataPrevious,
+		handleValidationInput,
 	} = props;
 	const inputRef = useRef();
 	const dispatch = useDispatch();
@@ -42,21 +44,23 @@ function CreatPostSubModal(props) {
 
 	const handleComplete = () => {
 		if (!_.isEmpty(taggedData.addBook)) {
-			if (taggedData.addBook.hasOwnProperty('status')) {
-				return;
-			} else {
-				dispatch(checkBookInLibraries(taggedData.addBook.id))
-					.unwrap()
-					.then(res => {
-						const { rows } = res;
-						const library = rows.find(item => item.library.isDefault);
-						const status = library ? library.library.defaultType : null;
+			if (!taggedData.addBook.hasOwnProperty('status')) {
+				if (taggedDataPrevious.addBook.id !== taggedData.addBook.id) {
+					dispatch(checkBookInLibraries(taggedData.addBook.id))
+						.unwrap()
+						.then(res => {
+							const { rows } = res;
+							const library = rows.find(item => item.library.isDefault);
+							const status = library ? library.library.defaultType : null;
+							const pages = { read: taggedData.addBook.page, reading: '', wantToRead: '' };
 
-						const pages = { read: taggedData.addBook.page, reading: 0, wantToRead: 0 };
-
-						handleAddToPost({ ...taggedData.addBook, status, progress: pages[status] });
-					})
-					.catch(err => {});
+							handleAddToPost({ ...taggedData.addBook, status, progress: pages[status] || '' });
+							handleValidationInput('');
+						})
+						.catch(() => {
+							return;
+						});
+				}
 			}
 		}
 
@@ -172,6 +176,8 @@ CreatPostSubModal.propTypes = {
 	taggedData: PropTypes.object,
 	removeTaggedItem: PropTypes.func,
 	addOptionsToPost: PropTypes.func,
+	taggedDataPrevious: PropTypes.object,
+	handleValidationInput: PropTypes.func,
 };
 
 export default CreatPostSubModal;

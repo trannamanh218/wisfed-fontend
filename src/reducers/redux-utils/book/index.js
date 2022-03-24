@@ -7,6 +7,7 @@ import {
 	bookElasticSearchAPI,
 	bookFollowReviewAPi,
 	bookFriendReviewAPi,
+	progressBookAPI,
 } from 'constants/apiURL';
 import Request from 'helpers/Request';
 import _ from 'lodash';
@@ -77,6 +78,20 @@ export const getReviewOfBook = createAsyncThunk('book/getAllReviewOfBook', async
 		throw rejectWithValue(error);
 	}
 });
+
+export const updateProgressReadingBook = createAsyncThunk(
+	'library/updateProgressReadingBook',
+	async (params, { rejectWithValue }) => {
+		const { id, ...data } = params;
+		try {
+			const response = await Request.makePatch(progressBookAPI(id), data);
+			return response.data;
+		} catch (err) {
+			const error = JSON.parse(err.response);
+			return rejectWithValue(error);
+		}
+	}
+);
 
 const bookSlice = createSlice({
 	name: 'book',
