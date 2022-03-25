@@ -199,18 +199,18 @@ const MainCategoryDetail = ({ handleViewBookDetail }) => {
 							<h4>Mặc định</h4>
 							<MultipleRadio list={checkOptions} name='default' value='likeMost' />
 						</div>
-						<div className='main-category-detail__modal__option__group'>
+						{/* <div className='main-category-detail__modal__option__group'>
 							<h4>Theo số sao</h4>
 							<MultipleCheckbox list={starOptions} name='star' value='1' />
-						</div>
+						</div> */}
 						<div className='main-category-detail__modal__option__group'>
 							<h4>Theo thời gian phát hành</h4>
 							<MultipleRadio list={publishOptiosn} name='pulish-time' value='' />
 						</div>
-						<div className='main-category-detail__modal__option__group'>
+						{/* <div className='main-category-detail__modal__option__group'>
 							<h4>Theo người review</h4>
 							<MultipleCheckbox list={reviewOptions} name='review' value='' />
-						</div>
+						</div> */}
 						<Button className='btn-confirm'>Xác nhận</Button>
 					</ModalBody>
 				</Modal>

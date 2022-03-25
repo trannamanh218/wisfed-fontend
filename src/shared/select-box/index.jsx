@@ -7,7 +7,7 @@ import React, { useEffect, useState } from 'react';
 import { useVisible } from 'shared/hooks';
 import './select-box.scss';
 
-const SelectBox = ({ defaultOption, list, onChangeOption, name }) => {
+const SelectBox = ({ defaultOption, list, onChangeOption, name, className }) => {
 	const { ref, isVisible, setIsVisible } = useVisible(false);
 	const [activeItem, setActiveItem] = useState({ value: 1, title: 1, id: 1 });
 
@@ -36,7 +36,7 @@ const SelectBox = ({ defaultOption, list, onChangeOption, name }) => {
 	};
 
 	return (
-		<div className='select-box' ref={ref}>
+		<div className={`select-box ${className ? className : ''}`} ref={ref}>
 			<div className='select-box__btn' onClick={handleOpen}>
 				<span className='select-box__value'>{activeItem.title || activeItem.name}</span>
 				<img className='select-box__icon' src={dropdownIcon} alt='dropdown' />

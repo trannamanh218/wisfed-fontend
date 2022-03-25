@@ -67,5 +67,5 @@ export const checkBookLibraryAPI = id => `/api/v1/libraries/checkBookLibrary/${i
 export const otherListBookInLibaries = id => `/api/v1/libraries/listBookBy/${id}`;
 
 // comment activity
-export const commentActivityAPI = '/api/v1/commentActivities';
-export const commentActivityDetailAPI = id => `/api/v1/commentActivities/${id}`;
+export const commentActivityAPI = '/api/v1/commentMiniposts';
+export const commentActivityDetailAPI = id => `/api/v1/commentMiniposts/${id}`;

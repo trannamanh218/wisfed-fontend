@@ -54,7 +54,7 @@ function Post({ postInformations, className, isUpdateProgressReading = false }) 
 
 	const onCreateComment = (content, reply, parentData, indexParent) => {
 		const params = {
-			activityId: postData.activityId,
+			minipostId: postData.minipostId,
 			content: content,
 			mediaUrl: [],
 			reply,
@@ -63,7 +63,7 @@ function Post({ postInformations, className, isUpdateProgressReading = false }) 
 		dispatch(createComment(params))
 			.unwrap()
 			.then(res => {
-				const propertyComment = ['activityId', 'content', 'getstreamId', 'reply', 'id', 'createdAt'];
+				const propertyComment = ['minipostId', 'content', 'getstreamId', 'reply', 'id', 'createdAt'];
 				const newComment = _.pick(res, propertyComment);
 				newComment.user = userInfo;
 				newComment.replyComments = [];
@@ -88,7 +88,7 @@ function Post({ postInformations, className, isUpdateProgressReading = false }) 
 	};
 
 	const handleLikeAction = () => {
-		const params = { activityId: postData.activityId };
+		const params = { minipostId: postData.minipostId };
 		dispatch(updateReactionActivity(params))
 			.unwrap()
 			.then(() => {
@@ -113,7 +113,7 @@ function Post({ postInformations, className, isUpdateProgressReading = false }) 
 		const newData = {
 			content: '',
 			reply: parentData.id || data.id,
-			activityId: postData.activityId,
+			minipostId: postData.minipostId,
 			user: { ...userInfo },
 			replyComments: [],
 		};
@@ -246,7 +246,7 @@ function Post({ postInformations, className, isUpdateProgressReading = false }) 
 
 				return (
 					<CommentEditor
-						key={`editor-${comment.activityId}-${index}`}
+						key={`editor-${comment.minipostId}-${index}`}
 						userInfo={userInfo}
 						postData={postData}
 						onCreateComment={onCreateComment}

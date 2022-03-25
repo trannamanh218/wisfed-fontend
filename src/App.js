@@ -16,8 +16,9 @@ import { Routes, Route } from 'react-router-dom';
 import { login } from 'reducers/redux-utils/auth';
 import { ToastContainer } from 'react-toastify';
 import PropTypes from 'prop-types';
-import 'scss/main.scss';
 import NotFound from 'pages/not-found';
+import 'scss/main.scss';
+import ReadingSummary from 'pages/reading-summary';
 
 function App({ children }) {
 	const dispatch = useDispatch();
@@ -74,6 +75,7 @@ function App({ children }) {
 				<Route path='/profile' element={<Profile />} />
 				<Route path='/confirm-my-book' element={<ConfirmMyBook />} />
 				<Route path='/404' element={<NotFound />} />
+				<Route path='/reading/summary' element={<ReadingSummary />} />
 				<Route path='/' element={<Home />} />
 				{children}
 			</Routes>

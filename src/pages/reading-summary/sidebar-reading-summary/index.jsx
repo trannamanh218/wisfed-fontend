@@ -1,17 +1,16 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import BookSlider from 'shared/book-slider';
-import MyShelvesList from 'shared/my-shelves-list';
-import QuotesLinks from 'shared/quote-links';
-import ReadChallenge from 'shared/read-challenge';
-import StatisticList from 'shared/statistic-list';
 import PropTypes from 'prop-types';
-import './sidebar-shelves.scss';
+import { useFetchStatsReadingBooks } from 'api/library.hook';
+import StatisticList from 'shared/statistic-list';
+import MyShelvesList from 'shared/my-shelves-list';
 import { useSelector } from 'react-redux';
 import { useFetchQuotes } from 'api/quote.hooks';
-import { useFetchStatsReadingBooks } from 'api/library.hook';
+import QuotesLinks from 'shared/quote-links';
+import BookSlider from 'shared/book-slider';
+import { Link } from 'react-router-dom';
+import './sidebar-reading-summary.scss';
 
-const SidebarShelves = ({ isUpdate }) => {
+const SidebarReadingSummary = props => {
 	const { userInfo } = useSelector(state => state.auth);
 	const { libraryData } = useSelector(state => state.library);
 	const libraryList = libraryData?.rows?.map(item => ({ ...item, quantity: item.books.length }));
@@ -21,11 +20,12 @@ const SidebarShelves = ({ isUpdate }) => {
 		JSON.stringify([{ operator: 'eq', value: userInfo.id, property: 'createdBy' }])
 	);
 
-	const { readingData } = useFetchStatsReadingBooks(isUpdate);
+	const { readingData } = useFetchStatsReadingBooks();
+
 	const myComposing = new Array(10).fill({ source: '/images/book1.jpg', name: 'Design pattern' });
 
 	return (
-		<div className='sidebar-shelves'>
+		<div className='sidebar-reading-summary'>
 			<StatisticList
 				className='sidebar-shelves__reading__status'
 				title='Trạng thái đọc'
@@ -41,19 +41,10 @@ const SidebarShelves = ({ isUpdate }) => {
 					Xem thêm
 				</Link>
 			</div>
-			<ReadChallenge />
 		</div>
 	);
 };
 
-SidebarShelves.defaultProps = {
-	libraryData: {},
-	isUpdate: false,
-};
+SidebarReadingSummary.propTypes = {};
 
-SidebarShelves.propTypes = {
-	libraryData: PropTypes.object,
-	isUpdate: PropTypes.bool,
-};
-
-export default SidebarShelves;
+export default SidebarReadingSummary;
