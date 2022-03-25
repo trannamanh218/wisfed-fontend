@@ -13,10 +13,12 @@ import { useDispatch } from 'react-redux';
 import { unwrapResult } from '@reduxjs/toolkit';
 import ModalLogin from './ModalLogin';
 import { useNavigate } from 'react-router-dom';
+import EyeIcon from 'shared/eye-icon';
 
 function LoginComponet() {
 	const [isShow, setIsShow] = useState(false);
 	const [dataModal, setDataModal] = useState({});
+	const [isPublic, setIsPublic] = useState(false);
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const handleSubmit = async data => {
@@ -40,6 +42,10 @@ function LoginComponet() {
 		}
 	};
 
+	const handleChangeIcon = () => {
+		setIsPublic(!isPublic);
+	};
+
 	const handleChange = () => {
 		setIsShow(false);
 	};
@@ -59,7 +65,8 @@ function LoginComponet() {
 				<div className='login__body'>
 					<div>
 						<span className='login__body-text1'>
-							Khám phá mạng xã hội về sách <br /> hàng đầu Việt Nam
+							Khám phá mạng xã hội chia sẻ sách và sáng tạo nội dung
+							<br /> đầu tiên tại Việt Nam
 						</span>
 					</div>
 					<div>
@@ -108,7 +115,7 @@ function LoginComponet() {
 												<input
 													className='login__form__input'
 													type='email'
-													placeholder='Tài khoản'
+													placeholder='Email'
 													{...field}
 													value={field.value}
 													autoComplete='false'
@@ -132,12 +139,15 @@ function LoginComponet() {
 										>
 											<input
 												className='login__form__input'
-												type='password'
+												type={isPublic ? 'text' : 'password'}
 												placeholder='Mật khẩu'
 												{...field}
 												value={field.value}
 												autoComplete='new-password'
 											/>
+											<div>
+												<EyeIcon isPublic={isPublic} handlePublic={handleChangeIcon} />
+											</div>
 										</div>
 										{meta.touched && meta.error && (
 											<small className='error-message'>{meta.error}</small>

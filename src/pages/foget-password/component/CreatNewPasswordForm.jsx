@@ -7,6 +7,7 @@ import { useSelector } from 'react-redux';
 import ModalLogin from 'pages/login/element/ModalLogin';
 import { resetPasswordValidate } from 'helpers/Validation';
 import { forgotPassword } from 'reducers/redux-utils/auth';
+import EyeIcon from 'shared/eye-icon';
 
 function CreatNewPasswordForm() {
 	const isFetching = useSelector(state => state.auth.isFetching);

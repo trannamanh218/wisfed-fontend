@@ -19,7 +19,7 @@ import Login from 'pages/login/element';
 import Register from 'pages/register/component';
 import ForgetPassWord from 'pages/foget-password/component';
 import ChooseTopic from 'pages/choose-topic';
-import Direct from 'pages/choose-topic/abc';
+import Direct from 'pages/choose-topic/DirectPage';
 import PropTypes from 'prop-types';
 import 'scss/main.scss';
 

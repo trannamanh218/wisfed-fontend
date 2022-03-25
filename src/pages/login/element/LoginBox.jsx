@@ -35,7 +35,7 @@ const LoginBox = () => {
 											<input
 												className='login__form__input'
 												type='email'
-												placeholder='Tài khoản'
+												placeholder='Email'
 												{...field}
 												value={field.value}
 												autoComplete='false'

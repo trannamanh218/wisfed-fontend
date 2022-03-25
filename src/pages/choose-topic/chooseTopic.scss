@@ -22,6 +22,12 @@
 	grid-template-columns: repeat(3, 1fr);
 	margin-top: 40px;
 }
+
+.disabled-bnt {
+	pointer-events: none;
+	opacity: 0.5;
+}
+
 .choose-topic__button {
 	width: 368px;
 	height: 56px;
@@ -35,6 +41,7 @@
 		align-items: center;
 		width: 100%;
 		height: 56px;
+		color: #fcfcfc;
 	}
 }
 
