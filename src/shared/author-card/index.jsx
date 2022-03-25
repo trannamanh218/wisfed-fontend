@@ -4,7 +4,7 @@ import UserAvatar from 'shared/user-avatar';
 import './author-card.scss';
 import PropTypes from 'prop-types';
 
-const AuthorCard = ({ direction, size }) => {
+const AuthorCard = ({ direction, size, item }) => {
 	return (
 		<div className='author-card'>
 			<div className='author-card__left'>
@@ -26,6 +26,7 @@ const AuthorCard = ({ direction, size }) => {
 AuthorCard.propTypes = {
 	direction: PropTypes.string,
 	size: PropTypes.string,
+	item: PropTypes.object,
 };
 
 export default AuthorCard;

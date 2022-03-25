@@ -30,8 +30,8 @@ MyNotificationStatus.args = {
 	},
 };
 
-export const MyNotificationStatusOne = Template.bind({});
-MyNotificationStatusOne.args = {
+export const MyNotificationStatusIlike = Template.bind({});
+MyNotificationStatusIlike.args = {
 	data: {
 		actor: 'Đặng Đình Văn',
 		avatar: '',
@@ -46,8 +46,8 @@ MyNotificationStatusOne.args = {
 	},
 };
 
-export const MyNotificationStatusSecond = Template.bind({});
-MyNotificationStatusSecond.args = {
+export const MyNotificationStatusAddFriend = Template.bind({});
+MyNotificationStatusAddFriend.args = {
 	data: {
 		actor: 'Phạm Hùng',
 		avatar: '',
@@ -62,8 +62,8 @@ MyNotificationStatusSecond.args = {
 	},
 };
 
-export const MyNotificationStatusThree = Template.bind({});
-MyNotificationStatusThree.args = {
+export const MyNotificationStatusGroup = Template.bind({});
+MyNotificationStatusGroup.args = {
 	data: {
 		actor: 'Chuyên trộm chó',
 		avatar: '',
@@ -77,8 +77,8 @@ MyNotificationStatusThree.args = {
 		origin: 'user:bfdb3971-de4c-4c2b-bbbe-fbb36770031a',
 	},
 };
-export const MyNotificationStatusFourth = Template.bind({});
-MyNotificationStatusFourth.args = {
+export const MyNotificationStatusAccept = Template.bind({});
+MyNotificationStatusAccept.args = {
 	data: {
 		actor: 'Chuyên trộm chó',
 		avatar: '',
@@ -92,8 +92,8 @@ MyNotificationStatusFourth.args = {
 		origin: 'user:bfdb3971-de4c-4c2b-bbbe-fbb36770031a',
 	},
 };
-export const MyNotificationStatusFive = Template.bind({});
-MyNotificationStatusFive.args = {
+export const MyNotificationStatusRefuse = Template.bind({});
+MyNotificationStatusRefuse.args = {
 	data: {
 		actor: 'Chuyên trộm chó',
 		avatar: '',

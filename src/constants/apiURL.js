@@ -39,8 +39,10 @@ export const checkLikedAPI = '/api/v1/users/checkLiked';
 
 // friend
 export const friendAPI = id => `/api/v1/users/${id}/listFriend`;
+export const cancelFriendApi = id => `/api/v1/users/${id}/cancelFriendReq`;
 export const makeFriendAPI = `/api/v1/users/friendRequest`;
-
+export const replyFriendReqApi = id => `/api/v1/users/${id}/replyFriendReq/`;
+export const unFriend = id => `/api/v1/users/${id}/unFriend`;
 //activity
 export const activityAPI = '/api/v1/getstream';
 export const likeActivityAPI = '/api/v1/getstream/like';
@@ -62,3 +64,7 @@ export const commentActivityDetailAPI = id => `/api/v1/commentActivities/${id}`;
 
 // notification
 export const nottificationAPI = '/api/v1/getstream/notiMention';
+// followrs
+export const listFolowrs = '/api/v1/users/listFollows/';
+export const addfollow = '/api/v1/users/follow';
+export const unFollow = id => `/api/v1/users/${id}/unFollow`;

@@ -29,7 +29,7 @@ const QuoteCard = ({ data, isDetail }) => {
 				setIsLiked(true);
 			}
 		} catch {
-			toast.error('Lỗi hệ thống');
+			// toast.error('Lỗi hệ thống');
 		}
 	};
 

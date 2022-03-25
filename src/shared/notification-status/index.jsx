@@ -28,18 +28,13 @@ const NotificationStatus = ({ data }) => {
 						<div className='notificaiton__main__all__infor'>
 							<p dangerouslySetInnerHTML={{ __html: data?.message }}></p>
 						</div>
+						<div className={data.isSeen ? 'notificaiton__all__status__seen' : 'notificaiton__all__status'}>
+							{`${calculateDurationTime(data.time)}`}
+						</div>
 						{data.isAccept ? (
 							<div className='notificaiton___main__all__status'>Đã chấp nhận lời mời</div>
-						) : data.isRefuse ? (
-							<div className='notificaiton___main__all__status'>Đã từ chối lời mời</div>
 						) : (
-							<div
-								className={
-									data.isSeen ? 'notificaiton__all__status__seen' : 'notificaiton__all__status'
-								}
-							>
-								{`${calculateDurationTime(data.time)}`}
-							</div>
+							data.isRefuse(<div className='notificaiton___main__all__status'>Đã từ chối lời mời</div>)
 						)}
 					</div>
 

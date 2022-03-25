@@ -24,9 +24,9 @@
 		margin: 20px 0 20px -15px;
 	}
 }
-.status-book-modal .modal-body {
-	padding: 0;
-}
 .modalfilterhome__container__main {
-	padding: 48px 48px 0 48px;
+	padding: 0 20px;
+	.filter-quote-pane__setting__btn {
+		margin-bottom: 0;
+	}
 }

@@ -32,7 +32,7 @@ const NotificationModal = ({ setModalNotti, buttonModal }) => {
 	const getMyNotification = async () => {
 		try {
 			const notificationList = await dispatch(getNotification()).unwrap();
-			const arrNew = notificationList.results.map(item => item.activities).flat(1);
+			const arrNew = notificationList.map(item => item.activities).flat(1);
 			setGetNotifications(arrNew);
 		} catch {
 			toast.error('Lỗi hệ thống');
@@ -43,26 +43,19 @@ const NotificationModal = ({ setModalNotti, buttonModal }) => {
 		getMyNotification();
 	}, []);
 
+	const lengthAddFriend = () => {
+		const length = getNotifications.filter(item => item.verb === 'addfriend' && !item.isCheck);
+		return length.length;
+	};
+
 	const renderMessage = item => {
-		if (item !== 'follow:id' && item !== 'ed6b3eaf-5008-4b48-9c37-37cceea4f9a3') {
-			const parseObject = JSON.parse(item);
-			return (
-				<>
-					<span>
-						{parseObject.fullName ? parseObject.fullName : parseObject.firstName + parseObject.lastName}
-					</span>{' '}
-					đã gửi lời mời kết bạn
-				</>
-			);
+		if (item.verb === 'addfriend') {
+			return 'đã gửi lời mời kết bạn';
+		} else if (item.verb === 'commentMinipost') {
+			return 'đã bình luận vào bài viết của bạn';
 		}
 	};
 
-	const renderImg = item => {
-		if (item !== 'follow:id' && item !== 'ed6b3eaf-5008-4b48-9c37-37cceea4f9a3') {
-			const parseObject = JSON.parse(item);
-			return parseObject.avatarImage;
-		}
-	};
 	useEffect(() => {
 		document.addEventListener('click', handleClickOutside, true);
 		return () => {
@@ -81,116 +74,161 @@ const NotificationModal = ({ setModalNotti, buttonModal }) => {
 	};
 
 	return (
-		<div ref={notifymodal} className='notificaiton__container'>
-			<div className='notificaiton__title'>Thông báo</div>
-			<div className='notificaiton__tabs'>
-				<Tabs onSelect={eventKey => setSelectKey(eventKey)} defaultActiveKey='all'>
-					<Tab eventKey='all' title='Tất cả'>
-						<div className='notificaiton__all__title'>Mới nhất</div>
+		<div className='notificaiton'>
+			<div ref={notifymodal} className='notificaiton__container'>
+				<div className='notificaiton__title'>Thông báo</div>
+				<div className='notificaiton__tabs'>
+					<Tabs onSelect={eventKey => setSelectKey(eventKey)} defaultActiveKey='all'>
+						<Tab eventKey='all' title='Tất cả'>
+							<div className='notificaiton__all__title'>Mới nhất</div>
 
-						<div className='notificaiton__tabs__all__seen'>
-							<div className='notificaiton__all__layout'>
-								<UserAvatar size='mm' source={avater} />
-								<div className='notificaiton__all__layout__status'>
-									<div className='notificaiton__all__infor'>
-										<span>Huy Đạt</span> đã đăng trong nhóm Thời đại sách 5.0 247: Nhóm khác có vẻ
-										cập nhật tốt hơn anh em mình nh...
-									</div>
-									<div className='notificaiton__all__status'>Khoảng 30 giờ trước</div>
-								</div>
-								<div className='notificaiton__all__unseen'></div>
-							</div>
-						</div>
-						<div className='notificaiton__all__title'>Gần đây</div>
-						{getNotifications.map(item => (
-							<div key={item.id} className='notificaiton__tabs__all__seen'>
+							<div className='notificaiton__tabs__all__seen'>
 								<div className='notificaiton__all__layout'>
-									<UserAvatar size='mm' source={renderImg(item.object)} />
+									<UserAvatar size='mm' source={avater} />
 									<div className='notificaiton__all__layout__status'>
 										<div className='notificaiton__all__infor'>
-											<p dangerouslySetInnerHTML={{ __html: item?.message }}></p>
-											{item.verb === 'addfriend' && renderMessage(item.object)}
+											<span>Huy Đạt</span> đã đăng trong nhóm Thời đại sách 5.0 247: Nhóm khác có
+											vẻ cập nhật tốt hơn anh em mình nh...
 										</div>
-										<div className='notificaiton__all__status'>{`${calculateDurationTime(
-											item.time
-										)}`}</div>
+										<div className='notificaiton__all__status'>Khoảng 30 giờ trước</div>
 									</div>
 									<div className='notificaiton__all__unseen'></div>
 								</div>
-								{item.verb === 'addfriend' && (
-									<div className='notificaiton__all__friend'>
-										<div className='notificaiton__all__accept'>Chấp nhận</div>
-										<div className='notificaiton__all__refuse'>Từ chối</div>
-									</div>
-								)}
 							</div>
-						))}
-						<Link to={`/notification`} onClick={handleNotificaiton} className='notificaiton__tabs__button'>
-							Xem tất cả
-						</Link>
-					</Tab>
-					<Tab eventKey='unread' title='Chưa đọc'>
-						<div className='notificaiton__all__title'>Thông báo chưa đọc</div>
-						{getNotifications.map(item => (
-							<div key={item.id} className='notificaiton__tabs__all__seen'>
-								<div className='notificaiton__all__layout'>
-									<UserAvatar size='mm' source={renderImg(item.object)} />
-									<div className='notificaiton__all__layout__status'>
-										<div className='notificaiton__all__infor'>
-											<p dangerouslySetInnerHTML={{ __html: item?.message }}></p>
-											{item.verb === 'addfriend' && renderMessage(item.object)}
+							<div className='notificaiton__all__title'>Gần đây</div>
+							{getNotifications.map(item => (
+								<div key={item.id} className='notificaiton__tabs__all__seen'>
+									<div className='notificaiton__all__layout'>
+										<UserAvatar size='mm' source={item.createdBy.avatarImage} />
+										<div className='notificaiton__all__layout__status'>
+											<div className='notificaiton__all__infor'>
+												<p dangerouslySetInnerHTML={{ __html: item?.message }}></p>
+												{item.verb !== 'follow' && (
+													<>
+														<span>
+															{item.createdBy.fullName
+																? item.createdBy.fullName
+																: item.createdBy.firstName + item.createdBy.lastName}
+														</span>
+														&nbsp;
+														{renderMessage(item)}
+													</>
+												)}
+											</div>
+											<div className='notificaiton__all__status'>{`${calculateDurationTime(
+												item.time
+											)}`}</div>
 										</div>
-										<div className='notificaiton__all__status'>{`${calculateDurationTime(
-											item.time
-										)}`}</div>
+										<div className='notificaiton__all__unseen'></div>
 									</div>
-									<div className='notificaiton__all__unseen'></div>
+									{item.verb === 'addfriend' && (
+										<div className='notificaiton__all__friend'>
+											<div className='notificaiton__all__accept'>Chấp nhận</div>
+											<div className='notificaiton__all__refuse'>Từ chối</div>
+										</div>
+									)}
 								</div>
-								{item.verb === 'addfriend' && (
-									<div className='notificaiton__all__friend'>
-										<div className='notificaiton__all__accept'>Chấp nhận</div>
-										<div className='notificaiton__all__refuse'>Từ chối</div>
+							))}
+							<Link
+								to={`/notification`}
+								onClick={handleNotificaiton}
+								className='notificaiton__tabs__button'
+							>
+								Xem tất cả
+							</Link>
+						</Tab>
+						<Tab eventKey='unread' title='Chưa đọc'>
+							<div className='notificaiton__all__title'>Thông báo chưa đọc</div>
+							{getNotifications.map(item => (
+								<div key={item.id} className='notificaiton__tabs__all__seen'>
+									<div className='notificaiton__all__layout'>
+										<UserAvatar size='mm' source={item.createdBy.avatarImage} />
+										<div className='notificaiton__all__layout__status'>
+											<div className='notificaiton__all__infor'>
+												<p dangerouslySetInnerHTML={{ __html: item?.message }}></p>
+												{item.verb !== 'follow' && (
+													<>
+														<span>
+															{item.createdBy.fullName
+																? item.createdBy.fullName
+																: item.createdBy.firstName + item.createdBy.lastName}
+														</span>
+														&nbsp;
+														{renderMessage(item)}
+													</>
+												)}
+											</div>
+											<div className='notificaiton__all__status'>{`${calculateDurationTime(
+												item.time
+											)}`}</div>
+										</div>
+										<div className='notificaiton__all__unseen'></div>
 									</div>
-								)}
-							</div>
-						))}
-						<Link to={`/notification`} onClick={handleNotificaiton} className='notificaiton__tabs__button'>
-							Xem tất cả
-						</Link>
-					</Tab>
-					<Tab eventKey='friendrequest' title='Lời mời kết bạn'>
-						<div className='notificaiton__all__title'>24 lời kết bạn</div>
-						{getNotifications.map(
-							item =>
-								item.verb === 'addfriend' && (
-									<div key={item.id} className='notificaiton__tabs__all__seen'>
-										<div className='notificaiton__all__layout'>
-											<UserAvatar size='mm' source={renderImg(item.object)} />
-											<div className='notificaiton__all__layout__status'>
-												<div className='notificaiton__all__infor'>
-													<p dangerouslySetInnerHTML={{ __html: item?.message }}></p>
-													{item.verb === 'addfriend' && renderMessage(item.object)}
+									{item.verb === 'addfriend' && (
+										<div className='notificaiton__all__friend'>
+											<div className='notificaiton__all__accept'>Chấp nhận</div>
+											<div className='notificaiton__all__refuse'>Từ chối</div>
+										</div>
+									)}
+								</div>
+							))}
+							<Link
+								to={`/notification`}
+								onClick={handleNotificaiton}
+								className='notificaiton__tabs__button'
+							>
+								Xem tất cả
+							</Link>
+						</Tab>
+						<Tab eventKey='friendrequest' title='Lời mời kết bạn'>
+							<div className='notificaiton__all__title'>{lengthAddFriend()} lời kết bạn</div>
+							{getNotifications.map(
+								item =>
+									item.verb === 'addfriend' && (
+										<div key={item.id} className='notificaiton__tabs__all__seen'>
+											<div className='notificaiton__all__layout'>
+												<UserAvatar size='mm' source={item.createdBy.avatarImage} />
+												<div className='notificaiton__all__layout__status'>
+													<div className='notificaiton__all__infor'>
+														<p dangerouslySetInnerHTML={{ __html: item?.message }}></p>
+														{item.verb !== 'follow' && (
+															<>
+																<span>
+																	{item.createdBy.fullName
+																		? item.createdBy.fullName
+																		: item.createdBy.firstName +
+																		  item.createdBy.lastName}
+																</span>
+																&nbsp;
+																{renderMessage(item)}
+															</>
+														)}
+													</div>
+													<div className='notificaiton__all__status'>{`${calculateDurationTime(
+														item.time
+													)}`}</div>
 												</div>
-												<div className='notificaiton__all__status'>{`${calculateDurationTime(
-													item.time
-												)}`}</div>
+												<div className='notificaiton__all__unseen'></div>
 											</div>
-											<div className='notificaiton__all__unseen'></div>
+											{item.verb === 'addfriend' && (
+												<div className='notificaiton__all__friend'>
+													<div className='notificaiton__all__accept'>Chấp nhận</div>
+													<div className='notificaiton__all__refuse'>Từ chối</div>
+												</div>
+											)}
 										</div>
-										{item.verb === 'addfriend' && (
-											<div className='notificaiton__all__friend'>
-												<div className='notificaiton__all__accept'>Chấp nhận</div>
-												<div className='notificaiton__all__refuse'>Từ chối</div>
-											</div>
-										)}
-									</div>
-								)
-						)}
-						<Link to={`/notification`} onClick={handleNotificaiton} className='notificaiton__tabs__button'>
-							Xem tất cả
-						</Link>
-					</Tab>
-				</Tabs>
+									)
+							)}
+							<Link
+								to={`/notification`}
+								onClick={handleNotificaiton}
+								className='notificaiton__tabs__button'
+							>
+								Xem tất cả
+							</Link>
+						</Tab>
+					</Tabs>
+				</div>
 			</div>
 		</div>
 	);

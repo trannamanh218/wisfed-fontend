@@ -1,7 +1,4 @@
 .modalFollowers__container {
-	position: fixed;
-	top: 15%;
-	right: 25%;
 	border-radius: 16px;
 	background: #ffffff;
 	font-family: 'Montserrat';
@@ -11,6 +8,9 @@
 	overflow-y: scroll;
 	overflow-x: hidden;
 	height: 750px;
+}
+.modalFollowers__container__main .modal-dialog {
+	max-width: 900px;
 }
 .modalFollowers__header {
 	display: flex;
