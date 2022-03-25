@@ -2,7 +2,7 @@ import classNames from 'classnames';
 import { BookIcon, CategoryIcon, CloseX, Feather, GroupIcon, Image, Lock, PodCast, WorldNet } from 'components/svg';
 import { STATUS_IDLE, STATUS_LOADING, STATUS_SUCCESS } from 'constants';
 import _ from 'lodash';
-import PropTypes, { element } from 'prop-types';
+import PropTypes from 'prop-types';
 import { useEffect, useRef, useState } from 'react';
 import { Form } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';

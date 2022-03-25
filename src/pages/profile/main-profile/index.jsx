@@ -7,7 +7,7 @@ import FavoriteAuthorTab from './favorite-author-tab';
 import InforTab from './infor-tab';
 import Bookcase from './bookcase-tab';
 import PostTab from './post-tab';
-import { getViewUserProfile } from 'reducers/redux-utils/user';
+import { getUserDetail } from 'reducers/redux-utils/user';
 import { useSelector, useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 
@@ -18,12 +18,12 @@ const MainProfile = () => {
 	const updateUserProfile = useSelector(state => state.user.updateUserProfile);
 
 	useEffect(() => {
-		getUserProfile();
+		getUserDetailData();
 	}, [updateUserProfile]);
 
-	const getUserProfile = async () => {
+	const getUserDetailData = async () => {
 		try {
-			const userData = await dispatch(getViewUserProfile('bfdb3971-de4c-4c2b-bbbe-fbb36770031a')).unwrap();
+			const userData = await dispatch(getUserDetail('bfdb3971-de4c-4c2b-bbbe-fbb36770031a')).unwrap();
 			setUserInfo(userData);
 		} catch {
 			toast.error('Lỗi hệ thống');
@@ -51,7 +51,7 @@ const MainProfile = () => {
 					<QuoteTab />
 				</Tab>
 				<Tab eventKey='favorite-authors' title='Tác giả yêu thích'>
-					<FavoriteAuthorTab />
+					<FavoriteAuthorTab list={[]} />
 				</Tab>
 			</Tabs>
 		</div>

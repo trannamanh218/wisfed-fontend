@@ -259,6 +259,7 @@ const PersonalInfoForm = ({ userData }) => {
 			setSocialsMediaInputValue('');
 			setUserSocialsMedia(socialsMediaArr);
 		}
+		userSocialsMediaRef.current.focus();
 	};
 
 	const renderAddSocialsMediaLink = () => {
@@ -266,11 +267,11 @@ const PersonalInfoForm = ({ userData }) => {
 			<div className='form-field-wrapper'>
 				<div className='form-field'>
 					<Input
-						type='text'
-						isBorder={false}
+						isBorder={true}
 						placeholder='Nhập link'
 						value={socialsMediaInputValue}
 						handleChange={e => updateInputValue(e, 'edit-socials-media')}
+						inputRef={userSocialsMediaRef}
 					/>
 				</div>
 				<div className='form-field__btn save' onClick={addSocialsMediaLink}>
@@ -298,26 +299,18 @@ const PersonalInfoForm = ({ userData }) => {
 			setaccessSubmit(false);
 		}
 
-		if (
-			userFirstNameRef.current ||
-			userAddressRef.current ||
-			userWorksRef.current ||
-			textArea.current ||
-			userSocialsMediaRef.current
-		) {
-			if (fieldEditting === 'name-editting') {
-				userFirstNameRef.current.focus();
-			} else if (fieldEditting === 'address-editting') {
-				userAddressRef.current.focus();
-			} else if (fieldEditting === 'works-editting') {
-				userWorksRef.current.focus();
-			} else if (fieldEditting === 'descriptions-editting') {
-				const end = textArea.current.value.length;
-				textArea.current.setSelectionRange(end, end);
-				textArea.current.focus();
-			} else if (fieldEditting === 'socials-editting') {
-				userSocialsMediaRef.current.focus();
-			}
+		if (userFirstNameRef.current && fieldEditting === 'name-editting') {
+			userFirstNameRef.current.focus();
+		} else if (userAddressRef.current && fieldEditting === 'address-editting') {
+			userAddressRef.current.focus();
+		} else if (userWorksRef.current && fieldEditting === 'works-editting') {
+			userWorksRef.current.focus();
+		} else if (textArea.current && fieldEditting === 'descriptions-editting') {
+			const end = textArea.current.value.length;
+			textArea.current.setSelectionRange(end, end);
+			textArea.current.focus();
+		} else if (userSocialsMediaRef.current && fieldEditting === 'socials-editting') {
+			userSocialsMediaRef.current.focus();
 		}
 	}, [editName, editBirthday, editAddress, editGender, editDescriptions, editWorks, userSocialsMedia, fieldEditting]);
 
@@ -351,12 +344,14 @@ const PersonalInfoForm = ({ userData }) => {
 					<div className='btn-icon'>
 						<Global />
 					</div>
-					<div className='btn-icon' onClick={() => enableEdit('name-editting')}>
-						<Pencil />
-					</div>
-					{editName && (
+
+					{editName ? (
 						<div className='form-field__btn cancel' onClick={() => cancelEdit('cancel-edit-name')}>
 							Hủy
+						</div>
+					) : (
+						<div className='btn-icon' onClick={() => enableEdit('name-editting')}>
+							<Pencil />
 						</div>
 					)}
 				</div>
@@ -411,12 +406,13 @@ const PersonalInfoForm = ({ userData }) => {
 					<div className='btn-icon'>
 						<Global />
 					</div>
-					<div className='btn-icon' onClick={() => enableEdit('birthday-editting')}>
-						<Pencil />
-					</div>
-					{editBirthday && (
+					{editBirthday ? (
 						<div className='form-field__btn cancel' onClick={() => cancelEdit('cancel-edit-birthday')}>
 							Hủy
+						</div>
+					) : (
+						<div className='btn-icon' onClick={() => enableEdit('birthday-editting')}>
+							<Pencil />
 						</div>
 					)}
 				</div>
@@ -446,12 +442,13 @@ const PersonalInfoForm = ({ userData }) => {
 					<div className='btn-icon'>
 						<Global />
 					</div>
-					<div className='btn-icon' onClick={() => enableEdit('gender-editting')}>
-						<Pencil />
-					</div>
-					{editGender && (
+					{editGender ? (
 						<div className='form-field__btn cancel' onClick={() => cancelEdit('cancel-edit-gender')}>
 							Hủy
+						</div>
+					) : (
+						<div className='btn-icon' onClick={() => enableEdit('gender-editting')}>
+							<Pencil />
 						</div>
 					)}
 				</div>
@@ -482,12 +479,13 @@ const PersonalInfoForm = ({ userData }) => {
 					<div className='btn-icon'>
 						<Global />
 					</div>
-					<div className='btn-icon' onClick={() => enableEdit('address-editting')}>
-						<Pencil />
-					</div>
-					{editAddress && (
+					{editAddress ? (
 						<div className='form-field__btn cancel' onClick={() => cancelEdit('cancel-edit-address')}>
 							Hủy
+						</div>
+					) : (
+						<div className='btn-icon' onClick={() => enableEdit('address-editting')}>
+							<Pencil />
 						</div>
 					)}
 				</div>
@@ -518,12 +516,13 @@ const PersonalInfoForm = ({ userData }) => {
 					<div className='btn-icon'>
 						<Global />
 					</div>
-					<div className='btn-icon' onClick={() => enableEdit('works-editting')}>
-						<Pencil />
-					</div>
-					{editWorks && (
+					{editWorks ? (
 						<div className='form-field__btn cancel' onClick={() => cancelEdit('cancel-edit-works')}>
 							Hủy
+						</div>
+					) : (
+						<div className='btn-icon' onClick={() => enableEdit('works-editting')}>
+							<Pencil />
 						</div>
 					)}
 				</div>
@@ -560,15 +559,16 @@ const PersonalInfoForm = ({ userData }) => {
 					<div className='btn-icon'>
 						<Global />
 					</div>
-					<div className='btn-icon' onClick={() => enableEdit('categories-editting')}>
-						<Pencil />
-					</div>
-					{editFavoriteCategories && (
+					{editFavoriteCategories ? (
 						<div
 							className='form-field__btn cancel'
 							onClick={() => cancelEdit('cancel-edit-favorite-categories')}
 						>
 							Hủy
+						</div>
+					) : (
+						<div className='btn-icon' onClick={() => enableEdit('categories-editting')}>
+							<Pencil />
 						</div>
 					)}
 				</div>
@@ -615,15 +615,16 @@ const PersonalInfoForm = ({ userData }) => {
 						<div className='btn-icon'>
 							<Global />
 						</div>
-						<div className='btn-icon'>
-							<Pencil onClick={() => enableEdit('descriptions-editting')} />
-						</div>
-						{editDescriptions && (
+						{editDescriptions ? (
 							<div
 								className='form-field__btn cancel'
 								onClick={() => cancelEdit('cancel-edit-descriptions')}
 							>
 								Hủy
+							</div>
+						) : (
+							<div className='btn-icon' onClick={() => enableEdit('descriptions-editting')}>
+								<Pencil />
 							</div>
 						)}
 					</div>
