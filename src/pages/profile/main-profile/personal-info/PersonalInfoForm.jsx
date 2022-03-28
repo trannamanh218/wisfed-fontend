@@ -14,6 +14,8 @@ import { editUserInfo } from 'reducers/redux-utils/user';
 import { activeUpdateUserProfileStatus } from 'reducers/redux-utils/user';
 import PropTypes from 'prop-types';
 
+import ShareModeDropdown from 'shared/share-mode-dropdown';
+
 const PersonalInfoForm = ({ userData }) => {
 	const [userFirstName, setUserFirstName] = useState(userData.firstName);
 	const [userLastName, setUserLastName] = useState(userData.lastName);
@@ -341,9 +343,10 @@ const PersonalInfoForm = ({ userData }) => {
 							</div>
 						)}
 					</div>
-					<div className='btn-icon'>
+					{/* <div className='btn-icon'>
 						<Global />
-					</div>
+					</div> */}
+					<ShareModeDropdown />
 
 					{editName ? (
 						<div className='form-field__btn cancel' onClick={() => cancelEdit('cancel-edit-name')}>

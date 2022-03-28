@@ -1,19 +1,28 @@
-import React from 'react';
+import { useEffect, useState } from 'react';
 import MyShelvesList from 'shared/my-shelves-list';
 import StatisticList from 'shared/statistic-list';
 import ToggleList from 'shared/toggle-list';
 import './sidebar-my-quote.scss';
 
-const SidebarMyQuote = () => {
-	const hashtagList = [
-		{ id: 1, title: 'Tiểu thuyết' },
-		{ id: 2, title: 'Hạnh phúc' },
-		{ id: 3, title: 'Đầu tư' },
-		{ id: 4, title: 'Kinh doanh' },
-		{ id: 4, title: 'Kinh doanh' },
-		{ id: 4, title: 'Kinh doanh' },
-		{ id: 4, title: 'Kinh doanh' },
-	];
+const SidebarMyQuote = ({ isQuoteDetail = false, quoteHashtags }) => {
+	const [hashtagList, setHashtagList] = useState([]);
+
+	useEffect(() => {
+		if (isQuoteDetail) {
+			setHashtagList(quoteHashtags);
+		} else {
+			const hashtagListArr = [
+				{ id: 1, title: 'Tiểu thuyết' },
+				{ id: 2, title: 'Hạnh phúc' },
+				{ id: 3, title: 'Đầu tư' },
+				{ id: 4, title: 'Kinh doanh' },
+				{ id: 4, title: 'Kinh doanh' },
+				{ id: 4, title: 'Kinh doanh' },
+				{ id: 4, title: 'Kinh doanh' },
+			];
+			setHashtagList(hashtagListArr);
+		}
+	}, []);
 
 	const statusList = [
 		{ name: 'Muốn đọc', quantity: 30 },

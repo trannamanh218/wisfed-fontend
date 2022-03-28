@@ -135,13 +135,13 @@
 		transition: all 0.1s ease-in;
 	}
 	svg {
-		width: 14px;
-		height: 14px;
+		width: 16px;
+		height: 16px;
 		margin-right: 8px;
 	}
 	.group-icon-svg {
 		path {
-			stroke: #2d2c42;
+			stroke: $ash;
 		}
 	}
 }
@@ -160,11 +160,6 @@
 		margin-left: 12px;
 	}
 
-	svg {
-		path {
-			stroke: $ash;
-		}
-	}
 	&.show {
 		display: block;
 	}

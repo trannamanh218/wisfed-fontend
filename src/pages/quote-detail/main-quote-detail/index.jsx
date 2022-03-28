@@ -1,25 +1,20 @@
 import { Forward } from 'components/svg';
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import BackButton from 'shared/back-button';
 import QuoteComment from 'shared/quote-comments';
 import QuoteCard from 'shared/quote-card';
 import './main-quote-detail.scss';
-import { useParams } from 'react-router-dom';
-import { getQuoteDetail, creatQuotesComment } from 'reducers/redux-utils/quote';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import _ from 'lodash';
 import CommentEditor from 'shared/comment-editor';
-import { useSelector } from 'react-redux';
 import classNames from 'classnames';
 import { checkLikeQuoteComment } from 'reducers/redux-utils/quote';
 
-const MainQuoteDetail = () => {
-	const { id } = useParams();
+const MainQuoteDetail = ({ quoteData, onCreateComment }) => {
 	const dispatch = useDispatch();
 	const userInfo = useSelector(state => state.auth.userInfo);
 
-	const [quoteData, setQuoteData] = useState({});
 	const [commentLv1IdArray, setCommentLv1IdArray] = useState([]);
 	const [replyingCommentId, setReplyingCommentId] = useState(0);
 	const [clickReply, setClickReply] = useState(false);
@@ -27,18 +22,18 @@ const MainQuoteDetail = () => {
 
 	useEffect(() => {
 		window.scrollTo(0, 0);
-		getQuoteData();
+		// getQuoteData();
 		checkQuoteCommentLiked();
 	}, []);
 
-	const getQuoteData = async () => {
-		try {
-			const response = await dispatch(getQuoteDetail(id)).unwrap();
-			setQuoteData(response);
-		} catch {
-			toast.error('Lỗi hệ thống');
-		}
-	};
+	// const getQuoteData = async () => {
+	// 	try {
+	// 		const response = await dispatch(getQuoteDetail(id)).unwrap();
+	// 		setQuoteData(response);
+	// 	} catch {
+	// 		toast.error('Lỗi hệ thống');
+	// 	}
+	// };
 
 	const checkQuoteCommentLiked = async () => {
 		try {
@@ -64,24 +59,24 @@ const MainQuoteDetail = () => {
 		}
 	}, [quoteData.commentQuotes]);
 
-	const onCreateComment = async (content, replyId) => {
-		const params = {
-			quoteId: Number(id),
-			content: content,
-			mediaUrl: [],
-			replyId: replyId,
-		};
-		try {
-			const res = await dispatch(creatQuotesComment(params));
-			if (!_.isEmpty(res)) {
-				getQuoteData();
-			}
-		} catch {
-			err => {
-				return err;
-			};
-		}
-	};
+	// const onCreateComment = async (content, replyId) => {
+	// 	const params = {
+	// 		quoteId: Number(id),
+	// 		content: content,
+	// 		mediaUrl: [],
+	// 		replyId: replyId,
+	// 	};
+	// 	try {
+	// 		const res = await dispatch(creatQuotesComment(params));
+	// 		if (!_.isEmpty(res)) {
+	// 			getQuoteData();
+	// 		}
+	// 	} catch {
+	// 		err => {
+	// 			return err;
+	// 		};
+	// 	}
+	// };
 
 	const handleReply = cmtLv1Id => {
 		setReplyingCommentId(cmtLv1Id);

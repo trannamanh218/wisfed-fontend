@@ -82,7 +82,7 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 
 	const shareModeList = [
 		{ value: 'public', title: 'Mọi người', icon: <WorldNet /> },
-		{ value: 'friends', title: 'Bạn bè', icon: <GroupIcon /> },
+		{ value: 'friends', title: 'Bạn bè', icon: <GroupIcon className='group-icon-svg' /> },
 		{ value: 'followers', title: 'Người Follow', icon: <PodCast /> },
 		{ value: 'private', title: 'Chỉ mình tôi', icon: <Lock /> },
 	];
@@ -276,36 +276,29 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 			image: [],
 			preview: urlAdded,
 		};
-
 		if (taggedData.addFriends.length) {
 			params.mentionsUser = taggedData.addFriends.map(item => item.id);
 		}
 		if (taggedData.addAuthor.length) {
 			params.mentionsAuthor = taggedData.addAuthor.map(item => item.id);
 		}
-
 		if (taggedData.addImages.length) {
 			params.image = taggedData.addImages;
 		}
-
 		if (taggedData.addCategory.length) {
 			params.mentionsCategory = taggedData.addCategory.map(item => item.id);
 		}
-
 		if (!_.isEmpty(taggedData.addBook)) {
 			params.bookId = taggedData.addBook.id;
 		}
-
 		return params;
 	};
 
-	const onCreatePost = () => {
-		const params = generateData();
-
+	const onCreatePost = async () => {
+		const params = await generateData();
 		// book, author , topic is required
 		if ((params.bookId || params.mentionsAuthor.length || params.mentionsCategory.length) && params.msg) {
 			setStatus(STATUS_LOADING);
-
 			dispatch(createActivity(params))
 				.unwrap()
 				.then(() => {
@@ -327,7 +320,6 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 
 	const checkActive = () => {
 		let isActive = false;
-
 		if (
 			(!_.isEmpty(taggedData.addBook) || taggedData.addAuthor.length || taggedData.addCategory.length) &&
 			textFieldEdit.current?.innerHTML
