@@ -11,6 +11,9 @@
 		display: block;
 		height: 500px;
 	}
+	&.add-margin {
+		margin: 24px 0;
+	}
 
 	&__item {
 		padding: 1px;

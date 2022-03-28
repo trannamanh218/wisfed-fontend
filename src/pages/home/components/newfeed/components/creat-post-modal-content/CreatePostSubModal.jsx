@@ -18,11 +18,12 @@ function CreatPostSubModal(props) {
 		taggedData,
 		removeTaggedItem,
 		addOptionsToPost,
+		images,
 	} = props;
 	const inputRef = useRef();
 
 	useEffect(() => {
-		if (taggedData.addImages.length === 0) {
+		if (images.length === 0) {
 			backToMainModal();
 		}
 	}, [taggedData.addImages]);
@@ -69,13 +70,13 @@ function CreatPostSubModal(props) {
 					<div className='creat-post-modal-content__substitute__body__modifyImages-container'>
 						<div
 							className={classNames('creat-post-modal-content__substitute__body__modifyImages-box', {
-								'one-or-two-images': taggedData.addImages.length <= 2,
-								'more-two-images': taggedData.addImages.length > 2,
+								'one-or-two-images': images.length <= 2,
+								'more-two-images': images.length > 2,
 							})}
 						>
-							{taggedData.addImages.map((image, index) => (
+							{images.map((image, index) => (
 								<div key={index} className='creat-post-modal-content__substitute__modify-image-item'>
-									<img src={image} alt='image' />
+									<img src={URL.createObjectURL(image)} alt='image' />
 									<button
 										className='creat-post-modal-content__substitute__modify-image-item-delete'
 										onClick={() => deleteImage(index)}

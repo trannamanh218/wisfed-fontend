@@ -20,6 +20,7 @@ import { useCallback } from 'react';
 import { Circle as CircleLoading } from 'shared/loading';
 import './style.scss';
 import UserAvatar from 'shared/user-avatar';
+import { uploadMultiFile } from 'reducers/redux-utils/common';
 
 function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option, onChangeOption, onChangeNewPost }) {
 	const [shareMode, setShareMode] = useState({ value: 'public', title: 'Mọi người', icon: <WorldNet /> });
@@ -32,7 +33,6 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 		'addAuthor': [],
 		'addFriends': [],
 		'addCategory': [],
-		'addImages': [],
 	});
 	const [fetchingUrlInfo, setFetchingUrlInfo] = useState(false);
 	const [hasUrl, setHasUrl] = useState(false);
@@ -41,6 +41,7 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 	const [oldUrlAddedArray, setOldUrlAddedArray] = useState([]);
 	const [status, setStatus] = useState(STATUS_IDLE);
 	const [showUpload, setShowUpload] = useState(false);
+	const [imagesUpload, setImagesUpload] = useState([]);
 	const dispatch = useDispatch();
 	const textFieldEdit = useRef(null);
 
@@ -72,12 +73,6 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 			icon: <GroupIcon className='item-add-to-post-svg' />,
 			message: 'Không tìm thấy bạn bè',
 		},
-		{
-			value: 'addImages',
-			title: 'chỉnh sửa ảnh',
-			icon: <Image />,
-			message: '',
-		},
 	];
 
 	const shareModeList = [
@@ -104,7 +99,7 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 
 	useEffect(() => {
 		if (!_.isEmpty(option)) {
-			setShowMainModal(prev => !prev);
+			setShowMainModal(!showMainModal);
 		}
 	}, [option]);
 
@@ -180,18 +175,6 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 		setHasUrl(false);
 	};
 
-	// const addOptionsToPost = param => {
-	// 	setOption(param);
-	// 	setShowMainModal(false);
-	// };
-
-	// const addImages = e => {
-	// 	const obj = Object.entries(e.target.files);
-	// 	const newArrayFile = [...images];
-	// 	obj.forEach(item => newArrayFile.push(item[1]));
-	// 	setImages(newArrayFile);
-	// }
-
 	const handlePlaceholder = () => {
 		if (textFieldEdit.current.innerText.length > 0) {
 			setShowTextFieldEditPlaceholder(false);
@@ -220,24 +203,18 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 		}
 	};
 
-	const handleOpenUploadImage = () => {
-		setShowUpload(true);
-		addOptionsToPost({ value: 'addImages', title: 'chỉnh sửa ảnh', icon: <Image />, message: '' });
-	};
-
 	const deleteImage = imageIndex => {
-		const newImagesArray = [...taggedData.addImages];
+		const newImagesArray = [...imagesUpload];
 		newImagesArray.splice(imageIndex, 1);
-		setTaggedData(prev => ({ ...prev, 'addImages': newImagesArray }));
 		if (!newImagesArray.length) {
 			backToMainModal();
 			addOptionsToPost({ value: 'addImages', title: 'chỉnh sửa ảnh', icon: <Image />, message: '' });
 		}
+		setImagesUpload(newImagesArray);
 	};
 
 	const handleAddToPost = data => {
 		const newData = { ...taggedData };
-
 		if (option.value === 'addAuthor' || option.value === 'addFriends' || option.value === 'addCategory') {
 			const listData = [...taggedData[option.value]];
 			const lastItem = listData[listData.length - 1];
@@ -245,7 +222,6 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 			if (!listData.length || (!_.isEmpty(lastItem) && lastItem.id !== data.id)) {
 				listData.push(data);
 			}
-
 			newData[option.value] = listData;
 		} else if (option.value === 'addBook') {
 			newData[option.value] = data;
@@ -253,7 +229,6 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 			newData[option.value] = data;
 			setShowMainModal(false);
 		}
-
 		setTaggedData(newData);
 	};
 
@@ -267,7 +242,12 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 		}
 	};
 
-	const generateData = () => {
+	const removeAllImages = () => {
+		setImagesUpload([]);
+		setShowUpload(false);
+	};
+
+	const generateData = async () => {
 		const params = {
 			msg: textFieldEdit?.current?.innerHTML,
 			mentionsUser: [],
@@ -282,8 +262,18 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 		if (taggedData.addAuthor.length) {
 			params.mentionsAuthor = taggedData.addAuthor.map(item => item.id);
 		}
-		if (taggedData.addImages.length) {
-			params.image = taggedData.addImages;
+		if (imagesUpload.length) {
+			try {
+				const imagesUploaded = await dispatch(uploadMultiFile(imagesUpload)).unwrap();
+				const imagesArray = [];
+				imagesUploaded.forEach(item => {
+					imagesArray.push(item.streamPath);
+				});
+				params.image = imagesArray;
+			} catch {
+				toast.error('Đăng ảnh không thành công');
+				params.image = {};
+			}
 		}
 		if (taggedData.addCategory.length) {
 			params.mentionsCategory = taggedData.addCategory.map(item => item.id);
@@ -415,9 +405,10 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 							{showUpload && (
 								<UploadImage
 									addOptionsToPost={addOptionsToPost}
-									optionList={optionList}
 									handleAddToPost={handleAddToPost}
-									taggedData={taggedData}
+									images={imagesUpload}
+									setImages={setImagesUpload}
+									removeAllImages={removeAllImages}
 								/>
 							)}
 							{hasUrl && !showUpload && (
@@ -442,7 +433,7 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 								<label
 									htmlFor='image-upload'
 									className='creat-post-modal-content__main__options__item-add-to-post'
-									onClick={handleOpenUploadImage}
+									onClick={() => setShowUpload(!showUpload)}
 								>
 									<Image />
 								</label>
@@ -482,6 +473,7 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 					taggedData={taggedData}
 					removeTaggedItem={removeTaggedItem}
 					addOptionsToPost={addOptionsToPost}
+					images={imagesUpload}
 				/>
 			</div>
 		</div>

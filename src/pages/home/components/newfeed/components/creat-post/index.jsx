@@ -23,7 +23,6 @@ function CreatPost({ onChangeNewPost }) {
 			icon: <BookIcon className='newfeed__creat-post__options__item__logo--book' />,
 			message: 'Không tìm thấy cuốn sách nào',
 		},
-
 		{
 			value: 'addAuthor',
 			title: 'tác giả',
@@ -48,8 +47,7 @@ function CreatPost({ onChangeNewPost }) {
 		if (showModalCreatPost) {
 			creatPostModalContainer.current.addEventListener('mousedown', e => {
 				if (e.target === creatPostModalContainer.current) {
-					setShowModalCreatPost(false);
-					setOption({});
+					hideCreatPostModal();
 				}
 			});
 			blockScroll();
@@ -82,6 +80,7 @@ function CreatPost({ onChangeNewPost }) {
 
 	const hideCreatPostModal = () => {
 		setShowModalCreatPost(false);
+		setOption({});
 	};
 
 	const onChangeOption = data => {

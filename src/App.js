@@ -25,8 +25,8 @@ function App({ children }) {
 		const params = {
 			email: 'admin@gmail.com',
 			password: '123456',
-			// email: 'nguyenhien@gmail.com',
-			// password: '123456',
+			// email: 'register@gmail.com',
+			// password: '12345678',
 		};
 
 		fetchLogin(params);

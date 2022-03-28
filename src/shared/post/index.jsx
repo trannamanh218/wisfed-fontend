@@ -200,8 +200,7 @@ function Post({ postInformations, className, isUpdateProgressReading = false }) 
 			</ul>
 
 			{postData.book && <PostBook data={postData.book} />}
-
-			<GridImage images={postData.image} id={postData.id} />
+			{postData?.image?.length > 0 && <GridImage images={postData.image} inPost={true} />}
 			{postData?.image?.length === 0 && !_.isEmpty(postData?.preview) && (
 				<>
 					{videoId ? (
