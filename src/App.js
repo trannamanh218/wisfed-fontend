@@ -19,6 +19,7 @@ import PropTypes from 'prop-types';
 import NotFound from 'pages/not-found';
 import 'scss/main.scss';
 import ReadingSummary from 'pages/reading-summary';
+import ReadingTarget from 'pages/reading-target';
 
 function App({ children }) {
 	const dispatch = useDispatch();
@@ -30,6 +31,8 @@ function App({ children }) {
 			// email: 'nguyenhien@gmail.com',
 			// password: '123456',
 			// email: 'thuyheobeo@gmail.com',
+			// password: '12345678',
+			// email: 'register@gmail.com',
 			// password: '12345678',
 		};
 
@@ -76,6 +79,7 @@ function App({ children }) {
 				<Route path='/confirm-my-book' element={<ConfirmMyBook />} />
 				<Route path='/404' element={<NotFound />} />
 				<Route path='/reading/summary' element={<ReadingSummary />} />
+				<Route path='/reading/target' element={<ReadingTarget />} />
 				<Route path='/' element={<Home />} />
 				{children}
 			</Routes>

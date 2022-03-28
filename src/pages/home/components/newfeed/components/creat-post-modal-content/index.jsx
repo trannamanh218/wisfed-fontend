@@ -4,7 +4,6 @@ import { STATUS_IDLE, STATUS_LOADING, STATUS_SUCCESS } from 'constants';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { useEffect, useRef, useState } from 'react';
-import { Form } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { createActivity, getSuggestionForPost } from 'reducers/redux-utils/activity';
@@ -59,6 +58,12 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 
 	useEffect(() => {
 		textFieldEdit.current.focus();
+
+		// const form = document.getElementById('formCreatePost');
+		// console.log(form);
+		// if (form) {
+		// 	form.addEventListener();
+		// }
 	}, []);
 
 	useEffect(() => {
@@ -212,8 +217,8 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 			}
 
 			newData[option.value] = listData;
-		} else if (option.value === 'addBook') {
-			newData[option.value] = data;
+		} else if (option.value === 'addBook' || data.hasOwnProperty('page')) {
+			newData['addBook'] = data;
 		} else if (option.value === 'addImages') {
 			newData[option.value] = data;
 			setShowMainModal(false);
@@ -348,11 +353,12 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 						<CloseX />
 					</button>
 				</div>
-				<Form
+				<form
 					onSubmit={e => {
 						e.preventDefault();
+						return false;
 					}}
-					id='createPostForm'
+					id='formCreatePost'
 				>
 					<div className='creat-post-modal-content__main__body'>
 						<div className='creat-post-modal-content__main__body__user-info'>
@@ -465,11 +471,10 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 							className={classNames('creat-post-modal-content__main__submit', {
 								'active': checkActive(),
 							})}
-							type='submit'
-							form='createPostForm'
+							type='button'
 							onClick={e => {
+								e.preventDefault();
 								if (checkActive()) {
-									e.preventDefault();
 									onCreatePost();
 								}
 							}}
@@ -477,7 +482,7 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 							Đăng
 						</button>
 					</div>
-				</Form>
+				</form>
 			</div>
 			{/* sub modal */}
 			<div
