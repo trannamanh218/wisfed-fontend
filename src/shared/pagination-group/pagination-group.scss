@@ -1,0 +1,41 @@
+@import 'src/scss/abstracts/_variables.scss';
+
+.pagination-group {
+	gap: 6px;
+	justify-content: center;
+
+	.page-link {
+		padding: 1.125rem;
+		border-radius: 10px;
+		background-color: $secondary;
+		border: none;
+		font-size: 0.875rem;
+		font-weight: 600;
+		color: $ash;
+		&:hover {
+			background-color: #007eff;
+			color: $white;
+		}
+	}
+
+	.page-item.active .page-link {
+		background-color: #007eff;
+		color: $white;
+	}
+
+	.page-item {
+		&:last-child {
+			.page-link {
+				border-top-right-radius: 10px;
+				border-bottom-right-radius: 10px;
+			}
+		}
+
+		&:first-child {
+			.page-link {
+				border-top-left-radius: 10px;
+				border-bottom-left-radius: 10px;
+			}
+		}
+	}
+}

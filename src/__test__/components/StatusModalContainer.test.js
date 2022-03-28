@@ -2,12 +2,13 @@ import { act, fireEvent, render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import StatusModalContainer from 'components/status-button/StatusModalContainer';
 import { CoffeeCupIcon, TargetIcon } from 'components/svg';
+import { STATUS_BOOK } from 'constants';
 
 describe('Status book list', () => {
 	it('hiển thị đủ 3 trạng thái cuốn sách và chỉ 1 trạng thái được active', () => {
 		const fakeActiveStatus = {
-			'title': 'Đang đọc',
-			'value': 'reading',
+			'name': 'Đang đọc',
+			'value': STATUS_BOOK.reading,
 			'icon': CoffeeCupIcon,
 		};
 		const { getByText, getAllByTestId } = render(<StatusModalContainer currentStatus={fakeActiveStatus} />);
@@ -21,8 +22,8 @@ describe('Status book list', () => {
 
 	it('trạng thái muốn đọc phải được active', () => {
 		const fakeActiveStatus = {
-			'title': 'Muốn đọc',
-			'value': 'wantRead',
+			'name': 'Muốn đọc',
+			'value': STATUS_BOOK.liked,
 			'icon': TargetIcon,
 		};
 
@@ -32,8 +33,8 @@ describe('Status book list', () => {
 
 	it('phải thay đổi trạng thái cuốn sách nếu user click sang một trạng thái khác trạng thái trước đó', () => {
 		const fakeActiveStatus = {
-			'title': 'Đang đọc',
-			'value': 'reading',
+			'name': 'Đang đọc',
+			'value': STATUS_BOOK.reading,
 			'icon': CoffeeCupIcon,
 		};
 		const handleChangeStatus = jest.fn();
@@ -46,13 +47,13 @@ describe('Status book list', () => {
 		userEvent.click(wantReadItem);
 
 		expect(handleChangeStatus).toBeCalledTimes(1);
-		expect(handleChangeStatus).toHaveBeenCalledWith(expect.objectContaining({ title: fakeTitle }));
+		expect(handleChangeStatus).toHaveBeenCalledWith(expect.objectContaining({ name: fakeTitle }));
 	});
 
 	it('should not change active status when use click same status', () => {
 		const fakeActiveStatus = {
-			'title': 'Đang đọc',
-			'value': 'reading',
+			'name': 'Đang đọc',
+			'value': STATUS_BOOK.reading,
 			'icon': CoffeeCupIcon,
 		};
 		const handleChangeStatus = jest.fn();
@@ -79,11 +80,11 @@ describe('Book shelve list', () => {
 	it('hiển thị đúng 2 book shelve', () => {
 		const fakeBookShelves = [
 			{
-				title: 'Sách2021',
+				name: 'Sách2021',
 				id: 1,
 			},
 			{
-				title: 'tusach1',
+				name: 'tusach1',
 				id: 2,
 			},
 		];
@@ -101,11 +102,11 @@ describe('Book shelve list', () => {
 	it('khi click nút thêm sách thì nút thêm sách sẽ ẩn đi và hiển thị ô input', async () => {
 		const fakeBookShelves = [
 			{
-				title: 'Sách2021',
+				name: 'Sách2021',
 				id: 1,
 			},
 			{
-				title: 'tusach1',
+				name: 'tusach1',
 				id: 2,
 			},
 		];
@@ -124,11 +125,11 @@ describe('Book shelve list', () => {
 	it('không update danh sách giá nếu submit blank input', async () => {
 		const fakeBookShelves = [
 			{
-				title: 'Sách2021',
+				name: 'Sách2021',
 				id: 1,
 			},
 			{
-				title: 'tusach1',
+				name: 'tusach1',
 				id: 2,
 			},
 		];
@@ -154,11 +155,11 @@ describe('Book shelve list', () => {
 	it('update danh sách giá sách nếu thỏa mãn giá trị input không vượt quá 20 kí tự', async () => {
 		const fakeBookShelves = [
 			{
-				title: 'Sách2021',
+				name: 'Sách2021',
 				id: 1,
 			},
 			{
-				title: 'tusach1',
+				name: 'tusach1',
 				id: 2,
 			},
 		];

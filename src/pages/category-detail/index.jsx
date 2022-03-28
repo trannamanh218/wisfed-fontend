@@ -31,7 +31,7 @@ const CategoryDetail = () => {
 	const handleViewBookDetail = async data => {
 		setStatus(STATUS_LOADING);
 		try {
-			await dispatch(getBookDetail(data.id)).unwrap();
+			await dispatch(getBookDetail({ id: data.id })).unwrap();
 			setStatus(STATUS_SUCCESS);
 			navigate(RouteLink.bookDetail(data.id, data.name));
 		} catch (err) {

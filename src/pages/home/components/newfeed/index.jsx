@@ -15,7 +15,7 @@ const NewFeed = () => {
 	const [modalShow, setModalShow] = useState(false);
 
 	const onChangeNewPost = () => {
-		setIsNewPost(true);
+		setIsNewPost(!isNewPost);
 	};
 
 	const handleModalFilter = () => {

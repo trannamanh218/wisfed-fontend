@@ -6,6 +6,8 @@ import { useCallback, useEffect, useRef } from 'react';
 import SuggestSection from './SuggestSection';
 import TaggedList from './TaggedList';
 import './style.scss';
+import { useDispatch } from 'react-redux';
+import { checkBookInLibraries } from 'reducers/redux-utils/library';
 
 function CreatPostSubModal(props) {
 	const {
@@ -18,8 +20,11 @@ function CreatPostSubModal(props) {
 		taggedData,
 		removeTaggedItem,
 		addOptionsToPost,
+		taggedDataPrevious,
+		handleValidationInput,
 	} = props;
 	const inputRef = useRef();
+	const dispatch = useDispatch();
 
 	useEffect(() => {
 		if (taggedData.addImages.length === 0) {
@@ -38,6 +43,27 @@ function CreatPostSubModal(props) {
 	};
 
 	const handleComplete = () => {
+		if (!_.isEmpty(taggedData.addBook)) {
+			if (!taggedData.addBook.hasOwnProperty('status')) {
+				if (taggedDataPrevious.addBook.id !== taggedData.addBook.id) {
+					dispatch(checkBookInLibraries(taggedData.addBook.id))
+						.unwrap()
+						.then(res => {
+							const { rows } = res;
+							const library = rows.find(item => item.library.isDefault);
+							const status = library ? library.library.defaultType : null;
+							const pages = { read: taggedData.addBook.page, reading: '', wantToRead: '' };
+
+							handleAddToPost({ ...taggedData.addBook, status, progress: pages[status] || '' });
+							handleValidationInput('');
+						})
+						.catch(() => {
+							return;
+						});
+				}
+			}
+		}
+
 		if (option.value === 'modifyImages') {
 			addOptionsToPost({
 				value: 'addImages',
@@ -150,6 +176,8 @@ CreatPostSubModal.propTypes = {
 	taggedData: PropTypes.object,
 	removeTaggedItem: PropTypes.func,
 	addOptionsToPost: PropTypes.func,
+	taggedDataPrevious: PropTypes.object,
+	handleValidationInput: PropTypes.func,
 };
 
 export default CreatPostSubModal;

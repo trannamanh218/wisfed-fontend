@@ -17,6 +17,10 @@ import './main-category-detail.scss';
 import SearchBook from './SearchBook';
 import { useFetchBooks } from 'api/book.hooks';
 import PropTypes from 'prop-types';
+import { Modal, ModalBody } from 'react-bootstrap';
+import MultipleCheckbox from 'shared/multiple-checkbox';
+import MultipleRadio from 'shared/multiple-radio';
+import { useModal } from 'shared/hooks';
 
 const MainCategoryDetail = ({ handleViewBookDetail }) => {
 	const { id } = useParams();
@@ -25,10 +29,33 @@ const MainCategoryDetail = ({ handleViewBookDetail }) => {
 	const topBooks = books.slice(0, 10);
 	const [bookList, setBookList] = useState(books.slice(0, 10));
 	const [isLike, setIsLike] = useState(false);
-	const navigate = useNavigate();
 	const [inputSearch, setInputSearch] = useState('');
 	const [filter, setFilter] = useState('[]');
+	const { modalOpen, setModalOpen, toggleModal } = useModal(false);
 	const { books: searchResults } = useFetchBooks(1, 10, filter);
+	const navigate = useNavigate();
+
+	const checkOptions = [
+		{
+			value: 'likeMost',
+			title: 'Review nhiều like nhất',
+		},
+	];
+	const starOptions = new Array(5).fill({}).map((_, index) => ({ value: index + 1, title: `${index + 1} sao` }));
+	const publishOptiosn = [
+		{
+			value: 'newest',
+			title: 'Mới nhất',
+		},
+		{
+			value: 'oldest',
+			title: 'Cũ nhất',
+		},
+	];
+	const reviewOptions = [
+		{ value: 'followMost', title: 'Có nhiều Follow nhất' },
+		{ value: 'reviewMost', title: 'Có nhiều Review nhất' },
+	];
 
 	useEffect(() => {
 		if (books && books.length) {
@@ -67,8 +94,6 @@ const MainCategoryDetail = ({ handleViewBookDetail }) => {
 	});
 
 	const updateInputSearch = value => {
-		setInputSearch(value);
-
 		if (value) {
 			const filterValue = [{ 'operator': 'eq', 'value': id, 'property': 'categoryId' }];
 			filterValue.push({ 'operator': 'search', 'value': value.trim(), 'property': 'name' });
@@ -81,6 +106,7 @@ const MainCategoryDetail = ({ handleViewBookDetail }) => {
 	const debounceSearch = useCallback(_.debounce(updateInputSearch, 1000), []);
 
 	const handleSearch = e => {
+		setInputSearch(e.target.value);
 		debounceSearch(e.target.value);
 	};
 
@@ -94,6 +120,10 @@ const MainCategoryDetail = ({ handleViewBookDetail }) => {
 			</div>
 		);
 	}
+
+	const handleFilter = () => {
+		setModalOpen(true);
+	};
 
 	return (
 		<div className='main-category-detail'>
@@ -115,7 +145,11 @@ const MainCategoryDetail = ({ handleViewBookDetail }) => {
 			<p className='main-category-detail__intro'>{categoryInfo.description || 'Chưa cập nhật'}</p>
 
 			<div className='main-category-detail__container'>
-				<SearchField placeholder='Tìm kiếm sách trong chủ đề kinh doanh' handleChange={handleSearch} />
+				<SearchField
+					placeholder='Tìm kiếm sách trong chủ đề kinh doanh'
+					handleChange={handleSearch}
+					value={inputSearch}
+				/>
 				{inputSearch && <SearchBook list={searchResults} handleViewBookDetail={handleViewBookDetail} />}
 				<CategoryGroup
 					key={`category-group`}
@@ -143,7 +177,7 @@ const MainCategoryDetail = ({ handleViewBookDetail }) => {
 				</div>
 			</div>
 
-			<FilterPane title='Bài viết hay nhất'>
+			<FilterPane title='Bài viết hay nhất' onFilter={handleFilter}>
 				<div className='main-category-detail__posts'>
 					{postList && postList.length
 						? postList.map((item, index) => (
@@ -153,6 +187,33 @@ const MainCategoryDetail = ({ handleViewBookDetail }) => {
 						  ))
 						: null}
 				</div>
+				<Modal
+					show={modalOpen}
+					onHide={toggleModal}
+					className='main-category-detail__modal'
+					keyboard={false}
+					centered
+				>
+					<ModalBody>
+						<div className='main-category-detail__modal__option__group'>
+							<h4>Mặc định</h4>
+							<MultipleRadio list={checkOptions} name='default' value='likeMost' />
+						</div>
+						<div className='main-category-detail__modal__option__group'>
+							<h4>Theo số sao</h4>
+							<MultipleCheckbox list={starOptions} name='star' value='1' />
+						</div>
+						<div className='main-category-detail__modal__option__group'>
+							<h4>Theo thời gian phát hành</h4>
+							<MultipleRadio list={publishOptiosn} name='pulish-time' value='' />
+						</div>
+						<div className='main-category-detail__modal__option__group'>
+							<h4>Theo người review</h4>
+							<MultipleCheckbox list={reviewOptions} name='review' value='' />
+						</div>
+						<Button className='btn-confirm'>Xác nhận</Button>
+					</ModalBody>
+				</Modal>
 			</FilterPane>
 		</div>
 	);

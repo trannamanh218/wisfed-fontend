@@ -40,7 +40,7 @@ export const useFetchQuoteRandom = () => {
 
 export const useFetchQuotes = (current = 1, perPage = 10, filter = '[]') => {
 	const [status, setStatus] = useState(STATUS_IDLE);
-	const [quoteData, setQuoteData] = useState({ rows: [], count: 0 });
+	const [quoteData, setQuoteData] = useState([]);
 	const [retry, setRetry] = useState(false);
 	const dispatch = useDispatch();
 

@@ -18,7 +18,7 @@ $grey-border: #f1f1f1;
 // $ash-background: #eff0f7;
 $white-off: #fcfcfc;
 $white: #ffffff;
-$red: red;
+$red: #e61b00;
 
 // custom theme for bootstrap
 $theme-colors: (
@@ -33,6 +33,7 @@ $theme-colors: (
 	'info': $blue,
 	'light': $white,
 	'dark': $ash,
+	'danger': $red,
 );
 
 $width-book-sm: 108px;

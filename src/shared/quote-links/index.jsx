@@ -19,7 +19,7 @@ const QuotesLinks = ({ title, list, className }) => {
 						</div>
 					))}
 				</div>
-				<Link className='view-all-link' to='/'>
+				<Link className='view-all-link' to='/quote/me'>
 					Xem tất cả
 				</Link>
 			</div>

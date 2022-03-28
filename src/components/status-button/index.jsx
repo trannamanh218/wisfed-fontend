@@ -1,39 +1,123 @@
-import { CircleCheckIcon } from 'components/svg';
-import WrapIcon from 'components/wrap-icon';
-import React, { useState } from 'react';
-import { Modal } from 'react-bootstrap';
-import StatusModalContainer from './StatusModalContainer';
+import { useFetchAuthLibraries } from 'api/library.hook';
 import classNames from 'classnames';
+import { CircleCheckIcon, CoffeeCupIcon, TargetIcon } from 'components/svg';
+import WrapIcon from 'components/wrap-icon';
+import { STATUS_BOOK } from 'constants';
+import _ from 'lodash';
 import PropTypes from 'prop-types';
+import React, { useEffect, useRef, useState } from 'react';
+import { Modal } from 'react-bootstrap';
+import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
+import {
+	addBookToDefaultLibrary,
+	addRemoveBookInLibraries,
+	checkBookInLibraries,
+	createLibrary,
+	updateAuthLibrary,
+} from 'reducers/redux-utils/library';
 import './status-button.scss';
+import StatusModalContainer from './StatusModalContainer';
+import { Circle as CircleLoading } from 'shared/loading';
+import { STATUS_LOADING, STATUS_IDLE } from 'constants';
+import { updateCurrentBook } from 'reducers/redux-utils/book';
+import { useNavigate } from 'react-router-dom';
+import { STATUS_SUCCESS } from 'constants';
 
-const StatusButton = ({ className }) => {
-	const [modalShow, setModalShow] = useState(false);
-	const [currentStatus, setCurrentStatus] = useState({
-		'title': 'Đã đọc',
-		'value': 'readAlready',
+const STATUS_BOOK_OBJ = {
+	'reading': {
+		'name': 'Đang đọc',
+		'value': STATUS_BOOK.reading,
+		'icon': CoffeeCupIcon,
+	},
+	'read': {
+		'name': 'Đã đọc',
+		'value': STATUS_BOOK.read,
 		'icon': CircleCheckIcon,
-	});
+	},
+	'wantToRead': {
+		'name': 'Muốn đọc',
+		'value': STATUS_BOOK.wantToRead,
+		'icon': TargetIcon,
+	},
+};
 
-	const [bookShelves, setBookShelves] = useState([
-		{
-			title: 'Sách2021',
-			id: 1,
-		},
-		{
-			title: 'tusach1',
-			id: 2,
-		},
-		{
-			title: 'tusach2',
-			id: 3,
-		},
-	]);
-
+const StatusButton = ({ className, status, handleClick, libraryId, onChangeLibrary, bookData }) => {
+	const [modalShow, setModalShow] = useState(false);
+	const [currentStatus, setCurrentStatus] = useState(STATUS_BOOK_OBJ.wantToRead);
 	const [showInput, setShowInput] = useState(false);
+	const [bookLibraries, setBookLibaries] = useState([]);
+	const [fetchStatus, setFetchStatus] = useState(STATUS_IDLE);
+	const statusRef = useRef({});
+	statusRef.current = STATUS_BOOK_OBJ.wantToRead;
+	const navigate = useNavigate();
 
-	const handleClose = () => setModalShow(false);
-	const handleShow = () => setModalShow(true);
+	const {
+		library: { authLibraryData },
+	} = useSelector(state => state);
+
+	const dispatch = useDispatch();
+
+	const { statusLibraries } = useFetchAuthLibraries();
+
+	useEffect(() => {
+		if (status) {
+			setCurrentStatus(STATUS_BOOK_OBJ[status]);
+			statusRef.current = STATUS_BOOK_OBJ[status];
+		}
+	}, [status]);
+
+	const handleClose = () => {
+		setModalShow(false);
+	};
+
+	const handleShow = e => {
+		e.stopPropagation();
+		// check duoc trangt hai cos trong thu vien
+		let bookInLibraries = [];
+		let initStatus = STATUS_BOOK_OBJ[status] || STATUS_BOOK_OBJ.wantToRead;
+
+		dispatch(checkBookInLibraries(bookData.id))
+			.unwrap()
+			.then(res => {
+				const { rows } = res;
+
+				if (_.isEmpty(rows)) {
+					bookInLibraries = authLibraryData.rows.map(item => ({
+						...item,
+						isInLibrary: false,
+						isSelect: false,
+					}));
+				} else {
+					const currentLibraries = rows.map(item => ({ ...item.library }));
+					bookInLibraries = authLibraryData.rows.map(item => {
+						const newItem = { ...item, isInLibrary: false, isSelect: false };
+						for (const lib of currentLibraries) {
+							if (newItem.id === lib.id) {
+								newItem.isInLibrary = true;
+								newItem.isSelect = true;
+								break;
+							}
+						}
+
+						return newItem;
+					});
+
+					const currentStatusLibrary = currentLibraries.find(item => item.isDefault);
+
+					if (!_.isEmpty(currentStatusLibrary)) {
+						initStatus = STATUS_BOOK_OBJ[currentStatusLibrary.defaultType];
+					}
+				}
+			})
+			.catch(() => {})
+			.finally(() => {
+				setBookLibaries(bookInLibraries);
+				setCurrentStatus(initStatus);
+				setModalShow(true);
+			});
+		// hien thi
+	};
 
 	const addBookShelves = () => {
 		if (!showInput) {
@@ -41,29 +125,97 @@ const StatusButton = ({ className }) => {
 		}
 	};
 
-	const updateBookShelve = title => {
-		const id = Math.floor(Math.random() * 100000);
-		const data = { title, id };
-		setBookShelves(prev => [...prev, data]);
+	const updateBookShelve = async params => {
+		try {
+			const data = await dispatch(createLibrary(params)).unwrap();
+			const newRows = [...authLibraryData.rows, data];
+			dispatch(updateAuthLibrary({ rows: newRows, count: newRows.length }));
+			const newBookLibraries = [...bookLibraries, { ...data, isInLibrary: false, isSelect: false }];
+			setBookLibaries(newBookLibraries);
+		} catch (err) {
+			toast.error('Lỗi không tạo được tủ sách!');
+		}
 	};
 
-	const handleConfirm = () => {
-		setModalShow(false);
+	const updateStatusBook = () => {
+		if (!_.isEmpty(bookData) && status !== currentStatus.value) {
+			const params = { bookId: bookData.id, type: currentStatus.value };
+			return dispatch(addBookToDefaultLibrary(params)).unwrap();
+		}
+	};
+
+	const handleAddAndRemoveBook = () => {
+		if (!_.isEmpty(bookLibraries)) {
+			const data = bookLibraries.reduce(
+				(res, item) => {
+					if (!item.isInLibrary && item.isSelect) {
+						res.add.push(item.id);
+						return res;
+					}
+
+					if (item.isInLibrary && !item.isSelect) {
+						res.remove.push(item.id);
+						return res;
+					}
+
+					return res;
+				},
+				{ add: [], remove: [] }
+			);
+
+			if (!_.isEmpty(data.add) || !_.isEmpty(data.remove)) {
+				return dispatch(addRemoveBookInLibraries({ id: bookData.id, ...data }));
+			}
+		}
+		return;
+	};
+
+	const handleConfirm = async () => {
+		setFetchStatus(STATUS_LOADING);
+		try {
+			await updateStatusBook();
+			await handleAddAndRemoveBook();
+			setModalShow(false);
+			setFetchStatus(STATUS_SUCCESS);
+
+			if (status !== currentStatus.value) {
+				dispatch(updateCurrentBook({ ...bookData, status: currentStatus.value }));
+				navigate('/');
+			}
+		} catch (err) {
+			setModalShow(false);
+			setFetchStatus(STATUS_IDLE);
+		}
 	};
 
 	const handleChangeStatus = data => {
 		setCurrentStatus(data);
 	};
 
+	const onChangeShelves = data => {
+		const newData = bookLibraries.map(item => {
+			if (item.id === data.id) {
+				return { ...item, isSelect: !item.isSelect };
+			}
+			return item;
+		});
+
+		setBookLibaries(newData);
+	};
+
 	return (
 		<>
+			<CircleLoading loading={fetchStatus === STATUS_LOADING} />
 			<button
 				className={classNames('btn btn-status btn-primary', { [`${className}`]: className })}
 				data-testid='btn-modal'
 				onClick={handleShow}
 			>
-				<WrapIcon className='btn-status__icon' component={currentStatus.icon} />
-				<span>{currentStatus.title}</span>
+				<WrapIcon
+					className='btn-status__icon'
+					component={status ? STATUS_BOOK_OBJ[status].icon : STATUS_BOOK_OBJ.wantToRead.icon}
+				/>
+				<span>{status ? STATUS_BOOK_OBJ[status].name : STATUS_BOOK_OBJ.wantToRead.name}</span>
 			</button>
 			<Modal
 				id='status-book-modal'
@@ -77,11 +229,14 @@ const StatusButton = ({ className }) => {
 					<StatusModalContainer
 						currentStatus={currentStatus}
 						handleChangeStatus={handleChangeStatus}
-						bookShelves={bookShelves}
+						bookShelves={bookLibraries}
 						updateBookShelve={updateBookShelve}
 						addBookShelves={addBookShelves}
-						setBookShelves={setBookShelves}
 						handleConfirm={handleConfirm}
+						onChangeLibrary={onChangeLibrary}
+						libraryId={libraryId}
+						onChangeShelves={onChangeShelves}
+						statusLibraries={statusLibraries}
 					/>
 				</Modal.Body>
 			</Modal>
@@ -89,8 +244,20 @@ const StatusButton = ({ className }) => {
 	);
 };
 
+StatusButton.defaultProps = {
+	className: '',
+	status: STATUS_BOOK.wantToRead,
+	handleClick: () => {},
+	libraryId: null,
+	bookData: {},
+};
+
 StatusButton.propTypes = {
 	className: PropTypes.string,
+	status: PropTypes.oneOf([STATUS_BOOK.read, STATUS_BOOK.reading, STATUS_BOOK.wantToRead]),
+	handleClick: PropTypes.func,
+	libraryId: PropTypes.any,
+	bookData: PropTypes.object,
 };
 
 export default StatusButton;

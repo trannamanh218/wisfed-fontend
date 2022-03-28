@@ -77,6 +77,8 @@
 	}
 
 	&__share {
+		display: flex;
+		align-items: center;
 		&__text {
 			margin-left: 1rem;
 			display: inline-block;

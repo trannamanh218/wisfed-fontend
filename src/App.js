@@ -18,6 +18,7 @@ import { login } from 'reducers/redux-utils/auth';
 import { ToastContainer } from 'react-toastify';
 import PropTypes from 'prop-types';
 import 'scss/main.scss';
+import NotFound from 'pages/not-found';
 
 function App({ children }) {
 	const dispatch = useDispatch();
@@ -28,6 +29,8 @@ function App({ children }) {
 			password: '12345678',
 			// email: 'nguyenhien@gmail.com',
 			// password: '123456',
+			// email: 'thuyheobeo@gmail.com',
+			// password: '12345678',
 		};
 
 		fetchLogin(params);
@@ -61,15 +64,18 @@ function App({ children }) {
 				<Route path='/category/detail/:id' element={<CategoryDetail />} />
 				<Route path='/category/detail/:id/:slug' element={<CategoryDetail />} />
 				<Route path='/shelves' element={<BookShelves />} />
+				<Route path='/shelves/:userId' element={<BookShelves />} />
 				<Route path='/group' element={<Group />} />
 				<Route path='/book/detail/:id' element={<BookDetail />} />
 				<Route path='/book/detail/:id/:slug' element={<BookDetail />} />
-				<Route path='/review' element={<Review />} />
+				<Route path='/review/:id' element={<Review />} />
+				<Route path='/review/:id/:slug' element={<Review />} />
 				<Route path='/quote' element={<Quote />} />
 				<Route path='/quote/me' element={<MyQuote />} />
 				<Route path='/quote/detail/:id' element={<QuoteDetail />} />
 				<Route path='/profile' element={<Profile />} />
 				<Route path='/confirm-my-book' element={<ConfirmMyBook />} />
+				<Route path='/404' element={<NotFound />} />
 				<Route path='/' element={<Home />} />
 				{children}
 			</Routes>
