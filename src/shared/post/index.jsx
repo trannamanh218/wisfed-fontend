@@ -15,8 +15,9 @@ import PostBook from 'shared/post-book';
 import UserAvatar from 'shared/user-avatar';
 import './post.scss';
 import PreviewLink from 'shared/preview-link/PreviewLink';
+import ReactRating from 'shared/react-rating';
 
-function Post({ postInformations, className, isUpdateProgressReading = false }) {
+function Post({ postInformations, className }) {
 	const [postData, setPostData] = useState({});
 	const { userInfo } = useSelector(state => state.auth);
 	const dispatch = useDispatch();
@@ -160,11 +161,13 @@ function Post({ postInformations, className, isUpdateProgressReading = false }) 
 					<div className='post__user-status__post-time-status'>
 						<span>{calculateDurationTime(postData.time || postData.updatedAt)}</span>
 						<>
-							{isUpdateProgressReading && (
-								<>
+							{postData.book && (
+								<div className='post__user-status__subtitle'>
+									<span>Cập nhật tiến độ đọc sách</span>
 									<div className='post__user-status__post-time-status__online-dot'></div>
-									<span style={{ color: '#656773' }}>Cập nhật tiến độ đọc sách</span>
-								</>
+									<span>Xếp hạng</span>
+									<ReactRating readonly={true} initialRating={4} />
+								</div>
 							)}
 						</>
 					</div>
@@ -272,7 +275,6 @@ Post.propTypes = {
 	postInformations: PropTypes.object,
 	likeAction: PropTypes.func,
 	className: PropTypes.string,
-	isUpdateProgressReading: PropTypes.bool,
 };
 
 export default Post;

@@ -96,6 +96,26 @@
 	background-color: $primary;
 }
 
+.post__user-status__subtitle {
+	display: flex;
+	align-items: center;
+	color: $ash-placeholder;
+	font-weight: 500;
+	> span {
+		&:first-of-type {
+			margin-right: 12px;
+		}
+	}
+
+	svg {
+		width: 16px;
+	}
+
+	.react-rating-container {
+		margin-left: 1rem;
+	}
+}
+
 .post__description {
 	font-size: 0.94rem;
 	line-height: 1.5rem;
