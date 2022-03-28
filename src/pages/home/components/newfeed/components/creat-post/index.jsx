@@ -1,16 +1,22 @@
 import { useEffect, useState, useRef } from 'react';
 import { BookIcon, Feather, CategoryIcon, GroupIcon } from 'components/svg';
 import CreatPostModalContent from '../creat-post-modal-content';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import UserAvatar from 'shared/user-avatar';
 import PropTypes from 'prop-types';
+import _ from 'lodash';
+import { updateCurrentBook } from 'reducers/redux-utils/book';
 
 function CreatPost({ onChangeNewPost }) {
 	const [showModalCreatPost, setShowModalCreatPost] = useState(false);
 	const [option, setOption] = useState({});
 	const creatPostModalContainer = useRef(null);
 	const scrollBlocked = useRef(false);
-	const { userInfo } = useSelector(state => state.auth);
+	const {
+		auth: { userInfo },
+		book: { bookForCreatePost },
+	} = useSelector(state => state);
+	const dispatch = useDispatch();
 
 	const safeDocument = typeof document !== 'undefined' ? document : {};
 	const { body } = safeDocument;
@@ -23,7 +29,6 @@ function CreatPost({ onChangeNewPost }) {
 			icon: <BookIcon className='newfeed__creat-post__options__item__logo--book' />,
 			message: 'Không tìm thấy cuốn sách nào',
 		},
-
 		{
 			value: 'addAuthor',
 			title: 'tác giả',
@@ -45,11 +50,18 @@ function CreatPost({ onChangeNewPost }) {
 	];
 
 	useEffect(() => {
+		if (!_.isEmpty(bookForCreatePost)) {
+			setShowModalCreatPost(true);
+		}
+	}, [bookForCreatePost]);
+
+	useEffect(() => {
 		if (showModalCreatPost) {
 			creatPostModalContainer.current.addEventListener('mousedown', e => {
 				if (e.target === creatPostModalContainer.current) {
 					setShowModalCreatPost(false);
 					setOption({});
+					dispatch(updateCurrentBook({}));
 				}
 			});
 			blockScroll();

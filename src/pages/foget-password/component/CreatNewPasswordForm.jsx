@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Formik, Field, Form } from 'formik';
 import classNames from 'classnames';
-import { resetPassword } from 'reducers/redux-utils/auth';
+import { resetPassword, forgotPassword } from 'reducers/redux-utils/auth';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
 import ModalLogin from 'pages/login/element/ModalLogin';
 import { resetPasswordValidate } from 'helpers/Validation';
-import { forgotPassword } from 'reducers/redux-utils/auth';
-import EyeIcon from 'shared/eye-icon';
+import { Circle } from 'shared/loading';
+import { toast } from 'react-toastify';
 
 function CreatNewPasswordForm() {
 	const isFetching = useSelector(state => state.auth.isFetching);
@@ -15,7 +15,12 @@ function CreatNewPasswordForm() {
 	const [isShow, setIsShow] = useState(false);
 	const [dataModal, setDataModal] = useState({});
 	const newEmail = JSON.parse(localStorage.getItem('emailForgot'));
-	const [seconds, setSeconds] = useState(120);
+	const [seconds, setSeconds] = useState(180);
+	const [secondsEffect, setSecondsEffect] = useState(300);
+	const [isShowBtn, setIsShowBtn] = useState(false);
+	const [valuePassword2, setValuePassword2] = useState('');
+	const [valueOtp, setValueOtp] = useState('');
+	const [valuePassword, setValuePassword] = useState('');
 
 	const handleSubmit = async data => {
 		try {
@@ -30,8 +35,8 @@ function CreatNewPasswordForm() {
 				title: 'Tạo mật khẩu',
 				title2: 'mới thành công',
 				isShowIcon: true,
-				scribe: 'Mật khẩu mới của bạn là',
-				scribe2: `${data.newPassword}`,
+				scribe: 'Vui lòng đăng nhập lại',
+				scribe2: 'với mật khẩu mới',
 			});
 		} catch (err) {
 			setIsShow(true);
@@ -55,32 +60,67 @@ function CreatNewPasswordForm() {
 		return `${mins}:${secondRemain}`;
 	};
 
-	const handleResendOTP = async () => {
-		await dispatch(forgotPassword(newEmail)).unwrap();
-	};
+	useEffect(() => {
+		const countDown = setInterval(() => {
+			if (seconds > 0) {
+				setSeconds(seconds - 1);
+			}
+			return;
+		}, 1000);
 
-	const renderResendOTP = () => {
-		if (seconds) {
-			return (
-				<>
-					<span>Gửi lại mã trong</span>
-					<span className='timer'>{formatTime(seconds)}</span>
-				</>
-			);
+		const countDownEffect = setTimeout(() => {
+			if (secondsEffect > 0) {
+				setSecondsEffect(secondsEffect - 1);
+			}
+			// else {
+			// 	setIsModalError(true);
+			// }
+			return;
+		}, 1000);
+
+		return () => {
+			clearInterval(countDown);
+			clearTimeout(countDownEffect);
+		};
+	});
+
+	const handleResendOTP = async () => {
+		const data = {
+			email: newEmail,
+		};
+		try {
+			await dispatch(forgotPassword(data)).unwrap();
+			setSeconds(180);
+			setDataModal({
+				title: 'Đã gửi mã',
+				title2: 'Xác Nhận',
+				isShowIcon: true,
+				scribe: 'Vui lòng kiểm tra hòm thư ',
+				scribe2: `${data.email}`,
+			});
+			setTimeout(() => {
+				setIsShow(true);
+			}, 500);
+		} catch {
+			toast.error('Lỗi hệ thống');
 		}
-		return (
-			<span className='resend' onClick={handleResendOTP}>
-				Gửi lại mã xác nhận
-			</span>
-		);
 	};
 
 	const handleChangeModal = () => {
 		setIsShow(false);
 	};
 
+	useEffect(() => {
+		if (valueOtp && valuePassword && valuePassword2) {
+			setIsShowBtn(true);
+		} else if (valueOtp === '' || valuePassword === '' || valuePassword2 === '') {
+			setIsShowBtn(false);
+		}
+	}, [valueOtp, valuePassword, valuePassword2]);
+
 	return (
 		<div className='forget__form__email'>
+			<Circle loading={isFetching} />
 			{isShow && (
 				<div>
 					<ModalLogin data={dataModal} handleChange={handleChangeModal} />
@@ -103,6 +143,7 @@ function CreatNewPasswordForm() {
 					</div>
 					<Field name='OTP'>
 						{({ field, meta }) => {
+							setValueOtp(field.value);
 							return (
 								<div className='forgetPassword__form__field'>
 									<div
@@ -127,11 +168,15 @@ function CreatNewPasswordForm() {
 						}}
 					</Field>
 					<div className='forget__send-otp__link'>
-						<span>Không nhận được mã? Gửi lại</span>
+						<span className={seconds === 0 ? '' : 'disabled-bnt'} onClick={handleResendOTP}>
+							Không nhận được mã? Gửi lại
+						</span>
+						<span className={seconds !== 0 ? 'timer' : 'timer disabled-span'}>{formatTime(seconds)}</span>
 					</div>
 					<hr />
 					<Field name='newPassword'>
 						{({ field, meta }) => {
+							setValuePassword(field.value);
 							return (
 								<div className='forgetPassword__form__field'>
 									<div
@@ -157,6 +202,7 @@ function CreatNewPasswordForm() {
 					</Field>
 					<Field name='confirmPassword'>
 						{({ field, meta }) => {
+							setValuePassword2(field.value);
 							return (
 								<div className='forgetPassword__form__field'>
 									<div
@@ -180,7 +226,15 @@ function CreatNewPasswordForm() {
 							);
 						}}
 					</Field>
-					<button className='forgetPassword__form__btn-otp'>Lấy lại mật khẩu</button>
+					<button
+						className={
+							isShowBtn
+								? 'forgetPassword__form__btn-otp'
+								: 'forgetPassword__form__btn-otp disabled-bnt-forgot'
+						}
+					>
+						Lấy lại mật khẩu
+					</button>
 				</Form>
 			</Formik>
 		</div>

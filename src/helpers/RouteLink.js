@@ -8,6 +8,10 @@ class RouteLink {
 	bookDetail(id, name) {
 		return `/book/detail/${id}/${toSlug(name)}`;
 	}
+
+	reviewBookDetail(id, name) {
+		return `/review/${id}/${toSlug(name)}`;
+	}
 }
 
 export default new RouteLink();

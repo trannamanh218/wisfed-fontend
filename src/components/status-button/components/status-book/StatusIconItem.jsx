@@ -20,7 +20,7 @@ const StatusIconItem = ({ item, currentStatus, handleChangeStatus }) => {
 			data-testid='statusIcon'
 		>
 			<WrapIcon component={item.icon} />
-			<span className='status-item__title'>{item.title}</span>
+			<span className='status-item__title'>{item.name}</span>
 			<span className={classNames('custom-radio', { 'active': isActive })}></span>
 		</li>
 	);

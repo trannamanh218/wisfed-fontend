@@ -1,5 +1,9 @@
+// import { useFetchInfiniateActivities } from 'api/activity.hooks';
 import NormalContainer from 'components/layout/normal-container';
-import React from 'react';
+import _ from 'lodash';
+import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import BackButton from 'shared/back-button';
 import FilterPane from 'shared/filter-pane';
 import PostList from 'shared/post-list';
@@ -18,6 +22,28 @@ const Review = () => {
 		commentNumber: 1,
 		shareNumber: 3,
 	});
+
+	const params = useParams();
+	const { userInfo } = useSelector(state => state.auth);
+
+	const [filter, setFilter] = useState();
+
+	useEffect(() => {
+		if (!_.isEmpty(userInfo) && !_.isEmpty(params)) {
+			const filterData = [
+				{ 'operator': 'eq', 'value': `user:${userInfo.id}`, 'property': 'origin' },
+				{
+					'operator': 'search',
+					'value': params.id,
+					'property': 'bookId',
+				},
+			];
+
+			setFilter(filterData);
+		}
+	}, [params, userInfo]);
+
+	// const { postList } = useFetchInfiniateActivities(JSON.stringify(filter));
 
 	return (
 		<NormalContainer>

@@ -11,7 +11,7 @@ import { Circle as CircleLoading } from 'shared/loading';
 import PropTypes from 'prop-types';
 import './main-category.scss';
 
-const MainCategory = ({ status, handleViewBookDetail }) => {
+const MainCategory = ({ status, handleViewBookDetail, viewCategoryDetail }) => {
 	const [inputValue, setInputValue] = useState('');
 	const { categories, fetchData, hasMore } = useFetchAllCategoriesWithBooks();
 	const { searchCategories, fetchFilterData, hasMoreFilterData } = useFetchFilterCategories(inputValue);
@@ -42,6 +42,7 @@ const MainCategory = ({ status, handleViewBookDetail }) => {
 								title={category.name}
 								data={category}
 								handleViewBookDetail={handleViewBookDetail}
+								handleClick={viewCategoryDetail}
 							/>
 						))}
 					</InfiniteScroll>

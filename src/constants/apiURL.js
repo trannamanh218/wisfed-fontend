@@ -3,6 +3,7 @@ export const authAPI = '/api/v1/auth';
 export const registerAPI = '/api/v1/auth/register';
 export const forgotPasswordAPI = '/api/v1/auth/forgotPassword';
 export const resetPasswordAPI = '/api/v1/auth/resetPassword/';
+export const checkTokenResetPassword = '/api/v1/auth/verify-password';
 
 // quote
 export const quoteAPI = '/api/v1/quotes';
@@ -27,6 +28,7 @@ export const creatBookCopyrightsAPI = '/api/v1/bookCopyrights';
 export const bookAllReviewAPI = id => `/api/v1/books/${id}/reviews`;
 export const bookFollowReviewAPi = id => `/api/v1/books/${id}/followReviews`;
 export const bookFriendReviewAPi = id => `/api/v1/books/${id}/friendReviews`;
+export const progressBookAPI = id => `/api/v1/books/updateBookProgress/${id}`;
 
 // category
 export const categoryAPI = '/api/v1/categories';
@@ -56,6 +58,15 @@ export const libraryAPI = '/api/v1/libraries';
 export const libraryDetailAPI = id => `/api/v1/libraries/${id}`;
 export const addBookToLibraryAPI = id => `/api/v1/libraries/${id}/addBook`;
 export const removeBookFromLibraryAPI = id => `/api/v1/libraries/${id}/removeBook`;
+export const listBookLibraryAPI = id => `/api/v1/libraries/listBookLibrary/${id}`;
+export const updateBookAPI = id => `api/v1/libraries/updateBookLibrary/${id}`;
+export const myLibraryAPI = '/api/v1/libraries/mylib';
+export const addBookToDefaultLibraryAPI = type => `/api/v1/libraries/addBook/${type}`;
+export const allBookInLibraryAPI = id => `/api/v1/libraries/listBookAllLibrary/${id}`;
+export const removeAllBookAPI = '/api/v1/libraries/removeAllBook ';
+export const addRemoveBookAPI = id => `/api/v1/libraries/addRemoveBook/${id}`;
+export const checkBookLibraryAPI = id => `/api/v1/libraries/checkBookLibrary/${id}`;
+export const otherListBookInLibaries = id => `/api/v1/libraries/listBookBy/${id}`;
 
 // comment activity
 export const commentActivityAPI = '/api/v1/commentActivities';

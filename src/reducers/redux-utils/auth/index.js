@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { authAPI, forgotPasswordAPI, registerAPI, resetPasswordAPI } from 'constants/apiURL';
+import { authAPI, forgotPasswordAPI, registerAPI, resetPasswordAPI, checkTokenResetPassword } from 'constants/apiURL';
 import Request from 'helpers/Request';
 import Storage from 'helpers/Storage';
 import _ from 'lodash';
@@ -7,6 +7,15 @@ import _ from 'lodash';
 export const register = createAsyncThunk('auth/register', async (params, { rejectWithValue }) => {
 	try {
 		const response = await Request.makePost(registerAPI, params);
+		return response;
+	} catch (err) {
+		return rejectWithValue(err.response);
+	}
+});
+
+export const checkApiToken = createAsyncThunk('/auth/forgot-admin', async (params, { rejectWithValue }) => {
+	try {
+		const response = await Request.makeGet(checkTokenResetPassword, params);
 		return response;
 	} catch (err) {
 		return rejectWithValue(err.response);
@@ -44,7 +53,6 @@ export const resetPassword = createAsyncThunk('auth/resetPassword', async (param
 		const response = await Request.makePost(resetPasswordAPI, params);
 		return response;
 	} catch (err) {
-		console.log(err.response);
 		return rejectWithValue(err.response);
 	}
 });
