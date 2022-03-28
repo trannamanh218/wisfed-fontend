@@ -5,14 +5,14 @@ import avater from 'assets/images/image22.png';
 import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { backgroundToggle, activeKeyTabsNotification } from 'reducers/redux-utils/notificaiton';
 import { useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import UserAvatar from 'shared/user-avatar';
 import { getNotification } from 'reducers/redux-utils/notificaiton';
-// import { useSelector } from 'react-redux';
 import { calculateDurationTime } from 'helpers/Common';
+import { useNavigate } from 'react-router-dom';
 
 const NotificationModal = ({ setModalNotti, buttonModal }) => {
 	const notifymodal = useRef(null);
@@ -21,7 +21,7 @@ const NotificationModal = ({ setModalNotti, buttonModal }) => {
 	const history = useLocation();
 	const [getNotifications, setGetNotifications] = useState([]);
 	// const keyTabsActive = useSelector(state => state.notificationReducer.activeKeyTabs);
-
+	const navigate = useNavigate();
 	const handleClickOutside = e => {
 		if (notifymodal.current && !notifymodal.current.contains(e.target) && !buttonModal.current.contains(e.target)) {
 			setModalNotti(false);
@@ -29,14 +29,37 @@ const NotificationModal = ({ setModalNotti, buttonModal }) => {
 		}
 	};
 
+	useEffect(() => {
+		document.addEventListener('click', handleClickOutside, true);
+		return () => {
+			document.removeEventListener('click', handleClickOutside, true);
+		};
+	}, []);
+
 	const getMyNotification = async () => {
 		try {
 			const notificationList = await dispatch(getNotification()).unwrap();
 			const arrNew = notificationList.map(item => item.activities).flat(1);
-			setGetNotifications(arrNew);
+			const newArr = arrNew.map(item => {
+				const data = { ...item, isRead: false };
+				return { ...data };
+			});
+			setGetNotifications(newArr);
+			return;
 		} catch {
 			toast.error('Lỗi hệ thống');
 		}
+	};
+
+	const hanleActiveIsReed = items => {
+		const newArr = getNotifications.map(item => {
+			if (item.id === items.id) {
+				const data = { ...item, isRead: true };
+				return { ...data };
+			}
+			return { ...item };
+		});
+		setGetNotifications(newArr);
 	};
 
 	useEffect(() => {
@@ -48,6 +71,14 @@ const NotificationModal = ({ setModalNotti, buttonModal }) => {
 		return length.length;
 	};
 
+	const handleLinkAddfriend = item => {
+		if (item.verb === 'addfriend') {
+			navigate('/profile');
+			dispatch(backgroundToggle(true));
+			setModalNotti(false);
+		}
+	};
+
 	const renderMessage = item => {
 		if (item.verb === 'addfriend') {
 			return 'đã gửi lời mời kết bạn';
@@ -55,13 +86,6 @@ const NotificationModal = ({ setModalNotti, buttonModal }) => {
 			return 'đã bình luận vào bài viết của bạn';
 		}
 	};
-
-	useEffect(() => {
-		document.addEventListener('click', handleClickOutside, true);
-		return () => {
-			document.removeEventListener('click', handleClickOutside, true);
-		};
-	}, []);
 
 	const handleNotificaiton = () => {
 		dispatch(backgroundToggle(true));
@@ -96,39 +120,71 @@ const NotificationModal = ({ setModalNotti, buttonModal }) => {
 								</div>
 							</div>
 							<div className='notificaiton__all__title'>Gần đây</div>
-							{getNotifications.map(item => (
-								<div key={item.id} className='notificaiton__tabs__all__seen'>
-									<div className='notificaiton__all__layout'>
-										<UserAvatar size='mm' source={item.createdBy.avatarImage} />
-										<div className='notificaiton__all__layout__status'>
-											<div className='notificaiton__all__infor'>
-												<p dangerouslySetInnerHTML={{ __html: item?.message }}></p>
-												{item.verb !== 'follow' && (
-													<>
-														<span>
-															{item.createdBy.fullName
-																? item.createdBy.fullName
-																: item.createdBy.firstName + item.createdBy.lastName}
-														</span>
-														&nbsp;
-														{renderMessage(item)}
-													</>
-												)}
+							{getNotifications.map(item =>
+								item.isCheck ? (
+									''
+								) : (
+									<div
+										onClick={() => hanleActiveIsReed(item)}
+										key={item.id}
+										className={
+											item.isRead
+												? 'notificaiton__tabs__all__active'
+												: 'notificaiton__tabs__all__seen'
+										}
+									>
+										<div
+											onClick={() => {
+												handleLinkAddfriend(item);
+											}}
+											className='notificaiton__all__layout'
+										>
+											<UserAvatar size='mm' source={item.createdBy.avatarImage} />
+											<div className='notificaiton__all__layout__status'>
+												<div className='notificaiton__all__infor'>
+													<p dangerouslySetInnerHTML={{ __html: item?.message }}></p>
+													{item.verb !== 'follow' && (
+														<>
+															<span>
+																{item.createdBy.fullName ? (
+																	item.createdBy.fullName
+																) : (
+																	<>
+																		<span> {item.createdBy.firstName}</span>
+																		<span> {item.createdBy.lastName}</span>
+																	</>
+																)}
+															</span>
+															&nbsp;
+															{renderMessage(item)}
+														</>
+													)}
+												</div>
+												<div
+													className={
+														item.isRead
+															? 'notificaiton__all__status__seen'
+															: 'notificaiton__all__status'
+													}
+												>{`${calculateDurationTime(item.time)}`}</div>
 											</div>
-											<div className='notificaiton__all__status'>{`${calculateDurationTime(
-												item.time
-											)}`}</div>
+											<div
+												className={
+													item.isRead
+														? 'notificaiton__all__seen'
+														: 'notificaiton__all__unseen'
+												}
+											></div>
 										</div>
-										<div className='notificaiton__all__unseen'></div>
+										{item.verb === 'addfriend' && (
+											<div className='notificaiton__all__friend'>
+												<div className='notificaiton__all__accept'>Chấp nhận</div>
+												<div className='notificaiton__all__refuse'>Từ chối</div>
+											</div>
+										)}
 									</div>
-									{item.verb === 'addfriend' && (
-										<div className='notificaiton__all__friend'>
-											<div className='notificaiton__all__accept'>Chấp nhận</div>
-											<div className='notificaiton__all__refuse'>Từ chối</div>
-										</div>
-									)}
-								</div>
-							))}
+								)
+							)}
 							<Link
 								to={`/notification`}
 								onClick={handleNotificaiton}
@@ -140,8 +196,21 @@ const NotificationModal = ({ setModalNotti, buttonModal }) => {
 						<Tab eventKey='unread' title='Chưa đọc'>
 							<div className='notificaiton__all__title'>Thông báo chưa đọc</div>
 							{getNotifications.map(item => (
-								<div key={item.id} className='notificaiton__tabs__all__seen'>
-									<div className='notificaiton__all__layout'>
+								<div
+									onClick={() => hanleActiveIsReed(item)}
+									key={item.id}
+									className={
+										item.isRead
+											? 'notificaiton__tabs__all__active'
+											: 'notificaiton__tabs__all__seen'
+									}
+								>
+									<div
+										onClick={() => {
+											handleLinkAddfriend(item);
+										}}
+										className='notificaiton__all__layout'
+									>
 										<UserAvatar size='mm' source={item.createdBy.avatarImage} />
 										<div className='notificaiton__all__layout__status'>
 											<div className='notificaiton__all__infor'>
@@ -149,9 +218,14 @@ const NotificationModal = ({ setModalNotti, buttonModal }) => {
 												{item.verb !== 'follow' && (
 													<>
 														<span>
-															{item.createdBy.fullName
-																? item.createdBy.fullName
-																: item.createdBy.firstName + item.createdBy.lastName}
+															{item.createdBy.fullName ? (
+																item.createdBy.fullName
+															) : (
+																<>
+																	<span> {item.createdBy.firstName}</span>
+																	<span> {item.createdBy.lastName}</span>
+																</>
+															)}
 														</span>
 														&nbsp;
 														{renderMessage(item)}
@@ -162,7 +236,11 @@ const NotificationModal = ({ setModalNotti, buttonModal }) => {
 												item.time
 											)}`}</div>
 										</div>
-										<div className='notificaiton__all__unseen'></div>
+										<div
+											className={
+												item.isRead ? 'notificaiton__all__seen' : 'notificaiton__all__unseen'
+											}
+										></div>
 									</div>
 									{item.verb === 'addfriend' && (
 										<div className='notificaiton__all__friend'>
@@ -184,8 +262,19 @@ const NotificationModal = ({ setModalNotti, buttonModal }) => {
 							<div className='notificaiton__all__title'>{lengthAddFriend()} lời kết bạn</div>
 							{getNotifications.map(
 								item =>
-									item.verb === 'addfriend' && (
-										<div key={item.id} className='notificaiton__tabs__all__seen'>
+									item.verb === 'addfriend' &&
+									(item.isCheck ? (
+										''
+									) : (
+										<div
+											onClick={() => hanleActiveIsReed(item)}
+											key={item.id}
+											className={
+												item.isRead
+													? 'notificaiton__tabs__all__active'
+													: 'notificaiton__tabs__all__seen'
+											}
+										>
 											<div className='notificaiton__all__layout'>
 												<UserAvatar size='mm' source={item.createdBy.avatarImage} />
 												<div className='notificaiton__all__layout__status'>
@@ -194,10 +283,14 @@ const NotificationModal = ({ setModalNotti, buttonModal }) => {
 														{item.verb !== 'follow' && (
 															<>
 																<span>
-																	{item.createdBy.fullName
-																		? item.createdBy.fullName
-																		: item.createdBy.firstName +
-																		  item.createdBy.lastName}
+																	{item.createdBy.fullName ? (
+																		item.createdBy.fullName
+																	) : (
+																		<>
+																			<span> {item.createdBy.firstName}</span>
+																			<span> {item.createdBy.lastName}</span>
+																		</>
+																	)}
 																</span>
 																&nbsp;
 																{renderMessage(item)}
@@ -208,7 +301,13 @@ const NotificationModal = ({ setModalNotti, buttonModal }) => {
 														item.time
 													)}`}</div>
 												</div>
-												<div className='notificaiton__all__unseen'></div>
+												<div
+													className={
+														item.isRead
+															? 'notificaiton__all__seen'
+															: 'notificaiton__all__unseen'
+													}
+												></div>
 											</div>
 											{item.verb === 'addfriend' && (
 												<div className='notificaiton__all__friend'>
@@ -217,7 +316,7 @@ const NotificationModal = ({ setModalNotti, buttonModal }) => {
 												</div>
 											)}
 										</div>
-									)
+									))
 							)}
 							<Link
 								to={`/notification`}

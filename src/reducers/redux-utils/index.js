@@ -9,7 +9,7 @@ import quote from './quote';
 import library from './library';
 import comment from './comment';
 import notificationReducer from './notificaiton';
-
+import profile from './profile';
 const rootReducer = {
 	auth,
 	post,
@@ -22,6 +22,7 @@ const rootReducer = {
 	library,
 	comment,
 	notificationReducer,
+	profile,
 };
 
 export default rootReducer;

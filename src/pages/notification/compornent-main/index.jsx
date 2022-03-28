@@ -24,7 +24,7 @@ const Notification = () => {
 			const notificationList = await dispatch(getNotification()).unwrap();
 			const arrNew = notificationList.map(item => item.activities).flat(1);
 			const newArr = arrNew.map(item => {
-				const data = { ...item, isAccept: false, isRefuse: false };
+				const data = { ...item, isAccept: false, isRefuse: false, isRead: false };
 				return { ...data };
 			});
 			setGetNotifications(newArr);
@@ -118,10 +118,14 @@ const Notification = () => {
 													{item.verb !== 'follow' && (
 														<>
 															<span>
-																{item.createdBy.fullName
-																	? item.createdBy.fullName
-																	: item.createdBy.firstName +
-																	  item.createdBy.lastName}
+																{item.createdBy.fullName ? (
+																	item.createdBy.fullName
+																) : (
+																	<>
+																		<span> {item.createdBy.firstName}</span>
+																		<span> {item.createdBy.lastName}</span>
+																	</>
+																)}
 															</span>
 															&nbsp;
 															{renderMessage(item)}
@@ -194,10 +198,14 @@ const Notification = () => {
 													{item.verb !== 'follow' && (
 														<>
 															<span>
-																{item.createdBy.fullName
-																	? item.createdBy.fullName
-																	: item.createdBy.firstName +
-																	  item.createdBy.lastName}
+																{item.createdBy.fullName ? (
+																	item.createdBy.fullName
+																) : (
+																	<>
+																		<span> {item.createdBy.firstName}</span>
+																		<span> {item.createdBy.lastName}</span>
+																	</>
+																)}
 															</span>
 															&nbsp;
 															{renderMessage(item)}
@@ -242,9 +250,14 @@ const Notification = () => {
 												<div className='notificaiton__all__main__layout__status'>
 													<div className='notificaiton__main__all__infor'>
 														<span>
-															{item.createdBy.fullName
-																? item.createdBy.fullName
-																: item.createdBy.firstName + item.createdBy.lastName}
+															{item.createdBy.fullName ? (
+																item.createdBy.fullName
+															) : (
+																<>
+																	<span> {item.createdBy.firstName}</span>
+																	<span> {item.createdBy.lastName}</span>
+																</>
+															)}
 														</span>
 														&nbsp;đã gửi lời mời kết bạn
 													</div>

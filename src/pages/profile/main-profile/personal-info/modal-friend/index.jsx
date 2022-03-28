@@ -13,12 +13,13 @@ import UserAvatar from 'shared/user-avatar';
 import Button from 'shared/button';
 import { Minus } from 'components/svg';
 import _ from 'lodash';
+import { changeToggle } from 'reducers/redux-utils/profile';
 
 const ModalFriend = () => {
 	const { modalOpen, setModalOpen, toggleModal } = useModal(false);
 	const { userInfo } = useSelector(state => state.auth);
 	const [getMyListFriend, setGetMyListFriend] = useState([]);
-
+	const changeTogglefalse = useSelector(state => state.profile.toggle);
 	const dispatch = useDispatch();
 
 	const unFolow = id => {
@@ -36,7 +37,7 @@ const ModalFriend = () => {
 		const param = {
 			data: { userId: id },
 		};
-
+		dispatch(changeToggle(id));
 		dispatch(addFollower(param)).unwrap();
 		const newArrFriend = getMyListFriend.map(item => {
 			if (item.userIdTwo === id) {
@@ -93,7 +94,7 @@ const ModalFriend = () => {
 		} catch {
 			toast.error('Lỗi hệ thống');
 		}
-	}, [userInfo, dispatch]);
+	}, [userInfo, dispatch, changeTogglefalse]);
 
 	return (
 		<>

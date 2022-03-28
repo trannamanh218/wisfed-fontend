@@ -1,6 +1,6 @@
 .notificaiton {
 	position: absolute;
-	max-width: 400px;
+	width: 400px;
 	top: 100%;
 	right: 2%;
 	padding-right: 4px;
@@ -17,6 +17,7 @@
 		border-bottom-left-radius: 12px;
 		border-bottom-right-radius: 12px;
 		height: 700px;
+		width: 400px;
 		&::-webkit-scrollbar {
 			width: 8px;
 			background-color: #f5f5f5;
@@ -127,12 +128,13 @@
 }
 .notificaiton__tabs__all__seen {
 	margin: 0 20px !important;
-	.notificaiton__all__status__seen {
-		font-weight: 500;
-		font-size: 13px;
-		line-height: 22px;
-		letter-spacing: 0.25px;
-	}
+}
+.notificaiton__all__status__seen {
+	font-weight: 500;
+	font-size: 13px;
+	line-height: 22px;
+	letter-spacing: 0.25px;
+	color: #4e4b66;
 }
 .notificaiton__all__friend {
 	display: flex;

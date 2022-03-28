@@ -12,23 +12,40 @@ import _ from 'lodash';
 import UserAvatar from 'shared/user-avatar';
 import { Add } from 'components/svg';
 import Button from 'shared/button';
+import { unFollower } from 'reducers/redux-utils/user';
+import { changeToggle } from 'reducers/redux-utils/profile';
 
 const ModalWatching = () => {
 	const { modalOpen, setModalOpen, toggleModal } = useModal(false);
 	const { userInfo } = useSelector(state => state.auth);
 	const [getListFollow, setGetListFollow] = useState([]);
 	const dispatch = useDispatch();
-
+	const changeToggleTrue = useSelector(state => state.profile.toggle);
 	useEffect(async () => {
 		try {
 			if (!_.isEmpty(userInfo)) {
 				const followList = await dispatch(getListFollowrs(userInfo.id)).unwrap();
-				setGetListFollow(followList.rows);
+				const newArrFriend = followList.rows.map(item => {
+					return { ...item, checkUnfollow: false };
+				});
+				setGetListFollow(newArrFriend);
 			}
 		} catch {
 			toast.error('Lỗi hệ thống');
 		}
-	}, [userInfo, dispatch]);
+	}, [userInfo, dispatch, changeToggleTrue]);
+
+	const unFolow = id => {
+		dispatch(changeToggle(id));
+		dispatch(unFollower(id)).unwrap();
+		const newArrFriend = getListFollow.map(item => {
+			if (item.userIdTwo === id) {
+				return { ...item, checkUnfollow: true };
+			}
+			return { ...item };
+		});
+		setGetListFollow(newArrFriend);
+	};
 
 	return (
 		<>
@@ -55,40 +72,48 @@ const ModalWatching = () => {
 						<SearchField placeholder='Tìm kiếm trên Wisfeed' />
 					</div>
 					<div className='modalFollowers__info'>
-						{getListFollow.map(item => (
+						{getListFollow.map(item =>
 							// <AuthorCard direction={'row'} key={item.id} size={'md'} item={item} />
+							item.checkUnfollow ? (
+								''
+							) : (
+								<div key={item.id} className='author-card'>
+									<div className='author-card__left'>
+										<UserAvatar
+											source={item.userTwo.avatarImage}
+											className='author-card__avatar'
+											size={'md'}
+										/>
+										<div className='author-card__info'>
+											<h5>
+												{item.userTwo.firstName} {item.userTwo.lastName}
+											</h5>
+											<p className='author-card__subtitle'>3K follow, 300 bạn bè</p>
+										</div>
+									</div>
+									<div className='author-card__right'>
+										{/* <ConnectButtons direction={'row'} /> */}
+										<div className={`connect-buttons ${'row'}`}>
+											<Button
+												onClick={() => {
+													unFolow(item.userIdTwo);
+												}}
+												className='connect-button follow'
+											>
+												<span className='connect-button__content'>Hủy theo dõi </span>
+											</Button>
 
-							<div key={item.id} className='author-card'>
-								<div className='author-card__left'>
-									<UserAvatar
-										source={item.userTwo.avatarImage}
-										className='author-card__avatar'
-										size={'md'}
-									/>
-									<div className='author-card__info'>
-										<h5>
-											{item.userTwo.firstName} {item.userTwo.lastName}
-										</h5>
-										<p className='author-card__subtitle'>3K follow, 300 bạn bè</p>
+											<Button className='connect-button' isOutline={true} name='friend'>
+												{/* <Minus className='connect-button__icon' /> */}
+
+												<Add className='connect-button__icon' />
+												<span className='connect-button__content'>Kết bạn</span>
+											</Button>
+										</div>
 									</div>
 								</div>
-								<div className='author-card__right'>
-									{/* <ConnectButtons direction={'row'} /> */}
-									<div className={`connect-buttons ${'row'}`}>
-										<Button className='connect-button follow'>
-											<span className='connect-button__content'>Hủy theo dõi </span>
-										</Button>
-
-										<Button className='connect-button' isOutline={true} name='friend'>
-											{/* <Minus className='connect-button__icon' /> */}
-
-											<Add className='connect-button__icon' />
-											<span className='connect-button__content'>Kết bạn</span>
-										</Button>
-									</div>
-								</div>
-							</div>
-						))}
+							)
+						)}
 					</div>
 				</Modal.Body>
 			</Modal>
