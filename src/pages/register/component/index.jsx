@@ -35,6 +35,7 @@ function RegisterComponent() {
 						isShowIcon: true,
 						scribe: 'Tài khoản Wisfeed của bạn là,',
 						scribe2: `${newData.email}`,
+						pathname: '/login',
 					};
 					setDataModal(newdata);
 					setIsShow(true);

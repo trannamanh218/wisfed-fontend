@@ -23,6 +23,8 @@ import Direct from 'pages/choose-topic/DirectPage';
 import PropTypes from 'prop-types';
 import 'scss/main.scss';
 import NotFound from 'pages/not-found';
+import ForgetPassWordAdminComponet from 'pages/foget-password/component-admin/ForgotAdmin';
+import AdminCreatNewPassword from 'pages/foget-password/component-admin/CreatNewPasswordAdmin';
 
 function App({ children }) {
 	const dispatch = useDispatch();
@@ -81,6 +83,8 @@ function App({ children }) {
 				<Route path='/login' element={<Login />} />
 				<Route path='/register' element={<Register />} />
 				<Route path='/forget-password' element={<ForgetPassWord />} />
+				<Route path='/forget-password-admin' element={<ForgetPassWordAdminComponet />} />
+				<Route path='/creat-newpassword-admin' element={<AdminCreatNewPassword />} />
 				<Route path='/choose-topic' element={<ChooseTopic />} />
 				<Route path='/direct' element={<Direct />} />
 				<Route path='/404' element={<NotFound />} />

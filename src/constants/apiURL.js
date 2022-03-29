@@ -2,8 +2,10 @@
 export const authAPI = '/api/v1/auth';
 export const registerAPI = '/api/v1/auth/register';
 export const forgotPasswordAPI = '/api/v1/auth/forgotPassword';
+export const forgotPasswordAPIAdmin = '/api/v1/auth/adminForgotPassword/';
 export const resetPasswordAPI = '/api/v1/auth/resetPassword/';
-export const checkTokenResetPassword = '/api/v1/auth/verify-password';
+export const resetPasswordAPIAdmin = '/api/v1/auth/resetPasswordByMail/';
+export const checkTokenResetPassword = token => `/api/v1/auth/verify-password?token=${token}`;
 
 // quote
 export const quoteAPI = '/api/v1/quotes';

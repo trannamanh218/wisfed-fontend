@@ -1,35 +1,33 @@
 import React, { useState, useEffect } from 'react';
 import { Formik, Field, Form } from 'formik';
 import classNames from 'classnames';
-import { resetPassword, forgotPassword } from 'reducers/redux-utils/auth';
+import { resetPasswordAdmin } from 'reducers/redux-utils/auth';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
 import ModalLogin from 'pages/login/element/ModalLogin';
-import { resetPasswordValidate } from 'helpers/Validation';
+import { resetPasswordValidateAdmin } from 'helpers/Validation';
 import { Circle } from 'shared/loading';
-import { toast } from 'react-toastify';
-import { changeKey } from 'reducers/redux-utils/forget-password';
 
-function CreatNewPasswordForm() {
+function CreatNewPasswordAdminForm() {
 	const isFetching = useSelector(state => state.auth.isFetching);
 	const dispatch = useDispatch();
 	const [isShow, setIsShow] = useState(false);
 	const [dataModal, setDataModal] = useState({});
 	const newEmail = JSON.parse(localStorage.getItem('emailForgot'));
-	const [seconds, setSeconds] = useState(180);
-	const [secondsEffect, setSecondsEffect] = useState(300);
 	const [isShowBtn, setIsShowBtn] = useState(false);
 	const [valuePassword2, setValuePassword2] = useState('');
-	const [valueOtp, setValueOtp] = useState('');
 	const [valuePassword, setValuePassword] = useState('');
+
+	const checkData = useSelector(state => state.auth.infoForgot.data);
 
 	const handleSubmit = async data => {
 		try {
 			const newData = {
 				email: newEmail,
+				OTP: checkData.otp,
 				...data,
 			};
-			await dispatch(resetPassword(newData)).unwrap();
+			await dispatch(resetPasswordAdmin(newData)).unwrap();
 
 			setIsShow(true);
 			setDataModal({
@@ -52,76 +50,17 @@ function CreatNewPasswordForm() {
 		}
 	};
 
-	const formatTime = number => {
-		const mins = Math.floor(number / 60)
-			.toString()
-			.padStart(2, '0');
-		const secondRemain = Math.floor(number % 60)
-			.toString()
-			.padStart(2, '0');
-		return `${mins}:${secondRemain}`;
-	};
-
-	useEffect(() => {
-		const countDown = setInterval(() => {
-			if (seconds > 0) {
-				setSeconds(seconds - 1);
-			}
-			return;
-		}, 1000);
-
-		const countDownEffect = setTimeout(() => {
-			if (secondsEffect > 0) {
-				setSecondsEffect(secondsEffect - 1);
-			}
-			// else {
-			// 	setIsModalError(true);
-			// }
-			return;
-		}, 1000);
-
-		return () => {
-			clearInterval(countDown);
-			clearTimeout(countDownEffect);
-		};
-	});
-
-	const handleResendOTP = async () => {
-		const data = {
-			email: newEmail,
-		};
-		try {
-			await dispatch(forgotPassword(data)).unwrap();
-			setSeconds(180);
-			setDataModal({
-				title: 'Đã gửi mã',
-				title2: 'Xác Nhận',
-				isShowIcon: true,
-				scribe: 'Vui lòng kiểm tra hòm thư ',
-				scribe2: `${data.email}`,
-			});
-			setTimeout(() => {
-				setIsShow(true);
-			}, 500);
-		} catch {
-			toast.error('Lỗi hệ thống');
-		}
-	};
-
 	const handleChangeModal = () => {
 		setIsShow(false);
-		if (dataModal.icon === true) {
-			dispatch(changeKey(false));
-		}
 	};
 
 	useEffect(() => {
-		if (valueOtp && valuePassword && valuePassword2) {
+		if (valuePassword && valuePassword2) {
 			setIsShowBtn(true);
-		} else if (valueOtp === '' || valuePassword === '' || valuePassword2 === '') {
+		} else if (valuePassword === '' || valuePassword2 === '') {
 			setIsShowBtn(false);
 		}
-	}, [valueOtp, valuePassword, valuePassword2]);
+	}, [valuePassword, valuePassword2]);
 
 	return (
 		<div className='forget__form__email'>
@@ -132,53 +71,15 @@ function CreatNewPasswordForm() {
 				</div>
 			)}
 			<Formik
-				initialValues={{ OTP: '', newPassword: '', confirmPassword: '' }}
+				initialValues={{ newPassword: '', confirmPassword: '' }}
 				onSubmit={handleSubmit}
-				validationSchema={resetPasswordValidate}
+				validationSchema={resetPasswordValidateAdmin}
 			>
 				<Form className='forgetPassword__form'>
 					<div className='forget__name-title'>
 						<span>Xác nhận mật khẩu mới</span>
 					</div>
-					<div className='forget__subcribe'>
-						<span>
-							Nhập mã xác nhận 06 chữ số vừa được gửi <br /> về Email đã đăng ký của bạn. Sau đó <br />
-							tạo mật khẩu mới
-						</span>
-					</div>
-					<Field name='OTP'>
-						{({ field, meta }) => {
-							setValueOtp(field.value);
-							return (
-								<div className='forgetPassword__form__field'>
-									<div
-										className={classNames('forgetPassword__form__group', {
-											'error': meta.touched && meta.error,
-										})}
-									>
-										<input
-											className='forgetPassword__form__input'
-											type='text'
-											placeholder='Nhập mã OTP'
-											{...field}
-											value={field.value}
-											autoComplete='false'
-										/>
-									</div>
-									{meta.touched && meta.error && (
-										<small className='error-message'>{meta.error}</small>
-									)}
-								</div>
-							);
-						}}
-					</Field>
-					<div className='forget__send-otp__link'>
-						<span className={seconds === 0 ? '' : 'disabled-link'} onClick={handleResendOTP}>
-							Không nhận được mã? Gửi lại
-						</span>
-						<span className={seconds !== 0 ? 'timer' : 'timer disabled-span'}>{formatTime(seconds)}</span>
-					</div>
-					<hr />
+
 					<Field name='newPassword'>
 						{({ field, meta }) => {
 							setValuePassword(field.value);
@@ -232,6 +133,7 @@ function CreatNewPasswordForm() {
 						}}
 					</Field>
 					<button
+						type='submit'
 						className={
 							isShowBtn
 								? 'forgetPassword__form__btn-otp'
@@ -246,4 +148,4 @@ function CreatNewPasswordForm() {
 	);
 }
 
-export default CreatNewPasswordForm;
+export default CreatNewPasswordAdminForm;

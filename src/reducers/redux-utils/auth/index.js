@@ -1,5 +1,13 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { authAPI, forgotPasswordAPI, registerAPI, resetPasswordAPI, checkTokenResetPassword } from 'constants/apiURL';
+import {
+	authAPI,
+	forgotPasswordAPI,
+	registerAPI,
+	resetPasswordAPI,
+	checkTokenResetPassword,
+	forgotPasswordAPIAdmin,
+	resetPasswordAPIAdmin,
+} from 'constants/apiURL';
 import Request from 'helpers/Request';
 import Storage from 'helpers/Storage';
 import _ from 'lodash';
@@ -15,7 +23,7 @@ export const register = createAsyncThunk('auth/register', async (params, { rejec
 
 export const checkApiToken = createAsyncThunk('/auth/forgot-admin', async (params, { rejectWithValue }) => {
 	try {
-		const response = await Request.makeGet(checkTokenResetPassword, params);
+		const response = await Request.makeGet(checkTokenResetPassword(params));
 		return response;
 	} catch (err) {
 		return rejectWithValue(err.response);
@@ -48,9 +56,27 @@ export const forgotPassword = createAsyncThunk('auth/forgotPassword', async (par
 	}
 });
 
+export const forgotPasswordAdmin = createAsyncThunk('auth/forgotPasswordAdmin', async (params, { rejectWithValue }) => {
+	try {
+		const response = await Request.makePost(forgotPasswordAPIAdmin, params);
+		return response;
+	} catch (err) {
+		return rejectWithValue(err.response);
+	}
+});
+
 export const resetPassword = createAsyncThunk('auth/resetPassword', async (params, { rejectWithValue }) => {
 	try {
 		const response = await Request.makePost(resetPasswordAPI, params);
+		return response;
+	} catch (err) {
+		return rejectWithValue(err.response);
+	}
+});
+
+export const resetPasswordAdmin = createAsyncThunk('auth/resetPasswordAdmin', async (params, { rejectWithValue }) => {
+	try {
+		const response = await Request.makePost(resetPasswordAPIAdmin, params);
 		return response;
 	} catch (err) {
 		return rejectWithValue(err.response);
@@ -63,6 +89,7 @@ const authSlice = createSlice({
 		isFetching: false,
 		userInfo: {},
 		error: {},
+		infoForgot: {},
 	},
 	extraReducers: {
 		[login.pending]: state => {
@@ -100,6 +127,32 @@ const authSlice = createSlice({
 			state.error = {};
 		},
 		[forgotPassword.rejected]: (state, action) => {
+			state.isFetching = false;
+			state.userInfo = {};
+			state.error = action.payload;
+		},
+		[checkApiToken.pending]: state => {
+			state.isFetching = true;
+		},
+		[checkApiToken.fulfilled]: (state, action) => {
+			state.isFetching = false;
+			state.infoForgot = action.payload;
+			state.error = {};
+		},
+		[checkApiToken.rejected]: (state, action) => {
+			state.isFetching = false;
+			state.error = action.payload;
+			state.infoForgot = {};
+		},
+		[forgotPasswordAdmin.pending]: state => {
+			state.isFetching = true;
+		},
+		[forgotPasswordAdmin.fulfilled]: (state, action) => {
+			state.isFetching = false;
+			state.userInfo = action.payload;
+			state.error = {};
+		},
+		[forgotPasswordAdmin.rejected]: (state, action) => {
 			state.isFetching = false;
 			state.userInfo = {};
 			state.error = action.payload;

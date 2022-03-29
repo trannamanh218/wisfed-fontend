@@ -23,7 +23,15 @@ export const registerValidate = yup.object().shape({
 		.required('*Vui lòng điền đầy đủ thông tin'),
 });
 
-export const emialValidate = yup.object().shape({
+export const emailValidate = yup.object().shape({
+	email: yup
+		.string()
+		.max(200, '*Email không vượt quá 200 ký tự')
+		.email('*Email không đúng định dạng')
+		.required('*Vui lòng điền đầy đủ thông tin'),
+});
+
+export const emailAdminValidation = yup.object().shape({
 	email: yup
 		.string()
 		.max(200, '*Email không vượt quá 200 ký tự')
@@ -37,6 +45,20 @@ export const resetPasswordValidate = yup.object().shape({
 		.string()
 		.min(6, '*Mật khẩu từ 6-15 kí tự. Vui lòng kiểm tra lại')
 		.max(15, '*Mật khẩu từ 6-15 kí tự. Vui lòng kiểm tra lại')
+		.required('*Vui lòng điền đầy đủ thông tin'),
+	confirmPassword: yup
+		.string()
+		.when('newPasword', {
+			is: val => (val && val.length > 0 ? true : false),
+			then: yup.string().oneOf([yup.ref('newPasword')], '*Mật khẩu không trùng khớp'),
+		})
+		.required('*Vui lòng điền đầy đủ thông tin'),
+});
+export const resetPasswordValidateAdmin = yup.object().shape({
+	newPassword: yup
+		.string()
+		.min(8, '*Mật khẩu từ 8-15 kí tự. Vui lòng kiểm tra lại')
+		.max(15, '*Mật khẩu từ 8-15 kí tự. Vui lòng kiểm tra lại')
 		.required('*Vui lòng điền đầy đủ thông tin'),
 	confirmPassword: yup
 		.string()

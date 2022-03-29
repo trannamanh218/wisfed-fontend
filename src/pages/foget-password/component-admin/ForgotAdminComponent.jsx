@@ -3,14 +3,14 @@ import { Formik, Field, Form } from 'formik';
 import classNames from 'classnames';
 import { useDispatch } from 'react-redux';
 import ModalLogin from 'pages/login/element/ModalLogin';
-import { forgotPassword } from 'reducers/redux-utils/auth';
+import { forgotPasswordAdmin } from 'reducers/redux-utils/auth';
 import { changeKey } from 'reducers/redux-utils/forget-password';
 import { useSelector } from 'react-redux';
 import { Circle } from 'shared/loading';
-import { emailValidate } from 'helpers/Validation';
+import { emailAdminValidation } from 'helpers/Validation';
 import { toast } from 'react-toastify';
 
-function ForgetpasswordFormComponent() {
+function ForgetpasswordAdminFormComponent() {
 	const isFetching = useSelector(state => state.auth.isFetching);
 	const dispatch = useDispatch();
 	const [isShow, setIsShow] = useState(false);
@@ -24,7 +24,7 @@ function ForgetpasswordFormComponent() {
 	const handleSubmit = async data => {
 		localStorage.setItem('emailForgot', JSON.stringify(data.email));
 		try {
-			await dispatch(forgotPassword(data)).unwrap();
+			await dispatch(forgotPasswordAdmin(data)).unwrap();
 			if (!isFetching) {
 				setTimeout(() => {
 					setIsShow(true);
@@ -51,7 +51,7 @@ function ForgetpasswordFormComponent() {
 						<ModalLogin data={dataModal} handleChange={handleChangeModal} />
 					</div>
 				)}
-				<Formik initialValues={{ email: '' }} onSubmit={handleSubmit} validationSchema={emailValidate}>
+				<Formik initialValues={{ email: '' }} onSubmit={handleSubmit} validationSchemae={emailAdminValidation}>
 					<Form className='forgetPassword__form'>
 						<div className='forget__name-title'>
 							<span>Quên mật khẩu</span>
@@ -101,4 +101,4 @@ function ForgetpasswordFormComponent() {
 	);
 }
 
-export default ForgetpasswordFormComponent;
+export default ForgetpasswordAdminFormComponent;

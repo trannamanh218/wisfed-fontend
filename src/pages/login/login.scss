@@ -103,6 +103,7 @@
 }
 
 .login__form__group {
+	background-color: #eff0f6;
 	display: flex;
 	border-radius: 8px;
 	align-items: center;
@@ -119,6 +120,9 @@
 	height: 45px;
 	margin-top: 12px;
 	color: #0576f0;
+}
+.eye-icon {
+	margin-right: 10px;
 }
 .login__form__input {
 	background-color: #eff0f6;
