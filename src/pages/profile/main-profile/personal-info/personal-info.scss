@@ -4,12 +4,13 @@ $wallpaper-height: 350px;
 .personal-info {
 	margin-bottom: 3.25rem;
 	&__wallpaper {
-		padding-top: $wallpaper-height;
+		height: $wallpaper-height;
 		background-size: cover;
 		background-repeat: no-repeat;
 		background-position: 50% 50%;
 		display: flex;
 		justify-content: flex-end;
+		align-items: flex-end;
 		border-top-left-radius: 12px;
 		border-top-right-radius: 12px;
 	}
@@ -25,9 +26,15 @@ $wallpaper-height: 350px;
 			font-size: 1rem;
 			font-weight: 600;
 			color: $ash;
+			display: flex;
+			align-items: center;
 
 			img {
 				margin-right: 0.875rem;
+			}
+
+			span {
+				margin-top: 2px;
 			}
 		}
 	}
@@ -81,7 +88,6 @@ $wallpaper-height: 350px;
 			margin: 0;
 			font-size: 1.5rem;
 			font-weight: 700;
-			text-transform: capitalize;
 		}
 
 		.edit-name {
@@ -131,6 +137,7 @@ $wallpaper-height: 350px;
 			background-color: $white-off;
 			box-shadow: 0 0 20px 2px rgba($ash-placeholder, 0.4);
 			overflow: hidden;
+			z-index: 1000;
 		}
 
 		&-item {
@@ -184,7 +191,12 @@ $wallpaper-height: 350px;
 	&-form {
 		.form-field {
 			width: 420px;
-			overflow: hidden;
+			display: flex;
+			gap: 24px;
+			&-group {
+				margin-bottom: 2.5rem;
+			}
+
 			&--custom {
 				width: 100%;
 				display: block;
@@ -194,22 +206,95 @@ $wallpaper-height: 350px;
 				display: flex;
 				align-items: center;
 				gap: 1.5rem;
-				&:not(&:last-of-type) {
-					margin-bottom: 2.5rem;
+				&.socials-link {
+					margin-bottom: 1rem;
 				}
 			}
 
 			&-wrapper--custom {
-				justify-content: flex-end;
-				margin-top: 1.5rem;
+				display: block;
 			}
 
 			&-label {
-				margin-bottom: 1.25rem;
+				margin-bottom: 12px;
+			}
+
+			&-name {
+				width: 100%;
+				display: flex;
+				gap: 24px;
+				justify-content: space-between;
+			}
+
+			&__btn {
+				background-color: #eff0f6;
+				height: 34px;
+				border-radius: 12px;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				font-size: 14px;
+				padding: 0 12px;
+				cursor: pointer;
+				&.cancel {
+					color: #e61b00;
+				}
+				&.save {
+					color: $success;
+				}
+			}
+
+			&__buttons {
+				display: flex;
+				justify-content: flex-end;
+				gap: 1rem;
+				margin-top: 16px;
+				&.no-data {
+					justify-content: flex-start;
+					margin: 0;
+					gap: 1.5rem;
+				}
+			}
+
+			&-filled {
+				width: 100%;
+				height: 56px;
+				padding: 0 1em;
+				font-size: 0.94rem;
+				line-height: 1.5;
+				color: $ash;
+				border-radius: 15px;
+				background-color: #f7f7fc;
+				display: flex;
+				align-items: center;
+				user-select: none;
+
+				&.email {
+					background-color: #d9dbe9;
+				}
+
+				&.gender {
+					justify-content: center;
+					width: fit-content;
+					padding: 0 1.5rem;
+				}
 			}
 
 			input {
 				height: 56px;
+				background-color: $ash-background;
+			}
+
+			.add-and-search-categories {
+				.add-and-search-categories__main-content {
+					padding: 12px 16px;
+					input {
+						height: 32px;
+					}
+					.add-and-search-categories__input {
+						height: fit-content;
+					}
+				}
 			}
 		}
 
@@ -222,6 +307,7 @@ $wallpaper-height: 350px;
 			align-items: center;
 			justify-content: center;
 			background-color: #eff0f6;
+			cursor: pointer;
 			svg {
 				width: 14px;
 				height: 14px;
@@ -243,9 +329,32 @@ $wallpaper-height: 350px;
 		width: 100%;
 		border-radius: 16px;
 		color: $ash-placeholder;
+		cursor: no-drop;
+		&.active {
+			background-color: $primary;
+			color: white;
+			cursor: pointer;
+		}
 	}
 
 	&__modal {
+		&::-webkit-scrollbar {
+			width: 8px;
+		}
+
+		&::-webkit-scrollbar-track {
+			background: #f1f1f1;
+			border-radius: 8px;
+		}
+
+		&::-webkit-scrollbar-thumb {
+			background: #606060;
+			border-radius: 8px;
+			&:hover {
+				background: rgba(#606060, 0.85);
+			}
+		}
+
 		.modal-dialog {
 			max-width: 700px;
 		}
@@ -269,7 +378,7 @@ $wallpaper-height: 350px;
 
 		.close-btn {
 			background-color: #eff0f6;
-			padding: 1rem;
+			padding: 8px;
 			border-radius: 50%;
 
 			svg {
@@ -278,6 +387,13 @@ $wallpaper-height: 350px;
 			}
 		}
 	}
+}
+
+.form-field__no-data {
+	font-size: 14px;
+	height: 56px;
+	display: flex;
+	align-items: center;
 }
 
 @media only screen and (max-width: 1366px) {

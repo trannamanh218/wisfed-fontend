@@ -3,13 +3,13 @@ import classNames from 'classnames';
 import { CheckIcon } from 'components/svg';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useVisible } from 'shared/hooks';
 import './select-box.scss';
 
 const SelectBox = ({ defaultOption, list, onChangeOption, name }) => {
 	const { ref, isVisible, setIsVisible } = useVisible(false);
-	const [activeItem, setActiveItem] = useState({ value: 1, title: 1, id: 1 });
+	const [activeItem, setActiveItem] = useState(defaultOption);
 
 	useEffect(() => {
 		setActiveItem(defaultOption);

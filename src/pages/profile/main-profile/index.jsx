@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState, useEffect } from 'react';
 import PersonalInfo from './personal-info';
 import './main-profile.scss';
 import { Tab, Tabs } from 'react-bootstrap';
@@ -7,12 +7,33 @@ import FavoriteAuthorTab from './favorite-author-tab';
 import InforTab from './infor-tab';
 import BookTab from './book-tab';
 import Bookcase from './bookcase-tab';
+import PostTab from './post-tab';
+import { getUserDetail } from 'reducers/redux-utils/user';
+import { useSelector, useDispatch } from 'react-redux';
+import { toast } from 'react-toastify';
 
 const MainProfile = () => {
-	const favoriteAuthors = [...Array(2)];
+	const [userInfo, setUserInfo] = useState({});
+
+	const dispatch = useDispatch();
+	const updateUserProfile = useSelector(state => state.user.updateUserProfile);
+
+	useEffect(() => {
+		getUserDetailData();
+	}, [updateUserProfile]);
+
+	const getUserDetailData = async () => {
+		try {
+			const userData = await dispatch(getUserDetail('bfdb3971-de4c-4c2b-bbbe-fbb36770031a')).unwrap();
+			setUserInfo(userData);
+		} catch {
+			toast.error('Lỗi hệ thống');
+		}
+	};
+
 	return (
 		<div className='main-profile'>
-			<PersonalInfo />
+			<PersonalInfo userInfo={userInfo} />
 			<Tabs className='main-profile__tabs' defaultActiveKey={'books'}>
 				{/*Notes: Chỉ hiển thị khi user là tác giả, không public */}
 				<Tab eventKey='books' title='Sách của tác giả'>
@@ -21,17 +42,17 @@ const MainProfile = () => {
 				<Tab eventKey='shelves' title='Tủ sách'>
 					<Bookcase />
 				</Tab>
-				<Tab eventKey='articles' title='Bài viết'>
-					Lorem, ipsum dolor sit amet consectetur adipisicing.
+				<Tab eventKey='post' title='Bài viết' className='post-tab-active'>
+					<PostTab />
 				</Tab>
 				<Tab eventKey='infor' title='Giới thiệu'>
-					<InforTab />
+					<InforTab userInfo={userInfo} />
 				</Tab>
 				<Tab eventKey='quotes' title='Quotes'>
 					<QuoteTab />
 				</Tab>
 				<Tab eventKey='favorite-authors' title='Tác giả yêu thích'>
-					<FavoriteAuthorTab list={favoriteAuthors} />
+					<FavoriteAuthorTab list={[]} />
 				</Tab>
 			</Tabs>
 		</div>

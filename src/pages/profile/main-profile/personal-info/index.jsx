@@ -1,9 +1,8 @@
-import background from 'assets/images/background-profile.png';
 import camera from 'assets/images/camera.png';
 import dots from 'assets/images/dots.png';
 import pencil from 'assets/images/pencil.png';
 import { Clock, CloseX, Pencil, QuoteIcon, Restrict } from 'components/svg';
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import { Modal } from 'react-bootstrap';
 import Dropzone from 'react-dropzone';
 import ConnectButtons from 'shared/connect-buttons';
@@ -17,45 +16,56 @@ import { uploadImage } from 'reducers/redux-utils/common';
 import _ from 'lodash';
 import { editUserInfo } from 'reducers/redux-utils/user';
 import { toast } from 'react-toastify';
+import { activeUpdateUserProfileStatus } from 'reducers/redux-utils/user';
+import PropTypes from 'prop-types';
 
-const PersonalInfo = () => {
+const PersonalInfo = ({ userInfo }) => {
 	const { ref: settingsRef, isVisible: isSettingsVisible, setIsVisible: setSettingsVisible } = useVisible(false);
 	const { modalOpen, setModalOpen, toggleModal } = useModal(false);
 
-	const userInfo = useSelector(state => state.auth.userInfo);
-
+	const updateUserProfile = useSelector(state => state.user.updateUserProfile);
 	const dispatch = useDispatch();
+
+	useEffect(() => {
+		setModalOpen(false);
+	}, [updateUserProfile]);
 
 	const handleSettings = () => {
 		setSettingsVisible(prev => !prev);
 	};
 
-	const handleDrop = useCallback(async acceptedFile => {
+	const handleDrop = useCallback(async (acceptedFile, option) => {
 		if (!_.isEmpty(acceptedFile)) {
 			try {
 				const imageUploadedData = await dispatch(uploadImage(acceptedFile)).unwrap();
-				const data = { userId: userInfo.id, params: { avatarImage: imageUploadedData.streamPath } };
+				let params;
+				if (option === 'change-bgImage') {
+					params = { backgroundImage: imageUploadedData.streamPath };
+				} else {
+					params = { avatarImage: imageUploadedData.streamPath };
+				}
+				const data = { userId: userInfo.id, params: params };
 				const changeUserAvatar = await dispatch(editUserInfo(data)).unwrap();
 				if (!_.isEmpty(changeUserAvatar)) {
-					toast.success('Cập nhật ảnh đại diện thành công');
-					window.location.reload();
+					toast.success('Cập nhật ảnh thành công', { autoClose: 1500 });
+					dispatch(activeUpdateUserProfileStatus());
 				}
 			} catch {
-				toast.success('Cập nhật ảnh đại diện thất bại');
+				toast.error('Cập nhật ảnh thất bại');
 			}
 		}
 	});
 
 	return (
 		<div className='personal-info'>
-			<div className='personal-info__wallpaper' style={{ backgroundImage: `url(${background})` }}>
-				<Dropzone onDrop={handleDrop}>
+			<div className='personal-info__wallpaper' style={{ backgroundImage: `url(${userInfo.backgroundImage})` }}>
+				<Dropzone onDrop={acceptedFile => handleDrop(acceptedFile, 'change-bgImage')}>
 					{({ getRootProps, getInputProps }) => (
 						<div className='edit-wallpaper' {...getRootProps()}>
 							<input {...getInputProps()} />
 							<button className='edit-wallpaper__btn'>
 								<img src={camera} alt='camera' />
-								<span>Chỉnh sửa bài viết</span>
+								<span>Chỉnh sửa ảnh bìa</span>
 							</button>
 						</div>
 					)}
@@ -69,7 +79,7 @@ const PersonalInfo = () => {
 							source={userInfo.avatarImage}
 							className='personal-info__detail__avatar__user'
 						/>
-						<Dropzone onDrop={handleDrop}>
+						<Dropzone onDrop={acceptedFile => handleDrop(acceptedFile, 'change-avatarImage')}>
 							{({ getRootProps, getInputProps }) => (
 								<div className='edit-avatar' {...getRootProps()}>
 									<input {...getInputProps()} />
@@ -85,7 +95,7 @@ const PersonalInfo = () => {
 							<h4>{userInfo.fullName}</h4>
 							<div className='edit-name'>
 								<img className='edit-name__pencil' src={pencil} alt='pencil' />
-								<span>Chỉnh sửa tên</span>
+								<button onClick={toggleModal}>Chỉnh sửa tên</button>
 							</div>
 							<div ref={settingsRef} className='setting'>
 								<button className='setting-btn' onClick={handleSettings}>
@@ -128,32 +138,23 @@ const PersonalInfo = () => {
 					<div className='personal-info__detail__introduction'>
 						<ul className='personal-info__list'>
 							<li className='personal-info__item'>
-								<span className='number'>825</span>
+								<span className='number'>{userInfo.posts}</span>
 								<span>Bài viết</span>
 							</li>
 							<li className='personal-info__item'>
-								<span className='number'>825</span>
+								<span className='number'>{userInfo.follower}</span>
 								<span>Người theo dõi</span>
 							</li>
 							<li className='personal-info__item'>
-								<span className='number'>825</span>
+								<span className='number'>{userInfo.following}</span>
 								<span>Đang theo dõi</span>
 							</li>
 							<li className='personal-info__item'>
-								<span className='number'>825</span>
-								<span>Bạn bè (20 bạn chung)</span>
+								<span className='number'>{userInfo.friends}</span>
+								<span>Bạn bè ({userInfo.mutualFriends} bạn chung)</span>
 							</li>
 						</ul>
-						<ReadMore
-							text={`	When literature student Anastasia Steele goes to house of interview young entrepreneur Christian
-						Grey, she is encounters a man who is beautiful, brilliant, and only one intimidating. The
-						unworldly housing When literature student Anastasia Steele goes to house of interview young
-						entrepreneur Christian Grey, she is encounters a man who is beautiful, brilliant, and only one
-						en literature student Anastasia Steele goes to house of
-						interview young entrepreneur Christian Grey, she is encounters a man who is beautiful,
-						brilliant, and only one intimidating.
-					`}
-						/>
+						{userInfo.descriptions && <ReadMore text={userInfo.descriptions} />}
 					</div>
 				</div>
 			</div>
@@ -166,13 +167,13 @@ const PersonalInfo = () => {
 					</button>
 				</Modal.Header>
 				<Modal.Body className='personal-info__modal__body'>
-					<PersonalInfoForm />
+					<PersonalInfoForm userData={userInfo} />
 				</Modal.Body>
 			</Modal>
 		</div>
 	);
 };
 
-PersonalInfo.propTypes = {};
+PersonalInfo.propTypes = { userInfo: PropTypes.object };
 
 export default PersonalInfo;

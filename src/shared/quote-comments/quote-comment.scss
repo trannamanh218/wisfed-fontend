@@ -57,9 +57,13 @@
 
 	&__item {
 		cursor: pointer;
+		user-select: none;
 		&--timeline {
 			font-weight: 500;
 			color: $ash-placeholder;
+		}
+		&.liked {
+			color: $primary;
 		}
 	}
 }
