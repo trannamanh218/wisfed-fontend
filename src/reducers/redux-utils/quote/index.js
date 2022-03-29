@@ -1,5 +1,13 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { quoteAPI, quoteDetailAPI, quoteCommentAPI, likeQuoteAPI } from 'constants/apiURL';
+import {
+	quoteAPI,
+	quoteDetailAPI,
+	quoteCommentAPI,
+	likeQuoteAPI,
+	checkLikeQuoteAPI,
+	likeQuoteCommentAPI,
+	checkLikeQuoteCommentAPI,
+} from 'constants/apiURL';
 import Request from 'helpers/Request';
 
 export const getQuoteList = createAsyncThunk('quote/get quote list', async (params, { rejectWithValue }) => {
@@ -49,6 +57,36 @@ export const likeUnlikeQuote = createAsyncThunk('quote/like quote', async (id, {
 	} catch (err) {
 		const error = JSON.parse(err.response);
 		return rejectWithValue(error);
+	}
+});
+
+export const checkLikeQuote = createAsyncThunk('quote/check like quote', async () => {
+	try {
+		const response = await Request.makeGet(checkLikeQuoteAPI);
+		return response.data;
+	} catch (err) {
+		const error = JSON.parse(err.response);
+		return error;
+	}
+});
+
+export const likeQuoteComment = createAsyncThunk('quote/like quote', async (id, { rejectWithValue }) => {
+	try {
+		const response = await Request.makePatch(likeQuoteCommentAPI(id));
+		return response.data;
+	} catch (err) {
+		const error = JSON.parse(err.response);
+		return rejectWithValue(error);
+	}
+});
+
+export const checkLikeQuoteComment = createAsyncThunk('quote/check like quote comment', async () => {
+	try {
+		const response = await Request.makeGet(checkLikeQuoteCommentAPI);
+		return response.data;
+	} catch (err) {
+		const error = JSON.parse(err.response);
+		return error;
 	}
 });
 

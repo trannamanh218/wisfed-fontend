@@ -55,7 +55,7 @@ function App({ children }) {
 		<div>
 			<ToastContainer
 				position='top-center'
-				autoClose={5000}
+				autoClose={3000}
 				hideProgressBar={false}
 				newestOnTop={false}
 				closeOnClick
@@ -75,9 +75,9 @@ function App({ children }) {
 				<Route path='/book/detail/:id/:slug' element={<BookDetail />} />
 				<Route path='/review/:id' element={<Review />} />
 				<Route path='/review/:id/:slug' element={<Review />} />
-				<Route path='/quote' element={<Quote />} />
-				<Route path='/quote/me' element={<MyQuote />} />
-				<Route path='/quote/detail/:id' element={<QuoteDetail />} />
+				<Route path='/quotes' element={<Quote />} />
+				<Route path='/quotes/me' element={<MyQuote />} />
+				<Route path='/quotes/detail/:id' element={<QuoteDetail />} />
 				<Route path='/profile' element={<Profile />} />
 				<Route path='/confirm-my-book' element={<ConfirmMyBook />} />
 				<Route path='/login' element={<Login />} />

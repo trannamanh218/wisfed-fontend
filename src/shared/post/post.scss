@@ -182,3 +182,15 @@
 		height: auto;
 	}
 }
+
+.post__video-youtube {
+	width: 100%;
+	height: 375px;
+	margin: 24px 0;
+}
+
+@media only screen and (max-width: 1366px) {
+	.post__video-youtube {
+		height: 350px;
+	}
+}

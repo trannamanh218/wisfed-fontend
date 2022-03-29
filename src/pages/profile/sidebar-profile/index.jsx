@@ -14,7 +14,7 @@ const SidebarProfile = () => {
 	];
 	return (
 		<div className='sidebar-profile'>
-			<ReadingBook />
+			<ReadingBook bookData={{}} />
 			<BookSlider className='book-reference__slider' title='Sách của Phương Anh' list={bookList} />
 			<ReadChallenge />
 			<div className='sidebar-profile__personal__category'>
