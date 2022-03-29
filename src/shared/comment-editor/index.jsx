@@ -3,7 +3,7 @@ import UserAvatar from 'shared/user-avatar';
 import PropTypes from 'prop-types';
 import './comment-editor.scss';
 
-const CommentEditor = ({ userInfo, postData, onCreateComment, className, reply, parentData, indexParent }) => {
+const CommentEditor = ({ userInfo, onCreateComment, className, replyId, parentData, indexParent, textareaId }) => {
 	const commentArea = useRef(null);
 
 	const onChangeComment = () => {
@@ -15,7 +15,7 @@ const CommentEditor = ({ userInfo, postData, onCreateComment, className, reply, 
 		if (e.which === 13 && !e.shiftKey) {
 			e.preventDefault();
 			if (commentArea.current.value) {
-				onCreateComment(commentArea.current.value, reply, parentData, indexParent);
+				onCreateComment(commentArea.current.value, replyId, parentData, indexParent);
 				commentArea.current.value = '';
 				onChangeComment();
 			}
@@ -35,7 +35,7 @@ const CommentEditor = ({ userInfo, postData, onCreateComment, className, reply, 
 					rows='1'
 					onChange={onChangeComment}
 					name='content'
-					id={postData.id}
+					id={textareaId}
 					onKeyPress={handleKeyPress}
 				/>
 			</form>
@@ -48,19 +48,19 @@ CommentEditor.defaultProps = {
 	postData: {},
 	onCreateComment: () => {},
 	className: '',
-	reply: '',
+	replyId: '',
 	parentData: {},
 	indexParent: null,
 };
 
 CommentEditor.propTypes = {
 	userInfo: PropTypes.object,
-	postData: PropTypes.object,
 	onCreateComment: PropTypes.func,
 	className: PropTypes.string,
-	reply: PropTypes.any,
+	replyId: PropTypes.any,
 	parentData: PropTypes.object,
 	indexParent: PropTypes.any,
+	textareaId: PropTypes.string,
 };
 
 export default CommentEditor;

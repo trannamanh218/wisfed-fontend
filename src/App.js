@@ -15,18 +15,25 @@ import { useDispatch } from 'react-redux';
 import { Routes, Route } from 'react-router-dom';
 import { login } from 'reducers/redux-utils/auth';
 import { ToastContainer } from 'react-toastify';
+import Login from 'pages/login/element';
+import Register from 'pages/register/component';
+import ForgetPassWord from 'pages/foget-password/component';
+import ChooseTopic from 'pages/choose-topic';
+import Direct from 'pages/choose-topic/DirectPage';
 import PropTypes from 'prop-types';
 import NotFound from 'pages/not-found';
-import 'scss/main.scss';
 import ReadingSummary from 'pages/reading-summary';
 import ReadingTarget from 'pages/reading-target';
+import ForgetPassWordAdminComponet from 'pages/foget-password/component-admin/ForgotAdmin';
+import AdminCreatNewPassword from 'pages/foget-password/component-admin/CreatNewPasswordAdmin';
+import 'scss/main.scss';
 
 function App({ children }) {
 	const dispatch = useDispatch();
 
 	useEffect(() => {
 		const params = {
-			email: 'admin@gmail.com',
+			username: 'admin@gmail.com',
 			password: '123456',
 			// email: 'nguyenhien@gmail.com',
 			// password: '123456',
@@ -52,7 +59,7 @@ function App({ children }) {
 		<div>
 			<ToastContainer
 				position='top-center'
-				autoClose={5000}
+				autoClose={3000}
 				hideProgressBar={false}
 				newestOnTop={false}
 				closeOnClick
@@ -72,11 +79,18 @@ function App({ children }) {
 				<Route path='/book/detail/:id/:slug' element={<BookDetail />} />
 				<Route path='/review/:id' element={<Review />} />
 				<Route path='/review/:id/:slug' element={<Review />} />
-				<Route path='/quote' element={<Quote />} />
-				<Route path='/quote/me' element={<MyQuote />} />
-				<Route path='/quote/detail/:id' element={<QuoteDetail />} />
+				<Route path='/quotes' element={<Quote />} />
+				<Route path='/quotes/me' element={<MyQuote />} />
+				<Route path='/quotes/detail/:id' element={<QuoteDetail />} />
 				<Route path='/profile' element={<Profile />} />
 				<Route path='/confirm-my-book' element={<ConfirmMyBook />} />
+				<Route path='/login' element={<Login />} />
+				<Route path='/register' element={<Register />} />
+				<Route path='/forget-password' element={<ForgetPassWord />} />
+				<Route path='/forget-password-admin' element={<ForgetPassWordAdminComponet />} />
+				<Route path='/creat-newpassword-admin' element={<AdminCreatNewPassword />} />
+				<Route path='/choose-topic' element={<ChooseTopic />} />
+				<Route path='/direct' element={<Direct />} />
 				<Route path='/404' element={<NotFound />} />
 				<Route path='/reading/summary' element={<ReadingSummary />} />
 				<Route path='/reading/target' element={<ReadingTarget />} />

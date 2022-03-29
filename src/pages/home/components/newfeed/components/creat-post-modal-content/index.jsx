@@ -42,6 +42,7 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 	const [hasUrl, setHasUrl] = useState(false);
 	const [urlAdded, setUrlAdded] = useState({});
 	const [urlAddedArray, setUrlAddedArray] = useState([]);
+	const [oldUrlAddedArray, setOldUrlAddedArray] = useState([]);
 	const [status, setStatus] = useState(STATUS_IDLE);
 	const [showUpload, setShowUpload] = useState(false);
 	const [validationInput, setValidationInput] = useState();
@@ -81,7 +82,6 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 			detectUrl();
 			createSpanElements();
 		});
-
 		return () => {
 			document.removeEventListener('input', handlePlaceholder);
 		};
@@ -101,16 +101,19 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 			if (url !== null) {
 				setUrlAddedArray(url);
 				setHasUrl(true);
+			} else {
+				setUrlAddedArray([]);
 			}
 		}, 1000),
 		[]
 	);
 
 	useEffect(() => {
-		if (urlAddedArray.length > 0) {
+		if (!_.isEqual(urlAddedArray, oldUrlAddedArray)) {
 			getPreviewUrlFnc(urlAddedArray[urlAddedArray.length - 1]);
+			setOldUrlAddedArray(urlAddedArray);
 		}
-	}, [urlAddedArray.length]);
+	}, [urlAddedArray]);
 
 	const createSpanElements = () => {
 		const subStringArray = textFieldEdit.current.innerText.split(' ');
@@ -127,18 +130,18 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 		placeCaretAtEnd(textFieldEdit.current);
 	};
 
-	const placeCaretAtEnd = el => {
-		el.focus();
+	const placeCaretAtEnd = element => {
+		element.focus();
 		if (typeof window.getSelection != 'undefined' && typeof document.createRange != 'undefined') {
 			const range = document.createRange();
-			range.selectNodeContents(el);
+			range.selectNodeContents(element);
 			range.collapse(false);
-			const sel = window.getSelection();
-			sel.removeAllRanges();
-			sel.addRange(range);
+			const selection = window.getSelection();
+			selection.removeAllRanges();
+			selection.addRange(range);
 		} else if (typeof document.body.createTextRange != 'undefined') {
 			const textRange = document.body.createTextRange();
-			textRange.moveToElementText(el);
+			textRange.moveToElementText(element);
 			textRange.collapse(false);
 			textRange.select();
 		}

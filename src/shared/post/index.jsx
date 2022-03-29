@@ -19,12 +19,20 @@ import ReactRating from 'shared/react-rating';
 
 function Post({ postInformations, className }) {
 	const [postData, setPostData] = useState({});
+	const [videoId, setVideoId] = useState('');
 	const { userInfo } = useSelector(state => state.auth);
 	const dispatch = useDispatch();
 
 	useEffect(() => {
 		const isLike = hasLikedPost();
 		setPostData({ ...postInformations, isLike });
+		if (!_.isEmpty(postInformations.preview) && postInformations.preview.url.includes('https://www.youtube.com/')) {
+			const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+			const match = postInformations.preview.url.match(regExp);
+			if (match && match[2].length === 11) {
+				setVideoId(match[2]);
+			}
+		}
 	}, [postInformations]);
 
 	const directUrl = url => {
@@ -197,10 +205,21 @@ function Post({ postInformations, className }) {
 			{postData.book && <PostBook data={{ ...postData.book, bookLibrary: postData.bookLibrary }} />}
 
 			<GridImage images={postData.image} id={postData.id} />
-			{postData?.image?.length === 0 && !_.isEmpty(postData.preview) && (
-				<div onClick={() => directUrl(postInformations.preview.url)}>
-					<PreviewLink isFetching={false} urlData={postInformations.preview} />
-				</div>
+			{postData?.image?.length === 0 && !_.isEmpty(postData?.preview) && (
+				<>
+					{videoId ? (
+						<iframe
+							className='post__video-youtube'
+							src={`//www.youtube.com/embed/${videoId}`}
+							frameBorder={0}
+							allowFullScreen={true}
+						></iframe>
+					) : (
+						<div onClick={() => directUrl(postInformations.preview.url)}>
+							<PreviewLink isFetching={false} urlData={postInformations.preview} />
+						</div>
+					)}
+				</>
 			)}
 			<PostActionBar postData={postData} handleLikeAction={handleLikeAction} />
 

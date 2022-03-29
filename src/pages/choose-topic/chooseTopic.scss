@@ -1,0 +1,87 @@
+.choose-topic__container {
+	background-color: #fcfcfc;
+	padding-bottom: 82px;
+}
+.choose-topic__header {
+	background-color: #fbf7f2;
+	height: 120px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+.choose-topic__body {
+	background-color: #fcfcfc;
+	box-shadow: 0px 0px 32px rgba(0, 0, 0, 0.04);
+	border-radius: 12px;
+	width: 72%;
+	margin: 79px auto 82px auto;
+	padding: 54px 92px 40px 92px;
+}
+.choose-topic__box {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	margin-top: 40px;
+}
+
+.disabled-bnt {
+	pointer-events: none;
+	opacity: 0.5;
+}
+
+.choose-topic__button {
+	width: 368px;
+	height: 56px;
+	background-color: #e0af7e;
+	border-radius: 12px;
+	margin: auto;
+	margin-top: 58px;
+	button {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		width: 100%;
+		height: 56px;
+		color: #fcfcfc;
+	}
+}
+
+.choose-topic__title {
+	font-family: 'Montserrat';
+	font-style: normal;
+	font-weight: 600;
+	font-size: 20px;
+	line-height: 32px;
+	text-align: center;
+	letter-spacing: 0.75px;
+	color: #2d2c42;
+}
+.choose-topic__subcribe {
+	font-family: 'Montserrat';
+	font-style: normal;
+	font-weight: 500;
+	font-size: 13px;
+	line-height: 22px;
+	text-align: center;
+	letter-spacing: 0.25px;
+	color: #4e4b66;
+	margin-top: 8px;
+}
+.choose-topic__search {
+	margin-top: 16px;
+}
+.form-check-input[type='checkbox'] {
+	background-color: #d9dbe9;
+}
+.form-check-input:checked[type='checkbox'] {
+	background-image: url(http://localhost:3000/static/media/check.21da64a….svg);
+	background-size: 10px;
+}
+
+.form-check-input.is-valid {
+	border-color: #fcfcfc;
+	border-width: 2px;
+	margin-top: 0;
+	border: none;
+	background-color: none;
+	outline: none;
+}
