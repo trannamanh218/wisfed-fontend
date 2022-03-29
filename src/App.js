@@ -15,16 +15,23 @@ import { useDispatch } from 'react-redux';
 import { Routes, Route } from 'react-router-dom';
 import { login } from 'reducers/redux-utils/auth';
 import { ToastContainer } from 'react-toastify';
+import Login from 'pages/login/element';
+import Register from 'pages/register/component';
+import ForgetPassWord from 'pages/foget-password/component';
+import ChooseTopic from 'pages/choose-topic';
+import Direct from 'pages/choose-topic/DirectPage';
 import PropTypes from 'prop-types';
 import 'scss/main.scss';
 import NotFound from 'pages/not-found';
+import ForgetPassWordAdminComponet from 'pages/foget-password/component-admin/ForgotAdmin';
+import AdminCreatNewPassword from 'pages/foget-password/component-admin/CreatNewPasswordAdmin';
 
 function App({ children }) {
 	const dispatch = useDispatch();
 
 	useEffect(() => {
 		const params = {
-			email: 'admin@gmail.com',
+			username: 'admin@gmail.com',
 			password: '123456',
 			// email: 'nguyenhien@gmail.com',
 			// password: '123456',
@@ -73,6 +80,13 @@ function App({ children }) {
 				<Route path='/quotes/detail/:id' element={<QuoteDetail />} />
 				<Route path='/profile' element={<Profile />} />
 				<Route path='/confirm-my-book' element={<ConfirmMyBook />} />
+				<Route path='/login' element={<Login />} />
+				<Route path='/register' element={<Register />} />
+				<Route path='/forget-password' element={<ForgetPassWord />} />
+				<Route path='/forget-password-admin' element={<ForgetPassWordAdminComponet />} />
+				<Route path='/creat-newpassword-admin' element={<AdminCreatNewPassword />} />
+				<Route path='/choose-topic' element={<ChooseTopic />} />
+				<Route path='/direct' element={<Direct />} />
 				<Route path='/404' element={<NotFound />} />
 				<Route path='/' element={<Home />} />
 				{children}

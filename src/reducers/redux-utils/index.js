@@ -8,6 +8,7 @@ import activity from './activity';
 import quote from './quote';
 import library from './library';
 import comment from './comment';
+import forgetPasswordSliceReducer from './forget-password';
 
 const rootReducer = {
 	auth,
@@ -20,6 +21,7 @@ const rootReducer = {
 	quote,
 	library,
 	comment,
+	forgetPasswordSliceReducer,
 };
 
 export default rootReducer;
