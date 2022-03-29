@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { useFetchStatsReadingBooks } from 'api/library.hook';
 import StatisticList from 'shared/statistic-list';
 import MyShelvesList from 'shared/my-shelves-list';
@@ -10,7 +9,7 @@ import BookSlider from 'shared/book-slider';
 import { Link } from 'react-router-dom';
 import './sidebar-reading-summary.scss';
 
-const SidebarReadingSummary = props => {
+const SidebarReadingSummary = () => {
 	const { userInfo } = useSelector(state => state.auth);
 	const { libraryData } = useSelector(state => state.library);
 	const libraryList = libraryData?.rows?.map(item => ({ ...item, quantity: item.books.length }));

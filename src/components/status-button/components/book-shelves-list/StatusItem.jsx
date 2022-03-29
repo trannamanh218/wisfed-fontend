@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const StatusItem = ({ item, onChangeLibrary, libraryId, onChangeShelves }) => {
+const StatusItem = ({ item, onChangeShelves }) => {
 	const handleChange = e => {
 		e.stopPropagation();
 		onChangeShelves(item);
@@ -27,7 +27,7 @@ const StatusItem = ({ item, onChangeLibrary, libraryId, onChangeShelves }) => {
 
 StatusItem.propTypes = {
 	item: PropTypes.object.isRequired,
-	onChangeLibrary: PropTypes.func,
+	onChangeShelves: PropTypes.func,
 	libraryId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
 };
 

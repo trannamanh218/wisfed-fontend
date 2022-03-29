@@ -33,7 +33,7 @@ function App({ children }) {
 
 	useEffect(() => {
 		const params = {
-			username: 'admin@gmail.com',
+			email: 'admin@gmail.com',
 			password: '123456',
 			// email: 'nguyenhien@gmail.com',
 			// password: '123456',

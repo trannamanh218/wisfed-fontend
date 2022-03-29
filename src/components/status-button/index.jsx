@@ -42,7 +42,7 @@ const STATUS_BOOK_OBJ = {
 	},
 };
 
-const StatusButton = ({ className, status, handleClick, libraryId, onChangeLibrary, bookData }) => {
+const StatusButton = ({ className, status, bookData }) => {
 	const [modalShow, setModalShow] = useState(false);
 	const [currentStatus, setCurrentStatus] = useState(STATUS_BOOK_OBJ.wantToRead);
 	const [showInput, setShowInput] = useState(false);
@@ -233,8 +233,6 @@ const StatusButton = ({ className, status, handleClick, libraryId, onChangeLibra
 						updateBookShelve={updateBookShelve}
 						addBookShelves={addBookShelves}
 						handleConfirm={handleConfirm}
-						onChangeLibrary={onChangeLibrary}
-						libraryId={libraryId}
 						onChangeShelves={onChangeShelves}
 						statusLibraries={statusLibraries}
 					/>
@@ -248,7 +246,6 @@ StatusButton.defaultProps = {
 	className: '',
 	status: STATUS_BOOK.wantToRead,
 	handleClick: () => {},
-	libraryId: null,
 	bookData: {},
 };
 
@@ -256,7 +253,6 @@ StatusButton.propTypes = {
 	className: PropTypes.string,
 	status: PropTypes.oneOf([STATUS_BOOK.read, STATUS_BOOK.reading, STATUS_BOOK.wantToRead]),
 	handleClick: PropTypes.func,
-	libraryId: PropTypes.any,
 	bookData: PropTypes.object,
 };
 

@@ -1,6 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import {
-	allBookInLibraryAPI,
 	bookAllReviewAPI,
 	bookAPI,
 	bookDetailAPI,

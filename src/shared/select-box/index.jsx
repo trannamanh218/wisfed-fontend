@@ -82,6 +82,7 @@ SelectBox.propTypes = {
 	),
 	onChangeOption: PropTypes.func,
 	name: PropTypes.string.isRequired,
+	className: PropTypes.string,
 };
 
 export default SelectBox;
