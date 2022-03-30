@@ -11,6 +11,7 @@ import BookSlider from 'shared/book-slider';
 import StatisticList from 'shared/statistic-list';
 import { Circle as CircleLoading } from 'shared/loading';
 import './book-reference.scss';
+import { NotificationError } from 'helpers/Error';
 
 const BookReference = () => {
 	const [status, setStatus] = useState(STATUS_IDLE);
@@ -33,6 +34,7 @@ const BookReference = () => {
 			setStatus(STATUS_SUCCESS);
 			navigate(RouteLink.bookDetail(data.id, data.name));
 		} catch (err) {
+			NotificationError(err);
 			const statusCode = err?.statusCode || 500;
 			setStatus(statusCode);
 		}

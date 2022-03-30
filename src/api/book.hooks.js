@@ -2,8 +2,8 @@ import { STATUS_IDLE, STATUS_LOADING, STATUS_SUCCESS } from 'constants';
 import { generateQuery } from 'helpers/Common';
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { toast } from 'react-toastify';
 import { getBookDetail, getBookList, getReviewOfBook } from 'reducers/redux-utils/book';
+import { NotificationError } from 'helpers/Error';
 
 export const useFetchBooks = (current = 1, perPage = 10, filter = '[]') => {
 	const [status, setStatus] = useState(STATUS_IDLE);
@@ -28,6 +28,7 @@ export const useFetchBooks = (current = 1, perPage = 10, filter = '[]') => {
 					const data = await dispatch(getBookList(query)).unwrap();
 					setBooks(data.rows);
 				} catch (err) {
+					NotificationError(err);
 					const statusCode = err?.statusCode || 500;
 					setStatus(statusCode);
 				}
@@ -57,7 +58,7 @@ export const useFetchBookDetail = id => {
 			try {
 				await dispatch(getBookDetail(params)).unwrap();
 			} catch (err) {
-				toast.error('Lỗi hệ thống');
+				NotificationError(err);
 				const statusCode = err?.statusCode || 500;
 				setStatus(statusCode);
 			}
@@ -106,6 +107,7 @@ export const useFetchReviewOfBook = (id, option, current = 1, perPage = 10, filt
 					setStatus(STATUS_SUCCESS);
 					setReviewData(res);
 				} catch (err) {
+					NotificationError(err);
 					const statusCode = err?.statusCode || 500;
 					setStatus(statusCode);
 				}
@@ -149,6 +151,7 @@ export const useFetchRelatedBooks = categoryId => {
 					setRelatedBook(response.rows);
 					setStatus(STATUS_SUCCESS);
 				} catch (err) {
+					NotificationError(err);
 					const statusCode = err?.statusCode || 500;
 					setStatus(statusCode);
 				}

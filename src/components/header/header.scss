@@ -111,6 +111,7 @@
 	justify-content: space-around;
 	align-items: center;
 	margin-left: auto;
+	cursor: pointer;
 	svg {
 		width: 30px;
 		height: 28px;
@@ -124,6 +125,7 @@
 	height: 30px;
 	background-size: contain;
 	background-repeat: no-repeat;
+	// background-color: #fff;
 	&::after {
 		position: absolute;
 		top: 0;
@@ -137,7 +139,41 @@
 		background-color: $primary;
 	}
 }
+.header__notify__icon__active {
+	position: relative;
+	background-image: url('../../assets/icons/Notification.svg');
+	width: 30px;
+	height: 30px;
+	background-size: contain;
+	background-repeat: no-repeat;
+	&::before {
+		position: absolute;
+		top: 0;
+		right: 0;
+		transform: translateY(-50%);
+		content: '';
+		display: inline-block;
+		width: 18px;
+		height: 19px;
+		border-radius: 50%;
+		background-color: #fff;
+		z-index: 0;
+	}
 
+	&::after {
+		position: absolute;
+		top: 0;
+		right: 0;
+		transform: translateY(-50%);
+		content: '';
+		display: inline-block;
+		width: 16px;
+		height: 16px;
+		border-radius: 50%;
+		background-color: $primary;
+		z-index: 1;
+	}
+}
 .header__avatar {
 	width: 48px;
 	height: 48px;
@@ -171,6 +207,18 @@
 		&::after {
 			width: 12px;
 			height: 12px;
+		}
+	}
+	.header__notify__icon__active {
+		width: 24px;
+		height: 24px;
+		&::after {
+			width: 12px;
+			height: 12px;
+		}
+		&::before {
+			width: 13px;
+			height: 14px;
 		}
 	}
 

@@ -1,0 +1,93 @@
+.modalFollowers__container {
+	border-radius: 16px;
+	background: #ffffff;
+	font-family: 'Montserrat';
+	font-style: normal;
+	z-index: 1000;
+	box-shadow: 0px 0px 72px rgba(0, 0, 0, 0.04);
+	overflow-y: scroll;
+	overflow-x: hidden;
+	height: 860px;
+	&::-webkit-scrollbar {
+		width: 8px;
+		background-color: #f5f5f5;
+	}
+
+	&::-webkit-scrollbar-track {
+		background-color: rgb(255, 255, 255);
+		-webkit-border-radius: 12px;
+		border-radius: 12px;
+	}
+	&::-webkit-scrollbar-thumb {
+		border-radius: 12px;
+		background-color: #cfcfcf;
+	}
+}
+.modalFollowers__container__main .modal-dialog {
+	max-width: 900px;
+}
+.modalFollowers__header {
+	display: flex;
+	justify-content: space-around;
+	justify-content: center;
+	align-items: center;
+	padding: 30px 50px;
+	position: relative;
+	&::after {
+		content: '';
+		background: #f1f1f5;
+		height: 1px;
+		width: 100%;
+		position: absolute;
+		top: 100%;
+	}
+}
+.modalFollowers__title {
+	letter-spacing: 0.75px;
+	font-weight: 600;
+	font-size: 20px;
+	line-height: 32px;
+	flex: 1;
+	text-align: center;
+	color: #2d2c42;
+}
+.modalFollowers__close {
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+	background: #eff0f7;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	cursor: pointer;
+}
+.modalFollowers__search {
+	margin: 40px 25px;
+}
+.modalFollowers__info {
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+	padding: 0 25px;
+	.author-card {
+		.author-card__info h5 {
+			font-weight: 600;
+			font-size: 15px;
+			line-height: 24px;
+			letter-spacing: 0.75px;
+			color: #2d2c42;
+		}
+		.author-card__subtitle {
+			color: #6e7191;
+			font-weight: 500;
+			font-size: 13px;
+			line-height: 22px;
+			letter-spacing: 0.25px;
+		}
+	}
+	.author-card {
+		.author-card__left {
+			margin-right: 80px;
+		}
+	}
+}

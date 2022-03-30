@@ -23,6 +23,7 @@ import { STATUS_LOADING, STATUS_IDLE } from 'constants';
 import { updateCurrentBook } from 'reducers/redux-utils/book';
 import { useNavigate } from 'react-router-dom';
 import { STATUS_SUCCESS } from 'constants';
+import { NotificationError } from 'helpers/Error';
 
 const STATUS_BOOK_OBJ = {
 	'reading': {
@@ -110,7 +111,9 @@ const StatusButton = ({ className, status, bookData }) => {
 					}
 				}
 			})
-			.catch(() => {})
+			.catch(err => {
+				NotificationError(err);
+			})
 			.finally(() => {
 				setBookLibaries(bookInLibraries);
 				setCurrentStatus(initStatus);
@@ -133,6 +136,7 @@ const StatusButton = ({ className, status, bookData }) => {
 			const newBookLibraries = [...bookLibraries, { ...data, isInLibrary: false, isSelect: false }];
 			setBookLibaries(newBookLibraries);
 		} catch (err) {
+			NotificationError(err);
 			toast.error('Lỗi không tạo được tủ sách!');
 		}
 	};
@@ -183,6 +187,7 @@ const StatusButton = ({ className, status, bookData }) => {
 				navigate('/');
 			}
 		} catch (err) {
+			NotificationError(err);
 			setModalShow(false);
 			setFetchStatus(STATUS_IDLE);
 		}

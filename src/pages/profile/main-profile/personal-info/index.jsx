@@ -11,6 +11,9 @@ import ReadMore from 'shared/read-more';
 import UserAvatar from 'shared/user-avatar';
 import PersonalInfoForm from './PersonalInfoForm';
 import './personal-info.scss';
+import ModalFollowers from './modal-followers';
+import ModalWatching from './modal-watching';
+import ModalFriend from './modal-friend';
 import { useSelector, useDispatch } from 'react-redux';
 import { uploadImage } from 'reducers/redux-utils/common';
 import _ from 'lodash';
@@ -55,7 +58,6 @@ const PersonalInfo = ({ userInfo }) => {
 			}
 		}
 	});
-
 	return (
 		<div className='personal-info'>
 			<div className='personal-info__wallpaper' style={{ backgroundImage: `url(${userInfo.backgroundImage})` }}>
@@ -141,18 +143,9 @@ const PersonalInfo = ({ userInfo }) => {
 								<span className='number'>{userInfo.posts}</span>
 								<span>Bài viết</span>
 							</li>
-							<li className='personal-info__item'>
-								<span className='number'>{userInfo.follower}</span>
-								<span>Người theo dõi</span>
-							</li>
-							<li className='personal-info__item'>
-								<span className='number'>{userInfo.following}</span>
-								<span>Đang theo dõi</span>
-							</li>
-							<li className='personal-info__item'>
-								<span className='number'>{userInfo.friends}</span>
-								<span>Bạn bè ({userInfo.mutualFriends} bạn chung)</span>
-							</li>
+							<ModalFollowers follower={userInfo.follower} />
+							<ModalWatching following={userInfo.following} />
+							<ModalFriend friends={userInfo.friends} mutualFriends={userInfo.mutualFriends} />
 						</ul>
 						{userInfo.descriptions && <ReadMore text={userInfo.descriptions} />}
 					</div>

@@ -8,6 +8,8 @@ import activity from './activity';
 import quote from './quote';
 import library from './library';
 import comment from './comment';
+import notificationReducer from './notificaiton';
+import profile from './profile';
 import forgetPasswordSliceReducer from './forget-password';
 
 const rootReducer = {
@@ -21,6 +23,8 @@ const rootReducer = {
 	quote,
 	library,
 	comment,
+	notificationReducer,
+	profile,
 	forgetPasswordSliceReducer,
 };
 

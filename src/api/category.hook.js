@@ -7,6 +7,7 @@ import { toast } from 'react-toastify';
 import { getBookList } from 'reducers/redux-utils/book';
 import { getCategoryDetail, getCategoryList } from 'reducers/redux-utils/category';
 import { usePrevious } from 'shared/hooks';
+import { NotificationError } from 'helpers/Error';
 
 const fetchCategories = async (dispatch, pagination, filter = []) => {
 	const { current, perPage } = pagination;
@@ -39,6 +40,7 @@ export const useFetchViewMoreCategories = (current = 0, perPage = 10, filter = '
 				}
 				setStatus(STATUS_SUCCESS);
 			} catch (err) {
+				NotificationError(err);
 				const statusCode = err?.statusCode || 500;
 				setStatus(statusCode);
 			}
@@ -93,6 +95,7 @@ export const useFetchAllCategoriesWithBooks = () => {
 				const statusCode = err?.statusCode || 500;
 				setStatus(statusCode);
 				setHasMore(false);
+				NotificationError(err);
 				toast.error('Lỗi không truy cập được danh sách chủ đề');
 				return err;
 			}
@@ -271,7 +274,7 @@ export const useFetchCategoryDetail = id => {
 				try {
 					await dispatch(getCategoryDetail(id)).unwrap();
 				} catch (err) {
-					toast.error('Lỗi hệ thống');
+					NotificationError(err);
 					const statusCode = err?.statusCode || 500;
 					setStatus(statusCode);
 				}
@@ -328,6 +331,7 @@ export const useFetchOtherCategories = (current, perPage, name) => {
 					}
 					setStatus(STATUS_SUCCESS);
 				} catch (err) {
+					NotificationError(err);
 					const statusCode = err?.statusCode || 500;
 					setStatus(statusCode);
 				}

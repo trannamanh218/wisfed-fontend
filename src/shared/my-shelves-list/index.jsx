@@ -10,6 +10,7 @@ import { toast } from 'react-toastify';
 import './my-shelves-list.scss';
 import _ from 'lodash';
 import { useParams } from 'react-router-dom';
+import { NotificationError } from 'helpers/Error';
 
 const MyShelvesList = ({ list }) => {
 	const dispatch = useDispatch();
@@ -22,10 +23,10 @@ const MyShelvesList = ({ list }) => {
 		if (name) {
 			const params = { name };
 			try {
-				await dispatch(createLibrary(params));
+				await dispatch(createLibrary(params)).unwrap();
 				toast.success('Tạo thư viện thành công!');
 			} catch (err) {
-				toast.error('Lỗi không tạo được tủ sách!');
+				NotificationError(err);
 			} finally {
 				resetForm();
 			}

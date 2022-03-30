@@ -24,6 +24,7 @@ import {
 } from 'reducers/redux-utils/library';
 import { useModal } from 'shared/hooks';
 import './setting-more.scss';
+import { NotificationError } from 'helpers/Error';
 
 const STATUS_BOOK_OBJ = {
 	'reading': {
@@ -155,7 +156,7 @@ const SettingMore = props => {
 				setStatusModal(true);
 			})
 			.catch(err => {
-				toast.error('Lỗi hệ thống');
+				NotificationError(err);
 				const statusCode = err?.statusCode || 500;
 				setStatus(statusCode);
 			});
@@ -176,7 +177,7 @@ const SettingMore = props => {
 			const newBookLibraries = [...bookLibraries, { ...data, isInLibrary: false, isSelect: false }];
 			setBookLibaries(newBookLibraries);
 		} catch (err) {
-			toast.error('Lỗi không tạo được tủ sách!');
+			NotificationError(err);
 		}
 	};
 

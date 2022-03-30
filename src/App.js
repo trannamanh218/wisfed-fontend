@@ -10,6 +10,7 @@ import MyQuote from 'pages/quote/my-quote';
 import Review from 'pages/review';
 import BookShelves from 'pages/shelves';
 import ConfirmMyBook from 'pages/confirm-my-book';
+import Notification from 'pages/notification/compornent-main';
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { Routes, Route } from 'react-router-dom';
@@ -22,6 +23,7 @@ import ChooseTopic from 'pages/choose-topic';
 import Direct from 'pages/choose-topic/DirectPage';
 import PropTypes from 'prop-types';
 import NotFound from 'pages/not-found';
+import { NotificationError } from 'helpers/Error';
 import ReadingSummary from 'pages/reading-summary';
 import ReadingTarget from 'pages/reading-target';
 import ForgetPassWordAdminComponet from 'pages/foget-password/component-admin/ForgotAdmin';
@@ -33,13 +35,11 @@ function App({ children }) {
 
 	useEffect(() => {
 		const params = {
-			email: 'admin@gmail.com',
-			password: '123456',
-			// email: 'nguyenhien@gmail.com',
+			email: 'register@gmail.com',
+			password: '12345678',
+			// email: 'admin@gmail.com',
 			// password: '123456',
 			// email: 'thuyheobeo@gmail.com',
-			// password: '12345678',
-			// email: 'register@gmail.com',
 			// password: '12345678',
 		};
 
@@ -50,6 +50,7 @@ function App({ children }) {
 		try {
 			await dispatch(login(params)).unwrap();
 		} catch (err) {
+			NotificationError(err);
 			const statusCode = err?.statusCode || 500;
 			return statusCode;
 		}
@@ -69,6 +70,7 @@ function App({ children }) {
 				pauseOnHover
 			/>
 			<Routes>
+				<Route path='/notification' element={<Notification />} />
 				<Route path='/category' element={<Category />} />
 				<Route path='/category/detail/:id' element={<CategoryDetail />} />
 				<Route path='/category/detail/:id/:slug' element={<CategoryDetail />} />

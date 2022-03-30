@@ -10,7 +10,7 @@ const FavoriteAuthorTab = () => {
 			<h4>Tác giả yêu thích</h4>
 			<div className='favorite-author-tab__list'>
 				{list && list.length > 0 ? (
-					list.map((item, index) => <AuthorCard key={index} />)
+					list.map((item, index) => <AuthorCard key={index} direction={'column'} size={'lg'} />)
 				) : (
 					<p>Không có dữ liệu</p>
 				)}

@@ -5,6 +5,7 @@ import { generateQuery } from 'helpers/Common';
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { getQuoteList } from 'reducers/redux-utils/quote';
+import { NotificationError } from 'helpers/Error';
 
 export const useFetchQuoteRandom = () => {
 	const [status, setStatus] = useState(STATUS_IDLE);
@@ -27,6 +28,7 @@ export const useFetchQuoteRandom = () => {
 				}
 				setStatus(STATUS_SUCCESS);
 			} catch (err) {
+				NotificationError(err);
 				const statusCode = err?.statusCode || 500;
 				setStatus(statusCode);
 			}
@@ -60,6 +62,7 @@ export const useFetchQuotes = (current = 1, perPage = 10, filter = '[]') => {
 					setQuoteData(data);
 					setStatus(STATUS_SUCCESS);
 				} catch (err) {
+					NotificationError(err);
 					const statusCode = err?.statusCode || 500;
 					setStatus(statusCode);
 				}

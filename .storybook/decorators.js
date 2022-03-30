@@ -6,7 +6,6 @@ import { configureStore } from '@reduxjs/toolkit';
 import rootReducer from '../src/reducers/redux-utils';
 
 export const withRouter = (StoryFn, { parameters: { deeplink } }) => {
-
 	if (!deeplink) {
 		return (
 			<BrowserRouter>
@@ -41,6 +40,7 @@ export const withStore = (StoryFn, { parameters }) => {
 		</Provider>
 	);
 };
+
 
 // ordered from innermost to outermost, be careful with the order!
 export const globalDecorators = [withRouter, withStore];

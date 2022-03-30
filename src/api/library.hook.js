@@ -12,6 +12,7 @@ import {
 	updateAuthLibrary,
 	updateLibrary,
 } from 'reducers/redux-utils/library';
+import { NotificationError } from 'helpers/Error';
 
 export const useFetchLibraries = (current = 1, perPage = 10, filter = '[]') => {
 	const [status, setStatus] = useState(STATUS_IDLE);
@@ -37,6 +38,7 @@ export const useFetchLibraries = (current = 1, perPage = 10, filter = '[]') => {
 						dispatch(updateLibrary(data));
 						setStatus(STATUS_SUCCESS);
 					} catch (err) {
+						NotificationError(err);
 						const statusCode = err?.statusCode || 500;
 						setStatus(statusCode);
 					}
@@ -99,6 +101,7 @@ export const useFetchStatsReadingBooks = isUpdate => {
 					setReadingData(libraryList);
 					setStatus(STATUS_SUCCESS);
 				} catch (err) {
+					NotificationError(err);
 					const statusCode = err?.statusCode || 500;
 					setStatus(statusCode);
 				}
@@ -140,6 +143,7 @@ export const useFetchFilterBookFromLibrary = (current = 1, perPage = 10, filter 
 					setBooks(data);
 					setStatus(STATUS_SUCCESS);
 				} catch (err) {
+					NotificationError(err);
 					const statusCode = err?.statusCode || 500;
 					setStatus(statusCode);
 				}
@@ -187,6 +191,7 @@ export const useFetchMyLibraries = (current = 1, perPage = 10, isUpdate) => {
 					dispatch(updateLibrary(data));
 					setStatus(STATUS_SUCCESS);
 				} catch (err) {
+					NotificationError(err);
 					const statusCode = err?.statusCode || 500;
 					setStatus(statusCode);
 				}
@@ -227,6 +232,7 @@ export const useFetchAuthLibraries = (current = 1, perPage = 10) => {
 					setStatusLibraries(rows.default);
 					setStatus(STATUS_SUCCESS);
 				} catch (err) {
+					NotificationError(err);
 					const statusCode = err?.statusCode || 500;
 					setStatus(statusCode);
 				}

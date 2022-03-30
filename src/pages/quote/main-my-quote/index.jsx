@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { checkLikeQuote } from 'reducers/redux-utils/quote';
 import './main-my-quote.scss';
+import { NotificationError } from 'helpers/Error';
 
 const MainMyQuote = () => {
 	const [myQuoteList, setMyQuoteList] = useState([]);
@@ -49,8 +50,8 @@ const MainMyQuote = () => {
 			} else {
 				setHasMore(false);
 			}
-		} catch {
-			toast.error('Lỗi hệ thống');
+		} catch (err) {
+			NotificationError(err);
 		}
 	};
 
@@ -71,8 +72,8 @@ const MainMyQuote = () => {
 			} else {
 				setHasMore(false);
 			}
-		} catch {
-			toast.error('Lỗi hệ thống');
+		} catch (err) {
+			NotificationError(err);
 		}
 	};
 
