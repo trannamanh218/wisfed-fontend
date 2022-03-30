@@ -3,6 +3,7 @@ import { generateQuery } from 'helpers/Common';
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { getUserList } from 'reducers/redux-utils/user';
+import { NotificationError } from 'helpers/Error';
 
 export const useFetchUsers = (current = 1, perPage = 10, filter = '[]') => {
 	const [status, setStatus] = useState(STATUS_IDLE);
@@ -26,6 +27,7 @@ export const useFetchUsers = (current = 1, perPage = 10, filter = '[]') => {
 					setUsersData(data);
 					setStatus(STATUS_SUCCESS);
 				} catch (err) {
+					NotificationError(err);
 					const statusCode = err?.statusCode || 500;
 					setStatus(statusCode);
 				}

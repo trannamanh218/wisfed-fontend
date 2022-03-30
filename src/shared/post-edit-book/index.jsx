@@ -6,7 +6,7 @@ import BookThumbnail from 'shared/book-thumbnail';
 import LinearProgressBar from 'shared/linear-progress-bar';
 import ReactRating from 'shared/react-rating';
 import './post-edit-book.scss';
-
+import { NotificationError } from 'helpers/Error';
 const PostEditBook = props => {
 	const { data, handleValidationInput, validationInput, handleAddToPost } = props;
 	// rating là rating của user cho cuốn sách, không phải rating tổng -- rating 1 lần duy nhất)
@@ -42,6 +42,7 @@ const PostEditBook = props => {
 		try {
 			await progressReadingSchema(data.status).validate({ [name]: value }, { abortEarly: false });
 		} catch (err) {
+			NotificationError(err);
 			const { errors } = err;
 			handleValidationInput(errors[0]);
 		}

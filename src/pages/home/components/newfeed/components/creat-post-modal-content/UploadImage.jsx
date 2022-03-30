@@ -40,7 +40,6 @@ const UploadImage = props => {
 				setStatus(STATUS_SUCCESS);
 			})
 			.catch(err => {
-				console.log(err);
 				toast.error('Lỗi hệ thống không thể upload ảnh');
 			})
 			.finally(() => {

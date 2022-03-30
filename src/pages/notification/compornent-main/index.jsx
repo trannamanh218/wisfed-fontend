@@ -10,9 +10,10 @@ import UserAvatar from 'shared/user-avatar';
 import { getNotification } from 'reducers/redux-utils/notificaiton';
 import { ReplyFriendRequest, CancelFriendRequest } from 'reducers/redux-utils/user';
 import { useState, useEffect } from 'react';
-import { toast } from 'react-toastify';
 import { useDispatch } from 'react-redux';
 import { calculateDurationTime } from 'helpers/Common';
+import { renderMessage } from 'helpers/HandleShare';
+import { NotificationError } from 'helpers/Error';
 
 const Notification = () => {
 	const [getNotifications, setGetNotifications] = useState([]);
@@ -29,8 +30,8 @@ const Notification = () => {
 			});
 			setGetNotifications(newArr);
 			return;
-		} catch {
-			toast.error('Lỗi hệ thống');
+		} catch (err) {
+			NotificationError(err);
 		}
 	};
 
@@ -69,14 +70,6 @@ const Notification = () => {
 	const lengthAddFriend = () => {
 		const length = getNotifications.filter(item => item.verb === 'addfriend' && !item.isCheck);
 		return length.length;
-	};
-
-	const renderMessage = item => {
-		if (item.verb === 'addfriend') {
-			return 'đã gửi lời mời kết bạn';
-		} else if (item.verb === 'commentMinipost') {
-			return 'đã bình luận vào bài viết của bạn';
-		}
 	};
 
 	return (

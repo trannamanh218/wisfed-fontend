@@ -11,6 +11,7 @@ import _ from 'lodash';
 import { creatQuotes } from 'reducers/redux-utils/quote/index';
 import { toast } from 'react-toastify';
 import { handleAfterCreatQuote } from 'reducers/redux-utils/quote';
+import { NotificationError } from 'helpers/Error';
 
 function CreatQuotesModal({ hideCreatQuotesModal }) {
 	const [showTextFieldEditPlaceholder, setShowTextFieldEditPlaceholder] = useState(true);
@@ -97,8 +98,8 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 			} else if (option.value === 'addCategory') {
 				setCategorySearchedList(data.rows.slice(0, 5));
 			}
-		} catch {
-			toast.error('Lỗi hệ thống');
+		} catch (err) {
+			NotificationError(err);
 		} finally {
 			setGetDataFinish(true);
 		}
@@ -210,8 +211,8 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 			}
 			hideCreatQuotesModal();
 			dispatch(handleAfterCreatQuote());
-		} catch {
-			toast.error('Lỗi hệ thống');
+		} catch (err) {
+			NotificationError(err);
 		}
 	};
 

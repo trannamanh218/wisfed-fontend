@@ -8,6 +8,7 @@ import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import './main-my-quote.scss';
+import { NotificationError } from 'helpers/Error';
 
 const MainMyQuote = () => {
 	const [myQuoteList, setMyQuoteList] = useState([]);
@@ -41,8 +42,8 @@ const MainMyQuote = () => {
 			} else {
 				setHasMore(false);
 			}
-		} catch {
-			toast.error('Lỗi hệ thống');
+		} catch (err) {
+			NotificationError(err);
 		}
 	};
 
@@ -63,8 +64,8 @@ const MainMyQuote = () => {
 			} else {
 				setHasMore(false);
 			}
-		} catch {
-			toast.error('Lỗi hệ thống');
+		} catch (err) {
+			NotificationError(err);
 		}
 	};
 

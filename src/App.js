@@ -19,6 +19,7 @@ import { ToastContainer } from 'react-toastify';
 import PropTypes from 'prop-types';
 import 'scss/main.scss';
 import NotFound from 'pages/not-found';
+import { NotificationError } from 'helpers/Error';
 
 function App({ children }) {
 	const dispatch = useDispatch();
@@ -27,7 +28,7 @@ function App({ children }) {
 		const params = {
 			email: 'register@gmail.com',
 			password: '12345678',
-			// email: 'nguyenhien@gmail.com',
+			// email: 'admin@gmail.com',
 			// password: '123456',
 			// email: 'thuyheobeo@gmail.com',
 			// password: '12345678',
@@ -40,6 +41,7 @@ function App({ children }) {
 		try {
 			await dispatch(login(params)).unwrap();
 		} catch (err) {
+			NotificationError(err);
 			const statusCode = err?.statusCode || 500;
 			return statusCode;
 		}

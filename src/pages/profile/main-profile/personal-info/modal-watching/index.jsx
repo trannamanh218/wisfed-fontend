@@ -7,13 +7,13 @@ import { Modal } from 'react-bootstrap';
 import { useModal } from 'shared/hooks';
 import { getListFollowrs } from 'reducers/redux-utils/user';
 import React, { useState, useEffect } from 'react';
-import { toast } from 'react-toastify';
 import _ from 'lodash';
 import UserAvatar from 'shared/user-avatar';
 import { Add } from 'components/svg';
 import Button from 'shared/button';
 import { unFollower } from 'reducers/redux-utils/user';
 import { changeToggle } from 'reducers/redux-utils/profile';
+import { NotificationError } from 'helpers/Error';
 
 const ModalWatching = () => {
 	const { modalOpen, setModalOpen, toggleModal } = useModal(false);
@@ -21,6 +21,7 @@ const ModalWatching = () => {
 	const [getListFollow, setGetListFollow] = useState([]);
 	const dispatch = useDispatch();
 	const changeToggleTrue = useSelector(state => state.profile.toggle);
+
 	useEffect(async () => {
 		try {
 			if (!_.isEmpty(userInfo)) {
@@ -30,21 +31,29 @@ const ModalWatching = () => {
 				});
 				setGetListFollow(newArrFriend);
 			}
-		} catch {
-			toast.error('Lỗi hệ thống');
+		} catch (err) {
+			NotificationError(err);
 		}
 	}, [userInfo, dispatch, changeToggleTrue]);
 
-	const unFolow = id => {
-		dispatch(changeToggle(id));
-		dispatch(unFollower(id)).unwrap();
-		const newArrFriend = getListFollow.map(item => {
-			if (item.userIdTwo === id) {
-				return { ...item, checkUnfollow: true };
-			}
-			return { ...item };
-		});
-		setGetListFollow(newArrFriend);
+	const unFolow = async id => {
+		if (changeToggleTrue !== id) {
+			dispatch(changeToggle(id));
+		} else {
+			dispatch(changeToggle());
+		}
+		try {
+			await dispatch(unFollower(id)).unwrap();
+			const newArrFriend = getListFollow.map(item => {
+				if (item.userIdTwo === id) {
+					return { ...item, checkUnfollow: true };
+				}
+				return { ...item };
+			});
+			setGetListFollow(newArrFriend);
+		} catch (err) {
+			NotificationError(err);
+		}
 	};
 
 	return (

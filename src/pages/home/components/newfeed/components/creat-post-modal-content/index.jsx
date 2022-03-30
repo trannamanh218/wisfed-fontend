@@ -25,6 +25,7 @@ import { STATUS_BOOK } from 'constants';
 import { usePrevious } from 'shared/hooks';
 import { addBookToDefaultLibrary } from 'reducers/redux-utils/library';
 import { setting } from './settings';
+import { NotificationError } from 'helpers/Error';
 
 function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option, onChangeOption, onChangeNewPost }) {
 	const [shareMode, setShareMode] = useState({ value: 'public', title: 'Mọi người', icon: <WorldNet /> });
@@ -146,6 +147,7 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 			const res = await dispatch(getPreviewUrl(data)).unwrap();
 			setUrlAdded(res);
 		} catch (err) {
+			NotificationError(err);
 			const obj = { url: url, title: url, images: [] };
 			setUrlAdded(obj);
 		} finally {
@@ -170,6 +172,7 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 			const data = await dispatch(getSuggestionForPost({ input, option, userInfo })).unwrap();
 			setSuggestionData(data.rows);
 		} catch (err) {
+			NotificationError(err);
 			return err;
 		}
 	};

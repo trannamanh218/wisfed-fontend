@@ -3,11 +3,10 @@ import FilterPane from 'shared/filter-pane';
 import FitlerOptions from 'shared/filter-options';
 import QuoteCard from 'shared/quote-card';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { toast } from 'react-toastify';
 import { getQuoteList } from 'reducers/redux-utils/quote';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-
+import { NotificationError } from 'helpers/Error';
 const QuotesTab = () => {
 	const filterOptions = [
 		{ id: 1, title: 'Tất cả', value: 'all' },
@@ -53,8 +52,8 @@ const QuotesTab = () => {
 			} else {
 				setHasMore(false);
 			}
-		} catch {
-			toast.error('Lỗi hệ thống');
+		} catch (err) {
+			NotificationError(err);
 		}
 	};
 
@@ -73,8 +72,8 @@ const QuotesTab = () => {
 			} else {
 				setHasMore(false);
 			}
-		} catch {
-			toast.error('Lỗi hệ thống');
+		} catch (err) {
+			NotificationError(err);
 		}
 	};
 

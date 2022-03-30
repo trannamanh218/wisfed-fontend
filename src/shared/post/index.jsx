@@ -15,6 +15,7 @@ import PostBook from 'shared/post-book';
 import UserAvatar from 'shared/user-avatar';
 import './post.scss';
 import PreviewLink from 'shared/preview-link/PreviewLink';
+import { NotificationError } from 'helpers/Error';
 
 function Post({ postInformations, className, isUpdateProgressReading = false }) {
 	const [postData, setPostData] = useState({});
@@ -83,7 +84,8 @@ function Post({ postInformations, className, isUpdateProgressReading = false }) 
 				setPostData(prev => ({ ...prev, usersComments, comments: prev.comments + 1 }));
 			})
 			.catch(err => {
-				return err;
+				NotificationError(err);
+				// return err;
 			});
 	};
 

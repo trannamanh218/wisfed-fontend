@@ -12,6 +12,7 @@ import _ from 'lodash';
 import CommentEditor from 'shared/comment-editor';
 import { useSelector } from 'react-redux';
 import classNames from 'classnames';
+import { NotificationError } from 'helpers/Error';
 
 const MainQuoteDetail = () => {
 	const { id } = useParams();
@@ -31,8 +32,8 @@ const MainQuoteDetail = () => {
 		try {
 			const response = await dispatch(getQuoteDetail(id)).unwrap();
 			setQuoteData(response);
-		} catch {
-			toast.error('Lỗi hệ thống');
+		} catch (err) {
+			NotificationError(err);
 		}
 	};
 

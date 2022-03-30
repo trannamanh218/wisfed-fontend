@@ -10,6 +10,7 @@ import { getBookDetail } from 'reducers/redux-utils/book';
 import { getCategoryDetail } from 'reducers/redux-utils/category';
 import MainCategoryDetail from './main-category-detail';
 import SidebarCategoryDetail from './sidebar-category-detail';
+import { NotificationError } from 'helpers/Error';
 
 const CategoryDetail = () => {
 	const [status, setStatus] = useState(STATUS_IDLE);
@@ -23,6 +24,7 @@ const CategoryDetail = () => {
 			setStatus(STATUS_SUCCESS);
 			navigate(RouteLink.categoryDetail(data.id, data.name));
 		} catch (err) {
+			NotificationError(err);
 			const statusCode = err?.statusCode || 500;
 			setStatus(statusCode);
 		}
@@ -35,6 +37,7 @@ const CategoryDetail = () => {
 			setStatus(STATUS_SUCCESS);
 			navigate(RouteLink.bookDetail(data.id, data.name));
 		} catch (err) {
+			NotificationError(err);
 			const statusCode = err?.statusCode || 500;
 			setStatus(statusCode);
 		}
