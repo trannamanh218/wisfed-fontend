@@ -3,7 +3,8 @@ import AuthorCard from 'shared/author-card';
 import PropTypes from 'prop-types';
 import './favorite-author-tab.scss';
 
-const FavoriteAuthorTab = ({ list }) => {
+const FavoriteAuthorTab = () => {
+	const list = [...Array(2)];
 	return (
 		<div className='favorite-author-tab'>
 			<h4>Tác giả yêu thích</h4>

@@ -45,7 +45,7 @@ const Sidebar = () => {
 					<button className='sidebar__view-more-btn--blue'>Xem thêm</button>
 				</div>
 			</div>
-			<ReadingBook />
+			<ReadingBook bookData={{}} />
 			<TheBooksWantsToRead />
 			<ReadChallenge />
 		</div>

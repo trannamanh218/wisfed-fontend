@@ -250,7 +250,7 @@ const SettingMore = props => {
 
 	return (
 		<div className='setting-more' ref={ref}>
-			<button className='setting-more__btn' onClick={handleClose}>
+			<button className='setting-more__btn' onClick={handleClose} title='Tính năng khác'>
 				<span className='setting-more__dot' />
 				<span className='setting-more__dot' />
 			</button>

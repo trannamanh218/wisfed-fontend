@@ -1,0 +1,95 @@
+@import 'src/scss/abstracts/_variables.scss';
+
+.reading-summary-book-tab {
+	.select-box {
+		&__btn {
+			background-color: $primary-light;
+			width: 220px;
+			justify-content: center;
+			gap: 2rem;
+			font-weight: 600;
+		}
+
+		&__list {
+			width: 220px;
+			height: auto;
+			border-radius: 12px;
+			max-height: unset;
+			overflow-y: unset;
+			background-color: $primary-light;
+			margin-top: 1rem;
+		}
+
+		&__item {
+			background-color: $primary-light;
+
+			&.active {
+				border: unset;
+				background-color: $primary-light;
+				font-weight: 400;
+				svg {
+					display: none;
+				}
+			}
+		}
+	}
+
+	&__chart-wrapper {
+		margin-top: 2rem;
+		position: relative;
+		width: fit-content;
+		height: fit-content;
+	}
+
+	.caretY {
+		position: absolute;
+		top: 35px;
+		left: 70px;
+		width: 20px;
+	}
+	.caretX {
+		position: absolute;
+		bottom: 46px;
+		right: 18px;
+		transform: rotate(90deg);
+		width: 20px;
+	}
+
+	.recharts-wrapper {
+		.recharts-default-legend {
+			text-align: right !important;
+			.recharts-surface {
+				display: none !important;
+			}
+		}
+
+		.recharts-layer .recharts-cartesian-axis-tick {
+			line {
+				display: none;
+			}
+		}
+
+		.recharts-legend-item-text {
+			color: $ash !important;
+			font-weight: 600;
+		}
+
+		.recharts-text.recharts-label {
+			color: $ash !important;
+			font-weight: 600;
+		}
+
+		.recharts-cartesian-axis-ticks {
+			// color: #333333 !important;
+			font-weight: 600;
+		}
+	}
+
+	&__btn {
+		background-color: $primary-light;
+		color: $ash;
+		width: 220px;
+		display: block;
+		margin: 38px 0 80px auto;
+	}
+}

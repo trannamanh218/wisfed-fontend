@@ -18,7 +18,6 @@ import SearchBook from './SearchBook';
 import { useFetchBooks } from 'api/book.hooks';
 import PropTypes from 'prop-types';
 import { Modal, ModalBody } from 'react-bootstrap';
-import MultipleCheckbox from 'shared/multiple-checkbox';
 import MultipleRadio from 'shared/multiple-radio';
 import { useModal } from 'shared/hooks';
 
@@ -41,7 +40,7 @@ const MainCategoryDetail = ({ handleViewBookDetail }) => {
 			title: 'Review nhiều like nhất',
 		},
 	];
-	const starOptions = new Array(5).fill({}).map((_, index) => ({ value: index + 1, title: `${index + 1} sao` }));
+	// const starOptions = new Array(5).fill({}).map((_, index) => ({ value: index + 1, title: `${index + 1} sao` }));
 	const publishOptiosn = [
 		{
 			value: 'newest',
@@ -52,10 +51,10 @@ const MainCategoryDetail = ({ handleViewBookDetail }) => {
 			title: 'Cũ nhất',
 		},
 	];
-	const reviewOptions = [
-		{ value: 'followMost', title: 'Có nhiều Follow nhất' },
-		{ value: 'reviewMost', title: 'Có nhiều Review nhất' },
-	];
+	// const reviewOptions = [
+	// 	{ value: 'followMost', title: 'Có nhiều Follow nhất' },
+	// 	{ value: 'reviewMost', title: 'Có nhiều Review nhất' },
+	// ];
 
 	useEffect(() => {
 		if (books && books.length) {
@@ -199,18 +198,18 @@ const MainCategoryDetail = ({ handleViewBookDetail }) => {
 							<h4>Mặc định</h4>
 							<MultipleRadio list={checkOptions} name='default' value='likeMost' />
 						</div>
-						<div className='main-category-detail__modal__option__group'>
+						{/* <div className='main-category-detail__modal__option__group'>
 							<h4>Theo số sao</h4>
 							<MultipleCheckbox list={starOptions} name='star' value='1' />
-						</div>
+						</div> */}
 						<div className='main-category-detail__modal__option__group'>
 							<h4>Theo thời gian phát hành</h4>
 							<MultipleRadio list={publishOptiosn} name='pulish-time' value='' />
 						</div>
-						<div className='main-category-detail__modal__option__group'>
+						{/* <div className='main-category-detail__modal__option__group'>
 							<h4>Theo người review</h4>
 							<MultipleCheckbox list={reviewOptions} name='review' value='' />
-						</div>
+						</div> */}
 						<Button className='btn-confirm'>Xác nhận</Button>
 					</ModalBody>
 				</Modal>

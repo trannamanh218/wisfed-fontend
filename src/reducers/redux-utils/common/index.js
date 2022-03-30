@@ -2,13 +2,9 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { uploadImageAPI, uploadMultipleImageAPI, creatBookCopyrightsAPI } from 'constants/apiURL';
 import Request from 'helpers/Request';
 
-export const uploadImage = createAsyncThunk('common/uploadImage', async (params, { rejectWithValue }) => {
-	const {
-		data: { file },
-	} = params;
-
+export const uploadImage = createAsyncThunk('common/uploadImage', async (dataUpload, { rejectWithValue }) => {
 	try {
-		const response = await Request.makeUpload(uploadImageAPI, file, params);
+		const response = await Request.makeUpload(uploadImageAPI, dataUpload);
 		return response.data;
 	} catch (err) {
 		const error = JSON.stringify(err.response);
@@ -16,14 +12,14 @@ export const uploadImage = createAsyncThunk('common/uploadImage', async (params,
 	}
 });
 
-export const uploadMultiFile = createAsyncThunk('common/uploadMultiFile', async dataUpload => {
+export const uploadMultiFile = createAsyncThunk('common/uploadMultiFile', async (dataUpload, { rejectWithValue }) => {
 	try {
 		const res = await Request.makeUpload(uploadMultipleImageAPI, dataUpload);
 		const data = res.data;
 		return data;
 	} catch (err) {
-		const error = err.response;
-		return error;
+		const error = JSON.stringify(err.response);
+		return rejectWithValue(error);
 	}
 });
 

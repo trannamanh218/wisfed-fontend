@@ -15,6 +15,11 @@ const PostEditBook = props => {
 	useEffect(() => {
 		if (inputRef.current) {
 			inputRef.current.focus();
+			inputRef.current.addEventListener('keyup', event => {
+				if (event.keyCode === 13) {
+					event.preventDefault();
+				}
+			});
 		}
 	}, [data]);
 

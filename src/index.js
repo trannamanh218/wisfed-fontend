@@ -8,6 +8,7 @@ import { BrowserRouter } from 'react-router-dom';
 import '../node_modules/react-bootstrap/dist/react-bootstrap';
 import '../node_modules/react-toastify/dist/ReactToastify.css';
 import '../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js';
+import '../node_modules/recharts/umd/Recharts.js';
 
 ReactDOM.render(
 	<React.StrictMode>

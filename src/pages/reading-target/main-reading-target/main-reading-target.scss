@@ -1,0 +1,174 @@
+@import 'src/scss/abstracts/_global.scss';
+
+.reading-target {
+	padding-top: 2.25rem;
+
+	&__header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+
+		.search-field {
+			max-width: 456px;
+		}
+
+		h4 {
+			margin: 0;
+		}
+	}
+
+	&__process {
+		display: flex;
+		align-items: center;
+		gap: 2.5rem;
+		padding: 1.75rem 1.875rem 1.75rem 2.5rem;
+		margin: 2.375rem auto 2rem;
+		border-radius: 16px;
+		background-color: white;
+	}
+
+	&__user {
+		flex-shrink: 0;
+	}
+
+	&__content {
+		flex-grow: 1;
+		&__top {
+			display: flex;
+			align-items: center;
+			margin-bottom: 1.5rem;
+			font-weight: 600;
+
+			button {
+				font-weight: 600;
+			}
+		}
+
+		&__bottom {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			gap: 0.75rem;
+
+			.linear-progress {
+				flex-grow: 1;
+				flex-shrink: 0;
+				border-radius: 12px;
+			}
+
+			.linear-progress-bar {
+				font-size: 18px;
+				font-weight: 600;
+			}
+		}
+
+		.btn-edit {
+			margin-left: auto;
+			margin-right: 26px;
+			color: $blue;
+		}
+
+		.btn-cancel {
+			color: $blue;
+		}
+
+		.btn.btn-share {
+			padding: 8px 20px;
+			border-radius: 12px;
+			font-size: 1rem;
+		}
+	}
+
+	&__table {
+		text-align: center;
+		border-collapse: separate;
+		border-spacing: 5px 1rem;
+
+		&__header {
+			background-color: white;
+			th {
+				padding: 1rem;
+			}
+		}
+
+		tr.empty-row {
+			height: 24px;
+		}
+
+		td {
+			vertical-align: middle;
+		}
+
+		tr {
+			td:nth-of-type(3),
+			th:nth-of-type(3) {
+				text-align: left;
+			}
+		}
+
+		tbody {
+			font-size: 1rem;
+			font-weight: 600;
+			line-height: 1.5;
+			color: $ash-body;
+			background-color: white;
+
+			tr {
+				background-color: $secondary;
+			}
+		}
+
+		th {
+			&:first-of-type {
+				border-top-left-radius: 12px;
+				border-bottom-left-radius: 12px;
+			}
+			&:last-of-type {
+				border-top-right-radius: 12px;
+				border-bottom-right-radius: 12px;
+			}
+		}
+
+		.table > :not(caption) > * > * {
+			border-bottom-width: 0px;
+		}
+
+		.table > :not(:first-child) {
+			border-top: unset;
+		}
+
+		tr.highlight {
+			height: 20px;
+			background-color: white;
+		}
+
+		tr.highlight-0 {
+			td {
+				border-top-left-radius: 12px;
+				border-top-right-radius: 12px;
+			}
+		}
+
+		.hightlight-column {
+			width: 20px;
+			background-color: white;
+		}
+	}
+
+	.book-thumbnail.book-thumbnail-sm {
+		width: 55px;
+		height: 83px;
+	}
+
+	.book-name {
+		max-width: 180px;
+		display: -webkit-box;
+		-webkit-line-clamp: 4;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
+	.book-row {
+	}
+}

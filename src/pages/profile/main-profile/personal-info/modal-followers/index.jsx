@@ -7,7 +7,7 @@ import { Modal } from 'react-bootstrap';
 import { useModal } from 'shared/hooks';
 import { useSelector } from 'react-redux';
 
-const ModalFollowers = () => {
+const ModalFollowers = ({ follower }) => {
 	const { modalOpen, setModalOpen, toggleModal } = useModal(false);
 
 	const { userInfo } = useSelector(state => state.auth);
@@ -21,7 +21,7 @@ const ModalFollowers = () => {
 				}}
 				className='personal-info__item'
 			>
-				<span className='number'>825</span>
+				<span className='number'>{follower}</span>
 				<span>Người theo dõi</span>
 			</li>
 			<Modal size='lg' className='modalFollowers__container__main' show={modalOpen} onHide={toggleModal}>
@@ -50,5 +50,6 @@ const ModalFollowers = () => {
 ModalFollowers.propTypes = {
 	idModalItem: PropTypes.string,
 	setModalWatching: PropTypes.func,
+	follower: PropTypes.number,
 };
 export default ModalFollowers;

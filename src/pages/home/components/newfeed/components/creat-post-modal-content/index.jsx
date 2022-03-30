@@ -4,7 +4,6 @@ import { STATUS_IDLE, STATUS_LOADING, STATUS_SUCCESS } from 'constants';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { useEffect, useRef, useState } from 'react';
-import { Form } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { createActivity, getSuggestionForPost } from 'reducers/redux-utils/activity';
@@ -43,6 +42,7 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 	const [hasUrl, setHasUrl] = useState(false);
 	const [urlAdded, setUrlAdded] = useState({});
 	const [urlAddedArray, setUrlAddedArray] = useState([]);
+	const [oldUrlAddedArray, setOldUrlAddedArray] = useState([]);
 	const [status, setStatus] = useState(STATUS_IDLE);
 	const [showUpload, setShowUpload] = useState(false);
 	const [validationInput, setValidationInput] = useState();
@@ -59,6 +59,12 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 
 	useEffect(() => {
 		textFieldEdit.current.focus();
+
+		// const form = document.getElementById('formCreatePost');
+		// console.log(form);
+		// if (form) {
+		// 	form.addEventListener();
+		// }
 	}, []);
 
 	useEffect(() => {
@@ -76,7 +82,6 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 			detectUrl();
 			createSpanElements();
 		});
-
 		return () => {
 			document.removeEventListener('input', handlePlaceholder);
 		};
@@ -96,16 +101,19 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 			if (url !== null) {
 				setUrlAddedArray(url);
 				setHasUrl(true);
+			} else {
+				setUrlAddedArray([]);
 			}
 		}, 1000),
 		[]
 	);
 
 	useEffect(() => {
-		if (urlAddedArray.length > 0) {
+		if (!_.isEqual(urlAddedArray, oldUrlAddedArray)) {
 			getPreviewUrlFnc(urlAddedArray[urlAddedArray.length - 1]);
+			setOldUrlAddedArray(urlAddedArray);
 		}
-	}, [urlAddedArray.length]);
+	}, [urlAddedArray]);
 
 	const createSpanElements = () => {
 		const subStringArray = textFieldEdit.current.innerText.split(' ');
@@ -122,18 +130,18 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 		placeCaretAtEnd(textFieldEdit.current);
 	};
 
-	const placeCaretAtEnd = el => {
-		el.focus();
+	const placeCaretAtEnd = element => {
+		element.focus();
 		if (typeof window.getSelection != 'undefined' && typeof document.createRange != 'undefined') {
 			const range = document.createRange();
-			range.selectNodeContents(el);
+			range.selectNodeContents(element);
 			range.collapse(false);
-			const sel = window.getSelection();
-			sel.removeAllRanges();
-			sel.addRange(range);
+			const selection = window.getSelection();
+			selection.removeAllRanges();
+			selection.addRange(range);
 		} else if (typeof document.body.createTextRange != 'undefined') {
 			const textRange = document.body.createTextRange();
-			textRange.moveToElementText(el);
+			textRange.moveToElementText(element);
 			textRange.collapse(false);
 			textRange.select();
 		}
@@ -212,8 +220,8 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 			}
 
 			newData[option.value] = listData;
-		} else if (option.value === 'addBook') {
-			newData[option.value] = data;
+		} else if (option.value === 'addBook' || data.hasOwnProperty('page')) {
+			newData['addBook'] = data;
 		} else if (option.value === 'addImages') {
 			newData[option.value] = data;
 			setShowMainModal(false);
@@ -348,11 +356,12 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 						<CloseX />
 					</button>
 				</div>
-				<Form
+				<form
 					onSubmit={e => {
 						e.preventDefault();
+						return false;
 					}}
-					id='createPostForm'
+					id='formCreatePost'
 				>
 					<div className='creat-post-modal-content__main__body'>
 						<div className='creat-post-modal-content__main__body__user-info'>
@@ -465,11 +474,10 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 							className={classNames('creat-post-modal-content__main__submit', {
 								'active': checkActive(),
 							})}
-							type='submit'
-							form='createPostForm'
+							type='button'
 							onClick={e => {
+								e.preventDefault();
 								if (checkActive()) {
-									e.preventDefault();
 									onCreatePost();
 								}
 							}}
@@ -477,7 +485,7 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 							Đăng
 						</button>
 					</div>
-				</Form>
+				</form>
 			</div>
 			{/* sub modal */}
 			<div

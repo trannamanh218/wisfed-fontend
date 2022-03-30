@@ -1,7 +1,7 @@
 import { CloseX } from 'components/svg';
 import SearchField from 'shared/search-field';
 // import AuthorCard from 'shared/author-card';
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
 import { Modal } from 'react-bootstrap';
 import { useModal } from 'shared/hooks';
@@ -15,7 +15,7 @@ import Button from 'shared/button';
 import { unFollower } from 'reducers/redux-utils/user';
 import { changeToggle } from 'reducers/redux-utils/profile';
 
-const ModalWatching = () => {
+const ModalWatching = ({ following }) => {
 	const { modalOpen, setModalOpen, toggleModal } = useModal(false);
 	const { userInfo } = useSelector(state => state.auth);
 	const [getListFollow, setGetListFollow] = useState([]);
@@ -55,7 +55,7 @@ const ModalWatching = () => {
 				}}
 				className='personal-info__item'
 			>
-				<span className='number'>825</span>
+				<span className='number'>{following}</span>
 				<span>Đang theo dõi</span>
 			</li>
 			<Modal size='lg' className='modalFollowers__container__main' show={modalOpen} onHide={toggleModal}>
@@ -120,5 +120,7 @@ const ModalWatching = () => {
 		</>
 	);
 };
-ModalWatching.propTypes = {};
+ModalWatching.propTypes = {
+	following: PropTypes.number,
+};
 export default ModalWatching;

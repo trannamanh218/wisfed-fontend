@@ -2,13 +2,19 @@
 export const authAPI = '/api/v1/auth';
 export const registerAPI = '/api/v1/auth/register';
 export const forgotPasswordAPI = '/api/v1/auth/forgotPassword';
-export const resetPasswordAPI = id => `/api/v1/auth/resetPassword/${id}`;
+export const forgotPasswordAPIAdmin = '/api/v1/auth/adminForgotPassword/';
+export const resetPasswordAPI = '/api/v1/auth/resetPassword/';
+export const resetPasswordAPIAdmin = '/api/v1/auth/resetPasswordByMail/';
+export const checkTokenResetPassword = token => `/api/v1/auth/verify-password?token=${token}`;
 
 // quote
 export const quoteAPI = '/api/v1/quotes';
 export const quoteDetailAPI = id => `/api/v1/quotes/${id}`;
 export const quoteCommentAPI = '/api/v1/commentQuotes';
 export const likeQuoteAPI = id => `/api/v1/quotes/like/${id}`;
+export const checkLikeQuoteAPI = '/api/v1/quotes/checkLikeQuote';
+export const likeQuoteCommentAPI = id => `/api/v1/commentQuotes/like/${id}`;
+export const checkLikeQuoteCommentAPI = '/api/v1/quotes/checkLikeCmtQuote';
 
 // post
 export const postAPI = '/api/v1/posts';
@@ -37,6 +43,7 @@ export const categoryDetailAPI = id => `/api/v1/categories/${id}`;
 export const userAPI = '/api/v1/users';
 export const userDetailAPI = id => `/api/v1/users/${id}`;
 export const checkLikedAPI = '/api/v1/users/checkLiked';
+export const updateLikeCategory = id => `api/v1/users/${id}`;
 
 // friend
 export const friendAPI = id => `/api/v1/users/${id}/listFriend`;
@@ -69,8 +76,8 @@ export const checkBookLibraryAPI = id => `/api/v1/libraries/checkBookLibrary/${i
 export const otherListBookInLibaries = id => `/api/v1/libraries/listBookBy/${id}`;
 
 // comment activity
-export const commentActivityAPI = '/api/v1/commentActivities';
-export const commentActivityDetailAPI = id => `/api/v1/commentActivities/${id}`;
+// export const commentActivityAPI = '/api/v1/commentActivities';
+// export const commentActivityDetailAPI = id => `/api/v1/commentActivities/${id}`;
 
 // notification
 export const nottificationAPI = '/api/v1/getstream/notiMention';
@@ -78,3 +85,5 @@ export const nottificationAPI = '/api/v1/getstream/notiMention';
 export const listFolowrs = '/api/v1/users/listFollows/';
 export const addfollow = '/api/v1/users/follow';
 export const unFollow = id => `/api/v1/users/${id}/unFollow`;
+export const commentActivityAPI = '/api/v1/commentMiniposts';
+export const commentActivityDetailAPI = id => `/api/v1/commentMiniposts/${id}`;
