@@ -85,7 +85,7 @@ export const updateReactionActivity = createAsyncThunk(
 	'activity/updateReactionActivity',
 	async (params, { rejectWithValue }) => {
 		try {
-			const response = await Request.makePatch(likeActivityAPI, params);
+			const response = await Request.makePatch(likeActivityAPI(params.minipostId), params);
 			return response.data;
 		} catch (err) {
 			const error = JSON.stringify(err.response);

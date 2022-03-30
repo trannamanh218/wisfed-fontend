@@ -53,7 +53,7 @@ export const replyFriendReqApi = id => `/api/v1/users/${id}/replyFriendReq/`;
 export const unFriend = id => `/api/v1/users/${id}/unFriend`;
 //activity
 export const activityAPI = '/api/v1/getstream';
-export const likeActivityAPI = '/api/v1/getstream/like';
+export const likeActivityAPI = id => `/api/v1/getstream/like/${id}`;
 export const listLikedActivityAPI = '/api/v1/users/likedActivities';
 
 // upload files
