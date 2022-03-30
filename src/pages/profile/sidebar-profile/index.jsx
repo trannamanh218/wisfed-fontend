@@ -1,3 +1,4 @@
+import { useFetchStatsReadingBooks } from 'api/library.hook';
 import React from 'react';
 import BookSlider from 'shared/book-slider';
 import DualColumn from 'shared/dual-column';
@@ -7,11 +8,8 @@ import './sidebar-profile.scss';
 
 const SidebarProfile = () => {
 	const bookList = new Array(10).fill({ source: '/images/book1.jpg', name: 'Design pattern' });
-	const catories = [
-		{ name: 'Đang đọc', quantity: 30 },
-		{ name: 'Đã đọc', quantity: 110 },
-		{ name: 'Muốn đọc', quantity: 8 },
-	];
+	const { readingData } = useFetchStatsReadingBooks();
+
 	return (
 		<div className='sidebar-profile'>
 			<ReadingBook bookData={{}} />
@@ -19,7 +17,7 @@ const SidebarProfile = () => {
 			<ReadChallenge />
 			<div className='sidebar-profile__personal__category'>
 				<h4>Danh mục cá nhân</h4>
-				<DualColumn list={catories} />
+				<DualColumn list={readingData} />
 			</div>
 		</div>
 	);

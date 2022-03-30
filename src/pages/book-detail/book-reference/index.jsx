@@ -12,6 +12,7 @@ import StatisticList from 'shared/statistic-list';
 import { Circle as CircleLoading } from 'shared/loading';
 import './book-reference.scss';
 import { NotificationError } from 'helpers/Error';
+import { useFetchStatsReadingBooks } from 'api/library.hook';
 
 const BookReference = () => {
 	const [status, setStatus] = useState(STATUS_IDLE);
@@ -19,13 +20,9 @@ const BookReference = () => {
 	const navigate = useNavigate();
 	const { bookInfo } = useSelector(state => state.book);
 	const { relatedBook } = useFetchRelatedBooks(bookInfo.categoryId);
+	const { readingData } = useFetchStatsReadingBooks();
 
 	const bookList = new Array(10).fill({ source: '/images/book1.jpg', name: 'Design pattern' });
-	const statisticList = [
-		{ name: 'Muốn đọc', quantity: 30 },
-		{ name: 'Đang đọc', quantity: 110 },
-		{ name: 'Đã đọc', quantity: 8 },
-	];
 
 	const handleViewBookDetail = async data => {
 		setStatus(STATUS_LOADING);
@@ -72,7 +69,7 @@ const BookReference = () => {
 					</li>
 				</ul>
 			</div>
-			<StatisticList title='Trạng thái đọc' background='light' isBackground={false} list={statisticList} />
+			<StatisticList title='Trạng thái đọc' background='light' isBackground={false} list={readingData} />
 		</div>
 	);
 };

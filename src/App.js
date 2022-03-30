@@ -77,8 +77,8 @@ function App({ children }) {
 				<Route path='/shelves' element={<BookShelves />} />
 				<Route path='/shelves/:userId' element={<BookShelves />} />
 				<Route path='/group' element={<Group />} />
-				<Route path='/book/detail/:id' element={<BookDetail />} />
-				<Route path='/book/detail/:id/:slug' element={<BookDetail />} />
+				<Route path='/book/detail/:bookId' element={<BookDetail />} />
+				<Route path='/book/detail/:bookId/:slug' element={<BookDetail />} />
 				<Route path='/review/:id' element={<Review />} />
 				<Route path='/review/:id/:slug' element={<Review />} />
 				<Route path='/quotes' element={<Quote />} />

@@ -71,7 +71,7 @@ export const useFetchStatsReadingBooks = isUpdate => {
 		setRetry(prev => !prev);
 	}, [setRetry]);
 
-	useEffect(async () => {
+	useEffect(() => {
 		let isMount = true;
 		if (isMount) {
 			setStatus(STATUS_LOADING);
@@ -80,8 +80,10 @@ export const useFetchStatsReadingBooks = isUpdate => {
 
 			if (_.isEmpty(params)) {
 				filter.push({ 'operator': 'eq', 'value': userInfo.id, 'property': 'createdBy' });
-			} else {
+			} else if (params.id) {
 				filter.push({ 'operator': 'eq', 'value': params.id, 'property': 'createdBy' });
+			} else if (params.bookId) {
+				filter.push({ 'operator': 'eq', 'value': userInfo.id, 'property': 'createdBy' });
 			}
 
 			const fetchData = async () => {

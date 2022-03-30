@@ -8,8 +8,8 @@ import BookInfo from './book-info';
 import BookReference from './book-reference';
 
 function BookDetail() {
-	const { id } = useParams();
-	const { bookInfo } = useFetchBookDetail(id);
+	const { bookId } = useParams();
+	const { bookInfo } = useFetchBookDetail(bookId);
 
 	if (_.isEmpty(bookInfo)) {
 		return (
