@@ -22,7 +22,6 @@ const SidebarShelves = ({ isUpdate }) => {
 	);
 
 	const { readingData } = useFetchStatsReadingBooks(isUpdate);
-
 	const myComposing = new Array(10).fill({ source: '/images/book1.jpg', name: 'Design pattern' });
 
 	return (

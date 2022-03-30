@@ -1,0 +1,45 @@
+@import 'src/scss/abstracts/_variables.scss';
+
+.read-book-tab {
+	&__header {
+		display: flex;
+		align-items: center;
+	}
+
+	&__year {
+		color: #000000;
+	}
+
+	&__quantity {
+		color: #000000;
+		font-size: 1.5rem;
+		font-weight: 700;
+		line-height: 1.5;
+		margin-bottom: 0;
+		margin-left: auto;
+	}
+
+	.accordion-button:not(.collapsed) {
+		background-color: white;
+		box-shadow: unset;
+	}
+
+	.accordion-button {
+		&::after {
+			background-image: url('../../../../assets/images/caret-up.png');
+		}
+
+		&:focus {
+			box-shadow: unset;
+			border-color: unset;
+		}
+	}
+
+	.accordion-item {
+		border: unset;
+	}
+
+	.read-book {
+		margin-bottom: 1.5rem;
+	}
+}

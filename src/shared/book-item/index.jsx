@@ -19,7 +19,7 @@ const BookItem = props => {
 	const renderOverlay = () => {
 		if (isMyShelve) {
 			return (
-				<span className='book-item__icon'>
+				<span className='book-item__icon' title='Chế độ công khai'>
 					<EyeIcon isPublic={isPublic} handlePublic={handlePublic} />
 				</span>
 			);

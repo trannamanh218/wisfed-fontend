@@ -10,7 +10,6 @@ import {
 	myLibraryAPI,
 	removeAllBookAPI,
 	removeBookFromLibraryAPI,
-	updateBookAPI,
 } from 'constants/apiURL';
 import Request from 'helpers/Request';
 

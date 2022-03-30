@@ -10,6 +10,8 @@ import library from './library';
 import comment from './comment';
 import notificationReducer from './notificaiton';
 import profile from './profile';
+import forgetPasswordSliceReducer from './forget-password';
+
 const rootReducer = {
 	auth,
 	post,
@@ -23,6 +25,7 @@ const rootReducer = {
 	comment,
 	notificationReducer,
 	profile,
+	forgetPasswordSliceReducer,
 };
 
 export default rootReducer;

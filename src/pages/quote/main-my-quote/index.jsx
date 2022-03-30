@@ -7,12 +7,19 @@ import { getQuoteList } from 'reducers/redux-utils/quote';
 import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import { checkLikeQuote } from 'reducers/redux-utils/quote';
 import './main-my-quote.scss';
 import { NotificationError } from 'helpers/Error';
 
 const MainMyQuote = () => {
 	const [myQuoteList, setMyQuoteList] = useState([]);
 	const [hasMore, setHasMore] = useState(true);
+	const [defaultOption, setDefaultOption] = useState({ id: 1, title: 'Tất cả', value: 'all' });
+	const filterOptions = [
+		{ id: 1, title: 'Của tôi', value: 'me' },
+		{ id: 2, title: 'Yêu thích', value: 'me-like' },
+	];
+	const [likedArray, setLikedArray] = useState([]);
 
 	const callApiStart = useRef(10);
 	const callApiPerPage = useRef(10);
@@ -24,6 +31,7 @@ const MainMyQuote = () => {
 	useEffect(() => {
 		callApiStart.current = 10;
 		getMyQuoteListFirstTime();
+		getLikedArray();
 	}, [resetQuoteList]);
 
 	const getMyQuoteListFirstTime = async () => {
@@ -69,12 +77,14 @@ const MainMyQuote = () => {
 		}
 	};
 
-	const filterOptions = [
-		{ id: 1, title: 'Của tôi', value: 'me' },
-		{ id: 2, title: 'Yêu thích', value: 'me-like' },
-	];
-
-	const [defaultOption, setDefaultOption] = useState({ id: 1, title: 'Tất cả', value: 'all' });
+	const getLikedArray = async () => {
+		try {
+			const res = await dispatch(checkLikeQuote()).unwrap();
+			setLikedArray(res);
+		} catch {
+			toast.error('Lỗi hệ thống');
+		}
+	};
 
 	const handleChangeOption = (e, data) => {
 		if (data.value !== defaultOption.value) {
@@ -102,7 +112,7 @@ const MainMyQuote = () => {
 						loader={<h4>Loading...</h4>}
 					>
 						{myQuoteList.map(item => (
-							<QuoteCard key={item.id} data={item} />
+							<QuoteCard key={item.id} data={item} likedArray={likedArray} />
 						))}
 					</InfiniteScroll>
 				)}

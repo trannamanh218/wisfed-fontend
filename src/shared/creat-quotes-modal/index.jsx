@@ -1,5 +1,5 @@
 import './creat-quotes-modal.scss';
-import { CloseX, WeatherStars, BackChevron, Search, CheckIcon } from 'components/svg';
+import { CloseX, WeatherStars, BackChevron, Search } from 'components/svg';
 import { useEffect, useState, useRef, useCallback } from 'react';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
@@ -12,6 +12,7 @@ import { creatQuotes } from 'reducers/redux-utils/quote/index';
 import { toast } from 'react-toastify';
 import { handleAfterCreatQuote } from 'reducers/redux-utils/quote';
 import { NotificationError } from 'helpers/Error';
+import AddAndSearchCategories from 'shared/add-and-search-categories';
 
 function CreatQuotesModal({ hideCreatQuotesModal }) {
 	const [showTextFieldEditPlaceholder, setShowTextFieldEditPlaceholder] = useState(true);
@@ -30,6 +31,7 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 	const [categoryAddedList, setCategoryAddedList] = useState([]);
 	const [getDataFinish, setGetDataFinish] = useState(false);
 	const [categoryAddedIdList, setCategoryAddedIdList] = useState([]);
+	const [hashTagsAddedArray, setHashTagsAddedArray] = useState([]);
 
 	const textFieldEdit = useRef(null);
 	const categoryInputContainer = useRef(null);
@@ -40,13 +42,13 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 	const dispatch = useDispatch();
 
 	const colorData = [
-		'to bottom right, #E3F7FF, #FFD8C3',
-		'to bottom right, #FACEB8, #E6AFCC, #C8BEE5, #ACD1F1',
-		'to bottom right, #EDF7F8, #B5C7E1',
-		'to bottom right, #E6B2FD, #9559FF',
-		'to bottom right, #F9AB34, #FFE68E',
-		'to bottom right, #FFD42A, #FFFC49',
-		'to bottom right, #C5FFAA, #00BAC6',
+		'100deg, #E3F7FF, #FFD8C3',
+		'100deg, #FACEB8, #E6AFCC, #C8BEE5, #ACD1F1',
+		'100deg, #EDF7F8, #B5C7E1',
+		'100deg, #77C2F1, #FFB4ED',
+		'100deg, #F9AB34, #FFE68E',
+		'100deg, #FFD42A, #FFFC49',
+		'100deg, #C5FFAA, #00BAC6',
 	];
 
 	useEffect(() => {
@@ -96,7 +98,7 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 			} else if (option.value === 'addBook') {
 				setBookSearchedList(data.rows.slice(0, 3));
 			} else if (option.value === 'addCategory') {
-				setCategorySearchedList(data.rows.slice(0, 5));
+				setCategorySearchedList(data.rows);
 			}
 		} catch (err) {
 			NotificationError(err);
@@ -144,25 +146,6 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 		categoryInputWrapper.current.style.width = categoryInput.current.value.length + 0.5 + 'ch';
 	};
 
-	const focusCategoryInput = () => {
-		categoryInput.current.focus();
-	};
-
-	useEffect(() => {
-		if (categoryInput.current) {
-			categoryInput.current.focus();
-		}
-	}, [categoryAddedList]);
-
-	useEffect(() => {
-		if (categoryInputContainer.current) {
-			categoryInputContainer.current.addEventListener('click', focusCategoryInput);
-			return () => {
-				categoryInputContainer.current.removeEventListener('click', focusCategoryInput);
-			};
-		}
-	}, []);
-
 	const addCategory = category => {
 		if (categoryAddedList.filter(categoryAdded => categoryAdded.id === category.id).length > 0) {
 			removeCategory(category.id);
@@ -195,15 +178,22 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 		return <div className='creat-quotes-modal__no-search-result'>Không có kết quả phù hợp</div>;
 	};
 
+	const updateHashTagsInputValue = e => {
+		const hashtagRegex = /\B(\#[a-zA-Z]+\b)(?!;)/g;
+		const hashTags = e.target.value.match(hashtagRegex);
+		setInputHashtagValue(e.target.value);
+		setHashTagsAddedArray(hashTags);
+	};
+
 	const creatQuotesFnc = async () => {
 		try {
 			const data = {
-				'quote': textFieldEdit.current.innerText,
-				'bookId': bookAdded.id,
-				'authorName': authorAdded,
-				'categories': categoryAddedIdList,
-				'tag': inputHashtagValue,
-				'background': backgroundColor,
+				quote: textFieldEdit.current.innerText,
+				bookId: bookAdded.id,
+				authorName: authorAdded,
+				categories: categoryAddedIdList,
+				tag: hashTagsAddedArray,
+				background: backgroundColor,
 			};
 			const response = await dispatch(creatQuotes(data)).unwrap();
 			if (response) {
@@ -400,76 +390,19 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 					</div>
 					<div className='creat-quotes-modal__body__option-item'>
 						<div className='creat-quotes-modal__body__option-item__title'>Chủ đề</div>
-						<div
-							className='creat-quotes-modal__body__option-item__search-container'
-							style={categoryAddedList.length > 0 ? { padding: '8px 24px' } : {}}
-							ref={categoryInputContainer}
-						>
-							{categoryAddedList.length > 0 ? (
-								<div className='creat-quotes-modal__body__option-categories-added'>
-									{categoryAddedList.map(item => (
-										<div
-											key={item.id}
-											className='creat-quotes-modal__body__option-categories-added__item'
-										>
-											<div>{item.name}</div>
-											<button onClick={() => removeCategory(item.id)}>
-												<CloseX />
-											</button>
-										</div>
-									))}
-									<div
-										ref={categoryInputWrapper}
-										className='category-input-wrapper'
-										style={{ width: '8px' }}
-									>
-										<input
-											value={inputCategoryValue}
-											onChange={searchCategory}
-											ref={categoryInput}
-										/>
-									</div>
-								</div>
-							) : (
-								<>
-									<Search />
-									<input
-										placeholder='Tìm kiếm và thêm chủ đề'
-										value={inputCategoryValue}
-										onChange={searchCategory}
-									/>
-								</>
-							)}
-						</div>
-						{inputCategoryValue.trim() !== '' && getDataFinish && (
-							<>
-								{categorySearchedList.length > 0 ? (
-									<div className='creat-quotes-modal__body__option-item__search-result category'>
-										{categorySearchedList.map(item => (
-											<div
-												className='creat-quotes-modal__searched-item category'
-												key={item.id}
-												onClick={() => addCategory(item)}
-											>
-												<span>{item.name}</span>
-												<>
-													{categoryAddedList.filter(
-														categoryAdded => categoryAdded.id === item.id
-													).length > 0 && (
-														<>
-															<div className='creat-quotes-modal__checked-category'></div>
-															<CheckIcon />
-														</>
-													)}
-												</>
-											</div>
-										))}
-									</div>
-								) : (
-									<>{renderNoSearchResult()}</>
-								)}
-							</>
-						)}
+						<AddAndSearchCategories
+							categoryAddedList={categoryAddedList}
+							categorySearchedList={categorySearchedList}
+							addCategory={addCategory}
+							removeCategory={removeCategory}
+							getDataFinish={getDataFinish}
+							searchCategory={searchCategory}
+							inputCategoryValue={inputCategoryValue}
+							categoryInputContainer={categoryInputContainer}
+							categoryInputWrapper={categoryInputWrapper}
+							categoryInput={categoryInput}
+							hasSearchIcon={true}
+						/>
 					</div>
 					<div className='creat-quotes-modal__body__option-item'>
 						<div className='creat-quotes-modal__body__option-item__title'>Từ khóa</div>
@@ -478,7 +411,7 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 								style={{ margin: '0' }}
 								placeholder='Nhập từ khóa'
 								value={inputHashtagValue}
-								onChange={e => setInputHashtagValue(e.target.value)}
+								onChange={updateHashTagsInputValue}
 							/>
 						</div>
 					</div>

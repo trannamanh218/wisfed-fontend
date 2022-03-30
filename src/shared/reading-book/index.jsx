@@ -2,10 +2,9 @@ import './style.scss';
 import ProgressBar from 'react-bootstrap/ProgressBar';
 import PropTypes from 'prop-types';
 
-function ReadingBook({
-	bookData = { avatar: '/images/book1.jpg', name: 'Những phát minh của nhà khoa học Tesla ', author: 'Đỗ Gia' },
-	percent = 30,
-}) {
+function ReadingBook({ bookData, percent }) {
+	bookData = { avatar: '/images/book1.jpg', name: 'Những phát minh của nhà khoa học Tesla ', author: 'Đỗ Gia' };
+	percent = 50;
 	return (
 		<div className='reading-book'>
 			<h4 className='reading-book__title'>Sách đang đọc</h4>

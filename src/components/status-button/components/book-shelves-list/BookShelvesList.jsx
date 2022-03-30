@@ -3,18 +3,12 @@ import StatusItem from './StatusItem';
 import PropTypes from 'prop-types';
 import './style.scss';
 
-const BookShelvesList = ({ list, onChangeLibrary, libraryId, onChangeShelves }) => {
+const BookShelvesList = ({ list, onChangeShelves }) => {
 	const renderList = listData => {
 		return (
 			<ul className='status-book__list status-book__list--shelves'>
 				{listData.map(item => (
-					<StatusItem
-						key={item.id}
-						item={item}
-						onChangeLibrary={onChangeLibrary}
-						libraryId={libraryId}
-						onChangeShelves={onChangeShelves}
-					/>
+					<StatusItem key={item.id} item={item} onChangeShelves={onChangeShelves} />
 				))}
 			</ul>
 		);
@@ -30,14 +24,12 @@ const BookShelvesList = ({ list, onChangeLibrary, libraryId, onChangeShelves }) 
 
 BookShelvesList.defaultProps = {
 	list: [],
-	onChangeLibrary: () => {},
-	libraryId: null,
+	onChangeShelves: () => {},
 };
 
 BookShelvesList.propTypes = {
 	list: PropTypes.array.isRequired,
-	onChangeLibrary: PropTypes.func,
-	libraryId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+	onChangeShelves: PropTypes.func,
 };
 
 export default BookShelvesList;

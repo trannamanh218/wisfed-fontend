@@ -13,6 +13,7 @@ import CommentEditor from 'shared/comment-editor';
 import { useSelector } from 'react-redux';
 import classNames from 'classnames';
 import { NotificationError } from 'helpers/Error';
+import { checkLikeQuoteComment } from 'reducers/redux-utils/quote';
 
 const MainQuoteDetail = () => {
 	const { id } = useParams();
@@ -22,10 +23,13 @@ const MainQuoteDetail = () => {
 	const [quoteData, setQuoteData] = useState({});
 	const [commentLv1IdArray, setCommentLv1IdArray] = useState([]);
 	const [replyingCommentId, setReplyingCommentId] = useState(0);
+	const [clickReply, setClickReply] = useState(false);
+	const [quoteCommentsLikedArray, setQuoteCommentsLikedArray] = useState([]);
 
 	useEffect(() => {
 		window.scrollTo(0, 0);
 		getQuoteData();
+		checkQuoteCommentLiked();
 	}, []);
 
 	const getQuoteData = async () => {
@@ -37,12 +41,21 @@ const MainQuoteDetail = () => {
 		}
 	};
 
+	const checkQuoteCommentLiked = async () => {
+		try {
+			const res = await dispatch(checkLikeQuoteComment()).unwrap();
+			setQuoteCommentsLikedArray(res);
+		} catch {
+			toast.error('Lỗi hệ thống');
+		}
+	};
+
 	useEffect(() => {
 		if (quoteData?.commentQuotes?.length > 0) {
 			const commentLv1IdTemp = [];
 			for (let i = 0; i < quoteData.commentQuotes.length; i++) {
 				if (
-					quoteData.commentQuotes[i].reply === null &&
+					quoteData.commentQuotes[i].replyId === null &&
 					!commentLv1IdTemp.includes(quoteData.commentQuotes[i].id)
 				) {
 					commentLv1IdTemp.push(quoteData.commentQuotes[i].id);
@@ -52,12 +65,12 @@ const MainQuoteDetail = () => {
 		}
 	}, [quoteData.commentQuotes]);
 
-	const onCreateComment = async (content, reply) => {
+	const onCreateComment = async (content, replyId) => {
 		const params = {
 			quoteId: Number(id),
 			content: content,
 			mediaUrl: [],
-			reply: reply,
+			replyId: replyId,
 		};
 		try {
 			const res = await dispatch(creatQuotesComment(params));
@@ -73,7 +86,19 @@ const MainQuoteDetail = () => {
 
 	const handleReply = cmtLv1Id => {
 		setReplyingCommentId(cmtLv1Id);
+		setClickReply(!clickReply);
 	};
+
+	useEffect(() => {
+		const textareaInCommentEdit = document.querySelector(`#textarea-${replyingCommentId}`);
+		if (textareaInCommentEdit) {
+			textareaInCommentEdit.focus();
+			window.scroll({
+				top: textareaInCommentEdit.offsetTop - 400,
+				behavior: 'smooth',
+			});
+		}
+	}, [replyingCommentId, clickReply]);
 
 	return (
 		<div className='main-quote-detail'>
@@ -90,18 +115,19 @@ const MainQuoteDetail = () => {
 					<QuoteCard className='mx-auto' isDetail={true} data={quoteData} />
 					{quoteData.commentQuotes?.map((comment, index) => (
 						<div key={`${comment.id}-${index}`}>
-							{comment.reply === null && (
+							{comment.replyId === null && (
 								<QuoteComment
 									commentLv1Id={comment.id}
 									data={comment}
 									quoteData={quoteData}
 									handleReply={handleReply}
+									quoteCommentsLikedArray={quoteCommentsLikedArray}
 								/>
 							)}
 
 							<div className='main-quote-detail__reply'>
 								{quoteData.commentQuotes.map(commentChild => {
-									if (commentChild.reply === comment.id) {
+									if (commentChild.replyId === comment.id) {
 										return (
 											<div key={commentChild.id}>
 												<div>
@@ -110,6 +136,7 @@ const MainQuoteDetail = () => {
 														data={commentChild}
 														quoteData={quoteData}
 														handleReply={handleReply}
+														quoteCommentsLikedArray={quoteCommentsLikedArray}
 													/>
 												</div>
 											</div>
@@ -124,13 +151,14 @@ const MainQuoteDetail = () => {
 										className={classNames('main-quote-detail__reply-comment', {
 											'show': comment.id === replyingCommentId,
 										})}
-										reply={replyingCommentId}
+										replyId={replyingCommentId}
+										textareaId={`textarea-${comment.id}`}
 									/>
 								)}
 							</div>
 						</div>
 					))}
-					<CommentEditor userInfo={userInfo} reply={null} onCreateComment={onCreateComment} />
+					<CommentEditor userInfo={userInfo} replyId={null} onCreateComment={onCreateComment} />
 				</div>
 			)}
 		</div>

@@ -16,15 +16,24 @@ import UserAvatar from 'shared/user-avatar';
 import './post.scss';
 import PreviewLink from 'shared/preview-link/PreviewLink';
 import { NotificationError } from 'helpers/Error';
+import ReactRating from 'shared/react-rating';
 
-function Post({ postInformations, className, isUpdateProgressReading = false }) {
+function Post({ postInformations, className }) {
 	const [postData, setPostData] = useState({});
+	const [videoId, setVideoId] = useState('');
 	const { userInfo } = useSelector(state => state.auth);
 	const dispatch = useDispatch();
 
 	useEffect(() => {
 		const isLike = hasLikedPost();
 		setPostData({ ...postInformations, isLike });
+		if (!_.isEmpty(postInformations.preview) && postInformations.preview.url.includes('https://www.youtube.com/')) {
+			const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+			const match = postInformations.preview.url.match(regExp);
+			if (match && match[2].length === 11) {
+				setVideoId(match[2]);
+			}
+		}
 	}, [postInformations]);
 
 	const directUrl = url => {
@@ -55,7 +64,7 @@ function Post({ postInformations, className, isUpdateProgressReading = false }) 
 
 	const onCreateComment = (content, reply, parentData, indexParent) => {
 		const params = {
-			activityId: postData.activityId,
+			minipostId: postData.minipostId,
 			content: content,
 			mediaUrl: [],
 			reply,
@@ -64,7 +73,7 @@ function Post({ postInformations, className, isUpdateProgressReading = false }) 
 		dispatch(createComment(params))
 			.unwrap()
 			.then(res => {
-				const propertyComment = ['activityId', 'content', 'getstreamId', 'reply', 'id', 'createdAt'];
+				const propertyComment = ['minipostId', 'content', 'getstreamId', 'reply', 'id', 'createdAt'];
 				const newComment = _.pick(res, propertyComment);
 				newComment.user = userInfo;
 				newComment.replyComments = [];
@@ -90,7 +99,7 @@ function Post({ postInformations, className, isUpdateProgressReading = false }) 
 	};
 
 	const handleLikeAction = () => {
-		const params = { activityId: postData.activityId };
+		const params = { minipostId: postData.minipostId };
 		dispatch(updateReactionActivity(params))
 			.unwrap()
 			.then(() => {
@@ -115,7 +124,7 @@ function Post({ postInformations, className, isUpdateProgressReading = false }) 
 		const newData = {
 			content: '',
 			reply: parentData.id || data.id,
-			activityId: postData.activityId,
+			minipostId: postData.minipostId,
 			user: { ...userInfo },
 			replyComments: [],
 		};
@@ -157,16 +166,18 @@ function Post({ postInformations, className, isUpdateProgressReading = false }) 
 
 				<div className='post__user-status__name-and-post-time-status'>
 					<div data-testid='post__user-name' className='post__user-status__name'>
-						{postData.actor || 'Ẩn danh'}
+						{(!_.isEmpty(postData.createdBy) && postData?.createdBy?.fullName) || 'Ẩn danh'}
 					</div>
 					<div className='post__user-status__post-time-status'>
 						<span>{calculateDurationTime(postData.time || postData.updatedAt)}</span>
 						<>
-							{isUpdateProgressReading && (
-								<>
+							{postData.book && (
+								<div className='post__user-status__subtitle'>
+									<span>Cập nhật tiến độ đọc sách</span>
 									<div className='post__user-status__post-time-status__online-dot'></div>
-									<span style={{ color: '#656773' }}>Cập nhật tiến độ đọc sách</span>
-								</>
+									<span>Xếp hạng</span>
+									<ReactRating readonly={true} initialRating={4} />
+								</div>
 							)}
 						</>
 					</div>
@@ -196,10 +207,21 @@ function Post({ postInformations, className, isUpdateProgressReading = false }) 
 			{postData.book && <PostBook data={{ ...postData.book, bookLibrary: postData.bookLibrary }} />}
 
 			<GridImage images={postData.image} id={postData.id} />
-			{postData?.image?.length === 0 && !_.isEmpty(postData.preview) && (
-				<div onClick={() => directUrl(postInformations.preview.url)}>
-					<PreviewLink isFetching={false} urlData={postInformations.preview} />
-				</div>
+			{postData?.image?.length === 0 && !_.isEmpty(postData?.preview) && (
+				<>
+					{videoId ? (
+						<iframe
+							className='post__video-youtube'
+							src={`//www.youtube.com/embed/${videoId}`}
+							frameBorder={0}
+							allowFullScreen={true}
+						></iframe>
+					) : (
+						<div onClick={() => directUrl(postInformations.preview.url)}>
+							<PreviewLink isFetching={false} urlData={postInformations.preview} />
+						</div>
+					)}
+				</>
 			)}
 			<PostActionBar postData={postData} handleLikeAction={handleLikeAction} />
 
@@ -248,7 +270,7 @@ function Post({ postInformations, className, isUpdateProgressReading = false }) 
 
 				return (
 					<CommentEditor
-						key={`editor-${comment.activityId}-${index}`}
+						key={`editor-${comment.minipostId}-${index}`}
 						userInfo={userInfo}
 						postData={postData}
 						onCreateComment={onCreateComment}
@@ -274,7 +296,6 @@ Post.propTypes = {
 	postInformations: PropTypes.object,
 	likeAction: PropTypes.func,
 	className: PropTypes.string,
-	isUpdateProgressReading: PropTypes.bool,
 };
 
 export default Post;

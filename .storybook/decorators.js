@@ -34,7 +34,6 @@ export const withStore = (StoryFn, { parameters }) => {
 		reducer: rootReducer,
 		preloadedState: parameters.store?.initialState, // if undefined, just use default state from reducers
 	});
-
 	return (
 		<Provider store={store}>
 			<StoryFn />
