@@ -7,6 +7,7 @@ import GroupShortcuts from './components/group-shortcuts';
 import { useFetchQuoteRandom } from 'api/quote.hooks';
 import _ from 'lodash';
 import { useFetchBookInDefaultLibrary, useFetchStatsReadingBooks } from 'api/library.hook';
+import { Link } from 'react-router-dom';
 
 const Sidebar = () => {
 	const { quoteRandom } = useFetchQuoteRandom();
@@ -14,7 +15,6 @@ const Sidebar = () => {
 	const { bookData } = useFetchBookInDefaultLibrary(1, 10, fiterBook);
 	const { readingData } = useFetchStatsReadingBooks();
 
-	console.log(readingData);
 	return (
 		<div className='sidebar'>
 			<GroupShortcuts />
@@ -34,20 +34,16 @@ const Sidebar = () => {
 				<h4 className='sidebar__block__title'>Giá sách</h4>
 				<div className='sidebar__block__content'>
 					<div className='personal-category__box'>
-						<div className='personal-category__item'>
-							<div className='personal-category__item__title'>Sách đang đọc</div>
-							<div className='personal-category__item__quantity'>02 cuốn</div>
-						</div>
-						<div className='personal-category__item'>
-							<div className='personal-category__item__title'>Sách đã đọc</div>
-							<div className='personal-category__item__quantity'>400 cuốn</div>
-						</div>
-						<div className='personal-category__item'>
-							<div className='personal-category__item__title'>Sách muốn đọc</div>
-							<div className='personal-category__item__quantity'>20 cuốn</div>
-						</div>
+						{readingData.map(item => (
+							<div key={item.value} className='personal-category__item'>
+								<div className='personal-category__item__title'>{item.name}</div>
+								<div className='personal-category__item__quantity'>{item.quantity} cuốn</div>
+							</div>
+						))}
 					</div>
-					<button className='sidebar__view-more-btn--blue'>Xem thêm</button>
+					<Link to='/shelves' className='sidebar__view-more-btn--blue'>
+						Xem thêm
+					</Link>
 				</div>
 			</div>
 			<ReadingBook />
