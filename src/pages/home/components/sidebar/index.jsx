@@ -6,10 +6,15 @@ import ReadChallenge from 'shared/read-challenge';
 import GroupShortcuts from './components/group-shortcuts';
 import { useFetchQuoteRandom } from 'api/quote.hooks';
 import _ from 'lodash';
+import { useFetchBookInDefaultLibrary, useFetchStatsReadingBooks } from 'api/library.hook';
 
 const Sidebar = () => {
 	const { quoteRandom } = useFetchQuoteRandom();
+	const fiterBook = JSON.stringify([{ operator: 'eq', value: 'wantToRead', property: 'defaultType' }]);
+	const { bookData } = useFetchBookInDefaultLibrary(1, 10, fiterBook);
+	const { readingData } = useFetchStatsReadingBooks();
 
+	console.log(readingData);
 	return (
 		<div className='sidebar'>
 			<GroupShortcuts />
@@ -45,8 +50,8 @@ const Sidebar = () => {
 					<button className='sidebar__view-more-btn--blue'>Xem thêm</button>
 				</div>
 			</div>
-			<ReadingBook bookData={{}} />
-			<TheBooksWantsToRead />
+			<ReadingBook />
+			<TheBooksWantsToRead list={bookData} />
 			<ReadChallenge />
 		</div>
 	);

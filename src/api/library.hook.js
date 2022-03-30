@@ -220,13 +220,6 @@ export const useFetchAuthLibraries = (current = 1, perPage = 10) => {
 
 			const fetchData = async () => {
 				try {
-					// 					const filter = [
-					// 						{ 'operator': 'eq', 'value': false, 'property': 'isDefault' },
-					// 						{ 'operator': 'eq', 'value': userInfo.id, 'property': 'createdBy' },
-					// 					];
-					//
-					// 					const query = generateQuery(1, 10, JSON.stringify(filter));
-					// const data = await dispatch(getLibraryList(query)).unwrap();
 					const data = await dispatch(getMyLibraryList()).unwrap();
 					const { rows } = data;
 
@@ -247,4 +240,46 @@ export const useFetchAuthLibraries = (current = 1, perPage = 10) => {
 	}, [retry, current, perPage, userInfo]);
 
 	return { status, retryRequest, statusLibraries };
+};
+
+export const useFetchBookInDefaultLibrary = (current = 1, perPage = 10, filter = '[]') => {
+	const [status, setStatus] = useState();
+	const [bookData, setBookData] = useState([]);
+	const [retry, setRetry] = useState(false);
+	const dispatch = useDispatch();
+
+	const retryRequest = useCallback(() => {
+		setRetry(prev => !prev);
+	}, [setRetry]);
+
+	useEffect(() => {
+		let isMount = true;
+		const fetchLibrary = async () => {
+			const query = generateQuery(current, perPage, filter);
+			try {
+				const data = await dispatch(getMyLibraryList(query)).unwrap();
+				const { rows, count } = data;
+				if (count > 0 && isMount) {
+					const { default: defaultLibraries } = rows;
+					const currentLibrary = defaultLibraries[0];
+					const bookData = !_.isEmpty(currentLibrary)
+						? currentLibrary.books.map(item => ({ ...item.book }))
+						: [];
+					setBookData(bookData);
+					setStatus(STATUS_SUCCESS);
+				}
+			} catch (err) {
+				const statusCode = err?.statusCode || 500;
+				setStatus(statusCode);
+			}
+		};
+
+		fetchLibrary();
+
+		return () => {
+			isMount = false;
+		};
+	}, [current, perPage, filter, retry]);
+
+	return { status, bookData, retryRequest };
 };
