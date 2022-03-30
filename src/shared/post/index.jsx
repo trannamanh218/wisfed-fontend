@@ -15,6 +15,7 @@ import PostBook from 'shared/post-book';
 import UserAvatar from 'shared/user-avatar';
 import './post.scss';
 import PreviewLink from 'shared/preview-link/PreviewLink';
+import { NotificationError } from 'helpers/Error';
 import ReactRating from 'shared/react-rating';
 
 function Post({ postInformations, className }) {
@@ -92,7 +93,8 @@ function Post({ postInformations, className }) {
 				setPostData(prev => ({ ...prev, usersComments, comments: prev.comments + 1 }));
 			})
 			.catch(err => {
-				return err;
+				NotificationError(err);
+				// return err;
 			});
 	};
 

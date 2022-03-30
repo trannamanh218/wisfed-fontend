@@ -6,7 +6,6 @@ import React, { useState, useEffect } from 'react';
 import { Modal } from 'react-bootstrap';
 import { useModal } from 'shared/hooks';
 import { getFriendList, addFollower, unFollower, unFriendRequest } from 'reducers/redux-utils/user';
-import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
 // import ConnectButtons from 'shared/connect-buttons';
 import UserAvatar from 'shared/user-avatar';
@@ -14,50 +13,71 @@ import Button from 'shared/button';
 import { Minus } from 'components/svg';
 import _ from 'lodash';
 import { changeToggle } from 'reducers/redux-utils/profile';
+import { NotificationError } from 'helpers/Error';
 
-const ModalFriend = ({ mutualFriends }) => {
+const ModalFriend = ({ friends, mutualFriends }) => {
 	const { modalOpen, setModalOpen, toggleModal } = useModal(false);
 	const { userInfo } = useSelector(state => state.auth);
 	const [getMyListFriend, setGetMyListFriend] = useState([]);
 	const changeTogglefalse = useSelector(state => state.profile.toggle);
 	const dispatch = useDispatch();
 
-	const unFolow = id => {
-		dispatch(unFollower(id)).unwrap();
-		const newArrFriend = getMyListFriend.map(item => {
-			if (item.userIdTwo === id) {
-				return { ...item, checkUnfollow: true, checkFolow: false };
+	const unFolow = async id => {
+		try {
+			await dispatch(unFollower(id)).unwrap();
+			const newArrFriend = getMyListFriend.map(item => {
+				if (item.userIdTwo === id) {
+					return { ...item, checkUnfollow: true, checkFolow: false };
+				}
+				return { ...item };
+			});
+			setGetMyListFriend(newArrFriend);
+			if (changeTogglefalse !== id) {
+				dispatch(changeToggle(id));
+			} else {
+				dispatch(changeToggle());
 			}
-			return { ...item };
-		});
-		setGetMyListFriend(newArrFriend);
+		} catch (err) {
+			NotificationError(err);
+		}
 	};
-	console.log(mutualFriends);
-	const addFolow = id => {
+
+	const addFolow = async id => {
 		const param = {
 			data: { userId: id },
 		};
-		dispatch(changeToggle(id));
-		dispatch(addFollower(param)).unwrap();
-		const newArrFriend = getMyListFriend.map(item => {
-			if (item.userIdTwo === id) {
-				return { ...item, checkFolow: true, checkUnfollow: false };
+		try {
+			await dispatch(addFollower(param)).unwrap();
+			const newArrFriend = getMyListFriend.map(item => {
+				if (item.userIdTwo === id) {
+					return { ...item, checkFolow: true, checkUnfollow: false };
+				}
+				return { ...item };
+			});
+			setGetMyListFriend(newArrFriend);
+			if (changeTogglefalse !== id) {
+				dispatch(changeToggle(id));
+			} else {
+				dispatch(changeToggle());
 			}
-			return { ...item };
-		});
-		setGetMyListFriend(newArrFriend);
+		} catch (err) {
+			NotificationError(err);
+		}
 	};
 
-	const handleUnFriend = id => {
-		dispatch(unFriendRequest(id)).unwrap();
-		const newArrFriend = getMyListFriend.map(item => {
-			if (item.userIdTwo === id) {
-				return { ...item, checkUnfriend: false };
-			}
-			return { ...item };
-		});
-
-		setGetMyListFriend(newArrFriend);
+	const handleUnFriend = async id => {
+		try {
+			await dispatch(unFriendRequest(id)).unwrap();
+			const newArrFriend = getMyListFriend.map(item => {
+				if (item.userIdTwo === id) {
+					return { ...item, checkUnfriend: false };
+				}
+				return { ...item };
+			});
+			setGetMyListFriend(newArrFriend);
+		} catch (err) {
+			NotificationError(err);
+		}
 	};
 
 	const renderButtonFollows = item => {
@@ -91,8 +111,8 @@ const ModalFriend = ({ mutualFriends }) => {
 				});
 				setGetMyListFriend(newArrFriend);
 			}
-		} catch {
-			toast.error('Lỗi hệ thống');
+		} catch (err) {
+			NotificationError(err);
 		}
 	}, [userInfo, dispatch, changeTogglefalse]);
 
@@ -104,8 +124,8 @@ const ModalFriend = ({ mutualFriends }) => {
 				}}
 				className='personal-info__item'
 			>
-				<span className='number'>{mutualFriends}</span>
-				<span>Bạn bè</span>
+				<span className='number'>{friends}</span>
+				<span>Bạn bè ({mutualFriends})</span>
 			</li>
 			<Modal size='lg' className='modalFollowers__container__main' show={modalOpen} onHide={toggleModal}>
 				<Modal.Body className='modalFollowers__container'>
@@ -169,6 +189,7 @@ const ModalFriend = ({ mutualFriends }) => {
 	);
 };
 ModalFriend.propTypes = {
-	following: PropTypes.number,
+	friends: PropTypes.number,
+	mutualFriends: PropTypes.number,
 };
 export default ModalFriend;

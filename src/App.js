@@ -23,6 +23,7 @@ import ChooseTopic from 'pages/choose-topic';
 import Direct from 'pages/choose-topic/DirectPage';
 import PropTypes from 'prop-types';
 import NotFound from 'pages/not-found';
+import { NotificationError } from 'helpers/Error';
 import ReadingSummary from 'pages/reading-summary';
 import ReadingTarget from 'pages/reading-target';
 import ForgetPassWordAdminComponet from 'pages/foget-password/component-admin/ForgotAdmin';
@@ -36,11 +37,9 @@ function App({ children }) {
 		const params = {
 			email: 'register@gmail.com',
 			password: '12345678',
-			// email: 'nguyenhien@gmail.com',
+			// email: 'admin@gmail.com',
 			// password: '123456',
 			// email: 'thuyheobeo@gmail.com',
-			// password: '12345678',
-			// email: 'register@gmail.com',
 			// password: '12345678',
 		};
 
@@ -51,6 +50,7 @@ function App({ children }) {
 		try {
 			await dispatch(login(params)).unwrap();
 		} catch (err) {
+			NotificationError(err);
 			const statusCode = err?.statusCode || 500;
 			return statusCode;
 		}

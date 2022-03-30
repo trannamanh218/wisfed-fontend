@@ -41,7 +41,7 @@ const QuoteCard = ({ data, isDetail, likedArray }) => {
 			setIsLiked(response.liked);
 			setLikeNumber(response.quote?.like);
 		} catch {
-			// toast.error('Lỗi hệ thống');
+			toast.error('Lỗi hệ thống');
 		}
 	};
 

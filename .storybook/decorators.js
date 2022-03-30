@@ -6,7 +6,6 @@ import { configureStore } from '@reduxjs/toolkit';
 import rootReducer from '../src/reducers/redux-utils';
 
 export const withRouter = (StoryFn, { parameters: { deeplink } }) => {
-
 	if (!deeplink) {
 		return (
 			<BrowserRouter>

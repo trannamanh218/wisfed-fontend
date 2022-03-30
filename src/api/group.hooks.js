@@ -2,6 +2,7 @@ import { STATUS_IDLE, STATUS_LOADING, STATUS_SUCCESS } from 'constants';
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { getGroupList } from 'reducers/redux-utils/group';
+import { NotificationError } from 'helpers/Error';
 
 export const useFetchGroups = (current = 1, perPage = 10, filter = '[]') => {
 	const [status, setStatus] = useState(STATUS_IDLE);
@@ -24,6 +25,7 @@ export const useFetchGroups = (current = 1, perPage = 10, filter = '[]') => {
 					setGroups(data);
 					setStatus(STATUS_SUCCESS);
 				} catch (err) {
+					NotificationError(err);
 					const statusCode = err?.statusCode || 500;
 					setStatus(statusCode);
 				}

@@ -36,7 +36,7 @@ const PersonalInfo = ({ userInfo }) => {
 	const handleSettings = () => {
 		setSettingsVisible(prev => !prev);
 	};
-	console.log(userInfo);
+
 	const handleDrop = useCallback(async (acceptedFile, option) => {
 		if (!_.isEmpty(acceptedFile)) {
 			try {
@@ -58,7 +58,6 @@ const PersonalInfo = ({ userInfo }) => {
 			}
 		}
 	});
-
 	return (
 		<div className='personal-info'>
 			<div className='personal-info__wallpaper' style={{ backgroundImage: `url(${userInfo.backgroundImage})` }}>
@@ -146,7 +145,7 @@ const PersonalInfo = ({ userInfo }) => {
 							</li>
 							<ModalFollowers follower={userInfo.follower} />
 							<ModalWatching following={userInfo.following} />
-							<ModalFriend mutualFriends={userInfo?.mutualFriends} />
+							<ModalFriend friends={userInfo.friends} mutualFriends={userInfo.mutualFriends} />
 						</ul>
 						{userInfo.descriptions && <ReadMore text={userInfo.descriptions} />}
 					</div>

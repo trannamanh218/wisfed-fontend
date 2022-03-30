@@ -5,6 +5,7 @@ import { generateQuery } from 'helpers/Common';
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { getActivityList } from 'reducers/redux-utils/activity';
+import { NotificationError } from 'helpers/Error';
 
 export const useFetchActivities = (current = 1, perPage = 10, filter = '[]', isNewPost) => {
 	const [status, setStatus] = useState(STATUS_IDLE);
@@ -26,6 +27,7 @@ export const useFetchActivities = (current = 1, perPage = 10, filter = '[]', isN
 				setActivity(data);
 				setStatus(STATUS_SUCCESS);
 			} catch (err) {
+				NotificationError(err);
 				const statusCode = err?.statusCode || 500;
 				setStatus(statusCode);
 			}

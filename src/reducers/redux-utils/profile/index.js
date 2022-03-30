@@ -4,7 +4,7 @@ import Request from 'helpers/Request';
 const profileSlice = createSlice({
 	name: 'profile',
 	initialState: {
-		toggle: null,
+		toggle: '',
 	},
 	reducers: {
 		changeToggle: (state, action) => {
