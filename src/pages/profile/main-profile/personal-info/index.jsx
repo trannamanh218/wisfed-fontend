@@ -58,7 +58,7 @@ const PersonalInfo = ({ userInfo }) => {
 			}
 		}
 	});
-
+	console.log(userInfo);
 	return (
 		<div className='personal-info'>
 			<div className='personal-info__wallpaper' style={{ backgroundImage: `url(${userInfo.backgroundImage})` }}>
@@ -144,41 +144,12 @@ const PersonalInfo = ({ userInfo }) => {
 								<span className='number'>{userInfo.posts}</span>
 								<span>Bài viết</span>
 							</li>
-							<li className='personal-info__item'>
-								<span className='number'>{userInfo.follower}</span>
-								<span>Người theo dõi</span>
-							</li>
-							<li className='personal-info__item'>
-								<span className='number'>{userInfo.following}</span>
-								<span>Đang theo dõi</span>
-							</li>
-							<li className='personal-info__item'>
-								<span className='number'>{userInfo.friends}</span>
-								<span>Bạn bè ({userInfo.mutualFriends} bạn chung)</span>
-							</li>
+							<ModalFollowers follower={userInfo.follower} />
+							<ModalWatching following={userInfo.following} />
+							<ModalFriend friends={userInfo.friends} mutualFriends={userInfo.mutualFriends} />
 						</ul>
 						{userInfo.descriptions && <ReadMore text={userInfo.descriptions} />}
 					</div>
-					<span>@phuonganfa-flip-horizontal</span>
-					<ul className='personal-info__list'>
-						<li className='personal-info__item'>
-							<span className='number'>825</span>
-							<span>Bài viết</span>
-						</li>
-						<ModalFollowers />
-						<ModalWatching />
-						<ModalFriend />
-					</ul>
-					<ReadMore
-						text={`	When literature student Anastasia Steele goes to house of interview young entrepreneur Christian
-						Grey, she is encounters a man who is beautiful, brilliant, and only one intimidating. The
-						unworldly housing When literature student Anastasia Steele goes to house of interview young
-						entrepreneur Christian Grey, she is encounters a man who is beautiful, brilliant, and only one
-						en literature student Anastasia Steele goes to house of
-						interview young entrepreneur Christian Grey, she is encounters a man who is beautiful,
-						brilliant, and only one intimidating.
-					`}
-					/>
 				</div>
 			</div>
 

@@ -1,7 +1,7 @@
 import { CloseX } from 'components/svg';
 import SearchField from 'shared/search-field';
 // import AuthorCard from 'shared/author-card';
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import React, { useState, useEffect } from 'react';
 import { Modal } from 'react-bootstrap';
 import { useModal } from 'shared/hooks';
@@ -15,7 +15,7 @@ import _ from 'lodash';
 import { changeToggle } from 'reducers/redux-utils/profile';
 import { NotificationError } from 'helpers/Error';
 
-const ModalFriend = () => {
+const ModalFriend = ({ friends, mutualFriends }) => {
 	const { modalOpen, setModalOpen, toggleModal } = useModal(false);
 	const { userInfo } = useSelector(state => state.auth);
 	const [getMyListFriend, setGetMyListFriend] = useState([]);
@@ -124,8 +124,8 @@ const ModalFriend = () => {
 				}}
 				className='personal-info__item'
 			>
-				<span className='number'>825</span>
-				<span>Bạn bè (20 bạn chung)</span>
+				<span className='number'>{friends}</span>
+				<span>Bạn bè ({mutualFriends})</span>
 			</li>
 			<Modal size='lg' className='modalFollowers__container__main' show={modalOpen} onHide={toggleModal}>
 				<Modal.Body className='modalFollowers__container'>
@@ -188,5 +188,8 @@ const ModalFriend = () => {
 		</>
 	);
 };
-ModalFriend.propTypes = {};
+ModalFriend.propTypes = {
+	friends: PropTypes.number,
+	mutualFriends: PropTypes.number,
+};
 export default ModalFriend;
