@@ -20,6 +20,10 @@ import PropTypes from 'prop-types';
 import { Modal, ModalBody } from 'react-bootstrap';
 import MultipleRadio from 'shared/multiple-radio';
 import { useModal } from 'shared/hooks';
+import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
+import { addToFavoriteCategory } from 'reducers/redux-utils/user';
+import { NotificationError } from 'helpers/Error';
 
 const MainCategoryDetail = ({ handleViewBookDetail }) => {
 	const { id } = useParams();
@@ -33,6 +37,8 @@ const MainCategoryDetail = ({ handleViewBookDetail }) => {
 	const { modalOpen, setModalOpen, toggleModal } = useModal(false);
 	const { books: searchResults } = useFetchBooks(1, 10, filter);
 	const navigate = useNavigate();
+	const { userInfo } = useSelector(state => state.auth);
+	const dispatch = useDispatch();
 
 	const checkOptions = [
 		{
@@ -66,8 +72,46 @@ const MainCategoryDetail = ({ handleViewBookDetail }) => {
 		}
 	}, [categoryInfo]);
 
-	const handleLikeCategory = () => {
-		setIsLike(!isLike);
+	useEffect(() => {
+		if (!_.isEmpty(userInfo)) {
+			const { favoriteCategory } = userInfo;
+			const index = favoriteCategory.findIndex(item => item.categoryId === parseInt(id));
+			if (index !== -1) {
+				setIsLike(true);
+			} else {
+				setIsLike(false);
+			}
+		}
+	}, [userInfo, id]);
+
+	const handleLikeCategory = async () => {
+		const categoryId = parseInt(id);
+		if (_.isEmpty(userInfo)) {
+			toast.warn('Vui lòng đăng nhập để sử dụng tính năng này');
+		} else {
+			let favoriteCategory = [];
+			if (isLike) {
+				favoriteCategory = userInfo.favoriteCategory.forEach(item => {
+					if (item.categoryId !== categoryId) {
+						favoriteCategory.push(item.categoryId);
+					}
+				});
+			} else {
+				favoriteCategory = userInfo.favoriteCategory.map(item => item.categoryId);
+				favoriteCategory.push(categoryId);
+			}
+
+			try {
+				const params = {
+					id: 'bfdb3971-de4c-4c2b-bbbe-fbb36770031a',
+					favoriteCategory,
+				};
+				await dispatch(addToFavoriteCategory(params));
+				setIsLike(like => !like);
+			} catch (err) {
+				NotificationError(err);
+			}
+		}
 	};
 
 	const handleViewMore = () => {

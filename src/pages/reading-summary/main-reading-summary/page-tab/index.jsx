@@ -93,7 +93,7 @@ const PageTab = () => {
 						left: 20,
 						bottom: 5,
 					}}
-					barSize={30}
+					barSize={36}
 				>
 					<XAxis
 						stroke='#6E7191'
@@ -118,7 +118,7 @@ const PageTab = () => {
 				</BarChart>
 			</div>
 
-			<button className='btn reading-summary-book-tab__btn'>Chia sẻ</button>
+			<button className='btn reading-summary-page-tab__btn'>Chia sẻ</button>
 		</div>
 	);
 };
