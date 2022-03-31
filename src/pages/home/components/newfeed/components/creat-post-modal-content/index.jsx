@@ -25,6 +25,7 @@ import { usePrevious } from 'shared/hooks';
 import { addBookToDefaultLibrary } from 'reducers/redux-utils/library';
 import { setting } from './settings';
 import { NotificationError } from 'helpers/Error';
+import { uploadMultiFile } from 'reducers/redux-utils/common';
 
 function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option, onChangeOption, onChangeNewPost }) {
 	const [shareMode, setShareMode] = useState({ value: 'public', title: 'Mọi người', icon: <WorldNet /> });
@@ -37,7 +38,6 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 		'addAuthor': [],
 		'addFriends': [],
 		'addCategory': [],
-		'addImages': [],
 	});
 	const [fetchingUrlInfo, setFetchingUrlInfo] = useState(false);
 	const [hasUrl, setHasUrl] = useState(false);
@@ -46,6 +46,7 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 	const [oldUrlAddedArray, setOldUrlAddedArray] = useState([]);
 	const [status, setStatus] = useState(STATUS_IDLE);
 	const [showUpload, setShowUpload] = useState(false);
+	const [imagesUpload, setImagesUpload] = useState([]);
 	const [validationInput, setValidationInput] = useState();
 	const dispatch = useDispatch();
 	const textFieldEdit = useRef(null);
@@ -87,12 +88,6 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 			document.removeEventListener('input', handlePlaceholder);
 		};
 	}, [showTextFieldEditPlaceholder]);
-
-	useEffect(() => {
-		if (!_.isEmpty(option)) {
-			setShowMainModal(false);
-		}
-	}, [option]);
 
 	const detectUrl = useCallback(
 		_.debounce(() => {
@@ -203,13 +198,18 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 	};
 
 	const deleteImage = imageIndex => {
-		const newImagesArray = [...taggedData.addImages];
+		const newImagesArray = [...imagesUpload];
 		newImagesArray.splice(imageIndex, 1);
-		setTaggedData(prev => ({ ...prev, 'addImages': newImagesArray }));
 		if (!newImagesArray.length) {
 			backToMainModal();
 			addOptionsToPost({ value: 'addImages', title: 'chỉnh sửa ảnh', icon: <Image />, message: '' });
 		}
+		setImagesUpload(newImagesArray);
+	};
+
+	const removeAllImages = () => {
+		setImagesUpload([]);
+		setShowUpload(false);
 	};
 
 	const handleAddToPost = data => {
@@ -243,7 +243,7 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 		}
 	};
 
-	const generateData = () => {
+	const generateData = async () => {
 		const params = {
 			msg: textFieldEdit?.current?.innerHTML,
 			mentionsUser: [],
@@ -255,12 +255,23 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 
 		params.mentionsUser = taggedData.addFriends.length ? taggedData.addFriends.map(item => item.id) : [];
 		params.mentionsAuthor = taggedData.addAuthor.length ? taggedData.addAuthor.map(item => item.id) : [];
-		params.image = taggedData.addImages.length ? taggedData.addImages : [];
+		if (imagesUpload.length) {
+			try {
+				const imagesUploaded = await dispatch(uploadMultiFile(imagesUpload)).unwrap();
+				const imagesArray = [];
+				imagesUploaded.forEach(item => {
+					imagesArray.push(item.streamPath);
+				});
+				params.image = imagesArray;
+			} catch {
+				toast.error('Đăng ảnh không thành công');
+				params.image = {};
+			}
+		}
 		params.mentionsCategory = taggedData.addCategory.length ? taggedData.addCategory.map(item => item.id) : [];
 		if (!_.isEmpty(taggedData.addBook)) {
 			params.bookId = taggedData.addBook.id;
 		}
-
 		return params;
 	};
 
@@ -296,7 +307,7 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 	};
 
 	const onCreatePost = async () => {
-		const params = generateData();
+		const params = await generateData();
 		// book, author , topic is required
 		if ((params.bookId || params.mentionsAuthor.length || params.mentionsCategory.length) && params.msg) {
 			setStatus(STATUS_LOADING);
@@ -440,9 +451,9 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 							{showUpload && (
 								<UploadImage
 									addOptionsToPost={addOptionsToPost}
-									optionList={optionList}
-									handleAddToPost={handleAddToPost}
-									taggedData={taggedData}
+									images={imagesUpload}
+									setImages={setImagesUpload}
+									removeAllImages={removeAllImages}
 								/>
 							)}
 							{hasUrl && !showUpload && (
@@ -508,7 +519,7 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 					taggedData={taggedData}
 					removeTaggedItem={removeTaggedItem}
 					addOptionsToPost={addOptionsToPost}
-					showMainModal={showMainModal}
+					images={imagesUpload}
 					taggedDataPrevious={taggedDataPrevious}
 					handleValidationInput={handleValidationInput}
 				/>

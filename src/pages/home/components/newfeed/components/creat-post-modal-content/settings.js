@@ -27,16 +27,10 @@ export const setting = {
 			icon: <GroupIcon className='item-add-to-post-svg' />,
 			message: 'Không tìm thấy bạn bè',
 		},
-		{
-			value: 'addImages',
-			title: 'chỉnh sửa ảnh',
-			icon: <Image />,
-			message: '',
-		},
 	],
 	shareModeList: [
 		{ value: 'public', title: 'Mọi người', icon: <WorldNet /> },
-		{ value: 'friends', title: 'Bạn bè', icon: <GroupIcon /> },
+		{ value: 'friends', title: 'Bạn bè', icon: <GroupIcon className='group-icon-svg' /> },
 		{ value: 'followers', title: 'Người Follow', icon: <PodCast /> },
 		{ value: 'private', title: 'Chỉ mình tôi', icon: <Lock /> },
 	],

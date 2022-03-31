@@ -135,13 +135,13 @@
 		transition: all 0.1s ease-in;
 	}
 	svg {
-		width: 14px;
-		height: 14px;
+		width: 16px;
+		height: 16px;
 		margin-right: 8px;
 	}
 	.group-icon-svg {
 		path {
-			stroke: #2d2c42;
+			stroke: $ash;
 		}
 	}
 }
@@ -158,12 +158,6 @@
 	i {
 		color: #4e4b66;
 		margin-left: 12px;
-	}
-
-	svg {
-		path {
-			stroke: $ash;
-		}
 	}
 	&.show {
 		display: block;
@@ -285,7 +279,7 @@
 
 .creat-post-modal-content__main__body__image-over {
 	position: absolute;
-	inset: 0 0 1px 0;
+	inset: 1px;
 	background-color: rgba(0, 0, 0, 0.4);
 	display: flex;
 	justify-content: center;
