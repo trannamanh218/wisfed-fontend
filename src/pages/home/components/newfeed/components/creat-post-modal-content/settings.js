@@ -1,4 +1,4 @@
-import { BookIcon, CategoryIcon, Feather, GroupIcon, Image, Lock, PodCast, WorldNet } from 'components/svg';
+import { BookIcon, CategoryIcon, Feather, GroupIcon, Lock, PodCast, WorldNet } from 'components/svg';
 
 export const setting = {
 	optionList: [

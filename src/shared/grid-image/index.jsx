@@ -99,7 +99,7 @@ GridImage.defaultProps = {
 
 GridImage.propTypes = {
 	images: PropTypes.array,
-	id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+	inPost: PropTypes.bool,
 };
 
 export default GridImage;

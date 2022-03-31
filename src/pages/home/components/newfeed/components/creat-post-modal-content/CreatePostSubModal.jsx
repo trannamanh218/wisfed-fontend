@@ -8,22 +8,26 @@ import TaggedList from './TaggedList';
 import './style.scss';
 import { useDispatch } from 'react-redux';
 import { checkBookInLibraries } from 'reducers/redux-utils/library';
+import { getSuggestionForPost } from 'reducers/redux-utils/activity';
+import { useState } from 'react';
+import { NotificationError } from 'helpers/Error';
 
 function CreatPostSubModal(props) {
 	const {
 		option,
 		backToMainModal,
 		deleteImage,
-		fetchSuggestion,
-		suggestionData,
 		handleAddToPost,
 		taggedData,
 		removeTaggedItem,
-		addOptionsToPost,
 		images,
 		taggedDataPrevious,
 		handleValidationInput,
+		userInfo,
 	} = props;
+
+	const [suggestionData, setSuggestionData] = useState([]);
+
 	const inputRef = useRef();
 	const dispatch = useDispatch();
 
@@ -36,6 +40,16 @@ function CreatPostSubModal(props) {
 	useEffect(() => {
 		fetchSuggestion('', option);
 	}, [option]);
+
+	const fetchSuggestion = async (input, option) => {
+		try {
+			const data = await dispatch(getSuggestionForPost({ input, option, userInfo })).unwrap();
+			setSuggestionData(data.rows);
+		} catch (err) {
+			NotificationError(err);
+			return err;
+		}
+	};
 
 	const debounceSearch = useCallback(_.debounce(fetchSuggestion, 1000), []);
 
@@ -64,13 +78,6 @@ function CreatPostSubModal(props) {
 				}
 			}
 		}
-
-		if (option.value === 'modifyImages') {
-			addOptionsToPost({
-				value: 'addImages',
-				title: 'chỉnh sửa ảnh',
-			});
-		}
 		backToMainModal();
 		inputRef.current.value = '';
 	};
@@ -81,11 +88,7 @@ function CreatPostSubModal(props) {
 				<button className='creat-post-modal-content__substitute__back' onClick={handleComplete}>
 					<BackArrow />
 				</button>
-				<h5>
-					{option.value === 'modifyImages'
-						? `${option.title.charAt(0).toUpperCase() + option.title.slice(1)}`
-						: `Thêm ${option.title} vào bài viết`}
-				</h5>
+				<h5>{option.value === 'modifyImages' ? option.title : `Thêm ${option.title} vào bài viết`}</h5>
 				<button style={{ visibility: 'hidden' }} className='creat-post-modal-content__substitute__back'>
 					<BackArrow />
 				</button>
@@ -96,8 +99,8 @@ function CreatPostSubModal(props) {
 					<div className='creat-post-modal-content__substitute__body__modifyImages-container'>
 						<div
 							className={classNames('creat-post-modal-content__substitute__body__modifyImages-box', {
-								'one-or-two-images': taggedData.addImages.length <= 2,
-								'more-two-images': taggedData.addImages.length > 2,
+								'one-or-two-images': images.length <= 2,
+								'more-two-images': images.length > 2,
 							})}
 						>
 							{images.map((image, index) => (

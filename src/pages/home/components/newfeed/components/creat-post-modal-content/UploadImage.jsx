@@ -31,7 +31,7 @@ const UploadImage = props => {
 									e.stopPropagation();
 									addOptionsToPost({
 										value: 'modifyImages',
-										title: 'chỉnh sửa ảnh',
+										title: 'Chỉnh sửa ảnh',
 									});
 								}}
 							>
@@ -74,9 +74,10 @@ const UploadImage = props => {
 };
 
 UploadImage.propTypes = {
-	taggedData: PropTypes.object,
-	handleAddToPost: PropTypes.func,
 	addOptionsToPost: PropTypes.func,
+	images: PropTypes.array,
+	setImages: PropTypes.func,
+	removeAllImages: PropTypes.func,
 };
 
 export default UploadImage;

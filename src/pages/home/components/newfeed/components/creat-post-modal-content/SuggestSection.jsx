@@ -9,7 +9,7 @@ const SuggestSection = props => {
 	const { option, list, handleAddToPost } = props;
 	const { userInfo } = useSelector(state => state.auth);
 
-	if (list && list.length > 0) {
+	if (list.length > 0) {
 		switch (option.value) {
 			case 'addBook': {
 				return <BookSlider list={list} handleViewBookDetail={handleAddToPost} />;

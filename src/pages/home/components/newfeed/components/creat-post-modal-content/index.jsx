@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-import { createActivity, getSuggestionForPost } from 'reducers/redux-utils/activity';
+import { createActivity } from 'reducers/redux-utils/activity';
 import PostEditBook from 'shared/post-edit-book';
 import OptionsPost from './OptionsPost';
 import ShareModeComponent from './ShareModeComponent';
@@ -31,8 +31,6 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 	const [shareMode, setShareMode] = useState({ value: 'public', title: 'Mọi người', icon: <WorldNet /> });
 	const [showTextFieldEditPlaceholder, setShowTextFieldEditPlaceholder] = useState(true);
 	const [showMainModal, setShowMainModal] = useState(showModalCreatPost);
-	const [suggestionData, setSuggestionData] = useState([]);
-	const mentionData = useRef({});
 	const [taggedData, setTaggedData] = useState({
 		'addBook': {},
 		'addAuthor': [],
@@ -61,12 +59,6 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 
 	useEffect(() => {
 		textFieldEdit.current.focus();
-
-		// const form = document.getElementById('formCreatePost');
-		// console.log(form);
-		// if (form) {
-		// 	form.addEventListener();
-		// }
 	}, []);
 
 	useEffect(() => {
@@ -170,31 +162,26 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 		}
 	};
 
-	const fetchSuggestion = async (input, option) => {
-		try {
-			const data = await dispatch(getSuggestionForPost({ input, option, userInfo })).unwrap();
-			setSuggestionData(data.rows);
-		} catch (err) {
-			NotificationError(err);
-			return err;
-		}
-	};
-
 	const backToMainModal = () => {
 		setShowMainModal(true);
 	};
 
 	const addOptionsToPost = param => {
-		onChangeOption(param);
-		setShowMainModal(false);
-		if (param.value === 'modifyImages') {
-			setShowMainModal(true);
+		if (imagesUpload.length > 0 && param.value === 'addBook') {
+			toast.warning('Không thể kết hợp đồng thời thêm ảnh và sách');
+		} else {
+			onChangeOption(param);
+			setShowMainModal(false);
 		}
 	};
 
 	const handleOpenUploadImage = () => {
-		setShowUpload(true);
-		addOptionsToPost({ value: 'addImages', title: 'chỉnh sửa ảnh', icon: <Image />, message: '' });
+		if (_.isEmpty(taggedData.addBook)) {
+			setShowUpload(!showUpload);
+			addOptionsToPost({ value: 'addImages', title: 'chỉnh sửa ảnh', icon: <Image />, message: '' });
+		} else {
+			toast.warning('Không thể kết hợp đồng thời thêm ảnh và sách');
+		}
 	};
 
 	const deleteImage = imageIndex => {
@@ -337,14 +324,12 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 
 	const checkActive = () => {
 		let isActive = false;
-
 		if (
 			(!_.isEmpty(taggedData.addBook) || taggedData.addAuthor.length || taggedData.addCategory.length) &&
 			textFieldEdit.current?.innerText
 		) {
 			isActive = true;
 		}
-
 		return isActive && !validationInput;
 	};
 
@@ -474,10 +459,14 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 									list={optionList}
 									addOptionsToPost={addOptionsToPost}
 									taggedData={taggedData}
+									images={imagesUpload}
 								/>
 								<label
 									htmlFor='image-upload'
-									className='creat-post-modal-content__main__options__item-add-to-post'
+									className={classNames('creat-post-modal-content__main__options__item-add-to-post', {
+										'active': imagesUpload.length > 0 && _.isEmpty(taggedData.addBook),
+										'disabled': !_.isEmpty(taggedData.addBook),
+									})}
 									onClick={handleOpenUploadImage}
 								>
 									<Image />
@@ -511,17 +500,13 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 					option={option}
 					backToMainModal={backToMainModal}
 					deleteImage={deleteImage}
-					optionList={optionList}
-					fetchSuggestion={fetchSuggestion}
-					suggestionData={suggestionData}
 					handleAddToPost={handleAddToPost}
-					mentionData={mentionData.current}
 					taggedData={taggedData}
 					removeTaggedItem={removeTaggedItem}
-					addOptionsToPost={addOptionsToPost}
 					images={imagesUpload}
 					taggedDataPrevious={taggedDataPrevious}
 					handleValidationInput={handleValidationInput}
+					userInfo={userInfo}
 				/>
 			</div>
 		</div>

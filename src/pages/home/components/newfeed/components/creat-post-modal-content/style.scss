@@ -288,6 +288,7 @@
 	font-size: 36px;
 	font-weight: 700;
 	letter-spacing: 5px;
+	user-select: none;
 }
 
 .creat-post-modal-content__main__body__image-options {
@@ -389,7 +390,6 @@
 
 	&.active {
 		background-color: $primary;
-
 		svg {
 			path {
 				fill: $white-off;
@@ -399,6 +399,16 @@
 			path {
 				fill: none;
 				stroke: $white-off;
+			}
+		}
+	}
+
+	&.disabled {
+		background-color: white;
+		cursor: no-drop;
+		svg {
+			path {
+				fill: #dad8d8;
 			}
 		}
 	}
