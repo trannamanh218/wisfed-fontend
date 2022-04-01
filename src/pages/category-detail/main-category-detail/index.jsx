@@ -20,6 +20,9 @@ import PropTypes from 'prop-types';
 import { Modal, ModalBody } from 'react-bootstrap';
 import MultipleRadio from 'shared/multiple-radio';
 import { useModal } from 'shared/hooks';
+import { useDispatch, useSelector } from 'react-redux';
+import { getLikeCategory } from 'reducers/redux-utils/user';
+import { toast } from 'react-toastify';
 
 const MainCategoryDetail = ({ handleViewBookDetail }) => {
 	const { id } = useParams();
@@ -33,6 +36,45 @@ const MainCategoryDetail = ({ handleViewBookDetail }) => {
 	const { modalOpen, setModalOpen, toggleModal } = useModal(false);
 	const { books: searchResults } = useFetchBooks(1, 10, filter);
 	const navigate = useNavigate();
+	const dispatch = useDispatch();
+	const { userInfo } = useSelector(state => state.auth);
+	const [addFavorite, setAddFavorite] = useState([]);
+	const favoriteCategoryId = userInfo?.favoriteCategory?.map(item => {
+		return item.categoryId;
+	});
+	useEffect(() => {
+		if (favoriteCategoryId) {
+			setAddFavorite(favoriteCategoryId);
+		}
+	}, []);
+
+	const handleChange = () => {
+		const keyData = Number(id);
+		if (addFavorite.indexOf(keyData) !== -1) {
+			addFavorite.splice(addFavorite.indexOf(keyData), 1);
+			setIsLike(!isLike);
+		} else {
+			const newFavorite = [...addFavorite, keyData];
+			setAddFavorite(newFavorite);
+			setIsLike(!isLike);
+		}
+	};
+
+	const updateUser = async () => {
+		try {
+			const params = {
+				id: userInfo.id,
+				favoriteCategory: addFavorite,
+			};
+			await dispatch(getLikeCategory(params));
+		} catch {
+			toast.error('Lỗi hệ thống');
+		}
+	};
+
+	useEffect(() => {
+		updateUser();
+	}, [addFavorite]);
 
 	const checkOptions = [
 		{
@@ -66,9 +108,9 @@ const MainCategoryDetail = ({ handleViewBookDetail }) => {
 		}
 	}, [categoryInfo]);
 
-	const handleLikeCategory = () => {
-		setIsLike(!isLike);
-	};
+	// const handleLikeCategory = () => {
+	// 	setIsLike(!isLike);
+	// };
 
 	const handleViewMore = () => {
 		const currentLength = bookList.length;
@@ -132,7 +174,7 @@ const MainCategoryDetail = ({ handleViewBookDetail }) => {
 				<Button
 					className={classNames('btn-like', { 'active': isLike })}
 					isOutline={true}
-					onClick={handleLikeCategory}
+					onClick={handleChange}
 				>
 					<span className='heart-icon'>
 						<Heart />

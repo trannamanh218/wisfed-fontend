@@ -35,17 +35,13 @@ function App({ children }) {
 
 	useEffect(() => {
 		const params = {
-			email: 'register@gmail.com',
+			email: 'hoangquanx98x@gmail.com',
 			password: '12345678',
-			// email: 'admin@gmail.com',
-			// password: '123456',
-			// email: 'thuyheobeo@gmail.com',
-			// password: '12345678',
 		};
 
 		fetchLogin(params);
 	}, []);
-
+	//
 	const fetchLogin = async params => {
 		try {
 			await dispatch(login(params)).unwrap();

@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import jwt_decode from 'jwt-decode';
 import {
 	authAPI,
 	forgotPasswordAPI,
@@ -7,6 +8,7 @@ import {
 	checkTokenResetPassword,
 	forgotPasswordAPIAdmin,
 	resetPasswordAPIAdmin,
+	checkUserInfoAPI,
 } from 'constants/apiURL';
 import Request from 'helpers/Request';
 import Storage from 'helpers/Storage';
@@ -53,6 +55,16 @@ export const forgotPassword = createAsyncThunk('auth/forgotPassword', async (par
 		return response;
 	} catch (err) {
 		return rejectWithValue(err.response);
+	}
+});
+
+export const getUserInfo = createAsyncThunk('auth/getUserInfo', async () => {
+	const accessToken = localStorage.getItem('accessToken');
+	if (accessToken !== null) {
+		const response = await Request.makeGet(checkApiToken());
+		return response;
+	} else {
+		return {};
 	}
 });
 
@@ -152,7 +164,17 @@ const authSlice = createSlice({
 			state.userInfo = action.payload;
 			state.error = {};
 		},
-		[forgotPasswordAdmin.rejected]: (state, action) => {
+		[getUserInfo.rejected]: (state, action) => {
+			state.isFetching = false;
+			state.userInfo = {};
+			state.error = action.payload;
+		},
+		[getUserInfo.fulfilled]: (state, action) => {
+			state.isFetching = false;
+			state.userInfo = action.payload;
+			state.error = {};
+		},
+		[getUserInfo.rejected]: (state, action) => {
 			state.isFetching = false;
 			state.userInfo = {};
 			state.error = action.payload;

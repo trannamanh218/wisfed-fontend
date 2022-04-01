@@ -3,7 +3,7 @@ import './chooseTopic.scss';
 import Logo from 'assets/images/Logo 2.png';
 import SearchField from 'shared/search-field';
 import { Form } from 'react-bootstrap';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { getCategoryList } from 'reducers/redux-utils/category';
 import { getLikeCategory } from 'reducers/redux-utils/user';
 import { toast } from 'react-toastify';
@@ -14,6 +14,7 @@ function ChooseTopic() {
 	const [addFavorite, setAddFavorite] = useState([]);
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
+	const { userInfo } = useSelector(state => state.auth);
 
 	const getListCategory = async () => {
 		const querry = {
@@ -27,7 +28,7 @@ function ChooseTopic() {
 	const updateUser = async () => {
 		try {
 			const params = {
-				id: 'bfdb3971-de4c-4c2b-bbbe-fbb36770031a',
+				id: userInfo.id,
 				favoriteCategory: addFavorite,
 			};
 			await dispatch(getLikeCategory(params));

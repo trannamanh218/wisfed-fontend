@@ -44,6 +44,7 @@ export const userAPI = '/api/v1/users';
 export const userDetailAPI = id => `/api/v1/users/${id}`;
 export const checkLikedAPI = '/api/v1/users/checkLiked';
 export const updateLikeCategory = id => `api/v1/users/${id}`;
+export const checkUserInfoAPI = '/api/v1/auth/jwt';
 
 // friend
 export const friendAPI = id => `/api/v1/users/${id}/listFriend`;

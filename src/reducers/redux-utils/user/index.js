@@ -122,7 +122,7 @@ export const getCheckLiked = createAsyncThunk('user/check liked', async (params,
 export const getLikeCategory = createAsyncThunk('user/updateLikeCategory', async (params, { rejectWithValue }) => {
 	const { id, ...restParams } = params;
 	try {
-		const response = await Request.makeGet(updateLikeCategory(id), restParams);
+		const response = await Request.makePatch(updateLikeCategory(id), restParams);
 		return response.data;
 	} catch (err) {
 		const error = JSON.parse(err.response);
