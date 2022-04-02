@@ -83,7 +83,7 @@ function App({ children }) {
 				<Route path='/quotes/me' element={<MyQuote />} />
 				<Route path='/quotes/detail/:id' element={<QuoteDetail />} />
 				<Route path='/profile' element={<Profile />} />
-				<Route path='/confirm-my-book' element={<ConfirmMyBook />} />
+				<Route path='/confirm-my-book/:bookId' element={<ConfirmMyBook />} />
 				<Route path='/login' element={<Login />} />
 				<Route path='/register' element={<Register />} />
 				<Route path='/forget-password' element={<ForgetPassWord />} />

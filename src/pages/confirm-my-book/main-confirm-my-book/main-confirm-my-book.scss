@@ -4,7 +4,7 @@
 	display: flex;
 	align-items: center;
 	gap: 36px;
-	button {
+	.back-btn {
 		padding: 8px;
 		border-radius: 50%;
 		background-color: #eff0f6;
@@ -145,6 +145,13 @@
 			stroke: $ash;
 		}
 	}
+	&.disable {
+		cursor: no-drop;
+		span,
+		svg {
+			opacity: 0.5;
+		}
+	}
 }
 
 .main-confirm-my-book__confirm__images-uploaded {
@@ -176,6 +183,7 @@
 	font-weight: 700;
 	letter-spacing: 5px;
 	display: none;
+	user-select: none;
 	&.show {
 		display: flex;
 	}
