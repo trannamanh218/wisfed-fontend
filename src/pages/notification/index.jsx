@@ -227,89 +227,95 @@ const NotificationModal = ({ setModalNotti, buttonModal }) => {
 						</Tab>
 						<Tab eventKey='unread' title='Chưa đọc'>
 							<div className='notificaiton__all__title'>Thông báo chưa đọc</div>
-							{getNotifications.map(item => (
-								<div
-									onClick={() => hanleActiveIsReed(item)}
-									key={item.id}
-									className={
-										item.isRead
-											? 'notificaiton__tabs__all__active'
-											: 'notificaiton__tabs__all__seen'
-									}
-								>
+							{getNotifications.map(item =>
+								item.isCheck ? (
+									''
+								) : (
 									<div
-										onClick={() => {
-											handleLinkAddfriend(item);
-										}}
-										className='notificaiton__all__layout'
+										onClick={() => hanleActiveIsReed(item)}
+										key={item.id}
+										className={
+											item.isRead
+												? 'notificaiton__tabs__all__active'
+												: 'notificaiton__tabs__all__seen'
+										}
 									>
-										<UserAvatar size='mm' source={item.createdBy.avatarImage} />
-										<div className='notificaiton__all__layout__status'>
-											<div className='notificaiton__all__infor'>
-												<p dangerouslySetInnerHTML={{ __html: item?.message }}></p>
-												{item.verb !== 'follow' && (
-													<>
-														<span>
-															{item.createdBy.fullName ? (
-																item.createdBy.fullName
-															) : (
-																<>
-																	<span> {item.createdBy.firstName}</span>
-																	<span> {item.createdBy.lastName}</span>
-																</>
-															)}
-														</span>
-														&nbsp;
-														{renderMessage(item)}
-													</>
+										<div
+											onClick={() => {
+												handleLinkAddfriend(item);
+											}}
+											className='notificaiton__all__layout'
+										>
+											<UserAvatar size='mm' source={item.createdBy.avatarImage} />
+											<div className='notificaiton__all__layout__status'>
+												<div className='notificaiton__all__infor'>
+													<p dangerouslySetInnerHTML={{ __html: item?.message }}></p>
+													{item.verb !== 'follow' && (
+														<>
+															<span>
+																{item.createdBy.fullName ? (
+																	item.createdBy.fullName
+																) : (
+																	<>
+																		<span> {item.createdBy.firstName}</span>
+																		<span> {item.createdBy.lastName}</span>
+																	</>
+																)}
+															</span>
+															&nbsp;
+															{renderMessage(item)}
+														</>
+													)}
+												</div>
+												<div
+													className={
+														item.isRead
+															? 'notificaiton__all__status__seen'
+															: 'notificaiton__all__status'
+													}
+												>{`${calculateDurationTime(item.time)}`}</div>
+												{item.isAccept ? (
+													<div className='notificaiton___main__all__status'>
+														Đã chấp nhận lời mời
+													</div>
+												) : (
+													item.isRefuse && (
+														<div className='notificaiton___main__all__status'>
+															Đã từ chối lời mời
+														</div>
+													)
 												)}
 											</div>
 											<div
 												className={
 													item.isRead
-														? 'notificaiton__all__status__seen'
-														: 'notificaiton__all__status'
+														? 'notificaiton__all__seen'
+														: 'notificaiton__all__unseen'
 												}
-											>{`${calculateDurationTime(item.time)}`}</div>
-											{item.isAccept ? (
-												<div className='notificaiton___main__all__status'>
-													Đã chấp nhận lời mời
-												</div>
-											) : (
-												item.isRefuse && (
-													<div className='notificaiton___main__all__status'>
-														Đã từ chối lời mời
-													</div>
-												)
-											)}
+											></div>
 										</div>
-										<div
-											className={
-												item.isRead ? 'notificaiton__all__seen' : 'notificaiton__all__unseen'
-											}
-										></div>
+										{item.verb === 'addfriend' &&
+											(item.isAccept || item.isRefuse ? (
+												''
+											) : (
+												<div className='notificaiton__all__friend'>
+													<div
+														onClick={() => ReplyFriendReq(item.object, item)}
+														className='notificaiton__all__accept'
+													>
+														Chấp nhận
+													</div>
+													<div
+														onClick={() => cancelFriend(item.object, item)}
+														className='notificaiton__all__refuse'
+													>
+														Từ chối
+													</div>
+												</div>
+											))}
 									</div>
-									{item.verb === 'addfriend' &&
-										(item.isAccept || item.isRefuse ? (
-											''
-										) : (
-											<div className='notificaiton__all__friend'>
-												<div
-													onClick={() => ReplyFriendReq(item.object, item)}
-													className='notificaiton__all__accept'
-												>
-													Chấp nhận
-												</div>
-												<div
-													onClick={() => cancelFriend(item.object, item)}
-													className='notificaiton__all__refuse'
-												>
-													Từ chối
-												</div>
-											</div>
-										))}
-								</div>
-							))}
+								)
+							)}
 							<Link
 								to={`/notification`}
 								onClick={handleNotificaiton}

@@ -10,7 +10,7 @@ import Bookcase from './bookcase-tab';
 import PostTab from './post-tab';
 import { getUserDetail } from 'reducers/redux-utils/user';
 import { useSelector, useDispatch } from 'react-redux';
-import { toast } from 'react-toastify';
+import { NotificationError } from 'helpers/Error';
 
 const MainProfile = () => {
 	const [userInfo, setUserInfo] = useState({});
@@ -24,10 +24,10 @@ const MainProfile = () => {
 
 	const getUserDetailData = async () => {
 		try {
-			const userData = await dispatch(getUserDetail('bfdb3971-de4c-4c2b-bbbe-fbb36770031a')).unwrap();
+			const userData = await dispatch(getUserDetail('ed6b3eaf-5008-4b48-9c37-37cceea4f9a3')).unwrap();
 			setUserInfo(userData);
-		} catch {
-			toast.error('Lỗi hệ thống');
+		} catch (err) {
+			NotificationError(err);
 		}
 	};
 

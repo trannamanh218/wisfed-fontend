@@ -6,8 +6,8 @@ import { Form } from 'react-bootstrap';
 import { useDispatch } from 'react-redux';
 import { getCategoryList } from 'reducers/redux-utils/category';
 import { getLikeCategory } from 'reducers/redux-utils/user';
-import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
+import { NotificationError } from 'helpers/Error';
 
 function ChooseTopic() {
 	const [listCategory, setListCategory] = useState([]);
@@ -31,8 +31,8 @@ function ChooseTopic() {
 				favoriteCategory: addFavorite,
 			};
 			await dispatch(getLikeCategory(params));
-		} catch {
-			toast.error('Lỗi hệ thống');
+		} catch (err) {
+			NotificationError(err);
 		} finally {
 			navigate('/');
 		}

@@ -12,6 +12,7 @@ import {
 	unFriend,
 	userDetailAPI,
 	updateLikeCategory,
+	listFollowing,
 } from 'constants/apiURL';
 import Request from 'helpers/Request';
 
@@ -25,9 +26,10 @@ export const getUserList = createAsyncThunk('user/getUserList', async (params, {
 	}
 });
 
-export const getListFollowrs = createAsyncThunk('user/getListFollowrs', async (params, { rejectWithValue }) => {
+export const getListFollowrs = createAsyncThunk('user/getListFollowrs', async (param, { rejectWithValue }) => {
+	const { userId } = param;
 	try {
-		const response = await Request.makeGet(listFolowrs, params);
+		const response = await Request.makeGet(listFolowrs(userId));
 		return response.data;
 	} catch (err) {
 		const error = JSON.parse(err.response);
@@ -35,10 +37,20 @@ export const getListFollowrs = createAsyncThunk('user/getListFollowrs', async (p
 	}
 });
 
-export const getFriendList = createAsyncThunk('user/getFriendList', async (id, { rejectWithValue }) => {
-	// const { id, ...restParams } = params;
+export const getFriendList = createAsyncThunk('user/getFriendList', async (param, { rejectWithValue }) => {
+	const { userId } = param;
 	try {
-		const response = await Request.makeGet(friendAPI(id));
+		const response = await Request.makeGet(friendAPI(userId));
+		return response.data;
+	} catch (err) {
+		const error = JSON.parse(err.response);
+		throw rejectWithValue(error);
+	}
+});
+export const getListFollowing = createAsyncThunk('user/getListFollowing', async (param, { rejectWithValue }) => {
+	const { userId } = param;
+	try {
+		const response = await Request.makeGet(listFollowing(userId));
 		return response.data;
 	} catch (err) {
 		const error = JSON.parse(err.response);

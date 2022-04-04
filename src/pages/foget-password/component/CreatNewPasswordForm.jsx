@@ -7,8 +7,8 @@ import { useSelector } from 'react-redux';
 import ModalLogin from 'pages/login/element/ModalLogin';
 import { resetPasswordValidate } from 'helpers/Validation';
 import { Circle } from 'shared/loading';
-import { toast } from 'react-toastify';
 import { changeKey } from 'reducers/redux-utils/forget-password';
+import { NotificationError } from 'helpers/Error';
 
 function CreatNewPasswordForm() {
 	const isFetching = useSelector(state => state.auth.isFetching);
@@ -103,8 +103,8 @@ function CreatNewPasswordForm() {
 			setTimeout(() => {
 				setIsShow(true);
 			}, 500);
-		} catch {
-			toast.error('Lỗi hệ thống');
+		} catch (err) {
+			NotificationError(err);
 		}
 	};
 

@@ -15,6 +15,7 @@ import classNames from 'classnames';
 import { editUserInfo } from 'reducers/redux-utils/user';
 import { activeUpdateUserProfileStatus } from 'reducers/redux-utils/user';
 import PropTypes from 'prop-types';
+import { NotificationError } from 'helpers/Error';
 
 const PersonalInfoForm = ({ userData }) => {
 	const [userFirstName, setUserFirstName] = useState(userData.firstName);
@@ -216,8 +217,8 @@ const PersonalInfoForm = ({ userData }) => {
 		try {
 			const data = await dispatch(getSuggestionForPost({ input, option, userData })).unwrap();
 			setCategorySearchedList(data.rows);
-		} catch {
-			toast.error('Lỗi hệ thống');
+		} catch (err) {
+			NotificationError(err);
 		} finally {
 			setGetDataFinish(true);
 		}

@@ -7,7 +7,6 @@ import './main-quote-detail.scss';
 import { useParams } from 'react-router-dom';
 import { getQuoteDetail, creatQuotesComment } from 'reducers/redux-utils/quote';
 import { useDispatch } from 'react-redux';
-import { toast } from 'react-toastify';
 import _ from 'lodash';
 import CommentEditor from 'shared/comment-editor';
 import { useSelector } from 'react-redux';
@@ -45,8 +44,8 @@ const MainQuoteDetail = () => {
 		try {
 			const res = await dispatch(checkLikeQuoteComment()).unwrap();
 			setQuoteCommentsLikedArray(res);
-		} catch {
-			toast.error('Lỗi hệ thống');
+		} catch (err) {
+			NotificationError(err);
 		}
 	};
 

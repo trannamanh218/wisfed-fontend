@@ -8,7 +8,7 @@ const MultipleCheckbox = ({ list, value }) => {
 		return (
 			<Form className='multiple-checkbox'>
 				{list.map((item, index) => (
-					<FormCheckGroup key={index} data={item} name={item.data.title} value={value} type='checkbox' />
+					<FormCheckGroup key={index} data={item} name={item.title} value={value} type='checkbox' />
 				))}
 			</Form>
 		);

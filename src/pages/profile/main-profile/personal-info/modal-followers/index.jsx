@@ -1,30 +1,116 @@
 import './modal-followers.scss';
 import { CloseX } from 'components/svg';
 import SearchField from 'shared/search-field';
-import AuthorCard from 'shared/author-card';
+// import AuthorCard from 'shared/author-card';
 import PropTypes from 'prop-types';
 import { Modal } from 'react-bootstrap';
-import { useModal } from 'shared/hooks';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import React, { useState, useEffect } from 'react';
+import { getListFollowrs, makeFriendRequest, unFriendRequest } from 'reducers/redux-utils/user';
+import { NotificationError } from 'helpers/Error';
+import UserAvatar from 'shared/user-avatar';
+import Button from 'shared/button';
+import { Add, Minus } from 'components/svg';
+import { buttonReqFriend } from 'helpers/HandleShare';
 
-const ModalFollowers = ({ follower }) => {
-	const { modalOpen, setModalOpen, toggleModal } = useModal(false);
-
+const ModalFollowers = ({ modalFollower, setModalFollower }) => {
 	const { userInfo } = useSelector(state => state.auth);
+	const [getMyListFollowing, setGetMyListFollowing] = useState([]);
+	const dispatch = useDispatch();
+	console.log(getMyListFollowing);
+	useEffect(async () => {
+		const param = {
+			userId: userInfo.id,
+		};
+		try {
+			const followList = await dispatch(getListFollowrs(param)).unwrap();
+			const newArrFriend = followList.rows.map(item => {
+				return { ...item, checkUnfollow: false, isPending: false, isAddFriend: true };
+			});
+			setGetMyListFollowing(newArrFriend);
+		} catch (err) {
+			NotificationError(err);
+		}
+	}, [userInfo, dispatch]);
 
-	const favoriteAuthors = [...Array(4)];
+	const toggleModal = () => {
+		setModalFollower(!modalFollower);
+	};
+
+	const handleAddFriend = id => {
+		const param = {
+			userId: id,
+		};
+		try {
+			dispatch(makeFriendRequest(param)).unwrap();
+			const newArrFriend = getMyListFollowing.map(item => {
+				if (id === item.userIdTwo) {
+					return { ...item, isPending: true };
+				}
+				return { ...item };
+			});
+			setGetMyListFollowing(newArrFriend);
+		} catch (err) {
+			NotificationError(err);
+		}
+	};
+
+	const handleUnFriend = id => {
+		try {
+			const newArrFriend = getMyListFollowing.map(item => {
+				if (id === item.userIdTwo) {
+					return { ...item, isAddFriend: false };
+				}
+				return { ...item };
+			});
+			setGetMyListFollowing(newArrFriend);
+			dispatch(unFriendRequest(id)).unwrap();
+		} catch (err) {
+			NotificationError(err);
+		}
+	};
+
+	const buttonAddFriend = item => {
+		return (
+			<Button
+				onClick={() => handleAddFriend(item.userIdTwo)}
+				className='connect-button'
+				isOutline={true}
+				name='friend'
+			>
+				<Add className='connect-button__icon' />
+				<span className='connect-button__content'>Kết bạn</span>
+			</Button>
+		);
+	};
+
+	const buttonUnFriend = item => {
+		return (
+			<Button
+				onClick={() => handleUnFriend(item.userIdTwo)}
+				className='connect-button'
+				isOutline={true}
+				name='friend'
+			>
+				<Minus className='connect-button__icon' />
+				<span className='connect-button__content'>Hủy kết bạn</span>
+			</Button>
+		);
+	};
+
+	const renderButtonFriend = item => {
+		if (item.relation === 'pending') {
+			return buttonReqFriend();
+		} else if (item.relation === 'friend') {
+			return item.isAddFriend ? buttonUnFriend(item) : item.isPending ? buttonReqFriend() : buttonAddFriend(item);
+		} else if (item.relation === 'unknown') {
+			return item.isPending ? buttonReqFriend() : buttonAddFriend(item);
+		}
+	};
+
 	return (
 		<>
-			<li
-				onClick={() => {
-					setModalOpen(true);
-				}}
-				className='personal-info__item'
-			>
-				<span className='number'>{follower}</span>
-				<span>Người theo dõi</span>
-			</li>
-			<Modal size='lg' className='modalFollowers__container__main' show={modalOpen} onHide={toggleModal}>
+			<Modal size='lg' className='modalFollowers__container__main' show={modalFollower} onHide={toggleModal}>
 				<Modal.Body className='modalFollowers__container'>
 					<div className='modalFollowers__header'>
 						<div className='modalFollowers__title'>
@@ -38,9 +124,34 @@ const ModalFollowers = ({ follower }) => {
 						<SearchField placeholder='Tìm kiếm trên Wisfeed' />
 					</div>
 					<div className='modalFollowers__info'>
-						{favoriteAuthors.map((item, index) => (
-							<AuthorCard direction={'row'} key={index} size={'md'} />
-						))}
+						{getMyListFollowing.map(
+							item =>
+								item.relation !== 'isMe' && (
+									<div key={item.id} className='author-card'>
+										<div className='author-card__left'>
+											<UserAvatar
+												source={item.userOne.avatarImage}
+												className='author-card__avatar'
+												size={'md'}
+											/>
+											<div className='author-card__info'>
+												<h5>
+													{item.userOne.firstName} {item.userOne.lastName}
+												</h5>
+												<p className='author-card__subtitle'>3K follow, 300 bạn bè</p>
+											</div>
+										</div>
+										<div className='author-card__right'>
+											<div className={`connect-buttons ${'row'}`}>
+												<Button className='connect-button follow'>
+													<span className='connect-button__content'> Theo dõi </span>
+												</Button>
+												{renderButtonFriend(item)}
+											</div>
+										</div>
+									</div>
+								)
+						)}
 					</div>
 				</Modal.Body>
 			</Modal>
@@ -48,8 +159,7 @@ const ModalFollowers = ({ follower }) => {
 	);
 };
 ModalFollowers.propTypes = {
-	idModalItem: PropTypes.string,
-	setModalWatching: PropTypes.func,
-	follower: PropTypes.number,
+	setModalFollower: PropTypes.func,
+	modalFollower: PropTypes.bool,
 };
 export default ModalFollowers;

@@ -52,7 +52,6 @@ const StatusButton = ({ className, status, bookData }) => {
 	const statusRef = useRef({});
 	statusRef.current = STATUS_BOOK_OBJ.wantToRead;
 	const navigate = useNavigate();
-
 	const {
 		library: { authLibraryData },
 	} = useSelector(state => state);
@@ -77,7 +76,6 @@ const StatusButton = ({ className, status, bookData }) => {
 		// check duoc trangt hai cos trong thu vien
 		let bookInLibraries = [];
 		let initStatus = STATUS_BOOK_OBJ[status] || STATUS_BOOK_OBJ.wantToRead;
-
 		dispatch(checkBookInLibraries(bookData.id))
 			.unwrap()
 			.then(res => {

@@ -127,9 +127,13 @@ const errVN = {
 		vi: 'Bạn đã review cuốn này',
 		en: `Have you reviewed this book?`,
 	},
-	999: {
-		vi: 'Có gì đó không đúng',
+	400: {
+		vi: 'Lỗi hệ thống',
 		en: `something is not right`,
+	},
+	711: {
+		vi: 'Bạn đã đánh giá cuốn sách này',
+		en: `You were review this book`,
 	},
 };
 

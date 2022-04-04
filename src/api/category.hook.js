@@ -92,11 +92,8 @@ export const useFetchAllCategoriesWithBooks = () => {
 						});
 				}
 			} catch (err) {
-				const statusCode = err?.statusCode || 500;
-				setStatus(statusCode);
-				setHasMore(false);
+				handleError(err);
 				NotificationError(err);
-				toast.error('Lỗi không truy cập được danh sách chủ đề');
 				return err;
 			}
 		};
