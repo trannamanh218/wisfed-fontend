@@ -134,7 +134,7 @@ const errVN = {
 };
 
 export const NotificationError = (err, language) => {
-	const statusCodeError = err?.errorCode;
+	const statusCodeError = err?.errorCode || err?.statusCode;
 	if (language === 'en') {
 		return toast.error(errVN[statusCodeError].en);
 	} else {

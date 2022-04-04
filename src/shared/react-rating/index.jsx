@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Rating from 'react-rating';
 import { Star } from 'components/svg';
 import PropTypes from 'prop-types';

@@ -21,8 +21,9 @@ import { Modal, ModalBody } from 'react-bootstrap';
 import MultipleRadio from 'shared/multiple-radio';
 import { useModal } from 'shared/hooks';
 import { useDispatch, useSelector } from 'react-redux';
-import { getLikeCategory } from 'reducers/redux-utils/user';
 import { toast } from 'react-toastify';
+import { addToFavoriteCategory } from 'reducers/redux-utils/user';
+import { NotificationError } from 'helpers/Error';
 
 const MainCategoryDetail = ({ handleViewBookDetail }) => {
 	const { id } = useParams();
@@ -36,45 +37,8 @@ const MainCategoryDetail = ({ handleViewBookDetail }) => {
 	const { modalOpen, setModalOpen, toggleModal } = useModal(false);
 	const { books: searchResults } = useFetchBooks(1, 10, filter);
 	const navigate = useNavigate();
-	const dispatch = useDispatch();
 	const { userInfo } = useSelector(state => state.auth);
-	const [addFavorite, setAddFavorite] = useState([]);
-	const favoriteCategoryId = userInfo?.favoriteCategory?.map(item => {
-		return item.categoryId;
-	});
-	useEffect(() => {
-		if (favoriteCategoryId) {
-			setAddFavorite(favoriteCategoryId);
-		}
-	}, []);
-
-	const handleChange = () => {
-		const keyData = Number(id);
-		if (addFavorite.indexOf(keyData) !== -1) {
-			addFavorite.splice(addFavorite.indexOf(keyData), 1);
-			setIsLike(!isLike);
-		} else {
-			const newFavorite = [...addFavorite, keyData];
-			setAddFavorite(newFavorite);
-			setIsLike(!isLike);
-		}
-	};
-
-	const updateUser = async () => {
-		try {
-			const params = {
-				id: userInfo.id,
-				favoriteCategory: addFavorite,
-			};
-			await dispatch(getLikeCategory(params));
-		} catch {
-			toast.error('Lỗi hệ thống');
-		}
-	};
-
-	useEffect(() => {
-		updateUser();
-	}, [addFavorite]);
+	const dispatch = useDispatch();
 
 	const checkOptions = [
 		{
@@ -108,9 +72,47 @@ const MainCategoryDetail = ({ handleViewBookDetail }) => {
 		}
 	}, [categoryInfo]);
 
-	// const handleLikeCategory = () => {
-	// 	setIsLike(!isLike);
-	// };
+	useEffect(() => {
+		if (!_.isEmpty(userInfo)) {
+			const { favoriteCategory } = userInfo;
+			const index = favoriteCategory.findIndex(item => item.categoryId === parseInt(id));
+			if (index !== -1) {
+				setIsLike(true);
+			} else {
+				setIsLike(false);
+			}
+		}
+	}, [userInfo, id]);
+
+	const handleLikeCategory = async () => {
+		const categoryId = parseInt(id);
+		if (_.isEmpty(userInfo)) {
+			toast.warn('Vui lòng đăng nhập để sử dụng tính năng này');
+		} else {
+			let favoriteCategory = [];
+			if (isLike) {
+				favoriteCategory = userInfo.favoriteCategory.forEach(item => {
+					if (item.categoryId !== categoryId) {
+						favoriteCategory.push(item.categoryId);
+					}
+				});
+			} else {
+				favoriteCategory = userInfo.favoriteCategory.map(item => item.categoryId);
+				favoriteCategory.push(categoryId);
+			}
+
+			try {
+				const params = {
+					id: userInfo.id,
+					favoriteCategory,
+				};
+				await dispatch(addToFavoriteCategory(params));
+				setIsLike(like => !like);
+			} catch (err) {
+				NotificationError(err);
+			}
+		}
+	};
 
 	const handleViewMore = () => {
 		const currentLength = bookList.length;
@@ -174,7 +176,7 @@ const MainCategoryDetail = ({ handleViewBookDetail }) => {
 				<Button
 					className={classNames('btn-like', { 'active': isLike })}
 					isOutline={true}
-					onClick={handleChange}
+					onClick={handleLikeCategory}
 				>
 					<span className='heart-icon'>
 						<Heart />

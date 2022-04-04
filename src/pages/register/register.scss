@@ -10,15 +10,16 @@
 }
 
 .register__container-modal {
+	background-color: rgba(78, 75, 102, 0.4);
 	position: fixed;
 	width: 100%;
 	height: 100vh;
 	z-index: 1;
 }
 
-.register__congtainer {
+.register__container {
 	background-color: #f5f5f5;
-	max-width: 1440px;
+	max-width: 1440px !important;
 	margin: auto;
 }
 .register__body {
@@ -41,7 +42,7 @@
 	max-width: 400px;
 	height: 100%;
 	background: #fcfcfc;
-	box-shadow: 0px 0px 32px rgba(0, 0, 0, 0.04);
+	box-shadow: 0px 0px 32px rgba(0, 0, 0, 0.12);
 	border-radius: 12px;
 }
 .register__form__wrapper {

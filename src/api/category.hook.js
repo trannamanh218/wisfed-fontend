@@ -1,11 +1,11 @@
 import { STATUS_SUCCESS, STATUS_IDLE } from 'constants';
 import { generateQuery } from 'helpers/Common';
 import _ from 'lodash';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { getBookList } from 'reducers/redux-utils/book';
-import { getCategoryDetail, getCategoryList } from 'reducers/redux-utils/category';
+import { getCategoryDetail, getCategoryList, getFavoriteCategories } from 'reducers/redux-utils/category';
 import { usePrevious } from 'shared/hooks';
 import { NotificationError } from 'helpers/Error';
 
@@ -346,4 +346,51 @@ export const useFetchOtherCategories = (current, perPage, name) => {
 	}, [current, perPage, newName]);
 
 	return { otherCategories, status };
+};
+
+export const useFetchFavoriteCategories = () => {
+	const [favoriteCategoryData, setFavoriteCategoryData] = useState({
+		rows: [],
+		count: 0,
+	});
+
+	const [status, setStatus] = useState(STATUS_IDLE);
+	const [retry, setRetry] = useState(false);
+	const dispatch = useDispatch();
+
+	const retryRequest = useCallback(() => {
+		setRetry(prev => !prev);
+	}, [setRetry]);
+
+	useEffect(() => {
+		let isMount = true;
+		const fetchData = async () => {
+			const params = generateQuery(1, 20);
+			try {
+				const data = await dispatch(getFavoriteCategories(params)).unwrap();
+				if (isMount) {
+					const listLibrary = data.rows.map(item => ({
+						...item.category,
+						quantity: item.category.numberBooks || 0,
+					}));
+					setFavoriteCategoryData({ rows: listLibrary, count: data.count });
+				}
+			} catch (err) {
+				NotificationError(err);
+				const statusCode = err?.statusCode || 500;
+				setStatus(statusCode);
+			}
+		};
+
+		fetchData();
+		return () => {
+			isMount = false;
+		};
+	}, [retry]);
+
+	return {
+		status,
+		favoriteCategoryData,
+		retryRequest,
+	};
 };

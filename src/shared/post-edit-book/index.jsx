@@ -1,7 +1,7 @@
 import { STATUS_BOOK } from 'constants';
 import { progressReadingSchema } from 'helpers/Validation';
 import PropTypes from 'prop-types';
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import BookThumbnail from 'shared/book-thumbnail';
 import LinearProgressBar from 'shared/linear-progress-bar';
 import ReactRating from 'shared/react-rating';
@@ -11,6 +11,7 @@ const PostEditBook = props => {
 	const { data, handleValidationInput, validationInput, handleAddToPost } = props;
 	// rating là rating của user cho cuốn sách, không phải rating tổng -- rating 1 lần duy nhất)
 	const inputRef = useRef(null);
+	const [ratingValue, setRatingValue] = useState(0);
 
 	useEffect(() => {
 		if (inputRef.current) {
@@ -40,6 +41,10 @@ const PostEditBook = props => {
 
 		handleAddToPost({ ...data, progress: value });
 		handleValidationInput(message);
+	};
+
+	const handleChangeRate = e => {
+		setRatingValue(e);
 	};
 
 	const handleBlur = async e => {
@@ -92,7 +97,7 @@ const PostEditBook = props => {
 				{data.status === STATUS_BOOK.read ? (
 					<div className='post-edit-book__action'>
 						<div className='post-edit-book__ratings'>
-							<ReactRating initialRating={3.3} readonly={true} fractions={1} />
+							<ReactRating initialRating={ratingValue} fractions={1} handleChange={handleChangeRate} />
 							<div className='post-edit-book__rating__number'>(4.2)(09 đánh giá)</div>
 						</div>
 					</div>

@@ -2,8 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import LoadingIndicator from 'shared/loading-indicator';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import CategoryGroup from 'shared/category-group';
-const SearchCategory = ({ searchCategories, fetchFilterData, hasMoreFilterData, handleViewBookDetail }) => {
+import { Form } from 'react-bootstrap';
+
+const SearchCategoryChooseTopic = ({ searchCategories, fetchFilterData, hasMoreFilterData, handleChange }) => {
 	if (searchCategories.length) {
 		return (
 			<InfiniteScroll
@@ -16,32 +17,40 @@ const SearchCategory = ({ searchCategories, fetchFilterData, hasMoreFilterData, 
 				{searchCategories.map(item => (
 					<>
 						<div key={item.id} className='form-check-wrapper'>
-							{searchCategories.map(category => (
-								<CategoryGroup
-									key={`category-group-${category.id}`}
-									list={category.books}
-									title={category.name}
-									handleViewBookDetail={handleViewBookDetail}
+							<Form.Check className='form-check-custom' type={'checkbox'} id={item.id}>
+								<Form.Check.Input
+									className={`form-check-custom--'checkbox'`}
+									type={'checkbox'}
+									isValid
+									name={item.name}
+									value={item.id}
+									onClick={handleChange}
+									// defaultChecked={data.value === value}
 								/>
-							))}
+								<Form.Check.Label className='form-check-label--custom'>{item.name}</Form.Check.Label>
+							</Form.Check>
 						</div>
 					</>
-				))}{' '}
+				))}
 			</InfiniteScroll>
 		);
 	}
+
 	return <p className='blank-content'>Không có kết quả phù hợp</p>;
 };
-SearchCategory.defaultProps = {
+
+SearchCategoryChooseTopic.defaultProps = {
 	searchCategories: [],
 	fetchFilterData: () => {},
-	handleViewBookDetail: () => {},
+	handleChange: () => {},
 	hasMoreFilterData: true,
 };
-SearchCategory.propTypes = {
+
+SearchCategoryChooseTopic.propTypes = {
 	searchCategories: PropTypes.array,
 	fetchFilterData: PropTypes.func,
-	handleViewBookDetail: PropTypes.func,
+	handleChange: PropTypes.func,
 	hasMoreFilterData: PropTypes.bool,
 };
-export default SearchCategory;
+
+export default SearchCategoryChooseTopic;

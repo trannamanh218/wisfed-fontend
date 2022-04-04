@@ -1,13 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import './chooseTopic.scss';
 import Logo from 'assets/images/Logo 2.png';
-import SearchField from 'shared/search-field';
 import { Form } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { getCategoryList } from 'reducers/redux-utils/category';
-import { getLikeCategory } from 'reducers/redux-utils/user';
+import { addToFavoriteCategory } from 'reducers/redux-utils/user';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
+import SearchIcon from 'assets/icons/search.svg';
+import classNames from 'classnames';
+import { useFetchFilterCategories } from 'api/category.hook';
+
+import _ from 'lodash';
 
 function ChooseTopic() {
 	const [listCategory, setListCategory] = useState([]);
@@ -15,6 +19,8 @@ function ChooseTopic() {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const { userInfo } = useSelector(state => state.auth);
+	const [inputValue, setInputValue] = useState('');
+	const { searchCategories, fetchFilterData, hasMoreFilterData } = useFetchFilterCategories(inputValue);
 
 	const getListCategory = async () => {
 		const querry = {
@@ -25,13 +31,19 @@ function ChooseTopic() {
 		setListCategory(listCategoryAction.rows);
 	};
 
+	const hadllerSearch = e => {
+		setInputValue(e.target.value);
+	};
+
+	const debounceSearch = useCallback(_.debounce(hadllerSearch, 1000), []);
+
 	const updateUser = async () => {
 		try {
 			const params = {
 				id: userInfo.id,
 				favoriteCategory: addFavorite,
 			};
-			await dispatch(getLikeCategory(params));
+			await dispatch(addToFavoriteCategory(params));
 		} catch {
 			toast.error('Lỗi hệ thống');
 		} finally {
@@ -42,6 +54,7 @@ function ChooseTopic() {
 	useEffect(() => {
 		getListCategory();
 	}, []);
+
 	const handleChange = e => {
 		const keyData = Number(e.target.value);
 		if (addFavorite.indexOf(keyData) !== -1) {
@@ -68,7 +81,14 @@ function ChooseTopic() {
 					</span>
 				</div>
 				<div className='choose-topic__search'>
-					<SearchField placeholder='Tìm kiếm chủ đề' />
+					<div className={classNames('search-field')}>
+						<img className='search-field__icon' src={SearchIcon} alt='search-icon' />
+						<input
+							className='search-field__input'
+							placeholder='Tìm kiếm chủ đề'
+							onChange={debounceSearch}
+						/>
+					</div>
 				</div>
 				<div className='choose-topic__box'>
 					{listCategory.map(item => {
@@ -94,6 +114,7 @@ function ChooseTopic() {
 						);
 					})}
 				</div>
+
 				<div
 					className={'choose-topic__button ' + `${addFavorite.length >= 2 ? '' : 'disabled-bnt'}`}
 					onClick={() => {

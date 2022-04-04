@@ -1,6 +1,15 @@
 .choose-topic__container {
 	background-color: #fcfcfc;
 	padding-bottom: 82px;
+	.was-validated .form-check-input:valid:checked[type='checkbox'],
+	.form-check-input.is-valid:checked[type='checkbox'] {
+		background-color: #fcfcfc;
+		border: 1px solid #a0a3bd;
+	}
+	.form-check-input:checked[type='checkbox'] {
+		background-image: url('../../assets/icons/check-green.svg');
+		background-size: 10px;
+	}
 }
 .choose-topic__header {
 	background-color: #fbf7f2;

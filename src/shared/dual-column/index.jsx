@@ -21,7 +21,15 @@ const DualColumn = props => {
 		} else {
 			if (rows < NUMBER_ROWS) {
 				setRows(NUMBER_ROWS);
+			} else {
+				setRows(length);
+				setIsExpand(true);
 			}
+		}
+
+		if (isExpand) {
+			setRows(DEFAULT_TOGGLE_ROWS);
+			setIsExpand(false);
 		}
 	};
 
