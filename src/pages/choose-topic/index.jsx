@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import SearchIcon from 'assets/icons/search.svg';
 import classNames from 'classnames';
 import { useFetchFilterCategories } from 'api/category.hook';
+import SearchCategoryChooseTopic from './searchCateChooseTopic';
 
 import _ from 'lodash';
 
@@ -58,7 +59,9 @@ function ChooseTopic() {
 	const handleChange = e => {
 		const keyData = Number(e.target.value);
 		if (addFavorite.indexOf(keyData) !== -1) {
-			addFavorite.splice(addFavorite.indexOf(keyData), 1);
+			const removeItem = addFavorite[addFavorite.indexOf(keyData)];
+			const newArr = addFavorite.filter(item => item !== removeItem);
+			setAddFavorite(newArr);
 		} else {
 			const newFavorite = [...addFavorite, keyData];
 			setAddFavorite(newFavorite);
@@ -91,28 +94,67 @@ function ChooseTopic() {
 					</div>
 				</div>
 				<div className='choose-topic__box'>
-					{listCategory.map(item => {
-						return (
-							<>
-								<div key={item.id} className='form-check-wrapper'>
-									<Form.Check className='form-check-custom' type={'checkbox'} id={item.id}>
-										<Form.Check.Input
-											className={`form-check-custom--'checkbox'`}
-											type={'checkbox'}
-											isValid
-											name={item.name}
-											value={item.id}
-											onClick={handleChange}
-											// defaultChecked={data.value === value}
-										/>
-										<Form.Check.Label className='form-check-label--custom'>
-											{item.name}
-										</Form.Check.Label>
-									</Form.Check>
-								</div>
-							</>
-						);
-					})}
+					{inputValue === '' ? (
+						<>
+							{' '}
+							{listCategory.map(item => {
+								return (
+									<>
+										{addFavorite.includes(item.id) ? (
+											<div key={item.id} className='form-check-wrapper'>
+												<Form.Check
+													className='form-check-custom'
+													type={'checkbox'}
+													id={item.id}
+												>
+													<Form.Check.Input
+														className={`form-check-custom--'checkbox'`}
+														type={'checkbox'}
+														name={item.name}
+														checked
+														value={item.id}
+														onClick={handleChange}
+														// defaultChecked={data.value === value}
+													/>
+													<Form.Check.Label className='form-check-label--custom'>
+														{item.name}
+													</Form.Check.Label>
+												</Form.Check>
+											</div>
+										) : (
+											<div key={item.id} className='form-check-wrapper'>
+												<Form.Check
+													className='form-check-custom'
+													type={'checkbox'}
+													id={item.id}
+												>
+													<Form.Check.Input
+														className={`form-check-custom--'checkbox'`}
+														type={'checkbox'}
+														name={item.name}
+														isValid
+														value={item.id}
+														onClick={handleChange}
+														// defaultChecked={data.value === value}
+													/>
+													<Form.Check.Label className='form-check-label--custom'>
+														{item.name}
+													</Form.Check.Label>
+												</Form.Check>
+											</div>
+										)}
+									</>
+								);
+							})}
+						</>
+					) : (
+						<SearchCategoryChooseTopic
+							searchCategories={searchCategories}
+							fetchFilterData={fetchFilterData}
+							hasMoreFilterData={hasMoreFilterData}
+							handleChange={handleChange}
+						/>
+					)}
 				</div>
 
 				<div

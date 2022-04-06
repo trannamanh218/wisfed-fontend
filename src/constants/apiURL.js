@@ -40,6 +40,10 @@ export const categoryAPI = '/api/v1/categories';
 export const categoryDetailAPI = id => `/api/v1/categories/${id}`;
 export const favoriteCategoriesAPI = '/api/v1/categories/favoriteCategories';
 
+//rating
+export const bookRating = '/api/v1/books/rating';
+export const userRating = id => `api/v1/books/rating/${id}`;
+
 //user
 export const userAPI = '/api/v1/users';
 export const userDetailAPI = id => `/api/v1/users/${id}`;

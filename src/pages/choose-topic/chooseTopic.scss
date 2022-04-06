@@ -84,6 +84,8 @@
 .form-check-input:checked[type='checkbox'] {
 	background-image: url(http://localhost:3000/static/media/check.21da64a….svg);
 	background-size: 10px;
+	background-color: #fcfcfc;
+	border: #d9dbe9 1px solid;
 }
 
 .form-check-input.is-valid {

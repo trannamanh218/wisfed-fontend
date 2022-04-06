@@ -6,7 +6,6 @@ import classNames from 'classnames';
 
 const SearchField = ({ placeholder = 'Nhập thông tin tìm kiếm...', handleChange, className, value = '' }) => {
 	const inputRef = useRef();
-	console.log(inputRef.current);
 	return (
 		<div className={classNames('search-field', { [`${className}`]: className })}>
 			<img className='search-field__icon' src={SearchIcon} alt='search-icon' />
