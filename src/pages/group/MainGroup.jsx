@@ -1,7 +1,12 @@
 import React from 'react';
+import PopupCreatGroup from './PopupCreatGroup';
 
 const MainGroup = () => {
-	return <div>This is maim Group</div>;
+	return (
+		<div>
+			<PopupCreatGroup />
+		</div>
+	);
 };
 
 export default MainGroup;
