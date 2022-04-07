@@ -43,13 +43,11 @@ const Review = () => {
 		}
 	}, [params, userInfo]);
 
-	// const { postList } = useFetchInfiniateActivities(JSON.stringify(filter));
-
 	return (
 		<NormalContainer>
 			<div className='review'>
 				<div className='review__header'>
-					<BackButton className='review__header__btn' />
+					<BackButton destination={-1} className='review__header__btn' />
 					<h4>Bài Review về Đắc Nhân Tâm của Thanh Nguyễn</h4>
 				</div>
 				<ReviewBookInfo />
