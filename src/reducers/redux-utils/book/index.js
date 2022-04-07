@@ -71,9 +71,9 @@ export const ratingUser = createAsyncThunk('book/ratingBookUser', async (params,
 	}
 });
 
-export const getRatingBook = createAsyncThunk('book/getRatingBook', async (query, { rejectWithValue }) => {
+export const getRatingBook = createAsyncThunk('book/getRatingBook', async (id, { rejectWithValue }) => {
 	try {
-		const res = await Request.makeGet(bookRating, query);
+		const res = await Request.makeGet(bookRating(id));
 		// const data = JSON.parse(res.data).data;
 		return res;
 	} catch (err) {

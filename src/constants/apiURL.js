@@ -41,7 +41,7 @@ export const categoryDetailAPI = id => `/api/v1/categories/${id}`;
 export const favoriteCategoriesAPI = '/api/v1/categories/favoriteCategories';
 
 //rating
-export const bookRating = '/api/v1/books/rating';
+export const bookRating = id => `/api/v1/books/ratingBook/${id}`;
 export const userRating = id => `api/v1/books/rating/${id}`;
 
 //user
