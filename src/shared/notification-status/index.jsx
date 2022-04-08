@@ -9,7 +9,6 @@ import { NotificationError } from 'helpers/Error';
 
 const NotificationStatus = ({ item, setGetNotifications, getNotifications }) => {
 	const dispatch = useDispatch();
-	console.log(item);
 	const ReplyFriendReq = async (data, items) => {
 		const parseObject = JSON.parse(data);
 		const params = { id: parseObject.requestId, data: { reply: true } };
@@ -92,7 +91,7 @@ const NotificationStatus = ({ item, setGetNotifications, getNotifications }) => 
 				></div>
 			</div>
 
-			{(item.verb === 'addfriend' || item.verb === 'browse') &&
+			{(item.verb === 'addFriend' || item.verb === 'addfriend' || item.verb === 'browse') &&
 				(item.isAccept || item.isRefuse ? (
 					''
 				) : (

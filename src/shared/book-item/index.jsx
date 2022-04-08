@@ -25,7 +25,7 @@ const BookItem = props => {
 			);
 		}
 
-		return <StatusButton />;
+		return <StatusButton bookData={data} />;
 	};
 
 	return (

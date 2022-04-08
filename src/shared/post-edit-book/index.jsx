@@ -73,14 +73,18 @@ const PostEditBook = props => {
 									className='post-edit-book__input'
 									onChange={handleChange}
 									onBlur={handleBlur}
-									// value={data.progress}
+									value={data.progress}
 									autoFocus
 									name='progress'
 								/>
 							)}
 
 							<span>/{data.page}</span>
-							<span className='post-edit-book__message'>Nhập số trang sách đã đọc</span>
+							{!data.progress ? (
+								<span className='post-edit-book__message'>Nhập số trang sách đã đọc</span>
+							) : (
+								''
+							)}
 						</div>
 						<small className='post-edit-book__message'>{validationInput}</small>
 					</div>

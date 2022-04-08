@@ -1,6 +1,10 @@
 .login__container {
 	position: relative;
+	.eye-icon {
+		margin-right: 10px;
+	}
 }
+
 .login__container-modal {
 	position: fixed;
 	width: 100%;
@@ -121,9 +125,7 @@
 	margin-top: 12px;
 	color: #0576f0;
 }
-.eye-icon {
-	margin-right: 10px;
-}
+
 .login__form__input {
 	background-color: #eff0f6;
 	flex-grow: 1;

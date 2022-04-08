@@ -38,6 +38,7 @@ export const progressBookAPI = id => `/api/v1/books/updateBookProgress/${id}`;
 // category
 export const categoryAPI = '/api/v1/categories';
 export const categoryDetailAPI = id => `/api/v1/categories/${id}`;
+export const favoriteCategoriesAPI = '/api/v1/categories/favoriteCategories';
 
 //user
 export const userAPI = '/api/v1/users';
@@ -51,9 +52,10 @@ export const cancelFriendApi = id => `/api/v1/users/${id}/cancelFriendReq`;
 export const makeFriendAPI = `/api/v1/users/friendRequest`;
 export const replyFriendReqApi = id => `/api/v1/users/${id}/replyFriendReq/`;
 export const unFriend = id => `/api/v1/users/${id}/unFriend`;
+export const myFriendsReq = `/api/v1/users/friendReqToMe/`;
 //activity
 export const activityAPI = '/api/v1/getstream';
-export const likeActivityAPI = '/api/v1/getstream/like';
+export const likeActivityAPI = id => `/api/v1/getstream/like/${id}`;
 export const listLikedActivityAPI = '/api/v1/users/likedActivities';
 
 // upload files

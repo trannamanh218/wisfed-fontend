@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import shareImg from 'assets/images/alert-circle-fill.png';
 import facebookImg from 'assets/images/facebook.png';
 import StatusButton from 'components/status-button';

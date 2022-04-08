@@ -3,7 +3,7 @@ import { STATUS_IDLE } from 'constants';
 import { STATUS_LOADING } from 'constants';
 import { generateQuery } from 'helpers/Common';
 import { useCallback, useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { getQuoteList } from 'reducers/redux-utils/quote';
 import { NotificationError } from 'helpers/Error';
 
@@ -23,8 +23,9 @@ export const useFetchQuoteRandom = () => {
 		async function fetchData() {
 			try {
 				const data = await dispatch(getQuoteList()).unwrap();
-				if (data.rows && data.rows.length) {
-					setQuoteRandom(data.rows[0]);
+				if (data && data.length > 0) {
+					const item = data[Math.floor(Math.random() * data.length)];
+					setQuoteRandom(item);
 				}
 				setStatus(STATUS_SUCCESS);
 			} catch (err) {
@@ -45,6 +46,7 @@ export const useFetchQuotes = (current = 1, perPage = 10, filter = '[]') => {
 	const [quoteData, setQuoteData] = useState([]);
 	const [retry, setRetry] = useState(false);
 	const dispatch = useDispatch();
+	const { userInfo } = useSelector(state => state.auth);
 
 	const retryRequest = useCallback(() => {
 		setRetry(prev => !prev);
@@ -74,7 +76,7 @@ export const useFetchQuotes = (current = 1, perPage = 10, filter = '[]') => {
 		return () => {
 			isMount = false;
 		};
-	}, [retry, current, perPage, filter]);
+	}, [retry, current, perPage, filter, userInfo]);
 
 	return { status, quoteData, retryRequest };
 };

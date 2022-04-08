@@ -30,6 +30,7 @@ import ForgetPassWordAdminComponet from 'pages/foget-password/component-admin/Fo
 import AdminCreatNewPassword from 'pages/foget-password/component-admin/CreatNewPasswordAdmin';
 import DetailFriend from 'pages/group/component/detail-friend';
 import 'scss/main.scss';
+import QuoteAll from 'pages/quote/all-quote/';
 
 function App({ children }) {
 	const dispatch = useDispatch();
@@ -42,6 +43,8 @@ function App({ children }) {
 			// password: '123456',
 			// email: 'admin@gmail.com',
 			// password: '123456',
+			// email: 'register2@gmail.com',
+			// password: '12345678',
 		};
 
 		fetchLogin(params);
@@ -79,12 +82,13 @@ function App({ children }) {
 				<Route path='/shelves/:userId' element={<BookShelves />} />
 				<Route path='/friends' element={<Friends />} />
 				<Route path='/friends/:slug' element={<DetailFriend />} />
-				<Route path='/book/detail/:id' element={<BookDetail />} />
-				<Route path='/book/detail/:id/:slug' element={<BookDetail />} />
+				<Route path='/book/detail/:bookId' element={<BookDetail />} />
+				<Route path='/book/detail/:bookId/:slug' element={<BookDetail />} />
 				<Route path='/review/:id' element={<Review />} />
 				<Route path='/review/:id/:slug' element={<Review />} />
 				<Route path='/quotes' element={<Quote />} />
 				<Route path='/quotes/me' element={<MyQuote />} />
+				<Route path='/quotes/all' element={<QuoteAll />} />
 				<Route path='/quotes/detail/:id' element={<QuoteDetail />} />
 				<Route path='/profile' element={<Profile />} />
 				<Route path='/confirm-my-book' element={<ConfirmMyBook />} />

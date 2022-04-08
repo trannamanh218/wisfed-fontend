@@ -205,7 +205,6 @@ const StatusButton = ({ className, status, bookData }) => {
 
 		setBookLibaries(newData);
 	};
-
 	return (
 		<>
 			<CircleLoading loading={fetchStatus === STATUS_LOADING} />

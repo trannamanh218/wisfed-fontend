@@ -1,0 +1,51 @@
+.friends__unFriends__container {
+	font-family: 'Montserrat';
+	font-style: normal;
+}
+
+.friends__unFriend__close {
+	text-align: right;
+}
+.friends__unFriend__content {
+	font-weight: 700;
+	font-size: 24px;
+	line-height: 48px;
+	letter-spacing: 1px;
+	color: #14142b;
+	margin-bottom: 12px;
+	text-align: center;
+}
+.friends__unFriend__cancel {
+	font-weight: 600;
+	font-size: 15px;
+	line-height: 24px;
+	letter-spacing: 0.75px;
+	color: #6e7191;
+	cursor: pointer;
+	margin-top: 24px;
+}
+.friends__unFriend__title {
+	font-weight: 500;
+	font-size: 18px;
+	line-height: 32px;
+	color: #4e4b66;
+	letter-spacing: 0.75px;
+	text-align: center;
+	margin-bottom: 48px;
+}
+.friends__unFriend__main {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+.friends__unFriend__button {
+	width: 330px;
+}
+@media (min-width: 576px) {
+	.friends__unFriends__container {
+		.modal-dialog {
+			max-width: 500px;
+			margin: 9rem auto;
+		}
+	}
+}

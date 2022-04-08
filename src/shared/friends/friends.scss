@@ -47,6 +47,9 @@
 				line-height: 22px;
 				letter-spacing: 0.25px;
 				display: inline-block;
+				overflow: hidden;
+				white-space: nowrap;
+				text-overflow: ellipsis;
 			}
 		}
 	}

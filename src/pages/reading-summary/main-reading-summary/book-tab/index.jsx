@@ -93,7 +93,7 @@ const BookTab = () => {
 						left: 20,
 						bottom: 5,
 					}}
-					barSize={30}
+					barSize={36}
 				>
 					<XAxis
 						stroke='#6E7191'

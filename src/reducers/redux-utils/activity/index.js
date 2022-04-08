@@ -1,6 +1,8 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { activityAPI, bookAPI, categoryAPI, friendAPI, likeActivityAPI, userAPI } from 'constants/apiURL';
 import Request from 'helpers/Request';
+import { checkBookInLibraries } from '../library';
+import _ from 'lodash';
 
 export const createActivity = createAsyncThunk('activity/createActivity', async (params, { rejectWithValue }) => {
 	try {
@@ -12,15 +14,18 @@ export const createActivity = createAsyncThunk('activity/createActivity', async 
 	}
 });
 
-export const getActivityList = createAsyncThunk('activity/getActivityList', async (params, { rejectWithValue }) => {
-	try {
-		const response = await Request.makeGet(activityAPI, params);
-		return response.data;
-	} catch (err) {
-		const error = JSON.stringify(err.response);
-		throw rejectWithValue(error);
+export const getActivityList = createAsyncThunk(
+	'activity/getActivityList',
+	async (params, { dispatch, rejectWithValue }) => {
+		try {
+			const response = await Request.makeGet(activityAPI, params);
+			return response.data;
+		} catch (err) {
+			const error = JSON.stringify(err.response);
+			throw rejectWithValue(error);
+		}
 	}
-});
+);
 
 export const getSuggestionForPost = createAsyncThunk(
 	'activity/getSuggestionForPost',
@@ -85,7 +90,7 @@ export const updateReactionActivity = createAsyncThunk(
 	'activity/updateReactionActivity',
 	async (params, { rejectWithValue }) => {
 		try {
-			const response = await Request.makePatch(likeActivityAPI, params);
+			const response = await Request.makePatch(likeActivityAPI(params.minipostId), params);
 			return response.data;
 		} catch (err) {
 			const error = JSON.stringify(err.response);

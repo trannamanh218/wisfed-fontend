@@ -7,7 +7,6 @@ import NormalContainer from 'components/layout/normal-container';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { getNotification } from 'reducers/redux-utils/notificaiton';
-import { ReplyFriendRequest, CancelFriendRequest } from 'reducers/redux-utils/user';
 import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
@@ -38,7 +37,9 @@ const Notification = () => {
 	}, [dispatch]);
 
 	const lengthAddFriend = () => {
-		const length = getNotifications.filter(item => item.verb === 'addfriend' && !item.isCheck);
+		const length = getNotifications.filter(
+			item => (item.verb === 'addfriend' || item.verb === 'addfriend') && item.isCheck
+		);
 		return length.length;
 	};
 
@@ -69,7 +70,7 @@ const Notification = () => {
 							</div>
 							<div className='notificaiton__all__main__title'>Gần đây</div>
 							{getNotifications.map(item =>
-								item.isCheck ? (
+								item.isCheck === true ? (
 									''
 								) : (
 									<NotificationStatus
@@ -84,7 +85,7 @@ const Notification = () => {
 						<Tab eventKey='unread' title='Chưa đọc'>
 							<div className='notificaiton__all__main__title'>Thông báo chưa đọc</div>
 							{getNotifications.map(item =>
-								item.isCheck ? (
+								item.isCheck === true ? (
 									''
 								) : (
 									<NotificationStatus
@@ -100,7 +101,7 @@ const Notification = () => {
 							<div className='notificaiton__all__main__title'>{lengthAddFriend()}&nbsp;lời kết bạn</div>
 							{getNotifications.map(
 								item =>
-									item.verb === 'addfriend' &&
+									(item.verb === 'addfriend' || item.verb === 'addFriend') &&
 									!item.isCheck && (
 										<NotificationStatus
 											key={item.id}

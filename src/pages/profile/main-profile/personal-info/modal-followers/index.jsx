@@ -1,7 +1,6 @@
 import './modal-followers.scss';
 import { CloseX } from 'components/svg';
 import SearchField from 'shared/search-field';
-// import AuthorCard from 'shared/author-card';
 import PropTypes from 'prop-types';
 import { Modal } from 'react-bootstrap';
 import { useSelector, useDispatch } from 'react-redux';
@@ -17,7 +16,7 @@ const ModalFollowers = ({ modalFollower, setModalFollower }) => {
 	const { userInfo } = useSelector(state => state.auth);
 	const [getMyListFollowing, setGetMyListFollowing] = useState([]);
 	const dispatch = useDispatch();
-	console.log(getMyListFollowing);
+
 	useEffect(async () => {
 		const param = {
 			userId: userInfo.id,

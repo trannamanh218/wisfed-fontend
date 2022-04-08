@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { categoryAPI, categoryDetailAPI } from 'constants/apiURL';
+import { categoryAPI, categoryDetailAPI, favoriteCategoriesAPI } from 'constants/apiURL';
 import Request from 'helpers/Request';
 
 export const getCategoryList = createAsyncThunk('categroy/getCategoryList', async (params, { rejectWithValue }) => {
@@ -21,6 +21,19 @@ export const getCategoryDetail = createAsyncThunk('categroy/getCategoryDetail', 
 		throw rejectWithValue(error);
 	}
 });
+
+export const getFavoriteCategories = createAsyncThunk(
+	'category/getFavoriteCategories',
+	async (params, { rejectWithValue }) => {
+		try {
+			const response = await Request.makeGet(favoriteCategoriesAPI, params);
+			return response.data;
+		} catch (err) {
+			const error = JSON.parse(err.response);
+			throw rejectWithValue(error);
+		}
+	}
+);
 
 const categorySlice = createSlice({
 	name: 'category',

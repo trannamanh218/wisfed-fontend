@@ -1,12 +1,10 @@
 import { CloseX } from 'components/svg';
 import SearchField from 'shared/search-field';
-// import AuthorCard from 'shared/author-card';
 import PropTypes from 'prop-types';
 import React, { useState, useEffect } from 'react';
 import { Modal } from 'react-bootstrap';
 import { getFriendList, addFollower, unFollower, unFriendRequest } from 'reducers/redux-utils/user';
 import { useDispatch, useSelector } from 'react-redux';
-// import ConnectButtons from 'shared/connect-buttons';
 import UserAvatar from 'shared/user-avatar';
 import Button from 'shared/button';
 import { Minus } from 'components/svg';

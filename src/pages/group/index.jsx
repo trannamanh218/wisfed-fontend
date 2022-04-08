@@ -7,10 +7,10 @@ import MyFriends from './component/my-friend';
 import MyFollow from './component/my-follow';
 import InvitationFriend from './component/invitation-friend';
 import SuggestFriend from './component/suggest-friend';
+
 const Friends = () => {
 	const [activeTabs, setActiveTabs] = useState('friend');
 	const [toggleSearch, setToggleSearch] = useState(true);
-
 	const handleActiveTabs = string => {
 		if (string === 'friend') {
 			setActiveTabs('friend');
@@ -29,11 +29,11 @@ const Friends = () => {
 
 	const contentTabFriends = () => {
 		if (activeTabs === 'friend') {
-			return <MyFriends />;
+			return <MyFriends activeTabs={activeTabs} />;
 		} else if (activeTabs === 'follow') {
-			return <MyFollow />;
+			return <MyFollow activeTabs={activeTabs} />;
 		} else if (activeTabs === 'addfriend') {
-			return <InvitationFriend />;
+			return <InvitationFriend activeTabs={activeTabs} />;
 		} else if (activeTabs === 'suggest') {
 			return <SuggestFriend />;
 		}

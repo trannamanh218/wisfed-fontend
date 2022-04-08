@@ -112,6 +112,9 @@
 		justify-content: flex-end;
 		color: #0576f0;
 		text-decoration: underline;
+		&:hover {
+			color: #0576f0;
+		}
 	}
 }
 
@@ -152,6 +155,10 @@
 // wants to read
 .wants-to-read__thumbnail {
 	margin-right: 20px;
+}
+.wants-to-read__thumbnail img {
+	max-width: 108px;
+	max-width: 162px;
 }
 .sidebar__block__content {
 	.slick-arrow {

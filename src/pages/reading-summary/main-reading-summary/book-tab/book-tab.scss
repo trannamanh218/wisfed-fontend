@@ -86,10 +86,12 @@
 	}
 
 	&__btn {
-		background-color: $primary-light;
-		color: $ash;
-		width: 220px;
-		display: block;
-		margin: 38px 0 80px auto;
+		&.btn {
+			background-color: $primary-light;
+			color: $ash;
+			width: 220px;
+			display: block;
+			margin: 38px 0 80px auto;
+		}
 	}
 }

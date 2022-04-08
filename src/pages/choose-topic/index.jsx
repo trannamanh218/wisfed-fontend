@@ -5,7 +5,7 @@ import SearchField from 'shared/search-field';
 import { Form } from 'react-bootstrap';
 import { useDispatch } from 'react-redux';
 import { getCategoryList } from 'reducers/redux-utils/category';
-import { getLikeCategory } from 'reducers/redux-utils/user';
+import { addToFavoriteCategory } from 'reducers/redux-utils/user';
 import { useNavigate } from 'react-router-dom';
 import { NotificationError } from 'helpers/Error';
 
@@ -30,7 +30,7 @@ function ChooseTopic() {
 				id: 'bfdb3971-de4c-4c2b-bbbe-fbb36770031a',
 				favoriteCategory: addFavorite,
 			};
-			await dispatch(getLikeCategory(params));
+			await dispatch(addToFavoriteCategory(params));
 		} catch (err) {
 			NotificationError(err);
 		} finally {
@@ -41,6 +41,7 @@ function ChooseTopic() {
 	useEffect(() => {
 		getListCategory();
 	}, []);
+
 	const handleChange = e => {
 		const keyData = Number(e.target.value);
 		if (addFavorite.indexOf(keyData) !== -1) {
