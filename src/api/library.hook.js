@@ -45,7 +45,7 @@ export const useFetchLibraries = (current = 1, perPage = 10, filter = '[]') => {
 				}
 			};
 
-			fetchData();
+			// fetchData();
 		}
 		return () => {
 			isMount = false;
@@ -109,7 +109,7 @@ export const useFetchStatsReadingBooks = isUpdate => {
 				}
 			};
 
-			fetchData();
+			// fetchData();
 		}
 		return () => {
 			isMount = false;
@@ -151,7 +151,7 @@ export const useFetchFilterBookFromLibrary = (current = 1, perPage = 10, filter 
 				}
 			};
 
-			fetchData();
+			// fetchData();
 		}
 		return () => {
 			isMount = false;
@@ -199,7 +199,7 @@ export const useFetchMyLibraries = (current = 1, perPage = 10, isUpdate) => {
 				}
 			};
 
-			fetchData();
+			// fetchData();
 		}
 		return () => {
 			isMount = false;
@@ -240,7 +240,7 @@ export const useFetchAuthLibraries = (current = 1, perPage = 10) => {
 				}
 			};
 
-			fetchData();
+			// fetchData();
 		}
 		return () => {
 			isMount = false;
@@ -282,7 +282,7 @@ export const useFetchBookInDefaultLibrary = (current = 1, perPage = 10, filter =
 			}
 		};
 
-		fetchLibrary();
+		// fetchLibrary();
 
 		return () => {
 			isMount = false;

@@ -206,7 +206,7 @@ function Post({ postInformations, className }) {
 
 			{postData.book && <PostBook data={{ ...postData.book, bookLibrary: postData.bookLibrary }} />}
 
-			<GridImage images={postData.image} id={postData.id} />
+			{postData?.image?.length > 0 && <GridImage images={postData.image} inPost={true} />}
 			{postData?.image?.length === 0 && !_.isEmpty(postData?.preview) && (
 				<>
 					{videoId ? (

@@ -13,6 +13,9 @@
 	background-color: #fcfcfc;
 	font-size: 0.94rem;
 	line-height: 24px;
+	&::-webkit-scrollbar {
+		display: none;
+	}
 }
 
 .form-field-label {

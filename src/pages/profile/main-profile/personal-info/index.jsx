@@ -9,7 +9,7 @@ import ConnectButtons from 'shared/connect-buttons';
 import { useModal, useVisible } from 'shared/hooks';
 import ReadMore from 'shared/read-more';
 import UserAvatar from 'shared/user-avatar';
-import PersonalInfoForm from './PersonalInfoForm';
+import PersonalInfoForm from './personal-info-form/PersonalInfoForm';
 import './personal-info.scss';
 import ModalFollowers from './modal-followers';
 import ModalWatching from './modal-watching';

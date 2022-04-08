@@ -1,5 +1,4 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import Request from 'helpers/Request';
+import { createSlice } from '@reduxjs/toolkit';
 
 const profileSlice = createSlice({
 	name: 'profile',

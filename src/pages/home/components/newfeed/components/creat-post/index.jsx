@@ -59,8 +59,7 @@ function CreatPost({ onChangeNewPost }) {
 		if (showModalCreatPost) {
 			creatPostModalContainer.current.addEventListener('mousedown', e => {
 				if (e.target === creatPostModalContainer.current) {
-					setShowModalCreatPost(false);
-					setOption({});
+					hideCreatPostModal();
 					dispatch(updateCurrentBook({}));
 				}
 			});
@@ -94,6 +93,7 @@ function CreatPost({ onChangeNewPost }) {
 
 	const hideCreatPostModal = () => {
 		setShowModalCreatPost(false);
+		setOption({});
 	};
 
 	const onChangeOption = data => {
