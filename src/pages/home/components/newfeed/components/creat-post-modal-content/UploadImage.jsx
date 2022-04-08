@@ -7,7 +7,40 @@ import './style.scss';
 import GridImage from 'shared/grid-image';
 
 const UploadImage = props => {
-	const { addOptionsToPost, images, setImages, removeAllImages } = props;
+	const { addOptionsToPost, handleAddToPost, taggedData } = props;
+	const dispatch = useDispatch();
+	const images = taggedData.addImages;
+	const [status, setStatus] = useState(STATUS_IDLE);
+
+	const uploadFiles = acceptedFiles => {
+		const fileList = acceptedFiles.map(item => {
+			const params = {
+				data: { file: [item] },
+				// onUploadProgress: progressEvent => {
+				// 	const { loaded, total } = progressEvent;
+				// 	const percent = Math.floor((loaded * 100) / total);
+				// },
+			};
+			return dispatch(uploadImage(params)).unwrap();
+		});
+
+		Promise.all(fileList)
+			.then(res => {
+				const resData = res.map(item => item.streamPath);
+				if (!_.isEmpty(resData)) {
+					const imgList = [...taggedData.addImages, ...resData];
+					handleAddToPost(imgList);
+				}
+
+				setStatus(STATUS_SUCCESS);
+			})
+			.catch(() => {
+				toast.error('Lỗi hệ thống không thể upload ảnh');
+			})
+			.finally(() => {
+				setStatus(STATUS_IDLE);
+			});
+	};
 
 	const onDrop = useCallback(acceptedFiles => {
 		if (!_.isEmpty(acceptedFiles)) {

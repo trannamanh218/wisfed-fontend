@@ -7,7 +7,7 @@ import { useDispatch } from 'react-redux';
 import UserAvatar from 'shared/user-avatar';
 import './quote-comment.scss';
 import { likeQuoteComment } from 'reducers/redux-utils/quote';
-import { toast } from 'react-toastify';
+import { NotificationError } from 'helpers/Error';
 
 const QuoteComment = ({ data, handleReply, quoteData, commentLv1Id, quoteCommentsLikedArray }) => {
 	const [isLiked, setIsLiked] = useState(false);
@@ -26,8 +26,8 @@ const QuoteComment = ({ data, handleReply, quoteData, commentLv1Id, quoteComment
 		try {
 			const res = await dispatch(likeQuoteComment(commentId)).unwrap();
 			setIsLiked(res.liked);
-		} catch {
-			toast.error('Lỗi hệ thống');
+		} catch (err) {
+			NotificationError(err);
 		}
 	};
 

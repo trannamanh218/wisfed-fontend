@@ -6,14 +6,12 @@ import avater from 'assets/images/image22.png';
 import NormalContainer from 'components/layout/normal-container';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import UserAvatar from 'shared/user-avatar';
 import { getNotification } from 'reducers/redux-utils/notificaiton';
 import { ReplyFriendRequest, CancelFriendRequest } from 'reducers/redux-utils/user';
 import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { calculateDurationTime } from 'helpers/Common';
-import { renderMessage } from 'helpers/HandleShare';
 import { NotificationError } from 'helpers/Error';
+import NotificationStatus from 'shared/notification-status';
 
 const Notification = () => {
 	const [getNotifications, setGetNotifications] = useState([]);
@@ -33,34 +31,6 @@ const Notification = () => {
 		} catch (err) {
 			NotificationError(err);
 		}
-	};
-
-	const ReplyFriendReq = (data, items) => {
-		const parseObject = JSON.parse(data);
-		const params = { id: parseObject.requestId, data: { reply: true } };
-		dispatch(ReplyFriendRequest(params)).unwrap();
-		const newArr = getNotifications.map(item => {
-			if (items.id === item.id) {
-				const data = { ...item, isAccept: true };
-				return { ...data };
-			}
-			return { ...item };
-		});
-		setGetNotifications(newArr);
-	};
-
-	const cancelFriend = (data, items) => {
-		const parseObject = JSON.parse(data);
-		const params = { id: parseObject.requestId, data: { level: 'normal' } };
-		dispatch(CancelFriendRequest(params)).unwrap();
-		const newArr = getNotifications.map(item => {
-			if (items.id === item.id) {
-				const data = { ...item, isRefuse: true };
-				return { ...data };
-			}
-			return { ...item };
-		});
-		setGetNotifications(newArr);
 	};
 
 	useEffect(() => {
@@ -102,77 +72,12 @@ const Notification = () => {
 								item.isCheck ? (
 									''
 								) : (
-									<div key={item.id} className='notificaiton__tabs__main__all'>
-										<div className='notificaiton__all__main__layout'>
-											<UserAvatar size='mm' source={item.createdBy.avatarImage} />
-											<div className='notificaiton__all__main__layout__status'>
-												<div className='notificaiton__main__all__infor'>
-													<p dangerouslySetInnerHTML={{ __html: item?.message }}></p>
-													{item.verb !== 'follow' && (
-														<>
-															<span>
-																{item.createdBy.fullName ? (
-																	item.createdBy.fullName
-																) : (
-																	<>
-																		<span> {item.createdBy.firstName}</span>
-																		<span> {item.createdBy.lastName}</span>
-																	</>
-																)}
-															</span>
-															&nbsp;
-															{renderMessage(item)}
-														</>
-													)}
-												</div>
-												<div
-													className={
-														item.isAccept || item.isRefuse
-															? 'notificaiton__all__status__seen'
-															: 'notificaiton__all__status'
-													}
-												>{`${calculateDurationTime(item?.time)}`}</div>
-												{item.isAccept ? (
-													<div className='notificaiton___main__all__status'>
-														Đã chấp nhận lời mời
-													</div>
-												) : (
-													item.isRefuse && (
-														<div className='notificaiton___main__all__status'>
-															Đã từ chối lời mời
-														</div>
-													)
-												)}
-											</div>
-											<div
-												className={
-													item.isAccept || item.isRefuse
-														? 'notificaiton__main__all__seen'
-														: 'notificaiton__main__all__unseen'
-												}
-											></div>
-										</div>
-
-										{item.verb === 'addfriend' &&
-											(item.isAccept || item.isRefuse ? (
-												''
-											) : (
-												<div className='notificaiton__main__all__friend'>
-													<div
-														onClick={() => ReplyFriendReq(item.object, item)}
-														className='notificaiton__main__all__accept'
-													>
-														Chấp nhận
-													</div>
-													<div
-														onClick={() => cancelFriend(item.object, item)}
-														className='notificaiton__main__all__refuse'
-													>
-														Từ chối
-													</div>
-												</div>
-											))}
-									</div>
+									<NotificationStatus
+										key={item.id}
+										item={item}
+										setGetNotifications={setGetNotifications}
+										getNotifications={getNotifications}
+									/>
 								)
 							)}
 						</Tab>
@@ -182,52 +87,12 @@ const Notification = () => {
 								item.isCheck ? (
 									''
 								) : (
-									<div key={item.id} className='notificaiton__tabs__main__all'>
-										<div className='notificaiton__all__main__layout'>
-											<UserAvatar size='mm' source={item.createdBy.avatarImage} />
-											<div className='notificaiton__all__main__layout__status'>
-												<div className='notificaiton__main__all__infor'>
-													<p dangerouslySetInnerHTML={{ __html: item?.message }}></p>
-													{item.verb !== 'follow' && (
-														<>
-															<span>
-																{item.createdBy.fullName ? (
-																	item.createdBy.fullName
-																) : (
-																	<>
-																		<span> {item.createdBy.firstName}</span>
-																		<span> {item.createdBy.lastName}</span>
-																	</>
-																)}
-															</span>
-															&nbsp;
-															{renderMessage(item)}
-														</>
-													)}
-												</div>
-												<div className='notificaiton__all__status'>{`${calculateDurationTime(
-													item.time
-												)}`}</div>
-											</div>
-											<div className='notificaiton__main__all__unseen'></div>
-										</div>
-										{item.verb === 'addfriend' && (
-											<div className='notificaiton__main__all__friend'>
-												<div
-													onClick={() => ReplyFriendReq(item.object, item.id)}
-													className='notificaiton__main__all__accept'
-												>
-													Chấp nhận
-												</div>
-												<div
-													onClick={() => cancelFriend(item.object, item.id)}
-													className='notificaiton__main__all__refuse'
-												>
-													Từ chối
-												</div>
-											</div>
-										)}
-									</div>
+									<NotificationStatus
+										key={item.id}
+										item={item}
+										setGetNotifications={setGetNotifications}
+										getNotifications={getNotifications}
+									/>
 								)
 							)}
 						</Tab>
@@ -237,45 +102,12 @@ const Notification = () => {
 								item =>
 									item.verb === 'addfriend' &&
 									!item.isCheck && (
-										<div key={item.id} className='notificaiton__tabs__main__all'>
-											<div className='notificaiton__all__main__layout'>
-												<UserAvatar size='mm' source={item.createdBy.avatarImage} />
-												<div className='notificaiton__all__main__layout__status'>
-													<div className='notificaiton__main__all__infor'>
-														<span>
-															{item.createdBy.fullName ? (
-																item.createdBy.fullName
-															) : (
-																<>
-																	<span> {item.createdBy.firstName}</span>
-																	<span> {item.createdBy.lastName}</span>
-																</>
-															)}
-														</span>
-														&nbsp;đã gửi lời mời kết bạn
-													</div>
-
-													<div className='notificaiton__all__status'>{`${calculateDurationTime(
-														item.time
-													)}`}</div>
-												</div>
-												<div className='notificaiton__main__all__unseen'></div>
-											</div>
-											<div className='notificaiton__main__all__friend'>
-												<div
-													onClick={() => ReplyFriendReq(item.object)}
-													className='notificaiton__main__all__accept'
-												>
-													Chấp nhận
-												</div>
-												<div
-													onClick={() => cancelFriend(item.object)}
-													className='notificaiton__main__all__refuse'
-												>
-													Từ chối
-												</div>
-											</div>
-										</div>
+										<NotificationStatus
+											key={item.id}
+											item={item}
+											setGetNotifications={setGetNotifications}
+											getNotifications={getNotifications}
+										/>
 									)
 							)}
 						</Tab>

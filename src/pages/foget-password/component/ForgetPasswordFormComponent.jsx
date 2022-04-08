@@ -8,7 +8,7 @@ import { changeKey } from 'reducers/redux-utils/forget-password';
 import { useSelector } from 'react-redux';
 import { Circle } from 'shared/loading';
 import { emailValidate } from 'helpers/Validation';
-import { toast } from 'react-toastify';
+import { NotificationError } from 'helpers/Error';
 
 function ForgetpasswordFormComponent() {
 	const isFetching = useSelector(state => state.auth.isFetching);
@@ -38,7 +38,7 @@ function ForgetpasswordFormComponent() {
 				});
 			}
 		} catch (err) {
-			toast.error('Lỗi hệ thống');
+			NotificationError(err);
 		}
 	};
 

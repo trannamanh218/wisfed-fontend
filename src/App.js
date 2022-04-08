@@ -1,7 +1,7 @@
 import BookDetail from 'pages/book-detail';
 import Category from 'pages/category';
 import CategoryDetail from 'pages/category-detail';
-import Group from 'pages/group';
+import Friends from 'pages/group';
 import Home from 'pages/home';
 import Profile from 'pages/profile';
 import Quote from 'pages/quote';
@@ -28,6 +28,7 @@ import ReadingSummary from 'pages/reading-summary';
 import ReadingTarget from 'pages/reading-target';
 import ForgetPassWordAdminComponet from 'pages/foget-password/component-admin/ForgotAdmin';
 import AdminCreatNewPassword from 'pages/foget-password/component-admin/CreatNewPasswordAdmin';
+import DetailFriend from 'pages/group/component/detail-friend';
 import 'scss/main.scss';
 
 function App({ children }) {
@@ -35,10 +36,12 @@ function App({ children }) {
 
 	useEffect(() => {
 		const params = {
-			// email: 'register@gmail.com',
-			// password: '12345678',
-			email: 'admin@gmail.com',
-			password: '123456',
+			email: 'register@gmail.com',
+			password: '12345678',
+			// email: 'hungngonzai@gmail.com',
+			// password: '123456',
+			// email: 'admin@gmail.com',
+			// password: '123456',
 		};
 
 		fetchLogin(params);
@@ -74,9 +77,11 @@ function App({ children }) {
 				<Route path='/category/detail/:id/:slug' element={<CategoryDetail />} />
 				<Route path='/shelves' element={<BookShelves />} />
 				<Route path='/shelves/:userId' element={<BookShelves />} />
+				<Route path='/friends' element={<Friends />} />
 				<Route path='/group' element={<Group />} />
-				<Route path='/book/detail/:bookId' element={<BookDetail />} />
-				<Route path='/book/detail/:bookId/:slug' element={<BookDetail />} />
+				<Route path='/friends/:slug' element={<DetailFriend />} />
+				<Route path='/book/detail/:id' element={<BookDetail />} />
+				<Route path='/book/detail/:id/:slug' element={<BookDetail />} />
 				<Route path='/review/:id' element={<Review />} />
 				<Route path='/review/:id/:slug' element={<Review />} />
 				<Route path='/quotes' element={<Quote />} />

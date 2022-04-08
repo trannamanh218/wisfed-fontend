@@ -1,0 +1,29 @@
+.friends__container {
+	.notificaiton__main__container {
+		padding-top: 36px;
+		gap: 20px;
+	}
+	.friends__detail__header {
+		background: #ffffff;
+		border-radius: 12px;
+		padding: 22px 23px 23px 23px;
+		margin-top: 34px;
+		margin-bottom: 32px;
+		.friends__search {
+			display: flex;
+			gap: 16px;
+			.connect-button {
+				background: #f5e7d8;
+				border-radius: 12px;
+				max-width: 120px;
+				border: none;
+				span {
+					font-weight: 600;
+					font-size: 15px;
+					line-height: 24px;
+					color: #b38c64;
+				}
+			}
+		}
+	}
+}

@@ -2,7 +2,7 @@ import camera from 'assets/images/camera.png';
 import dots from 'assets/images/dots.png';
 import pencil from 'assets/images/pencil.png';
 import { Clock, CloseX, Pencil, QuoteIcon, Restrict } from 'components/svg';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Modal } from 'react-bootstrap';
 import Dropzone from 'react-dropzone';
 import ConnectButtons from 'shared/connect-buttons';
@@ -25,7 +25,9 @@ import PropTypes from 'prop-types';
 const PersonalInfo = ({ userInfo }) => {
 	const { ref: settingsRef, isVisible: isSettingsVisible, setIsVisible: setSettingsVisible } = useVisible(false);
 	const { modalOpen, setModalOpen, toggleModal } = useModal(false);
-
+	const [modalFriend, setModalFriend] = useState(false);
+	const [modalFollower, setModalFollower] = useState(false);
+	const [modalFollowing, setModalFollowing] = useState(false);
 	const updateUserProfile = useSelector(state => state.user.updateUserProfile);
 	const dispatch = useDispatch();
 
@@ -143,9 +145,41 @@ const PersonalInfo = ({ userInfo }) => {
 								<span className='number'>{userInfo.posts}</span>
 								<span>Bài viết</span>
 							</li>
-							<ModalFollowers follower={userInfo.follower} />
-							<ModalWatching following={userInfo.following} />
-							<ModalFriend friends={userInfo.friends} mutualFriends={userInfo.mutualFriends} />
+							<li
+								onClick={() => {
+									setModalFollower(true);
+								}}
+								className='personal-info__item'
+							>
+								<span className='number'>{userInfo.follower}</span>
+								<span>Người theo dõi</span>
+							</li>
+
+							{modalFollower && (
+								<ModalFollowers setModalFollower={setModalFollower} modalFollower={modalFollower} />
+							)}
+							<li
+								onClick={() => {
+									setModalFollowing(true);
+								}}
+								className='personal-info__item'
+							>
+								<span className='number'>{userInfo.following}</span>
+								<span>Đang theo dõi</span>
+							</li>
+							{modalFollowing && (
+								<ModalWatching setModalFollowing={setModalFollowing} modalFollowing={modalFollowing} />
+							)}
+							<li
+								onClick={() => {
+									setModalFriend(true);
+								}}
+								className='personal-info__item'
+							>
+								<span className='number'>{userInfo.friends}</span>
+								<span>Bạn bè ({userInfo.mutualFriends})</span>
+							</li>
+							{modalFriend && <ModalFriend setModalFriend={setModalFriend} modalFriend={modalFriend} />}
 						</ul>
 						{userInfo.descriptions && <ReadMore text={userInfo.descriptions} />}
 					</div>

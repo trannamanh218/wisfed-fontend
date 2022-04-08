@@ -7,7 +7,9 @@ import { useDispatch } from 'react-redux';
 import { getCategoryList } from 'reducers/redux-utils/category';
 import { addToFavoriteCategory } from 'reducers/redux-utils/user';
 import { toast } from 'react-toastify';
+import { getLikeCategory } from 'reducers/redux-utils/user';
 import { useNavigate } from 'react-router-dom';
+import { NotificationError } from 'helpers/Error';
 
 function ChooseTopic() {
 	const [listCategory, setListCategory] = useState([]);
@@ -30,9 +32,9 @@ function ChooseTopic() {
 				id: 'bfdb3971-de4c-4c2b-bbbe-fbb36770031a',
 				favoriteCategory: addFavorite,
 			};
-			await dispatch(addToFavoriteCategory(params));
-		} catch {
-			toast.error('Lỗi hệ thống');
+			await dispatch(getLikeCategory(params));
+		} catch (err) {
+			NotificationError(err);
 		} finally {
 			navigate('/');
 		}
