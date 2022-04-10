@@ -21,6 +21,7 @@ import { editUserInfo } from 'reducers/redux-utils/user';
 import { toast } from 'react-toastify';
 import { activeUpdateUserProfileStatus } from 'reducers/redux-utils/user';
 import PropTypes from 'prop-types';
+import backgroundImageDefault from 'assets/images/background-profile.png';
 
 const PersonalInfo = ({ userInfo }) => {
 	const { ref: settingsRef, isVisible: isSettingsVisible, setIsVisible: setSettingsVisible } = useVisible(false);
@@ -60,7 +61,10 @@ const PersonalInfo = ({ userInfo }) => {
 	});
 	return (
 		<div className='personal-info'>
-			<div className='personal-info__wallpaper' style={{ backgroundImage: `url(${userInfo.backgroundImage})` }}>
+			<div
+				className='personal-info__wallpaper'
+				style={{ backgroundImage: `url(${userInfo.backgroundImage})` || `url(${backgroundImageDefault})` }}
+			>
 				<Dropzone onDrop={acceptedFile => handleDrop(acceptedFile, 'change-bgImage')}>
 					{({ getRootProps, getInputProps }) => (
 						<div className='edit-wallpaper' {...getRootProps()}>

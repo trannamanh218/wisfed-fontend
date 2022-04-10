@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import avatarTest from 'assets/images/avatar2.png';
 import bookSample from 'assets/images/sample-book-img.jpg';
 import { getSuggestionForPost } from 'reducers/redux-utils/activity';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import _ from 'lodash';
 import { creatQuotes } from 'reducers/redux-utils/quote/index';
 import { toast } from 'react-toastify';
@@ -38,7 +38,6 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 	const categoryInputWrapper = useRef(null);
 	const categoryInput = useRef(null);
 
-	const userInfo = useSelector(state => state.auth.userInfo);
 	const dispatch = useDispatch();
 
 	const colorData = [

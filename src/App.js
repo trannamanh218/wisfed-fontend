@@ -72,7 +72,6 @@ function App({ children }) {
 				<Route path='/category' element={<Category />} />
 				<Route path='/category/detail/:id' element={<CategoryDetail />} />
 				<Route path='/category/detail/:id/:slug' element={<CategoryDetail />} />
-				<Route path='/shelves' element={<BookShelves />} />
 				<Route path='/shelves/:userId' element={<BookShelves />} />
 				<Route path='/group' element={<Group />} />
 				<Route path='/book/detail/:bookId' element={<BookDetail />} />
