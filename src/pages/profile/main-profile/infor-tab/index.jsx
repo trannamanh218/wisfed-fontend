@@ -36,6 +36,7 @@ const InforTab = ({ userInfo }) => {
 									isBorder={false}
 									disabled
 									value={userInfo.fullName}
+									readOnly={true}
 								/>
 							</div>
 						</div>
@@ -69,12 +70,19 @@ const InforTab = ({ userInfo }) => {
 												isBorder={false}
 												disabled
 												value={date}
+												readOnly={true}
 											/>
 										</div>
 									</div>
 									<div className='col-4 '>
 										<div className='form-field'>
-											<Input type='text' isBorder={false} disabled value={month} />
+											<Input
+												type='text'
+												isBorder={false}
+												disabled
+												value={month}
+												readOnly={true}
+											/>
 										</div>
 									</div>
 									<div className='col-4 '>
@@ -85,6 +93,7 @@ const InforTab = ({ userInfo }) => {
 												isBorder={false}
 												disabled
 												value={year}
+												readOnly={true}
 											/>
 										</div>
 									</div>
@@ -107,6 +116,7 @@ const InforTab = ({ userInfo }) => {
 										isBorder={false}
 										disabled
 										value={userInfo.address}
+										readOnly={true}
 									/>
 								) : (
 									<div className='form-field__no-data '>Chưa có dữ liệu</div>
@@ -122,7 +132,13 @@ const InforTab = ({ userInfo }) => {
 							<label className='form-field-label'>Công việc</label>
 							<div className='form-field'>
 								{userInfo.works ? (
-									<Input type='text' isBorder={false} disabled value={userInfo.works} />
+									<Input
+										type='text'
+										isBorder={false}
+										disabled
+										value={userInfo.works}
+										readOnly={true}
+									/>
 								) : (
 									<div className='form-field__no-data '>Chưa có dữ liệu</div>
 								)}
@@ -137,7 +153,7 @@ const InforTab = ({ userInfo }) => {
 									{userInfo.socials.map((item, index) => (
 										<div className='form-field-socials-link' key={index}>
 											<div className='form-field'>
-												<Input type='text' isBorder={false} value={item} />
+												<Input type='text' isBorder={false} value={item} readOnly={true} />
 											</div>
 										</div>
 									))}

@@ -214,7 +214,6 @@ export const useFetchMyLibraries = (current = 1, perPage = 10, isUpdate) => {
 
 export const useFetchAuthLibraries = (current = 1, perPage = 10) => {
 	const [status, setStatus] = useState(STATUS_IDLE);
-	const [retry, setRetry] = useState(false);
 	const [statusLibraries, setStatusLibraries] = useState([]);
 	const { userInfo } = useSelector(state => state.auth);
 	const dispatch = useDispatch();
@@ -244,7 +243,7 @@ export const useFetchAuthLibraries = (current = 1, perPage = 10) => {
 		return () => {
 			isMount = false;
 		};
-	}, [retry, current, perPage, userInfo]);
+	}, [current, perPage, userInfo]);
 	return { status, statusLibraries };
 };
 

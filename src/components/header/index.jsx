@@ -71,7 +71,7 @@ const Header = () => {
 					/>
 					{modalNoti && <NotificationModal setModalNotti={setModalNotti} buttonModal={buttonModal} />}
 				</div>
-				<Link to='/profile'>
+				<Link to={`/profile/${userInfo.id}`}>
 					<UserAvatar className='header__avatar' source={userInfo?.avatarImage} />
 				</Link>
 			</div>

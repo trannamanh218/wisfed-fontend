@@ -65,7 +65,11 @@ const PersonalInfo = ({ userInfo }) => {
 		<div className='personal-info'>
 			<div
 				className='personal-info__wallpaper'
-				style={{ backgroundImage: `url(${userInfo.backgroundImage})` || `url(${backgroundImageDefault})` }}
+				style={
+					userInfo.backgroundImage
+						? { backgroundImage: `url(${userInfo.backgroundImage})` }
+						: { backgroundImage: `url(${backgroundImageDefault})` }
+				}
 			>
 				<Dropzone onDrop={acceptedFile => handleDrop(acceptedFile, 'change-bgImage')}>
 					{({ getRootProps, getInputProps }) => (

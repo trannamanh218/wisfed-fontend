@@ -56,7 +56,7 @@ TextareaType.propTypes = {
 	textareaValue: PropTypes.string,
 	editStatus: PropTypes.bool,
 	textareaRef: PropTypes.object,
-	updateInputValue: PropTypes.string,
+	updateInputValue: PropTypes.func,
 	cancelEdit: PropTypes.func,
 	enableEdit: PropTypes.func,
 };

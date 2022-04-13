@@ -2,6 +2,7 @@ import ShareModeDropdown from 'shared/share-mode-dropdown';
 import PropTypes from 'prop-types';
 import Input from 'shared/input';
 import { Add } from 'components/svg';
+import _ from 'lodash';
 
 function GroupType({
 	dataArray,
@@ -38,7 +39,7 @@ function GroupType({
 	return (
 		<div className='form-field-group'>
 			<label className='form-field-label'>URL Mạng xã hội khác</label>
-			{dataArray.length > 0 ? (
+			{!_.isEmpty(dataArray) ? (
 				<>
 					{dataArray.map((item, index) => (
 						<div className='form-field-wrapper socials-link' key={index}>

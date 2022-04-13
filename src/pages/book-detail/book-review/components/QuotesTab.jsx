@@ -19,7 +19,7 @@ const QuotesTab = () => {
 	const [myQuoteList, setMyQuoteList] = useState([]);
 	const [hasMore, setHasMore] = useState(true);
 
-	const callApiStart = useRef(10);
+	const callApiStart = useRef(0);
 	const callApiPerPage = useRef(10);
 
 	const resetQuoteList = useSelector(state => state.quote.resetQuoteList);
@@ -34,28 +34,9 @@ const QuotesTab = () => {
 	};
 
 	useEffect(() => {
-		callApiStart.current = 10;
-		getMyQuoteListFirstTime();
+		callApiStart.current = 0;
+		getMyQuoteList();
 	}, [resetQuoteList]);
-
-	const getMyQuoteListFirstTime = async () => {
-		try {
-			const params = {
-				start: 0,
-				limit: callApiPerPage.current,
-				sort: JSON.stringify([{ property: 'createdAt', direction: 'DESC' }]),
-				filter: JSON.stringify([{ operator: 'eq', value: id, property: 'bookId' }]),
-			};
-			const quotesList = await dispatch(getQuoteList(params)).unwrap();
-			if (quotesList.length) {
-				setMyQuoteList(quotesList);
-			} else {
-				setHasMore(false);
-			}
-		} catch (err) {
-			NotificationError(err);
-		}
-	};
 
 	const getMyQuoteList = async () => {
 		try {
