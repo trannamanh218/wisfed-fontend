@@ -122,7 +122,7 @@ const ModalFriend = ({ setModalFriend, modalFriend }) => {
 					<div className='modalFollowers__info'>
 						{getMyListFriend.map(item =>
 							// <AuthorCard direction={'row'} key={item.id} size={'md'} item={item} />
-							item.checkUnfriend ? (
+							item.checkUnfriend && item.relation !== 'isMe' ? (
 								<div key={item.id} className='author-card'>
 									<div className='author-card__left'>
 										<UserAvatar

@@ -14,6 +14,7 @@ const Sidebar = () => {
 	const fiterBook = JSON.stringify([{ operator: 'eq', value: 'wantToRead', property: 'defaultType' }]);
 	const { bookData } = useFetchBookInDefaultLibrary(1, 10, fiterBook);
 	const { readingData, booksRead } = useFetchStatsReadingBooks();
+
 	return (
 		<div className='sidebar'>
 			<GroupShortcuts />

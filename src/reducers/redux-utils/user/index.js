@@ -27,10 +27,10 @@ export const getUserList = createAsyncThunk('user/getUserList', async (params, {
 	}
 });
 
-export const getListFollowrs = createAsyncThunk('user/getListFollowrs', async (param, { rejectWithValue }) => {
-	const { userId } = param;
+export const getListFollowrs = createAsyncThunk('user/getListFollowrs', async (params, { rejectWithValue }) => {
+	const { userId, ...query } = params;
 	try {
-		const response = await Request.makeGet(listFolowrs(userId), param);
+		const response = await Request.makeGet(listFolowrs(userId), query);
 		return response.data;
 	} catch (err) {
 		const error = JSON.parse(err.response);
@@ -49,10 +49,11 @@ export const getFriendList = createAsyncThunk('user/getFriendList', async (param
 	}
 });
 
-export const getListFollowing = createAsyncThunk('user/getListFollowing', async (param, { rejectWithValue }) => {
-	const { userId } = param;
+export const getListFollowing = createAsyncThunk('user/getListFollowing', async (params, { rejectWithValue }) => {
+	const { userId, ...query } = params;
+
 	try {
-		const response = await Request.makeGet(listFollowing(userId), param);
+		const response = await Request.makeGet(listFollowing(userId), query);
 		return response.data;
 	} catch (err) {
 		const error = JSON.parse(err.response);
@@ -62,9 +63,10 @@ export const getListFollowing = createAsyncThunk('user/getListFollowing', async 
 
 export const getListReqFriendsToMe = createAsyncThunk(
 	'user/getListReqFriendsToMe',
-	async (param, { rejectWithValue }) => {
+	async (params, { rejectWithValue }) => {
+		const { ...query } = params;
 		try {
-			const response = await Request.makeGet(myFriendsReq, param);
+			const response = await Request.makeGet(myFriendsReq, query);
 			return response.data;
 		} catch (err) {
 			const error = JSON.parse(err.response);
