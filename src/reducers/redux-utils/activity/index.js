@@ -1,8 +1,8 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { activityAPI, bookAPI, categoryAPI, friendAPI, likeActivityAPI, userAPI } from 'constants/apiURL';
 import Request from 'helpers/Request';
-import { checkBookInLibraries } from '../library';
-import _ from 'lodash';
+// import { checkBookInLibraries } from '../library';
+// import _ from 'lodash';
 
 export const createActivity = createAsyncThunk('activity/createActivity', async (params, { rejectWithValue }) => {
 	try {

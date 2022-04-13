@@ -6,6 +6,7 @@ import { Form } from 'react-bootstrap';
 import { useDispatch } from 'react-redux';
 import { getCategoryList } from 'reducers/redux-utils/category';
 import { addToFavoriteCategory } from 'reducers/redux-utils/user';
+// import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import { NotificationError } from 'helpers/Error';
 

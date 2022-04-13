@@ -1,0 +1,53 @@
+@import 'src/scss/abstracts/_global.scss';
+
+.share-mode-dropdown {
+	position: relative;
+	svg {
+		width: 14px;
+		height: 14px;
+	}
+	.group-icon-svg {
+		width: 16px;
+		height: 16px;
+		path {
+			stroke: $ash;
+		}
+	}
+}
+
+.share-mode-selected {
+	background-color: #eff0f6;
+	width: 34px;
+	height: 34px;
+	border-radius: 50%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	cursor: pointer;
+}
+
+.share-mode-list {
+	width: 130px;
+	background-color: #eff0f6;
+	border-radius: 8px;
+	padding: 6px 8px;
+	font-size: 0.82rem;
+	position: absolute;
+	left: 0;
+	top: 100%;
+	z-index: 1000;
+	display: none;
+	margin-top: 6px;
+	border: #e2e2e2 1px solid;
+	&.show {
+		display: flex;
+		flex-direction: column;
+		gap: 16px;
+	}
+}
+
+.share-mode-list__item {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}

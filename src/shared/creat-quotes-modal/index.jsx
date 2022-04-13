@@ -32,7 +32,6 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 	const [getDataFinish, setGetDataFinish] = useState(false);
 	const [categoryAddedIdList, setCategoryAddedIdList] = useState([]);
 	const [hashTagsAddedArray, setHashTagsAddedArray] = useState([]);
-
 	const textFieldEdit = useRef(null);
 	const categoryInputContainer = useRef(null);
 	const categoryInputWrapper = useRef(null);
@@ -92,7 +91,7 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 
 	const getSuggestionForCreatQuotes = async (input, option) => {
 		try {
-			const data = await dispatch(getSuggestionForPost({ input, option, userInfo })).unwrap();
+			const data = await dispatch(getSuggestionForPost({ input, option })).unwrap();
 			if (option.value === 'addAuthor') {
 				setAuthorSearchedList(data.rows.slice(0, 5));
 			} else if (option.value === 'addBook') {

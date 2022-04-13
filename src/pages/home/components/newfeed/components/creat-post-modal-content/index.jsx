@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-import { createActivity, getSuggestionForPost } from 'reducers/redux-utils/activity';
+import { createActivity } from 'reducers/redux-utils/activity';
 import PostEditBook from 'shared/post-edit-book';
 import OptionsPost from './OptionsPost';
 import ShareModeComponent from './ShareModeComponent';
@@ -25,6 +25,7 @@ import { usePrevious } from 'shared/hooks';
 import { addBookToDefaultLibrary } from 'reducers/redux-utils/library';
 import { setting } from './settings';
 import { NotificationError } from 'helpers/Error';
+import { uploadMultiFile } from 'reducers/redux-utils/common';
 
 function CreatPostModalContent({
 	hideCreatPostModal,
@@ -38,14 +39,11 @@ function CreatPostModalContent({
 	const [shareMode, setShareMode] = useState({ value: 'public', title: 'Mọi người', icon: <WorldNet /> });
 	const [showTextFieldEditPlaceholder, setShowTextFieldEditPlaceholder] = useState(true);
 	const [showMainModal, setShowMainModal] = useState(showModalCreatPost);
-	const [suggestionData, setSuggestionData] = useState([]);
-	const mentionData = useRef({});
 	const [taggedData, setTaggedData] = useState({
 		'addBook': {},
 		'addAuthor': [],
 		'addFriends': [],
 		'addCategory': [],
-		'addImages': [],
 	});
 	const [fetchingUrlInfo, setFetchingUrlInfo] = useState(false);
 	const [hasUrl, setHasUrl] = useState(false);
@@ -54,6 +52,7 @@ function CreatPostModalContent({
 	const [oldUrlAddedArray, setOldUrlAddedArray] = useState([]);
 	const [status, setStatus] = useState(STATUS_IDLE);
 	const [showUpload, setShowUpload] = useState(false);
+	const [imagesUpload, setImagesUpload] = useState([]);
 	const [validationInput, setValidationInput] = useState();
 	const dispatch = useDispatch();
 	const textFieldEdit = useRef(null);
@@ -68,12 +67,6 @@ function CreatPostModalContent({
 
 	useEffect(() => {
 		textFieldEdit.current.focus();
-
-		// const form = document.getElementById('formCreatePost');
-		// console.log(form);
-		// if (form) {
-		// 	form.addEventListener();
-		// }
 	}, []);
 
 	useEffect(() => {
@@ -102,12 +95,6 @@ function CreatPostModalContent({
 			document.removeEventListener('input', handlePlaceholder);
 		};
 	}, [showTextFieldEditPlaceholder]);
-
-	useEffect(() => {
-		if (!_.isEmpty(option)) {
-			setShowMainModal(false);
-		}
-	}, [option]);
 
 	const detectUrl = useCallback(
 		_.debounce(() => {
@@ -190,41 +177,41 @@ function CreatPostModalContent({
 		}
 	};
 
-	const fetchSuggestion = async (input, option) => {
-		try {
-			const data = await dispatch(getSuggestionForPost({ input, option, userInfo })).unwrap();
-			setSuggestionData(data.rows);
-		} catch (err) {
-			NotificationError(err);
-			return err;
-		}
-	};
-
 	const backToMainModal = () => {
 		setShowMainModal(true);
 	};
 
 	const addOptionsToPost = param => {
-		onChangeOption(param);
-		setShowMainModal(false);
-		if (param.value === 'modifyImages') {
-			setShowMainModal(true);
+		if (imagesUpload.length > 0 && param.value === 'addBook') {
+			toast.warning('Không thể kết hợp đồng thời thêm ảnh và sách');
+		} else {
+			onChangeOption(param);
+			setShowMainModal(false);
 		}
 	};
 
 	const handleOpenUploadImage = () => {
-		setShowUpload(true);
-		addOptionsToPost({ value: 'addImages', title: 'chỉnh sửa ảnh', icon: <Image />, message: '' });
+		if (_.isEmpty(taggedData.addBook)) {
+			setShowUpload(!showUpload);
+			addOptionsToPost({ value: 'addImages', title: 'chỉnh sửa ảnh', icon: <Image />, message: '' });
+		} else {
+			toast.warning('Không thể kết hợp đồng thời thêm ảnh và sách');
+		}
 	};
 
 	const deleteImage = imageIndex => {
-		const newImagesArray = [...taggedData.addImages];
+		const newImagesArray = [...imagesUpload];
 		newImagesArray.splice(imageIndex, 1);
-		setTaggedData(prev => ({ ...prev, 'addImages': newImagesArray }));
 		if (!newImagesArray.length) {
 			backToMainModal();
 			addOptionsToPost({ value: 'addImages', title: 'chỉnh sửa ảnh', icon: <Image />, message: '' });
 		}
+		setImagesUpload(newImagesArray);
+	};
+
+	const removeAllImages = () => {
+		setImagesUpload([]);
+		setShowUpload(false);
 	};
 
 	const handleAddToPost = data => {
@@ -258,7 +245,7 @@ function CreatPostModalContent({
 		}
 	};
 
-	const generateData = () => {
+	const generateData = async () => {
 		const params = {
 			msg: textFieldEdit?.current?.innerHTML,
 			mentionsUser: [],
@@ -270,7 +257,19 @@ function CreatPostModalContent({
 
 		params.mentionsUser = taggedData.addFriends.length ? taggedData.addFriends.map(item => item.id) : [];
 		params.mentionsAuthor = taggedData.addAuthor.length ? taggedData.addAuthor.map(item => item.id) : [];
-		params.image = taggedData.addImages.length ? taggedData.addImages : [];
+		if (imagesUpload.length) {
+			try {
+				const imagesUploaded = await dispatch(uploadMultiFile(imagesUpload)).unwrap();
+				const imagesArray = [];
+				imagesUploaded.forEach(item => {
+					imagesArray.push(item.streamPath);
+				});
+				params.image = imagesArray;
+			} catch {
+				toast.error('Đăng ảnh không thành công');
+				params.image = {};
+			}
+		}
 		params.mentionsCategory = taggedData.addCategory.length ? taggedData.addCategory.map(item => item.id) : [];
 		if (!_.isEmpty(taggedData.addBook)) {
 			params.bookId = taggedData.addBook.id;
@@ -309,7 +308,7 @@ function CreatPostModalContent({
 	};
 
 	const onCreatePost = async () => {
-		const params = generateData();
+		const params = await generateData();
 		// book, author , topic is required
 		if ((params.bookId || params.mentionsAuthor.length || params.mentionsCategory.length) && params.msg) {
 			setStatus(STATUS_LOADING);
@@ -340,14 +339,12 @@ function CreatPostModalContent({
 
 	const checkActive = () => {
 		let isActive = false;
-
 		if (
 			(!_.isEmpty(taggedData.addBook) || taggedData.addAuthor.length || taggedData.addCategory.length) &&
 			textFieldEdit.current?.innerText
 		) {
 			isActive = true;
 		}
-
 		return isActive && !validationInput;
 	};
 
@@ -454,9 +451,9 @@ function CreatPostModalContent({
 							{showUpload && (
 								<UploadImage
 									addOptionsToPost={addOptionsToPost}
-									optionList={optionList}
-									handleAddToPost={handleAddToPost}
-									taggedData={taggedData}
+									images={imagesUpload}
+									setImages={setImagesUpload}
+									removeAllImages={removeAllImages}
 								/>
 							)}
 							{hasUrl && !showUpload && (
@@ -477,10 +474,14 @@ function CreatPostModalContent({
 									list={optionList}
 									addOptionsToPost={addOptionsToPost}
 									taggedData={taggedData}
+									images={imagesUpload}
 								/>
 								<label
 									htmlFor='image-upload'
-									className='creat-post-modal-content__main__options__item-add-to-post'
+									className={classNames('creat-post-modal-content__main__options__item-add-to-post', {
+										'active': imagesUpload.length > 0 && _.isEmpty(taggedData.addBook),
+										'disabled': !_.isEmpty(taggedData.addBook),
+									})}
 									onClick={handleOpenUploadImage}
 								>
 									<Image />
@@ -514,17 +515,13 @@ function CreatPostModalContent({
 					option={option}
 					backToMainModal={backToMainModal}
 					deleteImage={deleteImage}
-					optionList={optionList}
-					fetchSuggestion={fetchSuggestion}
-					suggestionData={suggestionData}
 					handleAddToPost={handleAddToPost}
-					mentionData={mentionData.current}
 					taggedData={taggedData}
 					removeTaggedItem={removeTaggedItem}
-					addOptionsToPost={addOptionsToPost}
-					showMainModal={showMainModal}
+					images={imagesUpload}
 					taggedDataPrevious={taggedDataPrevious}
 					handleValidationInput={handleValidationInput}
+					userInfo={userInfo}
 				/>
 			</div>
 		</div>
