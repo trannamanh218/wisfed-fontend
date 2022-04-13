@@ -11,7 +11,7 @@ const SearchBook = props => {
 		return (
 			<div className='main-shelves__search__results'>
 				<h4>{`Kết quả tìm kiếm "${inputSearch}"`}</h4>
-				<Shelf list={list} isMyShelve={isMyShelve} handleUpdateLibrary={handleUpdateLibrary} />;
+				<Shelf list={list} isMyShelve={isMyShelve} handleUpdateLibrary={handleUpdateLibrary} />
 			</div>
 		);
 	}

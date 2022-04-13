@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import QuoteList from 'shared/quote-list';
 import { getQuoteList } from 'reducers/redux-utils/quote';
 import { useDispatch } from 'react-redux';
-import { toast } from 'react-toastify';
+import { NotificationError } from 'helpers/Error';
 
 const QuoteTab = () => {
 	const [myQuoteList, setMyQuoteList] = useState([]);
@@ -26,8 +26,8 @@ const QuoteTab = () => {
 			};
 			const quotesList = await dispatch(getQuoteList(params)).unwrap();
 			setMyQuoteList(myQuoteList.concat(quotesList));
-		} catch {
-			toast.error('Lỗi hệ thống');
+		} catch (err) {
+			NotificationError(err);
 		}
 	};
 

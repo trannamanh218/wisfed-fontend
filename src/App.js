@@ -1,7 +1,7 @@
 import BookDetail from 'pages/book-detail';
 import Category from 'pages/category';
 import CategoryDetail from 'pages/category-detail';
-import Group from 'pages/group';
+import Friends from 'pages/group';
 import Home from 'pages/home';
 import Profile from 'pages/profile';
 import Quote from 'pages/quote';
@@ -28,17 +28,23 @@ import ReadingSummary from 'pages/reading-summary';
 import ReadingTarget from 'pages/reading-target';
 import ForgetPassWordAdminComponet from 'pages/foget-password/component-admin/ForgotAdmin';
 import AdminCreatNewPassword from 'pages/foget-password/component-admin/CreatNewPasswordAdmin';
+import DetailFriend from 'pages/group/component/detail-friend';
 import 'scss/main.scss';
+import QuoteAll from 'pages/quote/all-quote/';
 
 function App({ children }) {
 	const dispatch = useDispatch();
 
 	useEffect(() => {
 		const params = {
-			// email: 'register@gmail.com',
+			email: 'register@gmail.com',
+			password: '12345678',
+			// email: 'hungngonzai@gmail.com',
+			// password: '123456',
+			// email: 'admin@gmail.com',
+			// password: '123456',
+			// email: 'register2@gmail.com',
 			// password: '12345678',
-			email: 'admin@gmail.com',
-			password: '123456',
 		};
 
 		fetchLogin(params);
@@ -73,13 +79,15 @@ function App({ children }) {
 				<Route path='/category/detail/:id' element={<CategoryDetail />} />
 				<Route path='/category/detail/:id/:slug' element={<CategoryDetail />} />
 				<Route path='/shelves/:userId' element={<BookShelves />} />
-				<Route path='/group' element={<Group />} />
+				<Route path='/friends' element={<Friends />} />
+				<Route path='/friends/:slug' element={<DetailFriend />} />
 				<Route path='/book/detail/:bookId' element={<BookDetail />} />
 				<Route path='/book/detail/:bookId/:slug' element={<BookDetail />} />
 				<Route path='/review/:id' element={<Review />} />
 				<Route path='/review/:id/:slug' element={<Review />} />
 				<Route path='/quotes' element={<Quote />} />
 				<Route path='/quotes/me' element={<MyQuote />} />
+				<Route path='/quotes/all' element={<QuoteAll />} />
 				<Route path='/quotes/detail/:id' element={<QuoteDetail />} />
 				<Route path='/profile' element={<Profile />} />
 				<Route path='/confirm-my-book/:bookId' element={<ConfirmMyBook />} />

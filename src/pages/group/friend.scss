@@ -1,0 +1,95 @@
+.friends__container {
+	max-width: 700px;
+	margin: 0 auto;
+	font-family: 'Montserrat';
+	font-style: normal;
+	min-height: 100vh;
+	.friends__content {
+		font-weight: 700;
+		font-size: 36px;
+		line-height: 48px;
+		padding: 34px 0 26px 0;
+	}
+	.friends__header {
+		background: #ffffff;
+		border-radius: 12px;
+		padding: 22px 23px 0 23px;
+		.friends__search {
+			display: flex;
+			gap: 16px;
+			margin-bottom: 27px;
+			.connect-button {
+				background: #f5e7d8;
+				border-radius: 12px;
+				max-width: 120px;
+				border: none;
+				span {
+					font-weight: 600;
+					font-size: 15px;
+					line-height: 24px;
+					color: #b38c64;
+				}
+			}
+		}
+		.friend__radio {
+			display: flex;
+			gap: 28px;
+			padding-bottom: 23px;
+			[type='radio']:checked,
+			[type='radio']:not(:checked) {
+				position: absolute;
+				left: -9999px;
+			}
+			[type='radio']:checked + label,
+			[type='radio']:not(:checked) + label {
+				position: relative;
+				padding-left: 28px;
+				cursor: pointer;
+				line-height: 20px;
+				display: inline-block;
+				color: #666;
+			}
+			[type='radio']:checked + label:before,
+			[type='radio']:not(:checked) + label:before {
+				content: '';
+				position: absolute;
+				left: 0;
+				top: 0;
+				width: 20px;
+				height: 20px;
+				border: 2px solid #a0a3bd;
+				border-radius: 100%;
+				background: #fff;
+			}
+			[type='radio']:checked + label:after,
+			[type='radio']:not(:checked) + label:after {
+				content: '';
+				width: 12px;
+				height: 12px;
+				background: #e0af7e;
+				position: absolute;
+				top: 4px;
+				left: 4px;
+				border-radius: 100%;
+				-webkit-transition: all 0.2s ease;
+				transition: all 0.2s ease;
+			}
+			[type='radio']:checked + label:before {
+				border: 2px solid #b38c64;
+			}
+			[type='radio']:not(:checked) + label:after {
+				opacity: 0;
+				-webkit-transform: scale(0);
+				transform: scale(0);
+			}
+			[type='radio']:checked + label:after {
+				opacity: 1;
+				-webkit-transform: scale(1);
+				transform: scale(1);
+			}
+		}
+	}
+	.friends__main {
+		margin-top: 32px;
+	}
+}

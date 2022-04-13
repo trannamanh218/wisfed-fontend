@@ -4,8 +4,7 @@ import QuoteCard from 'shared/quote-card';
 import './quote-list.scss';
 import { checkLikeQuote } from 'reducers/redux-utils/quote';
 import { useDispatch } from 'react-redux';
-import { toast } from 'react-toastify';
-
+import { NotificationError } from 'helpers/Error';
 const QuoteList = ({ list }) => {
 	const [likedArray, setLikedArray] = useState([]);
 
@@ -19,8 +18,8 @@ const QuoteList = ({ list }) => {
 		try {
 			const res = await dispatch(checkLikeQuote()).unwrap();
 			setLikedArray(res);
-		} catch {
-			toast.error('Lỗi hệ thống');
+		} catch (err) {
+			NotificationError(err);
 		}
 	};
 

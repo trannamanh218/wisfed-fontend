@@ -27,7 +27,15 @@ import { setting } from './settings';
 import { NotificationError } from 'helpers/Error';
 import { uploadMultiFile } from 'reducers/redux-utils/common';
 
-function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option, onChangeOption, onChangeNewPost }) {
+function CreatPostModalContent({
+	hideCreatPostModal,
+	showModalCreatPost,
+	option,
+	onChangeOption,
+	onChangeNewPost,
+	renderBookReading,
+	booksId,
+}) {
 	const [shareMode, setShareMode] = useState({ value: 'public', title: 'Mọi người', icon: <WorldNet /> });
 	const [showTextFieldEditPlaceholder, setShowTextFieldEditPlaceholder] = useState(true);
 	const [showMainModal, setShowMainModal] = useState(showModalCreatPost);
@@ -62,11 +70,18 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 	}, []);
 
 	useEffect(() => {
-		if (!_.isEmpty(bookForCreatePost)) {
-			const newData = { ...taggedData };
-			const pages = { read: bookForCreatePost.page, reading: '', wantToRead: '' };
-			newData.addBook = { ...bookForCreatePost, progress: pages[bookForCreatePost.status] };
-			setTaggedData(newData);
+		if (!_.isEmpty(bookForCreatePost) || !_.isEmpty(renderBookReading)) {
+			if (booksId) {
+				const newData = { ...taggedData };
+				const pages = { read: renderBookReading.page, reading: '', wantToRead: '' };
+				newData.addBook = { ...renderBookReading, progress: pages[renderBookReading.status] };
+				setTaggedData(newData);
+			} else {
+				const newData = { ...taggedData };
+				const pages = { read: bookForCreatePost.page, reading: '', wantToRead: '' };
+				newData.addBook = { ...bookForCreatePost, progress: pages[bookForCreatePost.status] };
+				setTaggedData(newData);
+			}
 		}
 	}, [bookForCreatePost]);
 
@@ -270,7 +285,6 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 		const { status, progress } = taggedData.addBook;
 		const convertProgress = parseInt(progress) || 0;
 		const progressParams = { id: params.bookId, progress: convertProgress };
-
 		// read
 		if (status) {
 			if (status === STATUS_BOOK.read || STATUS_BOOK.reading) {
@@ -311,8 +325,9 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 				onChangeNewPost();
 			} catch (err) {
 				const statusCode = err?.statusCode || 500;
+				NotificationError(err);
 				setStatus(statusCode);
-				toast.error('Tạo post thất bại!');
+				// toast.error('Tạo post thất bại!');
 			} finally {
 				dispatch(updateCurrentBook({}));
 				setStatus(STATUS_IDLE);
@@ -519,6 +534,8 @@ CreatPostModalContent.propTypes = {
 	option: PropTypes.object,
 	onChangeOption: PropTypes.func,
 	onChangeNewPost: PropTypes.func,
+	renderBookReading: PropTypes.object,
+	booksId: PropTypes.number,
 };
 
 export default CreatPostModalContent;

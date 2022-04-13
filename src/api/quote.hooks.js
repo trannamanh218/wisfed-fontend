@@ -23,8 +23,9 @@ export const useFetchQuoteRandom = () => {
 		async function fetchData() {
 			try {
 				const data = await dispatch(getQuoteList()).unwrap();
-				if (data.rows && data.rows.length) {
-					setQuoteRandom(data.rows[0]);
+				if (data && data.length > 0) {
+					const item = data[Math.floor(Math.random() * data.length)];
+					setQuoteRandom(item);
 				}
 				setStatus(STATUS_SUCCESS);
 			} catch (err) {

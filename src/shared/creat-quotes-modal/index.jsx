@@ -32,7 +32,6 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 	const [getDataFinish, setGetDataFinish] = useState(false);
 	const [categoryAddedIdList, setCategoryAddedIdList] = useState([]);
 	const [hashTagsAddedArray, setHashTagsAddedArray] = useState([]);
-
 	const textFieldEdit = useRef(null);
 	const categoryInputContainer = useRef(null);
 	const categoryInputWrapper = useRef(null);

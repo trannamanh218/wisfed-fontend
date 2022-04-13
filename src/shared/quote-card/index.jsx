@@ -4,11 +4,11 @@ import BadgeList from 'shared/badge-list';
 import QuoteActionBar from 'shared/quote-action-bar';
 import UserAvatar from 'shared/user-avatar';
 import './quote-card.scss';
-import { toast } from 'react-toastify';
 import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { likeUnlikeQuote } from 'reducers/redux-utils/quote';
 import { checkLikeQuote } from 'reducers/redux-utils/quote';
+import { NotificationError } from 'helpers/Error';
 
 const QuoteCard = ({ data, isDetail, likedArray }) => {
 	const [isLiked, setIsLiked] = useState(false);
@@ -40,8 +40,8 @@ const QuoteCard = ({ data, isDetail, likedArray }) => {
 			const response = await dispatch(likeUnlikeQuote(id)).unwrap();
 			setIsLiked(response.liked);
 			setLikeNumber(response.quote?.like);
-		} catch {
-			toast.error('Lỗi hệ thống');
+		} catch (err) {
+			NotificationError(err);
 		}
 	};
 
@@ -51,8 +51,8 @@ const QuoteCard = ({ data, isDetail, likedArray }) => {
 			if (res.includes(data.id)) {
 				setIsLiked(true);
 			}
-		} catch {
-			toast.error('Lỗi hệ thống');
+		} catch (err) {
+			NotificationError(err);
 		}
 	};
 

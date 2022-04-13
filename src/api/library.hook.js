@@ -45,7 +45,7 @@ export const useFetchLibraries = (current = 1, perPage = 10, filter = '[]') => {
 				}
 			};
 
-			// fetchData();
+			fetchData();
 		}
 		return () => {
 			isMount = false;
@@ -59,6 +59,7 @@ export const useFetchStatsReadingBooks = isUpdate => {
 	const [status, setStatus] = useState(STATUS_IDLE);
 	const [retry, setRetry] = useState(false);
 	const { userInfo } = useSelector(state => state.auth);
+	const [booksRead, setBooksRead] = useState({});
 	const [readingData, setReadingData] = useState([
 		{ name: 'Muốn đọc', value: STATUS_BOOK.wantToRead, quantity: 0 },
 		{ name: 'Đang đọc', value: STATUS_BOOK.reading, quantity: 0 },
@@ -94,12 +95,14 @@ export const useFetchStatsReadingBooks = isUpdate => {
 
 					const libraryList = readingData.map(item => {
 						const library = rows.find(library => library.defaultType === item.value);
+						if (library.defaultType === 'reading') {
+							setBooksRead(library);
+						}
 						if (library) {
 							return { ...item, quantity: library.books.length };
 						}
 						return { ...item, quantity: 0 };
 					});
-
 					setReadingData(libraryList);
 					setStatus(STATUS_SUCCESS);
 				} catch (err) {
@@ -109,14 +112,14 @@ export const useFetchStatsReadingBooks = isUpdate => {
 				}
 			};
 
-			// fetchData();
+			fetchData();
 		}
 		return () => {
 			isMount = false;
 		};
 	}, [retry, userInfo, params, isUpdate]);
 
-	return { status, retryRequest, readingData };
+	return { status, retryRequest, readingData, booksRead };
 };
 
 export const useFetchFilterBookFromLibrary = (current = 1, perPage = 10, filter = '[]') => {
@@ -151,7 +154,7 @@ export const useFetchFilterBookFromLibrary = (current = 1, perPage = 10, filter 
 				}
 			};
 
-			// fetchData();
+			fetchData();
 		}
 		return () => {
 			isMount = false;
@@ -277,7 +280,7 @@ export const useFetchBookInDefaultLibrary = (current = 1, perPage = 10, filter =
 			}
 		};
 
-		// fetchLibrary();
+		fetchLibrary();
 
 		return () => {
 			isMount = false;

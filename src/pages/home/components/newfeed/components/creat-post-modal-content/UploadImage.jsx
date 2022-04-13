@@ -16,13 +16,17 @@ const UploadImage = props => {
 		}
 	});
 
-	const { getRootProps, getInputProps } = useDropzone({ accept: 'image/*', onDrop, multiple: true });
+	const { getRootProps, getInputProps } = useDropzone({
+		accept: 'image/*',
+		onDrop,
+		multiple: true,
+	});
 
 	if (images.length) {
 		return (
 			<div className='creat-post-modal-content__main__body__image-container'>
 				<div className='creat-post-modal-content__main__body__image-box'>
-					<GridImage images={images} id='post-create' inPost={false} />
+					<GridImage images={images} inPost={false} />
 					<div className='creat-post-modal-content__main__body__image-options'>
 						<div className='creat-post-modal-content__main__body__image-options__block-left'>
 							<button
@@ -31,14 +35,18 @@ const UploadImage = props => {
 									e.stopPropagation();
 									addOptionsToPost({
 										value: 'modifyImages',
-										title: 'Chỉnh sửa ảnh',
+										title: 'chỉnh sửa ảnh',
 									});
 								}}
 							>
 								<Pencil />
 								<span>Chỉnh sửa tất cả</span>
 							</button>
-							<div {...getRootProps({ className: 'dropzone upload-image__options' })}>
+							<div
+								{...getRootProps({
+									className: 'dropzone upload-image__options',
+								})}
+							>
 								<input {...getInputProps()} />
 								<label
 									htmlFor='image-upload'
@@ -74,9 +82,11 @@ const UploadImage = props => {
 };
 
 UploadImage.propTypes = {
+	taggedData: PropTypes.object,
+	handleAddToPost: PropTypes.func,
 	addOptionsToPost: PropTypes.func,
-	images: PropTypes.array,
 	setImages: PropTypes.func,
+	images: PropTypes.array,
 	removeAllImages: PropTypes.func,
 };
 

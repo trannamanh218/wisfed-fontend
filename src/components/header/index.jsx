@@ -56,8 +56,8 @@ const Header = () => {
 						{activeLink === `/shelves/${userInfo.id}` ? <BookFillIcon /> : <BookIcon />}
 					</Link>
 				</li>
-				<li className={classNames('header__nav__item', { active: activeLink === '/group' })}>
-					<Link className='header__nav__link' to='/group'>
+				<li className={classNames('header__nav__item', { active: activeLink === '/friends' })}>
+					<Link className='header__nav__link' to='/friends'>
 						<GroupIcon className='header__nav__icon' />
 					</Link>
 				</li>

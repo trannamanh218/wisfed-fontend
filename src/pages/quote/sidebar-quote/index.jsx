@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import BookSlider from 'shared/book-slider';
 import DualColumn from 'shared/dual-column';
@@ -6,6 +6,9 @@ import SearchField from 'shared/search-field';
 import './sidebar-quote.scss';
 
 const SidebarQuote = () => {
+	const quotesAll = location.pathname === '/quotes/all';
+	const [toggleQuotesSlider, setToggleQuesSlider] = useState(true);
+
 	// const hashtagList = [
 	// 	{ id: 1, title: 'Tiểu thuyết' },
 	// 	{ id: 2, title: 'Hạnh phúc' },
@@ -15,6 +18,15 @@ const SidebarQuote = () => {
 	// 	{ id: 4, title: 'Kinh doanh' },
 	// 	{ id: 4, title: 'Kinh doanh' },
 	// ];
+
+	useEffect(() => {
+		if (quotesAll) {
+			setToggleQuesSlider(false);
+		}
+		setTimeout(function () {
+			window.scrollTo(0, 0);
+		}, 22);
+	}, []);
 
 	const quoteList = [
 		{ name: 'Tiểu thuyêt', quantity: 30 },
@@ -35,13 +47,14 @@ const SidebarQuote = () => {
 				<SearchField className='sidebar-quote__search' placeholder='Tìm kiếm danh mục' />
 				<DualColumn list={quoteList} />
 			</div>
-
-			<div className='sidebar-quote__slider'>
-				<BookSlider title='Sách tôi là tác giả' list={myComposing} />
-				<Link className='view-all-link' to='/'>
-					Xem thêm
-				</Link>
-			</div>
+			{toggleQuotesSlider && (
+				<div className='sidebar-quote__slider'>
+					<BookSlider title='Sách tôi là tác giả' list={myComposing} />
+					<Link className='view-all-link' to='/'>
+						Xem thêm
+					</Link>
+				</div>
+			)}
 		</div>
 	);
 };
