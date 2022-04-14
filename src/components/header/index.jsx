@@ -51,9 +51,9 @@ const Header = () => {
 						<CategoryIcon className='header__nav__icon' />
 					</Link>
 				</li>
-				<li className={classNames('header__nav__item', { active: activeLink === '/shelves' })}>
-					<Link className='header__nav__link' to='/shelves'>
-						{activeLink === '/shelves' ? <BookFillIcon /> : <BookIcon />}
+				<li className={classNames('header__nav__item', { active: activeLink === `/shelves/${userInfo.id}` })}>
+					<Link className='header__nav__link' to={`/shelves/${userInfo.id}`}>
+						{activeLink === `/shelves/${userInfo.id}` ? <BookFillIcon /> : <BookIcon />}
 					</Link>
 				</li>
 				<li className={classNames('header__nav__item', { active: activeLink === '/friends' })}>
@@ -71,7 +71,7 @@ const Header = () => {
 					/>
 					{modalNoti && <NotificationModal setModalNotti={setModalNotti} buttonModal={buttonModal} />}
 				</div>
-				<Link to='/profile'>
+				<Link to={`/profile/${userInfo.id}`}>
 					<UserAvatar className='header__avatar' source={userInfo?.avatarImage} />
 				</Link>
 			</div>

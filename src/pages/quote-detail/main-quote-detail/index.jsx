@@ -102,7 +102,7 @@ const MainQuoteDetail = () => {
 	return (
 		<div className='main-quote-detail'>
 			<div className='main-quote-detail__header'>
-				<BackButton />
+				<BackButton destination={-1} />
 				<h4>Chi tiết Quote</h4>
 				<a className='main-quote-detail__link' href='#'>
 					<span>Xem tất cả của Adam Khort</span>

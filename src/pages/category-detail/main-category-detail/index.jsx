@@ -1,4 +1,4 @@
-import React, { Fragment, useCallback, useEffect, useState } from 'react';
+import { Fragment, useCallback, useEffect, useState } from 'react';
 import { useFetchCategoryDetail } from 'api/category.hook';
 import classNames from 'classnames';
 import { Heart } from 'components/svg';
@@ -157,7 +157,7 @@ const MainCategoryDetail = ({ handleViewBookDetail }) => {
 		return (
 			<div className='main-category-detail'>
 				<div className='main-category-detail__header'>
-					<BackButton />
+					<BackButton destination='/category' />
 				</div>
 				<p className='main-category-detail__intro'>Không tìm thấy chủ đề</p>
 			</div>
@@ -171,7 +171,7 @@ const MainCategoryDetail = ({ handleViewBookDetail }) => {
 	return (
 		<div className='main-category-detail'>
 			<div className='main-category-detail__header'>
-				<BackButton />
+				<BackButton destination='/category' />
 				<h4>{categoryInfo.name}</h4>
 				<Button
 					className={classNames('btn-like', { 'active': isLike })}

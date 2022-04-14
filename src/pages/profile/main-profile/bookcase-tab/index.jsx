@@ -30,7 +30,7 @@ function Bookcase() {
 			reviews: ['Ngày 01.01.2021 đọc được 12/300 trang sách', 'Ngày 01.01.2021 đọc được 12/300 trang sách'],
 		},
 		{
-			id: 2,
+			id: 3,
 			partName: '',
 			bookCover: sampleBookImg,
 			bookName: 'One To Watch Nhìn một lần (Phiên bản mới)',

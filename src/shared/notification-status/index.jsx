@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { calculateDurationTime } from 'helpers/Common';
 import UserAvatar from 'shared/user-avatar';

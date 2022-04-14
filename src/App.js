@@ -37,14 +37,12 @@ function App({ children }) {
 
 	useEffect(() => {
 		const params = {
-			email: 'register@gmail.com',
-			password: '12345678',
+			// email: 'register@gmail.com',
+			// password: '12345678',
 			// email: 'hungngonzai@gmail.com',
 			// password: '123456',
-			// email: 'admin@gmail.com',
-			// password: '123456',
-			// email: 'register2@gmail.com',
-			// password: '12345678',
+			email: 'admin@gmail.com',
+			password: '123456',
 		};
 
 		fetchLogin(params);
@@ -78,7 +76,6 @@ function App({ children }) {
 				<Route path='/category' element={<Category />} />
 				<Route path='/category/detail/:id' element={<CategoryDetail />} />
 				<Route path='/category/detail/:id/:slug' element={<CategoryDetail />} />
-				<Route path='/shelves' element={<BookShelves />} />
 				<Route path='/shelves/:userId' element={<BookShelves />} />
 				<Route path='/friends' element={<Friends />} />
 				<Route path='/friends/:slug' element={<DetailFriend />} />
@@ -90,8 +87,8 @@ function App({ children }) {
 				<Route path='/quotes/me' element={<MyQuote />} />
 				<Route path='/quotes/all' element={<QuoteAll />} />
 				<Route path='/quotes/detail/:id' element={<QuoteDetail />} />
-				<Route path='/profile' element={<Profile />} />
-				<Route path='/confirm-my-book' element={<ConfirmMyBook />} />
+				<Route path='/profile/:userId' element={<Profile />} />
+				<Route path='/confirm-my-book/:bookId' element={<ConfirmMyBook />} />
 				<Route path='/login' element={<Login />} />
 				<Route path='/register' element={<Register />} />
 				<Route path='/forget-password' element={<ForgetPassWord />} />

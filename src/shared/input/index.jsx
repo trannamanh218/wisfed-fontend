@@ -8,6 +8,7 @@ const Input = ({
 	isBorder = true,
 	className = '',
 	inputRef,
+	readOnly,
 	...rest
 }) => {
 	return (
@@ -21,6 +22,7 @@ const Input = ({
 			placeholder={placeholder}
 			onChange={handleChange}
 			ref={inputRef}
+			readOnly={readOnly}
 			{...rest}
 		/>
 	);
@@ -32,6 +34,7 @@ Input.propTypes = {
 	isBorder: PropTypes.bool,
 	className: PropTypes.string,
 	inputRef: PropTypes.object,
+	readOnly: PropTypes.bool,
 };
 
 export default Input;

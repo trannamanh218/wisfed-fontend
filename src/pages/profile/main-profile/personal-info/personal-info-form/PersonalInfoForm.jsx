@@ -32,7 +32,7 @@ const PersonalInfoForm = ({ userData }) => {
 	const [editFavoriteCategories, setEditFavoriteCategories] = useState(false);
 	const [editDescriptions, setEditDescriptions] = useState(false);
 	const [userDescriptions, setUserDescriptions] = useState(userData.descriptions);
-	const [userSocialsMedia, setUserSocialsMedia] = useState(userData.socials);
+	const [userSocialsMedia, setUserSocialsMedia] = useState(userData.socials || []);
 	const [editSocialsMedia, setEditSocialsMedia] = useState(false);
 	const [socialsMediaInputValue, setSocialsMediaInputValue] = useState('');
 	const [accessSubmit, setaccessSubmit] = useState(false);

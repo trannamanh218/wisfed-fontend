@@ -60,7 +60,7 @@ InputType.propTypes = {
 	editStatus: PropTypes.bool,
 	inputValue: PropTypes.string,
 	updateInputValue: PropTypes.func,
-	inputRef: PropTypes.func,
+	inputRef: PropTypes.object,
 	userData: PropTypes.string,
 	cancelEdit: PropTypes.func,
 	enableEdit: PropTypes.func,
