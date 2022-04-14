@@ -14,46 +14,46 @@ import {
 } from 'reducers/redux-utils/library';
 import { NotificationError } from 'helpers/Error';
 
-export const useFetchLibraries = (current = 1, perPage = 10, filter = '[]') => {
-	const [status, setStatus] = useState(STATUS_IDLE);
-	const [retry, setRetry] = useState(false);
-	const dispatch = useDispatch();
-	const { libraryData } = useSelector(state => state.library);
-
-	const retryRequest = useCallback(() => {
-		setRetry(!retry);
-	}, [retry]);
-
-	useEffect(() => {
-		let isMount = true;
-		if (isMount) {
-			setStatus(STATUS_LOADING);
-
-			const fetchData = async () => {
-				if (filter !== '[]') {
-					const query = generateQuery(1, 10, filter);
-
-					try {
-						const data = await dispatch(getLibraryList(query)).unwrap();
-						dispatch(updateLibrary(data));
-						setStatus(STATUS_SUCCESS);
-					} catch (err) {
-						NotificationError(err);
-						const statusCode = err?.statusCode || 500;
-						setStatus(statusCode);
-					}
-				}
-			};
-
-			fetchData();
-		}
-		return () => {
-			isMount = false;
-		};
-	}, [retry, current, perPage, filter]);
-
-	return { status, retryRequest, libraryData };
-};
+// export const useFetchLibraries = (current = 1, perPage = 10, filter = '[]') => {
+// 	const [status, setStatus] = useState(STATUS_IDLE);
+// 	const [retry, setRetry] = useState(false);
+// 	const dispatch = useDispatch();
+// 	const { libraryData } = useSelector(state => state.library);
+//
+// 	const retryRequest = useCallback(() => {
+// 		setRetry(!retry);
+// 	}, [retry]);
+//
+// 	useEffect(() => {
+// 		let isMount = true;
+// 		if (isMount) {
+// 			setStatus(STATUS_LOADING);
+//
+// 			const fetchData = async () => {
+// 				if (filter !== '[]') {
+// 					const query = generateQuery(1, 10, filter);
+//
+// 					try {
+// 						const data = await dispatch(getLibraryList(query)).unwrap();
+// 						dispatch(updateLibrary(data));
+// 						setStatus(STATUS_SUCCESS);
+// 					} catch (err) {
+// 						NotificationError(err);
+// 						const statusCode = err?.statusCode || 500;
+// 						setStatus(statusCode);
+// 					}
+// 				}
+// 			};
+//
+// 			// fetchData();
+// 		}
+// 		return () => {
+// 			isMount = false;
+// 		};
+// 	}, [retry, current, perPage, filter]);
+//
+// 	return { status, retryRequest, libraryData };
+// };
 
 export const useFetchStatsReadingBooks = isUpdate => {
 	const [status, setStatus] = useState(STATUS_IDLE);
@@ -122,47 +122,47 @@ export const useFetchStatsReadingBooks = isUpdate => {
 	return { status, retryRequest, readingData, booksRead };
 };
 
-export const useFetchFilterBookFromLibrary = (current = 1, perPage = 10, filter = '[]') => {
-	const [status, setStatus] = useState(STATUS_IDLE);
-	const [retry, setRetry] = useState(false);
-	const [books, setBooks] = useState({
-		rows: [],
-		count: 0,
-	});
-	const dispatch = useDispatch();
-
-	const retryRequest = useCallback(() => {
-		setRetry(prev => !prev);
-	}, [setRetry]);
-
-	useEffect(async () => {
-		let isMount = true;
-		if (isMount) {
-			setStatus(STATUS_LOADING);
-
-			const fetchData = async () => {
-				const query = generateQuery(1, 10, filter);
-
-				try {
-					const data = await dispatch(getAllBookInLirary(query)).unwrap();
-					setBooks(data);
-					setStatus(STATUS_SUCCESS);
-				} catch (err) {
-					NotificationError(err);
-					const statusCode = err?.statusCode || 500;
-					setStatus(statusCode);
-				}
-			};
-
-			fetchData();
-		}
-		return () => {
-			isMount = false;
-		};
-	}, [retry, current, perPage, filter]);
-
-	return { status, retryRequest, books };
-};
+// export const useFetchFilterBookFromLibrary = (current = 1, perPage = 10, filter = '[]') => {
+// 	const [status, setStatus] = useState(STATUS_IDLE);
+// 	const [retry, setRetry] = useState(false);
+// 	const [books, setBooks] = useState({
+// 		rows: [],
+// 		count: 0,
+// 	});
+// 	const dispatch = useDispatch();
+//
+// 	const retryRequest = useCallback(() => {
+// 		setRetry(prev => !prev);
+// 	}, [setRetry]);
+//
+// 	useEffect(async () => {
+// 		let isMount = true;
+// 		if (isMount) {
+// 			setStatus(STATUS_LOADING);
+//
+// 			const fetchData = async () => {
+// 				const query = generateQuery(1, 10, filter);
+//
+// 				try {
+// 					const data = await dispatch(getAllBookInLirary(query)).unwrap();
+// 					setBooks(data);
+// 					setStatus(STATUS_SUCCESS);
+// 				} catch (err) {
+// 					NotificationError(err);
+// 					const statusCode = err?.statusCode || 500;
+// 					setStatus(statusCode);
+// 				}
+// 			};
+//
+// 			// fetchData();
+// 		}
+// 		return () => {
+// 			isMount = false;
+// 		};
+// 	}, [retry, current, perPage, filter]);
+//
+// 	return { status, retryRequest, books };
+// };
 
 export const useFetchMyLibraries = (current = 1, perPage = 10, isUpdate) => {
 	const [status, setStatus] = useState(STATUS_IDLE);

@@ -27,7 +27,7 @@ const QuotesTab = () => {
 	const dispatch = useDispatch();
 	const { id } = useParams();
 
-	const handleChangeOption = (e, data) => {
+	const handleChangeOption = data => {
 		if (data.value !== defaultOption.value) {
 			setDefaultOption(data);
 		}

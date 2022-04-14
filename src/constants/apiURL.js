@@ -57,6 +57,7 @@ export const myFriendsReq = `/api/v1/users/friendReqToMe/`;
 export const activityAPI = '/api/v1/getstream';
 export const likeActivityAPI = id => `/api/v1/getstream/like/${id}`;
 export const listLikedActivityAPI = '/api/v1/users/likedActivities';
+export const getPostsByUserAPI = id => `/api/v1/getstream/profile/${id}`;
 
 // upload files
 export const uploadImageAPI = '/api/v1/upload/image';

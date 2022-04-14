@@ -9,6 +9,7 @@ import Modalfilterhome from './components/modal-filter-home';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { getActivityList } from 'reducers/redux-utils/activity';
 import { useDispatch } from 'react-redux';
+import { NotificationError } from 'helpers/Error';
 
 const NewFeed = () => {
 	const [isNewPost, setIsNewPost] = useState(false);
@@ -49,7 +50,7 @@ const NewFeed = () => {
 				setHasMore(false);
 			}
 		} catch (err) {
-			return;
+			NotificationError(err);
 		}
 	};
 
