@@ -15,8 +15,12 @@ function ReadingBook({ bookData }) {
 		if (bookData?.books?.length > 0) {
 			const newItem = bookData?.books[bookData?.books.length - 1];
 			setRenderBooksReading(newItem.book);
-			const progessNumber = (newItem.book.progress / newItem.book.page) * 100;
-			setPercent(progessNumber.toFixed());
+			if (newItem.book.progress) {
+				const progessNumber = (newItem.book.progress / newItem.book.page) * 100;
+				setPercent(progessNumber.toFixed());
+			} else {
+				setPercent(0);
+			}
 		}
 	}, [bookData, percent]);
 

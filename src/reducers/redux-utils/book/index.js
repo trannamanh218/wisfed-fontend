@@ -7,6 +7,7 @@ import {
 	bookFollowReviewAPi,
 	bookFriendReviewAPi,
 	progressBookAPI,
+	bookAuthor,
 } from 'constants/apiURL';
 import Request from 'helpers/Request';
 import _ from 'lodash';
@@ -15,6 +16,16 @@ import { checkBookInLibraries } from '../library';
 export const getBookList = createAsyncThunk('book/getBookList', async (params, { rejectWithValue }) => {
 	try {
 		const response = await Request.makeGet(bookAPI, params);
+		return response.data;
+	} catch (err) {
+		const error = JSON.parse(err.response);
+		throw rejectWithValue(error);
+	}
+});
+
+export const getBookAuthorList = createAsyncThunk('book/getBookAuthorList', async (params, { rejectWithValue }) => {
+	try {
+		const response = await Request.makeGet(bookAuthor, params);
 		return response.data;
 	} catch (err) {
 		const error = JSON.parse(err.response);

@@ -100,15 +100,16 @@ const NotificationModal = ({ setModalNotti, buttonModal }) => {
 				const data = { ...item, isAccept: false, isRefuse: false, isRead: false };
 				return { ...data };
 			});
-			setGetNotifications(newArr);
+			setGetNotifications(newArr.slice(0, 10));
 			return;
 		} catch (err) {
 			NotificationError(err);
 		}
 	};
+
 	const lengthAddFriend = () => {
 		const length = getNotifications.filter(
-			item => (item.verb === 'addfriend' || item.verb === 'addfriend') && item.isCheck
+			item => (item.verb === 'addFriend' || item.verb === 'addfriend') && !item.isCheck
 		);
 		return length.length;
 	};

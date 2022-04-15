@@ -13,6 +13,7 @@ const SidebarReadingSummary = () => {
 	const { userInfo } = useSelector(state => state.auth);
 	const { libraryData } = useSelector(state => state.library);
 	const libraryList = libraryData?.rows?.map(item => ({ ...item, quantity: item.books.length }));
+
 	const { quoteData } = useFetchQuotes(
 		1,
 		3,

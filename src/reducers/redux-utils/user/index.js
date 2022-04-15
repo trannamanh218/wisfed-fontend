@@ -178,6 +178,7 @@ export const editUserInfo = createAsyncThunk('user/edit user info', async (data,
 export const getUserDetail = createAsyncThunk('user/get user detail', async (userId, { rejectWithValue }) => {
 	try {
 		const response = await Request.makeGet(userDetailAPI(userId));
+
 		return response.data;
 	} catch (err) {
 		const error = JSON.parse(err.response);
@@ -189,6 +190,7 @@ const userSlice = createSlice({
 	name: 'user',
 	initialState: {
 		isFetching: false,
+		userDetail: {},
 		categoriesData: {},
 		error: {},
 		updateUserProfile: false,
@@ -196,6 +198,21 @@ const userSlice = createSlice({
 	reducers: {
 		activeUpdateUserProfileStatus: state => {
 			state.updateUserProfile = !state.updateUserProfile;
+		},
+	},
+	extraReducers: {
+		[getUserDetail.pending]: state => {
+			state.isFetching = true;
+		},
+		[getUserDetail.fulfilled]: (state, action) => {
+			state.isFetching = false;
+			state.userDetail = action.payload;
+			state.error = {};
+		},
+		[getUserDetail.rejected]: (state, action) => {
+			state.isFetching = false;
+			state.userDetail = {};
+			state.error = action.payload;
 		},
 	},
 });

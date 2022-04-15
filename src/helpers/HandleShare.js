@@ -1,11 +1,9 @@
 import Button from 'shared/button';
-import { Add, Minus } from 'components/svg';
+import { Minus } from 'components/svg';
 
 export const renderMessage = item => {
 	if (item.verb === 'addfriend' || item.verb === 'addFriend') {
 		return 'đã gửi lời mời kết bạn';
-	} else if (item.verb === 'commentMinipost') {
-		return 'đã bình luận vào bài viết của bạn';
 	} else if (item.verb === 'browse') {
 		return (
 			<>
@@ -19,7 +17,9 @@ export const renderMessage = item => {
 			</>
 		);
 	} else if (item.verb === 'mention') {
-		return <>đã bình luận của bạn haha</>;
+		return <>Đã nhắc bạn trong một bình luận</>;
+	} else if (item.verb === 'comment') {
+		return 'đã bình luận vào bài viết của bạn';
 	}
 };
 

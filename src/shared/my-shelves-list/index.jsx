@@ -34,10 +34,10 @@ const MyShelvesList = ({ list }) => {
 	};
 
 	const checkAuthorize = () => {
-		if (_.isEmpty(params)) {
+		if (userInfo.id === params.userId) {
 			return true;
 		} else {
-			return userInfo.id === params.id;
+			return false;
 		}
 	};
 

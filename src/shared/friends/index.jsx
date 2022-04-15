@@ -15,6 +15,7 @@ import { useDispatch } from 'react-redux';
 import React, { useState } from 'react';
 import { changeToggleFollows } from 'reducers/redux-utils/friends';
 import ModalUnFriend from 'pages/group/component/modalUnFriends';
+import { Link } from 'react-router-dom';
 
 const FriendsItem = ({ list, keyTabs, getListFollower, getMyListFriendReq }) => {
 	const dispatch = useDispatch();
@@ -215,25 +216,28 @@ const FriendsItem = ({ list, keyTabs, getListFollower, getMyListFriendReq }) => 
 	const renderDisplay = () => {
 		return (
 			<div className='myfriends__layout'>
-				<img
-					className='myfriends__layout__img'
-					src={list.userTwo.avatarImage ? defaultAvatar : defaultAvatar}
-					alt=''
-				/>
-				<div className='myfriends__star'>
-					<div className='myfriends__star__name'>
-						{' '}
-						{list.userTwo.fullName ? (
-							list.userTwo.fullName
-						) : (
-							<>
-								<span>{list.userTwo.firstName}</span>&nbsp;
-								<span>{list.userTwo.lastName}</span>
-							</>
-						)}
+				<Link to={`/profile/${list.userTwo.id}`}>
+					<img
+						className='myfriends__layout__img'
+						src={list.userTwo.avatarImage ? defaultAvatar : defaultAvatar}
+						alt=''
+					/>
+					<div className='myfriends__star'>
+						<div className='myfriends__star__name'>
+							{' '}
+							{list.userTwo.fullName ? (
+								list.userTwo.fullName
+							) : (
+								<>
+									<span>{list.userTwo.firstName}</span>&nbsp;
+									<span>{list.userTwo.lastName}</span>
+								</>
+							)}
+						</div>
+						{list.isStar && <Subtract />}
 					</div>
-					{list.isStar && <Subtract />}
-				</div>
+				</Link>
+
 				<div className='myfriends__button__container'>
 					{renderButtonFriends()}
 					{renderButtonFollow()}
@@ -245,24 +249,26 @@ const FriendsItem = ({ list, keyTabs, getListFollower, getMyListFriendReq }) => 
 	const renderFollowerDisplay = () => {
 		return (
 			<div className='myfriends__layout'>
-				<img
-					className='myfriends__layout__img'
-					src={list.userOne.avatarImage ? defaultAvatar : defaultAvatar}
-					alt=''
-				/>
-				<div className='myfriends__star'>
-					<div className='myfriends__star__name'>
-						{list.userOne.fullName ? (
-							list.userOne.fullName
-						) : (
-							<>
-								<span>{list.userOne.firstName}</span>&nbsp;
-								<span>{list.userOne.lastName}</span>
-							</>
-						)}
+				<Link to={`/profile/${list.userOne.id}`}>
+					<img
+						className='myfriends__layout__img'
+						src={list.userOne.avatarImage ? defaultAvatar : defaultAvatar}
+						alt=''
+					/>
+					<div className='myfriends__star'>
+						<div className='myfriends__star__name'>
+							{list.userOne.fullName ? (
+								list.userOne.fullName
+							) : (
+								<>
+									<span>{list.userOne.firstName}</span>&nbsp;
+									<span>{list.userOne.lastName}</span>
+								</>
+							)}
+						</div>
+						{list.isStar && <Subtract />}
 					</div>
-					{list.isStar && <Subtract />}
-				</div>
+				</Link>
 				<div className='myfriends__button__container'>
 					{renderButtonFriends()}
 					{renderButtonFollow()}

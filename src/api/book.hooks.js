@@ -2,7 +2,7 @@ import { STATUS_IDLE, STATUS_LOADING, STATUS_SUCCESS } from 'constants';
 import { generateQuery } from 'helpers/Common';
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getBookDetail, getBookList, getReviewOfBook } from 'reducers/redux-utils/book';
+import { getBookDetail, getBookList, getReviewOfBook, getBookAuthorList } from 'reducers/redux-utils/book';
 import { NotificationError } from 'helpers/Error';
 
 export const useFetchBooks = (current = 1, perPage = 10, filter = '[]') => {
@@ -39,6 +39,39 @@ export const useFetchBooks = (current = 1, perPage = 10, filter = '[]') => {
 	}, [retry, current, perPage, filter]);
 
 	return { status, books, retryRequest };
+};
+
+export const useFetchAuthorBooks = (current = 1, perPage = 10, filter = '[]') => {
+	const [status, setStatus] = useState(STATUS_IDLE);
+	const [booksAuthor, setBooksAuthor] = useState([]);
+	const [retry, setRetry] = useState(false);
+	const dispatch = useDispatch();
+
+	const retryRequest = useCallback(() => {
+		setRetry(prev => !prev);
+	}, [setRetry]);
+
+	useEffect(() => {
+		const isMount = true;
+		if (isMount) {
+			setStatus(STATUS_LOADING);
+			const query = generateQuery(current, perPage, filter);
+			const fetchData = async () => {
+				try {
+					const data = await dispatch(getBookAuthorList(query)).unwrap();
+					setBooksAuthor(data);
+				} catch (err) {
+					NotificationError(err);
+					const statusCode = err?.statusCode || 500;
+					setStatus(statusCode);
+				}
+			};
+
+			fetchData();
+		}
+	}, [retry, current, perPage, filter]);
+
+	return { status, booksAuthor, retryRequest };
 };
 
 export const useFetchBookDetail = id => {

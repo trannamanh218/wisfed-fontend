@@ -18,7 +18,6 @@ const SidebarReadingTarget = () => {
 		3,
 		JSON.stringify([{ operator: 'eq', value: userInfo.id, property: 'createdBy' }])
 	);
-
 	return (
 		<div className='sidebar-reading-target'>
 			<StatisticList

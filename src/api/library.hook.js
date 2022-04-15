@@ -67,7 +67,6 @@ export const useFetchStatsReadingBooks = isUpdate => {
 	]);
 	const dispatch = useDispatch();
 	const params = useParams();
-
 	const retryRequest = useCallback(() => {
 		setRetry(prev => !prev);
 	}, [setRetry]);
@@ -81,8 +80,8 @@ export const useFetchStatsReadingBooks = isUpdate => {
 
 			if (_.isEmpty(params)) {
 				filter.push({ 'operator': 'eq', 'value': userInfo.id, 'property': 'createdBy' });
-			} else if (params.id) {
-				filter.push({ 'operator': 'eq', 'value': params.id, 'property': 'createdBy' });
+			} else if (params.userId) {
+				filter.push({ 'operator': 'eq', 'value': params.userId, 'property': 'createdBy' });
 			} else if (params.bookId) {
 				filter.push({ 'operator': 'eq', 'value': userInfo.id, 'property': 'createdBy' });
 			}
@@ -215,9 +214,10 @@ export const useFetchMyLibraries = (current = 1, perPage = 10, isUpdate) => {
 export const useFetchAuthLibraries = (current = 1, perPage = 10) => {
 	const [status, setStatus] = useState(STATUS_IDLE);
 	const [statusLibraries, setStatusLibraries] = useState([]);
+	const [statusCustom, setStatusCustom] = useState([]);
 	const { userInfo } = useSelector(state => state.auth);
 	const dispatch = useDispatch();
-
+	const params = useParams();
 	useEffect(async () => {
 		let isMount = true;
 		if (isMount && !_.isEmpty(userInfo)) {
@@ -225,11 +225,11 @@ export const useFetchAuthLibraries = (current = 1, perPage = 10) => {
 
 			const fetchData = async () => {
 				try {
-					const data = await dispatch(getMyLibraryList()).unwrap();
+					const data = await dispatch(getMyLibraryList(params)).unwrap();
 					const { rows } = data;
-
 					dispatch(updateAuthLibrary({ rows: rows.custom, count: rows.custom.length }));
 					setStatusLibraries(rows.default);
+					setStatusCustom(rows.custom);
 					setStatus(STATUS_SUCCESS);
 				} catch (err) {
 					// NotificationError(err);
@@ -244,7 +244,7 @@ export const useFetchAuthLibraries = (current = 1, perPage = 10) => {
 			isMount = false;
 		};
 	}, [current, perPage, userInfo]);
-	return { status, statusLibraries };
+	return { status, statusLibraries, statusCustom };
 };
 
 export const useFetchBookInDefaultLibrary = (current = 1, perPage = 10, filter = '[]') => {
@@ -252,7 +252,6 @@ export const useFetchBookInDefaultLibrary = (current = 1, perPage = 10, filter =
 	const [bookData, setBookData] = useState([]);
 	const [retry, setRetry] = useState(false);
 	const dispatch = useDispatch();
-
 	const retryRequest = useCallback(() => {
 		setRetry(prev => !prev);
 	}, [setRetry]);
@@ -262,11 +261,10 @@ export const useFetchBookInDefaultLibrary = (current = 1, perPage = 10, filter =
 		const fetchLibrary = async () => {
 			const query = generateQuery(current, perPage, filter);
 			try {
-				const data = await dispatch(getMyLibraryList(query)).unwrap();
+				const data = await dispatch(getLibraryList(query)).unwrap();
 				const { rows, count } = data;
 				if (count > 0 && isMount) {
-					const { default: defaultLibraries } = rows;
-					const currentLibrary = defaultLibraries[0];
+					const currentLibrary = rows[0];
 					const bookData = !_.isEmpty(currentLibrary)
 						? currentLibrary.books.map(item => ({ ...item.book }))
 						: [];
