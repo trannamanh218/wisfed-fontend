@@ -38,7 +38,7 @@ const Notification = () => {
 
 	const lengthAddFriend = () => {
 		const length = getNotifications.filter(
-			item => (item.verb === 'addfriend' || item.verb === 'addfriend') && item.isCheck
+			item => (item.verb === 'addFriend' || item.verb === 'addfriend') && !item.isCheck
 		);
 		return length.length;
 	};

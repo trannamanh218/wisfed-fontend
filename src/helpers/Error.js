@@ -135,10 +135,13 @@ const errVN = {
 		vi: 'Bạn đã đánh giá cuốn sách này',
 		en: `You were review this book`,
 	},
+	999: {
+		vi: 'Lỗi hệ thống',
+	},
 };
 
 export const NotificationError = (err, language) => {
-	const statusCodeError = err?.errorCode || err?.statusCode;
+	const statusCodeError = err?.errorCode;
 	if (language === 'en') {
 		return toast.error(errVN[statusCodeError].en);
 	} else {

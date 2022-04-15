@@ -16,6 +16,7 @@ import Request from 'helpers/Request';
 export const createLibrary = createAsyncThunk('library/createLibrary', async (params, { rejectWithValue }) => {
 	try {
 		const response = await Request.makePost(libraryAPI, params);
+
 		return { ...response.data, books: [] };
 	} catch (err) {
 		const error = JSON.parse(err.response);
@@ -34,8 +35,9 @@ export const getLibraryList = createAsyncThunk('library/getLibraryList', async (
 });
 
 export const getMyLibraryList = createAsyncThunk('library/getMyLibraryList', async (params, { rejectWithValue }) => {
+	const { userId, ...query } = params;
 	try {
-		const response = await Request.makeGet(myLibraryAPI, params);
+		const response = await Request.makeGet(myLibraryAPI(userId), query);
 		return response.data;
 	} catch (err) {
 		const error = JSON.parse(err.response);

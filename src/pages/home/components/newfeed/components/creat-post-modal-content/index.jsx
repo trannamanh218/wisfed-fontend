@@ -325,7 +325,7 @@ function CreatPostModalContent({
 				onChangeNewPost();
 			} catch (err) {
 				const statusCode = err?.statusCode || 500;
-				NotificationError(err);
+				// NotificationError(err);
 				setStatus(statusCode);
 				// toast.error('Tạo post thất bại!');
 			} finally {
