@@ -67,7 +67,9 @@ function Post({ postInformations, className }) {
 			minipostId: postData.minipostId,
 			content: content,
 			mediaUrl: [],
-			reply,
+			mentionsUser: [],
+			replyId: null,
+			like: 0,
 		};
 
 		dispatch(createComment(params))
@@ -94,7 +96,6 @@ function Post({ postInformations, className }) {
 			})
 			.catch(err => {
 				NotificationError(err);
-				// return err;
 			});
 	};
 

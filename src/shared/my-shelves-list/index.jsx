@@ -1,4 +1,3 @@
-import React from 'react';
 import PropTypes from 'prop-types';
 import { Field, Form, Formik } from 'formik';
 import Input from 'shared/input';
@@ -8,7 +7,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { createLibrary } from 'reducers/redux-utils/library';
 import { toast } from 'react-toastify';
 import './my-shelves-list.scss';
-import _ from 'lodash';
 import { useParams } from 'react-router-dom';
 import { NotificationError } from 'helpers/Error';
 
@@ -34,10 +32,10 @@ const MyShelvesList = ({ list }) => {
 	};
 
 	const checkAuthorize = () => {
-		if (_.isEmpty(params)) {
+		if (userInfo.id === params.userId) {
 			return true;
 		} else {
-			return userInfo.id === params.id;
+			return false;
 		}
 	};
 

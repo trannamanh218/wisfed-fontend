@@ -4,9 +4,8 @@ import CategoryDetail from 'pages/category-detail';
 import Friends from 'pages/group';
 import Home from 'pages/home';
 import Profile from 'pages/profile';
-import Quote from 'pages/quote';
 import QuoteDetail from 'pages/quote-detail';
-import MyQuote from 'pages/quote/my-quote';
+import Quote from 'pages/quote';
 import Review from 'pages/review';
 import BookShelves from 'pages/shelves';
 import ConfirmMyBook from 'pages/confirm-my-book';
@@ -83,8 +82,7 @@ function App({ children }) {
 				<Route path='/book/detail/:bookId/:slug' element={<BookDetail />} />
 				<Route path='/review/:id' element={<Review />} />
 				<Route path='/review/:id/:slug' element={<Review />} />
-				<Route path='/quotes' element={<Quote />} />
-				<Route path='/quotes/me' element={<MyQuote />} />
+				<Route path='/quotes/:userId' element={<Quote />} />
 				<Route path='/quotes/all' element={<QuoteAll />} />
 				<Route path='/quotes/detail/:id' element={<QuoteDetail />} />
 				<Route path='/profile/:userId' element={<Profile />} />

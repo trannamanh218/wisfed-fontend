@@ -1,10 +1,9 @@
-import React from 'react';
 import MyShelvesList from 'shared/my-shelves-list';
 import StatisticList from 'shared/statistic-list';
 import ToggleList from 'shared/toggle-list';
-import './sidebar-my-quote.scss';
+import './sidebar-quote.scss';
 
-const SidebarMyQuote = () => {
+const SidebarQuote = () => {
 	const hashtagList = [
 		{ id: 1, title: 'Tiểu thuyết' },
 		{ id: 2, title: 'Hạnh phúc' },
@@ -44,6 +43,4 @@ const SidebarMyQuote = () => {
 	);
 };
 
-SidebarMyQuote.propTypes = {};
-
-export default SidebarMyQuote;
+export default SidebarQuote;

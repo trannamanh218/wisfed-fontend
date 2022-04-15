@@ -10,8 +10,7 @@ import './comment.scss';
 
 const Comment = props => {
 	const { data, handleReply, postData, index, parentData, indexParent } = props;
-	// const isAuthor = postData.origin.split(':')[1] === data.user.id;
-	const isAuthor = false;
+	const isAuthor = postData.createdBy.id === data.user.id;
 	const { userInfo } = useSelector(state => state.auth);
 	const dispatch = useDispatch();
 
