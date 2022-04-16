@@ -47,6 +47,9 @@ import { ReactComponent as GmailIcon } from 'assets/icons/flat-color-icons_googl
 import { ReactComponent as SuccessIcon } from 'assets/icons/Circle Actions Success.svg';
 import { ReactComponent as WrongIcon } from 'assets/icons/Circle Actions Close.svg';
 import { ReactComponent as CloseButtonIcon } from 'assets/icons/CloseButton.svg';
+import { ReactComponent as Subtract } from 'assets/icons/subtract.svg';
+import { ReactComponent as CloseIconX } from 'assets/icons/Close X.svg';
+import { ReactComponent as CameraIcon } from 'assets/icons/IconCamera.svg';
 
 export {
 	HomeIcon,
@@ -98,4 +101,7 @@ export {
 	WrongIcon,
 	SuccessIcon,
 	CloseButtonIcon,
+	Subtract,
+	CloseIconX,
+	CameraIcon,
 };

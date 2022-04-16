@@ -1,15 +1,14 @@
-import { useFetchAuthLibraries } from 'api/library.hook';
 import clockIcon from 'assets/images/clock.png';
 import convertIcon from 'assets/images/convert.png';
 import featherIcon from 'assets/images/feather.png';
 import trashIcon from 'assets/images/trash.png';
 import StatusModalContainer from 'components/status-button/StatusModalContainer';
 import { CircleCheckIcon, CloseX, CoffeeCupIcon, TargetIcon } from 'components/svg';
-import { STATUS_BOOK, STATUS_IDLE, STATUS_LOADING, STATUS_SUCCESS } from 'constants';
+import { STATUS_BOOK } from 'constants';
 import RouteLink from 'helpers/RouteLink';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Modal, ModalBody } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -49,9 +48,6 @@ const SettingMore = props => {
 	const { modalOpen: statusModal, setModalOpen: setStatusModal } = useModal(false);
 	const [currentStatus, setCurrentStatus] = useState(STATUS_BOOK_OBJ.wantToRead);
 	const [bookLibraries, setBookLibaries] = useState([]);
-	const [status, setStatus] = useState(STATUS_IDLE);
-	const [showInput, setShowInput] = useState(false);
-	// const { ref, isVisible, setIsVisible } = useVisible(false);
 
 	const [isVisible, setIsVisible] = useState(false);
 	const ref = useRef();
@@ -64,8 +60,6 @@ const SettingMore = props => {
 	const {
 		library: { authLibraryData },
 	} = useSelector(state => state);
-
-	const { statusLibraries } = useFetchAuthLibraries();
 
 	const handleClose = () => {
 		setIsVisible(!isVisible);
@@ -114,8 +108,6 @@ const SettingMore = props => {
 		let bookInLibraries = [];
 		let initStatus = STATUS_BOOK.wantToRead;
 
-		setStatus(STATUS_LOADING);
-
 		dispatch(checkBookInLibraries(bookData.id))
 			.unwrap()
 			.then(res => {
@@ -152,13 +144,10 @@ const SettingMore = props => {
 				setCurrentStatus(initStatus);
 				statusRef.current = initStatus;
 				setBookLibaries(bookInLibraries);
-				setStatus(STATUS_SUCCESS);
 				setStatusModal(true);
 			})
 			.catch(err => {
 				NotificationError(err);
-				const statusCode = err?.statusCode || 500;
-				setStatus(statusCode);
 			});
 	};
 
@@ -178,12 +167,6 @@ const SettingMore = props => {
 			setBookLibaries(newBookLibraries);
 		} catch (err) {
 			NotificationError(err);
-		}
-	};
-
-	const addBookShelves = () => {
-		if (!showInput) {
-			setShowInput(true);
 		}
 	};
 
@@ -229,7 +212,6 @@ const SettingMore = props => {
 	};
 
 	const handleConfirm = async () => {
-		setStatus(STATUS_LOADING);
 		try {
 			await updateStatusBook();
 			await handleAddAndRemoveBook();
@@ -240,7 +222,6 @@ const SettingMore = props => {
 		} finally {
 			setStatusModal(false);
 			setIsVisible(false);
-			setStatus(STATUS_IDLE);
 		}
 	};
 
@@ -305,13 +286,10 @@ const SettingMore = props => {
 					<StatusModalContainer
 						currentStatus={currentStatus}
 						handleChangeStatus={handleChangeStatus}
-						// bookShelves={authLibraryData.rows}
 						bookShelves={bookLibraries}
 						updateBookShelve={updateBookShelve}
-						addBookShelves={addBookShelves}
 						handleConfirm={handleConfirm}
 						onChangeShelves={onChangeShelves}
-						statusLibraries={statusLibraries}
 					/>
 				</Modal.Body>
 			</Modal>

@@ -63,7 +63,7 @@ const MainQuote = () => {
 	return (
 		<div className='main-quote'>
 			<div className='main-quote__header'>
-				<BackButton />
+				<BackButton destination={-1} />
 				<h4>Quotes của Adam</h4>
 				<SearchField className='main-quote__search' placeholder='Tìm kiếm theo sách, tác giả, chủ đề ...' />
 			</div>

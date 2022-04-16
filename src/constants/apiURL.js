@@ -29,7 +29,7 @@ export const groupDetailAPI = id => `/api/v1/groups/${id}`;
 export const bookAPI = '/api/v1/books';
 export const bookDetailAPI = id => `/api/v1/books/${id}`;
 export const bookElasticSearchAPI = '/api/v1/books/search';
-export const creatBookCopyrightsAPI = '/api/v1/bookCopyrights';
+export const bookCopyrightsAPI = '/api/v1/bookCopyrights';
 export const bookAllReviewAPI = id => `/api/v1/books/${id}/reviews`;
 export const bookFollowReviewAPi = id => `/api/v1/books/${id}/followReviews`;
 export const bookFriendReviewAPi = id => `/api/v1/books/${id}/friendReviews`;
@@ -52,11 +52,12 @@ export const updateLikeCategory = id => `api/v1/users/${id}`;
 export const checkUserInfoAPI = '/api/v1/auth/jwt';
 
 // friend
-export const friendAPI = id => `/api/v1/users/${id}/listFriend`;
+export const friendAPI = id => `/api/v1/users/listFriends/${id}`;
 export const cancelFriendApi = id => `/api/v1/users/${id}/cancelFriendReq`;
 export const makeFriendAPI = `/api/v1/users/friendRequest`;
 export const replyFriendReqApi = id => `/api/v1/users/${id}/replyFriendReq/`;
 export const unFriend = id => `/api/v1/users/${id}/unFriend`;
+export const myFriendsReq = `/api/v1/users/friendReqToMe/`;
 //activity
 export const activityAPI = '/api/v1/getstream';
 export const likeActivityAPI = id => `/api/v1/getstream/like/${id}`;
@@ -82,14 +83,13 @@ export const checkBookLibraryAPI = id => `/api/v1/libraries/checkBookLibrary/${i
 export const otherListBookInLibaries = id => `/api/v1/libraries/listBookBy/${id}`;
 
 // comment activity
-// export const commentActivityAPI = '/api/v1/commentActivities';
-// export const commentActivityDetailAPI = id => `/api/v1/commentActivities/${id}`;
+export const commentActivityAPI = '/api/v1/commentMiniposts';
+export const commentActivityDetailAPI = id => `/api/v1/commentMiniposts/${id}`;
 
 // notification
 export const nottificationAPI = '/api/v1/getstream/notiMention';
 // followrs
-export const listFolowrs = '/api/v1/users/listFollows/';
+export const listFolowrs = id => `/api/v1/users/listFollowers/${id}`;
 export const addfollow = '/api/v1/users/follow';
 export const unFollow = id => `/api/v1/users/${id}/unFollow`;
-export const commentActivityAPI = '/api/v1/commentMiniposts';
-export const commentActivityDetailAPI = id => `/api/v1/commentMiniposts/${id}`;
+export const listFollowing = id => `/api/v1/users/listFollowings/${id}`;

@@ -236,6 +236,7 @@ $wallpaper-height: 350px;
 				font-size: 14px;
 				padding: 0 12px;
 				cursor: pointer;
+				user-select: none;
 				&.cancel {
 					color: #e61b00;
 				}
@@ -276,6 +277,7 @@ $wallpaper-height: 350px;
 				&.gender {
 					justify-content: center;
 					width: fit-content;
+					min-width: 90px;
 					padding: 0 1.5rem;
 				}
 			}
@@ -295,6 +297,14 @@ $wallpaper-height: 350px;
 						height: fit-content;
 					}
 				}
+			}
+
+			&.categories {
+				padding: 12px 16px;
+				background-color: #f7f7fc;
+				align-items: center;
+				flex-wrap: wrap;
+				gap: 12px;
 			}
 		}
 

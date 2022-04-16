@@ -13,8 +13,7 @@ const Sidebar = () => {
 	const { quoteRandom } = useFetchQuoteRandom();
 	const fiterBook = JSON.stringify([{ operator: 'eq', value: 'wantToRead', property: 'defaultType' }]);
 	const { bookData } = useFetchBookInDefaultLibrary(1, 10, fiterBook);
-	const { readingData } = useFetchStatsReadingBooks();
-
+	const { readingData, booksRead } = useFetchStatsReadingBooks();
 	return (
 		<div className='sidebar'>
 			<GroupShortcuts />
@@ -26,7 +25,9 @@ const Sidebar = () => {
 							<p>{`“ ${quoteRandom?.quote} ”`}</p>
 							<p className='quotes__content__author-name'>{quoteRandom.authorName || ''}</p>
 						</div>
-						<button className='sidebar__view-more-btn--blue'>Xem thêm</button>
+						<Link to={`/quotes/all`} className='sidebar__view-more-btn--blue'>
+							Xem thêm
+						</Link>
 					</div>
 				)}
 			</div>
@@ -46,7 +47,7 @@ const Sidebar = () => {
 					</Link>
 				</div>
 			</div>
-			<ReadingBook />
+			<ReadingBook bookData={booksRead} />
 			<TheBooksWantsToRead list={bookData} />
 			<ReadChallenge />
 		</div>

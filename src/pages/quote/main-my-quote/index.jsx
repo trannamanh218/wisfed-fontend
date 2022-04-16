@@ -4,7 +4,6 @@ import FilterQuotePane from 'shared/fitler-quote-pane';
 import QuoteCard from 'shared/quote-card';
 import SearchField from 'shared/search-field';
 import { getQuoteList } from 'reducers/redux-utils/quote';
-import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { checkLikeQuote } from 'reducers/redux-utils/quote';
@@ -81,8 +80,8 @@ const MainMyQuote = () => {
 		try {
 			const res = await dispatch(checkLikeQuote()).unwrap();
 			setLikedArray(res);
-		} catch {
-			toast.error('Lỗi hệ thống');
+		} catch (err) {
+			NotificationError(err);
 		}
 	};
 
@@ -95,7 +94,7 @@ const MainMyQuote = () => {
 	return (
 		<div className='main-my-quote'>
 			<div className='main-my-quote__header'>
-				<BackButton />
+				<BackButton destination={-1} />
 				<h4>Quote của tôi</h4>
 				<SearchField className='main-my-quote__search' placeholder='Tìm kiếm theo sách, tác giả, chủ đề ...' />
 			</div>

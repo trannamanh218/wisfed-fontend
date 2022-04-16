@@ -2,9 +2,9 @@ import { useFetchAuthLibraries } from 'api/library.hook';
 import { generateQuery } from 'helpers/Common';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
-import React, { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { getAllBookInLirary, getListBookLibrary } from 'reducers/redux-utils/library';
 import Button from 'shared/button';
 import EyeIcon from 'shared/eye-icon';
@@ -14,17 +14,24 @@ import SelectBox from 'shared/select-box';
 import Shelf from 'shared/shelf';
 import SearchBook from './SearchBook';
 import './main-shelves.scss';
+import { getUserDetail } from 'reducers/redux-utils/user';
 
 const DEFAULT_LIBRARY = { value: 'all', title: 'Tất cả', id: 'all' };
 
 const MainShelves = ({ handleUpdateLibrary, isUpdate }) => {
 	const [isPublic, setIsPublic] = useState(true);
 	const [allBooks, setAllBooks] = useState({ rows: [], count: 0 });
+	const [currentBooks, setCurrentBooks] = useState([]);
 	const [currentLibrary, setCurrentLibrary] = useState({ value: 'all', title: 'Tất cả', id: 'all' });
 	const [filter, setFilter] = useState('[]');
 	const [inputSearch, setInputSearch] = useState('');
+	const [shelveName, setShelveName] = useState('');
+	const [isMyShelve, setIsMyShelve] = useState();
+	const [currentPage, setCurrentPage] = useState(0);
 
-	const params = useParams();
+	const itemsPerPage = useRef(16).current;
+
+	const { userId } = useParams();
 	const dispatch = useDispatch();
 
 	const {
@@ -34,43 +41,47 @@ const MainShelves = ({ handleUpdateLibrary, isUpdate }) => {
 
 	const libraryList = !_.isEmpty(libraryData.rows) ? [DEFAULT_LIBRARY].concat(libraryData.rows) : [];
 
-	useEffect(() => {
-		setCurrentLibrary(DEFAULT_LIBRARY);
-		setFilter('[]');
-		setInputSearch('');
-	}, [params]);
+	useEffect(async () => {
+		if (!_.isEmpty(userInfo)) {
+			if (userId !== userInfo.id) {
+				const user = await dispatch(getUserDetail(userId)).unwrap();
+				setShelveName(`Tủ sách của ${user.fullName}`);
+				setIsMyShelve(false);
+			} else {
+				setShelveName('Tủ sách của tôi');
+				setIsMyShelve(true);
+			}
+		}
+	}, [userInfo, userId]);
 
 	useFetchAuthLibraries();
 
 	useEffect(() => {
-		const isMount = true;
-		if (isMount) {
-			const fetchData = async () => {
-				const query = generateQuery(1, 10, filter);
-				const id = params.userId || userInfo.id;
-				try {
-					let data = { rows: [], count: 0 };
-					if (currentLibrary.value === 'all') {
-						data = await dispatch(getAllBookInLirary({ id, ...query })).unwrap();
-					} else {
-						data = await dispatch(getListBookLibrary({ id: currentLibrary.id, ...query })).unwrap();
-					}
+		fetchData();
+	}, [currentLibrary, isUpdate, userId, filter]);
 
-					setAllBooks(data);
-				} catch (err) {
-					return err;
-				}
-			};
-
-			fetchData();
+	const fetchData = async () => {
+		const query = generateQuery(1, 10, filter);
+		try {
+			let data = { rows: [], count: 0 };
+			if (currentLibrary.value === 'all') {
+				data = await dispatch(getAllBookInLirary({ id: userId, ...query })).unwrap();
+			} else {
+				data = await dispatch(getListBookLibrary({ id: currentLibrary.id, ...query })).unwrap();
+			}
+			setAllBooks(data);
+		} catch (err) {
+			return err;
 		}
-	}, [currentLibrary, isUpdate, params, userInfo, filter]);
+	};
 
 	const handlePublic = () => {
 		setIsPublic(!isPublic);
 	};
 
 	const onChangeLibrary = data => {
+		setCurrentPage(0);
+		setCurrentBooks([]);
 		setCurrentLibrary(data);
 	};
 
@@ -91,21 +102,21 @@ const MainShelves = ({ handleUpdateLibrary, isUpdate }) => {
 		debounceSearch(e.target.value);
 	};
 
-	const checkAuthorize = () => {
-		if (_.isEmpty(params)) {
-			return true;
-		} else {
-			return userInfo.id === params.userId;
-		}
+	const changePage = pageIndex => {
+		setCurrentPage(pageIndex);
 	};
+
+	useEffect(() => {
+		if (allBooks.rows.length > 0) {
+			window.scroll(0, 0);
+			setCurrentBooks(allBooks.rows.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage));
+		}
+	}, [currentPage, allBooks]);
 
 	return (
 		<div className='main-shelves'>
-			<h4>
-				<Link to='/shelves/c09fdf39-2691-44f4-96d6-e45c8f2afd63'>Tủ sách của Nguyễn HIến Lê</Link>
-			</h4>
 			<div className='main-shelves__header'>
-				<h4>Tủ sách của tôi</h4>
+				<h4>{shelveName}</h4>
 				<SearchField
 					placeholder='Tìm kiếm sách'
 					className='main-shelves__search'
@@ -121,7 +132,7 @@ const MainShelves = ({ handleUpdateLibrary, isUpdate }) => {
 						defaultOption={currentLibrary}
 						onChangeOption={onChangeLibrary}
 					/>
-					{checkAuthorize() && (
+					{isMyShelve && (
 						<Button className='btn-private' isOutline={true} onClick={handlePublic}>
 							<EyeIcon isPublic={isPublic} handlePublic={handlePublic} />
 							<span>{isPublic ? 'Công khai' : 'Không công khai'}</span>
@@ -132,19 +143,21 @@ const MainShelves = ({ handleUpdateLibrary, isUpdate }) => {
 				{filter !== '[]' ? (
 					<SearchBook
 						inputSearch={inputSearch}
-						list={allBooks.rows}
-						isMyShelve={checkAuthorize()}
+						list={currentBooks}
+						isMyShelve={isMyShelve}
 						handleUpdateLibrary={handleUpdateLibrary}
 					/>
 				) : (
-					<Shelf
-						list={allBooks.rows}
-						isMyShelve={checkAuthorize()}
-						handleUpdateLibrary={handleUpdateLibrary}
-					/>
+					<Shelf list={currentBooks} isMyShelve={isMyShelve} handleUpdateLibrary={handleUpdateLibrary} />
 				)}
 
-				{allBooks.count > 10 && <PaginationGroup />}
+				{allBooks.count > itemsPerPage && (
+					<PaginationGroup
+						totalPage={Math.ceil(allBooks.count / itemsPerPage)}
+						currentPage={currentPage + 1}
+						changePage={changePage}
+					/>
+				)}
 			</div>
 		</div>
 	);

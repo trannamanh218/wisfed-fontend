@@ -166,7 +166,7 @@ function Post({ postInformations, className }) {
 
 				<div className='post__user-status__name-and-post-time-status'>
 					<div data-testid='post__user-name' className='post__user-status__name'>
-						{(!_.isEmpty(postData.createdBy) && postData?.createdBy?.fullName) || 'Ẩn danh'}
+						{postData?.createdBy?.fullName || 'Ẩn danh'}
 					</div>
 					<div className='post__user-status__post-time-status'>
 						<span>{calculateDurationTime(postData.time || postData.updatedAt)}</span>
@@ -213,7 +213,7 @@ function Post({ postInformations, className }) {
 
 			{postData.book && <PostBook data={{ ...postData.book, bookLibrary: postData.bookLibrary }} />}
 
-			<GridImage images={postData.image} id={postData.id} />
+			{postData?.image?.length > 0 && <GridImage images={postData.image} inPost={true} />}
 			{postData?.image?.length === 0 && !_.isEmpty(postData?.preview) && (
 				<>
 					{videoId ? (

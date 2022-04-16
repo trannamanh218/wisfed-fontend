@@ -72,7 +72,6 @@ export const useFetchBookDetail = id => {
 			isMount = false;
 		};
 	}, [id, userInfo]);
-
 	return { bookInfo, status };
 };
 

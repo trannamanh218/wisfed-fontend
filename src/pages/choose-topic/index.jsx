@@ -5,7 +5,7 @@ import { Form } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { getCategoryList } from 'reducers/redux-utils/category';
 import { addToFavoriteCategory } from 'reducers/redux-utils/user';
-import { toast } from 'react-toastify';
+// import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import SearchIcon from 'assets/icons/search.svg';
 import classNames from 'classnames';
@@ -13,6 +13,7 @@ import { useFetchFilterCategories } from 'api/category.hook';
 import SearchCategoryChooseTopic from './searchCateChooseTopic';
 
 import _ from 'lodash';
+import { NotificationError } from 'helpers/Error';
 
 function ChooseTopic() {
 	const [listCategory, setListCategory] = useState([]);
@@ -45,8 +46,8 @@ function ChooseTopic() {
 				favoriteCategory: addFavorite,
 			};
 			await dispatch(addToFavoriteCategory(params));
-		} catch {
-			toast.error('Lỗi hệ thống');
+		} catch (err) {
+			NotificationError(err);
 		} finally {
 			navigate('/');
 		}
