@@ -18,6 +18,7 @@ import { getPreviewUrl } from 'reducers/redux-utils/post';
 import { useCallback } from 'react';
 import { Circle as CircleLoading } from 'shared/loading';
 import './style.scss';
+import { ratingUser } from 'reducers/redux-utils/book';
 import UserAvatar from 'shared/user-avatar';
 import { updateCurrentBook, updateProgressReadingBook, createReviewBook } from 'reducers/redux-utils/book';
 import { STATUS_BOOK } from 'constants';
@@ -57,10 +58,11 @@ function CreatPostModalContent({
 	const dispatch = useDispatch();
 	const textFieldEdit = useRef(null);
 	const taggedDataPrevious = usePrevious(taggedData);
+	const [valueStar, setValueStar] = useState(0);
 
 	const {
 		auth: { userInfo },
-		book: { bookForCreatePost },
+		book: { bookForCreatePost, bookInfo },
 	} = useSelector(state => state);
 
 	const { optionList, shareModeList } = setting;
@@ -329,6 +331,7 @@ function CreatPostModalContent({
 				setStatus(STATUS_IDLE);
 				hideCreatPostModal();
 				onChangeOption({});
+				userRating();
 			}
 		}
 	};
@@ -346,6 +349,22 @@ function CreatPostModalContent({
 
 	const handleValidationInput = value => {
 		setValidationInput(value);
+	};
+
+	const handleChangeStar = e => {
+		setValueStar(e);
+	};
+
+	const userRating = async () => {
+		const params = { star: valueStar, id: bookInfo.id };
+		if (bookInfo.id && valueStar) {
+			try {
+				await dispatch(ratingUser(params));
+			} catch (err) {
+				NotificationError(err);
+				return err;
+			}
+		}
 	};
 
 	return (
@@ -442,6 +461,8 @@ function CreatPostModalContent({
 									handleValidationInput={handleValidationInput}
 									validationInput={validationInput}
 									handleAddToPost={handleAddToPost}
+									handleChangeStar={handleChangeStar}
+									valueStar={valueStar}
 								/>
 							)}
 							{showUpload && (

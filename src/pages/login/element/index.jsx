@@ -14,6 +14,7 @@ import { unwrapResult } from '@reduxjs/toolkit';
 import ModalLogin from './ModalLogin';
 import { useNavigate } from 'react-router-dom';
 import EyeIcon from 'shared/eye-icon';
+import _ from 'lodash';
 
 function LoginComponet() {
 	const [isShow, setIsShow] = useState(false);
@@ -27,7 +28,11 @@ function LoginComponet() {
 			const infoUser = unwrapResult(actionLogin);
 			if (infoUser) {
 				toast.success('Đăng nhập thành công');
-				navigate('/');
+				if (!_.isEmpty(infoUser?.favoriteCategory)) {
+					navigate('/');
+				} else {
+					navigate('/choose-topic');
+				}
 			}
 		} catch {
 			const newdata = {

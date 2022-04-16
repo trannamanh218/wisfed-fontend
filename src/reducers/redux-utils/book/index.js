@@ -8,6 +8,8 @@ import {
 	progressBookAPI,
 	bookAuthor,
 	bookReviewAPI,
+	userRating,
+	bookRating,
 } from 'constants/apiURL';
 import Request from 'helpers/Request';
 import _ from 'lodash';
@@ -65,6 +67,29 @@ export const getBookDetail = createAsyncThunk('book/getBookDetail', async (param
 	} catch (err) {
 		const error = JSON.parse(err.response);
 		throw rejectWithValue(error);
+	}
+});
+
+export const ratingUser = createAsyncThunk('book/ratingBookUser', async (params, { rejectWithValue }) => {
+	const id = params.id;
+	const star = { star: params.star };
+	try {
+		const response = await Request.makePost(userRating(id), star);
+		return response;
+	} catch (err) {
+		const error = JSON.parse(err.response);
+		throw rejectWithValue(error);
+	}
+});
+
+export const getRatingBook = createAsyncThunk('book/getRatingBook', async (id, { rejectWithValue }) => {
+	try {
+		const res = await Request.makeGet(bookRating(id));
+		// const data = JSON.parse(res.data).data;
+		return res;
+	} catch (err) {
+		const error = JSON.parse(err.response);
+		rejectWithValue(error);
 	}
 });
 
@@ -140,6 +165,7 @@ const bookSlice = createSlice({
 		bookReviewData: {},
 		currentBook: { id: null },
 		bookForCreatePost: {},
+		ratingBookStart: null,
 	},
 	reducers: {
 		updateCurrentBook: (state, action) => {
@@ -160,6 +186,19 @@ const bookSlice = createSlice({
 		[getBookDetail.rejected]: (state, action) => {
 			state.isFetching = false;
 			state.bookInfo = {};
+			state.error = action.payload;
+		},
+		[getRatingBook.pending]: state => {
+			state.isFetching = true;
+		},
+		[getRatingBook.fulfilled]: (state, action) => {
+			state.isFetching = false;
+			state.ratingBookStart = action.payload;
+			state.error = {};
+		},
+		[getRatingBook.rejected]: (state, action) => {
+			state.isFetching = false;
+			state.ratingBookStart = {};
 			state.error = action.payload;
 		},
 	},

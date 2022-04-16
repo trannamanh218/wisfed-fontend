@@ -103,7 +103,7 @@ const MainCategoryDetail = ({ handleViewBookDetail }) => {
 
 			try {
 				const params = {
-					id: 'bfdb3971-de4c-4c2b-bbbe-fbb36770031a',
+					id: userInfo.id,
 					favoriteCategory,
 				};
 				await dispatch(addToFavoriteCategory(params));

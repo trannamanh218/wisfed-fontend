@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import shareImg from 'assets/images/alert-circle-fill.png';
 import facebookImg from 'assets/images/facebook.png';
 import StatusButton from 'components/status-button';
@@ -11,17 +11,35 @@ import { useSelector } from 'react-redux';
 import _ from 'lodash';
 import { convertToPlainString } from 'helpers/Common';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { getRatingBook } from 'reducers/redux-utils/book';
+import { useDispatch } from 'react-redux';
+import { toast } from 'react-toastify';
 
 const BookIntro = () => {
 	const { bookInfo } = useSelector(state => state.book);
 	const location = useLocation();
 	const navigate = useNavigate();
+	const dispatch = useDispatch();
+	const [lisRatingStar, setLisRatingStar] = useState({});
 
 	const handleClick = () => {
 		if (location.pathname !== '/' || location.pathname !== '/home') {
 			navigate('/');
 		}
 	};
+
+	const fetchData = async () => {
+		try {
+			const res = await dispatch(getRatingBook(bookInfo?.id)).unwrap();
+			setLisRatingStar(res.data);
+		} catch (err) {
+			toast.error('lỗi hệ thống');
+		}
+	};
+
+	useEffect(() => {
+		fetchData();
+	}, []);
 
 	return (
 		<div className='book-intro'>
@@ -41,8 +59,8 @@ const BookIntro = () => {
 					<CircleCheckIcon className='book-intro__check' />
 				</div>
 				<div className='book-intro__stars'>
-					<ReactRating readonly={true} initialRating={4} />
-					<span>(09 đánh giá)</span>
+					<ReactRating readonly={true} initialRating={lisRatingStar?.avg} />
+					<span>({lisRatingStar?.count} đánh giá)</span>
 					<span>(4000 review)</span>
 				</div>
 
