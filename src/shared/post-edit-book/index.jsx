@@ -19,11 +19,8 @@ const PostEditBook = props => {
 	const dispatch = useDispatch();
 
 	const fetchData = async () => {
-		const query = {
-			filter: JSON.stringify([{ 'operator': 'eq', 'value': `${bookInfor.id}`, 'property': 'bookId' }]),
-		};
 		try {
-			const res = await dispatch(getRatingBook(query)).unwrap();
+			const res = await dispatch(getRatingBook(bookInfor.id)).unwrap();
 			const data = res.data.rows;
 			setListRatingStar(data);
 		} catch (err) {
