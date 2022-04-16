@@ -19,7 +19,7 @@ import { useCallback } from 'react';
 import { Circle as CircleLoading } from 'shared/loading';
 import './style.scss';
 import UserAvatar from 'shared/user-avatar';
-import { updateCurrentBook, updateProgressReadingBook } from 'reducers/redux-utils/book';
+import { updateCurrentBook, updateProgressReadingBook, createReviewBook } from 'reducers/redux-utils/book';
 import { STATUS_BOOK } from 'constants';
 import { usePrevious } from 'shared/hooks';
 import { addBookToDefaultLibrary } from 'reducers/redux-utils/library';
@@ -277,10 +277,6 @@ function CreatPostModalContent({
 		return params;
 	};
 
-	const createNewActivity = params => {
-		return dispatch(createActivity(params)).unwrap();
-	};
-
 	const handleUpdateProgress = params => {
 		const { status, progress } = taggedData.addBook;
 		const convertProgress = parseInt(progress) || 0;
@@ -312,22 +308,22 @@ function CreatPostModalContent({
 		// book, author , topic is required
 		if ((params.bookId || params.mentionsAuthor.length || params.mentionsCategory.length) && params.msg) {
 			setStatus(STATUS_LOADING);
-
 			try {
 				if (params.bookId) {
+					const reviewData = {
+						bookId: params.bookId,
+						mediaUrl: [],
+						content: textFieldEdit.current.innerText,
+					};
 					await handleUpdateProgress(params);
-					await createNewActivity(params);
-				} else {
-					await createNewActivity(params);
+					await dispatch(createReviewBook(reviewData));
 				}
+				await dispatch(createActivity(params));
 				setStatus(STATUS_SUCCESS);
 				toast.success('Tạo post thành công!');
 				onChangeNewPost();
 			} catch (err) {
-				const statusCode = err?.statusCode || 500;
-				// NotificationError(err);
-				setStatus(statusCode);
-				// toast.error('Tạo post thất bại!');
+				NotificationError(err);
 			} finally {
 				dispatch(updateCurrentBook({}));
 				setStatus(STATUS_IDLE);

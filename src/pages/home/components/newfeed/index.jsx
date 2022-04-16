@@ -20,7 +20,7 @@ const NewFeed = () => {
 
 	const dispatch = useDispatch();
 
-	const callApiStart = useRef(0);
+	const callApiStart = useRef(10);
 	const callApiPerPage = useRef(10);
 
 	const onChangeNewPost = () => {
@@ -31,9 +31,24 @@ const NewFeed = () => {
 		setModalShow(true);
 	};
 
-	useEffect(() => {
-		getPostList();
-	}, []);
+	useEffect(async () => {
+		callApiStart.current = 10;
+		getPostListFirstTime();
+	}, [isNewPost]);
+
+	const getPostListFirstTime = async () => {
+		try {
+			const params = {
+				start: 0,
+				limit: callApiPerPage.current,
+				sort: JSON.stringify([{ property: 'createdAt', direction: 'DESC' }]),
+			};
+			const posts = await dispatch(getActivityList(params)).unwrap();
+			setPostList(posts);
+		} catch (err) {
+			NotificationError(err);
+		}
+	};
 
 	const getPostList = async () => {
 		try {

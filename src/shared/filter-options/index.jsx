@@ -5,7 +5,7 @@ import RadioInput from 'shared/radio-input';
 import classNames from 'classnames';
 
 const FitlerOptions = ({ list, name, className, defaultOption, handleChangeOption }) => {
-	if (list && list.length) {
+	if (list.length) {
 		return (
 			<Form className={classNames('filter-options', { [`${className}`]: className })}>
 				{list.map((item, index) => {

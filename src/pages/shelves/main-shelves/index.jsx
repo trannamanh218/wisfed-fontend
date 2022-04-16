@@ -28,6 +28,7 @@ const MainShelves = ({ handleUpdateLibrary, isUpdate }) => {
 	const [shelveName, setShelveName] = useState('');
 	const [isMyShelve, setIsMyShelve] = useState();
 	const [currentPage, setCurrentPage] = useState(0);
+	const [isLoading, setIsLoading] = useState(true);
 
 	const itemsPerPage = useRef(16).current;
 
@@ -72,6 +73,8 @@ const MainShelves = ({ handleUpdateLibrary, isUpdate }) => {
 			setAllBooks(data);
 		} catch (err) {
 			return err;
+		} finally {
+			setIsLoading(false);
 		}
 	};
 
@@ -114,52 +117,60 @@ const MainShelves = ({ handleUpdateLibrary, isUpdate }) => {
 	}, [currentPage, allBooks]);
 
 	return (
-		<div className='main-shelves'>
-			<div className='main-shelves__header'>
-				<h4>{shelveName}</h4>
-				<SearchField
-					placeholder='Tìm kiếm sách'
-					className='main-shelves__search'
-					handleChange={handleSearch}
-					value={inputSearch}
-				/>
-			</div>
-			<div className='main-shelves__pane'>
-				<div className='main-shelves__filters'>
-					<SelectBox
-						name='library'
-						list={libraryList}
-						defaultOption={currentLibrary}
-						onChangeOption={onChangeLibrary}
-					/>
-					{isMyShelve && (
-						<Button className='btn-private' isOutline={true} onClick={handlePublic}>
-							<EyeIcon isPublic={isPublic} handlePublic={handlePublic} />
-							<span>{isPublic ? 'Công khai' : 'Không công khai'}</span>
-						</Button>
-					)}
+		<>
+			{!isLoading && (
+				<div className='main-shelves'>
+					<div className='main-shelves__header'>
+						<h4>{shelveName}</h4>
+						<SearchField
+							placeholder='Tìm kiếm sách'
+							className='main-shelves__search'
+							handleChange={handleSearch}
+							value={inputSearch}
+						/>
+					</div>
+					<div className='main-shelves__pane'>
+						<div className='main-shelves__filters'>
+							<SelectBox
+								name='library'
+								list={libraryList}
+								defaultOption={currentLibrary}
+								onChangeOption={onChangeLibrary}
+							/>
+							{isMyShelve && (
+								<Button className='btn-private' isOutline={true} onClick={handlePublic}>
+									<EyeIcon isPublic={isPublic} handlePublic={handlePublic} />
+									<span>{isPublic ? 'Công khai' : 'Không công khai'}</span>
+								</Button>
+							)}
+						</div>
+
+						{filter !== '[]' ? (
+							<SearchBook
+								inputSearch={inputSearch}
+								list={currentBooks}
+								isMyShelve={isMyShelve}
+								handleUpdateLibrary={handleUpdateLibrary}
+							/>
+						) : (
+							<Shelf
+								list={currentBooks}
+								isMyShelve={isMyShelve}
+								handleUpdateLibrary={handleUpdateLibrary}
+							/>
+						)}
+
+						{allBooks.count > itemsPerPage && (
+							<PaginationGroup
+								totalPage={Math.ceil(allBooks.count / itemsPerPage)}
+								currentPage={currentPage + 1}
+								changePage={changePage}
+							/>
+						)}
+					</div>
 				</div>
-
-				{filter !== '[]' ? (
-					<SearchBook
-						inputSearch={inputSearch}
-						list={currentBooks}
-						isMyShelve={isMyShelve}
-						handleUpdateLibrary={handleUpdateLibrary}
-					/>
-				) : (
-					<Shelf list={currentBooks} isMyShelve={isMyShelve} handleUpdateLibrary={handleUpdateLibrary} />
-				)}
-
-				{allBooks.count > itemsPerPage && (
-					<PaginationGroup
-						totalPage={Math.ceil(allBooks.count / itemsPerPage)}
-						currentPage={currentPage + 1}
-						changePage={changePage}
-					/>
-				)}
-			</div>
-		</div>
+			)}
+		</>
 	);
 };
 

@@ -14,7 +14,7 @@ import { useParams } from 'react-router-dom';
 import { getUserDetail } from 'reducers/redux-utils/user';
 
 const MainQuote = () => {
-	const [myQuoteList, setMyQuoteList] = useState([]);
+	const [quoteList, setQuoteList] = useState([]);
 	const [hasMore, setHasMore] = useState(true);
 	const [defaultOption, setDefaultOption] = useState({ id: 1, title: 'Tất cả', value: 'all' });
 	const [likedArray, setLikedArray] = useState([]);
@@ -40,7 +40,7 @@ const MainQuote = () => {
 
 	useEffect(() => {
 		callApiStart.current = 10;
-		getMyQuoteListFirstTime();
+		getQuoteListFirstTime();
 		getLikedArray();
 	}, [resetQuoteList, sortValue, sortDirection]);
 
@@ -57,7 +57,7 @@ const MainQuote = () => {
 		}
 	}, [userInfo, userId]);
 
-	const getMyQuoteListFirstTime = async () => {
+	const getQuoteListFirstTime = async () => {
 		try {
 			const params = {
 				start: 0,
@@ -67,7 +67,7 @@ const MainQuote = () => {
 			};
 			const quotesList = await dispatch(getQuoteList(params)).unwrap();
 			if (quotesList.length) {
-				setMyQuoteList(quotesList);
+				setQuoteList(quotesList);
 			} else {
 				setHasMore(false);
 			}
@@ -76,7 +76,7 @@ const MainQuote = () => {
 		}
 	};
 
-	const getMyQuoteList = async () => {
+	const getQuoteListData = async () => {
 		try {
 			const params = {
 				start: callApiStart.current,
@@ -87,7 +87,7 @@ const MainQuote = () => {
 			const quotesList = await dispatch(getQuoteList(params)).unwrap();
 			if (quotesList.length) {
 				callApiStart.current += callApiPerPage.current;
-				setMyQuoteList(myQuoteList.concat(quotesList));
+				setQuoteList(quoteList.concat(quotesList));
 			} else {
 				setHasMore(false);
 			}
@@ -143,14 +143,14 @@ const MainQuote = () => {
 						handleChange={sortQuotes}
 						isMyQuotes={isMyQuotes}
 					>
-						{myQuoteList.length > 0 ? (
+						{quoteList.length > 0 ? (
 							<InfiniteScroll
-								dataLength={myQuoteList.length}
-								next={getMyQuoteList}
+								dataLength={quoteList.length}
+								next={getQuoteListData}
 								hasMore={hasMore}
 								loader={<h4>Loading...</h4>}
 							>
-								{myQuoteList.map(item => (
+								{quoteList.map(item => (
 									<QuoteCard key={item.id} data={item} likedArray={likedArray} />
 								))}
 							</InfiniteScroll>

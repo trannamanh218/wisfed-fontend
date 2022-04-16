@@ -1,4 +1,3 @@
-import React from 'react';
 import { Tab, Tabs } from 'react-bootstrap';
 import ReviewRating from 'shared/review-rating';
 import QuotesTab from './components/QuotesTab';
@@ -34,17 +33,6 @@ const BookReview = () => {
 		},
 	];
 
-	const listQuote = Array.from(Array(5)).fill({
-		data: {
-			content: `Lorem ipsum dolor sit amet consectetur adipisicing elit. Veniam velit nemo voluptate. Eaque tenetur
-			dolore qui doloribus modi alias labore deleniti quisquam sunt. Accusantium, accusamus eius ipsum optio
-			distinctio laborum.`,
-			avatar: '',
-			author: 'Mai Nguyễn',
-			bookName: 'Đắc nhân tâm',
-		},
-		badges: [{ title: 'Marketing' }, { title: 'Phát triển bản thân' }],
-	});
 	return (
 		<div className='book-review'>
 			<ReviewRating list={listRating} ratingLevel={4.2} ratingTotal={3200} className='book-review__rating' />
@@ -53,7 +41,7 @@ const BookReview = () => {
 					<ReviewTab />
 				</Tab>
 				<Tab eventKey='quotes' title='Quotes'>
-					<QuotesTab list={listQuote} />
+					<QuotesTab />
 				</Tab>
 			</Tabs>
 		</div>

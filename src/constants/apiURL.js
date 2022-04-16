@@ -30,9 +30,9 @@ export const bookAPI = '/api/v1/books';
 export const bookDetailAPI = id => `/api/v1/books/${id}`;
 export const bookElasticSearchAPI = '/api/v1/books/search';
 export const bookCopyrightsAPI = '/api/v1/bookCopyrights';
-export const bookAllReviewAPI = id => `/api/v1/books/${id}/reviews`;
-export const bookFollowReviewAPi = id => `/api/v1/books/${id}/followReviews`;
-export const bookFriendReviewAPi = id => `/api/v1/books/${id}/friendReviews`;
+export const bookReviewAPI = '/api/v1/reviews';
+export const bookFollowReviewAPI = id => `/api/v1/books/${id}/followReviews`;
+export const bookFriendReviewAPI = id => `/api/v1/books/${id}/friendReviews`;
 export const progressBookAPI = id => `/api/v1/books/updateBookProgress/${id}`;
 export const bookAuthor = '/api/v1/books/listBookByAuthor';
 // category
