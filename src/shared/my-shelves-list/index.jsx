@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { createLibrary } from 'reducers/redux-utils/library';
 import { toast } from 'react-toastify';
 import './my-shelves-list.scss';
-import _ from 'lodash';
+// import _ from 'lodash';
 import { useParams } from 'react-router-dom';
 import { NotificationError } from 'helpers/Error';
 

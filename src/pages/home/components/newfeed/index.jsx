@@ -32,7 +32,7 @@ const NewFeed = () => {
 
 	useEffect(() => {
 		getPostList();
-	}, []);
+	}, [modalShow]);
 
 	const getPostList = async () => {
 		try {
