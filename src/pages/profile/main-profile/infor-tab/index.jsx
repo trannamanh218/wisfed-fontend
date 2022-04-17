@@ -129,6 +129,47 @@ const InforTab = ({ userInfo }) => {
 				<div className='row'>
 					<div className='col-6'>
 						<div className='form-field-group'>
+							<label className='form-field-label'>Trường trung học</label>
+							<div className='form-field'>
+								{userInfo.highSchool ? (
+									<Input
+										type='text'
+										placeholder='Nhập địa chỉ'
+										isBorder={false}
+										disabled
+										value={userInfo.highSchool}
+										readOnly={true}
+									/>
+								) : (
+									<div className='form-field__no-data '>Chưa có dữ liệu</div>
+								)}
+							</div>
+						</div>
+					</div>
+					<div className='col-6'>
+						<div className='form-field-group'>
+							<label className='form-field-label'>Đại học/Cao đẳng</label>
+							<div className='form-field'>
+								{userInfo.university ? (
+									<Input
+										type='text'
+										placeholder='Nhập địa chỉ'
+										isBorder={false}
+										disabled
+										value={userInfo.university}
+										readOnly={true}
+									/>
+								) : (
+									<div className='form-field__no-data '>Chưa có dữ liệu</div>
+								)}
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div className='row'>
+					<div className='col-6'>
+						<div className='form-field-group'>
 							<label className='form-field-label'>Công việc</label>
 							<div className='form-field'>
 								{userInfo.works ? (
@@ -170,10 +211,28 @@ const InforTab = ({ userInfo }) => {
 				<div className='row'>
 					<div className='col-6'>
 						<div className='form-field-group'>
+							<label className='form-field-label'>Sở thích</label>
+							<div className='form-field'>
+								{userInfo.hobby ? (
+									<Input
+										type='text'
+										isBorder={false}
+										disabled
+										value={userInfo.hobby}
+										readOnly={true}
+									/>
+								) : (
+									<div className='form-field__no-data '>Chưa có dữ liệu</div>
+								)}
+							</div>
+						</div>
+					</div>
+					<div className='col-6'>
+						<div className='form-field-group'>
 							<label className='form-field-label '>Chủ đề yêu thích</label>
-							{userInfo?.favoriteCategories ? (
-								<div className='form-field form-field-flex '>
-									<BadgeList list={userInfo.favoriteCategories} className='form-field-badge' />
+							{userInfo?.favoriteCategory ? (
+								<div className='form-field form-field-flex'>
+									<BadgeList list={userInfo.favoriteCategory} className='form-field-badge' />
 								</div>
 							) : (
 								<div className='form-field'>
@@ -182,8 +241,8 @@ const InforTab = ({ userInfo }) => {
 							)}
 						</div>
 					</div>
-					<div className='col-6'></div>
 				</div>
+
 				<div className='row'>
 					<div className='col-12'>
 						<div className='form-field-group'>

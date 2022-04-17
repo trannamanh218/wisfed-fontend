@@ -10,7 +10,7 @@ import classNames from 'classnames';
 import { editUserInfo } from 'reducers/redux-utils/user';
 import { activeUpdateUserProfileStatus } from 'reducers/redux-utils/user';
 import PropTypes from 'prop-types';
-import ShareModeDropdown from 'shared/share-mode-dropdown';
+// import ShareModeDropdown from 'shared/share-mode-dropdown';
 import InputType from './input-type';
 import DropdownType from './dropdown-type';
 import SelectType from './select-type';
@@ -37,6 +37,12 @@ const PersonalInfoForm = ({ userData }) => {
 	const [socialsMediaInputValue, setSocialsMediaInputValue] = useState('');
 	const [accessSubmit, setaccessSubmit] = useState(false);
 	const [fieldEditting, setFeildEditting] = useState('');
+	const [userHighSchool, setUserHighschool] = useState(userData.highSchool);
+	const [editHighSchool, setEditHighSchool] = useState(false);
+	const [userUniversity, setUserUniversity] = useState(userData.university);
+	const [editUniversity, setEditUniversity] = useState(false);
+	const [userHobby, setUserHobby] = useState(userData.hobby);
+	const [editHobby, setEditHobby] = useState(false);
 
 	const textareaRef = useRef(null);
 	const userFirstNameRef = useRef(null);
@@ -50,6 +56,9 @@ const PersonalInfoForm = ({ userData }) => {
 	const genderRef = useRef({ value: 'female', title: 'Nữ' });
 	const genderArray = useRef([]);
 	const userFavoriteCategoriesOrigin = useRef([]);
+	const userHighSchoolRef = useRef(null);
+	const userUniversityRef = useRef(null);
+	const userHobbyRef = useRef(null);
 
 	const dispatch = useDispatch();
 	const currentYear = new Date().getFullYear();
@@ -151,6 +160,12 @@ const PersonalInfoForm = ({ userData }) => {
 			textareaRef.current.style.height = textareaRef.current.scrollHeight + 'px';
 		} else if (option === 'edit-socials-media') {
 			setSocialsMediaInputValue(e.target.value);
+		} else if (option === 'edit-high-school') {
+			setUserHighschool(e.target.value);
+		} else if (option === 'edit-university') {
+			setUserUniversity(e.target.value);
+		} else if (option === 'edit-hobby') {
+			setUserHobby(e.target.value);
 		}
 	};
 
@@ -177,6 +192,12 @@ const PersonalInfoForm = ({ userData }) => {
 			setEditDescriptions(true);
 		} else if (option === 'socials-editting') {
 			setEditSocialsMedia(true);
+		} else if (option === 'high-school-editting') {
+			setEditHighSchool(true);
+		} else if (option === 'university-editting') {
+			setEditUniversity(true);
+		} else if (option === 'hobby-editting') {
+			setEditHobby(true);
 		}
 		setFeildEditting(option);
 	};
@@ -212,6 +233,15 @@ const PersonalInfoForm = ({ userData }) => {
 		} else if (option === 'cancel-edit-socials-media') {
 			setEditSocialsMedia(false);
 			setSocialsMediaInputValue('');
+		} else if (option === 'cancel-edit-high-school') {
+			setEditHighSchool(false);
+			setUserHighschool(userData.highSchool);
+		} else if (option === 'cancel-edit-university') {
+			setEditUniversity(false);
+			setUserUniversity(userData.university);
+		} else if (option === 'cancel-edit-hobby') {
+			setEditHobby(false);
+			setUserHobby(userData.hobby);
 		}
 	};
 
@@ -259,7 +289,10 @@ const PersonalInfoForm = ({ userData }) => {
 			editWorks ||
 			editDescriptions ||
 			editFavoriteCategories ||
-			!_.isEqual(userData.socials, userSocialsMedia)
+			!_.isEqual(userData.socials, userSocialsMedia) ||
+			editHighSchool ||
+			editUniversity ||
+			editHobby
 		) {
 			setaccessSubmit(true);
 		} else {
@@ -278,8 +311,26 @@ const PersonalInfoForm = ({ userData }) => {
 			textareaRef.current.focus();
 		} else if (userSocialsMediaRef.current && fieldEditting === 'socials-editting') {
 			userSocialsMediaRef.current.focus();
+		} else if (userHighSchoolRef.current && fieldEditting === 'high-school-editting') {
+			userHighSchoolRef.current.focus();
+		} else if (userUniversityRef.current && fieldEditting === 'university-editting') {
+			userUniversityRef.current.focus();
+		} else if (userHobbyRef.current && fieldEditting === 'hobby-editting') {
+			userHobbyRef.current.focus();
 		}
-	}, [editName, editBirthday, editGender, editAddress, editWorks, editDescriptions, editSocialsMedia, fieldEditting]);
+	}, [
+		editName,
+		editBirthday,
+		editGender,
+		editAddress,
+		editWorks,
+		editDescriptions,
+		editSocialsMedia,
+		fieldEditting,
+		editHighSchool,
+		editUniversity,
+		editHobby,
+	]);
 
 	return (
 		<div className='personal-info-form'>
@@ -309,7 +360,7 @@ const PersonalInfoForm = ({ userData }) => {
 						)}
 					</div>
 
-					<ShareModeDropdown />
+					{/* <ShareModeDropdown /> */}
 
 					{editName ? (
 						<div className='form-field__btn cancel' onClick={() => cancelEdit('cancel-edit-name')}>
@@ -375,10 +426,40 @@ const PersonalInfoForm = ({ userData }) => {
 				enableEdit={enableEdit}
 			/>
 
+			<InputType
+				option='high-school'
+				editStatus={editHighSchool}
+				inputValue={userHighSchool}
+				updateInputValue={updateInputValue}
+				inputRef={userHighSchoolRef}
+				cancelEdit={cancelEdit}
+				enableEdit={enableEdit}
+			/>
+
+			<InputType
+				option='university'
+				editStatus={editUniversity}
+				inputValue={userUniversity}
+				updateInputValue={updateInputValue}
+				inputRef={userUniversityRef}
+				cancelEdit={cancelEdit}
+				enableEdit={enableEdit}
+			/>
+
 			<SelectType
 				dataAdded={userFavoriteCategories}
 				setDataAdded={setUserFavoriteCategories}
 				editStatus={editFavoriteCategories}
+				cancelEdit={cancelEdit}
+				enableEdit={enableEdit}
+			/>
+
+			<InputType
+				option='hobby'
+				editStatus={editHobby}
+				inputValue={userHobby}
+				updateInputValue={updateInputValue}
+				inputRef={userHobbyRef}
 				cancelEdit={cancelEdit}
 				enableEdit={enableEdit}
 			/>
