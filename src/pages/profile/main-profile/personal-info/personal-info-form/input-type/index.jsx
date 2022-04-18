@@ -16,7 +16,7 @@ function InputType({ option, editStatus, inputValue, updateInputValue, inputRef,
 			setTextTranslated('Trường trung học');
 		} else if (option === 'university') {
 			setTextTranslated('Đại học / Cao đẳng');
-		} else if (option === 'hobby') {
+		} else if (option === 'interest') {
 			setTextTranslated('Sở thích');
 		}
 	}, []);

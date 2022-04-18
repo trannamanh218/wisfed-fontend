@@ -194,7 +194,7 @@ $wallpaper-height: 350px;
 
 	&-form {
 		.form-field {
-			width: 420px;
+			width: 80%;
 			display: flex;
 			gap: 24px;
 			&-group {
@@ -209,6 +209,7 @@ $wallpaper-height: 350px;
 			&-wrapper {
 				display: flex;
 				align-items: center;
+				justify-content: space-between;
 				gap: 1.5rem;
 				&.socials-link {
 					margin-bottom: 1rem;
@@ -309,6 +310,7 @@ $wallpaper-height: 350px;
 				align-items: center;
 				flex-wrap: wrap;
 				gap: 12px;
+				width: 100%;
 			}
 		}
 
@@ -370,7 +372,7 @@ $wallpaper-height: 350px;
 		}
 
 		.modal-dialog {
-			max-width: 700px;
+			max-width: 650px;
 		}
 		.modal-content {
 			border-radius: 16px;

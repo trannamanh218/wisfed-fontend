@@ -1,4 +1,4 @@
-import { Global, Pencil } from 'components/svg';
+import { Pencil } from 'components/svg';
 import { YEAR_LIMIT } from 'constants';
 import { useEffect, useState, useRef } from 'react';
 import Input from 'shared/input';
@@ -41,8 +41,8 @@ const PersonalInfoForm = ({ userData }) => {
 	const [editHighSchool, setEditHighSchool] = useState(false);
 	const [userUniversity, setUserUniversity] = useState(userData.university);
 	const [editUniversity, setEditUniversity] = useState(false);
-	const [userHobby, setUserHobby] = useState(userData.hobby);
-	const [editHobby, setEditHobby] = useState(false);
+	const [userInterest, setUserInterest] = useState(userData.interest);
+	const [editInterest, setEditInterest] = useState(false);
 
 	const textareaRef = useRef(null);
 	const userFirstNameRef = useRef(null);
@@ -58,7 +58,8 @@ const PersonalInfoForm = ({ userData }) => {
 	const userFavoriteCategoriesOrigin = useRef([]);
 	const userHighSchoolRef = useRef(null);
 	const userUniversityRef = useRef(null);
-	const userHobbyRef = useRef(null);
+	const userInterestRef = useRef(null);
+	const favoriteCategoriesAddId = useRef([]);
 
 	const dispatch = useDispatch();
 	const currentYear = new Date().getFullYear();
@@ -164,8 +165,8 @@ const PersonalInfoForm = ({ userData }) => {
 			setUserHighschool(e.target.value);
 		} else if (option === 'edit-university') {
 			setUserUniversity(e.target.value);
-		} else if (option === 'edit-hobby') {
-			setUserHobby(e.target.value);
+		} else if (option === 'edit-interest') {
+			setUserInterest(e.target.value);
 		}
 	};
 
@@ -196,8 +197,8 @@ const PersonalInfoForm = ({ userData }) => {
 			setEditHighSchool(true);
 		} else if (option === 'university-editting') {
 			setEditUniversity(true);
-		} else if (option === 'hobby-editting') {
-			setEditHobby(true);
+		} else if (option === 'interest-editting') {
+			setEditInterest(true);
 		}
 		setFeildEditting(option);
 	};
@@ -239,9 +240,9 @@ const PersonalInfoForm = ({ userData }) => {
 		} else if (option === 'cancel-edit-university') {
 			setEditUniversity(false);
 			setUserUniversity(userData.university);
-		} else if (option === 'cancel-edit-hobby') {
-			setEditHobby(false);
-			setUserHobby(userData.hobby);
+		} else if (option === 'cancel-edit-interest') {
+			setEditInterest(false);
+			setUserInterest(userData.interest);
 		}
 	};
 
@@ -256,6 +257,7 @@ const PersonalInfoForm = ({ userData }) => {
 				works: userWorks,
 				descriptions: userDescriptions,
 				socials: userSocialsMedia,
+				favoriteCategory: favoriteCategoriesAddId.current,
 			};
 			const data = { userId: userData.id, params: params };
 			const changeUserAvatar = await dispatch(editUserInfo(data)).unwrap();
@@ -292,7 +294,7 @@ const PersonalInfoForm = ({ userData }) => {
 			!_.isEqual(userData.socials, userSocialsMedia) ||
 			editHighSchool ||
 			editUniversity ||
-			editHobby
+			editInterest
 		) {
 			setaccessSubmit(true);
 		} else {
@@ -315,8 +317,8 @@ const PersonalInfoForm = ({ userData }) => {
 			userHighSchoolRef.current.focus();
 		} else if (userUniversityRef.current && fieldEditting === 'university-editting') {
 			userUniversityRef.current.focus();
-		} else if (userHobbyRef.current && fieldEditting === 'hobby-editting') {
-			userHobbyRef.current.focus();
+		} else if (userInterestRef.current && fieldEditting === 'interest-editting') {
+			userInterestRef.current.focus();
 		}
 	}, [
 		editName,
@@ -329,8 +331,18 @@ const PersonalInfoForm = ({ userData }) => {
 		fieldEditting,
 		editHighSchool,
 		editUniversity,
-		editHobby,
+		editInterest,
 	]);
+
+	useEffect(() => {
+		if (userFavoriteCategories.length > 0) {
+			const arrayTemp = [];
+			userFavoriteCategories.forEach(item => {
+				arrayTemp.push(item.id);
+			});
+			favoriteCategoriesAddId.current = arrayTemp;
+		}
+	}, [userFavoriteCategories]);
 
 	return (
 		<div className='personal-info-form'>
@@ -380,9 +392,7 @@ const PersonalInfoForm = ({ userData }) => {
 					<div className='form-field'>
 						<div className='form-field-filled email'>{userData.email}</div>
 					</div>
-					<div className='btn-icon'>
-						<Global />
-					</div>
+					{/* <ShareModeDropdown /> */}
 				</div>
 			</div>
 
@@ -455,11 +465,11 @@ const PersonalInfoForm = ({ userData }) => {
 			/>
 
 			<InputType
-				option='hobby'
-				editStatus={editHobby}
-				inputValue={userHobby}
+				option='interest'
+				editStatus={editInterest}
+				inputValue={userInterest}
 				updateInputValue={updateInputValue}
-				inputRef={userHobbyRef}
+				inputRef={userInterestRef}
 				cancelEdit={cancelEdit}
 				enableEdit={enableEdit}
 			/>
