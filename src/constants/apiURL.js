@@ -40,11 +40,16 @@ export const categoryAPI = '/api/v1/categories';
 export const categoryDetailAPI = id => `/api/v1/categories/${id}`;
 export const favoriteCategoriesAPI = '/api/v1/categories/favoriteCategories';
 
+//rating
+export const bookRating = id => `/api/v1/books/ratingBook/${id}`;
+export const userRating = id => `api/v1/books/rating/${id}`;
+
 //user
 export const userAPI = '/api/v1/users';
 export const userDetailAPI = id => `/api/v1/users/${id}`;
 export const checkLikedAPI = '/api/v1/users/checkLiked';
 export const updateLikeCategory = id => `api/v1/users/${id}`;
+export const checkUserInfoAPI = '/api/v1/auth/jwt';
 
 // friend
 export const friendAPI = id => `/api/v1/users/listFriends/${id}`;
@@ -91,3 +96,4 @@ export const listFollowing = id => `/api/v1/users/listFollowings/${id}`;
 
 //chart
 export const listAPIChart = (count, by) => `/api/v1/tracking?count=${count}&by=${by}`;
+export const listBooksReadYear = type => `/api/v1/libraries/listBookByType/${type}`;

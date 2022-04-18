@@ -1,73 +1,67 @@
 import PropTypes from 'prop-types';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Bar, BarChart, Legend, Tooltip, XAxis, YAxis } from 'recharts';
 import SelectBox from 'shared/select-box';
 import caretChart from 'assets/images/caret-chart.png';
 import './page-tab.scss';
+import { getListChart } from 'reducers/redux-utils/chart';
+import { useDispatch } from 'react-redux';
+import { NotificationError } from 'helpers/Error';
 
 const PageTab = () => {
 	const [currentOption, setCurrentOption] = useState({ value: 'month', title: 'Tháng' });
-
+	const [chartsData, setChartsData] = useState([]);
+	const dispatch = useDispatch();
 	const options = [
 		{ value: 'month', title: 'Tháng' },
 		{ value: 'year', title: 'Năm' },
 	];
 
-	const data = [
-		{
-			monthNumber: 'T1',
-			numberOfPages: 2400,
-			color: '#FEC5BB',
-		},
-		{
-			monthNumber: 'T2',
-			numberOfPages: 1398,
-		},
-		{
-			monthNumber: 'T3',
-			numberOfPages: 9800,
-		},
-		{
-			monthNumber: 'T4',
-			numberOfPages: 3908,
-		},
+	const fetchData = async () => {
+		try {
+			if (currentOption.value === 'month') {
+				const params = {
+					count: 'page',
+					by: 'month',
+				};
+				const data = await dispatch(getListChart(params)).unwrap();
+				setChartsData(data);
+			} else {
+				const params = {
+					count: 'page',
+					by: 'year',
+				};
 
-		{
-			monthNumber: 'T5',
-			numberOfPages: 3800,
-		},
-		{
-			monthNumber: 'T6',
-			numberOfPages: 4300,
-		},
-		{
-			monthNumber: 'T7',
-			numberOfPages: 4300,
-		},
-		{
-			monthNumber: 'T8',
-			numberOfPages: 4300,
-		},
-		{
-			monthNumber: 'T9',
-			numberOfPages: 4300,
-		},
-		{
-			monthNumber: 'T10',
-			numberOfPages: 4300,
-		},
-		{
-			monthNumber: 'T11',
-			numberOfPages: 4800,
-		},
-		{
-			monthNumber: 'T12',
-			numberOfPages: 4300,
-		},
-	];
+				const data = await dispatch(getListChart(params)).unwrap();
+				setChartsData(data);
+			}
+		} catch (err) {
+			NotificationError(err);
+		}
+	};
+
+	function CustomTooltip(props) {
+		const { label, payload } = props;
+		return (
+			<div className='custom-tooltip'>
+				<p className='label'>{` ${currentOption.value === 'month' ? 'Tháng' : 'Năm'} ${label} : Đã đọc ${
+					payload[0]?.payload.count
+				} trang`}</p>
+			</div>
+		);
+	}
+
+	useEffect(() => {
+		fetchData();
+	}, [currentOption]);
 
 	const onChangeOption = item => {
 		setCurrentOption(item);
+	};
+
+	CustomTooltip.propTypes = {
+		label: PropTypes.string,
+		payload: PropTypes.object,
 	};
 
 	return (
@@ -86,7 +80,7 @@ const PageTab = () => {
 				<BarChart
 					width={900}
 					height={500}
-					data={data}
+					data={chartsData}
 					margin={{
 						top: 50,
 						right: 30,
@@ -97,7 +91,7 @@ const PageTab = () => {
 				>
 					<XAxis
 						stroke='#6E7191'
-						dataKey='monthNumber'
+						dataKey={currentOption.value === 'month' ? 'month' : 'year'}
 						tick={<CustomizedAxisXTick />}
 						strokeDasharray='5 5'
 						strokeWidth={3}
@@ -107,14 +101,15 @@ const PageTab = () => {
 						label={{ value: 'Số trang', position: 'top', offset: 30 }}
 						tick={<CustomizedAxisYTick />}
 						allowDataOverflow={true}
-						domain={[0, 'dataMax + 1000']}
+						domain={[0, 'auto']}
 						strokeDasharray='5 5'
+						tickCount={10}
 						strokeWidth={3}
 						stroke='#6e7191'
 					></YAxis>
-					<Tooltip cursor={false} />
+					<Tooltip cursor={false} content={<CustomTooltip />} />
 					<Legend wrapperStyle={{ top: 460, left: 30 }} />
-					<Bar dataKey='numberOfPages' fill='#9ad0f5' name='Tháng' />
+					<Bar dataKey='count' fill='#9ad0f5' name={currentOption.value === 'month' ? 'Tháng' : 'Năm'} />
 				</BarChart>
 			</div>
 

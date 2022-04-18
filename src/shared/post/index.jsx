@@ -176,7 +176,14 @@ function Post({ postInformations, className }) {
 									<span>Cập nhật tiến độ đọc sách</span>
 									<div className='post__user-status__post-time-status__online-dot'></div>
 									<span>Xếp hạng</span>
-									<ReactRating readonly={true} initialRating={4} />
+									<ReactRating
+										readonly={true}
+										initialRating={
+											postInformations?.book?.actorRating?.star
+												? postInformations?.book?.actorRating?.star
+												: 0
+										}
+									/>
 								</div>
 							)}
 						</>

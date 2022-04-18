@@ -31,6 +31,7 @@ import AdminCreatNewPassword from 'pages/foget-password/component-admin/CreatNew
 import DetailFriend from 'pages/group/component/detail-friend';
 import 'scss/main.scss';
 import QuoteAll from 'pages/quote/all-quote/';
+import Group from 'pages/group-page';
 
 function App({ children }) {
 	const dispatch = useDispatch();
@@ -47,7 +48,7 @@ function App({ children }) {
 
 		fetchLogin(params);
 	}, []);
-
+	//
 	const fetchLogin = async params => {
 		try {
 			await dispatch(login(params)).unwrap();
@@ -99,6 +100,7 @@ function App({ children }) {
 				<Route path='/404' element={<NotFound />} />
 				<Route path='/reading-summary' element={<ReadingSummary />} />
 				<Route path='/reading-target' element={<ReadingTarget />} />
+				<Route path='/group' element={<Group />} />
 				<Route path='/' element={<Home />} />
 				{children}
 			</Routes>
