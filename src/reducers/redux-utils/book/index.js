@@ -1,13 +1,13 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import {
-	bookAllReviewAPI,
 	bookAPI,
 	bookDetailAPI,
 	bookElasticSearchAPI,
-	bookFollowReviewAPi,
-	bookFriendReviewAPi,
+	bookFollowReviewAPI,
+	bookFriendReviewAPI,
 	progressBookAPI,
 	bookAuthor,
+	bookReviewAPI,
 	userRating,
 	bookRating,
 } from 'constants/apiURL';
@@ -93,29 +93,56 @@ export const getRatingBook = createAsyncThunk('book/getRatingBook', async (id, {
 	}
 });
 
-export const getReviewOfBook = createAsyncThunk('book/getAllReviewOfBook', async (params, { rejectWithValue }) => {
-	const { id, option, ...query } = params;
+export const createReviewBook = createAsyncThunk('book/create review', async (reviewData, { rejectWithValue }) => {
 	try {
-		let response;
-		switch (option) {
-			case 'followReviews':
-				response = await Request.makeGet(bookFollowReviewAPi(id), query);
-				break;
-			case 'friendReviews':
-				response = await Request.makeGet(bookFriendReviewAPi(id), query);
-				break;
-			default:
-				response = await Request.makeGet(bookAllReviewAPI(id), query);
-		}
+		const response = await Request.makePost(bookReviewAPI, reviewData);
 		return response.data;
 	} catch (err) {
 		const error = JSON.parse(err.response);
-		throw rejectWithValue(error);
+		return rejectWithValue(error);
 	}
 });
 
+export const getReviewsBook = createAsyncThunk('book/get reviews', async (params, { rejectWithValue }) => {
+	try {
+		const response = await Request.makeGet(bookReviewAPI, params);
+		return response.data;
+	} catch (err) {
+		const error = JSON.parse(err.response);
+		return rejectWithValue(error);
+	}
+});
+
+export const getReviewsBookByFriends = createAsyncThunk(
+	'book/get reviews by friends',
+	async (data, { rejectWithValue }) => {
+		try {
+			const { bookId, params } = data;
+			const response = await Request.makeGet(bookFriendReviewAPI(bookId), params);
+			return response.data;
+		} catch (err) {
+			const error = JSON.parse(err.response);
+			return rejectWithValue(error);
+		}
+	}
+);
+
+export const getReviewsBookByFollowers = createAsyncThunk(
+	'book/get reviews by followers',
+	async (data, { rejectWithValue }) => {
+		try {
+			const { bookId, params } = data;
+			const response = await Request.makeGet(bookFollowReviewAPI(bookId), params);
+			return response.data;
+		} catch (err) {
+			const error = JSON.parse(err.response);
+			return rejectWithValue(error);
+		}
+	}
+);
+
 export const updateProgressReadingBook = createAsyncThunk(
-	'library/updateProgressReadingBook',
+	'book/updateProgressReadingBook',
 	async (params, { rejectWithValue }) => {
 		const { id, ...data } = params;
 		try {
@@ -160,22 +187,6 @@ const bookSlice = createSlice({
 			state.isFetching = false;
 			state.bookInfo = {};
 			state.error = action.payload;
-		},
-		[getReviewOfBook.pending]: state => {
-			state.isFetching = true;
-		},
-		[getReviewOfBook.fulfilled]: (state, action) => {
-			state.isFetching = false;
-			state.bookReviewData = action.payload;
-			state.error = {};
-		},
-		[getReviewOfBook.rejected]: (state, action) => {
-			state.isFetching = false;
-			state.bookReviewData = {};
-			state.error = action.payload;
-		},
-		[getReviewOfBook.pending]: state => {
-			state.isFetching = true;
 		},
 		[getRatingBook.pending]: state => {
 			state.isFetching = true;

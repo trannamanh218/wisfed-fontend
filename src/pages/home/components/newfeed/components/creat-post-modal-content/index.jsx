@@ -21,7 +21,7 @@ import { Circle as CircleLoading } from 'shared/loading';
 import './style.scss';
 import { ratingUser } from 'reducers/redux-utils/book';
 import UserAvatar from 'shared/user-avatar';
-import { updateCurrentBook, updateProgressReadingBook } from 'reducers/redux-utils/book';
+import { updateCurrentBook, updateProgressReadingBook, createReviewBook } from 'reducers/redux-utils/book';
 import { STATUS_BOOK } from 'constants';
 import { usePrevious } from 'shared/hooks';
 import { addBookToDefaultLibrary } from 'reducers/redux-utils/library';
@@ -59,8 +59,8 @@ function CreatPostModalContent({
 	const dispatch = useDispatch();
 	const textFieldEdit = useRef(null);
 	const taggedDataPrevious = usePrevious(taggedData);
-	const [checkProgress, setCheckProgress] = useState();
 	const [valueStar, setValueStar] = useState(0);
+	const [checkProgress, setCheckProgress] = useState();
 
 	const {
 		auth: { userInfo },
@@ -261,9 +261,6 @@ function CreatPostModalContent({
 		}
 		return params;
 	};
-	const createNewActivity = params => {
-		return dispatch(createActivity(params)).unwrap();
-	};
 
 	const handleUpdateProgress = params => {
 		const { status, progress } = taggedData.addBook;
@@ -296,11 +293,15 @@ function CreatPostModalContent({
 			setStatus(STATUS_LOADING);
 			try {
 				if (params.bookId) {
+					const reviewData = {
+						bookId: params.bookId,
+						mediaUrl: [],
+						content: textFieldEdit.current.innerText,
+					};
 					await handleUpdateProgress(params);
-					await createNewActivity(params);
-				} else {
-					await createNewActivity(params);
+					await dispatch(createReviewBook(reviewData));
 				}
+				await dispatch(createActivity(params));
 				setStatus(STATUS_SUCCESS);
 				toast.success('Tạo post thành công!');
 				onChangeNewPost();
@@ -361,7 +362,6 @@ function CreatPostModalContent({
 				await dispatch(ratingUser(params));
 			} catch (err) {
 				NotificationError(err);
-				return err;
 			}
 		}
 	};

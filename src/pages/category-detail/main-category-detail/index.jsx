@@ -240,7 +240,7 @@ const MainCategoryDetail = ({ handleViewBookDetail }) => {
 					<ModalBody>
 						<div className='main-category-detail__modal__option__group'>
 							<h4>Mặc định</h4>
-							<MultipleRadio list={checkOptions} name='default' value='likeMost' />
+							<MultipleRadio list={checkOptions} name='default' defaultValue='likeMost' />
 						</div>
 						{/* <div className='main-category-detail__modal__option__group'>
 							<h4>Theo số sao</h4>
@@ -248,7 +248,7 @@ const MainCategoryDetail = ({ handleViewBookDetail }) => {
 						</div> */}
 						<div className='main-category-detail__modal__option__group'>
 							<h4>Theo thời gian phát hành</h4>
-							<MultipleRadio list={publishOptiosn} name='pulish-time' value='' />
+							<MultipleRadio list={publishOptiosn} name='pulish-time' defaultValue='' />
 						</div>
 						{/* <div className='main-category-detail__modal__option__group'>
 							<h4>Theo người review</h4>

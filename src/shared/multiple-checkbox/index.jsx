@@ -1,14 +1,19 @@
-import React from 'react';
 import PropTypes from 'prop-types';
 import FormCheckGroup from 'shared/form-check-group';
 import { Form } from 'react-bootstrap';
 
-const MultipleCheckbox = ({ list, value }) => {
+const MultipleCheckbox = ({ list, defaultValue }) => {
 	if (list && list.length) {
 		return (
 			<Form className='multiple-checkbox'>
 				{list.map((item, index) => (
-					<FormCheckGroup key={index} data={item} name={item.title} value={value} type='checkbox' />
+					<FormCheckGroup
+						key={index}
+						data={item}
+						name={item.title}
+						defaultValue={defaultValue}
+						type='checkbox'
+					/>
 				))}
 			</Form>
 		);
@@ -20,13 +25,13 @@ const MultipleCheckbox = ({ list, value }) => {
 MultipleCheckbox.defaultProps = {
 	list: [],
 	name: '',
-	value: '',
+	defaultValue: '',
 };
 
 MultipleCheckbox.propTypes = {
 	list: PropTypes.array,
 	name: PropTypes.string,
-	value: PropTypes.any,
+	defaultValue: PropTypes.any,
 };
 
 export default MultipleCheckbox;

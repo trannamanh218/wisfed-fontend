@@ -14,6 +14,8 @@ import { NotificationError } from 'helpers/Error';
 import _ from 'lodash';
 import { useParams } from 'react-router-dom';
 
+import { updateUserInfoRedux } from 'reducers/redux-utils/auth';
+
 const MainProfile = () => {
 	const { userId } = useParams();
 
@@ -30,6 +32,7 @@ const MainProfile = () => {
 		try {
 			const userData = await dispatch(getUserDetail(userId)).unwrap();
 			setUserInfo(userData);
+			dispatch(updateUserInfoRedux(userData));
 		} catch (err) {
 			NotificationError(err);
 		}

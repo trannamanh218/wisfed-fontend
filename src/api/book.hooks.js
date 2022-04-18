@@ -2,7 +2,7 @@ import { STATUS_IDLE, STATUS_LOADING, STATUS_SUCCESS } from 'constants';
 import { generateQuery } from 'helpers/Common';
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getBookDetail, getBookList, getReviewOfBook, getBookAuthorList } from 'reducers/redux-utils/book';
+import { getBookDetail, getBookList, getBookAuthorList } from 'reducers/redux-utils/book';
 import { NotificationError } from 'helpers/Error';
 
 export const useFetchBooks = (current = 1, perPage = 10, filter = '[]') => {
@@ -106,55 +106,6 @@ export const useFetchBookDetail = id => {
 		};
 	}, [id, userInfo]);
 	return { bookInfo, status };
-};
-
-export const useFetchReviewOfBook = (id, option, current = 1, perPage = 10, filter) => {
-	const [retry, setRetry] = useState(false);
-	const [status, setStatus] = useState(STATUS_IDLE);
-	const [reviewData, setReviewData] = useState({
-		rows: [],
-		count: 0,
-	});
-	const dispatch = useDispatch();
-
-	const retryRequest = useCallback(() => {
-		setRetry(prev => !prev);
-	}, [setRetry]);
-
-	useEffect(() => {
-		let isMount = true;
-
-		if (id) {
-			const query = generateQuery(current, perPage, filter);
-			const params = {
-				id,
-				...query,
-				option,
-			};
-
-			setStatus(STATUS_LOADING);
-			const fetchReview = async () => {
-				try {
-					const res = await dispatch(getReviewOfBook(params)).unwrap();
-					setStatus(STATUS_SUCCESS);
-					setReviewData(res);
-				} catch (err) {
-					NotificationError(err);
-					const statusCode = err?.statusCode || 500;
-					setStatus(statusCode);
-				}
-			};
-
-			if (isMount) {
-				fetchReview();
-			}
-		}
-		return () => {
-			isMount = false;
-		};
-	}, [id, option, current, perPage, filter, retry]);
-
-	return { reviewData, status, retryRequest };
 };
 
 export const useFetchRelatedBooks = categoryId => {
