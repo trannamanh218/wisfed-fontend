@@ -106,6 +106,7 @@ const BookTab = () => {
 						strokeDasharray='5 5'
 						strokeWidth={3}
 						stroke='#6e7191'
+						dataKey='count'
 					></YAxis>
 					<Tooltip cursor={false} content={<CustomTooltip />} />
 					<Legend wrapperStyle={{ top: 460, left: 30 }} />

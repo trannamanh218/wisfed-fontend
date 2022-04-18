@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { CloseIconX } from 'components/svg';
 
-const MiniPopup = ({ handleClose, data }) => {
+const MiniPopup = ({ handleClose }) => {
 	const data1 = {
 		title: 'Bài viết được kiểm duyệt',
 

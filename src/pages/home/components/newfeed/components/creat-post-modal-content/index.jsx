@@ -362,7 +362,6 @@ function CreatPostModalContent({
 				await dispatch(ratingUser(params));
 			} catch (err) {
 				NotificationError(err);
-				return err;
 			}
 		}
 	};

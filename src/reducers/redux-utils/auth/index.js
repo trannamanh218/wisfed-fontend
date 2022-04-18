@@ -1,5 +1,4 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import jwt_decode from 'jwt-decode';
 import {
 	authAPI,
 	forgotPasswordAPI,
@@ -8,7 +7,6 @@ import {
 	checkTokenResetPassword,
 	forgotPasswordAPIAdmin,
 	resetPasswordAPIAdmin,
-	checkUserInfoAPI,
 } from 'constants/apiURL';
 import Request from 'helpers/Request';
 import Storage from 'helpers/Storage';

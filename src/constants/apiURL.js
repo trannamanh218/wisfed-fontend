@@ -97,3 +97,4 @@ export const listFollowing = id => `/api/v1/users/listFollowings/${id}`;
 
 //chart
 export const listAPIChart = (count, by) => `/api/v1/tracking?count=${count}&by=${by}`;
+export const listBooksReadYear = type => `/api/v1/libraries/listBookByType/${type}`;

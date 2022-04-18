@@ -4,21 +4,24 @@ import bookImage from 'assets/images/default-book.png';
 import ReactRating from 'shared/react-rating';
 import './read-book.scss';
 
-const ReadBook = ({ source }) => {
+const ReadBook = ({ items }) => {
 	return (
 		<div className='read-book'>
 			<div className='read-book__image'>
-				<img src={source || bookImage} alt={name} onError={e => e.target.setAttribute('src', `${bookImage}`)} />
+				<img
+					src={items.book.images[0] || bookImage}
+					alt={name}
+					onError={e => e.target.setAttribute('src', `${bookImage}`)}
+				/>
 			</div>
-			<h5 className='read-book__name'>The Mystery of Briony Lodge - Bí mật của Briony Lodge bản dịch 2021</h5>
+			<h5 className='read-book__name' dangerouslySetInnerHTML={{ __html: items.book.description }}></h5>
 			<ReactRating initialRating={4} readonly={true} />
 		</div>
 	);
 };
 
 ReadBook.propTypes = {
-	images: PropTypes.array,
-	source: PropTypes.string,
+	items: PropTypes.object,
 };
 
 export default ReadBook;
