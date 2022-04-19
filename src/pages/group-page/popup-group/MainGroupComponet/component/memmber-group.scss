@@ -1,0 +1,94 @@
+.member-group__admin {
+	padding: 52px 48px 10px 44px;
+	h2 {
+		font-family: 'Montserrat';
+		font-style: normal;
+		font-weight: 600;
+		font-size: 18px;
+		line-height: 32px;
+		display: flex;
+		align-items: center;
+		letter-spacing: 0.75px;
+		color: #2d2c42;
+		margin-bottom: 40px;
+	}
+}
+.member-item {
+	margin-bottom: 20px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	img {
+		width: 54px;
+		height: 54px;
+		border-radius: 50%;
+		margin-right: 14px;
+	}
+}
+.member-item__info {
+	display: flex;
+	align-items: center;
+}
+.member-item__text {
+	width: 166px;
+	span {
+		font-family: 'Montserrat';
+		font-style: normal;
+		font-weight: 700;
+		font-size: 13px;
+		line-height: 22px;
+		display: flex;
+		align-items: center;
+		letter-spacing: 0.25px;
+		color: #2d2c42;
+	}
+	p {
+		margin-top: 5px;
+		font-family: 'Montserrat';
+		font-style: normal;
+		font-weight: 600;
+		font-size: 13px;
+		line-height: 22px;
+		display: flex;
+		align-items: center;
+		letter-spacing: 0.25px;
+		color: #6e7191;
+	}
+}
+.member-item__btn {
+	width: 121px;
+	height: 34px;
+}
+
+.bnt-add-friend {
+	border: 1.22px solid #e0af7e;
+	border-radius: 8px;
+	img {
+		width: 24px;
+		height: 24px;
+	}
+	font-family: 'Montserrat';
+	font-style: normal;
+	font-weight: 600;
+	font-size: 11px;
+	line-height: 15px;
+	letter-spacing: 0.457476px;
+	color: #b38c64;
+	margin-right: 12px;
+}
+.btn-folow {
+	padding: 9.75949px 14.6392px;
+	position: static;
+	width: 121.99px;
+	height: 34.52px;
+	background-color: #e0af7e;
+	font-family: 'Montserrat';
+	font-style: normal;
+	font-weight: 600;
+	font-size: 11px;
+	line-height: 15px;
+	border-radius: 7.31962px;
+	letter-spacing: 0.457476px;
+	color: #fcfcfc;
+	margin-right: 12px;
+}

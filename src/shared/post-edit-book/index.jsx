@@ -19,12 +19,9 @@ const PostEditBook = props => {
 	const dispatch = useDispatch();
 
 	const fetchData = async () => {
-		const query = {
-			filter: JSON.stringify([{ 'operator': 'eq', 'value': `${bookInfor.id}`, 'property': 'bookId' }]),
-		};
 		try {
-			const res = await dispatch(getRatingBook(query)).unwrap();
-			const data = res.data.rows;
+			const res = await dispatch(getRatingBook(bookInfor.id)).unwrap();
+			const data = res.data;
 			setListRatingStar(data);
 		} catch (err) {
 			toast.error('lỗi hệ thống');
@@ -124,7 +121,13 @@ const PostEditBook = props => {
 								handleChange={handleChangeStar}
 							/>
 							<div className='post-edit-book__rating__number'>
-								(4.2) ({listRatingStar?.length} đánh giá)
+								{listRatingStar?.avg !== 0 ? (
+									<div>
+										({listRatingStar?.avg}) ({listRatingStar?.count} đánh giá)
+									</div>
+								) : (
+									<div>(chưa có đánh giá)</div>
+								)}
 							</div>
 						</div>
 					</div>

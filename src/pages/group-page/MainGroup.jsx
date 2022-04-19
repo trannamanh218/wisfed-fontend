@@ -3,6 +3,9 @@ import PopupCreatGroup from './PopupCreatGroup';
 import PopupInviteFriend from './popup-group/popupInviteFriend';
 import PopupQuestion from './popup-group/popupQuestion';
 import MiniPopup from './popup-group/mini-popup';
+import SidebarGroupLef from './sidebar-left';
+import './mainGroup.scss';
+import MainGroupComponent from './popup-group/MainGroupComponet/MainGroupComponent';
 
 const MainGroup = () => {
 	const [isShow, setIsShow] = useState(false);
@@ -89,6 +92,10 @@ const MainGroup = () => {
 						''
 					)}
 				</div>
+			</div>
+			<div className='group-main__container'>
+				<SidebarGroupLef />
+				<MainGroupComponent />
 			</div>
 		</div>
 	);

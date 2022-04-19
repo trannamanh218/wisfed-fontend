@@ -22,6 +22,7 @@ function Post({ postInformations, className }) {
 	const [postData, setPostData] = useState({});
 	const [videoId, setVideoId] = useState('');
 	const { userInfo } = useSelector(state => state.auth);
+
 	const dispatch = useDispatch();
 
 	useEffect(() => {

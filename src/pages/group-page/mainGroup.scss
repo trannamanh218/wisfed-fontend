@@ -1,0 +1,20 @@
+.group-main__container {
+	display: flex;
+	.tab-content {
+		padding-bottom: 0 !important;
+	}
+}
+.group-main-component__container {
+	flex: 1;
+}
+
+.main-content__post {
+	margin-top: 41px;
+}
+
+.mainContainer {
+	padding-right: 0;
+}
+.mainContainer__main {
+	max-width: 62rem;
+}
