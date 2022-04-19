@@ -1,4 +1,3 @@
-import React from 'react';
 import BookIntro from 'pages/book-detail/book-intro';
 import BookReview from 'pages/book-detail/book-review';
 

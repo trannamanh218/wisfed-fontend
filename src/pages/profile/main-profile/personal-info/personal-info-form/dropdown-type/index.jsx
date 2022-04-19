@@ -1,6 +1,6 @@
 import SelectBox from 'shared/select-box';
 import PropTypes from 'prop-types';
-import ShareModeDropdown from 'shared/share-mode-dropdown';
+// import ShareModeDropdown from 'shared/share-mode-dropdown';
 import { useState, useEffect } from 'react';
 import { Pencil } from 'components/svg';
 import classNames from 'classnames';
@@ -50,7 +50,7 @@ function DropdownType({ option, data, editStatus, userData, displayData, cancelE
 					)}
 				</div>
 
-				<ShareModeDropdown />
+				{/* <ShareModeDropdown /> */}
 
 				{editStatus ? (
 					<div className='form-field__btn cancel' onClick={() => cancelEdit(`cancel-edit-${option}`)}>

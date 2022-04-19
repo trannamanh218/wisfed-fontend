@@ -69,18 +69,6 @@ const BookReview = () => {
 		fetchData();
 	}, []);
 
-	const listQuote = Array.from(Array(5)).fill({
-		data: {
-			content: `Lorem ipsum dolor sit amet consectetur adipisicing elit. Veniam velit nemo voluptate. Eaque tenetur
-			dolore qui doloribus modi alias labore deleniti quisquam sunt. Accusantium, accusamus eius ipsum optio
-			distinctio laborum.`,
-			avatar: '',
-			author: 'Mai Nguyễn',
-			bookName: 'Đắc nhân tâm',
-		},
-		badges: [{ title: 'Marketing' }, { title: 'Phát triển bản thân' }],
-	});
-
 	return (
 		<div className='book-review'>
 			<ReviewRating

@@ -29,12 +29,20 @@ const PersonalInfo = ({ userInfo }) => {
 	const [modalFriend, setModalFriend] = useState(false);
 	const [modalFollower, setModalFollower] = useState(false);
 	const [modalFollowing, setModalFollowing] = useState(false);
+	const [bgImage, setBgImage] = useState('');
+
 	const updateUserProfile = useSelector(state => state.user.updateUserProfile);
 	const dispatch = useDispatch();
 
 	useEffect(() => {
 		setModalOpen(false);
 	}, [updateUserProfile]);
+
+	useEffect(() => {
+		if (userInfo.backgroundImage) {
+			setBgImage(userInfo.backgroundImage);
+		}
+	}, [userInfo]);
 
 	const handleSettings = () => {
 		setSettingsVisible(prev => !prev);
@@ -51,8 +59,8 @@ const PersonalInfo = ({ userInfo }) => {
 					params = { avatarImage: imageUploadedData.streamPath };
 				}
 				const data = { userId: userInfo.id, params: params };
-				const changeUserAvatar = await dispatch(editUserInfo(data)).unwrap();
-				if (!_.isEmpty(changeUserAvatar)) {
+				const changeUserImage = await dispatch(editUserInfo(data)).unwrap();
+				if (!_.isEmpty(changeUserImage)) {
 					toast.success('Cập nhật ảnh thành công', { autoClose: 1500 });
 					dispatch(activeUpdateUserProfileStatus());
 				}
@@ -61,16 +69,15 @@ const PersonalInfo = ({ userInfo }) => {
 			}
 		}
 	});
+
 	return (
 		<div className='personal-info'>
-			<div
-				className='personal-info__wallpaper'
-				style={
-					userInfo.backgroundImage
-						? { backgroundImage: `url(${userInfo.backgroundImage})` }
-						: { backgroundImage: `url(${backgroundImageDefault})` }
-				}
-			>
+			<div className='personal-info__wallpaper'>
+				{userInfo.backgroundImage ? (
+					<img src={bgImage} alt='background-image' onError={() => setBgImage(backgroundImageDefault)} />
+				) : (
+					<img src={backgroundImageDefault} alt='background-image' />
+				)}
 				<Dropzone onDrop={acceptedFile => handleDrop(acceptedFile, 'change-bgImage')}>
 					{({ getRootProps, getInputProps }) => (
 						<div className='edit-wallpaper' {...getRootProps()}>

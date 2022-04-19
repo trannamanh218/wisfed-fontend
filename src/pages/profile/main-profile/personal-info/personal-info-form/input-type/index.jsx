@@ -1,6 +1,6 @@
 import { Pencil } from 'components/svg';
 import Input from 'shared/input';
-import ShareModeDropdown from 'shared/share-mode-dropdown';
+// import ShareModeDropdown from 'shared/share-mode-dropdown';
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
@@ -12,6 +12,12 @@ function InputType({ option, editStatus, inputValue, updateInputValue, inputRef,
 			setTextTranslated('Địa chỉ');
 		} else if (option === 'works') {
 			setTextTranslated('Công việc');
+		} else if (option === 'high-school') {
+			setTextTranslated('Trường trung học');
+		} else if (option === 'university') {
+			setTextTranslated('Đại học / Cao đẳng');
+		} else if (option === 'interest') {
+			setTextTranslated('Sở thích');
 		}
 	}, []);
 
@@ -39,7 +45,7 @@ function InputType({ option, editStatus, inputValue, updateInputValue, inputRef,
 					)}
 				</div>
 
-				<ShareModeDropdown />
+				{/* <ShareModeDropdown /> */}
 
 				{editStatus ? (
 					<div className='form-field__btn cancel' onClick={() => cancelEdit(`cancel-edit-${option}`)}>

@@ -162,7 +162,7 @@ function Post({ postInformations, className }) {
 				<UserAvatar
 					data-testid='post__user-avatar'
 					className='post__user-status__avatar'
-					source={postData?.userAvatar}
+					source={postData?.createdBy?.avatarImage}
 				/>
 
 				<div className='post__user-status__name-and-post-time-status'>
