@@ -56,6 +56,17 @@
 }
 .group-name__btn {
 	margin-left: 12px;
+	.search-field__input {
+		font-family: 'Montserrat';
+		font-style: normal;
+		font-weight: 500;
+		font-size: 13px;
+		line-height: 22px;
+		display: flex;
+		align-items: center;
+		letter-spacing: 0.25px;
+		color: #a0a3bd;
+	}
 }
 .btn-top {
 	display: flex;
@@ -80,6 +91,11 @@
 		letter-spacing: 0.25px;
 		color: #fcfcfc;
 	}
+	svg {
+		width: 24px;
+		height: 24px;
+		margin-right: 12px;
+	}
 }
 .group-name__invite-group {
 	display: flex;
@@ -102,6 +118,11 @@
 		text-align: center;
 		letter-spacing: 0.25px;
 		color: #fcfcfc;
+		svg {
+			margin-right: 15px;
+			width: 18px;
+			height: 18px;
+		}
 	}
 }
 .group__search {

@@ -12,7 +12,6 @@ export const useFetchActivities = (current = 1, perPage = 10, filter = '[]', isN
 	const [activity, setActivity] = useState([]);
 	const [retry, setRetry] = useState(false);
 	const dispatch = useDispatch();
-
 	const retryRequest = useCallback(() => {
 		setRetry(prev => !prev);
 	}, [setRetry]);

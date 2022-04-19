@@ -3,7 +3,6 @@ import ProgressBar from 'react-bootstrap/ProgressBar';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import CreatPostModalContent from 'pages/home/components/newfeed/components/creat-post-modal-content';
-import { useSelector } from 'react-redux';
 
 function ReadingBook({ bookData }) {
 	const [renderBookReading, setRenderBooksReading] = useState({});
@@ -11,18 +10,17 @@ function ReadingBook({ bookData }) {
 	const [booksId, setBooksId] = useState('');
 	const [percent, setPercent] = useState(null);
 	const [option, setOption] = useState({});
-	const { userInfo } = useSelector(state => state.auth);
 
 	useEffect(() => {
 		if (bookData?.books?.length > 0) {
 			const newItem = bookData?.books[bookData?.books.length - 1];
 			setRenderBooksReading(newItem.book);
-			return newItem?.book?.bookProgress?.map(item => {
-				if (item.userId === userInfo.id) {
-					const progessNumber = (item.progress / renderBookReading.page) * 100;
-					setPercent(progessNumber.toFixed());
-				}
-			});
+			if (newItem.book.progress) {
+				const progessNumber = (newItem.book.progress / newItem.book.page) * 100;
+				setPercent(progessNumber.toFixed());
+			} else {
+				setPercent(0);
+			}
 		}
 	}, [bookData, percent]);
 
@@ -85,6 +83,5 @@ function ReadingBook({ bookData }) {
 }
 ReadingBook.propTypes = {
 	bookData: PropTypes.object,
-	percent: PropTypes.number,
 };
 export default ReadingBook;

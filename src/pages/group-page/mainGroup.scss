@@ -2,9 +2,12 @@
 	display: flex;
 	.tab-content {
 		padding-bottom: 0 !important;
+		border-bottom-left-radius: 24px;
+		border-bottom-right-radius: 24px;
 	}
 }
 .group-main-component__container {
+	border-radius: 24px;
 	flex: 1;
 }
 
@@ -16,5 +19,67 @@
 	padding-right: 0;
 }
 .mainContainer__main {
-	max-width: 62rem;
+	max-width: 100%;
+}
+.mainContainer__right {
+	min-width: 280px;
+}
+.tab-content > .active {
+	border-radius: 24px;
+}
+.group-sibar-right {
+	padding-right: 36px;
+	h2 {
+		font-family: 'Montserrat';
+		font-style: normal;
+		font-weight: 700;
+		font-size: 20px;
+		line-height: 32px;
+		display: flex;
+		align-items: center;
+		letter-spacing: 0.75px;
+		color: #2d2c42;
+	}
+	.search-field {
+		margin-top: 24px;
+		border: 1px solid #d9dbe9;
+	}
+	.search-field__input {
+		font-family: 'Montserrat';
+		font-style: normal;
+		font-weight: 500;
+		font-size: 15px;
+		line-height: 24px;
+		display: flex;
+		align-items: center;
+		letter-spacing: 0.75px;
+		color: #a0a3bd;
+	}
+
+	.dualColumn-item {
+		width: 100%;
+	}
+	.dualColumn-item__title {
+		font-family: 'Montserrat';
+		font-style: normal;
+		font-weight: 600;
+		font-size: 13px;
+		line-height: 22px;
+		display: flex;
+		align-items: center;
+		letter-spacing: 0.25px;
+		color: #2d2c42;
+	}
+	.dualColumn-item__number {
+		font-family: 'Montserrat';
+		font-style: normal;
+		font-weight: 700;
+		font-size: 15px;
+		line-height: 24px;
+		display: flex;
+		align-items: center;
+		text-align: right;
+		letter-spacing: 0.75px;
+		color: #2d2c42;
+	}
 }

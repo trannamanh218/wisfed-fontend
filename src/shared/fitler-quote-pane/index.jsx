@@ -4,11 +4,10 @@ import Button from 'shared/button';
 import FitlerOptions from 'shared/filter-options';
 import { Add, Configure } from 'components/svg';
 import './filter-quote-pane.scss';
-import MultipleRadio from 'shared/multiple-radio';
-import MultipleCheckbox from 'shared/multiple-checkbox';
 import CreatQuotesModal from 'shared/creat-quotes-modal';
+import FormCheckGroup from 'shared/form-check-group';
 
-const FilterQuotePane = ({ filterOptions, defaultOption, handleChangeOption, children }) => {
+const FilterQuotePane = ({ filterOptions, defaultOption, handleChangeOption, children, handleChange, isMyQuotes }) => {
 	const [showCreatQuotesModal, setShowCreatQuotesModal] = useState(false);
 
 	const creatQuotesModalContainer = useRef(null);
@@ -23,9 +22,6 @@ const FilterQuotePane = ({ filterOptions, defaultOption, handleChangeOption, chi
 			value: 'default',
 			title: 'Quote nhiều like nhất',
 		},
-	];
-
-	const checkOptions = [
 		{
 			value: 'newest',
 			title: 'Mới nhất',
@@ -86,13 +82,16 @@ const FilterQuotePane = ({ filterOptions, defaultOption, handleChangeOption, chi
 					<Button className='filter-quote-pane__btn' varient='primary-light' onClick={creatQuotes}>
 						<Add className='filter-quote-pane__icon' /> Tạo Quotes
 					</Button>
-					<FitlerOptions
-						list={filterOptions}
-						defaultOption={defaultOption}
-						handleChangeOption={handleChangeOption}
-						name='filter-user'
-						className='filter-quote-pane__options'
-					/>
+					{isMyQuotes && (
+						<FitlerOptions
+							list={filterOptions}
+							defaultOption={defaultOption}
+							handleChangeOption={handleChangeOption}
+							name='filter-user'
+							className='filter-quote-pane__options'
+						/>
+					)}
+
 					<div className='filter-quote-pane__config dropdown'>
 						<button
 							className='filter-pane__btn dropdown-toggle'
@@ -105,11 +104,28 @@ const FilterQuotePane = ({ filterOptions, defaultOption, handleChangeOption, chi
 						<div className='filter-quote-pane__setting dropdown-menu' aria-labelledby='filterQuoteMenu'>
 							<div className='filter-quote-pane__setting__group'>
 								<h6 className='filter-quote-pane__setting__title'>Mặc định</h6>
-								<MultipleRadio list={radioOptions} name='quote-filter' value='default' />
-							</div>
-							<div className='filter-quote-pane__setting__group'>
+								<FormCheckGroup
+									data={radioOptions[0]}
+									name='custom'
+									type='radio'
+									defaultValue='default'
+									handleChange={handleChange}
+								/>
 								<h6 className='filter-quote-pane__setting__title'>Theo thời gian tạo</h6>
-								<MultipleCheckbox list={checkOptions} name='quote-filter-default' value='newest' />
+								<FormCheckGroup
+									data={radioOptions[1]}
+									name='custom'
+									type='radio'
+									defaultValue='default'
+									handleChange={handleChange}
+								/>
+								<FormCheckGroup
+									data={radioOptions[2]}
+									name='custom'
+									type='radio'
+									defaultValue='default'
+									handleChange={handleChange}
+								/>
 							</div>
 							<Button className='filter-quote-pane__setting__btn'>Xác nhận</Button>
 						</div>
@@ -132,6 +148,8 @@ FilterQuotePane.propTypes = {
 	defaultOption: PropTypes.object,
 	handleChangeOption: PropTypes.func,
 	children: PropTypes.any,
+	handleChange: PropTypes.func,
+	isMyQuotes: PropTypes.bool,
 };
 
 export default FilterQuotePane;

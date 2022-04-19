@@ -1,10 +1,11 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { postAPI, postDetailAPI, previewLink } from 'constants/apiURL';
+import { postAPI, postDetailAPI, previewLink, getPostsByUserAPI } from 'constants/apiURL';
 import Request from 'helpers/Request';
 
-export const getPostList = createAsyncThunk('post/getPostList', async (params, { rejectWithValue }) => {
+export const getPostsByUser = createAsyncThunk('post/getPostListByUser', async (data, { rejectWithValue }) => {
 	try {
-		const response = await Request.makeGet(postAPI, params);
+		const { userId, params } = data;
+		const response = await Request.makeGet(getPostsByUserAPI(userId), params);
 		return response.data;
 	} catch (err) {
 		const error = JSON.parse(err.response);
@@ -51,18 +52,6 @@ const postSlice = createSlice({
 		error: {},
 	},
 	extraReducers: {
-		[getPostList.pending]: state => {
-			state.isFetching = true;
-		},
-		[getPostList.fulfilled]: (state, action) => {
-			state.isFetching = false;
-			state.postsData = action.payload;
-			state.error = {};
-		},
-		[getPostList.rejected]: (state, action) => {
-			state.isFetching = false;
-			state.error = action.payload;
-		},
 		[getPostDetail.pending]: state => {
 			state.isFetching = true;
 		},

@@ -54,3 +54,17 @@
 		}
 	}
 }
+.sidebar-profile__personal__category {
+	.topic-column__btn {
+		gap: 15px;
+		margin-top: 16px;
+	}
+
+	.view-caret {
+		margin-right: 15px;
+		transition: all 0.2s linear;
+		&.view-more {
+			transform: rotate(180deg);
+		}
+	}
+}

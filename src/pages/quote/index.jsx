@@ -1,12 +1,16 @@
 import MainContainer from 'components/layout/main-container';
-import React from 'react';
+import { useEffect } from 'react';
 import MainQuote from './main-quote';
-import SidebarQuote from './sidebar-quote';
+import SidebarQuote from 'shared/sidebar-quote';
 
 const Quote = () => {
+	useEffect(() => {
+		setTimeout(function () {
+			window.scrollTo(0, 0);
+		}, 22);
+	});
+
 	return <MainContainer main={<MainQuote />} right={<SidebarQuote />} />;
 };
-
-Quote.propTypes = {};
 
 export default Quote;

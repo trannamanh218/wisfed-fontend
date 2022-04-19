@@ -19,12 +19,15 @@ const PostEditBook = props => {
 	const dispatch = useDispatch();
 
 	const fetchData = async () => {
-		try {
-			const res = await dispatch(getRatingBook(bookInfor.id)).unwrap();
-			const data = res.data;
-			setListRatingStar(data);
-		} catch (err) {
-			toast.error('lỗi hệ thống');
+		if (data.status === STATUS_BOOK.read || bookInfor) {
+			const bookId = bookInfor ? bookInfor.id : data.id;
+			try {
+				const res = await dispatch(getRatingBook(bookId)).unwrap();
+				const data = res.data.rows;
+				setListRatingStar(data);
+			} catch (err) {
+				toast.error('lỗi hệ thống');
+			}
 		}
 	};
 

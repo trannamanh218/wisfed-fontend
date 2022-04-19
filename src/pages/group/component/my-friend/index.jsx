@@ -6,25 +6,29 @@ import { useSelector, useDispatch } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
+import { generateQuery } from 'helpers/Common';
 
-const MyFriends = ({ activeTabs }) => {
+const MyFriends = ({ activeTabs, inputSearch, filter }) => {
 	const { userInfo } = useSelector(state => state.auth);
 	const [getMyListFriend, setGetMyListFriend] = useState([]);
-
 	const dispatch = useDispatch();
 	useEffect(async () => {
-		const param = {
-			userId: userInfo.id,
-		};
+		const query = generateQuery(1, 10, filter);
+		const userId = userInfo.id;
 		try {
 			if (!_.isEmpty(userInfo)) {
-				const friendList = await dispatch(getFriendList(param)).unwrap();
-				setGetMyListFriend(friendList.rows);
+				if (inputSearch.length > 0) {
+					const friendList = await dispatch(getFriendList({ userId, ...query })).unwrap();
+					setGetMyListFriend(friendList.rows);
+				} else {
+					const friendList = await dispatch(getFriendList({ userId })).unwrap();
+					setGetMyListFriend(friendList.rows);
+				}
 			}
 		} catch (err) {
 			NotificationError(err);
 		}
-	}, [userInfo, dispatch]);
+	}, [userInfo, dispatch, filter]);
 
 	return (
 		<div className='myfriends__container'>
@@ -49,6 +53,8 @@ const MyFriends = ({ activeTabs }) => {
 };
 MyFriends.propTypes = {
 	activeTabs: PropTypes.string,
+	inputSearch: PropTypes.string,
+	filter: PropTypes.string,
 };
 
 export default MyFriends;

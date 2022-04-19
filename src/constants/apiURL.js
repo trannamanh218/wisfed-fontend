@@ -30,11 +30,11 @@ export const bookAPI = '/api/v1/books';
 export const bookDetailAPI = id => `/api/v1/books/${id}`;
 export const bookElasticSearchAPI = '/api/v1/books/search';
 export const bookCopyrightsAPI = '/api/v1/bookCopyrights';
-export const bookAllReviewAPI = id => `/api/v1/books/${id}/reviews`;
-export const bookFollowReviewAPi = id => `/api/v1/books/${id}/followReviews`;
-export const bookFriendReviewAPi = id => `/api/v1/books/${id}/friendReviews`;
+export const bookReviewAPI = '/api/v1/reviews';
+export const bookFollowReviewAPI = id => `/api/v1/books/${id}/followReviews`;
+export const bookFriendReviewAPI = id => `/api/v1/books/${id}/friendReviews`;
 export const progressBookAPI = id => `/api/v1/books/updateBookProgress/${id}`;
-
+export const bookAuthor = '/api/v1/books/listBookByAuthor';
 // category
 export const categoryAPI = '/api/v1/categories';
 export const categoryDetailAPI = id => `/api/v1/categories/${id}`;
@@ -62,6 +62,7 @@ export const myFriendsReq = `/api/v1/users/friendReqToMe/`;
 export const activityAPI = '/api/v1/getstream';
 export const likeActivityAPI = id => `/api/v1/getstream/like/${id}`;
 export const listLikedActivityAPI = '/api/v1/users/likedActivities';
+export const getPostsByUserAPI = id => `/api/v1/getstream/profile/${id}`;
 
 // upload files
 export const uploadImageAPI = '/api/v1/upload/image';
@@ -74,7 +75,7 @@ export const addBookToLibraryAPI = id => `/api/v1/libraries/${id}/addBook`;
 export const removeBookFromLibraryAPI = id => `/api/v1/libraries/${id}/removeBook`;
 export const listBookLibraryAPI = id => `/api/v1/libraries/listBookLibrary/${id}`;
 export const updateBookAPI = id => `api/v1/libraries/updateBookLibrary/${id}`;
-export const myLibraryAPI = '/api/v1/libraries/mylib';
+export const myLibraryAPI = id => `/api/v1/libraries/libraryBy/${id}`;
 export const addBookToDefaultLibraryAPI = type => `/api/v1/libraries/addBook/${type}`;
 export const allBookInLibraryAPI = id => `/api/v1/libraries/listBookAllLibrary/${id}`;
 export const removeAllBookAPI = '/api/v1/libraries/removeAllBook ';
@@ -93,3 +94,7 @@ export const listFolowrs = id => `/api/v1/users/listFollowers/${id}`;
 export const addfollow = '/api/v1/users/follow';
 export const unFollow = id => `/api/v1/users/${id}/unFollow`;
 export const listFollowing = id => `/api/v1/users/listFollowings/${id}`;
+
+//chart
+export const listAPIChart = (count, by) => `/api/v1/tracking?count=${count}&by=${by}`;
+export const listBooksReadYear = type => `/api/v1/libraries/listBookByType/${type}`;

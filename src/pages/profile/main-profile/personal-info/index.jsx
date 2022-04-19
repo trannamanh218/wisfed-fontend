@@ -164,7 +164,11 @@ const PersonalInfo = ({ userInfo }) => {
 							</li>
 
 							{modalFollower && (
-								<ModalFollowers setModalFollower={setModalFollower} modalFollower={modalFollower} />
+								<ModalFollowers
+									setModalFollower={setModalFollower}
+									modalFollower={modalFollower}
+									userInfoDetail={userInfo}
+								/>
 							)}
 							<li
 								onClick={() => {
@@ -176,7 +180,11 @@ const PersonalInfo = ({ userInfo }) => {
 								<span>Đang theo dõi</span>
 							</li>
 							{modalFollowing && (
-								<ModalWatching setModalFollowing={setModalFollowing} modalFollowing={modalFollowing} />
+								<ModalWatching
+									setModalFollowing={setModalFollowing}
+									modalFollowing={modalFollowing}
+									userInfoDetail={userInfo}
+								/>
 							)}
 							<li
 								onClick={() => {
@@ -187,7 +195,13 @@ const PersonalInfo = ({ userInfo }) => {
 								<span className='number'>{userInfo.friends}</span>
 								<span>Bạn bè ({userInfo.mutualFriends})</span>
 							</li>
-							{modalFriend && <ModalFriend setModalFriend={setModalFriend} modalFriend={modalFriend} />}
+							{modalFriend && (
+								<ModalFriend
+									setModalFriend={setModalFriend}
+									modalFriend={modalFriend}
+									userInfoDetail={userInfo}
+								/>
+							)}
 						</ul>
 						{userInfo.descriptions && <ReadMore text={userInfo.descriptions} />}
 					</div>

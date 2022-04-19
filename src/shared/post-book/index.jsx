@@ -26,12 +26,12 @@ function PostBook({ data }) {
 
 	useEffect(() => {
 		fetchData();
-	}, []);
+	}, [data?.id]);
 
 	useEffect(() => {
 		if (data.status === 'wantToRead') {
 			setProgress(data.page);
-			setPercenProgress(100);
+			setPercenProgress(0);
 		} else {
 			const newPropgress = ((data.progress / data.page) * 100).toFixed();
 			setPercenProgress(newPropgress);
@@ -52,7 +52,7 @@ function PostBook({ data }) {
 						<LinearProgressBar percent={percenProgress} />
 						<div className='post-book__editor'>
 							<span className='post-book__ratio'>
-								{data.status === 'wantToRead' ? progress : data.progress}/{data.page}
+								{data.status === 'wantToRead' ? data.progress : data.progress}/{data.page}
 							</span>
 							<span>Trang sách đã đọc</span>
 						</div>

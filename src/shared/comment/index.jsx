@@ -2,17 +2,15 @@ import classNames from 'classnames';
 import { calculateDurationTime } from 'helpers/Common';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
-import React from 'react';
 import { Badge } from 'react-bootstrap';
-import { useDispatch } from 'react-redux';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { updateReactionActivity } from 'reducers/redux-utils/activity';
 import UserAvatar from 'shared/user-avatar';
 import './comment.scss';
 
 const Comment = props => {
 	const { data, handleReply, postData, index, parentData, indexParent } = props;
-	const isAuthor = postData.origin.split(':')[1] === data.user.id;
+	const isAuthor = postData.createdBy.id === data.user.id;
 	const { userInfo } = useSelector(state => state.auth);
 	const dispatch = useDispatch();
 

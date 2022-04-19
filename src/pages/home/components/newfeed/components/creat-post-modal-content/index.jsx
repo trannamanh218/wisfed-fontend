@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import classNames from 'classnames';
 import { CloseX, Image, WorldNet } from 'components/svg';
 import { STATUS_IDLE, STATUS_LOADING, STATUS_SUCCESS } from 'constants';
@@ -20,7 +21,7 @@ import { Circle as CircleLoading } from 'shared/loading';
 import './style.scss';
 import { ratingUser } from 'reducers/redux-utils/book';
 import UserAvatar from 'shared/user-avatar';
-import { updateCurrentBook, updateProgressReadingBook } from 'reducers/redux-utils/book';
+import { updateCurrentBook, updateProgressReadingBook, createReviewBook } from 'reducers/redux-utils/book';
 import { STATUS_BOOK } from 'constants';
 import { usePrevious } from 'shared/hooks';
 import { addBookToDefaultLibrary } from 'reducers/redux-utils/library';
@@ -59,18 +60,17 @@ function CreatPostModalContent({
 	const textFieldEdit = useRef(null);
 	const taggedDataPrevious = usePrevious(taggedData);
 	const [valueStar, setValueStar] = useState(0);
+	const [checkProgress, setCheckProgress] = useState();
 
 	const {
 		auth: { userInfo },
 		book: { bookForCreatePost, bookInfo },
 	} = useSelector(state => state);
-
 	const { optionList, shareModeList } = setting;
 
 	useEffect(() => {
 		textFieldEdit.current.focus();
 	}, []);
-
 	useEffect(() => {
 		if (!_.isEmpty(bookForCreatePost) || !_.isEmpty(renderBookReading)) {
 			if (booksId) {
@@ -86,7 +86,6 @@ function CreatPostModalContent({
 			}
 		}
 	}, [bookForCreatePost]);
-
 	useEffect(() => {
 		textFieldEdit.current.addEventListener('input', () => {
 			handlePlaceholder();
@@ -97,7 +96,6 @@ function CreatPostModalContent({
 			document.removeEventListener('input', handlePlaceholder);
 		};
 	}, [showTextFieldEditPlaceholder]);
-
 	const detectUrl = useCallback(
 		_.debounce(() => {
 			const urlRegex =
@@ -112,14 +110,12 @@ function CreatPostModalContent({
 		}, 1000),
 		[]
 	);
-
 	useEffect(() => {
 		if (!_.isEqual(urlAddedArray, oldUrlAddedArray)) {
 			getPreviewUrlFnc(urlAddedArray[urlAddedArray.length - 1]);
 			setOldUrlAddedArray(urlAddedArray);
 		}
 	}, [urlAddedArray]);
-
 	const createSpanElements = () => {
 		const subStringArray = textFieldEdit.current.innerText.split(' ');
 		textFieldEdit.current.innerText = '';
@@ -134,7 +130,6 @@ function CreatPostModalContent({
 		textFieldEdit.current.innerHTML = subStringArray.join(' ');
 		placeCaretAtEnd(textFieldEdit.current);
 	};
-
 	const placeCaretAtEnd = element => {
 		element.focus();
 		if (typeof window.getSelection != 'undefined' && typeof document.createRange != 'undefined') {
@@ -151,7 +146,6 @@ function CreatPostModalContent({
 			textRange.select();
 		}
 	};
-
 	const getPreviewUrlFnc = async url => {
 		setFetchingUrlInfo(true);
 		const data = { 'url': url };
@@ -166,11 +160,9 @@ function CreatPostModalContent({
 			setFetchingUrlInfo(false);
 		}
 	};
-
 	const removeUrlPreview = () => {
 		setHasUrl(false);
 	};
-
 	const handlePlaceholder = () => {
 		if (textFieldEdit.current.innerText.length > 0) {
 			setShowTextFieldEditPlaceholder(false);
@@ -178,11 +170,9 @@ function CreatPostModalContent({
 			setShowTextFieldEditPlaceholder(true);
 		}
 	};
-
 	const backToMainModal = () => {
 		setShowMainModal(true);
 	};
-
 	const addOptionsToPost = param => {
 		if (imagesUpload.length > 0 && param.value === 'addBook') {
 			toast.warning('Không thể kết hợp đồng thời thêm ảnh và sách');
@@ -191,7 +181,6 @@ function CreatPostModalContent({
 			setShowMainModal(false);
 		}
 	};
-
 	const handleOpenUploadImage = () => {
 		if (_.isEmpty(taggedData.addBook)) {
 			setShowUpload(!showUpload);
@@ -200,7 +189,6 @@ function CreatPostModalContent({
 			toast.warning('Không thể kết hợp đồng thời thêm ảnh và sách');
 		}
 	};
-
 	const deleteImage = imageIndex => {
 		const newImagesArray = [...imagesUpload];
 		newImagesArray.splice(imageIndex, 1);
@@ -210,22 +198,19 @@ function CreatPostModalContent({
 		}
 		setImagesUpload(newImagesArray);
 	};
-
 	const removeAllImages = () => {
 		setImagesUpload([]);
 		setShowUpload(false);
 	};
-
 	const handleAddToPost = data => {
 		const newData = { ...taggedData };
-
+		setCheckProgress(data.progress);
 		if (option.value === 'addAuthor' || option.value === 'addFriends' || option.value === 'addCategory') {
 			const listData = [...taggedData[option.value]];
 			const lastItem = listData[listData.length - 1];
 			if (!listData.length || (!_.isEmpty(lastItem) && lastItem.id !== data.id)) {
 				listData.push(data);
 			}
-
 			newData[option.value] = listData;
 		} else if (option.value === 'addBook' || data.hasOwnProperty('page')) {
 			newData['addBook'] = data;
@@ -236,7 +221,6 @@ function CreatPostModalContent({
 
 		setTaggedData(newData);
 	};
-
 	const removeTaggedItem = (data, type) => {
 		if (type !== 'addBook') {
 			const currentTaggedList = taggedData[type];
@@ -246,7 +230,6 @@ function CreatPostModalContent({
 			setTaggedData(prev => ({ ...prev, [type]: {} }));
 		}
 	};
-
 	const generateData = async () => {
 		const params = {
 			msg: textFieldEdit?.current?.innerHTML,
@@ -279,10 +262,6 @@ function CreatPostModalContent({
 		return params;
 	};
 
-	const createNewActivity = params => {
-		return dispatch(createActivity(params)).unwrap();
-	};
-
 	const handleUpdateProgress = params => {
 		const { status, progress } = taggedData.addBook;
 		const convertProgress = parseInt(progress) || 0;
@@ -301,35 +280,39 @@ function CreatPostModalContent({
 			} else if (convertProgress === taggedData.addBook.page) {
 				type = STATUS_BOOK.read;
 			}
-
 			const addBookParams = { bookId: params.bookId, type };
 			const addToDefaultLibraryRequest = dispatch(addBookToDefaultLibrary(addBookParams)).unwrap();
 			const updateProgressRequest = dispatch(updateProgressReadingBook(progressParams)).unwrap();
 			return Promise.all([addToDefaultLibraryRequest, updateProgressRequest]);
 		}
 	};
-
 	const onCreatePost = async () => {
 		const params = await generateData();
 		// book, author , topic is required
-		if ((params.bookId || params.mentionsAuthor.length || params.mentionsCategory.length) && params.msg) {
+		if ((params.bookId || params.mentionsAuthor.length || params.mentionsCategory.length) && params.msg !== '') {
 			setStatus(STATUS_LOADING);
-
 			try {
 				if (params.bookId) {
+					const reviewData = {
+						bookId: params.bookId,
+						mediaUrl: [],
+						content: textFieldEdit.current.innerText,
+					};
 					await handleUpdateProgress(params);
-					await createNewActivity(params);
-				} else {
-					await createNewActivity(params);
+					await dispatch(createReviewBook(reviewData));
 				}
+				await dispatch(createActivity(params));
 				setStatus(STATUS_SUCCESS);
 				toast.success('Tạo post thành công!');
 				onChangeNewPost();
 			} catch (err) {
 				const statusCode = err?.statusCode || 500;
-				NotificationError(err);
+				if (err.errorCode === 702) {
+					NotificationError(err);
+				} else {
+					toast.error('Tạo post thất bại!');
+				}
 				setStatus(statusCode);
-				// toast.error('Tạo post thất bại!');
 			} finally {
 				dispatch(updateCurrentBook({}));
 				setStatus(STATUS_IDLE);
@@ -337,20 +320,33 @@ function CreatPostModalContent({
 				onChangeOption({});
 				userRating();
 			}
+		} else if (params.msg === '' && validationInput === '') {
+			try {
+				if (params.bookId) {
+					await handleUpdateProgress(params);
+				}
+			} catch (err) {
+				if (params.msg === '' && validationInput === '') {
+					toast.success('Cập nhập trang sách thành công');
+				} else {
+					toast.error('Cập nhập trang sách thất bại');
+				}
+			} finally {
+				hideCreatPostModal();
+			}
 		}
 	};
-
 	const checkActive = () => {
 		let isActive = false;
 		if (
-			(!_.isEmpty(taggedData.addBook) || taggedData.addAuthor.length || taggedData.addCategory.length) &&
-			textFieldEdit.current?.innerText
+			((taggedData.addBook.page != checkProgress && validationInput === '') ||
+				textFieldEdit.current?.innerText) &&
+			(!_.isEmpty(taggedData.addBook) || taggedData.addAuthor.length || taggedData.addCategory.length)
 		) {
 			isActive = true;
 		}
 		return isActive && !validationInput;
 	};
-
 	const handleValidationInput = value => {
 		setValidationInput(value);
 	};
@@ -366,7 +362,6 @@ function CreatPostModalContent({
 				await dispatch(ratingUser(params));
 			} catch (err) {
 				NotificationError(err);
-				return err;
 			}
 		}
 	};
@@ -404,7 +399,6 @@ function CreatPostModalContent({
 							<div className='creat-post-modal-content__main__body__user-info__block-right'>
 								<p>
 									{userInfo.fullName || userInfo.lastName || userInfo.firstName || 'Không xác định'}
-
 									{taggedData.addFriends.length ? (
 										<>
 											<span className='d-inline-block mx-1'>cùng với</span>
@@ -451,7 +445,6 @@ function CreatPostModalContent({
 									{taggedData.addBook.name}
 								</a>
 							)}
-
 							<TaggedList taggedData={taggedData} removeTaggedItem={removeTaggedItem} type='addAuthor' />
 							<TaggedList
 								taggedData={taggedData}
@@ -486,7 +479,6 @@ function CreatPostModalContent({
 							)}
 						</div>
 					</div>
-
 					<div className='creat-post-modal-content__main__options-and-submit'>
 						<div className='creat-post-modal-content__main__options'>
 							<span>Thêm vào bài viết</span>

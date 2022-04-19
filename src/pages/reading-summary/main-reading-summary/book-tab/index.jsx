@@ -1,73 +1,67 @@
 import PropTypes from 'prop-types';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Bar, BarChart, Legend, Tooltip, XAxis, YAxis } from 'recharts';
 import SelectBox from 'shared/select-box';
 import caretChart from 'assets/images/caret-chart.png';
 import './book-tab.scss';
+import { getListChart } from 'reducers/redux-utils/chart';
+import { useDispatch } from 'react-redux';
+import { NotificationError } from 'helpers/Error';
 
 const BookTab = () => {
 	const [currentOption, setCurrentOption] = useState({ value: 'month', title: 'Tháng' });
-
+	const [chartsData, setChartsData] = useState([]);
+	const dispatch = useDispatch();
 	const options = [
 		{ value: 'month', title: 'Tháng' },
 		{ value: 'year', title: 'Năm' },
 	];
 
-	const data = [
-		{
-			monthNumber: 'T1',
-			numberOfBooks: 2400,
-			color: '#FEC5BB',
-		},
-		{
-			monthNumber: 'T2',
-			numberOfBooks: 1398,
-		},
-		{
-			monthNumber: 'T3',
-			numberOfBooks: 9800,
-		},
-		{
-			monthNumber: 'T4',
-			numberOfBooks: 3908,
-		},
+	const fetchData = async () => {
+		try {
+			if (currentOption.value === 'month') {
+				const params = {
+					count: 'book',
+					by: 'month',
+				};
+				const data = await dispatch(getListChart(params)).unwrap();
+				setChartsData(data);
+			} else {
+				const params = {
+					count: 'book',
+					by: 'year',
+				};
 
-		{
-			monthNumber: 'T5',
-			numberOfBooks: 3800,
-		},
-		{
-			monthNumber: 'T6',
-			numberOfBooks: 4300,
-		},
-		{
-			monthNumber: 'T7',
-			numberOfBooks: 4300,
-		},
-		{
-			monthNumber: 'T8',
-			numberOfBooks: 4300,
-		},
-		{
-			monthNumber: 'T9',
-			numberOfBooks: 4300,
-		},
-		{
-			monthNumber: 'T10',
-			numberOfBooks: 4300,
-		},
-		{
-			monthNumber: 'T11',
-			numberOfBooks: 4800,
-		},
-		{
-			monthNumber: 'T12',
-			numberOfBooks: 4300,
-		},
-	];
+				const data = await dispatch(getListChart(params)).unwrap();
+				setChartsData(data);
+			}
+		} catch (err) {
+			NotificationError(err);
+		}
+	};
+
+	function CustomTooltip(props) {
+		const { label, payload } = props;
+		return (
+			<div className='custom-tooltip'>
+				<p className='label'>{` ${currentOption.value === 'month' ? 'Tháng' : 'Năm'} ${label} : Đã đọc ${
+					payload[0]?.payload.count
+				} cuốn sách`}</p>
+			</div>
+		);
+	}
+
+	useEffect(() => {
+		fetchData();
+	}, [currentOption]);
 
 	const onChangeOption = item => {
 		setCurrentOption(item);
+	};
+
+	CustomTooltip.propTypes = {
+		label: PropTypes.string,
+		payload: PropTypes.object,
 	};
 
 	return (
@@ -86,7 +80,7 @@ const BookTab = () => {
 				<BarChart
 					width={900}
 					height={500}
-					data={data}
+					data={chartsData}
 					margin={{
 						top: 50,
 						right: 30,
@@ -97,7 +91,7 @@ const BookTab = () => {
 				>
 					<XAxis
 						stroke='#6E7191'
-						dataKey='monthNumber'
+						dataKey={currentOption.value === 'month' ? 'month' : 'year'}
 						tick={<CustomizedAxisXTick />}
 						strokeDasharray='5 5'
 						strokeWidth={3}
@@ -107,14 +101,16 @@ const BookTab = () => {
 						label={{ value: 'Số sách', position: 'top', offset: 30 }}
 						tick={<CustomizedAxisYTick />}
 						allowDataOverflow={true}
-						domain={[0, 'dataMax + 1000']}
+						domain={['auto', 'auto']}
+						tickCount={10}
 						strokeDasharray='5 5'
 						strokeWidth={3}
 						stroke='#6e7191'
+						dataKey='count'
 					></YAxis>
-					<Tooltip cursor={false} />
+					<Tooltip cursor={false} content={<CustomTooltip />} />
 					<Legend wrapperStyle={{ top: 460, left: 30 }} />
-					<Bar dataKey='numberOfBooks' fill='#9ad0f5' name='Tháng' />
+					<Bar dataKey='count' fill='#9ad0f5' name={currentOption.value === 'month' ? 'Tháng' : 'Năm'} />
 				</BarChart>
 			</div>
 
@@ -125,7 +121,6 @@ const BookTab = () => {
 
 function CustomizedAxisXTick(props) {
 	const { x, y, payload } = props;
-
 	return (
 		<g transform={`translate(${x},${y})`}>
 			<text x={0} y={10} dy={16} textAnchor='middle' fill='#2d2c42'>
@@ -137,7 +132,6 @@ function CustomizedAxisXTick(props) {
 
 function CustomizedAxisYTick(props) {
 	const { x, y, payload } = props;
-
 	return (
 		<g transform={`translate(${x},${y})`}>
 			<text x={-8} y={0} textAnchor='end' fill='#2d2c42'>

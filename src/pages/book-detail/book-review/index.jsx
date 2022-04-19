@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Tab, Tabs } from 'react-bootstrap';
 import ReviewRating from 'shared/review-rating';
 import QuotesTab from './components/QuotesTab';
@@ -85,8 +85,8 @@ const BookReview = () => {
 		<div className='book-review'>
 			<ReviewRating
 				list={listRating}
-				ratingLevel={listRatingStar.avg}
-				ratingTotal={listRatingStar.count}
+				ratingLevel={listRatingStar?.avg}
+				ratingTotal={listRatingStar?.count}
 				className='book-review__rating'
 			/>
 			<Tabs className='book-review__tabs'>
@@ -94,7 +94,7 @@ const BookReview = () => {
 					<ReviewTab />
 				</Tab>
 				<Tab eventKey='quotes' title='Quotes'>
-					<QuotesTab list={listQuote} />
+					<QuotesTab />
 				</Tab>
 			</Tabs>
 		</div>

@@ -1,5 +1,4 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import jwt_decode from 'jwt-decode';
 import {
 	authAPI,
 	forgotPasswordAPI,
@@ -8,7 +7,6 @@ import {
 	checkTokenResetPassword,
 	forgotPasswordAPIAdmin,
 	resetPasswordAPIAdmin,
-	checkUserInfoAPI,
 } from 'constants/apiURL';
 import Request from 'helpers/Request';
 import Storage from 'helpers/Storage';
@@ -103,6 +101,13 @@ const authSlice = createSlice({
 		error: {},
 		infoForgot: {},
 	},
+
+	reducers: {
+		updateUserInfoRedux: (state, action) => {
+			state.userInfo = action.payload;
+		},
+	},
+
 	extraReducers: {
 		[login.pending]: state => {
 			state.isFetching = true;
@@ -182,5 +187,6 @@ const authSlice = createSlice({
 	},
 });
 
+export const { updateUserInfoRedux } = authSlice.actions;
 const auth = authSlice.reducer;
 export default auth;

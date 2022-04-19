@@ -7,6 +7,7 @@ import IntroGroup from './component/introGroup';
 import MainPostGroup from './component/MainPostGroup';
 import MemberGroup from './component/MemberGroup';
 import './style.scss';
+import { ActionPlusGroup, LogInCircle } from 'components/svg';
 
 function MainGroupComponent() {
 	const [key, setKey] = useState('intro');
@@ -33,10 +34,16 @@ function MainGroupComponent() {
 				<div className='group-name__btn'>
 					<div className='btn-top'>
 						<div className='group-name__join-group'>
-							<button>Yêu cầu tham gia</button>
+							<button>
+								<LogInCircle />
+								Yêu cầu tham gia
+							</button>
 						</div>
 						<div className='group-name__invite-group'>
-							<button>Mời</button>
+							<button>
+								<ActionPlusGroup />
+								Mời
+							</button>
 						</div>
 					</div>
 
