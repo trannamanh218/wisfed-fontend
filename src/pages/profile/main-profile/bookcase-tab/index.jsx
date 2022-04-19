@@ -4,102 +4,148 @@ import ProgressBar from 'react-bootstrap/ProgressBar';
 import classNames from 'classnames';
 import BookThumbnail from 'shared/book-thumbnail';
 import { BoldCenterCircle, RightArrow } from 'components/svg';
+import { useFetchAuthLibraries } from 'api/library.hook';
+import { useEffect, useState } from 'react';
 
 function Bookcase() {
-	const DATA = [
-		{
-			id: 1,
-			partName: 'Sách đang đọc',
-			bookCover: sampleBookImg,
-			bookName: 'Anastasia Steele goes to house Đàn ông sao hoả đàn bà sao kim (2021)',
-			author: 'J. Conner  & S. Grand',
-			bookPercent: 30,
-			reviews: [
-				'Ngày 01.01.2021 đọc được 12/300 trang sách',
-				'Ngày 01.01.2021 đọc được 12/300 trang sách',
-				'Ngày 01.01.2021 đọc được 12/300 trang sách',
-			],
-		},
-		{
-			id: 2,
-			partName: 'Sách đã đọc',
-			bookCover: sampleBookImg,
-			bookName: 'One To Watch Nhìn một lần (Phiên bản mới)',
-			author: 'J. Conner  & S. Grand',
-			bookPercent: 100,
-			reviews: ['Ngày 01.01.2021 đọc được 12/300 trang sách', 'Ngày 01.01.2021 đọc được 12/300 trang sách'],
-		},
-		{
-			id: 3,
-			partName: '',
-			bookCover: sampleBookImg,
-			bookName: 'One To Watch Nhìn một lần (Phiên bản mới)',
-			author: 'J. Conner  & S. Grand',
-			bookPercent: 100,
-			reviews: ['Ngày 01.01.2021 đọc được 12/300 trang sách'],
-		},
-	];
+	const { statusLibraries } = useFetchAuthLibraries();
+	const [readingBooks, setReadingBooks] = useState([]);
+	const [readBooks, setReadBooks] = useState([]);
+	useEffect(() => {
+		const filterReadbooks = statusLibraries.filter(item => item.defaultType === 'read');
+		const filterReadingbooks = statusLibraries.filter(item => item.defaultType === 'reading');
+		return setReadBooks(filterReadbooks), setReadingBooks(filterReadingbooks);
+	}, [statusLibraries]);
+
+	const progressBarPercenNumber = items => {
+		const progress = ((items.book.bookProgress[0]?.progress / items.book.page) * 100).toFixed();
+		return (
+			<div className='bookcase__item__book-progress'>
+				<ProgressBar
+					className={classNames('bookcase__item__book-progress-bar', {
+						'fullBar': items.book.bookProgress[0]?.progress === 100,
+					})}
+					now={progress}
+				/>
+				<div
+					className={classNames('bookcase__item__book-percent', {
+						'fullBar': items.book.bookProgress[0]?.progress === 100,
+					})}
+				>
+					{progress}%
+				</div>
+			</div>
+		);
+	};
+
 	return (
 		<div className='bookcase'>
-			{DATA.map(item => (
-				<div key={item.id} className='bookcase__item'>
-					<div className='bookcase__item-name'>{item.partName}</div>
-					<div className='bookcase__item__book'>
-						<BookThumbnail source={item.bookCover} size='lg' />
-						<div className='bookcase__item__book-info'>
-							<div className='bookcase__item__book-info__detail'>
-								<div className='bookcase__item__book-name'>{item.bookName}</div>
-								<div className='bookcase__item__author-name'>{item.author}</div>
-								<div className='bookcase__item__book-progress'>
-									<ProgressBar
-										className={classNames('bookcase__item__book-progress-bar', {
-											'fullBar': item.bookPercent === 100,
-										})}
-										now={item.bookPercent}
-									/>
-									<div
-										className={classNames('bookcase__item__book-percent', {
-											'fullBar': item.bookPercent === 100,
-										})}
-									>
-										{item.bookPercent}%
+			<div className='bookcase__item-name'>Sách đang đọc</div>
+			{readingBooks.map(item =>
+				item?.books?.slice(0, 3).map(items => (
+					<div key={items.id} className='bookcase__item'>
+						<div className='bookcase__item__book'>
+							<BookThumbnail source={items.book?.images[0]} size='lg' />
+							<div className='bookcase__item__book-info'>
+								<div className='bookcase__item__book-info__detail'>
+									<div className='bookcase__item__book-name'>{items.book?.name}</div>
+									<div className='bookcase__item__author-name'>
+										{item.book?.author ? item.book?.author : 'Tác giả chưa xác định'}
 									</div>
+									{progressBarPercenNumber(items)}
+								</div>
+								<div className='bookcase__item__button'>
+									<button>Viết Review</button>
 								</div>
 							</div>
-							<div className='bookcase__item__button'>
-								<button>Viết Review</button>
-							</div>
 						</div>
-					</div>
-					<div className='bookcase__item__reviews'>
-						<div className='bookcase__item__reviews-name'>{`Bài Review ${item.bookName}`}</div>
-						<div className='bookcase__item__reviews-list'>
-							{item.reviews.map((review, index) => (
-								<div key={index} className='bookcase__review-item'>
+						<div className='bookcase__item__reviews'>
+							<div className='bookcase__item__reviews-name'>{`Bài Review ${items.book?.name}`}</div>
+							<div className='bookcase__item__reviews-list'>
+								<div className='bookcase__review-item'>
 									<div className='bookcase__review-item__svg'>
 										<BoldCenterCircle />
-										{index > 0 && (
-											<div className='bookcase__review-item__vertical-stick'>
-												<div className='bookcase__vertical-stick'></div>
-											</div>
-										)}
+
+										<div className='bookcase__review-item__vertical-stick'>
+											<div className='bookcase__vertical-stick'></div>
+										</div>
 									</div>
 									<div className='bookcase__review-item__text'>
-										<span>{review}</span>
+										<span></span>
 										<a>Review sách</a>
 									</div>
 								</div>
-							))}
-						</div>
-						<div className='bookcase__review-all'>
-							<button>
-								<span>Xem toàn bộ Review</span>
-								<RightArrow />
-							</button>
+							</div>
+							<div className='bookcase__review-all'>
+								<button>
+									<span>Xem toàn bộ Review</span>
+									<RightArrow />
+								</button>
+							</div>
 						</div>
 					</div>
-				</div>
-			))}
+				))
+			)}
+			<div className='bookcase__item-name'>Sách đã đọc</div>
+			{readBooks.map(item =>
+				item?.books?.slice(0, 3).map(items => (
+					<div key={items.id} className='bookcase__item'>
+						<div className='bookcase__item__book'>
+							<BookThumbnail source={items.book?.images[0]} size='lg' />
+							<div className='bookcase__item__book-info'>
+								<div className='bookcase__item__book-info__detail'>
+									<div className='bookcase__item__book-name'>{items.book?.name}</div>
+									<div className='bookcase__item__author-name'>
+										{item.book?.author ? item.book?.author : 'Tác giả chưa xác định'}
+									</div>
+									<div className='bookcase__item__book-progress'>
+										<ProgressBar
+											className={classNames('bookcase__item__book-progress-bar', {
+												'fullBar': item.defaultType === 'read',
+											})}
+											now={100}
+										/>
+										<div
+											className={classNames('bookcase__item__book-percent', {
+												'fullBar': item.defaultType === 'read',
+											})}
+										>
+											{100}%
+										</div>
+									</div>
+								</div>
+								<div className='bookcase__item__button'>
+									<button>Viết Review</button>
+								</div>
+							</div>
+						</div>
+						<div className='bookcase__item__reviews'>
+							<div className='bookcase__item__reviews-name'>{`Bài Review ${items.book?.name}`}</div>
+							<div className='bookcase__item__reviews-list'>
+								<div className='bookcase__review-item'>
+									<div className='bookcase__review-item__svg'>
+										<BoldCenterCircle />
+
+										<div className='bookcase__review-item__vertical-stick'>
+											<div className='bookcase__vertical-stick'></div>
+										</div>
+									</div>
+									<div className='bookcase__review-item__text'>
+										<span></span>
+										<a>Review sách</a>
+									</div>
+								</div>
+							</div>
+							<div className='bookcase__review-all'>
+								<button>
+									<span>Xem toàn bộ Review</span>
+									<RightArrow />
+								</button>
+							</div>
+						</div>
+					</div>
+				))
+			)}
 		</div>
 	);
 }

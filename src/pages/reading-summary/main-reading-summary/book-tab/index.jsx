@@ -33,7 +33,13 @@ const BookTab = () => {
 				};
 
 				const data = await dispatch(getListChart(params)).unwrap();
-				setChartsData(data);
+				const newData = data.map(item => {
+					if (item.count?.length > 0) {
+						return { ...item, count: JSON.parse(item.count) };
+					}
+					return item;
+				});
+				setChartsData(newData);
 			}
 		} catch (err) {
 			NotificationError(err);
@@ -106,7 +112,6 @@ const BookTab = () => {
 						strokeDasharray='5 5'
 						strokeWidth={3}
 						stroke='#6e7191'
-						dataKey='count'
 					></YAxis>
 					<Tooltip cursor={false} content={<CustomTooltip />} />
 					<Legend wrapperStyle={{ top: 460, left: 30 }} />

@@ -8,11 +8,13 @@ import QuotesLinks from 'shared/quote-links';
 import BookSlider from 'shared/book-slider';
 import { Link } from 'react-router-dom';
 import './sidebar-reading-summary.scss';
+import { useFetchAuthorBooks } from 'api/book.hooks';
 
 const SidebarReadingSummary = () => {
 	const { userInfo } = useSelector(state => state.auth);
 	const { libraryData } = useSelector(state => state.library);
 	const libraryList = libraryData?.rows?.map(item => ({ ...item, quantity: item.books.length }));
+	const { booksAuthor } = useFetchAuthorBooks();
 
 	const { quoteData } = useFetchQuotes(
 		1,
@@ -21,8 +23,6 @@ const SidebarReadingSummary = () => {
 	);
 
 	const { readingData } = useFetchStatsReadingBooks();
-
-	const myComposing = new Array(10).fill({ source: '/images/book1.jpg', name: 'Design pattern' });
 
 	return (
 		<div className='sidebar-reading-summary'>
@@ -36,7 +36,7 @@ const SidebarReadingSummary = () => {
 			<MyShelvesList list={libraryList} />
 			<QuotesLinks list={quoteData} title='Quotes' />
 			<div className='my-compose'>
-				<BookSlider title='Sách tôi là tác giả' list={myComposing} />
+				<BookSlider title='Sách tôi là tác giả' list={booksAuthor} />
 				<Link className='view-all-link' to='/'>
 					Xem thêm
 				</Link>

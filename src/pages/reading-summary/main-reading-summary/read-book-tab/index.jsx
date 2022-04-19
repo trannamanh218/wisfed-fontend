@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 // import PropTypes from 'prop-types';
 import { Accordion } from 'react-bootstrap';
 import ReadBook from 'shared/read-book';
-import bookImage from 'assets/images/book1.png';
 import './read-book-tab.scss';
 import { getListBooksReadYear } from 'reducers/redux-utils/chart';
 import { NotificationError } from 'helpers/Error';
@@ -32,10 +31,10 @@ const ReadBookTab = () => {
 			});
 			const newYearData = newData.filter(item => item.year === yearMin.year);
 			setBooksRead([{ year: yearMin.year, data: newYearData }]);
-			while (yearMin.year + (1 + n - 1) !== year) {
+			while (yearMin.year + n !== year) {
 				n = n + 1;
-				const newYearData = newData.filter(item => item.year === yearMin.year + (1 + n - 1));
-				const data = { data: newYearData, year: yearMin.year + (1 + n - 1) };
+				const newYearData = newData.filter(item => item.year === yearMin.year + n);
+				const data = { data: newYearData, year: yearMin.year + n };
 				setBooksRead(prev => [...prev, data]);
 			}
 		} catch (err) {
