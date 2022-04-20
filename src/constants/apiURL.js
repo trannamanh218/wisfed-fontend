@@ -31,6 +31,7 @@ export const bookDetailAPI = id => `/api/v1/books/${id}`;
 export const bookElasticSearchAPI = '/api/v1/books/search';
 export const bookCopyrightsAPI = '/api/v1/bookCopyrights';
 export const bookReviewAPI = '/api/v1/reviews';
+export const commentBookReviewAPI = '/api/v1/commentReviews';
 export const bookFollowReviewAPI = id => `/api/v1/books/${id}/followReviews`;
 export const bookFriendReviewAPI = id => `/api/v1/books/${id}/friendReviews`;
 export const progressBookAPI = id => `/api/v1/books/updateBookProgress/${id}`;
@@ -98,3 +99,6 @@ export const listFollowing = id => `/api/v1/users/listFollowings/${id}`;
 //chart
 export const listAPIChart = (count, by) => `/api/v1/tracking?count=${count}&by=${by}`;
 export const listBooksReadYear = type => `/api/v1/libraries/listBookByType/${type}`;
+// reading-target
+
+export const getReadingTargetAPI = '/api/v1/books/readingGoal';

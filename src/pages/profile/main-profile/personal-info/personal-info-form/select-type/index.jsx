@@ -2,7 +2,7 @@ import { Pencil } from 'components/svg';
 import AddAndSearchCategories from 'shared/add-and-search-categories';
 import PropTypes from 'prop-types';
 import { useState, useRef, useCallback } from 'react';
-import ShareModeDropdown from 'shared/share-mode-dropdown';
+// import ShareModeDropdown from 'shared/share-mode-dropdown';
 import _ from 'lodash';
 import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
@@ -102,7 +102,7 @@ function SelectType({ dataAdded, setDataAdded, editStatus, cancelEdit, enableEdi
 					)}
 				</div>
 
-				<ShareModeDropdown />
+				{/* <ShareModeDropdown /> */}
 
 				{editStatus ? (
 					<div

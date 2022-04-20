@@ -55,7 +55,6 @@ const BookReview = () => {
 			total: listRatingStar.rate_1_star,
 		},
 	];
-
 	const fetchData = async () => {
 		try {
 			const res = await dispatch(getRatingBook(bookInfor?.id)).unwrap();
@@ -68,18 +67,6 @@ const BookReview = () => {
 	useEffect(() => {
 		fetchData();
 	}, []);
-
-	const listQuote = Array.from(Array(5)).fill({
-		data: {
-			content: `Lorem ipsum dolor sit amet consectetur adipisicing elit. Veniam velit nemo voluptate. Eaque tenetur
-			dolore qui doloribus modi alias labore deleniti quisquam sunt. Accusantium, accusamus eius ipsum optio
-			distinctio laborum.`,
-			avatar: '',
-			author: 'Mai Nguyễn',
-			bookName: 'Đắc nhân tâm',
-		},
-		badges: [{ title: 'Marketing' }, { title: 'Phát triển bản thân' }],
-	});
 
 	return (
 		<div className='book-review'>

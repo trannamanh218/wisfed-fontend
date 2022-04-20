@@ -8,7 +8,6 @@ import './sidebar-profile.scss';
 import classNames from 'classnames';
 import caretIcon from 'assets/images/caret.png';
 import { useFetchAuthLibraries } from 'api/library.hook';
-import { NUMBER_ROWS } from 'constants';
 import { Link } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 import { useFetchAuthorBooks } from 'api/book.hooks';
@@ -16,10 +15,10 @@ import { useSelector } from 'react-redux';
 const DEFAULT_TOGGLE_ROWS = 1;
 
 const SidebarProfile = () => {
-	const { booksAuthor } = useFetchAuthorBooks();
+	const userDetail = useSelector(state => state.user.userDetail);
+	const { booksAuthor } = useFetchAuthorBooks(userDetail.firstName, userDetail.lastName);
 	const { readingData, booksRead } = useFetchStatsReadingBooks();
 	const { statusCustom } = useFetchAuthLibraries();
-	const userDetail = useSelector(state => state.user.userDetail);
 	const libraryList = statusCustom?.map(item => ({ ...item, quantity: item.books.length }));
 	const [isExpand, setIsExpand] = useState(false);
 	const [rows, setRows] = useState(DEFAULT_TOGGLE_ROWS);
@@ -27,6 +26,7 @@ const SidebarProfile = () => {
 	useEffect(() => {}, []);
 	const handleViewMore = () => {
 		const length = statusCustom.length;
+		const NUMBER_ROWS = statusCustom.length + 1;
 		if (length <= NUMBER_ROWS) {
 			const maxLength = length < NUMBER_ROWS ? length : NUMBER_ROWS;
 			const newRows = isExpand ? DEFAULT_TOGGLE_ROWS : maxLength;

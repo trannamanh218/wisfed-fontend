@@ -14,7 +14,7 @@ const ReadBook = ({ items }) => {
 					onError={e => e.target.setAttribute('src', `${bookImage}`)}
 				/>
 			</div>
-			<h5 className='read-book__name' dangerouslySetInnerHTML={{ __html: items.book.description }}></h5>
+			<h5 className='read-book__name' dangerouslySetInnerHTML={{ __html: items.book.name }}></h5>
 			<ReactRating initialRating={4} readonly={true} />
 		</div>
 	);

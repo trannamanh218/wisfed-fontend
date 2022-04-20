@@ -10,7 +10,6 @@ import { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 
 function PostBook({ data }) {
-	const [progress, setProgress] = useState();
 	const [percenProgress, setPercenProgress] = useState();
 	const [listRatingStar, setListRatingStar] = useState({});
 	const dispatch = useDispatch();
@@ -30,12 +29,10 @@ function PostBook({ data }) {
 
 	useEffect(() => {
 		if (data.status === 'wantToRead') {
-			setProgress(data.page);
 			setPercenProgress(0);
 		} else {
 			const newPropgress = ((data.progress / data.page) * 100).toFixed();
 			setPercenProgress(newPropgress);
-			setProgress(data.progress);
 		}
 	}, []);
 

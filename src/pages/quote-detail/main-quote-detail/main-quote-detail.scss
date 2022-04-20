@@ -42,18 +42,14 @@
 				gap: 24px;
 			}
 		}
-
-		.comment-editor {
-			margin-left: 40px;
-		}
 	}
 }
 
-.main-quote-detail__reply {
-	margin: 0 0 32px 40px;
+.comment-reply-container {
+	margin: 0 0 32px 44px;
 }
 
-.main-quote-detail__reply-comment {
+.reply-comment-editor {
 	display: none;
 	&.show {
 		display: flex;

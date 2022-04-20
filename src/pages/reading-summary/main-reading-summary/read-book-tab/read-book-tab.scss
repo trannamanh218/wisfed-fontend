@@ -27,6 +27,7 @@
 	.accordion-button {
 		&::after {
 			background-image: url('../../../../assets/images/caret-up.png');
+			margin-right: 90px;
 		}
 
 		&:focus {
