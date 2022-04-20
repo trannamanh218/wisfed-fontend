@@ -1,6 +1,6 @@
 @import 'src/scss/abstracts/_variables.scss';
 
-.quote-comment {
+.comment {
 	display: flex;
 	width: fit-content;
 	margin-bottom: 1.25rem;
@@ -11,6 +11,7 @@
 		border-radius: 16px;
 		background-color: $ash-background;
 		font-size: 0.825rem;
+		width: fit-content;
 	}
 
 	&--secondary {
@@ -23,7 +24,7 @@
 	}
 	&__avatar {
 		flex-shrink: 0;
-		margin-right: 0.5em;
+		margin-right: 8px;
 	}
 
 	&__author {
