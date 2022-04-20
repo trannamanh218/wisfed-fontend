@@ -219,7 +219,7 @@ const FriendsItem = ({ list, keyTabs, getListFollower, getMyListFriendReq }) => 
 				<Link to={`/profile/${list.userTwo.id}`}>
 					<img
 						className='myfriends__layout__img'
-						src={list.userTwo.avatarImage ? defaultAvatar : defaultAvatar}
+						src={list.userTwo.avatarImage ? list.userTwo.avatarImage : defaultAvatar}
 						alt=''
 					/>
 					<div className='myfriends__star'>

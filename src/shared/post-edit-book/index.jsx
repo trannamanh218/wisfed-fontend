@@ -17,7 +17,6 @@ const PostEditBook = props => {
 	const inputRef = useRef(null);
 	const bookInfor = useSelector(state => state.book.bookInfo);
 	const dispatch = useDispatch();
-
 	const fetchData = async () => {
 		try {
 			const res = await dispatch(getRatingBook(bookInfor.id)).unwrap();

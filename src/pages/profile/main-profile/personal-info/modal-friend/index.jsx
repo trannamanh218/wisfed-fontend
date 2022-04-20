@@ -141,7 +141,6 @@ const ModalFriend = ({ setModalFriend, modalFriend, userInfoDetail }) => {
 										{item.userTwo.id !== userInfo.id && (
 											<div className={`connect-buttons ${'row'}`}>
 												{renderButtonFollows(item)}
-
 												<Button
 													className='connect-button'
 													isOutline={true}
