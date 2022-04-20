@@ -25,7 +25,7 @@ function PostBook({ data }) {
 
 	useEffect(() => {
 		fetchData();
-	}, []);
+	}, [data?.id]);
 
 	useEffect(() => {
 		if (data.status === 'wantToRead') {
@@ -60,7 +60,14 @@ function PostBook({ data }) {
 					<div className='post-book__rating__group'>
 						<ReactRating initialRating={listRatingStar.avg} readonly={true} fractions={2} />
 						<div className='post-book__rating__number'>
-							( {listRatingStar.avg} sao ) ( {listRatingStar.count} đánh giá )
+							{listRatingStar?.avg !== 0 ? (
+								<div>
+									{' '}
+									( {listRatingStar.avg} sao ) ( {listRatingStar.count} đánh giá )
+								</div>
+							) : (
+								<div>(Chưa có đánh giá)</div>
+							)}
 						</div>
 					</div>
 				</div>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 // import PropTypes from 'prop-types';
 import { Accordion } from 'react-bootstrap';
 import ReadBook from 'shared/read-book';

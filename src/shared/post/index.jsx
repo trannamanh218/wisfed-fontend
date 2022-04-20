@@ -7,7 +7,6 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateReactionActivity } from 'reducers/redux-utils/activity';
 import { createComment } from 'reducers/redux-utils/comment';
-import Comment from 'shared/comment';
 import CommentEditor from 'shared/comment-editor';
 import GridImage from 'shared/grid-image';
 import PostActionBar from 'shared/post-action-bar';
@@ -17,12 +16,21 @@ import './post.scss';
 import PreviewLink from 'shared/preview-link/PreviewLink';
 import { NotificationError } from 'helpers/Error';
 import ReactRating from 'shared/react-rating';
+import { useParams } from 'react-router-dom';
+import { createCommentReview } from 'reducers/redux-utils/book';
+import Comment from 'shared/comments';
 
 function Post({ postInformations, className }) {
 	const [postData, setPostData] = useState({});
 	const [videoId, setVideoId] = useState('');
 	const { userInfo } = useSelector(state => state.auth);
+	const [commentLv1IdArray, setCommentLv1IdArray] = useState([]);
+	const [replyingCommentId, setReplyingCommentId] = useState(0);
+	const [clickReply, setClickReply] = useState(false);
+
 	const dispatch = useDispatch();
+
+	const { bookId } = useParams();
 
 	useEffect(() => {
 		const isLike = hasLikedPost();
@@ -39,6 +47,21 @@ function Post({ postInformations, className }) {
 	const directUrl = url => {
 		window.open(url, '_blank');
 	};
+
+	useEffect(() => {
+		if (postData.usersComments?.length > 0) {
+			const commentLv1IdTemp = [];
+			for (let i = 0; i < postData.usersComments.length; i++) {
+				if (
+					postData.usersComments[i].replyId === null &&
+					!commentLv1IdTemp.includes(postData.usersComments[i].id)
+				) {
+					commentLv1IdTemp.push(postData.usersComments[i].id);
+				}
+			}
+			setCommentLv1IdArray(commentLv1IdTemp);
+		}
+	}, [postData.usersComments]);
 
 	useEffect(() => {
 		const urlAddedArray = document.querySelectorAll('.url-color');
@@ -58,45 +81,40 @@ function Post({ postInformations, className }) {
 			const user = usersLikePost.find(item => item.user.id === userInfo.id);
 			isLike = !_.isEmpty(user) ? user.liked : false;
 		}
-
 		return isLike;
 	};
 
-	const onCreateComment = (content, reply, parentData, indexParent) => {
-		const params = {
-			minipostId: postData.minipostId,
-			content: content,
-			mediaUrl: [],
-			mentionsUser: [],
-			replyId: null,
-			like: 0,
-		};
-
-		dispatch(createComment(params))
-			.unwrap()
-			.then(res => {
-				const propertyComment = ['minipostId', 'content', 'getstreamId', 'reply', 'id', 'createdAt'];
-				const newComment = _.pick(res, propertyComment);
-				newComment.user = userInfo;
-				newComment.replyComments = [];
-
-				let usersComments = [];
-				if (_.isEmpty(parentData)) {
-					usersComments = [...postData.usersComments, newComment];
-				} else {
-					const replyComments = [...parentData.replyComments.slice(0, -1), newComment];
-					usersComments = [
-						...postData.usersComments.slice(0, indexParent),
-						{ ...parentData, replyComments },
-						...postData.usersComments.slice(indexParent + 1),
-					];
-				}
-
-				setPostData(prev => ({ ...prev, usersComments, comments: prev.comments + 1 }));
-			})
-			.catch(err => {
-				NotificationError(err);
-			});
+	const onCreateComment = async (content, replyId) => {
+		try {
+			let res = {};
+			if (bookId) {
+				const commentReviewData = {
+					reviewId: postData.id,
+					replyId: replyId,
+					content: content,
+					mediaUrl: [],
+					mentionsUser: [],
+				};
+				res = await dispatch(createCommentReview(commentReviewData)).unwrap();
+			} else {
+				const params = {
+					minipostId: postData.minipostId,
+					content: content,
+					mediaUrl: [],
+					mentionsUser: [],
+					replyId: replyId,
+				};
+				res = await dispatch(createComment(params)).unwrap();
+			}
+			if (!_.isEmpty(res)) {
+				const newComment = { ...res, user: userInfo };
+				const usersComments = [...postData.usersComments, newComment];
+				const newPostData = { ...postData, usersComments, comments: postData.comments + 1 };
+				setPostData(newPostData);
+			}
+		} catch (err) {
+			NotificationError(err);
+		}
 	};
 
 	const handleLikeAction = () => {
@@ -113,47 +131,20 @@ function Post({ postInformations, className }) {
 			});
 	};
 
-	const isValidToAddReply = data => {
-		if (data && data.replyComments && data.replyComments.length) {
-			return data.replyComments.every(item => item.content);
+	useEffect(() => {
+		const textareaInCommentEdit = document.querySelector(`#textarea-${replyingCommentId}`);
+		if (textareaInCommentEdit) {
+			textareaInCommentEdit.focus();
+			window.scroll({
+				top: textareaInCommentEdit.offsetTop - 400,
+				behavior: 'smooth',
+			});
 		}
+	}, [replyingCommentId, clickReply]);
 
-		return true;
-	};
-
-	const handleReply = (data, index, parentData, indexParent) => {
-		const newData = {
-			content: '',
-			reply: parentData.id || data.id,
-			minipostId: postData.minipostId,
-			user: { ...userInfo },
-			replyComments: [],
-		};
-
-		let usersComments = [];
-		const isValid = _.isEmpty(parentData) ? isValidToAddReply(data) : isValidToAddReply(parentData);
-
-		if (isValid) {
-			if (_.isEmpty(parentData)) {
-				const replyComments = [...data.replyComments, newData];
-
-				usersComments = [
-					...postData.usersComments.slice(0, index),
-					{ ...data, replyComments },
-					...postData.usersComments.slice(index + 1),
-				];
-			} else {
-				const replyComments = [...parentData.replyComments, newData];
-
-				usersComments = [
-					...postData.usersComments.slice(0, indexParent),
-					{ ...parentData, replyComments },
-					...postData.usersComments.slice(indexParent + 1),
-				];
-			}
-
-			return setPostData(prev => ({ ...prev, usersComments }));
-		}
+	const handleReply = cmtLv1Id => {
+		setReplyingCommentId(cmtLv1Id);
+		setClickReply(!clickReply);
 	};
 
 	return (
@@ -170,7 +161,7 @@ function Post({ postInformations, className }) {
 						{postData?.createdBy?.fullName || 'Ẩn danh'}
 					</div>
 					<div className='post__user-status__post-time-status'>
-						<span>{calculateDurationTime(postData.time || postData.updatedAt)}</span>
+						<span>{calculateDurationTime(postData.createdAt)}</span>
 						<>
 							{postData.book && (
 								<div className='post__user-status__subtitle'>
@@ -215,6 +206,7 @@ function Post({ postInformations, className }) {
 			{postData.book && <PostBook data={{ ...postData.book, bookLibrary: postData.bookLibrary }} />}
 
 			{postData?.image?.length > 0 && <GridImage images={postData.image} inPost={true} />}
+
 			{postData?.image?.length === 0 && !_.isEmpty(postData?.preview) && (
 				<>
 					{videoId ? (
@@ -233,73 +225,54 @@ function Post({ postInformations, className }) {
 			)}
 			<PostActionBar postData={postData} handleLikeAction={handleLikeAction} />
 
-			{postData.usersComments?.map((comment, index) => {
-				if (comment.content) {
-					return (
-						<div key={`${comment.id}-${index}`}>
-							<Comment
-								data={comment}
-								postData={postData}
-								handleReply={handleReply}
-								index={index}
-								indexParent={null}
-							/>
-							{comment.replyComments?.map((childComment, childIndex) => {
-								if (childComment.content) {
-									return (
+			{postData.usersComments?.map(comment => (
+				<div key={comment.id}>
+					{comment.replyId === null && (
+						<Comment
+							commentLv1Id={comment.id}
+							data={comment}
+							postData={postData}
+							handleReply={handleReply}
+							postCommentsLikedArray={[]}
+							inQuotes={false}
+						/>
+					)}
+					<div className='comment-reply-container'>
+						{postData.usersComments.map(commentChild => {
+							if (commentChild.replyId === comment.id) {
+								return (
+									<div key={commentChild.id}>
 										<Comment
-											key={`child-${comment.id}-${childComment.id}-${childIndex}`}
-											data={childComment}
+											commentLv1Id={comment.id}
+											data={commentChild}
 											postData={postData}
 											handleReply={handleReply}
-											index={childIndex}
-											parentData={comment}
-											indexParent={index}
+											postCommentsLikedArray={[]}
+											inQuotes={false}
 										/>
-									);
-								}
-
-								return (
-									<CommentEditor
-										key={`editor-${comment.id}-${childIndex}`}
-										userInfo={userInfo}
-										postData={postData}
-										onCreateComment={onCreateComment}
-										className='reply-comment'
-										reply={childComment.reply}
-										parentData={comment}
-										indexParent={index}
-									/>
+									</div>
 								);
-							})}
-						</div>
-					);
-				}
-
-				return (
-					<CommentEditor
-						key={`editor-${comment.minipostId}-${index}`}
-						userInfo={userInfo}
-						postData={postData}
-						onCreateComment={onCreateComment}
-						className='reply-comment'
-						reply={comment.reply}
-						indexParent={null}
-					/>
-				);
-			})}
-
-			<CommentEditor
-				userInfo={userInfo}
-				postData={postData}
-				onCreateComment={onCreateComment}
-				reply={null}
-				indexParent={null}
-				key='editor'
-			/>
+							}
+						})}
+						{commentLv1IdArray.includes(comment.id) && (
+							<CommentEditor
+								userInfo={userInfo}
+								onCreateComment={onCreateComment}
+								className={classNames('reply-comment-editor', {
+									'show': comment.id === replyingCommentId,
+								})}
+								replyId={replyingCommentId}
+								textareaId={`textarea-${comment.id}`}
+							/>
+						)}
+					</div>
+				</div>
+			))}
+			<CommentEditor userInfo={userInfo} onCreateComment={onCreateComment} reply={null} indexParent={null} />
 		</div>
 	);
 }
+
 Post.propTypes = {
 	postInformations: PropTypes.object,
 	likeAction: PropTypes.func,

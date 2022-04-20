@@ -10,6 +10,7 @@ import {
 	bookReviewAPI,
 	userRating,
 	bookRating,
+	commentBookReviewAPI,
 } from 'constants/apiURL';
 import Request from 'helpers/Request';
 import _ from 'lodash';
@@ -112,6 +113,19 @@ export const getReviewsBook = createAsyncThunk('book/get reviews', async (params
 		return rejectWithValue(error);
 	}
 });
+
+export const createCommentReview = createAsyncThunk(
+	'book/create comment review',
+	async (commentReviewData, { rejectWithValue }) => {
+		try {
+			const response = await Request.makePost(commentBookReviewAPI, commentReviewData);
+			return response.data;
+		} catch (err) {
+			const error = JSON.parse(err.response);
+			return rejectWithValue(error);
+		}
+	}
+);
 
 export const getReviewsBookByFriends = createAsyncThunk(
 	'book/get reviews by friends',

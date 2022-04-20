@@ -18,7 +18,7 @@ const BookReview = () => {
 			level: 5,
 			percent:
 				(listRatingStar.rate_5_star / listRatingStar.count) * 100
-					? (listRatingStar.rate_5_star / listRatingStar.count) * 100
+					? (listRatingStar.rate_5_star / listRatingStar.count).toFixed(2) * 100
 					: 0,
 			total: listRatingStar.rate_5_star,
 		},
@@ -26,7 +26,7 @@ const BookReview = () => {
 			level: 4,
 			percent:
 				(listRatingStar.rate_4_star / listRatingStar.count) * 100
-					? (listRatingStar.rate_4_star / listRatingStar.count) * 100
+					? (listRatingStar.rate_4_star / listRatingStar.count).toFixed(2) * 100
 					: 0,
 			total: listRatingStar.rate_4_star,
 		},
@@ -34,7 +34,7 @@ const BookReview = () => {
 			level: 3,
 			percent:
 				(listRatingStar.rate_3_star / listRatingStar.count) * 100
-					? (listRatingStar.rate_3_star / listRatingStar.count) * 100
+					? (listRatingStar.rate_3_star / listRatingStar.count).toFixed(2) * 100
 					: 0,
 			total: listRatingStar.rate_3_star,
 		},
@@ -42,7 +42,7 @@ const BookReview = () => {
 			level: 2,
 			percent:
 				(listRatingStar.rate_2_star / listRatingStar.count) * 100
-					? (listRatingStar.rate_2_star / listRatingStar.count) * 100
+					? (listRatingStar.rate_2_star / listRatingStar.count).toFixed(2) * 100
 					: 0,
 			total: listRatingStar.rate_2_star,
 		},
@@ -50,7 +50,7 @@ const BookReview = () => {
 			level: 1,
 			percent:
 				(listRatingStar.rate_1_star / listRatingStar.count) * 100
-					? (listRatingStar.rate_1_star / listRatingStar.count) * 100
+					? (listRatingStar.rate_1_star / listRatingStar.count).toFixed(2) * 100
 					: 0,
 			total: listRatingStar.rate_1_star,
 		},
@@ -72,8 +72,8 @@ const BookReview = () => {
 		<div className='book-review'>
 			<ReviewRating
 				list={listRating}
-				ratingLevel={listRatingStar.avg}
-				ratingTotal={listRatingStar.count}
+				ratingLevel={listRatingStar?.avg}
+				ratingTotal={listRatingStar?.count}
 				className='book-review__rating'
 			/>
 			<Tabs className='book-review__tabs'>
