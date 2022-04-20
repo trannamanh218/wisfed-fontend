@@ -1,7 +1,7 @@
 import { Forward } from 'components/svg';
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import BackButton from 'shared/back-button';
-import QuoteComment from 'shared/quote-comments';
+import Comment from 'shared/comments';
 import QuoteCard from 'shared/quote-card';
 import './main-quote-detail.scss';
 import { useParams } from 'react-router-dom';
@@ -70,6 +70,7 @@ const MainQuoteDetail = () => {
 			content: content,
 			mediaUrl: [],
 			replyId: replyId,
+			mentionsUser: [],
 		};
 		try {
 			const res = await dispatch(creatQuotesComment(params));
@@ -112,32 +113,32 @@ const MainQuoteDetail = () => {
 			{!_.isEmpty(quoteData) && (
 				<div className='main-quote-detail__pane'>
 					<QuoteCard className='mx-auto' isDetail={true} data={quoteData} />
-					{quoteData.commentQuotes?.map((comment, index) => (
-						<div key={`${comment.id}-${index}`}>
+					{quoteData.commentQuotes?.map(comment => (
+						<div key={comment.id}>
 							{comment.replyId === null && (
-								<QuoteComment
+								<Comment
 									commentLv1Id={comment.id}
 									data={comment}
-									quoteData={quoteData}
+									postData={quoteData}
 									handleReply={handleReply}
-									quoteCommentsLikedArray={quoteCommentsLikedArray}
+									postCommentsLikedArray={quoteCommentsLikedArray}
+									inQuotes={true}
 								/>
 							)}
 
-							<div className='main-quote-detail__reply'>
+							<div className='comment-reply-container'>
 								{quoteData.commentQuotes.map(commentChild => {
 									if (commentChild.replyId === comment.id) {
 										return (
 											<div key={commentChild.id}>
-												<div>
-													<QuoteComment
-														commentLv1Id={comment.id}
-														data={commentChild}
-														quoteData={quoteData}
-														handleReply={handleReply}
-														quoteCommentsLikedArray={quoteCommentsLikedArray}
-													/>
-												</div>
+												<Comment
+													commentLv1Id={comment.id}
+													data={commentChild}
+													postData={quoteData}
+													handleReply={handleReply}
+													postCommentsLikedArray={quoteCommentsLikedArray}
+													inQuotes={true}
+												/>
 											</div>
 										);
 									}
@@ -145,9 +146,8 @@ const MainQuoteDetail = () => {
 								{commentLv1IdArray.includes(comment.id) && (
 									<CommentEditor
 										userInfo={userInfo}
-										postData={quoteData}
 										onCreateComment={onCreateComment}
-										className={classNames('main-quote-detail__reply-comment', {
+										className={classNames('reply-comment-editor', {
 											'show': comment.id === replyingCommentId,
 										})}
 										replyId={replyingCommentId}

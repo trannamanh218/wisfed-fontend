@@ -1,7 +1,7 @@
 import { STATUS_BOOK } from 'constants';
 import { progressReadingSchema } from 'helpers/Validation';
 import PropTypes from 'prop-types';
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import BookThumbnail from 'shared/book-thumbnail';
 import LinearProgressBar from 'shared/linear-progress-bar';
 import ReactRating from 'shared/react-rating';

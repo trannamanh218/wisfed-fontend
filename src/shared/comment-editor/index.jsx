@@ -1,9 +1,9 @@
-import React, { useRef } from 'react';
+import { useRef } from 'react';
 import UserAvatar from 'shared/user-avatar';
 import PropTypes from 'prop-types';
 import './comment-editor.scss';
 
-const CommentEditor = ({ userInfo, onCreateComment, className, replyId, parentData, indexParent, textareaId }) => {
+const CommentEditor = ({ userInfo, onCreateComment, className, replyId, textareaId }) => {
 	const commentArea = useRef(null);
 
 	const onChangeComment = () => {
@@ -12,13 +12,11 @@ const CommentEditor = ({ userInfo, onCreateComment, className, replyId, parentDa
 	};
 
 	const handleKeyPress = e => {
-		if (e.which === 13 && !e.shiftKey) {
+		if (e.which === 13 && !e.shiftKey && commentArea.current.value) {
 			e.preventDefault();
-			if (commentArea.current.value) {
-				onCreateComment(commentArea.current.value, replyId, parentData, indexParent);
-				commentArea.current.value = '';
-				onChangeComment();
-			}
+			onCreateComment(commentArea.current.value, replyId);
+			commentArea.current.value = '';
+			onChangeComment();
 		}
 	};
 
@@ -45,12 +43,9 @@ const CommentEditor = ({ userInfo, onCreateComment, className, replyId, parentDa
 
 CommentEditor.defaultProps = {
 	userInfo: {},
-	postData: {},
 	onCreateComment: () => {},
 	className: '',
 	replyId: '',
-	parentData: {},
-	indexParent: null,
 };
 
 CommentEditor.propTypes = {
@@ -58,8 +53,6 @@ CommentEditor.propTypes = {
 	onCreateComment: PropTypes.func,
 	className: PropTypes.string,
 	replyId: PropTypes.any,
-	parentData: PropTypes.object,
-	indexParent: PropTypes.any,
 	textareaId: PropTypes.string,
 };
 

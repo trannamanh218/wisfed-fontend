@@ -71,6 +71,7 @@ function CreatPostModalContent({
 	useEffect(() => {
 		textFieldEdit.current.focus();
 	}, []);
+
 	useEffect(() => {
 		if (!_.isEmpty(bookForCreatePost) || !_.isEmpty(renderBookReading)) {
 			if (booksId) {
@@ -86,6 +87,7 @@ function CreatPostModalContent({
 			}
 		}
 	}, [bookForCreatePost]);
+
 	useEffect(() => {
 		textFieldEdit.current.addEventListener('input', () => {
 			handlePlaceholder();
@@ -96,6 +98,7 @@ function CreatPostModalContent({
 			document.removeEventListener('input', handlePlaceholder);
 		};
 	}, [showTextFieldEditPlaceholder]);
+
 	const detectUrl = useCallback(
 		_.debounce(() => {
 			const urlRegex =
@@ -110,12 +113,14 @@ function CreatPostModalContent({
 		}, 1000),
 		[]
 	);
+
 	useEffect(() => {
 		if (!_.isEqual(urlAddedArray, oldUrlAddedArray)) {
 			getPreviewUrlFnc(urlAddedArray[urlAddedArray.length - 1]);
 			setOldUrlAddedArray(urlAddedArray);
 		}
 	}, [urlAddedArray]);
+
 	const createSpanElements = () => {
 		const subStringArray = textFieldEdit.current.innerText.split(' ');
 		textFieldEdit.current.innerText = '';
@@ -130,6 +135,7 @@ function CreatPostModalContent({
 		textFieldEdit.current.innerHTML = subStringArray.join(' ');
 		placeCaretAtEnd(textFieldEdit.current);
 	};
+
 	const placeCaretAtEnd = element => {
 		element.focus();
 		if (typeof window.getSelection != 'undefined' && typeof document.createRange != 'undefined') {
@@ -146,6 +152,7 @@ function CreatPostModalContent({
 			textRange.select();
 		}
 	};
+
 	const getPreviewUrlFnc = async url => {
 		setFetchingUrlInfo(true);
 		const data = { 'url': url };
@@ -160,6 +167,7 @@ function CreatPostModalContent({
 			setFetchingUrlInfo(false);
 		}
 	};
+
 	const removeUrlPreview = () => {
 		setHasUrl(false);
 	};
@@ -170,9 +178,11 @@ function CreatPostModalContent({
 			setShowTextFieldEditPlaceholder(true);
 		}
 	};
+
 	const backToMainModal = () => {
 		setShowMainModal(true);
 	};
+
 	const addOptionsToPost = param => {
 		if (imagesUpload.length > 0 && param.value === 'addBook') {
 			toast.warning('Không thể kết hợp đồng thời thêm ảnh và sách');
@@ -181,6 +191,7 @@ function CreatPostModalContent({
 			setShowMainModal(false);
 		}
 	};
+
 	const handleOpenUploadImage = () => {
 		if (_.isEmpty(taggedData.addBook)) {
 			setShowUpload(!showUpload);
@@ -189,6 +200,7 @@ function CreatPostModalContent({
 			toast.warning('Không thể kết hợp đồng thời thêm ảnh và sách');
 		}
 	};
+
 	const deleteImage = imageIndex => {
 		const newImagesArray = [...imagesUpload];
 		newImagesArray.splice(imageIndex, 1);
@@ -198,10 +210,12 @@ function CreatPostModalContent({
 		}
 		setImagesUpload(newImagesArray);
 	};
+
 	const removeAllImages = () => {
 		setImagesUpload([]);
 		setShowUpload(false);
 	};
+
 	const handleAddToPost = data => {
 		const newData = { ...taggedData };
 		setCheckProgress(data.progress);
@@ -218,9 +232,9 @@ function CreatPostModalContent({
 			newData[option.value] = data;
 			setShowMainModal(false);
 		}
-
 		setTaggedData(newData);
 	};
+
 	const removeTaggedItem = (data, type) => {
 		if (type !== 'addBook') {
 			const currentTaggedList = taggedData[type];
@@ -230,6 +244,7 @@ function CreatPostModalContent({
 			setTaggedData(prev => ({ ...prev, [type]: {} }));
 		}
 	};
+
 	const generateData = async () => {
 		const params = {
 			msg: textFieldEdit?.current?.innerHTML,
@@ -286,6 +301,7 @@ function CreatPostModalContent({
 			return Promise.all([addToDefaultLibraryRequest, updateProgressRequest]);
 		}
 	};
+
 	const onCreatePost = async () => {
 		const params = await generateData();
 		// book, author , topic is required
@@ -293,13 +309,14 @@ function CreatPostModalContent({
 			setStatus(STATUS_LOADING);
 			try {
 				if (params.bookId) {
-					const reviewData = {
-						bookId: params.bookId,
-						mediaUrl: [],
-						content: textFieldEdit.current.innerText,
-					};
-					await handleUpdateProgress(params);
-					await dispatch(createReviewBook(reviewData));
+					if (taggedData.addBook.status === 'read') {
+						const reviewData = {
+							bookId: params.bookId,
+							mediaUrl: [],
+							content: textFieldEdit.current.innerText,
+						};
+						dispatch(createReviewBook(reviewData));
+					}
 				}
 				await dispatch(createActivity(params));
 				setStatus(STATUS_SUCCESS);
@@ -336,6 +353,7 @@ function CreatPostModalContent({
 			}
 		}
 	};
+
 	const checkActive = () => {
 		let isActive = false;
 		if (
@@ -347,6 +365,7 @@ function CreatPostModalContent({
 		}
 		return isActive && !validationInput;
 	};
+
 	const handleValidationInput = value => {
 		setValidationInput(value);
 	};
