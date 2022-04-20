@@ -1,4 +1,4 @@
-import ShareModeDropdown from 'shared/share-mode-dropdown';
+// import ShareModeDropdown from 'shared/share-mode-dropdown';
 import { Pencil } from 'components/svg';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
@@ -36,7 +36,7 @@ function TextareaType({ textareaValue, editStatus, textareaRef, updateInputValue
 					</>
 				)}
 				<div className={editStatus || textareaValue ? 'form-field__buttons' : 'form-field__buttons no-data'}>
-					<ShareModeDropdown />
+					{/* <ShareModeDropdown /> */}
 					{editStatus ? (
 						<div className='form-field__btn cancel' onClick={() => cancelEdit('cancel-edit-descriptions')}>
 							Hủy
@@ -56,7 +56,7 @@ TextareaType.propTypes = {
 	textareaValue: PropTypes.string,
 	editStatus: PropTypes.bool,
 	textareaRef: PropTypes.object,
-	updateInputValue: PropTypes.string,
+	updateInputValue: PropTypes.func,
 	cancelEdit: PropTypes.func,
 	enableEdit: PropTypes.func,
 };

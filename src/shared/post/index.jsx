@@ -67,7 +67,9 @@ function Post({ postInformations, className }) {
 			minipostId: postData.minipostId,
 			content: content,
 			mediaUrl: [],
-			reply,
+			mentionsUser: [],
+			replyId: null,
+			like: 0,
 		};
 
 		dispatch(createComment(params))
@@ -94,7 +96,6 @@ function Post({ postInformations, className }) {
 			})
 			.catch(err => {
 				NotificationError(err);
-				// return err;
 			});
 	};
 
@@ -161,12 +162,12 @@ function Post({ postInformations, className }) {
 				<UserAvatar
 					data-testid='post__user-avatar'
 					className='post__user-status__avatar'
-					source={postData?.userAvatar}
+					source={postData?.createdBy?.avatarImage}
 				/>
 
 				<div className='post__user-status__name-and-post-time-status'>
 					<div data-testid='post__user-name' className='post__user-status__name'>
-						{(!_.isEmpty(postData.createdBy) && postData?.createdBy?.fullName) || 'Ẩn danh'}
+						{postData?.createdBy?.fullName || 'Ẩn danh'}
 					</div>
 					<div className='post__user-status__post-time-status'>
 						<span>{calculateDurationTime(postData.time || postData.updatedAt)}</span>
@@ -176,7 +177,14 @@ function Post({ postInformations, className }) {
 									<span>Cập nhật tiến độ đọc sách</span>
 									<div className='post__user-status__post-time-status__online-dot'></div>
 									<span>Xếp hạng</span>
-									<ReactRating readonly={true} initialRating={4} />
+									<ReactRating
+										readonly={true}
+										initialRating={
+											postInformations?.book?.actorRating?.star
+												? postInformations?.book?.actorRating?.star
+												: 0
+										}
+									/>
 								</div>
 							)}
 						</>

@@ -1,16 +1,37 @@
 import { STATUS_BOOK } from 'constants';
 import { progressReadingSchema } from 'helpers/Validation';
 import PropTypes from 'prop-types';
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import BookThumbnail from 'shared/book-thumbnail';
 import LinearProgressBar from 'shared/linear-progress-bar';
 import ReactRating from 'shared/react-rating';
 import './post-edit-book.scss';
+import { useDispatch, useSelector } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
+import { getRatingBook } from 'reducers/redux-utils/book';
+import { toast } from 'react-toastify';
+
 const PostEditBook = props => {
-	const { data, handleValidationInput, validationInput, handleAddToPost } = props;
-	// rating là rating của user cho cuốn sách, không phải rating tổng -- rating 1 lần duy nhất)
+	const { data, handleValidationInput, validationInput, handleAddToPost, handleChangeStar, valueStar } = props;
+	const [listRatingStar, setListRatingStar] = useState(null);
 	const inputRef = useRef(null);
+	const bookInfor = useSelector(state => state.book.bookInfo);
+	const dispatch = useDispatch();
+	const fetchData = async () => {
+		try {
+			const res = await dispatch(getRatingBook(bookInfor.id)).unwrap();
+			const data = res.data.rows;
+			setListRatingStar(data);
+		} catch (err) {
+			toast.error('lỗi hệ thống');
+		}
+	};
+
+	useEffect(() => {
+		fetchData();
+	}, []);
+
+	// rating là rating của user cho cuốn sách, không phải rating tổng -- rating 1 lần duy nhất)
 
 	useEffect(() => {
 		if (inputRef.current) {
@@ -92,8 +113,15 @@ const PostEditBook = props => {
 				{data.status === STATUS_BOOK.read ? (
 					<div className='post-edit-book__action'>
 						<div className='post-edit-book__ratings'>
-							<ReactRating initialRating={3.3} readonly={true} fractions={1} />
-							<div className='post-edit-book__rating__number'>(4.2)(09 đánh giá)</div>
+							<ReactRating
+								initialRating={valueStar}
+								ratingTotal={listRatingStar?.length}
+								fractions={1}
+								handleChange={handleChangeStar}
+							/>
+							<div className='post-edit-book__rating__number'>
+								(4.2) ({listRatingStar?.length} đánh giá)
+							</div>
 						</div>
 					</div>
 				) : null}
@@ -107,6 +135,8 @@ PostEditBook.propTypes = {
 	handleValidationInput: PropTypes.func,
 	validationInput: PropTypes.string,
 	handleAddToPost: PropTypes.func,
+	handleChangeStar: PropTypes.func,
+	valueStar: PropTypes.number,
 };
 
 export default PostEditBook;

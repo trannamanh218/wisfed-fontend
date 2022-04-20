@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { calculateDurationTime } from 'helpers/Common';
 import UserAvatar from 'shared/user-avatar';
@@ -9,7 +8,6 @@ import { NotificationError } from 'helpers/Error';
 
 const NotificationStatus = ({ item, setGetNotifications, getNotifications }) => {
 	const dispatch = useDispatch();
-	console.log(item);
 	const ReplyFriendReq = async (data, items) => {
 		const parseObject = JSON.parse(data);
 		const params = { id: parseObject.requestId, data: { reply: true } };
@@ -92,7 +90,7 @@ const NotificationStatus = ({ item, setGetNotifications, getNotifications }) => 
 				></div>
 			</div>
 
-			{(item.verb === 'addfriend' || item.verb === 'browse') &&
+			{(item.verb === 'addFriend' || item.verb === 'addfriend' || item.verb === 'browse') &&
 				(item.isAccept || item.isRefuse ? (
 					''
 				) : (

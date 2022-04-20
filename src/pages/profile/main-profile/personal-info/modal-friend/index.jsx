@@ -1,22 +1,21 @@
 import { CloseX } from 'components/svg';
 import SearchField from 'shared/search-field';
-// import AuthorCard from 'shared/author-card';
 import PropTypes from 'prop-types';
 import React, { useState, useEffect } from 'react';
 import { Modal } from 'react-bootstrap';
 import { getFriendList, addFollower, unFollower, unFriendRequest } from 'reducers/redux-utils/user';
 import { useDispatch, useSelector } from 'react-redux';
-// import ConnectButtons from 'shared/connect-buttons';
 import UserAvatar from 'shared/user-avatar';
 import Button from 'shared/button';
 import { Minus } from 'components/svg';
 import { NotificationError } from 'helpers/Error';
+import { useParams } from 'react-router-dom';
 
-const ModalFriend = ({ setModalFriend, modalFriend }) => {
+const ModalFriend = ({ setModalFriend, modalFriend, userInfoDetail }) => {
 	const { userInfo } = useSelector(state => state.auth);
 	const [getMyListFriend, setGetMyListFriend] = useState([]);
 	const dispatch = useDispatch();
-
+	const { userId } = useParams();
 	const unFolow = id => {
 		try {
 			dispatch(unFollower(id)).unwrap();
@@ -93,7 +92,7 @@ const ModalFriend = ({ setModalFriend, modalFriend }) => {
 
 	useEffect(async () => {
 		const param = {
-			userId: userInfo.id,
+			userId: userId,
 		};
 		try {
 			const friendList = await dispatch(getFriendList(param)).unwrap();
@@ -112,7 +111,7 @@ const ModalFriend = ({ setModalFriend, modalFriend }) => {
 				<Modal.Body className='modalFollowers__container'>
 					<div className='modalFollowers__header'>
 						<div className='modalFollowers__title'>
-							Bạn bè của {userInfo.firstName} {userInfo.lastName}
+							Bạn bè của {userInfoDetail.firstName} {userInfoDetail.lastName}
 						</div>
 						<div className='modalFollowers__close'>
 							<CloseX onClick={toggleModal} />
@@ -123,7 +122,6 @@ const ModalFriend = ({ setModalFriend, modalFriend }) => {
 					</div>
 					<div className='modalFollowers__info'>
 						{getMyListFriend.map(item =>
-							// <AuthorCard direction={'row'} key={item.id} size={'md'} item={item} />
 							item.checkUnfriend ? (
 								<div key={item.id} className='author-card'>
 									<div className='author-card__left'>
@@ -140,23 +138,20 @@ const ModalFriend = ({ setModalFriend, modalFriend }) => {
 										</div>
 									</div>
 									<div className='author-card__right'>
-										{/* <ConnectButtons direction={'row'} /> */}
-										<div className={`connect-buttons ${'row'}`}>
-											{renderButtonFollows(item)}
-
-											<Button
-												className='connect-button'
-												isOutline={true}
-												name='friend'
-												onClick={() => handleUnFriend(item.userIdTwo)}
-											>
-												<Minus className='connect-button__icon' />
-
-												{/* <Add className='connect-button__icon' /> */}
-
-												<span className='connect-button__content'>Huỷ kết bạn</span>
-											</Button>
-										</div>
+										{item.userTwo.id !== userInfo.id && (
+											<div className={`connect-buttons ${'row'}`}>
+												{renderButtonFollows(item)}
+												<Button
+													className='connect-button'
+													isOutline={true}
+													name='friend'
+													onClick={() => handleUnFriend(item.userIdTwo)}
+												>
+													<Minus className='connect-button__icon' />
+													<span className='connect-button__content'>Huỷ kết bạn</span>
+												</Button>
+											</div>
+										)}
 									</div>
 								</div>
 							) : (
@@ -172,5 +167,6 @@ const ModalFriend = ({ setModalFriend, modalFriend }) => {
 ModalFriend.propTypes = {
 	setModalFriend: PropTypes.func,
 	modalFriend: PropTypes.bool,
+	userInfoDetail: PropTypes.object,
 };
 export default ModalFriend;

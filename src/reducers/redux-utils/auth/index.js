@@ -56,6 +56,16 @@ export const forgotPassword = createAsyncThunk('auth/forgotPassword', async (par
 	}
 });
 
+export const getUserInfo = createAsyncThunk('auth/getUserInfo', async () => {
+	const accessToken = localStorage.getItem('accessToken');
+	if (accessToken !== null) {
+		const response = await Request.makeGet(checkApiToken());
+		return response;
+	} else {
+		return {};
+	}
+});
+
 export const forgotPasswordAdmin = createAsyncThunk('auth/forgotPasswordAdmin', async (params, { rejectWithValue }) => {
 	try {
 		const response = await Request.makePost(forgotPasswordAPIAdmin, params);
@@ -91,6 +101,13 @@ const authSlice = createSlice({
 		error: {},
 		infoForgot: {},
 	},
+
+	reducers: {
+		updateUserInfoRedux: (state, action) => {
+			state.userInfo = action.payload;
+		},
+	},
+
 	extraReducers: {
 		[login.pending]: state => {
 			state.isFetching = true;
@@ -152,7 +169,17 @@ const authSlice = createSlice({
 			state.userInfo = action.payload;
 			state.error = {};
 		},
-		[forgotPasswordAdmin.rejected]: (state, action) => {
+		[getUserInfo.rejected]: (state, action) => {
+			state.isFetching = false;
+			state.userInfo = {};
+			state.error = action.payload;
+		},
+		[getUserInfo.fulfilled]: (state, action) => {
+			state.isFetching = false;
+			state.userInfo = action.payload;
+			state.error = {};
+		},
+		[getUserInfo.rejected]: (state, action) => {
 			state.isFetching = false;
 			state.userInfo = {};
 			state.error = action.payload;
@@ -160,5 +187,6 @@ const authSlice = createSlice({
 	},
 });
 
+export const { updateUserInfoRedux } = authSlice.actions;
 const auth = authSlice.reducer;
 export default auth;

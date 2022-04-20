@@ -62,7 +62,7 @@ export const likeUnlikeQuote = createAsyncThunk('quote/like quote', async (id, {
 
 export const checkLikeQuote = createAsyncThunk('quote/check like quote', async () => {
 	try {
-		const response = await Request.makeGet(checkLikeQuoteAPI);
+		const response = await Request.makeGet(checkLikeQuoteAPI, { limit: 1000 });
 		return response.data;
 	} catch (err) {
 		const error = JSON.parse(err.response);

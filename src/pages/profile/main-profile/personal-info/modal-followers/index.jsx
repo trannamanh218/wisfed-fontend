@@ -1,7 +1,6 @@
 import './modal-followers.scss';
 import { CloseX } from 'components/svg';
 import SearchField from 'shared/search-field';
-// import AuthorCard from 'shared/author-card';
 import PropTypes from 'prop-types';
 import { Modal } from 'react-bootstrap';
 import { useSelector, useDispatch } from 'react-redux';
@@ -12,15 +11,16 @@ import UserAvatar from 'shared/user-avatar';
 import Button from 'shared/button';
 import { Add, Minus } from 'components/svg';
 import { buttonReqFriend } from 'helpers/HandleShare';
+import { useParams } from 'react-router-dom';
 
-const ModalFollowers = ({ modalFollower, setModalFollower }) => {
+const ModalFollowers = ({ modalFollower, setModalFollower, userInfoDetail }) => {
 	const { userInfo } = useSelector(state => state.auth);
 	const [getMyListFollowing, setGetMyListFollowing] = useState([]);
 	const dispatch = useDispatch();
-	console.log(getMyListFollowing);
+	const { userId } = useParams();
 	useEffect(async () => {
 		const param = {
-			userId: userInfo.id,
+			userId: userId,
 		};
 		try {
 			const followList = await dispatch(getListFollowrs(param)).unwrap();
@@ -114,7 +114,7 @@ const ModalFollowers = ({ modalFollower, setModalFollower }) => {
 				<Modal.Body className='modalFollowers__container'>
 					<div className='modalFollowers__header'>
 						<div className='modalFollowers__title'>
-							Người theo dõi {userInfo.firstName} {userInfo.lastName}
+							Người theo dõi {userInfoDetail.firstName} {userInfoDetail.lastName}
 						</div>
 						<div className='modalFollowers__close'>
 							<CloseX onClick={toggleModal} />
@@ -124,34 +124,33 @@ const ModalFollowers = ({ modalFollower, setModalFollower }) => {
 						<SearchField placeholder='Tìm kiếm trên Wisfeed' />
 					</div>
 					<div className='modalFollowers__info'>
-						{getMyListFollowing.map(
-							item =>
-								item.relation !== 'isMe' && (
-									<div key={item.id} className='author-card'>
-										<div className='author-card__left'>
-											<UserAvatar
-												source={item.userOne.avatarImage}
-												className='author-card__avatar'
-												size={'md'}
-											/>
-											<div className='author-card__info'>
-												<h5>
-													{item.userOne.firstName} {item.userOne.lastName}
-												</h5>
-												<p className='author-card__subtitle'>3K follow, 300 bạn bè</p>
-											</div>
-										</div>
-										<div className='author-card__right'>
-											<div className={`connect-buttons ${'row'}`}>
-												<Button className='connect-button follow'>
-													<span className='connect-button__content'> Theo dõi </span>
-												</Button>
-												{renderButtonFriend(item)}
-											</div>
-										</div>
+						{getMyListFollowing.map(item => (
+							<div key={item.id} className='author-card'>
+								<div className='author-card__left'>
+									<UserAvatar
+										source={item.userOne.avatarImage}
+										className='author-card__avatar'
+										size={'md'}
+									/>
+									<div className='author-card__info'>
+										<h5>
+											{item.userOne.firstName} {item.userOne.lastName}
+										</h5>
+										<p className='author-card__subtitle'>3K follow, 300 bạn bè</p>
 									</div>
-								)
-						)}
+								</div>
+								<div className='author-card__right'>
+									{item.relation !== 'isMe' && (
+										<div className={`connect-buttons ${'row'}`}>
+											<Button className='connect-button follow'>
+												<span className='connect-button__content'> Theo dõi </span>
+											</Button>
+											{renderButtonFriend(item)}
+										</div>
+									)}
+								</div>
+							</div>
+						))}
 					</div>
 				</Modal.Body>
 			</Modal>
@@ -161,5 +160,6 @@ const ModalFollowers = ({ modalFollower, setModalFollower }) => {
 ModalFollowers.propTypes = {
 	setModalFollower: PropTypes.func,
 	modalFollower: PropTypes.bool,
+	userInfoDetail: PropTypes.object,
 };
 export default ModalFollowers;

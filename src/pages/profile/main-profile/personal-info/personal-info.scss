@@ -5,20 +5,24 @@ $wallpaper-height: 350px;
 	margin-bottom: 3.25rem;
 	&__wallpaper {
 		height: $wallpaper-height;
-		background-size: cover;
-		background-repeat: no-repeat;
-		background-position: 50% 50%;
 		display: flex;
 		justify-content: flex-end;
 		align-items: flex-end;
 		border-top-left-radius: 12px;
 		border-top-right-radius: 12px;
+		position: relative;
+		> img {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+		}
 	}
 
 	.edit-wallpaper {
 		width: fit-content;
-		margin-right: 2.5rem;
-		margin-bottom: 1.5rem;
+		right: 2.5rem;
+		bottom: 1.5rem;
+		position: absolute;
 		&__btn {
 			padding: 0.825rem 1.25rem;
 			background-color: $white;
@@ -190,7 +194,7 @@ $wallpaper-height: 350px;
 
 	&-form {
 		.form-field {
-			width: 420px;
+			width: 80%;
 			display: flex;
 			gap: 24px;
 			&-group {
@@ -205,6 +209,7 @@ $wallpaper-height: 350px;
 			&-wrapper {
 				display: flex;
 				align-items: center;
+				justify-content: space-between;
 				gap: 1.5rem;
 				&.socials-link {
 					margin-bottom: 1rem;
@@ -305,6 +310,7 @@ $wallpaper-height: 350px;
 				align-items: center;
 				flex-wrap: wrap;
 				gap: 12px;
+				width: 100%;
 			}
 		}
 
@@ -366,7 +372,7 @@ $wallpaper-height: 350px;
 		}
 
 		.modal-dialog {
-			max-width: 700px;
+			max-width: 650px;
 		}
 		.modal-content {
 			border-radius: 16px;

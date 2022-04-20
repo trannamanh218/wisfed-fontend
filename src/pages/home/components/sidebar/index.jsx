@@ -8,13 +8,16 @@ import { useFetchQuoteRandom } from 'api/quote.hooks';
 import _ from 'lodash';
 import { useFetchBookInDefaultLibrary, useFetchStatsReadingBooks } from 'api/library.hook';
 import { Link } from 'react-router-dom';
-
+import { useSelector } from 'react-redux';
 const Sidebar = () => {
 	const { quoteRandom } = useFetchQuoteRandom();
-	const fiterBook = JSON.stringify([{ operator: 'eq', value: 'wantToRead', property: 'defaultType' }]);
+	const { userInfo } = useSelector(state => state.auth);
+	const fiterBook = JSON.stringify([
+		{ operator: 'eq', value: 'wantToRead', property: 'defaultType' },
+		{ operator: 'eq', value: `${userInfo.id}`, property: 'createdBy' },
+	]);
 	const { bookData } = useFetchBookInDefaultLibrary(1, 10, fiterBook);
-	const { readingData } = useFetchStatsReadingBooks();
-
+	const { readingData, booksRead } = useFetchStatsReadingBooks();
 	return (
 		<div className='sidebar'>
 			<GroupShortcuts />
@@ -26,7 +29,9 @@ const Sidebar = () => {
 							<p>{`“ ${quoteRandom?.quote} ”`}</p>
 							<p className='quotes__content__author-name'>{quoteRandom.authorName || ''}</p>
 						</div>
-						<button className='sidebar__view-more-btn--blue'>Xem thêm</button>
+						<Link to={`/quotes/all`} className='sidebar__view-more-btn--blue'>
+							Xem thêm
+						</Link>
 					</div>
 				)}
 			</div>
@@ -41,12 +46,12 @@ const Sidebar = () => {
 							</div>
 						))}
 					</div>
-					<Link to='/shelves' className='sidebar__view-more-btn--blue'>
+					<Link to={`/shelves/${userInfo.id}`} className='sidebar__view-more-btn--blue'>
 						Xem thêm
 					</Link>
 				</div>
 			</div>
-			<ReadingBook />
+			<ReadingBook bookData={booksRead} />
 			<TheBooksWantsToRead list={bookData} />
 			<ReadChallenge />
 		</div>

@@ -1,6 +1,5 @@
 import { Configure } from 'components/svg';
 import PropTypes from 'prop-types';
-import React from 'react';
 import './filter-pane.scss';
 
 const FilterPane = ({ children, title, subtitle, onFilter }) => {

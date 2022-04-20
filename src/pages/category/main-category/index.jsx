@@ -4,10 +4,11 @@ import React, { useCallback, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import CategoryGroup from 'shared/category-group';
 import LoadingIndicator from 'shared/loading-indicator';
-import SearchField from 'shared/search-field';
 import SearchCategory from './SearchCategory';
 import { STATUS_LOADING } from 'constants';
 import { Circle as CircleLoading } from 'shared/loading';
+import SearchIcon from 'assets/icons/search.svg';
+import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import './main-category.scss';
 
@@ -17,17 +18,20 @@ const MainCategory = ({ status, handleViewBookDetail, viewCategoryDetail }) => {
 	const { searchCategories, fetchFilterData, hasMoreFilterData } = useFetchFilterCategories(inputValue);
 
 	const changeHandler = event => {
-		setInputValue(event.target.value);
+		setInputValue(event?.target?.value);
 	};
 
-	const debouncedChangeHandler = useCallback(_.debounce(changeHandler, 1000), []);
+	const debounceSearch = useCallback(_.debounce(changeHandler, 1000), []);
 
 	return (
 		<div className='main-category'>
 			<CircleLoading loading={status === STATUS_LOADING} />
 			<h4>Tất cả chủ đề</h4>
 			<div className='main-category__container'>
-				<SearchField placeholder='Tìm kiếm chủ đề' handleChange={debouncedChangeHandler} />
+				<div className={classNames('search-field')}>
+					<img className='search-field__icon' src={SearchIcon} alt='search-icon' />
+					<input className='search-field__input' placeholder='Tìm kiếm chủ đề' onChange={debounceSearch} />
+				</div>
 				{!inputValue ? (
 					<InfiniteScroll
 						dataLength={categories.length}

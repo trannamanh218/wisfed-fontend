@@ -21,6 +21,7 @@ import { editUserInfo } from 'reducers/redux-utils/user';
 import { toast } from 'react-toastify';
 import { activeUpdateUserProfileStatus } from 'reducers/redux-utils/user';
 import PropTypes from 'prop-types';
+import backgroundImageDefault from 'assets/images/background-profile.png';
 
 const PersonalInfo = ({ userInfo }) => {
 	const { ref: settingsRef, isVisible: isSettingsVisible, setIsVisible: setSettingsVisible } = useVisible(false);
@@ -28,12 +29,20 @@ const PersonalInfo = ({ userInfo }) => {
 	const [modalFriend, setModalFriend] = useState(false);
 	const [modalFollower, setModalFollower] = useState(false);
 	const [modalFollowing, setModalFollowing] = useState(false);
+	const [bgImage, setBgImage] = useState('');
+
 	const updateUserProfile = useSelector(state => state.user.updateUserProfile);
 	const dispatch = useDispatch();
 
 	useEffect(() => {
 		setModalOpen(false);
 	}, [updateUserProfile]);
+
+	useEffect(() => {
+		if (userInfo.backgroundImage) {
+			setBgImage(userInfo.backgroundImage);
+		}
+	}, [userInfo]);
 
 	const handleSettings = () => {
 		setSettingsVisible(prev => !prev);
@@ -50,8 +59,8 @@ const PersonalInfo = ({ userInfo }) => {
 					params = { avatarImage: imageUploadedData.streamPath };
 				}
 				const data = { userId: userInfo.id, params: params };
-				const changeUserAvatar = await dispatch(editUserInfo(data)).unwrap();
-				if (!_.isEmpty(changeUserAvatar)) {
+				const changeUserImage = await dispatch(editUserInfo(data)).unwrap();
+				if (!_.isEmpty(changeUserImage)) {
 					toast.success('Cập nhật ảnh thành công', { autoClose: 1500 });
 					dispatch(activeUpdateUserProfileStatus());
 				}
@@ -60,9 +69,15 @@ const PersonalInfo = ({ userInfo }) => {
 			}
 		}
 	});
+
 	return (
 		<div className='personal-info'>
-			<div className='personal-info__wallpaper' style={{ backgroundImage: `url(${userInfo.backgroundImage})` }}>
+			<div className='personal-info__wallpaper'>
+				{userInfo.backgroundImage ? (
+					<img src={bgImage} alt='background-image' onError={() => setBgImage(backgroundImageDefault)} />
+				) : (
+					<img src={backgroundImageDefault} alt='background-image' />
+				)}
 				<Dropzone onDrop={acceptedFile => handleDrop(acceptedFile, 'change-bgImage')}>
 					{({ getRootProps, getInputProps }) => (
 						<div className='edit-wallpaper' {...getRootProps()}>
@@ -156,7 +171,11 @@ const PersonalInfo = ({ userInfo }) => {
 							</li>
 
 							{modalFollower && (
-								<ModalFollowers setModalFollower={setModalFollower} modalFollower={modalFollower} />
+								<ModalFollowers
+									setModalFollower={setModalFollower}
+									modalFollower={modalFollower}
+									userInfoDetail={userInfo}
+								/>
 							)}
 							<li
 								onClick={() => {
@@ -168,7 +187,11 @@ const PersonalInfo = ({ userInfo }) => {
 								<span>Đang theo dõi</span>
 							</li>
 							{modalFollowing && (
-								<ModalWatching setModalFollowing={setModalFollowing} modalFollowing={modalFollowing} />
+								<ModalWatching
+									setModalFollowing={setModalFollowing}
+									modalFollowing={modalFollowing}
+									userInfoDetail={userInfo}
+								/>
 							)}
 							<li
 								onClick={() => {
@@ -179,7 +202,13 @@ const PersonalInfo = ({ userInfo }) => {
 								<span className='number'>{userInfo.friends}</span>
 								<span>Bạn bè ({userInfo.mutualFriends})</span>
 							</li>
-							{modalFriend && <ModalFriend setModalFriend={setModalFriend} modalFriend={modalFriend} />}
+							{modalFriend && (
+								<ModalFriend
+									setModalFriend={setModalFriend}
+									modalFriend={modalFriend}
+									userInfoDetail={userInfo}
+								/>
+							)}
 						</ul>
 						{userInfo.descriptions && <ReadMore text={userInfo.descriptions} />}
 					</div>

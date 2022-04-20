@@ -1,5 +1,5 @@
 import NormalContainer from 'components/layout/normal-container';
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import './friend.scss';
 import SearchField from 'shared/search-field';
 import Button from 'shared/button';
@@ -7,36 +7,61 @@ import MyFriends from './component/my-friend';
 import MyFollow from './component/my-follow';
 import InvitationFriend from './component/invitation-friend';
 import SuggestFriend from './component/suggest-friend';
+import _ from 'lodash';
+
 const Friends = () => {
 	const [activeTabs, setActiveTabs] = useState('friend');
 	const [toggleSearch, setToggleSearch] = useState(true);
+	const [inputSearch, setInputSearch] = useState('');
+	const [filter, setFilter] = useState('[]');
 
 	const handleActiveTabs = string => {
+		setInputSearch('');
+		setFilter('[]');
+		setToggleSearch(false);
 		if (string === 'friend') {
 			setActiveTabs('friend');
 			setToggleSearch(true);
 		} else if (string === 'follow') {
 			setActiveTabs('follow');
-			setToggleSearch(true);
 		} else if (string === 'addfriend') {
 			setActiveTabs('addfriend');
-			setToggleSearch(true);
 		} else if (string === 'suggest') {
 			setActiveTabs('suggest');
-			setToggleSearch(false);
 		}
 	};
 
 	const contentTabFriends = () => {
 		if (activeTabs === 'friend') {
-			return <MyFriends />;
+			return <MyFriends activeTabs={activeTabs} filter={filter} inputSearch={inputSearch} />;
 		} else if (activeTabs === 'follow') {
-			return <MyFollow />;
+			return <MyFollow activeTabs={activeTabs} />;
 		} else if (activeTabs === 'addfriend') {
-			return <InvitationFriend />;
+			return <InvitationFriend activeTabs={activeTabs} />;
 		} else if (activeTabs === 'suggest') {
 			return <SuggestFriend />;
 		}
+	};
+
+	const updateInputSearch = value => {
+		if (value) {
+			const filterValue = [];
+			filterValue.push({
+				'operator': 'search',
+				'value': value.toLowerCase().trim(),
+				'property': 'firstName,lastName',
+			});
+			setFilter(JSON.stringify(filterValue));
+		} else {
+			setFilter('[]');
+		}
+	};
+
+	const debounceSearch = useCallback(_.debounce(updateInputSearch, 1000), []);
+
+	const handleSearch = e => {
+		setInputSearch(e.target.value);
+		debounceSearch(e.target.value);
 	};
 
 	return (
@@ -46,7 +71,11 @@ const Friends = () => {
 				<div className='friends__header'>
 					{toggleSearch && (
 						<div className='friends__search'>
-							<SearchField placeholder='Tìm kiếm bạn bè' />
+							<SearchField
+								placeholder='Tìm kiếm bạn bè'
+								handleChange={handleSearch}
+								value={inputSearch}
+							/>
 							<Button className='connect-button' isOutline={false} name='friend'>
 								<span>Tìm kiếm</span>
 							</Button>

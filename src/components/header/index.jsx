@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { LogoIcon, BookFillIcon, BookIcon, CategoryIcon, GroupIcon, HomeIcon } from 'components/svg';
 import SearchIcon from 'assets/icons/search.svg';
@@ -51,9 +51,9 @@ const Header = () => {
 						<CategoryIcon className='header__nav__icon' />
 					</Link>
 				</li>
-				<li className={classNames('header__nav__item', { active: activeLink === '/shelves' })}>
-					<Link className='header__nav__link' to='/shelves'>
-						{activeLink === '/shelves' ? <BookFillIcon /> : <BookIcon />}
+				<li className={classNames('header__nav__item', { active: activeLink === `/shelves/${userInfo.id}` })}>
+					<Link className='header__nav__link' to={`/shelves/${userInfo.id}`}>
+						{activeLink === `/shelves/${userInfo.id}` ? <BookFillIcon /> : <BookIcon />}
 					</Link>
 				</li>
 				<li className={classNames('header__nav__item', { active: activeLink === '/friends' })}>
@@ -71,7 +71,7 @@ const Header = () => {
 					/>
 					{modalNoti && <NotificationModal setModalNotti={setModalNotti} buttonModal={buttonModal} />}
 				</div>
-				<Link to='/profile'>
+				<Link to={`/profile/${userInfo.id}`}>
 					<UserAvatar className='header__avatar' source={userInfo?.avatarImage} />
 				</Link>
 			</div>

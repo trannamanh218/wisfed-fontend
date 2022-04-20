@@ -1,4 +1,4 @@
-import React, { Fragment, useCallback, useEffect, useState } from 'react';
+import { Fragment, useCallback, useEffect, useState } from 'react';
 import { useFetchCategoryDetail } from 'api/category.hook';
 import classNames from 'classnames';
 import { Heart } from 'components/svg';
@@ -103,7 +103,7 @@ const MainCategoryDetail = ({ handleViewBookDetail }) => {
 
 			try {
 				const params = {
-					id: 'bfdb3971-de4c-4c2b-bbbe-fbb36770031a',
+					id: userInfo.id,
 					favoriteCategory,
 				};
 				await dispatch(addToFavoriteCategory(params));
@@ -157,7 +157,7 @@ const MainCategoryDetail = ({ handleViewBookDetail }) => {
 		return (
 			<div className='main-category-detail'>
 				<div className='main-category-detail__header'>
-					<BackButton />
+					<BackButton destination='/category' />
 				</div>
 				<p className='main-category-detail__intro'>Không tìm thấy chủ đề</p>
 			</div>
@@ -171,7 +171,7 @@ const MainCategoryDetail = ({ handleViewBookDetail }) => {
 	return (
 		<div className='main-category-detail'>
 			<div className='main-category-detail__header'>
-				<BackButton />
+				<BackButton destination='/category' />
 				<h4>{categoryInfo.name}</h4>
 				<Button
 					className={classNames('btn-like', { 'active': isLike })}
@@ -240,7 +240,7 @@ const MainCategoryDetail = ({ handleViewBookDetail }) => {
 					<ModalBody>
 						<div className='main-category-detail__modal__option__group'>
 							<h4>Mặc định</h4>
-							<MultipleRadio list={checkOptions} name='default' value='likeMost' />
+							<MultipleRadio list={checkOptions} name='default' defaultValue='likeMost' />
 						</div>
 						{/* <div className='main-category-detail__modal__option__group'>
 							<h4>Theo số sao</h4>
@@ -248,7 +248,7 @@ const MainCategoryDetail = ({ handleViewBookDetail }) => {
 						</div> */}
 						<div className='main-category-detail__modal__option__group'>
 							<h4>Theo thời gian phát hành</h4>
-							<MultipleRadio list={publishOptiosn} name='pulish-time' value='' />
+							<MultipleRadio list={publishOptiosn} name='pulish-time' defaultValue='' />
 						</div>
 						{/* <div className='main-category-detail__modal__option__group'>
 							<h4>Theo người review</h4>

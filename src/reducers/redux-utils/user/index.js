@@ -11,8 +11,9 @@ import {
 	unFollow,
 	unFriend,
 	updateLikeCategory,
-	userDetailAPI,
 	listFollowing,
+	userDetailAPI,
+	myFriendsReq,
 } from 'constants/apiURL';
 import Request from 'helpers/Request';
 
@@ -26,10 +27,10 @@ export const getUserList = createAsyncThunk('user/getUserList', async (params, {
 	}
 });
 
-export const getListFollowrs = createAsyncThunk('user/getListFollowrs', async (param, { rejectWithValue }) => {
-	const { userId } = param;
+export const getListFollowrs = createAsyncThunk('user/getListFollowrs', async (params, { rejectWithValue }) => {
+	const { userId, ...query } = params;
 	try {
-		const response = await Request.makeGet(listFolowrs(userId));
+		const response = await Request.makeGet(listFolowrs(userId), query);
 		return response.data;
 	} catch (err) {
 		const error = JSON.parse(err.response);
@@ -37,26 +38,42 @@ export const getListFollowrs = createAsyncThunk('user/getListFollowrs', async (p
 	}
 });
 
-export const getFriendList = createAsyncThunk('user/getFriendList', async (param, { rejectWithValue }) => {
-	const { userId } = param;
+export const getFriendList = createAsyncThunk('user/getFriendList', async (params, { rejectWithValue }) => {
+	const { userId, ...query } = params;
 	try {
-		const response = await Request.makeGet(friendAPI(userId));
+		const response = await Request.makeGet(friendAPI(userId), query);
 		return response.data;
 	} catch (err) {
 		const error = JSON.parse(err.response);
 		throw rejectWithValue(error);
 	}
 });
-export const getListFollowing = createAsyncThunk('user/getListFollowing', async (param, { rejectWithValue }) => {
-	const { userId } = param;
+
+export const getListFollowing = createAsyncThunk('user/getListFollowing', async (params, { rejectWithValue }) => {
+	const { userId, ...query } = params;
+
 	try {
-		const response = await Request.makeGet(listFollowing(userId));
+		const response = await Request.makeGet(listFollowing(userId), query);
 		return response.data;
 	} catch (err) {
 		const error = JSON.parse(err.response);
 		throw rejectWithValue(error);
 	}
 });
+
+export const getListReqFriendsToMe = createAsyncThunk(
+	'user/getListReqFriendsToMe',
+	async (params, { rejectWithValue }) => {
+		const { ...query } = params;
+		try {
+			const response = await Request.makeGet(myFriendsReq, query);
+			return response.data;
+		} catch (err) {
+			const error = JSON.parse(err.response);
+			throw rejectWithValue(error);
+		}
+	}
+);
 
 export const makeFriendRequest = createAsyncThunk('user/makeFriendRequest', async (params, { rejectWithValue }) => {
 	try {
@@ -99,6 +116,7 @@ export const unFollower = createAsyncThunk('user/unFollowRequest', async (id, { 
 		throw rejectWithValue(error);
 	}
 });
+
 export const unFriendRequest = createAsyncThunk('user/unFriendRequest', async (id, { rejectWithValue }) => {
 	try {
 		const response = await Request.makeDelete(unFriend(id));
@@ -124,6 +142,17 @@ export const getCheckLiked = createAsyncThunk('user/check liked', async (params,
 	const { id, ...restParams } = params;
 	try {
 		const response = await Request.makeGet(checkLikedAPI(id), restParams);
+		return response.data;
+	} catch (err) {
+		const error = JSON.parse(err.response);
+		throw rejectWithValue(error);
+	}
+});
+
+export const getLikeCategory = createAsyncThunk('user/updateLikeCategory', async (params, { rejectWithValue }) => {
+	const { id, ...restParams } = params;
+	try {
+		const response = await Request.makePatch(updateLikeCategory(id), restParams);
 		return response.data;
 	} catch (err) {
 		const error = JSON.parse(err.response);
@@ -160,6 +189,7 @@ export const editUserInfo = createAsyncThunk('user/edit user info', async (data,
 export const getUserDetail = createAsyncThunk('user/get user detail', async (userId, { rejectWithValue }) => {
 	try {
 		const response = await Request.makeGet(userDetailAPI(userId));
+
 		return response.data;
 	} catch (err) {
 		const error = JSON.parse(err.response);
@@ -171,6 +201,7 @@ const userSlice = createSlice({
 	name: 'user',
 	initialState: {
 		isFetching: false,
+		userDetail: {},
 		categoriesData: {},
 		error: {},
 		updateUserProfile: false,
@@ -178,6 +209,21 @@ const userSlice = createSlice({
 	reducers: {
 		activeUpdateUserProfileStatus: state => {
 			state.updateUserProfile = !state.updateUserProfile;
+		},
+	},
+	extraReducers: {
+		[getUserDetail.pending]: state => {
+			state.isFetching = true;
+		},
+		[getUserDetail.fulfilled]: (state, action) => {
+			state.isFetching = false;
+			state.userDetail = action.payload;
+			state.error = {};
+		},
+		[getUserDetail.rejected]: (state, action) => {
+			state.isFetching = false;
+			state.userDetail = {};
+			state.error = action.payload;
 		},
 	},
 });

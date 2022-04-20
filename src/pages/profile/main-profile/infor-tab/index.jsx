@@ -36,6 +36,7 @@ const InforTab = ({ userInfo }) => {
 									isBorder={false}
 									disabled
 									value={userInfo.fullName}
+									readOnly={true}
 								/>
 							</div>
 						</div>
@@ -69,12 +70,19 @@ const InforTab = ({ userInfo }) => {
 												isBorder={false}
 												disabled
 												value={date}
+												readOnly={true}
 											/>
 										</div>
 									</div>
 									<div className='col-4 '>
 										<div className='form-field'>
-											<Input type='text' isBorder={false} disabled value={month} />
+											<Input
+												type='text'
+												isBorder={false}
+												disabled
+												value={month}
+												readOnly={true}
+											/>
 										</div>
 									</div>
 									<div className='col-4 '>
@@ -85,6 +93,7 @@ const InforTab = ({ userInfo }) => {
 												isBorder={false}
 												disabled
 												value={year}
+												readOnly={true}
 											/>
 										</div>
 									</div>
@@ -107,6 +116,48 @@ const InforTab = ({ userInfo }) => {
 										isBorder={false}
 										disabled
 										value={userInfo.address}
+										readOnly={true}
+									/>
+								) : (
+									<div className='form-field__no-data '>Chưa có dữ liệu</div>
+								)}
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div className='row'>
+					<div className='col-6'>
+						<div className='form-field-group'>
+							<label className='form-field-label'>Trường trung học</label>
+							<div className='form-field'>
+								{userInfo.highSchool ? (
+									<Input
+										type='text'
+										placeholder='Nhập địa chỉ'
+										isBorder={false}
+										disabled
+										value={userInfo.highSchool}
+										readOnly={true}
+									/>
+								) : (
+									<div className='form-field__no-data '>Chưa có dữ liệu</div>
+								)}
+							</div>
+						</div>
+					</div>
+					<div className='col-6'>
+						<div className='form-field-group'>
+							<label className='form-field-label'>Đại học/Cao đẳng</label>
+							<div className='form-field'>
+								{userInfo.university ? (
+									<Input
+										type='text'
+										placeholder='Nhập địa chỉ'
+										isBorder={false}
+										disabled
+										value={userInfo.university}
+										readOnly={true}
 									/>
 								) : (
 									<div className='form-field__no-data '>Chưa có dữ liệu</div>
@@ -122,7 +173,13 @@ const InforTab = ({ userInfo }) => {
 							<label className='form-field-label'>Công việc</label>
 							<div className='form-field'>
 								{userInfo.works ? (
-									<Input type='text' isBorder={false} disabled value={userInfo.works} />
+									<Input
+										type='text'
+										isBorder={false}
+										disabled
+										value={userInfo.works}
+										readOnly={true}
+									/>
 								) : (
 									<div className='form-field__no-data '>Chưa có dữ liệu</div>
 								)}
@@ -137,7 +194,7 @@ const InforTab = ({ userInfo }) => {
 									{userInfo.socials.map((item, index) => (
 										<div className='form-field-socials-link' key={index}>
 											<div className='form-field'>
-												<Input type='text' isBorder={false} value={item} />
+												<Input type='text' isBorder={false} value={item} readOnly={true} />
 											</div>
 										</div>
 									))}
@@ -154,10 +211,28 @@ const InforTab = ({ userInfo }) => {
 				<div className='row'>
 					<div className='col-6'>
 						<div className='form-field-group'>
+							<label className='form-field-label'>Sở thích</label>
+							<div className='form-field'>
+								{userInfo.hobby ? (
+									<Input
+										type='text'
+										isBorder={false}
+										disabled
+										value={userInfo.hobby}
+										readOnly={true}
+									/>
+								) : (
+									<div className='form-field__no-data '>Chưa có dữ liệu</div>
+								)}
+							</div>
+						</div>
+					</div>
+					<div className='col-6'>
+						<div className='form-field-group'>
 							<label className='form-field-label '>Chủ đề yêu thích</label>
-							{userInfo?.favoriteCategories ? (
-								<div className='form-field form-field-flex '>
-									<BadgeList list={userInfo.favoriteCategories} className='form-field-badge' />
+							{userInfo?.favoriteCategory ? (
+								<div className='form-field form-field-flex'>
+									<BadgeList list={userInfo.favoriteCategory} className='form-field-badge' />
 								</div>
 							) : (
 								<div className='form-field'>
@@ -166,8 +241,8 @@ const InforTab = ({ userInfo }) => {
 							)}
 						</div>
 					</div>
-					<div className='col-6'></div>
 				</div>
+
 				<div className='row'>
 					<div className='col-12'>
 						<div className='form-field-group'>

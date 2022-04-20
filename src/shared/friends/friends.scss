@@ -21,6 +21,8 @@
 	.myfriends__layout__img {
 		border-top-left-radius: 16px;
 		border-top-right-radius: 16px;
+		max-width: 198px;
+		min-height: 198px;
 	}
 	.myfriends__name {
 		font-weight: 600;
@@ -47,6 +49,9 @@
 				line-height: 22px;
 				letter-spacing: 0.25px;
 				display: inline-block;
+				overflow: hidden;
+				white-space: nowrap;
+				text-overflow: ellipsis;
 			}
 		}
 	}

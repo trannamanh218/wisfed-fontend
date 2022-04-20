@@ -1,11 +1,10 @@
-import { useFetchAuthLibraries } from 'api/library.hook';
 import classNames from 'classnames';
 import { CircleCheckIcon, CoffeeCupIcon, TargetIcon } from 'components/svg';
 import WrapIcon from 'components/wrap-icon';
 import { STATUS_BOOK } from 'constants';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Modal } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
@@ -46,7 +45,6 @@ const STATUS_BOOK_OBJ = {
 const StatusButton = ({ className, status, bookData }) => {
 	const [modalShow, setModalShow] = useState(false);
 	const [currentStatus, setCurrentStatus] = useState(STATUS_BOOK_OBJ.wantToRead);
-	const [showInput, setShowInput] = useState(false);
 	const [bookLibraries, setBookLibaries] = useState([]);
 	const [fetchStatus, setFetchStatus] = useState(STATUS_IDLE);
 	const statusRef = useRef({});
@@ -57,8 +55,6 @@ const StatusButton = ({ className, status, bookData }) => {
 	} = useSelector(state => state);
 
 	const dispatch = useDispatch();
-
-	const { statusLibraries } = useFetchAuthLibraries();
 
 	useEffect(() => {
 		if (status) {
@@ -117,13 +113,6 @@ const StatusButton = ({ className, status, bookData }) => {
 				setCurrentStatus(initStatus);
 				setModalShow(true);
 			});
-		// hien thi
-	};
-
-	const addBookShelves = () => {
-		if (!showInput) {
-			setShowInput(true);
-		}
 	};
 
 	const updateBookShelve = async params => {
@@ -205,7 +194,6 @@ const StatusButton = ({ className, status, bookData }) => {
 
 		setBookLibaries(newData);
 	};
-
 	return (
 		<>
 			<CircleLoading loading={fetchStatus === STATUS_LOADING} />
@@ -234,10 +222,8 @@ const StatusButton = ({ className, status, bookData }) => {
 						handleChangeStatus={handleChangeStatus}
 						bookShelves={bookLibraries}
 						updateBookShelve={updateBookShelve}
-						addBookShelves={addBookShelves}
 						handleConfirm={handleConfirm}
 						onChangeShelves={onChangeShelves}
-						statusLibraries={statusLibraries}
 					/>
 				</Modal.Body>
 			</Modal>

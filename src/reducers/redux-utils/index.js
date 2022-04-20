@@ -11,7 +11,8 @@ import comment from './comment';
 import notificationReducer from './notificaiton';
 import profile from './profile';
 import forgetPasswordSliceReducer from './forget-password';
-
+import friends from './friends';
+import chart from './chart';
 const rootReducer = {
 	auth,
 	post,
@@ -26,6 +27,8 @@ const rootReducer = {
 	notificationReducer,
 	profile,
 	forgetPasswordSliceReducer,
+	friends,
+	chart,
 };
 
 export default rootReducer;

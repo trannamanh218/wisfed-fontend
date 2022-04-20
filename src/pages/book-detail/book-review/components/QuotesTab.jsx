@@ -4,9 +4,11 @@ import FitlerOptions from 'shared/filter-options';
 import QuoteCard from 'shared/quote-card';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { getQuoteList } from 'reducers/redux-utils/quote';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { NotificationError } from 'helpers/Error';
+import { checkLikeQuote } from 'reducers/redux-utils/quote';
+
 const QuotesTab = () => {
 	const filterOptions = [
 		{ id: 1, title: 'Tất cả', value: 'all' },
@@ -16,39 +18,39 @@ const QuotesTab = () => {
 
 	const [defaultOption, setDefaultOption] = useState({ id: 1, title: 'Tất cả', value: 'all' });
 
-	const [myQuoteList, setMyQuoteList] = useState([]);
+	const [quoteList, setQuoteList] = useState([]);
 	const [hasMore, setHasMore] = useState(true);
+	const [likedArray, setLikedArray] = useState([]);
 
-	const callApiStart = useRef(10);
+	const callApiStart = useRef(0);
 	const callApiPerPage = useRef(10);
 
-	const resetQuoteList = useSelector(state => state.quote.resetQuoteList);
-
 	const dispatch = useDispatch();
-	const { id } = useParams();
+	const { bookId } = useParams();
 
-	const handleChangeOption = (e, data) => {
+	const handleChangeOption = data => {
 		if (data.value !== defaultOption.value) {
 			setDefaultOption(data);
 		}
 	};
 
 	useEffect(() => {
-		callApiStart.current = 10;
-		getMyQuoteListFirstTime();
-	}, [resetQuoteList]);
+		getQuoteListData();
+		getLikedArray();
+	}, []);
 
-	const getMyQuoteListFirstTime = async () => {
+	const getQuoteListData = async () => {
 		try {
 			const params = {
-				start: 0,
+				start: callApiStart.current,
 				limit: callApiPerPage.current,
 				sort: JSON.stringify([{ property: 'createdAt', direction: 'DESC' }]),
-				filter: JSON.stringify([{ operator: 'eq', value: id, property: 'bookId' }]),
+				filter: JSON.stringify([{ operator: 'eq', value: bookId, property: 'bookId' }]),
 			};
-			const quotesList = await dispatch(getQuoteList(params)).unwrap();
-			if (quotesList.length) {
-				setMyQuoteList(quotesList);
+			const quoteListData = await dispatch(getQuoteList(params)).unwrap();
+			if (quoteListData.length) {
+				callApiStart.current += callApiPerPage.current;
+				setQuoteList(quoteList.concat(quoteListData));
 			} else {
 				setHasMore(false);
 			}
@@ -57,51 +59,42 @@ const QuotesTab = () => {
 		}
 	};
 
-	const getMyQuoteList = async () => {
+	const getLikedArray = async () => {
 		try {
-			const params = {
-				start: callApiStart.current,
-				limit: callApiPerPage.current,
-				sort: JSON.stringify([{ property: 'createdAt', direction: 'DESC' }]),
-				filter: JSON.stringify([{ operator: 'eq', value: id, property: 'bookId' }]),
-			};
-			const quotesList = await dispatch(getQuoteList(params)).unwrap();
-			if (quotesList.length) {
-				callApiStart.current += callApiPerPage.current;
-				setMyQuoteList(myQuoteList.concat(quotesList));
-			} else {
-				setHasMore(false);
-			}
+			const res = await dispatch(checkLikeQuote()).unwrap();
+			setLikedArray(res);
 		} catch (err) {
 			NotificationError(err);
 		}
 	};
 
 	return (
-		<FilterPane title='Quotes'>
-			<FitlerOptions
-				list={filterOptions}
-				defaultOption={defaultOption}
-				handleChangeOption={handleChangeOption}
-				name='filter-user'
-				className='quote-tab__filter__options'
-			/>
+		<div className='quotes-tab'>
+			{quoteList.length ? (
+				<FilterPane title='Quotes'>
+					<FitlerOptions
+						list={filterOptions}
+						defaultOption={defaultOption}
+						handleChangeOption={handleChangeOption}
+						name='filter-user'
+						className='quotes-tab__filter__options'
+					/>
 
-			{myQuoteList.length > 0 ? (
-				<InfiniteScroll
-					dataLength={myQuoteList.length}
-					next={getMyQuoteList}
-					hasMore={hasMore}
-					loader={<h4>Loading...</h4>}
-				>
-					{myQuoteList.map(item => (
-						<QuoteCard key={item.id} data={item} />
-					))}
-				</InfiniteScroll>
+					<InfiniteScroll
+						dataLength={quoteList.length}
+						next={getQuoteListData}
+						hasMore={hasMore}
+						loader={<h4>Loading...</h4>}
+					>
+						{quoteList.map(item => (
+							<QuoteCard key={item.id} data={item} likedArray={likedArray} />
+						))}
+					</InfiniteScroll>
+				</FilterPane>
 			) : (
-				<h5 style={{ margin: '2.5rem' }}>Không có dữ liệu</h5>
+				<h5>Chưa có dữ liệu</h5>
 			)}
-		</FilterPane>
+		</div>
 	);
 };
 

@@ -17,7 +17,8 @@
 			display: flex;
 			align-items: center;
 			gap: 0.625rem;
-			padding: 0.75rem 1rem;
+			padding: 0 1rem;
+			background-color: $ash-background;
 		}
 
 		&-socials-link {
@@ -26,9 +27,10 @@
 
 		.form-field-badge {
 			&.badge {
-				padding: 0.625rem 0.875rem;
-				font-size: 1rem;
-				border-radius: 12px;
+				padding: 12px 12px;
+				font-size: 13px;
+				line-height: 15px;
+				border-radius: 10px;
 			}
 		}
 	}

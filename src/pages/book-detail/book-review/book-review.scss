@@ -44,6 +44,12 @@
 }
 
 .review-tab {
+	> h5 {
+		text-align: center;
+		margin: 0 auto;
+		padding: 40px 0 0 40px;
+	}
+
 	&__search {
 		padding: 0 2.5rem;
 		margin: 2rem 0;
@@ -54,7 +60,12 @@
 	}
 }
 
-.quote-tab {
+.quotes-tab {
+	> h5 {
+		text-align: center;
+		margin: 0 auto;
+		padding: 40px 0 0 40px;
+	}
 	&__filter__options {
 		padding: 0 2.5rem;
 		margin-bottom: 2rem;

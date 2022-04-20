@@ -1,4 +1,3 @@
-import sampleBookImg from 'assets/images/sample-book-img.jpg';
 import Slider from 'react-slick';
 import SlideSettings from './wants-to-read-slide-settings';
 import PropTypes from 'prop-types';
@@ -12,7 +11,7 @@ function TheBooksWantsToRead(props) {
 				<Slider {...SlideSettings}>
 					{list.map((item, index) => (
 						<div key={index} className='wants-to-read__thumbnail'>
-							<img src={sampleBookImg} alt='' />
+							<img src={item.images[0]} alt='' />
 						</div>
 					))}
 				</Slider>

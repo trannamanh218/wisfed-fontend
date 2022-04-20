@@ -11,14 +11,16 @@ import Button from 'shared/button';
 import { unFollower, makeFriendRequest, unFriendRequest } from 'reducers/redux-utils/user';
 import { NotificationError } from 'helpers/Error';
 import { buttonReqFriend } from 'helpers/HandleShare';
+import { useParams } from 'react-router-dom';
 
-const ModalWatching = ({ setModalFollowing, modalFollowing }) => {
+const ModalWatching = ({ setModalFollowing, modalFollowing, userInfoDetail }) => {
 	const { userInfo } = useSelector(state => state.auth);
 	const [getListFollow, setGetListFollow] = useState([]);
 	const dispatch = useDispatch();
+	const { userId } = useParams();
 	useEffect(async () => {
 		const param = {
-			userId: userInfo.id,
+			userId: userId,
 		};
 		try {
 			const followingList = await dispatch(getListFollowing(param)).unwrap();
@@ -131,7 +133,7 @@ const ModalWatching = ({ setModalFollowing, modalFollowing }) => {
 				<Modal.Body className='modalFollowers__container'>
 					<div className='modalFollowers__header'>
 						<div className='modalFollowers__title'>
-							Người {userInfo.firstName} {userInfo.lastName} đang theo dõi
+							Người {userInfoDetail.firstName} {userInfoDetail.lastName} đang theo dõi
 						</div>
 						<div className='modalFollowers__close'>
 							<CloseX onClick={toggleModal} />
@@ -142,38 +144,40 @@ const ModalWatching = ({ setModalFollowing, modalFollowing }) => {
 					</div>
 					<div className='modalFollowers__info'>
 						{getListFollow.map(item =>
-							item.checkUnfollow
-								? ''
-								: item.relation !== 'isMe' && (
-										<div key={item.id} className='author-card'>
-											<div className='author-card__left'>
-												<UserAvatar
-													source={item.userTwo.avatarImage}
-													className='author-card__avatar'
-													size={'md'}
-												/>
-												<div className='author-card__info'>
-													<h5>
-														{item.userTwo.firstName} {item.userTwo.lastName}
-													</h5>
-													<p className='author-card__subtitle'>3K follow, 300 bạn bè</p>
-												</div>
-											</div>
-											<div className='author-card__right'>
-												<div className={`connect-buttons ${'row'}`}>
-													<Button
-														onClick={() => {
-															unFolow(item.userIdTwo);
-														}}
-														className='connect-button follow'
-													>
-														<span className='connect-button__content'>Hủy theo dõi </span>
-													</Button>
-													{renderButtonFriend(item)}
-												</div>
-											</div>
+							item.checkUnfollow ? (
+								''
+							) : (
+								<div key={item.id} className='author-card'>
+									<div className='author-card__left'>
+										<UserAvatar
+											source={item.userTwo.avatarImage}
+											className='author-card__avatar'
+											size={'md'}
+										/>
+										<div className='author-card__info'>
+											<h5>
+												{item.userTwo.firstName} {item.userTwo.lastName}
+											</h5>
+											<p className='author-card__subtitle'>3K follow, 300 bạn bè</p>
 										</div>
-								  )
+									</div>
+									<div className='author-card__right'>
+										{item.relation !== 'isMe' && (
+											<div className={`connect-buttons ${'row'}`}>
+												<Button
+													onClick={() => {
+														unFolow(item.userIdTwo);
+													}}
+													className='connect-button follow'
+												>
+													<span className='connect-button__content'>Hủy theo dõi </span>
+												</Button>
+												{renderButtonFriend(item)}
+											</div>
+										)}
+									</div>
+								</div>
+							)
 						)}
 					</div>
 				</Modal.Body>
@@ -184,5 +188,6 @@ const ModalWatching = ({ setModalFollowing, modalFollowing }) => {
 ModalWatching.propTypes = {
 	modalFollowing: PropTypes.bool,
 	setModalFollowing: PropTypes.func,
+	userInfoDetail: PropTypes.object,
 };
 export default ModalWatching;
