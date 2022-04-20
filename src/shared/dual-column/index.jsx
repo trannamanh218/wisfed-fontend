@@ -32,6 +32,7 @@ const DualColumn = props => {
 			setIsExpand(false);
 		}
 	};
+	console.log(list);
 
 	if (list && list.length)
 		return (
