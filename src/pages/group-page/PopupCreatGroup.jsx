@@ -1,4 +1,4 @@
-import { CameraIcon, CloseIconX } from 'components/svg';
+import { CameraIcon, CheckIcon, CloseIconX } from 'components/svg';
 import React, { useRef } from 'react';
 import { Image } from 'react-bootstrap';
 import Input from 'shared/input';
@@ -9,8 +9,8 @@ import './creat-group.scss';
 
 const PopupCreatGroup = ({ handleClose }) => {
 	const listTransparent = [
-		{ value: 'public', title: 'Công khai' },
-		{ value: 'private', title: 'Riêng tư' },
+		{ value: 'public', title: 'Công khai', img: <CheckIcon /> },
+		{ value: 'private', title: 'Riêng tư', img: <CheckIcon /> },
 	];
 
 	const listKindOfGroup = [
@@ -18,7 +18,7 @@ const PopupCreatGroup = ({ handleClose }) => {
 		{ value: 'authors', title: 'Tác giả' },
 		{ value: 'share', title: ' Chia sẻ' },
 	];
-	const tranparentRef = useRef({ value: 'public', title: 'Công khai' });
+	const tranparentRef = useRef({ value: 'public', title: 'Công khai', img: <CheckIcon /> });
 	const kindOfGroupRef = useRef({ value: 'default', title: 'Tác giả/ Chia sẻ/ Sách' });
 	const textArea = useRef(null);
 

@@ -101,3 +101,53 @@
 		}
 	}
 }
+.manage-item {
+	font-family: 'Montserrat';
+	font-style: normal;
+	font-weight: 500;
+	font-size: 14px;
+	line-height: 24px;
+	align-items: center;
+	letter-spacing: 0.75px;
+	color: #6e7191;
+	display: flex;
+	margin-top: 22px;
+	svg {
+		margin-right: 8px;
+		width: 28px;
+		height: 28px;
+	}
+	p {
+		margin-right: 10px;
+		background-color: #e0af7e;
+		border-radius: 50%;
+		width: 30px;
+		height: 28px;
+		padding: 3px;
+		font-family: 'Montserrat';
+		font-style: normal;
+		font-weight: 500;
+		font-size: 13px;
+		line-height: 22px;
+		display: flex;
+		align-items: center;
+		letter-spacing: 0.25px;
+		color: #fcfcfc;
+	}
+}
+.manage-btn {
+	margin-top: 90px;
+	display: flex;
+	align-items: center;
+	svg {
+		margin-right: 10px;
+		margin-bottom: 5px;
+	}
+}
+.group__intro {
+	margin-top: 60px;
+}
+
+.group-sibar-left__description {
+	margin-top: 32px;
+}

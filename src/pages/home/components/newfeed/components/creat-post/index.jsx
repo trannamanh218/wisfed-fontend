@@ -47,6 +47,12 @@ function CreatPost({ onChangeNewPost }) {
 			icon: <GroupIcon className='newfeed__creat-post__options__item__logo--friend' />,
 			message: 'Không tìm thấy bạn bè',
 		},
+		{
+			value: 'hashtag',
+			title: 'Hashtag',
+			icon: <GroupIcon className='newfeed__creat-post__options__item__logo--friend' />,
+			message: 'Không tìm thấy hashtag',
+		},
 	];
 
 	useEffect(() => {
