@@ -55,7 +55,6 @@ const BookReview = () => {
 			total: listRatingStar.rate_1_star,
 		},
 	];
-
 	const fetchData = async () => {
 		try {
 			const res = await dispatch(getRatingBook(bookInfor?.id)).unwrap();

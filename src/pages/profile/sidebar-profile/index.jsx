@@ -15,10 +15,10 @@ import { useSelector } from 'react-redux';
 const DEFAULT_TOGGLE_ROWS = 1;
 
 const SidebarProfile = () => {
-	const { booksAuthor } = useFetchAuthorBooks();
+	const userDetail = useSelector(state => state.user.userDetail);
+	const { booksAuthor } = useFetchAuthorBooks(userDetail.firstName, userDetail.lastName);
 	const { readingData, booksRead } = useFetchStatsReadingBooks();
 	const { statusCustom } = useFetchAuthLibraries();
-	const userDetail = useSelector(state => state.user.userDetail);
 	const libraryList = statusCustom?.map(item => ({ ...item, quantity: item.books.length }));
 	const [isExpand, setIsExpand] = useState(false);
 	const [rows, setRows] = useState(DEFAULT_TOGGLE_ROWS);
