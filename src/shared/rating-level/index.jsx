@@ -15,7 +15,7 @@ const RatingLevel = props => {
 			<span className='rating-level__icon'>
 				<Star />
 			</span>
-			<LinearProgressBar height={0.42} percent={percent} />
+			<LinearProgressBar height={0.42} percent={percent !== 0 ? percent : 0.5} />
 			<span>{`${percent}% (${formatNumberToWord(total)})`}</span>
 		</div>
 	);

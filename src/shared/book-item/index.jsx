@@ -32,7 +32,7 @@ const BookItem = props => {
 
 	useEffect(() => {
 		fetchData();
-	}, []);
+	}, [data?.id]);
 
 	const renderOverlay = () => {
 		if (isMyShelve) {
@@ -62,7 +62,7 @@ const BookItem = props => {
 			<span className='book-item__author'>
 				{!_.isEmpty(data.authors) ? data?.authors[0]?.authorName : <br />}
 			</span>
-			<ReactRating initialRating={listRatingStar.avg} readonly={true} />
+			<ReactRating initialRating={listRatingStar?.avg} readonly={true} />
 			<span className='book-item__text'>
 				{listRatingStar.avg !== 0 ? `(Trung bình ${listRatingStar?.avg} sao)` : 'chưa có đánh giá'}
 			</span>
