@@ -7,6 +7,7 @@ import _ from 'lodash';
 
 const BookThumbnail = props => {
 	const { images = [], source = '', name = 'book', size = 'md', handleClick, className = '', data = {} } = props;
+
 	return (
 		<div
 			className={classNames(`book-thumbnail book-thumbnail-${size}`, { [`${className}`]: className })}

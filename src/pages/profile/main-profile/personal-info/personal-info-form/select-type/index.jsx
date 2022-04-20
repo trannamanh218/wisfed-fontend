@@ -5,8 +5,8 @@ import { useState, useRef, useCallback } from 'react';
 // import ShareModeDropdown from 'shared/share-mode-dropdown';
 import _ from 'lodash';
 import { useDispatch } from 'react-redux';
-import { toast } from 'react-toastify';
 import { getSuggestionForPost } from 'reducers/redux-utils/activity';
+import { NotificationError } from 'helpers/Error';
 
 function SelectType({ dataAdded, setDataAdded, editStatus, cancelEdit, enableEdit }) {
 	const [categorySearchedList, setCategorySearchedList] = useState([]);
@@ -51,8 +51,8 @@ function SelectType({ dataAdded, setDataAdded, editStatus, cancelEdit, enableEdi
 		try {
 			const data = await dispatch(getSuggestionForPost({ input, option })).unwrap();
 			setCategorySearchedList(data.rows);
-		} catch {
-			toast.error('Lỗi hệ thống');
+		} catch (err) {
+			NotificationError(err);
 		} finally {
 			setGetDataFinish(true);
 		}

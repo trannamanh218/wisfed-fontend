@@ -101,3 +101,4 @@ export const listBooksReadYear = type => `/api/v1/libraries/listBookByType/${typ
 // reading-target
 
 export const getReadingTargetAPI = '/api/v1/books/readingGoal';
+export const updateTargetReadAPI = year => `/api/v1/books/readingGoal/${year}`;

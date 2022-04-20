@@ -1,41 +1,80 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import SearchField from 'shared/search-field';
 import UserAvatar from 'shared/user-avatar';
 import LinearProgressBar from 'shared/linear-progress-bar';
 import { Table } from 'react-bootstrap';
-import bookImage from 'assets/images/book1.png';
 import _ from 'lodash';
 import moment from 'moment';
 import './main-reading-target.scss';
 import BookThumbnail from 'shared/book-thumbnail';
+import { getListBooksTargetReading } from 'reducers/redux-utils/chart';
+import { useDispatch } from 'react-redux';
+import { NotificationError } from 'helpers/Error';
+import ModalReadTarget from '../modal-reading-target';
+import { useModal } from 'shared/hooks';
 
 const MainReadingTarget = () => {
-	const bookList = [...new Array(5)].fill({}).map((item, index) => ({
-		id: index + 1,
-		images: [bookImage],
-		name: 'The Mystery of Briony Lodge - Bí mật của Briony Lodge Bí mật của Briony Lodge Bí mật của Briony Lodge',
-		authors: [{ id: `author - ${index}`, name: 'Dr. Large' }],
-		addDate: new Date(2022, 1, 3),
-		readingDate: new Date(),
-		completedDate: new Date(2022, 7, 30),
-	}));
+	const dispatch = useDispatch();
+	const [booksReadYear, setBooksReadYear] = useState([]);
+	const { modalOpen, setModalOpen, toggleModal } = useModal(false);
+	const [deleteModal, setDeleteModal] = useState(false);
+	const fetchData = async () => {
+		try {
+			const data = await dispatch(getListBooksTargetReading()).unwrap();
+			const dob = new Date();
+			const year = dob.getFullYear();
+			const newData = data.filter(item => item.year === year);
+			setBooksReadYear(newData);
+		} catch (err) {
+			NotificationError(err);
+		}
+	};
 
-	return (
-		<div className='reading-target'>
+	useEffect(() => {
+		fetchData();
+	}, [modalOpen, deleteModal]);
+
+	const renderLinearProgressBar = item => {
+		let percent = 0;
+		if (item.booksReadCount > item.numberBook) {
+			percent = 100;
+		} else {
+			percent = ((item.booksReadCount / item.numberBook) * 100).toFixed();
+		}
+		return <LinearProgressBar height={2.75} percent={percent} label={`${percent} %`} />;
+	};
+
+	const handleEditTarget = () => {
+		setModalOpen(true);
+	};
+
+	const handleDeleteTarget = () => {
+		setDeleteModal(true);
+		setModalOpen(true);
+	};
+
+	return booksReadYear.map(item => (
+		<div key={item.id} className='reading-target'>
 			<div className='reading-target__header'>
-				<h4>Mục tiêu đọc sách năm 2021</h4>
+				<h4>Mục tiêu đọc sách năm {item.year}</h4>
 				<SearchField placeholder='Tìm kiếm sách' />
 			</div>
 			<div className='reading-target__process'>
 				<UserAvatar className='reading-target__user' size='lg' />
 				<div className='reading-target__content'>
 					<div className='reading-target__content__top'>
-						<p>Bạn đã đọc được 2 trên 5 cuốn</p>
-						<button className='btn-edit'>Sửa mục tiêu</button>
-						<button className='btn-cancel'>Bỏ mục tiêu</button>
+						<p>
+							Bạn đã đọc được {item.booksReadCount} trên {item.numberBook} cuốn
+						</p>
+						<button onClick={handleEditTarget} className='btn-edit'>
+							Sửa mục tiêu
+						</button>
+						<button onClick={handleDeleteTarget} className='btn-cancel'>
+							Bỏ mục tiêu
+						</button>
 					</div>
 					<div className='reading-target__content__bottom'>
-						<LinearProgressBar height={2.75} percent={60} label={`60 %`} />
+						{renderLinearProgressBar(item)}
 						<button className='btn btn-share btn-primary-light'>Chia sẻ</button>
 					</div>
 				</div>
@@ -54,8 +93,8 @@ const MainReadingTarget = () => {
 						<tr className='empty-row' />
 					</thead>
 					<tbody>
-						{!_.isEmpty(bookList) ? (
-							bookList.map((item, index) => (
+						{!_.isEmpty(item.booksRead) ? (
+							item.booksRead.map((item, index) => (
 								<>
 									<tr className={`highlight highlight-${index} `}>
 										<td colSpan={8}></td>
@@ -63,17 +102,17 @@ const MainReadingTarget = () => {
 									<tr className='book-row' key={item.id}>
 										<td className='hightlight-column'></td>
 										<td>
-											<BookThumbnail size='sm' images={item.images} />
+											<BookThumbnail size='sm' source={item.book?.images[0]} />
 										</td>
 										<td>
-											<span className='book-name' title={item.name}>
-												{item.name}
+											<span className='book-name' title={item.book.name}>
+												{item.book.name}
 											</span>
 										</td>
 										<td>{!_.isEmpty(item.authors) ? item.authors[0].name : 'Chưa cập nhật'}</td>
-										<td>{moment(item.addDate).format('DD/MM/YYYY')}</td>
-										<td>{moment(item.readingDate).format('DD/MM/YYYY')}</td>
-										<td>{moment(item.completedDate).format('DD/MM/YYYY')}</td>
+										<td>{moment(item.createdAt).format('DD/MM/YYYY')}</td>
+										<td>{moment(item.createdAt).format('DD/MM/YYYY')}</td>
+										<td>{moment(item.updatedAt).format('DD/MM/YYYY')}</td>
 										<td className='hightlight-column'></td>
 									</tr>
 								</>
@@ -89,8 +128,14 @@ const MainReadingTarget = () => {
 					</tbody>
 				</Table>
 			</div>
+			<ModalReadTarget
+				modalOpen={modalOpen}
+				toggleModal={toggleModal}
+				setModalOpen={setModalOpen}
+				deleteModal={deleteModal}
+			/>
 		</div>
-	);
+	));
 };
 
 MainReadingTarget.propTypes = {};

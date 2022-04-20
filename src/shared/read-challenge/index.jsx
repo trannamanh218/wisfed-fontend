@@ -1,10 +1,15 @@
 import './style.scss';
 import readChallengeImg from 'assets/images/read-challenge-img.jpg';
 import { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
+import { updateTargetRead, createTargetRead } from 'reducers/redux-utils/chart';
+import { useDispatch } from 'react-redux';
+import { toast } from 'react-toastify';
+import { NotificationError } from 'helpers/Error';
 
-function ReadChallenge() {
+function ReadChallenge({ modalOpen, setModalOpen }) {
 	const [inputValue, setInputValue] = useState(0);
-
+	const dispatch = useDispatch();
 	useEffect(() => {
 		if (inputValue < 0) {
 			setInputValue(0);
@@ -16,6 +21,42 @@ function ReadChallenge() {
 			setInputValue(Math.floor(inputValue));
 		}
 	}, [inputValue]);
+
+	const handleChangeTarget = async () => {
+		if (modalOpen) {
+			try {
+				const dob = new Date();
+				const year = dob.getFullYear();
+				const query = {
+					numberBook: inputValue,
+				};
+				const params = {
+					year: year,
+					...query,
+				};
+				return await dispatch(updateTargetRead(params)).unwrap();
+			} catch (err) {
+				NotificationError(err);
+			} finally {
+				toast.success('Sửa mục tiêu thành công');
+				setModalOpen(false);
+			}
+		} else {
+			try {
+				const dob = new Date();
+				const year = dob.getFullYear();
+				const params = {
+					year: year,
+					numberBook: inputValue,
+				};
+				return await dispatch(createTargetRead(params)).unwrap();
+			} catch (err) {
+				NotificationError(err);
+			} finally {
+				toast.success('Tạo mục tiêu thành công');
+			}
+		}
+	};
 
 	const inputOnBlur = () => {
 		if (inputValue === '') {
@@ -55,11 +96,16 @@ function ReadChallenge() {
 							&#43;
 						</button>
 					</div>
-					<button className='read-challenge__start-challenge-btn'>Bắt đầu thử thách</button>
+					<button onClick={handleChangeTarget} className='read-challenge__start-challenge-btn'>
+						{modalOpen ? 'Thay đổi mục tiêu đọc sách' : 'Bắt đầu thử thách'}
+					</button>
 				</div>
 			</div>
 		</div>
 	);
 }
-
+ReadChallenge.propTypes = {
+	modalOpen: PropTypes.bool,
+	setModalOpen: PropTypes.func,
+};
 export default ReadChallenge;

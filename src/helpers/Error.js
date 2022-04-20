@@ -138,13 +138,34 @@ const errVN = {
 	999: {
 		vi: 'Lỗi hệ thống',
 	},
+	331: {
+		vi: 'Người dùng không phải tác giả',
+	},
+	888: {
+		vi: 'Lỗi của Database',
+	},
+	500: {
+		vi: 'Lỗi server',
+	},
+	741: {
+		vi: 'Mục tiêu đã tồn tại',
+	},
+	742: {
+		vi: 'Mục tiêu không tồn tại',
+	},
 };
 
-export const NotificationError = (err, language) => {
-	const statusCodeError = err?.errorCode;
-	if (language === 'en') {
-		return toast.error(errVN[statusCodeError].en);
+export const NotificationError = err => {
+	let errCode = {};
+	if (typeof err === 'string') {
+		if (typeof err === 'string') {
+			errCode = JSON.parse(JSON.parse(err));
+		} else {
+			errCode = JSON.parse(err);
+		}
 	} else {
-		return toast.error(errVN[statusCodeError].vi);
+		errCode = err;
 	}
+	const statusCodeError = errCode?.errorCode;
+	return toast.error(errVN[statusCodeError].vi);
 };
