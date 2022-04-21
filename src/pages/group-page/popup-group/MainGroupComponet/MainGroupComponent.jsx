@@ -8,6 +8,8 @@ import MainPostGroup from './component/MainPostGroup';
 import MemberGroup from './component/MemberGroup';
 import './style.scss';
 import { ActionPlusGroup, LogInCircle } from 'components/svg';
+import SettingsGroup from './AminSettings/SettingsGroup';
+import SettingsQuestions from './AminSettings/SettingsQuestions';
 
 function MainGroupComponent() {
 	const [key, setKey] = useState('intro');
@@ -65,6 +67,8 @@ function MainGroupComponent() {
 					</Tab>
 				</Tabs>
 			</div>
+			<SettingsGroup />
+			<SettingsQuestions />
 		</div>
 	);
 }
