@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import BookThumbnail from 'shared/book-thumbnail';
 import ReactRating from 'shared/react-rating';
 import PropTypes from 'prop-types';

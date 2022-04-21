@@ -37,12 +37,12 @@ function App({ children }) {
 
 	useEffect(() => {
 		const params = {
-			// email: 'register@gmail.com',
-			// password: '12345678',
+			email: 'register@gmail.com',
+			password: '12345678',
 			// email: 'hungngonzai@gmail.com',
 			// password: '123456',
-			email: 'admin@gmail.com',
-			password: '123456',
+			// email: 'admin@gmail.com',
+			// password: '123456',
 		};
 
 		fetchLogin(params);

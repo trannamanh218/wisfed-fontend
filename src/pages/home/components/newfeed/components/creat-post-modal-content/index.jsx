@@ -218,7 +218,7 @@ function CreatPostModalContent({
 
 	const handleAddToPost = data => {
 		const newData = { ...taggedData };
-		setCheckProgress(data.progress);
+		setCheckProgress(Number(data.progress));
 		if (option.value === 'addAuthor' || option.value === 'addFriends' || option.value === 'addCategory') {
 			const listData = [...taggedData[option.value]];
 			const lastItem = listData[listData.length - 1];
@@ -305,65 +305,71 @@ function CreatPostModalContent({
 	const onCreatePost = async () => {
 		const params = await generateData();
 		// book, author , topic is required
-		if ((params.bookId || params.mentionsAuthor.length || params.mentionsCategory.length) && params.msg !== '') {
-			setStatus(STATUS_LOADING);
-			try {
-				if (params.bookId) {
-					if (taggedData.addBook.status === 'read') {
-						const reviewData = {
-							bookId: params.bookId,
-							mediaUrl: [],
-							content: textFieldEdit.current.innerText,
-						};
-						dispatch(createReviewBook(reviewData));
-					}
+		setStatus(STATUS_LOADING);
+		try {
+			if (params.bookId) {
+				if (params.msg) {
+					const reviewData = {
+						bookId: params.bookId,
+						mediaUrl: [],
+						content: textFieldEdit.current.innerText,
+						curProgress: checkProgress,
+					};
+					dispatch(createReviewBook(reviewData));
 				}
-				await dispatch(createActivity(params));
-				setStatus(STATUS_SUCCESS);
-				toast.success('Tạo post thành công!');
-				onChangeNewPost();
-			} catch (err) {
-				const statusCode = err?.statusCode || 500;
-				if (err.errorCode === 702) {
-					NotificationError(err);
-				} else {
-					toast.error('Tạo post thất bại!');
+				if (valueStar > 0) {
+					userRating();
 				}
-				setStatus(statusCode);
-			} finally {
-				dispatch(updateCurrentBook({}));
-				setStatus(STATUS_IDLE);
-				hideCreatPostModal();
-				onChangeOption({});
-				userRating();
+				handleUpdateProgress(params);
 			}
-		} else if (params.msg === '' && validationInput === '') {
-			try {
-				if (params.bookId) {
-					await handleUpdateProgress(params);
-				}
-			} catch (err) {
-				if (params.msg === '' && validationInput === '') {
-					toast.success('Cập nhập trang sách thành công');
-				} else {
-					toast.error('Cập nhập trang sách thất bại');
-				}
-			} finally {
-				hideCreatPostModal();
+			await dispatch(createActivity(params));
+			setStatus(STATUS_SUCCESS);
+			toast.success('Tạo post thành công!');
+			onChangeNewPost();
+		} catch (err) {
+			const statusCode = err?.statusCode || 500;
+			if (err.errorCode === 702) {
+				NotificationError(err);
+			} else {
+				toast.error('Tạo post thất bại!');
 			}
+			setStatus(statusCode);
+		} finally {
+			dispatch(updateCurrentBook({}));
+			setStatus(STATUS_IDLE);
+			hideCreatPostModal();
+			onChangeOption({});
 		}
 	};
 
 	const checkActive = () => {
 		let isActive = false;
-		if (
-			((taggedData.addBook.page != checkProgress && validationInput === '') ||
-				textFieldEdit.current?.innerText) &&
-			(!_.isEmpty(taggedData.addBook) || taggedData.addAuthor.length || taggedData.addCategory.length)
-		) {
-			isActive = true;
+		if (taggedData.addBook.status) {
+			if (taggedData.addBook.status === 'read' && textFieldEdit.current?.innerText) {
+				isActive = true;
+			} else if (taggedData.addBook.status === 'reading') {
+				if (checkProgress == taggedData.addBook.page) {
+					const newTaggedData = { ...taggedData };
+					newTaggedData.addBook.status = 'read';
+					setTaggedData(newTaggedData);
+				}
+				isActive = true;
+			} else {
+				isActive = true;
+			}
+		} else {
+			if (
+				(taggedData.addBook.page !== checkProgress || textFieldEdit.current?.innerText) &&
+				(!_.isEmpty(taggedData.addBook) ||
+					taggedData.addAuthor.length ||
+					taggedData.addCategory.length ||
+					imagesUpload.length) &&
+				!validationInput
+			) {
+				isActive = true;
+			}
 		}
-		return isActive && !validationInput;
+		return isActive;
 	};
 
 	const handleValidationInput = value => {

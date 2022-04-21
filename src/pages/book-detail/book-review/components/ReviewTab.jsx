@@ -26,6 +26,8 @@ const ReviewTab = () => {
 	const dispatch = useDispatch();
 	const { bookId } = useParams();
 
+	// const bookInfo = useSelector(state => state.book.bookInfo);
+
 	useEffect(() => {
 		getReviewList();
 	}, []);

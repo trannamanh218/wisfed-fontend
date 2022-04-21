@@ -1,5 +1,4 @@
 import './bookcase.scss';
-import sampleBookImg from 'assets/images/sample-book-img.jpg';
 import ProgressBar from 'react-bootstrap/ProgressBar';
 import classNames from 'classnames';
 import BookThumbnail from 'shared/book-thumbnail';

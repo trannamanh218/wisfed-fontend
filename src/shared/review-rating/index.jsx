@@ -1,4 +1,3 @@
-import React from 'react';
 import ReactRating from 'shared/react-rating';
 import PropTypes from 'prop-types';
 import RatingLevel from 'shared/rating-level';
