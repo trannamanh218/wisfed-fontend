@@ -3,8 +3,9 @@ import Input from 'shared/input';
 import SelectBox from 'shared/select-box';
 import { BackArrow } from 'components/svg';
 import './group-settings.scss';
+import PropTypes from 'prop-types';
 
-function SettingsGroup() {
+function SettingsGroup({ handleChange }) {
 	// const listTransparent = [
 	// 	{ value: 'public', title: 'Công khai', img: <CheckIcon /> },
 	// 	{ value: 'private', title: 'Riêng tư', img: <CheckIcon /> },
@@ -28,7 +29,7 @@ function SettingsGroup() {
 	return (
 		<div className='group-settings__container'>
 			<div className='group-settings__title'>
-				<button>
+				<button onClick={() => handleChange('tabs')}>
 					<BackArrow />
 				</button>
 				<h2>Cài đặt</h2>
@@ -106,5 +107,9 @@ function SettingsGroup() {
 		</div>
 	);
 }
+
+SettingsGroup.propTypes = {
+	handleChange: PropTypes.func,
+};
 
 export default SettingsGroup;

@@ -1,28 +1,29 @@
 import { CircleActionsAlertQuestion, SettingIcon } from 'components/svg';
 import React from 'react';
 import './group-sibar.scss';
+import PropTypes from 'prop-types';
 
-const SidebarGroupLef = () => {
+const SidebarGroupLef = ({ handleChange }) => {
 	return (
 		<div className='group-sibar-left__container'>
 			<div className='group__manager'>
 				<h3 className='group-sibar-left__title'>Quản lý nhóm</h3>
 				<div className='group-sibar-left__description'>
-					<div className='manage-item'>
+					<div className='manage-item' onClick={() => handleChange('settingsQuestion')}>
 						<span>
 							<CircleActionsAlertQuestion /> Câu hỏi thành viên
 						</span>
 					</div>
 
-					<span className='manage-item'>
+					<span className='manage-item' onClick={() => handleChange('manageJoin')}>
 						<p>99+</p> Yêu cầu làm thành viên
 					</span>
 
-					<span className='manage-item'>
+					<span className='manage-item' onClick={() => handleChange('managePost')}>
 						<p>99+</p> Bài viết đang chờ
 					</span>
 
-					<div className='manage-btn'>
+					<div className='manage-btn' onClick={() => handleChange('settings')}>
 						<SettingIcon /> Cài đặt
 					</div>
 				</div>
@@ -99,6 +100,10 @@ const SidebarGroupLef = () => {
 			</div>
 		</div>
 	);
+};
+
+SidebarGroupLef.propTypes = {
+	handleChange: PropTypes.func,
 };
 
 export default SidebarGroupLef;

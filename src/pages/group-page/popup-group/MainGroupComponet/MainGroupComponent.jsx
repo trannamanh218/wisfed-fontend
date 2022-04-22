@@ -10,9 +10,13 @@ import './style.scss';
 import { ActionPlusGroup, LogInCircle } from 'components/svg';
 import SettingsGroup from './AminSettings/SettingsGroup';
 import SettingsQuestions from './AminSettings/SettingsQuestions';
+import ManageJoin from './AminSettings/ManageJoin';
+import PropTypes from 'prop-types';
+import PostWatting from './AminSettings/PostWatting';
 
-function MainGroupComponent() {
+function MainGroupComponent({ handleChange, keyChange }) {
 	const [key, setKey] = useState('intro');
+
 	return (
 		<div className='group-main-component__container'>
 			<div className='group__background'>
@@ -54,23 +58,32 @@ function MainGroupComponent() {
 					</div>
 				</div>
 			</div>
-			<div className='group-tabs'>
-				<Tabs id='controlled-tab' activeKey={key} onSelect={k => setKey(k)} className='mb-3'>
-					<Tab eventKey='intro' title='Giới thiệu'>
-						<IntroGroup />
-					</Tab>
-					<Tab eventKey='post' title='Bài viết'>
-						<MainPostGroup />
-					</Tab>
-					<Tab eventKey='member' title='Thành viên'>
-						<MemberGroup />
-					</Tab>
-				</Tabs>
-			</div>
-			<SettingsGroup />
-			<SettingsQuestions />
+			{keyChange === 'tabs' && (
+				<div className='group-tabs'>
+					<Tabs id='controlled-tab' activeKey={key} onSelect={k => setKey(k)} className='mb-3'>
+						<Tab eventKey='intro' title='Giới thiệu'>
+							<IntroGroup />
+						</Tab>
+						<Tab eventKey='post' title='Bài viết'>
+							<MainPostGroup />
+						</Tab>
+						<Tab eventKey='member' title='Thành viên'>
+							<MemberGroup />
+						</Tab>
+					</Tabs>
+				</div>
+			)}
+			{keyChange === 'settings' && <SettingsGroup handleChange={handleChange} />}
+			{keyChange === 'settingsQuestion' && <SettingsQuestions handleChange={handleChange} />}
+			{keyChange === 'manageJoin' && <ManageJoin handleChange={handleChange} />}
+			{keyChange === 'managePost' && <PostWatting handleChange={handleChange} />}
 		</div>
 	);
 }
+
+MainGroupComponent.propTypes = {
+	handleChange: PropTypes.func,
+	keyChange: PropTypes.string,
+};
 
 export default MainGroupComponent;
