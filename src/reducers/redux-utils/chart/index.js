@@ -1,11 +1,17 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { listAPIChart, listBooksReadYear, getReadingTargetAPI, updateTargetReadAPI } from 'constants/apiURL';
+import {
+	listBooksReadYear,
+	getReadingTargetAPI,
+	updateTargetReadAPI,
+	getAPIchartsByid,
+	getReadingTargetIdAPI,
+} from 'constants/apiURL';
 import Request from 'helpers/Request';
 
-export const getListChart = createAsyncThunk('chart/apiChart', async (params, { rejectWithValue }) => {
-	const { count, by } = params;
+export const getChartsByid = createAsyncThunk('targetReading/getListChartsId', async (params, { rejectWithValue }) => {
+	const { userId, by, count } = params;
 	try {
-		const response = await Request.makeGet(listAPIChart(count, by));
+		const response = await Request.makeGet(getAPIchartsByid(userId, count, by));
 		return response.data;
 	} catch (err) {
 		const error = JSON.stringify(err.response);
@@ -16,9 +22,9 @@ export const getListChart = createAsyncThunk('chart/apiChart', async (params, { 
 export const getListBooksReadYear = createAsyncThunk(
 	'chart/getListBooksReadYear',
 	async (params, { rejectWithValue }) => {
-		const { type } = params;
+		const { type, userId } = params;
 		try {
-			const response = await Request.makeGet(listBooksReadYear(type));
+			const response = await Request.makeGet(listBooksReadYear(type, userId));
 			return response.data;
 		} catch (err) {
 			const error = JSON.stringify(err.response);
@@ -30,8 +36,9 @@ export const getListBooksReadYear = createAsyncThunk(
 export const getListBooksTargetReading = createAsyncThunk(
 	'targetReading/getListBooksTargetRead',
 	async (params, { rejectWithValue }) => {
+		const { userId, ...query } = params;
 		try {
-			const response = await Request.makeGet(getReadingTargetAPI, params);
+			const response = await Request.makeGet(getReadingTargetIdAPI(userId), query);
 			return response.data.rows;
 		} catch (err) {
 			const error = JSON.stringify(err.response);

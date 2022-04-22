@@ -4,9 +4,10 @@ import { Bar, BarChart, Legend, Tooltip, XAxis, YAxis } from 'recharts';
 import SelectBox from 'shared/select-box';
 import caretChart from 'assets/images/caret-chart.png';
 import './book-tab.scss';
-import { getListChart } from 'reducers/redux-utils/chart';
+import { getChartsByid } from 'reducers/redux-utils/chart';
 import { useDispatch } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
+import { useParams } from 'react-router-dom';
 
 const BookTab = () => {
 	const [currentOption, setCurrentOption] = useState({ value: 'month', title: 'Tháng' });
@@ -16,23 +17,25 @@ const BookTab = () => {
 		{ value: 'month', title: 'Tháng' },
 		{ value: 'year', title: 'Năm' },
 	];
-
+	const { userId } = useParams();
 	const fetchData = async () => {
 		try {
 			if (currentOption.value === 'month') {
 				const params = {
 					count: 'book',
 					by: 'month',
+					userId: userId,
 				};
-				const data = await dispatch(getListChart(params)).unwrap();
+				const data = await dispatch(getChartsByid(params)).unwrap();
 				setChartsData(data);
 			} else {
 				const params = {
 					count: 'book',
 					by: 'year',
+					userId: userId,
 				};
 
-				const data = await dispatch(getListChart(params)).unwrap();
+				const data = await dispatch(getChartsByid(params)).unwrap();
 				const newData = data.map(item => {
 					if (item.count?.length > 0) {
 						return { ...item, count: JSON.parse(item.count) };
@@ -140,7 +143,7 @@ function CustomizedAxisYTick(props) {
 	return (
 		<g transform={`translate(${x},${y})`}>
 			<text x={-8} y={0} textAnchor='end' fill='#2d2c42'>
-				{payload.value}
+				{payload.value.toFixed()}
 			</text>
 		</g>
 	);

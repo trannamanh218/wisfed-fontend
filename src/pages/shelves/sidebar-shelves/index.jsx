@@ -10,10 +10,19 @@ import './sidebar-shelves.scss';
 import { useSelector } from 'react-redux';
 import { useFetchQuotes } from 'api/quote.hooks';
 import { useFetchStatsReadingBooks } from 'api/library.hook';
-
+import ChartsReading from 'shared/charts-Reading';
+import { useFetchAuthorBooks } from 'api/book.hooks';
+import { useParams } from 'react-router-dom';
+import ProgressBarCircle from 'shared/progress-circle';
+import { useFetchUserParams } from 'api/user.hook';
+import { useFetchTargetReading } from 'api/readingTarget.hooks';
 const SidebarShelves = ({ isUpdate }) => {
+	const { userId } = useParams();
+	const { userData } = useFetchUserParams(userId);
+	const { booksAuthor } = useFetchAuthorBooks(userData.firstName, userData.lastName);
 	const { userInfo } = useSelector(state => state.auth);
 	const { libraryData } = useSelector(state => state.library);
+	const { booksReadYear } = useFetchTargetReading(userId);
 	const libraryList = libraryData?.rows?.map(item => ({ ...item, quantity: item.books.length }));
 	const { quoteData } = useFetchQuotes(
 		1,
@@ -22,8 +31,6 @@ const SidebarShelves = ({ isUpdate }) => {
 	);
 
 	const { readingData } = useFetchStatsReadingBooks(isUpdate);
-	const myComposing = new Array(10).fill({ source: '/images/book1.jpg', name: 'Design pattern' });
-
 	return (
 		<div className='sidebar-shelves'>
 			<StatisticList
@@ -33,15 +40,26 @@ const SidebarShelves = ({ isUpdate }) => {
 				isBackground={true}
 				list={readingData}
 			/>
-			<MyShelvesList list={libraryList} />
-			<QuotesLinks list={quoteData} title='Quotes' />
-			<div className='my-compose'>
-				<BookSlider title='Sách tôi là tác giả' list={myComposing} />
-				<Link className='view-all-link' to='/'>
-					Xem thêm
-				</Link>
-			</div>
-			<ReadChallenge />
+			<MyShelvesList list={libraryList} userId={userId} />
+			<QuotesLinks
+				list={quoteData}
+				title={userId === userInfo.id ? 'Quotes của tôi' : `Quotes của ${userData.fullName}`}
+			/>
+			{booksAuthor.length > 0 && (
+				<div className='my-compose'>
+					<BookSlider
+						className='book-reference__slider'
+						title={`Sách của ${userData.fullName}`}
+						list={booksAuthor}
+					/>
+					<Link className='view-all-link' to='/'>
+						Xem thêm
+					</Link>
+				</div>
+			)}
+
+			{booksReadYear.length > 0 ? <ProgressBarCircle /> : <ReadChallenge />}
+			<ChartsReading />
 		</div>
 	);
 };

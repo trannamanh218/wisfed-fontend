@@ -6,11 +6,14 @@ import MyShelvesList from 'shared/my-shelves-list';
 import { useFetchQuotes } from 'api/quote.hooks';
 import QuotesLinks from 'shared/quote-links';
 import './sidebar-reading-target.scss';
+import { useParams } from 'react-router-dom';
+import { useFetchUserParams } from 'api/user.hook';
 
 const SidebarReadingTarget = () => {
 	const { userInfo } = useSelector(state => state.auth);
-
+	const { userId } = useParams();
 	const { readingData } = useFetchStatsReadingBooks();
+	const { userData } = useFetchUserParams(userId);
 	const { libraryData } = useSelector(state => state.library);
 	const libraryList = libraryData?.rows?.map(item => ({ ...item, quantity: item.books.length }));
 	const { quoteData } = useFetchQuotes(
@@ -28,7 +31,10 @@ const SidebarReadingTarget = () => {
 				list={readingData}
 			/>
 			<MyShelvesList list={libraryList} />
-			<QuotesLinks list={quoteData} title='Quotes' />
+			<QuotesLinks
+				list={quoteData}
+				title={userId === userInfo.id ? 'Quotes của tôi' : `Quotes của ${userData.fullName}`}
+			/>
 		</div>
 	);
 };

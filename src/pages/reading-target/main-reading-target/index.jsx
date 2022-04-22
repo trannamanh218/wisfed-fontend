@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import SearchField from 'shared/search-field';
 import UserAvatar from 'shared/user-avatar';
 import LinearProgressBar from 'shared/linear-progress-bar';
@@ -7,32 +7,22 @@ import _ from 'lodash';
 import moment from 'moment';
 import './main-reading-target.scss';
 import BookThumbnail from 'shared/book-thumbnail';
-import { getListBooksTargetReading } from 'reducers/redux-utils/chart';
-import { useDispatch } from 'react-redux';
-import { NotificationError } from 'helpers/Error';
 import ModalReadTarget from '../modal-reading-target';
 import { useModal } from 'shared/hooks';
+import { useParams } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { useFetchUserParams } from 'api/user.hook';
+import { useFetchTargetReading } from 'api/readingTarget.hooks';
 
 const MainReadingTarget = () => {
-	const dispatch = useDispatch();
-	const [booksReadYear, setBooksReadYear] = useState([]);
+	const { userId } = useParams();
+	const { userInfo } = useSelector(state => state.auth);
+	const { usersData } = useFetchUserParams(userId);
 	const { modalOpen, setModalOpen, toggleModal } = useModal(false);
 	const [deleteModal, setDeleteModal] = useState(false);
-	const fetchData = async () => {
-		try {
-			const data = await dispatch(getListBooksTargetReading()).unwrap();
-			const dob = new Date();
-			const year = dob.getFullYear();
-			const newData = data.filter(item => item.year === year);
-			setBooksReadYear(newData);
-		} catch (err) {
-			NotificationError(err);
-		}
-	};
-
-	useEffect(() => {
-		fetchData();
-	}, [modalOpen, deleteModal]);
+	const [filter, setFilter] = useState('[]');
+	const [inputSearch, setInputSearch] = useState('');
+	const { booksReadYear } = useFetchTargetReading(userId, modalOpen, deleteModal, filter);
 
 	const renderLinearProgressBar = item => {
 		let percent = 0;
@@ -53,29 +43,57 @@ const MainReadingTarget = () => {
 		setModalOpen(true);
 	};
 
-	return booksReadYear.map(item => (
-		<div key={item.id} className='reading-target'>
-			<div className='reading-target__header'>
-				<h4>Mục tiêu đọc sách năm {item.year}</h4>
-				<SearchField placeholder='Tìm kiếm sách' />
-			</div>
-			<div className='reading-target__process'>
-				<UserAvatar className='reading-target__user' size='lg' />
-				<div className='reading-target__content'>
-					<div className='reading-target__content__top'>
-						<p>
-							Bạn đã đọc được {item.booksReadCount} trên {item.numberBook} cuốn
-						</p>
+	const updateInputSearch = value => {
+		if (value) {
+			const filterValue = [];
+			filterValue.push({ 'operator': 'search', 'value': value.trim(), 'property': 'name' });
+			setFilter(JSON.stringify(filterValue));
+		} else {
+			setFilter('[]');
+		}
+	};
+
+	const debounceSearch = useCallback(_.debounce(updateInputSearch, 1000), []);
+
+	const handleSearch = e => {
+		setInputSearch(e.target.value);
+		debounceSearch(e.target.value);
+	};
+
+	const renderContentTop = item => {
+		const name = userInfo.id === userId ? 'Bạn' : usersData?.fullName;
+		return (
+			<div className='reading-target__content__top'>
+				<p>
+					{name} đã đọc được {item.booksReadCount} trên {item.numberBook} cuốn
+				</p>
+				{userInfo.id === userId && (
+					<>
 						<button onClick={handleEditTarget} className='btn-edit'>
 							Sửa mục tiêu
 						</button>
 						<button onClick={handleDeleteTarget} className='btn-cancel'>
 							Bỏ mục tiêu
 						</button>
-					</div>
+					</>
+				)}
+			</div>
+		);
+	};
+
+	return booksReadYear.map(item => (
+		<div key={item.id} className='reading-target'>
+			<div className='reading-target__header'>
+				<h4>Mục tiêu đọc sách năm {item.year}</h4>
+				<SearchField placeholder='Tìm kiếm sách' handleChange={handleSearch} value={inputSearch} />
+			</div>
+			<div className='reading-target__process'>
+				<UserAvatar className='reading-target__user' size='lg' />
+				<div className='reading-target__content'>
+					{renderContentTop(item)}
 					<div className='reading-target__content__bottom'>
 						{renderLinearProgressBar(item)}
-						<button className='btn btn-share btn-primary-light'>Chia sẻ</button>
+						{userInfo.id === userId && <button className='btn btn-share btn-primary-light'>Chia sẻ</button>}
 					</div>
 				</div>
 			</div>
@@ -119,7 +137,7 @@ const MainReadingTarget = () => {
 							))
 						) : (
 							<tr className='empty-data'>
-								<td colSpan={6}>Không có dữ liếu</td>
+								<td colSpan={6}>Không có dữ liệu</td>
 							</tr>
 						)}
 						<tr className='highlight'>

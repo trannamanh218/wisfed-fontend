@@ -49,11 +49,10 @@ function ReadChallenge({ modalOpen, setModalOpen }) {
 					year: year,
 					numberBook: inputValue,
 				};
-				return await dispatch(createTargetRead(params)).unwrap();
+				await dispatch(createTargetRead(params)).unwrap();
+				return toast.success('Tạo mục tiêu thành công');
 			} catch (err) {
 				NotificationError(err);
-			} finally {
-				toast.success('Tạo mục tiêu thành công');
 			}
 		}
 	};

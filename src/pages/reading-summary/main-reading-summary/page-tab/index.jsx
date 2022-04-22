@@ -4,12 +4,14 @@ import { Bar, BarChart, Legend, Tooltip, XAxis, YAxis } from 'recharts';
 import SelectBox from 'shared/select-box';
 import caretChart from 'assets/images/caret-chart.png';
 import './page-tab.scss';
-import { getListChart } from 'reducers/redux-utils/chart';
+import { getChartsByid } from 'reducers/redux-utils/chart';
 import { useDispatch } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
+import { useParams } from 'react-router-dom';
 
 const PageTab = () => {
 	const [currentOption, setCurrentOption] = useState({ value: 'month', title: 'Tháng' });
+	const { userId } = useParams();
 	const [chartsData, setChartsData] = useState([]);
 	const dispatch = useDispatch();
 	const options = [
@@ -23,16 +25,18 @@ const PageTab = () => {
 				const params = {
 					count: 'page',
 					by: 'month',
+					userId: userId,
 				};
-				const data = await dispatch(getListChart(params)).unwrap();
+				const data = await dispatch(getChartsByid(params)).unwrap();
 				setChartsData(data);
 			} else {
 				const params = {
 					count: 'page',
 					by: 'year',
+					userId: userId,
 				};
 
-				const data = await dispatch(getListChart(params)).unwrap();
+				const data = await dispatch(getChartsByid(params)).unwrap();
 				setChartsData(data);
 			}
 		} catch (err) {

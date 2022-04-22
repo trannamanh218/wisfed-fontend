@@ -13,26 +13,20 @@ import { useSelector, useDispatch } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
 import _ from 'lodash';
 import { useParams } from 'react-router-dom';
-
-import { updateUserInfoRedux } from 'reducers/redux-utils/auth';
+// import { updateUserInfoRedux } from 'reducers/redux-utils/auth';
 
 const MainProfile = () => {
 	const { userId } = useParams();
-
 	const [userInfo, setUserInfo] = useState({});
-
 	const dispatch = useDispatch();
-	const updateUserProfile = useSelector(state => state.user.updateUserProfile);
-
 	useEffect(() => {
 		getUserDetailData();
-	}, [updateUserProfile, userId]);
+	}, [userId]);
 
 	const getUserDetailData = async () => {
 		try {
 			const userData = await dispatch(getUserDetail(userId)).unwrap();
 			setUserInfo(userData);
-			dispatch(updateUserInfoRedux(userData));
 		} catch (err) {
 			NotificationError(err);
 		}

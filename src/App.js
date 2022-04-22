@@ -96,8 +96,8 @@ function App({ children }) {
 				<Route path='/choose-topic' element={<ChooseTopic />} />
 				<Route path='/direct' element={<Direct />} />
 				<Route path='/404' element={<NotFound />} />
-				<Route path='/reading-summary' element={<ReadingSummary />} />
-				<Route path='/reading-target' element={<ReadingTarget />} />
+				<Route path='/reading-summary/:userId' element={<ReadingSummary />} />
+				<Route path='/reading-target/:userId' element={<ReadingTarget />} />
 				<Route path='/group' element={<Group />} />
 				<Route path='/' element={<Home />} />
 				{children}
