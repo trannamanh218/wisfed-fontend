@@ -34,7 +34,6 @@ import Group from 'pages/group-page';
 
 function App({ children }) {
 	const dispatch = useDispatch();
-
 	useEffect(() => {
 		const params = {
 			// email: 'register@gmail.com',
@@ -95,11 +94,11 @@ function App({ children }) {
 				<Route path='/creat-newpassword-admin' element={<AdminCreatNewPassword />} />
 				<Route path='/choose-topic' element={<ChooseTopic />} />
 				<Route path='/direct' element={<Direct />} />
-				<Route path='/404' element={<NotFound />} />
 				<Route path='/reading-summary/:userId' element={<ReadingSummary />} />
 				<Route path='/reading-target/:userId' element={<ReadingTarget />} />
 				<Route path='/group' element={<Group />} />
 				<Route path='/' element={<Home />} />
+				<Route path='*' element={<NotFound />} />
 				{children}
 			</Routes>
 		</div>
