@@ -14,19 +14,19 @@ import { useParams } from 'react-router-dom';
 import { getUserDetail } from 'reducers/redux-utils/user';
 
 const MainQuote = () => {
+	const filterOptions = [
+		{ id: 1, title: 'Của tôi', value: 'me' },
+		{ id: 2, title: 'Yêu thích', value: 'me-like' },
+	];
+
 	const [quoteList, setQuoteList] = useState([]);
 	const [hasMore, setHasMore] = useState(true);
-	const [defaultOption, setDefaultOption] = useState({ id: 1, title: 'Tất cả', value: 'all' });
+	const [currentOption, setCurrentOption] = useState(filterOptions[0]);
 	const [likedArray, setLikedArray] = useState([]);
 	const [sortValue, setSortValue] = useState('like');
 	const [sortDirection, setSortDirection] = useState('DESC');
 	const [quotesUserName, setQuotesUserName] = useState('');
 	const [isMyQuotes, setIsMyQuotes] = useState();
-
-	const filterOptions = [
-		{ id: 1, title: 'Của tôi', value: 'me' },
-		{ id: 2, title: 'Yêu thích', value: 'me-like' },
-	];
 
 	const callApiStart = useRef(10);
 	const callApiPerPage = useRef(10);
@@ -105,10 +105,8 @@ const MainQuote = () => {
 		}
 	};
 
-	const handleChangeOption = (e, data) => {
-		if (data.value !== defaultOption.value) {
-			setDefaultOption(data);
-		}
+	const handleChangeOption = item => {
+		setCurrentOption(item);
 	};
 
 	const sortQuotes = params => {
@@ -139,7 +137,7 @@ const MainQuote = () => {
 					<FilterQuotePane
 						filterOptions={filterOptions}
 						handleChangeOption={handleChangeOption}
-						defaultOption={defaultOption}
+						currentOption={currentOption}
 						handleChange={sortQuotes}
 						isMyQuotes={isMyQuotes}
 					>

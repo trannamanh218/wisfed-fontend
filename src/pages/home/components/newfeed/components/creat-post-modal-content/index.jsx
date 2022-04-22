@@ -313,7 +313,7 @@ function CreatPostModalContent({
 						bookId: params.bookId,
 						mediaUrl: [],
 						content: textFieldEdit.current.innerText,
-						curProgress: checkProgress,
+						curProgress: taggedData.addBook.status === 'read' ? taggedData.addBook.page : checkProgress,
 					};
 					dispatch(createReviewBook(reviewData));
 				}
@@ -345,8 +345,10 @@ function CreatPostModalContent({
 	const checkActive = () => {
 		let isActive = false;
 		if (taggedData.addBook.status) {
-			if (taggedData.addBook.status === 'read' && textFieldEdit.current?.innerText) {
-				isActive = true;
+			if (taggedData.addBook.status === 'read') {
+				if (textFieldEdit?.current?.innerText) {
+					isActive = true;
+				}
 			} else if (taggedData.addBook.status === 'reading') {
 				if (checkProgress == taggedData.addBook.page) {
 					const newTaggedData = { ...taggedData };

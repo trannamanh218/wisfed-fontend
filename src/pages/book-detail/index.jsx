@@ -2,7 +2,6 @@ import { useFetchBookDetail } from 'api/book.hooks';
 import MainContainer from 'components/layout/main-container';
 import NormalContainer from 'components/layout/normal-container';
 import _ from 'lodash';
-import React from 'react';
 import { useParams } from 'react-router-dom';
 import BookInfo from './book-info';
 import BookReference from './book-reference';

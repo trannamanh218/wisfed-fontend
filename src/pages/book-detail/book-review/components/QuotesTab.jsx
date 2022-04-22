@@ -16,7 +16,7 @@ const QuotesTab = () => {
 		{ id: 3, title: 'Người theo dõi', value: 'followers' },
 	];
 
-	const [defaultOption, setDefaultOption] = useState({ id: 1, title: 'Tất cả', value: 'all' });
+	const [currentOption, setCurrentOption] = useState(filterOptions[0]);
 
 	const [quoteList, setQuoteList] = useState([]);
 	const [hasMore, setHasMore] = useState(true);
@@ -28,10 +28,8 @@ const QuotesTab = () => {
 	const dispatch = useDispatch();
 	const { bookId } = useParams();
 
-	const handleChangeOption = data => {
-		if (data.value !== defaultOption.value) {
-			setDefaultOption(data);
-		}
+	const handleChangeOption = item => {
+		setCurrentOption(item);
 	};
 
 	useEffect(() => {
@@ -74,7 +72,7 @@ const QuotesTab = () => {
 				<FilterPane title='Quotes'>
 					<FitlerOptions
 						list={filterOptions}
-						defaultOption={defaultOption}
+						currentOption={currentOption}
 						handleChangeOption={handleChangeOption}
 						name='filter-user'
 						className='quotes-tab__filter__options'
