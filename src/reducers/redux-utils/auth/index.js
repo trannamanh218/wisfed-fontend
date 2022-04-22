@@ -7,6 +7,7 @@ import {
 	checkTokenResetPassword,
 	forgotPasswordAPIAdmin,
 	resetPasswordAPIAdmin,
+	userDetailAPI,
 } from 'constants/apiURL';
 import Request from 'helpers/Request';
 import Storage from 'helpers/Storage';
@@ -90,6 +91,17 @@ export const resetPasswordAdmin = createAsyncThunk('auth/resetPasswordAdmin', as
 		return response;
 	} catch (err) {
 		return rejectWithValue(err.response);
+	}
+});
+
+export const editUserInfo = createAsyncThunk('user/edit user info', async (data, { rejectWithValue }) => {
+	try {
+		const { userId, params } = data;
+		const response = await Request.makePatch(userDetailAPI(userId), params);
+		return response.data;
+	} catch (err) {
+		const error = JSON.parse(err.response);
+		return rejectWithValue(error);
 	}
 });
 
@@ -180,6 +192,21 @@ const authSlice = createSlice({
 			state.error = {};
 		},
 		[getUserInfo.rejected]: (state, action) => {
+			state.isFetching = false;
+			state.userInfo = {};
+			state.error = action.payload;
+		},
+		[editUserInfo.rejected]: (state, action) => {
+			state.isFetching = false;
+			state.userInfo = {};
+			state.error = action.payload;
+		},
+		[editUserInfo.fulfilled]: (state, action) => {
+			state.isFetching = false;
+			state.userInfo = action.payload;
+			state.error = {};
+		},
+		[editUserInfo.rejected]: (state, action) => {
 			state.isFetching = false;
 			state.userInfo = {};
 			state.error = action.payload;
