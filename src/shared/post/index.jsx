@@ -25,7 +25,7 @@ function Post({ postInformations, className }) {
 	const [videoId, setVideoId] = useState('');
 	const { userInfo } = useSelector(state => state.auth);
 	const [commentLv1IdArray, setCommentLv1IdArray] = useState([]);
-	const [replyingCommentId, setReplyingCommentId] = useState(0);
+	const [replyingCommentId, setReplyingCommentId] = useState(null);
 	const [clickReply, setClickReply] = useState(false);
 
 	const dispatch = useDispatch();

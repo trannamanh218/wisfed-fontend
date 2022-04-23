@@ -350,12 +350,15 @@ function CreatPostModalContent({
 					isActive = true;
 				}
 			} else if (taggedData.addBook.status === 'reading') {
-				if (checkProgress == taggedData.addBook.page) {
+				if (checkProgress === taggedData.addBook.page) {
 					const newTaggedData = { ...taggedData };
 					newTaggedData.addBook.status = 'read';
 					setTaggedData(newTaggedData);
+				} else {
+					if (!validationInput) {
+						isActive = true;
+					}
 				}
-				isActive = true;
 			} else {
 				isActive = true;
 			}
