@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import CreatPostModalContent from 'pages/home/components/newfeed/components/creat-post-modal-content';
 
 function ReadingBook({ bookData }) {
-	const [renderBookReading, setRenderBooksReading] = useState({});
+	const [renderBookReading, setRenderBookReading] = useState({});
 	const [toggleModal, setToggleModal] = useState(false);
 	const [booksId, setBooksId] = useState('');
 	const [percent, setPercent] = useState(null);
@@ -14,7 +14,7 @@ function ReadingBook({ bookData }) {
 	useEffect(() => {
 		if (bookData?.books?.length > 0) {
 			const newItem = bookData?.books[bookData?.books.length - 1];
-			setRenderBooksReading(newItem.book);
+			setRenderBookReading(newItem.book);
 			if (newItem.book.progress) {
 				const progessNumber = (newItem.book.progress / newItem.book.page) * 100;
 				setPercent(progessNumber.toFixed());

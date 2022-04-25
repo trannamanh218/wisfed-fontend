@@ -213,12 +213,12 @@ const InforTab = ({ userInfo }) => {
 						<div className='form-field-group'>
 							<label className='form-field-label'>Sở thích</label>
 							<div className='form-field'>
-								{userInfo.hobby ? (
+								{userInfo.interest ? (
 									<Input
 										type='text'
 										isBorder={false}
 										disabled
-										value={userInfo.hobby}
+										value={userInfo.interest}
 										readOnly={true}
 									/>
 								) : (

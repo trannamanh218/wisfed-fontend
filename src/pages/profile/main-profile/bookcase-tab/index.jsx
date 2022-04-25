@@ -15,8 +15,8 @@ function Bookcase() {
 	useEffect(() => {
 		const filterReadbooks = statusLibraries.filter(item => item.defaultType === 'read');
 		const filterReadingbooks = statusLibraries.filter(item => item.defaultType === 'reading');
-		setReadBooks(filterReadbooks[0]?.books.slice(0, 3));
-		setReadingBooks(filterReadingbooks[0]?.books.slice(0, 3));
+		setReadBooks(filterReadbooks[0]?.books);
+		setReadingBooks(filterReadingbooks[0]?.books);
 	}, [statusLibraries]);
 
 	const progressBarPercenNumber = item => {
@@ -25,13 +25,13 @@ function Bookcase() {
 			<div className='bookcase__item__book-progress'>
 				<ProgressBar
 					className={classNames('bookcase__item__book-progress-bar', {
-						'fullBar': item.book.bookProgress[0]?.progress === item.book.page,
+						'fullBar': progress == 100,
 					})}
 					now={progress}
 				/>
 				<div
 					className={classNames('bookcase__item__book-percent', {
-						'fullBar': item.book.bookProgress[0]?.progress === item.book.page,
+						'fullBar': progress == 100,
 					})}
 				>
 					{progress}%
