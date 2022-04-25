@@ -1,4 +1,3 @@
-import React from 'react';
 import Slider from 'react-slick';
 import PropTypes from 'prop-types';
 import BookThumbnail from 'shared/book-thumbnail';

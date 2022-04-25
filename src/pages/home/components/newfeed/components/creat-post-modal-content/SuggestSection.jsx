@@ -1,4 +1,3 @@
-import React from 'react';
 import PropTypes from 'prop-types';
 import noSearchResult from 'assets/images/no-search-result.png';
 import BookSlider from 'shared/book-slider';

@@ -3,9 +3,9 @@ import FilterPane from 'shared/filter-pane';
 import SearchField from 'shared/search-field';
 import Post from 'shared/post';
 import FitlerOptions from 'shared/filter-options';
-import { getReviewsBook } from 'reducers/redux-utils/book';
+import { getReviewsBook, getReviewsBookByFollowers, getReviewsBookByFriends } from 'reducers/redux-utils/book';
 import { useParams } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
 import InfiniteScroll from 'react-infinite-scroll-component';
 
@@ -16,19 +16,54 @@ const ReviewTab = () => {
 		{ id: 3, title: 'Người theo dõi', value: 'followReviews' },
 	];
 
-	const [defaultOption, setDefaultOption] = useState({ id: 1, title: 'Tất cả', value: 'reviews' });
+	const [currentOption, setCurrentOption] = useState(filterOptions[0]);
 	const [reviewList, setReviewList] = useState([]);
+	const [reviewCount, setReviewCount] = useState(0);
 	const [hasMore, setHasMore] = useState(true);
 
-	const callApiStart = useRef(0);
+	const callApiStart = useRef(10);
 	const callApiPerPage = useRef(10);
 
 	const dispatch = useDispatch();
 	const { bookId } = useParams();
 
+	const bookInfo = useSelector(state => state.book.bookInfo);
+
 	useEffect(() => {
-		getReviewList();
-	}, []);
+		setHasMore(true);
+		callApiStart.current = 10;
+		getReviewListFirstTime();
+	}, [currentOption]);
+
+	const getReviewListFirstTime = async () => {
+		try {
+			const params = {
+				start: 0,
+				limit: callApiPerPage.current,
+				sort: JSON.stringify([{ direction: 'DESC', property: 'createdAt' }]),
+				filter: JSON.stringify([
+					{ operator: 'eq', value: bookId, property: 'bookId' },
+					{ operator: 'eq', value: bookInfo.page, property: 'curProgress' },
+				]),
+			};
+
+			let response;
+			if (currentOption.value === 'reviews') {
+				response = await dispatch(getReviewsBook(params)).unwrap();
+			} else if (currentOption.value === 'friendReviews') {
+				response = await dispatch(getReviewsBookByFriends({ bookId, params })).unwrap();
+			} else {
+				response = await dispatch(getReviewsBookByFollowers({ bookId, params })).unwrap();
+			}
+			setReviewList(response.rows);
+			setReviewCount(response.count);
+			if (!response.rows.length) {
+				setHasMore(false);
+			}
+		} catch (err) {
+			NotificationError(err);
+		}
+	};
 
 	const getReviewList = async () => {
 		try {
@@ -36,10 +71,21 @@ const ReviewTab = () => {
 				start: callApiStart.current,
 				limit: callApiPerPage.current,
 				sort: JSON.stringify([{ direction: 'DESC', property: 'createdAt' }]),
-				filter: JSON.stringify([{ operator: 'eq', value: bookId, property: 'bookId' }]),
+				filter: JSON.stringify([
+					{ operator: 'eq', value: bookId, property: 'bookId' },
+					{ operator: 'eq', value: bookInfo.page, property: 'curProgress' },
+				]),
 			};
 
-			const response = await dispatch(getReviewsBook(params)).unwrap();
+			let response;
+			if (currentOption.value === 'reviews') {
+				response = await dispatch(getReviewsBook(params)).unwrap();
+			} else if (currentOption.value === 'friendReviews') {
+				response = await dispatch(getReviewsBookByFriends({ bookId, params })).unwrap();
+			} else {
+				response = await dispatch(getReviewsBookByFollowers({ bookId, params })).unwrap();
+			}
+
 			if (response.rows.length > 0) {
 				callApiStart.current += callApiPerPage.current;
 				setReviewList(reviewList.concat(response.rows));
@@ -51,26 +97,25 @@ const ReviewTab = () => {
 		}
 	};
 
-	const handleChangeOption = data => {
-		if (data.value !== defaultOption.value) {
-			setDefaultOption(data);
-		}
+	const handleChangeOption = item => {
+		callApiStart.current = 0;
+		setCurrentOption(item);
 	};
 
 	return (
 		<div className='review-tab'>
-			{reviewList.length ? (
-				<FilterPane title='Bài review' subtitle='(4000 đánh giá)' key='Bài-review'>
-					<FitlerOptions
-						list={filterOptions}
-						defaultOption={defaultOption}
-						handleChangeOption={handleChangeOption}
-						name='filter-user'
-						className='review-tab__filter__options'
-					/>
-					<div className='review-tab__search'>
-						<SearchField placeholder='Tìm kiếm theo Hastag, tên người review ...' />
-					</div>
+			<FilterPane title='Bài review' subtitle={`(${reviewCount} đánh giá)`} key='Bài-review'>
+				<FitlerOptions
+					list={filterOptions}
+					currentOption={currentOption}
+					handleChangeOption={handleChangeOption}
+					name='filter-user'
+					className='review-tab__filter__options'
+				/>
+				<div className='review-tab__search'>
+					<SearchField placeholder='Tìm kiếm theo Hastag, tên người review ...' />
+				</div>
+				{reviewList.length ? (
 					<InfiniteScroll
 						dataLength={reviewList.length}
 						next={getReviewList}
@@ -85,10 +130,10 @@ const ReviewTab = () => {
 							</Fragment>
 						))}
 					</InfiniteScroll>
-				</FilterPane>
-			) : (
-				<h5>Chưa có bài Review nào</h5>
-			)}
+				) : (
+					<h5>Chưa có bài Review nào</h5>
+				)}
+			</FilterPane>
 		</div>
 	);
 };

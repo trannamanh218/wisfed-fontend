@@ -7,7 +7,7 @@ import './filter-quote-pane.scss';
 import CreatQuotesModal from 'shared/creat-quotes-modal';
 import FormCheckGroup from 'shared/form-check-group';
 
-const FilterQuotePane = ({ filterOptions, defaultOption, handleChangeOption, children, handleChange, isMyQuotes }) => {
+const FilterQuotePane = ({ filterOptions, currentOption, handleChangeOption, children, handleChange, isMyQuotes }) => {
 	const [showCreatQuotesModal, setShowCreatQuotesModal] = useState(false);
 
 	const creatQuotesModalContainer = useRef(null);
@@ -85,7 +85,7 @@ const FilterQuotePane = ({ filterOptions, defaultOption, handleChangeOption, chi
 					{isMyQuotes && (
 						<FitlerOptions
 							list={filterOptions}
-							defaultOption={defaultOption}
+							currentOption={currentOption}
 							handleChangeOption={handleChangeOption}
 							name='filter-user'
 							className='filter-quote-pane__options'
@@ -145,7 +145,7 @@ const FilterQuotePane = ({ filterOptions, defaultOption, handleChangeOption, chi
 
 FilterQuotePane.propTypes = {
 	filterOptions: PropTypes.array,
-	defaultOption: PropTypes.object,
+	currentOption: PropTypes.object,
 	handleChangeOption: PropTypes.func,
 	children: PropTypes.any,
 	handleChange: PropTypes.func,

@@ -1,4 +1,3 @@
-import React from 'react';
 import PropTypes from 'prop-types';
 import { Form } from 'react-bootstrap';
 import './radio-input.scss';
@@ -14,7 +13,7 @@ const RadioInput = ({ handleChange, ...rest }) => {
 				isValid
 				name={name}
 				value={value}
-				onChange={e => handleChange(e, data)}
+				onChange={() => handleChange(data)}
 				checked={checked}
 			/>
 			<Form.Check.Label className='form-check-label--custom'>{title}</Form.Check.Label>

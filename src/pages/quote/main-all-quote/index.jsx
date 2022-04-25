@@ -10,13 +10,14 @@ import { checkLikeQuote } from 'reducers/redux-utils/quote';
 import { NotificationError } from 'helpers/Error';
 
 const MainAllQuotes = () => {
-	const [myQuoteList, setMyQuoteList] = useState([]);
-	const [hasMore, setHasMore] = useState(true);
-	const [defaultOption, setDefaultOption] = useState({ id: 1, title: 'Tất cả', value: 'all' });
 	const filterOptions = [
 		{ id: 1, title: 'Của tôi', value: 'me' },
 		{ id: 2, title: 'Yêu thích', value: 'me-like' },
 	];
+
+	const [myQuoteList, setMyQuoteList] = useState([]);
+	const [hasMore, setHasMore] = useState(true);
+	const [currentOption, setCurrentOption] = useState(filterOptions[0]);
 	const [likedArray, setLikedArray] = useState([]);
 
 	const callApiStart = useRef(10);
@@ -78,10 +79,8 @@ const MainAllQuotes = () => {
 		}
 	};
 
-	const handleChangeOption = (e, data) => {
-		if (data.value !== defaultOption.value) {
-			setDefaultOption(data);
-		}
+	const handleChangeOption = item => {
+		setCurrentOption(item);
 	};
 
 	return (
@@ -94,7 +93,7 @@ const MainAllQuotes = () => {
 			<FilterQuotePane
 				filterOptions={filterOptions}
 				handleChangeOption={handleChangeOption}
-				defaultOption={defaultOption}
+				currentOption={currentOption}
 			>
 				{myQuoteList.length > 0 && (
 					<InfiniteScroll

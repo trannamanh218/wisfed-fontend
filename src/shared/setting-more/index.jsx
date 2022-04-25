@@ -43,7 +43,7 @@ const STATUS_BOOK_OBJ = {
 	},
 };
 
-const SettingMore = props => {
+const SettingMore = ({ bookData, handleUpdateLibrary }) => {
 	const { modalOpen, setModalOpen, toggleModal } = useModal(false);
 	const { modalOpen: statusModal, setModalOpen: setStatusModal } = useModal(false);
 	const [currentStatus, setCurrentStatus] = useState(STATUS_BOOK_OBJ.wantToRead);
@@ -54,7 +54,6 @@ const SettingMore = props => {
 	const statusRef = useRef(STATUS_BOOK_OBJ.wantToRead);
 
 	const dispatch = useDispatch();
-	const { bookData, handleUpdateLibrary } = props;
 	const navigate = useNavigate();
 
 	const {
