@@ -17,18 +17,24 @@ const PostEditBook = props => {
 	const bookInfor = useSelector(state => state.book.bookInfo);
 	const dispatch = useDispatch();
 	const fetchData = async () => {
-		if (data.status === STATUS_BOOK.read || bookInfor) {
-			const bookId = bookInfor ? bookInfor.id : data.id;
+		if (data?.id) {
 			try {
-				const res = await dispatch(getRatingBook(bookId)).unwrap();
+				const res = await dispatch(getRatingBook(data?.id)).unwrap();
 				const data = res.data.rows;
 				setListRatingStar(data);
 			} catch (err) {
-				NotificationError(err);
+				// toast.error('lỗi hệ thống');
+			}
+		} else if (bookInfor?.id) {
+			try {
+				const res = await dispatch(getRatingBook(bookInfor?.id)).unwrap();
+				const data = res.data.rows;
+				setListRatingStar(data);
+			} catch (err) {
+				// toast.error('lỗi hệ thống');
 			}
 		}
 	};
-
 	useEffect(() => {
 		fetchData();
 	}, []);
@@ -124,7 +130,8 @@ const PostEditBook = props => {
 							<div className='post-edit-book__rating__number'>
 								{listRatingStar?.avg !== 0 ? (
 									<div>
-										({listRatingStar?.avg}) ({listRatingStar?.count} đánh giá)
+										{listRatingStar?.avg ? `(${listRatingStar?.avg}) ` : ''} (
+										{listRatingStar?.count || 'chưa có'} đánh giá)
 									</div>
 								) : (
 									<div>(chưa có đánh giá)</div>

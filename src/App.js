@@ -31,6 +31,7 @@ import DetailFriend from 'pages/group/component/detail-friend';
 import 'scss/main.scss';
 import QuoteAll from 'pages/quote/all-quote/';
 import Group from 'pages/group-page';
+import Ranks from 'pages/ranks';
 
 function App({ children }) {
 	const dispatch = useDispatch();
@@ -71,6 +72,7 @@ function App({ children }) {
 				pauseOnHover
 			/>
 			<Routes>
+				<Route path='/top100' element={<Ranks />} />
 				<Route path='/notification' element={<Notification />} />
 				<Route path='/category' element={<Category />} />
 				<Route path='/category/detail/:id' element={<CategoryDetail />} />

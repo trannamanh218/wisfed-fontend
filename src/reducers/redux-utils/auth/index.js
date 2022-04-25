@@ -7,11 +7,11 @@ import {
 	checkTokenResetPassword,
 	forgotPasswordAPIAdmin,
 	resetPasswordAPIAdmin,
-	userDetailAPI,
 } from 'constants/apiURL';
 import Request from 'helpers/Request';
 import Storage from 'helpers/Storage';
 import _ from 'lodash';
+import { editUserInfo } from '../user';
 
 export const register = createAsyncThunk('auth/register', async (params, { rejectWithValue }) => {
 	try {
@@ -91,17 +91,6 @@ export const resetPasswordAdmin = createAsyncThunk('auth/resetPasswordAdmin', as
 		return response;
 	} catch (err) {
 		return rejectWithValue(err.response);
-	}
-});
-
-export const editUserInfo = createAsyncThunk('user/edit user info', async (data, { rejectWithValue }) => {
-	try {
-		const { userId, params } = data;
-		const response = await Request.makePatch(userDetailAPI(userId), params);
-		return response.data;
-	} catch (err) {
-		const error = JSON.parse(err.response);
-		return rejectWithValue(error);
 	}
 });
 

@@ -1,0 +1,148 @@
+.settings-question__container {
+	background-color: #fcfcfc;
+	border-radius: 24px;
+	width: 710px;
+	margin-top: 32px;
+}
+.settings-question__title {
+	padding: 24px 24px 0 24px;
+	display: flex;
+	align-items: center;
+	button {
+		background-color: #f7efef;
+		width: 48px;
+		height: 48px;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		border-radius: 50%;
+		svg {
+			width: 24px;
+			height: 24px;
+		}
+	}
+	.settings-question__title-content {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		text-align: center;
+		flex: 1;
+		margin-right: 30px;
+		h2 {
+			font-family: 'Montserrat';
+			font-style: normal;
+			font-weight: 600;
+			font-size: 20px;
+			letter-spacing: 0.75px;
+			color: #2d2c42;
+			margin-top: 8px;
+		}
+	}
+}
+.settings-question__content {
+	margin-top: 24px;
+	height: 144px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background-color: #f7f7fc;
+	border-radius: 12px;
+	padding: 24px;
+	span {
+		font-family: 'Montserrat';
+		font-style: normal;
+		font-weight: 600;
+		font-size: 14px;
+		line-height: 24px;
+		letter-spacing: 0.75px;
+		color: #4e4b66;
+	}
+}
+
+.settings-question__main-content {
+	padding: 0 24px 24px 24px;
+}
+.settings-question__question {
+	background-color: #f7f7fc;
+	border-radius: 12px;
+	margin-top: 32px;
+	min-height: 200px;
+}
+.settings-question__question-header {
+	display: flex;
+	justify-content: space-between;
+	height: 57px;
+	.input {
+		border-radius: 0;
+		font-family: 'Montserrat';
+		font-style: normal;
+		font-weight: 500;
+		font-size: 15px;
+		line-height: 24px;
+		letter-spacing: 0.75px;
+		color: #a0a3bd;
+	}
+
+	.select-box__btn,
+	.select-box__value {
+		width: 250px;
+		font-family: 'Montserrat';
+		font-style: normal;
+		font-weight: 600;
+		font-size: 13px;
+		line-height: 22px;
+		text-align: center;
+		letter-spacing: 0.25px;
+		color: #2d2c42;
+	}
+	.select-box__list {
+		width: 220px;
+		left: 30px;
+	}
+	.select-box__item {
+		font-family: 'Montserrat';
+		font-style: normal;
+		font-weight: 600;
+		font-size: 13px;
+		line-height: 22px;
+		text-align: center;
+		letter-spacing: 0.25px;
+		color: #2d2c42;
+	}
+}
+.checbox-item-question-select {
+	margin-top: 32px;
+	padding: 24px;
+}
+.checbox-item-question {
+	padding: 16px;
+	width: 312px;
+	height: 57px;
+	background-color: #fcfcfc;
+	display: flex;
+	align-items: center;
+	margin-bottom: 16px;
+}
+.check-box__input {
+	width: 24px;
+	height: 24px;
+	margin-right: 15px;
+}
+.question__button {
+	background: #d9dbe9;
+	border-radius: 12px;
+	height: 57px;
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	button {
+		font-family: 'Montserrat';
+		font-style: normal;
+		font-weight: 600;
+		font-size: 15px;
+		line-height: 24px;
+		letter-spacing: 0.75px;
+		color: #a0a3bd;
+	}
+}
