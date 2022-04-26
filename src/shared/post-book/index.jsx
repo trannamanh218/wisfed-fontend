@@ -7,7 +7,7 @@ import LinearProgressBar from 'shared/linear-progress-bar';
 import { getRatingBook } from 'reducers/redux-utils/book';
 import { useDispatch } from 'react-redux';
 import { useState, useEffect } from 'react';
-import { toast } from 'react-toastify';
+import { NotificationError } from 'helpers/Error';
 
 function PostBook({ data }) {
 	const [percenProgress, setPercenProgress] = useState();
@@ -19,7 +19,7 @@ function PostBook({ data }) {
 			const res = await dispatch(getRatingBook(data.id)).unwrap();
 			setListRatingStar(res.data);
 		} catch (err) {
-			toast.error('lỗi hệ thống');
+			NotificationError(err);
 		}
 	};
 

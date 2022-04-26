@@ -13,7 +13,7 @@ import { convertToPlainString } from 'helpers/Common';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { getRatingBook } from 'reducers/redux-utils/book';
 import { useDispatch } from 'react-redux';
-import { toast } from 'react-toastify';
+import { NotificationError } from 'helpers/Error';
 
 const BookIntro = () => {
 	const { bookInfo } = useSelector(state => state.book);
@@ -33,7 +33,7 @@ const BookIntro = () => {
 			const res = await dispatch(getRatingBook(bookInfo?.id)).unwrap();
 			setLisRatingStar(res.data);
 		} catch (err) {
-			toast.error('lỗi hệ thống');
+			NotificationError(err);
 		}
 	};
 

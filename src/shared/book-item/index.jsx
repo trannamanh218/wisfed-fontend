@@ -9,7 +9,7 @@ import './book-item.scss';
 import _ from 'lodash';
 import { getRatingBook } from 'reducers/redux-utils/book';
 import { useDispatch } from 'react-redux';
-import { toast } from 'react-toastify';
+import { NotificationError } from 'helpers/Error';
 
 const BookItem = props => {
 	const { data, handleClick, isMyShelve, handleUpdateLibrary } = props;
@@ -26,7 +26,7 @@ const BookItem = props => {
 			const res = await dispatch(getRatingBook(data?.id)).unwrap();
 			setListRatingStar(res.data);
 		} catch (err) {
-			toast.error('lỗi hệ thống');
+			NotificationError(err);
 		}
 	};
 

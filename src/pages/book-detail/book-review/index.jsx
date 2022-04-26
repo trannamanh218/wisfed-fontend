@@ -6,7 +6,7 @@ import ReviewTab from './components/ReviewTab';
 import './book-review.scss';
 import { getRatingBook } from 'reducers/redux-utils/book';
 import { useDispatch, useSelector } from 'react-redux';
-import { toast } from 'react-toastify';
+import { NotificationError } from 'helpers/Error';
 
 const BookReview = () => {
 	const bookInfor = useSelector(state => state.book.bookInfo);
@@ -60,7 +60,7 @@ const BookReview = () => {
 			const res = await dispatch(getRatingBook(bookInfor?.id)).unwrap();
 			setListRatingStar(res.data);
 		} catch (err) {
-			toast.error('lỗi hệ thống');
+			NotificationError(err);
 		}
 	};
 

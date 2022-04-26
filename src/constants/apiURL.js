@@ -87,7 +87,6 @@ export const otherListBookInLibaries = id => `/api/v1/libraries/listBookBy/${id}
 // comment activity
 export const commentActivityAPI = '/api/v1/commentMiniposts';
 export const commentActivityDetailAPI = id => `/api/v1/commentMiniposts/${id}`;
-
 // notification
 export const nottificationAPI = '/api/v1/getstream/notiMention';
 // followrs
@@ -97,8 +96,10 @@ export const unFollow = id => `/api/v1/users/${id}/unFollow`;
 export const listFollowing = id => `/api/v1/users/listFollowings/${id}`;
 
 //chart
-export const listAPIChart = (count, by) => `/api/v1/tracking?count=${count}&by=${by}`;
-export const listBooksReadYear = type => `/api/v1/libraries/listBookByType/${type}`;
+// export const listAPIChart = (count, by) => `/api/v1/tracking?count=${count}&by=${by}`;
+export const listBooksReadYear = (type, id) => `/api/v1/libraries/listBookByType/${type}/${id}`;
+export const getAPIchartsByid = (id, count, by) => `/api/v1/tracking/trackingById/${id}?count=${count}&by=${by}`;
 // reading-target
-
 export const getReadingTargetAPI = '/api/v1/books/readingGoal';
+export const updateTargetReadAPI = year => `/api/v1/books/readingGoal/${year}`;
+export const getReadingTargetIdAPI = id => `/api/v1/books/readingGoalById/${id}`;

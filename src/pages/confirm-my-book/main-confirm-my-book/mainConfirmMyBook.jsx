@@ -12,6 +12,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { useParams, Link } from 'react-router-dom';
 import { useFetchBookDetail } from 'api/book.hooks';
+import { NotificationError } from 'helpers/Error';
 
 function MainConfirmMyBook() {
 	const [images, setImages] = useState([]);
@@ -43,8 +44,8 @@ function MainConfirmMyBook() {
 				setStatus(data[0].status);
 				setImages(data[0].documents);
 			}
-		} catch {
-			toast.error('Lỗi hệ thống');
+		} catch (err) {
+			NotificationError(err);
 		}
 	};
 
