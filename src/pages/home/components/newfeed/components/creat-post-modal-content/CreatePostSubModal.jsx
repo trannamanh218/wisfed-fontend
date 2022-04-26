@@ -200,6 +200,7 @@ CreatPostSubModal.propTypes = {
 	addOptionsToPost: PropTypes.func,
 	taggedDataPrevious: PropTypes.object,
 	handleValidationInput: PropTypes.func,
+	userInfo: PropTypes.object,
 };
 
 export default CreatPostSubModal;

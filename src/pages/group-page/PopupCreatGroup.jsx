@@ -1,4 +1,4 @@
-import { CameraIcon, CloseIconX } from 'components/svg';
+import { CameraIcon, CheckIcon, CloseIconX } from 'components/svg';
 import React, { useRef } from 'react';
 import { Image } from 'react-bootstrap';
 import Input from 'shared/input';
@@ -8,23 +8,23 @@ import PropTypes from 'prop-types';
 import './creat-group.scss';
 
 const PopupCreatGroup = ({ handleClose }) => {
-	const listTransparent = [
-		{ value: 'public', title: 'Công khai' },
-		{ value: 'private', title: 'Riêng tư' },
-	];
+	// const listTransparent = [
+	// 	{ value: 'public', title: 'Công khai', img: <CheckIcon /> },
+	// 	{ value: 'private', title: 'Riêng tư', img: <CheckIcon /> },
+	// ];
 
 	const listKindOfGroup = [
 		{ value: 'book', title: 'Sách' },
 		{ value: 'authors', title: 'Tác giả' },
 		{ value: 'share', title: ' Chia sẻ' },
 	];
-	const tranparentRef = useRef({ value: 'public', title: 'Công khai' });
+	// const tranparentRef = useRef({ value: 'public', title: 'Công khai', img: <CheckIcon /> });
 	const kindOfGroupRef = useRef({ value: 'default', title: 'Tác giả/ Chia sẻ/ Sách' });
 	const textArea = useRef(null);
 
-	const onchangeTransparent = data => {
-		tranparentRef.current = data;
-	};
+	// const onchangeTransparent = data => {
+	// 	tranparentRef.current = data;
+	// };
 	const onchangeKindOfGroup = data => {
 		kindOfGroupRef.current = data;
 	};
@@ -52,7 +52,7 @@ const PopupCreatGroup = ({ handleClose }) => {
 					<label>Tên nhóm</label>
 					<Input isBorder={false} placeholder='Tên nhóm' />
 				</div>
-				<div className='form-field-select__transparent'>
+				{/* <div className='form-field-select__transparent'>
 					<label>Quyền riêng tư</label>
 					<SelectBox
 						name='transparent'
@@ -60,7 +60,7 @@ const PopupCreatGroup = ({ handleClose }) => {
 						defaultOption={tranparentRef.current}
 						onChangeOption={onchangeTransparent}
 					/>
-				</div>
+				</div> */}
 				<div className='form-field-select__kind-of-group'>
 					<label>Kiểu nội dung</label>
 					<SelectBox

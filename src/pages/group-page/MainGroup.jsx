@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 // import PopupCreatGroup from './PopupCreatGroup';
 // import PopupInviteFriend from './popup-group/popupInviteFriend';
 // import PopupQuestion from './popup-group/popupQuestion';
@@ -8,6 +8,7 @@ import './mainGroup.scss';
 import MainGroupComponent from './popup-group/MainGroupComponet/MainGroupComponent';
 
 const MainGroup = () => {
+	const [keyChange, setKeyChange] = useState('settingsQuestion');
 	// const [isShow, setIsShow] = useState(false);
 	// const [isInvite, setIsInvite] = useState(false);
 	// const [isQuestion, setIsQuestion] = useState(false);
@@ -26,6 +27,11 @@ const MainGroup = () => {
 	// 		setIsMini(!isMini);
 	// 	}
 	// };
+
+	const handleChange = e => {
+		setKeyChange(e);
+	};
+
 	return (
 		<div>
 			{/* <div>
@@ -94,8 +100,8 @@ const MainGroup = () => {
 				</div>
 			</div> */}
 			<div className='group-main__container'>
-				<SidebarGroupLef />
-				<MainGroupComponent />
+				<SidebarGroupLef handleChange={handleChange} />
+				<MainGroupComponent handleChange={handleChange} keyChange={keyChange} />
 			</div>
 		</div>
 	);
