@@ -30,7 +30,7 @@ export const getSuggestionForPost = createAsyncThunk(
 		const filter = [];
 		let property = 'name';
 		if (option.value === 'addFriends' || option.value === 'addAuthor') {
-			property = 'email,fullName,firstName,lastName';
+			property = 'fullName,firstName,lastName';
 		}
 
 		if (option.value === 'addAuthor') {
@@ -76,7 +76,7 @@ export const getSuggestionForPost = createAsyncThunk(
 			}
 			return data;
 		} catch (err) {
-			const error = JSON.stringify(err.response);
+			const error = JSON.parse(err.response);
 			throw rejectWithValue(error);
 		}
 	}

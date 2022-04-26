@@ -3,7 +3,10 @@
 .loading-indicator {
 	width: 80px;
 	height: 80px;
-	margin: 0 auto;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin: auto;
 }
 
 .loading-indicator:after {
@@ -11,7 +14,6 @@
 	display: block;
 	width: 64px;
 	height: 64px;
-	margin: 8px;
 	border-radius: 50%;
 	border: 6px solid $primary;
 	border-color: $primary transparent $primary transparent;

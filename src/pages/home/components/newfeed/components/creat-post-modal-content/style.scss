@@ -487,6 +487,7 @@
 
 .creat-post-modal-content__substitute__search-result {
 	margin: 2.5rem 0;
+	min-height: 220px;
 	h5 {
 		font-weight: 600;
 		line-height: 1.5rem;
@@ -602,12 +603,14 @@
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	padding: 0 0 30px 0;
 	span {
 		font-weight: 600;
 		font-size: 1rem;
 		margin-top: 1rem;
 		color: $ash-placeholder;
+	}
+	img {
+		max-height: 170px;
 	}
 }
 

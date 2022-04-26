@@ -1,7 +1,7 @@
 // import { useFetchInfiniateActivities } from 'api/activity.hooks';
 import NormalContainer from 'components/layout/normal-container';
 import _ from 'lodash';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import BackButton from 'shared/back-button';
@@ -38,9 +38,9 @@ const Review = () => {
 					'property': 'bookId',
 				},
 			];
-
 			setFilter(filterData);
 		}
+		window.scrollTo(0, 0);
 	}, [params, userInfo]);
 
 	return (

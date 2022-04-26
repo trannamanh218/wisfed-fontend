@@ -1,5 +1,5 @@
 import NormalContainer from 'components/layout/normal-container';
-import React, { useState, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import './friend.scss';
 import SearchField from 'shared/search-field';
 import Button from 'shared/button';

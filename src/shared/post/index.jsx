@@ -161,7 +161,7 @@ function Post({ postInformations, className }) {
 						{postData?.createdBy?.fullName || 'Ẩn danh'}
 					</div>
 					<div className='post__user-status__post-time-status'>
-						<span>{calculateDurationTime(postData.time)}</span>
+						<span>{calculateDurationTime(postData.time || postData.createdAt)}</span>
 						<>
 							{postData.book && (
 								<div className='post__user-status__subtitle'>

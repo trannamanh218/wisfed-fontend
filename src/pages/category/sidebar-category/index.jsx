@@ -1,11 +1,10 @@
 import { useFetchFavoriteCategories, useFetchViewMoreCategories } from 'api/category.hook';
 import { MAX_PER_PAGE } from 'constants';
-import React from 'react';
 import { useState } from 'react';
 import StatisticList from 'shared/statistic-list';
 import TopicColumn from 'shared/topic-column';
 import PropTypes from 'prop-types';
-import { Circle as CircleLoading } from 'shared/loading';
+import Circle from 'shared/loading/circle';
 import { STATUS_LOADING } from 'constants';
 import './sidebar-category.scss';
 
@@ -25,7 +24,7 @@ const SidebarCategory = ({ status, viewCategoryDetail }) => {
 
 	return (
 		<div className='sidebar-category'>
-			<CircleLoading loading={status === STATUS_LOADING} />
+			<Circle loading={status === STATUS_LOADING} />
 			<StatisticList
 				title='Chủ đề yêu thích'
 				background='light'

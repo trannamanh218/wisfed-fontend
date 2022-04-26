@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import '../register.scss';
 import Logo from 'assets/images/Logo 2.png';
 import ImgRegister from 'assets/images/anh-1 1.png';
@@ -9,7 +9,7 @@ import { unwrapResult } from '@reduxjs/toolkit';
 import { useDispatch, useSelector } from 'react-redux';
 import ModalLogin from 'pages/login/element/ModalLogin';
 import { register } from 'reducers/redux-utils/auth';
-import { Circle } from 'shared/loading';
+import Circle from 'shared/loading/circle';
 
 function RegisterComponent() {
 	const dispatch = useDispatch();

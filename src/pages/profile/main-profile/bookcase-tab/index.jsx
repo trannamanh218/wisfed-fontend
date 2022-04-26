@@ -15,8 +15,8 @@ function Bookcase() {
 	useEffect(() => {
 		const filterReadbooks = statusLibraries.filter(item => item.defaultType === 'read');
 		const filterReadingbooks = statusLibraries.filter(item => item.defaultType === 'reading');
-		setReadBooks(filterReadbooks[0]?.books);
-		setReadingBooks(filterReadingbooks[0]?.books);
+		setReadBooks(filterReadbooks[0]?.books.reverse());
+		setReadingBooks(filterReadingbooks[0]?.books.reverse());
 	}, [statusLibraries]);
 
 	const progressBarPercenNumber = item => {
@@ -89,7 +89,7 @@ function Bookcase() {
 									))}
 								</div>
 								<div className='bookcase__review-all'>
-									<Link to={`/book/detail/${item.bookId}`}>
+									<Link to={`/review/${item.book.id}`}>
 										<span>Xem toàn bộ Review</span>
 										<RightArrow />
 									</Link>
@@ -140,7 +140,7 @@ function Bookcase() {
 									))}
 								</div>
 								<div className='bookcase__review-all'>
-									<Link to={`/book/detail/${item.bookId}`}>
+									<Link to={`/review/${item.book.id}`}>
 										<span>Xem toàn bộ Review</span>
 										<RightArrow />
 									</Link>
