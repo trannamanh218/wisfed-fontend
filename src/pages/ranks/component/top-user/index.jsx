@@ -1,8 +1,37 @@
-import React from 'react';
-// import PropTypes from 'prop-types';
-import AuthorBook from 'shared/author-book';
-import { CHECK_STAR } from 'constants';
-const BookTab = () => {
+import SelectBox from 'shared/select-box';
+import React, { useRef } from 'react';
+import AuthorCard from 'shared/author-card';
+import StarRanking from 'shared/starRanks';
+import './top-user.scss';
+import { ShareRanks } from 'components/svg';
+import TopRanks from 'shared/top-ranks';
+
+const TopUser = () => {
+	const kindOfGroupRef = useRef({ value: 'default', title: 'Chủ đề' });
+	const listYearRef = useRef({ value: 'default', title: 'Tuần' });
+	const listRead = useRef({ value: 'default', title: 'Đọc nhiều nhất' });
+	const listKindBook = [
+		{ value: 'book', title: 'Đọc nhiều nhất' },
+		{ value: 'authors', title: 'Đọc ít nhất ' },
+		{ value: 'share', title: ' Đọc cho vui' },
+		{ value: 'haha', title: ' Đọc vì đam mê' },
+	];
+	const listKindOfGroup = [
+		{ value: 'book', title: 'Y học' },
+		{ value: 'authors', title: 'Tạp chí' },
+		{ value: 'share', title: ' Truyện tranh' },
+		{ value: 'haha', title: ' Từ điển' },
+	];
+	const onchangeKindOfGroup = data => {
+		kindOfGroupRef.current = data;
+	};
+	const listYear = [
+		{ value: 'week', title: 'Tuần' },
+		{ value: 'month', title: 'Tháng' },
+		{ value: 'year', title: ' Năm' },
+		{ value: '10year', title: ' Thập kỉ' },
+		{ value: '100year', title: ' Thế kỉ' },
+	];
 	const bookList = [...Array(5)].fill({
 		id: 21248,
 		name: 'Lessons For IELTS - Reading',
@@ -34,12 +63,50 @@ const BookTab = () => {
 		},
 		tags: [],
 	});
-	if (bookList && bookList.length) {
-		return bookList.map((book, index) => <AuthorBook key={index} data={book} checkStar={CHECK_STAR} />);
-	}
-	return <p className='blank-content'>Không có quyển sách nào</p>;
+	return (
+		<div className='topbooks__container'>
+			<div className='topbooks__container__header'>
+				<div className='topbooks__container__title'>TOP 100 người dùng</div>
+				<SelectBox
+					name='themeGroup'
+					list={listKindBook}
+					defaultOption={listRead.current}
+					onChangeOption={onchangeKindOfGroup}
+				/>
+			</div>
+			<div className='topbooks__container__sort'>
+				<div className='topbooks__container__sort__left'>
+					<SelectBox
+						name='themeGroup'
+						list={listKindOfGroup}
+						defaultOption={kindOfGroupRef.current}
+						onChangeOption={onchangeKindOfGroup}
+					/>
+				</div>
+
+				<div className='topbooks__container__sort__right'>
+					<div className='topbooks__container__sort__right__title'>Xếp theo</div>
+					<SelectBox
+						name='themeGroup'
+						list={listYear}
+						defaultOption={listYearRef.current}
+						onChangeOption={onchangeKindOfGroup}
+					/>
+				</div>
+			</div>
+			<TopRanks />
+			{bookList.map((book, index) => (
+				<div key={index} className='topbooks__container__main'>
+					<StarRanking index={index} />
+					<div className='topbooks__container__main__layout'>
+						<AuthorCard size='lg' />
+					</div>
+					<div className='author-book__share'>
+						<ShareRanks />
+					</div>
+				</div>
+			))}
+		</div>
+	);
 };
-
-BookTab.propTypes = {};
-
-export default BookTab;
+export default TopUser;

@@ -28,13 +28,14 @@ export const useFetchTargetReading = (userId, modalOpen, deleteModal, filter = '
 				};
 
 				try {
-					const data = await dispatch(getListBooksTargetReading(params)).unwrap();
-					const dob = new Date();
-					const year = dob.getFullYear();
-					const newData = data.filter(item => item.year === year);
-
-					setBooksReadYear(newData);
-					setStatus(STATUS_SUCCESS);
+					if (userId) {
+						const data = await dispatch(getListBooksTargetReading(params)).unwrap();
+						const dob = new Date();
+						const year = dob.getFullYear();
+						const newData = data.filter(item => item.year === year);
+						setBooksReadYear(newData);
+						setStatus(STATUS_SUCCESS);
+					}
 				} catch (err) {
 					NotificationError(err);
 					const statusCode = err?.statusCode || 500;

@@ -12,17 +12,22 @@ import { Link } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 import { useFetchAuthorBooks } from 'api/book.hooks';
 import { useSelector } from 'react-redux';
+import { useFetchTargetReading } from 'api/readingTarget.hooks';
+import ProgressBarCircle from 'shared/progress-circle';
+
 const DEFAULT_TOGGLE_ROWS = 1;
 
 const SidebarProfile = () => {
+	const { userId } = useParams();
 	const userDetail = useSelector(state => state.user.userDetail);
 	const { booksAuthor } = useFetchAuthorBooks(userDetail.firstName, userDetail.lastName);
 	const { readingData, booksRead } = useFetchStatsReadingBooks();
 	const { statusCustom } = useFetchAuthLibraries();
+	const { booksReadYear } = useFetchTargetReading(userId);
 	const libraryList = statusCustom?.map(item => ({ ...item, quantity: item.books.length }));
 	const [isExpand, setIsExpand] = useState(false);
 	const [rows, setRows] = useState(DEFAULT_TOGGLE_ROWS);
-	const { userId } = useParams();
+
 	useEffect(() => {}, []);
 	const handleViewMore = () => {
 		const length = statusCustom.length;
@@ -54,7 +59,7 @@ const SidebarProfile = () => {
 				title={`Sách của ${userDetail.fullName}`}
 				list={booksAuthor}
 			/>
-			<ReadChallenge />
+			{booksReadYear.length > 0 ? <ProgressBarCircle /> : <ReadChallenge />}
 			<div className='sidebar-profile__personal__category'>
 				<h4>Giá sách cá nhân</h4>
 				<DualColumn list={readingData} />

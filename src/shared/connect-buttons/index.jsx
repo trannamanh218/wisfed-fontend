@@ -22,7 +22,7 @@ const ConnectButtons = ({ data, direction }) => {
 				) : (
 					<Minus className='connect-button__icon' />
 				)}
-				<span className='connect-button__content'>{infor.isFriend ? 'Huỷ kết bạn' : 'Thêm  bạn'}</span>
+				<span className='connect-button__content'>{infor.isFriend ? 'Huỷ kết bạn' : 'Kết bạn'}</span>
 			</Button>
 			<Button className='connect-button follow' onClick={handleFollow}>
 				<span className='connect-button__content'>{infor.isFollow ? 'Hủy theo dõi' : 'Theo dõi'}</span>

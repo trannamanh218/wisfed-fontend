@@ -1,8 +1,29 @@
-import React from 'react';
-// import PropTypes from 'prop-types';
+import './top-books.scss';
+import SelectBox from 'shared/select-box';
+import React, { useRef } from 'react';
 import AuthorBook from 'shared/author-book';
-import { CHECK_STAR } from 'constants';
-const BookTab = () => {
+import { CHECK_STAR, CHECK_SHARE } from 'constants';
+import StarRanking from 'shared/starRanks';
+
+const TopBooks = () => {
+	const kindOfGroupRef = useRef({ value: 'default', title: 'Chủ đề' });
+	const listYearRef = useRef({ value: 'default', title: 'Tuần' });
+	const listKindOfGroup = [
+		{ value: 'book', title: 'Y học' },
+		{ value: 'authors', title: 'Tạp chí' },
+		{ value: 'share', title: ' Truyện tranh' },
+		{ value: 'haha', title: ' Từ điển' },
+	];
+	const onchangeKindOfGroup = data => {
+		kindOfGroupRef.current = data;
+	};
+	const listYear = [
+		{ value: 'week', title: 'Tuần' },
+		{ value: 'month', title: 'Month' },
+		{ value: 'year', title: ' Năm' },
+		{ value: '10year', title: ' Thập kỉ' },
+		{ value: '100year', title: ' Thế kỉ' },
+	];
 	const bookList = [...Array(5)].fill({
 		id: 21248,
 		name: 'Lessons For IELTS - Reading',
@@ -34,12 +55,38 @@ const BookTab = () => {
 		},
 		tags: [],
 	});
-	if (bookList && bookList.length) {
-		return bookList.map((book, index) => <AuthorBook key={index} data={book} checkStar={CHECK_STAR} />);
-	}
-	return <p className='blank-content'>Không có quyển sách nào</p>;
+	return (
+		<div className='topbooks__container'>
+			<div className='topbooks__container__title'>TOP 100 Cuốn sách tốt nhất</div>
+			<div className='topbooks__container__sort'>
+				<div className='topbooks__container__sort__left'>
+					<SelectBox
+						name='themeGroup'
+						list={listKindOfGroup}
+						defaultOption={kindOfGroupRef.current}
+						onChangeOption={onchangeKindOfGroup}
+					/>
+				</div>
+
+				<div className='topbooks__container__sort__right'>
+					<div className='topbooks__container__sort__right__title'>Xếp theo</div>
+					<SelectBox
+						name='themeGroup'
+						list={listYear}
+						defaultOption={listYearRef.current}
+						onChangeOption={onchangeKindOfGroup}
+					/>
+				</div>
+			</div>
+			{bookList.map((book, index) => (
+				<div key={index} className='topbooks__container__main'>
+					<StarRanking index={index} />
+					<div className='topbooks__container__main__layout'>
+						<AuthorBook data={book} checkStar={CHECK_STAR} checkshare={CHECK_SHARE} />
+					</div>
+				</div>
+			))}
+		</div>
+	);
 };
-
-BookTab.propTypes = {};
-
-export default BookTab;
+export default TopBooks;

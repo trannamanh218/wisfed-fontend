@@ -39,3 +39,6 @@ export const STATUS_SUCCESS = 'SUCCESS';
 
 //library
 export const LIBRARY_LIMIT = 20;
+// BXH
+export const CHECK_STAR = true;
+export const CHECK_SHARE = true;

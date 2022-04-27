@@ -1,0 +1,39 @@
+.ranks__container {
+	width: 55%;
+	margin: auto;
+	padding-top: 47px;
+	font-family: 'Montserrat';
+	font-style: normal;
+	.ranks__container__header {
+		display: flex;
+		align-items: center;
+		gap: 12px;
+		margin-bottom: 50px;
+		.ranks__container__main__back {
+			background-color: #eff0f7;
+			padding: 8px;
+			border-radius: 50%;
+		}
+		.ranks__container__main__title {
+			color: #2d2c42;
+			font-weight: 700;
+			font-size: 24px;
+			line-height: 32px;
+			letter-spacing: 1px;
+		}
+	}
+	.ranks__container__main {
+		.nav-tabs {
+			justify-content: space-between;
+			padding: 0 40px;
+		}
+		.nav-item {
+			.nav-link {
+				font-weight: 600;
+				font-size: 20px;
+				line-height: 32px;
+				letter-spacing: 0.75px;
+			}
+		}
+	}
+}

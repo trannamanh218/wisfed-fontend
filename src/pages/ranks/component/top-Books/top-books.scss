@@ -1,0 +1,176 @@
+.topbooks__container {
+	padding: 41px 20px;
+	font-family: 'Montserrat';
+	font-style: normal;
+
+	&__title {
+		font-weight: 700;
+		font-size: 24px;
+		line-height: 32px;
+		letter-spacing: 1px;
+		color: #2d2c42;
+	}
+
+	&__sort {
+		display: flex;
+		justify-content: space-between;
+		margin-top: 39px;
+		.select-box__value {
+			font-weight: 600;
+			font-size: 15px;
+			line-height: 24px;
+			color: #2d2c42;
+			letter-spacing: 0.75px;
+		}
+		&__left {
+			.select-box {
+				.select-box__btn {
+					background: #f5e7d8;
+					width: 220px;
+					justify-content: center;
+					.select-box__value {
+						flex: 1;
+						text-align: center;
+					}
+				}
+
+				.select-box__list {
+					background: #fbf7f2;
+					max-width: 220px;
+				}
+			}
+		}
+
+		&__right {
+			&__title {
+				color: #6e7191;
+				letter-spacing: 0.75px;
+				font-weight: 500;
+				font-size: 15px;
+				line-height: 24px;
+			}
+
+			display: flex;
+			align-items: center;
+			gap: 20px;
+
+			.select-box {
+				.select-box__btn {
+					background: #f7f7fc;
+					width: 140px;
+					justify-content: space-around;
+				}
+
+				.select-box__list {
+					background: #f7f7fc;
+					max-width: 140px;
+				}
+			}
+		}
+	}
+
+	.topbooks__container__main {
+		margin-top: 40px;
+		margin-left: 45px;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 32px;
+		.topbooks__container__star__ranks {
+			width: 42px;
+			height: 42px;
+			border-radius: 50%;
+			background: #fbf7f2;
+		}
+
+		.topbooks__container__star {
+			position: relative;
+		}
+
+		.topbooks__container__number___custom {
+			position: absolute;
+			margin-left: 15px;
+			margin-top: -33px;
+			font-size: 18px;
+			line-height: 30px;
+		}
+
+		.topbooks__container__number___ranks {
+			position: absolute;
+			margin-left: 18.5px;
+			margin-top: -33px;
+			font-size: 18px;
+			line-height: 30px;
+		}
+
+		&__layout {
+			background: #fbf7f2;
+			border-radius: 16px;
+			flex: 1;
+			.star-icon {
+				&.fill {
+					path {
+						fill: #ff9d2b;
+					}
+				}
+			}
+
+			.react-rating-container {
+				svg {
+					margin-right: 12px;
+				}
+			}
+
+			.author-book__title {
+				font-size: 1.3rem;
+				margin-bottom: 0;
+			}
+			.author-book {
+				margin-bottom: 0;
+
+				.author-book__stats {
+					font-size: 1rem;
+				}
+			}
+
+			.author-book__bottom {
+				gap: 41px;
+			}
+			.author-card__avatar {
+				width: 76px;
+				height: 76px;
+			}
+			.author-card__info h5 {
+				color: #2d2c42;
+				font-weight: 600;
+				font-size: 1rem;
+				line-height: 24px;
+			}
+			.author-card__info p {
+				font-weight: 500;
+				font-size: 0.9rem;
+				line-height: 22px;
+			}
+			.btn {
+				max-width: 180px;
+			}
+			.btn span {
+				font-weight: 600;
+				font-size: 15px;
+				line-height: 24px;
+			}
+		}
+		.topbooks__container__main__svg {
+			.star-1 path {
+				fill: #a0a3bd;
+			}
+			.star-2 path {
+				fill: #b38c64;
+			}
+			.star-1,
+			.star-2 {
+				color: #fcfcfc;
+			}
+		}
+	}
+}
