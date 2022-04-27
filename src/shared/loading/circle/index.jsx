@@ -1,4 +1,3 @@
-import React from 'react';
 import PropTypes from 'prop-types';
 import BaseLoading from '../base';
 import LoadingIndicator from 'shared/loading-indicator';

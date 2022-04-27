@@ -17,7 +17,7 @@ import {
 } from 'reducers/redux-utils/library';
 import './status-button.scss';
 import StatusModalContainer from './StatusModalContainer';
-import { Circle as CircleLoading } from 'shared/loading';
+import Circle from 'shared/loading/circle';
 import { STATUS_LOADING, STATUS_IDLE } from 'constants';
 import { updateCurrentBook } from 'reducers/redux-utils/book';
 import { useNavigate } from 'react-router-dom';
@@ -196,7 +196,7 @@ const StatusButton = ({ className, status, bookData }) => {
 	};
 	return (
 		<>
-			<CircleLoading loading={fetchStatus === STATUS_LOADING} />
+			<Circle loading={fetchStatus === STATUS_LOADING} />
 			<button
 				className={classNames('btn btn-status btn-primary', { [`${className}`]: className })}
 				data-testid='btn-modal'

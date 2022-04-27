@@ -10,6 +10,7 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import { getActivityList } from 'reducers/redux-utils/activity';
 import { useDispatch } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
+import LoadingIndicator from 'shared/loading-indicator';
 
 const NewFeed = () => {
 	const [isNewPost, setIsNewPost] = useState(false);
@@ -85,7 +86,7 @@ const NewFeed = () => {
 					dataLength={postList.length}
 					next={getPostList}
 					hasMore={hasMore}
-					loader={<h4>Loading...</h4>}
+					loader={<LoadingIndicator />}
 				>
 					{postList.map(item => (
 						<Post key={item.id} postInformations={item} />

@@ -22,7 +22,6 @@ const Ranks = () => {
 						<Tab eventKey='books' title='Sách'>
 							<TopBooks />
 						</Tab>
-						<Tab eventKey='author' title='Tác giả'></Tab>
 						<Tab eventKey='User' title='Người dùng'>
 							<TopUser />
 						</Tab>

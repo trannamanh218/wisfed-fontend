@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import { getBookDetail } from 'reducers/redux-utils/book';
 import BookSlider from 'shared/book-slider';
 import StatisticList from 'shared/statistic-list';
-import { Circle as CircleLoading } from 'shared/loading';
+import Circle from 'shared/loading/circle';
 import './book-reference.scss';
 import { NotificationError } from 'helpers/Error';
 import { useFetchStatsReadingBooks } from 'api/library.hook';
@@ -39,12 +39,11 @@ const BookReference = () => {
 
 	return (
 		<div className='book-reference'>
-			<CircleLoading loading={status === STATUS_LOADING} />
+			<Circle loading={status === STATUS_LOADING} />
 			{/* sách của tac gia */}
 			<BookSlider className='book-reference__slider' title='Sách của Chris' list={bookList} />
 			{/* series sách đó */}
 			<BookSlider className='book-reference__slider' title='Seris dạy con làm giàu' list={bookList} />
-			{/*  */}
 			<BookSlider
 				className='book-reference__slider'
 				title='Gợi ý cùng thể loại'

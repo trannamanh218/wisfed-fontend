@@ -11,6 +11,7 @@ import { checkBookInLibraries } from 'reducers/redux-utils/library';
 import { getSuggestionForPost } from 'reducers/redux-utils/activity';
 import { useState } from 'react';
 import { NotificationError } from 'helpers/Error';
+import LoadingIndicator from 'shared/loading-indicator';
 
 function CreatPostSubModal(props) {
 	const {
@@ -27,6 +28,7 @@ function CreatPostSubModal(props) {
 	} = props;
 
 	const [suggestionData, setSuggestionData] = useState([]);
+	const [isFetchingSuggestions, setIsFetchingSuggestions] = useState(true);
 
 	const inputRef = useRef();
 	const dispatch = useDispatch();
@@ -38,16 +40,20 @@ function CreatPostSubModal(props) {
 	}, [images]);
 
 	useEffect(() => {
+		setSuggestionData([]);
 		fetchSuggestion('', option);
 	}, [option]);
 
 	const fetchSuggestion = async (input, option) => {
+		setIsFetchingSuggestions(true);
 		try {
 			const data = await dispatch(getSuggestionForPost({ input, option, userInfo })).unwrap();
 			setSuggestionData(data.rows);
 		} catch (err) {
 			NotificationError(err);
 			return err;
+		} finally {
+			setIsFetchingSuggestions(false);
 		}
 	};
 
@@ -140,28 +146,40 @@ function CreatPostSubModal(props) {
 						</button>
 					</div>
 					<div className='creat-post-modal-content__substitute__search-result'>
-						{option.value === 'addBook' && !_.isEmpty(taggedData.addBook) && (
-							<span
-								className='badge bg-primary-light badge-book'
-								onClick={() => removeTaggedItem(taggedData.addBook, 'addBook')}
-							>
-								<span>{taggedData.addBook.name}</span>
-								<CloseX />
-							</span>
-						)}
-						<TaggedList taggedData={taggedData} removeTaggedItem={removeTaggedItem} type={option.value} />
+						{isFetchingSuggestions ? (
+							<LoadingIndicator />
+						) : (
+							<>
+								{option.value === 'addBook' && !_.isEmpty(taggedData.addBook) && (
+									<span
+										className='badge bg-primary-light badge-book'
+										onClick={() => removeTaggedItem(taggedData.addBook, 'addBook')}
+									>
+										<span>{taggedData.addBook.name}</span>
+										<CloseX />
+									</span>
+								)}
+								<TaggedList
+									taggedData={taggedData}
+									removeTaggedItem={removeTaggedItem}
+									type={option.value}
+								/>
 
-						{suggestionData && suggestionData.length !== 0 && !inputRef.current.value && <h5>Gợi ý</h5>}
-						{suggestionData && suggestionData.length !== 0 && inputRef.current.value && (
-							<h5>Kết quả tìm kiếm</h5>
-						)}
+								{suggestionData && suggestionData.length !== 0 && !inputRef.current.value && (
+									<h5>Gợi ý</h5>
+								)}
+								{suggestionData && suggestionData.length !== 0 && inputRef.current.value && (
+									<h5>Kết quả tìm kiếm</h5>
+								)}
 
-						<SuggestSection
-							option={option}
-							list={suggestionData}
-							handleAddToPost={handleAddToPost}
-							taggedData={taggedData}
-						/>
+								<SuggestSection
+									option={option}
+									list={suggestionData}
+									handleAddToPost={handleAddToPost}
+									taggedData={taggedData}
+								/>
+							</>
+						)}
 					</div>
 				</div>
 			)}

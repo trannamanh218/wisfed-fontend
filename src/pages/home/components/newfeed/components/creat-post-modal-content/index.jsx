@@ -17,7 +17,7 @@ import UploadImage from './UploadImage';
 import PreviewLink from 'shared/preview-link/PreviewLink';
 import { getPreviewUrl } from 'reducers/redux-utils/post';
 import { useCallback } from 'react';
-import { Circle as CircleLoading } from 'shared/loading';
+import Circle from 'shared/loading/circle';
 import './style.scss';
 import { ratingUser } from 'reducers/redux-utils/book';
 import UserAvatar from 'shared/user-avatar';
@@ -55,7 +55,7 @@ function CreatPostModalContent({
 	const [status, setStatus] = useState(STATUS_IDLE);
 	const [showUpload, setShowUpload] = useState(false);
 	const [imagesUpload, setImagesUpload] = useState([]);
-	const [validationInput, setValidationInput] = useState();
+	const [validationInput, setValidationInput] = useState('');
 	const dispatch = useDispatch();
 	const textFieldEdit = useRef(null);
 	const taggedDataPrevious = usePrevious(taggedData);
@@ -344,32 +344,38 @@ function CreatPostModalContent({
 
 	const checkActive = () => {
 		let isActive = false;
-		if (taggedData.addBook.status) {
-			if (taggedData.addBook.status === 'read') {
-				if (textFieldEdit?.current?.innerText) {
+		if (!_.isEmpty(taggedData.addBook)) {
+			if (taggedData.addBook.status) {
+				if (taggedData.addBook.status === 'read') {
+					if (textFieldEdit?.current?.innerText) {
+						isActive = true;
+					}
+				} else if (taggedData.addBook.status === 'reading') {
+					if (checkProgress === taggedData.addBook.page) {
+						const newTaggedData = { ...taggedData };
+						newTaggedData.addBook.status = 'read';
+						setTaggedData(newTaggedData);
+					} else {
+						if (!validationInput) {
+							isActive = true;
+						}
+					}
+				} else {
 					isActive = true;
 				}
-			} else if (taggedData.addBook.status === 'reading') {
-				if (checkProgress === taggedData.addBook.page) {
-					const newTaggedData = { ...taggedData };
-					newTaggedData.addBook.status = 'read';
-					setTaggedData(newTaggedData);
+			} else {
+				if (taggedData.addBook.page !== checkProgress && !validationInput) {
+					isActive = true;
 				} else {
-					if (!validationInput) {
+					if (textFieldEdit.current?.innerText) {
 						isActive = true;
 					}
 				}
-			} else {
-				isActive = true;
 			}
 		} else {
 			if (
-				(taggedData.addBook.page !== checkProgress || textFieldEdit.current?.innerText) &&
-				(!_.isEmpty(taggedData.addBook) ||
-					taggedData.addAuthor.length ||
-					taggedData.addCategory.length ||
-					imagesUpload.length) &&
-				!validationInput
+				textFieldEdit.current?.innerText &&
+				(taggedData.addAuthor.length || taggedData.addCategory.length || imagesUpload.length)
 			) {
 				isActive = true;
 			}
@@ -398,7 +404,7 @@ function CreatPostModalContent({
 
 	return (
 		<div className='creat-post-modal-content'>
-			<CircleLoading loading={status === STATUS_LOADING} />
+			<Circle loading={status === STATUS_LOADING} />
 			{/*main */}
 			<div
 				className={classNames('creat-post-modal-content__main', {
