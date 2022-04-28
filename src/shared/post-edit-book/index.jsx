@@ -7,6 +7,7 @@ import ReactRating from 'shared/react-rating';
 import './post-edit-book.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import { getRatingBook } from 'reducers/redux-utils/book';
+import { NotificationError } from 'helpers/Error';
 
 const PostEditBook = props => {
 	const { data, handleValidationInput, validationInput, handleAddToPost, handleChangeStar, valueStar } = props;
@@ -23,7 +24,7 @@ const PostEditBook = props => {
 				const data = res.data.rows;
 				setListRatingStar(data);
 			} catch (err) {
-				// toast.error('lỗi hệ thống');
+				NotificationError(err);
 			}
 		} else if (bookInfor?.id) {
 			try {

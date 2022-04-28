@@ -1,42 +1,47 @@
-import React from 'react';
 import BookThumbnail from 'shared/book-thumbnail';
 import ReactRating from 'shared/react-rating';
 import ReadMore from 'shared/read-more';
 import './review-book-info.scss';
+import { useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { getRatingBook } from 'reducers/redux-utils/book';
+import { NotificationError } from 'helpers/Error';
 
-const ReviewBookInfo = () => {
+const ReviewBookInfo = ({ bookInfo }) => {
+	console.log(bookInfo);
+
+	const [lisRatingStar, setLisRatingStar] = useState({});
+
+	const dispatch = useDispatch();
+
+	const getRatingData = async () => {
+		try {
+			const res = await dispatch(getRatingBook(bookInfo?.id)).unwrap();
+			setLisRatingStar(res.data);
+		} catch (err) {
+			NotificationError(err);
+		}
+	};
+
+	useEffect(() => {
+		getRatingData();
+	}, []);
+
 	return (
 		<div className='review-book-info'>
-			<BookThumbnail className='review-book-info__image' size='lg' source='/images/book1.jpg' />
+			<BookThumbnail className='review-book-info__image' size='lg' source={bookInfo.images[0]} />
 			<div className='review-book-info__content'>
-				<h1 className='review-book-info__name'>
-					The Mystery of Briony Lodge - Bí mật của Briony Lodge bản dịch 2021
-				</h1>
-				<div className='review-book-info__author'>
-					<span>By Christ Bohajalian</span>
+				<div className='review-book-info__name-author'>
+					<h1 className='review-book-info__name'>{bookInfo.name}</h1>
+					<div className='review-book-info__author'>Bởi {bookInfo.authors[0].authorName}</div>
 				</div>
 				<div className='review-book-info__stars'>
-					<ReactRating readonly={true} initialRating={4} />
-					<span>(09 đánh giá)</span>
-					<span>(4000 review)</span>
+					<ReactRating readonly={true} initialRating={lisRatingStar?.avg} />
+					<span>(Trung bình {lisRatingStar?.avg} sao)</span>
 				</div>
 
 				<div className='review-book-info__description'>
-					<ReadMore
-						text={`	When literature student Anastasia Steele goes to house of interview young entrepreneur Christian
-						Grey, she is encounters a man who is beautiful, brilliant, and only one intimidating. The
-						unworldly housing When literature student Anastasia Steele goes to house of interview young
-						entrepreneur Christian Grey, she is encounters a man who is beautiful, brilliant, and only one
-						When literature student Anastasia Steele goes to house of interview young entrepreneur Christian
-						Grey, she is encounters a man who is beautiful, brilliant, and only one intimidating. The
-						unworldly housing When literature student Anastasia Steele goes to house of interview young
-						entrepreneur Christian Grey, she is encounters a man who is beautiful, brilliant, and only one
-						intimidating. Grey, she is encounters a man who is beautiful, brilliant, and only one
-						intimidating. The unworldly housing When literature student Anastasia Steele goes to house of
-						interview young entrepreneur Christian Grey, she is encounters a man who is beautiful,
-						brilliant, and only one intimidating.
-					`}
-					/>
+					<ReadMore text={bookInfo.description} />
 				</div>
 			</div>
 		</div>

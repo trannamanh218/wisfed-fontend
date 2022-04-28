@@ -8,6 +8,8 @@ import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import { updateCurrentBookReviewsNumber } from 'reducers/redux-utils/book';
+import _ from 'lodash';
 
 const ReviewTab = () => {
 	const filterOptions = [
@@ -50,6 +52,9 @@ const ReviewTab = () => {
 			let response;
 			if (currentOption.value === 'reviews') {
 				response = await dispatch(getReviewsBook(params)).unwrap();
+				if (!_.isEmpty(response)) {
+					dispatch(updateCurrentBookReviewsNumber(response.count));
+				}
 			} else if (currentOption.value === 'friendReviews') {
 				response = await dispatch(getReviewsBookByFriends({ bookId, params })).unwrap();
 			} else {

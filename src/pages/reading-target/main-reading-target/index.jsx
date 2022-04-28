@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import SearchField from 'shared/search-field';
 import UserAvatar from 'shared/user-avatar';
 import LinearProgressBar from 'shared/linear-progress-bar';

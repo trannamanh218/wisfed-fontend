@@ -13,6 +13,8 @@ import profile from './profile';
 import forgetPasswordSliceReducer from './forget-password';
 import friends from './friends';
 import chart from './chart';
+import common from './common';
+
 const rootReducer = {
 	auth,
 	post,
@@ -29,6 +31,7 @@ const rootReducer = {
 	forgetPasswordSliceReducer,
 	friends,
 	chart,
+	common,
 };
 
 export default rootReducer;

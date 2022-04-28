@@ -1,4 +1,4 @@
-import { createAsyncThunk } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { uploadImageAPI, uploadMultipleImageAPI, bookCopyrightsAPI } from 'constants/apiURL';
 import Request from 'helpers/Request';
 
@@ -47,3 +47,23 @@ export const getListCopyrights = createAsyncThunk('common/getListCopyrights', as
 		return rejectWithValue(error);
 	}
 });
+
+const commonSlice = createSlice({
+	name: 'common',
+	initialState: {
+		titleReviewPage: '',
+		directedFromProfile: true,
+	},
+
+	reducers: {
+		updateTitleReviewPage: (state, action) => {
+			state.titleReviewPage = action.payload;
+		},
+		updateDirectFromProfile: (state, action) => {
+			state.directedFromProfile = action.payload;
+		},
+	},
+});
+
+export const { updateTitleReviewPage, updateDirectFromProfile } = commonSlice.actions;
+export default commonSlice.reducer;

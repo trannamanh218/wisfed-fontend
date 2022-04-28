@@ -36,12 +36,12 @@ function App({ children }) {
 	const dispatch = useDispatch();
 	useEffect(() => {
 		const params = {
-			// email: 'register@gmail.com',
-			// password: '12345678',
+			email: 'register@gmail.com',
+			password: '12345678',
 			// email: 'hungngonzai@gmail.com',
 			// password: '123456',
-			email: 'admin@gmail.com',
-			password: '123456',
+			// email: 'admin@gmail.com',
+			// password: '123456',
 		};
 
 		fetchLogin(params);
@@ -80,8 +80,7 @@ function App({ children }) {
 				<Route path='/friends/:slug' element={<DetailFriend />} />
 				<Route path='/book/detail/:bookId' element={<BookDetail />} />
 				<Route path='/book/detail/:bookId/:slug' element={<BookDetail />} />
-				<Route path='/review/:id' element={<Review />} />
-				<Route path='/review/:id/:slug' element={<Review />} />
+				<Route path='/review/:bookId/:userId' element={<Review />} />
 				<Route path='/quotes/:userId' element={<Quote />} />
 				<Route path='/quotes/all' element={<QuoteAll />} />
 				<Route path='/quotes/detail/:id' element={<QuoteDetail />} />

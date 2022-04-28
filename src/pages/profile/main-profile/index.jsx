@@ -45,7 +45,7 @@ const MainProfile = () => {
 							<BookTab />
 						</Tab>
 						<Tab eventKey='shelves' title='Tủ sách'>
-							<Bookcase />
+							<Bookcase userInfo={userInfo} />
 						</Tab>
 						<Tab eventKey='post' title='Bài viết' className='post-tab-active'>
 							<PostTab />
