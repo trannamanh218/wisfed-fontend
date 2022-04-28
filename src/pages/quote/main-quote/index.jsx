@@ -81,7 +81,7 @@ const MainQuote = () => {
 			const params = {
 				start: callApiStart.current,
 				limit: callApiPerPage.current,
-				sort: JSON.stringify([{ property: 'createdAt', direction: 'DESC' }]),
+				sort: JSON.stringify([{ property: sortValue, direction: sortDirection }]),
 				filter: JSON.stringify([{ operator: 'eq', value: userInfo.id, property: 'createdBy' }]),
 			};
 			const quotesList = await dispatch(getQuoteList(params)).unwrap();
@@ -109,7 +109,7 @@ const MainQuote = () => {
 		setCurrentOption(item);
 	};
 
-	const sortQuotes = params => {
+	const handleSortQuotes = params => {
 		if (params === 'default') {
 			setSortValue('like');
 			setSortDirection('DESC');
@@ -138,7 +138,7 @@ const MainQuote = () => {
 						filterOptions={filterOptions}
 						handleChangeOption={handleChangeOption}
 						currentOption={currentOption}
-						handleChange={sortQuotes}
+						handleSortQuotes={handleSortQuotes}
 						isMyQuotes={isMyQuotes}
 					>
 						{quoteList.length > 0 ? (

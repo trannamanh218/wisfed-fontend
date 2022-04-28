@@ -13,6 +13,7 @@ import { useDispatch } from 'react-redux';
 import _ from 'lodash';
 import Circle from 'shared/loading/circle';
 import { updateTitleReviewPage, updateDirectFromProfile } from 'reducers/redux-utils/common';
+import PropTypes from 'prop-types';
 
 function Bookcase({ userInfo }) {
 	const [readingBooks, setReadingBooks] = useState([]);
@@ -181,5 +182,9 @@ function Bookcase({ userInfo }) {
 		</div>
 	);
 }
+
+Bookcase.propTypes = {
+	userInfo: PropTypes.object,
+};
 
 export default Bookcase;

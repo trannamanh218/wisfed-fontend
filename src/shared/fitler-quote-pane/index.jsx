@@ -6,12 +6,23 @@ import { Add, Configure } from 'components/svg';
 import './filter-quote-pane.scss';
 import CreatQuotesModal from 'shared/creat-quotes-modal';
 import FormCheckGroup from 'shared/form-check-group';
+import classNames from 'classnames';
 
-const FilterQuotePane = ({ filterOptions, currentOption, handleChangeOption, children, handleChange, isMyQuotes }) => {
+const FilterQuotePane = ({
+	filterOptions,
+	currentOption,
+	handleChangeOption,
+	children,
+	handleSortQuotes,
+	isMyQuotes,
+}) => {
 	const [showCreatQuotesModal, setShowCreatQuotesModal] = useState(false);
+	const [showDropdownMenu, setShowDropdownMenu] = useState(false);
 
 	const creatQuotesModalContainer = useRef(null);
 	const scrollBlocked = useRef(false);
+	const sortValue = useRef('default');
+	const sortDropdownMenu = useRef(null);
 
 	const safeDocument = typeof document !== 'undefined' ? document : {};
 	const { body } = safeDocument;
@@ -31,6 +42,15 @@ const FilterQuotePane = ({ filterOptions, currentOption, handleChangeOption, chi
 			title: 'Cũ nhất',
 		},
 	];
+
+	useEffect(() => {
+		if (sortDropdownMenu.current) {
+			document.addEventListener('click', checkClickTarget);
+		}
+		return () => {
+			document.removeEventListener('click', checkClickTarget);
+		};
+	}, []);
 
 	const creatQuotes = () => {
 		setShowCreatQuotesModal(true);
@@ -75,6 +95,20 @@ const FilterQuotePane = ({ filterOptions, currentOption, handleChangeOption, chi
 		scrollBlocked.current = false;
 	};
 
+	const handleChange = data => {
+		sortValue.current = data;
+	};
+
+	const checkClickTarget = e => {
+		let onTarget = false;
+		if (sortDropdownMenu.current.contains(e.target)) {
+			onTarget = true;
+		}
+		if (!onTarget) {
+			setShowDropdownMenu(false);
+		}
+	};
+
 	return (
 		<>
 			<div className='filter-quote-pane'>
@@ -92,16 +126,18 @@ const FilterQuotePane = ({ filterOptions, currentOption, handleChangeOption, chi
 						/>
 					)}
 
-					<div className='filter-quote-pane__config dropdown'>
+					<div className='filter-quote-pane__config dropdown' ref={sortDropdownMenu}>
 						<button
 							className='filter-pane__btn dropdown-toggle'
-							id='filterQuoteMenu'
-							data-bs-toggle='dropdown'
-							aria-expanded='false'
+							onClick={() => setShowDropdownMenu(!showDropdownMenu)}
 						>
 							<Configure />
 						</button>
-						<div className='filter-quote-pane__setting dropdown-menu' aria-labelledby='filterQuoteMenu'>
+						<div
+							className={classNames('filter-quote-pane__setting dropdown-menu', {
+								'show': showDropdownMenu,
+							})}
+						>
 							<div className='filter-quote-pane__setting__group'>
 								<h6 className='filter-quote-pane__setting__title'>Mặc định</h6>
 								<FormCheckGroup
@@ -111,7 +147,9 @@ const FilterQuotePane = ({ filterOptions, currentOption, handleChangeOption, chi
 									defaultValue='default'
 									handleChange={handleChange}
 								/>
-								<h6 className='filter-quote-pane__setting__title'>Theo thời gian tạo</h6>
+								<h6 style={{ marginTop: '24px' }} className='filter-quote-pane__setting__title'>
+									Theo thời gian tạo
+								</h6>
 								<FormCheckGroup
 									data={radioOptions[1]}
 									name='custom'
@@ -127,7 +165,15 @@ const FilterQuotePane = ({ filterOptions, currentOption, handleChangeOption, chi
 									handleChange={handleChange}
 								/>
 							</div>
-							<Button className='filter-quote-pane__setting__btn'>Xác nhận</Button>
+							<Button
+								className='filter-quote-pane__setting__btn'
+								onClick={() => {
+									handleSortQuotes(sortValue.current);
+									setShowDropdownMenu(false);
+								}}
+							>
+								Xác nhận
+							</Button>
 						</div>
 					</div>
 				</div>
@@ -148,7 +194,7 @@ FilterQuotePane.propTypes = {
 	currentOption: PropTypes.object,
 	handleChangeOption: PropTypes.func,
 	children: PropTypes.any,
-	handleChange: PropTypes.func,
+	handleSortQuotes: PropTypes.func,
 	isMyQuotes: PropTypes.bool,
 };
 

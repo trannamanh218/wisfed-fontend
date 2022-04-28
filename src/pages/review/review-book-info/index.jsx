@@ -6,10 +6,9 @@ import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { getRatingBook } from 'reducers/redux-utils/book';
 import { NotificationError } from 'helpers/Error';
+import PropTypes from 'prop-types';
 
 const ReviewBookInfo = ({ bookInfo }) => {
-	console.log(bookInfo);
-
 	const [lisRatingStar, setLisRatingStar] = useState({});
 
 	const dispatch = useDispatch();
@@ -48,6 +47,8 @@ const ReviewBookInfo = ({ bookInfo }) => {
 	);
 };
 
-ReviewBookInfo.propTypes = {};
+ReviewBookInfo.propTypes = {
+	bookInfo: PropTypes.func,
+};
 
 export default ReviewBookInfo;
