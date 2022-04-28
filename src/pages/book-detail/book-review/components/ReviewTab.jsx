@@ -10,6 +10,7 @@ import { NotificationError } from 'helpers/Error';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { updateCurrentBookReviewsNumber } from 'reducers/redux-utils/book';
 import _ from 'lodash';
+import LoadingIndicator from 'shared/loading-indicator';
 
 const ReviewTab = () => {
 	const filterOptions = [
@@ -62,7 +63,7 @@ const ReviewTab = () => {
 			}
 			setReviewList(response.rows);
 			setReviewCount(response.count);
-			if (!response.rows.length) {
+			if (!response.rows.length || response.rows.length < callApiPerPage.current) {
 				setHasMore(false);
 			}
 		} catch (err) {
@@ -125,7 +126,7 @@ const ReviewTab = () => {
 						dataLength={reviewList.length}
 						next={getReviewList}
 						hasMore={hasMore}
-						loader={<h4>Loading...</h4>}
+						loader={<LoadingIndicator />}
 						className='review-tab__list'
 					>
 						{reviewList.map(item => (

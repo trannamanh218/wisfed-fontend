@@ -20,4 +20,18 @@
 			}
 		}
 	}
+
+	.infinite-scroll-component {
+		.loading-indicator {
+			width: 80px;
+			height: 80px;
+			margin-top: 32px;
+		}
+
+		.loading-indicator:after {
+			width: 50px;
+			height: 50px;
+			border-width: 5px;
+		}
+	}
 }

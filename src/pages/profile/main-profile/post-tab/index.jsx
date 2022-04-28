@@ -6,6 +6,7 @@ import { useParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import LoadingIndicator from 'shared/loading-indicator';
 
 function PostTab() {
 	const [postList, setPostList] = useState([]);
@@ -29,7 +30,7 @@ function PostTab() {
 				sort: JSON.stringify([{ property: 'createdAt', direction: 'DESC' }]),
 			};
 			const posts = await dispatch(getPostsByUser({ userId, params })).unwrap();
-			if (posts.length) {
+			if (posts.length > 0) {
 				callApiStart.current += callApiPerPage.current;
 				setPostList(postList.concat(posts));
 			} else {
@@ -47,7 +48,7 @@ function PostTab() {
 					dataLength={postList.length}
 					next={getPostListByUser}
 					hasMore={hasMore}
-					loader={<h4>Loading...</h4>}
+					loader={<LoadingIndicator />}
 				>
 					{postList.map(item => (
 						<Post key={item.id} postInformations={item} />

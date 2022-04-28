@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { checkLikeQuote } from 'reducers/redux-utils/quote';
 import { NotificationError } from 'helpers/Error';
+import LoadingIndicator from 'shared/loading-indicator';
 
 const MainAllQuotes = () => {
 	const [allQuoteList, setAllQuoteList] = useState([]);
@@ -37,8 +38,11 @@ const MainAllQuotes = () => {
 				sort: JSON.stringify([{ property: sortValue, direction: sortDirection }]),
 			};
 			const quotesList = await dispatch(getQuoteList(params)).unwrap();
-			if (quotesList.length) {
+			if (quotesList.length > 0) {
 				setAllQuoteList(quotesList);
+				if (quotesList.length < callApiPerPage.current) {
+					setHasMore(false);
+				}
 			} else {
 				setHasMore(false);
 			}
@@ -101,7 +105,7 @@ const MainAllQuotes = () => {
 						dataLength={allQuoteList.length}
 						next={getAllQuoteList}
 						hasMore={hasMore}
-						loader={<h4>Loading...</h4>}
+						loader={<LoadingIndicator />}
 					>
 						{allQuoteList.map(item => (
 							<QuoteCard key={item.id} data={item} likedArray={likedArray} />
