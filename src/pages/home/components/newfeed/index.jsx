@@ -3,7 +3,7 @@ import _ from 'lodash';
 import { useState, useRef, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import Post from 'shared/post';
-import CreatPost from './components/creat-post';
+import CreatePost from './components/creat-post';
 import './newfeed.scss';
 import ModalfilterHome from './components/modal-filter-home';
 import InfiniteScroll from 'react-infinite-scroll-component';
@@ -79,7 +79,7 @@ const NewFeed = () => {
 				</div>
 			</div>
 			<ModalfilterHome modalShow={modalShow} setModalShow={setModalShow} />
-			{!_.isEmpty(userInfo) && <CreatPost onChangeNewPost={onChangeNewPost} />}
+			{!_.isEmpty(userInfo) && <CreatePost onChangeNewPost={onChangeNewPost} />}
 
 			{postList.length > 0 && (
 				<InfiniteScroll

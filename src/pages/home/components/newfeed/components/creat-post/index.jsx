@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 import _ from 'lodash';
 import { updateCurrentBook } from 'reducers/redux-utils/book';
 
-function CreatPost({ onChangeNewPost }) {
+function CreatePost({ onChangeNewPost }) {
 	const [showModalCreatPost, setShowModalCreatPost] = useState(false);
 	const [option, setOption] = useState({});
 	const creatPostModalContainer = useRef(null);
@@ -147,7 +147,7 @@ function CreatPost({ onChangeNewPost }) {
 		</div>
 	);
 }
-CreatPost.propTypes = {
+CreatePost.propTypes = {
 	onChangeNewPost: PropTypes.func,
 };
-export default CreatPost;
+export default CreatePost;

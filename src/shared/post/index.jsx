@@ -203,7 +203,11 @@ function Post({ postInformations, className }) {
 				))}
 			</ul>
 
-			{postData.book && <PostBook data={{ ...postData.book, bookLibrary: postData.bookLibrary }} />}
+			{postData.book && (
+				<PostBook
+					data={{ ...postData.book, bookLibrary: postData.bookLibrary, actorCreatedPost: postData.actor }}
+				/>
+			)}
 
 			{postData?.image?.length > 0 && <GridImage images={postData.image} inPost={true} />}
 

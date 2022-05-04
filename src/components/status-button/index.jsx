@@ -53,6 +53,7 @@ const StatusButton = ({ className, status, bookData }) => {
 	const {
 		library: { authLibraryData },
 	} = useSelector(state => state);
+	const userInfo = useSelector(state => state.auth.userInfo);
 
 	const dispatch = useDispatch();
 
@@ -69,7 +70,7 @@ const StatusButton = ({ className, status, bookData }) => {
 
 	const handleShow = e => {
 		e.stopPropagation();
-		// check duoc trangt hai cos trong thu vien
+		// check duoc trang thai co trong thu vien
 		let bookInLibraries = [];
 		let initStatus = STATUS_BOOK_OBJ[status] || STATUS_BOOK_OBJ.wantToRead;
 		dispatch(checkBookInLibraries(bookData.id))
@@ -169,7 +170,12 @@ const StatusButton = ({ className, status, bookData }) => {
 			setModalShow(false);
 			setFetchStatus(STATUS_SUCCESS);
 
-			if (status !== currentStatus.value) {
+			if (userInfo.id === bookData.actorCreatedPost) {
+				if (status !== currentStatus.value) {
+					dispatch(updateCurrentBook({ ...bookData, status: currentStatus.value }));
+					navigate('/');
+				}
+			} else {
 				dispatch(updateCurrentBook({ ...bookData, status: currentStatus.value }));
 				navigate('/');
 			}
@@ -194,6 +200,7 @@ const StatusButton = ({ className, status, bookData }) => {
 
 		setBookLibaries(newData);
 	};
+
 	return (
 		<>
 			<Circle loading={fetchStatus === STATUS_LOADING} />

@@ -14,6 +14,7 @@ import _ from 'lodash';
 import Circle from 'shared/loading/circle';
 import { updateTitleReviewPage, updateDirectFromProfile } from 'reducers/redux-utils/common';
 import PropTypes from 'prop-types';
+import { updateCurrentBook } from 'reducers/redux-utils/book';
 
 function Bookcase({ userInfo }) {
 	const [readingBooks, setReadingBooks] = useState([]);
@@ -74,6 +75,12 @@ function Bookcase({ userInfo }) {
 		}
 	};
 
+	const createReview = book => {
+		const newBook = { ...book, status: 'read' };
+		dispatch(updateCurrentBook(newBook));
+		navigate('/');
+	};
+
 	return (
 		<div className='bookcase'>
 			<Circle loading={status === STATUS_LOADING} />
@@ -93,7 +100,7 @@ function Bookcase({ userInfo }) {
 									{progressBarPercenNumber(item)}
 								</div>
 								<div className='bookcase__item__button'>
-									<button>Viết Review</button>
+									<button onClick={() => createReview(item.book)}>Viết Review</button>
 								</div>
 							</div>
 						</div>
@@ -144,7 +151,7 @@ function Bookcase({ userInfo }) {
 									{progressBarPercenNumber(item)}
 								</div>
 								<div className='bookcase__item__button'>
-									<button>Viết Review</button>
+									<button onClick={() => createReview(item.book)}>Viết Review</button>
 								</div>
 							</div>
 						</div>
