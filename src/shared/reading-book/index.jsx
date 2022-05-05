@@ -45,7 +45,7 @@ function ReadingBook({ bookData }) {
 						<div className='reading-book__thumbnail'>
 							<img
 								data-testid='reading-book__book-img'
-								src={renderBookReading?.images?.length > 0 && renderBookReading?.images[0]}
+								src={renderBookReading?.images?.length > 0 ? renderBookReading?.images[0] : ''}
 								alt=''
 							/>
 						</div>

@@ -209,7 +209,7 @@ function Post({ postInformations, className }) {
 				/>
 			)}
 
-			{postData?.image?.length > 0 && <GridImage images={postData.image} inPost={true} />}
+			{postData?.image?.length > 0 && <GridImage images={postData.image} inPost={true} postId={postData.id} />}
 
 			{postData?.image?.length === 0 && !_.isEmpty(postData?.preview) && (
 				<>
