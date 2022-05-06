@@ -20,7 +20,7 @@ const ChartsReading = () => {
 		setChartsData({ month: month, year: year });
 		try {
 			const paramsBook = {
-				count: 'book',
+				count: 'numBookRead',
 				by: 'month',
 				userId: userId,
 			};
@@ -28,7 +28,7 @@ const ChartsReading = () => {
 			const pageMonth = data.filter(item => item.month === month);
 			setPagesMonth(pageMonth);
 			const paramsPage = {
-				count: 'page',
+				count: 'numPageRead',
 				by: 'month',
 				userId: userId,
 			};

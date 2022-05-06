@@ -47,13 +47,13 @@ const StatusButton = ({ className, status, bookData }) => {
 	const [currentStatus, setCurrentStatus] = useState(STATUS_BOOK_OBJ.wantToRead);
 	const [bookLibraries, setBookLibaries] = useState([]);
 	const [fetchStatus, setFetchStatus] = useState(STATUS_IDLE);
+	const { userInfo } = useSelector(state => state.auth);
 	const statusRef = useRef({});
 	statusRef.current = STATUS_BOOK_OBJ.wantToRead;
 	const navigate = useNavigate();
 	const {
 		library: { authLibraryData },
 	} = useSelector(state => state);
-
 	const dispatch = useDispatch();
 
 	useEffect(() => {
@@ -72,7 +72,7 @@ const StatusButton = ({ className, status, bookData }) => {
 		// check duoc trangt hai cos trong thu vien
 		let bookInLibraries = [];
 		let initStatus = STATUS_BOOK_OBJ[status] || STATUS_BOOK_OBJ.wantToRead;
-		dispatch(checkBookInLibraries(bookData.id))
+		dispatch(checkBookInLibraries(bookData.id || bookData.bookId))
 			.unwrap()
 			.then(res => {
 				const { rows } = res;
@@ -130,7 +130,7 @@ const StatusButton = ({ className, status, bookData }) => {
 
 	const updateStatusBook = () => {
 		if (!_.isEmpty(bookData) && status !== currentStatus.value) {
-			const params = { bookId: bookData.id, type: currentStatus.value };
+			const params = { bookId: bookData.id || bookData.bookId, type: currentStatus.value };
 			return dispatch(addBookToDefaultLibrary(params)).unwrap();
 		}
 	};
@@ -155,7 +155,7 @@ const StatusButton = ({ className, status, bookData }) => {
 			);
 
 			if (!_.isEmpty(data.add) || !_.isEmpty(data.remove)) {
-				return dispatch(addRemoveBookInLibraries({ id: bookData.id, ...data }));
+				return dispatch(addRemoveBookInLibraries({ id: bookData.id || bookData.bookId, ...data }));
 			}
 		}
 		return;
@@ -208,25 +208,38 @@ const StatusButton = ({ className, status, bookData }) => {
 				/>
 				<span>{status ? STATUS_BOOK_OBJ[status].name : STATUS_BOOK_OBJ.wantToRead.name}</span>
 			</button>
-			<Modal
-				id='status-book-modal'
-				className='status-book-modal'
-				show={modalShow}
-				onHide={handleClose}
-				keyboard={false}
-				centered
-			>
-				<Modal.Body>
-					<StatusModalContainer
-						currentStatus={currentStatus}
-						handleChangeStatus={handleChangeStatus}
-						bookShelves={bookLibraries}
-						updateBookShelve={updateBookShelve}
-						handleConfirm={handleConfirm}
-						onChangeShelves={onChangeShelves}
-					/>
-				</Modal.Body>
-			</Modal>
+			{!_.isEmpty(userInfo) ? (
+				<Modal
+					id='status-book-modal'
+					className='status-book-modal'
+					show={modalShow}
+					onHide={handleClose}
+					keyboard={false}
+					centered
+				>
+					<Modal.Body>
+						<StatusModalContainer
+							currentStatus={currentStatus}
+							handleChangeStatus={handleChangeStatus}
+							bookShelves={bookLibraries}
+							updateBookShelve={updateBookShelve}
+							handleConfirm={handleConfirm}
+							onChangeShelves={onChangeShelves}
+						/>
+					</Modal.Body>
+				</Modal>
+			) : (
+				<Modal
+					id='status-book-modal'
+					className='status-book-modal'
+					show={modalShow}
+					onHide={handleClose}
+					keyboard={false}
+					centered
+				>
+					<Modal.Body>Vui lòng đăng nhập để trải nghiệm</Modal.Body>
+				</Modal>
+			)}
 		</>
 	);
 };

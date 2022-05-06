@@ -28,7 +28,6 @@ export const useFetchViewMoreCategories = (current = 0, perPage = 10, filter = '
 	});
 	const [status, setStatus] = useState(STATUS_IDLE);
 	const dispatch = useDispatch();
-
 	useEffect(() => {
 		const getCategories = async () => {
 			const query = generateQuery();

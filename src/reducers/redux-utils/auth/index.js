@@ -103,12 +103,6 @@ const authSlice = createSlice({
 		infoForgot: {},
 	},
 
-	reducers: {
-		updateUserInfoRedux: (state, action) => {
-			state.userInfo = action.payload;
-		},
-	},
-
 	extraReducers: {
 		[login.pending]: state => {
 			state.isFetching = true;

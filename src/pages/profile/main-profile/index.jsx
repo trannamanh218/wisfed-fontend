@@ -13,22 +13,22 @@ import { useDispatch } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
 import _ from 'lodash';
 import { useParams } from 'react-router-dom';
-// import { updateUserInfoRedux } from 'reducers/redux-utils/auth';
+import { useSelector } from 'react-redux';
 
 const MainProfile = () => {
 	const { userId } = useParams();
-	const [userInfo, setUserInfo] = useState({});
-	const [checkUpdataImg, setCheckUpdataImg] = useState(false);
+	const [userInfos, setUserInfos] = useState({});
 	const dispatch = useDispatch();
+	const { userInfo } = useSelector(state => state.auth);
 
 	useEffect(() => {
 		getUserDetailData();
-	}, [userId, checkUpdataImg]);
+	}, [userId, userInfo]);
 
 	const getUserDetailData = async () => {
 		try {
 			const userData = await dispatch(getUserDetail(userId)).unwrap();
-			setUserInfo(userData);
+			setUserInfos(userData);
 		} catch (err) {
 			NotificationError(err);
 		}
@@ -36,9 +36,9 @@ const MainProfile = () => {
 
 	return (
 		<>
-			{!_.isEmpty(userInfo) && (
+			{!_.isEmpty(userInfos) && (
 				<div className='main-profile'>
-					<PersonalInfo userInfo={userInfo} setCheckUpdataImg={setCheckUpdataImg} />
+					<PersonalInfo userInfos={userInfos} />
 					<Tabs className='main-profile__tabs' defaultActiveKey={'books'}>
 						{/*Notes: Chỉ hiển thị khi user là tác giả, không public */}
 						<Tab eventKey='books' title='Sách của tác giả'>
@@ -51,7 +51,7 @@ const MainProfile = () => {
 							<PostTab />
 						</Tab>
 						<Tab eventKey='infor' title='Giới thiệu'>
-							<InforTab userInfo={userInfo} />
+							<InforTab userInfo={userInfos} />
 						</Tab>
 						<Tab eventKey='quotes' title='Quotes'>
 							<QuoteTab />

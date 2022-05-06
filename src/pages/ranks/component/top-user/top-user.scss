@@ -10,7 +10,7 @@
 			letter-spacing: 0.75px;
 		}
 		.select-box__btn {
-			width: 234px;
+			width: 248px;
 			justify-content: space-around;
 			.select-box__value {
 				flex: 1;
@@ -18,7 +18,7 @@
 			}
 		}
 		.select-box__list {
-			max-width: 234px;
+			max-width: 248px;
 		}
 	}
 	.topbooks__container__main {
@@ -156,5 +156,9 @@
 				left: 12%;
 			}
 		}
+	}
+	.top__user {
+		margin-left: 0;
+		gap: 20px;
 	}
 }
