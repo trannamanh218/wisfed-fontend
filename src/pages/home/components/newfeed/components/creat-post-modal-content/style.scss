@@ -106,7 +106,7 @@
 	display: flex;
 	align-items: center;
 	p {
-		font-size: 1rem;
+		font-size: 1.15rem;
 		font-weight: 600;
 		color: $ash;
 		line-height: 1.5rem;
@@ -418,13 +418,22 @@
 .creat-post-modal-content__main__options__item-add-to-post__popover {
 	position: absolute;
 	top: -70%;
-	left: -30%;
+	left: 50%;
+	transform: translate(-50%, 0);
 	padding: 8px;
 	background-color: rgba(0, 0, 0, 0.7);
 	border-radius: 4px;
 	color: #fcfcfc;
-	min-width: 70px;
 	z-index: 500;
+	text-align: center;
+	width: fit-content;
+	white-space: nowrap;
+	font-weight: 400;
+	opacity: 0;
+	&.show {
+		opacity: 1;
+		transition: opacity 0.2s ease-in;
+	}
 }
 
 .creat-post-modal-content__main__submit {

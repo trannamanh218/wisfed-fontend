@@ -10,6 +10,10 @@ const GridImage = ({ images, inPost, postId }) => {
 			if (inPost) {
 				if (images.length === 1) {
 					document.querySelector(`.img-0-${postId}`).style.inset = '0%';
+					if (images[0].includes('charts')) {
+						document.querySelector(`.img-0-${postId} img`).style.height = 'fit-content';
+						document.querySelector(`.img-0-${postId} img`).style.objectFit = 'unset';
+					}
 				} else if (images.length === 2) {
 					document.querySelector(`.img-0-${postId}`).style.inset = '0% 0% 50% 0%';
 					document.querySelector(`.img-1-${postId}`).style.inset = '50% 0% 0% 0%';

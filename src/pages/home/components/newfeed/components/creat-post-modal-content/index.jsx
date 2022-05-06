@@ -38,7 +38,7 @@ function CreatPostModalContent({
 	renderBookReading,
 	booksId,
 }) {
-	const [shareMode, setShareMode] = useState({ value: 'public', title: 'Mọi người', icon: <WorldNet /> });
+	// const [shareMode, setShareMode] = useState({ value: 'public', title: 'Mọi người', icon: <WorldNet /> });
 	const [showTextFieldEditPlaceholder, setShowTextFieldEditPlaceholder] = useState(true);
 	const [showMainModal, setShowMainModal] = useState(showModalCreatPost);
 	const [taggedData, setTaggedData] = useState({
@@ -61,6 +61,7 @@ function CreatPostModalContent({
 	const taggedDataPrevious = usePrevious(taggedData);
 	const [valueStar, setValueStar] = useState(0);
 	const [checkProgress, setCheckProgress] = useState();
+	const [showImagePopover, setShowImagePopover] = useState(false);
 
 	const {
 		auth: { userInfo },
@@ -528,8 +529,20 @@ function CreatPostModalContent({
 										'active': imagesUpload.length > 0 && _.isEmpty(taggedData.addBook),
 										'disabled': !_.isEmpty(taggedData.addBook),
 									})}
+									onMouseOver={() => setShowImagePopover(true)}
+									onMouseLeave={() => setShowImagePopover(false)}
 									onClick={handleOpenUploadImage}
 								>
+									<div
+										className={classNames(
+											'creat-post-modal-content__main__options__item-add-to-post__popover',
+											{
+												'show': showImagePopover,
+											}
+										)}
+									>
+										Ảnh
+									</div>
 									<Image />
 								</span>
 							</div>

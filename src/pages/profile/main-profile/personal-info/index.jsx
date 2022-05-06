@@ -23,7 +23,7 @@ import { activeUpdateUserProfileStatus } from 'reducers/redux-utils/user';
 import PropTypes from 'prop-types';
 import backgroundImageDefault from 'assets/images/background-profile.png';
 
-const PersonalInfo = ({ userInfo, setCheckUpdataImg }) => {
+const PersonalInfo = ({ userInfo }) => {
 	const { ref: settingsRef, isVisible: isSettingsVisible, setIsVisible: setSettingsVisible } = useVisible(false);
 	const { modalOpen, setModalOpen, toggleModal } = useModal(false);
 	const [modalFriend, setModalFriend] = useState(false);
@@ -49,7 +49,6 @@ const PersonalInfo = ({ userInfo, setCheckUpdataImg }) => {
 	};
 
 	const handleDrop = useCallback(async (acceptedFile, option) => {
-		setCheckUpdataImg(false);
 		if (!_.isEmpty(acceptedFile)) {
 			try {
 				const imageUploadedData = await dispatch(uploadImage(acceptedFile)).unwrap();
@@ -67,8 +66,6 @@ const PersonalInfo = ({ userInfo, setCheckUpdataImg }) => {
 				}
 			} catch {
 				toast.error('Cập nhật ảnh thất bại');
-			} finally {
-				setCheckUpdataImg(true);
 			}
 		}
 	});
