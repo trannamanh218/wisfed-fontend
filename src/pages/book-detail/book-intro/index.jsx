@@ -14,6 +14,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { getRatingBook } from 'reducers/redux-utils/book';
 import { useDispatch } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
+import { FacebookShareButton } from 'react-share';
 
 const BookIntro = () => {
 	const { bookInfo } = useSelector(state => state.book);
@@ -67,15 +68,18 @@ const BookIntro = () => {
 				<div className='book-intro__description'>
 					<ReadMore text={convertToPlainString(bookInfo.description) || 'Chưa cập nhật'} />
 				</div>
-				<div className='book-intro__action'>
-					<div className='book-intro__share'>
-						<img src={shareImg} alt='share' />
-						<span className='book-intro__share__text'>Chia sẻ</span>
+				<FacebookShareButton url='https://peing.net/ja/' quote='Phải chăng ta đã yêu' hashtag=''>
+					<div className='book-intro__action'>
+						<div className='book-intro__share'>
+							<img src={shareImg} alt='share' />
+							<span className='book-intro__share__text'>Chia sẻ</span>
+						</div>
+
+						<div className='book-intro__share'>
+							<img src={facebookImg} alt='facebook' />
+						</div>
 					</div>
-					<div className='book-intro__share'>
-						<img src={facebookImg} alt='facebook' />
-					</div>
-				</div>
+				</FacebookShareButton>
 			</div>
 		</div>
 	);

@@ -103,3 +103,6 @@ export const getAPIchartsByid = (id, count, by) => `/api/v1/tracking/trackingByI
 export const getReadingTargetAPI = '/api/v1/books/readingGoal';
 export const updateTargetReadAPI = year => `/api/v1/books/readingGoal/${year}`;
 export const getReadingTargetIdAPI = id => `/api/v1/books/readingGoalById/${id}`;
+
+// group
+export const detailGroup = id => `api/v1/groups/${id}`;
