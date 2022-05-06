@@ -525,8 +525,7 @@ function CreatPostModalContent({
 									taggedData={taggedData}
 									images={imagesUpload}
 								/>
-								<label
-									htmlFor='image-upload'
+								<span
 									className={classNames('creat-post-modal-content__main__options__item-add-to-post', {
 										'active': imagesUpload.length > 0 && _.isEmpty(taggedData.addBook),
 										'disabled': !_.isEmpty(taggedData.addBook),
@@ -534,7 +533,7 @@ function CreatPostModalContent({
 									onClick={handleOpenUploadImage}
 								>
 									<Image />
-								</label>
+								</span>
 							</div>
 						</div>
 						<button

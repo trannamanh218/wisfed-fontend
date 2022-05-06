@@ -374,6 +374,7 @@
 	background-color: #eff0f6;
 	border-radius: 50%;
 	cursor: pointer;
+	position: relative;
 	svg {
 		width: 22px;
 		height: 22px;
@@ -412,6 +413,12 @@
 			}
 		}
 	}
+}
+
+.creat-post-modal-content__main__options__item-add-to-post__popover {
+	position: absolute;
+	top: -30%;
+	left: -50%;
 }
 
 .creat-post-modal-content__main__submit {

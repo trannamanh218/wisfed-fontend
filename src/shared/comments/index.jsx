@@ -42,21 +42,19 @@ const Comment = ({ data, handleReply, postData, commentLv1Id, postCommentsLikedA
 		}
 	};
 
-	console.log(data);
-
 	return (
 		<div className='comment'>
 			<UserAvatar className='comment__avatar' size='sm' source={data.user?.avatarImage} />
 			<div className='comment__wrapper'>
 				<div className='comment__container'>
 					<div className='comment__header'>
-						{/* <span className='comment__author'>
+						<span className='comment__author'>
 							{data.user.name ||
 								data.user.fullName ||
 								data.user.lastName ||
 								data.user.firstName ||
 								'Không xác định'}
-						</span> */}
+						</span>
 						{isAuthor && (
 							<Badge className='comment__badge' bg='primary-light'>
 								Tác giả

@@ -27,6 +27,7 @@ const OptionsPost = ({ list, addOptionsToPost, taggedData, images }) => {
 				}}
 				key={index}
 			>
+				<div className='creat-post-modal-content__main__options__item-add-to-post__popover'>popover</div>
 				{item.icon}
 			</span>
 		);
