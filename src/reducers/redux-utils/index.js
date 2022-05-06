@@ -14,6 +14,7 @@ import forgetPasswordSliceReducer from './forget-password';
 import friends from './friends';
 import chart from './chart';
 import common from './common';
+import ranks from './ranks';
 
 const rootReducer = {
 	auth,
@@ -32,6 +33,7 @@ const rootReducer = {
 	friends,
 	chart,
 	common,
+	ranks,
 };
 
 export default rootReducer;

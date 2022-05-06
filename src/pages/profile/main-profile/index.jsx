@@ -17,8 +17,8 @@ import { useParams } from 'react-router-dom';
 const MainProfile = () => {
 	const { userId } = useParams();
 	const [userInfor, setUserInfor] = useState({});
-	const userInfo = useSelector(state => state.auth.userInfo);
 	const dispatch = useDispatch();
+	const { userInfo } = useSelector(state => state.auth);
 
 	useEffect(() => {
 		getUserDetailData();
@@ -35,9 +35,9 @@ const MainProfile = () => {
 
 	return (
 		<>
-			{!_.isEmpty(userInfo) && (
+			{!_.isEmpty(userInfor) && (
 				<div className='main-profile'>
-					<PersonalInfo userInfo={userInfor} />
+					<PersonalInfo userInfor={userInfor} />
 					<Tabs className='main-profile__tabs' defaultActiveKey={'books'}>
 						{/*Notes: Chỉ hiển thị khi user là tác giả, không public */}
 						<Tab eventKey='books' title='Sách của tác giả'>

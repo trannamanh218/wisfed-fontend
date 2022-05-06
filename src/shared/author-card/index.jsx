@@ -8,9 +8,9 @@ const AuthorCard = ({ direction, size, item }) => {
 	return (
 		<div className='author-card'>
 			<div className='author-card__left'>
-				<UserAvatar className='author-card__avatar' size={size} />
+				<UserAvatar className='author-card__avatar' size={size} source={item.avatarImage || ''} />
 				<div className='author-card__info'>
-					<h5>Mai Nguyễn</h5>
+					<h5>{item.fullName || `${item.firstName} ${item.lastName}`}</h5>
 					<p className='author-card__subtitle'>3K follow, 300 bạn bè</p>
 					{/* <p>Tác giả của cuốn sách cuốn theo chiều gió</p>
 					<span>và 500 cuốn sách khác</span> */}

@@ -90,8 +90,36 @@ export const deleteTargetRead = createAsyncThunk(
 
 const chartSlice = createSlice({
 	name: 'chart',
-	initialState: {},
+	initialState: {
+		updateImgPost: [],
+		isFetching: false,
+		error: {},
+		targetReading: [],
+	},
+	reducers: {
+		updateImg: (state, action) => {
+			state.updateImgPost = action.payload;
+		},
+		updateTargetReading: (state, action) => {
+			state.targetReading = action.payload;
+		},
+	},
+	extraReducers: {
+		[getListBooksTargetReading.pending]: state => {
+			state.isFetching = true;
+		},
+		[getListBooksTargetReading.fulfilled]: (state, action) => {
+			state.isFetching = false;
+			state.targetReading = action.payload;
+			state.error = {};
+		},
+		[getListBooksTargetReading.rejected]: (state, action) => {
+			state.isFetching = false;
+			state.targetReading = [];
+			state.error = action.payload;
+		},
+	},
 });
-
+export const { updateImg, updateTargetReading } = chartSlice.actions;
 const chart = chartSlice.reducer;
 export default chart;

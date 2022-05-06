@@ -203,13 +203,8 @@ const userSlice = createSlice({
 		userDetail: {},
 		categoriesData: {},
 		error: {},
-		updateUserProfile: false,
 	},
-	reducers: {
-		activeUpdateUserProfileStatus: state => {
-			state.updateUserProfile = !state.updateUserProfile;
-		},
-	},
+
 	extraReducers: {
 		[getUserDetail.pending]: state => {
 			state.isFetching = true;
@@ -227,6 +222,5 @@ const userSlice = createSlice({
 	},
 });
 
-export const { activeUpdateUserProfileStatus } = userSlice.actions;
 const user = userSlice.reducer;
 export default user;

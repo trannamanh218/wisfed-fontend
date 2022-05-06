@@ -17,7 +17,7 @@ import { useFetchTargetReading } from 'api/readingTarget.hooks';
 const MainReadingTarget = () => {
 	const { userId } = useParams();
 	const { userInfo } = useSelector(state => state.auth);
-	const { usersData } = useFetchUserParams(userId);
+	const { userData } = useFetchUserParams(userId);
 	const { modalOpen, setModalOpen, toggleModal } = useModal(false);
 	const [deleteModal, setDeleteModal] = useState(false);
 	const [filter, setFilter] = useState('[]');
@@ -61,7 +61,7 @@ const MainReadingTarget = () => {
 	};
 
 	const renderContentTop = item => {
-		const name = userInfo.id === userId ? 'Bạn' : usersData?.fullName;
+		const name = userInfo.id === userId ? 'Bạn' : userData?.fullName;
 		return (
 			<div className='reading-target__content__top'>
 				<p>

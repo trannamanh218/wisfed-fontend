@@ -2,15 +2,15 @@ import './style.scss';
 import ProgressBar from 'react-bootstrap/ProgressBar';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
-import CreatPostModalContent from 'pages/home/components/newfeed/components/creat-post-modal-content';
+import { updateCurrentBook } from 'reducers/redux-utils/book';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 function ReadingBook({ bookData }) {
 	const [renderBookReading, setRenderBookReading] = useState({});
-	const [toggleModal, setToggleModal] = useState(false);
-	const [booksId, setBooksId] = useState('');
+	const dispatch = useDispatch();
 	const [percent, setPercent] = useState(null);
-	const [option, setOption] = useState({});
-
+	const navigate = useNavigate();
 	useEffect(() => {
 		if (bookData?.books?.length > 0) {
 			const newItem = bookData?.books[bookData?.books.length - 1];
@@ -25,17 +25,10 @@ function ReadingBook({ bookData }) {
 	}, [bookData, percent]);
 
 	const handleOpenModal = () => {
-		setToggleModal(!toggleModal);
-		setBooksId(renderBookReading.id);
+		dispatch(updateCurrentBook({ ...renderBookReading, status: 'reading' }));
+		navigate('/');
 	};
 
-	const onChangeOption = data => {
-		setOption(data);
-	};
-
-	const onChangeNewPost = () => {
-		setToggleModal(!toggleModal);
-	};
 	return (
 		bookData?.books?.length > 0 && (
 			<div className='reading-book'>
@@ -64,19 +57,6 @@ function ReadingBook({ bookData }) {
 						</div>
 					</div>
 				</div>
-				{toggleModal && (
-					<div className='newfeed__creat-post__modal'>
-						<CreatPostModalContent
-							showModalCreatPost={toggleModal}
-							option={option}
-							renderBookReading={renderBookReading}
-							booksId={booksId}
-							hideCreatPostModal={handleOpenModal}
-							onChangeOption={onChangeOption}
-							onChangeNewPost={onChangeNewPost}
-						/>
-					</div>
-				)}
 			</div>
 		)
 	);

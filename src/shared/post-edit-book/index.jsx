@@ -32,7 +32,7 @@ const PostEditBook = props => {
 				const data = res.data.rows;
 				setListRatingStar(data);
 			} catch (err) {
-				NotificationError(err);
+				// toast.error('lỗi hệ thống');
 			}
 		}
 	};

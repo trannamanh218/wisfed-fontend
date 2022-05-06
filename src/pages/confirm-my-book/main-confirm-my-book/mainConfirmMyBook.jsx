@@ -52,6 +52,7 @@ function MainConfirmMyBook() {
 	const onDrop = useCallback(acceptedFiles => {
 		if (!_.isEmpty(acceptedFiles)) {
 			const newArrayFile = [...images, ...acceptedFiles];
+
 			setImages(newArrayFile);
 		}
 	});

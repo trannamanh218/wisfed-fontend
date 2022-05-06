@@ -29,15 +29,7 @@ import { setting } from './settings';
 import { NotificationError } from 'helpers/Error';
 import { uploadMultiFile } from 'reducers/redux-utils/common';
 
-function CreatPostModalContent({
-	hideCreatPostModal,
-	showModalCreatPost,
-	option,
-	onChangeOption,
-	onChangeNewPost,
-	renderBookReading,
-	booksId,
-}) {
+function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option, onChangeOption, onChangeNewPost }) {
 	// const [shareMode, setShareMode] = useState({ value: 'public', title: 'Mọi người', icon: <WorldNet /> });
 	const [showTextFieldEditPlaceholder, setShowTextFieldEditPlaceholder] = useState(true);
 	const [showMainModal, setShowMainModal] = useState(showModalCreatPost);
@@ -63,6 +55,8 @@ function CreatPostModalContent({
 	const [checkProgress, setCheckProgress] = useState();
 	const [showImagePopover, setShowImagePopover] = useState(false);
 
+	const UpdateImg = useSelector(state => state.chart.updateImgPost);
+	const resetTaggedData = useSelector(state => state.post.resetTaggedData);
 	const {
 		auth: { userInfo },
 		book: { bookForCreatePost, bookInfo },
@@ -71,21 +65,19 @@ function CreatPostModalContent({
 
 	useEffect(() => {
 		textFieldEdit.current.focus();
+		if (UpdateImg.length > 0) {
+			setShowUpload(true);
+			setImagesUpload(UpdateImg);
+		}
 	}, []);
 
 	useEffect(() => {
-		if (!_.isEmpty(bookForCreatePost) || !_.isEmpty(renderBookReading)) {
-			if (booksId) {
-				const newData = { ...taggedData };
-				const pages = { read: renderBookReading.page, reading: '', wantToRead: '' };
-				newData.addBook = { ...renderBookReading, progress: pages[renderBookReading.status] };
-				setTaggedData(newData);
-			} else {
-				const newData = { ...taggedData };
-				const pages = { read: bookForCreatePost.page, reading: '', wantToRead: '' };
-				newData.addBook = { ...bookForCreatePost, progress: pages[bookForCreatePost.status] };
-				setTaggedData(newData);
-			}
+		if (!_.isEmpty(bookForCreatePost)) {
+			const newData = { ...taggedData };
+			const pages = { read: bookForCreatePost.page, reading: '', wantToRead: '' };
+			newData.addBook = { ...bookForCreatePost, progress: pages[bookForCreatePost.status] };
+			setTaggedData(newData);
+			setShowUpload(false);
 		}
 	}, [bookForCreatePost]);
 
@@ -99,6 +91,14 @@ function CreatPostModalContent({
 			document.removeEventListener('input', handlePlaceholder);
 		};
 	}, [showTextFieldEditPlaceholder]);
+
+	useEffect(() => {
+		if (resetTaggedData) {
+			setTaggedData({ 'addBook': {}, 'addAuthor': [], 'addFriends': [], 'addCategory': [] });
+			setImagesUpload([]);
+			setShowUpload(false);
+		}
+	}, [resetTaggedData]);
 
 	const detectUrl = useCallback(
 		_.debounce(() => {
@@ -594,7 +594,6 @@ CreatPostModalContent.propTypes = {
 	onChangeOption: PropTypes.func,
 	onChangeNewPost: PropTypes.func,
 	renderBookReading: PropTypes.object,
-	booksId: PropTypes.number,
 };
 
 export default CreatPostModalContent;

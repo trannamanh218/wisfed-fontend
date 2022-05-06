@@ -6,12 +6,14 @@ import UserAvatar from 'shared/user-avatar';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import { updateCurrentBook } from 'reducers/redux-utils/book';
+import { resetTaggedDataFunc } from 'reducers/redux-utils/post';
 
 function CreatePost({ onChangeNewPost }) {
 	const [showModalCreatPost, setShowModalCreatPost] = useState(false);
 	const [option, setOption] = useState({});
 	const creatPostModalContainer = useRef(null);
 	const scrollBlocked = useRef(false);
+	const UpdateImg = useSelector(state => state.chart.updateImgPost);
 	const {
 		auth: { userInfo },
 		book: { bookForCreatePost },
@@ -54,10 +56,20 @@ function CreatePost({ onChangeNewPost }) {
 			message: 'Không tìm thấy hashtag',
 		},
 	];
+	useEffect(() => {
+		if (UpdateImg.length > 0) {
+			setShowModalCreatPost(true);
+			dispatch(resetTaggedDataFunc(false));
+		} else {
+			setShowModalCreatPost(false);
+			dispatch(resetTaggedDataFunc(true));
+		}
+	}, [UpdateImg]);
 
 	useEffect(() => {
 		if (!_.isEmpty(bookForCreatePost)) {
 			setShowModalCreatPost(true);
+			dispatch(resetTaggedDataFunc(false));
 		}
 	}, [bookForCreatePost]);
 
@@ -100,6 +112,7 @@ function CreatePost({ onChangeNewPost }) {
 	const hideCreatPostModal = () => {
 		setShowModalCreatPost(false);
 		setOption({});
+		dispatch(resetTaggedDataFunc(true));
 	};
 
 	const onChangeOption = data => {
@@ -114,6 +127,7 @@ function CreatePost({ onChangeNewPost }) {
 				onClick={() => {
 					onChangeOption(item);
 					setShowModalCreatPost(true);
+					dispatch(resetTaggedDataFunc(false));
 				}}
 			>
 				<div className='newfeed__creat-post__options__item__logo'>{item.icon}</div>

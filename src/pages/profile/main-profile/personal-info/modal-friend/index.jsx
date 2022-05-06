@@ -16,6 +16,7 @@ const ModalFriend = ({ setModalFriend, modalFriend, userInfoDetail }) => {
 	const [getMyListFriend, setGetMyListFriend] = useState([]);
 	const dispatch = useDispatch();
 	const { userId } = useParams();
+
 	const unFolow = id => {
 		try {
 			dispatch(unFollower(id)).unwrap();

@@ -1,0 +1,35 @@
+.top__quotes__container {
+	padding: 28px 20px 24px 20px;
+	display: flex;
+	flex-direction: column;
+	.top__quotes__description {
+		text-align: center;
+		font-weight: 500;
+		font-size: 15px;
+		line-height: 24px;
+		color: #4e4b66;
+		flex: 1;
+		word-wrap: break-word;
+	}
+	.top__quotes__author {
+		text-align: center;
+		font-weight: 400;
+		font-size: 13px;
+		line-height: 24px;
+		color: #4e4b66;
+		margin-top: 24px;
+		text-decoration-line: underline;
+	}
+	.top__quotes__footer {
+		display: flex;
+		justify-content: space-between;
+		margin-top: 23px;
+	}
+	.top__quotes__info {
+		display: flex;
+		gap: 15px;
+	}
+	.quote-action__name:nth-last-child(2) {
+		color: #0576f0;
+	}
+}

@@ -9,6 +9,9 @@ import _ from 'lodash';
 import { useFetchBookInDefaultLibrary, useFetchStatsReadingBooks } from 'api/library.hook';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import ProgressBarCircle from 'shared/progress-circle';
+import { useFetchTargetReading } from 'api/readingTarget.hooks';
+
 const Sidebar = () => {
 	const { quoteRandom } = useFetchQuoteRandom();
 	const { userInfo } = useSelector(state => state.auth);
@@ -16,6 +19,7 @@ const Sidebar = () => {
 		{ operator: 'eq', value: 'wantToRead', property: 'defaultType' },
 		{ operator: 'eq', value: `${userInfo.id}`, property: 'createdBy' },
 	]);
+	const { booksReadYear } = useFetchTargetReading(userInfo?.id);
 	const { bookData } = useFetchBookInDefaultLibrary(1, 10, fiterBook);
 	const { readingData, booksRead } = useFetchStatsReadingBooks();
 	return (
@@ -53,7 +57,7 @@ const Sidebar = () => {
 			</div>
 			<ReadingBook bookData={booksRead} />
 			<TheBooksWantsToRead list={bookData} />
-			<ReadChallenge />
+			{booksReadYear.length > 0 && !_.isEmpty(userInfo) ? <ProgressBarCircle /> : <ReadChallenge />}
 		</div>
 	);
 };
