@@ -10,7 +10,7 @@ import { toast } from 'react-toastify';
 import { createActivity } from 'reducers/redux-utils/activity';
 import PostEditBook from 'shared/post-edit-book';
 import OptionsPost from './OptionsPost';
-import ShareModeComponent from './ShareModeComponent';
+// import ShareModeComponent from './ShareModeComponent';
 import CreatPostSubModal from './CreatePostSubModal';
 import TaggedList from './TaggedList';
 import UploadImage from './UploadImage';
@@ -435,7 +435,7 @@ function CreatPostModalContent({
 							<div className='creat-post-modal-content__main__body__user-info__block-right'>
 								<p>
 									{userInfo.fullName || userInfo.lastName || userInfo.firstName || 'Không xác định'}
-									{taggedData.addFriends.length ? (
+									{taggedData.addFriends.length > 0 && (
 										<>
 											<span className='d-inline-block mx-1'>cùng với</span>
 											{taggedData.addFriends.map(item => (
@@ -447,15 +447,13 @@ function CreatPostModalContent({
 												</span>
 											))}
 										</>
-									) : (
-										''
 									)}
 								</p>
-								<ShareModeComponent
+								{/* <ShareModeComponent
 									list={shareModeList}
 									shareMode={shareMode}
 									setShareMode={setShareMode}
-								/>
+								/> */}
 							</div>
 						</div>
 						<div

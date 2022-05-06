@@ -89,12 +89,10 @@
 
 .creat-post-modal-content__main__body__user-info {
 	display: flex;
-	margin-bottom: 35px;
+	margin-bottom: 28px;
 }
 
 .creat-post-modal-content__main__body__user-info__block-left {
-	width: 2.5rem;
-	height: 2.5rem;
 	margin-right: 16px;
 	img {
 		width: 100%;
@@ -105,6 +103,8 @@
 
 .creat-post-modal-content__main__body__user-info__block-right {
 	position: relative;
+	display: flex;
+	align-items: center;
 	p {
 		font-size: 1rem;
 		font-weight: 600;
@@ -417,8 +417,14 @@
 
 .creat-post-modal-content__main__options__item-add-to-post__popover {
 	position: absolute;
-	top: -30%;
-	left: -50%;
+	top: -70%;
+	left: -30%;
+	padding: 8px;
+	background-color: rgba(0, 0, 0, 0.7);
+	border-radius: 4px;
+	color: #fcfcfc;
+	min-width: 70px;
+	z-index: 500;
 }
 
 .creat-post-modal-content__main__submit {

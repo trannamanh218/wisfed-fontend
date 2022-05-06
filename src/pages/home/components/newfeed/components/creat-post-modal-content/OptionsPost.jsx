@@ -27,7 +27,9 @@ const OptionsPost = ({ list, addOptionsToPost, taggedData, images }) => {
 				}}
 				key={index}
 			>
-				<div className='creat-post-modal-content__main__options__item-add-to-post__popover'>popover</div>
+				<div className='creat-post-modal-content__main__options__item-add-to-post__popover'>
+					{item.title.charAt(0).toUpperCase() + item.title.slice(1)}
+				</div>
 				{item.icon}
 			</span>
 		);
