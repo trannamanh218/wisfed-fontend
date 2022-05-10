@@ -18,7 +18,7 @@ const TopQuotesComponent = ({ item }) => {
 						<p className='quote-card__author__detail__name'>{item.user.fullName}</p>
 					</div>
 				</div>
-				<QuoteActionBar />
+				<QuoteActionBar data={item} />
 			</div>
 		</div>
 	);

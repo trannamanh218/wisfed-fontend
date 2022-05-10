@@ -3,20 +3,29 @@ import { Crown } from 'components/svg';
 import './top-ranks.scss';
 import PropTypes from 'prop-types';
 
-const TopRanks = ({ getListTopBooks, listDataSortType }) => {
+const TopRanks = ({ getListTopBooks, valueDataSort }) => {
 	const handleRenderTitle = () => {
-		return listDataSortType.map(item => {
-			if (item.value === 'topFollow') {
-				return <span>Follow</span>;
-			}
-		});
+		if (valueDataSort === 'topFollow') {
+			return <span>Follow</span>;
+		} else if (valueDataSort === 'topRead') {
+			return <span>Cuốn sách</span>;
+		} else if (valueDataSort === 'topReview') {
+			return <span>Review</span>;
+		} else if (valueDataSort === 'topLike') {
+			return <span>Like</span>;
+		}
 	};
+
 	const handleNumber = number => {
-		return listDataSortType.map(item => {
-			if (item.value === 'topFollow') {
-				return <div className='number__books'>{getListTopBooks[number].numberFollowing}</div>;
-			}
-		});
+		if (valueDataSort === 'topFollow') {
+			return <div className='number__books'>{getListTopBooks[number].numberFollowing}</div>;
+		} else if (valueDataSort === 'topRead') {
+			return <div className='number__books'>{getListTopBooks[number].bookRead}</div>;
+		} else if (valueDataSort === 'topLike') {
+			return <div className='number__books'>{getListTopBooks[number].numLike}</div>;
+		} else if (valueDataSort === 'topReview') {
+			return <div className='number__books'>{getListTopBooks[number].numReview}</div>;
+		}
 	};
 	return (
 		<div className='top__user__ranks'>
@@ -70,6 +79,6 @@ const TopRanks = ({ getListTopBooks, listDataSortType }) => {
 };
 TopRanks.propTypes = {
 	getListTopBooks: PropTypes.array,
-	listDataSortType: PropTypes.array,
+	valueDataSort: PropTypes.string,
 };
 export default TopRanks;

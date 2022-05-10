@@ -1,32 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 // import PopupCreatGroup from './PopupCreatGroup';
 // import PopupInviteFriend from './popup-group/popupInviteFriend';
 // import PopupQuestion from './popup-group/popupQuestion';
 // import MiniPopup from './popup-group/mini-popup';
-import SidebarGroupLef from './sidebar-left';
 import './mainGroup.scss';
 import MainGroupComponent from './popup-group/MainGroupComponet/MainGroupComponent';
-import { useDispatch } from 'react-redux';
-import { NotificationError } from 'helpers/Error';
-import { getGroupDettail } from 'reducers/redux-utils/group';
 
 const MainGroup = () => {
-	const [detailGroup, setDetailGroup] = useState({});
-	const dispatch = useDispatch();
-
-	const fetchData = async () => {
-		try {
-			const res = await dispatch(getGroupDettail(1)).unwrap();
-			setDetailGroup(res.data);
-		} catch (err) {
-			NotificationError(err);
-		}
-	};
-
-	useEffect(() => {
-		fetchData();
-	}, []);
-	const [keyChange, setKeyChange] = useState('tabs');
+	const [keyChange, setKeyChange] = useState('settingsQuestion');
 	// const [isShow, setIsShow] = useState(false);
 	// const [isInvite, setIsInvite] = useState(false);
 	// const [isQuestion, setIsQuestion] = useState(false);
@@ -118,8 +99,7 @@ const MainGroup = () => {
 				</div>
 			</div> */}
 			<div className='group-main__container'>
-				<SidebarGroupLef handleChange={handleChange} data={detailGroup} />
-				<MainGroupComponent handleChange={handleChange} keyChange={keyChange} data={detailGroup} />
+				<MainGroupComponent handleChange={handleChange} keyChange={keyChange} />
 			</div>
 		</div>
 	);

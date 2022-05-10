@@ -2,10 +2,11 @@ import SelectBox from 'shared/select-box';
 import React, { useRef, useEffect, useState } from 'react';
 import StarRanking from 'shared/starRanks';
 import TopQuotesComponent from 'shared/top-quotes';
-import { getTopQuotes, getFilterTopQuotes } from 'reducers/redux-utils/ranks';
+import { getTopQuotes } from 'reducers/redux-utils/ranks';
 import { useDispatch } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
 import PropTypes from 'prop-types';
+import _ from 'lodash';
 
 const TopQuotes = ({ rows, listYear }) => {
 	const [topQuotesId, setTopQuotesId] = useState();
@@ -17,17 +18,12 @@ const TopQuotes = ({ rows, listYear }) => {
 
 	const getTopQuotesData = async () => {
 		const params = {
-			id: topQuotesId,
+			categoryId: topQuotesId,
 			by: valueDate,
 		};
 		try {
-			if (topQuotesId) {
-				const topQuotes = await dispatch(getFilterTopQuotes(params)).unwrap();
-				setGetListTopQuotes(topQuotes.rows);
-			} else {
-				const topQuotes = await dispatch(getTopQuotes(params)).unwrap();
-				setGetListTopQuotes(topQuotes.rows);
-			}
+			const topQuotes = await dispatch(getTopQuotes(params)).unwrap();
+			setGetListTopQuotes(topQuotes.rows);
 		} catch (err) {
 			NotificationError(err);
 		}

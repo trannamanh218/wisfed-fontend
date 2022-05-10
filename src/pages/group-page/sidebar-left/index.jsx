@@ -3,7 +3,9 @@ import React from 'react';
 import './group-sibar.scss';
 import PropTypes from 'prop-types';
 
-const SidebarGroupLef = ({ handleChange }) => {
+const SidebarGroupLef = ({ handleChange, data }) => {
+	const { groupType, description } = data;
+
 	return (
 		<div className='group-sibar-left__container'>
 			<div className='group__manager'>
@@ -36,13 +38,12 @@ const SidebarGroupLef = ({ handleChange }) => {
 				</span> */}
 					<div className='group-sibar-left__text1'>
 						<span>
-							<strong>Kiểu nội dung:</strong> Tác giả
+							<strong>Kiểu nội dung:</strong> {groupType}
 						</span>
 					</div>
 					<div className='group-sibar-left__text1'>
 						<span>
-							<strong>Giới thiệu:</strong> Giới thiệu: Tình yêu quê hương đất nước là tình cảm yêu mến và
-							gắn bó sâu sắc, chân thành đối với những ...
+							<strong>Giới thiệu:</strong> {description}
 						</span>
 					</div>
 				</div>
@@ -104,6 +105,7 @@ const SidebarGroupLef = ({ handleChange }) => {
 
 SidebarGroupLef.propTypes = {
 	handleChange: PropTypes.func,
+	data: PropTypes.object,
 };
 
 export default SidebarGroupLef;

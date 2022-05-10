@@ -23,6 +23,7 @@
 		align-items: center;
 		justify-content: center;
 		user-select: none;
+		gap: 1rem;
 		&:active {
 			&:focus {
 				box-shadow: unset;
@@ -40,7 +41,7 @@
 	&__content {
 		line-height: 1.25;
 		display: inline-block;
-		margin-left: 1rem;
+		// margin-left: 1rem;
 	}
 
 	&.follow {

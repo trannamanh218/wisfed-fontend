@@ -83,7 +83,7 @@ function RegisterComponent() {
 							onSubmit={handleSubmit}
 							validationSchema={registerValidate}
 						>
-							<Form className='register__form'>
+							<Form className='register__form-register'>
 								<div className='register__form-title'>
 									<span>
 										Tạo tài khoản <br /> nhanh chóng và dễ dàng

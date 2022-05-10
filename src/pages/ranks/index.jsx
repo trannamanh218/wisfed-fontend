@@ -10,9 +10,9 @@ import TopQuotes from './component/top-quotes';
 import { useFetchViewMoreCategories } from 'api/category.hook';
 const MAX_PER_PAGE = 30;
 
-const Ranks = () => {
+const Ranks = ({ loginId }) => {
 	const {
-		categoryData: { rows = [], count = 0 },
+		categoryData: { rows = [] },
 	} = useFetchViewMoreCategories(1, MAX_PER_PAGE, '[]');
 	const listYear = [
 		{ value: 'week', title: 'Tuần' },
@@ -45,4 +45,5 @@ const Ranks = () => {
 		</NormalContainer>
 	);
 };
+
 export default Ranks;

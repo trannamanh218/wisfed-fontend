@@ -5,7 +5,7 @@ import AuthorBook from 'shared/author-book';
 import { CHECK_STAR, CHECK_SHARE } from 'constants';
 import StarRanking from 'shared/starRanks';
 import PropTypes from 'prop-types';
-import { getTopBooks, getFilterTopBooks, getTopBooksAuth } from 'reducers/redux-utils/ranks';
+import { getTopBooks, getTopBooksAuth } from 'reducers/redux-utils/ranks';
 import { useDispatch, useSelector } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
 import _ from 'lodash';
@@ -13,7 +13,7 @@ import _ from 'lodash';
 const TopBooks = ({ rows, listYear }) => {
 	const kindOfGroupRef = useRef({ value: 'default', title: 'Chủ đề' });
 	const listYearRef = useRef({ value: 'default', title: 'Tuần' });
-	const { userInfo } = useSelector(state => state.auth);
+	const { isAuth } = useSelector(state => state.auth);
 	const [topBooksId, setTopQuotesId] = useState();
 	const [valueDate, setValueData] = useState('week');
 	const [getListTopBooks, setGetListTopBooks] = useState([]);
@@ -27,19 +27,15 @@ const TopBooks = ({ rows, listYear }) => {
 
 	const getTopBooksData = async () => {
 		const params = {
-			id: topBooksId,
+			categoryId: topBooksId,
 			by: valueDate,
 		};
+
 		try {
-			if (!_.isEmpty(userInfo)) {
-				if (topBooksId) {
-					const topBooks = await dispatch(getFilterTopBooks(params)).unwrap();
-					setGetListTopBooks(topBooks);
-				} else {
-					const topBooks = await dispatch(getTopBooks(params)).unwrap();
-					setGetListTopBooks(topBooks);
-				}
-			} else {
+			if (isAuth === false) {
+				const topBooks = await dispatch(getTopBooks(params)).unwrap();
+				setGetListTopBooks(topBooks);
+			} else if (isAuth === true) {
 				const topBooks = await dispatch(getTopBooksAuth(params)).unwrap();
 				setGetListTopBooks(topBooks);
 			}
@@ -49,10 +45,8 @@ const TopBooks = ({ rows, listYear }) => {
 	};
 
 	useEffect(() => {
-		if (!_.isEmpty(userInfo)) {
-			getTopBooksData();
-		}
-	}, [topBooksId, valueDate, userInfo]);
+		getTopBooksData();
+	}, [topBooksId, valueDate, isAuth]);
 
 	const onchangeKindOfDate = data => {
 		listYearRef.current = data;

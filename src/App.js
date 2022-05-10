@@ -10,10 +10,10 @@ import Review from 'pages/review';
 import BookShelves from 'pages/shelves';
 import ConfirmMyBook from 'pages/confirm-my-book';
 import Notification from 'pages/notification/compornent-main';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Routes, Route } from 'react-router-dom';
-import { login } from 'reducers/redux-utils/auth';
+import { login, checkLogin } from 'reducers/redux-utils/auth';
 import { ToastContainer } from 'react-toastify';
 import Login from 'pages/login/element';
 import Register from 'pages/register/component';
@@ -35,14 +35,15 @@ import Ranks from 'pages/ranks';
 
 function App({ children }) {
 	const dispatch = useDispatch();
+
 	useEffect(() => {
 		const params = {
-			email: 'register@gmail.com',
-			password: '12345678',
+			// email: 'register@gmail.com',
+			// password: '12345678',
 			// email: 'hungngonzai@gmail.com',
 			// password: '123456',
-			// email: 'admin@gmail.com',
-			// password: '123456',
+			email: 'admin@gmail.com',
+			password: '123456',
 		};
 
 		fetchLogin(params);
@@ -51,10 +52,11 @@ function App({ children }) {
 	const fetchLogin = async params => {
 		try {
 			await dispatch(login(params)).unwrap();
+			dispatch(checkLogin(true));
 		} catch (err) {
-			NotificationError(err);
-			const statusCode = err?.statusCode || 500;
-			return statusCode;
+			dispatch(checkLogin(false));
+			// NotificationError(JSON.parse(err));
+			// const statusCode = err?.statusCode || 500;
 		}
 	};
 

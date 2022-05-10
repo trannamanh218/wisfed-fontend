@@ -14,7 +14,6 @@ import { useFetchAuthorBooks } from 'api/book.hooks';
 import { useSelector } from 'react-redux';
 import { useFetchTargetReading } from 'api/readingTarget.hooks';
 import ProgressBarCircle from 'shared/progress-circle';
-
 const DEFAULT_TOGGLE_ROWS = 1;
 
 const SidebarProfile = () => {

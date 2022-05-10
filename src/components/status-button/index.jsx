@@ -23,7 +23,7 @@ import { updateCurrentBook } from 'reducers/redux-utils/book';
 import { useNavigate } from 'react-router-dom';
 import { STATUS_SUCCESS } from 'constants';
 import { NotificationError } from 'helpers/Error';
-import { useFetchAuthLibraries } from 'api/library.hook';
+// import { useFetchAuthLibraries } from 'api/library.hook';
 
 const STATUS_BOOK_OBJ = {
 	'reading': {
@@ -105,7 +105,6 @@ const StatusButton = ({ className, status, bookData }) => {
 						initStatus = STATUS_BOOK_OBJ[currentStatusLibrary.defaultType];
 					}
 				}
-				console.log(bookInLibraries);
 				setBookLibaries(bookInLibraries);
 				setCurrentStatus(initStatus);
 			})

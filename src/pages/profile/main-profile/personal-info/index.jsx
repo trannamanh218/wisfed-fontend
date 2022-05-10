@@ -32,6 +32,11 @@ const PersonalInfo = ({ userInfor }) => {
 	const { userInfo } = useSelector(state => state.auth);
 	const dispatch = useDispatch();
 
+	const item = {
+		isFollow: false,
+		isFriend: true,
+	};
+
 	useEffect(() => {
 		setModalOpen(false);
 	}, [userInfo]);
@@ -164,7 +169,7 @@ const PersonalInfo = ({ userInfor }) => {
 				<div className='personal-info__detail__connect-buttons-and-introduction'>
 					<div className={userInfor.id === userInfo.id && 'personal-info-none'}>
 						{' '}
-						<ConnectButtons />
+						<ConnectButtons item={item} />
 					</div>
 					<div className='personal-info__detail__introduction'>
 						<ul className='personal-info__list'>
