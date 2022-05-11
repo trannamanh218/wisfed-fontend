@@ -10,8 +10,8 @@ import Review from 'pages/review';
 import BookShelves from 'pages/shelves';
 import ConfirmMyBook from 'pages/confirm-my-book';
 import Notification from 'pages/notification/compornent-main';
-import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Routes, Route } from 'react-router-dom';
 import { login } from 'reducers/redux-utils/auth';
 import { ToastContainer } from 'react-toastify';
@@ -32,29 +32,49 @@ import 'scss/main.scss';
 import QuoteAll from 'pages/quote/all-quote/';
 import Group from 'pages/group-page';
 import Ranks from 'pages/ranks';
+import { getAllLibraryList, getAllMyLibraryRedux } from 'reducers/redux-utils/library';
 
 function App({ children }) {
-	const dispatch = useDispatch();
-	useEffect(() => {
-		const params = {
-			email: 'register@gmail.com',
-			password: '12345678',
-			// email: 'hungngonzai@gmail.com',
-			// password: '123456',
-			// email: 'admin@gmail.com',
-			// password: '123456',
-		};
+	const [myUserId, setMyUserId] = useState('');
 
-		fetchLogin(params);
+	const dispatch = useDispatch();
+	const updateMyLibrary = useSelector(state => state.library.updateMyLibrary);
+
+	useEffect(() => {
+		fetchLogin();
 	}, []);
 
-	const fetchLogin = async params => {
+	useEffect(() => {
+		if (myUserId) {
+			getAllMyLibrary(myUserId);
+		}
+	}, [myUserId, updateMyLibrary]);
+
+	const fetchLogin = async () => {
 		try {
-			await dispatch(login(params)).unwrap();
+			const params = {
+				email: 'register@gmail.com',
+				password: '12345678',
+				// email: 'hungngonzai@gmail.com',
+				// password: '123456',
+				// email: 'admin@gmail.com',
+				// password: '123456',
+			};
+			const res = await dispatch(login(params)).unwrap();
+			setMyUserId(res.id);
 		} catch (err) {
 			NotificationError(err);
 			const statusCode = err?.statusCode || 500;
 			return statusCode;
+		}
+	};
+
+	const getAllMyLibrary = async userId => {
+		try {
+			const data = await dispatch(getAllLibraryList({ userId })).unwrap();
+			dispatch(getAllMyLibraryRedux(data));
+		} catch (err) {
+			NotificationError(err);
 		}
 	};
 

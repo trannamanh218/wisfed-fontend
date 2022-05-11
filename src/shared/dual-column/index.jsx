@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import caretIcon from 'assets/images/caret.png';
@@ -40,7 +40,7 @@ const DualColumn = props => {
 					{list.slice(0, rows).map((item, index) => (
 						<li className={classNames('dualColumn-item', { 'has-background': isBackground })} key={index}>
 							<span className='dualColumn-item__title'>{item.name}</span>
-							<span className='dualColumn-item__number'>{item.quantity}</span>
+							<span className='dualColumn-item__number'>{item.books.length} cuốn</span>
 						</li>
 					))}
 				</ul>

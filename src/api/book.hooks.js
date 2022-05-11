@@ -116,7 +116,7 @@ export const useFetchBookDetail = id => {
 export const useFetchRelatedBooks = categoryId => {
 	const [retry, setRetry] = useState(false);
 	const [status, setStatus] = useState(STATUS_IDLE);
-	const [relatedBook, setRelatedBook] = useState([]);
+	const [relatedBooks, setRelatedBooks] = useState([]);
 	const dispatch = useDispatch();
 
 	const retryRequest = useCallback(() => {
@@ -136,7 +136,7 @@ export const useFetchRelatedBooks = categoryId => {
 			const fetchBook = async () => {
 				try {
 					const response = await dispatch(getBookList(query)).unwrap();
-					setRelatedBook(response.rows);
+					setRelatedBooks(response.rows);
 					setStatus(STATUS_SUCCESS);
 				} catch (err) {
 					NotificationError(err);
@@ -153,5 +153,5 @@ export const useFetchRelatedBooks = categoryId => {
 		};
 	}, [categoryId, retry]);
 
-	return { relatedBook, status, retryRequest };
+	return { relatedBooks, status, retryRequest };
 };

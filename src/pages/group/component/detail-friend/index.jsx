@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Button from 'shared/button';
 import NormalContainer from 'components/layout/normal-container';
 import SearchField from 'shared/search-field';
@@ -81,7 +81,7 @@ const DetailFriend = () => {
 		} catch (err) {
 			NotificationError(err);
 		}
-	}, [userInfo, dispatch, filter]);
+	}, [userInfo, filter]);
 
 	const handleBack = () => {
 		navigate('/friends');

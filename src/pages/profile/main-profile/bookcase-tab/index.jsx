@@ -75,8 +75,8 @@ function Bookcase({ userInfo }) {
 		}
 	};
 
-	const createReview = book => {
-		const newBook = { ...book, status: 'read' };
+	const createReview = (book, status) => {
+		const newBook = { ...book, status: status };
 		dispatch(updateCurrentBook(newBook));
 		navigate('/');
 	};
@@ -100,7 +100,7 @@ function Bookcase({ userInfo }) {
 									{progressBarPercenNumber(item)}
 								</div>
 								<div className='bookcase__item__button'>
-									<button onClick={() => createReview(item.book)}>Viết Review</button>
+									<button onClick={() => createReview(item.book, 'reading')}>Viết Review</button>
 								</div>
 							</div>
 						</div>
@@ -151,7 +151,7 @@ function Bookcase({ userInfo }) {
 									{progressBarPercenNumber(item)}
 								</div>
 								<div className='bookcase__item__button'>
-									<button onClick={() => createReview(item.book)}>Viết Review</button>
+									<button onClick={() => createReview(item.book, 'read')}>Viết Review</button>
 								</div>
 							</div>
 						</div>

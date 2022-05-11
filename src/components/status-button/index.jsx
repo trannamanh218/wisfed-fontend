@@ -23,7 +23,6 @@ import { updateCurrentBook } from 'reducers/redux-utils/book';
 import { useNavigate } from 'react-router-dom';
 import { STATUS_SUCCESS } from 'constants';
 import { NotificationError } from 'helpers/Error';
-import { useFetchAuthLibraries } from 'api/library.hook';
 
 const STATUS_BOOK_OBJ = {
 	'reading': {
@@ -51,9 +50,8 @@ const StatusButton = ({ className, status, bookData }) => {
 	const statusRef = useRef({});
 	statusRef.current = STATUS_BOOK_OBJ.wantToRead;
 	const navigate = useNavigate();
-	const {
-		library: { authLibraryData },
-	} = useSelector(state => state);
+
+	const myCustomLibraries = useSelector(state => state.library.myAllLibrary).custom;
 	const userInfo = useSelector(state => state.auth.userInfo);
 
 	const dispatch = useDispatch();
@@ -79,14 +77,14 @@ const StatusButton = ({ className, status, bookData }) => {
 			.then(res => {
 				const { rows } = res;
 				if (_.isEmpty(rows)) {
-					bookInLibraries = authLibraryData.rows.map(item => ({
+					bookInLibraries = myCustomLibraries.map(item => ({
 						...item,
 						isInLibrary: false,
 						isSelect: false,
 					}));
 				} else {
 					const currentLibraries = rows.map(item => ({ ...item.library }));
-					bookInLibraries = authLibraryData.rows.map(item => {
+					bookInLibraries = myCustomLibraries.map(item => {
 						const newItem = { ...item, isInLibrary: false, isSelect: false };
 						for (const lib of currentLibraries) {
 							if (newItem.id === lib.id) {
@@ -105,7 +103,6 @@ const StatusButton = ({ className, status, bookData }) => {
 						initStatus = STATUS_BOOK_OBJ[currentStatusLibrary.defaultType];
 					}
 				}
-				console.log(bookInLibraries);
 				setBookLibaries(bookInLibraries);
 				setCurrentStatus(initStatus);
 			})
@@ -120,7 +117,7 @@ const StatusButton = ({ className, status, bookData }) => {
 	const updateBookShelve = async params => {
 		try {
 			const data = await dispatch(createLibrary(params)).unwrap();
-			const newRows = [...authLibraryData.rows, data];
+			const newRows = [...myCustomLibraries, data];
 			dispatch(updateAuthLibrary({ rows: newRows, count: newRows.length }));
 			const newBookLibraries = [...bookLibraries, { ...data, isInLibrary: false, isSelect: false }];
 			setBookLibaries(newBookLibraries);
@@ -133,7 +130,7 @@ const StatusButton = ({ className, status, bookData }) => {
 	const updateStatusBook = () => {
 		if (!_.isEmpty(bookData) && status !== currentStatus.value) {
 			const params = { bookId: bookData.id || bookData.bookId, type: currentStatus.value };
-			return dispatch(addBookToDefaultLibrary(params)).unwrap();
+			dispatch(addBookToDefaultLibrary(params)).unwrap();
 		}
 	};
 
@@ -160,7 +157,6 @@ const StatusButton = ({ className, status, bookData }) => {
 				return dispatch(addRemoveBookInLibraries({ id: bookData.id || bookData.bookId, ...data }));
 			}
 		}
-		return;
 	};
 
 	const handleConfirm = async () => {

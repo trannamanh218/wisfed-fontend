@@ -1,4 +1,3 @@
-import React from 'react';
 import PropTypes from 'prop-types';
 import './linear-progress-bar.scss';
 
@@ -28,7 +27,7 @@ LinearProgressBar.defaultProps = {
 };
 
 LinearProgressBar.propTypes = {
-	percent: PropTypes.number.isRequired,
+	percent: PropTypes.any.isRequired,
 	variant: PropTypes.oneOf([
 		'primary',
 		'primary-light',
