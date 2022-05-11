@@ -13,7 +13,7 @@ import Notification from 'pages/notification/compornent-main';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Routes, Route } from 'react-router-dom';
-import { login } from 'reducers/redux-utils/auth';
+import { login, checkLogin } from 'reducers/redux-utils/auth';
 import { ToastContainer } from 'react-toastify';
 import Login from 'pages/login/element';
 import Register from 'pages/register/component';
@@ -62,10 +62,14 @@ function App({ children }) {
 			};
 			const res = await dispatch(login(params)).unwrap();
 			setMyUserId(res.id);
+			await dispatch(login(params)).unwrap();
+			dispatch(checkLogin(true));
 		} catch (err) {
-			NotificationError(err);
-			const statusCode = err?.statusCode || 500;
-			return statusCode;
+			if (JSON.parse(err).statusCode === 400) {
+				dispatch(checkLogin(false));
+			} else {
+				NotificationError(JSON.parse(err));
+			}
 		}
 	};
 

@@ -32,6 +32,11 @@ const PersonalInfo = ({ currentUserInfo }) => {
 	const { userInfo } = useSelector(state => state.auth);
 	const dispatch = useDispatch();
 
+	const item = {
+		isFollow: false,
+		isFriend: true,
+	};
+
 	useEffect(() => {
 		setModalOpen(false);
 	}, [userInfo]);

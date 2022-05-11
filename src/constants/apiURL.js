@@ -104,10 +104,12 @@ export const getReadingTargetAPI = '/api/v1/books/readingGoal';
 export const updateTargetReadAPI = year => `/api/v1/books/readingGoal/${year}`;
 export const getReadingTargetIdAPI = id => `/api/v1/books/readingGoalById/${id}`;
 // ranks
-export const getTopQuotesAPI = by => `/api/v1/report/reportTopQuotes?by=${by}`;
-export const getFilterTopQuotesAPI = (id, by) => `/api/v1/report/reportTopQuotes?categoryId=${id}&by=${by}`;
-export const getTopBooksAPI = by => `/api/v1/report/reportTopBooks?by=${by}`;
-export const getFilterTopBooksAPI = (id, by) => `/api/v1/report/reportTopBooks?categoryId=${id}&by=${by}`;
-export const getTopUserAPI = by => `/api/v1/report/reportTopUsers?by=${by}`;
-export const getFilterTopUserAPI = (by, sortType) => `/api/v1/report/reportTopUsers?by=${by}&sortType=${sortType}`;
-export const getTopBooksApiAuth = by => `api/v1/report/reportTopBooksAuth?by=${by}`;
+export const getTopQuotesAPI = `/api/v1/report/reportTopQuotes`;
+export const getTopBooksAPI = `/api/v1/report/reportTopBooks`;
+export const getFilterTopUserAPI = `/api/v1/report/reportTopUsers`;
+export const getTopBooksApiAuth = `api/v1/report/reportTopBooksAuth`;
+export const getFilterTopUserApiAuth = `/api/v1/report/reportTopUsersAuth`;
+
+// group
+export const detailGroup = id => `api/v1/groups/${id}`;
+export const creatGroup = '/api/v1/groups';

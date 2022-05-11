@@ -1,8 +1,18 @@
 import { MoreIcon } from 'components/svg';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './memmber-group.scss';
+import PropTypes from 'prop-types';
 
-function MemberGroup() {
+function MemberGroup({ memberGroups }) {
+	const [listAdmin, setListAdmin] = useState(null);
+	const [listMember, setListMember] = useState(null);
+	useEffect(() => {
+		const newItem = memberGroups?.filter(item => item.role === 'admin');
+		setListAdmin(newItem);
+		const newListMember = memberGroups?.filter(item => item.role === 'member');
+		setListMember(newListMember);
+	}, [memberGroups]);
+
 	return (
 		<div className='member-group__container'>
 			<div className='member-group__admin'>
@@ -189,5 +199,9 @@ function MemberGroup() {
 		</div>
 	);
 }
+
+MemberGroup.propTypes = {
+	memberGroups: PropTypes.array,
+};
 
 export default MemberGroup;

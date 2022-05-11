@@ -7,7 +7,7 @@ import { useSelector } from 'react-redux';
 const SuggestSection = props => {
 	const { option, list, handleAddToPost } = props;
 	const { userInfo } = useSelector(state => state.auth);
-
+	console.log(props);
 	if (list.length > 0) {
 		switch (option.value) {
 			case 'addBook': {

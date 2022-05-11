@@ -7,40 +7,48 @@ import { ShareRanks } from 'components/svg';
 import TopRanks from 'shared/top-ranks';
 import PropTypes from 'prop-types';
 import { NotificationError } from 'helpers/Error';
-import { useDispatch } from 'react-redux';
-import { getTopUser, getFilterTopUser } from 'reducers/redux-utils/ranks';
+import { useDispatch, useSelector } from 'react-redux';
+import { getTopUser, getTopUserAuth } from 'reducers/redux-utils/ranks';
 
 const TopUser = ({ rows, listYear }) => {
 	const kindOfGroupRef = useRef({ value: 'default', title: 'Chủ đề' });
 	const listYearRef = useRef({ value: 'default', title: 'Tuần' });
 	const listRead = useRef({ value: 'default', title: 'Đọc nhiều nhất' });
-
-	const [topUserFilter, setTopUserFilter] = useState();
+	const { isAuth } = useSelector(state => state.auth);
+	const [topUserFilter, setTopUserFilter] = useState(1);
 	const [valueDate, setValueDate] = useState('week');
-	const [valueDataSort, setValueDataSort] = useState();
+	const [valueDataSort, setValueDataSort] = useState('topFollow');
 	const [getListTopBooks, setGetListTopBooks] = useState([]);
-
 	const dispatch = useDispatch();
 	const listDataSortType = [
-		{ value: 'week', title: 'Đọc nhiều nhất' },
-		{ value: 'month', title: 'Review nhiều nhất' },
-		{ value: 'months', title: 'Được Like nhiều nhất ' },
+		{ value: 'topRead', title: 'Đọc nhiều nhất' },
+		{ value: 'topReview', title: 'Review nhiều nhất' },
+		{ value: 'topLike', title: 'Được Like nhiều nhất ' },
 		{ value: 'topFollow', title: ' Được Follow nhiều nhất ' },
 	];
 
-	const getTopBooksData = async () => {
-		const params = {
-			sortType: valueDataSort,
-			by: valueDate,
-		};
+	const getTopUserData = async () => {
+		let params = {};
+		if (valueDataSort === 'topFollow') {
+			params = {
+				sortType: valueDataSort,
+				by: valueDate,
+			};
+		} else {
+			params = {
+				sortType: valueDataSort,
+				by: valueDate,
+				categoryId: topUserFilter,
+			};
+		}
 
 		try {
-			if (valueDataSort) {
-				const topBooks = await dispatch(getFilterTopUser(params)).unwrap();
-				setGetListTopBooks(topBooks);
-			} else {
-				const topBooks = await dispatch(getTopUser(params)).unwrap();
-				setGetListTopBooks(topBooks);
+			if (isAuth === false) {
+				const topUser = await dispatch(getTopUser(params)).unwrap();
+				setGetListTopBooks(topUser);
+			} else if (isAuth === true) {
+				const topUser = await dispatch(getTopUserAuth(params)).unwrap();
+				setGetListTopBooks(topUser);
 			}
 		} catch (err) {
 			NotificationError(err);
@@ -48,8 +56,8 @@ const TopUser = ({ rows, listYear }) => {
 	};
 
 	useEffect(() => {
-		getTopBooksData();
-	}, [topUserFilter, valueDate, valueDataSort]);
+		getTopUserData();
+	}, [topUserFilter, valueDate, valueDataSort, isAuth]);
 
 	const onchangeKindOfGroup = data => {
 		kindOfGroupRef.current = data;
@@ -97,20 +105,22 @@ const TopUser = ({ rows, listYear }) => {
 					/>
 				</div>
 			</div>
-			{getListTopBooks.length > 1 && (
-				<TopRanks getListTopBooks={getListTopBooks} listDataSortType={listDataSortType} />
+			{getListTopBooks.length > 1 && <TopRanks getListTopBooks={getListTopBooks} valueDataSort={valueDataSort} />}
+			{getListTopBooks.length > 0 ? (
+				getListTopBooks.map((item, index) => (
+					<div key={item.id} className='topbooks__container__main top__user'>
+						<StarRanking index={index} />
+						<div className='topbooks__container__main__layout'>
+							<AuthorCard size='lg' item={item} />
+						</div>
+						<div className='author-book__share'>
+							<ShareRanks />
+						</div>
+					</div>
+				))
+			) : (
+				<div className='topbooks__notthing'>Không có dữ liệu</div>
 			)}
-			{getListTopBooks.map((item, index) => (
-				<div key={item.id} className='topbooks__container__main top__user'>
-					<StarRanking index={index} />
-					<div className='topbooks__container__main__layout'>
-						<AuthorCard size='lg' item={item} />
-					</div>
-					<div className='author-book__share'>
-						<ShareRanks />
-					</div>
-				</div>
-			))}
 		</div>
 	);
 };
