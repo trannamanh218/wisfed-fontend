@@ -76,7 +76,7 @@ SelectBox.propTypes = {
 	defaultOption: PropTypes.shape({
 		value: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
 		id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-		title: PropTypes.func,
+		title: PropTypes.string,
 	}),
 	list: PropTypes.arrayOf(
 		PropTypes.shape({
