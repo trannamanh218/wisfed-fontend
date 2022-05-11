@@ -53,12 +53,12 @@ function App({ children }) {
 	const fetchLogin = async () => {
 		try {
 			const params = {
-				email: 'register@gmail.com',
-				password: '12345678',
+				// email: 'register@gmail.com',
+				// password: '12345678',
 				// email: 'hungngonzai@gmail.com',
 				// password: '123456',
-				// email: 'admin@gmail.com',
-				// password: '123456',
+				email: 'admin@gmail.com',
+				password: '123456',
 			};
 			const res = await dispatch(login(params)).unwrap();
 			setMyUserId(res.id);

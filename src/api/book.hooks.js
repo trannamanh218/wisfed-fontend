@@ -56,7 +56,7 @@ export const useFetchAuthorBooks = (firstName, lastName) => {
 		if (isMount) {
 			setStatus(STATUS_LOADING);
 			const query = generateQuery(
-				1,
+				0,
 				10,
 				JSON.stringify([{ 'operator': 'search', 'value': `${firstName}`, 'property': 'authorName' }])
 			);
@@ -128,7 +128,7 @@ export const useFetchRelatedBooks = categoryId => {
 
 		if (categoryId && isMount) {
 			const query = generateQuery(
-				1,
+				0,
 				10,
 				JSON.stringify([{ 'operator': 'eq', 'value': categoryId, 'property': 'categoryId' }])
 			);

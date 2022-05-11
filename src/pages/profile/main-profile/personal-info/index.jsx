@@ -35,6 +35,7 @@ const PersonalInfo = ({ currentUserInfo }) => {
 	const item = {
 		isFollow: false,
 		isFriend: true,
+		pending: false,
 	};
 
 	useEffect(() => {
@@ -95,6 +96,7 @@ const PersonalInfo = ({ currentUserInfo }) => {
 					)}
 				</Dropzone>
 			</div>
+
 			<div className='personal-info__detail'>
 				<div className='personal-info__detail__avatar-and-name'>
 					<div className='personal-info__detail__avatar'>
@@ -167,8 +169,8 @@ const PersonalInfo = ({ currentUserInfo }) => {
 				</div>
 
 				<div className='personal-info__detail__connect-buttons-and-introduction'>
-					<div className={currentUserInfo.id === userInfo.id ? 'personal-info' : 'personal-info-none'}>
-						<ConnectButtons />
+					<div className={currentUserInfo.id !== userInfo.id ? 'personal-info' : 'personal-info-none'}>
+						<ConnectButtons item={item} />
 					</div>
 					<div className='personal-info__detail__introduction'>
 						<ul className='personal-info__list'>

@@ -17,7 +17,7 @@ const fetchCategories = async (dispatch, pagination, filter = []) => {
 };
 
 const fetchBook = (id, dispatch) => {
-	const query = generateQuery(1, 10, JSON.stringify([{ 'operator': 'eq', 'value': id, 'property': 'categoryId' }]));
+	const query = generateQuery(0, 10, JSON.stringify([{ 'operator': 'eq', 'value': id, 'property': 'categoryId' }]));
 	return dispatch(getBookList(query)).unwrap();
 };
 
@@ -361,7 +361,7 @@ export const useFetchFavoriteCategories = () => {
 	useEffect(() => {
 		let isMount = true;
 		const fetchData = async () => {
-			const params = generateQuery(1, 20);
+			const params = generateQuery(0, 20);
 			try {
 				const data = await dispatch(getFavoriteCategories(params)).unwrap();
 				if (isMount) {

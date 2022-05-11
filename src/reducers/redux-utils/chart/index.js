@@ -120,6 +120,7 @@ const chartSlice = createSlice({
 		},
 	},
 });
+
 export const { updateImg, updateTargetReading } = chartSlice.actions;
 const chart = chartSlice.reducer;
 export default chart;

@@ -34,12 +34,12 @@ export const useFetchTargetReading = (userId, modalOpen, deleteModal, filter = '
 						const dob = new Date();
 						const year = dob.getFullYear();
 						if (targetReading.length > 0 && userInfo.id === userId) {
-							await dispatch(updateTargetReading([]));
+							dispatch(updateTargetReading([]));
 							const newData = targetReading.filter(item => item.year === year);
 							setBooksReadYear(newData);
 							setStatus(STATUS_SUCCESS);
 						} else {
-							await dispatch(updateTargetReading([]));
+							dispatch(updateTargetReading([]));
 							const data = await dispatch(getListBooksTargetReading(params)).unwrap();
 							const newData = data.filter(item => item.year === year);
 							setBooksReadYear(newData);
@@ -48,8 +48,6 @@ export const useFetchTargetReading = (userId, modalOpen, deleteModal, filter = '
 					}
 				} catch (err) {
 					NotificationError(err);
-					const statusCode = err?.statusCode || 400;
-					setStatus(statusCode);
 				}
 			};
 

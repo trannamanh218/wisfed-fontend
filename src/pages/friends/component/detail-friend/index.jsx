@@ -48,7 +48,7 @@ const DetailFriend = () => {
 	};
 
 	useEffect(async () => {
-		const query = generateQuery(1, 10, filter);
+		const query = generateQuery(0, 10, filter);
 		const userId = userInfo.id;
 		try {
 			if (!_.isEmpty(userInfo)) {
