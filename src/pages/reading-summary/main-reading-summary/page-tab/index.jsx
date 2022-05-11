@@ -1,17 +1,25 @@
 import PropTypes from 'prop-types';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { Bar, BarChart, Legend, Tooltip, XAxis, YAxis } from 'recharts';
 import SelectBox from 'shared/select-box';
 import caretChart from 'assets/images/caret-chart.png';
 import './page-tab.scss';
-import { getListChart } from 'reducers/redux-utils/chart';
 import { useDispatch } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
+import { useParams } from 'react-router-dom';
+import { getChartsByid, updateImg } from 'reducers/redux-utils/chart';
+import { useNavigate } from 'react-router-dom';
+import Circle from 'shared/loading/circle';
+import { useCurrentPng } from 'recharts-to-png';
 
 const PageTab = () => {
 	const [currentOption, setCurrentOption] = useState({ value: 'month', title: 'Tháng' });
+	const [loading, setLoading] = useState(false);
+	const { userId } = useParams();
 	const [chartsData, setChartsData] = useState([]);
 	const dispatch = useDispatch();
+	const [getAreaPng, { ref: areaRef }] = useCurrentPng();
+	const navigate = useNavigate();
 	const options = [
 		{ value: 'month', title: 'Tháng' },
 		{ value: 'year', title: 'Năm' },
@@ -21,24 +29,51 @@ const PageTab = () => {
 		try {
 			if (currentOption.value === 'month') {
 				const params = {
-					count: 'page',
+					count: 'numPageRead',
 					by: 'month',
+					userId: userId,
 				};
-				const data = await dispatch(getListChart(params)).unwrap();
+				const data = await dispatch(getChartsByid(params)).unwrap();
 				setChartsData(data);
 			} else {
 				const params = {
-					count: 'page',
+					count: 'numPageRead',
 					by: 'year',
+					userId: userId,
 				};
 
-				const data = await dispatch(getListChart(params)).unwrap();
+				const data = await dispatch(getChartsByid(params)).unwrap();
 				setChartsData(data);
 			}
 		} catch (err) {
 			NotificationError(err);
 		}
 	};
+
+	const handleAreaDownload = useCallback(async () => {
+		setLoading(true);
+		const png = await getAreaPng();
+		if (png) {
+			const arr = png.split(',');
+			if (arr.length > 0) {
+				const mime = arr[0].match(/:(.*?);/)[1];
+				const bstr = atob(arr[1]);
+				let n = bstr.length;
+				const u8arr = new Uint8Array(n);
+				while (n--) {
+					u8arr[n] = bstr.charCodeAt(n);
+				}
+
+				const imageUploadedData = new File([u8arr], 'charts.png', { type: mime });
+				const imgUploadder = [imageUploadedData];
+				if (imageUploadedData) {
+					setLoading(false);
+					navigate('/');
+					return dispatch(updateImg(imgUploadder));
+				}
+			}
+		}
+	}, [getAreaPng]);
 
 	function CustomTooltip(props) {
 		const { label, payload } = props;
@@ -66,6 +101,7 @@ const PageTab = () => {
 
 	return (
 		<div className='reading-summary-page-tab'>
+			<Circle loading={loading} />
 			<SelectBox
 				className='select-box--custom'
 				name='library'
@@ -88,6 +124,7 @@ const PageTab = () => {
 						bottom: 5,
 					}}
 					barSize={36}
+					ref={areaRef}
 				>
 					<XAxis
 						stroke='#6E7191'
@@ -113,7 +150,9 @@ const PageTab = () => {
 				</BarChart>
 			</div>
 
-			<button className='btn reading-summary-page-tab__btn'>Chia sẻ</button>
+			<button className='btn reading-summary-page-tab__btn' onClick={handleAreaDownload}>
+				Chia sẻ
+			</button>
 		</div>
 	);
 };
@@ -130,13 +169,17 @@ function CustomizedAxisXTick(props) {
 	);
 }
 
+function formatNumber(number) {
+	return number.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
+}
+
 function CustomizedAxisYTick(props) {
 	const { x, y, payload } = props;
-
+	const numberFomat = formatNumber(payload.value);
 	return (
 		<g transform={`translate(${x},${y})`}>
 			<text x={-8} y={0} textAnchor='end' fill='#2d2c42'>
-				{payload.value}
+				{numberFomat}
 			</text>
 		</g>
 	);

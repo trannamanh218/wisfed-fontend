@@ -1,4 +1,3 @@
-import React from 'react';
 import PropTypes from 'prop-types';
 import noSearchResult from 'assets/images/no-search-result.png';
 import BookSlider from 'shared/book-slider';
@@ -8,7 +7,7 @@ import { useSelector } from 'react-redux';
 const SuggestSection = props => {
 	const { option, list, handleAddToPost } = props;
 	const { userInfo } = useSelector(state => state.auth);
-
+	console.log(props);
 	if (list.length > 0) {
 		switch (option.value) {
 			case 'addBook': {

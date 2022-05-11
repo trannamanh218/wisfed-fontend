@@ -45,7 +45,7 @@ CommentEditor.defaultProps = {
 	userInfo: {},
 	onCreateComment: () => {},
 	className: '',
-	replyId: '',
+	replyId: null,
 };
 
 CommentEditor.propTypes = {

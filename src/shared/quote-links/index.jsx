@@ -3,8 +3,9 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import './quote-links.scss';
-
+import { useParams } from 'react-router-dom';
 const QuotesLinks = ({ title, list, className }) => {
+	const { userId } = useParams();
 	if (list && list.length) {
 		return (
 			<div className={classNames('quote-links', { [`${className}`]: className })}>
@@ -19,7 +20,7 @@ const QuotesLinks = ({ title, list, className }) => {
 						</div>
 					))}
 				</div>
-				<Link className='view-all-link' to='/quotes/me'>
+				<Link className='view-all-link' to={`/quotes/${userId}`}>
 					Xem tất cả
 				</Link>
 			</div>
@@ -38,6 +39,7 @@ QuotesLinks.propTypes = {
 	title: PropTypes.string,
 	list: PropTypes.array,
 	className: PropTypes.string,
+	userId: PropTypes.string,
 };
 
 export default QuotesLinks;

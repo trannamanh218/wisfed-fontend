@@ -1,38 +1,47 @@
 import PropTypes from 'prop-types';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { Bar, BarChart, Legend, Tooltip, XAxis, YAxis } from 'recharts';
 import SelectBox from 'shared/select-box';
 import caretChart from 'assets/images/caret-chart.png';
 import './book-tab.scss';
-import { getListChart } from 'reducers/redux-utils/chart';
+import { getChartsByid, updateImg } from 'reducers/redux-utils/chart';
 import { useDispatch } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
+import { useParams } from 'react-router-dom';
+import { useCurrentPng } from 'recharts-to-png';
+import { useNavigate } from 'react-router-dom';
+import Circle from 'shared/loading/circle';
 
 const BookTab = () => {
 	const [currentOption, setCurrentOption] = useState({ value: 'month', title: 'Tháng' });
-	const [chartsData, setChartsData] = useState([]);
+	const [chartsData, setChartsData] = useState({});
+	const [loading, setLoading] = useState(false);
 	const dispatch = useDispatch();
 	const options = [
 		{ value: 'month', title: 'Tháng' },
 		{ value: 'year', title: 'Năm' },
 	];
-
+	const [getAreaPng, { ref: areaRef }] = useCurrentPng();
+	const { userId } = useParams();
+	const navigate = useNavigate();
 	const fetchData = async () => {
 		try {
 			if (currentOption.value === 'month') {
 				const params = {
-					count: 'book',
+					count: 'numBookRead',
 					by: 'month',
+					userId: userId,
 				};
-				const data = await dispatch(getListChart(params)).unwrap();
+				const data = await dispatch(getChartsByid(params)).unwrap();
 				setChartsData(data);
 			} else {
 				const params = {
-					count: 'book',
+					count: 'numBookRead',
 					by: 'year',
+					userId: userId,
 				};
 
-				const data = await dispatch(getListChart(params)).unwrap();
+				const data = await dispatch(getChartsByid(params)).unwrap();
 				const newData = data.map(item => {
 					if (item.count?.length > 0) {
 						return { ...item, count: JSON.parse(item.count) };
@@ -57,6 +66,31 @@ const BookTab = () => {
 		);
 	}
 
+	const handleAreaDownload = useCallback(async () => {
+		setLoading(true);
+		const png = await getAreaPng();
+		if (png) {
+			const arr = png.split(',');
+			if (arr.length > 0) {
+				const mime = arr[0].match(/:(.*?);/)[1];
+				const bstr = atob(arr[1]);
+				let n = bstr.length;
+				const u8arr = new Uint8Array(n);
+				while (n--) {
+					u8arr[n] = bstr.charCodeAt(n);
+				}
+
+				const imageUploadedData = new File([u8arr], 'charts.png', { type: mime });
+				const imgUploadder = [imageUploadedData];
+				if (imageUploadedData) {
+					setLoading(false);
+					navigate('/');
+					return dispatch(updateImg(imgUploadder));
+				}
+			}
+		}
+	}, [getAreaPng]);
+
 	useEffect(() => {
 		fetchData();
 	}, [currentOption]);
@@ -72,6 +106,7 @@ const BookTab = () => {
 
 	return (
 		<div className='reading-summary-book-tab'>
+			<Circle loading={loading} />
 			<SelectBox
 				className='select-box--custom'
 				name='library'
@@ -94,6 +129,7 @@ const BookTab = () => {
 						bottom: 5,
 					}}
 					barSize={36}
+					ref={areaRef}
 				>
 					<XAxis
 						stroke='#6E7191'
@@ -119,10 +155,16 @@ const BookTab = () => {
 				</BarChart>
 			</div>
 
-			<button className='btn reading-summary-book-tab__btn'>Chia sẻ</button>
+			<button className='btn reading-summary-book-tab__btn' onClick={handleAreaDownload}>
+				Chia sẻ
+			</button>
 		</div>
 	);
 };
+
+function formatNumber(number) {
+	return number.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
+}
 
 function CustomizedAxisXTick(props) {
 	const { x, y, payload } = props;
@@ -137,10 +179,11 @@ function CustomizedAxisXTick(props) {
 
 function CustomizedAxisYTick(props) {
 	const { x, y, payload } = props;
+	const numberFomat = formatNumber(payload.value.toFixed());
 	return (
 		<g transform={`translate(${x},${y})`}>
 			<text x={-8} y={0} textAnchor='end' fill='#2d2c42'>
-				{payload.value}
+				{numberFomat}
 			</text>
 		</g>
 	);

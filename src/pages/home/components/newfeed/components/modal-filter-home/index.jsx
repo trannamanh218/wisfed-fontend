@@ -1,11 +1,10 @@
 import './modal-filter-home.scss';
 import MultipleCheckbox from 'shared/multiple-checkbox';
 import { Modal } from 'react-bootstrap';
-import React from 'react';
 import Button from 'shared/button';
 import PropTypes from 'prop-types';
 
-const Modalfilterhome = ({ setModalShow, modalShow }) => {
+const ModalfilterHome = ({ setModalShow, modalShow }) => {
 	const fakeData = [
 		{
 			'title': 'Cập nhật sách',
@@ -73,8 +72,8 @@ const Modalfilterhome = ({ setModalShow, modalShow }) => {
 		</div>
 	);
 };
-Modalfilterhome.propTypes = {
+ModalfilterHome.propTypes = {
 	setModalShow: PropTypes.func,
 	modalShow: PropTypes.bool,
 };
-export default Modalfilterhome;
+export default ModalfilterHome;

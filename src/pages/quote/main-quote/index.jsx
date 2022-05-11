@@ -12,21 +12,22 @@ import { NotificationError } from 'helpers/Error';
 import _ from 'lodash';
 import { useParams } from 'react-router-dom';
 import { getUserDetail } from 'reducers/redux-utils/user';
+import LoadingIndicator from 'shared/loading-indicator';
 
 const MainQuote = () => {
+	const filterOptions = [
+		{ id: 1, title: 'Của tôi', value: 'me' },
+		{ id: 2, title: 'Yêu thích', value: 'me-like' },
+	];
+
 	const [quoteList, setQuoteList] = useState([]);
 	const [hasMore, setHasMore] = useState(true);
-	const [defaultOption, setDefaultOption] = useState({ id: 1, title: 'Tất cả', value: 'all' });
+	const [currentOption, setCurrentOption] = useState(filterOptions[0]);
 	const [likedArray, setLikedArray] = useState([]);
 	const [sortValue, setSortValue] = useState('like');
 	const [sortDirection, setSortDirection] = useState('DESC');
 	const [quotesUserName, setQuotesUserName] = useState('');
 	const [isMyQuotes, setIsMyQuotes] = useState();
-
-	const filterOptions = [
-		{ id: 1, title: 'Của tôi', value: 'me' },
-		{ id: 2, title: 'Yêu thích', value: 'me-like' },
-	];
 
 	const callApiStart = useRef(10);
 	const callApiPerPage = useRef(10);
@@ -68,6 +69,9 @@ const MainQuote = () => {
 			const quotesList = await dispatch(getQuoteList(params)).unwrap();
 			if (quotesList.length) {
 				setQuoteList(quotesList);
+				if (quotesList.length < callApiPerPage.current) {
+					setHasMore(false);
+				}
 			} else {
 				setHasMore(false);
 			}
@@ -81,8 +85,8 @@ const MainQuote = () => {
 			const params = {
 				start: callApiStart.current,
 				limit: callApiPerPage.current,
-				sort: JSON.stringify([{ property: 'createdAt', direction: 'DESC' }]),
-				filter: JSON.stringify([{ operator: 'eq', value: userInfo.id, property: 'createdBy' }]),
+				sort: JSON.stringify([{ property: sortValue, direction: sortDirection }]),
+				filter: JSON.stringify([{ operator: 'eq', value: userId, property: 'createdBy' }]),
 			};
 			const quotesList = await dispatch(getQuoteList(params)).unwrap();
 			if (quotesList.length) {
@@ -105,13 +109,11 @@ const MainQuote = () => {
 		}
 	};
 
-	const handleChangeOption = (e, data) => {
-		if (data.value !== defaultOption.value) {
-			setDefaultOption(data);
-		}
+	const handleChangeOption = item => {
+		setCurrentOption(item);
 	};
 
-	const sortQuotes = params => {
+	const handleSortQuotes = params => {
 		if (params === 'default') {
 			setSortValue('like');
 			setSortDirection('DESC');
@@ -139,8 +141,8 @@ const MainQuote = () => {
 					<FilterQuotePane
 						filterOptions={filterOptions}
 						handleChangeOption={handleChangeOption}
-						defaultOption={defaultOption}
-						handleChange={sortQuotes}
+						currentOption={currentOption}
+						handleSortQuotes={handleSortQuotes}
 						isMyQuotes={isMyQuotes}
 					>
 						{quoteList.length > 0 ? (
@@ -148,7 +150,7 @@ const MainQuote = () => {
 								dataLength={quoteList.length}
 								next={getQuoteListData}
 								hasMore={hasMore}
-								loader={<h4>Loading...</h4>}
+								loader={<LoadingIndicator />}
 							>
 								{quoteList.map(item => (
 									<QuoteCard key={item.id} data={item} likedArray={likedArray} />

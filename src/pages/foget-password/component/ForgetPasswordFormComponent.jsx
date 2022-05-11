@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Formik, Field, Form } from 'formik';
 import classNames from 'classnames';
 import { useDispatch } from 'react-redux';
@@ -6,7 +6,7 @@ import ModalLogin from 'pages/login/element/ModalLogin';
 import { forgotPassword } from 'reducers/redux-utils/auth';
 import { changeKey } from 'reducers/redux-utils/forget-password';
 import { useSelector } from 'react-redux';
-import { Circle } from 'shared/loading';
+import Circle from 'shared/loading/circle';
 import { emailValidate } from 'helpers/Validation';
 import { NotificationError } from 'helpers/Error';
 

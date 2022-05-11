@@ -10,14 +10,14 @@ import { toast } from 'react-toastify';
 import { createActivity } from 'reducers/redux-utils/activity';
 import PostEditBook from 'shared/post-edit-book';
 import OptionsPost from './OptionsPost';
-import ShareModeComponent from './ShareModeComponent';
+// import ShareModeComponent from './ShareModeComponent';
 import CreatPostSubModal from './CreatePostSubModal';
 import TaggedList from './TaggedList';
 import UploadImage from './UploadImage';
 import PreviewLink from 'shared/preview-link/PreviewLink';
 import { getPreviewUrl } from 'reducers/redux-utils/post';
 import { useCallback } from 'react';
-import { Circle as CircleLoading } from 'shared/loading';
+import Circle from 'shared/loading/circle';
 import './style.scss';
 import { ratingUser } from 'reducers/redux-utils/book';
 import UserAvatar from 'shared/user-avatar';
@@ -29,16 +29,8 @@ import { setting } from './settings';
 import { NotificationError } from 'helpers/Error';
 import { uploadMultiFile } from 'reducers/redux-utils/common';
 
-function CreatPostModalContent({
-	hideCreatPostModal,
-	showModalCreatPost,
-	option,
-	onChangeOption,
-	onChangeNewPost,
-	renderBookReading,
-	booksId,
-}) {
-	const [shareMode, setShareMode] = useState({ value: 'public', title: 'Mọi người', icon: <WorldNet /> });
+function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option, onChangeOption, onChangeNewPost }) {
+	// const [shareMode, setShareMode] = useState({ value: 'public', title: 'Mọi người', icon: <WorldNet /> });
 	const [showTextFieldEditPlaceholder, setShowTextFieldEditPlaceholder] = useState(true);
 	const [showMainModal, setShowMainModal] = useState(showModalCreatPost);
 	const [taggedData, setTaggedData] = useState({
@@ -55,13 +47,16 @@ function CreatPostModalContent({
 	const [status, setStatus] = useState(STATUS_IDLE);
 	const [showUpload, setShowUpload] = useState(false);
 	const [imagesUpload, setImagesUpload] = useState([]);
-	const [validationInput, setValidationInput] = useState();
+	const [validationInput, setValidationInput] = useState('');
 	const dispatch = useDispatch();
 	const textFieldEdit = useRef(null);
 	const taggedDataPrevious = usePrevious(taggedData);
 	const [valueStar, setValueStar] = useState(0);
 	const [checkProgress, setCheckProgress] = useState();
+	const [showImagePopover, setShowImagePopover] = useState(false);
 
+	const UpdateImg = useSelector(state => state.chart.updateImgPost);
+	const resetTaggedData = useSelector(state => state.post.resetTaggedData);
 	const {
 		auth: { userInfo },
 		book: { bookForCreatePost, bookInfo },
@@ -70,21 +65,19 @@ function CreatPostModalContent({
 
 	useEffect(() => {
 		textFieldEdit.current.focus();
+		if (UpdateImg.length > 0) {
+			setShowUpload(true);
+			setImagesUpload(UpdateImg);
+		}
 	}, []);
 
 	useEffect(() => {
-		if (!_.isEmpty(bookForCreatePost) || !_.isEmpty(renderBookReading)) {
-			if (booksId) {
-				const newData = { ...taggedData };
-				const pages = { read: renderBookReading.page, reading: '', wantToRead: '' };
-				newData.addBook = { ...renderBookReading, progress: pages[renderBookReading.status] };
-				setTaggedData(newData);
-			} else {
-				const newData = { ...taggedData };
-				const pages = { read: bookForCreatePost.page, reading: '', wantToRead: '' };
-				newData.addBook = { ...bookForCreatePost, progress: pages[bookForCreatePost.status] };
-				setTaggedData(newData);
-			}
+		if (!_.isEmpty(bookForCreatePost)) {
+			const newData = { ...taggedData };
+			const pages = { read: bookForCreatePost.page, reading: '', wantToRead: '' };
+			newData.addBook = { ...bookForCreatePost, progress: pages[bookForCreatePost.status] };
+			setTaggedData(newData);
+			setShowUpload(false);
 		}
 	}, [bookForCreatePost]);
 
@@ -98,6 +91,14 @@ function CreatPostModalContent({
 			document.removeEventListener('input', handlePlaceholder);
 		};
 	}, [showTextFieldEditPlaceholder]);
+
+	useEffect(() => {
+		if (resetTaggedData) {
+			setTaggedData({ 'addBook': {}, 'addAuthor': [], 'addFriends': [], 'addCategory': [] });
+			setImagesUpload([]);
+			setShowUpload(false);
+		}
+	}, [resetTaggedData]);
 
 	const detectUrl = useCallback(
 		_.debounce(() => {
@@ -218,7 +219,7 @@ function CreatPostModalContent({
 
 	const handleAddToPost = data => {
 		const newData = { ...taggedData };
-		setCheckProgress(data.progress);
+		setCheckProgress(Number(data.progress));
 		if (option.value === 'addAuthor' || option.value === 'addFriends' || option.value === 'addCategory') {
 			const listData = [...taggedData[option.value]];
 			const lastItem = listData[listData.length - 1];
@@ -305,65 +306,82 @@ function CreatPostModalContent({
 	const onCreatePost = async () => {
 		const params = await generateData();
 		// book, author , topic is required
-		if ((params.bookId || params.mentionsAuthor.length || params.mentionsCategory.length) && params.msg !== '') {
-			setStatus(STATUS_LOADING);
-			try {
-				if (params.bookId) {
-					if (taggedData.addBook.status === 'read') {
-						const reviewData = {
-							bookId: params.bookId,
-							mediaUrl: [],
-							content: textFieldEdit.current.innerText,
-						};
-						dispatch(createReviewBook(reviewData));
-					}
+		setStatus(STATUS_LOADING);
+		try {
+			if (params.bookId) {
+				if (params.msg) {
+					const reviewData = {
+						bookId: params.bookId,
+						mediaUrl: [],
+						content: textFieldEdit.current.innerText,
+						curProgress: taggedData.addBook.status === 'read' ? taggedData.addBook.page : checkProgress,
+					};
+					dispatch(createReviewBook(reviewData));
 				}
-				await dispatch(createActivity(params));
-				setStatus(STATUS_SUCCESS);
-				toast.success('Tạo post thành công!');
-				onChangeNewPost();
-			} catch (err) {
-				const statusCode = err?.statusCode || 500;
-				if (err.errorCode === 702) {
-					NotificationError(err);
-				} else {
-					toast.error('Tạo post thất bại!');
+				if (valueStar > 0) {
+					userRating();
 				}
-				setStatus(statusCode);
-			} finally {
-				dispatch(updateCurrentBook({}));
-				setStatus(STATUS_IDLE);
-				hideCreatPostModal();
-				onChangeOption({});
-				userRating();
+				handleUpdateProgress(params);
 			}
-		} else if (params.msg === '' && validationInput === '') {
-			try {
-				if (params.bookId) {
-					await handleUpdateProgress(params);
-				}
-			} catch (err) {
-				if (params.msg === '' && validationInput === '') {
-					toast.success('Cập nhập trang sách thành công');
-				} else {
-					toast.error('Cập nhập trang sách thất bại');
-				}
-			} finally {
-				hideCreatPostModal();
+			await dispatch(createActivity(params));
+			setStatus(STATUS_SUCCESS);
+			toast.success('Tạo post thành công!');
+			onChangeNewPost();
+		} catch (err) {
+			const statusCode = err?.statusCode || 500;
+			if (err.errorCode === 702) {
+				NotificationError(err);
+			} else {
+				toast.error('Tạo post thất bại!');
 			}
+			setStatus(statusCode);
+		} finally {
+			dispatch(updateCurrentBook({}));
+			setStatus(STATUS_IDLE);
+			hideCreatPostModal();
+			onChangeOption({});
 		}
 	};
 
 	const checkActive = () => {
 		let isActive = false;
-		if (
-			((taggedData.addBook.page != checkProgress && validationInput === '') ||
-				textFieldEdit.current?.innerText) &&
-			(!_.isEmpty(taggedData.addBook) || taggedData.addAuthor.length || taggedData.addCategory.length)
-		) {
-			isActive = true;
+		if (!_.isEmpty(taggedData.addBook)) {
+			if (taggedData.addBook.status) {
+				if (taggedData.addBook.status === 'read') {
+					if (textFieldEdit?.current?.innerText) {
+						isActive = true;
+					}
+				} else if (taggedData.addBook.status === 'reading') {
+					if (checkProgress === taggedData.addBook.page) {
+						const newTaggedData = { ...taggedData };
+						newTaggedData.addBook.status = 'read';
+						setTaggedData(newTaggedData);
+					} else {
+						if (!validationInput) {
+							isActive = true;
+						}
+					}
+				} else {
+					isActive = true;
+				}
+			} else {
+				if (taggedData.addBook.page !== checkProgress && !validationInput) {
+					isActive = true;
+				} else {
+					if (textFieldEdit.current?.innerText) {
+						isActive = true;
+					}
+				}
+			}
+		} else {
+			if (
+				textFieldEdit.current?.innerText &&
+				(taggedData.addAuthor.length || taggedData.addCategory.length || imagesUpload.length)
+			) {
+				isActive = true;
+			}
 		}
-		return isActive && !validationInput;
+		return isActive;
 	};
 
 	const handleValidationInput = value => {
@@ -387,7 +405,7 @@ function CreatPostModalContent({
 
 	return (
 		<div className='creat-post-modal-content'>
-			<CircleLoading loading={status === STATUS_LOADING} />
+			<Circle loading={status === STATUS_LOADING} />
 			{/*main */}
 			<div
 				className={classNames('creat-post-modal-content__main', {
@@ -418,7 +436,7 @@ function CreatPostModalContent({
 							<div className='creat-post-modal-content__main__body__user-info__block-right'>
 								<p>
 									{userInfo.fullName || userInfo.lastName || userInfo.firstName || 'Không xác định'}
-									{taggedData.addFriends.length ? (
+									{taggedData.addFriends.length > 0 && (
 										<>
 											<span className='d-inline-block mx-1'>cùng với</span>
 											{taggedData.addFriends.map(item => (
@@ -430,15 +448,13 @@ function CreatPostModalContent({
 												</span>
 											))}
 										</>
-									) : (
-										''
 									)}
 								</p>
-								<ShareModeComponent
+								{/* <ShareModeComponent
 									list={shareModeList}
 									shareMode={shareMode}
 									setShareMode={setShareMode}
-								/>
+								/> */}
 							</div>
 						</div>
 						<div
@@ -508,16 +524,27 @@ function CreatPostModalContent({
 									taggedData={taggedData}
 									images={imagesUpload}
 								/>
-								<label
-									htmlFor='image-upload'
+								<span
 									className={classNames('creat-post-modal-content__main__options__item-add-to-post', {
 										'active': imagesUpload.length > 0 && _.isEmpty(taggedData.addBook),
 										'disabled': !_.isEmpty(taggedData.addBook),
 									})}
+									onMouseOver={() => setShowImagePopover(true)}
+									onMouseLeave={() => setShowImagePopover(false)}
 									onClick={handleOpenUploadImage}
 								>
+									<div
+										className={classNames(
+											'creat-post-modal-content__main__options__item-add-to-post__popover',
+											{
+												'show': showImagePopover,
+											}
+										)}
+									>
+										Ảnh
+									</div>
 									<Image />
-								</label>
+								</span>
 							</div>
 						</div>
 						<button
@@ -567,7 +594,6 @@ CreatPostModalContent.propTypes = {
 	onChangeOption: PropTypes.func,
 	onChangeNewPost: PropTypes.func,
 	renderBookReading: PropTypes.object,
-	booksId: PropTypes.number,
 };
 
 export default CreatPostModalContent;

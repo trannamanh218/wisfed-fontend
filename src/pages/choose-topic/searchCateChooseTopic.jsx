@@ -1,4 +1,3 @@
-import React from 'react';
 import PropTypes from 'prop-types';
 import LoadingIndicator from 'shared/loading-indicator';
 import InfiniteScroll from 'react-infinite-scroll-component';

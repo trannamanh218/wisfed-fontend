@@ -8,7 +8,6 @@ import { toast } from 'react-toastify';
 import { useDispatch } from 'react-redux';
 import classNames from 'classnames';
 import { editUserInfo } from 'reducers/redux-utils/user';
-import { activeUpdateUserProfileStatus } from 'reducers/redux-utils/user';
 import PropTypes from 'prop-types';
 // import ShareModeDropdown from 'shared/share-mode-dropdown';
 import InputType from './input-type';
@@ -262,7 +261,6 @@ const PersonalInfoForm = ({ userData }) => {
 			const data = { userId: userData.id, params: params };
 			const changeUserAvatar = await dispatch(editUserInfo(data)).unwrap();
 			if (!_.isEmpty(changeUserAvatar)) {
-				dispatch(activeUpdateUserProfileStatus());
 				toast.success('Chỉnh sửa thành công', {
 					autoClose: 1500,
 				});

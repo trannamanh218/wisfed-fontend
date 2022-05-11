@@ -80,20 +80,21 @@ export const useFetchAuthorBooks = (firstName, lastName) => {
 
 export const useFetchBookDetail = id => {
 	const {
-		book: { bookInfo = {} },
-		auth: { userInfo = {} },
+		book: { bookInfo },
+		auth: { userInfo },
 	} = useSelector(state => state);
 	const [status, setStatus] = useState(STATUS_IDLE);
 	const dispatch = useDispatch();
 
 	useEffect(() => {
 		let isMount = true;
-
+		setStatus(STATUS_LOADING);
 		const fetchBookDetail = async () => {
 			const params = { id, userId: userInfo.id };
 
 			try {
 				await dispatch(getBookDetail(params)).unwrap();
+				setStatus(STATUS_SUCCESS);
 			} catch (err) {
 				NotificationError(err);
 				const statusCode = err?.statusCode || 500;
@@ -108,7 +109,7 @@ export const useFetchBookDetail = id => {
 		return () => {
 			isMount = false;
 		};
-	}, [id, userInfo]);
+	}, [id]);
 	return { bookInfo, status };
 };
 

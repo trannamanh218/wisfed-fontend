@@ -53,8 +53,19 @@ import { ReactComponent as CameraIcon } from 'assets/icons/IconCamera.svg';
 import { ReactComponent as MoreIcon } from 'assets/icons/More.svg';
 import { ReactComponent as ActionPlusGroup } from 'assets/icons/action-plus-group.svg';
 import { ReactComponent as LogInCircle } from 'assets/icons/Log In Circle.svg';
-
+import { ReactComponent as CircleActionsAlertQuestion } from 'assets/icons/Circle Actions Alert Question.svg';
+import { ReactComponent as SettingIcon } from 'assets/icons/Settings.svg';
+import { ReactComponent as StarRanks } from 'assets/icons/StarRanks.svg';
+import { ReactComponent as StarRanksBXH } from 'assets/icons/StarRanksBXH.svg';
+import { ReactComponent as StarRanksActive } from 'assets/icons/StarRanksActive.svg';
+import { ReactComponent as ShareRanks } from 'assets/icons/ShareRanks.svg';
+import { ReactComponent as Crown } from 'assets/icons/Crown.svg';
 export {
+	Crown,
+	ShareRanks,
+	StarRanksActive,
+	StarRanksBXH,
+	StarRanks,
 	HomeIcon,
 	CategoryIcon,
 	BookFillIcon,
@@ -110,4 +121,6 @@ export {
 	MoreIcon,
 	ActionPlusGroup,
 	LogInCircle,
+	CircleActionsAlertQuestion,
+	SettingIcon,
 };

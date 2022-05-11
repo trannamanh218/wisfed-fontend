@@ -12,13 +12,14 @@
 .register__container-modal {
 	background-color: rgba(78, 75, 102, 0.4);
 	position: fixed;
-	width: 100%;
+	width: 1440px;
 	height: 100vh;
 	z-index: 1;
 }
 
 .register__container {
-	background-color: #f5f5f5;
+	background-color: white;
+	box-shadow: 0px 0px 32px rgba(0, 0, 0, 0.04);
 	max-width: 1440px !important;
 	margin: auto;
 }

@@ -1,5 +1,4 @@
 import classNames from 'classnames';
-import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
 const ShareModeComponent = ({ list, shareMode, setShareMode }) => {

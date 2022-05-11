@@ -1,5 +1,4 @@
 import { STATUS_BOOK } from 'constants';
-import { progressReadingSchema } from 'helpers/Validation';
 import PropTypes from 'prop-types';
 import { useEffect, useRef, useState } from 'react';
 import BookThumbnail from 'shared/book-thumbnail';
@@ -7,29 +6,36 @@ import LinearProgressBar from 'shared/linear-progress-bar';
 import ReactRating from 'shared/react-rating';
 import './post-edit-book.scss';
 import { useDispatch, useSelector } from 'react-redux';
-import { NotificationError } from 'helpers/Error';
 import { getRatingBook } from 'reducers/redux-utils/book';
-import { toast } from 'react-toastify';
+import { NotificationError } from 'helpers/Error';
 
 const PostEditBook = props => {
 	const { data, handleValidationInput, validationInput, handleAddToPost, handleChangeStar, valueStar } = props;
 	const [listRatingStar, setListRatingStar] = useState(null);
+	const [showText, setShowText] = useState(true);
+
 	const inputRef = useRef(null);
 	const bookInfor = useSelector(state => state.book.bookInfo);
 	const dispatch = useDispatch();
 	const fetchData = async () => {
-		if (data.status === STATUS_BOOK.read || bookInfor) {
-			const bookId = bookInfor ? bookInfor.id : data.id;
+		if (data?.id) {
 			try {
-				const res = await dispatch(getRatingBook(bookId)).unwrap();
+				const res = await dispatch(getRatingBook(data?.id)).unwrap();
 				const data = res.data.rows;
 				setListRatingStar(data);
 			} catch (err) {
-				toast.error('lỗi hệ thống');
+				NotificationError(err);
+			}
+		} else if (bookInfor?.id) {
+			try {
+				const res = await dispatch(getRatingBook(bookInfor?.id)).unwrap();
+				const data = res.data.rows;
+				setListRatingStar(data);
+			} catch (err) {
+				// toast.error('lỗi hệ thống');
 			}
 		}
 	};
-
 	useEffect(() => {
 		fetchData();
 	}, []);
@@ -47,34 +53,21 @@ const PostEditBook = props => {
 		}
 	}, [data]);
 
-	const handleChange = async e => {
-		const { value, name } = e.target;
-		let message = '';
-
-		try {
-			const res = await progressReadingSchema(data.status).validate({ [name]: value }, { abortEarly: false });
-			const currentProgress = parseInt(res.progress);
-			if (currentProgress > data.page) {
-				message = `Số trang không vượt quá ${data.page}`;
-			}
-		} catch (err) {
-			const { errors } = err;
-			message = errors[0];
+	const handleChange = e => {
+		const { value } = e.target;
+		if (value) {
+			setShowText(false);
+		} else {
+			setShowText(true);
 		}
-
+		let message = '';
+		if (value > data.page) {
+			message = `Số trang không vượt quá ${data.page}`;
+		} else if (value < 0) {
+			message = 'Số trang không được bé hơn 0';
+		}
 		handleAddToPost({ ...data, progress: value });
 		handleValidationInput(message);
-	};
-
-	const handleBlur = async e => {
-		const { name, value } = e.target;
-		try {
-			await progressReadingSchema(data.status).validate({ [name]: value }, { abortEarly: false });
-		} catch (err) {
-			NotificationError(err);
-			const { errors } = err;
-			handleValidationInput(errors[0]);
-		}
 	};
 
 	return (
@@ -96,24 +89,21 @@ const PostEditBook = props => {
 									ref={inputRef}
 									className='post-edit-book__input'
 									onChange={handleChange}
-									onBlur={handleBlur}
 									value={data.progress}
 									autoFocus
 									name='progress'
+									type='number'
 								/>
 							)}
-
 							<span>/{data.page}</span>
-							{!data.progress ? (
+							{(data.status === STATUS_BOOK.reading || data.status === undefined) && showText && (
 								<span className='post-edit-book__message'>Nhập số trang sách đã đọc</span>
-							) : (
-								''
 							)}
 						</div>
 						<small className='post-edit-book__message'>{validationInput}</small>
 					</div>
 				</div>
-				{data.status === STATUS_BOOK.read ? (
+				{data.status === STATUS_BOOK.read && (
 					<div className='post-edit-book__action'>
 						<div className='post-edit-book__ratings'>
 							<ReactRating
@@ -125,7 +115,8 @@ const PostEditBook = props => {
 							<div className='post-edit-book__rating__number'>
 								{listRatingStar?.avg !== 0 ? (
 									<div>
-										({listRatingStar?.avg}) ({listRatingStar?.count} đánh giá)
+										{listRatingStar?.avg ? `(${listRatingStar?.avg}) ` : ''} (
+										{listRatingStar?.count || 'chưa có'} đánh giá)
 									</div>
 								) : (
 									<div>(chưa có đánh giá)</div>
@@ -133,7 +124,7 @@ const PostEditBook = props => {
 							</div>
 						</div>
 					</div>
-				) : null}
+				)}
 			</div>
 		</div>
 	);

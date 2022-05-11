@@ -10,10 +10,10 @@ import Review from 'pages/review';
 import BookShelves from 'pages/shelves';
 import ConfirmMyBook from 'pages/confirm-my-book';
 import Notification from 'pages/notification/compornent-main';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Routes, Route } from 'react-router-dom';
-import { login } from 'reducers/redux-utils/auth';
+import { login, checkLogin } from 'reducers/redux-utils/auth';
 import { ToastContainer } from 'react-toastify';
 import Login from 'pages/login/element';
 import Register from 'pages/register/component';
@@ -31,6 +31,7 @@ import DetailFriend from 'pages/group/component/detail-friend';
 import 'scss/main.scss';
 import QuoteAll from 'pages/quote/all-quote/';
 import Group from 'pages/group-page';
+import Ranks from 'pages/ranks';
 
 function App({ children }) {
 	const dispatch = useDispatch();
@@ -51,10 +52,11 @@ function App({ children }) {
 	const fetchLogin = async params => {
 		try {
 			await dispatch(login(params)).unwrap();
+			dispatch(checkLogin(true));
 		} catch (err) {
-			NotificationError(err);
-			const statusCode = err?.statusCode || 500;
-			return statusCode;
+			dispatch(checkLogin(false));
+			// NotificationError(JSON.parse(err));
+			// const statusCode = err?.statusCode || 500;
 		}
 	};
 
@@ -72,6 +74,7 @@ function App({ children }) {
 				pauseOnHover
 			/>
 			<Routes>
+				<Route path='/top100' element={<Ranks />} />
 				<Route path='/notification' element={<Notification />} />
 				<Route path='/category' element={<Category />} />
 				<Route path='/category/detail/:id' element={<CategoryDetail />} />
@@ -81,8 +84,7 @@ function App({ children }) {
 				<Route path='/friends/:slug' element={<DetailFriend />} />
 				<Route path='/book/detail/:bookId' element={<BookDetail />} />
 				<Route path='/book/detail/:bookId/:slug' element={<BookDetail />} />
-				<Route path='/review/:id' element={<Review />} />
-				<Route path='/review/:id/:slug' element={<Review />} />
+				<Route path='/review/:bookId/:userId' element={<Review />} />
 				<Route path='/quotes/:userId' element={<Quote />} />
 				<Route path='/quotes/all' element={<QuoteAll />} />
 				<Route path='/quotes/detail/:id' element={<QuoteDetail />} />
@@ -95,11 +97,11 @@ function App({ children }) {
 				<Route path='/creat-newpassword-admin' element={<AdminCreatNewPassword />} />
 				<Route path='/choose-topic' element={<ChooseTopic />} />
 				<Route path='/direct' element={<Direct />} />
-				<Route path='/404' element={<NotFound />} />
-				<Route path='/reading-summary' element={<ReadingSummary />} />
-				<Route path='/reading-target' element={<ReadingTarget />} />
+				<Route path='/reading-summary/:userId' element={<ReadingSummary />} />
+				<Route path='/reading-target/:userId' element={<ReadingTarget />} />
 				<Route path='/group' element={<Group />} />
 				<Route path='/' element={<Home />} />
+				<Route path='*' element={<NotFound />} />
 				{children}
 			</Routes>
 		</div>

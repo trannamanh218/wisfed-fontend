@@ -180,11 +180,15 @@ const bookSlice = createSlice({
 		currentBook: { id: null },
 		bookForCreatePost: {},
 		ratingBookStart: null,
+		currentBookReviewsNumber: 0,
 	},
 	reducers: {
 		updateCurrentBook: (state, action) => {
 			state.bookInfo = action.payload;
 			state.bookForCreatePost = action.payload;
+		},
+		updateCurrentBookReviewsNumber: (state, action) => {
+			state.currentBookReviewsNumber = action.payload;
 		},
 	},
 	extraReducers: {
@@ -220,4 +224,4 @@ const bookSlice = createSlice({
 
 const book = bookSlice.reducer;
 export default book;
-export const { updateCurrentBook } = bookSlice.actions;
+export const { updateCurrentBook, updateCurrentBookReviewsNumber } = bookSlice.actions;

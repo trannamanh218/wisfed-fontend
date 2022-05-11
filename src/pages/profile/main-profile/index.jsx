@@ -9,30 +9,25 @@ import BookTab from './book-tab';
 import Bookcase from './bookcase-tab';
 import PostTab from './post-tab';
 import { getUserDetail } from 'reducers/redux-utils/user';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
 import _ from 'lodash';
 import { useParams } from 'react-router-dom';
 
-import { updateUserInfoRedux } from 'reducers/redux-utils/auth';
-
 const MainProfile = () => {
 	const { userId } = useParams();
-
-	const [userInfo, setUserInfo] = useState({});
-
+	const [userInfor, setUserInfor] = useState({});
 	const dispatch = useDispatch();
-	const updateUserProfile = useSelector(state => state.user.updateUserProfile);
+	const { userInfo } = useSelector(state => state.auth);
 
 	useEffect(() => {
 		getUserDetailData();
-	}, [updateUserProfile, userId]);
+	}, [userId, userInfo]);
 
 	const getUserDetailData = async () => {
 		try {
 			const userData = await dispatch(getUserDetail(userId)).unwrap();
-			setUserInfo(userData);
-			dispatch(updateUserInfoRedux(userData));
+			setUserInfor(userData);
 		} catch (err) {
 			NotificationError(err);
 		}
@@ -40,22 +35,22 @@ const MainProfile = () => {
 
 	return (
 		<>
-			{!_.isEmpty(userInfo) && (
+			{!_.isEmpty(userInfor) && (
 				<div className='main-profile'>
-					<PersonalInfo userInfo={userInfo} />
+					<PersonalInfo userInfor={userInfor} />
 					<Tabs className='main-profile__tabs' defaultActiveKey={'books'}>
 						{/*Notes: Chỉ hiển thị khi user là tác giả, không public */}
 						<Tab eventKey='books' title='Sách của tác giả'>
 							<BookTab />
 						</Tab>
 						<Tab eventKey='shelves' title='Tủ sách'>
-							<Bookcase />
+							<Bookcase userInfo={userInfor} />
 						</Tab>
 						<Tab eventKey='post' title='Bài viết' className='post-tab-active'>
 							<PostTab />
 						</Tab>
 						<Tab eventKey='infor' title='Giới thiệu'>
-							<InforTab userInfo={userInfo} />
+							<InforTab userInfo={userInfor} />
 						</Tab>
 						<Tab eventKey='quotes' title='Quotes'>
 							<QuoteTab />

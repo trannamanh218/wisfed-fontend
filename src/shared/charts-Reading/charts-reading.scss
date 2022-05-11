@@ -1,0 +1,49 @@
+@import 'src/scss/abstracts/_variables.scss';
+
+.charts__reading__container {
+	font-family: 'Montserrat';
+	font-style: normal;
+	&__title {
+		font-weight: 600;
+		font-size: 20px;
+		line-height: 32px;
+		color: #2d2c42;
+		letter-spacing: 0.75px;
+	}
+	.charts__reading__container__main {
+		padding: 24px;
+		background: #ffffff;
+		margin-top: 24px;
+		border-radius: 16px;
+		&__read {
+			display: flex;
+			justify-content: space-between;
+			margin: 26px 0;
+			.book__read__title {
+				font-weight: 500;
+				font-size: 13px;
+				line-height: 22px;
+				letter-spacing: 0.25px;
+				color: #2d2c42;
+			}
+			.book__read__number {
+				font-weight: 600;
+				font-size: 15px;
+				line-height: 24px;
+				letter-spacing: 0.75px;
+				color: #2d2c42;
+			}
+		}
+		&__month {
+			width: 232px;
+			text-align: center;
+			letter-spacing: 0.75px;
+			font-weight: 600;
+			font-size: 15px;
+			line-height: 24px;
+			background: #f5e7d8;
+			border-radius: 12px;
+			padding: 16px 33px;
+		}
+	}
+}

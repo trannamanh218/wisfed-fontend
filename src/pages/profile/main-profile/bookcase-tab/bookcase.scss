@@ -123,17 +123,10 @@
 			}
 		}
 	}
-	span {
+	&__text {
 		font-weight: 600;
 		color: $ash;
 		font-size: 13px;
-	}
-	a {
-		font-weight: 600;
-		color: $blue !important;
-		font-size: 13px;
-		margin-left: 4px;
-		text-decoration: underline !important;
 	}
 }
 

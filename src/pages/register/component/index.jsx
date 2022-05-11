@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import '../register.scss';
 import Logo from 'assets/images/Logo 2.png';
 import ImgRegister from 'assets/images/anh-1 1.png';
@@ -9,7 +9,7 @@ import { unwrapResult } from '@reduxjs/toolkit';
 import { useDispatch, useSelector } from 'react-redux';
 import ModalLogin from 'pages/login/element/ModalLogin';
 import { register } from 'reducers/redux-utils/auth';
-import { Circle } from 'shared/loading';
+import Circle from 'shared/loading/circle';
 
 function RegisterComponent() {
 	const dispatch = useDispatch();
@@ -83,7 +83,7 @@ function RegisterComponent() {
 							onSubmit={handleSubmit}
 							validationSchema={registerValidate}
 						>
-							<Form className='register__form'>
+							<Form className='register__form-register'>
 								<div className='register__form-title'>
 									<span>
 										Tạo tài khoản <br /> nhanh chóng và dễ dàng

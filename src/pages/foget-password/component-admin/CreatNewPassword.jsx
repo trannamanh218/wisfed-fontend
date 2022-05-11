@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Formik, Field, Form } from 'formik';
 import classNames from 'classnames';
 import { resetPasswordAdmin } from 'reducers/redux-utils/auth';
@@ -6,7 +6,7 @@ import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
 import ModalLogin from 'pages/login/element/ModalLogin';
 import { resetPasswordValidateAdmin } from 'helpers/Validation';
-import { Circle } from 'shared/loading';
+import Circle from 'shared/loading/circle';
 
 function CreatNewPasswordAdminForm() {
 	const isFetching = useSelector(state => state.auth.isFetching);

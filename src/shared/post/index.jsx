@@ -25,7 +25,7 @@ function Post({ postInformations, className }) {
 	const [videoId, setVideoId] = useState('');
 	const { userInfo } = useSelector(state => state.auth);
 	const [commentLv1IdArray, setCommentLv1IdArray] = useState([]);
-	const [replyingCommentId, setReplyingCommentId] = useState(0);
+	const [replyingCommentId, setReplyingCommentId] = useState(null);
 	const [clickReply, setClickReply] = useState(false);
 
 	const dispatch = useDispatch();
@@ -158,10 +158,10 @@ function Post({ postInformations, className }) {
 
 				<div className='post__user-status__name-and-post-time-status'>
 					<div data-testid='post__user-name' className='post__user-status__name'>
-						{postData?.createdBy?.fullName || 'Ẩn danh'}
+						{postData?.createdBy?.fullName || postData?.user?.fullName || 'Ẩn danh'}
 					</div>
 					<div className='post__user-status__post-time-status'>
-						<span>{calculateDurationTime(postData.createdAt)}</span>
+						<span>{calculateDurationTime(postData.time || postData.createdAt)}</span>
 						<>
 							{postData.book && (
 								<div className='post__user-status__subtitle'>
@@ -203,9 +203,13 @@ function Post({ postInformations, className }) {
 				))}
 			</ul>
 
-			{postData.book && <PostBook data={{ ...postData.book, bookLibrary: postData.bookLibrary }} />}
+			{postData.book && (
+				<PostBook
+					data={{ ...postData.book, bookLibrary: postData.bookLibrary, actorCreatedPost: postData.actor }}
+				/>
+			)}
 
-			{postData?.image?.length > 0 && <GridImage images={postData.image} inPost={true} />}
+			{postData?.image?.length > 0 && <GridImage images={postData.image} inPost={true} postId={postData.id} />}
 
 			{postData?.image?.length === 0 && !_.isEmpty(postData?.preview) && (
 				<>

@@ -8,16 +8,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { checkLikeQuote } from 'reducers/redux-utils/quote';
 import { NotificationError } from 'helpers/Error';
+import LoadingIndicator from 'shared/loading-indicator';
 
 const MainAllQuotes = () => {
-	const [myQuoteList, setMyQuoteList] = useState([]);
+	const [allQuoteList, setAllQuoteList] = useState([]);
 	const [hasMore, setHasMore] = useState(true);
-	const [defaultOption, setDefaultOption] = useState({ id: 1, title: 'Tất cả', value: 'all' });
-	const filterOptions = [
-		{ id: 1, title: 'Của tôi', value: 'me' },
-		{ id: 2, title: 'Yêu thích', value: 'me-like' },
-	];
 	const [likedArray, setLikedArray] = useState([]);
+	const [sortValue, setSortValue] = useState('like');
+	const [sortDirection, setSortDirection] = useState('DESC');
 
 	const callApiStart = useRef(10);
 	const callApiPerPage = useRef(10);
@@ -28,20 +26,23 @@ const MainAllQuotes = () => {
 
 	useEffect(() => {
 		callApiStart.current = 10;
-		getMyQuoteListFirstTime();
+		getAllQuoteListFirstTime();
 		getLikedArray();
-	}, [resetQuoteList]);
+	}, [resetQuoteList, sortValue, sortDirection]);
 
-	const getMyQuoteListFirstTime = async () => {
+	const getAllQuoteListFirstTime = async () => {
 		try {
 			const params = {
 				start: 0,
 				limit: callApiPerPage.current,
-				sort: JSON.stringify([{ property: 'createdAt', direction: 'DESC' }]),
+				sort: JSON.stringify([{ property: sortValue, direction: sortDirection }]),
 			};
 			const quotesList = await dispatch(getQuoteList(params)).unwrap();
-			if (quotesList.length) {
-				setMyQuoteList(quotesList);
+			if (quotesList.length > 0) {
+				setAllQuoteList(quotesList);
+				if (quotesList.length < callApiPerPage.current) {
+					setHasMore(false);
+				}
 			} else {
 				setHasMore(false);
 			}
@@ -50,17 +51,17 @@ const MainAllQuotes = () => {
 		}
 	};
 
-	const getMyQuoteList = async () => {
+	const getAllQuoteList = async () => {
 		try {
 			const params = {
 				start: callApiStart.current,
 				limit: callApiPerPage.current,
-				sort: JSON.stringify([{ property: 'createdAt', direction: 'DESC' }]),
+				sort: JSON.stringify([{ property: sortValue, direction: sortDirection }]),
 			};
 			const quotesList = await dispatch(getQuoteList(params)).unwrap();
 			if (quotesList.length) {
 				callApiStart.current += callApiPerPage.current;
-				setMyQuoteList(myQuoteList.concat(quotesList));
+				setAllQuoteList(allQuoteList.concat(quotesList));
 			} else {
 				setHasMore(false);
 			}
@@ -78,9 +79,16 @@ const MainAllQuotes = () => {
 		}
 	};
 
-	const handleChangeOption = (e, data) => {
-		if (data.value !== defaultOption.value) {
-			setDefaultOption(data);
+	const handleSortQuotes = params => {
+		if (params === 'default') {
+			setSortValue('like');
+			setSortDirection('DESC');
+		} else if (params === 'newest') {
+			setSortValue('createdAt');
+			setSortDirection('DESC');
+		} else if (params === 'oldest') {
+			setSortValue('createdAt');
+			setSortDirection('ASC');
 		}
 	};
 
@@ -91,19 +99,15 @@ const MainAllQuotes = () => {
 				<h4>Tất cả Quotes</h4>
 				<SearchField className='main-my-quote__search' placeholder='Tìm kiếm theo sách, tác giả, chủ đề ...' />
 			</div>
-			<FilterQuotePane
-				filterOptions={filterOptions}
-				handleChangeOption={handleChangeOption}
-				defaultOption={defaultOption}
-			>
-				{myQuoteList.length > 0 && (
+			<FilterQuotePane isMyQuotes={false} handleSortQuotes={handleSortQuotes}>
+				{allQuoteList.length > 0 && (
 					<InfiniteScroll
-						dataLength={myQuoteList.length}
-						next={getMyQuoteList}
+						dataLength={allQuoteList.length}
+						next={getAllQuoteList}
 						hasMore={hasMore}
-						loader={<h4>Loading...</h4>}
+						loader={<LoadingIndicator />}
 					>
-						{myQuoteList.map(item => (
+						{allQuoteList.map(item => (
 							<QuoteCard key={item.id} data={item} likedArray={likedArray} />
 						))}
 					</InfiniteScroll>
@@ -112,7 +116,5 @@ const MainAllQuotes = () => {
 		</div>
 	);
 };
-
-MainAllQuotes.propTypes = {};
 
 export default MainAllQuotes;
