@@ -2,7 +2,10 @@
 	padding: 41px 20px;
 	font-family: 'Montserrat';
 	font-style: normal;
-
+	.topbooks__notthing {
+		margin-top: 40px;
+		text-align: center;
+	}
 	&__title {
 		font-weight: 700;
 		font-size: 24px;
@@ -68,31 +71,31 @@
 			}
 		}
 	}
-
+	.top__book {
+		gap: 28px !important;
+	}
 	.topbooks__container__main {
 		margin-top: 40px;
-		margin-left: 45px;
+		margin-left: 25px;
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
 		gap: 32px;
-		.topbooks__container__star__ranks {
-			width: 42px;
-			height: 42px;
-			border-radius: 50%;
-			background: #fbf7f2;
-		}
 
 		.topbooks__container__star {
 			position: relative;
 		}
 
 		.topbooks__container__number___custom {
-			position: absolute;
-			margin-left: 15px;
-			margin-top: -33px;
 			font-size: 18px;
 			line-height: 30px;
+			width: 42px;
+			height: 42px;
+			border-radius: 50%;
+			background: #fbf7f2;
+			display: flex;
+			justify-content: center;
+			align-items: center;
 		}
 
 		.topbooks__container__number___ranks {
@@ -114,7 +117,9 @@
 					}
 				}
 			}
-
+			.author-card {
+				padding: 1.25rem 1.3rem 1.25rem 1.8rem;
+			}
 			.react-rating-container {
 				svg {
 					margin-right: 12px;
@@ -124,6 +129,7 @@
 			.author-book__title {
 				font-size: 1.3rem;
 				margin-bottom: 0;
+				flex: 1;
 			}
 			.author-book {
 				margin-bottom: 0;
@@ -150,9 +156,6 @@
 				font-weight: 500;
 				font-size: 0.9rem;
 				line-height: 22px;
-			}
-			.btn {
-				max-width: 180px;
 			}
 			.btn span {
 				font-weight: 600;

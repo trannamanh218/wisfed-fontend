@@ -98,11 +98,17 @@ export const listFollowing = id => `/api/v1/users/listFollowings/${id}`;
 //chart
 // export const listAPIChart = (count, by) => `/api/v1/tracking?count=${count}&by=${by}`;
 export const listBooksReadYear = (type, id) => `/api/v1/libraries/listBookByType/${type}/${id}`;
-export const getAPIchartsByid = (id, count, by) => `/api/v1/tracking/trackingById/${id}?count=${count}&by=${by}`;
+export const getAPIchartsByid = (id, count, by) => `/api/v1/report/reportBooksById/${id}?count=${count}&by=${by}`;
 // reading-target
 export const getReadingTargetAPI = '/api/v1/books/readingGoal';
 export const updateTargetReadAPI = year => `/api/v1/books/readingGoal/${year}`;
 export const getReadingTargetIdAPI = id => `/api/v1/books/readingGoalById/${id}`;
+// ranks
+export const getTopQuotesAPI = `/api/v1/report/reportTopQuotes`;
+export const getTopBooksAPI = `/api/v1/report/reportTopBooks`;
+export const getFilterTopUserAPI = `/api/v1/report/reportTopUsers`;
+export const getTopBooksApiAuth = `api/v1/report/reportTopBooksAuth`;
+export const getFilterTopUserApiAuth = `/api/v1/report/reportTopUsersAuth`;
 
 // group
 export const detailGroup = id => `api/v1/groups/${id}`;

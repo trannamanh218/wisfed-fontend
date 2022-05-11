@@ -5,18 +5,31 @@ import BookThumbnail from 'shared/book-thumbnail';
 import { BoldCenterCircle, RightArrow } from 'components/svg';
 import { useFetchAuthLibraries } from 'api/library.hook';
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { STATUS_SUCCESS, STATUS_IDLE, STATUS_LOADING } from 'constants';
+import { getBookDetail } from 'reducers/redux-utils/book';
+import { NotificationError } from 'helpers/Error';
+import { useDispatch } from 'react-redux';
+import _ from 'lodash';
+import Circle from 'shared/loading/circle';
+import { updateTitleReviewPage, updateDirectFromProfile } from 'reducers/redux-utils/common';
+import PropTypes from 'prop-types';
+import { updateCurrentBook } from 'reducers/redux-utils/book';
 
-function Bookcase() {
+function Bookcase({ userInfo }) {
 	const [readingBooks, setReadingBooks] = useState([]);
 	const [readBooks, setReadBooks] = useState([]);
 	const { statusLibraries } = useFetchAuthLibraries();
+	const [status, setStatus] = useState(STATUS_IDLE);
+
+	const dispatch = useDispatch();
+	const navigate = useNavigate();
 
 	useEffect(() => {
 		const filterReadbooks = statusLibraries.filter(item => item.defaultType === 'read');
 		const filterReadingbooks = statusLibraries.filter(item => item.defaultType === 'reading');
 		setReadBooks(filterReadbooks[0]?.books.reverse());
-		setReadingBooks(filterReadingbooks[0]?.books.reverse());
+		setReadingBooks(filterReadingbooks[0]?.books.reverse().slice(0, 3));
 	}, [statusLibraries]);
 
 	const progressBarPercenNumber = item => {
@@ -45,8 +58,32 @@ function Bookcase() {
 		return newDateData;
 	};
 
+	const navigateToBookReview = async book => {
+		setStatus(STATUS_LOADING);
+		try {
+			const bookData = await dispatch(getBookDetail({ id: book.id })).unwrap();
+			if (!_.isEmpty(bookData)) {
+				dispatch(updateTitleReviewPage(`Bài Review về ${book.name} của ${userInfo.fullName}`));
+				dispatch(updateDirectFromProfile(true));
+				setStatus(STATUS_SUCCESS);
+				navigate(`/review/${book.id}/${userInfo.id}`);
+			}
+		} catch (err) {
+			NotificationError(err);
+			const statusCode = err?.statusCode || 500;
+			setStatus(statusCode);
+		}
+	};
+
+	const createReview = book => {
+		const newBook = { ...book, status: 'read' };
+		dispatch(updateCurrentBook(newBook));
+		navigate('/');
+	};
+
 	return (
 		<div className='bookcase'>
+			<Circle loading={status === STATUS_LOADING} />
 			<div className='bookcase__item-name'>Sách đang đọc</div>
 			{readingBooks &&
 				readingBooks.length > 0 &&
@@ -63,7 +100,7 @@ function Bookcase() {
 									{progressBarPercenNumber(item)}
 								</div>
 								<div className='bookcase__item__button'>
-									<button>Viết Review</button>
+									<button onClick={() => createReview(item.book)}>Viết Review</button>
 								</div>
 							</div>
 						</div>
@@ -89,10 +126,10 @@ function Bookcase() {
 									))}
 								</div>
 								<div className='bookcase__review-all'>
-									<Link to={`/review/${item.book.id}`}>
+									<button onClick={() => navigateToBookReview(item.book)}>
 										<span>Xem toàn bộ Review</span>
 										<RightArrow />
-									</Link>
+									</button>
 								</div>
 							</div>
 						)}
@@ -114,7 +151,7 @@ function Bookcase() {
 									{progressBarPercenNumber(item)}
 								</div>
 								<div className='bookcase__item__button'>
-									<button>Viết Review</button>
+									<button onClick={() => createReview(item.book)}>Viết Review</button>
 								</div>
 							</div>
 						</div>
@@ -140,10 +177,10 @@ function Bookcase() {
 									))}
 								</div>
 								<div className='bookcase__review-all'>
-									<Link to={`/review/${item.book.id}`}>
+									<button onClick={() => navigateToBookReview(item.book)}>
 										<span>Xem toàn bộ Review</span>
 										<RightArrow />
-									</Link>
+									</button>
 								</div>
 							</div>
 						)}
@@ -152,5 +189,9 @@ function Bookcase() {
 		</div>
 	);
 }
+
+Bookcase.propTypes = {
+	userInfo: PropTypes.object,
+};
 
 export default Bookcase;

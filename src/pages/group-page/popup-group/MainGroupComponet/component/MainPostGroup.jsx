@@ -1,5 +1,4 @@
-import CreatPost from 'pages/home/components/newfeed/components/creat-post';
-import React from 'react';
+import CreatePost from 'pages/home/components/newfeed/components/creat-post';
 import Post from 'shared/post';
 import './mainPostGroup.scss';
 
@@ -23,7 +22,7 @@ function MainPostGroup() {
 
 	return (
 		<div className='main-content__container'>
-			<CreatPost />
+			<CreatePost />
 			<div className='main-content__post'>
 				<Post postInformations={data} className={''} />
 				<Post postInformations={data} className={''} />

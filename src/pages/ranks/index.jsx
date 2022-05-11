@@ -7,7 +7,18 @@ import { Link } from 'react-router-dom';
 import TopBooks from './component/top-Books';
 import TopUser from './component/top-user';
 import TopQuotes from './component/top-quotes';
-const Ranks = () => {
+import { useFetchViewMoreCategories } from 'api/category.hook';
+const MAX_PER_PAGE = 30;
+
+const Ranks = ({ loginId }) => {
+	const {
+		categoryData: { rows = [] },
+	} = useFetchViewMoreCategories(1, MAX_PER_PAGE, '[]');
+	const listYear = [
+		{ value: 'week', title: 'Tuần' },
+		{ value: 'month', title: 'Tháng' },
+		{ value: 'year', title: ' Năm' },
+	];
 	return (
 		<NormalContainer>
 			<div className='ranks__container'>
@@ -20,13 +31,13 @@ const Ranks = () => {
 				<div className='ranks__container__main'>
 					<Tabs defaultActiveKey='books'>
 						<Tab eventKey='books' title='Sách'>
-							<TopBooks />
+							<TopBooks rows={rows} listYear={listYear} />
 						</Tab>
 						<Tab eventKey='User' title='Người dùng'>
-							<TopUser />
+							<TopUser rows={rows} listYear={listYear} />
 						</Tab>
 						<Tab eventKey='quotes' title='Quotes'>
-							<TopQuotes />
+							<TopQuotes rows={rows} listYear={listYear} />
 						</Tab>
 					</Tabs>
 				</div>
@@ -34,4 +45,5 @@ const Ranks = () => {
 		</NormalContainer>
 	);
 };
+
 export default Ranks;

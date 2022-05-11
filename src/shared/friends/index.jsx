@@ -297,7 +297,6 @@ const FriendsItem = ({ list, keyTabs, getListFollower, getMyListFriendReq }) => 
 
 	return (
 		<>
-			{' '}
 			{toggleModalUnFriends && (
 				<ModalUnFriend
 					setModalUnfriends={setModalUnfriends}

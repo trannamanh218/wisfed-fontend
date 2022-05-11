@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import shareImg from 'assets/images/alert-circle-fill.png';
 import facebookImg from 'assets/images/facebook.png';
 import StatusButton from 'components/status-button';
@@ -18,6 +18,7 @@ import { FacebookShareButton } from 'react-share';
 
 const BookIntro = () => {
 	const { bookInfo } = useSelector(state => state.book);
+	const reviewsNumber = useSelector(state => state.book.currentBookReviewsNumber);
 	const location = useLocation();
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
@@ -62,7 +63,7 @@ const BookIntro = () => {
 				<div className='book-intro__stars'>
 					<ReactRating readonly={true} initialRating={lisRatingStar?.avg} />
 					<span>({lisRatingStar?.count} đánh giá)</span>
-					<span>(4000 review)</span>
+					<span>({reviewsNumber} review)</span>
 				</div>
 
 				<div className='book-intro__description'>

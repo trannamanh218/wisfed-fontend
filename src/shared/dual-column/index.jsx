@@ -39,9 +39,7 @@ const DualColumn = props => {
 				<ul className={classNames('dualColumn-list', { [`bg-${background}`]: isBackground })}>
 					{list.slice(0, rows).map((item, index) => (
 						<li className={classNames('dualColumn-item', { 'has-background': isBackground })} key={index}>
-							<span className='dualColumn-item__title'>
-								<strong>{item.name}</strong>
-							</span>
+							<span className='dualColumn-item__title'>{item.name}</span>
 							<span className='dualColumn-item__number'>{item.quantity}</span>
 						</li>
 					))}

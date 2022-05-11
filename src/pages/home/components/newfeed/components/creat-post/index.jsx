@@ -6,9 +6,10 @@ import UserAvatar from 'shared/user-avatar';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import { updateCurrentBook } from 'reducers/redux-utils/book';
+import { resetTaggedDataFunc } from 'reducers/redux-utils/post';
 import { useLocation } from 'react-router-dom';
 
-function CreatPost({ onChangeNewPost }) {
+function CreatePost({ onChangeNewPost }) {
 	const [showModalCreatPost, setShowModalCreatPost] = useState(false);
 	const [option, setOption] = useState({});
 	const creatPostModalContainer = useRef(null);
@@ -85,6 +86,7 @@ function CreatPost({ onChangeNewPost }) {
 	useEffect(() => {
 		if (!_.isEmpty(bookForCreatePost)) {
 			setShowModalCreatPost(true);
+			dispatch(resetTaggedDataFunc(false));
 		}
 	}, [bookForCreatePost]);
 
@@ -127,6 +129,7 @@ function CreatPost({ onChangeNewPost }) {
 	const hideCreatPostModal = () => {
 		setShowModalCreatPost(false);
 		setOption({});
+		dispatch(resetTaggedDataFunc(true));
 	};
 
 	const onChangeOption = data => {
@@ -141,6 +144,7 @@ function CreatPost({ onChangeNewPost }) {
 				onClick={() => {
 					onChangeOption(item);
 					setShowModalCreatPost(true);
+					dispatch(resetTaggedDataFunc(false));
 				}}
 			>
 				<div className='newfeed__creat-post__options__item__logo'>{item.icon}</div>
@@ -174,7 +178,7 @@ function CreatPost({ onChangeNewPost }) {
 		</div>
 	);
 }
-CreatPost.propTypes = {
+CreatePost.propTypes = {
 	onChangeNewPost: PropTypes.func,
 };
-export default CreatPost;
+export default CreatePost;

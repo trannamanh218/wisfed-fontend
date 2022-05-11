@@ -3,9 +3,9 @@ import _ from 'lodash';
 import { useState, useRef, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import Post from 'shared/post';
-import CreatPost from './components/creat-post';
+import CreatePost from './components/creat-post';
 import './newfeed.scss';
-import Modalfilterhome from './components/modal-filter-home';
+import ModalfilterHome from './components/modal-filter-home';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { getActivityList } from 'reducers/redux-utils/activity';
 import { useDispatch } from 'react-redux';
@@ -78,8 +78,8 @@ const NewFeed = () => {
 					<Configure />
 				</div>
 			</div>
-			<Modalfilterhome modalShow={modalShow} setModalShow={setModalShow} />
-			{!_.isEmpty(userInfo) && <CreatPost onChangeNewPost={onChangeNewPost} />}
+			<ModalfilterHome modalShow={modalShow} setModalShow={setModalShow} />
+			{!_.isEmpty(userInfo) && <CreatePost onChangeNewPost={onChangeNewPost} />}
 
 			{postList.length > 0 && (
 				<InfiniteScroll

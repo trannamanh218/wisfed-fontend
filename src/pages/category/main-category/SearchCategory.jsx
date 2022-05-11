@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import LoadingIndicator from 'shared/loading-indicator';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import CategoryGroup from 'shared/category-group';
+
 const SearchCategory = ({ searchCategories, fetchFilterData, hasMoreFilterData, handleViewBookDetail }) => {
 	if (searchCategories.length) {
 		return (

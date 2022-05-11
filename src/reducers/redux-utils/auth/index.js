@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+// import { action } from '@storybook/addon-actions';
 import {
 	authAPI,
 	forgotPasswordAPI,
@@ -98,14 +99,14 @@ const authSlice = createSlice({
 	name: 'auth',
 	initialState: {
 		isFetching: false,
+		isAuth: null,
 		userInfo: {},
 		error: {},
 		infoForgot: {},
 	},
-
 	reducers: {
-		updateUserInfoRedux: (state, action) => {
-			state.userInfo = action.payload;
+		checkLogin: (state, action) => {
+			state.isAuth = action.payload;
 		},
 	},
 
@@ -115,6 +116,7 @@ const authSlice = createSlice({
 		},
 		[login.fulfilled]: (state, action) => {
 			state.isFetching = false;
+
 			state.userInfo = action.payload;
 			state.error = {};
 		},
@@ -182,6 +184,7 @@ const authSlice = createSlice({
 		},
 		[getUserInfo.rejected]: (state, action) => {
 			state.isFetching = false;
+
 			state.userInfo = {};
 			state.error = action.payload;
 		},
@@ -203,6 +206,6 @@ const authSlice = createSlice({
 	},
 });
 
-export const { updateUserInfoRedux } = authSlice.actions;
 const auth = authSlice.reducer;
+export const { checkLogin } = authSlice.actions;
 export default auth;

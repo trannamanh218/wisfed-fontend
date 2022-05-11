@@ -8,6 +8,7 @@ import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { NotificationError } from 'helpers/Error';
 import { checkLikeQuote } from 'reducers/redux-utils/quote';
+import LoadingIndicator from 'shared/loading-indicator';
 
 const QuotesTab = () => {
 	const filterOptions = [
@@ -82,7 +83,7 @@ const QuotesTab = () => {
 						dataLength={quoteList.length}
 						next={getQuoteListData}
 						hasMore={hasMore}
-						loader={<h4>Loading...</h4>}
+						loader={<LoadingIndicator />}
 					>
 						{quoteList.map(item => (
 							<QuoteCard key={item.id} data={item} likedArray={likedArray} />

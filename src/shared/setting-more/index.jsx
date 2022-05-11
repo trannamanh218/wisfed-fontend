@@ -5,13 +5,12 @@ import trashIcon from 'assets/images/trash.png';
 import StatusModalContainer from 'components/status-button/StatusModalContainer';
 import { CircleCheckIcon, CloseX, CoffeeCupIcon, TargetIcon } from 'components/svg';
 import { STATUS_BOOK } from 'constants';
-import RouteLink from 'helpers/RouteLink';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { useEffect, useRef, useState } from 'react';
 import { Modal, ModalBody } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import {
 	addBookToDefaultLibrary,
@@ -24,6 +23,7 @@ import {
 import { useModal } from 'shared/hooks';
 import './setting-more.scss';
 import { NotificationError } from 'helpers/Error';
+import { updateDirectFromProfile } from 'reducers/redux-utils/common';
 
 const STATUS_BOOK_OBJ = {
 	'reading': {
@@ -55,6 +55,7 @@ const SettingMore = ({ bookData, handleUpdateLibrary }) => {
 
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
+	const { userId } = useParams();
 
 	const {
 		library: { authLibraryData },
@@ -100,7 +101,8 @@ const SettingMore = ({ bookData, handleUpdateLibrary }) => {
 	};
 
 	const hanldeReviewBook = () => {
-		navigate(RouteLink.reviewBookDetail('402', bookData?.name));
+		dispatch(updateDirectFromProfile(false));
+		navigate(`/review/${bookData.id}/${userId}`);
 	};
 
 	const switchLibraries = () => {

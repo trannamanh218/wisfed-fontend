@@ -12,6 +12,7 @@ import { NotificationError } from 'helpers/Error';
 import _ from 'lodash';
 import { useParams } from 'react-router-dom';
 import { getUserDetail } from 'reducers/redux-utils/user';
+import LoadingIndicator from 'shared/loading-indicator';
 
 const MainQuote = () => {
 	const filterOptions = [
@@ -68,6 +69,9 @@ const MainQuote = () => {
 			const quotesList = await dispatch(getQuoteList(params)).unwrap();
 			if (quotesList.length) {
 				setQuoteList(quotesList);
+				if (quotesList.length < callApiPerPage.current) {
+					setHasMore(false);
+				}
 			} else {
 				setHasMore(false);
 			}
@@ -81,8 +85,8 @@ const MainQuote = () => {
 			const params = {
 				start: callApiStart.current,
 				limit: callApiPerPage.current,
-				sort: JSON.stringify([{ property: 'createdAt', direction: 'DESC' }]),
-				filter: JSON.stringify([{ operator: 'eq', value: userInfo.id, property: 'createdBy' }]),
+				sort: JSON.stringify([{ property: sortValue, direction: sortDirection }]),
+				filter: JSON.stringify([{ operator: 'eq', value: userId, property: 'createdBy' }]),
 			};
 			const quotesList = await dispatch(getQuoteList(params)).unwrap();
 			if (quotesList.length) {
@@ -109,7 +113,7 @@ const MainQuote = () => {
 		setCurrentOption(item);
 	};
 
-	const sortQuotes = params => {
+	const handleSortQuotes = params => {
 		if (params === 'default') {
 			setSortValue('like');
 			setSortDirection('DESC');
@@ -138,7 +142,7 @@ const MainQuote = () => {
 						filterOptions={filterOptions}
 						handleChangeOption={handleChangeOption}
 						currentOption={currentOption}
-						handleChange={sortQuotes}
+						handleSortQuotes={handleSortQuotes}
 						isMyQuotes={isMyQuotes}
 					>
 						{quoteList.length > 0 ? (
@@ -146,7 +150,7 @@ const MainQuote = () => {
 								dataLength={quoteList.length}
 								next={getQuoteListData}
 								hasMore={hasMore}
-								loader={<h4>Loading...</h4>}
+								loader={<LoadingIndicator />}
 							>
 								{quoteList.map(item => (
 									<QuoteCard key={item.id} data={item} likedArray={likedArray} />
