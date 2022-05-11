@@ -1,0 +1,24 @@
+@import 'src/scss/abstracts/_variables.scss';
+
+.review-rating {
+	display: flex;
+	align-items: center;
+
+	&__left {
+		height: 50%;
+		margin-right: 6em;
+		margin-bottom: 1.5em;
+		display: flex;
+		flex-direction: column;
+		gap: 1.6em;
+		align-items: center;
+		font-size: 0.825rem;
+		font-weight: 600;
+		line-height: 1.5;
+		color: $ash-label;
+	}
+
+	&__right {
+		flex-grow: 1;
+	}
+}

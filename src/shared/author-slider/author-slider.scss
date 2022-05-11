@@ -1,0 +1,59 @@
+@import 'src/scss/abstracts/_variables.scss';
+
+.author-slider__title {
+	font-size: 1.25rem;
+	font-weight: 600;
+	margin-bottom: 24px;
+	color: #2d2c42;
+}
+
+.author-slider {
+	&__item {
+		margin-right: 20px;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+
+		&__creator {
+			max-width: 55px;
+			font-size: 0.825rem;
+			font-weight: 500;
+			line-height: 1.5;
+			color: $ash-label;
+			display: -webkit-box;
+			-webkit-box-orient: vertical;
+			-webkit-line-clamp: 2;
+			text-overflow: ellipsis;
+			overflow: hidden;
+			margin-top: 0.75rem;
+			text-align: center;
+		}
+	}
+
+	.slick-prev {
+		left: 4% !important;
+	}
+
+	.slick-next {
+		right: 4% !important;
+	}
+
+	.slick-arrow {
+		&.slick-next {
+			display: flex !important;
+			justify-content: center;
+			border-radius: 50%;
+			background-color: rgba(20, 20, 43, 0.4) !important;
+			z-index: 1000;
+			width: 32px !important;
+			height: 32px !important;
+			padding: 0.3rem !important;
+			&:before {
+				display: none;
+			}
+			&:hover {
+				background-color: rgba(20, 20, 43, 0.7) !important;
+			}
+		}
+	}
+}

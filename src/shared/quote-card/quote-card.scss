@@ -1,0 +1,110 @@
+@import 'src/scss/abstracts/_variables.scss';
+
+.quote-card {
+	padding: 2.5em;
+	background-color: $secondary;
+	font-size: 1rem;
+	border-radius: 1rem;
+	margin-bottom: 1.25em;
+}
+
+.quote-card__quote-content {
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 16px;
+	p {
+		color: $ash-body;
+		font-size: 1rem;
+		font-weight: 500;
+		line-height: 1.5rem;
+		text-align: center;
+		&:first-child {
+			max-width: 60%;
+			word-break: break-word;
+		}
+	}
+}
+
+.quote-card__author {
+	display: flex;
+	justify-content: center;
+	gap: 1rem;
+	margin: 24px 0 16px;
+
+	&__avatar {
+		flex-shrink: 0;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+
+	&__detail {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: space-between;
+		&__text {
+			font-size: 13px;
+			line-height: 22px;
+			color: $ash-label;
+		}
+		&__name {
+			font-size: 16px;
+			font-weight: 600;
+			line-height: 24px;
+			color: $ash;
+			letter-spacing: 0.75px;
+		}
+	}
+}
+
+.quote-card__categories-in-detail {
+	margin: 32px 0 16px;
+	.quote-card__categories-badge {
+		&.badge {
+			font-size: 13px;
+			padding: 12px 16px;
+			border-radius: 12px;
+			line-height: 19px;
+			margin: 0 12px 12px 0;
+		}
+	}
+}
+
+.quote-footer {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	&__left {
+		width: 50%;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.75em;
+	}
+
+	&__right {
+		.quote-action-bar {
+			padding: 0;
+		}
+	}
+
+	&__badge {
+		&.badge {
+			font-size: 13px;
+			padding: 12px 16px;
+			border-radius: 12px;
+			line-height: 19px;
+			max-width: 160px;
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
+	}
+}
+
+.quote-card__hashtag {
+	color: $ash-label;
+	letter-spacing: 0.75px;
+	font-weight: 600;
+}

@@ -1,0 +1,23 @@
+@import 'src/scss/abstracts/_variables.scss';
+
+.linear-progress {
+	font-size: 0.75rem;
+	background-color: $ash-background;
+	border-radius: 0.5rem;
+}
+
+.linear-progress-bar {
+	flex-direction: column;
+	justify-content: center;
+	color: #fff;
+	text-align: center;
+	white-space: nowrap;
+	transition: width 0.6s ease;
+	border-radius: 4px;
+}
+
+.linear-progress,
+.linear-progress-bar {
+	display: flex;
+	overflow: hidden;
+}

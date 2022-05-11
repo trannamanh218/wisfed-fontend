@@ -1,0 +1,63 @@
+{
+	"plugins": [
+		[
+			"@babel/plugin-proposal-decorators",
+			{
+				"legacy": true
+			}
+		],
+		"transform-class-properties",
+		"syntax-dynamic-import",
+		"babel-plugin-transform-object-rest-spread",
+		[
+			"transform-react-jsx",
+			{
+				"useBuiltIns": true
+			}
+		],
+		[
+			"transform-runtime",
+			{
+				"helpers": false,
+				"polyfill": false,
+				"regenerator": true,
+				"moduleName": "babel-runtime"
+			}
+		],
+		[
+			"transform-regenerator",
+			{
+				"asyncGenerators": false,
+				"generators": false,
+				"async": false
+			}
+		]
+	],
+	"presets": ["@babel/preset-env", "@babel/preset-react"],
+	"env": {
+		"test": {
+			"presets": [
+				[
+					"env",
+					{
+						"targets": {
+							"node": "current"
+						}
+					}
+				]
+			],
+			"plugins": ["dynamic-import-node"]
+		},
+		"production": {
+			"plugins": [
+				[
+					"transform-react-remove-prop-types",
+					{
+						"mode": "remove",
+						"removeImport": true
+					}
+				]
+			]
+		}
+	}
+}

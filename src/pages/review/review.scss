@@ -1,0 +1,38 @@
+@import 'src/scss/abstracts/_variables.scss';
+
+.review {
+	max-width: 58rem;
+	margin: 0 auto;
+	padding: 2.5rem 0;
+	&__header {
+		display: flex;
+		align-items: center;
+		gap: 2.25rem;
+		h4 {
+			margin: 0;
+		}
+	}
+
+	&__items {
+		border-radius: 16px;
+		padding-bottom: 8px;
+		background-color: white;
+		h4 {
+			padding: 40px 40px 0;
+		}
+
+		hr {
+			border: #cecdcd 1px solid;
+		}
+
+		.post__container {
+			padding: 20px 40px;
+		}
+	}
+
+	.review__no-data {
+		width: fit-content;
+		margin: auto;
+		padding: 40px 0;
+	}
+}

@@ -1,0 +1,6 @@
+{
+	"compilerOptions": {
+		"baseUrl": "src"
+	},
+	"include": ["src", "src/components/status-book-modal/components/add-book-shelve-form/AddBookShelveForm.femfmdfe.js", "src/stories/pages/CategoryPage.stories.js"]
+}

@@ -1,0 +1,63 @@
+.was-validated .form-check-input:valid,
+.form-check-input.is-valid {
+	border-color: $ash-placeholder;
+	border-width: 2px;
+	margin-top: 0;
+}
+
+.was-validated .form-check-input:valid:checked[type='radio'],
+.form-check-input.is-valid:checked[type='radio'] {
+	background-color: $primary;
+}
+.was-validated .form-check-input:valid:checked[type='checkbox'],
+.form-check-input.is-valid:checked[type='checkbox'] {
+	background-color: $white;
+}
+
+.was-validated .form-check-input:valid,
+.form-check-input.is-valid ~ .form-check-label {
+	font-size: 1rem;
+	font-weight: 600;
+	color: $ash;
+	flex-grow: 1;
+}
+
+.form-check-input:checked[type='radio'] {
+	background-image: unset;
+	border: none;
+}
+
+.form-check-input:checked[type='checkbox'] {
+	background-image: url('../../assets/icons/check.svg');
+	background-size: 10px;
+}
+
+.form-check-input[type='checkbox'] {
+	border-radius: 0;
+}
+
+.was-validated .form-check-input:valid:focus,
+.form-check-input.is-valid:focus {
+	box-shadow: none;
+}
+
+.form-check {
+	max-width: 312px;
+	display: flex;
+	align-items: center;
+	gap: 1.125em;
+	border-radius: 12px;
+	padding-left: 1.5rem;
+	&:hover {
+		background-color: $secondary;
+
+		.form-check-label--custom {
+			color: $primary-dark;
+		}
+	}
+}
+
+.form-check-input {
+	width: 1.5em;
+	height: 1.5em;
+}

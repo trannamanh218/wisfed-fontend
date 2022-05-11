@@ -1,0 +1,26 @@
+@import 'src/scss/abstracts/_variables.scss';
+
+.filter-pane {
+	background: $white;
+	&__heading {
+		display: flex;
+		justify-content: space-between;
+		padding: 40px 40px 20px;
+	}
+
+	&__title {
+		font-size: 1.25rem;
+		font-weight: 600;
+		line-height: 1.5;
+		text-transform: capitalize;
+		margin: 0;
+	}
+
+	&__subtitle {
+		font-size: 0.825rem;
+		font-weight: 600;
+		color: $ash-label;
+		display: inline-block;
+		margin-left: 0.75rem;
+	}
+}

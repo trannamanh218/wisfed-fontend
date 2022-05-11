@@ -1,0 +1,19 @@
+@import 'src/scss/abstracts/_mixins.scss';
+
+.base-loading__content {
+	@include position-fixed(50%, 50%);
+	transform: translate(-50%, -50%);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	.loading-indicator {
+		width: 80px;
+		height: 80px;
+	}
+
+	.loading-indicator:after {
+		width: 64px;
+		height: 64px;
+		border-width: 6px;
+	}
+}

@@ -1,0 +1,58 @@
+@import 'src/scss/abstracts/_variables.scss';
+
+.quote-action-bar {
+	display: flex;
+	align-items: center;
+	gap: 32px;
+}
+
+.quote-action__item {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	font-size: 13px;
+	color: #6e7191;
+	font-weight: 600;
+	cursor: pointer;
+	-webkit-user-select: none;
+	user-select: none;
+
+	span {
+		line-height: 24px;
+		vertical-align: middle;
+	}
+
+	svg {
+		width: 24px;
+		height: 24px;
+		margin-left: 12px;
+	}
+
+	.quote-icon {
+		&.active {
+			path {
+				stroke: none;
+				fill: $primary;
+			}
+		}
+	}
+
+	button {
+		font-weight: 600;
+		color: $blue;
+		.quote-action__right-arrow {
+			margin-left: 12px;
+			height: 16px;
+		}
+	}
+}
+
+.quote-action__name {
+	display: inline-block;
+}
+
+@media only screen and (max-width: 1366px) {
+	.quote-action-bar {
+		gap: 28px;
+	}
+}

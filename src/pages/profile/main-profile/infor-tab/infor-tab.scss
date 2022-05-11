@@ -1,0 +1,63 @@
+@import 'src/scss/abstracts/_variables.scss';
+
+.infor-tab {
+	&__heading {
+		margin-bottom: 2.5rem;
+		font-size: 1.25rem;
+		line-height: 1.5;
+	}
+
+	.form-field {
+		height: 56px;
+		input {
+			height: 100%;
+		}
+
+		&.form-field-flex {
+			display: flex;
+			align-items: center;
+			gap: 0.625rem;
+			padding: 0 1rem;
+			background-color: $ash-background;
+		}
+
+		&-socials-link {
+			margin-bottom: 16px;
+		}
+
+		.form-field-badge {
+			&.badge {
+				padding: 12px 12px;
+				font-size: 13px;
+				line-height: 15px;
+				border-radius: 10px;
+			}
+		}
+	}
+
+	.form-field-label {
+		margin-bottom: 20px;
+	}
+
+	.form-field-group {
+		margin-bottom: 2.5rem;
+	}
+	.col-6.gender {
+		.form-field {
+			width: fit-content;
+			min-width: 120px;
+			&-filled {
+				width: 100%;
+				height: 56px;
+				padding: 0 1em;
+				font-size: 0.94rem;
+				line-height: 1.5;
+				color: $ash;
+				border-radius: 15px;
+				background-color: #f7f7fc;
+				display: flex;
+				align-items: center;
+			}
+		}
+	}
+}

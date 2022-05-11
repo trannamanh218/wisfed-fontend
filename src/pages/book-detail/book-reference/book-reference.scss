@@ -1,0 +1,29 @@
+.book-reference {
+	padding-bottom: 150px;
+	&__slider {
+		margin-bottom: 3.75rem;
+	}
+
+	&__highlight__post {
+		border: none;
+		margin-bottom: 60px;
+	}
+
+	.card-link {
+		&.card {
+			border: unset;
+			border-radius: 16px;
+			margin-bottom: 20px;
+		}
+
+		&__item {
+			margin: 1.5rem 1rem;
+			display: -webkit-box;
+			-webkit-box-orient: vertical;
+			-webkit-line-clamp: 2;
+			text-overflow: ellipsis;
+			overflow: hidden;
+			cursor: pointer;
+		}
+	}
+}

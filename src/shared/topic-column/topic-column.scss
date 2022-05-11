@@ -1,0 +1,71 @@
+@import 'src/scss/abstracts/_variables.scss';
+
+.topic-column {
+	margin-bottom: 3.75em;
+	max-width: 15.625rem;
+	&__header {
+		margin-bottom: 1.6em;
+		font-size: 1.25rem;
+		font-weight: 600;
+		line-height: 1.5;
+		color: $ash;
+	}
+
+	&__container {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+		grid-column-gap: 20px;
+		max-height: calc(10 * 0.825 * 4em);
+		overflow: hidden;
+		&.expand {
+			max-height: calc(20 * 0.825 * 4em);
+		}
+	}
+
+	&__item {
+		margin-bottom: 2.5em;
+		font-size: 0.825rem;
+		font-weight: 500;
+		line-height: 1.5;
+		color: $ash;
+		cursor: pointer;
+		&:hover {
+			font-weight: 600;
+		}
+		span {
+			display: -webkit-box;
+			-webkit-box-orient: vertical;
+			-webkit-line-clamp: 1;
+			overflow: hidden;
+		}
+	}
+
+	&__btn {
+		display: flex;
+		align-items: center;
+		color: $ash;
+	}
+
+	.view-caret {
+		margin-right: 15px;
+		transition: all 0.2s linear;
+		&.view-more {
+			transform: rotate(180deg);
+		}
+	}
+}
+.sidebar-profile__personal__category {
+	margin-top: 3.7rem;
+	.topic-column__btn {
+		gap: 15px;
+		margin-top: 16px;
+	}
+
+	.view-caret {
+		margin-right: 15px;
+		transition: all 0.2s linear;
+		&.view-more {
+			transform: rotate(180deg);
+		}
+	}
+}

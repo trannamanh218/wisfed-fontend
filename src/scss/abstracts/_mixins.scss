@@ -1,0 +1,65 @@
+@mixin alert-variant($background, $border, $color) {
+	color: $color;
+	background-color: $background;
+	border-color: $border;
+
+	hr {
+		border-top-color: darken($border, 5%);
+	}
+
+	.alert-link {
+		color: darken($color, 10%);
+	}
+}
+
+@mixin default-btn($padding-x: 20px, $padding-y: 20px, $background-color: transparent) {
+	display: inline-block;
+	text-align: center;
+	white-space: nowrap;
+	vertical-align: middle;
+	user-select: none;
+	padding: $padding-x $padding-y;
+	background-color: $background-color;
+	border: none;
+}
+
+@mixin responsive($breakpoint) {
+	@media only screen and (max-width: $breakpoint) {
+		@content;
+	}
+}
+
+@mixin responsive-min-width($breakpoint) {
+	@media only screen and (min-width: $breakpoint) {
+		@content;
+	}
+}
+
+@mixin overlay {
+	position: absolute;
+	inset: 0;
+}
+
+@mixin position-absolute($top, $left) {
+	position: absolute;
+	top: $top;
+	left: $left;
+}
+
+@mixin text-truncate() {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+@mixin text-style($color, $font-size: 16px, $font-family: 'SVN-Gilroy-Regular') {
+	color: $color;
+	font-size: $font-size;
+	font-family: $font-family, 'sans-serif';
+}
+
+@mixin position-fixed($top, $left) {
+	position: fixed;
+	top: $top;
+	left: $left;
+}

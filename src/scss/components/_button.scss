@@ -1,0 +1,71 @@
+@use 'sass:math';
+
+@each $name, $color in $theme-colors {
+	.btn-#{$name} {
+		&:hover,
+		&:focus {
+			background-color: $color;
+		}
+		&:active {
+			&:focus {
+				box-shadow: unset;
+			}
+		}
+
+		@if $color == $light {
+			color: $ash;
+			&:hover,
+			&:focus {
+				color: $ash;
+			}
+		} @else if $color == $primary-light {
+			color: $primary-dark;
+			&:hover,
+			&:focus {
+				color: $primary;
+			}
+		} @else {
+			color: $white;
+			&:hover,
+			&:focus {
+				color: $white;
+			}
+		}
+	}
+
+	.btn-outline-#{$name} {
+		&:active,
+		&.active {
+			&:focus {
+				box-shadow: unset;
+			}
+		}
+	}
+}
+
+.btn {
+	padding: 0.875rem 1.25rem;
+	border-radius: 12px;
+	border-width: 2px;
+	font-weight: 600;
+	&:focus {
+		box-shadow: unset;
+	}
+}
+
+.btn-sm {
+	padding: 0.5rem 1rem;
+}
+
+.btn-outline {
+	&-primary {
+		color: $primary-dark;
+	}
+
+	&-primary,
+	&-primary-dark {
+		&:hover {
+			color: $white;
+		}
+	}
+}

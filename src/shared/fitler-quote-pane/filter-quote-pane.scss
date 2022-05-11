@@ -1,0 +1,80 @@
+@import 'src/scss/abstracts/_variables.scss';
+
+.filter-quote-pane {
+	background: $white;
+	padding: 1.75rem 2.5rem;
+	border-radius: 16px;
+	&__heading {
+		margin-bottom: 2.25rem;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		flex-wrap: wrap;
+	}
+
+	&__btn {
+		display: flex;
+		align-items: center;
+		&.btn {
+			width: 220px;
+			padding: 1rem;
+			background-color: $primary-light;
+			font-size: 1rem;
+			line-height: 1.5;
+			color: $ash;
+			&:hover {
+				color: $ash;
+			}
+		}
+	}
+
+	&__icon {
+		width: 1rem;
+		height: 1rem;
+		margin-right: 1rem;
+	}
+
+	&__options {
+		margin-left: auto;
+		margin-right: 2rem;
+	}
+
+	&__title {
+		font-size: 1.25rem;
+		font-weight: 600;
+		line-height: 1.5;
+		text-transform: capitalize;
+	}
+
+	&__subtitle {
+		font-size: 0.825rem;
+		font-weight: 600;
+		color: $ash-label;
+		display: inline-block;
+		margin-left: 0.75rem;
+	}
+
+	&__setting {
+		&.dropdown-menu {
+			width: 352px;
+			transform: translate(-50%, 10px) !important;
+			box-shadow: 0px 0px 32px rgba(0, 0, 0, 0.07);
+			border-radius: 12px;
+			padding: 48px 32px 44px;
+			z-index: 100 !important;
+		}
+
+		&__title {
+			margin-bottom: 8px;
+			font-size: 1rem;
+			font-weight: 600;
+			line-height: 1.5;
+			padding-left: 12px;
+		}
+
+		&__btn {
+			width: 100%;
+			margin-top: 1.25rem;
+		}
+	}
+}

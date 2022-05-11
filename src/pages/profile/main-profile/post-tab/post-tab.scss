@@ -1,0 +1,23 @@
+@import 'src/scss/abstracts/_variables.scss';
+
+.post-tab {
+	position: relative;
+	.post__container {
+		padding: 32px 36px;
+	}
+	&::before {
+		width: 100%;
+		height: 15px;
+		content: '';
+		position: absolute;
+		top: 0;
+		left: 0;
+		display: flex;
+		background-color: white;
+	}
+	.post__video-youtube {
+		width: 100%;
+		height: 475px;
+		margin: 24px 0;
+	}
+}

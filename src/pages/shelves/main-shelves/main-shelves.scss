@@ -1,0 +1,108 @@
+@import 'src/scss/abstracts/_variables.scss';
+
+.main-shelves {
+	&__header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin-bottom: 1.75rem;
+		h4 {
+			margin: 0;
+		}
+	}
+	&__search {
+		max-width: 456px;
+		border: 1px solid $ash-line;
+	}
+
+	&__pane {
+		padding: 1.75rem 2.5rem;
+		border-radius: 16px;
+		background-color: $white;
+	}
+
+	&__filters {
+		display: flex;
+		justify-content: space-between;
+		margin-bottom: 2rem;
+		.select-box__btn {
+			background-color: $primary-light;
+		}
+	}
+
+	.select-shelf {
+		padding: 1rem 2.25rem;
+		border-radius: 16px;
+		background-color: $primary-light;
+	}
+
+	&__modal {
+		.modal-content {
+			padding: 2rem;
+			text-align: center;
+			border-radius: 24px;
+		}
+
+		.btn-closeX {
+			display: inline-block;
+			margin-left: auto;
+			svg {
+				width: 24px;
+				height: 24px;
+			}
+		}
+
+		&__title {
+			margin-bottom: 1.25rem;
+			font-size: 2.25rem;
+			font-weight: 700;
+			color: #14142b;
+		}
+		&__subtitle {
+			margin-bottom: 1.5rem;
+			font-size: 1.125rem;
+			color: $ash-body;
+		}
+
+		&__btn-delete {
+			&.btn {
+				display: block;
+				margin: 0 auto;
+				width: 255px;
+				max-width: 255px;
+				margin-bottom: 1.5rem;
+			}
+		}
+	}
+
+	.btn-private {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 0.875rem;
+		min-width: 200px;
+		&.btn {
+			border-color: $ash-line;
+			color: $ash-body;
+			&:hover {
+				background-color: unset;
+			}
+		}
+	}
+
+	.pagination-group {
+		margin-top: 60px;
+	}
+
+	&__search__img {
+		display: block;
+		margin: 0 auto;
+	}
+
+	&__search__message {
+		margin-top: 1.75rem;
+		color: $ash-body;
+		text-align: center;
+		font-weight: 600;
+	}
+}

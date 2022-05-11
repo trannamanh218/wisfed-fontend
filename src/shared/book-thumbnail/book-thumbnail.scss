@@ -1,0 +1,28 @@
+@import 'src/scss/abstracts/_variables.scss';
+
+.book-thumbnail {
+	display: inline-block;
+	border-radius: 8px;
+	overflow: hidden;
+	cursor: pointer;
+	img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+
+	&.book-thumbnail {
+		&-sm {
+			width: $width-book-sm;
+			height: 1.5 * $width-book-sm;
+		}
+		&-md {
+			width: $width-book-md;
+			height: 1.5 * $width-book-md;
+		}
+		&-lg {
+			width: $width-book-lg;
+			height: 1.5 * $width-book-lg;
+		}
+	}
+}

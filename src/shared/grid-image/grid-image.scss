@@ -1,0 +1,50 @@
+.grid-image {
+	position: relative;
+	border-radius: 8px;
+	overflow: hidden;
+	&.one-image {
+		display: block;
+		height: 400px;
+	}
+
+	&.more-one-image {
+		display: block;
+		height: 500px;
+	}
+
+	&.add-margin {
+		margin: 24px 0;
+	}
+
+	&__item {
+		padding: 1px;
+		position: absolute;
+		overflow: hidden;
+		img {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+		}
+	}
+
+	.grid-image__container {
+		position: relative;
+		border-radius: 8px;
+		overflow: hidden;
+		width: 100%;
+		height: 100%;
+	}
+
+	.grid-image__item-over {
+		position: absolute;
+		inset: 0 0 1px 0;
+		background-color: rgba(0, 0, 0, 0.4);
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		color: white;
+		font-size: 36px;
+		font-weight: 700;
+		letter-spacing: 5px;
+	}
+}

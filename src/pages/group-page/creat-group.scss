@@ -1,0 +1,124 @@
+.popup-group__header {
+	display: flex;
+	justify-content: space-between;
+	padding: 24px;
+	button {
+		width: 48px;
+		height: 48px;
+		border-radius: 50%;
+		background-color: #eff0f7;
+	}
+	h3 {
+		flex: 1;
+		text-align: center;
+		height: 48px !important;
+		margin-bottom: 0 !important;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+}
+
+.author__item {
+	cursor: pointer;
+	margin-top: 10px;
+	justify-content: space-between;
+	align-items: center;
+	width: -moz-fit-content;
+	width: fit-content;
+	margin-right: 10px;
+	padding: 0.75rem 1.25rem;
+	border-radius: 10px;
+	font-size: 0.75rem;
+	background-color: #f5e7d8;
+	color: #b38c64;
+}
+
+.author__list {
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.popup-group__container {
+	box-shadow: 0px 0px 32px rgba(0, 0, 0, 0.14);
+	border-radius: 24px;
+	background-color: #fcfcfc;
+	.upload-image__wrapper {
+		padding: 0;
+	}
+
+	.form-field-wrapper {
+		padding: 25px;
+	}
+	.form-field-name {
+		margin-top: 14px;
+		label {
+			margin-bottom: 23px;
+		}
+	}
+
+	.list__author-tags {
+		display: flex;
+		background-color: #f7f7fc;
+		border-radius: 12px;
+	}
+
+	.input__authors {
+		display: flex;
+		cursor: pointer;
+		justify-content: space-between;
+		align-items: center;
+
+		gap: 10px;
+		span {
+			width: max-content;
+			color: #b38c64;
+			background-color: #f5e7d8;
+			padding: 0.75rem 1.25rem;
+			border-radius: 10px;
+			font-size: 0.75rem;
+		}
+	}
+	.form-field-select__transparent,
+	.form-field--hastag,
+	.form-field-authors,
+	.form-field--discription,
+	.form-field-select__kind-of-group {
+		width: 100%;
+		label {
+			margin-top: 39px;
+			margin-bottom: 23px;
+		}
+		input {
+			width: 100%;
+		}
+	}
+	.select-box {
+		width: 100%;
+		.select-box__btn {
+			justify-content: space-between;
+		}
+		.select-box__list {
+			max-width: 100% !important;
+			width: 100% !important;
+		}
+		.select-box__item {
+			width: 100%;
+			margin: 0 !important;
+		}
+	}
+	.form-field--discription {
+		textarea {
+			background-color: #eff0f7;
+		}
+	}
+	.form-button {
+		margin-top: 57px;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		background-color: #eff0f7;
+		padding: 16px;
+		border-radius: 12px;
+	}
+}

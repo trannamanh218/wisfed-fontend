@@ -1,0 +1,53 @@
+@import 'src/scss/abstracts/_variables.scss';
+
+.connect-buttons {
+	display: flex;
+	&.row {
+		flex-direction: row;
+		gap: 1em;
+		flex-wrap: wrap;
+		justify-content: center;
+	}
+
+	&.column {
+		flex-direction: column;
+		gap: 1em;
+	}
+}
+
+.connect-button {
+	&.btn {
+		width: 200px;
+		padding: 1rem 1.25rem;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		user-select: none;
+		gap: 1rem;
+		&:active {
+			&:focus {
+				box-shadow: unset;
+			}
+		}
+	}
+
+	&__icon {
+		display: inline-block;
+
+		width: 20px;
+		height: 20px;
+	}
+
+	&__content {
+		line-height: 1.25;
+		display: inline-block;
+		// margin-left: 1rem;
+	}
+
+	&.follow {
+		&:hover {
+			background-color: transparent;
+			color: $primary-dark;
+		}
+	}
+}

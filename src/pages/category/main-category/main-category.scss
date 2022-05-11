@@ -1,0 +1,37 @@
+@import 'src/scss/abstracts/_variables.scss';
+
+.main-category {
+	&__container {
+		background: $white;
+		border-radius: 16px;
+		padding: 1.5rem 2.5rem;
+	}
+
+	.blank-content {
+		margin-top: 1.5rem;
+	}
+
+	.book-thumbnail {
+		border: 1px solid $ash-line;
+		img {
+			&:hover {
+				transform: scale(1.1);
+				transition: all 0.2s ease-out;
+			}
+		}
+	}
+
+	.infinite-scroll-component {
+		.loading-indicator {
+			width: 80px;
+			height: 80px;
+			margin-top: 32px;
+		}
+
+		.loading-indicator:after {
+			width: 50px;
+			height: 50px;
+			border-width: 5px;
+		}
+	}
+}

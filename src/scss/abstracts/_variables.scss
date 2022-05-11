@@ -1,0 +1,46 @@
+// colors
+$primary: #e0af7e;
+$primary-light: #f5e7d8;
+$primary-dark: #b38c64;
+$secondary: #fbf7f2;
+$warning: #ffdf9a;
+$success-light: #a6f787;
+$success: #008a00;
+$success-dark: #067306;
+$blue: #0576f0;
+$ash: #2d2c42;
+$ash-body: #4e4b66;
+$ash-label: #6e7191;
+$ash-placeholder: #a0a3bd;
+$ash-background: #f7f7fc;
+$ash-line: #d9dbe9;
+$grey-border: #f1f1f1;
+// $ash-background: #eff0f7;
+$white-off: #fcfcfc;
+$white: #ffffff;
+$red: #e61b00;
+
+// custom theme for bootstrap
+$theme-colors: (
+	'primary': $primary,
+	'primary-light': $primary-light,
+	'primary-dark': $primary-dark,
+	'secondary': $secondary,
+	'success': $success,
+	'success-light': $success-light,
+	'success-dark': $success-dark,
+	'warning': $warning,
+	'info': $blue,
+	'light': $white,
+	'dark': $ash,
+	'danger': $red,
+);
+
+$width-book-sm: 108px;
+$width-book-md: 160px;
+$width-book-lg: 200px;
+
+$width-avatar-sm: 36px;
+$width-avatar-md: 48px;
+$width-avatar-lg: 100px;
+$width-avatar-xl: 180px;

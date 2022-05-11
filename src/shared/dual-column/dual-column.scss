@@ -1,0 +1,60 @@
+@import 'src/scss/abstracts/_variables.scss';
+
+.dualColumn-list {
+	width: 100%;
+	border-radius: 16px;
+	overflow: hidden;
+	font-size: 0.825rem;
+}
+
+.dualColumn-item {
+	width: 17.5rem;
+	padding: 1rem 0 1rem;
+	display: flex;
+	color: $ash;
+	line-height: 1.5;
+	justify-content: space-between;
+
+	&.has-background {
+		padding: 1rem 1rem 0.5rem;
+		&:last-of-type {
+			padding-bottom: 1rem;
+		}
+	}
+
+	&__title {
+		display: inline-block;
+		font-weight: 600;
+	}
+
+	&__number {
+		display: inline-block;
+		font-weight: 500;
+		color: $ash-placeholder;
+		&.no-page-text {
+			color: $ash;
+			font-size: 15px;
+			font-weight: 600;
+		}
+	}
+}
+
+.dualColumn-btn {
+	margin-left: 194px;
+	span {
+		color: #0576f0;
+		text-decoration: underline;
+	}
+	display: flex;
+	align-items: center;
+	// padding: 0 1em;
+	color: $ash;
+	margin-top: 1.25rem;
+	.view-caret {
+		margin-right: 15px;
+		transition: all 0.2s linear;
+		&.view-more {
+			transform: rotate(180deg);
+		}
+	}
+}

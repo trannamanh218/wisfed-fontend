@@ -1,0 +1,145 @@
+@import 'src/scss/abstracts/_variables.scss';
+
+.bookcase__item {
+	margin-bottom: 60px;
+}
+
+.bookcase__item-name {
+	font-size: 20px;
+	line-height: 32px;
+	font-weight: 600;
+	color: $ash;
+}
+
+.bookcase__item__book {
+	margin-top: 32px;
+	display: flex;
+	justify-content: space-between;
+}
+
+.bookcase__item__book-info {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	width: 70%;
+}
+
+.bookcase__item__book-name {
+	font-size: 24px;
+	line-height: 32px;
+	font-weight: 700;
+	color: $ash;
+}
+
+.bookcase__item__author-name {
+	line-height: 24px;
+	color: $ash-label;
+	margin-top: 20px;
+}
+
+.bookcase__item__book-progress {
+	margin-top: 32px;
+}
+
+.bookcase__item__book-progress-bar {
+	height: 10px !important;
+	border-radius: 5px !important;
+	.progress-bar {
+		border-radius: 5px !important;
+	}
+	// &.fullBar {
+	// 	.progress-bar {
+	// background-color: $success-light;
+	// 	}
+	// }
+}
+
+.bookcase__item__book-percent {
+	width: 100%;
+	display: flex;
+	justify-content: flex-end;
+	margin-top: 4px;
+	font-weight: 600;
+	font-size: 15px;
+	line-height: 21px;
+	color: $ash-label;
+	// &.fullBar {
+	// color: $success-light;
+	// }
+}
+
+.bookcase__item__button {
+	width: 100%;
+	display: flex;
+	justify-content: flex-end;
+	button {
+		border-radius: 12px;
+		padding: 16px 50px;
+		color: #fcfcfc;
+		font-weight: 600;
+		background-color: $primary;
+		letter-spacing: 0.75px;
+		line-height: 24px;
+	}
+}
+
+.bookcase__item__reviews {
+	margin-top: 40px;
+	border-radius: 16px;
+	padding: 36px 24px 36px 40px;
+	background-color: $secondary;
+}
+
+.bookcase__item__reviews-name {
+	font-weight: 600;
+	color: $ash;
+	font-size: 20px;
+	line-height: 32px;
+	padding-bottom: 16px;
+}
+
+.bookcase__item__reviews-list {
+	margin: 0px 0 4px 40px;
+}
+
+.bookcase__review-item {
+	display: flex;
+	align-items: center;
+	gap: 24px;
+	margin-top: 16px;
+	.bookcase__review-item__svg {
+		position: relative;
+		.bookcase__review-item__vertical-stick {
+			position: absolute;
+			bottom: 100%;
+			left: 0;
+			width: 100%;
+			display: flex;
+			justify-content: center;
+			.bookcase__vertical-stick {
+				width: 2px;
+				height: 17px;
+				background-color: $primary;
+			}
+		}
+	}
+	&__text {
+		font-weight: 600;
+		color: $ash;
+		font-size: 13px;
+	}
+}
+
+.bookcase__review-all {
+	margin-top: 8px;
+	display: flex;
+	justify-content: flex-end;
+	button {
+		font-size: 13px;
+		color: $blue;
+		span {
+			margin-right: 12px;
+			font-weight: 600;
+		}
+	}
+}

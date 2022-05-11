@@ -1,0 +1,73 @@
+@import 'src/scss/abstracts/_variables.scss';
+
+.book-review {
+	&__rating {
+		margin: 4.25rem auto;
+	}
+
+	&__tabs {
+		justify-content: center;
+		align-items: center;
+		gap: 13.5rem;
+		padding-top: 0.25rem;
+
+		&.nav-tabs {
+			.nav-link {
+				font-size: 1.5rem;
+				font-weight: 700;
+				&.active {
+					font-size: 2.25rem;
+					line-height: 1.3;
+				}
+			}
+		}
+	}
+
+	.blank-content {
+		padding-left: 2.5rem;
+	}
+
+	.post-container--review {
+		padding: 0 2.5rem;
+	}
+
+	.quote-card {
+		margin-left: 2.5rem;
+		margin-right: 2.5rem;
+	}
+
+	hr {
+		background: #f1f1f5;
+		height: 2px !important;
+		opacity: 1 !important;
+	}
+}
+
+.review-tab {
+	h5 {
+		text-align: center;
+		margin: 0 auto;
+		padding: 40px 0 0 40px;
+	}
+
+	&__search {
+		padding: 0 2.5rem;
+		margin: 2rem 0;
+	}
+
+	&__filter__options {
+		padding: 0 2.5rem;
+	}
+}
+
+.quotes-tab {
+	h5 {
+		text-align: center;
+		margin: 0 auto;
+		padding: 40px 0 0 40px;
+	}
+	&__filter__options {
+		padding: 0 2.5rem;
+		margin-bottom: 2rem;
+	}
+}

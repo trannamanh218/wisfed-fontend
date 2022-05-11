@@ -1,0 +1,33 @@
+@import 'src/scss/abstracts/_variables.scss';
+
+.main-reading-summary {
+	&__nav {
+		background-color: white;
+		margin-bottom: 2rem !important;
+		padding: 0.75rem 3.125rem;
+		border-radius: 16px;
+
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: space-between;
+		align-items: center;
+	}
+
+	.nav-item {
+		font-size: 1.25rem;
+		color: $ash;
+	}
+
+	.nav-link {
+		color: $ash;
+		&.active {
+			font-weight: 600;
+		}
+	}
+
+	.tab-content {
+		padding: 1.5rem;
+		border-radius: 16px;
+		min-height: 800px;
+	}
+}

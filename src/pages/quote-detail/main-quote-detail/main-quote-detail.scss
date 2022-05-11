@@ -1,0 +1,70 @@
+@import 'src/scss/abstracts/_variables.scss';
+
+.main-quote-detail {
+	&__header {
+		display: flex;
+		align-items: center;
+		gap: 1.25rem;
+		h4 {
+			margin: 0;
+		}
+	}
+
+	&__link {
+		display: block;
+		max-width: 372px;
+		margin-left: auto;
+		padding: 1rem 1.5rem;
+		border: 1px solid $ash-line;
+		border-radius: 16px;
+		font-size: 1rem;
+		font-weight: 600;
+		color: $ash-body;
+
+		svg {
+			margin-left: 1.4rem;
+		}
+	}
+
+	&__pane {
+		margin-top: 3rem;
+		padding: 2rem 40px;
+		border-radius: 16px;
+		background-color: $white;
+
+		.quote-comment {
+			margin-left: 40px;
+		}
+
+		.quote-card {
+			margin: 0 auto 40px;
+			.quote-action-bar {
+				gap: 24px;
+			}
+		}
+	}
+}
+
+.comment-reply-container {
+	margin: 0 0 32px 44px;
+}
+
+.reply-comment-editor {
+	display: none;
+	&.show {
+		display: flex;
+	}
+}
+
+@media only screen and (max-width: 1366px) {
+	.main-quote-detail {
+		.quote-card {
+			.quote-action-bar {
+				gap: 12px;
+				.quote-action__item {
+					gap: 8px;
+				}
+			}
+		}
+	}
+}

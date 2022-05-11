@@ -1,0 +1,20 @@
+@import 'src/scss/abstracts/_variables.scss';
+
+.my-shelves-list {
+	margin-bottom: 2rem;
+}
+.my-shelves {
+	&__input {
+		background-color: $ash-background;
+		padding: 1.05em 1em;
+	}
+	&__btn__submit {
+		width: 100%;
+
+		&.btn {
+			margin-top: 1.25rem;
+			font-size: 0.825rem;
+			padding: 0.625rem 1.25rem;
+		}
+	}
+}
