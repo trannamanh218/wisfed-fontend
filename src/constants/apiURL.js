@@ -112,3 +112,4 @@ export const getFilterTopUserApiAuth = `/api/v1/report/reportTopUsersAuth`;
 
 // group
 export const detailGroup = id => `api/v1/groups/${id}`;
+export const creatGroup = '/api/v1/groups';

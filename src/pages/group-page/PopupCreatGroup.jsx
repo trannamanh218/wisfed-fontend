@@ -7,6 +7,9 @@ import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import './creat-group.scss';
 import { getUserList } from 'reducers/redux-utils/user';
+import { getCreatGroup } from 'reducers/redux-utils/group';
+import Dropzone from 'react-dropzone';
+import { useDropzone } from 'react-dropzone';
 
 const PopupCreatGroup = ({ handleClose }) => {
 	const [inputNameGroup, setInputNameGroup] = useState('');
@@ -19,11 +22,14 @@ const PopupCreatGroup = ({ handleClose }) => {
 	const [listHashtags, setListHashtags] = useState([]);
 	const dataRef = useRef('');
 	const inputRefHashtag = useRef(null);
+	const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
 
 	// const listTransparent = [
 	// 	{ value: 'public', title: 'Công khai', img: <CheckIcon /> },
 	// 	{ value: 'private', title: 'Riêng tư', img: <CheckIcon /> },
 	// ];
+
+	console.log(acceptedFiles);
 
 	const getDataAuthor = async () => {
 		const params = {
@@ -62,6 +68,17 @@ const PopupCreatGroup = ({ handleClose }) => {
 		} else setUserList([]);
 	}, [inputAuthors]);
 
+	const creatGroup = () => {
+		const data = {
+			name: inputNameGroup,
+			description: inputDiscription,
+			avatar: 'https://cdn0.fahasa.com/media/catalog/product/cache/1/small_image/400x400/9df78eab33525d08d6e5fb8d27136e95/3/3/3300000001159.jpg',
+			groupType: kindOfGroupRef.current,
+			authorIds: listAuthor,
+			tags: listHashtags,
+		};
+	};
+
 	const listKindOfGroup = [
 		{ value: 'book', title: 'Sách' },
 		{ value: 'authors', title: 'Tác giả' },
@@ -98,12 +115,19 @@ const PopupCreatGroup = ({ handleClose }) => {
 
 			<div>
 				<div className='upload-image__wrapper'>
-					<div className='dropzone upload-image'>
-						<CameraIcon />
-						<Image className='upload-image__icon' />
-						<p className='upload-image__description'>Thêm ảnh từ thiết bị</p>
-						<span>hoặc kéo thả</span>
-					</div>
+					<Dropzone>
+						{() => (
+							<div {...getRootProps()}>
+								<input {...getInputProps()} />
+								<div className='dropzone upload-image'>
+									<CameraIcon />
+									<Image className='upload-image__icon' />
+									<p className='upload-image__description'>Thêm ảnh từ thiết bị</p>
+									<span>hoặc kéo thả</span>
+								</div>
+							</div>
+						)}
+					</Dropzone>
 				</div>
 			</div>
 			<div className='form-field-wrapper'>
@@ -187,9 +211,8 @@ const PopupCreatGroup = ({ handleClose }) => {
 					<div className='list__author-tags'>
 						{listHashtags.length > 0 && (
 							<div className='input__authors'>
-								{listHashtags.map((item, index) => (
+								{listHashtags.map(item => (
 									<>
-										{' '}
 										<span>{item}</span>
 									</>
 								))}
