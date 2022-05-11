@@ -194,12 +194,16 @@ const MainCategoryDetail = ({ handleViewBookDetail }) => {
 					value={inputSearch}
 				/>
 				{inputSearch && <SearchBook list={searchResults} handleViewBookDetail={handleViewBookDetail} />}
-				<CategoryGroup
-					key={`category-group`}
-					list={topBooks}
-					title='Đọc nhiều nhất tuần này'
-					handleViewBookDetail={handleViewBookDetail}
-				/>
+
+				{topBooks.length > 0 && (
+					<CategoryGroup
+						key={`category-group`}
+						list={topBooks}
+						title='Đọc nhiều nhất tuần này'
+						handleViewBookDetail={handleViewBookDetail}
+					/>
+				)}
+
 				<div className='main-category-detail__allbook'>
 					<h4>Tất cả sách chủ đề {categoryInfo.name ? categoryInfo.name.toLowerCase() : ''}</h4>
 					<div className='books'>

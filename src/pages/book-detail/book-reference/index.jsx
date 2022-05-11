@@ -68,6 +68,10 @@ const BookReference = () => {
 		setIsExpand(true);
 	};
 
+	const directNewUrl = () => {
+		window.open('https://www.tecinus.vn');
+	};
+
 	return (
 		<div className='book-reference'>
 			<Circle loading={status === STATUS_LOADING} />
@@ -87,24 +91,29 @@ const BookReference = () => {
 					handleViewBookDetail={handleViewBookDetail}
 				/>
 			)}
-
-			<h4>Bài viết nổi bật</h4>
-			<div className='card card-link book-reference__highlight__post'>
-				<ul className='card-link__list'>
-					<li className='card-link__item'>
-						<a>Cuốn sách fefefegegeegxuất sắc nhất về nuôi dạy con năm 2021</a>
-					</li>
-					<li className='card-link__item'>
-						<a>Cuốn sách fefefegegeegxuất sắc nhất về nuôi dạy con năm 2021</a>
-					</li>
-					<li className='card-link__item'>
-						<a>Cuốn sách fefefegegeegxuất sắc nhất về nuôi dạy con năm 2021</a>
-					</li>
-					<li className='card-link__item'>
-						<a>Cuốn sách fefefegegeegxuất sắc nhất về nuôi dạy con năm 2021</a>
-					</li>
-				</ul>
+			<div className='book-reference__highlight__post'>
+				<h4>Bài viết nổi bật</h4>
+				<div className='card card-link'>
+					<ul className='card-link__list'>
+						<li className='card-link__item'>
+							<a>Cuốn sách fefefegegeegxuất sắc nhất về nuôi dạy con năm 2021</a>
+						</li>
+						<li className='card-link__item'>
+							<a>Cuốn sách fefefegegeegxuất sắc nhất về nuôi dạy con năm 2021</a>
+						</li>
+						<li className='card-link__item'>
+							<a>Cuốn sách fefefegegeegxuất sắc nhất về nuôi dạy con năm 2021</a>
+						</li>
+						<li className='card-link__item'>
+							<a>Cuốn sách fefefegegeegxuất sắc nhất về nuôi dạy con năm 2021</a>
+						</li>
+					</ul>
+				</div>
+				<button className='sidebar__view-more-btn--blue' onClick={directNewUrl}>
+					Xem thêm
+				</button>
 			</div>
+
 			{allCategories.length > 0 && (
 				<>
 					<h4 className='statistic-title'>Chủ đề</h4>

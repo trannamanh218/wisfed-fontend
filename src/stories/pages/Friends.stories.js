@@ -1,4 +1,4 @@
-import Friends from 'pages/group';
+import Friends from 'pages/friends';
 export default {
 	title: 'Pages/Friends',
 	component: Friends,

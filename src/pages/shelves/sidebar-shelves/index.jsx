@@ -1,4 +1,3 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 import BookSlider from 'shared/book-slider';
 import MyShelvesList from 'shared/my-shelves-list';
@@ -9,13 +8,13 @@ import PropTypes from 'prop-types';
 import './sidebar-shelves.scss';
 import { useSelector } from 'react-redux';
 import { useFetchQuotes } from 'api/quote.hooks';
-import { useFetchStatsReadingBooks } from 'api/library.hook';
 import ChartsReading from 'shared/charts-Reading';
 import { useFetchAuthorBooks } from 'api/book.hooks';
 import { useParams } from 'react-router-dom';
 import ProgressBarCircle from 'shared/progress-circle';
 import { useFetchUserParams } from 'api/user.hook';
 import { useFetchTargetReading } from 'api/readingTarget.hooks';
+
 const SidebarShelves = ({ isUpdate }) => {
 	const { userId } = useParams();
 	const { userData } = useFetchUserParams(userId);
@@ -30,7 +29,8 @@ const SidebarShelves = ({ isUpdate }) => {
 		JSON.stringify([{ operator: 'eq', value: userInfo.id, property: 'createdBy' }])
 	);
 
-	const { readingData } = useFetchStatsReadingBooks(isUpdate);
+	const myAllLibraryRedux = useSelector(state => state.library.myAllLibrary);
+
 	return (
 		<div className='sidebar-shelves'>
 			<StatisticList
@@ -38,9 +38,12 @@ const SidebarShelves = ({ isUpdate }) => {
 				title='Trạng thái đọc'
 				background='light'
 				isBackground={true}
-				list={readingData}
+				list={myAllLibraryRedux.default}
+				pageText={false}
 			/>
+
 			<MyShelvesList list={libraryList} userId={userId} />
+
 			<QuotesLinks
 				list={quoteData}
 				title={userId === userInfo.id ? 'Quotes của tôi' : `Quotes của ${userData.fullName}`}

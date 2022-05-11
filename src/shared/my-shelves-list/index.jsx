@@ -47,6 +47,7 @@ const MyShelvesList = ({ list }) => {
 				background='light'
 				isBackground={false}
 				list={list}
+				pageText={false}
 			/>
 			{checkAuthorize() ? (
 				<Formik

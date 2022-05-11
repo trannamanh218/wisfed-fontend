@@ -7,7 +7,7 @@ import './dual-column.scss';
 import { NUMBER_ROWS } from 'constants';
 
 const DualColumn = props => {
-	const { list, background, isBackground } = props;
+	const { list, background, isBackground, pageText = true } = props;
 	const [isExpand, setIsExpand] = useState(false);
 	const [rows, setRows] = useState(DEFAULT_TOGGLE_ROWS);
 
@@ -40,7 +40,12 @@ const DualColumn = props => {
 					{list.slice(0, rows).map((item, index) => (
 						<li className={classNames('dualColumn-item', { 'has-background': isBackground })} key={index}>
 							<span className='dualColumn-item__title'>{item.name}</span>
-							<span className='dualColumn-item__number'>{item.books.length} cuốn</span>
+
+							{pageText ? (
+								<span className='dualColumn-item__number'>{item.books.length} cuốn</span>
+							) : (
+								<span className='dualColumn-item__number no-page-text'>{item.books.length}</span>
+							)}
 						</li>
 					))}
 				</ul>
@@ -80,6 +85,7 @@ DualColumn.propTypes = {
 		'light',
 		'dark',
 	]),
+	pageText: PropTypes.bool,
 };
 
 export default DualColumn;

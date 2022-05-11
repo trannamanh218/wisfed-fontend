@@ -31,6 +31,11 @@
 		display: inline-block;
 		font-weight: 500;
 		color: $ash-placeholder;
+		&.no-page-text {
+			color: $ash;
+			font-size: 15px;
+			font-weight: 600;
+		}
 	}
 }
 

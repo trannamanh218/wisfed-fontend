@@ -1,7 +1,7 @@
 import BookDetail from 'pages/book-detail';
 import Category from 'pages/category';
 import CategoryDetail from 'pages/category-detail';
-import Friends from 'pages/group';
+import Friends from 'pages/friends';
 import Home from 'pages/home';
 import Profile from 'pages/profile';
 import QuoteDetail from 'pages/quote-detail';
@@ -27,7 +27,7 @@ import ReadingSummary from 'pages/reading-summary';
 import ReadingTarget from 'pages/reading-target';
 import ForgetPassWordAdminComponet from 'pages/foget-password/component-admin/ForgotAdmin';
 import AdminCreatNewPassword from 'pages/foget-password/component-admin/CreatNewPasswordAdmin';
-import DetailFriend from 'pages/group/component/detail-friend';
+import DetailFriend from 'pages/friends/component/detail-friend';
 import 'scss/main.scss';
 import QuoteAll from 'pages/quote/all-quote/';
 import Group from 'pages/group-page';
