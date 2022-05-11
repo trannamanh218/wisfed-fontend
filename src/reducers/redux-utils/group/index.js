@@ -22,9 +22,10 @@ export const getGroupDettail = createAsyncThunk('group/getGroupDettail', async (
 	}
 });
 
-export const getCreatGroup = createAsyncThunk('group/getCreatGroup', async (params = {}, { rejectWithValue }) => {
+export const getCreatGroup = createAsyncThunk('group/getCreatGroup', async (data = {}, { rejectWithValue }) => {
+	console.log(data);
 	try {
-		const res = await Request.makePost(creatGroup, params);
+		const res = await Request.makePost(creatGroup, data);
 		return res;
 	} catch (err) {
 		const error = JSON.parse(err.response);

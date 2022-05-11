@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import PopupCreatGroup from './PopupCreatGroup';
+// import PopupCreatGroup from './PopupCreatGroup';
 // import PopupInviteFriend from './popup-group/popupInviteFriend';
 // import PopupQuestion from './popup-group/popupQuestion';
 // import MiniPopup from './popup-group/mini-popup';
@@ -27,31 +27,31 @@ const MainGroup = () => {
 		fetchData();
 	}, []);
 	const [keyChange, setKeyChange] = useState('tabs');
-	const [isShow, setIsShow] = useState(true);
+	// const [isShow, setIsShow] = useState(true);
 	// const [isInvite, setIsInvite] = useState(false);
 	// const [isQuestion, setIsQuestion] = useState(false);
 	// const [isMini, setIsMini] = useState(false);
-	const handleClose = () => {
-		if (isShow === true) {
-			setIsShow(!isShow);
-		}
-		// if (isInvite === true) {
-		// 	setIsInvite(!isInvite);
-		// }
-		// if (isQuestion === true) {
-		// 	setIsQuestion(!isQuestion);
-		// }
-		// if (isMini === true) {
-		// 	setIsMini(!isMini);
-		// }
-	};
+	// const handleClose = () => {
+	// 	if (isShow === true) {
+	// 		setIsShow(!isShow);
+	// 	}
+	// 	// if (isInvite === true) {
+	// 	// 	setIsInvite(!isInvite);
+	// 	// }
+	// 	// if (isQuestion === true) {
+	// 	// 	setIsQuestion(!isQuestion);
+	// 	// }
+	// 	// if (isMini === true) {
+	// 	// 	setIsMini(!isMini);
+	// 	// }
+	// };
 
 	const handleChange = e => {
 		setKeyChange(e);
 	};
 
 	return (
-		<div>
+		<div className='main__main-group'>
 			{/* <div>
 				{' '}
 				<button
@@ -117,13 +117,7 @@ const MainGroup = () => {
 					)}
 				</div>
 			</div> */}
-			{isShow ? (
-				<div className='popup-container'>
-					<PopupCreatGroup handleClose={handleClose} />
-				</div>
-			) : (
-				''
-			)}
+
 			<div className='group-main__container'>
 				<SidebarGroupLef handleChange={handleChange} data={detailGroup} />
 				<MainGroupComponent handleChange={handleChange} keyChange={keyChange} data={detailGroup} />

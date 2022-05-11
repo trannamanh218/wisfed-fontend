@@ -1,5 +1,8 @@
 .group-main__container {
 	display: flex;
+	.mainContainer__main {
+		max-width: 100% !important;
+	}
 	.tab-content {
 		padding-bottom: 0 !important;
 		border-bottom-left-radius: 24px;
