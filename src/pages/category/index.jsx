@@ -1,16 +1,15 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import MainContainer from 'components/layout/main-container';
 import MainCategory from './main-category';
 import SidebarCategory from './sidebar-category';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { STATUS_IDLE } from 'constants';
-import { STATUS_LOADING } from 'constants';
 import { getCategoryDetail } from 'reducers/redux-utils/category';
-import { STATUS_SUCCESS } from 'constants';
+import { STATUS_SUCCESS, STATUS_IDLE, STATUS_LOADING } from 'constants';
 import RouteLink from 'helpers/RouteLink';
 import { getBookDetail } from 'reducers/redux-utils/book';
 import { NotificationError } from 'helpers/Error';
+
 const Category = () => {
 	const [status, setStatus] = useState(STATUS_IDLE);
 	const dispatch = useDispatch();
@@ -55,7 +54,5 @@ const Category = () => {
 		/>
 	);
 };
-
-Category.propTypes = {};
 
 export default Category;

@@ -6,15 +6,17 @@ import './read-book-tab.scss';
 import { getListBooksReadYear } from 'reducers/redux-utils/chart';
 import { NotificationError } from 'helpers/Error';
 import { useDispatch } from 'react-redux';
+import { useParams } from 'react-router-dom';
 
 const ReadBookTab = () => {
 	const [booksRead, setBooksRead] = useState([]);
-
+	const { userId } = useParams();
 	const dispatch = useDispatch();
 
 	const fetchData = async () => {
 		const params = {
 			type: 'read',
+			userId: userId,
 		};
 		try {
 			const data = await dispatch(getListBooksReadYear(params)).unwrap();

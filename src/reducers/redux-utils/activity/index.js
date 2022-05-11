@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { activityAPI, bookAPI, categoryAPI, friendAPI, likeActivityAPI, userAPI } from 'constants/apiURL';
 import Request from 'helpers/Request';
 // import { checkBookInLibraries } from '../library';
+// import { NotificationError } from 'helpers/Error';
 
 export const createActivity = createAsyncThunk('activity/createActivity', async (params, { rejectWithValue }) => {
 	try {
@@ -30,7 +31,7 @@ export const getSuggestionForPost = createAsyncThunk(
 		const filter = [];
 		let property = 'name';
 		if (option.value === 'addFriends' || option.value === 'addAuthor') {
-			property = 'email,fullName,firstName,lastName';
+			property = 'fullName,firstName,lastName';
 		}
 
 		if (option.value === 'addAuthor') {
@@ -76,7 +77,7 @@ export const getSuggestionForPost = createAsyncThunk(
 			}
 			return data;
 		} catch (err) {
-			const error = JSON.stringify(err.response);
+			const error = JSON.parse(err.response);
 			throw rejectWithValue(error);
 		}
 	}

@@ -97,7 +97,7 @@ function LoginComponet() {
 				<div className='login-gmail'>
 					<GmailIcon className='GmailIcon' /> <button>Đăng nhập bằng Gmail</button>
 				</div>
-				<hr />
+				<hr style={{ opacity: '0.1' }} />
 				<div>
 					<div>
 						<span className='login__form-title'>Đăng nhập tài khoản Wisfeed</span>
@@ -166,6 +166,7 @@ function LoginComponet() {
 					<div className='login__form__link'>
 						<Link to='/forget-password'>Quên mật khẩu ?</Link>
 					</div>
+					<hr style={{ opacity: '0.1' }} />
 					<div className='login__register'>
 						<Link to='/register'>
 							<button>Tạo tài khoản</button>

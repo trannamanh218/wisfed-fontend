@@ -1,32 +1,32 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import BookThumbnail from 'shared/book-thumbnail';
 import ReactRating from 'shared/react-rating';
 import PropTypes from 'prop-types';
 import SettingMore from 'shared/setting-more';
-import EyeIcon from 'shared/eye-icon';
+// import EyeIcon from 'shared/eye-icon';
 import StatusButton from 'components/status-button';
 import './book-item.scss';
 import _ from 'lodash';
 import { getRatingBook } from 'reducers/redux-utils/book';
 import { useDispatch } from 'react-redux';
-import { toast } from 'react-toastify';
+import { NotificationError } from 'helpers/Error';
 
 const BookItem = props => {
-	const { data, handleClick, isMyShelve, handleUpdateLibrary } = props;
-	const [isPublic, setIsPublic] = useState(data.isPublic);
+	const { data, handleClick, isMyShelve } = props;
+	// const [isPublic, setIsPublic] = useState(data.isPublic);
 	const dispatch = useDispatch();
 	const [listRatingStar, setListRatingStar] = useState({});
 
-	const handlePublic = () => {
-		setIsPublic(prev => !prev);
-	};
+	// const handlePublic = () => {
+	// 	setIsPublic(prev => !prev);
+	// };
 
 	const fetchData = async () => {
 		try {
 			const res = await dispatch(getRatingBook(data?.id)).unwrap();
 			setListRatingStar(res.data);
 		} catch (err) {
-			toast.error('lỗi hệ thống');
+			NotificationError(err);
 		}
 	};
 
@@ -37,13 +37,14 @@ const BookItem = props => {
 	const renderOverlay = () => {
 		if (isMyShelve) {
 			return (
-				<span className='book-item__icon' title='Chế độ công khai'>
-					<EyeIcon isPublic={isPublic} handlePublic={handlePublic} />
-				</span>
+				// <span className='book-item__icon' title='Chế độ công khai'>
+				// 	<EyeIcon isPublic={isPublic} handlePublic={handlePublic} />
+				// </span>
+				<></>
 			);
+		} else {
+			return <StatusButton bookData={data} />;
 		}
-
-		return <StatusButton bookData={data} />;
 	};
 
 	return (
@@ -51,7 +52,7 @@ const BookItem = props => {
 			<div className='book-item__container'>
 				<BookThumbnail size='lg' {...data} />
 				<div className='book-item__overlay'>
-					{isMyShelve && <SettingMore bookData={data} handleUpdateLibrary={handleUpdateLibrary} />}
+					{isMyShelve && <SettingMore bookData={data} />}
 					{renderOverlay()}
 				</div>
 			</div>
@@ -80,7 +81,6 @@ BookItem.defaultProps = {
 	},
 	isMyShelve: false,
 	handleClick: () => {},
-	handleUpdateLibrary: () => {},
 };
 
 BookItem.propTypes = {
@@ -95,6 +95,5 @@ BookItem.propTypes = {
 	}),
 	isMyShelve: PropTypes.bool,
 	handleClick: PropTypes.func,
-	handleUpdateLibrary: PropTypes.func,
 };
 export default BookItem;

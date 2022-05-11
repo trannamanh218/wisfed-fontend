@@ -56,7 +56,7 @@ export const useFetchAuthorBooks = (firstName, lastName) => {
 		if (isMount) {
 			setStatus(STATUS_LOADING);
 			const query = generateQuery(
-				1,
+				0,
 				10,
 				JSON.stringify([{ 'operator': 'search', 'value': `${firstName}`, 'property': 'authorName' }])
 			);
@@ -80,20 +80,21 @@ export const useFetchAuthorBooks = (firstName, lastName) => {
 
 export const useFetchBookDetail = id => {
 	const {
-		book: { bookInfo = {} },
-		auth: { userInfo = {} },
+		book: { bookInfo },
+		auth: { userInfo },
 	} = useSelector(state => state);
 	const [status, setStatus] = useState(STATUS_IDLE);
 	const dispatch = useDispatch();
 
 	useEffect(() => {
 		let isMount = true;
-
+		setStatus(STATUS_LOADING);
 		const fetchBookDetail = async () => {
 			const params = { id, userId: userInfo.id };
 
 			try {
 				await dispatch(getBookDetail(params)).unwrap();
+				setStatus(STATUS_SUCCESS);
 			} catch (err) {
 				NotificationError(err);
 				const statusCode = err?.statusCode || 500;
@@ -108,14 +109,14 @@ export const useFetchBookDetail = id => {
 		return () => {
 			isMount = false;
 		};
-	}, [id, userInfo]);
+	}, [id]);
 	return { bookInfo, status };
 };
 
 export const useFetchRelatedBooks = categoryId => {
 	const [retry, setRetry] = useState(false);
 	const [status, setStatus] = useState(STATUS_IDLE);
-	const [relatedBook, setRelatedBook] = useState([]);
+	const [relatedBooks, setRelatedBooks] = useState([]);
 	const dispatch = useDispatch();
 
 	const retryRequest = useCallback(() => {
@@ -127,7 +128,7 @@ export const useFetchRelatedBooks = categoryId => {
 
 		if (categoryId && isMount) {
 			const query = generateQuery(
-				1,
+				0,
 				10,
 				JSON.stringify([{ 'operator': 'eq', 'value': categoryId, 'property': 'categoryId' }])
 			);
@@ -135,7 +136,7 @@ export const useFetchRelatedBooks = categoryId => {
 			const fetchBook = async () => {
 				try {
 					const response = await dispatch(getBookList(query)).unwrap();
-					setRelatedBook(response.rows);
+					setRelatedBooks(response.rows);
 					setStatus(STATUS_SUCCESS);
 				} catch (err) {
 					NotificationError(err);
@@ -152,5 +153,5 @@ export const useFetchRelatedBooks = categoryId => {
 		};
 	}, [categoryId, retry]);
 
-	return { relatedBook, status, retryRequest };
+	return { relatedBooks, status, retryRequest };
 };

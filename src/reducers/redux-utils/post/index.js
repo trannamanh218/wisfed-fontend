@@ -50,6 +50,12 @@ const postSlice = createSlice({
 		postsData: {},
 		postInfo: {},
 		error: {},
+		resetTaggedData: false,
+	},
+	reducers: {
+		resetTaggedDataFunc: (state, action) => {
+			state.resetTaggedData = action.payload;
+		},
 	},
 	extraReducers: {
 		[getPostDetail.pending]: state => {
@@ -66,6 +72,6 @@ const postSlice = createSlice({
 		},
 	},
 });
-
+export const { resetTaggedDataFunc } = postSlice.actions;
 const post = postSlice.reducer;
 export default post;

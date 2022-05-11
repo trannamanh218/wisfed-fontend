@@ -38,7 +38,10 @@ const SelectBox = ({ defaultOption, list, onChangeOption, name, className }) => 
 	return (
 		<div className={`select-box ${className ? className : ''}`} ref={ref}>
 			<div className='select-box__btn' onClick={handleOpen}>
-				<span className='select-box__value'>{activeItem.title || activeItem.name}</span>
+				<span className='select-box__value'>
+					{activeItem.img ? activeItem.img : ''}
+					{activeItem.title || activeItem.name}
+				</span>
 				<img className='select-box__icon' src={dropdownIcon} alt='dropdown' />
 			</div>
 			{isVisible && !_.isEmpty(list) && (
@@ -52,7 +55,9 @@ const SelectBox = ({ defaultOption, list, onChangeOption, name, className }) => 
 								key={`${name}-${index}`}
 								onClick={() => handleSelect(item)}
 							>
-								<span>{item.title || item.name}</span>
+								<span>
+									{item.img ? item.img : ''} {item.title || item.name}
+								</span>
 								{isActive(item) && (
 									<span>
 										<CheckIcon />
@@ -78,6 +83,7 @@ SelectBox.propTypes = {
 			value: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
 			id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
 			title: PropTypes.string,
+			img: PropTypes.string,
 		})
 	),
 	onChangeOption: PropTypes.func,

@@ -2,42 +2,30 @@ import './style.scss';
 import ProgressBar from 'react-bootstrap/ProgressBar';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
-import CreatPostModalContent from 'pages/home/components/newfeed/components/creat-post-modal-content';
+import { updateCurrentBook } from 'reducers/redux-utils/book';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import _ from 'lodash';
 
 function ReadingBook({ bookData }) {
-	const [renderBookReading, setRenderBooksReading] = useState({});
-	const [toggleModal, setToggleModal] = useState(false);
-	const [booksId, setBooksId] = useState('');
+	const dispatch = useDispatch();
 	const [percent, setPercent] = useState(null);
-	const [option, setOption] = useState({});
+	const navigate = useNavigate();
 
 	useEffect(() => {
-		if (bookData?.books?.length > 0) {
-			const newItem = bookData?.books[bookData?.books.length - 1];
-			setRenderBooksReading(newItem.book);
-			if (newItem.book.progress) {
-				const progessNumber = (newItem.book.progress / newItem.book.page) * 100;
-				setPercent(progessNumber.toFixed());
-			} else {
-				setPercent(0);
-			}
+		if (!_.isEmpty(bookData)) {
+			const percentData = Math.round((bookData.bookProgress[0].progress / bookData.page) * 100);
+			setPercent(percentData);
 		}
 	}, [bookData, percent]);
 
 	const handleOpenModal = () => {
-		setToggleModal(!toggleModal);
-		setBooksId(renderBookReading.id);
+		dispatch(updateCurrentBook({ ...bookData, status: 'reading' }));
+		navigate('/');
 	};
 
-	const onChangeOption = data => {
-		setOption(data);
-	};
-
-	const onChangeNewPost = () => {
-		setToggleModal(!toggleModal);
-	};
 	return (
-		bookData?.books?.length > 0 && (
+		!_.isEmpty(bookData) && (
 			<div className='reading-book'>
 				<h4 className='reading-book__title'>Sách đang đọc</h4>
 				<div className='reading-book__content'>
@@ -45,14 +33,14 @@ function ReadingBook({ bookData }) {
 						<div className='reading-book__thumbnail'>
 							<img
 								data-testid='reading-book__book-img'
-								src={renderBookReading?.images?.length > 0 && renderBookReading?.images[0]}
+								src={bookData?.images?.length > 0 ? bookData.images[0] : ''}
 								alt=''
 							/>
 						</div>
 						<div className='reading-book__information'>
 							<div>
-								<div className='reading-book__information__book-name'>{renderBookReading.name}</div>
-								<div className='reading-book__information__author'>{renderBookReading?.author}</div>
+								<div className='reading-book__information__book-name'>{bookData.name}</div>
+								<div className='reading-book__information__author'>{bookData?.author}</div>
 							</div>
 							<div className='reading-book__information__current-progress'>
 								<ProgressBar now={percent} />
@@ -64,19 +52,6 @@ function ReadingBook({ bookData }) {
 						</div>
 					</div>
 				</div>
-				{toggleModal && (
-					<div className='newfeed__creat-post__modal'>
-						<CreatPostModalContent
-							showModalCreatPost={toggleModal}
-							option={option}
-							renderBookReading={renderBookReading}
-							booksId={booksId}
-							hideCreatPostModal={handleOpenModal}
-							onChangeOption={onChangeOption}
-							onChangeNewPost={onChangeNewPost}
-						/>
-					</div>
-				)}
 			</div>
 		)
 	);

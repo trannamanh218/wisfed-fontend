@@ -5,13 +5,12 @@ import trashIcon from 'assets/images/trash.png';
 import StatusModalContainer from 'components/status-button/StatusModalContainer';
 import { CircleCheckIcon, CloseX, CoffeeCupIcon, TargetIcon } from 'components/svg';
 import { STATUS_BOOK } from 'constants';
-import RouteLink from 'helpers/RouteLink';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { useEffect, useRef, useState } from 'react';
 import { Modal, ModalBody } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import {
 	addBookToDefaultLibrary,
@@ -20,10 +19,12 @@ import {
 	createLibrary,
 	removeAllBookInLibraries,
 	updateAuthLibrary,
+	updateMyAllLibraryRedux,
 } from 'reducers/redux-utils/library';
 import { useModal } from 'shared/hooks';
 import './setting-more.scss';
 import { NotificationError } from 'helpers/Error';
+import { updateDirectFromProfile } from 'reducers/redux-utils/common';
 
 const STATUS_BOOK_OBJ = {
 	'reading': {
@@ -43,7 +44,7 @@ const STATUS_BOOK_OBJ = {
 	},
 };
 
-const SettingMore = props => {
+const SettingMore = ({ bookData }) => {
 	const { modalOpen, setModalOpen, toggleModal } = useModal(false);
 	const { modalOpen: statusModal, setModalOpen: setStatusModal } = useModal(false);
 	const [currentStatus, setCurrentStatus] = useState(STATUS_BOOK_OBJ.wantToRead);
@@ -54,8 +55,8 @@ const SettingMore = props => {
 	const statusRef = useRef(STATUS_BOOK_OBJ.wantToRead);
 
 	const dispatch = useDispatch();
-	const { bookData, handleUpdateLibrary } = props;
 	const navigate = useNavigate();
+	const { userId } = useParams();
 
 	const {
 		library: { authLibraryData },
@@ -91,7 +92,7 @@ const SettingMore = props => {
 		const params = { bookId: bookData.id };
 		try {
 			await dispatch(removeAllBookInLibraries(params)).unwrap();
-			handleUpdateLibrary();
+			dispatch(updateMyAllLibraryRedux());
 			toast.success('Xoá sách thành công');
 		} catch (err) {
 			toast.warn('Lỗi không xóa được sách trong thư viện');
@@ -101,7 +102,8 @@ const SettingMore = props => {
 	};
 
 	const hanldeReviewBook = () => {
-		navigate(RouteLink.reviewBookDetail('402', bookData?.name));
+		dispatch(updateDirectFromProfile(false));
+		navigate(`/review/${bookData.id}/${userId}`);
 	};
 
 	const switchLibraries = () => {
@@ -216,7 +218,7 @@ const SettingMore = props => {
 			await updateStatusBook();
 			await handleAddAndRemoveBook();
 			toast.success('Chuyển giá sách thành công');
-			handleUpdateLibrary();
+			dispatch(updateMyAllLibraryRedux());
 		} catch (err) {
 			toast.error('Lỗi chuyển giá sách');
 		} finally {
@@ -299,12 +301,10 @@ const SettingMore = props => {
 
 SettingMore.defaultProps = {
 	bookData: {},
-	handleUpdateLibrary: () => {},
 };
 
 SettingMore.propTypes = {
 	bookData: PropTypes.object,
-	handleUpdateLibrary: PropTypes.func,
 };
 
 export default SettingMore;

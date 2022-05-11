@@ -1,4 +1,3 @@
-import React from 'react';
 import Slider from 'react-slick';
 import PropTypes from 'prop-types';
 import BookThumbnail from 'shared/book-thumbnail';
@@ -32,12 +31,6 @@ const BookSlider = ({ list, title = '', className, size = 'sm', handleViewBookDe
 			</div>
 		);
 	}
-
-	return (
-		<div className={classNames('book-slider', { [`${className}`]: className })}>
-			<p>Không có dữ liệu</p>
-		</div>
-	);
 };
 
 function SlideNextBtn({ className, style, onClick }) {
@@ -63,7 +56,7 @@ function settings() {
 		slidesToShow: 1,
 		slidesToScroll: 2,
 		initialSlide: 0,
-		infinite: true,
+		infinite: false,
 		lazyLoad: false,
 		autoplay: false,
 		swipeToSlide: true,

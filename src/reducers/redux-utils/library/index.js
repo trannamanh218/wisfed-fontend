@@ -7,7 +7,7 @@ import {
 	checkBookLibraryAPI,
 	libraryAPI,
 	listBookLibraryAPI,
-	myLibraryAPI,
+	allLibraryListAPI,
 	removeAllBookAPI,
 	removeBookFromLibraryAPI,
 } from 'constants/apiURL';
@@ -18,6 +18,17 @@ export const createLibrary = createAsyncThunk('library/createLibrary', async (pa
 		const response = await Request.makePost(libraryAPI, params);
 
 		return { ...response.data, books: [] };
+	} catch (err) {
+		const error = JSON.parse(err.response);
+		return rejectWithValue(error);
+	}
+});
+
+export const getAllLibraryList = createAsyncThunk('library/getLibraryList', async (data, { rejectWithValue }) => {
+	const { userId, params } = data;
+	try {
+		const response = await Request.makeGet(allLibraryListAPI(userId), params);
+		return response.data.rows;
 	} catch (err) {
 		const error = JSON.parse(err.response);
 		return rejectWithValue(error);
@@ -37,7 +48,7 @@ export const getLibraryList = createAsyncThunk('library/getLibraryList', async (
 export const getMyLibraryList = createAsyncThunk('library/getMyLibraryList', async (params, { rejectWithValue }) => {
 	const { userId, ...query } = params;
 	try {
-		const response = await Request.makeGet(myLibraryAPI(userId), query);
+		const response = await Request.makeGet(allLibraryListAPI(userId), query);
 		return response.data;
 	} catch (err) {
 		const error = JSON.parse(err.response);
@@ -167,9 +178,12 @@ const librarySlice = createSlice({
 			rows: [],
 			count: 0,
 		},
-
 		error: {},
+
+		myAllLibrary: {},
+		updateMyLibrary: false,
 	},
+
 	reducers: {
 		updateLibrary: (state, action) => {
 			const { rows, count } = action.payload;
@@ -178,7 +192,15 @@ const librarySlice = createSlice({
 		updateAuthLibrary: (state, action) => {
 			state.authLibraryData = action.payload;
 		},
+		//
+		getAllMyLibraryRedux: (state, action) => {
+			state.myAllLibrary = action.payload;
+		},
+		updateMyAllLibraryRedux: state => {
+			state.updateMyLibrary = !state.updateMyLibrary;
+		},
 	},
+
 	extraReducers: {
 		[createLibrary.pending]: state => {
 			state.isFetching = true;
@@ -217,7 +239,7 @@ const librarySlice = createSlice({
 		[addBookToDefaultLibrary.fulfilled]: state => {
 			state.isFetching = false;
 		},
-		[addBookToDefaultLibrary.pending]: state => {
+		[addBookToDefaultLibrary.rejected]: state => {
 			state.isFetching = false;
 		},
 	},
@@ -225,4 +247,4 @@ const librarySlice = createSlice({
 
 const library = librarySlice.reducer;
 export default library;
-export const { updateLibrary, updateAuthLibrary } = librarySlice.actions;
+export const { updateLibrary, updateAuthLibrary, getAllMyLibraryRedux, updateMyAllLibraryRedux } = librarySlice.actions;

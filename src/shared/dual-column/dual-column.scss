@@ -24,12 +24,18 @@
 
 	&__title {
 		display: inline-block;
-		font-weight: 500;
+		font-weight: 600;
 	}
 
 	&__number {
 		display: inline-block;
-		font-weight: 600;
+		font-weight: 500;
+		color: $ash-placeholder;
+		&.no-page-text {
+			color: $ash;
+			font-size: 15px;
+			font-weight: 600;
+		}
 	}
 }
 

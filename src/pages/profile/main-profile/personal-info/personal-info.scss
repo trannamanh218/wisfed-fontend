@@ -3,6 +3,7 @@
 $wallpaper-height: 350px;
 .personal-info {
 	margin-bottom: 3.25rem;
+
 	&__wallpaper {
 		height: $wallpaper-height;
 		display: flex;
@@ -64,6 +65,9 @@ $wallpaper-height: 350px;
 			display: flex;
 			gap: 36px;
 			margin-top: 16px;
+			.personal-info-none {
+				visibility: hidden;
+			}
 		}
 
 		&__introduction {
@@ -183,7 +187,7 @@ $wallpaper-height: 350px;
 		font-weight: 500;
 		line-height: 1.5;
 		color: $ash-label;
-
+		cursor: pointer;
 		.number {
 			display: inline-block;
 			margin-right: 0.25rem;

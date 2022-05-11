@@ -1,4 +1,3 @@
-import React from 'react';
 import BookSlider from 'shared/book-slider';
 import PropTypes from 'prop-types';
 import './category-group.scss';

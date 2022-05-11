@@ -1,12 +1,12 @@
 import { useFetchAllCategoriesWithBooks, useFetchFilterCategories } from 'api/category.hook';
 import _ from 'lodash';
-import React, { useCallback, useState } from 'react';
+import { useCallback, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import CategoryGroup from 'shared/category-group';
 import LoadingIndicator from 'shared/loading-indicator';
 import SearchCategory from './SearchCategory';
 import { STATUS_LOADING } from 'constants';
-import { Circle as CircleLoading } from 'shared/loading';
+import Circle from 'shared/loading/circle';
 import SearchIcon from 'assets/icons/search.svg';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
@@ -25,7 +25,7 @@ const MainCategory = ({ status, handleViewBookDetail, viewCategoryDetail }) => {
 
 	return (
 		<div className='main-category'>
-			<CircleLoading loading={status === STATUS_LOADING} />
+			<Circle loading={status === STATUS_LOADING} />
 			<h4>Tất cả chủ đề</h4>
 			<div className='main-category__container'>
 				<div className={classNames('search-field')}>

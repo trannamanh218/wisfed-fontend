@@ -89,12 +89,10 @@
 
 .creat-post-modal-content__main__body__user-info {
 	display: flex;
-	margin-bottom: 35px;
+	margin-bottom: 28px;
 }
 
 .creat-post-modal-content__main__body__user-info__block-left {
-	width: 2.5rem;
-	height: 2.5rem;
 	margin-right: 16px;
 	img {
 		width: 100%;
@@ -105,8 +103,10 @@
 
 .creat-post-modal-content__main__body__user-info__block-right {
 	position: relative;
+	display: flex;
+	align-items: center;
 	p {
-		font-size: 1rem;
+		font-size: 1.15rem;
 		font-weight: 600;
 		color: $ash;
 		line-height: 1.5rem;
@@ -374,6 +374,7 @@
 	background-color: #eff0f6;
 	border-radius: 50%;
 	cursor: pointer;
+	position: relative;
 	svg {
 		width: 22px;
 		height: 22px;
@@ -411,6 +412,27 @@
 				fill: #dad8d8;
 			}
 		}
+	}
+}
+
+.creat-post-modal-content__main__options__item-add-to-post__popover {
+	position: absolute;
+	top: -70%;
+	left: 50%;
+	transform: translate(-50%, 0);
+	padding: 8px;
+	background-color: rgba(0, 0, 0, 0.7);
+	border-radius: 4px;
+	color: #fcfcfc;
+	z-index: 500;
+	text-align: center;
+	width: fit-content;
+	white-space: nowrap;
+	font-weight: 400;
+	opacity: 0;
+	&.show {
+		opacity: 1;
+		transition: opacity 0.2s ease-in;
 	}
 }
 
@@ -487,6 +509,7 @@
 
 .creat-post-modal-content__substitute__search-result {
 	margin: 2.5rem 0;
+	min-height: 220px;
 	h5 {
 		font-weight: 600;
 		line-height: 1.5rem;
@@ -602,12 +625,14 @@
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	padding: 0 0 30px 0;
 	span {
 		font-weight: 600;
 		font-size: 1rem;
 		margin-top: 1rem;
 		color: $ash-placeholder;
+	}
+	img {
+		max-height: 170px;
 	}
 }
 

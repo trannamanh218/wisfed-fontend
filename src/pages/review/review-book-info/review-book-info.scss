@@ -22,6 +22,11 @@
 		flex-direction: column;
 	}
 
+	&__name-author {
+		height: 96px;
+		margin-bottom: 18px;
+	}
+
 	&__name {
 		font-size: 1.5rem;
 		font-weight: 700;
@@ -31,10 +36,10 @@
 		-webkit-line-clamp: 2;
 		text-overflow: ellipsis;
 		overflow: hidden;
+		line-height: 2rem;
 	}
 
 	&__author {
-		margin-bottom: 1rem;
 		font-size: 1rem;
 		font-weight: 400;
 	}
@@ -53,16 +58,12 @@
 		display: flex;
 		align-items: center;
 		gap: 0.56rem;
-		margin-bottom: 1rem;
+		margin-bottom: 18px;
 		span {
 			font-size: 0.825rem;
 			font-weight: 600;
 			color: $ash-placeholder;
 		}
-	}
-
-	&__description {
-		margin-bottom: 1.5rem;
 	}
 
 	&__action {

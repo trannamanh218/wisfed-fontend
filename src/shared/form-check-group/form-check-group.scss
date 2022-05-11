@@ -1,11 +1,9 @@
 @import 'src/scss/abstracts/_variables.scss';
 
 .form-check-custom {
-	max-width: 312px;
-	display: flex;
-	align-items: center;
 	gap: 1.125em;
 	border-radius: 12px;
+	padding-left: 12px !important;
 	&:hover {
 		background-color: $secondary;
 		.form-check-label--custom {
@@ -15,7 +13,7 @@
 }
 
 .form-check .form-check-input {
-	margin-left: 0;
+	margin-left: 0 !important;
 	flex-shrink: 0;
 }
 

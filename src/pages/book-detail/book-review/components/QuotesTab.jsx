@@ -8,6 +8,7 @@ import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { NotificationError } from 'helpers/Error';
 import { checkLikeQuote } from 'reducers/redux-utils/quote';
+import LoadingIndicator from 'shared/loading-indicator';
 
 const QuotesTab = () => {
 	const filterOptions = [
@@ -16,7 +17,7 @@ const QuotesTab = () => {
 		{ id: 3, title: 'Người theo dõi', value: 'followers' },
 	];
 
-	const [defaultOption, setDefaultOption] = useState({ id: 1, title: 'Tất cả', value: 'all' });
+	const [currentOption, setCurrentOption] = useState(filterOptions[0]);
 
 	const [quoteList, setQuoteList] = useState([]);
 	const [hasMore, setHasMore] = useState(true);
@@ -28,10 +29,8 @@ const QuotesTab = () => {
 	const dispatch = useDispatch();
 	const { bookId } = useParams();
 
-	const handleChangeOption = data => {
-		if (data.value !== defaultOption.value) {
-			setDefaultOption(data);
-		}
+	const handleChangeOption = item => {
+		setCurrentOption(item);
 	};
 
 	useEffect(() => {
@@ -74,7 +73,7 @@ const QuotesTab = () => {
 				<FilterPane title='Quotes'>
 					<FitlerOptions
 						list={filterOptions}
-						defaultOption={defaultOption}
+						currentOption={currentOption}
 						handleChangeOption={handleChangeOption}
 						name='filter-user'
 						className='quotes-tab__filter__options'
@@ -84,7 +83,7 @@ const QuotesTab = () => {
 						dataLength={quoteList.length}
 						next={getQuoteListData}
 						hasMore={hasMore}
-						loader={<h4>Loading...</h4>}
+						loader={<LoadingIndicator />}
 					>
 						{quoteList.map(item => (
 							<QuoteCard key={item.id} data={item} likedArray={likedArray} />

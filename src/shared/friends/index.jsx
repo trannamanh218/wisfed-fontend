@@ -14,7 +14,7 @@ import { NotificationError } from 'helpers/Error';
 import { useDispatch } from 'react-redux';
 import React, { useState } from 'react';
 import { changeToggleFollows } from 'reducers/redux-utils/friends';
-import ModalUnFriend from 'pages/group/component/modalUnFriends';
+import ModalUnFriend from 'pages/friends/component/modalUnFriends';
 import { Link } from 'react-router-dom';
 
 const FriendsItem = ({ list, keyTabs, getListFollower, getMyListFriendReq }) => {
@@ -297,7 +297,6 @@ const FriendsItem = ({ list, keyTabs, getListFollower, getMyListFriendReq }) => 
 
 	return (
 		<>
-			{' '}
 			{toggleModalUnFriends && (
 				<ModalUnFriend
 					setModalUnfriends={setModalUnfriends}

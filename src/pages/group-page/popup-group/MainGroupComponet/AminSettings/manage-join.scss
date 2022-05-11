@@ -1,0 +1,108 @@
+.manage-join__container {
+	background-color: #fcfcfc;
+	border-radius: 24px;
+	margin-top: 32px;
+}
+.manage-join__title {
+	display: flex;
+	padding: 24px 24px 0 24px;
+	button {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		background-color: #eff0f7;
+		width: 48px;
+		height: 48px;
+		border-radius: 50%;
+		svg {
+			width: 24px;
+			height: 24px;
+		}
+	}
+	h2 {
+		flex: 1;
+		text-align: center;
+		font-family: 'Montserrat';
+		font-style: normal;
+		font-weight: 600;
+		font-size: 20px;
+		line-height: 32px;
+		letter-spacing: 0.75px;
+		color: #2d2c42;
+	}
+}
+.manage-join__content {
+	padding: 0 24px 24px 24px;
+}
+.manage-join__content-button {
+	margin-top: 32px;
+}
+.manage-join__content-select {
+	display: flex;
+	margin-top: 13px;
+}
+.select-box-1 {
+	height: 57px;
+	width: 235px;
+	margin-right: 13px;
+	.select-box__value {
+		font-family: 'Montserrat';
+		font-style: normal;
+		font-weight: 600;
+		font-size: 13px;
+		line-height: 22px;
+		display: flex;
+		align-items: center;
+		text-align: center;
+		letter-spacing: 0.25px;
+		color: #2d2c42;
+	}
+	.select-box__item {
+		span {
+			font-family: 'Montserrat';
+			font-style: normal;
+			font-weight: 600;
+			font-size: 13px;
+			line-height: 22px;
+			display: flex;
+			align-items: center;
+			text-align: center;
+			letter-spacing: 0.25px;
+			color: #2d2c42;
+		}
+	}
+}
+.select-box-2 {
+	height: 57px;
+	width: 160px;
+	margin-right: 13px;
+	.select-box__value {
+		font-family: 'Montserrat';
+		font-style: normal;
+		font-weight: 600;
+		font-size: 13px;
+		line-height: 22px;
+		display: flex;
+		align-items: center;
+		text-align: center;
+		letter-spacing: 0.25px;
+		color: #2d2c42;
+	}
+	.select-box__item {
+		span {
+			font-family: 'Montserrat';
+			font-style: normal;
+			font-weight: 600;
+			font-size: 13px;
+			line-height: 22px;
+			display: flex;
+			align-items: center;
+			text-align: center;
+			letter-spacing: 0.25px;
+			color: #2d2c42;
+		}
+	}
+}
+.join-group__member {
+	margin-top: 62px;
+}
