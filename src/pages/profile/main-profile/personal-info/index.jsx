@@ -22,7 +22,7 @@ import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import backgroundImageDefault from 'assets/images/background-profile.png';
 
-const PersonalInfo = ({ userInfor }) => {
+const PersonalInfo = ({ currentUserInfo }) => {
 	const { ref: settingsRef, isVisible: isSettingsVisible, setIsVisible: setSettingsVisible } = useVisible(false);
 	const { modalOpen, setModalOpen, toggleModal } = useModal(false);
 	const [modalFriend, setModalFriend] = useState(false);
@@ -43,10 +43,10 @@ const PersonalInfo = ({ userInfor }) => {
 	}, [userInfo]);
 
 	useEffect(() => {
-		if (userInfor.backgroundImage) {
-			setBgImage(userInfor.backgroundImage);
+		if (currentUserInfo.backgroundImage) {
+			setBgImage(currentUserInfo.backgroundImage);
 		}
-	}, [userInfor]);
+	}, [currentUserInfo]);
 
 	const handleSettings = () => {
 		setSettingsVisible(prev => !prev);
@@ -62,7 +62,7 @@ const PersonalInfo = ({ userInfor }) => {
 				} else {
 					params = { avatarImage: imageUploadedData.streamPath };
 				}
-				const data = { userId: userInfor.id, params: params };
+				const data = { userId: currentUserInfo.id, params: params };
 				const changeUserImage = await dispatch(editUserInfo(data)).unwrap();
 				if (!_.isEmpty(changeUserImage)) {
 					toast.success('Cập nhật ảnh thành công', { autoClose: 1500 });
@@ -76,7 +76,7 @@ const PersonalInfo = ({ userInfor }) => {
 	return (
 		<div className='personal-info'>
 			<div className='personal-info__wallpaper'>
-				{userInfor.backgroundImage ? (
+				{currentUserInfo.backgroundImage ? (
 					<img src={bgImage} alt='background-image' onError={() => setBgImage(backgroundImageDefault)} />
 				) : (
 					<img src={backgroundImageDefault} alt='background-image' />
@@ -86,7 +86,7 @@ const PersonalInfo = ({ userInfor }) => {
 					{({ getRootProps, getInputProps }) => (
 						<div className='edit-wallpaper' {...getRootProps()}>
 							<input {...getInputProps()} />
-							{userInfor.id === userInfo.id && (
+							{currentUserInfo.id === userInfo.id && (
 								<button className='edit-wallpaper__btn'>
 									<img src={camera} alt='camera' />
 									<span>Chỉnh sửa ảnh bìa</span>
@@ -96,19 +96,20 @@ const PersonalInfo = ({ userInfor }) => {
 					)}
 				</Dropzone>
 			</div>
+
 			<div className='personal-info__detail'>
 				<div className='personal-info__detail__avatar-and-name'>
 					<div className='personal-info__detail__avatar'>
 						<UserAvatar
 							size='xl'
-							source={userInfor.avatarImage}
+							source={currentUserInfo.avatarImage}
 							className='personal-info__detail__avatar__user'
 						/>
 						<Dropzone onDrop={acceptedFile => handleDrop(acceptedFile, 'change-avatarImage')}>
 							{({ getRootProps, getInputProps }) => (
 								<div className='edit-avatar' {...getRootProps()}>
 									<input {...getInputProps()} />
-									{userInfor.id === userInfo.id && (
+									{currentUserInfo.id === userInfo.id && (
 										<button className='edit-avatar__btn'>
 											<img src={camera} alt='camera' />
 										</button>
@@ -119,8 +120,8 @@ const PersonalInfo = ({ userInfor }) => {
 					</div>
 					<div className='personal-info__detail__name'>
 						<div className='personal-info__username'>
-							<h4>{userInfor.fullName}</h4>
-							{userInfor.id === userInfo.id && (
+							<h4>{currentUserInfo.fullName}</h4>
+							{currentUserInfo.id === userInfo.id && (
 								<div className='edit-name'>
 									<img className='edit-name__pencil' src={pencil} alt='pencil' />
 									<button onClick={toggleModal}>Chỉnh sửa tên</button>
@@ -132,7 +133,7 @@ const PersonalInfo = ({ userInfor }) => {
 								</button>
 								{isSettingsVisible && (
 									<ul className='setting-list'>
-										{userInfor.id === userInfo.id && (
+										{currentUserInfo.id === userInfo.id && (
 											<li
 												className='setting-item'
 												onClick={() => {
@@ -163,19 +164,18 @@ const PersonalInfo = ({ userInfor }) => {
 								)}
 							</div>
 						</div>
-						<div className='personal-info__email'>{userInfor.email}</div>
+						<div className='personal-info__email'>{currentUserInfo.email}</div>
 					</div>
 				</div>
 
 				<div className='personal-info__detail__connect-buttons-and-introduction'>
-					<div className={userInfor.id === userInfo.id && 'personal-info-none'}>
-						{' '}
+					<div className={currentUserInfo.id !== userInfo.id ? 'personal-info' : 'personal-info-none'}>
 						<ConnectButtons item={item} />
 					</div>
 					<div className='personal-info__detail__introduction'>
 						<ul className='personal-info__list'>
 							<li className='personal-info__item'>
-								<span className='number'>{userInfor.posts}</span>
+								<span className='number'>{currentUserInfo.posts}</span>
 								<span>Bài viết</span>
 							</li>
 							<li
@@ -184,7 +184,7 @@ const PersonalInfo = ({ userInfor }) => {
 								}}
 								className='personal-info__item'
 							>
-								<span className='number'>{userInfor.follower}</span>
+								<span className='number'>{currentUserInfo.follower}</span>
 								<span>Người theo dõi</span>
 							</li>
 
@@ -192,7 +192,7 @@ const PersonalInfo = ({ userInfor }) => {
 								<ModalFollowers
 									setModalFollower={setModalFollower}
 									modalFollower={modalFollower}
-									userInfoDetail={userInfor}
+									userInfoDetail={currentUserInfo}
 								/>
 							)}
 							<li
@@ -201,14 +201,14 @@ const PersonalInfo = ({ userInfor }) => {
 								}}
 								className='personal-info__item'
 							>
-								<span className='number'>{userInfor.following}</span>
+								<span className='number'>{currentUserInfo.following}</span>
 								<span>Đang theo dõi</span>
 							</li>
 							{modalFollowing && (
 								<ModalWatching
 									setModalFollowing={setModalFollowing}
 									modalFollowing={modalFollowing}
-									userInfoDetail={userInfor}
+									userInfoDetail={currentUserInfo}
 								/>
 							)}
 							<li
@@ -217,18 +217,18 @@ const PersonalInfo = ({ userInfor }) => {
 								}}
 								className='personal-info__item'
 							>
-								<span className='number'>{userInfor.friends}</span>
-								<span>Bạn bè ({userInfor.mutualFriends})</span>
+								<span className='number'>{currentUserInfo.friends}</span>
+								<span>Bạn bè ({currentUserInfo.mutualFriends})</span>
 							</li>
 							{modalFriend && (
 								<ModalFriend
 									setModalFriend={setModalFriend}
 									modalFriend={modalFriend}
-									userInfoDetail={userInfor}
+									userInfoDetail={currentUserInfo}
 								/>
 							)}
 						</ul>
-						{userInfor.descriptions && <ReadMore text={userInfor.descriptions} />}
+						{currentUserInfo.descriptions && <ReadMore text={currentUserInfo.descriptions} />}
 					</div>
 				</div>
 			</div>
@@ -241,7 +241,7 @@ const PersonalInfo = ({ userInfor }) => {
 					</button>
 				</Modal.Header>
 				<Modal.Body className='personal-info__modal__body'>
-					<PersonalInfoForm userData={userInfor} />
+					<PersonalInfoForm userData={currentUserInfo} />
 				</Modal.Body>
 			</Modal>
 		</div>
@@ -249,7 +249,7 @@ const PersonalInfo = ({ userInfor }) => {
 };
 
 PersonalInfo.propTypes = {
-	userInfor: PropTypes.object,
+	currentUserInfo: PropTypes.object,
 };
 
 export default PersonalInfo;

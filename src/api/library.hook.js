@@ -88,7 +88,7 @@ export const useFetchStatsReadingBooks = isUpdate => {
 
 			const fetchData = async () => {
 				try {
-					const query = generateQuery(1, 10, JSON.stringify(filter));
+					const query = generateQuery(0, 10, JSON.stringify(filter));
 					const data = await dispatch(getLibraryList(query)).unwrap();
 					const { rows = [] } = data;
 
@@ -189,7 +189,7 @@ export const useFetchMyLibraries = (current = 1, perPage = 10, isUpdate) => {
 						filter.push({ 'operator': 'eq', 'value': params.userId, 'property': 'createdBy' });
 					}
 
-					const query = generateQuery(1, 10, JSON.stringify(filter));
+					const query = generateQuery(0, 10, JSON.stringify(filter));
 					const data = await dispatch(getLibraryList(query)).unwrap();
 
 					dispatch(updateLibrary(data));

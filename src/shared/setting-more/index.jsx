@@ -19,6 +19,7 @@ import {
 	createLibrary,
 	removeAllBookInLibraries,
 	updateAuthLibrary,
+	updateMyAllLibraryRedux,
 } from 'reducers/redux-utils/library';
 import { useModal } from 'shared/hooks';
 import './setting-more.scss';
@@ -43,7 +44,7 @@ const STATUS_BOOK_OBJ = {
 	},
 };
 
-const SettingMore = ({ bookData, handleUpdateLibrary }) => {
+const SettingMore = ({ bookData }) => {
 	const { modalOpen, setModalOpen, toggleModal } = useModal(false);
 	const { modalOpen: statusModal, setModalOpen: setStatusModal } = useModal(false);
 	const [currentStatus, setCurrentStatus] = useState(STATUS_BOOK_OBJ.wantToRead);
@@ -91,7 +92,7 @@ const SettingMore = ({ bookData, handleUpdateLibrary }) => {
 		const params = { bookId: bookData.id };
 		try {
 			await dispatch(removeAllBookInLibraries(params)).unwrap();
-			handleUpdateLibrary();
+			dispatch(updateMyAllLibraryRedux());
 			toast.success('Xoá sách thành công');
 		} catch (err) {
 			toast.warn('Lỗi không xóa được sách trong thư viện');
@@ -217,7 +218,7 @@ const SettingMore = ({ bookData, handleUpdateLibrary }) => {
 			await updateStatusBook();
 			await handleAddAndRemoveBook();
 			toast.success('Chuyển giá sách thành công');
-			handleUpdateLibrary();
+			dispatch(updateMyAllLibraryRedux());
 		} catch (err) {
 			toast.error('Lỗi chuyển giá sách');
 		} finally {
@@ -300,12 +301,10 @@ const SettingMore = ({ bookData, handleUpdateLibrary }) => {
 
 SettingMore.defaultProps = {
 	bookData: {},
-	handleUpdateLibrary: () => {},
 };
 
 SettingMore.propTypes = {
 	bookData: PropTypes.object,
-	handleUpdateLibrary: PropTypes.func,
 };
 
 export default SettingMore;

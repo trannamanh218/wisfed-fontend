@@ -58,13 +58,13 @@ export const calculateDurationTime = date => {
 };
 
 export const generateQuery = (
-	current = 1,
+	current = 0,
 	perPage = 10,
 	filter = '[]',
 	sort = '[{ "property": "createdAt", direction: "DESC }]'
 ) => {
 	return {
-		start: current > 1 ? (current - 1) * perPage : 0,
+		start: current * perPage,
 		limit: perPage,
 		filter,
 		sort,

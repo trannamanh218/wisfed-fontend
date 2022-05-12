@@ -4,7 +4,7 @@ import Input from 'shared/input';
 import StatisticList from 'shared/statistic-list';
 import { nameBookShelve } from 'helpers/Validation';
 import { useDispatch, useSelector } from 'react-redux';
-import { createLibrary } from 'reducers/redux-utils/library';
+import { createLibrary, updateMyAllLibraryRedux } from 'reducers/redux-utils/library';
 import { toast } from 'react-toastify';
 import './my-shelves-list.scss';
 import { useParams } from 'react-router-dom';
@@ -22,6 +22,7 @@ const MyShelvesList = ({ list }) => {
 			const params = { name };
 			try {
 				await dispatch(createLibrary(params)).unwrap();
+				dispatch(updateMyAllLibraryRedux());
 				toast.success('Tạo thư viện thành công!');
 			} catch (err) {
 				NotificationError(err);
@@ -47,6 +48,7 @@ const MyShelvesList = ({ list }) => {
 				background='light'
 				isBackground={false}
 				list={list}
+				pageText={false}
 			/>
 			{checkAuthorize() ? (
 				<Formik

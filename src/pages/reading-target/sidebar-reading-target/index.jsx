@@ -23,13 +23,13 @@ const SidebarReadingTarget = () => {
 	);
 	return (
 		<div className='sidebar-reading-target'>
-			<StatisticList
+			{/* <StatisticList
 				className='sidebar-shelves__reading__status'
 				title='Trạng thái đọc'
 				background='light'
 				isBackground={true}
 				list={readingData}
-			/>
+			/> */}
 			<MyShelvesList list={libraryList} />
 			<QuotesLinks
 				list={quoteData}

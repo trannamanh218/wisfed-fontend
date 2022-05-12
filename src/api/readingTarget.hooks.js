@@ -37,14 +37,15 @@ export const useFetchTargetReading = (userId, modalOpen, deleteModal, filter = '
 						if (targetReading.length > 0 && userInfo.id === userId) {
 							dispatch(updateTargetReading([]));
 							newData = targetReading.filter(item => item.year === year);
+							setBooksReadYear(newData);
 						} else {
 							dispatch(updateTargetReading([]));
 							const data = await dispatch(getListBooksTargetReading(params)).unwrap();
 							newData = data.filter(item => item.year === year);
+							setBooksReadYear(newData);
 						}
 						if (newData.length > 0) {
 							dispatch(checkRenderTargetReading(true));
-							setBooksReadYear(newData);
 						} else {
 							dispatch(checkRenderTargetReading(false));
 						}
@@ -57,6 +58,7 @@ export const useFetchTargetReading = (userId, modalOpen, deleteModal, filter = '
 			};
 			fetchData();
 		}
+
 		return () => {
 			isMount = false;
 		};
