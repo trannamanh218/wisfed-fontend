@@ -16,6 +16,7 @@ const Profile = () => {
 	const { userId } = useParams();
 
 	useEffect(() => {
+		window.scroll(0, 0);
 		getUserDetailData();
 	}, [userId, userInfo]);
 

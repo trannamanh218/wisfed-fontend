@@ -3,13 +3,12 @@ import ProgressBar from 'react-bootstrap/ProgressBar';
 import classNames from 'classnames';
 import BookThumbnail from 'shared/book-thumbnail';
 import { BoldCenterCircle, RightArrow } from 'components/svg';
-import { useFetchAuthLibraries } from 'api/library.hook';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { STATUS_SUCCESS, STATUS_IDLE, STATUS_LOADING } from 'constants';
 import { getBookDetail } from 'reducers/redux-utils/book';
 import { NotificationError } from 'helpers/Error';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import _ from 'lodash';
 import Circle from 'shared/loading/circle';
 import { updateTitleReviewPage, updateDirectFromProfile } from 'reducers/redux-utils/common';
@@ -19,18 +18,21 @@ import { updateCurrentBook } from 'reducers/redux-utils/book';
 function Bookcase({ userInfo }) {
 	const [readingBooks, setReadingBooks] = useState([]);
 	const [readBooks, setReadBooks] = useState([]);
-	const { statusLibraries } = useFetchAuthLibraries();
 	const [status, setStatus] = useState(STATUS_IDLE);
 
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
+	const myAllLibraryDefault = useSelector(state => state.library.myAllLibrary).default;
+
 	useEffect(() => {
-		const filterReadbooks = statusLibraries.filter(item => item.defaultType === 'read');
-		const filterReadingbooks = statusLibraries.filter(item => item.defaultType === 'reading');
-		setReadBooks(filterReadbooks[0]?.books.reverse());
-		setReadingBooks(filterReadingbooks[0]?.books.reverse().slice(0, 3));
-	}, [statusLibraries]);
+		if (!_.isEmpty(myAllLibraryDefault)) {
+			const filterReadbooks = myAllLibraryDefault.filter(item => item.defaultType === 'read');
+			const filterReadingbooks = myAllLibraryDefault.filter(item => item.defaultType === 'reading');
+			setReadBooks([...filterReadbooks[0].books].reverse());
+			setReadingBooks([...filterReadingbooks[0].books].reverse().slice(0, 3));
+		}
+	}, [myAllLibraryDefault]);
 
 	const progressBarPercenNumber = item => {
 		const progress = ((item.book.bookProgress[0]?.progress / item.book.page) * 100).toFixed();
