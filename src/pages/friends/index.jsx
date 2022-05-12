@@ -1,13 +1,12 @@
 import NormalContainer from 'components/layout/normal-container';
 import { useState, useCallback } from 'react';
 import './friend.scss';
-import SearchField from 'shared/search-field';
-import Button from 'shared/button';
 import MyFriends from './component/my-friend';
 import MyFollow from './component/my-follow';
 import InvitationFriend from './component/invitation-friend';
 import SuggestFriend from './component/suggest-friend';
 import _ from 'lodash';
+import SearchButton from 'shared/search-button';
 
 const Friends = () => {
 	const [activeTabs, setActiveTabs] = useState('friend');
@@ -69,18 +68,7 @@ const Friends = () => {
 			<div className='friends__container'>
 				<div className='friends__content'>Bạn bè</div>
 				<div className='friends__header'>
-					{toggleSearch && (
-						<div className='friends__search'>
-							<SearchField
-								placeholder='Tìm kiếm bạn bè'
-								handleChange={handleSearch}
-								value={inputSearch}
-							/>
-							<Button className='connect-button' isOutline={false} name='friend'>
-								<span>Tìm kiếm</span>
-							</Button>
-						</div>
-					)}
+					{toggleSearch && <SearchButton handleChange={handleSearch} value={inputSearch} />}
 
 					<div className='friend__radio'>
 						<p onClick={() => handleActiveTabs('friend')}>

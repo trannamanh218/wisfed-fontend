@@ -6,7 +6,6 @@ import { useSelector } from 'react-redux';
 
 const Layout = ({ children }) => {
 	const handleBackgroundToggle = useSelector(state => state.notificationReducer.toggle);
-
 	return (
 		<div className='layout'>
 			<Header />

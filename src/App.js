@@ -33,6 +33,7 @@ import QuoteAll from 'pages/quote/all-quote/';
 import Group from 'pages/group-page';
 import Ranks from 'pages/ranks';
 import { getAllLibraryList, getAllMyLibraryRedux } from 'reducers/redux-utils/library';
+import Result from 'pages/result';
 
 function App({ children }) {
 	const [myUserId, setMyUserId] = useState('');
@@ -97,6 +98,7 @@ function App({ children }) {
 			/>
 			<Routes>
 				<Route path='/top100' element={<Ranks />} />
+				<Route path='/result' element={<Result />} />
 				<Route path='/notification' element={<Notification />} />
 				<Route path='/category' element={<Category />} />
 				<Route path='/category/detail/:id' element={<CategoryDetail />} />

@@ -158,10 +158,11 @@ const errVN = {
 export const NotificationError = err => {
 	let errCode = {};
 	if (typeof err === 'string') {
-		if (typeof err === 'string') {
+		const errParse = JSON.parse(err);
+		if (typeof errParse === 'string') {
 			errCode = JSON.parse(JSON.parse(err));
 		} else {
-			errCode = JSON.parse(err);
+			errCode = errParse;
 		}
 	} else {
 		errCode = err;

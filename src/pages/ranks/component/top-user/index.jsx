@@ -9,6 +9,7 @@ import PropTypes from 'prop-types';
 import { NotificationError } from 'helpers/Error';
 import { useDispatch, useSelector } from 'react-redux';
 import { getTopUser, getTopUserAuth } from 'reducers/redux-utils/ranks';
+import dropdownIcon from 'assets/images/dropdown.png';
 
 const TopUser = ({ rows, listYear }) => {
 	const kindOfGroupRef = useRef({ value: 'default', title: 'Chủ đề' });
@@ -17,8 +18,9 @@ const TopUser = ({ rows, listYear }) => {
 	const { isAuth } = useSelector(state => state.auth);
 	const [topUserFilter, setTopUserFilter] = useState(1);
 	const [valueDate, setValueDate] = useState('week');
-	const [valueDataSort, setValueDataSort] = useState('topFollow');
+	const [valueDataSort, setValueDataSort] = useState('topRead');
 	const [getListTopBooks, setGetListTopBooks] = useState([]);
+	const [checkSelectBox, setCheckSelectBox] = useState(false);
 	const dispatch = useDispatch();
 	const listDataSortType = [
 		{ value: 'topRead', title: 'Đọc nhiều nhất' },
@@ -34,12 +36,14 @@ const TopUser = ({ rows, listYear }) => {
 				sortType: valueDataSort,
 				by: valueDate,
 			};
+			setCheckSelectBox(true);
 		} else {
 			params = {
 				sortType: valueDataSort,
 				by: valueDate,
 				categoryId: topUserFilter,
 			};
+			setCheckSelectBox(false);
 		}
 
 		try {
@@ -87,12 +91,21 @@ const TopUser = ({ rows, listYear }) => {
 			</div>
 			<div className='topbooks__container__sort'>
 				<div className='topbooks__container__sort__left'>
-					<SelectBox
-						name='themeGroup'
-						list={rows}
-						defaultOption={kindOfGroupRef.current}
-						onChangeOption={onchangeKindOfGroup}
-					/>
+					{checkSelectBox ? (
+						<div className={`select-box `}>
+							<div className='select-box__btn disable'>
+								<span className='select-box__value'>Chủ đề</span>
+								<img className='select-box__icon' src={dropdownIcon} alt='dropdown' />
+							</div>
+						</div>
+					) : (
+						<SelectBox
+							name='themeGroup'
+							list={rows}
+							defaultOption={kindOfGroupRef.current}
+							onChangeOption={onchangeKindOfGroup}
+						/>
+					)}
 				</div>
 
 				<div className='topbooks__container__sort__right'>

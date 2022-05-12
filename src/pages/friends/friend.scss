@@ -14,27 +14,15 @@
 		background: #ffffff;
 		border-radius: 12px;
 		padding: 22px 23px 0 23px;
-		.friends__search {
-			display: flex;
-			gap: 16px;
-			margin-bottom: 27px;
-			.connect-button {
-				background: #f5e7d8;
-				border-radius: 12px;
-				max-width: 120px;
-				border: none;
-				span {
-					font-weight: 600;
-					font-size: 15px;
-					line-height: 24px;
-					color: #b38c64;
-				}
-			}
+		.search__container {
+			padding: 0;
 		}
+
 		.friend__radio {
 			display: flex;
 			gap: 28px;
 			padding-bottom: 23px;
+			margin-top: 22px;
 			[type='radio']:checked,
 			[type='radio']:not(:checked) {
 				position: absolute;

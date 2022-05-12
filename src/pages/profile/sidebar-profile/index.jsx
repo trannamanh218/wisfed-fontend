@@ -14,7 +14,7 @@ import { useFetchTargetReading } from 'api/readingTarget.hooks';
 import ProgressBarCircle from 'shared/progress-circle';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
-
+import RenderProgress from 'shared/render-progress';
 const DEFAULT_TOGGLE_ROWS = 0;
 
 const SidebarProfile = ({ currentUserInfo }) => {
@@ -64,17 +64,8 @@ const SidebarProfile = ({ currentUserInfo }) => {
 	};
 
 	const handleRenderTargetReading = () => {
-		if (window.location.pathname.includes('profile')) {
-			if (userInfo.id === userId) {
-				if (booksReadYear.length > 0) {
-					return <ProgressBarCircle />;
-				}
-				return <ReadChallenge />;
-			} else {
-				if (booksReadYear.length > 0) {
-					return <ProgressBarCircle />;
-				}
-			}
+		if (userInfo.id === userId) {
+			return <RenderProgress booksReadYear={booksReadYear} />;
 		} else {
 			if (booksReadYear.length > 0) {
 				return <ProgressBarCircle />;

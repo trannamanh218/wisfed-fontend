@@ -2,16 +2,15 @@ import './sidebar.scss';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import ReadingBook from 'shared/reading-book';
 import TheBooksWantsToRead from './components/the-books-wants-to-read';
-import ReadChallenge from 'shared/read-challenge';
 import GroupShortcuts from './components/group-shortcuts';
 import { useFetchQuoteRandom } from 'api/quote.hooks';
 import _ from 'lodash';
 import { useFetchBookInDefaultLibrary, useFetchStatsReadingBooks } from 'api/library.hook';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import ProgressBarCircle from 'shared/progress-circle';
 import { useFetchTargetReading } from 'api/readingTarget.hooks';
 import { useState, useEffect } from 'react';
+import RenderProgress from 'shared/render-progress';
 
 const Sidebar = () => {
 	const { quoteRandom } = useFetchQuoteRandom();
@@ -71,7 +70,7 @@ const Sidebar = () => {
 			</div>
 			<ReadingBook bookData={bookReading} />
 			<TheBooksWantsToRead list={bookData} />
-			{booksReadYear.length > 0 && !_.isEmpty(userInfo) ? <ProgressBarCircle /> : <ReadChallenge />}
+			<RenderProgress booksReadYear={booksReadYear} />
 		</div>
 	);
 };

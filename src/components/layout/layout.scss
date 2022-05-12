@@ -5,10 +5,9 @@
 	margin: 0 auto;
 	min-height: 100vh;
 	background-color: $secondary;
-
+	position: relative;
 	&__container {
 		margin-top: 100px;
-		position: relative;
 		.header__dard {
 			position: absolute;
 			background: rgba(78, 75, 102, 0.2);
