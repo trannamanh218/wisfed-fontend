@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import '../register.scss';
 import Logo from 'assets/images/Logo 2.png';
+import Subtract from 'assets/images/Subtract.png';
 import ImgRegister from 'assets/images/anh-1 1.png';
 import { Formik, Field, Form } from 'formik';
 import classNames from 'classnames';
@@ -10,6 +11,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import ModalLogin from 'pages/login/element/ModalLogin';
 import { register } from 'reducers/redux-utils/auth';
 import Circle from 'shared/loading/circle';
+import ReactTooltip from 'react-tooltip';
 
 function RegisterComponent() {
 	const dispatch = useDispatch();
@@ -107,12 +109,29 @@ function RegisterComponent() {
 															value={field.value}
 															autoComplete='false'
 														/>
+														<div className='error--text'>
+															{meta.touched && meta.error && (
+																<div>
+																	<img
+																		src={Subtract}
+																		alt='img'
+																		data-tip
+																		data-for='registerTip'
+																	/>
+																	<ReactTooltip
+																		id='registerTip'
+																		place='bottom'
+																		effect='solid'
+																		backgroundColor='#E61B00'
+																	>
+																		{meta.touched && meta.error && (
+																			<div>{meta.error}</div>
+																		)}
+																	</ReactTooltip>
+																</div>
+															)}
+														</div>
 													</div>
-													{meta.touched && meta.error && (
-														<small className='error-message error-message-name'>
-															{meta.error}
-														</small>
-													)}
 												</div>
 											);
 										}}
@@ -134,12 +153,29 @@ function RegisterComponent() {
 															value={field.value}
 															autoComplete='false'
 														/>
+														<div className='error--text'>
+															{meta.touched && meta.error && (
+																<div>
+																	<img
+																		src={Subtract}
+																		alt='img'
+																		data-tip
+																		data-for='registerTip'
+																	/>
+																	<ReactTooltip
+																		id='registerTip'
+																		place='bottom'
+																		effect='solid'
+																		backgroundColor='#E61B00'
+																	>
+																		{meta.touched && meta.error && (
+																			<div>{meta.error}</div>
+																		)}
+																	</ReactTooltip>
+																</div>
+															)}
+														</div>
 													</div>
-													{meta.touched && meta.error && (
-														<small className='error-message error-message-name'>
-															{meta.error}
-														</small>
-													)}
 												</div>
 											);
 										}}
@@ -151,9 +187,12 @@ function RegisterComponent() {
 										return (
 											<div className='register__form__field'>
 												<div
-													className={classNames('register__form__group', {
-														'error': meta.touched && meta.error,
-													})}
+													className={classNames(
+														'register__form__group register_form_group1',
+														{
+															'error': meta.touched && meta.error,
+														}
+													)}
 												>
 													<input
 														className='register__form__input'
@@ -163,10 +202,29 @@ function RegisterComponent() {
 														value={field.value}
 														autoComplete='false'
 													/>
+													<div className='error--text'>
+														{meta.touched && meta.error && (
+															<div>
+																<img
+																	src={Subtract}
+																	alt='img'
+																	data-tip
+																	data-for='registerTip'
+																/>
+																<ReactTooltip
+																	id='registerTip'
+																	place='bottom'
+																	effect='solid'
+																	backgroundColor='#E61B00'
+																>
+																	{meta.touched && meta.error && (
+																		<div>{meta.error}</div>
+																	)}
+																</ReactTooltip>
+															</div>
+														)}
+													</div>
 												</div>
-												{meta.touched && meta.error && (
-													<small className='error-message'>{meta.error}</small>
-												)}
 											</div>
 										);
 									}}
@@ -188,10 +246,27 @@ function RegisterComponent() {
 													value={field.value}
 													autoComplete='new-password'
 												/>
+												<div className='error--text'>
+													{meta.touched && meta.error && (
+														<div>
+															<img
+																src={Subtract}
+																alt='img'
+																data-tip
+																data-for='registerTip'
+															/>
+															<ReactTooltip
+																id='registerTip'
+																place='bottom'
+																effect='solid'
+																backgroundColor='#E61B00'
+															>
+																{meta.touched && meta.error && <div>{meta.error}</div>}
+															</ReactTooltip>
+														</div>
+													)}
+												</div>
 											</div>
-											{meta.touched && meta.error && (
-												<small className='error-message'>{meta.error}</small>
-											)}
 										</div>
 									)}
 								</Field>

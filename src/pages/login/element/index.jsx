@@ -15,6 +15,8 @@ import ModalLogin from './ModalLogin';
 import { useNavigate } from 'react-router-dom';
 import EyeIcon from 'shared/eye-icon';
 import _ from 'lodash';
+import ReactTooltip from 'react-tooltip';
+import Subtract from 'assets/images/Subtract.png';
 
 function LoginComponet() {
 	const [isShow, setIsShow] = useState(false);
@@ -125,10 +127,27 @@ function LoginComponet() {
 													value={field.value}
 													autoComplete='false'
 												/>
+												<div className='error--text'>
+													{meta.touched && meta.error && (
+														<div>
+															<img
+																src={Subtract}
+																alt='img'
+																data-tip
+																data-for='registerTip'
+															/>
+															<ReactTooltip
+																id='registerTip'
+																place='bottom'
+																effect='solid'
+																backgroundColor='#E61B00'
+															>
+																{meta.touched && meta.error && <div>{meta.error}</div>}
+															</ReactTooltip>
+														</div>
+													)}
+												</div>
 											</div>
-											{meta.touched && meta.error && (
-												<small className='error-message'>{meta.error}</small>
-											)}
 										</div>
 									);
 								}}
@@ -150,13 +169,25 @@ function LoginComponet() {
 												value={field.value}
 												autoComplete='new-password'
 											/>
+											<div className='error--text'>
+												{meta.touched && meta.error && (
+													<div>
+														<img src={Subtract} alt='img' data-tip data-for='registerTip' />
+														<ReactTooltip
+															id='registerTip'
+															place='bottom'
+															effect='solid'
+															backgroundColor='#E61B00'
+														>
+															{meta.touched && meta.error && <div>{meta.error}</div>}
+														</ReactTooltip>
+													</div>
+												)}
+											</div>
 											<div>
 												<EyeIcon isPublic={isPublic} handlePublic={handleChangeIcon} />
 											</div>
 										</div>
-										{meta.touched && meta.error && (
-											<small className='error-message'>{meta.error}</small>
-										)}
 									</div>
 								)}
 							</Field>
