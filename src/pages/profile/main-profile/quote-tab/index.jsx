@@ -62,6 +62,4 @@ const QuoteTab = () => {
 	);
 };
 
-QuoteTab.propTypes = {};
-
 export default QuoteTab;
