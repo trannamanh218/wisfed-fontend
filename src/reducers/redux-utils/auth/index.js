@@ -8,11 +8,13 @@ import {
 	checkTokenResetPassword,
 	forgotPasswordAPIAdmin,
 	resetPasswordAPIAdmin,
+	InforUserByEmail,
 } from 'constants/apiURL';
 import Request from 'helpers/Request';
 import Storage from 'helpers/Storage';
 import _ from 'lodash';
 import { editUserInfo } from '../user';
+import jwtDecode from 'jwt-decode';
 
 export const register = createAsyncThunk('auth/register', async (params, { rejectWithValue }) => {
 	try {
@@ -60,9 +62,10 @@ export const forgotPassword = createAsyncThunk('auth/forgotPassword', async (par
 
 export const getUserInfo = createAsyncThunk('auth/getUserInfo', async () => {
 	const accessToken = localStorage.getItem('accessToken');
+	const { email } = jwtDecode(accessToken);
 	if (accessToken !== null) {
-		const response = await Request.makeGet(checkApiToken());
-		return response;
+		const response = await Request.makeGet(InforUserByEmail(email));
+		return response.data;
 	} else {
 		return {};
 	}
