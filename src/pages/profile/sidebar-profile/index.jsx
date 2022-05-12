@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import BookSlider from 'shared/book-slider';
 import DualColumn from 'shared/dual-column';
-import ReadChallenge from 'shared/read-challenge';
 import ReadingBook from 'shared/reading-book';
 import './sidebar-profile.scss';
 import classNames from 'classnames';

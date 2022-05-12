@@ -29,7 +29,7 @@ const Sidebar = () => {
 		if (!_.isEmpty(myAllLibraryRedux)) {
 			const readingLibrary = myAllLibraryRedux.default.filter(item => item.defaultType === 'reading');
 			const books = readingLibrary[0].books;
-			setBookReading(books[books.length - 1].book);
+			setBookReading(books[books?.length - 1].book);
 		}
 	}, [myAllLibraryRedux]);
 
@@ -66,6 +66,7 @@ const Sidebar = () => {
 					</Link>
 				</div>
 			</div>
+
 			<ReadingBook bookData={bookReading} />
 			<TheBooksWantsToRead list={bookData} />
 			<RenderProgress userId={userInfo?.id} />
