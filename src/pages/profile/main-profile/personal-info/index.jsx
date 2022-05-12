@@ -35,6 +35,7 @@ const PersonalInfo = ({ userInfor }) => {
 	const item = {
 		isFollow: false,
 		isFriend: true,
+		pending: false,
 	};
 
 	useEffect(() => {

@@ -14,8 +14,9 @@ import { useFetchAuthorBooks } from 'api/book.hooks';
 import { useSelector } from 'react-redux';
 import { useFetchTargetReading } from 'api/readingTarget.hooks';
 import ProgressBarCircle from 'shared/progress-circle';
-const DEFAULT_TOGGLE_ROWS = 1;
+import RenderProgress from 'shared/render-progress';
 
+const DEFAULT_TOGGLE_ROWS = 1;
 const SidebarProfile = () => {
 	const { userId } = useParams();
 	const userDetail = useSelector(state => state.user.userDetail);
@@ -54,10 +55,7 @@ const SidebarProfile = () => {
 
 	const handleRenderTargetReading = () => {
 		if (userInfo.id === userId) {
-			if (booksReadYear.length > 0) {
-				return <ProgressBarCircle />;
-			}
-			return <ReadChallenge />;
+			return <RenderProgress booksReadYear={booksReadYear} />;
 		} else {
 			if (booksReadYear.length > 0) {
 				return <ProgressBarCircle />;

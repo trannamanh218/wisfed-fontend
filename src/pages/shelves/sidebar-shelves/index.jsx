@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import BookSlider from 'shared/book-slider';
 import MyShelvesList from 'shared/my-shelves-list';
 import QuotesLinks from 'shared/quote-links';
-import ReadChallenge from 'shared/read-challenge';
 import StatisticList from 'shared/statistic-list';
 import PropTypes from 'prop-types';
 import './sidebar-shelves.scss';
@@ -13,9 +12,10 @@ import { useFetchStatsReadingBooks } from 'api/library.hook';
 import ChartsReading from 'shared/charts-Reading';
 import { useFetchAuthorBooks } from 'api/book.hooks';
 import { useParams } from 'react-router-dom';
-import ProgressBarCircle from 'shared/progress-circle';
 import { useFetchUserParams } from 'api/user.hook';
 import { useFetchTargetReading } from 'api/readingTarget.hooks';
+import RenderProgress from 'shared/render-progress';
+
 const SidebarShelves = ({ isUpdate }) => {
 	const { userId } = useParams();
 	const { userData } = useFetchUserParams(userId);
@@ -29,8 +29,8 @@ const SidebarShelves = ({ isUpdate }) => {
 		3,
 		JSON.stringify([{ operator: 'eq', value: userInfo.id, property: 'createdBy' }])
 	);
-
 	const { readingData } = useFetchStatsReadingBooks(isUpdate);
+
 	return (
 		<div className='sidebar-shelves'>
 			<StatisticList
@@ -57,8 +57,7 @@ const SidebarShelves = ({ isUpdate }) => {
 					</Link>
 				</div>
 			)}
-
-			{booksReadYear.length > 0 ? <ProgressBarCircle /> : <ReadChallenge />}
+			<RenderProgress booksReadYear={booksReadYear} />
 			<ChartsReading />
 		</div>
 	);

@@ -10,7 +10,7 @@ import Review from 'pages/review';
 import BookShelves from 'pages/shelves';
 import ConfirmMyBook from 'pages/confirm-my-book';
 import Notification from 'pages/notification/compornent-main';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { Routes, Route } from 'react-router-dom';
 import { login, checkLogin } from 'reducers/redux-utils/auth';
@@ -32,6 +32,7 @@ import 'scss/main.scss';
 import QuoteAll from 'pages/quote/all-quote/';
 import Group from 'pages/group-page';
 import Ranks from 'pages/ranks';
+import Result from 'pages/result';
 
 function App({ children }) {
 	const dispatch = useDispatch();
@@ -55,7 +56,7 @@ function App({ children }) {
 			dispatch(checkLogin(true));
 		} catch (err) {
 			dispatch(checkLogin(false));
-			// NotificationError(JSON.parse(err));
+			NotificationError(err);
 			// const statusCode = err?.statusCode || 500;
 		}
 	};
@@ -75,6 +76,7 @@ function App({ children }) {
 			/>
 			<Routes>
 				<Route path='/top100' element={<Ranks />} />
+				<Route path='/result' element={<Result />} />
 				<Route path='/notification' element={<Notification />} />
 				<Route path='/category' element={<Category />} />
 				<Route path='/category/detail/:id' element={<CategoryDetail />} />

@@ -60,7 +60,9 @@ import { ReactComponent as StarRanksBXH } from 'assets/icons/StarRanksBXH.svg';
 import { ReactComponent as StarRanksActive } from 'assets/icons/StarRanksActive.svg';
 import { ReactComponent as ShareRanks } from 'assets/icons/ShareRanks.svg';
 import { ReactComponent as Crown } from 'assets/icons/Crown.svg';
+import { ReactComponent as TimeIcon } from 'assets/icons/Time.svg';
 export {
+	TimeIcon,
 	Crown,
 	ShareRanks,
 	StarRanksActive,

@@ -1,13 +1,12 @@
 import { STATUS_IDLE, STATUS_LOADING, STATUS_SUCCESS } from 'constants';
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { getListBooksTargetReading, updateTargetReading } from 'reducers/redux-utils/chart';
-import { NotificationError } from 'helpers/Error';
+import { getListBooksTargetReading, updateTargetReading, checkRenderTargetReading } from 'reducers/redux-utils/chart';
 import { useSelector } from 'react-redux';
 
 export const useFetchTargetReading = (userId, modalOpen, deleteModal, filter = '[]') => {
 	const [status, setStatus] = useState(STATUS_IDLE);
-	const { targetReading } = useSelector(state => state.chart);
+	const { targetReading, renderTarget } = useSelector(state => state.chart);
 	const [booksReadYear, setBooksReadYear] = useState([]);
 	const [retry, setRetry] = useState(false);
 	const dispatch = useDispatch();
@@ -23,6 +22,7 @@ export const useFetchTargetReading = (userId, modalOpen, deleteModal, filter = '
 			const query = {
 				filter,
 			};
+
 			const fetchData = async () => {
 				const params = {
 					userId: userId,
@@ -33,32 +33,34 @@ export const useFetchTargetReading = (userId, modalOpen, deleteModal, filter = '
 					if (userId) {
 						const dob = new Date();
 						const year = dob.getFullYear();
+						let newData = [];
 						if (targetReading.length > 0 && userInfo.id === userId) {
-							await dispatch(updateTargetReading([]));
-							const newData = targetReading.filter(item => item.year === year);
-							setBooksReadYear(newData);
-							setStatus(STATUS_SUCCESS);
+							dispatch(updateTargetReading([]));
+							newData = targetReading.filter(item => item.year === year);
 						} else {
-							await dispatch(updateTargetReading([]));
+							dispatch(updateTargetReading([]));
 							const data = await dispatch(getListBooksTargetReading(params)).unwrap();
-							const newData = data.filter(item => item.year === year);
-							setBooksReadYear(newData);
-							setStatus(STATUS_SUCCESS);
+							newData = data.filter(item => item.year === year);
 						}
+						if (newData.length > 0) {
+							dispatch(checkRenderTargetReading(true));
+							setBooksReadYear(newData);
+						} else {
+							dispatch(checkRenderTargetReading(false));
+						}
+						setStatus(STATUS_SUCCESS);
 					}
 				} catch (err) {
-					NotificationError(err);
-					const statusCode = err?.statusCode || 400;
+					const statusCode = err?.statusCode || 500;
 					setStatus(statusCode);
 				}
 			};
-
 			fetchData();
 		}
 		return () => {
 			isMount = false;
 		};
-	}, [retry, modalOpen, deleteModal, userId, filter]);
+	}, [retry, modalOpen, deleteModal, userId, filter, renderTarget]);
 
 	return { status, booksReadYear, retryRequest };
 };

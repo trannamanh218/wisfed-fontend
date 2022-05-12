@@ -28,7 +28,8 @@
 
 .header__search {
 	height: 56px;
-	width: 100%;
+	// width: 100%;
+	min-width: 380px;
 	padding: 0 1.5em;
 	border-radius: 16px;
 	overflow: hidden;
@@ -57,7 +58,9 @@
 .header__nav {
 	flex-grow: 1;
 	display: flex;
-	justify-content: space-around;
+	// justify-content: space-around;
+	justify-content: flex-end;
+	gap: 16px;
 	margin-right: 32px;
 }
 

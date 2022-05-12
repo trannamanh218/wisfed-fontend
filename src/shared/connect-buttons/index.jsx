@@ -3,16 +3,9 @@ import React, { useState } from 'react';
 import Button from 'shared/button';
 import PropTypes from 'prop-types';
 import './connect-buttons.scss';
-import {
-	makeFriendRequest,
-	addFollower,
-	unFollower,
-	ReplyFriendRequest,
-	unFriendRequest,
-} from 'reducers/redux-utils/user';
+import { makeFriendRequest, addFollower, unFollower, unFriendRequest } from 'reducers/redux-utils/user';
 import { useDispatch } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
-import { NavItem } from 'react-bootstrap';
 
 const ConnectButtons = ({ data, direction, item }) => {
 	const dispatch = useDispatch();
@@ -77,7 +70,7 @@ const ConnectButtons = ({ data, direction, item }) => {
 	const handleUnFriend = () => {
 		setModalUnfriends(false);
 		try {
-			// dispatch(unFriendRequest(item.id)).unwrap();
+			dispatch(unFriendRequest(item.id)).unwrap();
 			setUnFriend(false);
 		} catch (err) {
 			NotificationError(err);
@@ -98,7 +91,7 @@ const ConnectButtons = ({ data, direction, item }) => {
 	};
 	const handleUnFollow = () => {
 		try {
-			dispatch(unFollower(NavItem.id)).unwrap();
+			dispatch(unFollower(item.id)).unwrap();
 			setToggleAddFollow(true);
 			setToggleUnFollow(false);
 		} catch (err) {
@@ -118,7 +111,11 @@ const ConnectButtons = ({ data, direction, item }) => {
 		if (item.isFriend) {
 			return unFriend ? buttonUnFriend() : togglePendingFriend ? buttonAddFriend() : buttonPendingFriend();
 		} else {
-			return togglePendingFriend ? buttonAddFriend() : buttonPendingFriend();
+			if (item.pending) {
+				return buttonPendingFriend();
+			} else {
+				return togglePendingFriend ? buttonAddFriend() : buttonPendingFriend();
+			}
 		}
 	};
 
