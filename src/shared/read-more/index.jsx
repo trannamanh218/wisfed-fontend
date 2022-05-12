@@ -6,6 +6,7 @@ import './read-more.scss';
 const ReadMore = ({ text, length = 450 }) => {
 	const [showLess, setShowLess] = useState(true);
 	const [showReadmore, setShowReadmore] = useState(false);
+	const [textFormated, setTextFormated] = useState('');
 
 	useEffect(() => {
 		if (text && text.length > length) {
@@ -16,12 +17,16 @@ const ReadMore = ({ text, length = 450 }) => {
 	}, [text]);
 
 	const handleShow = () => {
-		setShowLess(prev => !prev);
+		setShowLess(!showLess);
 	};
+
+	useEffect(() => {
+		setTextFormated(text.replace(/<[^>]+>/g, ''));
+	}, []);
 
 	return (
 		<p className={classNames('read-more')}>
-			{showReadmore ? <>{showLess ? `${text.slice(0, length)}...` : text}</> : text}
+			{showReadmore ? <>{showLess ? `${textFormated.slice(0, length)}...` : textFormated}</> : textFormated}
 			{showReadmore && (
 				<button className='read-more__btn' onClick={handleShow}>
 					{showLess ? 'Tiếp tục đọc' : 'Thu gọn'}

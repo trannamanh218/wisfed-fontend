@@ -76,7 +76,7 @@ export const addBookToLibraryAPI = id => `/api/v1/libraries/${id}/addBook`;
 export const removeBookFromLibraryAPI = id => `/api/v1/libraries/${id}/removeBook`;
 export const listBookLibraryAPI = id => `/api/v1/libraries/listBookLibrary/${id}`;
 export const updateBookAPI = id => `api/v1/libraries/updateBookLibrary/${id}`;
-export const myLibraryAPI = id => `/api/v1/libraries/libraryBy/${id}`;
+export const allLibraryListAPI = id => `/api/v1/libraries/libraryBy/${id}`;
 export const addBookToDefaultLibraryAPI = type => `/api/v1/libraries/addBook/${type}`;
 export const allBookInLibraryAPI = id => `/api/v1/libraries/listBookAllLibrary/${id}`;
 export const removeAllBookAPI = '/api/v1/libraries/removeAllBook ';

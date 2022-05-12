@@ -9,6 +9,7 @@ import { useFetchBookInDefaultLibrary, useFetchStatsReadingBooks } from 'api/lib
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { useFetchTargetReading } from 'api/readingTarget.hooks';
+import { useState, useEffect } from 'react';
 import RenderProgress from 'shared/render-progress';
 
 const Sidebar = () => {
@@ -20,7 +21,19 @@ const Sidebar = () => {
 	]);
 	const { booksReadYear } = useFetchTargetReading(userInfo?.id);
 	const { bookData } = useFetchBookInDefaultLibrary(1, 10, fiterBook);
-	const { readingData, booksRead } = useFetchStatsReadingBooks();
+	const { readingData } = useFetchStatsReadingBooks();
+
+	const [bookReading, setBookReading] = useState({});
+
+	const myAllLibraryRedux = useSelector(state => state.library.myAllLibrary);
+
+	useEffect(() => {
+		if (!_.isEmpty(myAllLibraryRedux)) {
+			const readingLibrary = myAllLibraryRedux.default.filter(item => item.defaultType === 'reading');
+			const books = readingLibrary[0].books;
+			setBookReading(books[books.length - 1].book);
+		}
+	}, [myAllLibraryRedux]);
 
 	return (
 		<div className='sidebar'>
@@ -55,7 +68,7 @@ const Sidebar = () => {
 					</Link>
 				</div>
 			</div>
-			<ReadingBook bookData={booksRead} />
+			<ReadingBook bookData={bookReading} />
 			<TheBooksWantsToRead list={bookData} />
 			<RenderProgress booksReadYear={booksReadYear} />
 		</div>

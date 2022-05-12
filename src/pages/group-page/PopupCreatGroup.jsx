@@ -29,8 +29,6 @@ const PopupCreatGroup = ({ handleClose }) => {
 	// 	{ value: 'private', title: 'Riêng tư', img: <CheckIcon /> },
 	// ];
 
-	console.log(acceptedFiles);
-
 	const getDataAuthor = async () => {
 		const params = {
 			filter: JSON.stringify([

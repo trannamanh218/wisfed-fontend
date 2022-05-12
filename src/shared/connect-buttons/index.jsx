@@ -22,6 +22,7 @@ const ConnectButtons = ({ data, direction, item }) => {
 			</Button>
 		);
 	};
+
 	const buttonAddFollow = () => {
 		return (
 			<Button className=' connect-button follow' isOutline={true} name='friend' onClick={handleFollow}>
@@ -39,6 +40,7 @@ const ConnectButtons = ({ data, direction, item }) => {
 			</Button>
 		);
 	};
+
 	const buttonUnFriend = () => {
 		return (
 			<Button className='connect-button' onClick={handleUnFriend}>
@@ -47,6 +49,7 @@ const ConnectButtons = ({ data, direction, item }) => {
 			</Button>
 		);
 	};
+
 	const buttonPendingFriend = () => {
 		return (
 			<Button className='connect-button'>

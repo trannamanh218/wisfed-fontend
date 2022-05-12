@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Button from 'shared/button';
 import NormalContainer from 'components/layout/normal-container';
 import SearchField from 'shared/search-field';
@@ -48,7 +48,7 @@ const DetailFriend = () => {
 	};
 
 	useEffect(async () => {
-		const query = generateQuery(1, 10, filter);
+		const query = generateQuery(0, 10, filter);
 		const userId = userInfo.id;
 		try {
 			if (!_.isEmpty(userInfo)) {
@@ -81,7 +81,7 @@ const DetailFriend = () => {
 		} catch (err) {
 			NotificationError(err);
 		}
-	}, [userInfo, dispatch, filter]);
+	}, [userInfo, filter]);
 
 	const handleBack = () => {
 		navigate('/friends');

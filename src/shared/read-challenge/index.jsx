@@ -10,6 +10,7 @@ import { NotificationError } from 'helpers/Error';
 function ReadChallenge({ modalOpen, setModalOpen }) {
 	const [inputValue, setInputValue] = useState(0);
 	const dispatch = useDispatch();
+
 	useEffect(() => {
 		if (inputValue < 0) {
 			setInputValue(0);
