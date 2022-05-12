@@ -24,7 +24,7 @@ const Sidebar = () => {
 	const myAllLibraryRedux = useSelector(state => state.library.myAllLibrary);
 
 	useEffect(() => {
-		if (!_.isEmpty(myAllLibraryRedux)) {
+		if (!_.isEmpty(myAllLibraryRedux) && myAllLibraryRedux.default.length > 0) {
 			const readingLibrary = myAllLibraryRedux.default.filter(item => item.defaultType === 'reading');
 			const readingBooks = readingLibrary[0].books;
 			const wantToReadLibrary = myAllLibraryRedux.default.filter(item => item.defaultType === 'wantToRead');
@@ -52,9 +52,10 @@ const Sidebar = () => {
 					</div>
 				)}
 			</div>
-			<div className='sidebar__block'>
-				<h4 className='sidebar__block__title'>Giá sách</h4>
-				{!_.isEmpty(myAllLibraryRedux) && myAllLibraryRedux.default.length > 0 && (
+
+			{!_.isEmpty(myAllLibraryRedux) && myAllLibraryRedux.default.length > 0 && (
+				<div className='sidebar__block'>
+					<h4 className='sidebar__block__title'>Giá sách</h4>
 					<div className='dualColumn'>
 						<ul className='dualColumn-list'>
 							{myAllLibraryRedux.default.map(item => (
@@ -65,15 +66,15 @@ const Sidebar = () => {
 							))}
 						</ul>
 					</div>
-				)}
-				<Link
-					style={{ marginTop: '4px' }}
-					to={`/shelves/${userInfo.id}`}
-					className='sidebar__view-more-btn--blue'
-				>
-					Xem thêm
-				</Link>
-			</div>
+					<Link
+						style={{ marginTop: '4px' }}
+						to={`/shelves/${userInfo.id}`}
+						className='sidebar__view-more-btn--blue'
+					>
+						Xem thêm
+					</Link>
+				</div>
+			)}
 
 			<ReadingBook bookData={bookReading} />
 
