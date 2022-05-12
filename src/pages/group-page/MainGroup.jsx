@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-// import PopupCreatGroup from './PopupCreatGroup';
+import PopupCreatGroup from './PopupCreatGroup';
 // import PopupInviteFriend from './popup-group/popupInviteFriend';
 // import PopupQuestion from './popup-group/popupQuestion';
 // import MiniPopup from './popup-group/mini-popup';
@@ -117,6 +117,14 @@ const MainGroup = () => {
 					)}
 				</div>
 			</div> */}
+
+			{/* {isShow ? (
+				<div className='popup-container'>
+					<PopupCreatGroup handleClose={handleClose} />
+				</div>
+			) : (
+				''
+			)} */}
 
 			<div className='group-main__container'>
 				<SidebarGroupLef handleChange={handleChange} data={detailGroup} />

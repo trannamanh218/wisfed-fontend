@@ -84,7 +84,13 @@ const PopupCreatGroup = ({ handleClose }) => {
 	}, [inputAuthors]);
 
 	useEffect(() => {
-		if (_.isEmpty(imgUrl, listAuthors, listHashtags, kindOfGroupRef.current, inputDiscription, inputNameGroup)) {
+		if (
+			imgUrl !== undefined &&
+			listAuthors !== [] &&
+			listHashtags !== [] &&
+			inputDiscription !== '' &&
+			inputNameGroup !== ''
+		) {
 			setIsShowBtn(true);
 		}
 	}, [imgUrl, listAuthors, listHashtags, kindOfGroup, inputDiscription, inputNameGroup]);
@@ -107,6 +113,8 @@ const PopupCreatGroup = ({ handleClose }) => {
 			NotificationError(err);
 		}
 	};
+
+	console.log(listHashtags);
 
 	const listKindOfGroup = [
 		{ value: 'book', title: 'Sách' },
@@ -149,19 +157,23 @@ const PopupCreatGroup = ({ handleClose }) => {
 
 			<div>
 				<div className='upload-image__wrapper'>
-					<Dropzone>
-						{() => (
-							<div {...getRootProps()}>
-								<input {...getInputProps()} />
-								<div className='dropzone upload-image'>
-									<CameraIcon />
-									<Image className='upload-image__icon' />
-									<p className='upload-image__description'>Thêm ảnh từ thiết bị</p>
-									<span>hoặc kéo thả</span>
+					{imgUrl ? (
+						<img style={{ width: '700px', height: '266px' }} src={imgUrl} alt='img' />
+					) : (
+						<Dropzone>
+							{() => (
+								<div {...getRootProps()}>
+									<input {...getInputProps()} />
+									<div className='dropzone upload-image'>
+										<CameraIcon />
+										<Image className='upload-image__icon' />
+										<p className='upload-image__description'>Thêm ảnh từ thiết bị</p>
+										<span>hoặc kéo thả</span>
+									</div>
 								</div>
-							</div>
-						)}
-					</Dropzone>
+							)}
+						</Dropzone>
+					)}
 				</div>
 			</div>
 			<div className='form-field-wrapper'>
@@ -261,7 +273,7 @@ const PopupCreatGroup = ({ handleClose }) => {
 						/>
 					</div>
 				</div>
-				<div className='form-button' onClick={() => creatGroup()}>
+				<div className={!isShowBtn ? 'disableBtn' : `form-button`} onClick={() => creatGroup()}>
 					<button>Tạo nhóm</button>
 				</div>
 			</div>
