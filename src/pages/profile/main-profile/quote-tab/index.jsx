@@ -1,17 +1,20 @@
 import { useEffect, useState } from 'react';
 import QuoteList from 'shared/quote-list';
-import { getQuoteList } from 'reducers/redux-utils/quote';
+import { getQuoteList, getMyLikedQuotes } from 'reducers/redux-utils/quote';
 import { useDispatch } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
+import { useParams } from 'react-router-dom';
 
 const QuoteTab = () => {
 	const [myQuoteList, setMyQuoteList] = useState([]);
 	const [myFavoriteQuoteList, setMyFavoriteQuoteList] = useState([]);
 
 	const dispatch = useDispatch();
+	const { userId } = useParams();
 
 	useEffect(() => {
 		getMyQuoteList();
+		getMyFavoriteQuoteList();
 	}, []);
 
 	const getMyQuoteList = async () => {
@@ -20,12 +23,26 @@ const QuoteTab = () => {
 				start: 0,
 				limit: 3,
 				sort: JSON.stringify([{ property: 'createdAt', direction: 'DESC' }]),
-				filter: JSON.stringify([
-					{ operator: 'eq', value: 'bfdb3971-de4c-4c2b-bbbe-fbb36770031a', property: 'createdBy' },
-				]),
+				filter: JSON.stringify([{ operator: 'eq', value: userId, property: 'createdBy' }]),
 			};
 			const quotesList = await dispatch(getQuoteList(params)).unwrap();
-			setMyQuoteList(myQuoteList.concat(quotesList));
+			setMyQuoteList(quotesList);
+		} catch (err) {
+			NotificationError(err);
+		}
+	};
+
+	const getMyFavoriteQuoteList = async () => {
+		try {
+			const params = {
+				start: 0,
+				limit: 3,
+				sort: JSON.stringify([{ property: 'createdAt', direction: 'DESC' }]),
+			};
+			const res = await dispatch(getMyLikedQuotes(params)).unwrap();
+			const quoteList = [];
+			res.forEach(item => quoteList.push({ ...item, categories: [], tags: [] }));
+			setMyFavoriteQuoteList(quoteList);
 		} catch (err) {
 			NotificationError(err);
 		}
