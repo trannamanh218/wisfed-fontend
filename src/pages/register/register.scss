@@ -90,19 +90,51 @@
 	margin-top: 19px;
 	text-align: left;
 }
+.register__form__group1 {
+	display: flex;
+	border-radius: 8px;
+	align-items: center;
+	overflow: hidden;
+	position: relative;
+	&.error {
+		border-color: red;
+	}
+
+	.error--text {
+		position: absolute;
+		right: 7px;
+		width: 32px !important;
+		height: 32px !important;
+		img {
+			margin-top: 7px;
+			margin-left: 13px;
+		}
+	}
+}
 
 .register__form__group {
 	display: flex;
 	border-radius: 8px;
 	align-items: center;
 	overflow: hidden;
+	position: relative;
 	&.error {
 		border-color: red;
 	}
 }
 .error-message-name {
 	width: 160px !important;
+	position: absolute;
+	top: 3px;
+	left: 0px;
 }
+#tooltip {
+	background-color: #18bb0c;
+}
+.error-message {
+	margin-left: -50px;
+}
+
 .register__form__link {
 	display: flex;
 	justify-content: center;
@@ -174,4 +206,13 @@
 	text-align: center;
 	letter-spacing: 0.75px;
 	color: #2d2c42;
+}
+
+#registerTip {
+	border-radius: 12px;
+
+	color: #fcfcfc;
+	font-family: 500;
+	letter-spacing: 0.25px;
+	align-items: center;
 }

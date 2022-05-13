@@ -1,5 +1,14 @@
 .sidebar-category {
 	&__list {
 		margin-bottom: 3.75rem;
+		.dualColumn {
+			.dualColumn-btn {
+				margin-left: 194px;
+				span {
+					color: #0576f0;
+					text-decoration: underline;
+				}
+			}
+		}
 	}
 }

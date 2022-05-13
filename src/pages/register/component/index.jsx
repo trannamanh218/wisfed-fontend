@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import '../register.scss';
 import Logo from 'assets/images/Logo 2.png';
+import Subtract from 'assets/images/Subtract.png';
 import ImgRegister from 'assets/images/anh-1 1.png';
 import { Formik, Field, Form } from 'formik';
 import classNames from 'classnames';
@@ -13,6 +14,7 @@ import Circle from 'shared/loading/circle';
 
 function RegisterComponent() {
 	const dispatch = useDispatch();
+	const [showImagePopover, setShowImagePopover] = useState(false);
 	const [isShow, setIsShow] = useState(false);
 	const [dataModal, setDataModal] = useState({});
 	const isFetching = useSelector(state => state.auth.isFetching);
@@ -107,12 +109,50 @@ function RegisterComponent() {
 															value={field.value}
 															autoComplete='false'
 														/>
+														<div
+															className='error--text'
+															style={{
+																position: 'fixed',
+																right: '642px',
+																zIndex: '1000',
+															}}
+														>
+															{meta.touched && meta.error && (
+																<div
+																	className='login__form__error'
+																	onMouseOver={() => setShowImagePopover(1)}
+																	onMouseLeave={() => setShowImagePopover(0)}
+																>
+																	<img
+																		src={Subtract}
+																		alt='img'
+																		data-tip
+																		data-for='registerTip'
+																	/>
+																	<div
+																		className={classNames(
+																			'login__form__error__popover-container',
+																			{
+																				'show': showImagePopover === 1,
+																			}
+																		)}
+																	>
+																		<div>
+																			<div className='error--textbox'>
+																				<div className='error--textbox--logo'></div>
+																				<div className='error--textbox--error'></div>
+																			</div>
+																			<div className='Login__form__error__popover'>
+																				{meta.touched && meta.error && (
+																					<div>{meta.error}</div>
+																				)}
+																			</div>
+																		</div>
+																	</div>
+																</div>
+															)}
+														</div>
 													</div>
-													{meta.touched && meta.error && (
-														<small className='error-message error-message-name'>
-															{meta.error}
-														</small>
-													)}
 												</div>
 											);
 										}}
@@ -135,11 +175,50 @@ function RegisterComponent() {
 															autoComplete='false'
 														/>
 													</div>
-													{meta.touched && meta.error && (
-														<small className='error-message error-message-name'>
-															{meta.error}
-														</small>
-													)}
+													<div
+														className='error--text'
+														style={{
+															position: 'fixed',
+															right: '455px',
+															zIndex: '1000',
+															top: '338px',
+														}}
+													>
+														{meta.touched && meta.error && (
+															<div
+																className='login__form__error'
+																onMouseOver={() => setShowImagePopover(2)}
+																onMouseLeave={() => setShowImagePopover(0)}
+															>
+																<img
+																	src={Subtract}
+																	alt='img'
+																	data-tip
+																	data-for='registerTip'
+																/>
+																<div
+																	className={classNames(
+																		'login__form__error__popover-container',
+																		{
+																			'show': showImagePopover === 2,
+																		}
+																	)}
+																>
+																	<div>
+																		<div className='error--textbox'>
+																			<div className='error--textbox--logo'></div>
+																			<div className='error--textbox--error'></div>
+																		</div>
+																		<div className='Login__form__error__popover'>
+																			{meta.touched && meta.error && (
+																				<div>{meta.error}</div>
+																			)}
+																		</div>
+																	</div>
+																</div>
+															</div>
+														)}
+													</div>
 												</div>
 											);
 										}}
@@ -151,9 +230,12 @@ function RegisterComponent() {
 										return (
 											<div className='register__form__field'>
 												<div
-													className={classNames('register__form__group', {
-														'error': meta.touched && meta.error,
-													})}
+													className={classNames(
+														'register__form__group register_form_group1',
+														{
+															'error': meta.touched && meta.error,
+														}
+													)}
 												>
 													<input
 														className='register__form__input'
@@ -163,10 +245,46 @@ function RegisterComponent() {
 														value={field.value}
 														autoComplete='false'
 													/>
+													<div
+														className='error--text'
+														style={{ position: 'fixed', right: '452px', zIndex: '1000' }}
+													>
+														{meta.touched && meta.error && (
+															<div
+																className='login__form__error'
+																onMouseOver={() => setShowImagePopover(3)}
+																onMouseLeave={() => setShowImagePopover(0)}
+															>
+																<img
+																	src={Subtract}
+																	alt='img'
+																	data-tip
+																	data-for='registerTip'
+																/>
+																<div
+																	className={classNames(
+																		'login__form__error__popover-container',
+																		{
+																			'show': showImagePopover === 3,
+																		}
+																	)}
+																>
+																	<div>
+																		<div className='error--textbox'>
+																			<div className='error--textbox--logo'></div>
+																			<div className='error--textbox--error'></div>
+																		</div>
+																		<div className='Login__form__error__popover'>
+																			{meta.touched && meta.error && (
+																				<div>{meta.error}</div>
+																			)}
+																		</div>
+																	</div>
+																</div>
+															</div>
+														)}
+													</div>
 												</div>
-												{meta.touched && meta.error && (
-													<small className='error-message'>{meta.error}</small>
-												)}
 											</div>
 										);
 									}}
@@ -188,10 +306,46 @@ function RegisterComponent() {
 													value={field.value}
 													autoComplete='new-password'
 												/>
+												<div
+													className='error--text'
+													style={{ position: 'fixed', right: '452px', zIndex: '1000' }}
+												>
+													{meta.touched && meta.error && (
+														<div
+															className='login__form__error'
+															onMouseOver={() => setShowImagePopover(4)}
+															onMouseLeave={() => setShowImagePopover(0)}
+														>
+															<img
+																src={Subtract}
+																alt='img'
+																data-tip
+																data-for='registerTip'
+															/>
+															<div
+																className={classNames(
+																	'login__form__error__popover-container',
+																	{
+																		'show': showImagePopover === 4,
+																	}
+																)}
+															>
+																<div>
+																	<div className='error--textbox'>
+																		<div className='error--textbox--logo'></div>
+																		<div className='error--textbox--error'></div>
+																	</div>
+																	<div className='Login__form__error__popover'>
+																		{meta.touched && meta.error && (
+																			<div>{meta.error}</div>
+																		)}
+																	</div>
+																</div>
+															</div>
+														</div>
+													)}
+												</div>
 											</div>
-											{meta.touched && meta.error && (
-												<small className='error-message'>{meta.error}</small>
-											)}
 										</div>
 									)}
 								</Field>

@@ -16,7 +16,10 @@ import { useNavigate } from 'react-router-dom';
 import EyeIcon from 'shared/eye-icon';
 import _ from 'lodash';
 
+import Subtract from 'assets/images/Subtract.png';
+
 function LoginComponet() {
+	const [showImagePopover, setShowImagePopover] = useState(false);
 	const [isShow, setIsShow] = useState(false);
 	const [dataModal, setDataModal] = useState({});
 	const [isPublic, setIsPublic] = useState(false);
@@ -125,10 +128,43 @@ function LoginComponet() {
 													value={field.value}
 													autoComplete='false'
 												/>
+												<div className='error--text'>
+													{meta.touched && meta.error && (
+														<div
+															className='login__form__error'
+															onMouseOver={() => setShowImagePopover(1)}
+															onMouseLeave={() => setShowImagePopover(0)}
+														>
+															<img
+																src={Subtract}
+																alt='img'
+																data-tip
+																data-for='registerTip'
+															/>
+															<div
+																className={classNames(
+																	'login__form__error__popover-container',
+																	{
+																		'show': showImagePopover === 1,
+																	}
+																)}
+															>
+																<div>
+																	<div className='error--textbox'>
+																		<div className='error--textbox--logo'></div>
+																		<div className='error--textbox--error'></div>
+																	</div>
+																	<div className='Login__form__error__popover'>
+																		{meta.touched && meta.error && (
+																			<div>{meta.error}</div>
+																		)}
+																	</div>
+																</div>
+															</div>
+														</div>
+													)}
+												</div>
 											</div>
-											{meta.touched && meta.error && (
-												<small className='error-message'>{meta.error}</small>
-											)}
 										</div>
 									);
 								}}
@@ -153,10 +189,38 @@ function LoginComponet() {
 											<div>
 												<EyeIcon isPublic={isPublic} handlePublic={handleChangeIcon} />
 											</div>
+											<div className='error--text'>
+												{meta.touched && meta.error && (
+													<div
+														className='login__form__error'
+														onMouseOver={() => setShowImagePopover(2)}
+														onMouseLeave={() => setShowImagePopover(0)}
+													>
+														<img src={Subtract} alt='img' data-tip data-for='registerTip' />
+														<div
+															className={classNames(
+																'login__form__error__popover-container',
+																{
+																	'show': showImagePopover === 2,
+																}
+															)}
+														>
+															<div>
+																<div className='error--textbox'>
+																	<div className='error--textbox--logo'></div>
+																	<div className='error--textbox--error'></div>
+																</div>
+																<div className='Login__form__error__popover'>
+																	{meta.touched && meta.error && (
+																		<div>{meta.error}</div>
+																	)}
+																</div>
+															</div>
+														</div>
+													</div>
+												)}
+											</div>
 										</div>
-										{meta.touched && meta.error && (
-											<small className='error-message'>{meta.error}</small>
-										)}
 									</div>
 								)}
 							</Field>
