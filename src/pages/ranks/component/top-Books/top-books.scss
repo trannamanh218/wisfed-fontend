@@ -36,10 +36,16 @@
 						text-align: center;
 					}
 				}
-
 				.select-box__list {
 					background: #fbf7f2;
 					max-width: 220px;
+				}
+			}
+			.disable {
+				background-color: #cccccc !important;
+				cursor: not-allowed;
+				.select-box__value {
+					color: #666666 !important;
 				}
 			}
 		}

@@ -47,11 +47,11 @@
 	.progress-bar {
 		border-radius: 5px !important;
 	}
-	&.fullBar {
-		.progress-bar {
-			background-color: $success-light;
-		}
-	}
+	// &.fullBar {
+	// 	.progress-bar {
+	// background-color: $success-light;
+	// 	}
+	// }
 }
 
 .bookcase__item__book-percent {
@@ -63,9 +63,9 @@
 	font-size: 15px;
 	line-height: 21px;
 	color: $ash-label;
-	&.fullBar {
-		color: $success-light;
-	}
+	// &.fullBar {
+	// color: $success-light;
+	// }
 }
 
 .bookcase__item__button {

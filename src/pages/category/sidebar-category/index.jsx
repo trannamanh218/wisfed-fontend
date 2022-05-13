@@ -25,13 +25,16 @@ const SidebarCategory = ({ status, viewCategoryDetail }) => {
 	return (
 		<div className='sidebar-category'>
 			<Circle loading={status === STATUS_LOADING} />
-			<StatisticList
-				title='Chủ đề yêu thích'
-				background='light'
-				className='sidebar-category__list'
-				isBackground={false}
-				list={favoriteCategoryData.rows}
-			/>
+			{favoriteCategoryData.length > 0 && (
+				<StatisticList
+					title='Chủ đề yêu thích'
+					background='light'
+					className='sidebar-category__list'
+					isBackground={false}
+					list={favoriteCategoryData.rows}
+				/>
+			)}
+
 			<TopicColumn
 				className='sidebar-category__topics'
 				topics={rows}

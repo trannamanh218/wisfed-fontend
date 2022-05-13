@@ -13,13 +13,25 @@ import SettingsQuestions from './AminSettings/SettingsQuestions';
 import ManageJoin from './AminSettings/ManageJoin';
 import PropTypes from 'prop-types';
 import PostWatting from './AminSettings/PostWatting';
+import PopupInviteFriend from '../popupInviteFriend';
 
 function MainGroupComponent({ handleChange, keyChange, data, backgroundImage }) {
 	const [key, setKey] = useState('intro');
 	const { groupType, description, memberGroups, name } = data;
+	const [isShow, setIsShow] = useState(false);
 
 	return (
 		<div className='group-main-component__container'>
+			<div>
+				=
+				{isShow ? (
+					<div className='popup-container'>
+						<PopupInviteFriend handleClose={() => setIsShow(!isShow)} />
+					</div>
+				) : (
+					''
+				)}
+			</div>
 			<div className='group__background'>
 				<div>
 					<img
@@ -52,7 +64,7 @@ function MainGroupComponent({ handleChange, keyChange, data, backgroundImage }) 
 								Yêu cầu tham gia
 							</button>
 						</div>
-						<div className='group-name__invite-group'>
+						<div className='group-name__invite-group' onClick={() => setIsShow(!isShow)}>
 							<button>
 								<ActionPlusGroup />
 								Mời

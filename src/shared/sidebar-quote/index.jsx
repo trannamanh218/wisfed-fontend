@@ -2,6 +2,7 @@ import MyShelvesList from 'shared/my-shelves-list';
 import StatisticList from 'shared/statistic-list';
 import ToggleList from 'shared/toggle-list';
 import './sidebar-quote.scss';
+import { useSelector } from 'react-redux';
 
 const SidebarQuote = () => {
 	const hashtagList = [
@@ -14,19 +15,7 @@ const SidebarQuote = () => {
 		{ id: 4, title: 'Kinh doanh' },
 	];
 
-	const statusList = [
-		{ name: 'Muốn đọc', quantity: 30 },
-		{ name: 'Đang đọc', quantity: 110 },
-		{ name: 'Đã đọc', quantity: 8 },
-	];
-
-	const shelfList = [
-		{ name: 'giasach2021', quantity: 30 },
-		{ name: 'sach cua toi', quantity: 110 },
-		{ name: 'tu sanch thang 1', quantity: 8 },
-		{ name: 'tu sanch thang 2', quantity: 8 },
-		{ name: 'tu sanch thang 3', quantity: 8 },
-	];
+	const myAllLibrary = useSelector(state => state.library.myAllLibrary);
 
 	return (
 		<div className='sidebar-my-quote'>
@@ -36,9 +25,10 @@ const SidebarQuote = () => {
 				title='Trạng thái đọc'
 				background='light'
 				isBackground={true}
-				list={statusList}
+				list={myAllLibrary.default}
+				pageText={false}
 			/>
-			<MyShelvesList list={shelfList} />
+			<MyShelvesList list={myAllLibrary.custom} />
 		</div>
 	);
 };

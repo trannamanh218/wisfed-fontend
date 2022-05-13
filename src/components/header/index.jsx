@@ -9,8 +9,12 @@ import UserAvatar from 'shared/user-avatar';
 import NotificationModal from 'pages/notification/';
 import { useDispatch } from 'react-redux';
 import { backgroundToggle } from 'reducers/redux-utils/notificaiton';
+import { useVisible } from 'shared/hooks';
+import SearchAllModal from 'shared/search-all';
 
 const Header = () => {
+	const { ref: showRef, isVisible: isShow, setIsVisible: setIsShow } = useVisible(false);
+
 	const [activeLink, setActiveLink] = useState('/');
 	const location = useLocation();
 	const { pathname } = location;
@@ -36,8 +40,14 @@ const Header = () => {
 				</Link>
 				<div className='header__search'>
 					<img className='header__search__icon' src={SearchIcon} alt='search-icon' />
-					<input className='header__search__input' placeholder='Tìm kiếm trên Wisfeed' />
+					<input
+						className='header__search__input'
+						placeholder='Tìm kiếm trên Wisfeed'
+						onClick={() => setIsShow(true)}
+						disabled={isShow}
+					/>
 				</div>
+				{isShow ? <SearchAllModal showRef={showRef} /> : ''}
 			</div>
 
 			<ul className='header__nav'>

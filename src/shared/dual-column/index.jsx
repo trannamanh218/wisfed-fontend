@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import caretIcon from 'assets/images/caret.png';
@@ -7,7 +7,7 @@ import './dual-column.scss';
 import { NUMBER_ROWS } from 'constants';
 
 const DualColumn = props => {
-	const { list, background, isBackground } = props;
+	const { list, background, isBackground, pageText = true } = props;
 	const [isExpand, setIsExpand] = useState(false);
 	const [rows, setRows] = useState(DEFAULT_TOGGLE_ROWS);
 
@@ -40,17 +40,17 @@ const DualColumn = props => {
 					{list.slice(0, rows).map((item, index) => (
 						<li className={classNames('dualColumn-item', { 'has-background': isBackground })} key={index}>
 							<span className='dualColumn-item__title'>{item.name}</span>
-							<span className='dualColumn-item__number'>{item.quantity}</span>
+
+							{pageText ? (
+								<span className='dualColumn-item__number'>{item.books.length} cuốn</span>
+							) : (
+								<span className='dualColumn-item__number no-page-text'>{item.books.length}</span>
+							)}
 						</li>
 					))}
 				</ul>
 				{list.length > DEFAULT_TOGGLE_ROWS && (
 					<button className='dualColumn-btn' onClick={handleViewMore}>
-						<img
-							className={classNames('view-caret', { 'view-more': isExpand })}
-							src={caretIcon}
-							alt='caret-icon'
-						/>
 						<span>{isExpand ? 'Rút gọn' : 'Xem thêm'}</span>
 					</button>
 				)}
@@ -80,6 +80,7 @@ DualColumn.propTypes = {
 		'light',
 		'dark',
 	]),
+	pageText: PropTypes.bool,
 };
 
 export default DualColumn;
