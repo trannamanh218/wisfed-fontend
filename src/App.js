@@ -13,7 +13,7 @@ import Notification from 'pages/notification/compornent-main';
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Routes, Route } from 'react-router-dom';
-import { login, checkLogin } from 'reducers/redux-utils/auth';
+import { checkLogin } from 'reducers/redux-utils/auth';
 import { ToastContainer } from 'react-toastify';
 import Login from 'pages/login/element';
 import Register from 'pages/register/component';
@@ -40,14 +40,12 @@ function App({ children }) {
 		fetchLogin();
 	}, []);
 
-	const fetchLogin = async params => {
+	const fetchLogin = async () => {
 		try {
-			await dispatch(getUserInfo(params)).unwrap();
+			await dispatch(getUserInfo()).unwrap();
 			dispatch(checkLogin(true));
 		} catch (err) {
 			dispatch(checkLogin(false));
-			// NotificationError(JSON.parse(err));
-			// const statusCode = err?.statusCode || 500;
 		}
 	};
 

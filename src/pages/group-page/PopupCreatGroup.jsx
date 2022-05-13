@@ -12,7 +12,6 @@ import Dropzone from 'react-dropzone';
 import { useDropzone } from 'react-dropzone';
 import { uploadImage } from 'reducers/redux-utils/common';
 import { NotificationError } from 'helpers/Error';
-import _ from 'lodash';
 
 const PopupCreatGroup = ({ handleClose }) => {
 	const [inputNameGroup, setInputNameGroup] = useState('');
@@ -113,8 +112,6 @@ const PopupCreatGroup = ({ handleClose }) => {
 			NotificationError(err);
 		}
 	};
-
-	console.log(listHashtags);
 
 	const listKindOfGroup = [
 		{ value: 'book', title: 'Sách' },
