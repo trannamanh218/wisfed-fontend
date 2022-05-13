@@ -1,4 +1,3 @@
-import React from 'react';
 import ConnectButtons from 'shared/connect-buttons';
 import UserAvatar from 'shared/user-avatar';
 import './author-card.scss';

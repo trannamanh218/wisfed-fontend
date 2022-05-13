@@ -79,7 +79,7 @@ const Sidebar = () => {
 
 			{wantToReadList.length > 0 && <TheBooksWantsToRead list={wantToReadList} />}
 
-			{booksReadYear.length > 0 && !_.isEmpty(userInfo) ? <ProgressBarCircle /> : <ReadChallenge />}
+			<RenderProgress booksReadYear={booksReadYear} />
 		</div>
 	);
 };

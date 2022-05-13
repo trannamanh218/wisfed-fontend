@@ -164,10 +164,6 @@ const librarySlice = createSlice({
 	},
 
 	reducers: {
-		updateLibrary: (state, action) => {
-			const { rows, count } = action.payload;
-			state.libraryData = { rows, count };
-		},
 		updateAuthLibrary: (state, action) => {
 			state.authLibraryData = action.payload;
 		},
@@ -226,4 +222,4 @@ const librarySlice = createSlice({
 
 const library = librarySlice.reducer;
 export default library;
-export const { updateLibrary, updateAuthLibrary, getAllMyLibraryRedux, updateMyAllLibraryRedux } = librarySlice.actions;
+export const { updateAuthLibrary, getAllMyLibraryRedux, updateMyAllLibraryRedux } = librarySlice.actions;
