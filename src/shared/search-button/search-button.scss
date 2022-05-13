@@ -1,0 +1,19 @@
+.search__container {
+	display: flex;
+	padding: 22px;
+	background: #ffffff;
+	border-radius: 12px;
+	gap: 16px;
+	.connect-button {
+		background: #f5e7d8;
+		border-radius: 12px;
+		max-width: 120px;
+		border: none;
+		span {
+			font-weight: 600;
+			font-size: 15px;
+			line-height: 24px;
+			color: #b38c64;
+		}
+	}
+}

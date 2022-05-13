@@ -1,0 +1,68 @@
+.result__search__container {
+	font-family: 'Montserrat';
+	font-style: normal;
+	.result__search__main {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin-top: 14px;
+		.result__search__main__left {
+			display: flex;
+			gap: 14px;
+			align-items: center;
+			cursor: pointer;
+			.result__search__icon__time {
+				background: #f7f7fc;
+				padding: 10px;
+				border-radius: 50%;
+				width: 42px;
+				height: 42px;
+			}
+			.result__search__name {
+				font-weight: 700;
+				font-size: 15px;
+				line-height: 24px;
+				color: #000000;
+			}
+			.result__search__main__avatar {
+				width: 42px;
+				.result__search__main__img {
+					margin-left: 3px;
+				}
+			}
+		}
+
+		.result__search__close {
+			cursor: pointer;
+			svg {
+				width: 20px;
+				height: 20px;
+			}
+		}
+	}
+	.result__search__value {
+		display: flex;
+		align-items: center;
+		gap: 11px;
+		margin-top: 24px;
+		cursor: pointer;
+		.result__search__icon {
+			width: 44px;
+			height: 44px;
+			border-radius: 50%;
+			background: #e0af7e;
+			padding: 11px;
+			svg {
+				path {
+					stroke: #f7f7fc;
+				}
+			}
+		}
+		.result__search__value__input {
+			font-weight: 700;
+			font-size: 15px;
+			line-height: 24px;
+			color: #e0af7e;
+		}
+	}
+}

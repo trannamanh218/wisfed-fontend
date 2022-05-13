@@ -95,6 +95,8 @@ const chartSlice = createSlice({
 		isFetching: false,
 		error: {},
 		targetReading: [],
+		renderTarget: false,
+		checkRenderTarget: null,
 	},
 	reducers: {
 		updateImg: (state, action) => {
@@ -102,6 +104,12 @@ const chartSlice = createSlice({
 		},
 		updateTargetReading: (state, action) => {
 			state.targetReading = action.payload;
+		},
+		renderTargetReadingProgress: (state, action) => {
+			state.renderTarget = action.payload;
+		},
+		checkRenderTargetReading: (state, action) => {
+			state.checkRenderTarget = action.payload;
 		},
 	},
 	extraReducers: {
@@ -120,7 +128,7 @@ const chartSlice = createSlice({
 		},
 	},
 });
-
-export const { updateImg, updateTargetReading } = chartSlice.actions;
+export const { updateImg, updateTargetReading, renderTargetReadingProgress, checkRenderTargetReading } =
+	chartSlice.actions;
 const chart = chartSlice.reducer;
 export default chart;

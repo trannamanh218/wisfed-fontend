@@ -30,7 +30,7 @@ const AuthorBook = props => {
 				</div>
 				<div className='author-book__bottom'>
 					<span className='author-book__stats'>1000 (đánh giá)</span>
-					<StatusButton bookData={data} />
+					<StatusButton bookData={data} status={data.status} />
 				</div>
 			</div>
 		</div>

@@ -1,0 +1,37 @@
+.result__container {
+	max-width: 750px;
+	margin: auto;
+	.result__header {
+		padding-top: 34px;
+		margin-bottom: 22px;
+		&__content {
+			font-weight: 700;
+			font-size: 36px;
+			line-height: 48px;
+			color: #2d2c42;
+		}
+	}
+	.result__main {
+		margin-top: 24px;
+		.nav-tabs {
+			padding: 0 40px;
+		}
+		.nav-item {
+			.nav-link {
+				font-weight: 600;
+				font-size: 15px;
+				line-height: 24px;
+				color: #a0a3bd;
+			}
+			.active {
+				color: #2d2c42;
+			}
+		}
+		.nav-tabs .nav-link {
+			padding: 2.75rem 1.9rem 1.75rem 1.9rem;
+		}
+		.tab-content {
+			padding-bottom: 0;
+		}
+	}
+}
