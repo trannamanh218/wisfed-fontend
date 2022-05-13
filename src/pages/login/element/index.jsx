@@ -15,10 +15,11 @@ import ModalLogin from './ModalLogin';
 import { useNavigate } from 'react-router-dom';
 import EyeIcon from 'shared/eye-icon';
 import _ from 'lodash';
-import ReactTooltip from 'react-tooltip';
+
 import Subtract from 'assets/images/Subtract.png';
 
 function LoginComponet() {
+	const [showImagePopover, setShowImagePopover] = useState(false);
 	const [isShow, setIsShow] = useState(false);
 	const [dataModal, setDataModal] = useState({});
 	const [isPublic, setIsPublic] = useState(false);
@@ -129,21 +130,37 @@ function LoginComponet() {
 												/>
 												<div className='error--text'>
 													{meta.touched && meta.error && (
-														<div>
+														<div
+															className='login__form__error'
+															onMouseOver={() => setShowImagePopover(1)}
+															onMouseLeave={() => setShowImagePopover(0)}
+														>
 															<img
 																src={Subtract}
 																alt='img'
 																data-tip
 																data-for='registerTip'
 															/>
-															<ReactTooltip
-																id='registerTip'
-																place='bottom'
-																effect='solid'
-																backgroundColor='#E61B00'
+															<div
+																className={classNames(
+																	'login__form__error__popover-container',
+																	{
+																		'show': showImagePopover === 1,
+																	}
+																)}
 															>
-																{meta.touched && meta.error && <div>{meta.error}</div>}
-															</ReactTooltip>
+																<div>
+																	<div className='error--textbox'>
+																		<div className='error--textbox--logo'></div>
+																		<div className='error--textbox--error'></div>
+																	</div>
+																	<div className='Login__form__error__popover'>
+																		{meta.touched && meta.error && (
+																			<div>{meta.error}</div>
+																		)}
+																	</div>
+																</div>
+															</div>
 														</div>
 													)}
 												</div>
@@ -169,23 +186,39 @@ function LoginComponet() {
 												value={field.value}
 												autoComplete='new-password'
 											/>
-											<div className='error--text'>
-												{meta.touched && meta.error && (
-													<div>
-														<img src={Subtract} alt='img' data-tip data-for='registerTip' />
-														<ReactTooltip
-															id='registerTip'
-															place='bottom'
-															effect='solid'
-															backgroundColor='#E61B00'
-														>
-															{meta.touched && meta.error && <div>{meta.error}</div>}
-														</ReactTooltip>
-													</div>
-												)}
-											</div>
 											<div>
 												<EyeIcon isPublic={isPublic} handlePublic={handleChangeIcon} />
+											</div>
+											<div className='error--text'>
+												{meta.touched && meta.error && (
+													<div
+														className='login__form__error'
+														onMouseOver={() => setShowImagePopover(2)}
+														onMouseLeave={() => setShowImagePopover(0)}
+													>
+														<img src={Subtract} alt='img' data-tip data-for='registerTip' />
+														<div
+															className={classNames(
+																'login__form__error__popover-container',
+																{
+																	'show': showImagePopover === 2,
+																}
+															)}
+														>
+															<div>
+																<div className='error--textbox'>
+																	<div className='error--textbox--logo'></div>
+																	<div className='error--textbox--error'></div>
+																</div>
+																<div className='Login__form__error__popover'>
+																	{meta.touched && meta.error && (
+																		<div>{meta.error}</div>
+																	)}
+																</div>
+															</div>
+														</div>
+													</div>
+												)}
 											</div>
 										</div>
 									</div>

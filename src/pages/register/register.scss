@@ -121,17 +121,6 @@
 	&.error {
 		border-color: red;
 	}
-
-	.error--text {
-		position: absolute;
-		right: 7px;
-		width: 32px !important;
-		height: 32px !important;
-		img {
-			margin-top: 7px;
-			margin-left: 13px;
-		}
-	}
 }
 .error-message-name {
 	width: 160px !important;
