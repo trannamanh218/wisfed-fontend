@@ -13,7 +13,7 @@ import Notification from 'pages/notification/compornent-main';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Routes, Route } from 'react-router-dom';
-import { login, checkLogin } from 'reducers/redux-utils/auth';
+import { checkLogin } from 'reducers/redux-utils/auth';
 import { ToastContainer } from 'react-toastify';
 import Login from 'pages/login/element';
 import Register from 'pages/register/component';
@@ -22,7 +22,7 @@ import ChooseTopic from 'pages/choose-topic';
 import Direct from 'pages/choose-topic/DirectPage';
 import PropTypes from 'prop-types';
 import NotFound from 'pages/not-found';
-import { NotificationError } from 'helpers/Error';
+import { getUserInfo } from 'reducers/redux-utils/auth';
 import ReadingSummary from 'pages/reading-summary';
 import ReadingTarget from 'pages/reading-target';
 import ForgetPassWordAdminComponet from 'pages/foget-password/component-admin/ForgotAdmin';
@@ -34,6 +34,7 @@ import Group from 'pages/group-page';
 import Ranks from 'pages/ranks';
 import { getAllLibraryList, getAllMyLibraryRedux } from 'reducers/redux-utils/library';
 import Result from 'pages/result';
+import { NotificationError } from 'helpers/Error';
 
 function App({ children }) {
 	const [myUserId, setMyUserId] = useState('');
@@ -45,34 +46,20 @@ function App({ children }) {
 		fetchLogin();
 	}, []);
 
+	const fetchLogin = async () => {
+		try {
+			await dispatch(getUserInfo()).unwrap();
+			dispatch(checkLogin(true));
+		} catch (err) {
+			dispatch(checkLogin(false));
+		}
+	};
+
 	useEffect(() => {
 		if (myUserId) {
 			getAllMyLibrary(myUserId);
 		}
 	}, [myUserId, updateMyLibrary]);
-
-	const fetchLogin = async () => {
-		try {
-			const params = {
-				// email: 'register@gmail.com',
-				// password: '12345678',
-				// email: 'hungngonzai@gmail.com',
-				// password: '123456',
-				email: 'admin@gmail.com',
-				password: '123456',
-			};
-			const res = await dispatch(login(params)).unwrap();
-			setMyUserId(res.id);
-			await dispatch(login(params)).unwrap();
-			dispatch(checkLogin(true));
-		} catch (err) {
-			if (JSON.parse(err).statusCode === 400) {
-				dispatch(checkLogin(false));
-			} else {
-				NotificationError(JSON.parse(err));
-			}
-		}
-	};
 
 	const getAllMyLibrary = async userId => {
 		try {
@@ -123,7 +110,7 @@ function App({ children }) {
 				<Route path='/direct' element={<Direct />} />
 				<Route path='/reading-summary/:userId' element={<ReadingSummary />} />
 				<Route path='/reading-target/:userId' element={<ReadingTarget />} />
-				<Route path='/group' element={<Group />} />
+				<Route path='/group/:id' element={<Group />} />
 				<Route path='/' element={<Home />} />
 				<Route path='*' element={<NotFound />} />
 				{children}

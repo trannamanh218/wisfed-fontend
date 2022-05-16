@@ -1,11 +1,13 @@
 // auth
 export const authAPI = '/api/v1/auth';
+export const authAPIToken = '/api/v1/auth/jwt';
 export const registerAPI = '/api/v1/auth/register';
 export const forgotPasswordAPI = '/api/v1/auth/forgotPassword';
 export const forgotPasswordAPIAdmin = '/api/v1/auth/adminForgotPassword/';
 export const resetPasswordAPI = '/api/v1/auth/resetPassword/';
 export const resetPasswordAPIAdmin = '/api/v1/auth/resetPasswordByMail/';
 export const checkTokenResetPassword = token => `/api/v1/auth/verify-password?token=${token}`;
+export const InforUserByEmail = email => `/api/v1/users/email?email=${email}`;
 
 // quote
 export const quoteAPI = '/api/v1/quotes';
@@ -116,3 +118,4 @@ export const getFilterTopUserApiAuth = `/api/v1/report/reportTopUsersAuth`;
 // group
 export const detailGroup = id => `api/v1/groups/${id}`;
 export const creatGroup = '/api/v1/groups';
+export const inviteFriend = id => `api/v1/groups/inviteMemberToGroup/${id}`;

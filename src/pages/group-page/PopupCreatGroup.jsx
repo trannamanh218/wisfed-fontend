@@ -10,6 +10,8 @@ import { getUserList } from 'reducers/redux-utils/user';
 import { getCreatGroup } from 'reducers/redux-utils/group';
 import Dropzone from 'react-dropzone';
 import { useDropzone } from 'react-dropzone';
+import { uploadImage } from 'reducers/redux-utils/common';
+import { NotificationError } from 'helpers/Error';
 
 const PopupCreatGroup = ({ handleClose }) => {
 	const [inputNameGroup, setInputNameGroup] = useState('');
@@ -17,12 +19,16 @@ const PopupCreatGroup = ({ handleClose }) => {
 	const [inputAuthors, setInputAuthors] = useState('');
 	const [userlist, setUserList] = useState([]);
 	const dispatch = useDispatch();
-	const [listAuthor, setListAuthors] = useState([]);
+	const [listAuthors, setListAuthors] = useState([]);
 	const [inputHashtag, setInputHashtag] = useState('');
 	const [listHashtags, setListHashtags] = useState([]);
 	const dataRef = useRef('');
 	const inputRefHashtag = useRef(null);
+	const inputRefAuthor = useRef(null);
 	const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
+	const [imgUrl, setImgUrl] = useState('');
+	const [isShowBtn, setIsShowBtn] = useState(false);
+	const [kindOfGroup, setKindOfGroup] = useState('');
 
 	// const listTransparent = [
 	// 	{ value: 'public', title: 'Công khai', img: <CheckIcon /> },
@@ -44,6 +50,15 @@ const PopupCreatGroup = ({ handleClose }) => {
 	};
 
 	useEffect(() => {
+		uploadImageFile();
+	}, [acceptedFiles]);
+
+	const uploadImageFile = async () => {
+		const imageUploadedData = await dispatch(uploadImage(acceptedFiles)).unwrap();
+		setImgUrl(imageUploadedData?.streamPath);
+	};
+
+	useEffect(() => {
 		document.getElementById('hashtag').addEventListener('keydown', e => {
 			if (e.keyCode === 32) {
 				dataRef.current = inputHashtag.trim();
@@ -51,6 +66,7 @@ const PopupCreatGroup = ({ handleClose }) => {
 			}
 		});
 	}, [inputHashtag]);
+
 	useEffect(() => {
 		const dataCheck = listHashtags.filter(item => dataRef.current === item);
 
@@ -66,21 +82,41 @@ const PopupCreatGroup = ({ handleClose }) => {
 		} else setUserList([]);
 	}, [inputAuthors]);
 
-	const creatGroup = () => {
+	useEffect(() => {
+		if (
+			imgUrl !== undefined &&
+			listAuthors !== [] &&
+			listHashtags !== [] &&
+			inputDiscription !== '' &&
+			inputNameGroup !== ''
+		) {
+			setIsShowBtn(true);
+		}
+	}, [imgUrl, listAuthors, listHashtags, kindOfGroup, inputDiscription, inputNameGroup]);
+
+	const creatGroup = async () => {
+		const listIdAuthor = listAuthors.map(item => item.id);
 		const data = {
 			name: inputNameGroup,
 			description: inputDiscription,
-			avatar: 'https://cdn0.fahasa.com/media/catalog/product/cache/1/small_image/400x400/9df78eab33525d08d6e5fb8d27136e95/3/3/3300000001159.jpg',
-			groupType: kindOfGroupRef.current,
-			authorIds: listAuthor,
+			avatar: imgUrl,
+			groupType: kindOfGroup.value,
+			authorIds: listIdAuthor,
 			tags: listHashtags,
+			categoryIds: [27, 1, 2, 3, 4],
+			bookIds: [13, 44, 212, 435, 124, 2342, 123, 12],
 		};
+		try {
+			await dispatch(getCreatGroup(data)).unwrap();
+		} catch (err) {
+			NotificationError(err);
+		}
 	};
 
 	const listKindOfGroup = [
 		{ value: 'book', title: 'Sách' },
-		{ value: 'authors', title: 'Tác giả' },
-		{ value: 'share', title: ' Chia sẻ' },
+		{ value: 'author', title: 'Tác giả' },
+		{ value: 'category', title: ' Chia sẻ' },
 	];
 	// const tranparentRef = useRef({ value: 'public', title: 'Công khai', img: <CheckIcon /> });
 	const kindOfGroupRef = useRef({ value: 'default', title: 'Tác giả/ Chia sẻ/ Sách' });
@@ -92,14 +128,19 @@ const PopupCreatGroup = ({ handleClose }) => {
 	const onchangeKindOfGroup = data => {
 		kindOfGroupRef.current = data;
 	};
+
+	useEffect(() => {
+		setKindOfGroup(kindOfGroupRef.current);
+	}, [kindOfGroupRef.current]);
 	const onInputChange = f => e => f(e.target.value);
 
 	const handleAddAuthors = e => {
-		if (listAuthor.length === 0) {
-			setListAuthors([...listAuthor, e]);
-		} else if (listAuthor.filter(item => item !== e)) {
-			setListAuthors([...listAuthor, e]);
+		const checkItem = listAuthors.filter(item => item === e);
+		if (checkItem.length < 1) {
+			setListAuthors([...listAuthors, e]);
 		}
+		inputRefAuthor.current.value = '';
+		setUserList([]);
 	};
 
 	return (
@@ -113,19 +154,23 @@ const PopupCreatGroup = ({ handleClose }) => {
 
 			<div>
 				<div className='upload-image__wrapper'>
-					<Dropzone>
-						{() => (
-							<div {...getRootProps()}>
-								<input {...getInputProps()} />
-								<div className='dropzone upload-image'>
-									<CameraIcon />
-									<Image className='upload-image__icon' />
-									<p className='upload-image__description'>Thêm ảnh từ thiết bị</p>
-									<span>hoặc kéo thả</span>
+					{imgUrl ? (
+						<img style={{ width: '700px', height: '266px' }} src={imgUrl} alt='img' />
+					) : (
+						<Dropzone>
+							{() => (
+								<div {...getRootProps()}>
+									<input {...getInputProps()} />
+									<div className='dropzone upload-image'>
+										<CameraIcon />
+										<Image className='upload-image__icon' />
+										<p className='upload-image__description'>Thêm ảnh từ thiết bị</p>
+										<span>hoặc kéo thả</span>
+									</div>
 								</div>
-							</div>
-						)}
-					</Dropzone>
+							)}
+						</Dropzone>
+					)}
 				</div>
 			</div>
 			<div className='form-field-wrapper'>
@@ -155,11 +200,13 @@ const PopupCreatGroup = ({ handleClose }) => {
 				<div className='form-field-authors'>
 					<label>Tên tác giả</label>
 					<div className='list__author-tags'>
-						{listAuthor.length > 0 ? (
+						{listAuthors.length > 0 ? (
 							<div className='input__authors'>
-								{listAuthor.map(item => (
+								{listAuthors.map(item => (
 									<>
-										<span>{item}</span>
+										<span>
+											{item.fullName ? item.fullName : `${item.firstName + ' ' + item.lastName}`}
+										</span>
 									</>
 								))}
 							</div>
@@ -170,6 +217,7 @@ const PopupCreatGroup = ({ handleClose }) => {
 							isBorder={false}
 							placeholder='Nhập từ khóa'
 							handleChange={onInputChange(setInputAuthors)}
+							inputRef={inputRefAuthor}
 						/>
 					</div>
 
@@ -179,12 +227,9 @@ const PopupCreatGroup = ({ handleClose }) => {
 									return (
 										<>
 											<span
+												key={item}
 												className='author__item'
-												onClick={() =>
-													handleAddAuthors(
-														item?.fullName || `${item?.firstName + ' ' + item?.lastName}`
-													)
-												}
+												onClick={() => handleAddAuthors(item)}
 											>
 												{item?.fullName || `${item?.firstName + ' ' + item?.lastName}`}
 											</span>
@@ -211,7 +256,7 @@ const PopupCreatGroup = ({ handleClose }) => {
 							<div className='input__authors'>
 								{listHashtags.map(item => (
 									<>
-										<span>{item}</span>
+										<span key={item}>{item}</span>
 									</>
 								))}
 							</div>
@@ -225,7 +270,7 @@ const PopupCreatGroup = ({ handleClose }) => {
 						/>
 					</div>
 				</div>
-				<div className='form-button'>
+				<div className={!isShowBtn ? 'disableBtn' : `form-button`} onClick={() => creatGroup()}>
 					<button>Tạo nhóm</button>
 				</div>
 			</div>

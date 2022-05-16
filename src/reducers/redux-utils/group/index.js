@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { groupAPI, detailGroup, creatGroup } from 'constants/apiURL';
+import { groupAPI, detailGroup, creatGroup, inviteFriend } from 'constants/apiURL';
 import Request from 'helpers/Request';
 
 export const getGroupList = createAsyncThunk('group/getGroupList', async (params = {}, { rejectWithValue }) => {
@@ -22,9 +22,20 @@ export const getGroupDettail = createAsyncThunk('group/getGroupDettail', async (
 	}
 });
 
-export const getCreatGroup = createAsyncThunk('group/getCreatGroup', async (params = {}, { rejectWithValue }) => {
+export const getCreatGroup = createAsyncThunk('group/getCreatGroup', async (data = {}, { rejectWithValue }) => {
 	try {
-		const res = await Request.makePost(creatGroup, params);
+		const res = await Request.makePost(creatGroup, data);
+		return res;
+	} catch (err) {
+		const error = JSON.parse(err.response);
+		return rejectWithValue(error);
+	}
+});
+
+export const getInviteFriend = createAsyncThunk('group/getInviteFriend', async (params = {}, { rejectWithValue }) => {
+	const { id, userId } = params;
+	try {
+		const res = await Request.makePost(inviteFriend(id), userId);
 		return res;
 	} catch (err) {
 		const error = JSON.parse(err.response);

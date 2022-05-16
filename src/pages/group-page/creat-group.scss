@@ -39,10 +39,22 @@
 	flex-wrap: wrap;
 }
 
+.disableBtn {
+	margin-top: 57px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background-color: #eff0f7;
+	padding: 16px;
+	border-radius: 12px;
+	pointer-events: none;
+}
+
 .popup-group__container {
 	box-shadow: 0px 0px 32px rgba(0, 0, 0, 0.14);
 	border-radius: 24px;
 	background-color: #fcfcfc;
+	max-width: 700px;
 	.upload-image__wrapper {
 		padding: 0;
 	}
@@ -117,8 +129,11 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		background-color: #eff0f7;
+		background-color: #e0af7e;
 		padding: 16px;
 		border-radius: 12px;
+		button {
+			color: #fcfcfc;
+		}
 	}
 }
