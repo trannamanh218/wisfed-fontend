@@ -45,8 +45,10 @@ const PersonalInfo = ({ currentUserInfo }) => {
 	useEffect(() => {
 		if (currentUserInfo.backgroundImage) {
 			setBgImage(currentUserInfo.backgroundImage);
+		} else {
+			setBgImage(backgroundImageDefault);
 		}
-	}, [currentUserInfo]);
+	}, []);
 
 	const handleSettings = () => {
 		setSettingsVisible(prev => !prev);
@@ -76,12 +78,7 @@ const PersonalInfo = ({ currentUserInfo }) => {
 	return (
 		<div className='personal-info'>
 			<div className='personal-info__wallpaper'>
-				{currentUserInfo.backgroundImage ? (
-					<img src={bgImage} alt='background-image' onError={() => setBgImage(backgroundImageDefault)} />
-				) : (
-					<img src={backgroundImageDefault} alt='background-image' />
-				)}
-
+				<img src={bgImage} alt='background-image' onError={() => setBgImage(backgroundImageDefault)} />
 				<Dropzone onDrop={acceptedFile => handleDrop(acceptedFile, 'change-bgImage')}>
 					{({ getRootProps, getInputProps }) => (
 						<div className='edit-wallpaper' {...getRootProps()}>

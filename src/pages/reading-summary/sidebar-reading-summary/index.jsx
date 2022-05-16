@@ -1,5 +1,3 @@
-import React from 'react';
-import { useFetchStatsReadingBooks } from 'api/library.hook';
 import StatisticList from 'shared/statistic-list';
 import MyShelvesList from 'shared/my-shelves-list';
 import { useSelector } from 'react-redux';
@@ -9,42 +7,51 @@ import BookSlider from 'shared/book-slider';
 import { Link } from 'react-router-dom';
 import './sidebar-reading-summary.scss';
 import { useFetchAuthorBooks } from 'api/book.hooks';
+import _ from 'lodash';
+import { useParams } from 'react-router-dom';
 
 const SidebarReadingSummary = () => {
+	const { userId } = useParams();
 	const { userInfo } = useSelector(state => state.auth);
-	const { libraryData } = useSelector(state => state.library);
-	const libraryList = libraryData?.rows?.map(item => ({ ...item, quantity: item.books.length }));
-	const { booksAuthor } = useFetchAuthorBooks();
+	const { booksAuthor } = useFetchAuthorBooks(userId);
 
 	const { quoteData } = useFetchQuotes(
-		1,
+		0,
 		3,
 		JSON.stringify([{ operator: 'eq', value: userInfo.id, property: 'createdBy' }])
 	);
 
-	const { readingData } = useFetchStatsReadingBooks();
+	const myAllLibraryRedux = useSelector(state => state.library.myAllLibrary);
 
 	return (
 		<div className='sidebar-reading-summary'>
-			<StatisticList
-				className='sidebar-shelves__reading__status'
-				title='Trạng thái đọc'
-				background='light'
-				isBackground={true}
-				list={readingData}
-			/>
-			<MyShelvesList list={libraryList} />
+			{!_.isEmpty(myAllLibraryRedux) && myAllLibraryRedux.custom.length > 0 && (
+				<>
+					<StatisticList
+						className='sidebar-shelves__reading__status'
+						title='Trạng thái đọc'
+						background='light'
+						isBackground={true}
+						list={myAllLibraryRedux.default}
+						pageText={false}
+					/>
+
+					<MyShelvesList list={myAllLibraryRedux.custom} />
+				</>
+			)}
 			<QuotesLinks list={quoteData} title='Quotes' />
 			<div className='my-compose'>
-				<BookSlider title='Sách tôi là tác giả' list={booksAuthor} />
-				<Link className='view-all-link' to='/'>
-					Xem thêm
-				</Link>
+				{booksAuthor.length > 0 && (
+					<>
+						<BookSlider title='Sách tôi là tác giả' list={booksAuthor} />
+						<Link className='view-all-link' to='/'>
+							Xem thêm
+						</Link>
+					</>
+				)}
 			</div>
 		</div>
 	);
 };
-
-SidebarReadingSummary.propTypes = {};
 
 export default SidebarReadingSummary;

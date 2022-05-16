@@ -7,6 +7,8 @@ import {
 	checkLikeQuoteAPI,
 	likeQuoteCommentAPI,
 	checkLikeQuoteCommentAPI,
+	getMyLikedQuotesAPI,
+	getQuotesByFriendsOrFollowersAPI,
 } from 'constants/apiURL';
 import Request from 'helpers/Request';
 
@@ -80,15 +82,41 @@ export const likeQuoteComment = createAsyncThunk('quote/like quote', async (id, 
 	}
 });
 
-export const checkLikeQuoteComment = createAsyncThunk('quote/check like quote comment', async () => {
+export const checkLikeQuoteComment = createAsyncThunk(
+	'quote/check like quote comment',
+	async (_, { rejectWithValue }) => {
+		try {
+			const response = await Request.makeGet(checkLikeQuoteCommentAPI);
+			return response.data;
+		} catch (err) {
+			const error = JSON.parse(err.response);
+			return rejectWithValue(error);
+		}
+	}
+);
+
+export const getMyLikedQuotes = createAsyncThunk('quote/get my liked quotes', async (params, { rejectWithValue }) => {
 	try {
-		const response = await Request.makeGet(checkLikeQuoteCommentAPI);
+		const response = await Request.makeGet(getMyLikedQuotesAPI, params);
 		return response.data;
 	} catch (err) {
 		const error = JSON.parse(err.response);
-		return error;
+		return rejectWithValue(error);
 	}
 });
+
+export const getQuotesByFriendsOrFollowers = createAsyncThunk(
+	'quote/get quote by friends or quote',
+	async (params, { rejectWithValue }) => {
+		try {
+			const response = await Request.makeGet(getQuotesByFriendsOrFollowersAPI, params);
+			return response.data.rows;
+		} catch (err) {
+			const error = JSON.parse(err.response);
+			return rejectWithValue(error);
+		}
+	}
+);
 
 const quoteSlice = createSlice({
 	name: 'quoteSlice',

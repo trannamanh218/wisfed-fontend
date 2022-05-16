@@ -11,10 +11,11 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import { updateCurrentBookReviewsNumber } from 'reducers/redux-utils/book';
 import _ from 'lodash';
 import LoadingIndicator from 'shared/loading-indicator';
+import PropTypes from 'prop-types';
 
-const ReviewTab = () => {
+const ReviewTab = ({ currentTab }) => {
 	const filterOptions = [
-		{ id: 1, title: 'Tất cả', value: 'reviews' },
+		{ id: 1, title: 'Tất cả', value: 'allReviews' },
 		{ id: 2, title: 'Bạn bè', value: 'friendReviews' },
 		{ id: 3, title: 'Người theo dõi', value: 'followReviews' },
 	];
@@ -33,10 +34,12 @@ const ReviewTab = () => {
 	const bookInfo = useSelector(state => state.book.bookInfo);
 
 	useEffect(() => {
-		setHasMore(true);
-		callApiStart.current = 10;
-		getReviewListFirstTime();
-	}, [currentOption]);
+		if (currentTab === 'reviews') {
+			setHasMore(true);
+			callApiStart.current = 10;
+			getReviewListFirstTime();
+		}
+	}, [currentOption, currentTab]);
 
 	const getReviewListFirstTime = async () => {
 		try {
@@ -51,7 +54,7 @@ const ReviewTab = () => {
 			};
 
 			let response;
-			if (currentOption.value === 'reviews') {
+			if (currentOption.value === 'allReviews') {
 				response = await dispatch(getReviewsBook(params)).unwrap();
 				if (!_.isEmpty(response)) {
 					dispatch(updateCurrentBookReviewsNumber(response.count));
@@ -84,7 +87,7 @@ const ReviewTab = () => {
 			};
 
 			let response;
-			if (currentOption.value === 'reviews') {
+			if (currentOption.value === 'allReviews') {
 				response = await dispatch(getReviewsBook(params)).unwrap();
 			} else if (currentOption.value === 'friendReviews') {
 				response = await dispatch(getReviewsBookByFriends({ bookId, params })).unwrap();
@@ -121,7 +124,7 @@ const ReviewTab = () => {
 				<div className='review-tab__search'>
 					<SearchField placeholder='Tìm kiếm theo Hastag, tên người review ...' />
 				</div>
-				{reviewList.length ? (
+				{currentTab === 'reviews' && reviewList.length ? (
 					<InfiniteScroll
 						dataLength={reviewList.length}
 						next={getReviewList}
@@ -142,6 +145,10 @@ const ReviewTab = () => {
 			</FilterPane>
 		</div>
 	);
+};
+
+ReviewTab.propTypes = {
+	currentTab: PropTypes.string,
 };
 
 export default ReviewTab;

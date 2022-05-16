@@ -16,7 +16,7 @@ import {
 	updateAuthLibrary,
 } from 'reducers/redux-utils/library';
 import './status-button.scss';
-import StatusModalContainer from './StatusModalContainer';
+import StatusModalContainer from 'shared/status-modal/StatusModalContainer';
 import Circle from 'shared/loading/circle';
 import { STATUS_LOADING, STATUS_IDLE } from 'constants';
 import { updateCurrentBook } from 'reducers/redux-utils/book';
@@ -130,7 +130,7 @@ const StatusButton = ({ className, status, bookData }) => {
 	const updateStatusBook = () => {
 		if (!_.isEmpty(bookData) && status !== currentStatus.value) {
 			const params = { bookId: bookData.id || bookData.bookId, type: currentStatus.value };
-			dispatch(addBookToDefaultLibrary(params)).unwrap();
+			dispatch(addBookToDefaultLibrary(params));
 		}
 	};
 

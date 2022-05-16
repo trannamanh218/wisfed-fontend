@@ -1,5 +1,4 @@
 import PropTypes from 'prop-types';
-import React from 'react';
 import BadgeList from 'shared/badge-list';
 import QuoteActionBar from 'shared/quote-action-bar';
 import UserAvatar from 'shared/user-avatar';

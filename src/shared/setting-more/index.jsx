@@ -2,7 +2,7 @@ import clockIcon from 'assets/images/clock.png';
 import convertIcon from 'assets/images/convert.png';
 import featherIcon from 'assets/images/feather.png';
 import trashIcon from 'assets/images/trash.png';
-import StatusModalContainer from 'components/status-button/StatusModalContainer';
+import StatusModalContainer from 'shared/status-modal/StatusModalContainer';
 import { CircleCheckIcon, CloseX, CoffeeCupIcon, TargetIcon } from 'components/svg';
 import { STATUS_BOOK } from 'constants';
 import _ from 'lodash';

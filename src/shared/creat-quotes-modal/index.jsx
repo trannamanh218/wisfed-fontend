@@ -190,7 +190,7 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 				bookId: bookAdded.id,
 				authorName: authorAdded,
 				categories: categoryAddedIdList,
-				tag: hashTagsAddedArray,
+				tags: hashTagsAddedArray,
 				background: backgroundColor,
 			};
 			const response = await dispatch(creatQuotes(data)).unwrap();
