@@ -35,27 +35,6 @@ export const getAllLibraryList = createAsyncThunk('library/getLibraryList', asyn
 	}
 });
 
-export const getLibraryList = createAsyncThunk('library/getLibraryList', async (params, { rejectWithValue }) => {
-	try {
-		const response = await Request.makeGet(libraryAPI, params);
-		return response.data;
-	} catch (err) {
-		const error = JSON.parse(err.response);
-		return rejectWithValue(error);
-	}
-});
-
-export const getMyLibraryList = createAsyncThunk('library/getMyLibraryList', async (params, { rejectWithValue }) => {
-	const { userId, ...query } = params;
-	try {
-		const response = await Request.makeGet(allLibraryListAPI(userId), query);
-		return response.data;
-	} catch (err) {
-		const error = JSON.parse(err.response);
-		return rejectWithValue(error);
-	}
-});
-
 export const addBookToLibrary = createAsyncThunk('library/addBookToLibrary', async (params, { rejectWithValue }) => {
 	const { id, ...data } = params;
 	try {

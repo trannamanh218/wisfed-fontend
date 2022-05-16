@@ -1,5 +1,3 @@
-import { useFetchStatsReadingBooks } from 'api/library.hook';
-import React from 'react';
 import { useSelector } from 'react-redux';
 import StatisticList from 'shared/statistic-list';
 import MyShelvesList from 'shared/my-shelves-list';
@@ -8,29 +6,36 @@ import QuotesLinks from 'shared/quote-links';
 import './sidebar-reading-target.scss';
 import { useParams } from 'react-router-dom';
 import { useFetchUserParams } from 'api/user.hook';
+import _ from 'lodash';
 
 const SidebarReadingTarget = () => {
 	const { userInfo } = useSelector(state => state.auth);
 	const { userId } = useParams();
-	const { readingData } = useFetchStatsReadingBooks();
 	const { userData } = useFetchUserParams(userId);
-	const { libraryData } = useSelector(state => state.library);
-	const libraryList = libraryData?.rows?.map(item => ({ ...item, quantity: item.books.length }));
 	const { quoteData } = useFetchQuotes(
-		1,
+		0,
 		3,
 		JSON.stringify([{ operator: 'eq', value: userInfo.id, property: 'createdBy' }])
 	);
+
+	const myAllLibraryRedux = useSelector(state => state.library.myAllLibrary);
+
 	return (
 		<div className='sidebar-reading-target'>
-			{/* <StatisticList
-				className='sidebar-shelves__reading__status'
-				title='Trạng thái đọc'
-				background='light'
-				isBackground={true}
-				list={readingData}
-			/> */}
-			<MyShelvesList list={libraryList} />
+			{!_.isEmpty(myAllLibraryRedux) && myAllLibraryRedux.custom.length > 0 && (
+				<>
+					<StatisticList
+						className='sidebar-shelves__reading__status'
+						title='Trạng thái đọc'
+						background='light'
+						isBackground={true}
+						list={myAllLibraryRedux.default}
+						pageText={false}
+					/>
+
+					<MyShelvesList list={myAllLibraryRedux.custom} />
+				</>
+			)}
 			<QuotesLinks
 				list={quoteData}
 				title={userId === userInfo.id ? 'Quotes của tôi' : `Quotes của ${userData.fullName}`}

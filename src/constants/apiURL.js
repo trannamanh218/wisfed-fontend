@@ -17,6 +17,7 @@ export const likeQuoteAPI = id => `/api/v1/quotes/like/${id}`;
 export const checkLikeQuoteAPI = '/api/v1/quotes/checkLikeQuote';
 export const likeQuoteCommentAPI = id => `/api/v1/commentQuotes/like/${id}`;
 export const checkLikeQuoteCommentAPI = '/api/v1/quotes/checkLikeCmtQuote';
+export const getMyLikedQuotesAPI = '/api/v1/quotes/listQuotesLiked';
 
 // post
 export const postAPI = '/api/v1/posts';
@@ -116,4 +117,4 @@ export const getFilterTopUserApiAuth = `/api/v1/report/reportTopUsersAuth`;
 export const detailGroup = id => `api/v1/groups/${id}`;
 export const creatGroup = '/api/v1/groups';
 // search
-export const getSearchAPI = `/api/v1/searchs?`;
+export const getSearchAPI = `/api/v1/searchs`;

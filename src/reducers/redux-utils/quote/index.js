@@ -7,6 +7,7 @@ import {
 	checkLikeQuoteAPI,
 	likeQuoteCommentAPI,
 	checkLikeQuoteCommentAPI,
+	getMyLikedQuotesAPI,
 } from 'constants/apiURL';
 import Request from 'helpers/Request';
 
@@ -87,6 +88,16 @@ export const checkLikeQuoteComment = createAsyncThunk('quote/check like quote co
 	} catch (err) {
 		const error = JSON.parse(err.response);
 		return error;
+	}
+});
+
+export const getMyLikedQuotes = createAsyncThunk('quote/get my liked quotes', async (params, { rejectWithValue }) => {
+	try {
+		const response = await Request.makeGet(getMyLikedQuotesAPI, params);
+		return response.data;
+	} catch (err) {
+		const error = JSON.parse(err.response);
+		return rejectWithValue(error);
 	}
 });
 

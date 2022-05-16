@@ -4,7 +4,13 @@ import PropTypes from 'prop-types';
 import './search-field.scss';
 import classNames from 'classnames';
 
-const SearchField = ({ placeholder = 'Nhập thông tin tìm kiếm...', handleChange, className, value = '' }) => {
+const SearchField = ({
+	placeholder = 'Nhập thông tin tìm kiếm...',
+	handleChange,
+	className,
+	value = '',
+	onKeyDown,
+}) => {
 	const inputRef = useRef();
 	return (
 		<div className={classNames('search-field', { [`${className}`]: className })}>
@@ -15,6 +21,8 @@ const SearchField = ({ placeholder = 'Nhập thông tin tìm kiếm...', handleC
 				placeholder={placeholder}
 				onChange={handleChange}
 				value={value}
+				onKeyDown={onKeyDown}
+				autoFocus
 			/>
 		</div>
 	);
@@ -25,6 +33,7 @@ SearchField.propTypes = {
 	handleChange: PropTypes.func,
 	className: PropTypes.string,
 	value: PropTypes.string,
+	onKeyDown: PropTypes.func,
 };
 
 export default SearchField;

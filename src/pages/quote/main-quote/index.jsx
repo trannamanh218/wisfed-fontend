@@ -3,10 +3,9 @@ import BackButton from 'shared/back-button';
 import FilterQuotePane from 'shared/fitler-quote-pane';
 import QuoteCard from 'shared/quote-card';
 import SearchField from 'shared/search-field';
-import { getQuoteList } from 'reducers/redux-utils/quote';
 import { useDispatch, useSelector } from 'react-redux';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { checkLikeQuote } from 'reducers/redux-utils/quote';
+import { checkLikeQuote, getQuoteList, getMyLikedQuotes } from 'reducers/redux-utils/quote';
 import './main-quote.scss';
 import { NotificationError } from 'helpers/Error';
 import _ from 'lodash';
@@ -40,10 +39,11 @@ const MainQuote = () => {
 	const dispatch = useDispatch();
 
 	useEffect(() => {
+		setHasMore(true);
 		callApiStart.current = 10;
 		getQuoteListFirstTime();
 		getLikedArray();
-	}, [resetQuoteList, sortValue, sortDirection]);
+	}, [resetQuoteList, sortValue, sortDirection, currentOption]);
 
 	useEffect(async () => {
 		if (!_.isEmpty(userInfo)) {
@@ -60,16 +60,30 @@ const MainQuote = () => {
 
 	const getQuoteListFirstTime = async () => {
 		try {
-			const params = {
-				start: 0,
-				limit: callApiPerPage.current,
-				sort: JSON.stringify([{ property: sortValue, direction: sortDirection }]),
-				filter: JSON.stringify([{ operator: 'eq', value: userId, property: 'createdBy' }]),
-			};
-			const quotesList = await dispatch(getQuoteList(params)).unwrap();
-			if (quotesList.length) {
-				setQuoteList(quotesList);
-				if (quotesList.length < callApiPerPage.current) {
+			let quoteListData = [];
+			if (currentOption.value === 'me') {
+				const params = {
+					start: 0,
+					limit: callApiPerPage.current,
+					sort: JSON.stringify([{ property: sortValue, direction: sortDirection }]),
+					filter: JSON.stringify([{ operator: 'eq', value: userId, property: 'createdBy' }]),
+				};
+				quoteListData = await dispatch(getQuoteList(params)).unwrap();
+			} else {
+				const params = {
+					start: 0,
+					limit: callApiPerPage.current,
+					// sort: JSON.stringify([{ property: sortValue, direction: sortDirection }]),
+				};
+				const res = await dispatch(getMyLikedQuotes(params)).unwrap();
+				const newData = [];
+				res.forEach(item => newData.push({ ...item, categories: [], tags: [] }));
+				quoteListData = newData;
+			}
+
+			if (quoteListData.length) {
+				setQuoteList(quoteListData);
+				if (quoteListData.length < callApiPerPage.current) {
 					setHasMore(false);
 				}
 			} else {
@@ -82,16 +96,30 @@ const MainQuote = () => {
 
 	const getQuoteListData = async () => {
 		try {
-			const params = {
-				start: callApiStart.current,
-				limit: callApiPerPage.current,
-				sort: JSON.stringify([{ property: sortValue, direction: sortDirection }]),
-				filter: JSON.stringify([{ operator: 'eq', value: userId, property: 'createdBy' }]),
-			};
-			const quotesList = await dispatch(getQuoteList(params)).unwrap();
-			if (quotesList.length) {
+			let quoteListData = [];
+			if (currentOption.value === 'me') {
+				const params = {
+					start: callApiStart.current,
+					limit: callApiPerPage.current,
+					sort: JSON.stringify([{ property: sortValue, direction: sortDirection }]),
+					filter: JSON.stringify([{ operator: 'eq', value: userId, property: 'createdBy' }]),
+				};
+				quoteListData = await dispatch(getQuoteList(params)).unwrap();
+			} else {
+				const params = {
+					start: callApiStart.current,
+					limit: callApiPerPage.current,
+					// sort: JSON.stringify([{ property: sortValue, direction: sortDirection }]),
+				};
+				const res = await dispatch(getMyLikedQuotes(params)).unwrap();
+				const newData = [];
+				res.forEach(item => newData.push({ ...item, categories: [], tags: [] }));
+				quoteListData = newData;
+			}
+
+			if (quoteListData.length) {
 				callApiStart.current += callApiPerPage.current;
-				setQuoteList(quoteList.concat(quotesList));
+				setQuoteList(quoteList.concat(quoteListData));
 			} else {
 				setHasMore(false);
 			}

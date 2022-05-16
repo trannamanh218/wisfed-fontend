@@ -6,10 +6,9 @@ import { useFetchTargetReading } from 'api/readingTarget.hooks';
 
 const RenderProgress = ({ userId }) => {
 	const { checkRenderTarget } = useSelector(state => state.chart);
-	const { booksReadYear } = useFetchTargetReading(userId);
-
+	useFetchTargetReading(userId);
 	const renderProgressBar = () => {
-		if (checkRenderTarget === true && booksReadYear.length > 0) {
+		if (checkRenderTarget === true) {
 			return <ProgressBarCircle />;
 		} else if (checkRenderTarget === false) {
 			return <ReadChallenge />;

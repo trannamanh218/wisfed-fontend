@@ -41,7 +41,7 @@ export const useFetchBooks = (current = 1, perPage = 10, filter = '[]') => {
 	return { status, books, retryRequest };
 };
 
-export const useFetchAuthorBooks = (firstName, lastName) => {
+export const useFetchAuthorBooks = userId => {
 	const [status, setStatus] = useState(STATUS_IDLE);
 	const [booksAuthor, setBooksAuthor] = useState([]);
 	const [retry, setRetry] = useState(false);
@@ -58,7 +58,7 @@ export const useFetchAuthorBooks = (firstName, lastName) => {
 			const query = generateQuery(
 				0,
 				10,
-				JSON.stringify([{ 'operator': 'search', 'value': `${firstName}`, 'property': 'authorName' }])
+				JSON.stringify([{ 'operator': 'search', 'value': `${userId}`, 'property': 'authorId' }])
 			);
 			const fetchData = async () => {
 				try {
@@ -73,7 +73,7 @@ export const useFetchAuthorBooks = (firstName, lastName) => {
 
 			fetchData();
 		}
-	}, [retry, firstName, lastName]);
+	}, [retry, userId]);
 
 	return { status, booksAuthor, retryRequest };
 };

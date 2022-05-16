@@ -19,7 +19,7 @@ const DEFAULT_TOGGLE_ROWS = 0;
 
 const SidebarProfile = ({ currentUserInfo }) => {
 	const { userId } = useParams();
-	const { booksAuthor } = useFetchAuthorBooks(currentUserInfo.firstName, currentUserInfo.lastName);
+	const { booksAuthor } = useFetchAuthorBooks(userId);
 	const [bookReading, setBookReading] = useState({});
 	const { booksReadYear } = useFetchTargetReading(userId);
 	const [isExpand, setIsExpand] = useState(false);

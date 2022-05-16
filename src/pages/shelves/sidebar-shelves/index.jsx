@@ -16,7 +16,7 @@ import _ from 'lodash';
 
 const SidebarShelves = ({ userData, isMyShelve }) => {
 	const { userId } = useParams();
-	const { booksAuthor } = useFetchAuthorBooks(userData.firstName, userData.lastName);
+	const { booksAuthor } = useFetchAuthorBooks(userId);
 	const { userInfo } = useSelector(state => state.auth);
 	const { quoteData } = useFetchQuotes(
 		0,
@@ -28,17 +28,19 @@ const SidebarShelves = ({ userData, isMyShelve }) => {
 
 	return (
 		<div className='sidebar-shelves'>
-			<StatisticList
-				className='sidebar-shelves__reading__status'
-				title='Trạng thái đọc'
-				background='light'
-				isBackground={true}
-				list={myAllLibraryRedux.default}
-				pageText={false}
-			/>
-
 			{!_.isEmpty(myAllLibraryRedux) && myAllLibraryRedux.custom.length > 0 && (
-				<MyShelvesList list={myAllLibraryRedux.custom} />
+				<>
+					<StatisticList
+						className='sidebar-shelves__reading__status'
+						title='Trạng thái đọc'
+						background='light'
+						isBackground={true}
+						list={myAllLibraryRedux.default}
+						pageText={false}
+					/>
+
+					<MyShelvesList list={myAllLibraryRedux.custom} />
+				</>
 			)}
 
 			<QuotesLinks

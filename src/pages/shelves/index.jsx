@@ -18,7 +18,6 @@ const BookShelves = () => {
 	const [isLoading, setIsLoading] = useState(false);
 	const [shelveName, setShelveName] = useState('');
 	const [isMyShelve, setIsMyShelve] = useState();
-	const [fetchingFirstTime, setFetchingFirsttime] = useState(true);
 	const [otherUserData, setOtherUserData] = useState({});
 
 	const { userId } = useParams();
@@ -27,7 +26,6 @@ const BookShelves = () => {
 
 	const userInfo = useSelector(state => state.auth.userInfo);
 	const myAllLibraryRedux = useSelector(state => state.library.myAllLibrary);
-	const updateMyLibrary = useSelector(state => state.library.updateMyLibrary);
 
 	useEffect(async () => {
 		if (!_.isEmpty(userInfo)) {
@@ -51,18 +49,11 @@ const BookShelves = () => {
 		}
 	}, [isMyShelve, myAllLibraryRedux]);
 
-	useEffect(() => {
-		if (!fetchingFirstTime) {
-			getAllLibrary();
-		}
-	}, [updateMyLibrary]);
-
 	const getAllLibrary = async () => {
 		try {
 			const data = await dispatch(getAllLibraryList({ userId })).unwrap();
 			const newData = data.default.concat(data.custom);
 			setAllLibraryList(newData);
-			setFetchingFirsttime(false);
 		} catch (err) {
 			NotificationError(err);
 		} finally {

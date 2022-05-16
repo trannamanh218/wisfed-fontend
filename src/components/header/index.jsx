@@ -4,17 +4,19 @@ import { LogoIcon, BookFillIcon, BookIcon, CategoryIcon, GroupIcon, HomeIcon } f
 import SearchIcon from 'assets/icons/search.svg';
 import classNames from 'classnames';
 import './header.scss';
-import { useSelector } from 'react-redux';
 import UserAvatar from 'shared/user-avatar';
 import NotificationModal from 'pages/notification/';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { backgroundToggle } from 'reducers/redux-utils/notificaiton';
 import { useVisible } from 'shared/hooks';
 import SearchAllModal from 'shared/search-all';
-
+import { useNavigate } from 'react-router-dom';
+import Storage from 'helpers/Storage';
+import { handleResetValue } from 'reducers/redux-utils/search';
 const Header = () => {
+	const { isShowModal } = useSelector(state => state.search);
 	const { ref: showRef, isVisible: isShow, setIsVisible: setIsShow } = useVisible(false);
-
+	const navigate = useNavigate();
 	const [activeLink, setActiveLink] = useState('/');
 	const location = useLocation();
 	const { pathname } = location;
@@ -22,14 +24,28 @@ const Header = () => {
 	const dispatch = useDispatch();
 	const [modalNoti, setModalNotti] = useState(false);
 	const buttonModal = useRef(null);
-
 	useEffect(() => {
 		setActiveLink(pathname);
 	}, [pathname]);
 
+	useEffect(() => {
+		if (isShowModal) {
+			dispatch(handleResetValue(false));
+			setIsShow(false);
+		}
+	}, [isShowModal]);
+
 	const toglleModalNotify = () => {
 		setModalNotti(!modalNoti);
 		dispatch(backgroundToggle(modalNoti));
+	};
+
+	const handleDirectLogin = () => {
+		if (Storage.getAccessToken()) {
+			navigate(`/profile/${userInfo.id}`);
+		} else {
+			navigate(`/login`);
+		}
 	};
 
 	return (
@@ -81,9 +97,9 @@ const Header = () => {
 					/>
 					{modalNoti && <NotificationModal setModalNotti={setModalNotti} buttonModal={buttonModal} />}
 				</div>
-				<Link to={`/profile/${userInfo.id}`}>
+				<div onClick={handleDirectLogin}>
 					<UserAvatar className='header__avatar' source={userInfo?.avatarImage} />
-				</Link>
+				</div>
 			</div>
 		</div>
 	);
