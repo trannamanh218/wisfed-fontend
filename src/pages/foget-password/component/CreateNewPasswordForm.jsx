@@ -10,7 +10,7 @@ import Circle from 'shared/loading/circle';
 import { changeKey } from 'reducers/redux-utils/forget-password';
 import { NotificationError } from 'helpers/Error';
 
-function CreatNewPasswordForm() {
+function CreateNewPasswordForm() {
 	const isFetching = useSelector(state => state.auth.isFetching);
 	const dispatch = useDispatch();
 	const [isShow, setIsShow] = useState(false);
@@ -246,4 +246,4 @@ function CreatNewPasswordForm() {
 	);
 }
 
-export default CreatNewPasswordForm;
+export default CreateNewPasswordForm;

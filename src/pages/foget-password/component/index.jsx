@@ -3,7 +3,7 @@ import Logo from 'assets/images/Logo 2.png';
 import '../forget-password.scss';
 import ImgForget from 'assets/images/quen-mk 1.png';
 import ForgetpasswordFormComponent from './ForgetPasswordFormComponent';
-import CreateNewPasswordForm from './CreatNewPasswordForm';
+import CreateNewPasswordForm from './CreateNewPasswordForm';
 import { useSelector } from 'react-redux';
 function ForgetPassWordComponet() {
 	const key = useSelector(state => state.forgetPasswordSliceReducer.keyChange);
