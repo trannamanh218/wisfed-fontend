@@ -10,7 +10,7 @@ import { getInviteFriend } from 'reducers/redux-utils/group';
 import { useParams } from 'react-router-dom';
 
 const PopupInviteFriend = ({ handleClose }) => {
-	const [listFiend, setListFriend] = useState([]);
+	const [listFriend, setListFriend] = useState([]);
 	const [listFriendSelect, setListFriendSelect] = useState([]);
 	const dispatch = useDispatch();
 	const { id = '' } = useParams();
@@ -29,7 +29,8 @@ const PopupInviteFriend = ({ handleClose }) => {
 	};
 
 	const inViteFriend = async () => {
-		const listId = listFriendSelect.map(item => `${item.id}`);
+		const listId = listFriendSelect?.map(item => item?.userIdTwo);
+
 		const params = {
 			id: id,
 			userIds: listId,
@@ -46,25 +47,17 @@ const PopupInviteFriend = ({ handleClose }) => {
 	useEffect(() => {
 		getListFriend();
 	}, [userInfo]);
+	console.log(listFriendSelect);
 
 	const handleSelectFriend = e => {
-		const itemCheck = listFriendSelect.filter(item => item === e);
-		if (listFriendSelect.length === 0) {
-			setListFriendSelect([...listFriendSelect, e]);
-		}
-		if (itemCheck.length >= 1) {
-			const newList = listFriendSelect.filter(item => item !== e);
-			setListFriendSelect(newList);
-		} else {
-			setListFriendSelect([...listFriendSelect, e]);
-		}
+		setListFriendSelect([...listFriendSelect, e]);
+		const checkItem = listFriend.filter(item => item !== e);
+		setListFriend(checkItem);
 	};
 	const handleRemoveFriend = e => {
-		const itemCheck = listFriendSelect.filter(item => item === e);
-		if (itemCheck.length >= 1) {
-			const newList = listFriendSelect.filter(item => item !== e);
-			setListFriendSelect(newList);
-		}
+		setListFriend([...listFriend, e]);
+		const checkItem = listFriendSelect.filter(item => item !== e);
+		setListFriendSelect(checkItem);
 	};
 
 	return (
@@ -84,12 +77,10 @@ const PopupInviteFriend = ({ handleClose }) => {
 			<div className='main-action'>
 				<div className='list-friend'>
 					<h4>Danh sách bạn bè</h4>
-					{listFiend?.map(item => {
-						const data = item?.userTwo;
-
+					{listFriend?.map(item => {
 						return (
 							<>
-								<div className='friend-item' key={data?.id}>
+								<div className='friend-item' key={item?.userTwo?.id}>
 									<img
 										src={item?.userTwo?.avatarImage}
 										alt=''
@@ -104,8 +95,7 @@ const PopupInviteFriend = ({ handleClose }) => {
 									<input
 										type='checkbox'
 										id={item?.userTwo.id}
-										onClick={() => handleSelectFriend(item?.userTwo)}
-										checked={listFriendSelect.filter(obj => item.userTwo.id === obj.id).length > 0}
+										onClick={() => handleSelectFriend(item)}
 									/>
 								</div>
 							</>
@@ -128,7 +118,7 @@ const PopupInviteFriend = ({ handleClose }) => {
 											)
 										}
 									/>
-									<span>{item?.fullName}</span>
+									<span>{item?.userTwo?.fullName}</span>
 									<button>
 										<CloseX onClick={() => handleRemoveFriend(item)} />
 									</button>

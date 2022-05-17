@@ -37,6 +37,9 @@ const Header = () => {
 
 	const tollgleModaleInfoUser = () => {
 		setModalInforUser(!modalInforUser);
+		if (localStorage.getItem('accessToken') === null) {
+			navigate('/login');
+		}
 	};
 
 	const handleLogout = () => {
