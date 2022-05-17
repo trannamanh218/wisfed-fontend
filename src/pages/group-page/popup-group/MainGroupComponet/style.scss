@@ -1,5 +1,6 @@
 .group__background {
 	img {
+		border-radius: 12px 12px 0px 0px;
 		height: 266px;
 		width: 100%;
 	}
@@ -97,6 +98,57 @@
 		width: 24px;
 		height: 24px;
 		margin-right: 12px;
+	}
+}
+.group-name__joined-group {
+	padding-left: 24px;
+	width: 206px;
+	height: 57px;
+	background: #eff0f6;
+	border-radius: 12px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	position: relative;
+	button {
+		font-family: 'Montserrat';
+		font-style: normal;
+		font-weight: 600;
+		font-size: 13px;
+		line-height: 22px;
+		display: flex;
+		align-items: center;
+		text-align: center;
+		letter-spacing: 0.25px;
+		color: #2d2c42;
+		span {
+			margin-right: 22px;
+		}
+	}
+	svg {
+		width: 24px;
+		height: 24px;
+		margin-right: 12px;
+	}
+	.list__dropdown {
+		border-radius: 0px 0px 12px 12px;
+		position: absolute;
+		width: 206px;
+		z-index: 1000;
+		background-color: #eff0f6;
+		padding-bottom: 20px;
+		top: 46px;
+		left: 0;
+		padding-left: 24px;
+		li {
+			margin-top: 35px;
+			font-family: 'Montserrat';
+			font-style: normal;
+			font-weight: 600;
+			font-size: 13px;
+			line-height: 22px;
+			cursor: pointer;
+		}
 	}
 }
 .group-name__invite-group {

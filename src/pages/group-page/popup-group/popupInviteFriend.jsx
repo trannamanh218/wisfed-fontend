@@ -29,12 +29,18 @@ const PopupInviteFriend = ({ handleClose }) => {
 	};
 
 	const inViteFriend = async () => {
-		const listId = listFriendSelect.map(item => item.id);
+		const listId = listFriendSelect.map(item => `${item.id}`);
 		const params = {
 			id: id,
-			userId: JSON.stringify(listId),
+			userIds: listId,
 		};
-		await dispatch(getInviteFriend(params)).unwrap();
+		try {
+			await dispatch(getInviteFriend(params)).unwrap();
+		} catch (err) {
+			NotificationError(err);
+		} finally {
+			handleClose();
+		}
 	};
 
 	useEffect(() => {

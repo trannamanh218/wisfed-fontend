@@ -3,7 +3,7 @@ import Logo from 'assets/images/Logo 2.png';
 import '../forget-password.scss';
 import ImgForget from 'assets/images/quen-mk 1.png';
 import ForgetpasswordFormComponent from './ForgetPasswordFormComponent';
-import CreatNewPasswordForm from './CreatNewPasswordForm';
+import CreateNewPasswordForm from './CreatNewPasswordForm';
 import { useSelector } from 'react-redux';
 function ForgetPassWordComponet() {
 	const key = useSelector(state => state.forgetPasswordSliceReducer.keyChange);
@@ -17,7 +17,7 @@ function ForgetPassWordComponet() {
 				<div className='forget__form__img'>
 					<img src={ImgForget} alt='' />
 				</div>
-				{key ? <CreatNewPasswordForm /> : <ForgetpasswordFormComponent />}
+				{key ? <CreateNewPasswordForm /> : <ForgetpasswordFormComponent />}
 			</div>
 		</div>
 	);

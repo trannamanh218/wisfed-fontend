@@ -35,6 +35,7 @@
 .main-action {
 	margin-top: 40px;
 	display: flex;
+	justify-content: space-around;
 }
 .list-friend {
 	margin-right: 64px;
@@ -43,6 +44,7 @@
 	display: flex;
 	align-items: center;
 	margin-bottom: 32px;
+	justify-content: space-between;
 	input {
 		width: 24px;
 		height: 24px;
