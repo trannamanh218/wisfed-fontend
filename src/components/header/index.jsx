@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { LogoIcon, BookFillIcon, BookIcon, CategoryIcon, GroupIcon, HomeIcon } from 'components/svg';
 import SearchIcon from 'assets/icons/search.svg';
 import classNames from 'classnames';
@@ -10,10 +10,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { backgroundToggle } from 'reducers/redux-utils/notificaiton';
 import { useVisible } from 'shared/hooks';
 import SearchAllModal from 'shared/search-all';
-import { useNavigate } from 'react-router-dom';
 import Storage from 'helpers/Storage';
 import { handleResetValue } from 'reducers/redux-utils/search';
 import { useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const Header = () => {
 	const { isShowModal } = useSelector(state => state.search);
@@ -26,6 +26,8 @@ const Header = () => {
 	const dispatch = useDispatch();
 	const [modalNoti, setModalNotti] = useState(false);
 	const buttonModal = useRef(null);
+	const [modalInforUser, setModalInforUser] = useState(false);
+
 	useEffect(() => {
 		setActiveLink(pathname);
 	}, [pathname]);
@@ -42,12 +44,20 @@ const Header = () => {
 		dispatch(backgroundToggle(modalNoti));
 	};
 
-	const handleDirectLogin = () => {
+	const tollgleModaleInfoUser = () => {
+		setModalInforUser(!modalInforUser);
 		if (Storage.getAccessToken()) {
 			navigate(`/profile/${userInfo.id}`);
 		} else {
 			navigate(`/login`);
 		}
+	};
+
+	const handleLogout = () => {
+		localStorage.removeItem('accessToken');
+		localStorage.removeItem('refreshToken');
+		navigate('/login');
+		toast.success('Đăng xuất thành công');
 	};
 
 	return (
@@ -100,8 +110,16 @@ const Header = () => {
 					/>
 					{modalNoti && <NotificationModal setModalNotti={setModalNotti} buttonModal={buttonModal} />}
 				</div>
-				<div onClick={handleDirectLogin}>
+				<div onClick={() => tollgleModaleInfoUser()}>
 					<UserAvatar className='header__avatar' source={userInfo?.avatarImage} />
+					{modalInforUser && localStorage.getItem('accessToken') && (
+						<ul className='header__option-info'>
+							<Link to={localStorage.getItem('accessToken') && `/profile/${userInfo.id}`}>
+								<li>Thông tin cá nhân</li>
+							</Link>
+							<li onClick={() => handleLogout()}>Đăng xuất</li>
+						</ul>
+					)}
 				</div>
 			</div>
 		</div>

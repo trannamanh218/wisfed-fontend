@@ -1,4 +1,4 @@
-import PopupCreatGroup from 'pages/group-page/PopupCreatGroup';
+import PopupCreatGroup from 'pages/group-page/PopupCreateGroup';
 
 export default {
 	title: 'Components/Modules/PopupCreatGroup',

@@ -41,8 +41,7 @@ function IntroGroup({ groupType, description, memberGroups, createdAt }) {
 				<div className='group-sibar-left__text1'>
 					<span>
 						<strong>Số lượng thành viên:</strong>{' '}
-						{memberGroups?.length < 10 ? `0${memberGroups?.length}` : memberGroups?.length} thành viên (03
-						thành viên mới)
+						{memberGroups?.length < 10 ? `0${memberGroups?.length}` : memberGroups?.length} thành viên
 					</span>
 				</div>
 				<div className='group-sibar-left__text1'>

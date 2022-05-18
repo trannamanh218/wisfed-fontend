@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import SearchField from 'shared/search-field';
 // import classNames from 'classnames';
 import Tabs from 'react-bootstrap/Tabs';
@@ -7,31 +7,46 @@ import IntroGroup from './component/introGroup';
 import MainPostGroup from './component/MainPostGroup';
 import MemberGroup from './component/MemberGroup';
 import './style.scss';
-import { ActionPlusGroup, LogInCircle } from 'components/svg';
+import { ActionPlusGroup, CloseIconX, DropdownGroup, IconCheck, LogInCircle, LogOutGroup } from 'components/svg';
 import SettingsGroup from './AminSettings/SettingsGroup';
 import SettingsQuestions from './AminSettings/SettingsQuestions';
 import ManageJoin from './AminSettings/ManageJoin';
 import PropTypes from 'prop-types';
 import PostWatting from './AminSettings/PostWatting';
 import PopupInviteFriend from '../popupInviteFriend';
+import { getEnjoyGroup } from 'reducers/redux-utils/group';
+import { NotificationError } from 'helpers/Error';
+import { useParams } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 function MainGroupComponent({ handleChange, keyChange, data, backgroundImage }) {
 	const [key, setKey] = useState('intro');
 	const { groupType, description, memberGroups, name } = data;
 	const [isShow, setIsShow] = useState(false);
+	const { id = '' } = useParams();
+	const dispatch = useDispatch();
+	const [show, setShow] = useState(false);
+	const { userInfo } = useSelector(state => state.auth);
+	const [showSelect, setShowSelect] = useState(false);
+
+	const enjoyGroup = async () => {
+		try {
+			await dispatch(getEnjoyGroup(id));
+		} catch (err) {
+			NotificationError(err);
+		}
+	};
+
+	useEffect(() => {
+		const checkItem = data?.memberGroups?.filter(item => item?.user?.id === userInfo?.id);
+		if (checkItem?.length > 0) {
+			setShow(true);
+		}
+	}, [data, userInfo, enjoyGroup.show]);
 
 	return (
 		<div className='group-main-component__container'>
-			<div>
-				=
-				{isShow ? (
-					<div className='popup-container'>
-						<PopupInviteFriend handleClose={() => setIsShow(!isShow)} />
-					</div>
-				) : (
-					''
-				)}
-			</div>
 			<div className='group__background'>
 				<div>
 					<img
@@ -58,18 +73,50 @@ function MainGroupComponent({ handleChange, keyChange, data, backgroundImage }) 
 				</div>
 				<div className='group-name__btn'>
 					<div className='btn-top'>
-						<div className='group-name__join-group'>
-							<button>
-								<LogInCircle />
-								Yêu cầu tham gia
-							</button>
-						</div>
+						{show ? (
+							<>
+								<div className='group-name__joined-group'>
+									<button onClick={() => setShowSelect(!showSelect)}>
+										<IconCheck />
+										<span>Đã tham gia</span>
+										<DropdownGroup />
+									</button>
+									<div className='list__dropdown' style={!showSelect ? { display: 'none' } : {}}>
+										<ul>
+											<li>
+												<CloseIconX /> Bỏ theo dõi
+											</li>
+											<li>
+												<LogOutGroup /> Rời khỏi nhóm
+											</li>
+										</ul>
+									</div>
+								</div>
+							</>
+						) : (
+							<div className='group-name__join-group'>
+								<button onClick={() => enjoyGroup()}>
+									<LogInCircle />
+									Yêu cầu tham gia
+								</button>
+							</div>
+						)}
+
 						<div className='group-name__invite-group' onClick={() => setIsShow(!isShow)}>
 							<button>
 								<ActionPlusGroup />
 								Mời
 							</button>
 						</div>
+					</div>
+					<div style={{ position: 'fixed', left: '33%', top: '20%', zIndex: '1000' }}>
+						{isShow ? (
+							<div className='popup-container'>
+								<PopupInviteFriend handleClose={() => setIsShow(!isShow)} />
+							</div>
+						) : (
+							''
+						)}
 					</div>
 
 					<div className='group__search'>
