@@ -154,8 +154,9 @@ const MainShelves = ({ allLibraryList, shelveName, isMyShelve, handleViewBookDet
 };
 
 MainShelves.defaultProps = {
-	isUpdate: false,
-	handleUpdateLibrary: () => {},
+	allLibraryList: [],
+	shelveName: '',
+	isMyShelve: true,
 };
 
 MainShelves.propTypes = {

@@ -18,6 +18,20 @@
 	flex: 1;
 }
 
+.group__main-container {
+	.layout {
+		.layout__container {
+			.mainContainer {
+				padding: 0 !important;
+				padding-left: 40px !important;
+				.mainContainer__main {
+					max-width: 100%;
+				}
+			}
+		}
+	}
+}
+
 .main-content__post {
 	margin-top: 41px;
 }

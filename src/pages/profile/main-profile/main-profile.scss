@@ -16,6 +16,7 @@
 	&__tabs {
 		&.nav-tabs {
 			gap: 1.5rem;
+			justify-content: space-between;
 			.nav-link {
 				font-weight: 600;
 				line-height: 1.5;

@@ -14,7 +14,6 @@ import ProgressBarCircle from 'shared/progress-circle';
 import RenderProgress from 'shared/render-progress';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
-
 const DEFAULT_TOGGLE_ROWS = 0;
 
 const SidebarProfile = ({ currentUserInfo }) => {

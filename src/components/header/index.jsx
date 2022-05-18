@@ -13,6 +13,8 @@ import SearchAllModal from 'shared/search-all';
 import { useNavigate } from 'react-router-dom';
 import Storage from 'helpers/Storage';
 import { handleResetValue } from 'reducers/redux-utils/search';
+import { useParams } from 'react-router-dom';
+
 const Header = () => {
 	const { isShowModal } = useSelector(state => state.search);
 	const { ref: showRef, isVisible: isShow, setIsVisible: setIsShow } = useVisible(false);
@@ -27,7 +29,7 @@ const Header = () => {
 	useEffect(() => {
 		setActiveLink(pathname);
 	}, [pathname]);
-
+	const { slug } = useParams();
 	useEffect(() => {
 		if (isShowModal) {
 			dispatch(handleResetValue(false));
@@ -61,6 +63,7 @@ const Header = () => {
 						placeholder='Tìm kiếm trên Wisfeed'
 						onClick={() => setIsShow(true)}
 						disabled={isShow}
+						value={slug || ''}
 					/>
 				</div>
 				{isShow ? <SearchAllModal showRef={showRef} /> : ''}

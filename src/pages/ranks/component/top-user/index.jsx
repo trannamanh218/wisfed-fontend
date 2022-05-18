@@ -118,7 +118,7 @@ const TopUser = ({ rows, listYear }) => {
 					/>
 				</div>
 			</div>
-			{getListTopBooks.length > 1 && <TopRanks getListTopBooks={getListTopBooks} valueDataSort={valueDataSort} />}
+			{getListTopBooks.length > 2 && <TopRanks getListTopBooks={getListTopBooks} valueDataSort={valueDataSort} />}
 			{getListTopBooks.length > 0 ? (
 				getListTopBooks.map((item, index) => (
 					<div key={item.id} className='topbooks__container__main top__user'>

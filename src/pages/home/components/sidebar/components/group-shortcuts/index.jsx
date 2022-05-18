@@ -2,6 +2,7 @@ import { useFetchGroups } from 'api/group.hooks';
 import bookIcon from 'assets/icons/book.svg';
 import _ from 'lodash';
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 function GroupShortcuts() {
 	const [viewMoreGroupsStatus, setViewMoreGroupsStatus] = useState(false);
@@ -16,16 +17,20 @@ function GroupShortcuts() {
 				<div className={'group-short-cut__items-box ' + `${viewMoreGroupsStatus ? 'view-more' : 'view-less'}`}>
 					{!_.isEmpty(rows) ? (
 						rows?.map((item, index) => (
-							<div key={index} className='group-short-cut__item'>
-								<div className='group-short-cut__item__logo'>
-									<img
-										src={item.avatar}
-										alt='group'
-										onError={e => e.target.setAttribute('src', `${bookIcon}`)}
-									/>
-								</div>
-								<div className='group-short-cut__item__name'>{item.name}</div>
-							</div>
+							<>
+								<Link to={`/group/${item.id}`}>
+									<div key={index} className='group-short-cut__item'>
+										<div className='group-short-cut__item__logo'>
+											<img
+												src={item.avatar}
+												alt='group'
+												onError={e => e.target.setAttribute('src', `${bookIcon}`)}
+											/>
+										</div>
+										<div className='group-short-cut__item__name'>{item.name}</div>
+									</div>
+								</Link>
+							</>
 						))
 					) : (
 						<p className='blank-content'>Không có dữ liệu</p>

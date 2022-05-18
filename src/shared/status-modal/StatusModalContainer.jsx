@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import AddBookShelveForm from './components/add-book-shelve-form/AddBookShelveForm';
-import BookShelvesList from './components/book-shelves-list/BookShelvesList';
-import StatusBookList from './components/status-book/StatusBookList';
+import AddBookShelveForm from '../../components/status-button/components/add-book-shelve-form/AddBookShelveForm';
+import BookShelvesList from '../../components/status-button/components/book-shelves-list/BookShelvesList';
+import StatusBookList from '../../components/status-button/components/status-book/StatusBookList';
 import PropTypes from 'prop-types';
 
 const StatusModalContainer = ({

@@ -15,7 +15,7 @@ const SearchAllModal = ({ showRef }) => {
 	const [valueInputSearch, setValueInputSearch] = useState('');
 	const [resultSearch, setResultSearch] = useState([]);
 	const [filter, setFilter] = useState('[]');
-	// const [arrayValue, setArrayValue] = useState([]);
+	const [valueInput, setValueInput] = useState('');
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	const { saveValueInput } = useSelector(state => state.search);
@@ -42,22 +42,22 @@ const SearchAllModal = ({ showRef }) => {
 		} catch (err) {
 			NotificationError(err);
 		}
-	}, [dispatch, filter, valueInputSearch]);
+	}, [filter, valueInputSearch]);
 
-	const debounceSearch = useCallback(_.debounce(updateInputSearch, 1000), []);
+	const debounceSearch = useCallback(_.debounce(updateInputSearch, 700), []);
 	const handleSearch = e => {
 		setValueInputSearch(e.target.value);
 		debounceSearch(e.target.value);
+		setValueInput(e.target.value);
 	};
 
 	const handleKeyDown = e => {
 		if (e.key === 'Enter') {
-			// const value = e.target.value;
-			// console.log( newArrayValue);
-			// Storage.setItem('result', JSON.stringify(arrayValue));
 			if (saveValueInput) {
 				dispatch(handleResetValue(true));
-				navigate('/result');
+				if (valueInput) {
+					navigate(`/result/${valueInput}`);
+				}
 			}
 		}
 	};
@@ -71,10 +71,6 @@ const SearchAllModal = ({ showRef }) => {
 					value={valueInputSearch}
 					onKeyDown={handleKeyDown}
 				/>
-			</div>
-			<div className='search__all__main__title'>
-				<div className='search__all__title'>Tìm kiếm gần đây </div>
-				<div className='search__all__title__editing'>Chỉnh sửa</div>
 			</div>
 			<ResultSearch valueInputSearch={valueInputSearch} resultSearch={resultSearch} />
 		</div>

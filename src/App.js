@@ -32,10 +32,10 @@ import 'scss/main.scss';
 import QuoteAll from 'pages/quote/all-quote/';
 import Group from 'pages/group-page';
 import Ranks from 'pages/ranks';
-import Result from 'pages/result';
 import { getAllLibraryList, getAllMyLibraryRedux } from 'reducers/redux-utils/library';
+import Result from 'pages/result';
 import { NotificationError } from 'helpers/Error';
-
+import Storage from 'helpers/Storage';
 function App({ children }) {
 	const [myUserId, setMyUserId] = useState('');
 
@@ -43,7 +43,12 @@ function App({ children }) {
 	const updateMyLibrary = useSelector(state => state.library.updateMyLibrary);
 
 	useEffect(() => {
-		fetchLogin();
+		const accsetToken = Storage.getAccessToken();
+		if (accsetToken) {
+			dispatch(checkLogin(true));
+		} else {
+			dispatch(checkLogin(false));
+		}
 	}, []);
 
 	useEffect(() => {
@@ -51,20 +56,6 @@ function App({ children }) {
 			getAllMyLibrary(myUserId);
 		}
 	}, [myUserId, updateMyLibrary]);
-
-	const fetchLogin = async () => {
-		try {
-			const res = await dispatch(getUserInfo()).unwrap();
-			setMyUserId(res.id);
-			dispatch(checkLogin(true));
-		} catch (err) {
-			if (JSON.parse(err).statusCode === 400) {
-				dispatch(checkLogin(false));
-			} else {
-				NotificationError(JSON.parse(err));
-			}
-		}
-	};
 
 	const getAllMyLibrary = async userId => {
 		try {
@@ -90,7 +81,7 @@ function App({ children }) {
 			/>
 			<Routes>
 				<Route path='/top100' element={<Ranks />} />
-				<Route path='/result' element={<Result />} />
+				<Route path='/result/:slug' element={<Result />} />
 				<Route path='/notification' element={<Notification />} />
 				<Route path='/category' element={<Category />} />
 				<Route path='/category/detail/:id' element={<CategoryDetail />} />
@@ -115,7 +106,7 @@ function App({ children }) {
 				<Route path='/direct' element={<Direct />} />
 				<Route path='/reading-summary/:userId' element={<ReadingSummary />} />
 				<Route path='/reading-target/:userId' element={<ReadingTarget />} />
-				<Route path='/group' element={<Group />} />
+				<Route path='/group/:id' element={<Group />} />
 				<Route path='/' element={<Home />} />
 				<Route path='*' element={<NotFound />} />
 				{children}

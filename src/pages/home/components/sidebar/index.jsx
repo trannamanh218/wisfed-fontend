@@ -7,8 +7,9 @@ import { useFetchQuoteRandom } from 'api/quote.hooks';
 import _ from 'lodash';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import RenderProgress from 'shared/render-progress';
+// import { useFetchTargetReading } from 'api/readingTarget.hooks';
 import { useState, useEffect } from 'react';
+import RenderProgress from 'shared/render-progress';
 
 const Sidebar = () => {
 	const { quoteRandom } = useFetchQuoteRandom();

@@ -9,14 +9,16 @@ import MainGroupComponent from './popup-group/MainGroupComponet/MainGroupCompone
 import { useDispatch } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
 import { getGroupDettail } from 'reducers/redux-utils/group';
+import { useParams } from 'react-router-dom';
 
 const MainGroup = () => {
+	const { id = '' } = useParams();
 	const [detailGroup, setDetailGroup] = useState({});
 	const dispatch = useDispatch();
 
 	const fetchData = async () => {
 		try {
-			const res = await dispatch(getGroupDettail(1)).unwrap();
+			const res = await dispatch(getGroupDettail(id)).unwrap();
 			setDetailGroup(res.data);
 		} catch (err) {
 			NotificationError(err);
