@@ -254,6 +254,7 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 			mentionsCategory: [],
 			image: [],
 			preview: urlAdded,
+			tags: [],
 		};
 
 		params.mentionsUser = taggedData.addFriends.length ? taggedData.addFriends.map(item => item.id) : [];

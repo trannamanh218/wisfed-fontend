@@ -27,11 +27,17 @@ const Header = () => {
 	const [modalNoti, setModalNotti] = useState(false);
 	const buttonModal = useRef(null);
 	const [modalInforUser, setModalInforUser] = useState(false);
+	const { value } = useParams();
+	const [getSlugResult, setGetSlugResult] = useState('');
 
 	useEffect(() => {
 		setActiveLink(pathname);
 	}, [pathname]);
-	const { slug } = useParams();
+
+	useEffect(() => {
+		setGetSlugResult(value);
+	}, [value]);
+
 	useEffect(() => {
 		if (isShowModal) {
 			dispatch(handleResetValue(false));
@@ -73,7 +79,7 @@ const Header = () => {
 						placeholder='Tìm kiếm trên Wisfeed'
 						onClick={() => setIsShow(true)}
 						disabled={isShow}
-						value={slug || ''}
+						value={getSlugResult || ''}
 					/>
 				</div>
 				{isShow ? <SearchAllModal showRef={showRef} /> : ''}

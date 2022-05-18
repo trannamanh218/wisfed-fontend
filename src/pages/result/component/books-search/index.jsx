@@ -8,11 +8,11 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import LoadingIndicator from 'shared/loading-indicator';
 import _ from 'lodash';
 
-const BookSearch = ({ listArrayBooks, hasMore, handleGetBooksSearch, elementRef }) => {
+const BookSearch = ({ listArrayBooks, hasMore, handleGetBooksSearch }) => {
 	return (
-		<div ref={elementRef} className='bookSearch__container'>
+		<div className='bookSearch__container'>
 			{/* <div className='bookSearch__title'>
-				Trang 1 trong số khoảng {listArrayBooks?.nameCount + listArrayBooks?.authorsCount} kết quả (0,05 giây)
+				Trang 1 trong số khoảng {listArrayBooks?.count} kết quả (0,05 giây)
 			</div> */}
 
 			{listArrayBooks?.length > 0 ? (
@@ -39,7 +39,6 @@ BookSearch.propTypes = {
 	listArrayBooks: PropTypes.object,
 	hasMore: PropTypes.bool,
 	handleGetBooksSearch: PropTypes.func,
-	elementRef: PropTypes.object,
 };
 
 export default BookSearch;

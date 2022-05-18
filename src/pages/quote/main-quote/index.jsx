@@ -73,7 +73,7 @@ const MainQuote = () => {
 				const params = {
 					start: 0,
 					limit: callApiPerPage.current,
-					// sort: JSON.stringify([{ property: sortValue, direction: sortDirection }]),
+					sort: JSON.stringify([{ property: sortValue, direction: sortDirection }]),
 				};
 				const res = await dispatch(getMyLikedQuotes(params)).unwrap();
 				const newData = [];
@@ -109,7 +109,7 @@ const MainQuote = () => {
 				const params = {
 					start: callApiStart.current,
 					limit: callApiPerPage.current,
-					// sort: JSON.stringify([{ property: sortValue, direction: sortDirection }]),
+					sort: JSON.stringify([{ property: sortValue, direction: sortDirection }]),
 				};
 				const res = await dispatch(getMyLikedQuotes(params)).unwrap();
 				const newData = [];

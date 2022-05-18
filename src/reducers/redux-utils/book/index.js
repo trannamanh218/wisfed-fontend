@@ -50,21 +50,10 @@ export const getElasticSearchBookList = createAsyncThunk(
 	}
 );
 
-export const getBookDetail = createAsyncThunk('book/getBookDetail', async (params, { dispatch, rejectWithValue }) => {
-	const { id, ...query } = params;
-
+export const getBookDetail = createAsyncThunk('book/getBookDetail', async (id, { rejectWithValue }) => {
 	try {
 		const response = await Request.makeGet(bookDetailAPI(id));
-		let status = null;
-
-		if (!_.isEmpty(query) && !_.isEmpty(query.userId)) {
-			const response_2 = await dispatch(checkBookInLibraries(id)).unwrap();
-			const { rows } = response_2;
-			const library = rows.find(item => item.library.isDefault);
-			status = library ? library.library.defaultType : null;
-		}
-
-		return { ...response.data, status };
+		return response.data;
 	} catch (err) {
 		const error = JSON.parse(err.response);
 		throw rejectWithValue(error);

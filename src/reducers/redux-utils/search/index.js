@@ -14,7 +14,7 @@ export const getFilterSearch = createAsyncThunk('search/getSearch', async (param
 export const getFilterSearchAuth = createAsyncThunk('search/getSearchAuth', async (params, { rejectWithValue }) => {
 	try {
 		const response = await Request.makeGet(getSearchAuthAPI, params);
-		return response;
+		return response.data.rows;
 	} catch (err) {
 		return rejectWithValue(err.response);
 	}

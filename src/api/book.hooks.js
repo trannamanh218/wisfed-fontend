@@ -90,10 +90,8 @@ export const useFetchBookDetail = id => {
 		let isMount = true;
 		setStatus(STATUS_LOADING);
 		const fetchBookDetail = async () => {
-			const params = { id, userId: userInfo.id };
-
 			try {
-				await dispatch(getBookDetail(params)).unwrap();
+				await dispatch(getBookDetail(id)).unwrap();
 				setStatus(STATUS_SUCCESS);
 			} catch (err) {
 				NotificationError(err);
@@ -110,6 +108,7 @@ export const useFetchBookDetail = id => {
 			isMount = false;
 		};
 	}, [id]);
+
 	return { bookInfo, status };
 };
 

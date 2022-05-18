@@ -10,7 +10,7 @@ import Review from 'pages/review';
 import BookShelves from 'pages/shelves';
 import ConfirmMyBook from 'pages/confirm-my-book';
 import Notification from 'pages/notification/compornent-main';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Routes, Route } from 'react-router-dom';
 import { checkLogin } from 'reducers/redux-utils/auth';
@@ -36,26 +36,28 @@ import { getAllLibraryList, getAllMyLibraryRedux } from 'reducers/redux-utils/li
 import Result from 'pages/result';
 import { NotificationError } from 'helpers/Error';
 import Storage from 'helpers/Storage';
-function App({ children }) {
-	const [myUserId, setMyUserId] = useState('');
+import _ from 'lodash';
 
+function App({ children }) {
 	const dispatch = useDispatch();
 	const updateMyLibrary = useSelector(state => state.library.updateMyLibrary);
+	const userInfo = useSelector(state => state.auth.userInfo);
 
-	useEffect(() => {
+	useEffect(async () => {
 		const accsetToken = Storage.getAccessToken();
 		if (accsetToken) {
 			dispatch(checkLogin(true));
+			await dispatch(getUserInfo());
 		} else {
 			dispatch(checkLogin(false));
 		}
 	}, []);
 
 	useEffect(() => {
-		if (myUserId) {
-			getAllMyLibrary(myUserId);
+		if (!_.isEmpty(userInfo)) {
+			getAllMyLibrary(userInfo.id);
 		}
-	}, [myUserId, updateMyLibrary]);
+	}, [userInfo, updateMyLibrary]);
 
 	const getAllMyLibrary = async userId => {
 		try {
@@ -81,7 +83,7 @@ function App({ children }) {
 			/>
 			<Routes>
 				<Route path='/top100' element={<Ranks />} />
-				<Route path='/result/:slug' element={<Result />} />
+				<Route path='/result/q=:value' element={<Result />} />
 				<Route path='/notification' element={<Notification />} />
 				<Route path='/category' element={<Category />} />
 				<Route path='/category/detail/:id' element={<CategoryDetail />} />

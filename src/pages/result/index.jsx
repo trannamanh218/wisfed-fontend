@@ -15,9 +15,8 @@ import { NotificationError } from 'helpers/Error';
 import { useNavigate } from 'react-router-dom';
 
 const Result = () => {
-	const { slug } = useParams();
+	const { value } = useParams();
 	const dispatch = useDispatch();
-	const { innerHeight: height } = window;
 	const { saveValueInput, isShowModal } = useSelector(state => state.search);
 	const [activeKeyDefault, setActiveKeyDefault] = useState('books');
 	const [searchResultInput, setSearchResultInput] = useState('');
@@ -25,11 +24,9 @@ const Result = () => {
 	const [listArrayBooks, setListArrayBooks] = useState([]);
 	const [listArrayQuotes, setListArrayQuotes] = useState([]);
 	const [hasMore, setHasMore] = useState(true);
-	const [filter, setFilter] = useState('[]');
-	const [newListInfiniteBooks, setNewListInfiniteBooks] = useState([]);
+	const [reload, setReload] = useState(false);
 	const callApiStart = useRef(0);
-	const callApiPerPage = useRef(100);
-	const elementRef = useRef();
+	const callApiPerPage = useRef(10);
 	const navigate = useNavigate();
 
 	const handleSelecActiveKey = () => {
@@ -42,85 +39,67 @@ const Result = () => {
 		handleSelecActiveKey();
 	}, [saveValueInput, isShowModal]);
 
-	const updateInputSearch = value => {
-		if (value) {
-			const filterValue = value;
-			setFilter(JSON.stringify(filterValue));
-		} else {
-			setFilter('[]');
-		}
-	};
-
-	const debounceSearch = useCallback(_.debounce(updateInputSearch, 700), []);
-
 	const handleChange = e => {
 		setSearchResultInput(e.target.value);
-		debounceSearch(e.target.value);
 	};
 
 	const handleDirectParam = () => {
 		if (searchResultInput) {
-			navigate(`/result/${searchResultInput}`);
+			navigate(`/result/q=${searchResultInput}`);
+			callApiStart.current = 0;
+			setListArrayBooks([]);
+			setHasMore(true);
 		}
 	};
 
 	const handleClickSearch = () => {
-		handleGetBooksSearch();
 		handleDirectParam();
+		if (callApiStart.current < 1 && listArrayBooks.length === 0) {
+			handleGetBooksSearch();
+		}
 	};
 
 	const handleKeyDown = e => {
 		if (e.key === 'Enter') {
-			handleGetBooksSearch();
 			handleDirectParam();
+			if (callApiStart.current < 1 && listArrayBooks.length === 0) {
+				handleGetBooksSearch();
+			}
 		}
 	};
 
 	useEffect(() => {
-		setSearchResultInput(slug);
-		setFilter(JSON.stringify(slug));
-	}, [slug]);
+		if (!reload) {
+			setReload(true);
+		}
+		setSearchResultInput(value);
+	}, [value]);
 
 	useEffect(() => {
 		handleGetBooksSearch();
-	}, [activeKeyDefault, filter, callApiStart.current]);
-
-	const handleScrol = () => {
-		const list = elementRef.current;
-		window.addEventListener('scroll', () => {
-			if (~~(window.scrollY + height) === list?.clientHeight + list?.offsetTop) {
-				callApiStart.current += 10;
-				if (newListInfiniteBooks && newListInfiniteBooks.length > 0) {
-					setListArrayBooks(listArrayBooks.concat(newListInfiniteBooks));
-				} else {
-					setHasMore(false);
-				}
-			}
-		});
-	};
-
-	useEffect(() => {
-		handleScrol();
-	}, []);
+	}, [activeKeyDefault, value, reload]);
 
 	const handleGetBooksSearch = async () => {
 		setIsFetching(true);
 		try {
-			if ((_.isEmpty(listArrayBooks) || _.isEmpty(listArrayQuotes)) && filter.length > 0 && searchResultInput) {
+			if ((_.isEmpty(listArrayBooks) || _.isEmpty(listArrayQuotes)) && searchResultInput.length > 0) {
 				const params = {
-					q: filter,
+					q: searchResultInput,
 					type: activeKeyDefault,
 					start: callApiStart.current,
 					limit: callApiPerPage.current,
 				};
 				if (activeKeyDefault === 'books') {
-					const resultBooks = await dispatch(getFilterSearchAuth(params));
-					const newListbook = resultBooks.payload.data;
-					const newConcatArray = newListbook?.authors.concat(newListbook?.name);
-					setNewListInfiniteBooks(newConcatArray);
+					const resultBooks = await dispatch(getFilterSearchAuth(params)).unwrap();
+					if (resultBooks.length > 0) {
+						callApiStart.current += callApiPerPage.current;
+						setListArrayBooks(listArrayBooks.concat(resultBooks));
+					} else if (resultBooks.length === 0) {
+						setHasMore(false);
+					}
 				} else if (activeKeyDefault === 'quotes') {
 					const resultBooks = await dispatch(getFilterSearchAuth(params));
-					setListArrayQuotes(resultBooks.payload.data);
+					setListArrayQuotes(resultBooks.resultBooks.data.rows);
 				}
 			}
 		} catch (err) {
@@ -135,7 +114,7 @@ const Result = () => {
 			<Circle loading={isFetching} />
 			<div className='result__container'>
 				<div className='result__header'>
-					<div className='result__header__content'>Kết quả tìm kiếm cho {slug}</div>
+					<div className='result__header__content'>Kết quả tìm kiếm cho {value}</div>
 				</div>
 				<div className='result__search'>
 					<div className='friends__header'>
@@ -155,10 +134,9 @@ const Result = () => {
 					>
 						<Tab eventKey='books' title='Sách'>
 							<BookSearch
-								handleScrol={handleScrol}
-								listArrayBooks={newListInfiniteBooks}
+								listArrayBooks={listArrayBooks}
 								hasMore={hasMore}
-								elementRef={elementRef}
+								handleGetBooksSearch={handleGetBooksSearch}
 							/>
 						</Tab>
 						<Tab eventKey='group' title='Nhóm'>

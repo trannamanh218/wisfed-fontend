@@ -23,9 +23,7 @@ const ResultSearch = ({ valueInputSearch, resultSearch, setRenderHistorySearch, 
 		);
 	};
 
-	const handleLinkItem = item => {
-		console.log(item);
-	};
+	const handleLinkItem = item => {};
 
 	const historySearch = () => {
 		return resultValue?.map((item, index) => (

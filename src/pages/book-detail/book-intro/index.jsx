@@ -52,6 +52,7 @@ const BookIntro = () => {
 					handleClick={handleClick}
 					bookData={bookInfo}
 					status={bookInfo.status}
+					hasBookStatus={false}
 				/>
 			</div>
 			<div className='book-intro__content'>

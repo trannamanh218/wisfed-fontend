@@ -56,7 +56,12 @@ function PostBook({ data }) {
 					</div>
 				</div>
 				<div className='post-book__button-and-rating'>
-					<StatusButton status={data.status} bookData={data} />
+					<StatusButton
+						bookData={data}
+						inPostBook={true}
+						hasBookStatus={true}
+						postActor={data.actorCreatedPost}
+					/>
 					<div className='post-book__rating__group'>
 						<ReactRating initialRating={listRatingStar.avg} readonly={true} fractions={2} />
 						<div className='post-book__rating__number'>
