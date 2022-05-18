@@ -10,7 +10,7 @@ import Review from 'pages/review';
 import BookShelves from 'pages/shelves';
 import ConfirmMyBook from 'pages/confirm-my-book';
 import Notification from 'pages/notification/compornent-main';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Routes, Route } from 'react-router-dom';
 import { checkLogin } from 'reducers/redux-utils/auth';
@@ -35,12 +35,12 @@ import Ranks from 'pages/ranks';
 import { getAllLibraryList, getAllMyLibraryRedux } from 'reducers/redux-utils/library';
 import Result from 'pages/result';
 import { NotificationError } from 'helpers/Error';
+import _ from 'lodash';
 
 function App({ children }) {
-	const [myUserId, setMyUserId] = useState('');
-
 	const dispatch = useDispatch();
 	const updateMyLibrary = useSelector(state => state.library.updateMyLibrary);
+	const userInfo = useSelector(state => state.auth.userInfo);
 
 	useEffect(() => {
 		fetchLogin();
@@ -56,10 +56,10 @@ function App({ children }) {
 	};
 
 	useEffect(() => {
-		if (myUserId) {
-			getAllMyLibrary(myUserId);
+		if (!_.isEmpty(userInfo)) {
+			getAllMyLibrary(userInfo.id);
 		}
-	}, [myUserId, updateMyLibrary]);
+	}, [userInfo, updateMyLibrary]);
 
 	const getAllMyLibrary = async userId => {
 		try {
