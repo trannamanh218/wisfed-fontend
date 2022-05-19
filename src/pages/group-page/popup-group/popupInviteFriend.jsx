@@ -47,7 +47,6 @@ const PopupInviteFriend = ({ handleClose }) => {
 	useEffect(() => {
 		getListFriend();
 	}, [userInfo]);
-	console.log(listFriendSelect);
 
 	const handleSelectFriend = e => {
 		setListFriendSelect([...listFriendSelect, e]);
