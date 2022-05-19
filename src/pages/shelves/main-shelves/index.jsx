@@ -89,6 +89,13 @@ const MainShelves = ({ allLibraryList, shelveName, isMyShelve, handleViewBookDet
 		setCurrentPage(pageIndex);
 	};
 
+	const handleUpdateBookList = bookId => {
+		const newBookList = [...currentBooks];
+		const indexRemove = newBookList.findIndex(item => item.id === bookId);
+		newBookList.splice(indexRemove, 1);
+		setCurrentBooks(newBookList);
+	};
+
 	return (
 		<>
 			<div className='main-shelves'>
@@ -131,7 +138,11 @@ const MainShelves = ({ allLibraryList, shelveName, isMyShelve, handleViewBookDet
 												isMyShelve={isMyShelve}
 											/>
 										) : (
-											<Shelf list={currentBooks} isMyShelve={isMyShelve} />
+											<Shelf
+												list={currentBooks}
+												isMyShelve={isMyShelve}
+												handleUpdateBookList={handleUpdateBookList}
+											/>
 										)}
 									</>
 									<>

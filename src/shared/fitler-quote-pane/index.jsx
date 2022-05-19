@@ -100,11 +100,7 @@ const FilterQuotePane = ({
 	};
 
 	const checkClickTarget = e => {
-		let onTarget = false;
-		if (sortDropdownMenu.current.contains(e.target)) {
-			onTarget = true;
-		}
-		if (!onTarget) {
+		if (!sortDropdownMenu.current.contains(e.target)) {
 			setShowDropdownMenu(false);
 		}
 	};
