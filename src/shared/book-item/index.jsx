@@ -11,8 +11,7 @@ import { getRatingBook } from 'reducers/redux-utils/book';
 import { useDispatch } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
 
-const BookItem = props => {
-	const { data, handleClick, isMyShelve } = props;
+const BookItem = ({ data, handleClick, isMyShelve, handleUpdateBookList }) => {
 	// const [isPublic, setIsPublic] = useState(data.isPublic);
 	const dispatch = useDispatch();
 	const [listRatingStar, setListRatingStar] = useState({});
@@ -52,7 +51,7 @@ const BookItem = props => {
 			<div className='book-item__container'>
 				<BookThumbnail size='lg' {...data} />
 				<div className='book-item__overlay'>
-					{isMyShelve && <SettingMore bookData={data} />}
+					{isMyShelve && <SettingMore bookData={data} handleUpdateBookList={handleUpdateBookList} />}
 					{renderOverlay()}
 				</div>
 			</div>
@@ -81,6 +80,7 @@ BookItem.defaultProps = {
 	},
 	isMyShelve: false,
 	handleClick: () => {},
+	handleUpdateBookList: () => {},
 };
 
 BookItem.propTypes = {
@@ -95,5 +95,6 @@ BookItem.propTypes = {
 	}),
 	isMyShelve: PropTypes.bool,
 	handleClick: PropTypes.func,
+	handleUpdateBookList: PropTypes.func,
 };
 export default BookItem;

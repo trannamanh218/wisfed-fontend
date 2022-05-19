@@ -56,7 +56,7 @@ const SearchAllModal = ({ showRef }) => {
 			if (saveValueInput) {
 				dispatch(handleResetValue(true));
 				if (valueInput) {
-					navigate(`/result/${valueInput}`);
+					navigate(`/result/q=${valueInput}`);
 				}
 			}
 		}
