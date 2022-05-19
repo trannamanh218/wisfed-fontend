@@ -3,7 +3,7 @@ import { Modal, ModalBody } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import './Modal-read-target.scss';
 import { CloseX } from 'components/svg';
-import { deleteTargetRead } from 'reducers/redux-utils/chart';
+import { deleteTargetRead, renderTargetReadingProgress } from 'reducers/redux-utils/chart';
 import { useDispatch } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
 
@@ -16,7 +16,8 @@ const ModalReadTarget = ({ toggleModal, modalOpen, setModalOpen, deleteModal }) 
 			const params = {
 				year: year,
 			};
-			return await dispatch(deleteTargetRead(params)).unwrap();
+			dispatch(renderTargetReadingProgress(false));
+			await dispatch(deleteTargetRead(params)).unwrap();
 		} catch (err) {
 			NotificationError(err);
 		} finally {

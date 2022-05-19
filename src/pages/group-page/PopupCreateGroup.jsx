@@ -5,7 +5,7 @@ import Input from 'shared/input';
 import SelectBox from 'shared/select-box';
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
-import './creat-group.scss';
+import './create-group.scss';
 import { getUserList } from 'reducers/redux-utils/user';
 import { getCreatGroup } from 'reducers/redux-utils/group';
 import Dropzone from 'react-dropzone';
@@ -13,7 +13,7 @@ import { useDropzone } from 'react-dropzone';
 import { uploadImage } from 'reducers/redux-utils/common';
 import { NotificationError } from 'helpers/Error';
 
-const PopupCreatGroup = ({ handleClose }) => {
+const PopupCreateGroup = ({ handleClose }) => {
 	const [inputNameGroup, setInputNameGroup] = useState('');
 	const [inputDiscription, setInputDiscription] = useState('');
 	const [inputAuthors, setInputAuthors] = useState('');
@@ -278,8 +278,8 @@ const PopupCreatGroup = ({ handleClose }) => {
 	);
 };
 
-PopupCreatGroup.propTypes = {
+PopupCreateGroup.propTypes = {
 	handleClose: PropTypes.func,
 };
 
-export default PopupCreatGroup;
+export default PopupCreateGroup;

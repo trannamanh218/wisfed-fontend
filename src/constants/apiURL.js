@@ -118,4 +118,8 @@ export const getFilterTopUserApiAuth = `/api/v1/report/reportTopUsersAuth`;
 // group
 export const detailGroup = id => `api/v1/groups/${id}`;
 export const creatGroup = '/api/v1/groups';
+// search
+export const getSearchAPI = `/api/v1/searchs`;
+export const getSearchAuthAPI = `/api/v1/searchs/searchAuth`;
 export const inviteFriend = id => `api/v1/groups/inviteMemberToGroup/${id}`;
+export const enjoyGroup = id => `/api/v1/groups/requestGroup/${id}`;

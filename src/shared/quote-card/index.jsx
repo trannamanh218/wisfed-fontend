@@ -24,7 +24,7 @@ const QuoteCard = ({ data, isDetail, likedArray }) => {
 				setIsLiked(true);
 			}
 		}
-		if (data.tags.length > 0) {
+		if (data.tags?.length > 0) {
 			const tagsArr = [];
 			data.tags.forEach(item => {
 				tagsArr.push('#' + item.tag.slug);

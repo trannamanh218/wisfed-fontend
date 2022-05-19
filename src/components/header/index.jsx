@@ -1,20 +1,24 @@
 import { useEffect, useState, useRef } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { LogoIcon, BookFillIcon, BookIcon, CategoryIcon, GroupIcon, HomeIcon } from 'components/svg';
 import SearchIcon from 'assets/icons/search.svg';
 import classNames from 'classnames';
 import './header.scss';
-import { useSelector } from 'react-redux';
 import UserAvatar from 'shared/user-avatar';
 import NotificationModal from 'pages/notification/';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { backgroundToggle } from 'reducers/redux-utils/notificaiton';
 import { useVisible } from 'shared/hooks';
 import SearchAllModal from 'shared/search-all';
+import Storage from 'helpers/Storage';
+import { handleResetValue } from 'reducers/redux-utils/search';
+import { useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const Header = () => {
+	const { isShowModal } = useSelector(state => state.search);
 	const { ref: showRef, isVisible: isShow, setIsVisible: setIsShow } = useVisible(false);
-
+	const navigate = useNavigate();
 	const [activeLink, setActiveLink] = useState('/');
 	const location = useLocation();
 	const { pathname } = location;
@@ -22,14 +26,44 @@ const Header = () => {
 	const dispatch = useDispatch();
 	const [modalNoti, setModalNotti] = useState(false);
 	const buttonModal = useRef(null);
+	const [modalInforUser, setModalInforUser] = useState(false);
+	const { value } = useParams();
+	const [getSlugResult, setGetSlugResult] = useState('');
 
 	useEffect(() => {
 		setActiveLink(pathname);
 	}, [pathname]);
 
+	useEffect(() => {
+		setGetSlugResult(value);
+	}, [value]);
+
+	useEffect(() => {
+		if (isShowModal) {
+			dispatch(handleResetValue(false));
+			setIsShow(false);
+		}
+	}, [isShowModal]);
+
 	const toglleModalNotify = () => {
 		setModalNotti(!modalNoti);
 		dispatch(backgroundToggle(modalNoti));
+	};
+
+	const tollgleModaleInfoUser = () => {
+		setModalInforUser(!modalInforUser);
+		if (Storage.getAccessToken()) {
+			navigate(`/profile/${userInfo.id}`);
+		} else {
+			navigate(`/login`);
+		}
+	};
+
+	const handleLogout = () => {
+		localStorage.removeItem('accessToken');
+		localStorage.removeItem('refreshToken');
+		navigate('/login');
+		toast.success('Đăng xuất thành công');
 	};
 
 	return (
@@ -45,6 +79,7 @@ const Header = () => {
 						placeholder='Tìm kiếm trên Wisfeed'
 						onClick={() => setIsShow(true)}
 						disabled={isShow}
+						value={getSlugResult || ''}
 					/>
 				</div>
 				{isShow ? <SearchAllModal showRef={showRef} /> : ''}
@@ -81,9 +116,17 @@ const Header = () => {
 					/>
 					{modalNoti && <NotificationModal setModalNotti={setModalNotti} buttonModal={buttonModal} />}
 				</div>
-				<Link to={`/profile/${userInfo.id}`}>
+				<div onClick={() => tollgleModaleInfoUser()}>
 					<UserAvatar className='header__avatar' source={userInfo?.avatarImage} />
-				</Link>
+					{modalInforUser && localStorage.getItem('accessToken') && (
+						<ul className='header__option-info'>
+							<Link to={localStorage.getItem('accessToken') && `/profile/${userInfo.id}`}>
+								<li>Thông tin cá nhân</li>
+							</Link>
+							<li onClick={() => handleLogout()}>Đăng xuất</li>
+						</ul>
+					)}
+				</div>
 			</div>
 		</div>
 	);

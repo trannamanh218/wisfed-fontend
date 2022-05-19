@@ -8,13 +8,14 @@ import { ShareRanks } from 'components/svg';
 const AuthorBook = props => {
 	const { data, checkStar, checkshare } = props;
 	// const authorsName = data?.book?.authors.map(author => author?.authorName);
+
 	return (
 		<div className='author-book'>
-			<BookThumbnail images={data.book.images} />
+			<BookThumbnail source={data.book?.images || data?.images[0]} />
 			<div className='author-book__info'>
 				<div className='author-book__header'>
-					<h4 className='author-book__title' title={data.book.name}>
-						{data.book.name}
+					<h4 className='author-book__title' title={data.book?.name || data?.name}>
+						{data.book?.name || data?.name}
 					</h4>
 					{checkshare && (
 						<div className='author-book__share'>
@@ -26,10 +27,10 @@ const AuthorBook = props => {
 				{/* <p className='author-book__writers'>{authorsName?.join('- ')}</p> */}
 				<div className='author-book__rating'>
 					<ReactRating readonly={true} initialRating={data.avgRating} checkStar={checkStar} />
-					<span className='author-book__rating__number'>{data.avgRating} sao</span>
+					<span className='author-book__rating__number'>{data.avgRating || data.rateAvg} sao</span>
 				</div>
 				<div className='author-book__bottom'>
-					<span className='author-book__stats'>1000 (đánh giá)</span>
+					<span className='author-book__stats'>{data?.countRate} (đánh giá)</span>
 					<StatusButton bookData={data} status={data.status} />
 				</div>
 			</div>

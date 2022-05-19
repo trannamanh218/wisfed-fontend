@@ -10,8 +10,8 @@ import { useFetchQuotes } from 'api/quote.hooks';
 import ChartsReading from 'shared/charts-Reading';
 import { useFetchAuthorBooks } from 'api/book.hooks';
 import { useParams } from 'react-router-dom';
-import { useFetchTargetReading } from 'api/readingTarget.hooks';
 import RenderProgress from 'shared/render-progress';
+
 import _ from 'lodash';
 
 const SidebarShelves = ({ userData, isMyShelve }) => {
@@ -25,8 +25,6 @@ const SidebarShelves = ({ userData, isMyShelve }) => {
 	);
 
 	const myAllLibraryRedux = useSelector(state => state.library.myAllLibrary);
-
-	const { booksReadYear } = useFetchTargetReading(userId);
 
 	return (
 		<div className='sidebar-shelves'>
@@ -62,7 +60,7 @@ const SidebarShelves = ({ userData, isMyShelve }) => {
 					</Link>
 				</div>
 			)}
-			<RenderProgress booksReadYear={booksReadYear} />
+			<RenderProgress userId={userId} />
 			<ChartsReading />
 		</div>
 	);

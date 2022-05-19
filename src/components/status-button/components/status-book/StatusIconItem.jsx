@@ -1,15 +1,14 @@
 import WrapIcon from 'components/wrap-icon';
-import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import './style.scss';
 
 const StatusIconItem = ({ item, currentStatus, handleChangeStatus }) => {
-	const isActive = currentStatus.value === item.value ? true : false;
+	const isActive = currentStatus === item.value ? true : false;
 
 	const handleClick = item => {
-		if (item.value !== currentStatus.value) {
-			handleChangeStatus(item);
+		if (item.value !== currentStatus) {
+			handleChangeStatus(item.value);
 		}
 	};
 
@@ -27,8 +26,8 @@ const StatusIconItem = ({ item, currentStatus, handleChangeStatus }) => {
 };
 
 StatusIconItem.propTypes = {
-	item: PropTypes.object.isRequired,
-	currentStatus: PropTypes.object.isRequired,
+	item: PropTypes.string.isRequired,
+	currentStatus: PropTypes.string.isRequired,
 	handleChangeStatus: PropTypes.func,
 };
 

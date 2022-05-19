@@ -13,7 +13,7 @@ const ConnectButtons = ({ data, direction, item }) => {
 	const [toggleUnFollow, setToggleUnFollow] = useState(true);
 	const [toggleAddFollow, setToggleAddFollow] = useState(true);
 	const [togglePendingFriend, setTogglePendingFriend] = useState(true);
-	const [toggleModalUnFriends, setModalUnfriends] = useState(false);
+	// const [toggleModalUnFriends, setModalUnfriends] = useState(false);
 
 	const buttonUnFollow = () => {
 		return (
@@ -71,7 +71,7 @@ const ConnectButtons = ({ data, direction, item }) => {
 		}
 	};
 	const handleUnFriend = () => {
-		setModalUnfriends(false);
+		// setModalUnfriends(false);
 		try {
 			dispatch(unFriendRequest(item.id)).unwrap();
 			setUnFriend(false);
@@ -111,14 +111,12 @@ const ConnectButtons = ({ data, direction, item }) => {
 	};
 
 	const handleRenderButtonFriend = () => {
-		if (item.isFriend) {
+		if (item.relation === 'friend') {
 			return unFriend ? buttonUnFriend() : togglePendingFriend ? buttonAddFriend() : buttonPendingFriend();
-		} else {
-			if (item.pending) {
-				return buttonPendingFriend();
-			} else {
-				return togglePendingFriend ? buttonAddFriend() : buttonPendingFriend();
-			}
+		} else if (item.relation === 'pending') {
+			return buttonPendingFriend();
+		} else if (item.relation === 'unknown') {
+			return togglePendingFriend ? buttonAddFriend() : buttonPendingFriend();
 		}
 	};
 
