@@ -14,27 +14,51 @@ import ManageJoin from './AminSettings/ManageJoin';
 import PropTypes from 'prop-types';
 import PostWatting from './AminSettings/PostWatting';
 import PopupInviteFriend from '../popupInviteFriend';
-import { getEnjoyGroup } from 'reducers/redux-utils/group';
+import { getEnjoyGroup, leaveGroupUser } from 'reducers/redux-utils/group';
 import { NotificationError } from 'helpers/Error';
-import { useParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
+import Circle from 'shared/loading/circle';
 
 function MainGroupComponent({ handleChange, keyChange, data, backgroundImage }) {
 	const [key, setKey] = useState('intro');
 	const { groupType, description, memberGroups, name } = data;
 	const [isShow, setIsShow] = useState(false);
-	const { id = '' } = useParams();
 	const dispatch = useDispatch();
 	const [show, setShow] = useState(false);
 	const { userInfo } = useSelector(state => state.auth);
 	const [showSelect, setShowSelect] = useState(false);
+	const [isFetching, setIsFetching] = useState(true);
 
 	const enjoyGroup = async () => {
+		setIsFetching(true);
 		try {
-			await dispatch(getEnjoyGroup(id));
+			await dispatch(getEnjoyGroup(data?.id));
+			setTimeout(() => {
+				setIsFetching(false);
+			}, 2000);
+			setShow(true);
+			setIsFetching(false);
 		} catch (err) {
 			NotificationError(err);
+		}
+	};
+
+	const leaveGroup = async () => {
+		setIsFetching(true);
+		const params = {
+			id: data?.id,
+		};
+		try {
+			await dispatch(leaveGroupUser(params));
+			setShow(false);
+			setShowSelect(false);
+		} catch (err) {
+			NotificationError(err);
+		} finally {
+			setTimeout(() => {
+				setIsFetching(false);
+			}, 2000);
 		}
 	};
 
@@ -42,11 +66,19 @@ function MainGroupComponent({ handleChange, keyChange, data, backgroundImage }) 
 		const checkItem = data?.memberGroups?.filter(item => item?.user?.id === userInfo?.id);
 		if (checkItem?.length > 0) {
 			setShow(true);
+			setTimeout(() => {
+				setIsFetching(false);
+			}, 2000);
+		} else {
+			setTimeout(() => {
+				setIsFetching(false);
+			}, 2000);
 		}
-	}, [data, userInfo, enjoyGroup.show]);
+	}, [data, userInfo]);
 
 	return (
 		<div className='group-main-component__container'>
+			<Circle loading={isFetching} />
 			<div className='group__background'>
 				<div>
 					<img
@@ -86,7 +118,7 @@ function MainGroupComponent({ handleChange, keyChange, data, backgroundImage }) 
 											<li>
 												<CloseIconX /> Bỏ theo dõi
 											</li>
-											<li>
+											<li onClick={() => leaveGroup()}>
 												<LogOutGroup /> Rời khỏi nhóm
 											</li>
 										</ul>
@@ -132,7 +164,7 @@ function MainGroupComponent({ handleChange, keyChange, data, backgroundImage }) 
 								groupType={groupType}
 								description={description}
 								memberGroups={memberGroups}
-								createdAt={data?.createdAt}
+								createdAt={data.createdAt}
 							/>
 						</Tab>
 						<Tab eventKey='post' title='Bài viết'>
