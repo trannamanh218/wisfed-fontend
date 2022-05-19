@@ -1,4 +1,4 @@
-import CreatNewPasswordForm from 'pages/foget-password/component/CreatNewPasswordForm';
+import CreatNewPasswordForm from 'pages/foget-password/component/CreateNewPasswordForm';
 
 export default {
 	title: 'Components/Modules/CreatNewPassword',

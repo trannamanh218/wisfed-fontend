@@ -8,19 +8,6 @@
 	left: 15%;
 	z-index: 1;
 	padding: 20px;
-	.search__all__header {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		.search__all__header__icon {
-			transform: rotate(180deg);
-			cursor: pointer;
-			svg {
-				height: 24px;
-				width: 24px;
-			}
-		}
-	}
 	.search__all__main__title {
 		display: flex;
 		justify-content: space-between;
@@ -41,5 +28,9 @@
 			letter-spacing: 0.75px;
 			cursor: pointer;
 		}
+	}
+	.history__search {
+		text-align: center;
+		margin-top: 20px;
 	}
 }

@@ -58,6 +58,7 @@ export const useFetchTargetReading = (userId, modalOpen, deleteModal, filter = '
 			};
 			fetchData();
 		}
+
 		return () => {
 			isMount = false;
 		};

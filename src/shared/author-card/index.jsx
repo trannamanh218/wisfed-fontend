@@ -18,7 +18,7 @@ const AuthorCard = ({ direction, size, item }) => {
 				</div>
 			</div>
 			<div className='author-card__right'>
-				{item.itsMe ? '' : <ConnectButtons direction={direction} item={item} />}
+				{item.relation === 'isMe' ? '' : <ConnectButtons direction={direction} item={item} />}
 			</div>
 		</div>
 	);

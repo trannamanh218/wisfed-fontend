@@ -35,6 +35,7 @@ import Ranks from 'pages/ranks';
 import { getAllLibraryList, getAllMyLibraryRedux } from 'reducers/redux-utils/library';
 import Result from 'pages/result';
 import { NotificationError } from 'helpers/Error';
+import Storage from 'helpers/Storage';
 import _ from 'lodash';
 
 function App({ children }) {
@@ -42,18 +43,15 @@ function App({ children }) {
 	const updateMyLibrary = useSelector(state => state.library.updateMyLibrary);
 	const userInfo = useSelector(state => state.auth.userInfo);
 
-	useEffect(() => {
-		fetchLogin();
-	}, []);
-
-	const fetchLogin = async () => {
-		try {
-			await dispatch(getUserInfo()).unwrap();
+	useEffect(async () => {
+		const accsetToken = Storage.getAccessToken();
+		if (accsetToken) {
 			dispatch(checkLogin(true));
-		} catch (err) {
+			await dispatch(getUserInfo());
+		} else {
 			dispatch(checkLogin(false));
 		}
-	};
+	}, []);
 
 	useEffect(() => {
 		if (!_.isEmpty(userInfo)) {
@@ -85,7 +83,7 @@ function App({ children }) {
 			/>
 			<Routes>
 				<Route path='/top100' element={<Ranks />} />
-				<Route path='/result' element={<Result />} />
+				<Route path='/result/q=:value' element={<Result />} />
 				<Route path='/notification' element={<Notification />} />
 				<Route path='/category' element={<Category />} />
 				<Route path='/category/detail/:id' element={<CategoryDetail />} />

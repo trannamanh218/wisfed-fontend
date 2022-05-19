@@ -30,7 +30,6 @@ const TopBooks = ({ rows, listYear }) => {
 			categoryId: topBooksId,
 			by: valueDate,
 		};
-
 		try {
 			if (isAuth === false) {
 				const topBooks = await dispatch(getTopBooks(params)).unwrap();
