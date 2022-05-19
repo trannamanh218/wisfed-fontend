@@ -1,5 +1,4 @@
 import { CircleCheckIcon, CoffeeCupIcon, TargetIcon } from 'components/svg';
-import React from 'react';
 import StatusIconItem from './StatusIconItem';
 import PropTypes from 'prop-types';
 import './style.scss';
@@ -42,7 +41,7 @@ const StatusBookList = ({ currentStatus, handleChangeStatus }) => {
 };
 
 StatusBookList.propTypes = {
-	currentStatus: PropTypes.object.isRequired,
+	currentStatus: PropTypes.string.isRequired,
 	handleChangeStatus: PropTypes.func,
 };
 

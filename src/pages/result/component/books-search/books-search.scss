@@ -9,5 +9,8 @@
 	}
 	.bookSearch__main {
 		margin-top: 35px;
+		.author-book__title {
+			flex: 1;
+		}
 	}
 }

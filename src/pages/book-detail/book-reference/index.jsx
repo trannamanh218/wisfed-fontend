@@ -78,7 +78,7 @@ const BookReference = () => {
 			{/* sách của tac gia */}
 			<BookSlider
 				className='book-reference__slider'
-				title={`Sách của ${bookInfo.authors[0].authorName} `}
+				title={`Sách của ${bookInfo.authors[0]?.authorName} `}
 				list={bookList}
 			/>
 			{/* series sách đó */}

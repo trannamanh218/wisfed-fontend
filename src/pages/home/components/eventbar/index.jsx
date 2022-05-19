@@ -1,5 +1,6 @@
 import './eventbar.scss';
 import eventBarImageSample from 'assets/images/event-bar-image-sample.jpg';
+import { Link } from 'react-router-dom';
 
 const EventBar = () => {
 	return (
@@ -12,12 +13,12 @@ const EventBar = () => {
 					<button className='event-bar__join-event'>Tham gia sự kiện</button>
 				</div>
 			</div>
-			<div className='event-and-rank-bar__block'>
+			<Link to={`/top100`} className='event-and-rank-bar__block'>
 				<h4 className='event-and-rank-bar__block__title'>Bảng xếp hạng</h4>
 				<div className='event-and-rank-bar__content'>
 					<img src={eventBarImageSample} alt='' />
 				</div>
-			</div>
+			</Link>
 		</div>
 	);
 };

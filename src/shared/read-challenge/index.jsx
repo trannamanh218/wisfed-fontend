@@ -2,7 +2,12 @@ import './style.scss';
 import readChallengeImg from 'assets/images/read-challenge-img.jpg';
 import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { updateTargetRead, createTargetRead, renderTargetReadingProgress } from 'reducers/redux-utils/chart';
+import {
+	updateTargetRead,
+	createTargetRead,
+	renderTargetReadingProgress,
+	checkRenderTargetReading,
+} from 'reducers/redux-utils/chart';
 import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 import { NotificationError } from 'helpers/Error';
@@ -52,6 +57,7 @@ function ReadChallenge({ modalOpen, setModalOpen }) {
 					numberBook: inputValue,
 				};
 				await dispatch(createTargetRead(params)).unwrap();
+				dispatch(checkRenderTargetReading(true));
 				return toast.success('Tạo mục tiêu thành công');
 			} catch (err) {
 				NotificationError(err);

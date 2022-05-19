@@ -4,16 +4,15 @@ import WrapIcon from 'components/wrap-icon';
 import { STATUS_BOOK } from 'constants';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { Modal } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
-import { toast } from 'react-toastify';
 import {
 	addBookToDefaultLibrary,
 	addRemoveBookInLibraries,
 	checkBookInLibraries,
 	createLibrary,
-	updateAuthLibrary,
+	updateMyAllLibraryRedux,
 } from 'reducers/redux-utils/library';
 import './status-button.scss';
 import StatusModalContainer from 'shared/status-modal/StatusModalContainer';
@@ -23,32 +22,35 @@ import { updateCurrentBook } from 'reducers/redux-utils/book';
 import { useNavigate } from 'react-router-dom';
 import { STATUS_SUCCESS } from 'constants';
 import { NotificationError } from 'helpers/Error';
+import Storage from 'helpers/Storage';
 
 const STATUS_BOOK_OBJ = {
-	'reading': {
+	reading: {
 		'name': 'Đang đọc',
 		'value': STATUS_BOOK.reading,
 		'icon': CoffeeCupIcon,
 	},
-	'read': {
+	read: {
 		'name': 'Đã đọc',
 		'value': STATUS_BOOK.read,
 		'icon': CircleCheckIcon,
 	},
-	'wantToRead': {
+	wantToRead: {
 		'name': 'Muốn đọc',
 		'value': STATUS_BOOK.wantToRead,
 		'icon': TargetIcon,
 	},
 };
 
-const StatusButton = ({ className, status, bookData }) => {
+const StatusButton = ({ className, bookData, inPostBook = false, hasBookStatus = false, postActor }) => {
 	const [modalShow, setModalShow] = useState(false);
-	const [currentStatus, setCurrentStatus] = useState(STATUS_BOOK_OBJ.wantToRead);
-	const [bookLibraries, setBookLibaries] = useState([]);
+	const [currentStatus, setCurrentStatus] = useState('');
 	const [fetchStatus, setFetchStatus] = useState(STATUS_IDLE);
-	const statusRef = useRef({});
-	statusRef.current = STATUS_BOOK_OBJ.wantToRead;
+	const [customLibrariesContainCurrentBookId, setCustomLibrariesContainCurrentBookId] = useState([]);
+
+	const addedArray = useRef([]);
+	const removedArray = useRef([]);
+
 	const navigate = useNavigate();
 
 	const myCustomLibraries = useSelector(state => state.library.myAllLibrary).custom;
@@ -56,12 +58,39 @@ const StatusButton = ({ className, status, bookData }) => {
 
 	const dispatch = useDispatch();
 
-	useEffect(() => {
-		if (status) {
-			setCurrentStatus(STATUS_BOOK_OBJ[status]);
-			statusRef.current = STATUS_BOOK_OBJ[status];
+	useEffect(async () => {
+		if (Storage.getAccessToken()) {
+			if (hasBookStatus) {
+				if (inPostBook) {
+					if (userInfo.id === postActor) {
+						setCurrentStatus(bookData.status);
+					} else {
+						checkBookInDefaultLibrary();
+					}
+				} else {
+					setCurrentStatus(bookData.status);
+				}
+			} else {
+				checkBookInDefaultLibrary();
+			}
+		} else {
+			setCurrentStatus(STATUS_BOOK.wantToRead);
 		}
-	}, [status]);
+	}, []);
+
+	const checkBookInDefaultLibrary = async () => {
+		try {
+			const res = await dispatch(checkBookInLibraries(bookData.id || bookData.bookId)).unwrap();
+			const defaultLibraryContainCurrentBook = res.filter(item => item.library.isDefault === true);
+			if (!!res.length && !!defaultLibraryContainCurrentBook.length) {
+				setCurrentStatus(defaultLibraryContainCurrentBook[0].library.defaultType);
+			} else {
+				setCurrentStatus(STATUS_BOOK.wantToRead);
+			}
+		} catch (err) {
+			NotificationError(err);
+		}
+	};
 
 	const handleClose = () => {
 		setModalShow(false);
@@ -69,42 +98,16 @@ const StatusButton = ({ className, status, bookData }) => {
 
 	const handleShow = e => {
 		e.stopPropagation();
-		// check duoc trang thai co trong thu vien
-		let bookInLibraries = [];
-		let initStatus = STATUS_BOOK_OBJ[status] || STATUS_BOOK_OBJ.wantToRead;
+		//check duoc trang thai co trong thu vien
 		dispatch(checkBookInLibraries(bookData.id || bookData.bookId))
 			.unwrap()
 			.then(res => {
-				const { rows } = res;
-				if (_.isEmpty(rows)) {
-					bookInLibraries = myCustomLibraries.map(item => ({
-						...item,
-						isInLibrary: false,
-						isSelect: false,
-					}));
-				} else {
-					const currentLibraries = rows.map(item => ({ ...item.library }));
-					bookInLibraries = myCustomLibraries.map(item => {
-						const newItem = { ...item, isInLibrary: false, isSelect: false };
-						for (const lib of currentLibraries) {
-							if (newItem.id === lib.id) {
-								newItem.isInLibrary = true;
-								newItem.isSelect = true;
-								break;
-							}
-						}
-
-						return newItem;
-					});
-
-					const currentStatusLibrary = currentLibraries.find(item => item.isDefault);
-
-					if (!_.isEmpty(currentStatusLibrary)) {
-						initStatus = STATUS_BOOK_OBJ[currentStatusLibrary.defaultType];
-					}
+				const customLibrariesContainCurrentBook = res.filter(item => item.library.isDefault === false);
+				if (customLibrariesContainCurrentBook.length) {
+					const arrId = [];
+					customLibrariesContainCurrentBook.forEach(item => arrId.push(item.libraryId));
+					setCustomLibrariesContainCurrentBookId(arrId);
 				}
-				setBookLibaries(bookInLibraries);
-				setCurrentStatus(initStatus);
 			})
 			.catch(err => {
 				NotificationError(err);
@@ -116,46 +119,28 @@ const StatusButton = ({ className, status, bookData }) => {
 
 	const updateBookShelve = async params => {
 		try {
-			const data = await dispatch(createLibrary(params)).unwrap();
-			const newRows = [...myCustomLibraries, data];
-			dispatch(updateAuthLibrary({ rows: newRows, count: newRows.length }));
-			const newBookLibraries = [...bookLibraries, { ...data, isInLibrary: false, isSelect: false }];
-			setBookLibaries(newBookLibraries);
+			await dispatch(createLibrary(params)).unwrap();
+			dispatch(updateMyAllLibraryRedux());
 		} catch (err) {
 			NotificationError(err);
-			toast.error('Lỗi không tạo được tủ sách!');
 		}
 	};
 
 	const updateStatusBook = () => {
-		if (!_.isEmpty(bookData) && status !== currentStatus.value) {
-			const params = { bookId: bookData.id || bookData.bookId, type: currentStatus.value };
+		if (!_.isEmpty(bookData)) {
+			const params = { bookId: bookData.id || bookData.bookId, type: currentStatus };
 			dispatch(addBookToDefaultLibrary(params));
 		}
 	};
 
 	const handleAddAndRemoveBook = () => {
-		if (!_.isEmpty(bookLibraries)) {
-			const data = bookLibraries.reduce(
-				(res, item) => {
-					if (!item.isInLibrary && item.isSelect) {
-						res.add.push(item.id);
-						return res;
-					}
-
-					if (item.isInLibrary && !item.isSelect) {
-						res.remove.push(item.id);
-						return res;
-					}
-
-					return res;
-				},
-				{ add: [], remove: [] }
+		if (!_.isEmpty(addedArray.current) || !_.isEmpty(removedArray.current)) {
+			dispatch(
+				addRemoveBookInLibraries({
+					id: bookData.id || bookData.bookId,
+					data: { add: addedArray.current, remove: removedArray.current },
+				})
 			);
-
-			if (!_.isEmpty(data.add) || !_.isEmpty(data.remove)) {
-				return dispatch(addRemoveBookInLibraries({ id: bookData.id || bookData.bookId, ...data }));
-			}
 		}
 	};
 
@@ -166,16 +151,8 @@ const StatusButton = ({ className, status, bookData }) => {
 			await handleAddAndRemoveBook();
 			setModalShow(false);
 			setFetchStatus(STATUS_SUCCESS);
-
-			if (userInfo.id === bookData.actorCreatedPost) {
-				if (status !== currentStatus.value) {
-					dispatch(updateCurrentBook({ ...bookData, status: currentStatus.value }));
-					navigate('/');
-				}
-			} else {
-				dispatch(updateCurrentBook({ ...bookData, status: currentStatus.value }));
-				navigate('/');
-			}
+			dispatch(updateCurrentBook({ ...bookData, status: currentStatus }));
+			navigate('/');
 		} catch (err) {
 			NotificationError(err);
 			setModalShow(false);
@@ -183,19 +160,24 @@ const StatusButton = ({ className, status, bookData }) => {
 		}
 	};
 
-	const handleChangeStatus = data => {
-		setCurrentStatus(data);
+	const handleChangeStatus = statusSelected => {
+		setCurrentStatus(statusSelected);
 	};
 
-	const onChangeShelves = data => {
-		const newData = bookLibraries.map(item => {
-			if (item.id === data.id) {
-				return { ...item, isSelect: !item.isSelect };
+	const onChangeShelves = (data, option) => {
+		if (option === 'add') {
+			const index = removedArray.current.indexOf(data.id);
+			if (index !== -1) {
+				removedArray.current.splice(index, 1);
 			}
-			return item;
-		});
-
-		setBookLibaries(newData);
+			addedArray.current.push(data.id);
+		} else {
+			const index = addedArray.current.indexOf(data.id);
+			if (index !== -1) {
+				addedArray.current.splice(index, 1);
+			}
+			removedArray.current.push(data.id);
+		}
 	};
 
 	return (
@@ -208,9 +190,9 @@ const StatusButton = ({ className, status, bookData }) => {
 			>
 				<WrapIcon
 					className='btn-status__icon'
-					component={status ? STATUS_BOOK_OBJ[status].icon : STATUS_BOOK_OBJ.wantToRead.icon}
+					component={currentStatus ? STATUS_BOOK_OBJ[currentStatus].icon : STATUS_BOOK_OBJ.wantToRead.icon}
 				/>
-				<span>{status ? STATUS_BOOK_OBJ[status].name : STATUS_BOOK_OBJ.wantToRead.name}</span>
+				<span>{currentStatus ? STATUS_BOOK_OBJ[currentStatus].name : STATUS_BOOK_OBJ.wantToRead.name}</span>
 			</button>
 			{!_.isEmpty(userInfo) ? (
 				<Modal
@@ -225,10 +207,11 @@ const StatusButton = ({ className, status, bookData }) => {
 						<StatusModalContainer
 							currentStatus={currentStatus}
 							handleChangeStatus={handleChangeStatus}
-							bookShelves={bookLibraries}
+							bookShelves={myCustomLibraries}
 							updateBookShelve={updateBookShelve}
 							handleConfirm={handleConfirm}
 							onChangeShelves={onChangeShelves}
+							customLibrariesContainCurrentBookId={customLibrariesContainCurrentBookId}
 						/>
 					</Modal.Body>
 				</Modal>
@@ -257,9 +240,10 @@ StatusButton.defaultProps = {
 
 StatusButton.propTypes = {
 	className: PropTypes.string,
-	status: PropTypes.oneOf([STATUS_BOOK.read, STATUS_BOOK.reading, STATUS_BOOK.wantToRead]),
-	handleClick: PropTypes.func,
 	bookData: PropTypes.object,
+	inPostBook: PropTypes.bool,
+	hasBookStatus: PropTypes.bool,
+	postActor: PropTypes.string,
 };
 
 export default StatusButton;

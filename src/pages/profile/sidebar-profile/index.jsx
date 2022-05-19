@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import BookSlider from 'shared/book-slider';
 import DualColumn from 'shared/dual-column';
-import ReadChallenge from 'shared/read-challenge';
 import ReadingBook from 'shared/reading-book';
 import './sidebar-profile.scss';
 import classNames from 'classnames';
@@ -12,9 +11,9 @@ import { useFetchAuthorBooks } from 'api/book.hooks';
 import { useSelector } from 'react-redux';
 import { useFetchTargetReading } from 'api/readingTarget.hooks';
 import ProgressBarCircle from 'shared/progress-circle';
+import RenderProgress from 'shared/render-progress';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
-import RenderProgress from 'shared/render-progress';
 const DEFAULT_TOGGLE_ROWS = 0;
 
 const SidebarProfile = ({ currentUserInfo }) => {
@@ -65,12 +64,12 @@ const SidebarProfile = ({ currentUserInfo }) => {
 
 	const handleRenderTargetReading = () => {
 		if (userInfo.id === userId) {
-			return <RenderProgress booksReadYear={booksReadYear} />;
+			return <RenderProgress userId={userId} />;
 		} else {
 			if (booksReadYear.length > 0) {
 				return <ProgressBarCircle />;
 			}
-			return <ReadChallenge />;
+			return '';
 		}
 	};
 

@@ -16,7 +16,6 @@ import Request from 'helpers/Request';
 export const createLibrary = createAsyncThunk('library/createLibrary', async (params, { rejectWithValue }) => {
 	try {
 		const response = await Request.makePost(libraryAPI, params);
-
 		return { ...response.data, books: [] };
 	} catch (err) {
 		const error = JSON.parse(err.response);
@@ -124,7 +123,7 @@ export const removeAllBookInLibraries = createAsyncThunk(
 export const addRemoveBookInLibraries = createAsyncThunk(
 	'library/addRemoveBookInLibrary',
 	async (params, { rejectWithValue }) => {
-		const { id, ...data } = params;
+		const { id, data } = params;
 		try {
 			const response = await Request.makePost(addRemoveBookAPI(id), data);
 			return response.data;
@@ -138,7 +137,7 @@ export const addRemoveBookInLibraries = createAsyncThunk(
 export const checkBookInLibraries = createAsyncThunk('library/checkBookInLibrarie', async (id, { rejectWithValue }) => {
 	try {
 		const response = await Request.makeGet(checkBookLibraryAPI(id));
-		return response.data;
+		return response.data.rows;
 	} catch (err) {
 		const error = JSON.parse(err.response);
 		return rejectWithValue(error);

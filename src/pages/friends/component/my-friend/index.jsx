@@ -12,6 +12,7 @@ const MyFriends = ({ activeTabs, inputSearch, filter }) => {
 	const { userInfo } = useSelector(state => state.auth);
 	const [getMyListFriend, setGetMyListFriend] = useState([]);
 	const dispatch = useDispatch();
+
 	useEffect(async () => {
 		const query = generateQuery(0, 10, filter);
 		const userId = userInfo.id;

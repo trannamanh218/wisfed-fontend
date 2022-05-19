@@ -31,8 +31,10 @@ const ProgressBarCircle = () => {
 		let percent = 0;
 		if (item.booksReadCount > item.numberBook) {
 			return (percent = 100);
-		} else {
+		} else if (0 < item.booksReadCount !== undefined < item.numberBook) {
 			percent = ((item.booksReadCount / item.numberBook) * 100).toFixed();
+		} else {
+			percent = 0;
 		}
 		return percent;
 	};
@@ -48,7 +50,7 @@ const ProgressBarCircle = () => {
 							<CircularProgressbarWithChildren
 								strokeWidth={4}
 								value={renderLinearProgressBar(item)}
-								text={`${item.booksReadCount}/${item.numberBook}`}
+								text={`${item.booksReadCount || 0}/${item.numberBook}`}
 								styles={{
 									path: { stroke: `url(#${idCSS})`, height: '100%' },
 								}}

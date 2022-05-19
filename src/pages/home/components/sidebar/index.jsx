@@ -7,19 +7,15 @@ import { useFetchQuoteRandom } from 'api/quote.hooks';
 import _ from 'lodash';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { useFetchTargetReading } from 'api/readingTarget.hooks';
+// import { useFetchTargetReading } from 'api/readingTarget.hooks';
 import { useState, useEffect } from 'react';
 import RenderProgress from 'shared/render-progress';
 
 const Sidebar = () => {
 	const { quoteRandom } = useFetchQuoteRandom();
 	const { userInfo } = useSelector(state => state.auth);
-
-	const { booksReadYear } = useFetchTargetReading(userInfo?.id);
-
 	const [bookReading, setBookReading] = useState({});
 	const [wantToReadList, setWantToReadList] = useState([]);
-
 	const myAllLibraryRedux = useSelector(state => state.library.myAllLibrary);
 
 	useEffect(() => {
@@ -79,7 +75,7 @@ const Sidebar = () => {
 
 			{wantToReadList.length > 0 && <TheBooksWantsToRead list={wantToReadList} />}
 
-			<RenderProgress booksReadYear={booksReadYear} />
+			<RenderProgress userId={userInfo?.id} />
 		</div>
 	);
 };
