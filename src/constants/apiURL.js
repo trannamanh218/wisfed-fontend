@@ -120,3 +120,4 @@ export const detailGroup = id => `api/v1/groups/${id}`;
 export const creatGroup = '/api/v1/groups';
 export const inviteFriend = id => `api/v1/groups/inviteMemberToGroup/${id}`;
 export const enjoyGroup = id => `/api/v1/groups/requestGroup/${id}`;
+export const leaveGroup = id => `/api/v1/groups/leaveGroup/${id}`;
