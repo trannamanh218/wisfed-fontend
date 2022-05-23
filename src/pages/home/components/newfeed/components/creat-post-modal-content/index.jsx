@@ -28,6 +28,8 @@ import { addBookToDefaultLibrary } from 'reducers/redux-utils/library';
 import { setting } from './settings';
 import { NotificationError } from 'helpers/Error';
 import { uploadMultiFile } from 'reducers/redux-utils/common';
+import { useLocation, useParams } from 'react-router-dom';
+import { creatNewPost } from 'reducers/redux-utils/group';
 
 function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option, onChangeOption, onChangeNewPost }) {
 	// const [shareMode, setShareMode] = useState({ value: 'public', title: 'Mọi người', icon: <WorldNet /> });
@@ -54,9 +56,11 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 	const [valueStar, setValueStar] = useState(0);
 	const [checkProgress, setCheckProgress] = useState();
 	const [showImagePopover, setShowImagePopover] = useState(false);
-
+	const location = useLocation();
 	const UpdateImg = useSelector(state => state.chart.updateImgPost);
 	const resetTaggedData = useSelector(state => state.post.resetTaggedData);
+	const { id = '' } = useParams();
+
 	const {
 		auth: { userInfo },
 		book: { bookForCreatePost, bookInfo },
@@ -324,7 +328,14 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 				}
 				handleUpdateProgress(params);
 			}
-			await dispatch(createActivity(params));
+
+			if (location.pathname.includes('group')) {
+				const newParams = { data: params, id: id };
+				await dispatch(creatNewPost(newParams));
+			} else {
+				await dispatch(createActivity(params));
+			}
+
 			setStatus(STATUS_SUCCESS);
 			toast.success('Tạo post thành công!');
 			onChangeNewPost();
