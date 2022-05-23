@@ -55,19 +55,19 @@ const Result = () => {
 
 	const handleClickSearch = () => {
 		handleDirectParam();
-		if (callApiStart.current < 1 && listArrayBooks.length === 0) {
-			handleGetBooksSearch();
-		}
 	};
 
 	const handleKeyDown = e => {
 		if (e.key === 'Enter') {
 			handleDirectParam();
-			if (callApiStart.current < 1 && listArrayBooks.length === 0) {
-				handleGetBooksSearch();
-			}
 		}
 	};
+
+	useEffect(() => {
+		if (saveValueInput !== searchResultInput && listArrayBooks.length === 0) {
+			handleGetBooksSearch();
+		}
+	}, [listArrayBooks]);
 
 	useEffect(() => {
 		if (!reload) {
@@ -130,7 +130,7 @@ const Result = () => {
 
 	return (
 		<NormalContainer>
-			<Circle loading={isFetching} />
+			{isFetching ? <Circle loading={isFetching} /> : ''}
 			<div className='result__container'>
 				<div className='result__header'>
 					<div className='result__header__content'>Kết quả tìm kiếm cho {value}</div>
@@ -156,6 +156,7 @@ const Result = () => {
 								listArrayBooks={listArrayBooks}
 								hasMore={hasMore}
 								handleGetBooksSearch={handleGetBooksSearch}
+								isFetching={isFetching}
 							/>
 						</Tab>
 						<Tab eventKey='group' title='Nhóm'>

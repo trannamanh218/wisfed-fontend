@@ -60,7 +60,7 @@ const SidebarShelves = ({ userData, isMyShelve }) => {
 					</Link>
 				</div>
 			)}
-			<RenderProgress userId={userId} />
+			<RenderProgress userIdParams={userId} />
 			<ChartsReading />
 		</div>
 	);

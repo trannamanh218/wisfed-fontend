@@ -66,10 +66,10 @@ const SidebarProfile = ({ currentUserInfo }) => {
 
 	const handleRenderTargetReading = () => {
 		if (userInfo.id === userId) {
-			return <RenderProgress userId={userId} />;
+			return <RenderProgress userIdParams={userId} />;
 		} else {
 			if (booksReadYear.length > 0) {
-				return <ProgressBarCircle />;
+				return <ProgressBarCircle booksReadYear={booksReadYear} />;
 			}
 			return '';
 		}

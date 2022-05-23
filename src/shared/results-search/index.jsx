@@ -99,7 +99,7 @@ const ResultSearch = ({ valueInputSearch, resultSearch, setIsShow }) => {
 			<div className='result__search__container'>
 				{valueInputSearch ? (
 					<>
-						{resultSearch.book?.rows.map(item => (
+						{resultSearch.books?.rows.slice(0, 5).map(item => (
 							<div key={item.id} onClick={() => handleItem(item)} className='result__search__main'>
 								<div className='result__search__main__left'>
 									<div className='result__search__icon__time'>

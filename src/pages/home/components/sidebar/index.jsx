@@ -34,7 +34,7 @@ const Sidebar = () => {
 
 	return (
 		<div className='sidebar'>
-			{/* <ReadingBook bookData={bookReading} /> */}
+			<ReadingBook bookData={bookReading} />
 
 			{!_.isEmpty(myAllLibraryRedux) && myAllLibraryRedux.default.length > 0 && (
 				<div className='sidebar__block'>
@@ -58,7 +58,7 @@ const Sidebar = () => {
 					</Link>
 				</div>
 			)}
-			<RenderProgress userId={userInfo?.id} />
+			<RenderProgress userIdParams={userInfo?.id} />
 			{wantToReadList.length > 0 && <TheBooksWantsToRead list={wantToReadList} />}
 			<div className='sidebar__block'>
 				<h4 className='sidebar__block__title'>Quotes</h4>

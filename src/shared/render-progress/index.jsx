@@ -4,9 +4,9 @@ import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { useFetchTargetReading } from 'api/readingTarget.hooks';
 
-const RenderProgress = ({ userId }) => {
+const RenderProgress = ({ userIdParams }) => {
 	const { checkRenderTarget } = useSelector(state => state.chart);
-	const { booksReadYear } = useFetchTargetReading(userId);
+	const { booksReadYear } = useFetchTargetReading(userIdParams);
 
 	const renderProgressBar = () => {
 		if (checkRenderTarget === true) {
@@ -20,6 +20,6 @@ const RenderProgress = ({ userId }) => {
 };
 
 RenderProgress.propTypes = {
-	userId: PropTypes.string,
+	userIdParams: PropTypes.string,
 };
 export default RenderProgress;
