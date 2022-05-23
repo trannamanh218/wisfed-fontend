@@ -30,7 +30,7 @@ const AuthorBook = props => {
 					<span className='author-book__rating__number'>{data.avgRating || data.rateAvg} sao</span>
 				</div>
 				<div className='author-book__bottom'>
-					<span className='author-book__stats'>{data?.countRate} (đánh giá)</span>
+					<span className='author-book__stats'>{data?.count ? `${data?.count} (đánh giá)` : ''}</span>
 					<StatusButton bookData={data} status={data.status} />
 				</div>
 			</div>

@@ -5,7 +5,7 @@ import Request from 'helpers/Request';
 export const getFilterSearch = createAsyncThunk('search/getSearch', async (params, { rejectWithValue }) => {
 	try {
 		const response = await Request.makeGet(getSearchAPI, params);
-		return response;
+		return response.data;
 	} catch (err) {
 		return rejectWithValue(err.response);
 	}

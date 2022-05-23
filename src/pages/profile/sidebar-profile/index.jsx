@@ -45,8 +45,10 @@ const SidebarProfile = ({ currentUserInfo }) => {
 	useEffect(() => {
 		if (!_.isEmpty(myAllLibraryRedux)) {
 			const readingLibrary = myAllLibraryRedux.default.filter(item => item.defaultType === 'reading');
-			const books = readingLibrary[0].books;
-			setBookReading(books[books.length - 1].book);
+			if (readingLibrary.length && readingLibrary[0].books.length) {
+				const books = readingLibrary[0].books;
+				setBookReading(books[books.length - 1].book);
+			}
 		}
 	}, [myAllLibraryRedux]);
 

@@ -36,7 +36,7 @@ const SearchAllModal = ({ showRef, setIsShow }) => {
 		try {
 			if (valueInputSearch.length > 0) {
 				const result = await dispatch(getFilterSearch({ ...params })).unwrap();
-				setResultSearch(result.data);
+				setResultSearch(result);
 			}
 		} catch (err) {
 			NotificationError(err);

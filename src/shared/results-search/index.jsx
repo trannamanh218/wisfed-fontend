@@ -83,7 +83,7 @@ const ResultSearch = ({ valueInputSearch, resultSearch, setIsShow }) => {
 	};
 
 	const renderSetting = () => {
-		if (!!resultSearch.books?.length || !!resultSearch.users?.length) {
+		if (saveLocalSearch.length > 0) {
 			return (
 				<div className='search__all__main__title'>
 					<div className='search__all__title'>Tìm kiếm gần đây </div>
@@ -99,8 +99,7 @@ const ResultSearch = ({ valueInputSearch, resultSearch, setIsShow }) => {
 			<div className='result__search__container'>
 				{valueInputSearch ? (
 					<>
-						{renderSetting()}
-						{resultSearch.books?.slice(0, 5).map(item => (
+						{resultSearch.book?.rows.map(item => (
 							<div key={item.id} onClick={() => handleItem(item)} className='result__search__main'>
 								<div className='result__search__main__left'>
 									<div className='result__search__icon__time'>
@@ -110,7 +109,7 @@ const ResultSearch = ({ valueInputSearch, resultSearch, setIsShow }) => {
 								</div>
 							</div>
 						))}
-						{resultSearch.users?.slice(0, 5).map(item => (
+						{resultSearch.users?.rows.map(item => (
 							<div key={item.id} className='result__search__main'>
 								<div onClick={() => handleItem(item)} className='result__search__main__left'>
 									<div className='result__search__main__avatar'>
@@ -128,7 +127,10 @@ const ResultSearch = ({ valueInputSearch, resultSearch, setIsShow }) => {
 						))}
 					</>
 				) : (
-					historySearch()
+					<>
+						{renderSetting()}
+						{historySearch()}
+					</>
 				)}
 
 				{valueInputSearch?.length > 0 && (

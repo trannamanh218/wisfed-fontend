@@ -2,8 +2,10 @@ import ConnectButtons from 'shared/connect-buttons';
 import UserAvatar from 'shared/user-avatar';
 import './author-card.scss';
 import PropTypes from 'prop-types';
-
-const AuthorCard = ({ direction, size, item }) => {
+import Storage from 'helpers/Storage';
+import Button from 'shared/button';
+import { Add } from 'components/svg';
+const AuthorCard = ({ direction, size, item, setModalShow }) => {
 	return (
 		<div className='author-card'>
 			<div className='author-card__left'>
@@ -18,7 +20,25 @@ const AuthorCard = ({ direction, size, item }) => {
 				</div>
 			</div>
 			<div className='author-card__right'>
-				{item.relation === 'isMe' ? '' : <ConnectButtons direction={direction} item={item} />}
+				{Storage.getAccessToken() ? (
+					<ConnectButtons direction={direction} item={item} />
+				) : (
+					<div className={`connect-buttons ${'column'}`}>
+						<Button className='connect-button' onClick={() => setModalShow(true)}>
+							<Add className='connect-button__icon' />
+
+							<span className='connect-button__content'>Kết bạn</span>
+						</Button>
+						<Button
+							className=' connect-button follow'
+							isOutline={true}
+							name='friend'
+							onClick={() => setModalShow(true)}
+						>
+							<span className='connect-button__content follow'>Theo dõi </span>
+						</Button>
+					</div>
+				)}
 			</div>
 		</div>
 	);
@@ -28,6 +48,7 @@ AuthorCard.propTypes = {
 	direction: PropTypes.string,
 	size: PropTypes.string,
 	item: PropTypes.object,
+	setModalShow: PropTypes.func,
 };
 
 export default AuthorCard;
