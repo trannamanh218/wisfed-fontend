@@ -110,6 +110,7 @@ const authSlice = createSlice({
 	reducers: {
 		checkLogin: (state, action) => {
 			state.isAuth = action.payload;
+			state.userInfo = {};
 		},
 	},
 
