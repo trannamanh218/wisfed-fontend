@@ -1,8 +1,9 @@
 import PropTypes from 'prop-types';
 import BookItem from 'shared/book-item';
 import './shelf.scss';
+import { memo } from 'react';
 
-const Shelf = ({ list, isMyShelve, handleClick, handleUpdateBookList }) => {
+const Shelf = ({ list, isMyShelve, handleUpdateBookList, handleViewBookDetail }) => {
 	if (list && list.length) {
 		return (
 			<div className='shelf'>
@@ -12,7 +13,7 @@ const Shelf = ({ list, isMyShelve, handleClick, handleUpdateBookList }) => {
 						{...item}
 						data={item}
 						isMyShelve={isMyShelve}
-						handleClick={handleClick}
+						handleViewBookDetail={handleViewBookDetail}
 						handleUpdateBookList={handleUpdateBookList}
 					/>
 				))}
@@ -26,15 +27,15 @@ const Shelf = ({ list, isMyShelve, handleClick, handleUpdateBookList }) => {
 Shelf.defaultProps = {
 	list: [],
 	isMyShelve: false,
-	handleClick: () => {},
+	handleViewBookDetail: () => {},
 	handleUpdateBookList: () => {},
 };
 
 Shelf.propTypes = {
 	list: PropTypes.array,
 	isMyShelve: PropTypes.bool,
-	handleClick: PropTypes.func,
 	handleUpdateBookList: PropTypes.func,
+	handleViewBookDetail: PropTypes.func,
 };
 
-export default Shelf;
+export default memo(Shelf);

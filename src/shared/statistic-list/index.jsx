@@ -4,12 +4,18 @@ import classNames from 'classnames';
 import './statistic-list.scss';
 
 const StatisticList = props => {
-	const { background, list, title, isBackground, className, pageText } = props;
+	const { background, list, title, isBackground, className, pageText, inCategory } = props;
 
 	return (
 		<div className={classNames('statistic', { [`${className}`]: className })}>
 			<h4 className={`statistic-title ${isBackground ? 'custom' : ''}`}>{title}</h4>
-			<DualColumn list={list} isBackground={isBackground} background={background} pageText={pageText} />
+			<DualColumn
+				list={list}
+				isBackground={isBackground}
+				background={background}
+				pageText={pageText}
+				inCategory={inCategory}
+			/>
 		</div>
 	);
 };
@@ -39,5 +45,6 @@ StatisticList.propTypes = {
 		'dark',
 	]),
 	pageText: PropTypes.bool,
+	inCategory: PropTypes.bool,
 };
 export default StatisticList;

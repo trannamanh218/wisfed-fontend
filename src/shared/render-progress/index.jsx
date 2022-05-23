@@ -3,6 +3,7 @@ import ReadChallenge from 'shared/read-challenge';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { useFetchTargetReading } from 'api/readingTarget.hooks';
+import { memo } from 'react';
 
 const RenderProgress = ({ userId }) => {
 	const { checkRenderTarget } = useSelector(state => state.chart);
@@ -21,4 +22,5 @@ const RenderProgress = ({ userId }) => {
 RenderProgress.propTypes = {
 	userId: PropTypes.string,
 };
-export default RenderProgress;
+
+export default memo(RenderProgress);

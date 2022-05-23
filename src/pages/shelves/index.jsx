@@ -1,5 +1,5 @@
 import MainContainer from 'components/layout/main-container';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import MainShelves from './main-shelves';
 import SidebarShelves from './sidebar-shelves';
 import Circle from 'shared/loading/circle';
@@ -61,7 +61,7 @@ const BookShelves = () => {
 		}
 	};
 
-	const handleViewBookDetail = async data => {
+	const handleViewBookDetail = useCallback(async data => {
 		setIsLoading(true);
 		try {
 			await dispatch(getBookDetail(data.id)).unwrap();
@@ -70,7 +70,7 @@ const BookShelves = () => {
 		} catch (err) {
 			NotificationError(err);
 		}
-	};
+	}, []);
 
 	return (
 		<>
@@ -84,7 +84,13 @@ const BookShelves = () => {
 						handleViewBookDetail={handleViewBookDetail}
 					/>
 				}
-				right={<SidebarShelves userData={otherUserData} isMyShelve={isMyShelve} />}
+				right={
+					<SidebarShelves
+						userData={otherUserData}
+						isMyShelve={isMyShelve}
+						handleViewBookDetail={handleViewBookDetail}
+					/>
+				}
 			/>
 		</>
 	);
