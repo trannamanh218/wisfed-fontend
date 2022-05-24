@@ -65,7 +65,7 @@ import { ReactComponent as DropdownGroup } from 'assets/icons/Arrow Caret Down.s
 import { ReactComponent as IconCheck } from 'assets/icons/circleCheck.svg';
 import { ReactComponent as LogOutGroup } from 'assets/icons/Log Out Square.svg';
 import { ReactComponent as ForwardGroup } from 'assets/icons/ForwardGroup.svg';
-
+import { ReactComponent as IconGroup } from 'assets/icons/UsersThree.svg';
 export {
 	TimeIcon,
 	Crown,
@@ -134,4 +134,5 @@ export {
 	IconCheck,
 	LogOutGroup,
 	ForwardGroup,
+	IconGroup,
 };

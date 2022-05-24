@@ -15,6 +15,7 @@ import Storage from 'helpers/Storage';
 import _ from 'lodash';
 import { editUserInfo } from '../user';
 import jwtDecode from 'jwt-decode';
+import { action } from '@storybook/addon-actions';
 
 export const register = createAsyncThunk('auth/register', async (params, { rejectWithValue }) => {
 	try {

@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { LogoIcon, BookFillIcon, BookIcon, CategoryIcon, GroupIcon, HomeIcon } from 'components/svg';
+import { LogoIcon, BookFillIcon, BookIcon, CategoryIcon, GroupIcon, HomeIcon, IconGroup } from 'components/svg';
 import SearchIcon from 'assets/icons/search.svg';
 import classNames from 'classnames';
 import './header.scss';
@@ -15,6 +15,7 @@ import Storage from 'helpers/Storage';
 import { handleResetValue } from 'reducers/redux-utils/search';
 import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { updateTargetReading } from 'reducers/redux-utils/chart';
 
 const Header = () => {
 	const { isShowModal } = useSelector(state => state.search);
@@ -67,7 +68,7 @@ const Header = () => {
 	const tollgleModaleInfoUser = () => {
 		setModalInforUser(!modalInforUser);
 		if (Storage.getAccessToken()) {
-			navigate(`/profile/${userInfo.id}`);
+			return;
 		} else {
 			navigate(`/login`);
 		}
@@ -82,6 +83,7 @@ const Header = () => {
 	const handleLogout = () => {
 		localStorage.removeItem('accessToken');
 		localStorage.removeItem('refreshToken');
+		dispatch(updateTargetReading([]));
 		navigate('/login');
 		toast.success('Đăng xuất thành công');
 	};
@@ -119,11 +121,17 @@ const Header = () => {
 						<CategoryIcon className='header__nav__icon' />
 					</Link>
 				</li>
+				<li className={classNames('header__nav__item', { active: activeLink === '/group' })}>
+					<Link className='header__nav__link' to='/group'>
+						<IconGroup className='header__nav__icon' />
+					</Link>
+				</li>
 				<li
-					onClick={handleUserLogin}
-					className={classNames('header__nav__item', { active: activeLink === `/shelves/${userInfo.id}` })}
+					className={classNames('header__nav__item', {
+						active: activeLink === `/shelves/${userInfo.id}`,
+					})}
 				>
-					<Link className='header__nav__link' to={userLogin && `/shelves/${userInfo.id}`}>
+					<Link className='header__nav__link' to={`/shelves/${userInfo.id}`}>
 						{activeLink === `/shelves/${userInfo.id}` ? <BookFillIcon /> : <BookIcon />}
 					</Link>
 				</li>
@@ -135,9 +143,7 @@ const Header = () => {
 						<GroupIcon className='header__nav__icon' />
 					</Link>
 				</li>
-			</ul>
-			<div className='header__userInfo'>
-				<div>
+				<div className='notify-icon'>
 					<div
 						ref={buttonModal}
 						onClick={toglleModalNotify}
@@ -145,6 +151,9 @@ const Header = () => {
 					/>
 					{modalNoti && <NotificationModal setModalNotti={setModalNotti} buttonModal={buttonModal} />}
 				</div>
+			</ul>
+
+			<div className='header__userInfo'>
 				<div onClick={() => tollgleModaleInfoUser()}>
 					<UserAvatar className='header__avatar' source={userInfo?.avatarImage} />
 					{modalInforUser && localStorage.getItem('accessToken') && (

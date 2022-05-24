@@ -34,9 +34,9 @@ const Sidebar = () => {
 
 	return (
 		<div className='sidebar'>
-			{/* <ReadingBook bookData={bookReading} /> */}
+			{!_.isEmpty(bookReading) && <ReadingBook bookData={bookReading} />}
 
-			{!_.isEmpty(myAllLibraryRedux) && myAllLibraryRedux.default.length > 0 && (
+			{!_.isEmpty(myAllLibraryRedux) && !!myAllLibraryRedux.default.length && (
 				<div className='sidebar__block'>
 					<h4 className='sidebar__block__title'>Giá sách</h4>
 					<div className='dualColumn'>
@@ -58,8 +58,11 @@ const Sidebar = () => {
 					</Link>
 				</div>
 			)}
+
 			<RenderProgress userId={userInfo?.id} />
+
 			{wantToReadList.length > 0 && <TheBooksWantsToRead list={wantToReadList} />}
+
 			<div className='sidebar__block'>
 				<h4 className='sidebar__block__title'>Quotes</h4>
 				{!_.isEmpty(quoteRandom) && (
