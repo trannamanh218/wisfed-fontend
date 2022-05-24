@@ -51,6 +51,11 @@ const DualColumn = props => {
 				</ul>
 				{list.length > DEFAULT_TOGGLE_ROWS && (
 					<button className='dualColumn-btn' onClick={handleViewMore}>
+						<img
+							className={classNames('view-caret', { 'view-more': isExpand })}
+							src={caretIcon}
+							alt='caret-icon'
+						/>
 						<span>{isExpand ? 'Rút gọn' : 'Xem thêm'}</span>
 					</button>
 				)}
