@@ -3,16 +3,13 @@ import 'react-circular-progressbar/dist/styles.css';
 import './progress-circle.scss';
 import { Link } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
-import { useFetchTargetReading } from 'api/readingTarget.hooks';
 import { useSelector } from 'react-redux';
 import _ from 'lodash';
+import PropTypes from 'prop-types';
 
-const ProgressBarCircle = () => {
+const ProgressBarCircle = ({ booksReadYear }) => {
 	const { userId } = useParams();
 	const { userInfo } = useSelector(state => state.auth);
-	const id = userId || userInfo?.id;
-	const { booksReadYear } = useFetchTargetReading(id);
-
 	const idCSS = 'library';
 	const SVG = () => {
 		const gradientTransform = `rotate(90)`;
@@ -69,5 +66,9 @@ const ProgressBarCircle = () => {
 				))}
 		</div>
 	);
+};
+
+ProgressBarCircle.propTypes = {
+	booksReadYear: PropTypes.string,
 };
 export default ProgressBarCircle;

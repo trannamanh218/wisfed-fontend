@@ -21,32 +21,20 @@ const Sidebar = () => {
 	useEffect(() => {
 		if (!_.isEmpty(myAllLibraryRedux) && myAllLibraryRedux.default.length > 0) {
 			const readingLibrary = myAllLibraryRedux.default.filter(item => item.defaultType === 'reading');
-			const readingBooks = readingLibrary[0].books;
-			const wantToReadLibrary = myAllLibraryRedux.default.filter(item => item.defaultType === 'wantToRead');
-			const newWantToReadList = [];
-			wantToReadLibrary[0].books.forEach(item => newWantToReadList.push(item.book));
-			setBookReading(readingBooks[readingBooks.length - 1].book);
-			setWantToReadList(newWantToReadList);
+			if (readingLibrary.length && readingLibrary[0].books.length) {
+				const readingBooks = readingLibrary[0].books;
+				const wantToReadLibrary = myAllLibraryRedux.default.filter(item => item.defaultType === 'wantToRead');
+				const newWantToReadList = [];
+				wantToReadLibrary[0].books.forEach(item => newWantToReadList.push(item.book));
+				setBookReading(readingBooks[readingBooks.length - 1].book);
+				setWantToReadList(newWantToReadList);
+			}
 		}
 	}, [myAllLibraryRedux]);
 
 	return (
 		<div className='sidebar'>
-			<GroupShortcuts />
-			<div className='sidebar__block'>
-				<h4 className='sidebar__block__title'>Quotes</h4>
-				{!_.isEmpty(quoteRandom) && (
-					<div className='sidebar__block__content'>
-						<div className='quotes__content'>
-							<p>{`“ ${quoteRandom?.quote} ”`}</p>
-							<p className='quotes__content__author-name'>{quoteRandom.authorName || ''}</p>
-						</div>
-						<Link to={`/quotes/all`} className='sidebar__view-more-btn--blue'>
-							Xem thêm
-						</Link>
-					</div>
-				)}
-			</div>
+			{/* <ReadingBook bookData={bookReading} /> */}
 
 			{!_.isEmpty(myAllLibraryRedux) && myAllLibraryRedux.default.length > 0 && (
 				<div className='sidebar__block'>
@@ -70,12 +58,24 @@ const Sidebar = () => {
 					</Link>
 				</div>
 			)}
-
-			<ReadingBook bookData={bookReading} />
-
-			{wantToReadList.length > 0 && <TheBooksWantsToRead list={wantToReadList} />}
-
 			<RenderProgress userId={userInfo?.id} />
+			{wantToReadList.length > 0 && <TheBooksWantsToRead list={wantToReadList} />}
+			<div className='sidebar__block'>
+				<h4 className='sidebar__block__title'>Quotes</h4>
+				{!_.isEmpty(quoteRandom) && (
+					<div className='sidebar__block__content'>
+						<div className='quotes__content'>
+							<p>{`“ ${quoteRandom?.quote} ”`}</p>
+							<p className='quotes__content__author-name'>{quoteRandom.authorName || ''}</p>
+						</div>
+						<Link to={`/quotes/all`} className='sidebar__view-more-btn--blue'>
+							Xem thêm
+						</Link>
+					</div>
+				)}
+			</div>
+
+			<GroupShortcuts />
 		</div>
 	);
 };

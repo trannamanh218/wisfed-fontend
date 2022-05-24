@@ -9,10 +9,9 @@ import { likeUnlikeQuote } from 'reducers/redux-utils/quote';
 import { checkLikeQuote } from 'reducers/redux-utils/quote';
 import { NotificationError } from 'helpers/Error';
 
-const QuoteCard = ({ data, isDetail, likedArray }) => {
+const QuoteCard = ({ data, isDetail = false, likedArray }) => {
 	const [isLiked, setIsLiked] = useState(false);
 	const [likeNumber, setLikeNumber] = useState(0);
-	const [hashTags, setHashTags] = useState([]);
 
 	const dispatch = useDispatch();
 
@@ -23,13 +22,6 @@ const QuoteCard = ({ data, isDetail, likedArray }) => {
 			if (likedArray.length > 0 && likedArray.includes(data.id)) {
 				setIsLiked(true);
 			}
-		}
-		if (data.tags?.length > 0) {
-			const tagsArr = [];
-			data.tags.forEach(item => {
-				tagsArr.push('#' + item.tag.slug);
-			});
-			setHashTags(tagsArr);
 		}
 		setLikeNumber(data.like);
 	}, []);
@@ -82,10 +74,10 @@ const QuoteCard = ({ data, isDetail, likedArray }) => {
 			<div className='quote-footer'>
 				{isDetail ? (
 					<div className='quote-footer__left'>
-						{hashTags.length > 0 &&
-							hashTags.map((tag, index) => (
+						{data.tags.length > 0 &&
+							data.tags.map((tag, index) => (
 								<span className='quote-card__hashtag' key={index}>
-									{tag}
+									{tag.name}
 								</span>
 							))}
 					</div>

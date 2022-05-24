@@ -4,8 +4,9 @@
 	border-radius: 16px;
 	font-family: 'Montserrat';
 	font-style: normal;
+	margin-bottom: 30px;
 	.CircularProgressbar {
-		width: 240px;
+		max-width: 240px;
 	}
 	.CircularProgressbar-path {
 		width: 214px;

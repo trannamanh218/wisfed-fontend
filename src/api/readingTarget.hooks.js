@@ -11,9 +11,10 @@ export const useFetchTargetReading = (userId, modalOpen, deleteModal, filter = '
 	const [retry, setRetry] = useState(false);
 	const dispatch = useDispatch();
 	const { userInfo } = useSelector(state => state.auth);
-	const retryRequest = useCallback(() => {
-		setRetry(prev => !prev);
-	}, [setRetry]);
+
+	const retryRequest = () => {
+		setRetry(!retry);
+	};
 
 	useEffect(async () => {
 		let isMount = true;
@@ -35,7 +36,6 @@ export const useFetchTargetReading = (userId, modalOpen, deleteModal, filter = '
 						const year = dob.getFullYear();
 						let newData = [];
 						if (targetReading.length > 0 && userInfo.id === userId) {
-							dispatch(updateTargetReading([]));
 							newData = targetReading.filter(item => item.year === year);
 							setBooksReadYear(newData);
 						} else {
