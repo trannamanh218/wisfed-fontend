@@ -7,7 +7,7 @@ import { ShareRanks } from 'components/svg';
 
 const AuthorBook = props => {
 	const { data, checkStar, checkshare } = props;
-	// const authorsName = data?.book?.authors.map(author => author?.authorName);
+	const authorsName = data.authors?.map(author => author?.authorName);
 
 	return (
 		<div className='author-book'>
@@ -24,7 +24,7 @@ const AuthorBook = props => {
 					)}
 				</div>
 
-				{/* <p className='author-book__writers'>{authorsName?.join('- ')}</p> */}
+				<p className='author-book__writers'>{authorsName && authorsName.join('- ')}</p>
 				<div className='author-book__rating'>
 					<ReactRating readonly={true} initialRating={data.avgRating} checkStar={checkStar} />
 					<span className='author-book__rating__number'>{data.avgRating || data.rateAvg} sao</span>

@@ -14,11 +14,11 @@
 			flex: 1;
 			cursor: pointer;
 			.result__search__icon__time {
-				background: #f7f7fc;
-				padding: 10px;
-				border-radius: 50%;
-				width: 42px;
-				height: 42px;
+				.result__search__img {
+					width: 42px;
+					height: 42px;
+					border-radius: 50%;
+				}
 			}
 			.result__search__name {
 				font-weight: 700;

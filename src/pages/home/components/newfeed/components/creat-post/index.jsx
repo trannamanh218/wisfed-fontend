@@ -27,7 +27,7 @@ function CreatePost({ onChangeNewPost }) {
 	const html = safeDocument.documentElement;
 	let optionList = null;
 
-	if (location.pathname === '/group') {
+	if (location.pathname.includes('group')) {
 		optionList = [
 			{
 				value: 'addBook',

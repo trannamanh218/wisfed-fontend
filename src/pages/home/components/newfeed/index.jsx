@@ -39,13 +39,15 @@ const NewFeed = () => {
 
 	const getPostListFirstTime = async () => {
 		try {
-			const params = {
-				start: 0,
-				limit: callApiPerPage.current,
-				sort: JSON.stringify([{ property: 'createdAt', direction: 'DESC' }]),
-			};
-			const posts = await dispatch(getActivityList(params)).unwrap();
-			setPostList(posts);
+			if (!_.isEmpty(userInfo)) {
+				const params = {
+					start: 0,
+					limit: callApiPerPage.current,
+					sort: JSON.stringify([{ property: 'createdAt', direction: 'DESC' }]),
+				};
+				const posts = await dispatch(getActivityList(params)).unwrap();
+				setPostList(posts);
+			}
 		} catch (err) {
 			NotificationError(err);
 		}

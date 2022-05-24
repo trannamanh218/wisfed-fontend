@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { LogoIcon, BookFillIcon, BookIcon, CategoryIcon, GroupIcon, HomeIcon } from 'components/svg';
+import { LogoIcon, BookFillIcon, BookIcon, CategoryIcon, GroupIcon, HomeIcon, IconGroup } from 'components/svg';
 import SearchIcon from 'assets/icons/search.svg';
 import classNames from 'classnames';
 import './header.scss';
@@ -67,7 +67,7 @@ const Header = () => {
 	const tollgleModaleInfoUser = () => {
 		setModalInforUser(!modalInforUser);
 		if (Storage.getAccessToken()) {
-			navigate(`/profile/${userInfo.id}`);
+			return;
 		} else {
 			navigate(`/login`);
 		}
@@ -127,6 +127,11 @@ const Header = () => {
 						{activeLink === `/shelves/${userInfo.id}` ? <BookFillIcon /> : <BookIcon />}
 					</Link>
 				</li>
+				<li className={classNames('header__nav__item', { active: activeLink === '/group' })}>
+					<Link className='header__nav__link' to='/group'>
+						<IconGroup className='header__nav__icon' />
+					</Link>
+				</li>
 				<li
 					onClick={handleUserLogin}
 					className={classNames('header__nav__item', { active: activeLink === '/friends' })}
@@ -135,9 +140,7 @@ const Header = () => {
 						<GroupIcon className='header__nav__icon' />
 					</Link>
 				</li>
-			</ul>
-			<div className='header__userInfo'>
-				<div>
+				<div className='notify-icon'>
 					<div
 						ref={buttonModal}
 						onClick={toglleModalNotify}
@@ -145,6 +148,9 @@ const Header = () => {
 					/>
 					{modalNoti && <NotificationModal setModalNotti={setModalNotti} buttonModal={buttonModal} />}
 				</div>
+			</ul>
+
+			<div className='header__userInfo'>
 				<div onClick={() => tollgleModaleInfoUser()}>
 					<UserAvatar className='header__avatar' source={userInfo?.avatarImage} />
 					{modalInforUser && localStorage.getItem('accessToken') && (

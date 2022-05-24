@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import Storage from 'helpers/Storage';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import bookImage from 'assets/images/default-book.png';
 
 const ResultSearch = ({ valueInputSearch, resultSearch, setIsShow }) => {
 	const [checkRenderStorage, setCheckRenderStorage] = useState(false);
@@ -103,13 +104,13 @@ const ResultSearch = ({ valueInputSearch, resultSearch, setIsShow }) => {
 							<div key={item.id} onClick={() => handleItem(item)} className='result__search__main'>
 								<div className='result__search__main__left'>
 									<div className='result__search__icon__time'>
-										<TimeIcon />
+										<img src={bookImage} className='result__search__img' />
 									</div>
 									<div className='result__search__name'>{item.name}</div>
 								</div>
 							</div>
 						))}
-						{resultSearch.users?.rows.map(item => (
+						{resultSearch.users?.rows.slice(0, 5).map(item => (
 							<div key={item.id} className='result__search__main'>
 								<div onClick={() => handleItem(item)} className='result__search__main__left'>
 									<div className='result__search__main__avatar'>

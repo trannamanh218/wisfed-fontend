@@ -221,6 +221,7 @@ const FriendsItem = ({ list, keyTabs, getListFollower, getMyListFriendReq }) => 
 						className='myfriends__layout__img'
 						src={list.userTwo.avatarImage ? list.userTwo.avatarImage : defaultAvatar}
 						alt=''
+						onError={e => e.target.setAttribute('src', `${defaultAvatar}`)}
 					/>
 					<div className='myfriends__star'>
 						<div className='myfriends__star__name'>

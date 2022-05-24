@@ -5,7 +5,7 @@
 	justify-content: space-around;
 	align-items: stretch;
 	background-color: $white;
-	padding: 0 40px 0;
+	padding: 0 40px 15px;
 	position: fixed;
 	top: 0;
 	left: 50%;
@@ -33,7 +33,8 @@
 		letter-spacing: 0.75px;
 		font-size: 15px;
 	}
-	height: 56px;
+	margin-top: 15px;
+	height: 63px;
 	// width: 100%;
 	min-width: 380px;
 	padding: 0 1.5em;
@@ -41,7 +42,7 @@
 	overflow: hidden;
 	display: flex;
 	align-items: center;
-	background-color: $ash-background;
+	background-color: #eff0f7;
 
 	&__icon {
 		width: 20px;
@@ -62,34 +63,42 @@
 }
 
 .header__nav {
-	flex-grow: 1;
+	// flex-grow: 1;
 	display: flex;
-	// justify-content: space-around;
-	justify-content: flex-end;
-	gap: 16px;
-	margin-right: 32px;
+	justify-content: space-around;
+	margin-right: 20px;
+	background-color: #eff0f7;
+	height: 63px;
+	margin-top: 15px;
+	border-radius: 12px;
+	width: 500px;
+	margin-left: 88px;
 }
 
 .header__nav__item {
-	width: 20%;
-	max-width: 116px;
+	width: 15%;
+	max-width: 80px;
 	position: relative;
 	text-align: center;
 	transition: all 3s ease;
 	padding: 32px 0;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	cursor: pointer;
 
 	&.active {
-		&::after {
-			position: absolute;
-			bottom: 0;
-			left: 0;
-			content: '';
-			width: 100%;
-			height: 4px;
-			margin-bottom: -2px;
-			border-radius: 8px;
-			background-color: $primary;
-		}
+		// &::after {
+		// 	position: absolute;
+		// 	bottom: 0;
+		// 	left: 0;
+		// 	content: '';
+		// 	width: 100%;
+		// 	height: 4px;
+		// 	margin-bottom: -2px;
+		// 	border-radius: 8px;
+		// 	background-color: $primary;
+		// }
 		.header__nav__icon {
 			fill: $primary;
 			path {
@@ -100,8 +109,8 @@
 	}
 
 	svg {
-		width: 30px;
-		height: 30px;
+		width: 27px;
+		height: 27px;
 		margin-bottom: 5px;
 	}
 }
@@ -115,6 +124,7 @@
 }
 
 .header__userInfo {
+	margin-top: 15px;
 	display: flex;
 	justify-content: space-around;
 	align-items: center;
@@ -124,6 +134,17 @@
 		width: 30px;
 		height: 28px;
 	}
+}
+.notify-icon {
+	width: 15%;
+	max-width: 80px;
+	position: relative;
+	transition: all 3s ease;
+	padding: 32px 0;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	cursor: pointer;
 }
 
 .header__notify__icon {

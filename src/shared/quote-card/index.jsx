@@ -26,6 +26,8 @@ const QuoteCard = ({ data, isDetail = false, likedArray }) => {
 		setLikeNumber(data.like);
 	}, []);
 
+	console.log(data.background);
+
 	const likeUnlikeQuoteFnc = async id => {
 		try {
 			const response = await dispatch(likeUnlikeQuote(id)).unwrap();
@@ -47,6 +49,13 @@ const QuoteCard = ({ data, isDetail = false, likedArray }) => {
 		}
 	};
 
+	const renderAuthorAndbooksName = () => {
+		if (data.book?.name) {
+			return `${data.book?.name}`;
+		}
+		return ` ${data.bookName}`;
+	};
+
 	return (
 		<div
 			className='quote-card'
@@ -54,7 +63,7 @@ const QuoteCard = ({ data, isDetail = false, likedArray }) => {
 		>
 			<div className='quote-card__quote-content'>
 				<p>{`"${data.quote}"`}</p>
-				<p style={{ textDecoration: 'underline' }}>{`${data.authorName} - ${data.book?.name}`}</p>
+				<p style={{ textDecoration: 'underline' }}>{renderAuthorAndbooksName()}</p>
 			</div>
 
 			<div className='quote-card__author'>

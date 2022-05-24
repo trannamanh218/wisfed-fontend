@@ -5,6 +5,9 @@ import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 import BookSearch from './component/books-search';
 import QuoteSearch from './component/quotes-search';
+import GroupSearch from './component/group-search';
+import AuthorSearch from './component/authors-search';
+import UsersSearch from './component/users-search';
 import { useSelector, useDispatch } from 'react-redux';
 import { useEffect, useState, useRef } from 'react';
 import _ from 'lodash';
@@ -18,27 +21,19 @@ import Storage from 'helpers/Storage';
 const Result = () => {
 	const { value } = useParams();
 	const dispatch = useDispatch();
-	const { saveValueInput, isShowModal } = useSelector(state => state.search);
-	const [activeKeyDefault, setActiveKeyDefault] = useState('books');
+	const { saveValueInput } = useSelector(state => state.search);
+	const [activeKeyDefault, setActiveKeyDefault] = useState('authors');
 	const [searchResultInput, setSearchResultInput] = useState('');
 	const [isFetching, setIsFetching] = useState(false);
 	const [listArrayBooks, setListArrayBooks] = useState([]);
 	const [listArrayQuotes, setListArrayQuotes] = useState([]);
+	const [listArrayGroup, setListArrayGroup] = useState([]);
 	const [hasMore, setHasMore] = useState(true);
 	const [reload, setReload] = useState(false);
+	const [count, setCount] = useState(0);
 	const callApiStart = useRef(0);
 	const callApiPerPage = useRef(10);
 	const navigate = useNavigate();
-
-	const handleSelecActiveKey = () => {
-		if (saveValueInput.length > 0 && isShowModal === true) {
-			setActiveKeyDefault('books');
-		}
-	};
-
-	useEffect(() => {
-		handleSelecActiveKey();
-	}, [saveValueInput, isShowModal]);
 
 	const handleChange = e => {
 		setSearchResultInput(e.target.value);
@@ -49,12 +44,18 @@ const Result = () => {
 			navigate(`/result/q=${searchResultInput}`);
 			callApiStart.current = 0;
 			setListArrayBooks([]);
+			setListArrayQuotes([]);
 			setHasMore(true);
 		}
 	};
 
 	const handleClickSearch = () => {
 		handleDirectParam();
+	};
+
+	const handleSelectKey = eventKey => {
+		callApiStart.current = 0;
+		setActiveKeyDefault(eventKey);
 	};
 
 	const handleKeyDown = e => {
@@ -64,10 +65,14 @@ const Result = () => {
 	};
 
 	useEffect(() => {
-		if (saveValueInput !== searchResultInput && listArrayBooks.length === 0) {
+		if (
+			saveValueInput !== searchResultInput &&
+			callApiStart.current === 0 &&
+			(listArrayBooks.length === 0) | (listArrayQuotes.length === 0)
+		) {
 			handleGetBooksSearch();
 		}
-	}, [listArrayBooks]);
+	}, [listArrayBooks, listArrayQuotes]);
 
 	useEffect(() => {
 		if (!reload) {
@@ -80,7 +85,38 @@ const Result = () => {
 		handleGetBooksSearch();
 	}, [activeKeyDefault, value, reload]);
 
-	const handleGetBooksSearch = async () => {
+	const handleCallAPI = async params => {
+		if ((_.isEmpty(listArrayBooks) || _.isEmpty(listArrayQuotes)) && searchResultInput.length > 0) {
+			if (activeKeyDefault === 'books') {
+				const result = await dispatch(getAuthAPI(params)).unwrap();
+				setCount(result.count);
+				if (result.rows.length > 0) {
+					callApiStart.current += callApiPerPage.current;
+					setListArrayBooks(listArrayBooks.concat(result.rows));
+				} else if (result.rows.length === 0) {
+					setHasMore(false);
+				}
+			} else if (activeKeyDefault === 'quotes') {
+				const result = await dispatch(getAuthAPI(params)).unwrap();
+				if (result.rows.length > 0) {
+					callApiStart.current += callApiPerPage.current;
+					setListArrayQuotes(listArrayQuotes.concat(result.rows));
+				} else if (result.rows.length === 0) {
+					setHasMore(false);
+				}
+			} else if (activeKeyDefault === 'groups') {
+				const result = await dispatch(getAuthAPI(params)).unwrap();
+				if (result.rows.length > 0) {
+					callApiStart.current += callApiPerPage.current;
+					setListArrayGroup(listArrayGroup.concat(result.rows));
+				} else if (result.rows.length === 0) {
+					setHasMore(false);
+				}
+			}
+		}
+	};
+
+	const handleGetBooksSearch = () => {
 		setIsFetching(true);
 		try {
 			const params = {
@@ -89,37 +125,13 @@ const Result = () => {
 				start: callApiStart.current,
 				limit: callApiPerPage.current,
 			};
-
+			let getAuthAPI;
 			if (Storage.getAccessToken()) {
-				if ((_.isEmpty(listArrayBooks) || _.isEmpty(listArrayQuotes)) && searchResultInput.length > 0) {
-					if (activeKeyDefault === 'books') {
-						const resultBooks = await dispatch(getFilterSearchAuth(params)).unwrap();
-						if (resultBooks.length > 0) {
-							callApiStart.current += callApiPerPage.current;
-							setListArrayBooks(listArrayBooks.concat(resultBooks));
-						} else if (resultBooks.length === 0) {
-							setHasMore(false);
-						}
-					} else if (activeKeyDefault === 'quotes') {
-						const resultBooks = await dispatch(getFilterSearchAuth(params));
-						setListArrayQuotes(resultBooks.resultBooks.data.rows);
-					}
-				}
+				getAuthAPI = getFilterSearchAuth;
+				handleCallAPI(params,getAuthAPI);
 			} else {
-				if ((_.isEmpty(listArrayBooks) || _.isEmpty(listArrayQuotes)) && searchResultInput.length > 0) {
-					if (activeKeyDefault === 'books') {
-						const resultBooks = await dispatch(getFilterSearch(params)).unwrap();
-						if (resultBooks.rows.length > 0) {
-							callApiStart.current += callApiPerPage.current;
-							setListArrayBooks(listArrayBooks.concat(resultBooks.rows));
-						} else if (resultBooks.rows.length === 0) {
-							setHasMore(false);
-						}
-					} else if (activeKeyDefault === 'quotes') {
-						const resultBooks = await dispatch(getFilterSearch(params)).unwrap();
-						setListArrayQuotes(resultBooks.resultBooks.data.rows);
-					}
-				}
+				getAuthAPI = getFilterSearch;
+				handleCallAPI(params,getAuthAPI);
 			}
 		} catch (err) {
 			NotificationError(err);
@@ -130,7 +142,7 @@ const Result = () => {
 
 	return (
 		<NormalContainer>
-			{isFetching ? <Circle loading={isFetching} /> : ''}
+			<Circle loading={isFetching} />
 			<div className='result__container'>
 				<div className='result__header'>
 					<div className='result__header__content'>Kết quả tìm kiếm cho {value}</div>
@@ -149,7 +161,7 @@ const Result = () => {
 					<Tabs
 						defaultActiveKey={'books'}
 						activeKey={activeKeyDefault}
-						onSelect={eventKey => setActiveKeyDefault(eventKey)}
+						onSelect={eventKey => handleSelectKey(eventKey)}
 					>
 						<Tab eventKey='books' title='Sách'>
 							<BookSearch
@@ -157,19 +169,33 @@ const Result = () => {
 								hasMore={hasMore}
 								handleGetBooksSearch={handleGetBooksSearch}
 								isFetching={isFetching}
+								count={count}
 							/>
 						</Tab>
-						<Tab eventKey='group' title='Nhóm'>
-							Group
+						<Tab eventKey='authors' title='Tác giả'>
+							<AuthorSearch />
+						</Tab>
+						<Tab eventKey='users' title='Mọi người'>
+							<UsersSearch />
+						</Tab>
+						<Tab eventKey='categories' title='Chủ đề'>
+							Chủ đề
 						</Tab>
 						<Tab eventKey='quotes' title='Quotes'>
-							<QuoteSearch listArrayQuotes={listArrayQuotes} />
+							<QuoteSearch
+								isFetching={isFetching}
+								listArrayQuotes={listArrayQuotes}
+								hasMore={hasMore}
+								handleGetBooksSearch={handleGetBooksSearch}
+							/>
 						</Tab>
-						<Tab eventKey='everyone' title='Mọi người'>
-							Mọi người
-						</Tab>
-						<Tab eventKey='story' title='Câu chuyện'>
-							Câu chuyện
+						<Tab eventKey='groups' title='Nhóm'>
+							<GroupSearch
+								isFetching={isFetching}
+								listArrayGroup={listArrayGroup}
+								hasMore={hasMore}
+								handleGetBooksSearch={handleGetBooksSearch}
+							/>
 						</Tab>
 					</Tabs>
 				</div>
@@ -178,4 +204,4 @@ const Result = () => {
 	);
 };
 
-export default Result;
+export defaul
