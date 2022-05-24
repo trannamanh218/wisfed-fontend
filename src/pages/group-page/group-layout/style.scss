@@ -1,0 +1,120 @@
+.search-group-container {
+	margin: 0px 69px 11px 69px;
+	padding-top: 54px;
+}
+.group-btn-back {
+	display: flex;
+	margin-bottom: 32px;
+	button {
+		border-radius: 50px;
+		background-color: #eff0f6;
+		padding: 5px;
+		margin-right: 29px;
+		svg {
+			width: 28px;
+			height: 28px;
+		}
+	}
+	span {
+		font-family: 'Montserrat';
+		font-style: normal;
+		font-weight: 600;
+		font-size: 20px;
+		line-height: 32px;
+		display: flex;
+		align-items: center;
+		letter-spacing: 0.75px;
+		color: #2d2c42;
+	}
+}
+.search-feild {
+	display: flex;
+	position: relative;
+	input {
+		flex-grow: 1;
+		margin-right: 16px;
+		height: 57px;
+		border-radius: 12px;
+		padding-left: 67px;
+		background-color: #eff0f7;
+		outline: none;
+	}
+	svg {
+		position: absolute;
+		top: 16px;
+		left: 26px;
+	}
+	button {
+		height: 57px;
+		width: 150px;
+		height: 57px;
+		left: 1221px;
+		top: 210px;
+		background: #e0af7e;
+		border-radius: 9px;
+		color: white;
+		font-family: 'Montserrat';
+		font-style: normal;
+		font-weight: 600;
+		font-size: 13px;
+		line-height: 18px;
+		letter-spacing: 0.5625px;
+		color: #fcfcfc;
+	}
+}
+.list-group__container {
+	padding: 8px 17px 8px 17px;
+	h3 {
+		font-family: 'Montserrat';
+		font-style: normal;
+		font-weight: 600;
+		font-size: 18.0357px;
+		line-height: 29px;
+		display: flex;
+		align-items: center;
+		letter-spacing: 0.676339px;
+		color: #2d2c42;
+	}
+}
+.item-list-group {
+	display: flex;
+	margin-top: 14px;
+	img {
+		width: 60px;
+		height: 60px;
+		border-radius: 9.91964px;
+		margin-right: 7px;
+	}
+}
+.item-infor {
+	span {
+		font-family: 'Montserrat';
+		font-style: normal;
+		font-weight: 600;
+		font-size: 16.2321px;
+		line-height: 22px;
+		display: flex;
+		align-items: center;
+		letter-spacing: -0.180357px;
+		color: #2d2c42;
+	}
+}
+
+.item-update {
+	display: flex;
+	justify-content: space-between;
+	span {
+		font-family: 'Montserrat';
+		font-style: normal;
+		font-weight: 500;
+		font-size: 12.625px;
+		line-height: 20px;
+		display: flex;
+		align-items: center;
+		letter-spacing: 0.225446px;
+		color: #6e7191;
+	}
+}
+.your-join-group {
+	margin-top: 33px;
+}

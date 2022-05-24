@@ -14,7 +14,7 @@ import Storage from 'helpers/Storage';
 import { handleResetValue } from 'reducers/redux-utils/search';
 import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { checkLogin } from 'reducers/redux-utils/auth';
+import { logout } from 'reducers/redux-utils/auth';
 
 const Header = () => {
 	const { isShowModal } = useSelector(state => state.search);
@@ -65,7 +65,7 @@ const Header = () => {
 		localStorage.removeItem('refreshToken');
 		navigate('/login');
 		toast.success('Đăng xuất thành công');
-		dispatch(checkLogin(false));
+		dispatch(logout({}));
 	};
 
 	return (
