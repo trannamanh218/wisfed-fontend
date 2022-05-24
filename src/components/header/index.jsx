@@ -84,7 +84,7 @@ const Header = () => {
 						value={getSlugResult || ''}
 					/>
 				</div>
-				{isShow ? <SearchAllModal showRef={showRef} /> : ''}
+				{isShow ? <SearchAllModal showRef={showRef} setIsShow={setIsShow} /> : ''}
 			</div>
 
 			<ul className='header__nav'>

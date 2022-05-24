@@ -9,9 +9,8 @@ import { handleSaveValueInput, handleResetValue } from 'reducers/redux-utils/sea
 import { useDispatch, useSelector } from 'react-redux';
 import { getFilterSearch } from 'reducers/redux-utils/search';
 import { NotificationError } from 'helpers/Error';
-import Storage from 'helpers/Storage';
 
-const SearchAllModal = ({ showRef }) => {
+const SearchAllModal = ({ showRef, setIsShow }) => {
 	const [valueInputSearch, setValueInputSearch] = useState('');
 	const [resultSearch, setResultSearch] = useState([]);
 	const [filter, setFilter] = useState('[]');
@@ -42,9 +41,9 @@ const SearchAllModal = ({ showRef }) => {
 		} catch (err) {
 			NotificationError(err);
 		}
-	}, [filter, valueInputSearch]);
+	}, [filter]);
 
-	const debounceSearch = useCallback(_.debounce(updateInputSearch, 700), []);
+	const debounceSearch = useCallback(_.debounce(updateInputSearch, 100), []);
 	const handleSearch = e => {
 		setValueInputSearch(e.target.value);
 		debounceSearch(e.target.value);
@@ -56,7 +55,7 @@ const SearchAllModal = ({ showRef }) => {
 			if (saveValueInput) {
 				dispatch(handleResetValue(true));
 				if (valueInput) {
-					navigate(`/result/${valueInput}`);
+					navigate(`/result/q=${valueInput}`);
 				}
 			}
 		}
@@ -72,11 +71,12 @@ const SearchAllModal = ({ showRef }) => {
 					onKeyDown={handleKeyDown}
 				/>
 			</div>
-			<ResultSearch valueInputSearch={valueInputSearch} resultSearch={resultSearch} />
+			<ResultSearch setIsShow={setIsShow} valueInputSearch={valueInputSearch} resultSearch={resultSearch} />
 		</div>
 	);
 };
 SearchAllModal.propTypes = {
 	showRef: PropTypes.object,
+	setIsShow: PropTypes.func,
 };
 export default SearchAllModal;
