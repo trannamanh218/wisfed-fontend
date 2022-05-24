@@ -3,7 +3,7 @@ import UserAvatar from 'shared/user-avatar';
 import './top-quotes.scss';
 import PropTypes from 'prop-types';
 
-const TopQuotesComponent = ({ item }) => {
+const TopQuotesComponent = ({ item, setModalShow }) => {
 	return (
 		<div className='top__quotes__container'>
 			<div className='top__quotes__description'>{item.quote}</div>
@@ -18,12 +18,13 @@ const TopQuotesComponent = ({ item }) => {
 						<p className='quote-card__author__detail__name'>{item.user.fullName}</p>
 					</div>
 				</div>
-				<QuoteActionBar data={item} />
+				<QuoteActionBar data={item} setModalShow={setModalShow} />
 			</div>
 		</div>
 	);
 };
 TopQuotesComponent.propTypes = {
 	item: PropTypes.array,
+	setModalShow: PropTypes.func,
 };
 export default TopQuotesComponent;

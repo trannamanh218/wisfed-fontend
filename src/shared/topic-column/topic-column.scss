@@ -1,8 +1,6 @@
 @import 'src/scss/abstracts/_variables.scss';
 
 .topic-column {
-	margin-bottom: 3.75em;
-	max-width: 15.625rem;
 	&__header {
 		margin-bottom: 1.6em;
 		font-size: 1.25rem;
@@ -14,7 +12,7 @@
 	&__container {
 		display: grid;
 		grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-		grid-column-gap: 20px;
+		grid-column-gap: 40px;
 		max-height: calc(10 * 0.825 * 4em);
 		overflow: hidden;
 		&.expand {
@@ -44,21 +42,6 @@
 		display: flex;
 		align-items: center;
 		color: $ash;
-	}
-
-	.view-caret {
-		margin-right: 15px;
-		transition: all 0.2s linear;
-		&.view-more {
-			transform: rotate(180deg);
-		}
-	}
-}
-.sidebar-profile__personal__category {
-	margin-top: 3.7rem;
-	.topic-column__btn {
-		gap: 15px;
-		margin-top: 16px;
 	}
 
 	.view-caret {

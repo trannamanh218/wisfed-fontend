@@ -83,6 +83,8 @@ const SettingMore = ({ bookData, handleUpdateBookList }) => {
 				const arrId = [];
 				customLibrariesContainCurrentBook.forEach(item => arrId.push(item.libraryId));
 				setCustomLibrariesContainCurrentBookId(arrId);
+			} else {
+				setCustomLibrariesContainCurrentBookId([]);
 			}
 		} catch (err) {
 			NotificationError(err);
@@ -143,8 +145,10 @@ const SettingMore = ({ bookData, handleUpdateBookList }) => {
 		try {
 			await updateStatusBook();
 			await handleAddAndRemoveBook();
-			dispatch(updateMyAllLibraryRedux());
 			toast.success('Chuyển giá sách thành công');
+			setTimeout(() => {
+				dispatch(updateMyAllLibraryRedux());
+			}, 150);
 		} catch (err) {
 			NotificationError(err);
 		} finally {

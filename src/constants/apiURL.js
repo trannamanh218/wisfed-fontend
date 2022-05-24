@@ -124,3 +124,5 @@ export const getSearchAuthAPI = `/api/v1/searchs/searchAuth`;
 export const inviteFriend = id => `api/v1/groups/inviteMemberToGroup/${id}`;
 export const enjoyGroup = id => `/api/v1/groups/requestGroup/${id}`;
 export const leaveGroup = id => `/api/v1/groups/leaveGroup/${id}`;
+export const createPostGroup = id => `/api/v1/groups/${id}/createPost`;
+export const listPostGroup = id => `/api/v1/groups/${id}/groupFeed`;

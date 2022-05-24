@@ -69,11 +69,9 @@
 
 	&__overlay {
 		position: absolute;
-		inset: 0;
-		bottom: 20%;
+		top: 12px;
+		right: 12px;
 		display: flex;
-		margin-right: 12px;
-		padding-top: 12px;
 		flex-direction: column;
 		align-items: center;
 

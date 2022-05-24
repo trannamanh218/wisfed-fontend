@@ -9,6 +9,7 @@ import LoadingIndicator from 'shared/loading-indicator';
 import _ from 'lodash';
 
 const BookSearch = ({ listArrayBooks, hasMore, handleGetBooksSearch }) => {
+	console.log(listArrayBooks);
 	return (
 		<div className='bookSearch__container'>
 			{/* <div className='bookSearch__title'>

@@ -6,13 +6,14 @@ import Tabs from 'react-bootstrap/Tabs';
 import BookSearch from './component/books-search';
 import QuoteSearch from './component/quotes-search';
 import { useSelector, useDispatch } from 'react-redux';
-import { useEffect, useState, useRef, useCallback } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import _ from 'lodash';
 import Circle from 'shared/loading/circle';
 import { useParams } from 'react-router-dom';
-import { getFilterSearchAuth } from 'reducers/redux-utils/search';
+import { getFilterSearchAuth, getFilterSearch } from 'reducers/redux-utils/search';
 import { NotificationError } from 'helpers/Error';
 import { useNavigate } from 'react-router-dom';
+import Storage from 'helpers/Storage';
 
 const Result = () => {
 	const { value } = useParams();
@@ -31,7 +32,7 @@ const Result = () => {
 
 	const handleSelecActiveKey = () => {
 		if (saveValueInput.length > 0 && isShowModal === true) {
-			setActiveKeyDefault('everyone');
+			setActiveKeyDefault('books');
 		}
 	};
 
@@ -82,24 +83,42 @@ const Result = () => {
 	const handleGetBooksSearch = async () => {
 		setIsFetching(true);
 		try {
-			if ((_.isEmpty(listArrayBooks) || _.isEmpty(listArrayQuotes)) && searchResultInput.length > 0) {
-				const params = {
-					q: searchResultInput,
-					type: activeKeyDefault,
-					start: callApiStart.current,
-					limit: callApiPerPage.current,
-				};
-				if (activeKeyDefault === 'books') {
-					const resultBooks = await dispatch(getFilterSearchAuth(params)).unwrap();
-					if (resultBooks.length > 0) {
-						callApiStart.current += callApiPerPage.current;
-						setListArrayBooks(listArrayBooks.concat(resultBooks));
-					} else if (resultBooks.length === 0) {
-						setHasMore(false);
+			const params = {
+				q: searchResultInput,
+				type: activeKeyDefault,
+				start: callApiStart.current,
+				limit: callApiPerPage.current,
+			};
+
+			if (Storage.getAccessToken()) {
+				if ((_.isEmpty(listArrayBooks) || _.isEmpty(listArrayQuotes)) && searchResultInput.length > 0) {
+					if (activeKeyDefault === 'books') {
+						const resultBooks = await dispatch(getFilterSearchAuth(params)).unwrap();
+						if (resultBooks.length > 0) {
+							callApiStart.current += callApiPerPage.current;
+							setListArrayBooks(listArrayBooks.concat(resultBooks));
+						} else if (resultBooks.length === 0) {
+							setHasMore(false);
+						}
+					} else if (activeKeyDefault === 'quotes') {
+						const resultBooks = await dispatch(getFilterSearchAuth(params));
+						setListArrayQuotes(resultBooks.resultBooks.data.rows);
 					}
-				} else if (activeKeyDefault === 'quotes') {
-					const resultBooks = await dispatch(getFilterSearchAuth(params));
-					setListArrayQuotes(resultBooks.resultBooks.data.rows);
+				}
+			} else {
+				if ((_.isEmpty(listArrayBooks) || _.isEmpty(listArrayQuotes)) && searchResultInput.length > 0) {
+					if (activeKeyDefault === 'books') {
+						const resultBooks = await dispatch(getFilterSearch(params)).unwrap();
+						if (resultBooks.rows.length > 0) {
+							callApiStart.current += callApiPerPage.current;
+							setListArrayBooks(listArrayBooks.concat(resultBooks.rows));
+						} else if (resultBooks.rows.length === 0) {
+							setHasMore(false);
+						}
+					} else if (activeKeyDefault === 'quotes') {
+						const resultBooks = await dispatch(getFilterSearch(params)).unwrap();
+						setListArrayQuotes(resultBooks.resultBooks.data.rows);
+					}
 				}
 			}
 		} catch (err) {

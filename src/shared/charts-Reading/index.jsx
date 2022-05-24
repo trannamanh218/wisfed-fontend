@@ -1,6 +1,6 @@
 import './charts-reading.scss';
 import { Link } from 'react-router-dom';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState, memo } from 'react';
 import { NotificationError } from 'helpers/Error';
 import { useDispatch } from 'react-redux';
 import { getChartsByid } from 'reducers/redux-utils/chart';
@@ -76,4 +76,4 @@ const ChartsReading = () => {
 	);
 };
 
-export default ChartsReading;
+export default memo(ChartsReading);

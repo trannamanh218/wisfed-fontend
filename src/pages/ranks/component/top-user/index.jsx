@@ -10,6 +10,8 @@ import { NotificationError } from 'helpers/Error';
 import { useDispatch, useSelector } from 'react-redux';
 import { getTopUser, getTopUserAuth } from 'reducers/redux-utils/ranks';
 import dropdownIcon from 'assets/images/dropdown.png';
+import ModalCheckLogin from 'shared/modal-check-login';
+import Storage from 'helpers/Storage';
 
 const TopUser = ({ rows, listYear }) => {
 	const kindOfGroupRef = useRef({ value: 'default', title: 'Chủ đề' });
@@ -21,6 +23,7 @@ const TopUser = ({ rows, listYear }) => {
 	const [valueDataSort, setValueDataSort] = useState('topRead');
 	const [getListTopBooks, setGetListTopBooks] = useState([]);
 	const [checkSelectBox, setCheckSelectBox] = useState(false);
+	const [modalShow, setModalShow] = useState(false);
 	const dispatch = useDispatch();
 	const listDataSortType = [
 		{ value: 'topRead', title: 'Đọc nhiều nhất' },
@@ -78,8 +81,17 @@ const TopUser = ({ rows, listYear }) => {
 		setValueDataSort(data.value);
 	};
 
+	const handleShare = () => {
+		if (Storage.getAccessToken()) {
+			// console.log('share');
+		} else {
+			setModalShow(true);
+		}
+	};
+
 	return (
 		<div className='topbooks__container'>
+			<ModalCheckLogin setModalShow={setModalShow} modalShow={modalShow} />
 			<div className='topbooks__container__header'>
 				<div className='topbooks__container__title'>TOP 100 người dùng</div>
 				<SelectBox
@@ -124,9 +136,9 @@ const TopUser = ({ rows, listYear }) => {
 					<div key={item.id} className='topbooks__container__main top__user'>
 						<StarRanking index={index} />
 						<div className='topbooks__container__main__layout'>
-							<AuthorCard size='lg' item={item} />
+							<AuthorCard size='lg' item={item} setModalShow={setModalShow} />
 						</div>
-						<div className='author-book__share'>
+						<div onClick={handleShare} className='author-book__share'>
 							<ShareRanks />
 						</div>
 					</div>

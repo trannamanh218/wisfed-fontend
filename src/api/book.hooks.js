@@ -81,7 +81,6 @@ export const useFetchAuthorBooks = userId => {
 export const useFetchBookDetail = id => {
 	const {
 		book: { bookInfo },
-		auth: { userInfo },
 	} = useSelector(state => state);
 	const [status, setStatus] = useState(STATUS_IDLE);
 	const dispatch = useDispatch();

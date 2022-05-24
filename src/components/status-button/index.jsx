@@ -23,6 +23,7 @@ import { useNavigate } from 'react-router-dom';
 import { STATUS_SUCCESS } from 'constants';
 import { NotificationError } from 'helpers/Error';
 import Storage from 'helpers/Storage';
+import ModalCheckLogin from 'shared/modal-check-login';
 
 const STATUS_BOOK_OBJ = {
 	reading: {
@@ -47,14 +48,13 @@ const StatusButton = ({ className, bookData, inPostBook = false, hasBookStatus =
 	const [currentStatus, setCurrentStatus] = useState('');
 	const [fetchStatus, setFetchStatus] = useState(STATUS_IDLE);
 	const [customLibrariesContainCurrentBookId, setCustomLibrariesContainCurrentBookId] = useState([]);
-
+	const { userInfo } = useSelector(state => state.auth);
 	const addedArray = useRef([]);
 	const removedArray = useRef([]);
 
 	const navigate = useNavigate();
 
 	const myCustomLibraries = useSelector(state => state.library.myAllLibrary).custom;
-	const userInfo = useSelector(state => state.auth.userInfo);
 
 	const dispatch = useDispatch();
 
@@ -96,25 +96,26 @@ const StatusButton = ({ className, bookData, inPostBook = false, hasBookStatus =
 		setModalShow(false);
 	};
 
-	const handleShow = e => {
+	const handleShow = async e => {
 		e.stopPropagation();
 		//check duoc trang thai co trong thu vien
-		dispatch(checkBookInLibraries(bookData.id || bookData.bookId))
-			.unwrap()
-			.then(res => {
-				const customLibrariesContainCurrentBook = res.filter(item => item.library.isDefault === false);
-				if (customLibrariesContainCurrentBook.length) {
-					const arrId = [];
-					customLibrariesContainCurrentBook.forEach(item => arrId.push(item.libraryId));
-					setCustomLibrariesContainCurrentBookId(arrId);
-				}
-			})
-			.catch(err => {
-				NotificationError(err);
-			})
-			.finally(() => {
-				setModalShow(true);
-			});
+		try {
+			const checkLibrariesData = await dispatch(checkBookInLibraries(bookData.id || bookData.bookId)).unwrap();
+			const customLibrariesContainCurrentBook = checkLibrariesData.filter(
+				item => item.library.isDefault === false
+			);
+			if (customLibrariesContainCurrentBook.length) {
+				const arrId = [];
+				customLibrariesContainCurrentBook.forEach(item => arrId.push(item.libraryId));
+				setCustomLibrariesContainCurrentBookId(arrId);
+			} else {
+				setCustomLibrariesContainCurrentBookId([]);
+			}
+		} catch (err) {
+			NotificationError(err);
+		} finally {
+			setModalShow(true);
+		}
 	};
 
 	const updateBookShelve = async params => {
@@ -216,16 +217,7 @@ const StatusButton = ({ className, bookData, inPostBook = false, hasBookStatus =
 					</Modal.Body>
 				</Modal>
 			) : (
-				<Modal
-					id='status-book-modal'
-					className='status-book-modal'
-					show={modalShow}
-					onHide={handleClose}
-					keyboard={false}
-					centered
-				>
-					<Modal.Body>Vui lòng đăng nhập để trải nghiệm</Modal.Body>
-				</Modal>
+				<ModalCheckLogin modalShow={modalShow} setModalShow={setModalShow} />
 			)}
 		</>
 	);

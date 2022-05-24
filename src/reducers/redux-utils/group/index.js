@@ -1,5 +1,14 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { groupAPI, detailGroup, creatGroup, inviteFriend, enjoyGroup, leaveGroup } from 'constants/apiURL';
+import {
+	groupAPI,
+	detailGroup,
+	creatGroup,
+	inviteFriend,
+	enjoyGroup,
+	leaveGroup,
+	listPostGroup,
+	createPostGroup,
+} from 'constants/apiURL';
 import Request from 'helpers/Request';
 
 export const getGroupList = createAsyncThunk('group/getGroupList', async (params = {}, { rejectWithValue }) => {
@@ -15,6 +24,7 @@ export const getGroupList = createAsyncThunk('group/getGroupList', async (params
 export const getGroupDettail = createAsyncThunk('group/getGroupDettail', async (id = {}, { rejectWithValue }) => {
 	try {
 		const res = await Request.makeGet(detailGroup(id));
+
 		return res;
 	} catch (err) {
 		const error = JSON.parse(err.response);
@@ -25,6 +35,29 @@ export const getGroupDettail = createAsyncThunk('group/getGroupDettail', async (
 export const getCreatGroup = createAsyncThunk('group/getCreatGroup', async (data = {}, { rejectWithValue }) => {
 	try {
 		const res = await Request.makePost(creatGroup, data);
+		return res;
+	} catch (err) {
+		const error = JSON.parse(err.response);
+		return rejectWithValue(error);
+	}
+});
+
+export const getListPost = createAsyncThunk('group/getListPost', async (params = {}, { rejectWithValue }) => {
+	const { id, query } = params;
+	try {
+		const res = await Request.makeGet(listPostGroup(id), query);
+		return res.data;
+	} catch (err) {
+		const error = JSON.parse(err.response);
+		return rejectWithValue(error);
+	}
+});
+
+export const creatNewPost = createAsyncThunk('group/creatNewPost', async (params = {}, { rejectWithValue }) => {
+	const { id, data } = params;
+
+	try {
+		const res = await Request.makePost(createPostGroup(id), data);
 		return res;
 	} catch (err) {
 		const error = JSON.parse(err.response);

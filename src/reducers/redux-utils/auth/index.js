@@ -15,6 +15,7 @@ import Storage from 'helpers/Storage';
 import _ from 'lodash';
 import { editUserInfo } from '../user';
 import jwtDecode from 'jwt-decode';
+import { action } from '@storybook/addon-actions';
 
 export const register = createAsyncThunk('auth/register', async (params, { rejectWithValue }) => {
 	try {
@@ -106,10 +107,14 @@ const authSlice = createSlice({
 		userInfo: {},
 		error: {},
 		infoForgot: {},
+		routerLogin: false,
 	},
 	reducers: {
 		checkLogin: (state, action) => {
 			state.isAuth = action.payload;
+		},
+		checkUserLogin: (state, action) => {
+			state.routerLogin = action.payload;
 		},
 	},
 
@@ -210,5 +215,5 @@ const authSlice = createSlice({
 });
 
 const auth = authSlice.reducer;
-export const { checkLogin } = authSlice.actions;
+export const { checkLogin, checkUserLogin } = authSlice.actions;
 export default auth;

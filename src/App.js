@@ -27,6 +27,7 @@ import ReadingSummary from 'pages/reading-summary';
 import ReadingTarget from 'pages/reading-target';
 import ForgetPassWordAdminComponet from 'pages/foget-password/component-admin/ForgotAdmin';
 import AdminCreatNewPassword from 'pages/foget-password/component-admin/CreatNewPasswordAdmin';
+import LayoutGroup from 'pages/group-page/group-layout';
 import DetailFriend from 'pages/friends/component/detail-friend';
 import 'scss/main.scss';
 import QuoteAll from 'pages/quote/all-quote/';
@@ -37,11 +38,12 @@ import Result from 'pages/result';
 import { NotificationError } from 'helpers/Error';
 import Storage from 'helpers/Storage';
 import _ from 'lodash';
+import ModalCheckLogin from 'shared/modal-check-login';
 
 function App({ children }) {
 	const dispatch = useDispatch();
 	const updateMyLibrary = useSelector(state => state.library.updateMyLibrary);
-	const userInfo = useSelector(state => state.auth.userInfo);
+	const { routerLogin, userInfo } = useSelector(state => state.auth);
 
 	useEffect(async () => {
 		const accsetToken = Storage.getAccessToken();
@@ -81,6 +83,7 @@ function App({ children }) {
 				draggable
 				pauseOnHover
 			/>
+			<ModalCheckLogin routerLogin={routerLogin} />
 			<Routes>
 				<Route path='/top100' element={<Ranks />} />
 				<Route path='/result/q=:value' element={<Result />} />
@@ -108,6 +111,7 @@ function App({ children }) {
 				<Route path='/direct' element={<Direct />} />
 				<Route path='/reading-summary/:userId' element={<ReadingSummary />} />
 				<Route path='/reading-target/:userId' element={<ReadingTarget />} />
+				<Route path='/group' element={<LayoutGroup />} />
 				<Route path='/group/:id' element={<Group />} />
 				<Route path='/' element={<Home />} />
 				<Route path='*' element={<NotFound />} />
