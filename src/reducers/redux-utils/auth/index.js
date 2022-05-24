@@ -107,13 +107,14 @@ const authSlice = createSlice({
 		userInfo: {},
 		error: {},
 		infoForgot: {},
+		routerLogin: false,
 	},
 	reducers: {
 		checkLogin: (state, action) => {
 			state.isAuth = action.payload;
 		},
-		logout: (state, action) => {
-			state.auth.userInfo = action.payload;
+		checkUserLogin: (state, action) => {
+			state.routerLogin = action.payload;
 		},
 	},
 
@@ -214,5 +215,5 @@ const authSlice = createSlice({
 });
 
 const auth = authSlice.reducer;
-export const { checkLogin, logout } = authSlice.actions;
+export const { checkLogin, checkUserLogin } = authSlice.actions;
 export default auth;

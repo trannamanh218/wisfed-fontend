@@ -3,13 +3,15 @@ import ReadChallenge from 'shared/read-challenge';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { useFetchTargetReading } from 'api/readingTarget.hooks';
+import { memo } from 'react';
 
 const RenderProgress = ({ userId }) => {
 	const { checkRenderTarget } = useSelector(state => state.chart);
-	useFetchTargetReading(userId);
+	const { booksReadYear } = useFetchTargetReading(userId);
+
 	const renderProgressBar = () => {
 		if (checkRenderTarget === true) {
-			return <ProgressBarCircle />;
+			return <ProgressBarCircle booksReadYear={booksReadYear} />;
 		} else if (checkRenderTarget === false) {
 			return <ReadChallenge />;
 		}
@@ -21,4 +23,5 @@ const RenderProgress = ({ userId }) => {
 RenderProgress.propTypes = {
 	userId: PropTypes.string,
 };
-export default RenderProgress;
+
+export default memo(RenderProgress);

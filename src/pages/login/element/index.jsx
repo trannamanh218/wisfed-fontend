@@ -68,7 +68,6 @@ function LoginComponet() {
 			)}
 			<div>
 				<Link to='/'>
-					{' '}
 					<div className='login__header'>
 						<img src={Logo} alt='logo' />
 					</div>

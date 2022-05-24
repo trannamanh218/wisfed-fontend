@@ -1,7 +1,7 @@
 import { useFetchGroups } from 'api/group.hooks';
 import bookIcon from 'assets/icons/book.svg';
 import _ from 'lodash';
-import { useState } from 'react';
+import { useState, memo } from 'react';
 import { Link } from 'react-router-dom';
 
 function GroupShortcuts() {
@@ -58,4 +58,4 @@ function GroupShortcuts() {
 	);
 }
 
-export default GroupShortcuts;
+export default memo(GroupShortcuts);

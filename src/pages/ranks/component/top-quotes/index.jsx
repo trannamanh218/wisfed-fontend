@@ -7,13 +7,14 @@ import { useDispatch } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
-
+import ModalCheckLogin from 'shared/modal-check-login';
 const TopQuotes = ({ rows, listYear }) => {
 	const [topQuotesId, setTopQuotesId] = useState();
 	const [valueDate, setValueData] = useState('week');
 	const [getListTopQuotes, setGetListTopQuotes] = useState([]);
 	const kindOfGroupRef = useRef({ value: 'default', title: 'Chủ đề' });
 	const listYearRef = useRef({ value: 'default', title: 'Tuần' });
+	const [modalShow, setModalShow] = useState(false);
 	const dispatch = useDispatch();
 
 	const getTopQuotesData = async () => {
@@ -45,6 +46,7 @@ const TopQuotes = ({ rows, listYear }) => {
 
 	return (
 		<div className='topbooks__container'>
+			<ModalCheckLogin setModalShow={setModalShow} modalShow={modalShow} />
 			<div className='topbooks__container__title'>TOP 100 Quotes được like nhiều nhất</div>
 			<div className='topbooks__container__sort'>
 				<div className='topbooks__container__sort__left'>
@@ -71,7 +73,7 @@ const TopQuotes = ({ rows, listYear }) => {
 					<div key={item.id} className='topbooks__container__main'>
 						<StarRanking index={index} />
 						<div className='topbooks__container__main__layout'>
-							<TopQuotesComponent item={item} />
+							<TopQuotesComponent item={item} setModalShow={setModalShow} />
 						</div>
 					</div>
 				))

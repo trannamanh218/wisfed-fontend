@@ -122,8 +122,13 @@ const ConnectButtons = ({ data, direction, item }) => {
 
 	return (
 		<div className={`connect-buttons ${direction}`}>
-			{handleRenderButtonFriend()}
-			{handleRenderButtonFollow()}
+			{item.relation !== 'isMe' && (
+				<>
+					{' '}
+					{handleRenderButtonFriend()}
+					{handleRenderButtonFollow()}
+				</>
+			)}
 		</div>
 	);
 };

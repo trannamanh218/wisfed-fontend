@@ -5,8 +5,8 @@ import classNames from 'classnames';
 import './quote-action-bar.scss';
 import { RightArrow } from 'components/svg';
 import { Link } from 'react-router-dom';
-
-const QuoteActionBar = ({ data, isDetail, likeUnlikeQuoteFnc, isLiked, likeNumber }) => {
+import Storage from 'helpers/Storage';
+const QuoteActionBar = ({ data, isDetail, likeUnlikeQuoteFnc, isLiked, likeNumber, setModalShow }) => {
 	const { isShare, share, comments, id } = data;
 
 	if (isDetail) {
@@ -27,16 +27,30 @@ const QuoteActionBar = ({ data, isDetail, likeUnlikeQuoteFnc, isLiked, likeNumbe
 			</ul>
 		);
 	}
+	const handleCheckLoginShare = () => {
+		if (!Storage.getAccessToken()) {
+			setModalShow(true);
+		}
+	};
+	const handleCheckLoginLike = () => {
+		if (!Storage.getAccessToken()) {
+			setModalShow(true);
+		} else {
+			likeUnlikeQuoteFnc(id);
+		}
+	};
 
 	return (
 		<ul className='quote-action-bar'>
-			<li className='quote-action__item' onClick={() => likeUnlikeQuoteFnc(id)}>
+			<li className='quote-action__item' onClick={handleCheckLoginLike}>
 				{isLiked ? <LikeFill /> : <Like />}
 				<span className='quote-action__name'>{likeNumber} Thích</span>
 			</li>
 			<li className='quote-action__item'>
 				<Share className={classNames('quote-icon', { 'active': isShare })} />
-				<span className='quote-action__name'>{share} Chia sẻ</span>
+				<span onClick={handleCheckLoginShare} className='quote-action__name'>
+					{share} Chia sẻ
+				</span>
 			</li>
 			<li className='quote-action__item'>
 				<Link to={`/quotes/detail/${id}`}>
@@ -67,6 +81,7 @@ QuoteActionBar.propTypes = {
 	isLiked: PropTypes.bool,
 	likeNumber: PropTypes.number,
 	likeUnlikeQuoteFnc: PropTypes.func,
+	setModalShow: PropTypes.func,
 };
 
 export default QuoteActionBar;

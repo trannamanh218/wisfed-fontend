@@ -38,11 +38,12 @@ import Result from 'pages/result';
 import { NotificationError } from 'helpers/Error';
 import Storage from 'helpers/Storage';
 import _ from 'lodash';
+import ModalCheckLogin from 'shared/modal-check-login';
 
 function App({ children }) {
 	const dispatch = useDispatch();
 	const updateMyLibrary = useSelector(state => state.library.updateMyLibrary);
-	const userInfo = useSelector(state => state.auth.userInfo);
+	const { routerLogin, userInfo } = useSelector(state => state.auth);
 
 	useEffect(async () => {
 		const accsetToken = Storage.getAccessToken();
@@ -82,6 +83,7 @@ function App({ children }) {
 				draggable
 				pauseOnHover
 			/>
+			<ModalCheckLogin routerLogin={routerLogin} />
 			<Routes>
 				<Route path='/top100' element={<Ranks />} />
 				<Route path='/result/q=:value' element={<Result />} />

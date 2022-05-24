@@ -8,13 +8,14 @@ import UserAvatar from 'shared/user-avatar';
 import NotificationModal from 'pages/notification/';
 import { useDispatch, useSelector } from 'react-redux';
 import { backgroundToggle } from 'reducers/redux-utils/notificaiton';
+import { checkUserLogin } from 'reducers/redux-utils/auth';
 import { useVisible } from 'shared/hooks';
 import SearchAllModal from 'shared/search-all';
 import Storage from 'helpers/Storage';
 import { handleResetValue } from 'reducers/redux-utils/search';
 import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { logout } from 'reducers/redux-utils/auth';
+import { updateTargetReading } from 'reducers/redux-utils/chart';
 
 const Header = () => {
 	const { isShowModal } = useSelector(state => state.search);
@@ -30,6 +31,7 @@ const Header = () => {
 	const [modalInforUser, setModalInforUser] = useState(false);
 	const { value } = useParams();
 	const [getSlugResult, setGetSlugResult] = useState('');
+	const [userLogin, setUserLogin] = useState(false);
 
 	useEffect(() => {
 		setActiveLink(pathname);
@@ -46,9 +48,21 @@ const Header = () => {
 		}
 	}, [isShowModal]);
 
+	useEffect(() => {
+		if (Storage.getAccessToken()) {
+			setUserLogin(true);
+		} else {
+			setUserLogin(false);
+		}
+	}, []);
+
 	const toglleModalNotify = () => {
-		setModalNotti(!modalNoti);
-		dispatch(backgroundToggle(modalNoti));
+		if (Storage.getAccessToken()) {
+			setModalNotti(!modalNoti);
+			dispatch(backgroundToggle(modalNoti));
+		} else {
+			dispatch(checkUserLogin(true));
+		}
 	};
 
 	const tollgleModaleInfoUser = () => {
@@ -60,12 +74,18 @@ const Header = () => {
 		}
 	};
 
+	const handleUserLogin = () => {
+		if (!Storage.getAccessToken()) {
+			dispatch(checkUserLogin(true));
+		}
+	};
+
 	const handleLogout = () => {
 		localStorage.removeItem('accessToken');
 		localStorage.removeItem('refreshToken');
+		dispatch(updateTargetReading([]));
 		navigate('/login');
 		toast.success('Đăng xuất thành công');
-		dispatch(logout({}));
 	};
 
 	return (
@@ -93,8 +113,11 @@ const Header = () => {
 						<HomeIcon className='header__nav__icon' />
 					</Link>
 				</li>
-				<li className={classNames('header__nav__item', { active: activeLink === '/category' })}>
-					<Link className='header__nav__link' to='/category'>
+				<li
+					onClick={handleUserLogin}
+					className={classNames('header__nav__item', { active: activeLink === '/category' })}
+				>
+					<Link className='header__nav__link' to={userLogin && '/category'}>
 						<CategoryIcon className='header__nav__icon' />
 					</Link>
 				</li>
@@ -112,8 +135,11 @@ const Header = () => {
 						{activeLink === `/shelves/${userInfo.id}` ? <BookFillIcon /> : <BookIcon />}
 					</Link>
 				</li>
-				<li className={classNames('header__nav__item', { active: activeLink === '/friends' })}>
-					<Link className='header__nav__link' to='/friends'>
+				<li
+					onClick={handleUserLogin}
+					className={classNames('header__nav__item', { active: activeLink === '/friends' })}
+				>
+					<Link className='header__nav__link' to={userLogin && '/friends'}>
 						<GroupIcon className='header__nav__icon' />
 					</Link>
 				</li>

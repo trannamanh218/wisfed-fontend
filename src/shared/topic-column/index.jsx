@@ -1,15 +1,15 @@
 import classNames from 'classnames';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 import caretIcon from 'assets/images/caret.png';
 import './topic-column.scss';
+import { Link } from 'react-router-dom';
 
-const TopicColumn = ({ topics, className, title, handleViewMore, viewCategoryDetail }) => {
+const TopicColumn = ({ topics, className, title }) => {
 	const [isExpand, setIsExpand] = useState(false);
 
-	const handleExpand = () => {
-		setIsExpand(prev => !prev);
-		handleViewMore();
+	const handleViewMore = () => {
+		setIsExpand(!isExpand);
 	};
 
 	if (topics && topics.length) {
@@ -18,19 +18,17 @@ const TopicColumn = ({ topics, className, title, handleViewMore, viewCategoryDet
 				<h4 className='topic-column__header'>{title}</h4>
 				<div className={classNames('topic-column__container', { 'expand': isExpand })}>
 					{topics.map((topic, index) => (
-						<div
+						<Link
+							to={`/category/detail/${topic.id}`}
 							className='topic-column__item'
 							key={index}
 							title={topic.name}
-							onClick={() => {
-								viewCategoryDetail(topic);
-							}}
 						>
 							<span>{topic.name}</span>
-						</div>
+						</Link>
 					))}
 				</div>
-				<button className='topic-column__btn' onClick={handleExpand}>
+				<button className='topic-column__btn' onClick={handleViewMore}>
 					<img
 						className={classNames('view-caret', { 'view-more': isExpand })}
 						src={caretIcon}
@@ -48,17 +46,13 @@ const TopicColumn = ({ topics, className, title, handleViewMore, viewCategoryDet
 TopicColumn.defaultProps = {
 	topics: [],
 	className: '',
-	title: '',
-	handleViewMore: () => {},
-	viewCategoryDetail: () => {},
+	title: 'Chủ đề khác',
 };
 
 TopicColumn.propTypes = {
 	topics: PropTypes.array.isRequired,
 	className: PropTypes.string,
 	title: PropTypes.string,
-	handleViewMore: PropTypes.func,
-	viewCategoryDetail: PropTypes.func,
 };
 
 export default TopicColumn;

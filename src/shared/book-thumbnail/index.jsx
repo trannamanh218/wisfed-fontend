@@ -1,4 +1,3 @@
-import React from 'react';
 import PropTypes from 'prop-types';
 import bookImage from 'assets/images/default-book.png';
 import './book-thumbnail.scss';
