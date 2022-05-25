@@ -1,5 +1,5 @@
 import { STATUS_IDLE, STATUS_LOADING, STATUS_SUCCESS } from 'constants';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { getListBooksTargetReading, updateTargetReading, checkRenderTargetReading } from 'reducers/redux-utils/chart';
 import { useSelector } from 'react-redux';

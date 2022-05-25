@@ -2,7 +2,7 @@ import BookSlider from 'shared/book-slider';
 import PropTypes from 'prop-types';
 import './category-group.scss';
 
-const CategoryGroup = ({ list, title, data, handleClick, handleViewBookDetail }) => {
+const CategoryGroup = ({ data, list, title, handleViewBookDetail, viewCategoryDetail }) => {
 	return (
 		<div className='category-group'>
 			<BookSlider
@@ -12,27 +12,19 @@ const CategoryGroup = ({ list, title, data, handleClick, handleViewBookDetail })
 				size='lg'
 				handleViewBookDetail={handleViewBookDetail}
 			/>
-			<span onClick={() => handleClick(data)} className='category-group__link'>
+			<button className='category-group__link' onClick={() => viewCategoryDetail(data)}>
 				Xem tất cả
-			</span>
+			</button>
 		</div>
 	);
 };
 
-CategoryGroup.defaultProps = {
-	list: [],
-	title: '',
-	data: { id: '' },
-	handleClick: () => {},
-	handleViewBookDetail: () => {},
-};
-
 CategoryGroup.propTypes = {
+	data: PropTypes.object,
 	list: PropTypes.array,
 	title: PropTypes.string,
-	data: PropTypes.object,
-	handleClick: PropTypes.func,
 	handleViewBookDetail: PropTypes.func,
+	viewCategoryDetail: PropTypes.func,
 };
 
 export default CategoryGroup;

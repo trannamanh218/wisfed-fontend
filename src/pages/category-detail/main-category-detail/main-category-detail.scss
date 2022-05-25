@@ -57,9 +57,15 @@
 	}
 
 	&__container {
-		padding: 1.5rem 2.5rem;
+		padding: 32px 40px 60px;
 		background: $white;
 		border-radius: 16px;
+		.get-more-books-btn {
+			margin: 24px 0 0 auto;
+			display: flex;
+			gap: 16px;
+			align-items: center;
+		}
 	}
 
 	&__allbook {
@@ -76,6 +82,17 @@
 		}
 	}
 
+	.filter-pane {
+		margin-top: 40px;
+		border-radius: 16px;
+		&__heading {
+			padding: 32px 40px 24px;
+			h4 {
+				margin-bottom: 0;
+			}
+		}
+	}
+
 	.book-thumbnail {
 		border: 1px solid $ash-line;
 		img {
@@ -89,9 +106,6 @@
 	&__modal {
 		.modal-content {
 			max-width: 380px;
-			.form-check {
-				padding-left: 3rem !important;
-			}
 		}
 
 		.modal-body {
@@ -100,10 +114,17 @@
 
 		&__option__group {
 			margin-bottom: 1.75rem;
+			h4 {
+				font-size: 18px;
+			}
 		}
 
 		.btn-confirm {
 			width: 100%;
 		}
+	}
+
+	&__posts {
+		padding: 16px 24px;
 	}
 }

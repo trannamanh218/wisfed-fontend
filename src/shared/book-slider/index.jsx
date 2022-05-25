@@ -9,7 +9,7 @@ import { memo } from 'react';
 
 const BookSlider = ({ list, title = '', className, size = 'sm', handleViewBookDetail, ...rest }) => {
 	const settingSlider = settings();
-	console.log('book slider');
+
 	if (list && list.length) {
 		return (
 			<div className={classNames('book-slider', { [`${className}`]: className })}>
@@ -58,7 +58,7 @@ function settings() {
 		slidesToShow: 1,
 		slidesToScroll: 2,
 		initialSlide: 0,
-		infinite: false,
+		infinite: true,
 		lazyLoad: false,
 		autoplay: false,
 		swipeToSlide: true,

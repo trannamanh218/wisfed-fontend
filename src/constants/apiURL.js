@@ -44,6 +44,7 @@ export const bookAuthor = '/api/v1/books/listBookByAuthor';
 export const categoryAPI = '/api/v1/categories';
 export const categoryDetailAPI = id => `/api/v1/categories/${id}`;
 export const favoriteCategoriesAPI = '/api/v1/categories/favoriteCategories';
+export const listBookByCategoryAPI = categoryId => `/api/v1/books/listBookCategory/${categoryId}`;
 
 //rating
 export const bookRating = id => `/api/v1/books/ratingBook/${id}`;

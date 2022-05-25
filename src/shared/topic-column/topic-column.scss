@@ -13,15 +13,15 @@
 		display: grid;
 		grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
 		grid-column-gap: 40px;
-		max-height: calc(10 * 0.825 * 4em);
+		max-height: 510px;
 		overflow: hidden;
 		&.expand {
-			max-height: calc(20 * 0.825 * 4em);
+			max-height: 800px;
 		}
 	}
 
 	&__item {
-		margin-bottom: 2.5em;
+		margin-bottom: 32px;
 		font-size: 0.825rem;
 		font-weight: 500;
 		line-height: 1.5;

@@ -9,6 +9,7 @@
 
 	.blank-content {
 		margin-top: 1.5rem;
+		font-size: 18px;
 	}
 
 	.book-thumbnail {
@@ -18,6 +19,13 @@
 				transform: scale(1.1);
 				transition: all 0.2s ease-out;
 			}
+		}
+	}
+
+	.search-category {
+		padding-top: 28px;
+		h5 {
+			margin: 0;
 		}
 	}
 

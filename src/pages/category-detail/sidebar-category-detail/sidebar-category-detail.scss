@@ -1,6 +1,10 @@
 @import 'src/scss/abstracts/_variables.scss';
 
 .sidebar-category-detail {
+	.author-slider {
+		margin-top: 60px;
+	}
+
 	&__quotes {
 		margin-top: 5rem;
 	}
