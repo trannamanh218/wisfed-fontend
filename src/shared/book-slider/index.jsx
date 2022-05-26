@@ -5,9 +5,11 @@ import arrowNext from 'assets/images/arrow-chevron-forward.png';
 import arrowPrev from 'assets/images/arrow-chevron-back.png';
 import './book-slider.scss';
 import classNames from 'classnames';
+import { memo } from 'react';
 
 const BookSlider = ({ list, title = '', className, size = 'sm', handleViewBookDetail, ...rest }) => {
 	const settingSlider = settings();
+
 	if (list && list.length) {
 		return (
 			<div className={classNames('book-slider', { [`${className}`]: className })}>
@@ -138,4 +140,4 @@ SlidePrevBtn.propTypes = {
 	onClick: PropTypes.func,
 };
 
-export default BookSlider;
+export default memo(BookSlider);

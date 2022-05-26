@@ -33,3 +33,59 @@ export const data = {
 	updatedAt: '2022-05-24T06:54:16.753Z',
 	works: 'developer',
 };
+
+export const users = {
+	createdAt: '2022-05-23T04:27:32.731Z',
+	id: 1059,
+	isFollow: true,
+	relation: 'pending',
+	updatedAt: '2022-05-23T04:27:32.731Z',
+	userIdOne: 'bfdb3971-de4c-4c2b-bbbe-fbb36770031a',
+	userIdTwo: '77177554-2322-41d3-8bb3-1335aa906c25',
+	userOne: {
+		avatarImage: 'http://192.168.3.10:31989/api/v1/files/streaming/images/file-1653358731038.png',
+		email: 'admin@gmail.com',
+		firstName: 'Admin',
+		fullName: 'Admin Đi Mượn',
+		id: 'bfdb3971-de4c-4c2b-bbbe-fbb36770031a',
+		lastName: 'Đi Mượn',
+	},
+
+	userTwo: {
+		avatarImage: null,
+		email: 'register2@gmail.com',
+		firstName: 'Test',
+		id: '77177554-2322-41d3-8bb3-1335aa906c25',
+		lastName: 'Gao',
+	},
+};
+
+export const books = {
+	progress: 267,
+	updatedAt: '2022-04-14T08:48:31.197Z',
+	userId: 'bfdb3971-de4c-4c2b-bbbe-fbb36770031a',
+	createdAt: '2022-02-11T19:29:47.741Z',
+	createdBy: null,
+	description:
+		'Các doanh nhân đã đọc bản thảo sớm của "Phác đồ khởi nghiệp theo Đường Cong J" đã trả lời rằng, “Tôi ước mình có thể sở hữu cuốn sách này từ nhiều năm trước.”<br />\nMột dự án khởi nghiệp mở ra một mô hình dự đoán; khi các doanh nhân càng nhận thức rõ hơn về mô hình này, họ càng có khả năng tận dụng nó tốt hơn. Tác giả Howard Love gọi mô hình này là Phác đồ khởi nghiệp theo Đường Cong J: Nỗ lực gian nan nhất chính là thời gian giữa lúc bắt đầu thực tế của một doanh nghiệp mới và khi sản phẩm và mô hình được thiết lập vững chắc. "Phác đồ khởi nghiệp theo Đường Cong J" mang đến cho các doanh nhân các công cụ cần thiết để giúp họ vượt qua những thử thách ban đầu và có sự sáng tạo giá trị sơ khai hơn mong đợi.<br />\nHoward Love đã đem ba mươi lăm năm kinh nghiệm khởi nghiệp vào cẩm nang toàn diện này nhằm hỗ trợ cho những ai bắt đầu kinh doanh. Ông phác thảo sáu giai đoạn dự đoán về tăng trưởng khởi nghiệp và chi tiết các hoạt động nên được thực hiện ở mỗi giai đoạn để đảm bảo thành công cũng như tránh được những cạm bẫy thông thường. Thay vì cảm thấy lạc lõng và bối rối sau một thất bại, các nhà sáng lập và nhà đầu tư khởi nghiệp có thể lường trước những thách thức, vượt qua các chướng ngại vật và cưỡi đường cong lên đến đỉnh thành công.<p>Giá sản phẩm trên Tiki đã bao gồm thuế theo luật hiện hành. Bên cạnh đó, tuỳ vào loại sản phẩm, hình thức và địa chỉ giao hàng mà có thể phát sinh thêm chi phí khác như phí vận chuyển, phụ phí hàng cồng kềnh, thuế nhập khẩu (đối với đơn hàng giao từ nước ngoài có giá trị trên 1 triệu đồng).....</p>',
+	fahasaBookId: null,
+	frontBookCover: null,
+	// id: 8166,
+	images: ['https://salt.tikicdn.com/ts/product/d7/d0/b1/7adaa0b03e174de466465e532cc4e944.jpg'],
+
+	isbn: null,
+	language: null,
+	like: 0,
+	name: 'Phác Đồ Khởi Nghiệp Theo Đường Cong J – Sáu Bước Đưa Doanh Nghiệp Tới Thành Công',
+	page: 267,
+	specifications: [
+		'{"name":"Thông tin chung","attributes":[{"code":"publisher_vn","name":"Công ty phát hành","value":"Hải Đăng Book"},{"code":"publication_date","name":"Ngày xuất bản","value":"2019-05-01 00:00:00"},{"code":"dimensions","name":"Kích thước","value":"14.5 x 20.5 cm"},{"code":"book_cover","name":"Loại bìa","value":"Bìa mềm"},{"code":"number_of_page","name":"Số trang","value":"372"}]}',
+	],
+
+	tikiBookId: '15869739',
+	updatedBy: null,
+	verify: false,
+	bookId: 8166,
+	id: 860,
+	reviewBook: [],
+};

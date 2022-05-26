@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Logo from 'assets/images/Logo 2.png';
 import ImageLogin from 'assets/images/cover-sign 1.png';
 import { Formik, Field, Form } from 'formik';
@@ -72,7 +72,6 @@ function LoginComponet() {
 						<img src={Logo} alt='logo' />
 					</div>
 				</Link>
-
 				<div className='login__body'>
 					<div>
 						<span className='login__body-text1'>

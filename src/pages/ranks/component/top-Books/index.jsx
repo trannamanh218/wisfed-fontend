@@ -8,7 +8,7 @@ import PropTypes from 'prop-types';
 import { getTopBooks, getTopBooksAuth } from 'reducers/redux-utils/ranks';
 import { useDispatch, useSelector } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
-import _ from 'lodash';
+import ModalCheckLogin from 'shared/modal-check-login';
 
 const TopBooks = ({ rows, listYear }) => {
 	const kindOfGroupRef = useRef({ value: 'default', title: 'Chủ đề' });
@@ -17,7 +17,7 @@ const TopBooks = ({ rows, listYear }) => {
 	const [topBooksId, setTopQuotesId] = useState();
 	const [valueDate, setValueData] = useState('week');
 	const [getListTopBooks, setGetListTopBooks] = useState([]);
-
+	const [modalShow, setModalShow] = useState(false);
 	const dispatch = useDispatch();
 
 	const onchangeKindOfGroup = data => {
@@ -54,6 +54,7 @@ const TopBooks = ({ rows, listYear }) => {
 
 	return (
 		<div className='topbooks__container'>
+			<ModalCheckLogin setModalShow={setModalShow} modalShow={modalShow} />
 			<div className='topbooks__container__title'>TOP 100 Cuốn sách tốt nhất</div>
 			<div className='topbooks__container__sort'>
 				<div className='topbooks__container__sort__left'>
@@ -80,7 +81,12 @@ const TopBooks = ({ rows, listYear }) => {
 					<div key={item.bookId} className='topbooks__container__main top__book'>
 						<StarRanking index={index} />
 						<div className='topbooks__container__main__layout'>
-							<AuthorBook data={item} checkStar={CHECK_STAR} checkshare={CHECK_SHARE} />
+							<AuthorBook
+								data={item}
+								checkStar={CHECK_STAR}
+								checkshare={CHECK_SHARE}
+								setModalShow={setModalShow}
+							/>
 						</div>
 					</div>
 				))

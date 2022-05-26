@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import BookThumbnail from 'shared/book-thumbnail';
 import ReactRating from 'shared/react-rating';
 import PropTypes from 'prop-types';
@@ -11,10 +11,13 @@ import { getRatingBook } from 'reducers/redux-utils/book';
 import { useDispatch } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
 
-const BookItem = ({ data, handleClick, isMyShelve, handleUpdateBookList }) => {
+const BookItem = ({ data, handleViewBookDetail, isMyShelve, handleUpdateBookList }) => {
 	// const [isPublic, setIsPublic] = useState(data.isPublic);
 	const dispatch = useDispatch();
 	const [listRatingStar, setListRatingStar] = useState({});
+
+	const bookOverlay = useRef(null);
+	const bookItemContainer = useRef(null);
 
 	// const handlePublic = () => {
 	// 	setIsPublic(prev => !prev);
@@ -36,22 +39,29 @@ const BookItem = ({ data, handleClick, isMyShelve, handleUpdateBookList }) => {
 	const renderOverlay = () => {
 		if (isMyShelve) {
 			return (
-				// <span className='book-item__icon' title='Chế độ công khai'>
-				// 	<EyeIcon isPublic={isPublic} handlePublic={handlePublic} />
-				// </span>
-				<></>
+				<>
+					<SettingMore bookData={data} handleUpdateBookList={handleUpdateBookList} />
+					{/* <span className='book-item__icon' title='Chế độ công khai'>
+						<EyeIcon isPublic={isPublic} handlePublic={handlePublic} />
+					</span> */}
+				</>
 			);
 		} else {
 			return <StatusButton bookData={data} />;
 		}
 	};
 
+	const viewBookDetail = e => {
+		if (bookItemContainer.current.contains(e.target) && !bookOverlay.current.contains(e.target)) {
+			handleViewBookDetail(data);
+		}
+	};
+
 	return (
-		<div className='book-item' onClick={handleClick}>
+		<div className='book-item' onClick={viewBookDetail} ref={bookItemContainer}>
 			<div className='book-item__container'>
 				<BookThumbnail size='lg' {...data} />
-				<div className='book-item__overlay'>
-					{isMyShelve && <SettingMore bookData={data} handleUpdateBookList={handleUpdateBookList} />}
+				<div className='book-item__overlay' ref={bookOverlay}>
 					{renderOverlay()}
 				</div>
 			</div>
@@ -79,7 +89,7 @@ BookItem.defaultProps = {
 		isPublic: true,
 	},
 	isMyShelve: false,
-	handleClick: () => {},
+	handleViewBookDetail: () => {},
 	handleUpdateBookList: () => {},
 };
 
@@ -94,7 +104,7 @@ BookItem.propTypes = {
 		id: PropTypes.number,
 	}),
 	isMyShelve: PropTypes.bool,
-	handleClick: PropTypes.func,
+	handleViewBookDetail: PropTypes.func,
 	handleUpdateBookList: PropTypes.func,
 };
 export default BookItem;

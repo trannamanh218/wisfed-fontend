@@ -34,20 +34,20 @@ const NewFeed = () => {
 
 	useEffect(async () => {
 		callApiStart.current = 10;
-		getPostListFirstTime();
-	}, [isNewPost]);
+		if (!_.isEmpty(userInfo)) {
+			getPostListFirstTime();
+		}
+	}, [isNewPost, userInfo]);
 
 	const getPostListFirstTime = async () => {
 		try {
-			if (!_.isEmpty(userInfo)) {
-				const params = {
-					start: 0,
-					limit: callApiPerPage.current,
-					sort: JSON.stringify([{ property: 'createdAt', direction: 'DESC' }]),
-				};
-				const posts = await dispatch(getActivityList(params)).unwrap();
-				setPostList(posts);
-			}
+			const params = {
+				start: 0,
+				limit: callApiPerPage.current,
+				sort: JSON.stringify([{ property: 'createdAt', direction: 'DESC' }]),
+			};
+			const posts = await dispatch(getActivityList(params)).unwrap();
+			setPostList(posts);
 		} catch (err) {
 			NotificationError(err);
 		}

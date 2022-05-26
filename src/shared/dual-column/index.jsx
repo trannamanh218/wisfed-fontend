@@ -7,30 +7,27 @@ import './dual-column.scss';
 import { NUMBER_ROWS } from 'constants';
 
 const DualColumn = props => {
-	const { list, background, isBackground, pageText = true } = props;
+	const { list, background, isBackground, pageText = true, inCategory = false } = props;
 	const [isExpand, setIsExpand] = useState(false);
 	const [rows, setRows] = useState(DEFAULT_TOGGLE_ROWS);
 
 	const handleViewMore = () => {
 		const length = list.length;
-		if (length <= NUMBER_ROWS) {
-			const maxLength = length < NUMBER_ROWS ? length : NUMBER_ROWS;
-			const newRows = isExpand ? DEFAULT_TOGGLE_ROWS : maxLength;
-			setIsExpand(prev => !prev);
-			return setRows(newRows);
+		let maxLength;
+
+		if (inCategory) {
+			maxLength = length;
 		} else {
-			if (rows < NUMBER_ROWS) {
-				setRows(NUMBER_ROWS);
+			if (length <= NUMBER_ROWS) {
+				maxLength = length;
 			} else {
-				setRows(length);
-				setIsExpand(true);
+				maxLength = NUMBER_ROWS;
 			}
 		}
 
-		if (isExpand) {
-			setRows(DEFAULT_TOGGLE_ROWS);
-			setIsExpand(false);
-		}
+		const newRows = isExpand ? DEFAULT_TOGGLE_ROWS : maxLength;
+		setRows(newRows);
+		setIsExpand(!isExpand);
 	};
 
 	if (list && list.length)
@@ -39,12 +36,16 @@ const DualColumn = props => {
 				<ul className={classNames('dualColumn-list', { [`bg-${background}`]: isBackground })}>
 					{list.slice(0, rows).map((item, index) => (
 						<li className={classNames('dualColumn-item', { 'has-background': isBackground })} key={index}>
-							<span className='dualColumn-item__title'>{item.name}</span>
+							<span className='dualColumn-item__title'>
+								{inCategory ? item.category.name : item.name}
+							</span>
 
 							{pageText ? (
 								<span className='dualColumn-item__number'>{item.books.length} cuốn</span>
 							) : (
-								<span className='dualColumn-item__number no-page-text'>{item.books.length}</span>
+								<span className='dualColumn-item__number no-page-text'>
+									{inCategory ? item.category.numberBooks : item.books.length}
+								</span>
 							)}
 						</li>
 					))}
@@ -86,6 +87,7 @@ DualColumn.propTypes = {
 		'dark',
 	]),
 	pageText: PropTypes.bool,
+	inCategory: PropTypes.bool,
 };
 
 export default DualColumn;

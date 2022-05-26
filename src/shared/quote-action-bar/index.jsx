@@ -6,9 +6,12 @@ import './quote-action-bar.scss';
 import { RightArrow } from 'components/svg';
 import { Link } from 'react-router-dom';
 import Storage from 'helpers/Storage';
-const QuoteActionBar = ({ data, isDetail, likeUnlikeQuoteFnc, isLiked, likeNumber, setModalShow }) => {
+import { checkUserLogin } from 'reducers/redux-utils/auth';
+import { useDispatch } from 'react-redux';
+const QuoteActionBar = ({ data, isDetail, likeUnlikeQuoteFnc, isLiked, likeNumber }) => {
 	const { isShare, share, comments, id } = data;
 
+	const dispatch = useDispatch();
 	if (isDetail) {
 		return (
 			<ul className='quote-action-bar'>
@@ -29,13 +32,14 @@ const QuoteActionBar = ({ data, isDetail, likeUnlikeQuoteFnc, isLiked, likeNumbe
 	}
 	const handleCheckLoginShare = () => {
 		if (!Storage.getAccessToken()) {
-			setModalShow(true);
+			dispatch(checkUserLogin(true));
 		}
 	};
 	const handleCheckLoginLike = () => {
 		if (!Storage.getAccessToken()) {
-			setModalShow(true);
+			dispatch(checkUserLogin(true));
 		} else {
+			dispatch(checkUserLogin(false));
 			likeUnlikeQuoteFnc(id);
 		}
 	};
@@ -81,7 +85,6 @@ QuoteActionBar.propTypes = {
 	isLiked: PropTypes.bool,
 	likeNumber: PropTypes.number,
 	likeUnlikeQuoteFnc: PropTypes.func,
-	setModalShow: PropTypes.func,
 };
 
 export default QuoteActionBar;

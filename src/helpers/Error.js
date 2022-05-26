@@ -179,10 +179,10 @@ const errVN = {
 		vi: 'Lời mời này đã được xử lý',
 	},
 	757: {
-		vi: 'bạn đã ở trong nhóm này rồi',
+		vi: 'Bạn đã ở trong nhóm này rồi',
 	},
 	758: {
-		vi: 'bạn đã xin vào nhóm này rồi',
+		vi: 'Bạn đã xin vào nhóm này rồi',
 	},
 	903: {
 		vi: 'hashtag không hợp lệ',

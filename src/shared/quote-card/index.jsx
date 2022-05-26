@@ -4,17 +4,15 @@ import QuoteActionBar from 'shared/quote-action-bar';
 import UserAvatar from 'shared/user-avatar';
 import './quote-card.scss';
 import { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
 import { likeUnlikeQuote } from 'reducers/redux-utils/quote';
 import { checkLikeQuote } from 'reducers/redux-utils/quote';
 import { NotificationError } from 'helpers/Error';
+import { useDispatch } from 'react-redux';
 
 const QuoteCard = ({ data, isDetail = false, likedArray }) => {
 	const [isLiked, setIsLiked] = useState(false);
 	const [likeNumber, setLikeNumber] = useState(0);
-
 	const dispatch = useDispatch();
-
 	useEffect(() => {
 		if (isDetail) {
 			getLikedArray();
@@ -25,8 +23,6 @@ const QuoteCard = ({ data, isDetail = false, likedArray }) => {
 		}
 		setLikeNumber(data.like);
 	}, []);
-
-	console.log(data.background);
 
 	const likeUnlikeQuoteFnc = async id => {
 		try {

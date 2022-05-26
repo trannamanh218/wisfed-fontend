@@ -11,10 +11,9 @@ import ChartsReading from 'shared/charts-Reading';
 import { useFetchAuthorBooks } from 'api/book.hooks';
 import { useParams } from 'react-router-dom';
 import RenderProgress from 'shared/render-progress';
-
 import _ from 'lodash';
 
-const SidebarShelves = ({ userData, isMyShelve }) => {
+const SidebarShelves = ({ userData, isMyShelve, handleViewBookDetail }) => {
 	const { userId } = useParams();
 	const { booksAuthor } = useFetchAuthorBooks(userId);
 	const { userInfo } = useSelector(state => state.auth);
@@ -43,17 +42,20 @@ const SidebarShelves = ({ userData, isMyShelve }) => {
 				</>
 			)}
 
-			<QuotesLinks
-				list={quoteData}
-				title={userId === userInfo.id ? 'Quotes của tôi' : `Quotes của ${userData.fullName}`}
-			/>
+			{!!quoteData.length && (
+				<QuotesLinks
+					list={quoteData}
+					title={userId === userInfo.id ? 'Quotes của tôi' : `Quotes của ${userData.fullName}`}
+				/>
+			)}
 
-			{booksAuthor.length > 0 && (
+			{!!booksAuthor.length && (
 				<div className='my-compose'>
 					<BookSlider
 						className='book-reference__slider'
 						title={isMyShelve ? 'Sách tôi là tác giả' : `Sách của ${userData.fullName}`}
 						list={booksAuthor}
+						handleViewBookDetail={handleViewBookDetail}
 					/>
 					<Link className='view-all-link' to='/'>
 						Xem thêm
@@ -69,11 +71,13 @@ const SidebarShelves = ({ userData, isMyShelve }) => {
 SidebarShelves.defaultProps = {
 	libraryData: {},
 	isUpdate: false,
+	handleViewBookDetail: () => {},
 };
 
 SidebarShelves.propTypes = {
 	isMyShelve: PropTypes.bool,
 	userData: PropTypes.object,
+	handleViewBookDetail: PropTypes.func,
 };
 
 export default SidebarShelves;
