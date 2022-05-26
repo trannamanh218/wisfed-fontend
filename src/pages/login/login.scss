@@ -181,10 +181,12 @@
 	height: 45px;
 	margin-top: 12px;
 	color: #0576f0;
+	flex-grow: 1;
 }
 
 .login__form__input {
-	background-color: #eff0f6;
+	border-radius: 8px;
+	background-color: #eff0f6 !important;
 	flex-grow: 1;
 	height: 56px;
 	padding: 0 12px;

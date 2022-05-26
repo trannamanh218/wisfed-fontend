@@ -44,7 +44,8 @@ const QuoteTab = () => {
 			res.forEach(item => quoteList.push({ ...item, categories: [], tags: [] }));
 			setMyFavoriteQuoteList(quoteList);
 		} catch (err) {
-			NotificationError(err);
+			// NotificationError(err);
+			return;
 		}
 	};
 

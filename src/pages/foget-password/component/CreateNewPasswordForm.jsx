@@ -9,6 +9,7 @@ import { resetPasswordValidate } from 'helpers/Validation';
 import Circle from 'shared/loading/circle';
 import { changeKey } from 'reducers/redux-utils/forget-password';
 import { NotificationError } from 'helpers/Error';
+import Subtract from 'assets/images/Subtract.png';
 
 function CreateNewPasswordForm() {
 	const isFetching = useSelector(state => state.auth.isFetching);
@@ -22,6 +23,9 @@ function CreateNewPasswordForm() {
 	const [valuePassword2, setValuePassword2] = useState('');
 	const [valueOtp, setValueOtp] = useState('');
 	const [valuePassword, setValuePassword] = useState('');
+	const [showImagePopover, setShowImagePopover] = useState(false);
+	const [showImagePopover1, setShowImagePopover1] = useState(false);
+	const [showImagePopover2, setShowImagePopover2] = useState(false);
 
 	const handleSubmit = async data => {
 		try {
@@ -164,10 +168,34 @@ function CreateNewPasswordForm() {
 											value={field.value}
 											autoComplete='false'
 										/>
+										<div className='error--text'>
+											{meta.touched && meta.error && (
+												<div
+													style={{ top: '18px' }}
+													className='login__form__error'
+													onMouseOver={() => setShowImagePopover(1)}
+													onMouseLeave={() => setShowImagePopover(0)}
+												>
+													<img src={Subtract} alt='img' data-tip data-for='registerTip' />
+													<div
+														className={classNames('login__form__error__popover-container', {
+															'show': showImagePopover === 1,
+														})}
+													>
+														<div>
+															<div className='error--textbox'>
+																<div className='error--textbox--logo'></div>
+																<div className='error--textbox--error'></div>
+															</div>
+															<div className='Login__form__error__popover'>
+																{meta.touched && meta.error && <div>{meta.error}</div>}
+															</div>
+														</div>
+													</div>
+												</div>
+											)}
+										</div>
 									</div>
-									{meta.touched && meta.error && (
-										<small className='error-message'>{meta.error}</small>
-									)}
 								</div>
 							);
 						}}
@@ -183,24 +211,48 @@ function CreateNewPasswordForm() {
 						{({ field, meta }) => {
 							setValuePassword(field.value);
 							return (
-								<div className='forgetPassword__form__field'>
+								<div className='forgetPassword__form__field  '>
 									<div
-										className={classNames('forgetPassword__form__group', {
+										className={classNames('forgetPassword__form__group input-1', {
 											'error': meta.touched && meta.error,
 										})}
 									>
 										<input
-											className='forgetPassword__form__input-password input-1'
+											className='forgetPassword__form__input-password'
 											type='password'
 											placeholder='Mật khẩu mới'
 											{...field}
 											value={field.value}
 											autoComplete='false'
 										/>
+										<div className='error--text'>
+											{meta.touched && meta.error && (
+												<div
+													className='login__form__error'
+													onMouseOver={() => setShowImagePopover1(1)}
+													onMouseLeave={() => setShowImagePopover1(0)}
+													style={{ top: '18px', zIndex: '1000' }}
+												>
+													<img src={Subtract} alt='img' data-tip data-for='registerTip' />
+													<div
+														className={classNames('login__form__error__popover-container', {
+															'show': showImagePopover1 === 1,
+														})}
+													>
+														<div>
+															<div className='error--textbox'>
+																<div className='error--textbox--logo'></div>
+																<div className='error--textbox--error'></div>
+															</div>
+															<div className='Login__form__error__popover'>
+																{meta.touched && meta.error && <div>{meta.error}</div>}
+															</div>
+														</div>
+													</div>
+												</div>
+											)}
+										</div>
 									</div>
-									{meta.touched && meta.error && (
-										<small className='error-message'>{meta.error}</small>
-									)}
 								</div>
 							);
 						}}
@@ -223,10 +275,34 @@ function CreateNewPasswordForm() {
 											value={field.value}
 											autoComplete='false'
 										/>
+										{meta.touched && meta.error && (
+											<div className='error--text'>
+												<div
+													style={{ top: '18px' }}
+													className='login__form__error'
+													onMouseOver={() => setShowImagePopover2(1)}
+													onMouseLeave={() => setShowImagePopover2(0)}
+												>
+													<img src={Subtract} alt='img' data-tip data-for='registerTip' />
+													<div
+														className={classNames('login__form__error__popover-container', {
+															'show': showImagePopover2 === 1,
+														})}
+													>
+														<div>
+															<div className='error--textbox'>
+																<div className='error--textbox--logo'></div>
+																<div className='error--textbox--error'></div>
+															</div>
+															<div className='Login__form__error__popover'>
+																{meta.touched && meta.error && <div>{meta.error}</div>}
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										)}
 									</div>
-									{meta.touched && meta.error && (
-										<small className='error-message'>{meta.error}</small>
-									)}
 								</div>
 							);
 						}}
