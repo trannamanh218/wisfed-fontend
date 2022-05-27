@@ -14,8 +14,7 @@ const NormalContainer = ({ children }) => {
 	return (
 		<Layout>
 			<div>
-				<ErrorBoundary FallbackComponent={ErrorFallback}></ErrorBoundary>
-				{children}
+				<ErrorBoundary FallbackComponent={ErrorFallback}> {children}</ErrorBoundary>
 			</div>
 		</Layout>
 	);
