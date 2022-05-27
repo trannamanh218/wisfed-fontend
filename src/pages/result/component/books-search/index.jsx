@@ -3,13 +3,11 @@ import AuthorBook from 'shared/author-book';
 import { CHECK_STAR, CHECK_SHARE } from 'constants';
 import ResultNotFound from '../result-not-found';
 import PropTypes from 'prop-types';
-import { useEffect, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import LoadingIndicator from 'shared/loading-indicator';
 import _ from 'lodash';
 
 const BookSearch = ({ listArrayBooks, hasMore, handleGetBooksSearch }) => {
-	console.log(listArrayBooks);
 	return (
 		<div className='bookSearch__container'>
 			{/* <div className='bookSearch__title'>

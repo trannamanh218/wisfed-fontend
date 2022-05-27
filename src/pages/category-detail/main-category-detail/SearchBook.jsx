@@ -37,6 +37,7 @@ SearchBook.defaultProps = {
 SearchBook.propTypes = {
 	list: PropTypes.array,
 	handleViewBookDetail: PropTypes.func,
+	inputSearch: PropTypes.string,
 };
 
 export default SearchBook;

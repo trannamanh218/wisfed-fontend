@@ -20,7 +20,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { addToFavoriteCategory } from 'reducers/redux-utils/user';
 import { NotificationError } from 'helpers/Error';
-import { getListBookByCategory } from 'reducers/redux-utils/category';
+import { getListBookByCategory, checkLikedCategoryRedux, getPostsByCategory } from 'reducers/redux-utils/category';
 import caretIcon from 'assets/images/caret.png';
 import { getBookDetail } from 'reducers/redux-utils/book';
 import RouteLink from 'helpers/RouteLink';
@@ -69,13 +69,7 @@ const MainCategoryDetail = () => {
 
 	useEffect(() => {
 		if (!_.isEmpty(userInfo)) {
-			const { favoriteCategory } = userInfo;
-			const index = favoriteCategory.findIndex(item => item.categoryId === parseInt(id));
-			if (index !== -1) {
-				setIsLike(true);
-			} else {
-				setIsLike(false);
-			}
+			checkLikedCategory();
 		}
 	}, [userInfo, id]);
 
@@ -83,18 +77,25 @@ const MainCategoryDetail = () => {
 		getBooksByCategory();
 	}, [filter]);
 
+	const checkLikedCategory = async () => {
+		try {
+			const res = await dispatch(checkLikedCategoryRedux(id)).unwrap();
+			setIsLike(res.isFavorite);
+		} catch (err) {
+			NotificationError(err);
+		}
+	};
+
 	const handleLikeCategory = async () => {
 		const categoryId = parseInt(id);
 		if (_.isEmpty(userInfo)) {
 			toast.warn('Vui lòng đăng nhập để sử dụng tính năng này');
 		} else {
-			let favoriteCategory = [];
+			let favoriteCategory = [...userInfo.favoriteCategory];
+			console.log(favoriteCategory);
 			if (isLike) {
-				favoriteCategory = userInfo.favoriteCategory.forEach(item => {
-					if (item.categoryId !== categoryId) {
-						favoriteCategory.push(item.categoryId);
-					}
-				});
+				const index = favoriteCategory.indexOf(id);
+				console.log(index);
 			} else {
 				favoriteCategory = userInfo.favoriteCategory.map(item => item.categoryId);
 				favoriteCategory.push(categoryId);
@@ -229,55 +230,50 @@ const MainCategoryDetail = () => {
 						/>
 
 						<>
-							{isFetchingBookList ? (
-								<LoadingIndicator />
+							{filter !== '[]' ? (
+								<SearchBook
+									list={bookList}
+									handleViewBookDetail={handleViewBookDetail}
+									inputSearch={inputSearch}
+								/>
 							) : (
 								<>
-									{filter !== '[]' ? (
-										<SearchBook
-											list={bookList}
+									{!!categoryInfo?.topBookReads.length && (
+										<CategoryGroup
+											key={`category-group`}
+											list={categoryInfo.topBookReads}
+											title='Đọc nhiều nhất tuần này'
 											handleViewBookDetail={handleViewBookDetail}
-											inputSearch={inputSearch}
 										/>
-									) : (
-										<>
-											{!!categoryInfo?.topBookReads.length && (
-												<CategoryGroup
-													key={`category-group`}
-													list={categoryInfo.topBookReads}
-													title='Đọc nhiều nhất tuần này'
-													handleViewBookDetail={handleViewBookDetail}
-												/>
-											)}
+									)}
 
-											<div className='main-category-detail__allbook'>
-												<h4>
-													{`Tất cả sách chủ đề "${
-														categoryInfo.name ? categoryInfo.name.toLowerCase() : ''
-													}"`}
-												</h4>
-												<div className='books'>
-													{bookList.map((item, index) => (
-														<BookThumbnail
-															key={index}
-															{...item}
-															source={item.source}
-															size='lg'
-															data={item}
-															handleClick={handleViewBookDetail}
-														/>
-													))}
-												</div>
-											</div>
-										</>
-									)}
-									{hasMore && (
-										<button className='get-more-books-btn' onClick={handleViewMore}>
-											<img src={caretIcon} alt='caret-icon' />
-											<span>Xem thêm</span>
-										</button>
-									)}
+									<div className='main-category-detail__allbook'>
+										<h4>
+											{`Tất cả sách chủ đề "${
+												categoryInfo.name ? categoryInfo.name.toLowerCase() : ''
+											}"`}
+										</h4>
+										<div className='books'>
+											{bookList.map((item, index) => (
+												<BookThumbnail
+													key={index}
+													{...item}
+													source={item.source}
+													size='lg'
+													data={item}
+													handleClick={handleViewBookDetail}
+												/>
+											))}
+										</div>
+									</div>
 								</>
+							)}
+							{isFetchingBookList && <LoadingIndicator />}
+							{hasMore && (
+								<button className='get-more-books-btn' onClick={handleViewMore}>
+									<img src={caretIcon} alt='caret-icon' />
+									<span>Xem thêm</span>
+								</button>
 							)}
 						</>
 					</div>

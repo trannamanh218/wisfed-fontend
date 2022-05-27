@@ -47,6 +47,7 @@ SearchCategory.defaultProps = {
 	handleViewBookDetail: () => {},
 	hasMoreFilterData: true,
 	viewCategoryDetail: () => {},
+	inputSearch: '',
 };
 SearchCategory.propTypes = {
 	searchCategories: PropTypes.array,
@@ -54,5 +55,6 @@ SearchCategory.propTypes = {
 	handleViewBookDetail: PropTypes.func,
 	hasMoreFilterData: PropTypes.bool,
 	viewCategoryDetail: PropTypes.func,
+	inputSearch: PropTypes.string,
 };
 export default SearchCategory;

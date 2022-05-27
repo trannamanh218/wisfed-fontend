@@ -153,7 +153,6 @@ function Register() {
 									</Field>
 									<Field name='lastname'>
 										{({ field, meta }) => {
-											console.log('ten', meta);
 											return (
 												<div
 													className={classNames('register__form__field name', {

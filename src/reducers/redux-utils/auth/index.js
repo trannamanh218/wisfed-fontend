@@ -116,6 +116,9 @@ const authSlice = createSlice({
 		checkUserLogin: (state, action) => {
 			state.routerLogin = action.payload;
 		},
+		deleteUserInfo: state => {
+			state.userInfo = {};
+		},
 	},
 
 	extraReducers: {
@@ -129,32 +132,6 @@ const authSlice = createSlice({
 			state.error = {};
 		},
 		[login.rejected]: (state, action) => {
-			state.isFetching = false;
-			state.userInfo = {};
-			state.error = action.payload;
-		},
-		[register.pending]: state => {
-			state.isFetching = true;
-		},
-		[register.fulfilled]: (state, action) => {
-			state.isFetching = false;
-			state.userInfo = action.payload;
-			state.error = {};
-		},
-		[register.rejected]: (state, action) => {
-			state.isFetching = false;
-			state.userInfo = {};
-			state.error = action.payload;
-		},
-		[forgotPassword.pending]: state => {
-			state.isFetching = true;
-		},
-		[forgotPassword.fulfilled]: (state, action) => {
-			state.isFetching = false;
-			state.userInfo = action.payload;
-			state.error = {};
-		},
-		[forgotPassword.rejected]: (state, action) => {
 			state.isFetching = false;
 			state.userInfo = {};
 			state.error = action.payload;
@@ -215,5 +192,5 @@ const authSlice = createSlice({
 });
 
 const auth = authSlice.reducer;
-export const { checkLogin, checkUserLogin } = authSlice.actions;
+export const { checkLogin, checkUserLogin, deleteUserInfo } = authSlice.actions;
 export default auth;

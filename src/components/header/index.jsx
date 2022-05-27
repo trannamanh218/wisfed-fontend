@@ -7,7 +7,7 @@ import './header.scss';
 import NotificationModal from 'pages/notification/';
 import { useDispatch, useSelector } from 'react-redux';
 import { backgroundToggle } from 'reducers/redux-utils/notificaiton';
-import { checkUserLogin } from 'reducers/redux-utils/auth';
+import { checkUserLogin, deleteUserInfo } from 'reducers/redux-utils/auth';
 import { useVisible } from 'shared/hooks';
 import SearchAllModal from 'shared/search-all';
 import Storage from 'helpers/Storage';
@@ -15,6 +15,7 @@ import { handleResetValue } from 'reducers/redux-utils/search';
 import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { updateTargetReading } from 'reducers/redux-utils/chart';
+import defaultAvatar from 'assets/images/avatar.jpeg';
 
 const Header = () => {
 	const { isShowModal } = useSelector(state => state.search);
@@ -97,6 +98,7 @@ const Header = () => {
 	const handleLogout = () => {
 		localStorage.removeItem('accessToken');
 		localStorage.removeItem('refreshToken');
+		dispatch(deleteUserInfo());
 		dispatch(updateTargetReading([]));
 		navigate('/login');
 		toast.success('Đăng xuất thành công');
@@ -169,7 +171,7 @@ const Header = () => {
 
 			<div className='header__userInfo' onClick={() => tollgleModaleInfoUser()} ref={userOptions}>
 				<div className='header__avatar'>
-					<img src={userInfo?.avatarImage} alt='avatar' />
+					<img src={userInfo?.avatarImage || defaultAvatar} alt='avatar' />
 				</div>
 				{modalInforUser && localStorage.getItem('accessToken') && (
 					<ul className='header__option-info'>
