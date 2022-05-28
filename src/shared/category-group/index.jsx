@@ -5,16 +5,20 @@ import './category-group.scss';
 const CategoryGroup = ({ data, list, title, handleViewBookDetail, viewCategoryDetail }) => {
 	return (
 		<div className='category-group'>
-			<BookSlider
-				className='category-group__slider'
-				title={title}
-				list={list}
-				size='lg'
-				handleViewBookDetail={handleViewBookDetail}
-			/>
-			<button className='category-group__link' onClick={() => viewCategoryDetail(data)}>
-				Xem tất cả
-			</button>
+			{!!list.length && (
+				<>
+					<BookSlider
+						className='category-group__slider'
+						title={title}
+						list={list}
+						size='lg'
+						handleViewBookDetail={handleViewBookDetail}
+					/>
+					<button className='category-group__link' onClick={() => viewCategoryDetail(data)}>
+						Xem tất cả
+					</button>
+				</>
+			)}
 		</div>
 	);
 };

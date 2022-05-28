@@ -171,7 +171,11 @@ const Header = () => {
 
 			<div className='header__userInfo' onClick={() => tollgleModaleInfoUser()} ref={userOptions}>
 				<div className='header__avatar'>
-					<img src={userInfo?.avatarImage || defaultAvatar} alt='avatar' />
+					<img
+						src={userInfo?.avatarImage}
+						onError={e => e.target.setAttribute('src', `${defaultAvatar}`)}
+						alt='avatar'
+					/>
 				</div>
 				{modalInforUser && localStorage.getItem('accessToken') && (
 					<ul className='header__option-info'>

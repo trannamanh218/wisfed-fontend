@@ -108,11 +108,26 @@
 
 	&__modal {
 		.modal-content {
-			max-width: 380px;
+			max-width: 352px;
+			margin: auto;
+			border-radius: 8px;
 		}
 
-		.modal-body {
-			padding: 3rem 2rem;
+		.main-category-detail__modal__content {
+			padding: 48px;
+		}
+
+		.main-category-detail__modal__title {
+			margin-bottom: 8px;
+			font-size: 18px;
+			font-weight: 600;
+			line-height: 24px;
+			padding-left: 12px;
+		}
+
+		.main-category-detail__modal__btn {
+			width: 100%;
+			margin-top: 1.5rem;
 		}
 
 		&__option__group {

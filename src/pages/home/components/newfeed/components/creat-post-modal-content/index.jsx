@@ -56,6 +56,8 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 	const [valueStar, setValueStar] = useState(0);
 	const [checkProgress, setCheckProgress] = useState();
 	const [showImagePopover, setShowImagePopover] = useState(false);
+	const [buttonActive, setButtonActive] = useState(false);
+
 	const location = useLocation();
 	const UpdateImg = useSelector(state => state.chart.updateImgPost);
 	const resetTaggedData = useSelector(state => state.post.resetTaggedData);
@@ -355,6 +357,10 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 		}
 	};
 
+	useEffect(() => {
+		checkActive();
+	}, [showMainModal, textFieldEdit?.current?.innerText, taggedData]);
+
 	const checkActive = () => {
 		let isActive = false;
 		if (!_.isEmpty(taggedData.addBook)) {
@@ -393,7 +399,7 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 				isActive = true;
 			}
 		}
-		return isActive;
+		setButtonActive(isActive);
 	};
 
 	const handleValidationInput = value => {
@@ -564,12 +570,12 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 						</div>
 						<button
 							className={classNames('creat-post-modal-content__main__submit', {
-								'active': checkActive(),
+								'active': buttonActive,
 							})}
 							type='button'
 							onClick={e => {
 								e.preventDefault();
-								if (checkActive()) {
+								if (buttonActive) {
 									onCreatePost();
 								}
 							}}

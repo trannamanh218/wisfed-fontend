@@ -74,7 +74,7 @@ export const getPostsByCategory = createAsyncThunk(
 	async (data, { rejectWithValue }) => {
 		try {
 			const { categoryId, params } = data;
-			const response = await Request.makeGet(checkLikedCategoryAPI(categoryId), params);
+			const response = await Request.makeGet(postByCategoryAPI(categoryId), params);
 			return response.data;
 		} catch (err) {
 			const error = JSON.parse(err.response);
