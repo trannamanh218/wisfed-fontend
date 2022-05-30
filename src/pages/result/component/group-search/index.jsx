@@ -14,15 +14,7 @@ import { getEnjoyGroup } from 'reducers/redux-utils/group';
 import { toast } from 'react-toastify';
 import { checkUserLogin } from 'reducers/redux-utils/auth';
 
-const GroupSearch = ({
-	value,
-	reload,
-	setIsFetching,
-	searchResultInput,
-	activeKeyDefault,
-	updateBooks,
-	isFetching,
-}) => {
+const GroupSearch = ({ value, setIsFetching, searchResultInput, activeKeyDefault, updateBooks, isFetching }) => {
 	const [listArrayGroup, setListArrayGroup] = useState([]);
 	const { isShowModal } = useSelector(state => state.search);
 	const [hasMore, setHasMore] = useState(true);
@@ -36,7 +28,7 @@ const GroupSearch = ({
 			callApiStart.current = 0;
 			setHasMore(true);
 		}
-	}, [reload, updateBooks, isShowModal, activeKeyDefault]);
+	}, [updateBooks, isShowModal, activeKeyDefault]);
 
 	useEffect(() => {
 		if (
@@ -99,7 +91,7 @@ const GroupSearch = ({
 
 	return (
 		<div className='group__search__container'>
-			{listArrayGroup.length ? (
+			{listArrayGroup.length && activeKeyDefault === 'groups' ? (
 				<InfiniteScroll
 					next={handleGetGroupSearch}
 					dataLength={listArrayGroup.length}
@@ -132,7 +124,6 @@ const GroupSearch = ({
 };
 
 GroupSearch.propTypes = {
-	reload: PropTypes.bool,
 	setIsFetching: PropTypes.func,
 	activeKeyDefault: PropTypes.string,
 	searchResultInput: PropTypes.string,

@@ -405,13 +405,8 @@
 	}
 
 	&.disabled {
-		background-color: white;
+		background-color: #d9dbe9;
 		cursor: no-drop;
-		svg {
-			path {
-				fill: #dad8d8;
-			}
-		}
 	}
 }
 

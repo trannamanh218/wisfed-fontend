@@ -115,6 +115,9 @@ const authSlice = createSlice({
 		checkUserLogin: (state, action) => {
 			state.routerLogin = action.payload;
 		},
+		checkUserInfor: (state, action) => {
+			state.userInfo = action.payload;
+		},
 	},
 
 	extraReducers: {
@@ -214,5 +217,5 @@ const authSlice = createSlice({
 });
 
 const auth = authSlice.reducer;
-export const { checkLogin, checkUserLogin } = authSlice.actions;
+export const { checkLogin, checkUserLogin, checkUserInfor } = authSlice.actions;
 export default auth;

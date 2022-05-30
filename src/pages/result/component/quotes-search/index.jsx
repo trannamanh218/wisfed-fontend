@@ -11,21 +11,13 @@ import { useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import LoadingIndicator from 'shared/loading-indicator';
 
-const QuoteSearch = ({
-	isFetching,
-	value,
-	reload,
-	setIsFetching,
-	searchResultInput,
-	activeKeyDefault,
-	updateBooks,
-}) => {
+const QuoteSearch = ({ isFetching, value, setIsFetching, searchResultInput, activeKeyDefault, updateBooks }) => {
 	const [likedArray, setLikedArray] = useState([1]);
 	const [listArrayQuotes, setListArrayQuotes] = useState([]);
 	const { isShowModal } = useSelector(state => state.search);
 	const [hasMore, setHasMore] = useState(true);
 	const dispatch = useDispatch();
-	const callApiStart = useRef(0);
+	const callApiStartQuotes = useRef(0);
 	const callApiPerPage = useRef(10);
 	const getLikedArray = async () => {
 		try {
@@ -43,21 +35,21 @@ const QuoteSearch = ({
 	useEffect(() => {
 		if (activeKeyDefault === 'quotes') {
 			setListArrayQuotes([]);
-			callApiStart.current = 0;
+			callApiStartQuotes.current = 0;
 			setHasMore(true);
 		}
-	}, [reload, updateBooks, isShowModal, activeKeyDefault]);
+	}, [updateBooks, isShowModal, activeKeyDefault]);
 
 	useEffect(() => {
 		if (
-			callApiStart.current === 0 &&
+			callApiStartQuotes.current === 0 &&
 			listArrayQuotes.length === 0 &&
 			searchResultInput &&
 			activeKeyDefault === 'quotes'
 		) {
 			handleGetQuotesSearch();
 		}
-	}, [callApiStart.current, listArrayQuotes, value, isShowModal]);
+	}, [callApiStartQuotes.current, listArrayQuotes, value, isShowModal]);
 
 	const handleGetQuotesSearch = async () => {
 		setIsFetching(true);
@@ -65,14 +57,14 @@ const QuoteSearch = ({
 			const params = {
 				q: searchResultInput,
 				type: activeKeyDefault,
-				start: callApiStart.current,
+				start: callApiStartQuotes.current,
 				limit: callApiPerPage.current,
 			};
 			if (activeKeyDefault === 'quotes') {
 				if (Storage.getAccessToken()) {
 					const result = await dispatch(getFilterSearchAuth(params)).unwrap();
 					if (result.rows.length > 0) {
-						callApiStart.current += callApiPerPage.current;
+						callApiStartQuotes.current += callApiPerPage.current;
 						setListArrayQuotes(listArrayQuotes.concat(result.rows));
 					} else {
 						setHasMore(false);
@@ -80,7 +72,7 @@ const QuoteSearch = ({
 				} else {
 					const result = await dispatch(getFilterSearch(params)).unwrap();
 					if (result.rows.length > 0) {
-						callApiStart.current += callApiPerPage.current;
+						callApiStartQuotes.current += callApiPerPage.current;
 						setListArrayQuotes(listArrayQuotes.concat(result.rows));
 					} else {
 						setHasMore(false);
@@ -96,7 +88,7 @@ const QuoteSearch = ({
 
 	return (
 		<div className='quoteSearch__container'>
-			{listArrayQuotes?.length > 0 ? (
+			{listArrayQuotes?.length > 0 && activeKeyDefault === 'quotes' ? (
 				<InfiniteScroll
 					next={handleGetQuotesSearch}
 					dataLength={listArrayQuotes.length}
@@ -116,7 +108,6 @@ const QuoteSearch = ({
 	);
 };
 QuoteSearch.propTypes = {
-	reload: PropTypes.bool,
 	setIsFetching: PropTypes.func,
 	activeKeyDefault: PropTypes.string,
 	searchResultInput: PropTypes.string,

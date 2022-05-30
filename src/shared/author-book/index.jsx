@@ -16,9 +16,10 @@ const AuthorBook = props => {
 			setModalShow(true);
 		}
 	};
+
 	return (
 		<div className='author-book'>
-			<BookThumbnail source={data.book?.images || data?.images[0]} />
+			<BookThumbnail source={data?.book?.images || data?.images[0]} />
 			<div className='author-book__info'>
 				<div className='author-book__header'>
 					<h4 className='author-book__title' title={data.book?.name || data?.name}>

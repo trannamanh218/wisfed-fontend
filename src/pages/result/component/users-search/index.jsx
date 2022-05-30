@@ -14,7 +14,7 @@ import { useDispatch, useSelector } from 'react-redux';
 const UsersSearch = ({
 	isFetching,
 	value,
-	reload,
+
 	setIsFetching,
 	searchResultInput,
 	activeKeyDefault,
@@ -33,7 +33,7 @@ const UsersSearch = ({
 			callApiStart.current = 0;
 			setHasMore(true);
 		}
-	}, [reload, updateBooks, isShowModal, activeKeyDefault]);
+	}, [updateBooks, isShowModal, activeKeyDefault]);
 
 	useEffect(() => {
 		if (
@@ -82,12 +82,12 @@ const UsersSearch = ({
 
 	return (
 		<div className='user__search__container'>
-			{listArrayUsers?.length > 0 ? (
+			{listArrayUsers?.length > 0 && activeKeyDefault === 'users' ? (
 				<InfiniteScroll
 					next={handleGetUserSearch}
 					dataLength={listArrayUsers.length}
 					hasMore={hasMore}
-					loader={<LoadingIndicator />}
+					// loader={<LoadingIndicator />}
 				>
 					<div className='myfriends__layout__container'>
 						{listArrayUsers.map(item => (
@@ -130,7 +130,6 @@ const UsersSearch = ({
 	);
 };
 UsersSearch.propTypes = {
-	reload: PropTypes.bool,
 	setIsFetching: PropTypes.func,
 	activeKeyDefault: PropTypes.string,
 	searchResultInput: PropTypes.string,

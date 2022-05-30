@@ -126,3 +126,5 @@ export const enjoyGroup = id => `/api/v1/groups/requestGroup/${id}`;
 export const leaveGroup = id => `/api/v1/groups/leaveGroup/${id}`;
 export const createPostGroup = id => `/api/v1/groups/${id}/createPost`;
 export const listPostGroup = id => `/api/v1/groups/${id}/groupFeed`;
+//share
+export const shareInternalAPI = (id, type) => `/api/v1/getstream/share/${id}?type=${type}`;

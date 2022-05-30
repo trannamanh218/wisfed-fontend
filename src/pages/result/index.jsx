@@ -10,7 +10,7 @@ import AuthorSearch from './component/authors-search';
 import UsersSearch from './component/users-search';
 import CategorySearch from './component/category-search';
 import { useEffect, useState } from 'react';
-// import Circle from 'shared/loading/circle';
+import Circle from 'shared/loading/circle';
 import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 
@@ -20,7 +20,6 @@ const Result = () => {
 	const [searchResultInput, setSearchResultInput] = useState('');
 	const [updateBooks, setUpdateBooks] = useState(false);
 	const [isFetching, setIsFetching] = useState(null);
-	const [reload, setReload] = useState(false);
 	const navigate = useNavigate();
 
 	const handleChange = e => {
@@ -49,15 +48,12 @@ const Result = () => {
 	};
 
 	useEffect(() => {
-		if (!reload) {
-			setReload(true);
-		}
 		setSearchResultInput(value);
 	}, [value]);
 
 	return (
 		<NormalContainer>
-			{/* <Circle loading={isFetching} /> */}
+			<Circle loading={isFetching} />
 			<div className='result__container'>
 				<div className='result__header'>
 					<div className='result__header__content'>Kết quả tìm kiếm cho {value}</div>
@@ -81,7 +77,6 @@ const Result = () => {
 						<Tab eventKey='books' title='Sách'>
 							<BookSearch
 								setIsFetching={setIsFetching}
-								reload={reload}
 								activeKeyDefault={activeKeyDefault}
 								searchResultInput={searchResultInput}
 								value={value}
@@ -90,12 +85,18 @@ const Result = () => {
 							/>
 						</Tab>
 						<Tab eventKey='authors' title='Tác giả'>
-							<AuthorSearch />
+							<AuthorSearch
+								setIsFetching={setIsFetching}
+								activeKeyDefault={activeKeyDefault}
+								searchResultInput={searchResultInput}
+								value={value}
+								updateBooks={updateBooks}
+								isFetching={isFetching}
+							/>
 						</Tab>
 						<Tab eventKey='users' title='Mọi người'>
 							<UsersSearch
 								setIsFetching={setIsFetching}
-								reload={reload}
 								activeKeyDefault={activeKeyDefault}
 								searchResultInput={searchResultInput}
 								value={value}
@@ -106,7 +107,6 @@ const Result = () => {
 						<Tab eventKey='categories' title='Chủ đề'>
 							<CategorySearch
 								setIsFetching={setIsFetching}
-								reload={reload}
 								activeKeyDefault={activeKeyDefault}
 								searchResultInput={searchResultInput}
 								value={value}
@@ -117,7 +117,6 @@ const Result = () => {
 						<Tab eventKey='quotes' title='Quotes'>
 							<QuoteSearch
 								setIsFetching={setIsFetching}
-								reload={reload}
 								activeKeyDefault={activeKeyDefault}
 								searchResultInput={searchResultInput}
 								value={value}
@@ -128,7 +127,6 @@ const Result = () => {
 						<Tab eventKey='groups' title='Nhóm'>
 							<GroupSearch
 								setIsFetching={setIsFetching}
-								reload={reload}
 								activeKeyDefault={activeKeyDefault}
 								searchResultInput={searchResultInput}
 								value={value}
