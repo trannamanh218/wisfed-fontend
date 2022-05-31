@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, memo } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import caretIcon from 'assets/images/caret.png';
@@ -104,4 +104,4 @@ DualColumn.propTypes = {
 	inCategory: PropTypes.bool,
 };
 
-export default DualColumn;
+export default memo(DualColumn);

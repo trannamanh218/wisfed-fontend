@@ -1,7 +1,7 @@
 import './style.scss';
 import ProgressBar from 'react-bootstrap/ProgressBar';
 import PropTypes from 'prop-types';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, memo } from 'react';
 import { updateCurrentBook } from 'reducers/redux-utils/book';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -59,4 +59,4 @@ function ReadingBook({ bookData }) {
 ReadingBook.propTypes = {
 	bookData: PropTypes.object,
 };
-export default ReadingBook;
+export default memo(ReadingBook);

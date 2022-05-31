@@ -1,4 +1,3 @@
-import { useFetchRelatedBooks } from 'api/book.hooks';
 import { STATUS_SUCCESS } from 'constants';
 import { STATUS_LOADING } from 'constants';
 import { STATUS_IDLE } from 'constants';
@@ -11,26 +10,27 @@ import BookSlider from 'shared/book-slider';
 import Circle from 'shared/loading/circle';
 import './book-reference.scss';
 import { NotificationError } from 'helpers/Error';
-import { getCategoryList } from 'reducers/redux-utils/category';
+import { getCategoryList, getListBookByCategory } from 'reducers/redux-utils/category';
 import caretIcon from 'assets/images/caret.png';
 import { Link } from 'react-router-dom';
+import { useFetchAuthorBooks } from 'api/book.hooks';
 
 const BookReference = () => {
 	const [status, setStatus] = useState(STATUS_IDLE);
 	const [allCategories, setAllCategories] = useState([]);
 	const [isExpand, setIsExpand] = useState(false);
 	const [rows, setRows] = useState(3);
+	const [relatedBooks, setRelateBooks] = useState([]);
 
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
 	const { bookInfo } = useSelector(state => state.book);
 
-	const { relatedBooks } = useFetchRelatedBooks(bookInfo.categoryId);
-
-	const bookList = new Array(10).fill({ source: '/images/book1.jpg', name: 'Design pattern' });
+	const { booksAuthor } = useFetchAuthorBooks(Number(bookInfo.authors[0]?.authorId));
 
 	useEffect(() => {
+		getBooksByCategory();
 		getAllCategories();
 	}, []);
 
@@ -68,6 +68,22 @@ const BookReference = () => {
 		setIsExpand(true);
 	};
 
+	const getBooksByCategory = async () => {
+		try {
+			const params = {
+				start: 0,
+				limit: 10,
+				sort: JSON.stringify([{ property: 'createdAt', direction: 'DESC' }]),
+			};
+			const res = await dispatch(
+				getListBookByCategory({ categoryId: bookInfo.categories[0]?.categoryId, params: params })
+			).unwrap();
+			setRelateBooks(res);
+		} catch (err) {
+			NotificationError(err);
+		}
+	};
+
 	const directNewUrl = () => {
 		window.open('https://www.tecinus.vn');
 	};
@@ -76,13 +92,17 @@ const BookReference = () => {
 		<div className='book-reference'>
 			<Circle loading={status === STATUS_LOADING} />
 			{/* sách của tac gia */}
-			<BookSlider
-				className='book-reference__slider'
-				title={`Sách của ${bookInfo.authors[0]?.authorName} `}
-				list={bookList}
-			/>
+			{!!bookInfo.authors.length && (
+				<BookSlider
+					className='book-reference__slider'
+					title={`Sách của ${bookInfo.authors[0]?.authorName} `}
+					list={booksAuthor}
+					handleViewBookDetail={handleViewBookDetail}
+				/>
+			)}
+
 			{/* series sách đó */}
-			<BookSlider className='book-reference__slider' title='Seris dạy con làm giàu' list={bookList} />
+			{/* <BookSlider className='book-reference__slider' title='Seris dạy con làm giàu' list={bookList} /> */}
 			{relatedBooks.length > 0 && (
 				<BookSlider
 					className='book-reference__slider'
@@ -96,16 +116,16 @@ const BookReference = () => {
 				<div className='card card-link'>
 					<ul className='card-link__list'>
 						<li className='card-link__item'>
-							<a>Cuốn sách fefefegegeegxuất sắc nhất về nuôi dạy con năm 2021</a>
+							<span>Cuốn sách fefefegegeegxuất sắc nhất về nuôi dạy con năm 2021</span>
 						</li>
 						<li className='card-link__item'>
-							<a>Cuốn sách fefefegegeegxuất sắc nhất về nuôi dạy con năm 2021</a>
+							<span>Cuốn sách fefefegegeegxuất sắc nhất về nuôi dạy con năm 2021</span>
 						</li>
 						<li className='card-link__item'>
-							<a>Cuốn sách fefefegegeegxuất sắc nhất về nuôi dạy con năm 2021</a>
+							<span>Cuốn sách fefefegegeegxuất sắc nhất về nuôi dạy con năm 2021</span>
 						</li>
 						<li className='card-link__item'>
-							<a>Cuốn sách fefefegegeegxuất sắc nhất về nuôi dạy con năm 2021</a>
+							<span>Cuốn sách fefefegegeegxuất sắc nhất về nuôi dạy con năm 2021</span>
 						</li>
 					</ul>
 				</div>
