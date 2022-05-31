@@ -1,5 +1,5 @@
 import React from 'react';
-import PropTypes, { any } from 'prop-types';
+import PropTypes from 'prop-types';
 import './sub-container.scss';
 import Layout from '..';
 import { ErrorBoundary } from 'react-error-boundary';
