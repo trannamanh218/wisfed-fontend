@@ -48,9 +48,9 @@ export const resetPasswordValidate = yup.object().shape({
 		.required('*Vui lòng điền đầy đủ thông tin'),
 	confirmPassword: yup
 		.string()
-		.when('newPasword', {
+		.when('newPassword', {
 			is: val => (val && val.length > 0 ? true : false),
-			then: yup.string().oneOf([yup.ref('newPasword')], '*Mật khẩu không trùng khớp'),
+			then: yup.string().oneOf([yup.ref('newPassword')], '*Mật khẩu không trùng khớp'),
 		})
 		.required('*Vui lòng điền đầy đủ thông tin'),
 });

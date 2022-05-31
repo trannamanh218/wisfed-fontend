@@ -7,7 +7,7 @@ import './header.scss';
 import NotificationModal from 'pages/notification/';
 import { useDispatch, useSelector } from 'react-redux';
 import { backgroundToggle } from 'reducers/redux-utils/notificaiton';
-import { checkUserLogin, deleteUserInfo } from 'reducers/redux-utils/auth';
+import { checkUserLogin, checkUserInfor, deleteUserInfo } from 'reducers/redux-utils/auth';
 import { useVisible } from 'shared/hooks';
 import SearchAllModal from 'shared/search-all';
 import Storage from 'helpers/Storage';
@@ -102,6 +102,7 @@ const Header = () => {
 		dispatch(updateTargetReading([]));
 		navigate('/login');
 		toast.success('Đăng xuất thành công');
+		dispatch(checkUserInfor({}));
 	};
 
 	return (
@@ -137,18 +138,17 @@ const Header = () => {
 						<CategoryIcon className='header__nav__icon' />
 					</Link>
 				</li>
+				<li
+					onClick={handleUserLogin}
+					className={classNames('header__nav__item', { active: activeLink === `/shelves/${userInfo.id}` })}
+				>
+					<Link className='header__nav__link' to={userLogin && `/shelves/${userInfo.id}`}>
+						{activeLink === `/shelves/${userInfo.id}` ? <BookFillIcon /> : <BookIcon />}
+					</Link>
+				</li>
 				<li className={classNames('header__nav__item', { active: activeLink === '/group' })}>
 					<Link className='header__nav__link' to='/group'>
 						<IconGroup className='header__nav__icon' />
-					</Link>
-				</li>
-				<li
-					className={classNames('header__nav__item', {
-						active: activeLink === `/shelves/${userInfo.id}`,
-					})}
-				>
-					<Link className='header__nav__link' to={`/shelves/${userInfo.id}`}>
-						{activeLink === `/shelves/${userInfo.id}` ? <BookFillIcon /> : <BookIcon />}
 					</Link>
 				</li>
 				<li

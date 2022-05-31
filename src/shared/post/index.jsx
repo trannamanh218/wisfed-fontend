@@ -19,6 +19,8 @@ import ReactRating from 'shared/react-rating';
 import { useParams } from 'react-router-dom';
 import { createCommentReview } from 'reducers/redux-utils/book';
 import Comment from 'shared/comments';
+import PostQuotes from 'shared/post-quotes';
+import PostsShare from 'shared/posts-Share';
 
 function Post({ postInformations, className }) {
 	const [postData, setPostData] = useState({});
@@ -27,7 +29,7 @@ function Post({ postInformations, className }) {
 	const [commentLv1IdArray, setCommentLv1IdArray] = useState([]);
 	const [replyingCommentId, setReplyingCommentId] = useState(null);
 	const [clickReply, setClickReply] = useState(false);
-
+	const { isSharePosts } = useSelector(state => state.post);
 	const dispatch = useDispatch();
 
 	const { bookId } = useParams();
@@ -215,13 +217,13 @@ function Post({ postInformations, className }) {
 					</>
 				)}
 			</ul>
-
-			{postData.book && (
+			{postData.isShare && postData.verb === 'shareQuote' && <PostQuotes postsData={postData} />}
+			{postData.verb === 'shareQuote' && postData.book && (
 				<PostBook
 					data={{ ...postData.book, bookLibrary: postData.bookLibrary, actorCreatedPost: postData.actor }}
 				/>
 			)}
-
+			{postData.verb === 'sharePost' && <PostsShare postData={postData} />}
 			{postData?.image?.length > 0 && <GridImage images={postData.image} inPost={true} postId={postData.id} />}
 
 			{postData?.image?.length === 0 && !_.isEmpty(postData?.preview) && (
@@ -240,52 +242,60 @@ function Post({ postInformations, className }) {
 					)}
 				</>
 			)}
-			<PostActionBar postData={postData} handleLikeAction={handleLikeAction} />
-
-			{postData.usersComments?.map(comment => (
-				<div key={comment.id}>
-					{comment.replyId === null && (
-						<Comment
-							commentLv1Id={comment.id}
-							data={comment}
-							postData={postData}
-							handleReply={handleReply}
-							postCommentsLikedArray={[]}
-							inQuotes={false}
-						/>
-					)}
-					<div className='comment-reply-container'>
-						{postData.usersComments.map(commentChild => {
-							if (commentChild.replyId === comment.id) {
-								return (
-									<div key={commentChild.id}>
-										<Comment
-											commentLv1Id={comment.id}
-											data={commentChild}
-											postData={postData}
-											handleReply={handleReply}
-											postCommentsLikedArray={[]}
-											inQuotes={false}
-										/>
-									</div>
-								);
-							}
-						})}
-						{commentLv1IdArray.includes(comment.id) && (
-							<CommentEditor
-								userInfo={userInfo}
-								onCreateComment={onCreateComment}
-								className={classNames('reply-comment-editor', {
-									'show': comment.id === replyingCommentId,
+			{!isSharePosts && (
+				<>
+					<PostActionBar postData={postData} handleLikeAction={handleLikeAction} />
+					{postData.usersComments?.map(comment => (
+						<div key={comment.id}>
+							{comment.replyId === null && (
+								<Comment
+									commentLv1Id={comment.id}
+									data={comment}
+									postData={postData}
+									handleReply={handleReply}
+									postCommentsLikedArray={[]}
+									inQuotes={false}
+								/>
+							)}
+							<div className='comment-reply-container'>
+								{postData.usersComments.map(commentChild => {
+									if (commentChild.replyId === comment.id) {
+										return (
+											<div key={commentChild.id}>
+												<Comment
+													commentLv1Id={comment.id}
+													data={commentChild}
+													postData={postData}
+													handleReply={handleReply}
+													postCommentsLikedArray={[]}
+													inQuotes={false}
+												/>
+											</div>
+										);
+									}
 								})}
-								replyId={replyingCommentId}
-								textareaId={`textarea-${comment.id}`}
-							/>
-						)}
-					</div>
-				</div>
-			))}
-			<CommentEditor userInfo={userInfo} onCreateComment={onCreateComment} reply={null} indexParent={null} />
+								{commentLv1IdArray.includes(comment.id) && (
+									<CommentEditor
+										userInfo={userInfo}
+										onCreateComment={onCreateComment}
+										className={classNames('reply-comment-editor', {
+											'show': comment.id === replyingCommentId,
+										})}
+										replyId={replyingCommentId}
+										textareaId={`textarea-${comment.id}`}
+									/>
+								)}
+							</div>
+						</div>
+					))}
+					<CommentEditor
+						userInfo={userInfo}
+						onCreateComment={onCreateComment}
+						reply={null}
+						indexParent={null}
+					/>
+				</>
+			)}
 		</div>
 	);
 }

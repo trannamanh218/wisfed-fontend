@@ -20,13 +20,13 @@ const Sidebar = () => {
 
 	useEffect(() => {
 		if (!_.isEmpty(myAllLibraryRedux) && myAllLibraryRedux.default.length > 0) {
-			const readingLibrary = myAllLibraryRedux.default.filter(item => item.defaultType === 'reading');
-			if (readingLibrary.length && readingLibrary[0].books.length) {
-				const readingBooks = readingLibrary[0].books;
-				const wantToReadLibrary = myAllLibraryRedux.default.filter(item => item.defaultType === 'wantToRead');
+			const readingLibrary = myAllLibraryRedux?.default?.filter(item => item.defaultType === 'reading');
+			if (readingLibrary.length && readingLibrary[0]?.books.length) {
+				const readingBooks = readingLibrary[0]?.books;
+				const wantToReadLibrary = myAllLibraryRedux?.default?.filter(item => item.defaultType === 'wantToRead');
 				const newWantToReadList = [];
-				wantToReadLibrary[0].books.forEach(item => newWantToReadList.push(item.book));
-				setBookReading(readingBooks[readingBooks.length - 1].book);
+				wantToReadLibrary[0]?.books?.forEach(item => newWantToReadList.push(item.book));
+				setBookReading(readingBooks[readingBooks?.length - 1].book);
 				setWantToReadList(newWantToReadList);
 			}
 		}
@@ -34,9 +34,9 @@ const Sidebar = () => {
 
 	return (
 		<div className='sidebar'>
-			{!_.isEmpty(bookReading) && <ReadingBook bookData={bookReading} />}
+			{!_.isEmpty(userInfo) && <ReadingBook bookData={bookReading} />}
 
-			{!_.isEmpty(myAllLibraryRedux) && !!myAllLibraryRedux.default.length && (
+			{!_.isEmpty(myAllLibraryRedux) && !_.isEmpty(userInfo) && myAllLibraryRedux.default.length > 0 && (
 				<div className='sidebar__block'>
 					<h4 className='sidebar__block__title'>Giá sách</h4>
 					<div className='dualColumn'>
@@ -58,11 +58,9 @@ const Sidebar = () => {
 					</Link>
 				</div>
 			)}
+			{!_.isEmpty(userInfo) && <RenderProgress userIdParams={userInfo?.id} />}
 
-			<RenderProgress userId={userInfo?.id} />
-
-			{wantToReadList.length > 0 && <TheBooksWantsToRead list={wantToReadList} />}
-
+			{wantToReadList.length > 0 && !_.isEmpty(userInfo) && <TheBooksWantsToRead list={wantToReadList} />}
 			<div className='sidebar__block'>
 				<h4 className='sidebar__block__title'>Quotes</h4>
 				{!_.isEmpty(quoteRandom) && (

@@ -4,17 +4,15 @@ import QuoteActionBar from 'shared/quote-action-bar';
 import UserAvatar from 'shared/user-avatar';
 import './quote-card.scss';
 import { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
 import { likeUnlikeQuote } from 'reducers/redux-utils/quote';
 import { checkLikeQuote } from 'reducers/redux-utils/quote';
 import { NotificationError } from 'helpers/Error';
+import { useDispatch } from 'react-redux';
 
 const QuoteCard = ({ data, isDetail = false, likedArray }) => {
 	const [isLiked, setIsLiked] = useState(false);
 	const [likeNumber, setLikeNumber] = useState(0);
-
 	const dispatch = useDispatch();
-
 	useEffect(() => {
 		if (isDetail) {
 			getLikedArray();
@@ -47,6 +45,13 @@ const QuoteCard = ({ data, isDetail = false, likedArray }) => {
 		}
 	};
 
+	const renderAuthorAndbooksName = () => {
+		if (data.book?.name) {
+			return `${data.book?.name}`;
+		}
+		return ` ${data.bookName}`;
+	};
+
 	return (
 		<div
 			className='quote-card'
@@ -54,7 +59,7 @@ const QuoteCard = ({ data, isDetail = false, likedArray }) => {
 		>
 			<div className='quote-card__quote-content'>
 				<p>{`"${data.quote}"`}</p>
-				<p style={{ textDecoration: 'underline' }}>{`${data.authorName} - ${data.book?.name}`}</p>
+				<p style={{ textDecoration: 'underline' }}>{renderAuthorAndbooksName()}</p>
 			</div>
 
 			<div className='quote-card__author'>

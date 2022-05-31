@@ -5,40 +5,22 @@ import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 import BookSearch from './component/books-search';
 import QuoteSearch from './component/quotes-search';
-import { useSelector, useDispatch } from 'react-redux';
-import { useEffect, useState, useRef } from 'react';
-import _ from 'lodash';
+import GroupSearch from './component/group-search';
+import AuthorSearch from './component/authors-search';
+import UsersSearch from './component/users-search';
+import CategorySearch from './component/category-search';
+import { useEffect, useState } from 'react';
 import Circle from 'shared/loading/circle';
 import { useParams } from 'react-router-dom';
-import { getFilterSearchAuth, getFilterSearch } from 'reducers/redux-utils/search';
-import { NotificationError } from 'helpers/Error';
 import { useNavigate } from 'react-router-dom';
-import Storage from 'helpers/Storage';
 
 const Result = () => {
 	const { value } = useParams();
-	const dispatch = useDispatch();
-	const { saveValueInput, isShowModal } = useSelector(state => state.search);
 	const [activeKeyDefault, setActiveKeyDefault] = useState('books');
 	const [searchResultInput, setSearchResultInput] = useState('');
-	const [isFetching, setIsFetching] = useState(false);
-	const [listArrayBooks, setListArrayBooks] = useState([]);
-	const [listArrayQuotes, setListArrayQuotes] = useState([]);
-	const [hasMore, setHasMore] = useState(true);
-	const [reload, setReload] = useState(false);
-	const callApiStart = useRef(0);
-	const callApiPerPage = useRef(10);
+	const [updateBooks, setUpdateBooks] = useState(false);
+	const [isFetching, setIsFetching] = useState(null);
 	const navigate = useNavigate();
-
-	const handleSelecActiveKey = () => {
-		if (saveValueInput.length > 0 && isShowModal === true) {
-			setActiveKeyDefault('books');
-		}
-	};
-
-	useEffect(() => {
-		handleSelecActiveKey();
-	}, [saveValueInput, isShowModal]);
 
 	const handleChange = e => {
 		setSearchResultInput(e.target.value);
@@ -47,86 +29,27 @@ const Result = () => {
 	const handleDirectParam = () => {
 		if (searchResultInput) {
 			navigate(`/result/q=${searchResultInput}`);
-			callApiStart.current = 0;
-			setListArrayBooks([]);
-			setHasMore(true);
+			setUpdateBooks(!updateBooks);
 		}
 	};
 
 	const handleClickSearch = () => {
 		handleDirectParam();
-		if (callApiStart.current < 1 && listArrayBooks.length === 0) {
-			handleGetBooksSearch();
-		}
+	};
+
+	const handleSelectKey = eventKey => {
+		setActiveKeyDefault(eventKey);
 	};
 
 	const handleKeyDown = e => {
 		if (e.key === 'Enter') {
 			handleDirectParam();
-			if (callApiStart.current < 1 && listArrayBooks.length === 0) {
-				handleGetBooksSearch();
-			}
 		}
 	};
 
 	useEffect(() => {
-		if (!reload) {
-			setReload(true);
-		}
 		setSearchResultInput(value);
 	}, [value]);
-
-	useEffect(() => {
-		handleGetBooksSearch();
-	}, [activeKeyDefault, value, reload]);
-
-	const handleGetBooksSearch = async () => {
-		setIsFetching(true);
-		try {
-			const params = {
-				q: searchResultInput,
-				type: activeKeyDefault,
-				start: callApiStart.current,
-				limit: callApiPerPage.current,
-			};
-
-			if (Storage.getAccessToken()) {
-				if ((_.isEmpty(listArrayBooks) || _.isEmpty(listArrayQuotes)) && searchResultInput.length > 0) {
-					if (activeKeyDefault === 'books') {
-						const resultBooks = await dispatch(getFilterSearchAuth(params)).unwrap();
-						if (resultBooks.length > 0) {
-							callApiStart.current += callApiPerPage.current;
-							setListArrayBooks(listArrayBooks.concat(resultBooks));
-						} else if (resultBooks.length === 0) {
-							setHasMore(false);
-						}
-					} else if (activeKeyDefault === 'quotes') {
-						const resultBooks = await dispatch(getFilterSearchAuth(params));
-						setListArrayQuotes(resultBooks.resultBooks.data.rows);
-					}
-				}
-			} else {
-				if ((_.isEmpty(listArrayBooks) || _.isEmpty(listArrayQuotes)) && searchResultInput.length > 0) {
-					if (activeKeyDefault === 'books') {
-						const resultBooks = await dispatch(getFilterSearch(params)).unwrap();
-						if (resultBooks.rows.length > 0) {
-							callApiStart.current += callApiPerPage.current;
-							setListArrayBooks(listArrayBooks.concat(resultBooks.rows));
-						} else if (resultBooks.rows.length === 0) {
-							setHasMore(false);
-						}
-					} else if (activeKeyDefault === 'quotes') {
-						const resultBooks = await dispatch(getFilterSearch(params)).unwrap();
-						setListArrayQuotes(resultBooks.resultBooks.data.rows);
-					}
-				}
-			}
-		} catch (err) {
-			NotificationError(err);
-		} finally {
-			setIsFetching(false);
-		}
-	};
 
 	return (
 		<NormalContainer>
@@ -149,26 +72,67 @@ const Result = () => {
 					<Tabs
 						defaultActiveKey={'books'}
 						activeKey={activeKeyDefault}
-						onSelect={eventKey => setActiveKeyDefault(eventKey)}
+						onSelect={eventKey => handleSelectKey(eventKey)}
 					>
 						<Tab eventKey='books' title='Sách'>
 							<BookSearch
-								listArrayBooks={listArrayBooks}
-								hasMore={hasMore}
-								handleGetBooksSearch={handleGetBooksSearch}
+								setIsFetching={setIsFetching}
+								activeKeyDefault={activeKeyDefault}
+								searchResultInput={searchResultInput}
+								value={value}
+								updateBooks={updateBooks}
+								isFetching={isFetching}
 							/>
 						</Tab>
-						<Tab eventKey='group' title='Nhóm'>
-							Group
+						<Tab eventKey='authors' title='Tác giả'>
+							<AuthorSearch
+								setIsFetching={setIsFetching}
+								activeKeyDefault={activeKeyDefault}
+								searchResultInput={searchResultInput}
+								value={value}
+								updateBooks={updateBooks}
+								isFetching={isFetching}
+							/>
+						</Tab>
+						<Tab eventKey='users' title='Mọi người'>
+							<UsersSearch
+								setIsFetching={setIsFetching}
+								activeKeyDefault={activeKeyDefault}
+								searchResultInput={searchResultInput}
+								value={value}
+								updateBooks={updateBooks}
+								isFetching={isFetching}
+							/>
+						</Tab>
+						<Tab eventKey='categories' title='Chủ đề'>
+							<CategorySearch
+								setIsFetching={setIsFetching}
+								activeKeyDefault={activeKeyDefault}
+								searchResultInput={searchResultInput}
+								value={value}
+								updateBooks={updateBooks}
+								isFetching={isFetching}
+							/>
 						</Tab>
 						<Tab eventKey='quotes' title='Quotes'>
-							<QuoteSearch listArrayQuotes={listArrayQuotes} />
+							<QuoteSearch
+								setIsFetching={setIsFetching}
+								activeKeyDefault={activeKeyDefault}
+								searchResultInput={searchResultInput}
+								value={value}
+								updateBooks={updateBooks}
+								isFetching={isFetching}
+							/>
 						</Tab>
-						<Tab eventKey='everyone' title='Mọi người'>
-							Mọi người
-						</Tab>
-						<Tab eventKey='story' title='Câu chuyện'>
-							Câu chuyện
+						<Tab eventKey='groups' title='Nhóm'>
+							<GroupSearch
+								setIsFetching={setIsFetching}
+								activeKeyDefault={activeKeyDefault}
+								searchResultInput={searchResultInput}
+								value={value}
+								updateBooks={updateBooks}
+								isFetching={isFetching}
+							/>
 						</Tab>
 					</Tabs>
 				</div>
