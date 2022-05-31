@@ -8,7 +8,6 @@ import { changeKey } from 'reducers/redux-utils/forget-password';
 import { useSelector } from 'react-redux';
 import Circle from 'shared/loading/circle';
 import { emailValidate } from 'helpers/Validation';
-import { NotificationError } from 'helpers/Error';
 import Subtract from 'assets/images/Subtract.png';
 
 function ForgetpasswordFormComponent() {
@@ -17,16 +16,20 @@ function ForgetpasswordFormComponent() {
 	const [isShow, setIsShow] = useState(false);
 	const [dataModal, setDatamodal] = useState({});
 	const [showImagePopover, setShowImagePopover] = useState(false);
+	const [checkUser, setCheckUser] = useState(false);
 
 	const handleChangeModal = () => {
 		setIsShow(false);
-		dispatch(changeKey(true));
+		if (checkUser === true) {
+			dispatch(changeKey(true));
+		}
 	};
 
 	const handleSubmit = async data => {
-		localStorage.setItem('emailForgot', JSON.stringify(data.email));
 		try {
+			localStorage.setItem('emailForgot', JSON.stringify(data.email));
 			await dispatch(forgotPassword(data)).unwrap();
+			setCheckUser(true);
 			if (!isFetching) {
 				setTimeout(() => {
 					setIsShow(true);
@@ -40,7 +43,14 @@ function ForgetpasswordFormComponent() {
 				});
 			}
 		} catch (err) {
-			NotificationError(err);
+			setIsShow(true);
+			setDatamodal({
+				title: 'Lấy lại mật khẩu',
+				title2: 'thất bại',
+				isShowIcon: false,
+				scribe: 'Tài khoản của bạn chưa tồn tại.',
+				scribe2: `Vui lòng đăng kí tài khoản`,
+			});
 		}
 	};
 
