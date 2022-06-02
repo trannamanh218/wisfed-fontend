@@ -22,7 +22,7 @@ import Comment from 'shared/comments';
 import PostQuotes from 'shared/post-quotes';
 import PostsShare from 'shared/posts-Share';
 
-function Post({ postInformations, className }) {
+function Post({ postInformations, className, renderShare }) {
 	const [postData, setPostData] = useState({});
 	const [videoId, setVideoId] = useState('');
 	const { userInfo } = useSelector(state => state.auth);
@@ -30,6 +30,7 @@ function Post({ postInformations, className }) {
 	const [replyingCommentId, setReplyingCommentId] = useState(null);
 	const [clickReply, setClickReply] = useState(false);
 	const { isSharePosts } = useSelector(state => state.post);
+
 	const dispatch = useDispatch();
 
 	const { bookId } = useParams();
@@ -151,45 +152,50 @@ function Post({ postInformations, className }) {
 
 	return (
 		<div className={classNames('post__container', { [`${className}`]: className })}>
-			<div className='post__user-status'>
-				<UserAvatar
-					data-testid='post__user-avatar'
-					className='post__user-status__avatar'
-					source={postData?.createdBy?.avatarImage}
-				/>
+			{!renderShare && postData.sharePost && (
+				<>
+					<div className='post__user-status'>
+						<UserAvatar
+							data-testid='post__user-avatar'
+							className='post__user-status__avatar'
+							source={postData?.createdBy?.avatarImage}
+						/>
 
-				<div className='post__user-status__name-and-post-time-status'>
-					<div data-testid='post__user-name' className='post__user-status__name'>
-						{postData?.createdBy?.fullName || postData?.user?.fullName || 'Ẩn danh'}
+						<div className='post__user-status__name-and-post-time-status'>
+							<div data-testid='post__user-name' className='post__user-status__name'>
+								{postData?.createdBy?.fullName || postData?.user?.fullName || 'Ẩn danh'}
+							</div>
+							<div className='post__user-status__post-time-status'>
+								<span>{calculateDurationTime(postData.time || postData.createdAt)}</span>
+								<>
+									{postData.book && (
+										<div className='post__user-status__subtitle'>
+											<span>Cập nhật tiến độ đọc sách</span>
+											<div className='post__user-status__post-time-status__online-dot'></div>
+											<span>Xếp hạng</span>
+											<ReactRating
+												readonly={true}
+												initialRating={
+													postInformations?.book?.actorRating?.star
+														? postInformations?.book?.actorRating?.star
+														: 0
+												}
+											/>
+										</div>
+									)}
+								</>
+							</div>
+						</div>
 					</div>
-					<div className='post__user-status__post-time-status'>
-						<span>{calculateDurationTime(postData.time || postData.createdAt)}</span>
-						<>
-							{postData.book && (
-								<div className='post__user-status__subtitle'>
-									<span>Cập nhật tiến độ đọc sách</span>
-									<div className='post__user-status__post-time-status__online-dot'></div>
-									<span>Xếp hạng</span>
-									<ReactRating
-										readonly={true}
-										initialRating={
-											postInformations?.book?.actorRating?.star
-												? postInformations?.book?.actorRating?.star
-												: 0
-										}
-									/>
-								</div>
-							)}
-						</>
-					</div>
-				</div>
-			</div>
-			<div
-				className='post__description'
-				dangerouslySetInnerHTML={{
-					__html: postData.message || postData.content,
-				}}
-			></div>
+					<div
+						className='post__description'
+						dangerouslySetInnerHTML={{
+							__html: postData.message || postData.content,
+						}}
+					></div>
+				</>
+			)}
+
 			<ul className='tagged'>
 				{postData.mentionsAuthors?.map(item => (
 					<li key={item.id} className={classNames('badge bg-primary-light')}>
@@ -205,7 +211,7 @@ function Post({ postInformations, className }) {
 				))}
 			</ul>
 			{postData.isShare && postData.verb === 'shareQuote' && <PostQuotes postsData={postData} />}
-			{postData.verb === 'shareQuote' && postData.book && (
+			{postData.book && (
 				<PostBook
 					data={{ ...postData.book, bookLibrary: postData.bookLibrary, actorCreatedPost: postData.actor }}
 				/>
@@ -291,6 +297,7 @@ Post.propTypes = {
 	postInformations: PropTypes.object,
 	likeAction: PropTypes.func,
 	className: PropTypes.string,
+	renderShare: PropTypes.bool,
 };
 
 export default Post;

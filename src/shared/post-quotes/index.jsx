@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import _ from 'lodash';
 
 const PostQuotes = ({ postsData }) => {
-	console.log(postsData);
 	const renderAuthorAndbooksName = () => {
 		if (postsData.book?.name) {
 			return `${postsData.book?.name}`;
