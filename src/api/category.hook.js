@@ -1,4 +1,4 @@
-import { STATUS_SUCCESS, STATUS_IDLE } from 'constants';
+import { STATUS_SUCCESS, STATUS_IDLE, STATUS_LOADING } from 'constants';
 import { generateQuery } from 'helpers/Common';
 import _ from 'lodash';
 import { useCallback, useEffect, useState } from 'react';
@@ -266,9 +266,11 @@ export const useFetchCategoryDetail = id => {
 	useEffect(() => {
 		let isMount = true;
 		if (categoryInfo.id !== id || _.isEmpty(categoryInfo)) {
+			setStatus(STATUS_LOADING);
 			const fetchCategoryDetail = async () => {
 				try {
 					await dispatch(getCategoryDetail(id)).unwrap();
+					setStatus(STATUS_SUCCESS);
 				} catch (err) {
 					NotificationError(err);
 					const statusCode = err?.statusCode || 500;

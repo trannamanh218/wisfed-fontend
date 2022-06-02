@@ -4,11 +4,10 @@ import { LogoIcon, BookFillIcon, BookIcon, CategoryIcon, GroupIcon, HomeIcon, Ic
 import SearchIcon from 'assets/icons/search.svg';
 import classNames from 'classnames';
 import './header.scss';
-import UserAvatar from 'shared/user-avatar';
 import NotificationModal from 'pages/notification/';
 import { useDispatch, useSelector } from 'react-redux';
 import { backgroundToggle } from 'reducers/redux-utils/notificaiton';
-import { checkUserLogin, checkUserInfor } from 'reducers/redux-utils/auth';
+import { checkUserLogin, checkUserInfor, deleteUserInfo } from 'reducers/redux-utils/auth';
 import { useVisible } from 'shared/hooks';
 import SearchAllModal from 'shared/search-all';
 import Storage from 'helpers/Storage';
@@ -16,6 +15,7 @@ import { handleResetValue } from 'reducers/redux-utils/search';
 import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { updateTargetReading } from 'reducers/redux-utils/chart';
+import defaultAvatar from 'assets/images/avatar.jpeg';
 
 const Header = () => {
 	const { isShowModal } = useSelector(state => state.search);
@@ -32,6 +32,8 @@ const Header = () => {
 	const { value } = useParams();
 	const [getSlugResult, setGetSlugResult] = useState('');
 	const [userLogin, setUserLogin] = useState(false);
+
+	const userOptions = useRef(null);
 
 	useEffect(() => {
 		setActiveLink(pathname);
@@ -54,7 +56,20 @@ const Header = () => {
 		} else {
 			setUserLogin(false);
 		}
+
+		if (userOptions.current) {
+			document.addEventListener('click', closeUserOptions);
+			return () => {
+				document.removeEventListener('click', closeUserOptions);
+			};
+		}
 	}, []);
+
+	const closeUserOptions = e => {
+		if (userOptions.current && !userOptions.current.contains(e.target)) {
+			setModalInforUser(false);
+		}
+	};
 
 	const toglleModalNotify = () => {
 		if (Storage.getAccessToken()) {
@@ -83,6 +98,7 @@ const Header = () => {
 	const handleLogout = () => {
 		localStorage.removeItem('accessToken');
 		localStorage.removeItem('refreshToken');
+		dispatch(deleteUserInfo());
 		dispatch(updateTargetReading([]));
 		navigate('/login');
 		toast.success('Đăng xuất thành công');
@@ -147,24 +163,28 @@ const Header = () => {
 					<div
 						ref={buttonModal}
 						onClick={toglleModalNotify}
-						className={classNames('header__notify__icon', { 'header__notify__icon__active': modalNoti })}
+						className={classNames('header__notify__icon', { 'active': modalNoti })}
 					/>
 					{modalNoti && <NotificationModal setModalNotti={setModalNotti} buttonModal={buttonModal} />}
 				</div>
 			</ul>
 
-			<div className='header__userInfo'>
-				<div onClick={() => tollgleModaleInfoUser()}>
-					<UserAvatar className='header__avatar' source={userInfo?.avatarImage} />
-					{modalInforUser && localStorage.getItem('accessToken') && (
-						<ul className='header__option-info'>
-							<Link to={localStorage.getItem('accessToken') && `/profile/${userInfo.id}`}>
-								<li>Thông tin cá nhân</li>
-							</Link>
-							<li onClick={() => handleLogout()}>Đăng xuất</li>
-						</ul>
-					)}
+			<div className='header__userInfo' onClick={() => tollgleModaleInfoUser()} ref={userOptions}>
+				<div className='header__avatar'>
+					<img
+						src={userInfo?.avatarImage || defaultAvatar}
+						onError={e => e.target.setAttribute('src', `${defaultAvatar}`)}
+						alt='avatar'
+					/>
 				</div>
+				{modalInforUser && localStorage.getItem('accessToken') && (
+					<ul className='header__option-info'>
+						<Link to={localStorage.getItem('accessToken') && `/profile/${userInfo.id}`}>
+							<li>Thông tin cá nhân</li>
+						</Link>
+						<li onClick={() => handleLogout()}>Đăng xuất</li>
+					</ul>
+				)}
 			</div>
 		</div>
 	);

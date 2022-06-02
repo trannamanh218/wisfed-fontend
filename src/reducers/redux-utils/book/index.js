@@ -13,8 +13,6 @@ import {
 	commentBookReviewAPI,
 } from 'constants/apiURL';
 import Request from 'helpers/Request';
-import _ from 'lodash';
-import { checkBookInLibraries } from '../library';
 
 export const getBookList = createAsyncThunk('book/getBookList', async (params, { rejectWithValue }) => {
 	try {

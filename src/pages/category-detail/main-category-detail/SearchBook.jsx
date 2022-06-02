@@ -1,15 +1,13 @@
-import React from 'react';
 import PropTypes from 'prop-types';
 import BookThumbnail from 'shared/book-thumbnail';
-import { NUMBER_OF_BOOKS } from 'constants';
 
-const SearchBook = ({ list, handleViewBookDetail }) => {
+const SearchBook = ({ list, handleViewBookDetail, inputSearch }) => {
 	if (list.length) {
 		return (
 			<div className='main-category-detail__allbook'>
-				<h4>Kết quả tìm kiếm</h4>
+				<h4>Kết quả tìm kiếm cho "{inputSearch}"</h4>
 				<div className='books'>
-					{list.slice(0, NUMBER_OF_BOOKS).map((item, index) => (
+					{list.map((item, index) => (
 						<BookThumbnail
 							key={index}
 							{...item}
@@ -39,6 +37,7 @@ SearchBook.defaultProps = {
 SearchBook.propTypes = {
 	list: PropTypes.array,
 	handleViewBookDetail: PropTypes.func,
+	inputSearch: PropTypes.string,
 };
 
 export default SearchBook;

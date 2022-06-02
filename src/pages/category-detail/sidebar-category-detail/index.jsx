@@ -2,13 +2,12 @@ import { useFetchOtherCategories } from 'api/category.hook';
 import { useFetchGroups } from 'api/group.hooks';
 import { useFetchQuotes } from 'api/quote.hooks';
 import { useFetchUsers } from 'api/user.hook';
-import { MAX_PER_PAGE } from 'constants';
 import _ from 'lodash';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import AuthorSlider from 'shared/author-slider';
 import GroupLinks from 'shared/group-links';
-import NewsLinks from 'shared/news-links';
+// import NewsLinks from 'shared/news-links';
 import QuotesLinks from 'shared/quote-links';
 import TopicColumn from 'shared/topic-column';
 import PropTypes from 'prop-types';
@@ -33,19 +32,17 @@ const SidebarCategoryDetail = ({ viewCategoryDetail }) => {
 
 	const {
 		otherCategories: { rows: categoriesList = [], count: totalCategory = 0 },
-	} = useFetchOtherCategories(currentPage, MAX_PER_PAGE, name);
+	} = useFetchOtherCategories(0, 30, name);
 
-	const {
-		quoteData: { rows: quoteList = [] },
-	} = useFetchQuotes(1, 5);
+	const { quoteData } = useFetchQuotes(0, 3);
 
 	const {
 		groups: { rows: groupList = [] },
-	} = useFetchGroups(1, 5, '[]');
+	} = useFetchGroups(0, 3, '[]');
 
 	const {
 		usersData: { rows: authorList = [] },
-	} = useFetchUsers(1, 10, "[{ 'operator': 'search', 'value': 'author', 'property': 'role'}]");
+	} = useFetchUsers(0, 10, "[{ 'operator': 'search', 'value': 'author', 'property': 'role'}]");
 
 	const viewMoreCategories = () => {
 		if (currentPage < totalCategory) {
@@ -53,26 +50,26 @@ const SidebarCategoryDetail = ({ viewCategoryDetail }) => {
 		}
 	};
 
-	if (_.isEmpty(categoryInfo)) {
-		return '';
-	}
-
 	return (
-		<div className='sidebar-category-detail'>
-			<TopicColumn
-				className='sidebar-category__topics'
-				title='Chủ đề khác'
-				topics={categoriesList}
-				handleViewMore={viewMoreCategories}
-				viewCategoryDetail={viewCategoryDetail}
-			/>
-			<AuthorSlider title='Tác giả nổi bật' list={authorList} size='lg' />
-			<div className='sidebar-category-detail__quotes'>
-				<QuotesLinks list={quoteList} title='Quotes' className='sidebar-category-detail__quotes' />
-				<GroupLinks list={groupList} title='Group' />
-				<NewsLinks list={quoteList} title='Tin tức liên quan' />
-			</div>
-		</div>
+		<>
+			{!_.isEmpty(categoryInfo) && (
+				<div className='sidebar-category-detail'>
+					<TopicColumn
+						className='sidebar-category__topics'
+						title='Chủ đề khác'
+						topics={categoriesList}
+						handleViewMore={viewMoreCategories}
+						viewCategoryDetail={viewCategoryDetail}
+					/>
+					<AuthorSlider title='Tác giả nổi bật' list={authorList} size='lg' />
+					<div className='sidebar-category-detail__quotes'>
+						<QuotesLinks list={quoteData} title='Quotes' className='sidebar-category-detail__quotes' />
+						<GroupLinks list={groupList} title='Group' />
+						{/* <NewsLinks list={quoteList} title='Tin tức liên quan' /> */}
+					</div>
+				</div>
+			)}
+		</>
 	);
 };
 

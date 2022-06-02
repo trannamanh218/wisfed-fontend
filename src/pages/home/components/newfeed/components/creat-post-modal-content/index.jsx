@@ -1,6 +1,6 @@
 /* eslint-disable max-lines */
 import classNames from 'classnames';
-import { CloseX, Image, WorldNet } from 'components/svg';
+import { CloseX, Image } from 'components/svg';
 import { STATUS_IDLE, STATUS_LOADING, STATUS_SUCCESS } from 'constants';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
@@ -59,6 +59,8 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 	const [valueStar, setValueStar] = useState(0);
 	const [checkProgress, setCheckProgress] = useState();
 	const [showImagePopover, setShowImagePopover] = useState(false);
+	const [buttonActive, setButtonActive] = useState(false);
+
 	const location = useLocation();
 	const UpdateImg = useSelector(state => state.chart.updateImgPost);
 	const { resetTaggedData, isShare, postsData, isSharePosts } = useSelector(state => state.post);
@@ -400,6 +402,10 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 		}
 	};
 
+	useEffect(() => {
+		checkActive();
+	}, [showMainModal, textFieldEdit?.current?.innerText, taggedData]);
+
 	const checkActive = () => {
 		let isActive = false;
 		if (!_.isEmpty(taggedData.addBook)) {
@@ -442,7 +448,7 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 				isActive = true;
 			}
 		}
-		return isActive;
+		setButtonActive(isActive);
 	};
 
 	const handleValidationInput = value => {
@@ -500,13 +506,16 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 									{taggedData.addFriends.length > 0 && (
 										<>
 											<span className='d-inline-block mx-1'>cùng với</span>
-											{taggedData.addFriends.map(item => (
-												<span key={item.id}>
-													{item.fullName ||
-														item.lastName ||
-														item.firstName ||
-														'Không xác định'}
-												</span>
+											{taggedData.addFriends.map((item, index) => (
+												<>
+													{index !== 0 && <span>{' và '}</span>}
+													<span key={item.id}>
+														{item.fullName ||
+															item.lastName ||
+															item.firstName ||
+															'Không xác định'}
+													</span>
+												</>
 											))}
 										</>
 									)}
@@ -612,12 +621,12 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 						</div>
 						<button
 							className={classNames('creat-post-modal-content__main__submit', {
-								'active': checkActive(),
+								'active': buttonActive,
 							})}
 							type='button'
 							onClick={e => {
 								e.preventDefault();
-								if (checkActive()) {
+								if (buttonActive) {
 									onCreatePost();
 								}
 							}}

@@ -81,8 +81,8 @@ function Post({ postInformations, className, renderShare }) {
 		const { usersLikePost } = postInformations;
 		let isLike = false;
 		if (!_.isEmpty(usersLikePost) && !_.isEmpty(userInfo)) {
-			const user = usersLikePost.find(item => item?.user?.id === userInfo.id);
-			isLike = !_.isEmpty(user) ? user.liked : false;
+			const user = usersLikePost.find(item => item.id === userInfo.id);
+			isLike = !_.isEmpty(user) ? true : false;
 		}
 		return isLike;
 	};
@@ -101,7 +101,7 @@ function Post({ postInformations, className, renderShare }) {
 				res = await dispatch(createCommentReview(commentReviewData)).unwrap();
 			} else {
 				const params = {
-					minipostId: postData.minipostId,
+					minipostId: postData.minipostId || postData.id,
 					content: content,
 					mediaUrl: [],
 					mentionsUser: [],
@@ -120,18 +120,15 @@ function Post({ postInformations, className, renderShare }) {
 		}
 	};
 
-	const handleLikeAction = () => {
-		const params = { minipostId: postData.minipostId };
-		dispatch(updateReactionActivity(params))
-			.unwrap()
-			.then(() => {
-				const setLike = !postData.isLike;
-				const numberOfLike = setLike ? postData.like + 1 : postData.like - 1;
-				setPostData(prev => ({ ...prev, isLike: !prev.isLike, like: numberOfLike }));
-			})
-			.catch(() => {
-				return;
-			});
+	const handleLikeAction = async () => {
+		try {
+			await dispatch(updateReactionActivity(postData.minipostId || postData.id)).unwrap();
+			const setLike = !postData.isLike;
+			const numberOfLike = setLike ? postData.like + 1 : postData.like - 1;
+			setPostData(prev => ({ ...prev, isLike: !prev.isLike, like: numberOfLike }));
+		} catch (err) {
+			NotificationError(err);
+		}
 	};
 
 	useEffect(() => {
@@ -197,18 +194,34 @@ function Post({ postInformations, className, renderShare }) {
 			)}
 
 			<ul className='tagged'>
-				{postData.mentionsAuthors?.map(item => (
-					<li key={item.id} className={classNames('badge bg-primary-light')}>
-						<Feather />
-						<span>
-							{item.authors.name ||
-								item.authors.fullName ||
-								item.authors.lastName ||
-								item.authors.firstName ||
-								'Không xác định'}
-						</span>
-					</li>
-				))}
+				{!!postData?.mentionsAuthors?.length && (
+					<>
+						{postData.mentionsAuthors?.map(item => (
+							<li key={item.id} className={classNames('badge bg-primary-light')}>
+								<Feather />
+								<span>
+									{item.authors.name ||
+										item.authors.fullName ||
+										item.authors.lastName ||
+										item.authors.firstName ||
+										'Không xác định'}
+								</span>
+							</li>
+						))}
+					</>
+				)}
+			</ul>
+
+			<ul className='tagged'>
+				{!!postData?.mentionsCategories?.length && (
+					<>
+						{postData.mentionsCategories?.map(item => (
+							<li key={item.id} className={classNames('badge bg-primary-light')}>
+								<span>{item.category.name}</span>
+							</li>
+						))}
+					</>
+				)}
 			</ul>
 			{postData.isShare && postData.verb === 'shareQuote' && <PostQuotes postsData={postData} />}
 			{postData.book && (

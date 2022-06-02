@@ -54,7 +54,7 @@
 		display: flex;
 		flex-wrap: wrap;
 		gap: 10px;
-		margin-bottom: 1.5rem;
+		margin-bottom: 12px;
 	}
 
 	.badge {
@@ -525,9 +525,10 @@
 		align-items: center;
 		width: fit-content;
 		gap: 5px;
-		padding: 0.75rem 1.25rem;
+		padding: 12px 20px;
 		border-radius: 10px;
 		font-size: 0.75rem;
+		line-height: 20px;
 		flex-wrap: wrap;
 
 		svg {

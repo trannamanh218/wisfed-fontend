@@ -2,7 +2,7 @@ import { Configure } from 'components/svg';
 import PropTypes from 'prop-types';
 import './filter-pane.scss';
 
-const FilterPane = ({ children, title, subtitle, onFilter }) => {
+const FilterPane = ({ children, title, subtitle, handleSortFilter, hasHeaderLine = false }) => {
 	return (
 		<div className='filter-pane'>
 			<div className='filter-pane__heading'>
@@ -10,10 +10,11 @@ const FilterPane = ({ children, title, subtitle, onFilter }) => {
 					{title}
 					<span className='filter-pane__subtitle'>{subtitle}</span>
 				</h4>
-				<button className='filter-pane__btn' onClick={onFilter}>
+				<button className='filter-pane__btn' onClick={handleSortFilter}>
 					<Configure />
 				</button>
 			</div>
+			{hasHeaderLine && <hr />}
 			<div className='filter-pane__content'>{children}</div>
 		</div>
 	);
@@ -22,14 +23,15 @@ const FilterPane = ({ children, title, subtitle, onFilter }) => {
 FilterPane.defaultProps = {
 	title: '',
 	subtitle: '',
-	onFilter: () => {},
+	handleSortFilter: () => {},
 };
 
 FilterPane.propTypes = {
 	children: PropTypes.node.isRequired,
 	title: PropTypes.string,
 	subtitle: PropTypes.string,
-	onFilter: PropTypes.func,
+	handleSortFilter: PropTypes.func,
+	hasHeaderLine: PropTypes.bool,
 };
 
 export default FilterPane;

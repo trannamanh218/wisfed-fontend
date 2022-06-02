@@ -1,8 +1,8 @@
-import React from 'react';
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import AuthorBook from 'shared/author-book';
 import { CHECK_STAR } from 'constants';
-const BookTab = () => {
+
+const BookTab = ({ currentTab }) => {
 	const bookList = [...Array(5)].fill({
 		avgRating: 5,
 		bookId: 74983,
@@ -35,6 +35,8 @@ const BookTab = () => {
 	return <p className='blank-content'>Không có quyển sách nào</p>;
 };
 
-BookTab.propTypes = {};
+BookTab.propTypes = {
+	currentTab: PropTypes.string,
+};
 
 export default BookTab;

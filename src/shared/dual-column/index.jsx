@@ -1,15 +1,19 @@
-import { useState } from 'react';
+import { useState, memo } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import caretIcon from 'assets/images/caret.png';
 import { DEFAULT_TOGGLE_ROWS } from 'constants';
 import './dual-column.scss';
 import { NUMBER_ROWS } from 'constants';
+import { useNavigate } from 'react-router-dom';
+import RouteLink from 'helpers/RouteLink';
 
 const DualColumn = props => {
 	const { list, background, isBackground, pageText = true, inCategory = false } = props;
 	const [isExpand, setIsExpand] = useState(false);
 	const [rows, setRows] = useState(DEFAULT_TOGGLE_ROWS);
+
+	const navigate = useNavigate();
 
 	const handleViewMore = () => {
 		const length = list.length;
@@ -30,13 +34,23 @@ const DualColumn = props => {
 		setIsExpand(!isExpand);
 	};
 
+	const handleOnClick = data => {
+		if (inCategory) {
+			navigate(RouteLink.categoryDetail(data.id, data.name));
+		}
+	};
+
 	if (list && list.length)
 		return (
 			<div className='dualColumn'>
 				<ul className={classNames('dualColumn-list', { [`bg-${background}`]: isBackground })}>
 					{list.slice(0, rows).map((item, index) => (
 						<li className={classNames('dualColumn-item', { 'has-background': isBackground })} key={index}>
-							<span className='dualColumn-item__title'>
+							<span
+								className='dualColumn-item__title'
+								onClick={() => handleOnClick(item.category)}
+								style={inCategory ? { cursor: 'pointer' } : {}}
+							>
 								{inCategory ? item.category.name : item.name}
 							</span>
 
@@ -90,4 +104,4 @@ DualColumn.propTypes = {
 	inCategory: PropTypes.bool,
 };
 
-export default DualColumn;
+export default memo(DualColumn);

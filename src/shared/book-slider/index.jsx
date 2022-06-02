@@ -10,29 +10,31 @@ import { memo } from 'react';
 const BookSlider = ({ list, title = '', className, size = 'sm', handleViewBookDetail, ...rest }) => {
 	const settingSlider = settings();
 
-	if (list && list.length) {
-		return (
-			<div className={classNames('book-slider', { [`${className}`]: className })}>
-				<h4 className='book-slider__title'>{title}</h4>
-				<div className='book-slider__content'>
-					<Slider {...settingSlider}>
-						{list.map((item, index) => (
-							<BookThumbnail
-								key={index}
-								{...item}
-								data={item}
-								source={item.source}
-								name={item.name}
-								size={size}
-								{...rest}
-								handleClick={handleViewBookDetail}
-							/>
-						))}
-					</Slider>
+	return (
+		<>
+			{!!list.length && (
+				<div className={classNames('book-slider', { [`${className}`]: className })}>
+					<h4 className='book-slider__title'>{title}</h4>
+					<div className='book-slider__content'>
+						<Slider {...settingSlider}>
+							{list.map((item, index) => (
+								<BookThumbnail
+									key={index}
+									{...item}
+									data={item}
+									source={item.source}
+									name={item.name}
+									size={size}
+									{...rest}
+									handleClick={handleViewBookDetail}
+								/>
+							))}
+						</Slider>
+					</div>
 				</div>
-			</div>
-		);
-	}
+			)}
+		</>
+	);
 };
 
 function SlideNextBtn({ className, style, onClick }) {
@@ -58,7 +60,7 @@ function settings() {
 		slidesToShow: 1,
 		slidesToScroll: 2,
 		initialSlide: 0,
-		infinite: false,
+		infinite: true,
 		lazyLoad: false,
 		autoplay: false,
 		swipeToSlide: true,

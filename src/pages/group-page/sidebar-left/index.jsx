@@ -5,7 +5,6 @@ import PropTypes from 'prop-types';
 
 const SidebarGroupLef = ({ handleChange, data }) => {
 	const { groupType, description } = data;
-
 	return (
 		<div className='group-sibar-left__container'>
 			<div className='group__manager'>

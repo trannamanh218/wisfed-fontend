@@ -7,7 +7,6 @@ import { ForwardGroup } from 'components/svg';
 const Group = () => {
 	const [numberIndex, setNumberIndex] = useState(4);
 	const [show, setShow] = useState(false);
-
 	const list = [
 		{ name: '#Shadow', quantity: '30 bài viết' },
 		{ name: '#GaoRanger', quantity: '30 bài viết' },

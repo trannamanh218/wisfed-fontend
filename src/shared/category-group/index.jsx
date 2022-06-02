@@ -2,39 +2,33 @@ import BookSlider from 'shared/book-slider';
 import PropTypes from 'prop-types';
 import './category-group.scss';
 
-const CategoryGroup = ({ list, title, data, handleClick, handleViewBookDetail }) => {
+const CategoryGroup = ({ data, list, title, handleViewBookDetail, viewCategoryDetail }) => {
 	return (
-		list.length > 0 && (
-			<div className='category-group'>
-				<BookSlider
-					className='category-group__slider'
-					title={title}
-					list={list}
-					size='lg'
-					handleViewBookDetail={handleViewBookDetail}
-				/>
-				<span onClick={() => handleClick(data)} className='category-group__link'>
-					Xem tất cả
-				</span>
-			</div>
-		)
+		<div className='category-group'>
+			{!!list.length && (
+				<>
+					<BookSlider
+						className='category-group__slider'
+						title={title}
+						list={list}
+						size='lg'
+						handleViewBookDetail={handleViewBookDetail}
+					/>
+					<button className='category-group__link' onClick={() => viewCategoryDetail(data)}>
+						Xem tất cả
+					</button>
+				</>
+			)}
+		</div>
 	);
 };
 
-CategoryGroup.defaultProps = {
-	list: [],
-	title: '',
-	data: { id: '' },
-	handleClick: () => {},
-	handleViewBookDetail: () => {},
-};
-
 CategoryGroup.propTypes = {
+	data: PropTypes.object,
 	list: PropTypes.array,
 	title: PropTypes.string,
-	data: PropTypes.object,
-	handleClick: PropTypes.func,
 	handleViewBookDetail: PropTypes.func,
+	viewCategoryDetail: PropTypes.func,
 };
 
 export default CategoryGroup;

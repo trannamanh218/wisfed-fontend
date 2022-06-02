@@ -164,7 +164,6 @@ export const addToFavoriteCategory = createAsyncThunk(
 	'user/updateLikeCategory',
 	async (params, { rejectWithValue }) => {
 		const { id, ...restParams } = params;
-
 		try {
 			const response = await Request.makePatch(updateLikeCategory(id), restParams);
 			return response.data;
