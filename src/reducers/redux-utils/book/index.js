@@ -6,7 +6,7 @@ import {
 	bookFollowReviewAPI,
 	bookFriendReviewAPI,
 	progressBookAPI,
-	bookAuthor,
+	bookAuthorAPI,
 	bookReviewAPI,
 	userRating,
 	bookRating,
@@ -26,7 +26,7 @@ export const getBookList = createAsyncThunk('book/getBookList', async (params, {
 
 export const getBookAuthorList = createAsyncThunk('book/getBookAuthorList', async (params, { rejectWithValue }) => {
 	try {
-		const response = await Request.makeGet(bookAuthor, params);
+		const response = await Request.makeGet(bookAuthorAPI, params);
 		return response.data;
 	} catch (err) {
 		const error = JSON.parse(err.response);

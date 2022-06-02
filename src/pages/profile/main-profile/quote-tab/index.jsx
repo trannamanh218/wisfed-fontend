@@ -1,11 +1,12 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, memo } from 'react';
 import QuoteList from 'shared/quote-list';
 import { getQuoteList, getMyLikedQuotes } from 'reducers/redux-utils/quote';
 import { useDispatch } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
 import { useParams } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
-const QuoteTab = () => {
+const QuoteTab = ({ currentTab }) => {
 	const [myQuoteList, setMyQuoteList] = useState([]);
 	const [myFavoriteQuoteList, setMyFavoriteQuoteList] = useState([]);
 
@@ -13,9 +14,11 @@ const QuoteTab = () => {
 	const { userId } = useParams();
 
 	useEffect(() => {
-		getMyQuoteList();
-		getMyFavoriteQuoteList();
-	}, []);
+		if (currentTab === 'quotes') {
+			getMyQuoteList();
+			getMyFavoriteQuoteList();
+		}
+	}, [currentTab]);
 
 	const getMyQuoteList = async () => {
 		try {
@@ -49,18 +52,28 @@ const QuoteTab = () => {
 		}
 	};
 
+	console.log('run');
+
 	return (
 		<>
-			<div className='my-quotes'>
-				<h4>Quote của tôi</h4>
-				<QuoteList list={myQuoteList} />
-			</div>
-			<div className='favorite-quotes'>
-				<h4>Quote yêu thích</h4>
-				<QuoteList list={myFavoriteQuoteList} />
-			</div>
+			{currentTab === 'quotes' && (
+				<>
+					<div className='my-quotes'>
+						<h4>Quote của tôi</h4>
+						<QuoteList list={myQuoteList} />
+					</div>
+					<div className='favorite-quotes'>
+						<h4>Quote yêu thích</h4>
+						<QuoteList list={myFavoriteQuoteList} />
+					</div>
+				</>
+			)}
 		</>
 	);
 };
 
-export default QuoteTab;
+QuoteTab.propTypes = {
+	currentTab: PropTypes.string,
+};
+
+export default memo(QuoteTab);

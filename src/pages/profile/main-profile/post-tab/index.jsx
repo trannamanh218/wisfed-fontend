@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, memo } from 'react';
 import Post from 'shared/post';
 import './post-tab.scss';
 import { getPostsByUser } from 'reducers/redux-utils/post';
@@ -7,8 +7,9 @@ import { useDispatch } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import LoadingIndicator from 'shared/loading-indicator';
+import PropTypes from 'prop-types';
 
-function PostTab() {
+function PostTab({ currentTab }) {
 	const [postList, setPostList] = useState([]);
 	const [hasMore, setHasMore] = useState(true);
 
@@ -19,8 +20,10 @@ function PostTab() {
 	const callApiPerPage = useRef(10);
 
 	useEffect(() => {
-		getPostListByUser();
-	}, []);
+		if (currentTab === 'post') {
+			getPostListByUser();
+		}
+	}, [currentTab]);
 
 	const getPostListByUser = async () => {
 		try {
@@ -43,7 +46,7 @@ function PostTab() {
 
 	return (
 		<div className='post-tab'>
-			{postList.length > 0 && (
+			{currentTab === 'post' && !!postList.length && (
 				<InfiniteScroll
 					dataLength={postList.length}
 					next={getPostListByUser}
@@ -59,4 +62,8 @@ function PostTab() {
 	);
 }
 
-export default PostTab;
+PostTab.propTypes = {
+	currentTab: PropTypes.string,
+};
+
+export default memo(PostTab);
