@@ -22,7 +22,7 @@ import Comment from 'shared/comments';
 import PostQuotes from 'shared/post-quotes';
 import PostsShare from 'shared/posts-Share';
 
-function Post({ postInformations, className, renderShare }) {
+function Post({ postInformations, className, showModalCreatPost }) {
 	const [postData, setPostData] = useState({});
 	const [videoId, setVideoId] = useState('');
 	const { userInfo } = useSelector(state => state.auth);
@@ -32,7 +32,6 @@ function Post({ postInformations, className, renderShare }) {
 	const { isSharePosts } = useSelector(state => state.post);
 
 	const dispatch = useDispatch();
-
 	const { bookId } = useParams();
 
 	useEffect(() => {
@@ -147,51 +146,67 @@ function Post({ postInformations, className, renderShare }) {
 		setClickReply(!clickReply);
 	};
 
-	return (
-		<div className={classNames('post__container', { [`${className}`]: className })}>
-			{!renderShare && postData.sharePost && (
-				<>
-					<div className='post__user-status'>
-						<UserAvatar
-							data-testid='post__user-avatar'
-							className='post__user-status__avatar'
-							source={postData?.createdBy?.avatarImage}
-						/>
+	const infoUser = () => {
+		return (
+			<>
+				<div className='post__user-status'>
+					<UserAvatar
+						data-testid='post__user-avatar'
+						className='post__user-status__avatar'
+						source={postData?.createdBy?.avatarImage}
+					/>
 
-						<div className='post__user-status__name-and-post-time-status'>
-							<div data-testid='post__user-name' className='post__user-status__name'>
-								{postData?.createdBy?.fullName || postData?.user?.fullName || 'Ẩn danh'}
-							</div>
-							<div className='post__user-status__post-time-status'>
-								<span>{calculateDurationTime(postData.time || postData.createdAt)}</span>
-								<>
-									{postData.book && (
-										<div className='post__user-status__subtitle'>
-											<span>Cập nhật tiến độ đọc sách</span>
-											<div className='post__user-status__post-time-status__online-dot'></div>
-											<span>Xếp hạng</span>
-											<ReactRating
-												readonly={true}
-												initialRating={
-													postInformations?.book?.actorRating?.star
-														? postInformations?.book?.actorRating?.star
-														: 0
-												}
-											/>
-										</div>
-									)}
-								</>
-							</div>
+					<div className='post__user-status__name-and-post-time-status'>
+						<div data-testid='post__user-name' className='post__user-status__name'>
+							{postData?.createdBy?.fullName || postData?.user?.fullName || 'Ẩn danh'}
+						</div>
+						<div className='post__user-status__post-time-status'>
+							<span>{calculateDurationTime(postData.time || postData.createdAt)}</span>
+							<>
+								{postData.book && (
+									<div className='post__user-status__subtitle'>
+										<span>Cập nhật tiến độ đọc sách</span>
+										<div className='post__user-status__post-time-status__online-dot'></div>
+										<span>Xếp hạng</span>
+										<ReactRating
+											readonly={true}
+											initialRating={
+												postInformations?.book?.actorRating?.star
+													? postInformations?.book?.actorRating?.star
+													: 0
+											}
+										/>
+									</div>
+								)}
+							</>
 						</div>
 					</div>
-					<div
-						className='post__description'
-						dangerouslySetInnerHTML={{
-							__html: postData.message || postData.content,
-						}}
-					></div>
-				</>
-			)}
+				</div>
+				<div
+					className='post__description'
+					dangerouslySetInnerHTML={{
+						__html: postData.message || postData.content,
+					}}
+				></div>
+			</>
+		);
+	};
+
+	const renderInfo = () => {
+		if (showModalCreatPost) {
+			if (postData.sharePost) {
+				return;
+			} else {
+				return infoUser();
+			}
+		} else {
+			return infoUser();
+		}
+	};
+
+	return (
+		<div className={classNames('post__container', { [`${className}`]: className })}>
+			{renderInfo()}
 
 			<ul className='tagged'>
 				{!!postData?.mentionsAuthors?.length && (
@@ -310,7 +325,7 @@ Post.propTypes = {
 	postInformations: PropTypes.object,
 	likeAction: PropTypes.func,
 	className: PropTypes.string,
-	renderShare: PropTypes.bool,
+	showModalCreatPost: PropTypes.bool,
 };
 
 export default Post;

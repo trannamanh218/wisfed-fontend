@@ -38,7 +38,7 @@ const SidebarReadingTarget = () => {
 			)}
 			<QuotesLinks
 				list={quoteData}
-				title={userId === userInfo.id ? 'Quotes của tôi' : `Quotes của ${userData.fullName}`}
+				title={userId === userInfo.id ? 'Quotes của tôi' : `Quotes của ${userData?.fullName}`}
 			/>
 		</div>
 	);

@@ -558,7 +558,9 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 							/>
 
 							{isShare && <PostQuotes postsData={postsData} />}
-							{isSharePosts && <Post postInformations={postsData} renderShare={true} />}
+							{isSharePosts && (
+								<Post postInformations={postsData} showModalCreatPost={showModalCreatPost} />
+							)}
 							{!_.isEmpty(taggedData.addBook) && (
 								<PostEditBook
 									data={taggedData.addBook}
