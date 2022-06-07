@@ -43,16 +43,11 @@ const QuoteTab = ({ currentTab }) => {
 				sort: JSON.stringify([{ property: 'createdAt', direction: 'DESC' }]),
 			};
 			const res = await dispatch(getMyLikedQuotes(params)).unwrap();
-			const quoteList = [];
-			res.forEach(item => quoteList.push({ ...item, categories: [], tags: [] }));
-			setMyFavoriteQuoteList(quoteList);
+			setMyFavoriteQuoteList(res);
 		} catch (err) {
-			// NotificationError(err);
-			return;
+			NotificationError(err);
 		}
 	};
-
-	console.log('run');
 
 	return (
 		<>

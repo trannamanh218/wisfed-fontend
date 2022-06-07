@@ -83,7 +83,7 @@ const TopUser = ({ rows, listYear }) => {
 
 	const handleShare = () => {
 		if (Storage.getAccessToken()) {
-			// console.log('share');
+			console.log('ok');
 		} else {
 			setModalShow(true);
 		}

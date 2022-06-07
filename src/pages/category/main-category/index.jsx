@@ -36,16 +36,10 @@ const MainCategory = ({ status, handleViewBookDetail, viewCategoryDetail }) => {
 		try {
 			const params = { start: 0, limit: callApiPerPage.current, filter: filter };
 			const categoryListData = await dispatch(getCategoryList(params)).unwrap();
-			if (categoryListData.rows.length) {
-				if (categoryListData.rows.length < callApiPerPage.current) {
-					setHasMore(false);
-				} else {
-					callApiStart.current += callApiPerPage.current;
-				}
-			} else {
+			setCategoryList(categoryListData.rows);
+			if (!categoryListData.rows.length || categoryListData.rows.length < callApiPerPage.current) {
 				setHasMore(false);
 			}
-			setCategoryList(categoryListData.rows);
 		} catch (err) {
 			NotificationError(err);
 		}

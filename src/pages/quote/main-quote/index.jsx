@@ -76,9 +76,7 @@ const MainQuote = () => {
 					sort: JSON.stringify([{ property: sortValue, direction: sortDirection }]),
 				};
 				const res = await dispatch(getMyLikedQuotes(params)).unwrap();
-				const newData = [];
-				res.forEach(item => newData.push({ ...item, categories: [], tags: [] }));
-				quoteListData = newData;
+				quoteListData = res;
 			}
 
 			if (quoteListData.length) {
@@ -112,9 +110,7 @@ const MainQuote = () => {
 					sort: JSON.stringify([{ property: sortValue, direction: sortDirection }]),
 				};
 				const res = await dispatch(getMyLikedQuotes(params)).unwrap();
-				const newData = [];
-				res.forEach(item => newData.push({ ...item, categories: [], tags: [] }));
-				quoteListData = newData;
+				quoteListData = res;
 			}
 
 			if (quoteListData.length) {
@@ -157,12 +153,12 @@ const MainQuote = () => {
 	return (
 		<>
 			{!_.isEmpty(userInfo) && (
-				<div className='main-my-quote'>
-					<div className='main-my-quote__header'>
+				<div className='main-quote'>
+					<div className='main-quote__header'>
 						<BackButton destination={-1} />
 						<h4>{quotesUserName}</h4>
 						<SearchField
-							className='main-my-quote__search'
+							className='main-quote__search'
 							placeholder='Tìm kiếm theo sách, tác giả, chủ đề ...'
 						/>
 					</div>

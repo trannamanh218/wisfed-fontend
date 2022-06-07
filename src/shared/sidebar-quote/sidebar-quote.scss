@@ -1,6 +1,6 @@
 @import 'src/scss/abstracts/_variables.scss';
 
-.sidebar-my-quote {
+.sidebar-quote {
 	display: flex;
 	flex-direction: column;
 	gap: 3.75rem;
@@ -9,5 +9,8 @@
 		h4 {
 			margin-bottom: 1.5rem;
 		}
+	}
+	.topic-column__container {
+		grid-template-columns: 1fr;
 	}
 }

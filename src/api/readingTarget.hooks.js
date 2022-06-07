@@ -22,15 +22,7 @@ export const useFetchTargetReading = (userIdParams, modalOpen, deleteModal, filt
 		let isMount = true;
 		if (isMount) {
 			setStatus(STATUS_LOADING);
-			const query = {
-				filter,
-			};
 			const fetchData = async () => {
-				const params = {
-					userId: userIdParams,
-					...query,
-				};
-
 				try {
 					if (userIdParams) {
 						const dob = new Date();
@@ -41,7 +33,7 @@ export const useFetchTargetReading = (userIdParams, modalOpen, deleteModal, filt
 							setBooksReadYear(newData);
 						} else {
 							dispatch(updateTargetReading([]));
-							const data = await dispatch(getListBooksTargetReading(params)).unwrap();
+							const data = await dispatch(getListBooksTargetReading(userIdParams)).unwrap();
 							newData = data.filter(item => item.year === year);
 							setBooksReadYear(newData);
 						}

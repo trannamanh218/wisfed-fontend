@@ -23,11 +23,14 @@ const StatusModalContainer = ({
 	return (
 		<>
 			<StatusBookList currentStatus={currentStatus} handleChangeStatus={handleChangeStatus} />
-			<BookShelvesList
-				list={bookShelves}
-				onChangeShelves={onChangeShelves}
-				customLibrariesContainCurrentBookId={customLibrariesContainCurrentBookId}
-			/>
+			{!!bookShelves.length && (
+				<BookShelvesList
+					list={bookShelves}
+					onChangeShelves={onChangeShelves}
+					customLibrariesContainCurrentBookId={customLibrariesContainCurrentBookId}
+				/>
+			)}
+
 			<AddBookShelveForm
 				showInput={showInput}
 				updateBookShelve={updateBookShelve}

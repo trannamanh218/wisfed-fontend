@@ -1,4 +1,4 @@
-import { Forward } from 'components/svg';
+// import { Forward } from 'components/svg';
 import { useState, useEffect } from 'react';
 import BackButton from 'shared/back-button';
 import Comment from 'shared/comments';
@@ -105,10 +105,10 @@ const MainQuoteDetail = () => {
 			<div className='main-quote-detail__header'>
 				<BackButton destination={-1} />
 				<h4>Chi tiết Quote</h4>
-				<a className='main-quote-detail__link' href='#'>
+				{/* <a className='main-quote-detail__link' href='#'>
 					<span>Xem tất cả của Adam Khort</span>
 					<Forward />
-				</a>
+				</a> */}
 			</div>
 			{!_.isEmpty(quoteData) && (
 				<div className='main-quote-detail__pane'>

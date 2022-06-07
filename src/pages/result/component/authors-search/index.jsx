@@ -37,7 +37,7 @@ const AuthorSearch = ({ value, setIsFetching, searchResultInput, activeKeyDefaul
 			handleGetAuthorsSearch();
 		}
 	}, [callApiStart.current, value, isShowModal, listArrayAuthors]);
-	console.log(listArrayAuthors);
+
 	const handleGetAuthorsSearch = async () => {
 		setIsFetching(true);
 		try {

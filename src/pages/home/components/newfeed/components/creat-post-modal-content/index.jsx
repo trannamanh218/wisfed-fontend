@@ -320,7 +320,7 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 			return Promise.all([addToDefaultLibraryRequest, updateProgressRequest]);
 		}
 	};
-	console.log(postsData.id);
+
 	const onCreatePost = async () => {
 		const params = await generateData();
 		// book, author , topic is required

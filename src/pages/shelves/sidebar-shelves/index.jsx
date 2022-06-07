@@ -5,15 +5,21 @@ import QuotesLinks from 'shared/quote-links';
 import StatisticList from 'shared/statistic-list';
 import PropTypes from 'prop-types';
 import './sidebar-shelves.scss';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { useFetchQuotes } from 'api/quote.hooks';
 import ChartsReading from 'shared/charts-Reading';
 import { useFetchAuthorBooks } from 'api/book.hooks';
 import { useParams } from 'react-router-dom';
 import RenderProgress from 'shared/render-progress';
 import _ from 'lodash';
+import ProgressBarCircle from 'shared/progress-circle';
+import { NotificationError } from 'helpers/Error';
+import { getListBooksTargetReading } from 'reducers/redux-utils/chart';
+import { useState, useEffect } from 'react';
 
 const SidebarShelves = ({ userData, isMyShelve, handleViewBookDetail }) => {
+	const [booksReadYear, setBookReadYear] = useState({});
+
 	const { userId } = useParams();
 	const { booksAuthor } = useFetchAuthorBooks(userId);
 	const { userInfo } = useSelector(state => state.auth);
@@ -24,6 +30,37 @@ const SidebarShelves = ({ userData, isMyShelve, handleViewBookDetail }) => {
 	);
 
 	const myAllLibraryRedux = useSelector(state => state.library.myAllLibrary);
+
+	const dispatch = useDispatch();
+
+	useEffect(() => {
+		if (!isMyShelve) {
+			getTargetReadingOfOtherUser();
+		}
+	}, []);
+
+	const getTargetReadingOfOtherUser = async () => {
+		try {
+			const data = await dispatch(getListBooksTargetReading(userId)).unwrap();
+			const year = new Date().getFullYear();
+			const newData = data.filter(item => item.year === year);
+			if (newData.length) {
+				setBookReadYear(newData[0]);
+			}
+		} catch (err) {
+			NotificationError(err);
+		}
+	};
+
+	const handleRenderTargetReading = () => {
+		if (isMyShelve) {
+			return <RenderProgress userId={userId} />;
+		} else {
+			if (!_.isEmpty(booksReadYear)) {
+				return <ProgressBarCircle booksReadYearData={booksReadYear} />;
+			}
+		}
+	};
 
 	return (
 		<div className='sidebar-shelves'>
@@ -57,12 +94,12 @@ const SidebarShelves = ({ userData, isMyShelve, handleViewBookDetail }) => {
 						list={booksAuthor}
 						handleViewBookDetail={handleViewBookDetail}
 					/>
-					<Link className='view-all-link' to='/'>
+					<Link className='view-all-link' to={`/book-author/${userId}`}>
 						Xem thêm
 					</Link>
 				</div>
 			)}
-			<RenderProgress userIdParams={userId} />
+			{handleRenderTargetReading()}
 			<ChartsReading />
 		</div>
 	);

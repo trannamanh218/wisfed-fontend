@@ -88,6 +88,8 @@ const MainCategoryDetail = () => {
 	}, [userInfo, id, sortDirection, sortValue]);
 
 	useEffect(() => {
+		setHasMore(true);
+		callApiStart.current = 16;
 		getBooksByCategoryFirstTime();
 	}, [filter]);
 
@@ -137,12 +139,10 @@ const MainCategoryDetail = () => {
 				filter: filter,
 			};
 			const res = await dispatch(getListBookByCategory({ categoryId: id, params: params })).unwrap();
-			if (res.length < callApiPerPage.current) {
-				setHasMore(false);
-			} else {
-				callApiStart.current += callApiPerPage.current;
-			}
 			setBookList(res);
+			if (!res.length || res.length < callApiPerPage.current) {
+				setHasMore(false);
+			}
 		} catch (err) {
 			NotificationError(err);
 		} finally {
@@ -223,13 +223,10 @@ const MainCategoryDetail = () => {
 				sort: JSON.stringify([{ direction: sortDirection, property: sortValue }]),
 			};
 			const res = await dispatch(getPostsByCategory({ categoryId: id, params })).unwrap();
-
-			if (res.length < callApiPerPageGetPosts.current) {
-				setHasMorePost(false);
-			} else {
-				callApiStartGetPosts.current += callApiPerPageGetPosts.current;
-			}
 			setPostsByCategory(res);
+			if (!res.length || res.length < callApiPerPageGetPosts.current) {
+				setHasMorePost(false);
+			}
 		} catch (err) {
 			NotificationError(err);
 		}

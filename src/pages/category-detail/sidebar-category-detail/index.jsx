@@ -60,6 +60,7 @@ const SidebarCategoryDetail = ({ viewCategoryDetail }) => {
 						topics={categoriesList}
 						handleViewMore={viewMoreCategories}
 						viewCategoryDetail={viewCategoryDetail}
+						inCategory={true}
 					/>
 					<AuthorSlider title='Tác giả nổi bật' list={authorList} size='lg' />
 					<div className='sidebar-category-detail__quotes'>

@@ -39,7 +39,7 @@ export const commentBookReviewAPI = '/api/v1/commentReviews';
 export const bookFollowReviewAPI = id => `/api/v1/books/${id}/followReviews`;
 export const bookFriendReviewAPI = id => `/api/v1/books/${id}/friendReviews`;
 export const progressBookAPI = id => `/api/v1/books/updateBookProgress/${id}`;
-export const bookAuthorAPI = '/api/v1/books/listBookByAuthor';
+export const bookAuthorAPI = id => `/api/v1/books/listBookByAuthor/${id}`;
 
 // category
 export const categoryAPI = '/api/v1/categories';

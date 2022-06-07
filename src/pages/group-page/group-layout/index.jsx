@@ -12,7 +12,6 @@ const LayoutGroup = () => {
 
 	const handleClose = () => {
 		setIsShow(!isShow);
-		console.log('aaaa');
 	};
 	const SearchGroup = () => {
 		const navigate = useNavigate();

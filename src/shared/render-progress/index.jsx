@@ -1,27 +1,53 @@
 import ProgressBarCircle from 'shared/progress-circle';
 import ReadChallenge from 'shared/read-challenge';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
-import { useFetchTargetReading } from 'api/readingTarget.hooks';
-import { memo } from 'react';
+import { memo, useEffect, useState } from 'react';
+import { getListBooksTargetReading } from 'reducers/redux-utils/chart';
+import { NotificationError } from 'helpers/Error';
+import _ from 'lodash';
 
-const RenderProgress = ({ userIdParams }) => {
+const RenderProgress = ({ userId }) => {
+	const [booksReadYear, setBookReadYear] = useState({});
+	const [isLoading, setIsLoading] = useState(true);
+
 	const { checkRenderTarget } = useSelector(state => state.chart);
-	const { booksReadYear } = useFetchTargetReading(userIdParams);
+
+	const dispatch = useDispatch();
+
+	useEffect(() => {
+		getTargetReading();
+	}, [checkRenderTarget]);
+
+	const getTargetReading = async () => {
+		setIsLoading(true);
+		try {
+			const data = await dispatch(getListBooksTargetReading(userId)).unwrap();
+			const year = new Date().getFullYear();
+			const newData = data.filter(item => item.year === year);
+			if (newData.length) {
+				setBookReadYear(newData[0]);
+			}
+		} catch (err) {
+			NotificationError(err);
+		} finally {
+			setIsLoading(false);
+		}
+	};
 
 	const renderProgressBar = () => {
-		if (checkRenderTarget === true) {
-			return <ProgressBarCircle booksReadYear={booksReadYear} />;
-		} else if (checkRenderTarget === false) {
+		if (!_.isEmpty(booksReadYear)) {
+			return <ProgressBarCircle booksReadYearData={booksReadYear} />;
+		} else {
 			return <ReadChallenge />;
 		}
 	};
 
-	return <>{renderProgressBar()}</>;
+	return <>{!isLoading && renderProgressBar()}</>;
 };
 
 RenderProgress.propTypes = {
-	userIdParams: PropTypes.string,
+	userId: PropTypes.string,
 };
 
 export default memo(RenderProgress);

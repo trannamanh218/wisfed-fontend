@@ -56,6 +56,7 @@ const SidebarCategory = ({ status, viewCategoryDetail }) => {
 				topics={rows}
 				title='Tất cả chủ đề'
 				viewCategoryDetail={viewCategoryDetail}
+				inCategory={true}
 			/>
 		</div>
 	);
