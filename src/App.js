@@ -109,6 +109,7 @@ function App({ children }) {
 				<Route path='/creat-newpassword-admin' element={<AdminCreatNewPassword />} />
 				<Route path='/choose-topic' element={<ChooseTopic />} />
 				<Route path='/direct' element={<Direct />} />
+				<Route path='direct/login' element={<Direct />} />
 				<Route path='/reading-summary/:userId' element={<ReadingSummary />} />
 				<Route path='/reading-target/:userId' element={<ReadingTarget />} />
 				<Route path='/group' element={<LayoutGroup />} />

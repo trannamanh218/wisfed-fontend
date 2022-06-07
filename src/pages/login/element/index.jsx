@@ -8,7 +8,7 @@ import { Link } from 'react-router-dom';
 import Validation from 'helpers/Validation';
 import { FaceBookIcon, GmailIcon } from 'components/svg';
 import { toast } from 'react-toastify';
-import { login } from 'reducers/redux-utils/auth';
+import { getLoginFacebook, login } from 'reducers/redux-utils/auth';
 import { useDispatch } from 'react-redux';
 import { unwrapResult } from '@reduxjs/toolkit';
 import ModalLogin from './ModalLogin';
@@ -97,11 +97,15 @@ function LoginComponet() {
 					<span className='login__login-box__title'>Đăng nhập và Khám phá</span>
 				</div>
 				<div className='login-facebook'>
-					<FaceBookIcon className='login__fbIcon' /> <button>Đăng nhập bằng Facebook</button>
+					<a href='https://wisfeed.tecinus.vn/api/v1/auth/facebook'>
+						<FaceBookIcon className='login__fbIcon' /> <button>Đăng nhập bằng Facebook</button>
+					</a>
 				</div>
-				<div className='login-gmail'>
-					<GmailIcon className='GmailIcon' /> <button>Đăng nhập bằng Gmail</button>
-				</div>
+				<a href='https://wisfeed.tecinus.vn/api/v1/auth/google'>
+					<div className='login-gmail'>
+						<GmailIcon className='GmailIcon' /> <button>Đăng nhập bằng Gmail</button>
+					</div>
+				</a>
 				<hr style={{ opacity: '0.1' }} />
 				<div>
 					<div>

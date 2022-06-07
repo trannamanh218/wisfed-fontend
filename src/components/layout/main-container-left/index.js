@@ -3,7 +3,7 @@ import './main-container.scss';
 import Layout from '..';
 import { ErrorBoundary } from 'react-error-boundary';
 
-const MainContainer = ({ main, right, sub }) => {
+const MainContainerLeft = ({ main, right, sub }) => {
 	const ErrorFallback = () => {
 		return (
 			<div>
@@ -15,20 +15,21 @@ const MainContainer = ({ main, right, sub }) => {
 		<Layout>
 			{sub && <div className='subcontainer__sub'>{sub}</div>}
 			<div className='mainContainer'>
-				<div className='mainContainer__main'>
-					<ErrorBoundary FallbackComponent={ErrorFallback}>{main}</ErrorBoundary>
-				</div>
-				<div className='mainContainer__right'>
+				<div className='mainContainer__right-left'>
 					<ErrorBoundary FallbackComponent={ErrorFallback}>{right}</ErrorBoundary>
+				</div>
+				<div className='mainContainer__main-left'>
+					<ErrorBoundary FallbackComponent={ErrorFallback}>{main}</ErrorBoundary>
 				</div>
 			</div>
 		</Layout>
 	);
 };
 
-MainContainer.propTypes = {
+MainContainerLeft.propTypes = {
 	main: PropTypes.any.isRequired,
 	right: PropTypes.any.isRequired,
+	sub: PropTypes.any,
 };
 
-export default MainContainer;
+export default MainContainerLeft;

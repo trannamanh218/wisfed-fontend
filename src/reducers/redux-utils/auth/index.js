@@ -9,6 +9,8 @@ import {
 	forgotPasswordAPIAdmin,
 	resetPasswordAPIAdmin,
 	InforUserByEmail,
+	loginFacebook,
+	loginGmail,
 } from 'constants/apiURL';
 import Request from 'helpers/Request';
 import Storage from 'helpers/Storage';
