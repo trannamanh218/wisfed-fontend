@@ -24,7 +24,9 @@ function SelectType({ dataAdded, setDataAdded, editStatus, cancelEdit, enableEdi
 		setCategorySearchedList([]);
 		setInputCategoryValue(e.target.value);
 		debounceSearch(e.target.value, { value: 'addCategory' });
-		categoryInputWrapper.current.style.width = categoryInput.current.value.length + 0.5 + 'ch';
+		if (categoryInputWrapper.current) {
+			categoryInputWrapper.current.style.width = categoryInput.current.value.length + 0.5 + 'ch';
+		}
 	};
 
 	const addCategory = category => {
@@ -36,7 +38,9 @@ function SelectType({ dataAdded, setDataAdded, editStatus, cancelEdit, enableEdi
 			setDataAdded(categoryArrayTemp);
 			setInputCategoryValue('');
 			setCategorySearchedList([]);
-			categoryInputWrapper.current.style.width = '0.5ch';
+			if (categoryInputWrapper.current) {
+				categoryInputWrapper.current.style.width = '0.5ch';
+			}
 		}
 	};
 

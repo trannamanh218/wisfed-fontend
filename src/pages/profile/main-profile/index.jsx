@@ -9,32 +9,44 @@ import Bookcase from './bookcase-tab';
 import PostTab from './post-tab';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
+import { useState } from 'react';
+import classNames from 'classnames';
 
 const MainProfile = ({ currentUserInfo }) => {
+	const [currentTab, setCurrentTab] = useState('shelves');
+
 	return (
 		<>
 			{!_.isEmpty(currentUserInfo) && (
 				<div className='main-profile'>
 					<PersonalInfo currentUserInfo={currentUserInfo} />
-					<Tabs className='main-profile__tabs' defaultActiveKey={'books'}>
-						{/*Notes: Chỉ hiển thị khi user là tác giả, không public */}
-						<Tab eventKey='books' title='Sách của tác giả'>
-							<BookTab />
-						</Tab>
+					<Tabs
+						className={classNames('main-profile__tabs', {
+							'none-books': currentUserInfo?.role !== 'author',
+						})}
+						defaultActiveKey={'shelves'}
+						onSelect={activeKey => setCurrentTab(activeKey)}
+					>
 						<Tab eventKey='shelves' title='Tủ sách'>
-							<Bookcase userInfo={currentUserInfo} />
+							<Bookcase userInfo={currentUserInfo} currentTab={currentTab} />
 						</Tab>
 						<Tab eventKey='post' title='Bài viết' className='post-tab-active'>
 							<PostTab />
 						</Tab>
+						{/*Notes: Chỉ hiển thị khi user là tác giả, không public */}
+						{currentUserInfo?.role === 'author' && (
+							<Tab eventKey='books' title='Sách của tác giả'>
+								<BookTab currentTab={currentTab} />
+							</Tab>
+						)}
 						<Tab eventKey='infor' title='Giới thiệu'>
-							<InforTab userInfo={currentUserInfo} />
+							<InforTab userInfo={currentUserInfo} currentTab={currentTab} />
 						</Tab>
 						<Tab eventKey='quotes' title='Quotes'>
-							<QuoteTab />
+							<QuoteTab currentTab={currentTab} />
 						</Tab>
 						<Tab eventKey='favorite-authors' title='Tác giả yêu thích'>
-							<FavoriteAuthorTab list={[]} />
+							<FavoriteAuthorTab list={[]} currentTab={currentTab} />
 						</Tab>
 					</Tabs>
 				</div>

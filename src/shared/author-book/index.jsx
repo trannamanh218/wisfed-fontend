@@ -4,27 +4,35 @@ import ReactRating from 'shared/react-rating';
 import StatusButton from 'components/status-button';
 import './author-book.scss';
 import { ShareRanks } from 'components/svg';
+import Storage from 'helpers/Storage';
 
 const AuthorBook = props => {
-	const { data, checkStar, checkshare } = props;
-	// const authorsName = data?.book?.authors.map(author => author?.authorName);
+	const { data, checkStar, checkshare, setModalShow } = props;
+	const authorsName = data.authors?.map(author => author?.authorName);
+	const handleShare = () => {
+		if (Storage.getAccessToken()) {
+			// console.log('share');
+		} else {
+			setModalShow(true);
+		}
+	};
 
 	return (
 		<div className='author-book'>
-			<BookThumbnail source={data.book?.images || data?.images[0]} />
+			<BookThumbnail source={data?.book?.images || data?.images[0]} />
 			<div className='author-book__info'>
 				<div className='author-book__header'>
 					<h4 className='author-book__title' title={data.book?.name || data?.name}>
 						{data.book?.name || data?.name}
 					</h4>
 					{checkshare && (
-						<div className='author-book__share'>
+						<div onClick={handleShare} className='author-book__share'>
 							<ShareRanks />
 						</div>
 					)}
 				</div>
 
-				{/* <p className='author-book__writers'>{authorsName?.join('- ')}</p> */}
+				<p className='author-book__writers'>{authorsName && authorsName.join('- ')}</p>
 				<div className='author-book__rating'>
 					<ReactRating readonly={true} initialRating={data.avgRating} checkStar={checkStar} />
 					<span className='author-book__rating__number'>{data.avgRating || data.rateAvg} sao</span>
@@ -45,6 +53,7 @@ AuthorBook.propTypes = {
 	data: PropTypes.object,
 	checkStar: PropTypes.bool,
 	checkshare: PropTypes.bool,
+	setModalShow: PropTypes.func,
 };
 
 export default AuthorBook;

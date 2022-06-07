@@ -256,10 +256,12 @@ const SettingMore = ({ bookData, handleUpdateBookList }) => {
 
 SettingMore.defaultProps = {
 	bookData: {},
+	handleUpdateBookList: () => {},
 };
 
 SettingMore.propTypes = {
 	bookData: PropTypes.object,
+	handleUpdateBookList: PropTypes.func,
 };
 
 export default SettingMore;

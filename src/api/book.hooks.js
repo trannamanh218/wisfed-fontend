@@ -61,8 +61,12 @@ export const useFetchAuthorBooks = userId => {
 				JSON.stringify([{ 'operator': 'search', 'value': `${userId}`, 'property': 'authorId' }])
 			);
 			const fetchData = async () => {
+				const params = {
+					id: userId,
+					...query,
+				};
 				try {
-					const data = await dispatch(getBookAuthorList(query)).unwrap();
+					const data = await dispatch(getBookAuthorList(params)).unwrap();
 					setBooksAuthor(data);
 				} catch (err) {
 					NotificationError(err);

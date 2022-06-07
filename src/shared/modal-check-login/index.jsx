@@ -21,7 +21,13 @@ const ModalCheckLogin = ({ routerLogin, modalShow, setModalShow }) => {
 	};
 
 	return (
-		<Modal show={modalShow ? modalShow : routerLogin} onHide={handleClose} keyboard={false} centered>
+		<Modal
+			className='modal__check__login__container'
+			show={modalShow ? modalShow : routerLogin}
+			onHide={handleClose}
+			keyboard={false}
+			centered
+		>
 			<Modal.Body className='modal__check__login'>
 				<div>
 					<div onClick={handleClose} className='modal__login__close'>

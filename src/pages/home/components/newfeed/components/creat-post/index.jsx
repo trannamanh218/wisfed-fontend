@@ -6,7 +6,7 @@ import UserAvatar from 'shared/user-avatar';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import { updateCurrentBook } from 'reducers/redux-utils/book';
-import { resetTaggedDataFunc } from 'reducers/redux-utils/post';
+import { resetTaggedDataFunc, saveDataShare, sharePosts } from 'reducers/redux-utils/post';
 import { useLocation } from 'react-router-dom';
 
 function CreatePost({ onChangeNewPost }) {
@@ -15,7 +15,7 @@ function CreatePost({ onChangeNewPost }) {
 	const creatPostModalContainer = useRef(null);
 	const scrollBlocked = useRef(false);
 	const location = useLocation();
-
+	const { postsData } = useSelector(state => state.post);
 	const {
 		auth: { userInfo },
 		book: { bookForCreatePost },
@@ -84,11 +84,11 @@ function CreatePost({ onChangeNewPost }) {
 	}
 
 	useEffect(() => {
-		if (!_.isEmpty(bookForCreatePost)) {
+		if (!_.isEmpty(bookForCreatePost) || !_.isEmpty(postsData)) {
 			setShowModalCreatPost(true);
 			dispatch(resetTaggedDataFunc(false));
 		}
-	}, [bookForCreatePost]);
+	}, [bookForCreatePost, postsData]);
 
 	useEffect(() => {
 		if (showModalCreatPost) {
@@ -130,6 +130,8 @@ function CreatePost({ onChangeNewPost }) {
 		setShowModalCreatPost(false);
 		setOption({});
 		dispatch(resetTaggedDataFunc(true));
+		dispatch(saveDataShare({}));
+		dispatch(sharePosts(false));
 	};
 
 	const onChangeOption = data => {

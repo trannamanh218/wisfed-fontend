@@ -1,12 +1,9 @@
 import MainContainer from 'components/layout/main-container';
-import { STATUS_SUCCESS } from 'constants';
-import { STATUS_LOADING } from 'constants';
-import { STATUS_IDLE } from 'constants';
+import { STATUS_SUCCESS, STATUS_IDLE, STATUS_LOADING } from 'constants';
 import RouteLink from 'helpers/RouteLink';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { getBookDetail } from 'reducers/redux-utils/book';
 import { getCategoryDetail } from 'reducers/redux-utils/category';
 import MainCategoryDetail from './main-category-detail';
 import SidebarCategoryDetail from './sidebar-category-detail';
@@ -30,27 +27,12 @@ const CategoryDetail = () => {
 		}
 	};
 
-	const handleViewBookDetail = async data => {
-		setStatus(STATUS_LOADING);
-		try {
-			await dispatch(getBookDetail({ id: data.id })).unwrap();
-			setStatus(STATUS_SUCCESS);
-			navigate(RouteLink.bookDetail(data.id, data.name));
-		} catch (err) {
-			NotificationError(err);
-			const statusCode = err?.statusCode || 500;
-			setStatus(statusCode);
-		}
-	};
-
 	return (
 		<MainContainer
-			main={<MainCategoryDetail handleViewBookDetail={handleViewBookDetail} />}
+			main={<MainCategoryDetail />}
 			right={<SidebarCategoryDetail status={status} viewCategoryDetail={viewCategoryDetail} />}
 		/>
 	);
 };
-
-CategoryDetail.propTypes = {};
 
 export default CategoryDetail;

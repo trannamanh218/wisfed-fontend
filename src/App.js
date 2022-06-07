@@ -15,8 +15,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Routes, Route } from 'react-router-dom';
 import { checkLogin } from 'reducers/redux-utils/auth';
 import { ToastContainer } from 'react-toastify';
-import Login from 'pages/login/element';
-import Register from 'pages/register/component';
+import Login from 'pages/login';
+import Register from 'pages/register';
 import ForgetPassWord from 'pages/foget-password/component';
 import ChooseTopic from 'pages/choose-topic';
 import Direct from 'pages/choose-topic/DirectPage';
@@ -39,6 +39,7 @@ import { NotificationError } from 'helpers/Error';
 import Storage from 'helpers/Storage';
 import _ from 'lodash';
 import ModalCheckLogin from 'shared/modal-check-login';
+import ReadingSummaryAuthor from 'pages/target-reading-author';
 
 function App({ children }) {
 	const dispatch = useDispatch();
@@ -86,6 +87,7 @@ function App({ children }) {
 			<ModalCheckLogin routerLogin={routerLogin} />
 			<Routes>
 				<Route path='/top100' element={<Ranks />} />
+				<Route path='/book-author/:userId' element={<ReadingSummaryAuthor />} />
 				<Route path='/result/q=:value' element={<Result />} />
 				<Route path='/notification' element={<Notification />} />
 				<Route path='/category' element={<Category />} />

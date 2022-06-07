@@ -17,7 +17,6 @@ import Storage from 'helpers/Storage';
 import _ from 'lodash';
 import { editUserInfo } from '../user';
 import jwtDecode from 'jwt-decode';
-import { action } from '@storybook/addon-actions';
 
 export const register = createAsyncThunk('auth/register', async (params, { rejectWithValue }) => {
 	try {
@@ -118,6 +117,12 @@ const authSlice = createSlice({
 		checkUserLogin: (state, action) => {
 			state.routerLogin = action.payload;
 		},
+		deleteUserInfo: state => {
+			state.userInfo = {};
+		},
+		checkUserInfor: (state, action) => {
+			state.userInfo = action.payload;
+		},
 	},
 
 	extraReducers: {
@@ -131,32 +136,6 @@ const authSlice = createSlice({
 			state.error = {};
 		},
 		[login.rejected]: (state, action) => {
-			state.isFetching = false;
-			state.userInfo = {};
-			state.error = action.payload;
-		},
-		[register.pending]: state => {
-			state.isFetching = true;
-		},
-		[register.fulfilled]: (state, action) => {
-			state.isFetching = false;
-			state.userInfo = action.payload;
-			state.error = {};
-		},
-		[register.rejected]: (state, action) => {
-			state.isFetching = false;
-			state.userInfo = {};
-			state.error = action.payload;
-		},
-		[forgotPassword.pending]: state => {
-			state.isFetching = true;
-		},
-		[forgotPassword.fulfilled]: (state, action) => {
-			state.isFetching = false;
-			state.userInfo = action.payload;
-			state.error = {};
-		},
-		[forgotPassword.rejected]: (state, action) => {
 			state.isFetching = false;
 			state.userInfo = {};
 			state.error = action.payload;
@@ -217,5 +196,5 @@ const authSlice = createSlice({
 });
 
 const auth = authSlice.reducer;
-export const { checkLogin, checkUserLogin } = authSlice.actions;
+export const { checkLogin, checkUserLogin, deleteUserInfo, checkUserInfor } = authSlice.actions;
 export default auth;

@@ -1,4 +1,4 @@
-import Login from 'pages/login/element';
+import Login from 'pages/login';
 
 export default {
 	title: 'Pages/login',

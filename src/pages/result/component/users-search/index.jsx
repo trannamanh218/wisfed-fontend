@@ -1,0 +1,140 @@
+import './users-search.scss';
+import InfiniteScroll from 'react-infinite-scroll-component';
+import PropTypes from 'prop-types';
+import ResultNotFound from '../result-not-found';
+import defaultAvatar from 'assets/images/avatar.jpeg';
+import Button from 'shared/button';
+import LoadingIndicator from 'shared/loading-indicator';
+import { getFilterSearchAuth, getFilterSearch } from 'reducers/redux-utils/search';
+import { NotificationError } from 'helpers/Error';
+import Storage from 'helpers/Storage';
+import { useEffect, useState, useRef } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+
+const UsersSearch = ({
+	isFetching,
+	value,
+
+	setIsFetching,
+	searchResultInput,
+	activeKeyDefault,
+	updateBooks,
+}) => {
+	const [listArrayUsers, setListArrayUsers] = useState([]);
+	const { isShowModal } = useSelector(state => state.search);
+	const [hasMore, setHasMore] = useState(true);
+	const dispatch = useDispatch();
+	const callApiStart = useRef(0);
+	const callApiPerPage = useRef(10);
+
+	useEffect(() => {
+		if (activeKeyDefault === 'users') {
+			setListArrayUsers([]);
+			callApiStart.current = 0;
+			setHasMore(true);
+		}
+	}, [updateBooks, isShowModal, activeKeyDefault]);
+
+	useEffect(() => {
+		if (
+			activeKeyDefault === 'users' &&
+			callApiStart.current === 0 &&
+			listArrayUsers.length === 0 &&
+			searchResultInput.length > 0
+		) {
+			handleGetUserSearch();
+		}
+	}, [callApiStart.current, value, isShowModal, listArrayUsers]);
+
+	const handleGetUserSearch = async () => {
+		setIsFetching(true);
+		try {
+			const params = {
+				q: searchResultInput,
+				type: activeKeyDefault,
+				start: callApiStart.current,
+				limit: callApiPerPage.current,
+			};
+
+			if (Storage.getAccessToken()) {
+				const result = await dispatch(getFilterSearchAuth(params)).unwrap();
+				if (result.rows.length > 0) {
+					callApiStart.current += callApiPerPage.current;
+					setListArrayUsers(listArrayUsers.concat(result.rows));
+				} else {
+					setHasMore(false);
+				}
+			} else {
+				const result = await dispatch(getFilterSearch(params)).unwrap();
+				if (result.rows.length > 0) {
+					callApiStart.current += callApiPerPage.current;
+					setListArrayUsers(listArrayUsers.concat(result.rows));
+				} else {
+					setHasMore(false);
+				}
+			}
+		} catch (err) {
+			NotificationError(err);
+		} finally {
+			setIsFetching(false);
+		}
+	};
+
+	return (
+		<div className='user__search__container'>
+			{listArrayUsers?.length > 0 && activeKeyDefault === 'users' ? (
+				<InfiniteScroll
+					next={handleGetUserSearch}
+					dataLength={listArrayUsers.length}
+					hasMore={hasMore}
+					// loader={<LoadingIndicator />}
+				>
+					<div className='myfriends__layout__container'>
+						{listArrayUsers.map(item => (
+							<div key={item.id} className='myfriends__layout'>
+								<div>
+									<img
+										className='myfriends__layout__img'
+										src={item.avatarImage ? defaultAvatar : defaultAvatar}
+										alt=''
+									/>
+									<div className='myfriends__star'>
+										<div className='myfriends__star__name'>
+											{item.fullName ? (
+												item.fullName
+											) : (
+												<>
+													<span>{item.firstName}</span>&nbsp;
+													<span>{item.lastName}</span>
+												</>
+											)}
+										</div>
+									</div>
+								</div>
+								<div className='myfriends__button__container'>
+									<Button className='myfriends__button' isOutline={false} name='friend'>
+										<span className='myfriends__button__content'>Kết bạn</span>
+									</Button>
+									<Button className='myfriends__button' isOutline={true} name='friend'>
+										<span className='myfriends__button__content'>Theo dõi</span>
+									</Button>
+								</div>
+							</div>
+						))}
+					</div>
+				</InfiniteScroll>
+			) : (
+				isFetching === false && <ResultNotFound />
+			)}
+		</div>
+	);
+};
+UsersSearch.propTypes = {
+	setIsFetching: PropTypes.func,
+	activeKeyDefault: PropTypes.string,
+	searchResultInput: PropTypes.string,
+	value: PropTypes.string,
+	updateBooks: PropTypes.bool,
+	isFetching: PropTypes.bool,
+};
+export default UsersSearch;

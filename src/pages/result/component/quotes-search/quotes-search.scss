@@ -1,18 +1,20 @@
 .quoteSearch__container {
 	padding: 24px 16px;
-	.quote-card {
-		padding: 1.5rem;
-		.quote-footer__left {
-			flex-wrap: nowrap;
-		}
-		.quote-footer__right {
-			.quote-action-bar {
-				gap: 20px;
-				.quote-action__item {
-					gap: 10px;
-				}
-				.quote-action__name:nth-last-child(2) {
-					color: #0576f0;
+	.quoteSearch__container__main {
+		.quote-card {
+			padding: 1.5rem;
+			.quote-footer__left {
+				flex-wrap: nowrap;
+			}
+			.quote-footer__right {
+				.quote-action-bar {
+					gap: 20px;
+					.quote-action__item {
+						gap: 10px;
+					}
+					.quote-action__name:nth-last-child(2) {
+						color: #0576f0;
+					}
 				}
 			}
 		}

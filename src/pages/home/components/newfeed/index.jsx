@@ -1,11 +1,11 @@
-import { Configure } from 'components/svg';
+// import { Configure } from 'components/svg';
 import _ from 'lodash';
 import { useState, useRef, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import Post from 'shared/post';
 import CreatePost from './components/creat-post';
 import './newfeed.scss';
-import ModalfilterHome from './components/modal-filter-home';
+// import ModalfilterHome from './components/modal-filter-home';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { getActivityList } from 'reducers/redux-utils/activity';
 import { useDispatch } from 'react-redux';
@@ -15,7 +15,7 @@ import LoadingIndicator from 'shared/loading-indicator';
 const NewFeed = () => {
 	const [isNewPost, setIsNewPost] = useState(false);
 	const { userInfo } = useSelector(state => state.auth);
-	const [modalShow, setModalShow] = useState(false);
+	// const [modalShow, setModalShow] = useState(false);
 	const [hasMore, setHasMore] = useState(true);
 	const [postList, setPostList] = useState([]);
 
@@ -28,14 +28,16 @@ const NewFeed = () => {
 		setIsNewPost(!isNewPost);
 	};
 
-	const handleModalFilter = () => {
-		setModalShow(true);
-	};
+	// const handleModalFilter = () => {
+	// 	setModalShow(true);
+	// };
 
 	useEffect(async () => {
 		callApiStart.current = 10;
-		getPostListFirstTime();
-	}, [isNewPost]);
+		if (!_.isEmpty(userInfo)) {
+			getPostListFirstTime();
+		}
+	}, [isNewPost, userInfo]);
 
 	const getPostListFirstTime = async () => {
 		try {
@@ -74,11 +76,12 @@ const NewFeed = () => {
 		<div className='newfeed'>
 			<div className='newfeed__header'>
 				<p>Bảng tin</p>
-				<div onClick={handleModalFilter}>
+				{/* <div onClick={handleModalFilter}>
 					<Configure />
-				</div>
+				</div> */}
 			</div>
-			<ModalfilterHome modalShow={modalShow} setModalShow={setModalShow} />
+			{/* <ModalfilterHome modalShow={modalShow} setModalShow={setModalShow} /> */}
+
 			{!_.isEmpty(userInfo) && <CreatePost onChangeNewPost={onChangeNewPost} />}
 
 			{postList.length > 0 && (

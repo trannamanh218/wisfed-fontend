@@ -1,6 +1,6 @@
 /* eslint-disable max-lines */
 import classNames from 'classnames';
-import { CloseX, Image, WorldNet } from 'components/svg';
+import { CloseX, Image } from 'components/svg';
 import { STATUS_IDLE, STATUS_LOADING, STATUS_SUCCESS } from 'constants';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
@@ -15,7 +15,7 @@ import CreatPostSubModal from './CreatePostSubModal';
 import TaggedList from './TaggedList';
 import UploadImage from './UploadImage';
 import PreviewLink from 'shared/preview-link/PreviewLink';
-import { getPreviewUrl } from 'reducers/redux-utils/post';
+import { getPreviewUrl, getSharePostInternal, getSharePostInternalPost } from 'reducers/redux-utils/post';
 import { useCallback } from 'react';
 import Circle from 'shared/loading/circle';
 import './style.scss';
@@ -30,6 +30,9 @@ import { NotificationError } from 'helpers/Error';
 import { uploadMultiFile } from 'reducers/redux-utils/common';
 import { useLocation, useParams } from 'react-router-dom';
 import { creatNewPost } from 'reducers/redux-utils/group';
+import PostQuotes from 'shared/post-quotes';
+import { saveDataShare, checkShare } from 'reducers/redux-utils/post';
+import Post from 'shared/post';
 
 function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option, onChangeOption, onChangeNewPost }) {
 	// const [shareMode, setShareMode] = useState({ value: 'public', title: 'Mọi người', icon: <WorldNet /> });
@@ -56,11 +59,12 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 	const [valueStar, setValueStar] = useState(0);
 	const [checkProgress, setCheckProgress] = useState();
 	const [showImagePopover, setShowImagePopover] = useState(false);
+	const [buttonActive, setButtonActive] = useState(false);
+
 	const location = useLocation();
 	const UpdateImg = useSelector(state => state.chart.updateImgPost);
-	const resetTaggedData = useSelector(state => state.post.resetTaggedData);
+	const { resetTaggedData, isShare, postsData, isSharePosts } = useSelector(state => state.post);
 	const { id = '' } = useParams();
-
 	const {
 		auth: { userInfo },
 		book: { bookForCreatePost, bookInfo },
@@ -189,20 +193,28 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 	};
 
 	const addOptionsToPost = param => {
-		if (imagesUpload.length > 0 && param.value === 'addBook') {
-			toast.warning('Không thể kết hợp đồng thời thêm ảnh và sách');
+		if (isShare || isSharePosts) {
+			return;
 		} else {
-			onChangeOption(param);
-			setShowMainModal(false);
+			if (imagesUpload.length > 0 && param.value === 'addBook') {
+				toast.warning('Không thể kết hợp đồng thời thêm ảnh và sách');
+			} else {
+				onChangeOption(param);
+				setShowMainModal(false);
+			}
 		}
 	};
 
 	const handleOpenUploadImage = () => {
-		if (_.isEmpty(taggedData.addBook)) {
-			setShowUpload(!showUpload);
-			addOptionsToPost({ value: 'addImages', title: 'chỉnh sửa ảnh', icon: <Image />, message: '' });
+		if (isShare || isSharePosts) {
+			return;
 		} else {
-			toast.warning('Không thể kết hợp đồng thời thêm ảnh và sách');
+			if (_.isEmpty(taggedData.addBook)) {
+				setShowUpload(!showUpload);
+				addOptionsToPost({ value: 'addImages', title: 'chỉnh sửa ảnh', icon: <Image />, message: '' });
+			} else {
+				toast.warning('Không thể kết hợp đồng thời thêm ảnh và sách');
+			}
 		}
 	};
 
@@ -280,6 +292,7 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 		if (!_.isEmpty(taggedData.addBook)) {
 			params.bookId = taggedData.addBook.id;
 		}
+
 		return params;
 	};
 
@@ -312,30 +325,62 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 		const params = await generateData();
 		// book, author , topic is required
 		setStatus(STATUS_LOADING);
+
 		try {
-			if (params.bookId) {
-				if (params.msg) {
-					const reviewData = {
-						bookId: params.bookId,
-						mediaUrl: [],
-						content: textFieldEdit.current.innerText,
-						curProgress: taggedData.addBook.status === 'read' ? taggedData.addBook.page : checkProgress,
+			if (isShare || isSharePosts) {
+				if (isShare) {
+					const query = {
+						id: postsData.sharePost ? postsData.sharePost.minipostId : postsData.id,
+						type: 'quote',
+						...params,
 					};
-					dispatch(createReviewBook(reviewData));
+					await dispatch(getSharePostInternal(query)).unwrap();
+				} else {
+					let newId;
+					let newType;
+					if (postsData.verb === 'miniPost') {
+						newId = postsData.minipostId;
+						newType = 'post';
+					} else {
+						if (postsData.sharePost.minipostId) {
+							newId = postsData.sharePost.minipostId;
+							newType = 'post';
+						} else {
+							newId = postsData.sharePost.id;
+							newType = 'quote';
+						}
+					}
+					const query = {
+						id: newId,
+						type: newType,
+						...params,
+					};
+					await dispatch(getSharePostInternal(query)).unwrap();
 				}
-				if (valueStar > 0) {
-					userRating();
-				}
-				handleUpdateProgress(params);
-			}
-
-			if (location.pathname.includes('group')) {
-				const newParams = { data: params, id: id };
-				await dispatch(creatNewPost(newParams));
 			} else {
-				await dispatch(createActivity(params));
-			}
+				if (params.bookId) {
+					if (params.msg) {
+						const reviewData = {
+							bookId: params.bookId,
+							mediaUrl: [],
+							content: textFieldEdit.current.innerText,
+							curProgress: taggedData.addBook.status === 'read' ? taggedData.addBook.page : checkProgress,
+						};
+						dispatch(createReviewBook(reviewData));
+					}
+					if (valueStar > 0) {
+						userRating();
+					}
+					handleUpdateProgress(params);
+				}
 
+				if (location.pathname.includes('group')) {
+					const newParams = { data: params, id: id };
+					await dispatch(creatNewPost(newParams));
+				} else {
+					await dispatch(createActivity(params));
+				}
+			}
 			setStatus(STATUS_SUCCESS);
 			toast.success('Tạo post thành công!');
 			onChangeNewPost();
@@ -349,11 +394,17 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 			setStatus(statusCode);
 		} finally {
 			dispatch(updateCurrentBook({}));
+			dispatch(saveDataShare({}));
+			dispatch(checkShare(false));
 			setStatus(STATUS_IDLE);
 			hideCreatPostModal();
 			onChangeOption({});
 		}
 	};
+
+	useEffect(() => {
+		checkActive();
+	}, [showMainModal, textFieldEdit?.current?.innerText, taggedData]);
 
 	const checkActive = () => {
 		let isActive = false;
@@ -385,6 +436,10 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 					}
 				}
 			}
+		} else if (isShare || isSharePosts) {
+			if (textFieldEdit.current?.innerText) {
+				isActive = true;
+			}
 		} else {
 			if (
 				textFieldEdit.current?.innerText &&
@@ -393,7 +448,7 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 				isActive = true;
 			}
 		}
-		return isActive;
+		setButtonActive(isActive);
 	};
 
 	const handleValidationInput = value => {
@@ -451,13 +506,16 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 									{taggedData.addFriends.length > 0 && (
 										<>
 											<span className='d-inline-block mx-1'>cùng với</span>
-											{taggedData.addFriends.map(item => (
-												<span key={item.id}>
-													{item.fullName ||
-														item.lastName ||
-														item.firstName ||
-														'Không xác định'}
-												</span>
+											{taggedData.addFriends.map((item, index) => (
+												<>
+													{index !== 0 && <span>{' và '}</span>}
+													<span key={item.id}>
+														{item.fullName ||
+															item.lastName ||
+															item.firstName ||
+															'Không xác định'}
+													</span>
+												</>
 											))}
 										</>
 									)}
@@ -499,6 +557,10 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 								type='addCategory'
 							/>
 
+							{isShare && <PostQuotes postsData={postsData} />}
+							{isSharePosts && (
+								<Post postInformations={postsData} showModalCreatPost={showModalCreatPost} />
+							)}
 							{!_.isEmpty(taggedData.addBook) && (
 								<PostEditBook
 									data={taggedData.addBook}
@@ -539,7 +601,7 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 								<span
 									className={classNames('creat-post-modal-content__main__options__item-add-to-post', {
 										'active': imagesUpload.length > 0 && _.isEmpty(taggedData.addBook),
-										'disabled': !_.isEmpty(taggedData.addBook),
+										'disabled': !_.isEmpty(taggedData.addBook) || isShare,
 									})}
 									onMouseOver={() => setShowImagePopover(true)}
 									onMouseLeave={() => setShowImagePopover(false)}
@@ -561,12 +623,12 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 						</div>
 						<button
 							className={classNames('creat-post-modal-content__main__submit', {
-								'active': checkActive(),
+								'active': buttonActive,
 							})}
 							type='button'
 							onClick={e => {
 								e.preventDefault();
-								if (checkActive()) {
+								if (buttonActive) {
 									onCreatePost();
 								}
 							}}

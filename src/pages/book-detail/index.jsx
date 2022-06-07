@@ -7,10 +7,17 @@ import BookInfo from './book-info';
 import BookReference from './book-reference';
 import Circle from 'shared/loading/circle';
 import { STATUS_LOADING } from 'constants';
+import { useEffect } from 'react';
 
 function BookDetail() {
 	const { bookId } = useParams();
 	const { bookInfo, status } = useFetchBookDetail(bookId);
+
+	useEffect(() => {
+		setTimeout(() => {
+			window.scroll(0, 0);
+		}, 300);
+	}, []);
 
 	return (
 		<>

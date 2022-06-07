@@ -61,8 +61,14 @@ const LayoutGroup = () => {
 		);
 	};
 	return (
-		<div>
-			{isShow ? <PopupCreateGroup handleClose={handleClose} /> : ''}
+		<div style={{ position: 'relative' }}>
+			{isShow ? (
+				<div>
+					<PopupCreateGroup handleClose={handleClose} />
+				</div>
+			) : (
+				''
+			)}
 			<MainContainerLeft
 				sub={<SearchGroup />}
 				right={<SidebarLeft listMyGroup={myGroup} listAdminMyGroup={adminGroup} />}

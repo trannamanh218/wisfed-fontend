@@ -13,8 +13,6 @@ import {
 	commentBookReviewAPI,
 } from 'constants/apiURL';
 import Request from 'helpers/Request';
-import _ from 'lodash';
-import { checkBookInLibraries } from '../library';
 
 export const getBookList = createAsyncThunk('book/getBookList', async (params, { rejectWithValue }) => {
 	try {
@@ -27,8 +25,9 @@ export const getBookList = createAsyncThunk('book/getBookList', async (params, {
 });
 
 export const getBookAuthorList = createAsyncThunk('book/getBookAuthorList', async (params, { rejectWithValue }) => {
+	const { id, query } = params;
 	try {
-		const response = await Request.makeGet(bookAuthor, params);
+		const response = await Request.makeGet(bookAuthor(id), query);
 		return response.data;
 	} catch (err) {
 		const error = JSON.parse(err.response);

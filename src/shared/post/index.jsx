@@ -19,17 +19,19 @@ import ReactRating from 'shared/react-rating';
 import { useParams } from 'react-router-dom';
 import { createCommentReview } from 'reducers/redux-utils/book';
 import Comment from 'shared/comments';
+import PostQuotes from 'shared/post-quotes';
+import PostsShare from 'shared/posts-Share';
 
-function Post({ postInformations, className }) {
+function Post({ postInformations, className, showModalCreatPost }) {
 	const [postData, setPostData] = useState({});
 	const [videoId, setVideoId] = useState('');
 	const { userInfo } = useSelector(state => state.auth);
 	const [commentLv1IdArray, setCommentLv1IdArray] = useState([]);
 	const [replyingCommentId, setReplyingCommentId] = useState(null);
 	const [clickReply, setClickReply] = useState(false);
+	const { isSharePosts } = useSelector(state => state.post);
 
 	const dispatch = useDispatch();
-
 	const { bookId } = useParams();
 
 	useEffect(() => {
@@ -78,8 +80,8 @@ function Post({ postInformations, className }) {
 		const { usersLikePost } = postInformations;
 		let isLike = false;
 		if (!_.isEmpty(usersLikePost) && !_.isEmpty(userInfo)) {
-			const user = usersLikePost.find(item => item.user.id === userInfo.id);
-			isLike = !_.isEmpty(user) ? user.liked : false;
+			const user = usersLikePost.find(item => item.id === userInfo.id);
+			isLike = !_.isEmpty(user) ? true : false;
 		}
 		return isLike;
 	};
@@ -98,7 +100,7 @@ function Post({ postInformations, className }) {
 				res = await dispatch(createCommentReview(commentReviewData)).unwrap();
 			} else {
 				const params = {
-					minipostId: postData.minipostId,
+					minipostId: postData.minipostId || postData.id,
 					content: content,
 					mediaUrl: [],
 					mentionsUser: [],
@@ -117,18 +119,15 @@ function Post({ postInformations, className }) {
 		}
 	};
 
-	const handleLikeAction = () => {
-		const params = { minipostId: postData.minipostId };
-		dispatch(updateReactionActivity(params))
-			.unwrap()
-			.then(() => {
-				const setLike = !postData.isLike;
-				const numberOfLike = setLike ? postData.like + 1 : postData.like - 1;
-				setPostData(prev => ({ ...prev, isLike: !prev.isLike, like: numberOfLike }));
-			})
-			.catch(() => {
-				return;
-			});
+	const handleLikeAction = async () => {
+		try {
+			await dispatch(updateReactionActivity(postData.minipostId || postData.id)).unwrap();
+			const setLike = !postData.isLike;
+			const numberOfLike = setLike ? postData.like + 1 : postData.like - 1;
+			setPostData(prev => ({ ...prev, isLike: !prev.isLike, like: numberOfLike }));
+		} catch (err) {
+			NotificationError(err);
+		}
 	};
 
 	useEffect(() => {
@@ -147,68 +146,105 @@ function Post({ postInformations, className }) {
 		setClickReply(!clickReply);
 	};
 
-	return (
-		<div className={classNames('post__container', { [`${className}`]: className })}>
-			<div className='post__user-status'>
-				<UserAvatar
-					data-testid='post__user-avatar'
-					className='post__user-status__avatar'
-					source={postData?.createdBy?.avatarImage}
-				/>
+	const infoUser = () => {
+		return (
+			<>
+				<div className='post__user-status'>
+					<UserAvatar
+						data-testid='post__user-avatar'
+						className='post__user-status__avatar'
+						source={postData?.createdBy?.avatarImage}
+					/>
 
-				<div className='post__user-status__name-and-post-time-status'>
-					<div data-testid='post__user-name' className='post__user-status__name'>
-						{postData?.createdBy?.fullName || postData?.user?.fullName || 'Ẩn danh'}
-					</div>
-					<div className='post__user-status__post-time-status'>
-						<span>{calculateDurationTime(postData.time || postData.createdAt)}</span>
-						<>
-							{postData.book && (
-								<div className='post__user-status__subtitle'>
-									<span>Cập nhật tiến độ đọc sách</span>
-									<div className='post__user-status__post-time-status__online-dot'></div>
-									<span>Xếp hạng</span>
-									<ReactRating
-										readonly={true}
-										initialRating={
-											postInformations?.book?.actorRating?.star
-												? postInformations?.book?.actorRating?.star
-												: 0
-										}
-									/>
-								</div>
-							)}
-						</>
+					<div className='post__user-status__name-and-post-time-status'>
+						<div data-testid='post__user-name' className='post__user-status__name'>
+							{postData?.createdBy?.fullName || postData?.user?.fullName || 'Ẩn danh'}
+						</div>
+						<div className='post__user-status__post-time-status'>
+							<span>{calculateDurationTime(postData.time || postData.createdAt)}</span>
+							<>
+								{postData.book && (
+									<div className='post__user-status__subtitle'>
+										<span>Cập nhật tiến độ đọc sách</span>
+										<div className='post__user-status__post-time-status__online-dot'></div>
+										<span>Xếp hạng</span>
+										<ReactRating
+											readonly={true}
+											initialRating={
+												postInformations?.book?.actorRating?.star
+													? postInformations?.book?.actorRating?.star
+													: 0
+											}
+										/>
+									</div>
+								)}
+							</>
+						</div>
 					</div>
 				</div>
-			</div>
-			<div
-				className='post__description'
-				dangerouslySetInnerHTML={{
-					__html: postData.message || postData.content,
-				}}
-			></div>
+				<div
+					className='post__description'
+					dangerouslySetInnerHTML={{
+						__html: postData.message || postData.content,
+					}}
+				></div>
+			</>
+		);
+	};
+
+	const renderInfo = () => {
+		if (showModalCreatPost) {
+			if (postData.sharePost) {
+				return;
+			} else {
+				return infoUser();
+			}
+		} else {
+			return infoUser();
+		}
+	};
+
+	return (
+		<div className={classNames('post__container', { [`${className}`]: className })}>
+			{renderInfo()}
+
 			<ul className='tagged'>
-				{postData.mentionsAuthors?.map(item => (
-					<li key={item.id} className={classNames('badge bg-primary-light')}>
-						<Feather />
-						<span>
-							{item.authors.name ||
-								item.authors.fullName ||
-								item.authors.lastName ||
-								item.authors.firstName ||
-								'Không xác định'}
-						</span>
-					</li>
-				))}
+				{!!postData?.mentionsAuthors?.length && (
+					<>
+						{postData.mentionsAuthors?.map(item => (
+							<li key={item.id} className={classNames('badge bg-primary-light')}>
+								<Feather />
+								<span>
+									{item.authors.name ||
+										item.authors.fullName ||
+										item.authors.lastName ||
+										item.authors.firstName ||
+										'Không xác định'}
+								</span>
+							</li>
+						))}
+					</>
+				)}
 			</ul>
 
+			<ul className='tagged'>
+				{!!postData?.mentionsCategories?.length && (
+					<>
+						{postData.mentionsCategories?.map(item => (
+							<li key={item.id} className={classNames('badge bg-primary-light')}>
+								<span>{item.category.name}</span>
+							</li>
+						))}
+					</>
+				)}
+			</ul>
+			{postData.isShare && postData.verb === 'shareQuote' && <PostQuotes postsData={postData} />}
 			{postData.book && (
 				<PostBook
 					data={{ ...postData.book, bookLibrary: postData.bookLibrary, actorCreatedPost: postData.actor }}
 				/>
 			)}
-
+			{postData.verb === 'sharePost' && !_.isEmpty(postData.sharePost) && <PostsShare postData={postData} />}
 			{postData?.image?.length > 0 && <GridImage images={postData.image} inPost={true} postId={postData.id} />}
 
 			{postData?.image?.length === 0 && !_.isEmpty(postData?.preview) && (
@@ -227,52 +263,60 @@ function Post({ postInformations, className }) {
 					)}
 				</>
 			)}
-			<PostActionBar postData={postData} handleLikeAction={handleLikeAction} />
-
-			{postData.usersComments?.map(comment => (
-				<div key={comment.id}>
-					{comment.replyId === null && (
-						<Comment
-							commentLv1Id={comment.id}
-							data={comment}
-							postData={postData}
-							handleReply={handleReply}
-							postCommentsLikedArray={[]}
-							inQuotes={false}
-						/>
-					)}
-					<div className='comment-reply-container'>
-						{postData.usersComments.map(commentChild => {
-							if (commentChild.replyId === comment.id) {
-								return (
-									<div key={commentChild.id}>
-										<Comment
-											commentLv1Id={comment.id}
-											data={commentChild}
-											postData={postData}
-											handleReply={handleReply}
-											postCommentsLikedArray={[]}
-											inQuotes={false}
-										/>
-									</div>
-								);
-							}
-						})}
-						{commentLv1IdArray.includes(comment.id) && (
-							<CommentEditor
-								userInfo={userInfo}
-								onCreateComment={onCreateComment}
-								className={classNames('reply-comment-editor', {
-									'show': comment.id === replyingCommentId,
+			{!isSharePosts && (
+				<>
+					<PostActionBar postData={postData} handleLikeAction={handleLikeAction} />
+					{postData.usersComments?.map(comment => (
+						<div key={comment.id}>
+							{comment.replyId === null && (
+								<Comment
+									commentLv1Id={comment.id}
+									data={comment}
+									postData={postData}
+									handleReply={handleReply}
+									postCommentsLikedArray={[]}
+									inQuotes={false}
+								/>
+							)}
+							<div className='comment-reply-container'>
+								{postData.usersComments.map(commentChild => {
+									if (commentChild.replyId === comment.id) {
+										return (
+											<div key={commentChild.id}>
+												<Comment
+													commentLv1Id={comment.id}
+													data={commentChild}
+													postData={postData}
+													handleReply={handleReply}
+													postCommentsLikedArray={[]}
+													inQuotes={false}
+												/>
+											</div>
+										);
+									}
 								})}
-								replyId={replyingCommentId}
-								textareaId={`textarea-${comment.id}`}
-							/>
-						)}
-					</div>
-				</div>
-			))}
-			<CommentEditor userInfo={userInfo} onCreateComment={onCreateComment} reply={null} indexParent={null} />
+								{commentLv1IdArray.includes(comment.id) && (
+									<CommentEditor
+										userInfo={userInfo}
+										onCreateComment={onCreateComment}
+										className={classNames('reply-comment-editor', {
+											'show': comment.id === replyingCommentId,
+										})}
+										replyId={replyingCommentId}
+										textareaId={`textarea-${comment.id}`}
+									/>
+								)}
+							</div>
+						</div>
+					))}
+					<CommentEditor
+						userInfo={userInfo}
+						onCreateComment={onCreateComment}
+						reply={null}
+						indexParent={null}
+					/>
+				</>
+			)}
 		</div>
 	);
 }
@@ -281,6 +325,7 @@ Post.propTypes = {
 	postInformations: PropTypes.object,
 	likeAction: PropTypes.func,
 	className: PropTypes.string,
+	showModalCreatPost: PropTypes.bool,
 };
 
 export default Post;

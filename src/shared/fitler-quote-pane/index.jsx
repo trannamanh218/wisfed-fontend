@@ -18,10 +18,10 @@ const FilterQuotePane = ({
 }) => {
 	const [showCreatQuotesModal, setShowCreatQuotesModal] = useState(false);
 	const [showDropdownMenu, setShowDropdownMenu] = useState(false);
+	const [sortValue, setSortValue] = useState('default');
 
 	const creatQuotesModalContainer = useRef(null);
 	const scrollBlocked = useRef(false);
-	const sortValue = useRef('default');
 	const sortDropdownMenu = useRef(null);
 
 	const safeDocument = typeof document !== 'undefined' ? document : {};
@@ -96,7 +96,7 @@ const FilterQuotePane = ({
 	};
 
 	const handleChange = data => {
-		sortValue.current = data;
+		setSortValue(data);
 	};
 
 	const checkClickTarget = e => {
@@ -142,6 +142,7 @@ const FilterQuotePane = ({
 									type='radio'
 									defaultValue='default'
 									handleChange={handleChange}
+									currentSortValue={sortValue}
 								/>
 								<h6 style={{ marginTop: '24px' }} className='filter-quote-pane__setting__title'>
 									Theo thời gian tạo
@@ -152,6 +153,7 @@ const FilterQuotePane = ({
 									type='radio'
 									defaultValue='default'
 									handleChange={handleChange}
+									currentSortValue={sortValue}
 								/>
 								<FormCheckGroup
 									data={radioOptions[2]}
@@ -159,12 +161,13 @@ const FilterQuotePane = ({
 									type='radio'
 									defaultValue='default'
 									handleChange={handleChange}
+									currentSortValue={sortValue}
 								/>
 							</div>
 							<Button
 								className='filter-quote-pane__setting__btn'
 								onClick={() => {
-									handleSortQuotes(sortValue.current);
+									handleSortQuotes(sortValue);
 									setShowDropdownMenu(false);
 								}}
 							>

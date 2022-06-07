@@ -1,3 +1,5 @@
+@import 'src/scss/abstracts/_variables.scss';
+
 .register__header {
 	height: 120px;
 	background-color: #fbf7f2;
@@ -37,6 +39,7 @@
 .register__name {
 	display: flex;
 	justify-content: space-between;
+	gap: 8px;
 }
 .register__box {
 	padding: 38px 16px 0px 16px;
@@ -88,40 +91,28 @@
 
 .register__form__field {
 	margin-top: 19px;
-	text-align: left;
-}
-.register__form__group1 {
-	display: flex;
-	border-radius: 8px;
-	align-items: center;
-	overflow: hidden;
+	border-radius: 12px;
 	position: relative;
-	&.error {
-		border-color: red;
+	background-color: #eff0f6;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 16px 12px;
+	&.name {
+		width: 49%;
 	}
-
+	&.error {
+		border: $red 1px solid;
+	}
 	.error--text {
-		position: absolute;
-		right: 7px;
-		width: 32px !important;
-		height: 32px !important;
-		img {
-			margin-top: 7px;
-			margin-left: 13px;
+		display: none;
+		&.show {
+			display: block;
+			margin-left: 8px;
 		}
 	}
 }
 
-.register__form__group {
-	display: flex;
-	border-radius: 8px;
-	align-items: center;
-	overflow: hidden;
-	position: relative;
-	&.error {
-		border-color: red;
-	}
-}
 .error-message-name {
 	width: 160px !important;
 	position: absolute;
@@ -131,6 +122,7 @@
 #tooltip {
 	background-color: #18bb0c;
 }
+
 .error-message {
 	margin-left: -50px;
 }
@@ -143,15 +135,14 @@
 	margin-top: 12px;
 	color: #0576f0;
 }
+
 .register__form__input {
 	background-color: #eff0f6;
-	flex-grow: 1;
-	height: 56px;
-	padding: 0 12px;
 	border: none;
 	line-height: 22px;
 	border: none;
 	outline: none;
+	padding-left: 8px;
 	&::placeholder {
 		color: #a0a3bd;
 		font-family: 'Montserrat';
@@ -162,16 +153,14 @@
 		letter-spacing: 0.25;
 	}
 }
+
 .register__form__input-name {
-	width: 180px;
 	background-color: #eff0f6;
-	flex-grow: 1;
-	height: 56px;
-	padding: 0 12px;
 	border: none;
 	line-height: 22px;
 	border: none;
 	outline: none;
+	padding-left: 8px;
 	&::placeholder {
 		color: #a0a3bd;
 		font-family: 'Montserrat';

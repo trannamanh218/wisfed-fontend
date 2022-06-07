@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import Storage from 'helpers/Storage';
 import Button from 'shared/button';
 import { Add } from 'components/svg';
-const AuthorCard = ({ direction, size, item, setModalShow }) => {
+const AuthorCard = ({ direction, size, item, setModalShow, checkAuthors }) => {
 	return (
 		<div className='author-card'>
 			<div className='author-card__left'>
@@ -13,10 +13,14 @@ const AuthorCard = ({ direction, size, item, setModalShow }) => {
 				<div className='author-card__info'>
 					<h5>{item.fullName || `${item.firstName} ${item.lastName}`}</h5>
 					<p className='author-card__subtitle'>
-						{item.numberFollowing} follow, {item.numFriends} bạn bè
+						{item.numberFollowing || item.countFollow} follow, {item.numFriends || item.countFriend} bạn bè
 					</p>
-					{/* <p>Tác giả của cuốn sách cuốn theo chiều gió</p>
-					<span>và 500 cuốn sách khác</span> */}
+					{checkAuthors && (
+						<>
+							<p>Tác giả của cuốn sách {item.bookAuthor[0]?.name}</p>
+							<span>và {item.countBook} cuốn sách khác</span>
+						</>
+					)}
 				</div>
 			</div>
 			<div className='author-card__right'>
@@ -49,6 +53,7 @@ AuthorCard.propTypes = {
 	size: PropTypes.string,
 	item: PropTypes.object,
 	setModalShow: PropTypes.func,
+	checkAuthors: PropTypes.bool,
 };
 
 export default AuthorCard;

@@ -39,12 +39,15 @@ export const commentBookReviewAPI = '/api/v1/commentReviews';
 export const bookFollowReviewAPI = id => `/api/v1/books/${id}/followReviews`;
 export const bookFriendReviewAPI = id => `/api/v1/books/${id}/friendReviews`;
 export const progressBookAPI = id => `/api/v1/books/updateBookProgress/${id}`;
-export const bookAuthor = '/api/v1/books/listBookByAuthor';
+export const bookAuthor = id => `/api/v1/books/listBookByAuthor/${id}`;
 
 // category
 export const categoryAPI = '/api/v1/categories';
 export const categoryDetailAPI = id => `/api/v1/categories/${id}`;
 export const favoriteCategoriesAPI = '/api/v1/categories/favoriteCategories';
+export const listBookByCategoryAPI = categoryId => `/api/v1/books/listBookCategory/${categoryId}`;
+export const checkLikedCategoryAPI = categoryId => `/api/v1/categories/detailAuth/${categoryId}`;
+export const postByCategoryAPI = categoryId => `/api/v1/getstream/listPostByCategoryAuth/${categoryId}`;
 
 //rating
 export const bookRating = id => `/api/v1/books/ratingBook/${id}`;
@@ -137,3 +140,5 @@ export const enjoyGroup = id => `/api/v1/groups/requestGroup/${id}`;
 export const leaveGroup = id => `/api/v1/groups/leaveGroup/${id}`;
 export const createPostGroup = id => `/api/v1/groups/${id}/createPost`;
 export const listPostGroup = id => `/api/v1/groups/${id}/groupFeed`;
+//share
+export const shareInternalAPI = (id, type) => `/api/v1/getstream/share/${id}?type=${type}`;

@@ -139,6 +139,8 @@ const MainShelves = ({ allLibraryList, shelveName, isMyShelve, handleViewBookDet
 												inputSearch={inputSearch}
 												list={currentBooks}
 												isMyShelve={isMyShelve}
+												handleUpdateBookList={handleUpdateBookList}
+												handleViewBookDetail={handleViewBookDetail}
 											/>
 										) : (
 											<Shelf
