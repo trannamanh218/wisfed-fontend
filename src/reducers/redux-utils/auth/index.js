@@ -9,8 +9,7 @@ import {
 	forgotPasswordAPIAdmin,
 	resetPasswordAPIAdmin,
 	InforUserByEmail,
-	loginFacebook,
-	loginGmail,
+	checkJwt,
 } from 'constants/apiURL';
 import Request from 'helpers/Request';
 import Storage from 'helpers/Storage';
@@ -24,6 +23,16 @@ export const register = createAsyncThunk('auth/register', async (params, { rejec
 		return response;
 	} catch (err) {
 		return rejectWithValue(err.response);
+	}
+});
+
+export const getCheckJwt = createAsyncThunk('user/getCheckJwt', async (params, { rejectWithValue }) => {
+	try {
+		const response = await Request.makeGet(checkJwt, params);
+		return response;
+	} catch (err) {
+		const error = JSON.parse(err.response);
+		throw rejectWithValue(error);
 	}
 });
 
@@ -136,6 +145,20 @@ const authSlice = createSlice({
 			state.error = {};
 		},
 		[login.rejected]: (state, action) => {
+			state.isFetching = false;
+			state.userInfo = {};
+			state.error = action.payload;
+		},
+		[checkJwt.pending]: state => {
+			state.isFetching = true;
+		},
+		[checkJwt.fulfilled]: (state, action) => {
+			state.isFetching = false;
+
+			state.userInfo = action.payload;
+			state.error = {};
+		},
+		[checkJwt.rejected]: (state, action) => {
 			state.isFetching = false;
 			state.userInfo = {};
 			state.error = action.payload;

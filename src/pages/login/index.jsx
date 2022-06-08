@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Logo from 'assets/images/Logo 2.png';
 import ImageLogin from 'assets/images/cover-sign 1.png';
 import { Formik, Field, Form } from 'formik';
@@ -8,14 +8,13 @@ import { Link } from 'react-router-dom';
 import Validation from 'helpers/Validation';
 import { FaceBookIcon, GmailIcon } from 'components/svg';
 import { toast } from 'react-toastify';
-import { login } from 'reducers/redux-utils/auth';
+import { login, getCheckJwt } from 'reducers/redux-utils/auth';
 import { useDispatch } from 'react-redux';
 import { unwrapResult } from '@reduxjs/toolkit';
 import ModalLogin from './element/ModalLogin';
 import { useNavigate } from 'react-router-dom';
 import EyeIcon from 'shared/eye-icon';
 import _ from 'lodash';
-import { getCheckJwt } from 'reducers/redux-utils/user';
 import Subtract from 'assets/images/Subtract.png';
 
 function Login() {

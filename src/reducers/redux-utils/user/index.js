@@ -14,7 +14,6 @@ import {
 	listFollowing,
 	userDetailAPI,
 	myFriendsReq,
-	checkJwt,
 } from 'constants/apiURL';
 import Request from 'helpers/Request';
 
@@ -33,16 +32,6 @@ export const getListFollowrs = createAsyncThunk('user/getListFollowrs', async (p
 	try {
 		const response = await Request.makeGet(listFolowrs(userId), query);
 		return response.data;
-	} catch (err) {
-		const error = JSON.parse(err.response);
-		throw rejectWithValue(error);
-	}
-});
-
-export const getCheckJwt = createAsyncThunk('user/getCheckJwt', async (params, { rejectWithValue }) => {
-	try {
-		const response = await Request.makeGet(checkJwt, params);
-		return response;
 	} catch (err) {
 		const error = JSON.parse(err.response);
 		throw rejectWithValue(error);
