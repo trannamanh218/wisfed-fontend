@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Logo from 'assets/images/Logo 2.png';
 import ImageLogin from 'assets/images/cover-sign 1.png';
 import { Formik, Field, Form } from 'formik';
@@ -15,7 +15,7 @@ import ModalLogin from './element/ModalLogin';
 import { useNavigate } from 'react-router-dom';
 import EyeIcon from 'shared/eye-icon';
 import _ from 'lodash';
-
+import { getCheckJwt } from 'reducers/redux-utils/user';
 import Subtract from 'assets/images/Subtract.png';
 
 function Login() {
@@ -25,13 +25,15 @@ function Login() {
 	const [isPublic, setIsPublic] = useState(false);
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
+
 	const handleSubmit = async data => {
 		try {
 			const actionLogin = await dispatch(login(data));
-			const infoUser = unwrapResult(actionLogin);
-			if (infoUser) {
+			const infoUserLogin = unwrapResult(actionLogin);
+			if (infoUserLogin) {
 				toast.success('Đăng nhập thành công');
-				if (!_.isEmpty(infoUser?.favoriteCategory)) {
+				const actionCheckJwt = await dispatch(getCheckJwt());
+				if (_.isEmpty(actionCheckJwt?.favoriteCategory)) {
 					navigate('/');
 				} else {
 					navigate('/choose-topic');
