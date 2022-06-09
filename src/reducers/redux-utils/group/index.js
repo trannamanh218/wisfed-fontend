@@ -8,6 +8,9 @@ import {
 	leaveGroup,
 	listPostGroup,
 	createPostGroup,
+	myGroup,
+	adminGroup,
+	memberGroup,
 } from 'constants/apiURL';
 import Request from 'helpers/Request';
 
@@ -26,6 +29,35 @@ export const getGroupDettail = createAsyncThunk('group/getGroupDettail', async (
 		const res = await Request.makeGet(detailGroup(id));
 
 		return res;
+	} catch (err) {
+		const error = JSON.parse(err.response);
+		return rejectWithValue(error);
+	}
+});
+
+export const getMyGroup = createAsyncThunk('group/getMyGroup', async (params = {}, { rejectWithValue }) => {
+	try {
+		const res = await Request.makeGet(myGroup, params);
+		return res;
+	} catch (err) {
+		const error = JSON.parse(err.response);
+		return rejectWithValue(error);
+	}
+});
+export const getMyAdminGroup = createAsyncThunk('group/getMyAdminGroup', async (params = {}, { rejectWithValue }) => {
+	try {
+		const res = await Request.makeGet(adminGroup, params);
+		return res;
+	} catch (err) {
+		const error = JSON.parse(err.response);
+		return rejectWithValue(error);
+	}
+});
+
+export const getMember = createAsyncThunk('group/getMember', async (id = {}, { rejectWithValue }) => {
+	try {
+		const res = await Request.makeGet(memberGroup(id));
+		return res.data;
 	} catch (err) {
 		const error = JSON.parse(err.response);
 		return rejectWithValue(error);

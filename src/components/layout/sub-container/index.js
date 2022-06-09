@@ -4,7 +4,7 @@ import './sub-container.scss';
 import Layout from '..';
 import { ErrorBoundary } from 'react-error-boundary';
 
-const SubContainer = ({ left, main, right, sub }) => {
+const SubContainer = ({ left, main, right }) => {
 	function ErrorFallback() {
 		return (
 			<div>
@@ -14,7 +14,6 @@ const SubContainer = ({ left, main, right, sub }) => {
 	}
 	return (
 		<Layout>
-			{sub && <div className='subcontainer__sub'>{sub}</div>}
 			<div className='subContainer'>
 				<div className='subContainer__left'>
 					<ErrorBoundary FallbackComponent={ErrorFallback}>{left}</ErrorBoundary>
@@ -30,7 +29,6 @@ SubContainer.propTypes = {
 	left: PropTypes.any.isRequired,
 	main: PropTypes.any.isRequired,
 	right: PropTypes.any.isRequired,
-	sub: PropTypes.any,
 };
 
 export default SubContainer;

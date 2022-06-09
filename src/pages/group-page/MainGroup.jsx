@@ -8,12 +8,13 @@ import './mainGroup.scss';
 import MainGroupComponent from './popup-group/MainGroupComponet/MainGroupComponent';
 import { useDispatch } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
-import { getGroupDettail } from 'reducers/redux-utils/group';
+import { getGroupDettail, getMember } from 'reducers/redux-utils/group';
 import { useParams } from 'react-router-dom';
 
 const MainGroup = () => {
 	const { id = '' } = useParams();
 	const [detailGroup, setDetailGroup] = useState({});
+	const [listMember, setListMember] = useState([]);
 	const dispatch = useDispatch();
 
 	const fetchData = async () => {
@@ -25,8 +26,18 @@ const MainGroup = () => {
 		}
 	};
 
+	const getListMember = async () => {
+		try {
+			const actionGetList = await dispatch(getMember(id)).unwrap();
+			setListMember(actionGetList);
+		} catch (err) {
+			NotificationError(err);
+		}
+	};
+
 	useEffect(() => {
 		fetchData();
+		getListMember();
 	}, []);
 	const [keyChange, setKeyChange] = useState('tabs');
 	// const [isShow, setIsShow] = useState(true);
@@ -129,8 +140,13 @@ const MainGroup = () => {
 			)} */}
 
 			<div className='group-main__container'>
-				<SidebarGroupLef handleChange={handleChange} data={detailGroup} />
-				<MainGroupComponent handleChange={handleChange} keyChange={keyChange} data={detailGroup} />
+				<SidebarGroupLef handleChange={handleChange} data={detailGroup} member={listMember} />
+				<MainGroupComponent
+					handleChange={handleChange}
+					keyChange={keyChange}
+					data={detailGroup}
+					member={listMember}
+				/>
 			</div>
 		</div>
 	);

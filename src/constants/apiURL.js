@@ -8,6 +8,7 @@ export const resetPasswordAPI = '/api/v1/auth/resetPassword/';
 export const resetPasswordAPIAdmin = '/api/v1/auth/resetPasswordByMail/';
 export const checkTokenResetPassword = token => `/api/v1/auth/verify-password?token=${token}`;
 export const InforUserByEmail = email => `/api/v1/users/email?email=${email}`;
+export const checkJwt = '/api/v1/auth/jwt';
 
 // quote
 export const quoteAPI = '/api/v1/quotes';
@@ -108,6 +109,7 @@ export const unFollow = id => `/api/v1/users/${id}/unFollow`;
 export const listFollowing = id => `/api/v1/users/listFollowings/${id}`;
 
 //chart
+
 // export const listAPIChart = (count, by) => `/api/v1/tracking?count=${count}&by=${by}`;
 export const listBooksReadYear = (type, id) => `/api/v1/libraries/listBookByType/${type}/${id}`;
 export const getAPIchartsByid = (id, count, by) => `/api/v1/report/reportBooksById/${id}?count=${count}&by=${by}`;
@@ -127,6 +129,9 @@ export const getBooksChartsData = id => `/api/v1/report/growthChartBook/${id}`;
 // group
 export const detailGroup = id => `api/v1/groups/${id}`;
 export const creatGroup = '/api/v1/groups';
+export const myGroup = '/api/v1/groups/myGroup';
+export const adminGroup = '/api/v1/groups/myGroup?type=admin';
+export const memberGroup = id => `/api/v1/groups/memberGroup/${id}`;
 
 // search
 export const getSearchAPI = `/api/v1/searchs`;

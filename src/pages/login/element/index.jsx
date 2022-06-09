@@ -1,38 +1,37 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import Logo from 'assets/images/Logo 2.png';
 import ImageLogin from 'assets/images/cover-sign 1.png';
 import { Formik, Field, Form } from 'formik';
-import './login.scss';
+import '../login.scss';
 import classNames from 'classnames';
 import { Link } from 'react-router-dom';
 import Validation from 'helpers/Validation';
 import { FaceBookIcon, GmailIcon } from 'components/svg';
 import { toast } from 'react-toastify';
-import { login, getCheckJwt } from 'reducers/redux-utils/auth';
+import { getLoginFacebook, login } from 'reducers/redux-utils/auth';
 import { useDispatch } from 'react-redux';
 import { unwrapResult } from '@reduxjs/toolkit';
-import ModalLogin from './element/ModalLogin';
+import ModalLogin from './ModalLogin';
 import { useNavigate } from 'react-router-dom';
 import EyeIcon from 'shared/eye-icon';
 import _ from 'lodash';
+
 import Subtract from 'assets/images/Subtract.png';
 
-function Login() {
+function LoginComponet() {
 	const [showImagePopover, setShowImagePopover] = useState(false);
 	const [isShow, setIsShow] = useState(false);
 	const [dataModal, setDataModal] = useState({});
 	const [isPublic, setIsPublic] = useState(false);
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
-
 	const handleSubmit = async data => {
 		try {
 			const actionLogin = await dispatch(login(data));
-			const infoUserLogin = unwrapResult(actionLogin);
-			if (infoUserLogin) {
+			const infoUser = unwrapResult(actionLogin);
+			if (infoUser) {
 				toast.success('Đăng nhập thành công');
-				const actionCheckJwt = await dispatch(getCheckJwt());
-				if (_.isEmpty(actionCheckJwt?.favoriteCategory)) {
+				if (!_.isEmpty(infoUser?.favoriteCategory)) {
 					navigate('/');
 				} else {
 					navigate('/choose-topic');
@@ -63,6 +62,7 @@ function Login() {
 		<div className='login__container'>
 			{isShow && dataModal && (
 				<div className='login__container-modal'>
+					{' '}
 					<ModalLogin data={dataModal} handleChange={handleChange} />
 				</div>
 			)}
@@ -97,11 +97,15 @@ function Login() {
 					<span className='login__login-box__title'>Đăng nhập và Khám phá</span>
 				</div>
 				<div className='login-facebook'>
-					<FaceBookIcon className='login__fbIcon' /> <button>Đăng nhập bằng Facebook</button>
+					<a href='https://wisfeed.tecinus.vn/api/v1/auth/facebook'>
+						<FaceBookIcon className='login__fbIcon' /> <button>Đăng nhập bằng Facebook</button>
+					</a>
 				</div>
-				<div className='login-gmail'>
-					<GmailIcon className='GmailIcon' /> <button>Đăng nhập bằng Gmail</button>
-				</div>
+				<a href='https://wisfeed.tecinus.vn/api/v1/auth/google'>
+					<div className='login-gmail'>
+						<GmailIcon className='GmailIcon' /> <button>Đăng nhập bằng Gmail</button>
+					</div>
+				</a>
 				<hr style={{ opacity: '0.1' }} />
 				<div>
 					<div>
@@ -116,29 +120,86 @@ function Login() {
 							<Field name='email'>
 								{({ field, meta }) => {
 									return (
+										<div className='login__form__field'>
+											<div
+												className={classNames('login__form__group', {
+													'error': meta.touched && meta.error,
+												})}
+											>
+												<input
+													className='login__form__input'
+													type='email'
+													placeholder='Email'
+													{...field}
+													value={field.value}
+													autoComplete='false'
+												/>
+												<div className='error--text'>
+													{meta.touched && meta.error && (
+														<div
+															className='login__form__error'
+															onMouseOver={() => setShowImagePopover(1)}
+															onMouseLeave={() => setShowImagePopover(0)}
+														>
+															<img
+																src={Subtract}
+																alt='img'
+																data-tip
+																data-for='registerTip'
+															/>
+															<div
+																className={classNames(
+																	'login__form__error__popover-container',
+																	{
+																		'show': showImagePopover === 1,
+																	}
+																)}
+															>
+																<div>
+																	<div className='error--textbox'>
+																		<div className='error--textbox--logo'></div>
+																		<div className='error--textbox--error'></div>
+																	</div>
+																	<div className='Login__form__error__popover'>
+																		{meta.touched && meta.error && (
+																			<div>{meta.error}</div>
+																		)}
+																	</div>
+																</div>
+															</div>
+														</div>
+													)}
+												</div>
+											</div>
+										</div>
+									);
+								}}
+							</Field>
+
+							<Field name='password'>
+								{({ field, meta }) => (
+									<div className='login__form__field'>
 										<div
-											className={classNames('login__form__field', {
-												'error': meta.error && meta.touched,
+											className={classNames('login__form__group', {
+												'error': meta.touched && meta.error,
 											})}
 										>
 											<input
 												className='login__form__input'
-												type='email'
-												placeholder='Email'
+												type={isPublic ? 'text' : 'password'}
+												placeholder='Mật khẩu'
 												{...field}
 												value={field.value}
-												autoComplete='false'
-												style={meta.error ? { width: '93%' } : { width: '100%' }}
+												autoComplete='new-password'
 											/>
-											<div
-												className={classNames('error--text', {
-													'show': meta.error,
-												})}
-											>
+											<div>
+												<EyeIcon isPublic={isPublic} handlePublic={handleChangeIcon} />
+											</div>
+											<div className='error--text'>
 												{meta.touched && meta.error && (
 													<div
 														className='login__form__error'
-														onMouseOver={() => setShowImagePopover(1)}
+														onMouseOver={() => setShowImagePopover(2)}
 														onMouseLeave={() => setShowImagePopover(0)}
 													>
 														<img src={Subtract} alt='img' data-tip data-for='registerTip' />
@@ -146,7 +207,7 @@ function Login() {
 															className={classNames(
 																'login__form__error__popover-container',
 																{
-																	'show': showImagePopover === 1,
+																	'show': showImagePopover === 2,
 																}
 															)}
 														>
@@ -156,66 +217,15 @@ function Login() {
 																	<div className='error--textbox--error'></div>
 																</div>
 																<div className='Login__form__error__popover'>
-																	<div>{meta.error}</div>
+																	{meta.touched && meta.error && (
+																		<div>{meta.error}</div>
+																	)}
 																</div>
 															</div>
 														</div>
 													</div>
 												)}
 											</div>
-										</div>
-									);
-								}}
-							</Field>
-
-							<Field name='password'>
-								{({ field, meta }) => (
-									<div
-										className={classNames('login__form__field', {
-											'error': meta.error && meta.touched,
-										})}
-									>
-										<input
-											className='login__form__input'
-											type={isPublic ? 'text' : 'password'}
-											placeholder='Mật khẩu'
-											{...field}
-											value={field.value}
-											autoComplete='new-password'
-											style={meta.error ? { width: '93%' } : { width: '100%' }}
-										/>
-										<div>
-											<EyeIcon isPublic={isPublic} handlePublic={handleChangeIcon} />
-										</div>
-										<div
-											className={classNames('error--text', {
-												'show': meta.error,
-											})}
-										>
-											{meta.touched && meta.error && (
-												<div
-													className='login__form__error'
-													onMouseOver={() => setShowImagePopover(2)}
-													onMouseLeave={() => setShowImagePopover(0)}
-												>
-													<img src={Subtract} alt='img' data-tip data-for='registerTip' />
-													<div
-														className={classNames('login__form__error__popover-container', {
-															'show': showImagePopover === 2,
-														})}
-													>
-														<div>
-															<div className='error--textbox'>
-																<div className='error--textbox--logo'></div>
-																<div className='error--textbox--error'></div>
-															</div>
-															<div className='Login__form__error__popover'>
-																<div>{meta.error}</div>
-															</div>
-														</div>
-													</div>
-												</div>
-											)}
 										</div>
 									</div>
 								)}
@@ -227,13 +237,15 @@ function Login() {
 						<Link to='/forget-password'>Quên mật khẩu ?</Link>
 					</div>
 					<hr style={{ opacity: '0.1' }} />
-					<Link className='login__register' to='/register'>
-						Tạo tài khoản
-					</Link>
+					<div className='login__register'>
+						<Link to='/register'>
+							<button>Tạo tài khoản</button>
+						</Link>
+					</div>
 				</div>
 			</div>
 		</div>
 	);
 }
 
-export default Login;
+export default LoginComponet;
