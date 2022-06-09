@@ -244,7 +244,7 @@ function Post({ postInformations, className, showModalCreatPost }) {
 					data={{ ...postData.book, bookLibrary: postData.bookLibrary, actorCreatedPost: postData.actor }}
 				/>
 			)}
-			{postData.verb === 'sharePost' && <PostsShare postData={postData} />}
+			{postData.verb === 'sharePost' && !_.isEmpty(postData.sharePost) && <PostsShare postData={postData} />}
 			{postData?.image?.length > 0 && <GridImage images={postData.image} inPost={true} postId={postData.id} />}
 
 			{postData?.image?.length === 0 && !_.isEmpty(postData?.preview) && (

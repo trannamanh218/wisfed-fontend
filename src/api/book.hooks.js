@@ -46,7 +46,6 @@ export const useFetchAuthorBooks = userId => {
 	const [booksAuthor, setBooksAuthor] = useState([]);
 	const [retry, setRetry] = useState(false);
 	const dispatch = useDispatch();
-
 	const retryRequest = useCallback(() => {
 		setRetry(prev => !prev);
 	}, [setRetry]);

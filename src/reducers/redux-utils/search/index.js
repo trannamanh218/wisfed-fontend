@@ -1,19 +1,10 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { getSearchAPI, getSearchAuthAPI } from 'constants/apiURL';
+import { getSearchAPI } from 'constants/apiURL';
 import Request from 'helpers/Request';
 
 export const getFilterSearch = createAsyncThunk('search/getSearch', async (params, { rejectWithValue }) => {
 	try {
 		const response = await Request.makeGet(getSearchAPI, params);
-		return response.data;
-	} catch (err) {
-		return rejectWithValue(err.response);
-	}
-});
-
-export const getFilterSearchAuth = createAsyncThunk('search/getSearchAuth', async (params, { rejectWithValue }) => {
-	try {
-		const response = await Request.makeGet(getSearchAuthAPI, params);
 		return response.data;
 	} catch (err) {
 		return rejectWithValue(err.response);

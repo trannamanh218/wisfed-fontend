@@ -3,9 +3,9 @@ import AuthorCard from 'shared/author-card';
 import Button from 'shared/button';
 import PropTypes from 'prop-types';
 import LoadingIndicator from 'shared/loading-indicator';
-import { getFilterSearchAuth, getFilterSearch } from 'reducers/redux-utils/search';
+import { getFilterSearch } from 'reducers/redux-utils/search';
 import { NotificationError } from 'helpers/Error';
-import Storage from 'helpers/Storage';
+
 import { useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import InfiniteScroll from 'react-infinite-scroll-component';
@@ -37,7 +37,7 @@ const AuthorSearch = ({ value, setIsFetching, searchResultInput, activeKeyDefaul
 			handleGetAuthorsSearch();
 		}
 	}, [callApiStart.current, value, isShowModal, listArrayAuthors]);
-	console.log(listArrayAuthors);
+
 	const handleGetAuthorsSearch = async () => {
 		setIsFetching(true);
 		try {
@@ -48,22 +48,12 @@ const AuthorSearch = ({ value, setIsFetching, searchResultInput, activeKeyDefaul
 				limit: callApiPerPage.current,
 			};
 
-			if (Storage.getAccessToken()) {
-				const result = await dispatch(getFilterSearchAuth(params)).unwrap();
-				if (result.rows.length > 0) {
-					callApiStart.current += callApiPerPage.current;
-					setListArrayAuthors(listArrayAuthors.concat(result.rows));
-				} else {
-					setHasMore(false);
-				}
+			const result = await dispatch(getFilterSearch(params)).unwrap();
+			if (result.rows.length > 0) {
+				callApiStart.current += callApiPerPage.current;
+				setListArrayAuthors(listArrayAuthors.concat(result.rows));
 			} else {
-				const result = await dispatch(getFilterSearch(params)).unwrap();
-				if (result.rows.length > 0) {
-					callApiStart.current += callApiPerPage.current;
-					setListArrayAuthors(listArrayAuthors.concat(result.rows));
-				} else {
-					setHasMore(false);
-				}
+				setHasMore(false);
 			}
 		} catch (err) {
 			NotificationError(err);

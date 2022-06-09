@@ -68,7 +68,10 @@ import { ReactComponent as ForwardGroup } from 'assets/icons/ForwardGroup.svg';
 import { ReactComponent as IconGroup } from 'assets/icons/UsersThree.svg';
 import { ReactComponent as StarAuthor } from 'assets/icons/StarAuthor.svg';
 import { ReactComponent as ShareAuthor } from 'assets/icons/shareAuthor.svg';
+import { ReactComponent as Setting } from 'assets/icons/Setting_fill.svg';
+
 export {
+	Setting,
 	ShareAuthor,
 	StarAuthor,
 	TimeIcon,

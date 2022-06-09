@@ -49,31 +49,38 @@ const PostsShare = ({ postData, className }) => {
 					<UserAvatar
 						data-testid='post__user-avatar'
 						className='post__user-status__avatar'
-						source={postData?.createdBy?.avatarImage}
+						source={
+							postData.sharePost
+								? postData.sharePost.createdBy.avatarImage
+								: postData?.createdBy?.avatarImage
+						}
 					/>
 
 					<div className='post__user-status__name-and-post-time-status'>
 						<div data-testid='post__user-name' className='post__user-status__name'>
-							{postData?.createdBy?.fullName || postData?.user?.fullName || 'Ẩn danh'}
+							{postData.sharePost
+								? postData.sharePost.createdBy.fullName
+								: postData?.createdBy?.fullName || postData?.user?.fullName || 'Ẩn danh'}
 						</div>
 						<div className='post__user-status__post-time-status'>
 							<span>{calculateDurationTime(postData.time || postData.createdAt)}</span>
 							<>
-								{postData.book && (
-									<div className='post__user-status__subtitle'>
-										<span>Cập nhật tiến độ đọc sách</span>
-										<div className='post__user-status__post-time-status__online-dot'></div>
-										<span>Xếp hạng</span>
-										<ReactRating
-											readonly={true}
-											initialRating={
-												postData?.book?.actorRating?.star
-													? postData?.book?.actorRating?.star
-													: 0
-											}
-										/>
-									</div>
-								)}
+								{postData.book ||
+									(postData.sharePost.book && (
+										<div className='post__user-status__subtitle'>
+											<span>Cập nhật tiến độ đọc sách</span>
+											<div className='post__user-status__post-time-status__online-dot'></div>
+											<span>Xếp hạng</span>
+											<ReactRating
+												readonly={true}
+												initialRating={
+													postData?.book?.actorRating?.star
+														? postData?.book?.actorRating?.star
+														: 0
+												}
+											/>
+										</div>
+									))}
 							</>
 						</div>
 					</div>
