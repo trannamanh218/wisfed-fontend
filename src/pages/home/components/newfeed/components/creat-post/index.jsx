@@ -8,6 +8,7 @@ import _ from 'lodash';
 import { updateCurrentBook } from 'reducers/redux-utils/book';
 import { resetTaggedDataFunc, saveDataShare, sharePosts } from 'reducers/redux-utils/post';
 import { useLocation } from 'react-router-dom';
+import { updateImg } from 'reducers/redux-utils/chart';
 
 function CreatePost({ onChangeNewPost }) {
 	const [showModalCreatPost, setShowModalCreatPost] = useState(false);
@@ -16,6 +17,7 @@ function CreatePost({ onChangeNewPost }) {
 	const scrollBlocked = useRef(false);
 	const location = useLocation();
 	const { postsData } = useSelector(state => state.post);
+	const { updateImgPost } = useSelector(state => state.chart);
 	const {
 		auth: { userInfo },
 		book: { bookForCreatePost },
@@ -84,11 +86,11 @@ function CreatePost({ onChangeNewPost }) {
 	}
 
 	useEffect(() => {
-		if (!_.isEmpty(bookForCreatePost) || !_.isEmpty(postsData)) {
+		if (!_.isEmpty(bookForCreatePost) || !_.isEmpty(postsData) || !_.isEmpty(updateImgPost)) {
 			setShowModalCreatPost(true);
 			dispatch(resetTaggedDataFunc(false));
 		}
-	}, [bookForCreatePost, postsData]);
+	}, [bookForCreatePost, postsData, updateImgPost]);
 
 	useEffect(() => {
 		if (showModalCreatPost) {
@@ -96,6 +98,7 @@ function CreatePost({ onChangeNewPost }) {
 				if (e.target === creatPostModalContainer.current) {
 					hideCreatPostModal();
 					dispatch(updateCurrentBook({}));
+					setShowModalCreatPost(false);
 				}
 			});
 			blockScroll();
@@ -132,6 +135,7 @@ function CreatePost({ onChangeNewPost }) {
 		dispatch(resetTaggedDataFunc(true));
 		dispatch(saveDataShare({}));
 		dispatch(sharePosts(false));
+		dispatch(updateImg([]));
 	};
 
 	const onChangeOption = data => {

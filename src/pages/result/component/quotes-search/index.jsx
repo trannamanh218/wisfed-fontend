@@ -5,7 +5,7 @@ import { NotificationError } from 'helpers/Error';
 import { checkLikeQuote } from 'reducers/redux-utils/quote';
 import ResultNotFound from '../result-not-found';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { getFilterSearchAuth, getFilterSearch } from 'reducers/redux-utils/search';
+import { getFilterSearch } from 'reducers/redux-utils/search';
 import Storage from 'helpers/Storage';
 import { useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -60,24 +60,12 @@ const QuoteSearch = ({ isFetching, value, setIsFetching, searchResultInput, acti
 				start: callApiStartQuotes.current,
 				limit: callApiPerPage.current,
 			};
-			if (activeKeyDefault === 'quotes') {
-				if (Storage.getAccessToken()) {
-					const result = await dispatch(getFilterSearchAuth(params)).unwrap();
-					if (result.rows.length > 0) {
-						callApiStartQuotes.current += callApiPerPage.current;
-						setListArrayQuotes(listArrayQuotes.concat(result.rows));
-					} else {
-						setHasMore(false);
-					}
-				} else {
-					const result = await dispatch(getFilterSearch(params)).unwrap();
-					if (result.rows.length > 0) {
-						callApiStartQuotes.current += callApiPerPage.current;
-						setListArrayQuotes(listArrayQuotes.concat(result.rows));
-					} else {
-						setHasMore(false);
-					}
-				}
+			const result = await dispatch(getFilterSearch(params)).unwrap();
+			if (result.rows.length > 0) {
+				callApiStartQuotes.current += callApiPerPage.current;
+				setListArrayQuotes(listArrayQuotes.concat(result.rows));
+			} else {
+				setHasMore(false);
 			}
 		} catch (err) {
 			NotificationError(err);

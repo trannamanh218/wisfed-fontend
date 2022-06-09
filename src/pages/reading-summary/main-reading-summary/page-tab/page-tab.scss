@@ -4,31 +4,39 @@
 	.select-box {
 		&__btn {
 			background-color: $primary-light;
-			width: 220px;
-			justify-content: center;
-			gap: 2rem;
+			justify-content: space-between;
 			font-weight: 600;
+			padding: 16px 40px;
+			width: 220px;
 		}
 
 		&__list {
 			width: 220px;
-			height: auto;
 			border-radius: 12px;
 			max-height: unset;
 			overflow-y: unset;
 			background-color: $primary-light;
 			margin-top: 1rem;
+			padding: 4px 40px;
 		}
 
 		&__item {
 			background-color: $primary-light;
-
+			line-height: 32px;
+			margin: 0;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
 			&.active {
 				border: unset;
-				background-color: $primary-light;
 				font-weight: 400;
 				svg {
-					display: none;
+					display: block;
+					margin: 0;
+					width: 14px;
+					path {
+						stroke: #222;
+					}
 				}
 			}
 		}

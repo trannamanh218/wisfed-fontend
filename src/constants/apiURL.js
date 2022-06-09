@@ -115,13 +115,13 @@ export const getAPIchartsByid = (id, count, by) => `/api/v1/report/reportBooksBy
 export const getReadingTargetAPI = '/api/v1/books/readingGoal';
 export const updateTargetReadAPI = year => `/api/v1/books/readingGoal/${year}`;
 export const getReadingTargetIdAPI = id => `/api/v1/books/readingGoalById/${id}`;
-
 // ranks
 export const getTopQuotesAPI = `/api/v1/report/reportTopQuotes`;
 export const getTopBooksAPI = `/api/v1/report/reportTopBooks`;
 export const getFilterTopUserAPI = `/api/v1/report/reportTopUsers`;
-export const getTopBooksApiAuth = `api/v1/report/reportTopBooksAuth`;
-export const getFilterTopUserApiAuth = `/api/v1/report/reportTopUsersAuth`;
+export const getTopBooksApiAuth = `api/v1/report/reportTopBooks`;
+export const getFilterTopUserApiAuth = `/api/v1/report/reportTopUsers`;
+export const getBooksChartsData = id => `/api/v1/report/growthChartBook/${id}`;
 
 // group
 export const detailGroup = id => `api/v1/groups/${id}`;
@@ -132,7 +132,6 @@ export const memberGroup = id => `/api/v1/groups/memberGroup/${id}`;
 
 // search
 export const getSearchAPI = `/api/v1/searchs`;
-export const getSearchAuthAPI = `/api/v1/searchs/searchAuth`;
 export const inviteFriend = id => `api/v1/groups/inviteMemberToGroup/${id}`;
 export const enjoyGroup = id => `/api/v1/groups/requestGroup/${id}`;
 export const leaveGroup = id => `/api/v1/groups/leaveGroup/${id}`;

@@ -7,22 +7,13 @@ import { NotificationError } from 'helpers/Error';
 import RouteLink from 'helpers/RouteLink';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import PropTypes from 'prop-types';
-import { getFilterSearchAuth, getFilterSearch } from 'reducers/redux-utils/search';
+import { getFilterSearch } from 'reducers/redux-utils/search';
 import { useEffect, useState, useRef, useCallback } from 'react';
-import Storage from 'helpers/Storage';
 import LoadingIndicator from 'shared/loading-indicator';
 import { getCategoryDetail } from 'reducers/redux-utils/category';
 import ResultNotFound from '../result-not-found';
 
-const CategorySearch = ({
-	value,
-	reload,
-	setIsFetching,
-	searchResultInput,
-	activeKeyDefault,
-	updateBooks,
-	isFetching,
-}) => {
+const CategorySearch = ({ value, reload, setIsFetching, searchResultInput, activeKeyDefault, updateBooks }) => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const [listArrayCategory, setListArrayCategory] = useState([]);
@@ -59,23 +50,12 @@ const CategorySearch = ({
 				start: callApiStartCategory.current,
 				limit: callApiPerPage.current,
 			};
-
-			if (Storage.getAccessToken()) {
-				const result = await dispatch(getFilterSearchAuth(params)).unwrap();
-				if (result.rows.length > 0) {
-					callApiStartCategory.current += callApiPerPage.current;
-					setListArrayCategory(listArrayCategory.concat(result.rows));
-				} else {
-					setHasMore(false);
-				}
+			const result = await dispatch(getFilterSearch(params)).unwrap();
+			if (result.rows.length > 0) {
+				callApiStartCategory.current += callApiPerPage.current;
+				setListArrayCategory(listArrayCategory.concat(result.rows));
 			} else {
-				const result = await dispatch(getFilterSearch(params)).unwrap();
-				if (result.rows.length > 0) {
-					callApiStartCategory.current += callApiPerPage.current;
-					setListArrayCategory(listArrayCategory.concat(result.rows));
-				} else {
-					setHasMore(false);
-				}
+				setHasMore(false);
 			}
 		} catch (err) {
 			NotificationError(err);
@@ -107,7 +87,7 @@ const CategorySearch = ({
 
 	return (
 		<div className='category__search__container'>
-			{listArrayCategory.length ? (
+			{listArrayCategory.length && activeKeyDefault === 'categories' ? (
 				<InfiniteScroll
 					dataLength={listArrayCategory.length}
 					next={handleGetGroupSearch}
@@ -142,6 +122,5 @@ CategorySearch.propTypes = {
 	searchResultInput: PropTypes.string,
 	value: PropTypes.string,
 	updateBooks: PropTypes.bool,
-	isFetching: PropTypes.bool,
 };
 export default CategorySearch;

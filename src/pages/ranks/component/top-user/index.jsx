@@ -36,13 +36,13 @@ const TopUser = ({ rows, listYear }) => {
 		let params = {};
 		if (valueDataSort === 'topFollow') {
 			params = {
-				sortType: valueDataSort,
+				reportType: valueDataSort,
 				by: valueDate,
 			};
 			setCheckSelectBox(true);
 		} else {
 			params = {
-				sortType: valueDataSort,
+				reportType: valueDataSort,
 				by: valueDate,
 				categoryId: topUserFilter,
 			};

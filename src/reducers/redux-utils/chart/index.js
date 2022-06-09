@@ -5,6 +5,7 @@ import {
 	updateTargetReadAPI,
 	getAPIchartsByid,
 	getReadingTargetIdAPI,
+	getBooksChartsData,
 } from 'constants/apiURL';
 import Request from 'helpers/Request';
 
@@ -18,6 +19,20 @@ export const getChartsByid = createAsyncThunk('targetReading/getListChartsId', a
 		throw rejectWithValue(error);
 	}
 });
+
+export const getChartsBooks = createAsyncThunk(
+	'targetReading/getListChartsBook',
+	async (params, { rejectWithValue }) => {
+		const { id, ...query } = params;
+		try {
+			const response = await Request.makeGet(getBooksChartsData(id), query);
+			return response.data;
+		} catch (err) {
+			const error = JSON.stringify(err.response);
+			throw rejectWithValue(error);
+		}
+	}
+);
 
 export const getListBooksReadYear = createAsyncThunk(
 	'chart/getListBooksReadYear',
@@ -95,7 +110,7 @@ const chartSlice = createSlice({
 		error: {},
 		targetReading: [],
 		renderTarget: false,
-		checkRenderTarget: null,
+		checkRenderTarget: false,
 	},
 	reducers: {
 		updateImg: (state, action) => {

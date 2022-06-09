@@ -5,9 +5,9 @@ import ResultNotFound from '../result-not-found';
 import PropTypes from 'prop-types';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import LoadingIndicator from 'shared/loading-indicator';
-import { getFilterSearchAuth, getFilterSearch } from 'reducers/redux-utils/search';
+import { getFilterSearch } from 'reducers/redux-utils/search';
 import { NotificationError } from 'helpers/Error';
-import Storage from 'helpers/Storage';
+
 import { useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -49,24 +49,13 @@ const BookSearch = ({ isFetching, value, setIsFetching, searchResultInput, activ
 				limit: callApiPerPage.current,
 			};
 
-			if (Storage.getAccessToken()) {
-				const result = await dispatch(getFilterSearchAuth(params)).unwrap();
-				setCount(result.count);
-				if (result.rows.length > 0) {
-					callApiStartBooks.current += callApiPerPage.current;
-					setListArrayBooks(listArrayBooks.concat(result.rows));
-				} else {
-					setHasMore(false);
-				}
+			const result = await dispatch(getFilterSearch(params)).unwrap();
+			setCount(result.count);
+			if (result.rows.length > 0) {
+				callApiStartBooks.current += callApiPerPage.current;
+				setListArrayBooks(listArrayBooks.concat(result.rows));
 			} else {
-				const result = await dispatch(getFilterSearch(params)).unwrap();
-				setCount(result.count);
-				if (result.rows.length > 0) {
-					callApiStartBooks.current += callApiPerPage.current;
-					setListArrayBooks(listArrayBooks.concat(result.rows));
-				} else {
-					setHasMore(false);
-				}
+				setHasMore(false);
 			}
 		} catch (err) {
 			NotificationError(err);

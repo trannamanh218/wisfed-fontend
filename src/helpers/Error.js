@@ -187,6 +187,9 @@ const errVN = {
 	903: {
 		vi: 'hashtag không hợp lệ',
 	},
+	759: {
+		vi: 'Type không hợp lệ',
+	},
 };
 
 export const NotificationError = err => {

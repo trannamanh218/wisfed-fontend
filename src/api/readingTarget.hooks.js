@@ -1,13 +1,14 @@
 import { STATUS_IDLE, STATUS_LOADING, STATUS_SUCCESS } from 'constants';
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { getListBooksTargetReading, updateTargetReading, checkRenderTargetReading } from 'reducers/redux-utils/chart';
+import { getListBooksTargetReading, updateTargetReading } from 'reducers/redux-utils/chart';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
+import { generateQuery } from 'helpers/Common';
 
 export const useFetchTargetReading = (userIdParams, modalOpen, deleteModal, filter = '[]') => {
 	const [status, setStatus] = useState(STATUS_IDLE);
-	const { targetReading, renderTarget } = useSelector(state => state.chart);
+	const { targetReading, renderTarget, checkRenderTarget } = useSelector(state => state.chart);
 	const [booksReadYear, setBooksReadYear] = useState([]);
 	const { userId } = useParams();
 	const [retry, setRetry] = useState(false);
@@ -17,7 +18,6 @@ export const useFetchTargetReading = (userIdParams, modalOpen, deleteModal, filt
 	const retryRequest = () => {
 		setRetry(!retry);
 	};
-
 	useEffect(async () => {
 		let isMount = true;
 		if (isMount) {
@@ -28,19 +28,20 @@ export const useFetchTargetReading = (userIdParams, modalOpen, deleteModal, filt
 						const dob = new Date();
 						const year = dob.getFullYear();
 						let newData = [];
-						if (targetReading.length > 0 && userInfo.id === userIdParams && userId && !checkUser) {
-							newData = targetReading.filter(item => item.year === year);
-							setBooksReadYear(newData);
+						const newTargetReading = targetReading.filter(item => item.year === year);
+						if (
+							newTargetReading.length > 0 &&
+							userInfo.id === userIdParams &&
+							userId &&
+							!checkUser &&
+							checkRenderTarget
+						) {
+							setBooksReadYear(newTargetReading);
 						} else {
 							dispatch(updateTargetReading([]));
 							const data = await dispatch(getListBooksTargetReading(userIdParams)).unwrap();
 							newData = data.filter(item => item.year === year);
 							setBooksReadYear(newData);
-						}
-						if (newData.length > 0) {
-							dispatch(checkRenderTargetReading(true));
-						} else {
-							dispatch(checkRenderTargetReading(false));
 						}
 						setStatus(STATUS_SUCCESS);
 					}
@@ -55,7 +56,7 @@ export const useFetchTargetReading = (userIdParams, modalOpen, deleteModal, filt
 		return () => {
 			isMount = false;
 		};
-	}, [retry, modalOpen, deleteModal, userIdParams, filter, renderTarget]);
+	}, [retry, modalOpen, deleteModal, userIdParams, renderTarget, checkRenderTarget, filter]);
 
 	return { status, booksReadYear, retryRequest };
 };

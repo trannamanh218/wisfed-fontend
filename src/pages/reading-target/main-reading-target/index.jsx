@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import SearchField from 'shared/search-field';
 import UserAvatar from 'shared/user-avatar';
 import LinearProgressBar from 'shared/linear-progress-bar';
@@ -19,6 +19,7 @@ const MainReadingTarget = () => {
 	const { userInfo } = useSelector(state => state.auth);
 	const { userData } = useFetchUserParams(userId);
 	const { modalOpen, setModalOpen, toggleModal } = useModal(false);
+	const [numberBookRead, setNumberBookRead] = useState(0);
 	const [deleteModal, setDeleteModal] = useState(false);
 	const [filter, setFilter] = useState('[]');
 	const [inputSearch, setInputSearch] = useState('');
@@ -26,10 +27,10 @@ const MainReadingTarget = () => {
 
 	const renderLinearProgressBar = item => {
 		let percent = 0;
-		if (item.booksReadCount > item.numberBook) {
+		if (numberBookRead > item.numberBook) {
 			percent = 100;
 		} else {
-			percent = ((item.booksReadCount / item.numberBook) * 100).toFixed();
+			percent = ((numberBookRead / item.numberBook) * 100).toFixed();
 		}
 		return <LinearProgressBar height={2.75} percent={percent} label={`${percent} %`} />;
 	};
@@ -59,13 +60,18 @@ const MainReadingTarget = () => {
 		setInputSearch(e.target.value);
 		debounceSearch(e.target.value);
 	};
+	useEffect(() => {
+		if (booksReadYear.length) {
+			setNumberBookRead(booksReadYear[0]?.booksReadCount);
+		}
+	}, []);
 
 	const renderContentTop = item => {
 		const name = userInfo.id === userId ? 'Bạn' : userData?.fullName;
 		return (
 			<div className='reading-target__content__top'>
 				<p>
-					{name} đã đọc được {item.booksReadCount} trên {item.numberBook} cuốn
+					{name} đã đọc được {numberBookRead} trên {item.numberBook} cuốn
 				</p>
 				{userInfo.id === userId && (
 					<>

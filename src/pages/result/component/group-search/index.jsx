@@ -3,7 +3,7 @@ import Button from 'shared/button';
 import DefaultImageGroup from 'assets/images/DefaultImageGroup.png';
 import PropTypes from 'prop-types';
 import LoadingIndicator from 'shared/loading-indicator';
-import { getFilterSearchAuth, getFilterSearch } from 'reducers/redux-utils/search';
+import { getFilterSearch } from 'reducers/redux-utils/search';
 import { NotificationError } from 'helpers/Error';
 import Storage from 'helpers/Storage';
 import { useEffect, useState, useRef } from 'react';
@@ -50,23 +50,12 @@ const GroupSearch = ({ value, setIsFetching, searchResultInput, activeKeyDefault
 				start: callApiStart.current,
 				limit: callApiPerPage.current,
 			};
-
-			if (Storage.getAccessToken()) {
-				const result = await dispatch(getFilterSearchAuth(params)).unwrap();
-				if (result.rows.length > 0) {
-					callApiStart.current += callApiPerPage.current;
-					setListArrayGroup(listArrayGroup.concat(result.rows));
-				} else {
-					setHasMore(false);
-				}
+			const result = await dispatch(getFilterSearch(params)).unwrap();
+			if (result.rows.length > 0) {
+				callApiStart.current += callApiPerPage.current;
+				setListArrayGroup(listArrayGroup.concat(result.rows));
 			} else {
-				const result = await dispatch(getFilterSearch(params)).unwrap();
-				if (result.rows.length > 0) {
-					callApiStart.current += callApiPerPage.current;
-					setListArrayGroup(listArrayGroup.concat(result.rows));
-				} else {
-					setHasMore(false);
-				}
+				setHasMore(false);
 			}
 		} catch (err) {
 			NotificationError(err);

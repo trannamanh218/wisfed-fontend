@@ -7,11 +7,14 @@
 			font-size: 13px;
 		}
 		.book-row {
+			.title {
+				text-align: left !important;
+			}
 			.book-name {
 				max-width: 98px;
 				font-size: 14.9px;
 				color: #4e4b66;
-				text-align: left;
+				text-align: center;
 			}
 			.custom-td {
 				display: flex;
@@ -23,6 +26,7 @@
 				color: #0576f0;
 				text-decoration-line: underline;
 				font-size: 12px;
+				cursor: pointer;
 			}
 			.book-name-title {
 				display: flex;

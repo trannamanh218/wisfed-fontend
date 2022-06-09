@@ -11,6 +11,8 @@ import ChartsReading from 'shared/charts-Reading';
 import { useFetchAuthorBooks } from 'api/book.hooks';
 import { useParams } from 'react-router-dom';
 import RenderProgress from 'shared/render-progress';
+import ProgressBarCircle from 'shared/progress-circle';
+import { useFetchTargetReading } from 'api/readingTarget.hooks';
 import _ from 'lodash';
 import ProgressBarCircle from 'shared/progress-circle';
 import { NotificationError } from 'helpers/Error';
@@ -23,6 +25,7 @@ const SidebarShelves = ({ userData, isMyShelve, handleViewBookDetail }) => {
 	const { userId } = useParams();
 	const { booksAuthor } = useFetchAuthorBooks(userId);
 	const { userInfo } = useSelector(state => state.auth);
+	const { booksReadYear } = useFetchTargetReading(userId);
 	const { quoteData } = useFetchQuotes(
 		0,
 		3,

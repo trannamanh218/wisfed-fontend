@@ -29,7 +29,6 @@ function ReadChallenge({ modalOpen, setModalOpen }) {
 	}, [inputValue]);
 
 	const handleChangeTarget = async () => {
-		dispatch(renderTargetReadingProgress(true));
 		if (modalOpen) {
 			try {
 				const dob = new Date();
@@ -41,12 +40,14 @@ function ReadChallenge({ modalOpen, setModalOpen }) {
 					year: year,
 					...query,
 				};
+				dispatch(checkRenderTargetReading(true));
 				return await dispatch(updateTargetRead(params)).unwrap();
 			} catch (err) {
 				NotificationError(err);
 			} finally {
 				toast.success('Sửa mục tiêu thành công');
 				setModalOpen(false);
+				dispatch(checkRenderTargetReading(false));
 			}
 		} else {
 			try {
@@ -57,10 +58,11 @@ function ReadChallenge({ modalOpen, setModalOpen }) {
 					numberBook: inputValue,
 				};
 				await dispatch(createTargetRead(params)).unwrap();
-				dispatch(checkRenderTargetReading(true));
 				return toast.success('Tạo mục tiêu thành công');
 			} catch (err) {
 				NotificationError(err);
+			} finally {
+				dispatch(renderTargetReadingProgress(true));
 			}
 		}
 	};
