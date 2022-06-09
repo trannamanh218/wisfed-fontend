@@ -35,10 +35,9 @@ function PostBook({ data }) {
 			setPercenProgress(newPropgress);
 		}
 	}, []);
-
 	return (
 		<div className='post-book'>
-			<BookThumbnail source={data?.images[0]} />
+			{data.images.length > 0 && <BookThumbnail source={data?.images[0]} />}
 			<div className='post-book__informations'>
 				<div className='post-book__name-and-author'>
 					<div className='post-book__name' title={data.name}>

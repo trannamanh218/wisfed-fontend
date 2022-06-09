@@ -327,7 +327,7 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 		setStatus(STATUS_LOADING);
 
 		try {
-			if (isShare || !isSharePosts) {
+			if (isShare || isSharePosts) {
 				if (isShare) {
 					const query = {
 						id: postsData.sharePost ? postsData.sharePost.minipostId : postsData.id,
@@ -336,9 +336,23 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 					};
 					await dispatch(getSharePostInternal(query)).unwrap();
 				} else {
+					let newId;
+					let newType;
+					if (postsData.verb === 'miniPost') {
+						newId = postsData.minipostId;
+						newType = 'post';
+					} else {
+						if (postsData.sharePost.minipostId) {
+							newId = postsData.sharePost.minipostId;
+							newType = 'post';
+						} else {
+							newId = postsData.sharePost.id;
+							newType = 'quote';
+						}
+					}
 					const query = {
-						id: postsData.sharePost ? postsData.sharePost.minipostId : postsData.minipostId,
-						type: 'post',
+						id: newId,
+						type: newType,
 						...params,
 					};
 					await dispatch(getSharePostInternal(query)).unwrap();
@@ -544,7 +558,9 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 							/>
 
 							{isShare && <PostQuotes postsData={postsData} />}
-							{isSharePosts && <Post postInformations={postsData} />}
+							{isSharePosts && (
+								<Post postInformations={postsData} showModalCreatPost={showModalCreatPost} />
+							)}
 							{!_.isEmpty(taggedData.addBook) && (
 								<PostEditBook
 									data={taggedData.addBook}

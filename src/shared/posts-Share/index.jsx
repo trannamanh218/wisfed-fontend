@@ -81,36 +81,36 @@ const PostsShare = ({ postData, className }) => {
 				<div
 					className='post__description'
 					dangerouslySetInnerHTML={{
-						__html: postData.sharePost.message || postData.sharePost.content,
+						__html: postData.sharePost?.message || postData.sharePost?.content,
 					}}
 				></div>
 				<ul className='tagged'>
-					{postData.sharePost.mentionsAuthors?.map(item => (
+					{postData.sharePost?.mentionsAuthors?.map(item => (
 						<li key={item.id} className={classNames('badge bg-primary-light')}>
 							<Feather />
 							<span>
 								{item.authors.name ||
-									item.authors.fullName ||
-									item.authors.lastName ||
-									item.authors.firstName ||
+									item.authors?.fullName ||
+									item.authors?.lastName ||
+									item.authors?.firstName ||
 									'Không xác định'}
 							</span>
 						</li>
 					))}
 				</ul>
-				{postData.isShare && postData.verb === 'shareQuote' && <PostQuotes postsData={postData} />}
-				{postData.sharePost.book && (
+				{postData?.isShare && postData?.verb === 'shareQuote' && <PostQuotes postsData={postData} />}
+				{postData?.sharePost?.book && (
 					<PostBook
 						data={{
-							...postData.sharePost.book,
-							bookLibrary: postData.bookLibrary,
-							actorCreatedPost: postData.actor,
+							...postData.sharePost?.book,
+							bookLibrary: postData?.bookLibrary,
+							actorCreatedPost: postData?.actor,
 						}}
 					/>
 				)}
 
 				{postData?.sharePost.image?.length > 0 && (
-					<GridImage images={postData?.sharePost.image} inPost={true} postId={postData.id} />
+					<GridImage images={postData?.sharePost.image} inPost={true} postId={postData?.id} />
 				)}
 
 				{postData?.sharePost.image?.length === 0 &&

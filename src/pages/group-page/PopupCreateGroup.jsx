@@ -155,7 +155,7 @@ const PopupCreateGroup = ({ handleClose }) => {
 			<div>
 				<div className='upload-image__wrapper'>
 					{imgUrl ? (
-						<img style={{ width: '700px', height: '266px' }} src={imgUrl} alt='img' />
+						<img style={{ width: '700px', height: '266px', objectFit: 'cover' }} src={imgUrl} alt='img' />
 					) : (
 						<Dropzone>
 							{() => (

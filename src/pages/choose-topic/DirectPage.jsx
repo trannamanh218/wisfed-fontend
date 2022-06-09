@@ -1,15 +1,18 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { useSearchParams } from 'react-router-dom';
+import { useLocation, useSearchParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { checkApiToken } from 'reducers/redux-utils/auth';
 import { useNavigate } from 'react-router-dom';
+import Circle from 'shared/loading/circle';
 
 export default function Direct() {
+	const [isFetching, setIsFetching] = useState(true);
 	const search = useSearchParams();
 	const newToken = search[0].get('token');
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
+	const location = useLocation();
 
 	const checkToken = async () => {
 		try {
@@ -24,8 +27,19 @@ export default function Direct() {
 	};
 
 	useEffect(() => {
-		checkToken();
+		if (location.pathname === 'direct') {
+			checkToken();
+			setIsFetching(false);
+		} else if (location.pathname === '/direct/login') {
+			localStorage.setItem('accessToken', newToken);
+			setIsFetching(false);
+			navigate('/');
+		}
 	}, [newToken]);
 
-	return <></>;
+	return (
+		<>
+			<Circle loading={isFetching} />
+		</>
+	);
 }

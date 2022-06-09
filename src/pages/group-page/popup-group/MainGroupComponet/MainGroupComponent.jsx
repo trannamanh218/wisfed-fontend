@@ -20,7 +20,7 @@ import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
 import Circle from 'shared/loading/circle';
 
-function MainGroupComponent({ handleChange, keyChange, data, backgroundImage }) {
+function MainGroupComponent({ handleChange, keyChange, data, backgroundImage, member }) {
 	const [key, setKey] = useState('intro');
 	const { groupType, description, memberGroups, name } = data;
 	const [isShow, setIsShow] = useState(false);
@@ -171,7 +171,7 @@ function MainGroupComponent({ handleChange, keyChange, data, backgroundImage }) 
 							<MainPostGroup />
 						</Tab>
 						<Tab eventKey='member' title='Thành viên'>
-							<MemberGroup memberGroups={memberGroups} />
+							<MemberGroup memberGroups={member} />
 						</Tab>
 					</Tabs>
 				</div>
@@ -189,6 +189,7 @@ MainGroupComponent.propTypes = {
 	keyChange: PropTypes.string,
 	data: PropTypes.object,
 	backgroundImage: PropTypes.string,
+	member: PropTypes.array,
 };
 
 export default MainGroupComponent;

@@ -66,7 +66,11 @@ import { ReactComponent as IconCheck } from 'assets/icons/circleCheck.svg';
 import { ReactComponent as LogOutGroup } from 'assets/icons/Log Out Square.svg';
 import { ReactComponent as ForwardGroup } from 'assets/icons/ForwardGroup.svg';
 import { ReactComponent as IconGroup } from 'assets/icons/UsersThree.svg';
+import { ReactComponent as StarAuthor } from 'assets/icons/StarAuthor.svg';
+import { ReactComponent as ShareAuthor } from 'assets/icons/shareAuthor.svg';
 export {
+	ShareAuthor,
+	StarAuthor,
 	TimeIcon,
 	Crown,
 	ShareRanks,

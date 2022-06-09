@@ -75,6 +75,10 @@
 	display: flex;
 	margin-top: 15px;
 	.people-item__text {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex-direction: column;
 		margin-left: 14.5px;
 		span {
 			font-family: 'Montserrat';

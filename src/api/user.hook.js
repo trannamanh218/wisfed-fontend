@@ -61,6 +61,7 @@ export const useFetchUserParams = userId => {
 			const fetchData = async () => {
 				try {
 					const data = await dispatch(getUserDetail(userId)).unwrap();
+
 					setUserData(data);
 					setStatus(STATUS_SUCCESS);
 				} catch (err) {
