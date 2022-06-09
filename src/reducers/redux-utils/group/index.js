@@ -11,6 +11,7 @@ import {
 	myGroup,
 	adminGroup,
 	memberGroup,
+	listTagGroup,
 } from 'constants/apiURL';
 import Request from 'helpers/Request';
 
@@ -29,6 +30,17 @@ export const getGroupDettail = createAsyncThunk('group/getGroupDettail', async (
 		const res = await Request.makeGet(detailGroup(id));
 
 		return res;
+	} catch (err) {
+		const error = JSON.parse(err.response);
+		return rejectWithValue(error);
+	}
+});
+
+export const getTagGroup = createAsyncThunk('group/getTagGroup', async (id = {}, { rejectWithValue }) => {
+	try {
+		const res = await Request.makeGet(listTagGroup(id));
+
+		return res.data;
 	} catch (err) {
 		const error = JSON.parse(err.response);
 		return rejectWithValue(error);

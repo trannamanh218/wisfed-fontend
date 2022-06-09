@@ -9,8 +9,10 @@ import {
 	checkLikeQuoteCommentAPI,
 	getMyLikedQuotesAPI,
 	getQuotesByFriendsOrFollowersAPI,
+	likeCommentGroup,
 } from 'constants/apiURL';
 import Request from 'helpers/Request';
+import { useLocation } from 'react-router-dom';
 
 export const getQuoteList = createAsyncThunk('quote/get quote list', async (params, { rejectWithValue }) => {
 	try {
@@ -73,8 +75,16 @@ export const checkLikeQuote = createAsyncThunk('quote/check like quote', async (
 });
 
 export const likeQuoteComment = createAsyncThunk('quote/like quote', async (id, { rejectWithValue }) => {
+	let response;
+	const location = useLocation();
 	try {
-		const response = await Request.makePatch(likeQuoteCommentAPI(id));
+		if (location.pathname.includes('group')) {
+			console.log('aaaaaa');
+			response = await Request.makePatch(likeCommentGroup(id));
+		} else {
+			response = await Request.makePatch(likeQuoteCommentAPI(id));
+			console.log('aavvvvva');
+		}
 		return response.data;
 	} catch (err) {
 		const error = JSON.parse(err.response);

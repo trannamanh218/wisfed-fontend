@@ -1,5 +1,13 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { activityAPI, bookAPI, categoryAPI, friendAPI, likeActivityAPI, userAPI } from 'constants/apiURL';
+import {
+	activityAPI,
+	bookAPI,
+	categoryAPI,
+	friendAPI,
+	likeActivityAPI,
+	likeGroupPost,
+	userAPI,
+} from 'constants/apiURL';
 import Request from 'helpers/Request';
 // import { checkBookInLibraries } from '../library';
 // import { NotificationError } from 'helpers/Error';
@@ -88,6 +96,19 @@ export const updateReactionActivity = createAsyncThunk(
 	async (minipostId, { rejectWithValue }) => {
 		try {
 			const response = await Request.makePatch(likeActivityAPI(minipostId));
+			return response.data;
+		} catch (err) {
+			const error = JSON.stringify(err.response);
+			throw rejectWithValue(error);
+		}
+	}
+);
+
+export const updateReactionActivityGroup = createAsyncThunk(
+	'activity/updateReactionActivityGroup',
+	async (minipostId, { rejectWithValue }) => {
+		try {
+			const response = await Request.makePatch(likeGroupPost(minipostId));
 			return response.data;
 		} catch (err) {
 			const error = JSON.stringify(err.response);

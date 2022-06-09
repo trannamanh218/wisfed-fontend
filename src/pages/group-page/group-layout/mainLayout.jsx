@@ -17,10 +17,15 @@ const MainLayout = ({ listGroup }) => {
 										<span>{item.name}</span>
 									</div>
 									<div className='item-group__description'>
-										<span>{item?.description?.length} thành viên</span>
+										<span>
+											{item?.countMember < 10 ? `0${item.countMember}` : item.countMember} thành
+											viên
+										</span>
 									</div>
 									<div className='item-group__count-post'>
-										<span>{item.name.length} bài viết/ngày</span>
+										<span>
+											{item?.countPost < 10 ? `0${item.countPost}` : item.countPost} bài viết/ngày
+										</span>
 									</div>
 									<div className='item-group-btn'>
 										<button>Truy cập vào nhóm </button>
