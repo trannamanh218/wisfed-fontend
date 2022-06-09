@@ -17,9 +17,9 @@ import PropTypes from 'prop-types';
 import { Modal, ModalBody } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-import { addToFavoriteCategory } from 'reducers/redux-utils/user';
+import { editUserInfo } from 'reducers/redux-utils/user';
 import { NotificationError } from 'helpers/Error';
-import { getListBookByCategory, checkLikedCategoryRedux, getPostsByCategory } from 'reducers/redux-utils/category';
+import { getListBookByCategory, getPostsByCategory } from 'reducers/redux-utils/category';
 import caretIcon from 'assets/images/caret.png';
 import { getBookDetail } from 'reducers/redux-utils/book';
 import RouteLink from 'helpers/RouteLink';
@@ -28,13 +28,14 @@ import LoadingIndicator from 'shared/loading-indicator';
 import { STATUS_LOADING } from 'constants';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import FormCheckGroup from 'shared/form-check-group';
+import { getFavoriteCategories } from 'reducers/redux-utils/category';
 
 const MainCategoryDetail = () => {
 	const { id } = useParams();
 	const { categoryInfo, status } = useFetchCategoryDetail(id);
 
 	const [bookList, setBookList] = useState([]);
-	const [isLike, setIsLike] = useState(null);
+	const [isLike, setIsLike] = useState(false);
 	const [inputSearch, setInputSearch] = useState('');
 	const [filter, setFilter] = useState('[]');
 	const [hasMore, setHasMore] = useState(true);
@@ -46,6 +47,7 @@ const MainCategoryDetail = () => {
 	const [sortValue, setSortValue] = useState('like');
 	const [sortDirection, setSortDirection] = useState('DESC');
 	const [sortValueTemp, setSortValueTemp] = useState('default');
+	const [favoriteCategories, setFavorriteCategories] = useState([]);
 
 	const callApiStart = useRef(16);
 	const callApiPerPage = useRef(16);
@@ -72,13 +74,14 @@ const MainCategoryDetail = () => {
 	];
 
 	useEffect(() => {
-		if (!_.isEmpty(userInfo)) {
-			setHasMore(true);
-			callApiStart.current = 16;
-			setFilter('[]');
-			checkLikedCategory();
-			getBooksByCategoryFirstTime();
-		}
+		checkFavoriteCategoriesData();
+	}, [id]);
+
+	useEffect(() => {
+		setHasMore(true);
+		callApiStart.current = 16;
+		setFilter('[]');
+		getBooksByCategoryFirstTime();
 	}, [userInfo, id]);
 
 	useEffect(() => {
@@ -93,10 +96,20 @@ const MainCategoryDetail = () => {
 		getBooksByCategoryFirstTime();
 	}, [filter]);
 
-	const checkLikedCategory = async () => {
+	const checkFavoriteCategoriesData = async () => {
 		try {
-			const res = await dispatch(checkLikedCategoryRedux(id)).unwrap();
-			setIsLike(res.isFavorite);
+			const res = await dispatch(getFavoriteCategories()).unwrap();
+			if (res.rows.length) {
+				const index = res.rows.findIndex(item => item.categoryId === parseInt(id));
+				if (index !== -1) {
+					setIsLike(true);
+				} else {
+					setIsLike(false);
+				}
+				setFavorriteCategories(res.rows);
+			} else {
+				setIsLike(false);
+			}
 		} catch (err) {
 			NotificationError(err);
 		}
@@ -107,22 +120,24 @@ const MainCategoryDetail = () => {
 		if (_.isEmpty(userInfo)) {
 			toast.warn('Vui lòng đăng nhập để sử dụng tính năng này');
 		} else {
-			const arrTemp = Array.from(userInfo.favoriteCategory, item => item.categoryId);
 			let favoriteCategory = [];
 			if (isLike) {
-				favoriteCategory = arrTemp.filter(item => item !== categoryId);
+				favoriteCategories.forEach(item => {
+					if (item.categoryId !== categoryId) {
+						favoriteCategory.push(item.categoryId);
+					}
+				});
 			} else {
-				favoriteCategory = arrTemp;
+				favoriteCategory = favoriteCategories.map(item => item.categoryId);
 				favoriteCategory.push(categoryId);
 			}
 
 			try {
 				const params = {
-					id: userInfo.id,
-					favoriteCategory,
+					favoriteCategory: favoriteCategory,
 				};
-				await dispatch(addToFavoriteCategory(params));
-				setIsLike(like => !like);
+				await dispatch(editUserInfo({ userId: userInfo.id, params: params }));
+				setIsLike(!isLike);
 			} catch (err) {
 				NotificationError(err);
 			}
@@ -330,6 +345,7 @@ const MainCategoryDetail = () => {
 													list={categoryInfo.topBookReads}
 													title='Đọc nhiều nhất tuần này'
 													handleViewBookDetail={handleViewBookDetail}
+													inCategoryDetail={true}
 												/>
 											)}
 

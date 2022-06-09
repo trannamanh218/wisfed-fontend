@@ -27,8 +27,6 @@ const Category = () => {
 			navigate(RouteLink.categoryDetail(data.id, data.name));
 		} catch (err) {
 			NotificationError(err);
-			const statusCode = err?.statusCode || 500;
-			setStatus(statusCode);
 		}
 	};
 

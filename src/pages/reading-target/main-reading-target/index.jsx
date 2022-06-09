@@ -85,7 +85,12 @@ const MainReadingTarget = () => {
 		<div key={item.id} className='reading-target'>
 			<div className='reading-target__header'>
 				<h4>Mục tiêu đọc sách năm {item.year}</h4>
-				<SearchField placeholder='Tìm kiếm sách' handleChange={handleSearch} value={inputSearch} />
+				<SearchField
+					className='main-shelves__search'
+					placeholder='Tìm kiếm sách'
+					handleChange={handleSearch}
+					value={inputSearch}
+				/>
 			</div>
 			<div className='reading-target__process'>
 				<UserAvatar className='reading-target__user' size='lg' />
@@ -97,22 +102,28 @@ const MainReadingTarget = () => {
 					</div>
 				</div>
 			</div>
+			<ModalReadTarget
+				modalOpen={modalOpen}
+				toggleModal={toggleModal}
+				setModalOpen={setModalOpen}
+				deleteModal={deleteModal}
+			/>
 
-			<div className='reading-target__table'>
-				<Table>
-					<thead className='reading-target__table__header'>
-						<tr>
-							<th colSpan={3}>Tên sách</th>
-							<th>Tác giả</th>
-							<th>Ngày thêm</th>
-							<th>Ngày đọc</th>
-							<th colSpan={2}>Ngày hoàn thành</th>
-						</tr>
-						<tr className='empty-row' />
-					</thead>
-					<tbody>
-						{!_.isEmpty(item.booksRead) ? (
-							item.booksRead.map((item, index) => (
+			{!_.isEmpty(item.booksRead) && (
+				<div className='reading-target__table'>
+					<Table>
+						<thead className='reading-target__table__header'>
+							<tr>
+								<th colSpan={3}>Tên sách</th>
+								<th>Tác giả</th>
+								<th>Ngày thêm</th>
+								<th>Ngày đọc</th>
+								<th colSpan={2}>Ngày hoàn thành</th>
+							</tr>
+							<tr className='empty-row' />
+						</thead>
+						<tbody>
+							{item.booksRead.map((item, index) => (
 								<>
 									<tr className={`highlight highlight-${index} `}>
 										<td colSpan={8}></td>
@@ -134,24 +145,14 @@ const MainReadingTarget = () => {
 										<td className='hightlight-column'></td>
 									</tr>
 								</>
-							))
-						) : (
-							<tr className='empty-data'>
-								<td colSpan={6}>Không có dữ liệu</td>
+							))}
+							<tr className='highlight'>
+								<td colSpan={8}></td>
 							</tr>
-						)}
-						<tr className='highlight'>
-							<td colSpan={8}></td>
-						</tr>
-					</tbody>
-				</Table>
-			</div>
-			<ModalReadTarget
-				modalOpen={modalOpen}
-				toggleModal={toggleModal}
-				setModalOpen={setModalOpen}
-				deleteModal={deleteModal}
-			/>
+						</tbody>
+					</Table>
+				</div>
+			)}
 		</div>
 	));
 };

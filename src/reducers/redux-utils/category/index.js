@@ -4,7 +4,6 @@ import {
 	categoryDetailAPI,
 	favoriteCategoriesAPI,
 	listBookByCategoryAPI,
-	checkLikedCategoryAPI,
 	postByCategoryAPI,
 } from 'constants/apiURL';
 import Request from 'helpers/Request';
@@ -49,19 +48,6 @@ export const getListBookByCategory = createAsyncThunk(
 			const { categoryId, params } = data;
 			const response = await Request.makeGet(listBookByCategoryAPI(categoryId), params);
 			return response.data.rows;
-		} catch (err) {
-			const error = JSON.parse(err.response);
-			throw rejectWithValue(error);
-		}
-	}
-);
-
-export const checkLikedCategoryRedux = createAsyncThunk(
-	'category/check liked category',
-	async (categoryId, { rejectWithValue }) => {
-		try {
-			const response = await Request.makeGet(checkLikedCategoryAPI(categoryId));
-			return response.data;
 		} catch (err) {
 			const error = JSON.parse(err.response);
 			throw rejectWithValue(error);
