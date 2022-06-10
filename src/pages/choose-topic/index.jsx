@@ -1,10 +1,10 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import './chooseTopic.scss';
 import Logo from 'assets/images/Logo 2.png';
 import { Form } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { getCategoryList } from 'reducers/redux-utils/category';
-import { addToFavoriteCategory } from 'reducers/redux-utils/user';
+import { editUserInfo } from 'reducers/redux-utils/user';
 // import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import SearchIcon from 'assets/icons/search.svg';
@@ -42,10 +42,9 @@ function ChooseTopic() {
 	const updateUser = async () => {
 		try {
 			const params = {
-				id: userInfo.id,
 				favoriteCategory: addFavorite,
 			};
-			await dispatch(addToFavoriteCategory(params));
+			await dispatch(editUserInfo({ userId: userInfo.id, params: params }));
 		} catch (err) {
 			NotificationError(err);
 		} finally {

@@ -14,7 +14,6 @@ import {
 import Request from 'helpers/Request';
 import Storage from 'helpers/Storage';
 import _ from 'lodash';
-import { editUserInfo } from '../user';
 import jwtDecode from 'jwt-decode';
 
 export const register = createAsyncThunk('auth/register', async (params, { rejectWithValue }) => {
@@ -197,21 +196,6 @@ const authSlice = createSlice({
 		[getUserInfo.rejected]: (state, action) => {
 			state.isFetching = false;
 
-			state.userInfo = {};
-			state.error = action.payload;
-		},
-		[editUserInfo.rejected]: (state, action) => {
-			state.isFetching = false;
-			state.userInfo = {};
-			state.error = action.payload;
-		},
-		[editUserInfo.fulfilled]: (state, action) => {
-			state.isFetching = false;
-			state.userInfo = action.payload;
-			state.error = {};
-		},
-		[editUserInfo.rejected]: (state, action) => {
-			state.isFetching = false;
 			state.userInfo = {};
 			state.error = action.payload;
 		},

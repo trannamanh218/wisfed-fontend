@@ -1,7 +1,7 @@
 import MainContainer from 'components/layout/main-container';
 import { STATUS_SUCCESS, STATUS_IDLE, STATUS_LOADING } from 'constants';
 import RouteLink from 'helpers/RouteLink';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { getCategoryDetail } from 'reducers/redux-utils/category';
@@ -14,6 +14,10 @@ const CategoryDetail = () => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
+	useEffect(() => {
+		window.scroll(0, 0);
+	}, []);
+
 	const viewCategoryDetail = async data => {
 		setStatus(STATUS_LOADING);
 		try {
@@ -22,8 +26,6 @@ const CategoryDetail = () => {
 			navigate(RouteLink.categoryDetail(data.id, data.name));
 		} catch (err) {
 			NotificationError(err);
-			const statusCode = err?.statusCode || 500;
-			setStatus(statusCode);
 		}
 	};
 

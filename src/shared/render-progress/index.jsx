@@ -1,8 +1,8 @@
 import ProgressBarCircle from 'shared/progress-circle';
 import ReadChallenge from 'shared/read-challenge';
 import PropTypes from 'prop-types';
-import { useFetchTargetReading } from 'api/readingTarget.hooks';
 import { memo } from 'react';
+import { useFetchTargetReading } from 'api/readingTarget.hooks';
 
 const RenderProgress = ({ userIdParams }) => {
 	const { booksReadYear } = useFetchTargetReading(userIdParams);
@@ -14,8 +14,7 @@ const RenderProgress = ({ userIdParams }) => {
 			return <ReadChallenge />;
 		}
 	};
-
-	return <>{renderProgressBar()}</>;
+	return renderProgressBar();
 };
 
 RenderProgress.propTypes = {

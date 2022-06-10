@@ -25,10 +25,10 @@ export const useFetchTargetReading = (userIdParams, modalOpen, deleteModal, filt
 
 			const fetchData = async () => {
 				const query = generateQuery(0, 10, filter);
-				const params = {
-					userId: userIdParams,
-					...query,
-				};
+				// const params = {
+				// 	userId: userIdParams,
+				// 	...query,
+				// };
 				try {
 					if (userIdParams) {
 						const dob = new Date();
@@ -45,7 +45,7 @@ export const useFetchTargetReading = (userIdParams, modalOpen, deleteModal, filt
 							setBooksReadYear(newTargetReading);
 						} else {
 							dispatch(updateTargetReading([]));
-							const data = await dispatch(getListBooksTargetReading(params)).unwrap();
+							const data = await dispatch(getListBooksTargetReading(userIdParams)).unwrap();
 							newData = data.filter(item => item.year === year);
 							setBooksReadYear(newData);
 						}

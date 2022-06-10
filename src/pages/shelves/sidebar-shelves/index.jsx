@@ -5,7 +5,7 @@ import QuotesLinks from 'shared/quote-links';
 import StatisticList from 'shared/statistic-list';
 import PropTypes from 'prop-types';
 import './sidebar-shelves.scss';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { useFetchQuotes } from 'api/quote.hooks';
 import ChartsReading from 'shared/charts-Reading';
 import { useFetchAuthorBooks } from 'api/book.hooks';
@@ -71,7 +71,7 @@ const SidebarShelves = ({ userData, isMyShelve, handleViewBookDetail }) => {
 						list={booksAuthor}
 						handleViewBookDetail={handleViewBookDetail}
 					/>
-					<Link className='view-all-link' to='/'>
+					<Link className='view-all-link' to={`/book-author/${userId}`}>
 						Xem thêm
 					</Link>
 				</div>

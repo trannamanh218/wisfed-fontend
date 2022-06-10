@@ -1,9 +1,9 @@
 @import 'src/scss/abstracts/_variables.scss';
 
 .shelf {
-	display: flex;
-	flex-wrap: wrap;
-	gap: 1rem;
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+	grid-gap: 1rem;
 	.book-item {
 		margin-bottom: 2rem;
 	}

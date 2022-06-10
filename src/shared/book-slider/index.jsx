@@ -7,8 +7,17 @@ import './book-slider.scss';
 import classNames from 'classnames';
 import { memo } from 'react';
 
-const BookSlider = ({ list, title = '', className, size = 'sm', handleViewBookDetail, ...rest }) => {
-	const settingSlider = settings();
+const BookSlider = ({
+	list,
+	title = '',
+	className,
+	size = 'sm',
+	handleViewBookDetail,
+	inCategory = false,
+	inCategoryDetail = false,
+	...rest
+}) => {
+	const settingSlider = settings(inCategory, inCategoryDetail);
 
 	return (
 		<>
@@ -53,18 +62,18 @@ function SlidePrevBtn({ className, style, onClick }) {
 	);
 }
 
-function settings() {
+function settings(inCategory, inCategoryDetail) {
 	return {
 		dots: false,
 		speed: 600,
-		slidesToShow: 1,
+		slidesToShow: inCategory ? 4 : 1,
 		slidesToScroll: 2,
 		initialSlide: 0,
-		infinite: true,
+		infinite: inCategoryDetail ? false : true,
 		lazyLoad: false,
 		autoplay: false,
 		swipeToSlide: true,
-		variableWidth: true,
+		variableWidth: inCategory ? false : true,
 		touchMove: true,
 		nextArrow: <SlideNextBtn />,
 		prevArrow: <SlidePrevBtn />,

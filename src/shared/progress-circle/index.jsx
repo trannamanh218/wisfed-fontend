@@ -7,10 +7,11 @@ import { useSelector } from 'react-redux';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 
-const ProgressBarCircle = ({ booksReadYear }) => {
+const ProgressBarCircle = ({ booksReadYearData }) => {
 	const { userId } = useParams();
 	const { userInfo } = useSelector(state => state.auth);
 	const idCSS = 'library';
+
 	const SVG = () => {
 		const gradientTransform = `rotate(90)`;
 		return (
@@ -39,36 +40,36 @@ const ProgressBarCircle = ({ booksReadYear }) => {
 	return (
 		<div>
 			<div className='progress__circle__title'>Mục tiêu đọc sách</div>
-			{booksReadYear.length > 0 &&
-				!_.isEmpty(userInfo) &&
-				booksReadYear.map(item => (
-					<div key={item.id} className='progress__circle__container'>
-						<div>
-							<CircularProgressbarWithChildren
-								strokeWidth={4}
-								value={renderLinearProgressBar(item)}
-								text={`${item.booksReadCount || 0}/${item.numberBook}`}
-								styles={{
-									path: { stroke: `url(#${idCSS})`, height: '100%' },
-								}}
-							/>
-							<div className='progress__circle__container__title'>Số cuốn sách đọc trong năm 2022</div>
-							{SVG()}
-							<Link
-								to={`/reading-target/${userId || userInfo?.id}`}
-								style={{ 'cursor': 'pointer', 'marginTop': '15px' }}
-								className='sidebar__view-more-btn--blue'
-							>
-								Xem chi tiết
-							</Link>
+			{!_.isEmpty(booksReadYearData) && !_.isEmpty(userInfo) && (
+				<div className='progress__circle__container'>
+					<div>
+						<CircularProgressbarWithChildren
+							strokeWidth={4}
+							value={renderLinearProgressBar(booksReadYearData)}
+							text={`${booksReadYearData.booksReadCount || 0}/${booksReadYearData.numberBook}`}
+							styles={{
+								path: { stroke: `url(#${idCSS})`, height: '100%' },
+							}}
+						/>
+						<div className='progress__circle__container__title'>
+							Số cuốn sách đọc trong năm {booksReadYearData.year}
 						</div>
+						{SVG()}
+						<Link
+							to={`/reading-target/${userId || userInfo?.id}`}
+							style={{ 'cursor': 'pointer', 'marginTop': '15px' }}
+							className='sidebar__view-more-btn--blue'
+						>
+							Xem chi tiết
+						</Link>
 					</div>
-				))}
+				</div>
+			)}
 		</div>
 	);
 };
 
 ProgressBarCircle.propTypes = {
-	booksReadYear: PropTypes.string,
+	booksReadYearData: PropTypes.string,
 };
 export default ProgressBarCircle;

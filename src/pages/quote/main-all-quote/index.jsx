@@ -93,11 +93,11 @@ const MainAllQuotes = () => {
 	};
 
 	return (
-		<div className='main-my-quote'>
-			<div className='main-my-quote__header'>
+		<div className='main-quote'>
+			<div className='main-quote__header'>
 				<BackButton />
 				<h4>Tất cả Quotes</h4>
-				<SearchField className='main-my-quote__search' placeholder='Tìm kiếm theo sách, tác giả, chủ đề ...' />
+				<SearchField className='main-quote__search' placeholder='Tìm kiếm theo sách, tác giả, chủ đề ...' />
 			</div>
 			<FilterQuotePane isMyQuotes={false} handleSortQuotes={handleSortQuotes}>
 				{allQuoteList.length > 0 && (

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import MainContainer from 'components/layout/main-container';
 import MainCategory from './main-category';
 import SidebarCategory from './sidebar-category';
@@ -15,6 +15,10 @@ const Category = () => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
+	useEffect(() => {
+		window.scroll(0, 0);
+	}, []);
+
 	const viewCategoryDetail = async data => {
 		setStatus(STATUS_LOADING);
 		try {
@@ -23,8 +27,6 @@ const Category = () => {
 			navigate(RouteLink.categoryDetail(data.id, data.name));
 		} catch (err) {
 			NotificationError(err);
-			const statusCode = err?.statusCode || 500;
-			setStatus(statusCode);
 		}
 	};
 

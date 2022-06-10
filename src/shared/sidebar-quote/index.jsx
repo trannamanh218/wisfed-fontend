@@ -1,27 +1,20 @@
 import MyShelvesList from 'shared/my-shelves-list';
 import StatisticList from 'shared/statistic-list';
-import ToggleList from 'shared/toggle-list';
 import './sidebar-quote.scss';
 import { useSelector } from 'react-redux';
+import TopicColumn from 'shared/topic-column';
+import PropTypes from 'prop-types';
 
-const SidebarQuote = () => {
-	const hashtagList = [
-		{ id: 1, title: 'Tiểu thuyết' },
-		{ id: 2, title: 'Hạnh phúc' },
-		{ id: 3, title: 'Đầu tư' },
-		{ id: 4, title: 'Kinh doanh' },
-		{ id: 4, title: 'Kinh doanh' },
-		{ id: 4, title: 'Kinh doanh' },
-		{ id: 4, title: 'Kinh doanh' },
-	];
-
+const SidebarQuote = ({ listHashtags }) => {
 	const myAllLibrary = useSelector(state => state.library.myAllLibrary);
 
 	return (
-		<div className='sidebar-my-quote'>
-			<ToggleList list={hashtagList} title='Hashtag từ Quotes' />
+		<div className='sidebar-quote'>
+			{!!listHashtags.length && (
+				<TopicColumn className='sidebar-category__topics' title='Hashtag từ Quotes' topics={listHashtags} />
+			)}
 			<StatisticList
-				className='sidebar-my-quote__reading__status'
+				className='sidebar-quote__reading__status'
 				title='Trạng thái đọc'
 				background='light'
 				isBackground={true}
@@ -31,6 +24,10 @@ const SidebarQuote = () => {
 			<MyShelvesList list={myAllLibrary.custom} />
 		</div>
 	);
+};
+
+SidebarQuote.propTypes = {
+	listHashtags: PropTypes.array,
 };
 
 export default SidebarQuote;

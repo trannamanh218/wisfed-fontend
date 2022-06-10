@@ -21,6 +21,17 @@
 		}
 	}
 
+	.category-group__none-slider {
+		display: grid;
+		grid-template-columns: repeat(4, 1fr);
+		grid-gap: 16px;
+		margin-bottom: 40px;
+		.book-thumbnail {
+			width: 100%;
+			height: 315px;
+		}
+	}
+
 	&__slider {
 		.book-thumbnail {
 			margin-right: 16px;

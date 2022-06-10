@@ -47,7 +47,6 @@ export const categoryAPI = '/api/v1/categories';
 export const categoryDetailAPI = id => `/api/v1/categories/${id}`;
 export const favoriteCategoriesAPI = '/api/v1/categories/favoriteCategories';
 export const listBookByCategoryAPI = categoryId => `/api/v1/books/listBookCategory/${categoryId}`;
-export const checkLikedCategoryAPI = categoryId => `/api/v1/categories/detailAuth/${categoryId}`;
 export const postByCategoryAPI = categoryId => `/api/v1/getstream/listPostByCategoryAuth/${categoryId}`;
 
 //rating
@@ -57,8 +56,6 @@ export const userRating = id => `api/v1/books/rating/${id}`;
 //user
 export const userAPI = '/api/v1/users';
 export const userDetailAPI = id => `/api/v1/users/${id}`;
-export const checkLikedAPI = '/api/v1/users/checkLiked';
-export const updateLikeCategory = id => `api/v1/users/${id}`;
 export const checkUserInfoAPI = '/api/v1/auth/jwt';
 export const getFavoriteAuthorAPI = '/api/v1/users/listAuthorsLiked ';
 
@@ -142,3 +139,6 @@ export const createPostGroup = id => `/api/v1/groups/${id}/createPost`;
 export const listPostGroup = id => `/api/v1/groups/${id}/groupFeed`;
 //share
 export const shareInternalAPI = (id, type) => `/api/v1/getstream/share/${id}?type=${type}`;
+
+//authors
+export const randomAuthorAPI = '/api/v1/users/randomAuthor';

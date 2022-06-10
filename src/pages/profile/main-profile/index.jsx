@@ -13,7 +13,7 @@ import { useState } from 'react';
 import classNames from 'classnames';
 
 const MainProfile = ({ currentUserInfo }) => {
-	const [currentTab, setCurrentTab] = useState('shelves');
+	const [currentTab, setCurrentTab] = useState('bookcase');
 
 	return (
 		<>
@@ -24,14 +24,14 @@ const MainProfile = ({ currentUserInfo }) => {
 						className={classNames('main-profile__tabs', {
 							'none-books': currentUserInfo?.role !== 'author',
 						})}
-						defaultActiveKey={'shelves'}
+						defaultActiveKey={'bookcase'}
 						onSelect={activeKey => setCurrentTab(activeKey)}
 					>
-						<Tab eventKey='shelves' title='Tủ sách'>
+						<Tab eventKey='bookcase' title='Tủ sách'>
 							<Bookcase userInfo={currentUserInfo} currentTab={currentTab} />
 						</Tab>
 						<Tab eventKey='post' title='Bài viết' className='post-tab-active'>
-							<PostTab />
+							<PostTab currentTab={currentTab} />
 						</Tab>
 						{/*Notes: Chỉ hiển thị khi user là tác giả, không public */}
 						{currentUserInfo?.role === 'author' && (
@@ -46,7 +46,7 @@ const MainProfile = ({ currentUserInfo }) => {
 							<QuoteTab currentTab={currentTab} />
 						</Tab>
 						<Tab eventKey='favorite-authors' title='Tác giả yêu thích'>
-							<FavoriteAuthorTab list={[]} currentTab={currentTab} />
+							<FavoriteAuthorTab currentTab={currentTab} />
 						</Tab>
 					</Tabs>
 				</div>
