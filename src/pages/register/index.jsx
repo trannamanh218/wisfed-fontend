@@ -7,7 +7,7 @@ import { Formik, Field, Form } from 'formik';
 import classNames from 'classnames';
 import { registerValidate } from 'helpers/Validation';
 import { unwrapResult } from '@reduxjs/toolkit';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import ModalLogin from 'pages/login/element/ModalLogin';
 import { register } from 'reducers/redux-utils/auth';
 import Circle from 'shared/loading/circle';
@@ -17,7 +17,7 @@ function Register() {
 	const [showImagePopover, setShowImagePopover] = useState(false);
 	const [isShow, setIsShow] = useState(false);
 	const [dataModal, setDataModal] = useState({});
-	const isFetching = useSelector(state => state.auth.isFetching);
+	const [isLoading, setIsLoading] = useState(false);
 
 	const handleSubmit = async data => {
 		const newData = {
@@ -29,6 +29,7 @@ function Register() {
 		};
 		if (newData) {
 			try {
+				setIsLoading(true);
 				const actionRegister = await dispatch(register(newData));
 				const infoUser = unwrapResult(actionRegister);
 				if (infoUser) {
@@ -40,10 +41,12 @@ function Register() {
 						scribe2: `${newData.email}`,
 						pathname: '/login',
 					};
+					setIsLoading(false);
 					setDataModal(newdata);
 					setIsShow(true);
 				}
 			} catch {
+				setIsLoading(false);
 				setIsShow(true);
 				const newdata = {
 					title: 'Tạo tài khoản',
@@ -63,7 +66,7 @@ function Register() {
 
 	return (
 		<div className='register__container'>
-			<Circle loading={isFetching} />
+			<Circle loading={isLoading} />
 			<div className='register__header'>
 				<img src={Logo} alt='logo' />
 			</div>

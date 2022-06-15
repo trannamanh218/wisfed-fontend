@@ -12,20 +12,17 @@ import { useFetchAuthorBooks } from 'api/book.hooks';
 import { useParams } from 'react-router-dom';
 import RenderProgress from 'shared/render-progress';
 import ProgressBarCircle from 'shared/progress-circle';
-import { useFetchTargetReading } from 'api/readingTarget.hooks';
 import _ from 'lodash';
-import ProgressBarCircle from 'shared/progress-circle';
 import { NotificationError } from 'helpers/Error';
 import { getListBooksTargetReading } from 'reducers/redux-utils/chart';
 import { useState, useEffect } from 'react';
 
-const SidebarShelves = ({ userData, isMyShelve, handleViewBookDetail }) => {
+const SidebarShelves = ({ shelveGroupName, isMyShelve, handleViewBookDetail }) => {
 	const [booksReadYear, setBookReadYear] = useState({});
 
 	const { userId } = useParams();
 	const { booksAuthor } = useFetchAuthorBooks(userId);
 	const { userInfo } = useSelector(state => state.auth);
-	const { booksReadYear } = useFetchTargetReading(userId);
 	const { quoteData } = useFetchQuotes(
 		0,
 		3,
@@ -85,7 +82,7 @@ const SidebarShelves = ({ userData, isMyShelve, handleViewBookDetail }) => {
 			{!!quoteData.length && (
 				<QuotesLinks
 					list={quoteData}
-					title={userId === userInfo.id ? 'Quotes của tôi' : `Quotes của ${userData.fullName}`}
+					title={userId === userInfo.id ? 'Quotes của tôi' : `Quotes của ${shelveGroupName}`}
 				/>
 			)}
 
@@ -93,7 +90,7 @@ const SidebarShelves = ({ userData, isMyShelve, handleViewBookDetail }) => {
 				<div className='my-compose'>
 					<BookSlider
 						className='book-reference__slider'
-						title={isMyShelve ? 'Sách tôi là tác giả' : `Sách của ${userData.fullName}`}
+						title={isMyShelve ? 'Sách tôi là tác giả' : `Sách của ${shelveGroupName}`}
 						list={booksAuthor}
 						handleViewBookDetail={handleViewBookDetail}
 					/>
@@ -109,14 +106,14 @@ const SidebarShelves = ({ userData, isMyShelve, handleViewBookDetail }) => {
 };
 
 SidebarShelves.defaultProps = {
-	libraryData: {},
-	isUpdate: false,
+	isMyShelve: true,
+	shelveGroupName: 'tôi',
 	handleViewBookDetail: () => {},
 };
 
 SidebarShelves.propTypes = {
 	isMyShelve: PropTypes.bool,
-	userData: PropTypes.object,
+	shelveGroupName: PropTypes.string,
 	handleViewBookDetail: PropTypes.func,
 };
 

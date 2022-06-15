@@ -97,8 +97,6 @@ function CreatePost({ onChangeNewPost }) {
 			creatPostModalContainer.current.addEventListener('mousedown', e => {
 				if (e.target === creatPostModalContainer.current) {
 					hideCreatPostModal();
-					dispatch(updateCurrentBook({}));
-					setShowModalCreatPost(false);
 				}
 			});
 			blockScroll();
@@ -130,12 +128,13 @@ function CreatePost({ onChangeNewPost }) {
 	};
 
 	const hideCreatPostModal = () => {
-		setShowModalCreatPost(false);
-		setOption({});
 		dispatch(resetTaggedDataFunc(true));
 		dispatch(saveDataShare({}));
 		dispatch(sharePosts(false));
 		dispatch(updateImg([]));
+		dispatch(updateCurrentBook({}));
+		setOption({});
+		setShowModalCreatPost(false);
 	};
 
 	const onChangeOption = data => {

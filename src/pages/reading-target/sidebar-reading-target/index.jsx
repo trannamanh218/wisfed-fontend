@@ -4,11 +4,14 @@ import MyShelvesList from 'shared/my-shelves-list';
 import { useFetchQuotes } from 'api/quote.hooks';
 import QuotesLinks from 'shared/quote-links';
 import './sidebar-reading-target.scss';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { useFetchUserParams } from 'api/user.hook';
 import _ from 'lodash';
+import ChartsReading from 'shared/charts-Reading';
+import { useFetchAuthorBooks } from 'api/book.hooks';
+import BookSlider from 'shared/book-slider';
 
-const SidebarReadingTarget = () => {
+const SidebarReadingTarget = ({ handleViewBookDetail, isMyShelve }) => {
 	const { userInfo } = useSelector(state => state.auth);
 	const { userId } = useParams();
 	const { userData } = useFetchUserParams(userId);
@@ -17,6 +20,7 @@ const SidebarReadingTarget = () => {
 		3,
 		JSON.stringify([{ operator: 'eq', value: userInfo.id, property: 'createdBy' }])
 	);
+	const { booksAuthor } = useFetchAuthorBooks(userId);
 
 	const myAllLibraryRedux = useSelector(state => state.library.myAllLibrary);
 
@@ -40,6 +44,20 @@ const SidebarReadingTarget = () => {
 				list={quoteData}
 				title={userId === userInfo.id ? 'Quotes của tôi' : `Quotes của ${userData?.fullName}`}
 			/>
+			{!!booksAuthor.length && (
+				<div className='my-compose'>
+					<BookSlider
+						className='book-reference__slider'
+						title={isMyShelve ? 'Sách tôi là tác giả' : `Sách của ${userData.fullName}`}
+						list={booksAuthor}
+						handleViewBookDetail={handleViewBookDetail}
+					/>
+					<Link className='view-all-link' to={`/book-author/${userId}`}>
+						Xem thêm
+					</Link>
+				</div>
+			)}
+			<ChartsReading />
 		</div>
 	);
 };

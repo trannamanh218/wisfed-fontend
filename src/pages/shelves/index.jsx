@@ -5,20 +5,17 @@ import SidebarShelves from './sidebar-shelves';
 import Circle from 'shared/loading/circle';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { getUserDetail } from 'reducers/redux-utils/user';
 import _ from 'lodash';
 import { NotificationError } from 'helpers/Error';
 import { getAllLibraryList } from 'reducers/redux-utils/library';
 import { getBookDetail } from 'reducers/redux-utils/book';
 import { useNavigate } from 'react-router-dom';
 import RouteLink from 'helpers/RouteLink';
+import { handleShelvesGroup } from 'api/shelvesGroup.hooks';
 
 const BookShelves = () => {
 	const [allLibraryList, setAllLibraryList] = useState([]);
-	const [isLoading, setIsLoading] = useState(false);
-	const [shelveName, setShelveName] = useState('');
-	const [isMyShelve, setIsMyShelve] = useState();
-	const [otherUserData, setOtherUserData] = useState({});
+	const [isViewBookDetailLoading, setIsViewBookDetailLoading] = useState(false);
 
 	const { userId } = useParams();
 	const dispatch = useDispatch();
@@ -27,27 +24,19 @@ const BookShelves = () => {
 	const userInfo = useSelector(state => state.auth.userInfo);
 	const myAllLibraryRedux = useSelector(state => state.library.myAllLibrary);
 
-	useEffect(async () => {
-		if (!_.isEmpty(userInfo)) {
-			if (userId !== userInfo.id) {
-				setIsLoading(true);
-				const user = await dispatch(getUserDetail(userId)).unwrap();
-				setOtherUserData(user);
-				setShelveName(`Tủ sách của ${user.fullName}`);
-				setIsMyShelve(false);
-				getAllLibrary();
-			} else {
-				setIsMyShelve(true);
-				setShelveName('Tủ sách của tôi');
-			}
+	const { isLoading, shelveGroupName, isMine } = handleShelvesGroup(userId);
+
+	useEffect(() => {
+		if (!_.isEmpty(userInfo) && userId !== userInfo.id) {
+			getAllLibrary();
 		}
 	}, [userInfo, userId]);
 
 	useEffect(() => {
-		if (isMyShelve && !_.isEmpty(myAllLibraryRedux)) {
+		if (isMine && !_.isEmpty(myAllLibraryRedux)) {
 			setAllLibraryList(myAllLibraryRedux.default.concat(myAllLibraryRedux.custom));
 		}
-	}, [isMyShelve, myAllLibraryRedux]);
+	}, [isMine, myAllLibraryRedux]);
 
 	const getAllLibrary = async () => {
 		try {
@@ -56,16 +45,14 @@ const BookShelves = () => {
 			setAllLibraryList(newData);
 		} catch (err) {
 			NotificationError(err);
-		} finally {
-			setIsLoading(false);
 		}
 	};
 
 	const handleViewBookDetail = useCallback(async data => {
-		setIsLoading(true);
+		setIsViewBookDetailLoading(true);
 		try {
 			await dispatch(getBookDetail(data.id)).unwrap();
-			setIsLoading(false);
+			setIsViewBookDetailLoading(false);
 			navigate(RouteLink.bookDetail(data.id, data.name));
 		} catch (err) {
 			NotificationError(err);
@@ -74,20 +61,22 @@ const BookShelves = () => {
 
 	return (
 		<>
-			<Circle loading={isLoading} />
+			<Circle loading={isLoading || isViewBookDetailLoading} />
 			<MainContainer
 				main={
-					<MainShelves
-						allLibraryList={allLibraryList}
-						shelveName={shelveName}
-						isMyShelve={isMyShelve}
-						handleViewBookDetail={handleViewBookDetail}
-					/>
+					shelveGroupName && (
+						<MainShelves
+							allLibraryList={allLibraryList}
+							shelveGroupName={`Tủ sách của ${shelveGroupName}`}
+							isMyShelve={isMine}
+							handleViewBookDetail={handleViewBookDetail}
+						/>
+					)
 				}
 				right={
 					<SidebarShelves
-						userData={otherUserData}
-						isMyShelve={isMyShelve}
+						shelveGroupName={shelveGroupName}
+						isMyShelve={isMine}
 						handleViewBookDetail={handleViewBookDetail}
 					/>
 				}

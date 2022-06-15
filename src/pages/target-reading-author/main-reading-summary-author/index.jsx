@@ -1,149 +1,160 @@
 import SearchField from 'shared/search-field';
-import { Table } from 'react-bootstrap';
 import './main-reading-author.scss';
-import BookThumbnail from 'shared/book-thumbnail';
 import { StarAuthor, ShareAuthor } from 'components/svg';
-import { useFetchAuthorBooks } from 'api/book.hooks';
 import { useParams } from 'react-router-dom';
-import { useState, useCallback, useEffect } from 'react';
-import { getFilterSearch } from 'reducers/redux-utils/search';
-import _ from 'lodash';
-import { useDispatch } from 'react-redux';
+import { getBookAuthorList } from 'reducers/redux-utils/book';
 import { NotificationError } from 'helpers/Error';
-import { Link } from 'react-router-dom';
+import { useState, useEffect, useRef } from 'react';
+import { useDispatch } from 'react-redux';
+import InfiniteScroll from 'react-infinite-scroll-component';
+import LoadingIndicator from 'shared/loading-indicator';
+import _ from 'lodash';
 
-const MainReadingAuthor = () => {
+const MainReadingAuthor = ({ currentUserShelveData }) => {
+	const [booksByAuthor, setBooksByAuthor] = useState([]);
+	const [hasMore, setHasMore] = useState(true);
+	const [filter, setFilter] = useState('[]');
+
 	const { userId } = useParams();
-	const [searchAuthorBook, setSearchAuthorBook] = useState('');
-	const { booksAuthor } = useFetchAuthorBooks(userId);
-	const [searchData, setSearchData] = useState([]);
-	const [filter, setFilter] = useState('');
+
 	const dispatch = useDispatch();
 
-	const updateFilter = value => {
-		if (value) {
-			const filterValue = value.trim();
-			setFilter(filterValue);
-		} else {
-			setFilter('[]');
-		}
-	};
+	const callApiStart = useRef(10);
+	const callApiPerPage = useRef(10);
 
 	useEffect(() => {
-		fetchDataSearch();
-	}, [filter]);
+		getBooksByAuthorFirsttime();
+	}, []);
 
-	const fetchDataSearch = async () => {
-		const params = {
-			authorId: userId,
-			type: 'books',
-			q: filter,
-		};
+	const getBooksByAuthorFirsttime = async () => {
 		try {
-			if (filter) {
-				const data = await dispatch(getFilterSearch(params)).unwrap();
-				setSearchData(data.rows);
+			const params = {
+				start: 0,
+				limit: callApiPerPage.current,
+				filter: '[]',
+				sort: JSON.stringify([{ 'direction': 'DESC', 'property': 'createdAt' }]),
+			};
+			const data = await dispatch(getBookAuthorList({ id: userId, params: params })).unwrap();
+			setBooksByAuthor(data);
+			if (!data.length || data.length < callApiPerPage.current) {
+				setHasMore(false);
 			}
 		} catch (err) {
 			NotificationError(err);
 		}
 	};
 
-	const handleChange = e => {
-		setSearchAuthorBook(e.target.value);
-		debounceSearch(e.target.value);
-	};
-	const debounceSearch = useCallback(_.debounce(updateFilter, 700), []);
-
-	const renderItem = (item, index) => {
-		return (
-			<tbody key={item.id}>
-				<tr className={`highlight highlight-${index} `}>
-					<td colSpan={11}></td>
-				</tr>
-				<tr className='book-row'>
-					<td className='hightlight-column'></td>
-					<td>
-						<BookThumbnail size='sm' source={item.images[0]} />
-					</td>
-					<td>
-						<span className='book-name title'>{item.name}</span>
-					</td>
-					<td>
-						<span className='custom-td'>
-							{item.avgRating ? item.avgRating : 0}
-							<StarAuthor />
-						</span>
-					</td>
-					<td>
-						<span className='book-name'>{item.countRating}</span>
-					</td>
-					<td>
-						<div className='book-name-title'>
-							<span className='book-name custom-text'>{item.countReview}</span>
-							<span className='book-name-custom'>
-								{item.newReview?.length ? item.newReview?.length : 0} lượt review mới
-							</span>
-						</div>
-					</td>
-					<td>
-						<span>400k</span>
-					</td>
-					<td>
-						<div className='book-name-title'>
-							<span className='book-name custom-text'>{item.countQuote}</span>
-							<div className='book-name-custom'>
-								{item.newQuote?.length ? item.newQuote?.length : 0} lượt quote mới
-							</div>
-						</div>
-					</td>
-					<td>
-						<div className='share-author'>
-							<ShareAuthor />
-						</div>
-					</td>
-					<td>
-						<Link to={`/book-author-charts/${item.id}`}>
-							<span className='book-name custom-text'>Chart</span>
-						</Link>
-					</td>
-					<td className='hightlight-column'></td>
-				</tr>
-				<tr className='highlight'>
-					<td colSpan={11}></td>
-				</tr>
-			</tbody>
-		);
+	const getBooksByAuthor = async () => {
+		try {
+			const params = {
+				start: callApiStart.current,
+				limit: callApiPerPage.current,
+				filter: filter,
+				sort: JSON.stringify([{ 'direction': 'DESC', 'property': 'createdAt' }]),
+			};
+			const data = await dispatch(getBookAuthorList({ id: userId, params: params })).unwrap();
+			if (data.length) {
+				if (data.length < callApiPerPage.current) {
+					setHasMore(false);
+				} else {
+					callApiStart.current += callApiPerPage.current;
+				}
+				setBooksByAuthor(booksByAuthor.concat(data));
+			} else {
+				setHasMore(false);
+			}
+		} catch (err) {
+			NotificationError(err);
+		}
 	};
 
 	return (
-		<div className='MainReadingAuthor__container'>
-			<div className='reading-target'>
-				<div className='reading-target__header'>
-					<h4>Sách tôi làm tác giả </h4>
-					<SearchField placeholder='Tìm kiếm sách' handleChange={handleChange} value={searchAuthorBook} />
-				</div>
+		<div className='main-reading-author__container'>
+			{!_.isEmpty(currentUserShelveData) && (
+				<>
+					<div className='main-reading-author__header'>
+						<h4>{`Sách của ${currentUserShelveData?.isMine ? 'tôi' : currentUserShelveData.fullName}`}</h4>
+						<SearchField
+							placeholder='Tìm kiếm sách'
+							className='main-shelves__search'
+							// handleChange={handleSearch}
+							// value={inputSearch}
+						/>
+					</div>
 
-				<div className='reading-target__table'>
-					<Table>
-						<thead className='reading-target__table__header'>
-							<tr>
-								<th colSpan={3}>Tên sách</th>
-								<th>Sao trung bình </th>
-								<th> Lượt đánh giá</th>
-								<th> Lượt review</th>
-								<th>Lượt thêm sách</th>
-								<th>Lượt Quote</th>
-								<th colSpan={2}></th>
-							</tr>
-							<tr className='empty-row' />
-						</thead>
-						{searchData?.length > 0
-							? searchData.map((item, index) => renderItem(item, index))
-							: booksAuthor.map((item, index) => renderItem(item, index))}
-					</Table>
-				</div>
-			</div>
+					<div className='main-reading-author__books'>
+						<div className='main-reading-author__books__title'>
+							<div></div>
+							<div className='main-reading-author__books__column'>Tên sách</div>
+							<div className='main-reading-author__books__column'>Sao trung bình</div>
+							<div className='main-reading-author__books__column'>Lượt đánh giá</div>
+							<div className='main-reading-author__books__column'>Lượt review</div>
+							<div className='main-reading-author__books__column'>Lượt thêm sách</div>
+							<div className='main-reading-author__books__column'>Lượt quote</div>
+							<div></div>
+						</div>
+						<div className='main-reading-author__books__content'>
+							<InfiniteScroll
+								dataLength={booksByAuthor.length}
+								next={getBooksByAuthor}
+								hasMore={hasMore}
+								loader={<LoadingIndicator />}
+							>
+								{booksByAuthor.map(item => (
+									<div key={item.id} className='main-reading-author__books__item'>
+										<div className='main-reading-author__books__item__column book-image'>
+											<img src={item.images[1]} alt='book-image' />
+										</div>
+										<div className='main-reading-author__books__item__column book-name'>
+											<span>{item.name}</span>
+										</div>
+										<div className='main-reading-author__books__item__column'>
+											<div className='main-reading-author__books__item__top'>
+												<span>{item.countRating}</span>
+												<StarAuthor />
+											</div>
+											<div className='main-reading-author__books__item__under'></div>
+										</div>
+										<div className='main-reading-author__books__item__column'>
+											<div className='main-reading-author__books__item__top'>
+												<span>{item.countRating}</span>
+											</div>
+											<div className='main-reading-author__books__item__under'></div>
+										</div>
+										<div className='main-reading-author__books__item__column'>
+											<div className='main-reading-author__books__item__top'>
+												<span className='underline-and-gold-color'>{item.countReview}</span>
+											</div>
+											<div className='main-reading-author__books__item__under'>
+												{item.newReview.length} lượt review mới
+											</div>
+										</div>
+										<div className='main-reading-author__books__item__column'>
+											<div className='main-reading-author__books__item__top'>
+												<span>{item.countAddBook}</span>
+											</div>
+											<div className='main-reading-author__books__item__under'></div>
+										</div>
+										<div className='main-reading-author__books__item__column'>
+											<div className='main-reading-author__books__item__top'>
+												<span className='underline-and-gold-color'>{item.countQuote}</span>
+											</div>
+											<div className='main-reading-author__books__item__under'>
+												{item.newQuote.length} lượt quote mới
+											</div>
+										</div>
+										<div className='main-reading-author__books__item__column'>
+											<ShareAuthor />
+										</div>
+									</div>
+								))}
+							</InfiniteScroll>
+						</div>
+					</div>
+
+					<button className='main-reading-author__share-btn btn'>Chia sẻ</button>
+				</>
+			)}
 		</div>
 	);
 };

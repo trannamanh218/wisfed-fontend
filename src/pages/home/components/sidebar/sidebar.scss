@@ -1,5 +1,9 @@
 @import 'src/scss/abstracts/_global.scss';
 
+.sidebar {
+	padding-top: 24px;
+}
+
 .sidebar__block {
 	margin-bottom: 60px;
 	.slick-arrow {

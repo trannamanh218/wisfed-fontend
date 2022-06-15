@@ -87,80 +87,88 @@ const MainReadingTarget = () => {
 		);
 	};
 
-	return booksReadYear.map(item => (
-		<div key={item.id} className='reading-target'>
-			<div className='reading-target__header'>
-				<h4>Mục tiêu đọc sách năm {item.year}</h4>
-				<SearchField
-					className='main-shelves__search'
-					placeholder='Tìm kiếm sách'
-					handleChange={handleSearch}
-					value={inputSearch}
-				/>
-			</div>
-			<div className='reading-target__process'>
-				<UserAvatar className='reading-target__user' size='lg' />
-				<div className='reading-target__content'>
-					{renderContentTop(item)}
-					<div className='reading-target__content__bottom'>
-						{renderLinearProgressBar(item)}
-						{userInfo.id === userId && <button className='btn btn-share btn-primary-light'>Chia sẻ</button>}
+	return (
+		<div className='reading-target'>
+			{!!booksReadYear.length && (
+				<>
+					<div className='reading-target__header'>
+						<h4>Mục tiêu đọc sách năm {booksReadYear[0].year}</h4>
+						<SearchField
+							className='main-shelves__search'
+							placeholder='Tìm kiếm sách'
+							handleChange={handleSearch}
+							value={inputSearch}
+						/>
 					</div>
-				</div>
-			</div>
-			<ModalReadTarget
-				modalOpen={modalOpen}
-				toggleModal={toggleModal}
-				setModalOpen={setModalOpen}
-				deleteModal={deleteModal}
-			/>
+					<div className='reading-target__process'>
+						<UserAvatar className='reading-target__user' size='lg' />
+						<div className='reading-target__content'>
+							{renderContentTop(booksReadYear[0])}
+							<div className='reading-target__content__bottom'>
+								{renderLinearProgressBar(booksReadYear[0])}
+								{userInfo.id === userId && (
+									<button className='btn btn-share btn-primary-light'>Chia sẻ</button>
+								)}
+							</div>
+						</div>
+					</div>
+					<ModalReadTarget
+						modalOpen={modalOpen}
+						toggleModal={toggleModal}
+						setModalOpen={setModalOpen}
+						deleteModal={deleteModal}
+					/>
 
-			{!_.isEmpty(item.booksRead) && (
-				<div className='reading-target__table'>
-					<Table>
-						<thead className='reading-target__table__header'>
-							<tr>
-								<th colSpan={3}>Tên sách</th>
-								<th>Tác giả</th>
-								<th>Ngày thêm</th>
-								<th>Ngày đọc</th>
-								<th colSpan={2}>Ngày hoàn thành</th>
-							</tr>
-							<tr className='empty-row' />
-						</thead>
-						<tbody>
-							{item.booksRead.map((item, index) => (
-								<>
-									<tr className={`highlight highlight-${index} `}>
+					{!_.isEmpty(booksReadYear[0].booksRead) && (
+						<div className='reading-target__table'>
+							<Table>
+								<thead className='reading-target__table__header'>
+									<tr>
+										<th colSpan={3}>Tên sách</th>
+										<th>Tác giả</th>
+										<th>Ngày thêm</th>
+										<th>Ngày đọc</th>
+										<th colSpan={2}>Ngày hoàn thành</th>
+									</tr>
+									<tr className='empty-row' />
+								</thead>
+								<tbody>
+									{booksReadYear[0].booksRead.map((item, index) => (
+										<>
+											<tr className={`highlight highlight-${index} `}>
+												<td colSpan={8}></td>
+											</tr>
+											<tr className='book-row' key={item.id}>
+												<td className='hightlight-column'></td>
+												<td>
+													<BookThumbnail size='sm' source={item.book?.images[0]} />
+												</td>
+												<td>
+													<span className='book-name' title={item.book.name}>
+														{item.book.name}
+													</span>
+												</td>
+												<td>
+													{!_.isEmpty(item.authors) ? item.authors[0].name : 'Chưa cập nhật'}
+												</td>
+												<td>{moment(item.createdAt).format('DD/MM/YYYY')}</td>
+												<td>{moment(item.createdAt).format('DD/MM/YYYY')}</td>
+												<td>{moment(item.updatedAt).format('DD/MM/YYYY')}</td>
+												<td className='hightlight-column'></td>
+											</tr>
+										</>
+									))}
+									<tr className='highlight'>
 										<td colSpan={8}></td>
 									</tr>
-									<tr className='book-row' key={item.id}>
-										<td className='hightlight-column'></td>
-										<td>
-											<BookThumbnail size='sm' source={item.book?.images[0]} />
-										</td>
-										<td>
-											<span className='book-name' title={item.book.name}>
-												{item.book.name}
-											</span>
-										</td>
-										<td>{!_.isEmpty(item.authors) ? item.authors[0].name : 'Chưa cập nhật'}</td>
-										<td>{moment(item.createdAt).format('DD/MM/YYYY')}</td>
-										<td>{moment(item.createdAt).format('DD/MM/YYYY')}</td>
-										<td>{moment(item.updatedAt).format('DD/MM/YYYY')}</td>
-										<td className='hightlight-column'></td>
-									</tr>
-								</>
-							))}
-							<tr className='highlight'>
-								<td colSpan={8}></td>
-							</tr>
-						</tbody>
-					</Table>
-				</div>
+								</tbody>
+							</Table>
+						</div>
+					)}
+				</>
 			)}
 		</div>
-	));
+	);
 };
 
 MainReadingTarget.propTypes = {};
