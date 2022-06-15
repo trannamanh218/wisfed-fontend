@@ -22,7 +22,7 @@ import ChooseTopic from 'pages/choose-topic';
 import Direct from 'pages/choose-topic/DirectPage';
 import PropTypes from 'prop-types';
 import NotFound from 'pages/not-found';
-import { getUserInfo } from 'reducers/redux-utils/auth';
+import { getUserInfo, getCheckJwt } from 'reducers/redux-utils/auth';
 import ReadingSummary from 'pages/reading-summary';
 import ReadingTarget from 'pages/reading-target';
 import ForgetPassWordAdminComponet from 'pages/foget-password/component-admin/ForgotAdmin';
@@ -52,6 +52,16 @@ function App({ children }) {
 		if (accsetToken) {
 			dispatch(checkLogin(true));
 			await dispatch(getUserInfo());
+		} else {
+			dispatch(checkLogin(false));
+		}
+	}, []);
+
+	useEffect(async () => {
+		const accsetToken = Storage.getAccessToken();
+		if (accsetToken) {
+			dispatch(checkLogin(true));
+			await dispatch(getCheckJwt());
 		} else {
 			dispatch(checkLogin(false));
 		}

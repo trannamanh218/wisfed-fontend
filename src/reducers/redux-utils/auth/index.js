@@ -28,7 +28,7 @@ export const register = createAsyncThunk('auth/register', async (params, { rejec
 export const getCheckJwt = createAsyncThunk('user/getCheckJwt', async (params, { rejectWithValue }) => {
 	try {
 		const response = await Request.makeGet(checkJwt, params);
-		return response;
+		return response.data;
 	} catch (err) {
 		const error = JSON.parse(err.response);
 		throw rejectWithValue(error);
@@ -153,7 +153,6 @@ const authSlice = createSlice({
 		},
 		[checkJwt.fulfilled]: (state, action) => {
 			state.isFetching = false;
-
 			state.userInfo = action.payload;
 			state.error = {};
 		},

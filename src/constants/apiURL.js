@@ -129,6 +129,10 @@ export const creatGroup = '/api/v1/groups';
 export const myGroup = '/api/v1/groups/myGroup';
 export const adminGroup = '/api/v1/groups/myGroup?type=admin';
 export const memberGroup = id => `/api/v1/groups/memberGroup/${id}`;
+export const listTagGroup = id => `/api/v1/groups/groupTag/${id}`;
+export const commentGroup = '/api/v1/groupPosts/commentGroupPost';
+export const likeGroupPost = id => `/api/v1/groupPosts/like/${id}`;
+export const likeCommentGroup = id => `/api/v1/groupPosts/likeComment/${id}`;
 
 // search
 export const getSearchAPI = `/api/v1/searchs`;

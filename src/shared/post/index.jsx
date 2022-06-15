@@ -5,8 +5,8 @@ import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { updateReactionActivity } from 'reducers/redux-utils/activity';
-import { createComment } from 'reducers/redux-utils/comment';
+import { updateReactionActivity, updateReactionActivityGroup } from 'reducers/redux-utils/activity';
+import { createComment, createCommentGroup } from 'reducers/redux-utils/comment';
 import CommentEditor from 'shared/comment-editor';
 import GridImage from 'shared/grid-image';
 import PostActionBar from 'shared/post-action-bar';
@@ -16,7 +16,7 @@ import './post.scss';
 import PreviewLink from 'shared/preview-link/PreviewLink';
 import { NotificationError } from 'helpers/Error';
 import ReactRating from 'shared/react-rating';
-import { useParams } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
 import { createCommentReview } from 'reducers/redux-utils/book';
 import Comment from 'shared/comments';
 import PostQuotes from 'shared/post-quotes';
@@ -30,13 +30,14 @@ function Post({ postInformations, className, showModalCreatPost }) {
 	const [replyingCommentId, setReplyingCommentId] = useState(null);
 	const [clickReply, setClickReply] = useState(false);
 	const { isSharePosts } = useSelector(state => state.post);
+	const location = useLocation();
 
 	const dispatch = useDispatch();
 	const { bookId } = useParams();
 
 	useEffect(() => {
-		const isLike = hasLikedPost();
-		setPostData({ ...postInformations, isLike });
+		// const isLike = hasLikedPost();
+		setPostData({ ...postInformations });
 		if (!_.isEmpty(postInformations.preview) && postInformations.preview.url.includes('https://www.youtube.com/')) {
 			const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
 			const match = postInformations.preview.url.match(regExp);
@@ -76,15 +77,15 @@ function Post({ postInformations, className, showModalCreatPost }) {
 		}
 	}, [postData]);
 
-	const hasLikedPost = () => {
-		const { usersLikePost } = postInformations;
-		let isLike = false;
-		if (!_.isEmpty(usersLikePost) && !_.isEmpty(userInfo)) {
-			const user = usersLikePost.find(item => item.id === userInfo.id);
-			isLike = !_.isEmpty(user) ? true : false;
-		}
-		return isLike;
-	};
+	// const hasLikedPost = () => {
+	// 	const { usersLikePost } = postInformations;
+	// 	let isLike = false;
+	// 	if (!_.isEmpty(usersLikePost) && !_.isEmpty(userInfo)) {
+	// 		const user = usersLikePost.find(item => item.id === userInfo.id);
+	// 		isLike = !_.isEmpty(user) ? true : false;
+	// 	}
+	// 	return isLike;
+	// };
 
 	const onCreateComment = async (content, replyId) => {
 		try {
@@ -99,14 +100,25 @@ function Post({ postInformations, className, showModalCreatPost }) {
 				};
 				res = await dispatch(createCommentReview(commentReviewData)).unwrap();
 			} else {
-				const params = {
-					minipostId: postData.minipostId || postData.id,
-					content: content,
-					mediaUrl: [],
-					mentionsUser: [],
-					replyId: replyId,
-				};
-				res = await dispatch(createComment(params)).unwrap();
+				if (location.pathname.includes('group')) {
+					const params = {
+						groupPostId: postData.minipostId || postData.id,
+						content: content,
+						mentionsUser: [],
+						mediaUrl: [],
+						replyId: replyId,
+					};
+					res = await dispatch(createCommentGroup(params)).unwrap();
+				} else {
+					const params = {
+						minipostId: postData.minipostId || postData.id,
+						content: content,
+						mediaUrl: [],
+						mentionsUser: [],
+						replyId: replyId,
+					};
+					res = await dispatch(createComment(params)).unwrap();
+				}
 			}
 			if (!_.isEmpty(res)) {
 				const newComment = { ...res, user: userInfo };
@@ -121,7 +133,12 @@ function Post({ postInformations, className, showModalCreatPost }) {
 
 	const handleLikeAction = async () => {
 		try {
-			await dispatch(updateReactionActivity(postData.minipostId || postData.id)).unwrap();
+			if (location.pathname.includes('group')) {
+				await dispatch(updateReactionActivityGroup(postData.minipostId || postData.id)).unwrap();
+			} else {
+				await dispatch(updateReactionActivity(postData.minipostId || postData.id)).unwrap();
+			}
+
 			const setLike = !postData.isLike;
 			const numberOfLike = setLike ? postData.like + 1 : postData.like - 1;
 			setPostData(prev => ({ ...prev, isLike: !prev.isLike, like: numberOfLike }));
