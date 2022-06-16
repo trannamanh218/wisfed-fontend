@@ -21,7 +21,7 @@ function MemberGroup() {
 			const actionGetList = await dispatch(getMember(id)).unwrap();
 			setMemberGroups(actionGetList);
 		} catch (err) {
-			NotificationError(err);
+			// NotificationError(err);
 		}
 	};
 
