@@ -47,19 +47,19 @@ const NotificationStatus = ({ item, setGetNotifications, getNotifications }) => 
 	return (
 		<div className='notificaiton__tabs__main__all'>
 			<div className='notificaiton__all__main__layout'>
-				<UserAvatar size='mm' source={item.createdBy.avatarImage} />
+				<UserAvatar size='mm' source={item.createdBy?.avatarImage} />
 				<div className='notificaiton__all__main__layout__status'>
 					<div className='notificaiton__main__all__infor'>
 						<p dangerouslySetInnerHTML={{ __html: item?.message }}></p>
 						{item.verb !== 'follow' && (
 							<>
 								<span>
-									{item.createdBy.fullName ? (
+									{item.createdBy?.fullName ? (
 										item.createdBy.fullName
 									) : (
 										<>
-											<span> {item.createdBy.firstName}</span>
-											<span> {item.createdBy.lastName}</span>
+											<span> {item.createdBy?.firstName}</span>
+											<span> {item.createdBy?.lastName}</span>
 										</>
 									)}
 								</span>

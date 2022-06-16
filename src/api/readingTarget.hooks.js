@@ -4,9 +4,8 @@ import { useDispatch } from 'react-redux';
 import { getListBooksTargetReading, updateTargetReading } from 'reducers/redux-utils/chart';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { generateQuery } from 'helpers/Common';
 
-export const useFetchTargetReading = (userIdParams, modalOpen, deleteModal, filter = '[]') => {
+export const useFetchTargetReading = (userIdParams, modalOpen, deleteModal) => {
 	const [status, setStatus] = useState(STATUS_IDLE);
 	const { targetReading, renderTarget, checkRenderTarget } = useSelector(state => state.chart);
 	const [booksReadYear, setBooksReadYear] = useState([]);
@@ -18,17 +17,16 @@ export const useFetchTargetReading = (userIdParams, modalOpen, deleteModal, filt
 	const retryRequest = () => {
 		setRetry(!retry);
 	};
+
 	useEffect(async () => {
 		let isMount = true;
 		if (isMount) {
 			setStatus(STATUS_LOADING);
 
 			const fetchData = async () => {
-				const query = generateQuery(0, 10, filter);
-				// const params = {
-				// 	userId: userIdParams,
-				// 	...query,
-				// };
+				const params = {
+					userId: userIdParams,
+				};
 				try {
 					if (userIdParams) {
 						const dob = new Date();
@@ -40,12 +38,12 @@ export const useFetchTargetReading = (userIdParams, modalOpen, deleteModal, filt
 							userInfo.id === userIdParams &&
 							userId &&
 							!checkUser &&
-							checkRenderTarget
+							!checkRenderTarget
 						) {
 							setBooksReadYear(newTargetReading);
 						} else {
 							dispatch(updateTargetReading([]));
-							const data = await dispatch(getListBooksTargetReading(userIdParams)).unwrap();
+							const data = await dispatch(getListBooksTargetReading(params)).unwrap();
 							newData = data.filter(item => item.year === year);
 							setBooksReadYear(newData);
 						}
@@ -62,7 +60,7 @@ export const useFetchTargetReading = (userIdParams, modalOpen, deleteModal, filt
 		return () => {
 			isMount = false;
 		};
-	}, [retry, modalOpen, deleteModal, userIdParams, renderTarget, checkRenderTarget, filter]);
+	}, [retry, modalOpen, deleteModal, userIdParams, renderTarget, checkRenderTarget]);
 
-	return { status, booksReadYear, retryRequest };
+	return { status, booksReadYear, retryRequest, setBooksReadYear };
 };

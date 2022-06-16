@@ -97,7 +97,7 @@ export const commentActivityAPI = '/api/v1/commentMiniposts';
 export const commentActivityDetailAPI = id => `/api/v1/commentMiniposts/${id}`;
 
 // notification
-export const nottificationAPI = '/api/v1/getstream/notiMention';
+export const nottificationAPI = '/api/v1/getstream/notifications';
 
 // followrs
 export const listFolowrs = id => `/api/v1/users/listFollowers/${id}`;

@@ -178,6 +178,7 @@ function CreatePost({ onChangeNewPost }) {
 						option={option}
 						onChangeOption={onChangeOption}
 						onChangeNewPost={onChangeNewPost}
+						setShowModalCreatPost={setShowModalCreatPost}
 					/>
 				</div>
 			)}

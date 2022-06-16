@@ -3,10 +3,10 @@ import ReadChallenge from 'shared/read-challenge';
 import PropTypes from 'prop-types';
 import { memo } from 'react';
 import { useFetchTargetReading } from 'api/readingTarget.hooks';
+import { STATUS_SUCCESS } from 'constants';
 
 const RenderProgress = ({ userIdParams }) => {
-	const { booksReadYear } = useFetchTargetReading(userIdParams);
-
+	const { booksReadYear, status } = useFetchTargetReading(userIdParams);
 	const renderProgressBar = () => {
 		if (booksReadYear.length > 0) {
 			return <ProgressBarCircle booksReadYear={booksReadYear} />;
@@ -14,7 +14,7 @@ const RenderProgress = ({ userIdParams }) => {
 			return <ReadChallenge />;
 		}
 	};
-	return renderProgressBar();
+	return status === STATUS_SUCCESS && renderProgressBar();
 };
 
 RenderProgress.propTypes = {

@@ -13,6 +13,7 @@ const ResultSearch = ({ valueInputSearch, resultSearch, setIsShow }) => {
 	const [saveLocalSearch, setSaveLoacalSearch] = useState([]);
 	const [directClick, setDirectClick] = useState(false);
 	const navigate = useNavigate();
+
 	const handleDeleteItem = id => {
 		const filterResult = saveLocalSearch.filter(item => item.id !== id);
 		Storage.setItem('result', JSON.stringify(filterResult));
