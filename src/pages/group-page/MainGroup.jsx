@@ -1,8 +1,5 @@
 import React, { useState, useEffect } from 'react';
-// import PopupCreateGroup from './PopupCreateGroup';
-// import PopupInviteFriend from './popup-group/popupInviteFriend';
-// import PopupQuestion from './popup-group/popupQuestion';
-// import MiniPopup from './popup-group/mini-popup';
+
 import SidebarGroupLef from './sidebar-left';
 import './mainGroup.scss';
 import MainGroupComponent from './popup-group/MainGroupComponet/MainGroupComponent';
@@ -31,7 +28,7 @@ const MainGroup = () => {
 			const actionGetList = await dispatch(getMember(id)).unwrap();
 			setListMember(actionGetList);
 		} catch (err) {
-			NotificationError(err);
+			// NotificationError(err);
 		}
 	};
 
@@ -40,24 +37,6 @@ const MainGroup = () => {
 		getListMember();
 	}, []);
 	const [keyChange, setKeyChange] = useState('tabs');
-	// const [isShow, setIsShow] = useState(true);
-	// const [isInvite, setIsInvite] = useState(false);
-	// const [isQuestion, setIsQuestion] = useState(false);
-	// const [isMini, setIsMini] = useState(false);
-	// const handleClose = () => {
-	// 	if (isShow === true) {
-	// 		setIsShow(!isShow);
-	// 	}
-	// 	// if (isInvite === true) {
-	// 	// 	setIsInvite(!isInvite);
-	// 	// }
-	// 	// if (isQuestion === true) {
-	// 	// 	setIsQuestion(!isQuestion);
-	// 	// }
-	// 	// if (isMini === true) {
-	// 	// 	setIsMini(!isMini);
-	// 	// }
-	// };
 
 	const handleChange = e => {
 		setKeyChange(e);
@@ -65,80 +44,6 @@ const MainGroup = () => {
 
 	return (
 		<div className='main__main-group'>
-			{/* <div>
-				{' '}
-				<button
-					onClick={() => {
-						setIsShow(!isShow);
-					}}
-				>
-					+
-				</button>
-				{isShow ? (
-					<div className='popup-container'>
-						<PopupCreateGroup handleClose={handleClose} />
-					</div>
-				) : (
-					''
-				)}
-				<div>
-					<button
-						onClick={() => {
-							setIsInvite(!isInvite);
-						}}
-					>
-						+
-					</button>
-					{isInvite ? (
-						<div className='popup-container'>
-							<PopupInviteFriend handleClose={handleClose} />
-						</div>
-					) : (
-						''
-					)}
-				</div>
-				<div>
-					<button
-						onClick={() => {
-							setIsQuestion(!isQuestion);
-						}}
-					>
-						+
-					</button>
-					{isQuestion ? (
-						<div className='popup-container'>
-							<PopupQuestion handleClose={handleClose} />
-						</div>
-					) : (
-						''
-					)}
-				</div>
-				<div>
-					<button
-						onClick={() => {
-							setIsMini(!isMini);
-						}}
-					>
-						+
-					</button>
-					{isMini ? (
-						<div className='popup-container'>
-							<MiniPopup />
-						</div>
-					) : (
-						''
-					)}
-				</div>
-			</div> */}
-
-			{/* {isShow ? (
-				<div className='popup-container'>
-					<PopupCreatGroup handleClose={handleClose} />
-				</div>
-			) : (
-				''
-			)} */}
-
 			<div className='group-main__container'>
 				<SidebarGroupLef handleChange={handleChange} data={detailGroup} member={listMember} />
 				<MainGroupComponent
