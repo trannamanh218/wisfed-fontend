@@ -20,6 +20,7 @@ const SidebarReadingTarget = ({ handleViewBookDetail, isMyShelve }) => {
 		3,
 		JSON.stringify([{ operator: 'eq', value: userInfo.id, property: 'createdBy' }])
 	);
+
 	const { booksAuthor } = useFetchAuthorBooks(userId);
 
 	const myAllLibraryRedux = useSelector(state => state.library.myAllLibrary);
@@ -52,7 +53,7 @@ const SidebarReadingTarget = ({ handleViewBookDetail, isMyShelve }) => {
 						list={booksAuthor}
 						handleViewBookDetail={handleViewBookDetail}
 					/>
-					<Link className='view-all-link' to={`/book-author/${userId}`}>
+					<Link className='view-all-link' to={`/books-author/${userId}`}>
 						Xem thêm
 					</Link>
 				</div>

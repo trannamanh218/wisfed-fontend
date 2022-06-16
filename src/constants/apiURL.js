@@ -43,7 +43,7 @@ export const progressBookAPI = id => `/api/v1/books/updateBookProgress/${id}`;
 export const bookAuthorAPI = id => `/api/v1/books/listBookByAuthor/${id}`;
 
 // category
-export const categoryAPI = '/api/v1/categories';
+export const categoryAPI = option => `/api/v1/categories?include=${option}`;
 export const categoryDetailAPI = id => `/api/v1/categories/${id}`;
 export const favoriteCategoriesAPI = '/api/v1/categories/favoriteCategories';
 export const listBookByCategoryAPI = categoryId => `/api/v1/books/listBookCategory/${categoryId}`;
@@ -97,7 +97,7 @@ export const commentActivityAPI = '/api/v1/commentMiniposts';
 export const commentActivityDetailAPI = id => `/api/v1/commentMiniposts/${id}`;
 
 // notification
-export const nottificationAPI = '/api/v1/getstream/notiMention';
+export const nottificationAPI = '/api/v1/getstream/notifications';
 
 // followrs
 export const listFolowrs = id => `/api/v1/users/listFollowers/${id}`;
@@ -129,6 +129,10 @@ export const creatGroup = '/api/v1/groups';
 export const myGroup = '/api/v1/groups/myGroup';
 export const adminGroup = '/api/v1/groups/myGroup?type=admin';
 export const memberGroup = id => `/api/v1/groups/memberGroup/${id}`;
+export const listTagGroup = id => `/api/v1/groups/groupTag/${id}`;
+export const commentGroup = '/api/v1/groupPosts/commentGroupPost';
+export const likeGroupPost = id => `/api/v1/groupPosts/like/${id}`;
+export const likeCommentGroup = id => `/api/v1/groupPosts/likeComment/${id}`;
 
 // search
 export const getSearchAPI = `/api/v1/searchs`;

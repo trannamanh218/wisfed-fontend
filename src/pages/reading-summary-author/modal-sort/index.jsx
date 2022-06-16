@@ -5,10 +5,11 @@ import FormCheckGroup from 'shared/form-check-group';
 import classNames from 'classnames';
 import { Setting } from 'components/svg';
 
-const ModalChart = ({ setChangeValue, changeValue, sortValue, setSortValue, sortValueKey, setSortValueKey }) => {
-	const [showDropdownMenu, setShowDropdownMenu] = useState(false);
+const ModalChart = ({ setChangeValue, changeValue, setSortValue, setSortValueKey }) => {
 	const sortDropdownMenu = useRef(null);
-
+	const [showDropdownMenu, setShowDropdownMenu] = useState(false);
+	const [dataValue, setDatavalue] = useState('day');
+	const [keyDatavalue, setKeydatavalue] = useState('read');
 	const radioOptions = [
 		{
 			value: 'day',
@@ -61,17 +62,24 @@ const ModalChart = ({ setChangeValue, changeValue, sortValue, setSortValue, sort
 	}, []);
 
 	const handleChange = data => {
-		setSortValue(data);
+		setDatavalue(data);
 	};
 
 	const handleChangekey = data => {
-		setSortValueKey(data);
+		setKeydatavalue(data);
 	};
 
 	const checkClickTarget = e => {
 		if (!sortDropdownMenu.current.contains(e.target)) {
 			setShowDropdownMenu(false);
 		}
+	};
+
+	const handleClickSort = () => {
+		setShowDropdownMenu(false);
+		setChangeValue(!changeValue);
+		setSortValue(dataValue);
+		setSortValueKey(keyDatavalue);
 	};
 
 	return (
@@ -95,7 +103,7 @@ const ModalChart = ({ setChangeValue, changeValue, sortValue, setSortValue, sort
 							type='radio'
 							defaultValue='week'
 							handleChange={handleChange}
-							currentSortValue={sortValue}
+							currentSortValue={dataValue}
 						/>
 					))}
 					<h6 style={{ marginTop: '24px' }} className='filter-quote-pane__setting__title'>
@@ -109,15 +117,14 @@ const ModalChart = ({ setChangeValue, changeValue, sortValue, setSortValue, sort
 							type='radio'
 							defaultValue='read'
 							handleChange={handleChangekey}
-							currentSortValue={sortValueKey}
+							currentSortValue={keyDatavalue}
 						/>
 					))}
 				</div>
 				<Button
 					className='filter-quote-pane__setting__btn'
 					onClick={() => {
-						setShowDropdownMenu(false);
-						setChangeValue(!changeValue);
+						handleClickSort();
 					}}
 				>
 					Xác nhận
@@ -127,9 +134,7 @@ const ModalChart = ({ setChangeValue, changeValue, sortValue, setSortValue, sort
 	);
 };
 ModalChart.propTypes = {
-	sortValue: PropTypes.string,
 	setSortValue: PropTypes.func,
-	sortValueKey: PropTypes.string,
 	setSortValueKey: PropTypes.func,
 	changeValue: PropTypes.bool,
 	setChangeValue: PropTypes.func,

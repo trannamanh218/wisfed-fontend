@@ -5,7 +5,7 @@ import QuotesLinks from 'shared/quote-links';
 import StatisticList from 'shared/statistic-list';
 import PropTypes from 'prop-types';
 import './sidebar-shelves.scss';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useFetchQuotes } from 'api/quote.hooks';
 import ChartsReading from 'shared/charts-Reading';
 import { useFetchAuthorBooks } from 'api/book.hooks';
@@ -13,13 +13,9 @@ import { useParams } from 'react-router-dom';
 import RenderProgress from 'shared/render-progress';
 import ProgressBarCircle from 'shared/progress-circle';
 import _ from 'lodash';
-import { NotificationError } from 'helpers/Error';
-import { getListBooksTargetReading } from 'reducers/redux-utils/chart';
-import { useState, useEffect } from 'react';
+import { useFetchTargetReading } from 'api/readingTarget.hooks';
 
 const SidebarShelves = ({ shelveGroupName, isMyShelve, handleViewBookDetail }) => {
-	const [booksReadYear, setBookReadYear] = useState({});
-
 	const { userId } = useParams();
 	const { booksAuthor } = useFetchAuthorBooks(userId);
 	const { userInfo } = useSelector(state => state.auth);
@@ -29,40 +25,19 @@ const SidebarShelves = ({ shelveGroupName, isMyShelve, handleViewBookDetail }) =
 		JSON.stringify([{ operator: 'eq', value: userId.id, property: 'createdBy' }])
 	);
 
+	const { booksReadYear } = useFetchTargetReading(userId);
+
 	const myAllLibraryRedux = useSelector(state => state.library.myAllLibrary);
-
-	const dispatch = useDispatch();
-
-	useEffect(() => {
-		if (!isMyShelve) {
-			getTargetReadingOfOtherUser();
-		}
-	}, []);
-
-	const getTargetReadingOfOtherUser = async () => {
-		try {
-			const data = await dispatch(getListBooksTargetReading(userId)).unwrap();
-			const year = new Date().getFullYear();
-			const newData = data.filter(item => item.year === year);
-			if (newData.length) {
-				setBookReadYear(newData[0]);
-			}
-		} catch (err) {
-			NotificationError(err);
-		}
-	};
 
 	const handleRenderTargetReading = () => {
 		if (isMyShelve) {
-			return <RenderProgress userId={userId} />;
+			return <RenderProgress userIdParams={userId} />;
 		} else {
-			if (!_.isEmpty(booksReadYear)) {
-				return <ProgressBarCircle booksReadYearData={booksReadYear} />;
+			if (booksReadYear.length > 0) {
+				return <ProgressBarCircle booksReadYear={booksReadYear} />;
 			}
 		}
 	};
-
-	console.log(booksReadYear);
 
 	return (
 		<div className='sidebar-shelves'>
@@ -96,7 +71,7 @@ const SidebarShelves = ({ shelveGroupName, isMyShelve, handleViewBookDetail }) =
 						list={booksAuthor}
 						handleViewBookDetail={handleViewBookDetail}
 					/>
-					<Link className='view-all-link' to={`/book-author/${userId}`}>
+					<Link className='view-all-link' to={`/books-author/${userId}`}>
 						Xem thêm
 					</Link>
 				</div>

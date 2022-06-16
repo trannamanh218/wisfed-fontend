@@ -22,7 +22,7 @@ import ChooseTopic from 'pages/choose-topic';
 import Direct from 'pages/choose-topic/DirectPage';
 import PropTypes from 'prop-types';
 import NotFound from 'pages/not-found';
-import { getUserInfo } from 'reducers/redux-utils/auth';
+import { getUserInfo, getCheckJwt } from 'reducers/redux-utils/auth';
 import ReadingSummary from 'pages/reading-summary';
 import ReadingTarget from 'pages/reading-target';
 import ForgetPassWordAdminComponet from 'pages/foget-password/component-admin/ForgotAdmin';
@@ -39,8 +39,8 @@ import { NotificationError } from 'helpers/Error';
 import Storage from 'helpers/Storage';
 import _ from 'lodash';
 import ModalCheckLogin from 'shared/modal-check-login';
-import ReadingSummaryAuthor from 'pages/target-reading-author';
-import ReadingSummaryChartAuthor from 'pages/target-reading-author/reading-summary-author';
+import BooksAuthor from 'pages/books-author';
+import ReadingSummaryChartAuthor from 'pages/reading-summary-author';
 
 function App({ children }) {
 	const dispatch = useDispatch();
@@ -52,6 +52,16 @@ function App({ children }) {
 		if (accsetToken) {
 			dispatch(checkLogin(true));
 			await dispatch(getUserInfo());
+		} else {
+			dispatch(checkLogin(false));
+		}
+	}, []);
+
+	useEffect(async () => {
+		const accsetToken = Storage.getAccessToken();
+		if (accsetToken) {
+			dispatch(checkLogin(true));
+			await dispatch(getCheckJwt());
 		} else {
 			dispatch(checkLogin(false));
 		}
@@ -88,7 +98,7 @@ function App({ children }) {
 			<ModalCheckLogin routerLogin={routerLogin} />
 			<Routes>
 				<Route path='/top100' element={<Ranks />} />
-				<Route path='/book-author/:userId' element={<ReadingSummaryAuthor />} />
+				<Route path='/books-author/:userId' element={<BooksAuthor />} />
 				<Route path='/book-author-charts/:bookId' element={<ReadingSummaryChartAuthor />} />
 				<Route path='/result/q=:value' element={<Result />} />
 				<Route path='/notification' element={<Notification />} />

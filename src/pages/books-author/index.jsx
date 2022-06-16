@@ -1,5 +1,5 @@
 import MainContainer from 'components/layout/main-container';
-import MainReadingAuthor from './main-reading-summary-author';
+import MainReadingAuthor from './main-books-author';
 import SidebarReadingSummary from '../reading-target/sidebar-reading-target';
 import { useParams } from 'react-router-dom';
 import { handleShelvesGroup } from 'api/shelvesGroup.hooks';
@@ -11,7 +11,7 @@ import RouteLink from 'helpers/RouteLink';
 import { NotificationError } from 'helpers/Error';
 import { useDispatch } from 'react-redux';
 
-const ReadingSummaryAuthor = () => {
+const BooksAuthor = () => {
 	const [isViewBookDetailLoading, setIsViewBookDetailLoading] = useState(false);
 
 	const { userId } = useParams();
@@ -48,4 +48,4 @@ const ReadingSummaryAuthor = () => {
 	);
 };
 
-export default ReadingSummaryAuthor;
+export default BooksAuthor;

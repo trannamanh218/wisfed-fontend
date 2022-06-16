@@ -10,7 +10,7 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import LoadingIndicator from 'shared/loading-indicator';
 import PropTypes from 'prop-types';
 
-const MainReadingAuthor = ({ shelveGroupName }) => {
+const MainBooksAuthor = ({ shelveGroupName }) => {
 	const [booksByAuthor, setBooksByAuthor] = useState([]);
 	const [hasMore, setHasMore] = useState(true);
 	const [filter, setFilter] = useState('[]');
@@ -155,8 +155,8 @@ const MainReadingAuthor = ({ shelveGroupName }) => {
 	);
 };
 
-MainReadingAuthor.propTypes = {
+MainBooksAuthor.propTypes = {
 	shelveGroupName: PropTypes.string,
 };
 
-export default MainReadingAuthor;
+export default MainBooksAuthor;

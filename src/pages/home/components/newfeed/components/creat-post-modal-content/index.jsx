@@ -15,7 +15,7 @@ import CreatPostSubModal from './CreatePostSubModal';
 import TaggedList from './TaggedList';
 import UploadImage from './UploadImage';
 import PreviewLink from 'shared/preview-link/PreviewLink';
-import { getPreviewUrl, getSharePostInternal, getSharePostInternalPost } from 'reducers/redux-utils/post';
+import { getPreviewUrl, getSharePostInternal } from 'reducers/redux-utils/post';
 import { useCallback } from 'react';
 import Circle from 'shared/loading/circle';
 import './style.scss';
@@ -34,7 +34,14 @@ import PostQuotes from 'shared/post-quotes';
 import { saveDataShare, checkShare } from 'reducers/redux-utils/post';
 import Post from 'shared/post';
 
-function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option, onChangeOption, onChangeNewPost }) {
+function CreatPostModalContent({
+	hideCreatPostModal,
+	setShowModalCreatPost,
+	showModalCreatPost,
+	option,
+	onChangeOption,
+	onChangeNewPost,
+}) {
 	// const [shareMode, setShareMode] = useState({ value: 'public', title: 'Mọi người', icon: <WorldNet /> });
 	const [showTextFieldEditPlaceholder, setShowTextFieldEditPlaceholder] = useState(true);
 	const [showMainModal, setShowMainModal] = useState(showModalCreatPost);
@@ -69,7 +76,7 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 		auth: { userInfo },
 		book: { bookForCreatePost, bookInfo },
 	} = useSelector(state => state);
-	const { optionList, shareModeList } = setting;
+	const { optionList } = setting;
 
 	useEffect(() => {
 		textFieldEdit.current.focus();
@@ -399,6 +406,7 @@ function CreatPostModalContent({ hideCreatPostModal, showModalCreatPost, option,
 			setStatus(STATUS_IDLE);
 			hideCreatPostModal();
 			onChangeOption({});
+			setShowModalCreatPost(false);
 		}
 	};
 
@@ -668,6 +676,7 @@ CreatPostModalContent.propTypes = {
 	onChangeOption: PropTypes.func,
 	onChangeNewPost: PropTypes.func,
 	renderBookReading: PropTypes.object,
+	setShowModalCreatPost: PropTypes.func,
 };
 
 export default CreatPostModalContent;

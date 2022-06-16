@@ -36,7 +36,7 @@ const Comment = ({ data, handleReply, postData, commentLv1Id, postCommentsLikedA
 	const handleLikeUnlikeQuoteCmt = async commentId => {
 		try {
 			const res = await dispatch(likeQuoteComment(commentId)).unwrap();
-			setIsLiked(res.liked);
+			setIsLiked(res?.liked);
 		} catch (err) {
 			NotificationError(err);
 		}

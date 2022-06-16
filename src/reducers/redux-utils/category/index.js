@@ -8,9 +8,10 @@ import {
 } from 'constants/apiURL';
 import Request from 'helpers/Request';
 
-export const getCategoryList = createAsyncThunk('categroy/getCategoryList', async (params, { rejectWithValue }) => {
+export const getCategoryList = createAsyncThunk('categroy/getCategoryList', async (data, { rejectWithValue }) => {
+	const { option, params } = data;
 	try {
-		const response = await Request.makeGet(categoryAPI, params);
+		const response = await Request.makeGet(categoryAPI(option), params);
 		return response.data;
 	} catch (err) {
 		const error = JSON.parse(err.response);

@@ -7,7 +7,6 @@ import { useFetchQuoteRandom } from 'api/quote.hooks';
 import _ from 'lodash';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-// import { useFetchTargetReading } from 'api/readingTarget.hooks';
 import { useState, useEffect } from 'react';
 import RenderProgress from 'shared/render-progress';
 
@@ -35,7 +34,6 @@ const Sidebar = () => {
 	return (
 		<div className='sidebar'>
 			{!_.isEmpty(userInfo) && <ReadingBook bookData={bookReading} />}
-
 			{!_.isEmpty(myAllLibraryRedux) && !_.isEmpty(userInfo) && myAllLibraryRedux.default.length > 0 && (
 				<div className='sidebar__block'>
 					<h4 className='sidebar__block__title'>Giá sách</h4>
@@ -59,7 +57,7 @@ const Sidebar = () => {
 				</div>
 			)}
 
-			{!_.isEmpty(userInfo) && <RenderProgress userId={userInfo?.id} />}
+			{!_.isEmpty(userInfo) && <RenderProgress userIdParams={userInfo?.id} />}
 
 			{wantToReadList.length > 0 && !_.isEmpty(userInfo) && <TheBooksWantsToRead list={wantToReadList} />}
 			<div className='sidebar__block'>

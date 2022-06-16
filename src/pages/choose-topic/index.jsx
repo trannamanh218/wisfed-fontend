@@ -25,11 +25,11 @@ function ChooseTopic() {
 	const { searchCategories, fetchFilterData, hasMoreFilterData } = useFetchFilterCategories(inputValue);
 
 	const getListCategory = async () => {
-		const querry = {
+		const params = {
 			start: 0,
-			limit: 26,
+			limit: 100,
 		};
-		const listCategoryAction = await dispatch(getCategoryList(querry)).unwrap();
+		const listCategoryAction = await dispatch(getCategoryList({ option: false, params })).unwrap();
 		setListCategory(listCategoryAction.rows);
 	};
 
