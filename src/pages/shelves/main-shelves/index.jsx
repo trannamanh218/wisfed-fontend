@@ -39,6 +39,7 @@ const MainShelves = ({ allLibraryList, shelveGroupName, isMyShelve, handleViewBo
 	}, [currentLibrary, userId, filter, currentPage]);
 
 	const getBooksInCurrentLibrary = async () => {
+		setIsLoading(true);
 		const query = generateQuery(currentPage, itemsPerPage, filter);
 		try {
 			let data = { rows: [], count: 0 };

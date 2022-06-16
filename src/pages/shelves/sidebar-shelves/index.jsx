@@ -26,7 +26,7 @@ const SidebarShelves = ({ shelveGroupName, isMyShelve, handleViewBookDetail }) =
 	const { quoteData } = useFetchQuotes(
 		0,
 		3,
-		JSON.stringify([{ operator: 'eq', value: userInfo.id, property: 'createdBy' }])
+		JSON.stringify([{ operator: 'eq', value: userId.id, property: 'createdBy' }])
 	);
 
 	const myAllLibraryRedux = useSelector(state => state.library.myAllLibrary);
@@ -61,6 +61,8 @@ const SidebarShelves = ({ shelveGroupName, isMyShelve, handleViewBookDetail }) =
 			}
 		}
 	};
+
+	console.log(booksReadYear);
 
 	return (
 		<div className='sidebar-shelves'>
