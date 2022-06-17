@@ -128,7 +128,7 @@ const authSlice = createSlice({
 		deleteUserInfo: state => {
 			state.userInfo = {};
 		},
-		checkUserInfor: (state, action) => {
+		updateUserInfo: (state, action) => {
 			state.userInfo = action.payload;
 		},
 	},
@@ -182,8 +182,8 @@ const authSlice = createSlice({
 			state.userInfo = action.payload;
 			state.error = {};
 		},
-		[getUserInfo.rejected]: (state, action) => {
-			state.isFetching = false;
+		[getUserInfo.pending]: (state, action) => {
+			state.isFetching = true;
 			state.userInfo = {};
 			state.error = action.payload;
 		},
@@ -201,5 +201,5 @@ const authSlice = createSlice({
 });
 
 const auth = authSlice.reducer;
-export const { checkLogin, checkUserLogin, deleteUserInfo, checkUserInfor } = authSlice.actions;
+export const { checkLogin, checkUserLogin, deleteUserInfo, updateUserInfo } = authSlice.actions;
 export default auth;

@@ -7,7 +7,7 @@ import './header.scss';
 import NotificationModal from 'pages/notification/';
 import { useDispatch, useSelector } from 'react-redux';
 import { backgroundToggle } from 'reducers/redux-utils/notificaiton';
-import { checkUserLogin, checkUserInfor, deleteUserInfo } from 'reducers/redux-utils/auth';
+import { checkUserLogin, deleteUserInfo } from 'reducers/redux-utils/auth';
 import { useVisible } from 'shared/hooks';
 import SearchAllModal from 'shared/search-all';
 import Storage from 'helpers/Storage';
@@ -102,7 +102,6 @@ const Header = () => {
 		dispatch(updateTargetReading([]));
 		navigate('/login');
 		toast.success('Đăng xuất thành công');
-		dispatch(checkUserInfor({}));
 	};
 
 	return (

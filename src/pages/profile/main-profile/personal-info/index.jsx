@@ -21,6 +21,7 @@ import { editUserInfo } from 'reducers/redux-utils/user';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import backgroundImageDefault from 'assets/images/background-profile.png';
+import { updateUserInfo } from 'reducers/redux-utils/auth';
 
 const PersonalInfo = ({ currentUserInfo }) => {
 	const { ref: settingsRef, isVisible: isSettingsVisible, setIsVisible: setSettingsVisible } = useVisible(false);
@@ -48,7 +49,7 @@ const PersonalInfo = ({ currentUserInfo }) => {
 		} else {
 			setBgImage(backgroundImageDefault);
 		}
-	}, []);
+	}, [currentUserInfo]);
 
 	const handleSettings = () => {
 		setSettingsVisible(prev => !prev);
@@ -66,6 +67,7 @@ const PersonalInfo = ({ currentUserInfo }) => {
 				}
 				const data = { userId: currentUserInfo.id, params: params };
 				const changeUserImage = await dispatch(editUserInfo(data)).unwrap();
+				dispatch(updateUserInfo(changeUserImage));
 				if (!_.isEmpty(changeUserImage)) {
 					toast.success('Cập nhật ảnh thành công', { autoClose: 1500 });
 				}
@@ -238,7 +240,7 @@ const PersonalInfo = ({ currentUserInfo }) => {
 					</button>
 				</Modal.Header>
 				<Modal.Body className='personal-info__modal__body'>
-					<PersonalInfoForm userData={currentUserInfo} />
+					<PersonalInfoForm userData={currentUserInfo} toggleModal={toggleModal} />
 				</Modal.Body>
 			</Modal>
 		</div>

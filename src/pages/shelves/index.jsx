@@ -3,11 +3,10 @@ import { useState, useEffect, useCallback } from 'react';
 import MainShelves from './main-shelves';
 import SidebarShelves from './sidebar-shelves';
 import Circle from 'shared/loading/circle';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import _ from 'lodash';
 import { NotificationError } from 'helpers/Error';
-import { getAllLibraryList } from 'reducers/redux-utils/library';
 import { getBookDetail } from 'reducers/redux-utils/book';
 import { useNavigate } from 'react-router-dom';
 import RouteLink from 'helpers/RouteLink';
@@ -21,32 +20,13 @@ const BookShelves = () => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
-	const userInfo = useSelector(state => state.auth.userInfo);
-	const myAllLibraryRedux = useSelector(state => state.library.myAllLibrary);
-
-	const { isLoading, shelveGroupName, isMine } = handleShelvesGroup(userId);
+	const { isLoading, shelveGroupName, isMine, allLibrary } = handleShelvesGroup(userId);
 
 	useEffect(() => {
-		if (!_.isEmpty(userInfo) && userId !== userInfo.id) {
-			getAllLibrary();
+		if (!_.isEmpty(allLibrary)) {
+			setAllLibraryList(allLibrary.default.concat(allLibrary.custom));
 		}
-	}, [userInfo, userId]);
-
-	useEffect(() => {
-		if (isMine && !_.isEmpty(myAllLibraryRedux)) {
-			setAllLibraryList(myAllLibraryRedux.default.concat(myAllLibraryRedux.custom));
-		}
-	}, [isMine, myAllLibraryRedux]);
-
-	const getAllLibrary = async () => {
-		try {
-			const data = await dispatch(getAllLibraryList({ userId })).unwrap();
-			const newData = data.default.concat(data.custom);
-			setAllLibraryList(newData);
-		} catch (err) {
-			NotificationError(err);
-		}
-	};
+	}, [allLibrary]);
 
 	const handleViewBookDetail = useCallback(async data => {
 		setIsViewBookDetailLoading(true);
@@ -78,6 +58,7 @@ const BookShelves = () => {
 						shelveGroupName={shelveGroupName}
 						isMyShelve={isMine}
 						handleViewBookDetail={handleViewBookDetail}
+						allLibrary={allLibrary}
 					/>
 				}
 			/>
