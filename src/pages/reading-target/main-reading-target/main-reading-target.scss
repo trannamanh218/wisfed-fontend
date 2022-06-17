@@ -25,6 +25,32 @@
 		margin: 2.375rem auto 2rem;
 		border-radius: 16px;
 		background-color: white;
+		.reading-target__user {
+			width: 143px !important;
+			height: 143px !important;
+		}
+		.reading-target__content_container {
+			display: flex;
+			align-items: flex-start;
+			flex-direction: column;
+			.reading-target__title {
+				font-weight: 500;
+				font-size: 15px;
+				line-height: 24px;
+				color: #6e7191;
+				margin-bottom: 8px;
+			}
+			.read-challenge__start-challenge-btn {
+				background: #b38c64;
+				width: 118px;
+				color: #fcfcfc;
+				border: none;
+				margin-top: 10px;
+			}
+		}
+	}
+	&__custom {
+		padding: 18px !important;
 	}
 
 	&__user {

@@ -1,12 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import {
-	postAPI,
-	postDetailAPI,
-	previewLink,
-	getPostsByUserAPI,
-	shareInternalAPI,
-	shareInternalPostsAPI,
-} from 'constants/apiURL';
+import { postAPI, postDetailAPI, previewLink, getPostsByUserAPI, shareInternalAPI } from 'constants/apiURL';
 import Request from 'helpers/Request';
 
 export const getPostsByUser = createAsyncThunk('post/getPostListByUser', async (data, { rejectWithValue }) => {

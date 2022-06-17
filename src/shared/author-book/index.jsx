@@ -11,7 +11,7 @@ const AuthorBook = props => {
 	const authorsName = data.authors?.map(author => author?.authorName);
 	const handleShare = () => {
 		if (Storage.getAccessToken()) {
-			console.log('ok');
+			// navigate('/');
 		} else {
 			setModalShow(true);
 		}

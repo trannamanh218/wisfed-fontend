@@ -5,13 +5,21 @@ import './quote-action-bar.scss';
 import { RightArrow } from 'components/svg';
 import { Link } from 'react-router-dom';
 import Storage from 'helpers/Storage';
+import { useDispatch } from 'react-redux';
+import { saveDataShare, checkShare } from 'reducers/redux-utils/post';
+import { useNavigate } from 'react-router-dom';
 
 const QuoteActionBar = ({ data, isDetail, likeUnlikeQuoteFnc, isLiked, likeNumber, setModalShow }) => {
 	const { isShare, share, comments, id } = data;
-
-	const handleCheckLoginShare = () => {
+	const dispatch = useDispatch();
+	const navigate = useNavigate();
+	const handleCheckLoginShare = async () => {
 		if (!Storage.getAccessToken()) {
 			setModalShow(true);
+		} else {
+			dispatch(saveDataShare(data));
+			dispatch(checkShare(true));
+			navigate('/');
 		}
 	};
 
