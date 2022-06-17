@@ -1,5 +1,4 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-// import { action } from '@storybook/addon-actions';
 import {
 	authAPI,
 	forgotPasswordAPI,
@@ -8,13 +7,11 @@ import {
 	checkTokenResetPassword,
 	forgotPasswordAPIAdmin,
 	resetPasswordAPIAdmin,
-	InforUserByEmail,
 	checkJwt,
 } from 'constants/apiURL';
 import Request from 'helpers/Request';
 import Storage from 'helpers/Storage';
 import _ from 'lodash';
-import jwtDecode from 'jwt-decode';
 
 export const register = createAsyncThunk('auth/register', async (params, { rejectWithValue }) => {
 	try {
@@ -67,17 +64,6 @@ export const forgotPassword = createAsyncThunk('auth/forgotPassword', async (par
 		return response;
 	} catch (err) {
 		return rejectWithValue(err.response);
-	}
-});
-
-export const getUserInfo = createAsyncThunk('auth/getUserInfo', async () => {
-	const accessToken = localStorage.getItem('accessToken');
-	const { email } = jwtDecode(accessToken);
-	if (accessToken !== null) {
-		const response = await Request.makeGet(InforUserByEmail(email));
-		return response.data;
-	} else {
-		return {};
 	}
 });
 
@@ -148,19 +134,6 @@ const authSlice = createSlice({
 			state.userInfo = {};
 			state.error = action.payload;
 		},
-		[checkJwt.pending]: state => {
-			state.isFetching = true;
-		},
-		[checkJwt.fulfilled]: (state, action) => {
-			state.isFetching = false;
-			state.userInfo = action.payload;
-			state.error = {};
-		},
-		[checkJwt.rejected]: (state, action) => {
-			state.isFetching = false;
-			state.userInfo = {};
-			state.error = action.payload;
-		},
 		[checkApiToken.pending]: state => {
 			state.isFetching = true;
 		},
@@ -182,17 +155,17 @@ const authSlice = createSlice({
 			state.userInfo = action.payload;
 			state.error = {};
 		},
-		[getUserInfo.pending]: (state, action) => {
+		[getCheckJwt.pending]: (state, action) => {
 			state.isFetching = true;
 			state.userInfo = {};
 			state.error = action.payload;
 		},
-		[getUserInfo.fulfilled]: (state, action) => {
+		[getCheckJwt.fulfilled]: (state, action) => {
 			state.isFetching = false;
 			state.userInfo = action.payload;
 			state.error = {};
 		},
-		[getUserInfo.rejected]: (state, action) => {
+		[getCheckJwt.rejected]: (state, action) => {
 			state.isFetching = false;
 			state.userInfo = {};
 			state.error = action.payload;

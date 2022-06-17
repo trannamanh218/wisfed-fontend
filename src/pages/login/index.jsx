@@ -31,8 +31,8 @@ function Login() {
 			const infoUserLogin = unwrapResult(actionLogin);
 			if (infoUserLogin) {
 				toast.success('Đăng nhập thành công');
-				const actionCheckJwt = await dispatch(getCheckJwt());
-				if (_.isEmpty(actionCheckJwt?.favoriteCategory)) {
+				const actionCheckJwt = await dispatch(getCheckJwt()).unwrap();
+				if (!_.isEmpty(actionCheckJwt?.favoriteCategory)) {
 					navigate('/');
 				} else {
 					navigate('/choose-topic');

@@ -9,8 +9,6 @@ import {
 	userAPI,
 } from 'constants/apiURL';
 import Request from 'helpers/Request';
-// import { checkBookInLibraries } from '../library';
-// import { NotificationError } from 'helpers/Error';
 
 export const createActivity = createAsyncThunk('activity/createActivity', async (params, { rejectWithValue }) => {
 	try {
@@ -66,7 +64,7 @@ export const getSuggestionForPost = createAsyncThunk(
 					break;
 				}
 				case 'addCategory': {
-					const response = await Request.makeGet(categoryAPI, query);
+					const response = await Request.makeGet(categoryAPI({ option: false }), query);
 					data = response.data;
 					break;
 				}
@@ -80,8 +78,6 @@ export const getSuggestionForPost = createAsyncThunk(
 					data = response.data;
 					break;
 				}
-				default:
-					break;
 			}
 			return data;
 		} catch (err) {
