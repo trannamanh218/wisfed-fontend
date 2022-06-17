@@ -108,6 +108,7 @@ function Post({ postInformations, className, showModalCreatPost }) {
 						mediaUrl: [],
 						replyId: replyId,
 					};
+
 					res = await dispatch(createCommentGroup(params)).unwrap();
 				} else {
 					const params = {
@@ -131,10 +132,12 @@ function Post({ postInformations, className, showModalCreatPost }) {
 		}
 	};
 
+	console.log(postData);
+
 	const handleLikeAction = async () => {
 		try {
 			if (location.pathname.includes('group')) {
-				await dispatch(updateReactionActivityGroup(postData.minipostId || postData.id)).unwrap();
+				await dispatch(updateReactionActivityGroup(postData.id)).unwrap();
 			} else {
 				await dispatch(updateReactionActivity(postData.minipostId || postData.id)).unwrap();
 			}
