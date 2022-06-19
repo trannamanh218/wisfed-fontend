@@ -9,19 +9,17 @@ import { checkLikeQuote } from 'reducers/redux-utils/quote';
 import { NotificationError } from 'helpers/Error';
 import { useDispatch } from 'react-redux';
 
-const QuoteCard = ({ data, isDetail = false, likedArray }) => {
+const QuoteCard = ({ data, isDetail = false }) => {
 	const [isLiked, setIsLiked] = useState(false);
-	const [likeNumber, setLikeNumber] = useState(0);
+	const [likeNumber, setLikeNumber] = useState(data.like);
 	const dispatch = useDispatch();
+
 	useEffect(() => {
 		if (isDetail) {
-			getLikedArray();
+			checkLikeInQuoteDetail();
 		} else {
-			if (likedArray.length > 0 && likedArray.includes(data.id)) {
-				setIsLiked(true);
-			}
+			setIsLiked(data.isLike);
 		}
-		setLikeNumber(data.like);
 	}, []);
 
 	const likeUnlikeQuoteFnc = async id => {
@@ -34,7 +32,7 @@ const QuoteCard = ({ data, isDetail = false, likedArray }) => {
 		}
 	};
 
-	const getLikedArray = async () => {
+	const checkLikeInQuoteDetail = async () => {
 		try {
 			const res = await dispatch(checkLikeQuote()).unwrap();
 			if (res.includes(data.id)) {

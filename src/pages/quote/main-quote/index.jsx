@@ -5,7 +5,7 @@ import QuoteCard from 'shared/quote-card';
 import SearchField from 'shared/search-field';
 import { useDispatch, useSelector } from 'react-redux';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { checkLikeQuote, getQuoteList, getMyLikedQuotes } from 'reducers/redux-utils/quote';
+import { getQuoteList, getMyLikedQuotes } from 'reducers/redux-utils/quote';
 import './main-quote.scss';
 import { NotificationError } from 'helpers/Error';
 import _ from 'lodash';
@@ -22,7 +22,6 @@ const MainQuote = () => {
 	const [quoteList, setQuoteList] = useState([]);
 	const [hasMore, setHasMore] = useState(true);
 	const [currentOption, setCurrentOption] = useState(filterOptions[0]);
-	const [likedArray, setLikedArray] = useState([]);
 	const [sortValue, setSortValue] = useState('like');
 	const [sortDirection, setSortDirection] = useState('DESC');
 	const [quotesUserName, setQuotesUserName] = useState('');
@@ -42,7 +41,6 @@ const MainQuote = () => {
 		setHasMore(true);
 		callApiStart.current = 10;
 		getQuoteListFirstTime();
-		getLikedArray();
 	}, [resetQuoteList, sortValue, sortDirection, currentOption]);
 
 	useEffect(async () => {
@@ -124,15 +122,6 @@ const MainQuote = () => {
 		}
 	};
 
-	const getLikedArray = async () => {
-		try {
-			const res = await dispatch(checkLikeQuote()).unwrap();
-			setLikedArray(res);
-		} catch (err) {
-			NotificationError(err);
-		}
-	};
-
 	const handleChangeOption = item => {
 		setCurrentOption(item);
 	};
@@ -177,7 +166,7 @@ const MainQuote = () => {
 								loader={<LoadingIndicator />}
 							>
 								{quoteList.map(item => (
-									<QuoteCard key={item.id} data={item} likedArray={likedArray} />
+									<QuoteCard key={item.id} data={item} />
 								))}
 							</InfiniteScroll>
 						) : (
