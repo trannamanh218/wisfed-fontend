@@ -9,8 +9,9 @@ import './sidebar-reading-summary.scss';
 import { useFetchAuthorBooks } from 'api/book.hooks';
 import _ from 'lodash';
 import { useParams } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
-const SidebarReadingSummary = () => {
+const SidebarReadingSummary = ({ handleViewBookDetail, isMine }) => {
 	const { userId } = useParams();
 	const { userInfo } = useSelector(state => state.auth);
 	const { booksAuthor } = useFetchAuthorBooks(userId);
@@ -52,6 +53,11 @@ const SidebarReadingSummary = () => {
 			</div>
 		</div>
 	);
+};
+
+SidebarReadingSummary.propTypes = {
+	handleViewBookDetail: PropTypes.func,
+	isMine: PropTypes.bool,
 };
 
 export default SidebarReadingSummary;

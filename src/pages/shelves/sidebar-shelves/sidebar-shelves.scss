@@ -4,11 +4,11 @@
 	display: flex;
 	flex-direction: column;
 	gap: 3.75rem;
+	padding-top: 12px;
 	.read-challenge {
 		margin-bottom: 0;
 	}
 	&__reading__status {
-		margin-top: 1rem;
 		h4 {
 			margin-bottom: 1.5rem;
 		}

@@ -71,7 +71,6 @@ const MainReadingTarget = () => {
 			</div>
 		);
 	};
-
 	const handleRenderUseSearch = newArr => {
 		const newData = newArr.booksRead || newArr;
 		return newData.length ? (
@@ -104,7 +103,6 @@ const MainReadingTarget = () => {
 			</tr>
 		);
 	};
-
 	return booksReadYear.map(item => (
 		<div key={item.id} className='reading-target'>
 			<div className='reading-target__header'>
@@ -132,7 +130,6 @@ const MainReadingTarget = () => {
 				setModalOpen={setModalOpen}
 				deleteModal={deleteModal}
 			/>
-
 			{!_.isEmpty(item.booksRead) && (
 				<div className='reading-target__table'>
 					<Table>
@@ -160,5 +157,4 @@ const MainReadingTarget = () => {
 };
 
 MainReadingTarget.propTypes = {};
-
 export default MainReadingTarget;

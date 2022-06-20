@@ -15,7 +15,7 @@ import CreatPostSubModal from './CreatePostSubModal';
 import TaggedList from './TaggedList';
 import UploadImage from './UploadImage';
 import PreviewLink from 'shared/preview-link/PreviewLink';
-import { getPreviewUrl, getSharePostInternal, getSharePostInternalPost } from 'reducers/redux-utils/post';
+import { getPreviewUrl, getSharePostInternal } from 'reducers/redux-utils/post';
 import { useCallback } from 'react';
 import Circle from 'shared/loading/circle';
 import './style.scss';
@@ -76,7 +76,7 @@ function CreatPostModalContent({
 		auth: { userInfo },
 		book: { bookForCreatePost, bookInfo },
 	} = useSelector(state => state);
-	const { optionList, shareModeList } = setting;
+	const { optionList } = setting;
 
 	useEffect(() => {
 		textFieldEdit.current.focus();

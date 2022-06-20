@@ -26,7 +26,6 @@ const profileSlice = createSlice({
 			state.checkUser = action.payload;
 		},
 	},
-	extraReducers: {},
 });
 
 export const { changeToggle, checkGetUser } = profileSlice.actions;

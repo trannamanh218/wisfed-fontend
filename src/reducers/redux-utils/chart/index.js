@@ -50,8 +50,7 @@ export const getListBooksReadYear = createAsyncThunk(
 
 export const getListBooksTargetReading = createAsyncThunk(
 	'targetReading/getListBooksTargetRead',
-	async (params, { rejectWithValue }) => {
-		const { userId } = params;
+	async (userId, { rejectWithValue }) => {
 		try {
 			const response = await Request.makeGet(getReadingTargetIdAPI(userId));
 			return response.data.rows;

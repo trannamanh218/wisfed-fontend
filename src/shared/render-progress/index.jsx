@@ -7,6 +7,7 @@ import { STATUS_SUCCESS } from 'constants';
 
 const RenderProgress = ({ userIdParams }) => {
 	const { booksReadYear, status } = useFetchTargetReading(userIdParams);
+
 	const renderProgressBar = () => {
 		if (booksReadYear.length > 0) {
 			return <ProgressBarCircle booksReadYear={booksReadYear} />;

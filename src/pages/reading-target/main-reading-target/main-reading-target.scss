@@ -1,8 +1,6 @@
 @import 'src/scss/abstracts/_global.scss';
 
 .reading-target {
-	padding-top: 2.25rem;
-
 	&__header {
 		display: flex;
 		align-items: center;
@@ -168,8 +166,5 @@
 		-webkit-box-orient: vertical;
 		overflow: hidden;
 		text-overflow: ellipsis;
-	}
-
-	.book-row {
 	}
 }

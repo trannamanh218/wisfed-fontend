@@ -35,7 +35,7 @@ const MainCategory = ({ status, handleViewBookDetail, viewCategoryDetail }) => {
 	const getCategoryListDataFirstTime = async () => {
 		try {
 			const params = { start: 0, limit: callApiPerPage.current, filter: filter };
-			const categoryListData = await dispatch(getCategoryList(params)).unwrap();
+			const categoryListData = await dispatch(getCategoryList({ option: true, params })).unwrap();
 			setCategoryList(categoryListData.rows);
 			if (!categoryListData.rows.length || categoryListData.rows.length < callApiPerPage.current) {
 				setHasMore(false);
@@ -48,7 +48,7 @@ const MainCategory = ({ status, handleViewBookDetail, viewCategoryDetail }) => {
 	const getCategoryListData = async () => {
 		try {
 			const params = { start: callApiStart.current, limit: callApiPerPage.current, filter: filter };
-			const categoryListData = await dispatch(getCategoryList(params)).unwrap();
+			const categoryListData = await dispatch(getCategoryList({ option: true, params })).unwrap();
 			if (categoryListData.rows.length) {
 				if (categoryListData.rows.length < callApiPerPage.current) {
 					setHasMore(false);

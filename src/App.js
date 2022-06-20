@@ -39,8 +39,8 @@ import { NotificationError } from 'helpers/Error';
 import Storage from 'helpers/Storage';
 import _ from 'lodash';
 import ModalCheckLogin from 'shared/modal-check-login';
-import ReadingSummaryAuthor from 'pages/target-reading-author';
-import ReadingSummaryChartAuthor from 'pages/target-reading-author/reading-summary-author';
+import BooksAuthor from 'pages/books-author';
+import ReadingSummaryChartAuthor from 'pages/reading-summary-author';
 
 function App({ children }) {
 	const dispatch = useDispatch();
@@ -88,7 +88,7 @@ function App({ children }) {
 			<ModalCheckLogin routerLogin={routerLogin} />
 			<Routes>
 				<Route path='/top100' element={<Ranks />} />
-				<Route path='/book-author/:userId' element={<ReadingSummaryAuthor />} />
+				<Route path='/books-author/:userId' element={<BooksAuthor />} />
 				<Route path='/book-author-charts/:bookId' element={<ReadingSummaryChartAuthor />} />
 				<Route path='/result/q=:value' element={<Result />} />
 				<Route path='/notification' element={<Notification />} />

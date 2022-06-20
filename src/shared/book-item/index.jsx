@@ -10,6 +10,7 @@ import _ from 'lodash';
 import { getRatingBook } from 'reducers/redux-utils/book';
 import { useDispatch } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
+import classNames from 'classnames';
 
 const BookItem = ({ data, handleViewBookDetail, isMyShelve, handleUpdateBookList }) => {
 	// const [isPublic, setIsPublic] = useState(data.isPublic);
@@ -61,7 +62,7 @@ const BookItem = ({ data, handleViewBookDetail, isMyShelve, handleUpdateBookList
 		<div className='book-item' onClick={viewBookDetail} ref={bookItemContainer}>
 			<div className='book-item__container'>
 				<BookThumbnail size='lg' {...data} />
-				<div className='book-item__overlay' ref={bookOverlay}>
+				<div className={classNames('book-item__overlay', { 'position': !isMyShelve })} ref={bookOverlay}>
 					{renderOverlay()}
 				</div>
 			</div>
