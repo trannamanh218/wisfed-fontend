@@ -14,7 +14,6 @@ import { unwrapResult } from '@reduxjs/toolkit';
 import ModalLogin from './element/ModalLogin';
 import { useNavigate } from 'react-router-dom';
 import EyeIcon from 'shared/eye-icon';
-import _ from 'lodash';
 import Subtract from 'assets/images/Subtract.png';
 
 function Login() {
@@ -32,7 +31,8 @@ function Login() {
 			if (infoUserLogin) {
 				toast.success('Đăng nhập thành công');
 				const actionCheckJwt = await dispatch(getCheckJwt());
-				if (_.isEmpty(actionCheckJwt?.favoriteCategory)) {
+				const checkFavorite = actionCheckJwt.payload.favoriteCategory;
+				if (checkFavorite.length > 0) {
 					navigate('/');
 				} else {
 					navigate('/choose-topic');

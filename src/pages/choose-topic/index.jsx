@@ -75,7 +75,7 @@ function ChooseTopic() {
 			</div>
 			<div className='choose-topic__body'>
 				<div className='choose-topic__title'>
-					<span>Lựa chọn ít nhất 03 chủ đề bạn yêu thích</span>
+					<span>Lựa chọn ít nhất 02 chủ đề bạn yêu thích</span>
 				</div>
 				<div className='choose-topic__subcribe'>
 					<span>
