@@ -22,12 +22,19 @@
 	.accordion-button:not(.collapsed) {
 		background-color: white;
 		box-shadow: unset;
+		&::after {
+			background-position: center;
+			background-repeat: no-repeat;
+			background-image: url('../../../../assets/images/caret.png');
+		}
 	}
 
 	.accordion-button {
 		&::after {
-			background-image: url('../../../../assets/images/caret-up.png');
+			background-image: url('../../../../assets/images/caret.png');
 			margin-right: 90px;
+			background-position: center;
+			background-repeat: no-repeat;
 		}
 
 		&:focus {

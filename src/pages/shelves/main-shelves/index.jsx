@@ -17,7 +17,7 @@ import LoadingIndicator from 'shared/loading-indicator';
 
 const DEFAULT_LIBRARY = { value: 'all', title: 'Tất cả', id: 'all' };
 
-const MainShelves = ({ allLibraryList, shelveName, isMyShelve, handleViewBookDetail }) => {
+const MainShelves = ({ allLibraryList, shelveGroupName, isMyShelve, handleViewBookDetail }) => {
 	// const [isPublic, setIsPublic] = useState(true);
 	const [currentBooks, setCurrentBooks] = useState([]);
 	const [currentLibrary, setCurrentLibrary] = useState(DEFAULT_LIBRARY);
@@ -39,6 +39,7 @@ const MainShelves = ({ allLibraryList, shelveName, isMyShelve, handleViewBookDet
 	}, [currentLibrary, userId, filter, currentPage]);
 
 	const getBooksInCurrentLibrary = async () => {
+		setIsLoading(true);
 		const query = generateQuery(currentPage, itemsPerPage, filter);
 		try {
 			let data = { rows: [], count: 0 };
@@ -103,7 +104,7 @@ const MainShelves = ({ allLibraryList, shelveName, isMyShelve, handleViewBookDet
 		<>
 			<div className='main-shelves'>
 				<div className='main-shelves__header'>
-					<h4>{shelveName}</h4>
+					<h4>{shelveGroupName}</h4>
 					<SearchField
 						placeholder='Tìm kiếm sách'
 						className='main-shelves__search'
@@ -172,13 +173,13 @@ const MainShelves = ({ allLibraryList, shelveName, isMyShelve, handleViewBookDet
 
 MainShelves.defaultProps = {
 	allLibraryList: [],
-	shelveName: '',
+	shelveGroupName: '',
 	isMyShelve: true,
 };
 
 MainShelves.propTypes = {
 	allLibraryList: PropTypes.array,
-	shelveName: PropTypes.string,
+	shelveGroupName: PropTypes.string,
 	isMyShelve: PropTypes.bool,
 	handleViewBookDetail: PropTypes.func,
 };

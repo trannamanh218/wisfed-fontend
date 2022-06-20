@@ -72,7 +72,6 @@ const MainReadingTarget = () => {
 			</div>
 		);
 	};
-
 	const handleRenderUseSearch = newArr => {
 		const newData = newArr.booksRead || newArr;
 		return newData.length ? (
@@ -172,5 +171,4 @@ const MainReadingTarget = () => {
 };
 
 MainReadingTarget.propTypes = {};
-
 export default MainReadingTarget;

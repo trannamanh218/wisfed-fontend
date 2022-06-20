@@ -90,7 +90,7 @@ const NotificationStatus = ({ item, setGetNotifications, getNotifications }) => 
 				></div>
 			</div>
 
-			{(item.verb === 'addFriend' || item.verb === 'addfriend' || item.verb === 'browse') &&
+			{(item.verb === 'addFriend' || item.verb === 'addfriend') &&
 				(item.isAccept || item.isRefuse ? (
 					''
 				) : (

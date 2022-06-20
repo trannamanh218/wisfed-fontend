@@ -1,12 +1,7 @@
 import UserAvatar from 'shared/user-avatar';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
-import {
-	updateTargetRead,
-	createTargetRead,
-	renderTargetReadingProgress,
-	checkRenderTargetReading,
-} from 'reducers/redux-utils/chart';
+import { createTargetRead, renderTargetReadingProgress } from 'reducers/redux-utils/chart';
 import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 import { NotificationError } from 'helpers/Error';

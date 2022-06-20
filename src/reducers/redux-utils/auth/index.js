@@ -194,7 +194,6 @@ const authSlice = createSlice({
 		},
 		[getUserInfo.rejected]: (state, action) => {
 			state.isFetching = false;
-
 			state.userInfo = {};
 			state.error = action.payload;
 		},

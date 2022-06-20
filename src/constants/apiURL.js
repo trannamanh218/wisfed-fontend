@@ -40,14 +40,14 @@ export const commentBookReviewAPI = '/api/v1/commentReviews';
 export const bookFollowReviewAPI = id => `/api/v1/books/${id}/followReviews`;
 export const bookFriendReviewAPI = id => `/api/v1/books/${id}/friendReviews`;
 export const progressBookAPI = id => `/api/v1/books/updateBookProgress/${id}`;
-export const bookAuthor = id => `/api/v1/books/listBookByAuthor/${id}`;
+export const bookAuthorAPI = id => `/api/v1/books/listBookByAuthor/${id}`;
 
 // category
-export const categoryAPI = '/api/v1/categories';
+export const categoryAPI = option => `/api/v1/categories?include=${option}`;
 export const categoryDetailAPI = id => `/api/v1/categories/${id}`;
 export const favoriteCategoriesAPI = '/api/v1/categories/favoriteCategories';
 export const listBookByCategoryAPI = categoryId => `/api/v1/books/listBookCategory/${categoryId}`;
-export const postByCategoryAPI = categoryId => `/api/v1/getstream/listPostByCategoryAuth/${categoryId}`;
+export const postByCategoryAPI = categoryId => `/api/v1/getstream/listPostByCategory/${categoryId}`;
 
 //rating
 export const bookRating = id => `/api/v1/books/ratingBook/${id}`;

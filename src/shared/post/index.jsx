@@ -264,22 +264,24 @@ function Post({ postInformations, className, showModalCreatPost }) {
 			{postData.verb === 'sharePost' && !_.isEmpty(postData.sharePost) && <PostsShare postData={postData} />}
 			{postData?.image?.length > 0 && <GridImage images={postData.image} inPost={true} postId={postData.id} />}
 
-			{postData?.image?.length === 0 && !_.isEmpty(postData?.preview) && (
-				<>
-					{videoId ? (
-						<iframe
-							className='post__video-youtube'
-							src={`//www.youtube.com/embed/${videoId}`}
-							frameBorder={0}
-							allowFullScreen={true}
-						></iframe>
-					) : (
-						<div onClick={() => directUrl(postInformations.preview.url)}>
-							<PreviewLink isFetching={false} urlData={postInformations.preview} />
-						</div>
-					)}
-				</>
-			)}
+			{postData?.image?.length === 0 &&
+				!_.isEmpty(postData.sharePost?.preview) &&
+				_.isEmpty(postData.sharePost?.book) && (
+					<>
+						{videoId ? (
+							<iframe
+								className='post__video-youtube'
+								src={`//www.youtube.com/embed/${videoId}`}
+								frameBorder={0}
+								allowFullScreen={true}
+							></iframe>
+						) : (
+							<div onClick={() => directUrl(postData?.sharePost.url)}>
+								<PreviewLink isFetching={false} urlData={postData?.sharePost.preview} />
+							</div>
+						)}
+					</>
+				)}
 			{!isSharePosts && (
 				<>
 					<PostActionBar postData={postData} handleLikeAction={handleLikeAction} />

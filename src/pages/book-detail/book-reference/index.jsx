@@ -36,7 +36,7 @@ const BookReference = () => {
 
 	const getAllCategories = async () => {
 		try {
-			const res = await dispatch(getCategoryList()).unwrap();
+			const res = await dispatch(getCategoryList({ option: false })).unwrap();
 			setAllCategories(res.rows);
 		} catch (err) {
 			NotificationError(err);

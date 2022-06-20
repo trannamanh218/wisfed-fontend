@@ -19,6 +19,7 @@ import { NotificationError } from 'helpers/Error';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
 import Circle from 'shared/loading/circle';
+import MainPostGroupView from './component/MainPostGroupView';
 
 function MainGroupComponent({ handleChange, keyChange, data, backgroundImage, member }) {
 	const [key, setKey] = useState('intro');
@@ -168,7 +169,7 @@ function MainGroupComponent({ handleChange, keyChange, data, backgroundImage, me
 							/>
 						</Tab>
 						<Tab eventKey='post' title='Bài viết'>
-							<MainPostGroup />
+							{show ? <MainPostGroup /> : <MainPostGroupView />}
 						</Tab>
 						<Tab eventKey='member' title='Thành viên'>
 							<MemberGroup memberGroups={member} />

@@ -79,11 +79,9 @@ export const likeQuoteComment = createAsyncThunk('quote/like quote', async (id, 
 	const location = useLocation();
 	try {
 		if (location.pathname.includes('group')) {
-			console.log('aaaaaa');
 			response = await Request.makePatch(likeCommentGroup(id));
 		} else {
 			response = await Request.makePatch(likeQuoteCommentAPI(id));
-			console.log('aavvvvva');
 		}
 		return response.data;
 	} catch (err) {

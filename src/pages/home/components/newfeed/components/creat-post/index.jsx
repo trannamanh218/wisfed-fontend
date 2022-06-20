@@ -6,13 +6,14 @@ import UserAvatar from 'shared/user-avatar';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import { updateCurrentBook } from 'reducers/redux-utils/book';
-import { resetTaggedDataFunc, saveDataShare, sharePosts } from 'reducers/redux-utils/post';
+import { resetTaggedDataFunc, saveDataShare, sharePosts, checkShare } from 'reducers/redux-utils/post';
 import { useLocation } from 'react-router-dom';
 import { updateImg } from 'reducers/redux-utils/chart';
 
 function CreatePost({ onChangeNewPost }) {
 	const [showModalCreatPost, setShowModalCreatPost] = useState(false);
 	const [option, setOption] = useState({});
+	const [showSubModal, setShowSubModal] = useState(false);
 	const creatPostModalContainer = useRef(null);
 	const scrollBlocked = useRef(false);
 	const location = useLocation();
@@ -97,8 +98,6 @@ function CreatePost({ onChangeNewPost }) {
 			creatPostModalContainer.current.addEventListener('mousedown', e => {
 				if (e.target === creatPostModalContainer.current) {
 					hideCreatPostModal();
-					dispatch(updateCurrentBook({}));
-					setShowModalCreatPost(false);
 				}
 			});
 			blockScroll();
@@ -130,12 +129,15 @@ function CreatePost({ onChangeNewPost }) {
 	};
 
 	const hideCreatPostModal = () => {
-		setShowModalCreatPost(false);
-		setOption({});
 		dispatch(resetTaggedDataFunc(true));
 		dispatch(saveDataShare({}));
 		dispatch(sharePosts(false));
+		dispatch(checkShare(false));
 		dispatch(updateImg([]));
+		dispatch(updateCurrentBook({}));
+		setOption({});
+		setShowModalCreatPost(false);
+		setShowSubModal(false);
 	};
 
 	const onChangeOption = data => {
@@ -151,6 +153,7 @@ function CreatePost({ onChangeNewPost }) {
 					onChangeOption(item);
 					setShowModalCreatPost(true);
 					dispatch(resetTaggedDataFunc(false));
+					setShowSubModal(true);
 				}}
 			>
 				<div className='newfeed__creat-post__options__item__logo'>{item.icon}</div>
@@ -179,6 +182,7 @@ function CreatePost({ onChangeNewPost }) {
 						onChangeOption={onChangeOption}
 						onChangeNewPost={onChangeNewPost}
 						setShowModalCreatPost={setShowModalCreatPost}
+						showSubModal={showSubModal}
 					/>
 				</div>
 			)}

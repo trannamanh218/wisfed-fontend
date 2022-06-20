@@ -41,6 +41,7 @@ function CreatPostModalContent({
 	option,
 	onChangeOption,
 	onChangeNewPost,
+	showSubModal,
 }) {
 	// const [shareMode, setShareMode] = useState({ value: 'public', title: 'Mọi người', icon: <WorldNet /> });
 	const [showTextFieldEditPlaceholder, setShowTextFieldEditPlaceholder] = useState(true);
@@ -76,7 +77,7 @@ function CreatPostModalContent({
 		auth: { userInfo },
 		book: { bookForCreatePost, bookInfo },
 	} = useSelector(state => state);
-	const { optionList, shareModeList } = setting;
+	const { optionList } = setting;
 
 	useEffect(() => {
 		textFieldEdit.current.focus();
@@ -476,6 +477,12 @@ function CreatPostModalContent({
 		}
 	};
 
+	useEffect(() => {
+		if (showSubModal) {
+			setShowMainModal(false);
+		}
+	}, [showSubModal]);
+
 	return (
 		<div className='creat-post-modal-content'>
 			<Circle loading={status === STATUS_LOADING} />
@@ -675,6 +682,7 @@ CreatPostModalContent.propTypes = {
 	onChangeNewPost: PropTypes.func,
 	renderBookReading: PropTypes.object,
 	setShowModalCreatPost: PropTypes.func,
+	showSubModal: PropTypes.bool,
 };
 
 export default CreatPostModalContent;

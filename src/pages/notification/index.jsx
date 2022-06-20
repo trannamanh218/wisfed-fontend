@@ -16,10 +16,12 @@ import { useNavigate } from 'react-router-dom';
 import { ReplyFriendRequest, CancelFriendRequest } from 'reducers/redux-utils/user';
 import { NotificationError } from 'helpers/Error';
 import { renderMessage } from 'helpers/HandleShare';
+import LoadingIndicator from 'shared/loading-indicator';
 
 const NotificationModal = ({ setModalNotti, buttonModal }) => {
 	const notifymodal = useRef(null);
 	const [selectKey, setSelectKey] = useState('all');
+	const [isLoading, setIsLoading] = useState(true);
 	const dispatch = useDispatch();
 	const history = useLocation();
 	const [getNotifications, setGetNotifications] = useState([]);
@@ -51,6 +53,7 @@ const NotificationModal = ({ setModalNotti, buttonModal }) => {
 				return { ...item };
 			});
 			setGetNotifications(newArr);
+
 			await dispatch(ReplyFriendRequest(params)).unwrap();
 		} catch (err) {
 			NotificationError(err);
@@ -104,6 +107,8 @@ const NotificationModal = ({ setModalNotti, buttonModal }) => {
 			return;
 		} catch (err) {
 			NotificationError(err);
+		} finally {
+			setIsLoading(false);
 		}
 	};
 
@@ -133,79 +138,80 @@ const NotificationModal = ({ setModalNotti, buttonModal }) => {
 	};
 
 	const rendergGetNotifications = () => {
-		return getNotifications.map(item =>
-			item.isCheck ? (
-				''
-			) : (
-				<div
-					onClick={() => hanleActiveIsReed(item)}
-					key={item.id}
-					className={item.isRead ? 'notificaiton__tabs__all__active' : 'notificaiton__tabs__all__seen'}
-				>
+		return getNotifications.map(
+			item =>
+				!item.isCheck && (
 					<div
-						onClick={() => {
-							handleLinkAddfriend(item);
-						}}
-						className='notificaiton__all__layout'
+						onClick={() => hanleActiveIsReed(item)}
+						key={item.id}
+						className={item.isRead ? 'notificaiton__tabs__all__active' : 'notificaiton__tabs__all__seen'}
 					>
-						<UserAvatar size='mm' source={item.createdBy.avatarImage} />
-						<div className='notificaiton__all__layout__status'>
-							<div className='notificaiton__all__infor'>
-								<p dangerouslySetInnerHTML={{ __html: item?.message }}></p>
-								{item.verb !== 'follow' && (
-									<>
-										<span>
-											{item.createdBy.fullName ? (
-												item.createdBy.fullName
-											) : (
-												<>
-													<span> {item.createdBy.firstName}</span>
-													<span> {item.createdBy.lastName}</span>
-												</>
-											)}
-										</span>
-										&nbsp;
-										{renderMessage(item)}
-									</>
+						<div
+							onClick={() => {
+								handleLinkAddfriend(item);
+							}}
+							className='notificaiton__all__layout'
+						>
+							<UserAvatar size='mm' source={item.createdBy?.avatarImage} />
+							<div className='notificaiton__all__layout__status'>
+								<div className='notificaiton__all__infor'>
+									<p dangerouslySetInnerHTML={{ __html: item?.message }}></p>
+									{item.verb !== 'follow' && (
+										<>
+											<span>
+												{item.createdBy?.fullName ? (
+													item.createdBy.fullName
+												) : (
+													<>
+														<span> {item.createdBy?.firstName}</span>
+														<span> {item.createdBy?.lastName}</span>
+													</>
+												)}
+											</span>
+											&nbsp;
+											{renderMessage(item)}
+										</>
+									)}
+								</div>
+								<div
+									className={
+										item.isRead ? 'notificaiton__all__status__seen' : 'notificaiton__all__status'
+									}
+								>{`${calculateDurationTime(item.time)}`}</div>
+								{item.isAccept ? (
+									<div className='notificaiton___main__all__status'>Đã chấp nhận lời mời</div>
+								) : (
+									item.isRefuse && (
+										<div className='notificaiton___main__all__status'>Đã từ chối lời mời</div>
+									)
 								)}
 							</div>
 							<div
-								className={
-									item.isRead ? 'notificaiton__all__status__seen' : 'notificaiton__all__status'
-								}
-							>{`${calculateDurationTime(item.time)}`}</div>
-							{item.isAccept ? (
-								<div className='notificaiton___main__all__status'>Đã chấp nhận lời mời</div>
-							) : (
-								item.isRefuse && (
-									<div className='notificaiton___main__all__status'>Đã từ chối lời mời</div>
-								)
-							)}
+								className={item.isRead ? 'notificaiton__all__seen' : 'notificaiton__all__unseen'}
+							></div>
 						</div>
-						<div className={item.isRead ? 'notificaiton__all__seen' : 'notificaiton__all__unseen'}></div>
+						{item.verb === 'addFriend' ||
+							(item.verb === 'addfriend' &&
+								(item.isAccept || item.isRefuse ? (
+									''
+								) : (
+									<div className='notificaiton__all__friend'>
+										<div
+											onClick={() => ReplyFriendReq(item.object, item)}
+											className='notificaiton__all__accept'
+										>
+											Chấp nhận
+										</div>
+										<div
+											onClick={() => cancelFriend(item.object, item)}
+											className='notificaiton__all__refuse'
+										>
+											Từ chối
+										</div>
+									</div>
+								)))}
 					</div>
-					{item.verb === 'addFriend' ||
-						(item.verb === 'addfriend' &&
-							(item.isAccept || item.isRefuse ? (
-								''
-							) : (
-								<div className='notificaiton__all__friend'>
-									<div
-										onClick={() => ReplyFriendReq(item.object, item)}
-										className='notificaiton__all__accept'
-									>
-										Chấp nhận
-									</div>
-									<div
-										onClick={() => cancelFriend(item.object, item)}
-										className='notificaiton__all__refuse'
-									>
-										Từ chối
-									</div>
-								</div>
-							)))}
-				</div>
-			)
+				)
 		);
 	};
 
@@ -213,127 +219,131 @@ const NotificationModal = ({ setModalNotti, buttonModal }) => {
 		<div className='notificaiton'>
 			<div ref={notifymodal} className='notificaiton__container'>
 				<div className='notificaiton__title'>Thông báo</div>
-				<div className='notificaiton__tabs'>
-					<Tabs onSelect={eventKey => setSelectKey(eventKey)} defaultActiveKey='all'>
-						<Tab eventKey='all' title='Tất cả'>
-							<div className='notificaiton__all__title'>Mới nhất</div>
+				{isLoading ? (
+					<LoadingIndicator />
+				) : (
+					<div className='notificaiton__tabs'>
+						<Tabs onSelect={eventKey => setSelectKey(eventKey)} defaultActiveKey='all'>
+							<Tab eventKey='all' title='Tất cả'>
+								<div className='notificaiton__all__title'>Mới nhất</div>
 
-							<div className='notificaiton__tabs__all__seen'>
-								<div className='notificaiton__all__layout'>
-									<UserAvatar size='mm' source={avater} />
-									<div className='notificaiton__all__layout__status'>
-										<div className='notificaiton__all__infor'>
-											<span>Huy Đạt</span> đã đăng trong nhóm Thời đại sách 5.0 247: Nhóm khác có
-											vẻ cập nhật tốt hơn anh em mình nh...
-										</div>
-										<div className='notificaiton__all__status'>Khoảng 30 giờ trước</div>
-									</div>
-									<div className='notificaiton__all__unseen'></div>
-								</div>
-							</div>
-							<div className='notificaiton__all__title'>Gần đây</div>
-							{rendergGetNotifications()}
-							<Link
-								to={`/notification`}
-								onClick={handleNotificaiton}
-								className='notificaiton__tabs__button'
-							>
-								Xem tất cả
-							</Link>
-						</Tab>
-						<Tab eventKey='unread' title='Chưa đọc'>
-							<div className='notificaiton__all__title'>Thông báo chưa đọc</div>
-							{rendergGetNotifications()}
-							<Link
-								to={`/notification`}
-								onClick={handleNotificaiton}
-								className='notificaiton__tabs__button'
-							>
-								Xem tất cả
-							</Link>
-						</Tab>
-						<Tab eventKey='friendrequest' title='Lời mời kết bạn'>
-							<div className='notificaiton__all__title'>{lengthAddFriend()} lời kết bạn</div>
-							{getNotifications.map(
-								item =>
-									(item.verb === 'addfriend' || item.verb === 'addFriend') &&
-									!item.isCheck && (
-										<div
-											onClick={() => hanleActiveIsReed(item)}
-											key={item.id}
-											className={
-												item.isRead
-													? 'notificaiton__tabs__all__active'
-													: 'notificaiton__tabs__all__seen'
-											}
-										>
-											<div className='notificaiton__all__layout'>
-												<UserAvatar size='mm' source={item.createdBy.avatarImage} />
-												<div className='notificaiton__all__layout__status'>
-													<div className='notificaiton__all__infor'>
-														<p dangerouslySetInnerHTML={{ __html: item?.message }}></p>
-														{item.verb !== 'follow' && (
-															<>
-																<span>
-																	{item.createdBy.fullName ? (
-																		item.createdBy.fullName
-																	) : (
-																		<>
-																			<span> {item.createdBy.firstName}</span>
-																			<span> {item.createdBy.lastName}</span>
-																		</>
-																	)}
-																</span>
-																&nbsp;
-																{renderMessage(item)}
-															</>
-														)}
-													</div>
-													<div className='notificaiton__all__status'>{`${calculateDurationTime(
-														item.time
-													)}`}</div>
-												</div>
-												<div
-													className={
-														item.isRead
-															? 'notificaiton__all__seen'
-															: 'notificaiton__all__unseen'
-													}
-												></div>
+								<div className='notificaiton__tabs__all__seen'>
+									<div className='notificaiton__all__layout'>
+										<UserAvatar size='mm' source={avater} />
+										<div className='notificaiton__all__layout__status'>
+											<div className='notificaiton__all__infor'>
+												<span>Huy Đạt</span> đã đăng trong nhóm Thời đại sách 5.0 247: Nhóm khác
+												có vẻ cập nhật tốt hơn anh em mình nh...
 											</div>
-											{item.verb === 'addFriend' ||
-												(item.verb === 'addfriend' &&
-													(item.isAccept || item.isRefuse ? (
-														''
-													) : (
-														<div className='notificaiton__all__friend'>
-															<div
-																onClick={() => ReplyFriendReq(item.object, item)}
-																className='notificaiton__all__accept'
-															>
-																Chấp nhận
-															</div>
-															<div
-																onClick={() => cancelFriend(item.object, item)}
-																className='notificaiton__all__refuse'
-															>
-																Từ chối
-															</div>
-														</div>
-													)))}
+											<div className='notificaiton__all__status'>Khoảng 30 giờ trước</div>
 										</div>
-									)
-							)}
-							<Link
-								to={`/notification`}
-								onClick={handleNotificaiton}
-								className='notificaiton__tabs__button'
-							>
-								Xem tất cả
-							</Link>
-						</Tab>
-					</Tabs>
-				</div>
+										<div className='notificaiton__all__unseen'></div>
+									</div>
+								</div>
+								<div className='notificaiton__all__title'>Gần đây</div>
+								{rendergGetNotifications()}
+								<Link
+									to={`/notification`}
+									onClick={handleNotificaiton}
+									className='notificaiton__tabs__button'
+								>
+									Xem tất cả
+								</Link>
+							</Tab>
+							<Tab eventKey='unread' title='Chưa đọc'>
+								<div className='notificaiton__all__title'>Thông báo chưa đọc</div>
+								{rendergGetNotifications()}
+								<Link
+									to={`/notification`}
+									onClick={handleNotificaiton}
+									className='notificaiton__tabs__button'
+								>
+									Xem tất cả
+								</Link>
+							</Tab>
+							<Tab eventKey='friendrequest' title='Lời mời kết bạn'>
+								<div className='notificaiton__all__title'>{lengthAddFriend()} lời kết bạn</div>
+								{getNotifications.map(
+									item =>
+										(item.verb === 'addfriend' || item.verb === 'addFriend') &&
+										!item.isCheck && (
+											<div
+												onClick={() => hanleActiveIsReed(item)}
+												key={item.id}
+												className={
+													item.isRead
+														? 'notificaiton__tabs__all__active'
+														: 'notificaiton__tabs__all__seen'
+												}
+											>
+												<div className='notificaiton__all__layout'>
+													<UserAvatar size='mm' source={item.createdBy.avatarImage} />
+													<div className='notificaiton__all__layout__status'>
+														<div className='notificaiton__all__infor'>
+															<p dangerouslySetInnerHTML={{ __html: item?.message }}></p>
+															{item.verb !== 'follow' && (
+																<>
+																	<span>
+																		{item.createdBy.fullName ? (
+																			item.createdBy.fullName
+																		) : (
+																			<>
+																				<span> {item.createdBy.firstName}</span>
+																				<span> {item.createdBy.lastName}</span>
+																			</>
+																		)}
+																	</span>
+																	&nbsp;
+																	{renderMessage(item)}
+																</>
+															)}
+														</div>
+														<div className='notificaiton__all__status'>{`${calculateDurationTime(
+															item.time
+														)}`}</div>
+													</div>
+													<div
+														className={
+															item.isRead
+																? 'notificaiton__all__seen'
+																: 'notificaiton__all__unseen'
+														}
+													></div>
+												</div>
+												{item.verb === 'addFriend' ||
+													(item.verb === 'addfriend' &&
+														(item.isAccept || item.isRefuse ? (
+															''
+														) : (
+															<div className='notificaiton__all__friend'>
+																<div
+																	onClick={() => ReplyFriendReq(item.object, item)}
+																	className='notificaiton__all__accept'
+																>
+																	Chấp nhận
+																</div>
+																<div
+																	onClick={() => cancelFriend(item.object, item)}
+																	className='notificaiton__all__refuse'
+																>
+																	Từ chối
+																</div>
+															</div>
+														)))}
+											</div>
+										)
+								)}
+								<Link
+									to={`/notification`}
+									onClick={handleNotificaiton}
+									className='notificaiton__tabs__button'
+								>
+									Xem tất cả
+								</Link>
+							</Tab>
+						</Tabs>
+					</div>
+				)}
 			</div>
 		</div>
 	);
