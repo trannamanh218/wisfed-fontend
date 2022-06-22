@@ -4,6 +4,7 @@ import './group-sibar.scss';
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import { updateKey } from 'reducers/redux-utils/group';
+import defaultAvatar from 'assets/images/avatar.jpeg';
 
 const SidebarGroupLef = ({ handleChange, data, member }) => {
 	const [listFriend, setListFriend] = useState([]);
@@ -75,17 +76,8 @@ const SidebarGroupLef = ({ handleChange, data, member }) => {
 									{item?.isAdmin && (
 										<div className='people-item'>
 											<img
-												src={
-													item.avatarImage
-														? item.avatarImage
-														: 'https://play-lh.googleusercontent.com/NIUu0OgXQO4nU-ugWTv6yNy92u9wQFFfwvlWOsCIG-tPYBagOZdpyrJCxfHULI_eeGI'
-												}
-												onError={e =>
-													e.target.setAttribute(
-														'src',
-														'https://play-lh.googleusercontent.com/NIUu0OgXQO4nU-ugWTv6yNy92u9wQFFfwvlWOsCIG-tPYBagOZdpyrJCxfHULI_eeGI'
-													)
-												}
+												src={item.avatarImage ? item.avatarImage : defaultAvatar}
+												onError={e => e.target.setAttribute('src', defaultAvatar)}
 												alt=''
 											/>
 											<div className='people-item__text'>
@@ -116,17 +108,8 @@ const SidebarGroupLef = ({ handleChange, data, member }) => {
 											<>
 												<div className='people-item'>
 													<img
-														src={
-															item.avatarImage
-																? item.avatarImage
-																: 'https://play-lh.googleusercontent.com/NIUu0OgXQO4nU-ugWTv6yNy92u9wQFFfwvlWOsCIG-tPYBagOZdpyrJCxfHULI_eeGI'
-														}
-														onError={e =>
-															e.target.setAttribute(
-																'src',
-																'https://play-lh.googleusercontent.com/NIUu0OgXQO4nU-ugWTv6yNy92u9wQFFfwvlWOsCIG-tPYBagOZdpyrJCxfHULI_eeGI'
-															)
-														}
+														src={item.avatarImage ? item.avatarImage : defaultAvatar}
+														onError={e => e.target.setAttribute('src', defaultAvatar)}
 														alt=''
 													/>
 													<div className='people-item__text'>
@@ -160,17 +143,8 @@ const SidebarGroupLef = ({ handleChange, data, member }) => {
 											<>
 												<div className='people-item'>
 													<img
-														src={
-															item.avatarImage
-																? item.avatarImage
-																: 'https://play-lh.googleusercontent.com/NIUu0OgXQO4nU-ugWTv6yNy92u9wQFFfwvlWOsCIG-tPYBagOZdpyrJCxfHULI_eeGI'
-														}
-														onError={e =>
-															e.target.setAttribute(
-																'src',
-																'https://play-lh.googleusercontent.com/NIUu0OgXQO4nU-ugWTv6yNy92u9wQFFfwvlWOsCIG-tPYBagOZdpyrJCxfHULI_eeGI'
-															)
-														}
+														src={item.avatarImage ? item.avatarImage : defaultAvatar}
+														onError={e => e.target.setAttribute('src', defaultAvatar)}
 														alt=''
 													/>
 													<div className='people-item__text'>

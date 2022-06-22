@@ -7,6 +7,7 @@ import { useDispatch } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
 import { useParams } from 'react-router-dom';
 import { getMember } from 'reducers/redux-utils/group';
+import defaultAvatar from 'assets/images/avatar.jpeg';
 
 function MemberGroup() {
 	const [listFriend, setListFriend] = useState([]);
@@ -88,17 +89,8 @@ function MemberGroup() {
 								<div className='member-item'>
 									<div className='member-item__info'>
 										<img
-											src={
-												item.avatarImage
-													? item.avatarImage
-													: 'https://play-lh.googleusercontent.com/NIUu0OgXQO4nU-ugWTv6yNy92u9wQFFfwvlWOsCIG-tPYBagOZdpyrJCxfHULI_eeGI'
-											}
-											onError={e =>
-												e.target.setAttribute(
-													'src',
-													'https://play-lh.googleusercontent.com/NIUu0OgXQO4nU-ugWTv6yNy92u9wQFFfwvlWOsCIG-tPYBagOZdpyrJCxfHULI_eeGI'
-												)
-											}
+											src={item.avatarImage}
+											onError={e => e.target.setAttribute('src', defaultAvatar)}
 											alt=''
 										/>
 										<div className='member-item__text'>
@@ -183,17 +175,8 @@ function MemberGroup() {
 									<div className='member-item'>
 										<div className='member-item__info'>
 											<img
-												src={
-													item.avatarImage
-														? item.avatarImage
-														: 'https://play-lh.googleusercontent.com/NIUu0OgXQO4nU-ugWTv6yNy92u9wQFFfwvlWOsCIG-tPYBagOZdpyrJCxfHULI_eeGI'
-												}
-												onError={e =>
-													e.target.setAttribute(
-														'src',
-														'https://play-lh.googleusercontent.com/NIUu0OgXQO4nU-ugWTv6yNy92u9wQFFfwvlWOsCIG-tPYBagOZdpyrJCxfHULI_eeGI'
-													)
-												}
+												src={item.avatarImage ? item.avatarImage : defaultAvatar}
+												onError={e => e.target.setAttribute('src', defaultAvatar)}
 												alt=''
 											/>
 											<div className='member-item__text'>
@@ -276,17 +259,8 @@ function MemberGroup() {
 									<div className='member-item'>
 										<div className='member-item__info'>
 											<img
-												src={
-													item.avatarImage
-														? item.avatarImage
-														: 'https://play-lh.googleusercontent.com/NIUu0OgXQO4nU-ugWTv6yNy92u9wQFFfwvlWOsCIG-tPYBagOZdpyrJCxfHULI_eeGI'
-												}
-												onError={e =>
-													e.target.setAttribute(
-														'src',
-														'https://play-lh.googleusercontent.com/NIUu0OgXQO4nU-ugWTv6yNy92u9wQFFfwvlWOsCIG-tPYBagOZdpyrJCxfHULI_eeGI'
-													)
-												}
+												src={item.avatarImage ? item.avatarImage : defaultAvatar}
+												onError={e => e.target.setAttribute('src', defaultAvatar)}
 												alt=''
 											/>
 											<div className='member-item__text'>
@@ -370,17 +344,8 @@ function MemberGroup() {
 							<div className='member-item'>
 								<div className='member-item__info'>
 									<img
-										src={
-											item.avatarImage
-												? item.avatarImage
-												: 'https://play-lh.googleusercontent.com/NIUu0OgXQO4nU-ugWTv6yNy92u9wQFFfwvlWOsCIG-tPYBagOZdpyrJCxfHULI_eeGI'
-										}
-										onError={e =>
-											e.target.setAttribute(
-												'src',
-												'https://play-lh.googleusercontent.com/NIUu0OgXQO4nU-ugWTv6yNy92u9wQFFfwvlWOsCIG-tPYBagOZdpyrJCxfHULI_eeGI'
-											)
-										}
+										src={item.avatarImage ? item.avatarImage : defaultAvatar}
+										onError={e => e.target.setAttribute('src', defaultAvatar)}
 										alt=''
 									/>
 									<div className='member-item__text'>
