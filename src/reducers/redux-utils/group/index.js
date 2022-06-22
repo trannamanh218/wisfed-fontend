@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+
 import {
 	groupAPI,
 	detailGroup,
@@ -12,6 +13,7 @@ import {
 	adminGroup,
 	memberGroup,
 	listTagGroup,
+	searchGroup,
 } from 'constants/apiURL';
 import Request from 'helpers/Request';
 
@@ -63,6 +65,17 @@ export const getMyAdminGroup = createAsyncThunk('group/getMyAdminGroup', async (
 	} catch (err) {
 		const error = JSON.parse(err.response);
 		return rejectWithValue(error);
+	}
+});
+
+export const getFillterGroup = createAsyncThunk('search/getFillterGroup', async (params, { rejectWithValue }) => {
+	const { id } = params;
+	const newParams = { q: params.q };
+	try {
+		const response = await Request.makeGet(searchGroup(id), newParams);
+		return response.data;
+	} catch (err) {
+		return rejectWithValue(err.response);
 	}
 });
 
@@ -152,6 +165,12 @@ const groupSlice = createSlice({
 		isFetching: false,
 		groupsData: {},
 		error: {},
+		key: 'intro',
+	},
+	reducers: {
+		updateKey: (state, action) => {
+			state.key = action.payload;
+		},
 	},
 	extraReducers: {
 		[getGroupList.pending]: state => {
@@ -180,4 +199,6 @@ const groupSlice = createSlice({
 });
 
 const group = groupSlice.reducer;
+
 export default group;
+export const { updateKey } = groupSlice.actions;

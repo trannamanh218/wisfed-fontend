@@ -15,9 +15,12 @@ const MainContainerLeft = ({ main, right, sub }) => {
 		<Layout>
 			{sub && <div className='subcontainer__sub'>{sub}</div>}
 			<div className='mainContainer'>
-				<div className='mainContainer__right-left'>
-					<ErrorBoundary FallbackComponent={ErrorFallback}>{right}</ErrorBoundary>
-				</div>
+				{right && (
+					<div className='mainContainer__right-left'>
+						<ErrorBoundary FallbackComponent={ErrorFallback}>{right}</ErrorBoundary>
+					</div>
+				)}
+
 				<div className='mainContainer__main-left'>
 					<ErrorBoundary FallbackComponent={ErrorFallback}>{main}</ErrorBoundary>
 				</div>

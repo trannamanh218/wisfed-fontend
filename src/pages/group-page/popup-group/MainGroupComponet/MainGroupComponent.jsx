@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import SearchField from 'shared/search-field';
 // import classNames from 'classnames';
 import Tabs from 'react-bootstrap/Tabs';
@@ -14,12 +14,15 @@ import ManageJoin from './AminSettings/ManageJoin';
 import PropTypes from 'prop-types';
 import PostWatting from './AminSettings/PostWatting';
 import PopupInviteFriend from '../popupInviteFriend';
-import { getEnjoyGroup, leaveGroupUser } from 'reducers/redux-utils/group';
+import { getEnjoyGroup, getFillterGroup, leaveGroupUser } from 'reducers/redux-utils/group';
 import { NotificationError } from 'helpers/Error';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
 import Circle from 'shared/loading/circle';
 import MainPostGroupView from './component/MainPostGroupView';
+import _ from 'lodash';
+import { useParams } from 'react-router-dom';
+import SearchLayout from './component/SearchLayout';
 
 function MainGroupComponent({ handleChange, keyChange, data, backgroundImage, member }) {
 	const [key, setKey] = useState('intro');
@@ -30,6 +33,11 @@ function MainGroupComponent({ handleChange, keyChange, data, backgroundImage, me
 	const { userInfo } = useSelector(state => state.auth);
 	const [showSelect, setShowSelect] = useState(false);
 	const [isFetching, setIsFetching] = useState(true);
+	const [valueGroupSearch, setValueGroupSearch] = useState('');
+	const [filter, setFilter] = useState('[]');
+	const [getData, setGetData] = useState([]);
+	const { id = '' } = useParams();
+	const keyRedux = useSelector(state => state.group.key);
 
 	const enjoyGroup = async () => {
 		setIsFetching(true);
@@ -62,6 +70,43 @@ function MainGroupComponent({ handleChange, keyChange, data, backgroundImage, me
 			}, 2000);
 		}
 	};
+	useEffect(() => {}, [keyRedux]);
+
+	const handleChangeSearch = e => {
+		setValueGroupSearch(e.target.value);
+		debounceSearch(e.target.value);
+		if (e.target.value !== '') {
+			handleChange('search');
+		} else {
+			handleChange('tabs');
+		}
+	};
+
+	const updateInputSearch = value => {
+		if (value) {
+			const filterValue = value.toLowerCase().trim();
+			setFilter(filterValue);
+		} else {
+			setFilter('[]');
+		}
+	};
+	const debounceSearch = useCallback(_.debounce(updateInputSearch, 500), []);
+
+	useEffect(async () => {
+		const params = {
+			q: filter,
+			id: id,
+		};
+		try {
+			if (valueGroupSearch.length > 0) {
+				const result = await dispatch(getFillterGroup({ ...params })).unwrap();
+				setGetData(result);
+			}
+			keyChange = 'search';
+		} catch (err) {
+			NotificationError(err);
+		}
+	}, [filter]);
 
 	useEffect(() => {
 		const checkItem = data?.memberGroups?.filter(item => item?.user?.id === userInfo?.id);
@@ -76,6 +121,13 @@ function MainGroupComponent({ handleChange, keyChange, data, backgroundImage, me
 			}, 2000);
 		}
 	}, [data, userInfo]);
+
+	const handleSelect = () => {
+		setKey(keyRedux);
+	};
+	useEffect(() => {
+		handleSelect();
+	}, [keyRedux]);
 
 	return (
 		<div className='group-main-component__container'>
@@ -142,7 +194,8 @@ function MainGroupComponent({ handleChange, keyChange, data, backgroundImage, me
 							</button>
 						</div>
 					</div>
-					<div style={{ position: 'fixed', left: '33%', top: '20%', zIndex: '1000' }}>
+
+					<div style={{ position: 'fixed', left: '33%', top: '20%', zIndex: '2000' }}>
 						{isShow ? (
 							<div className='popup-container'>
 								<PopupInviteFriend handleClose={() => setIsShow(!isShow)} />
@@ -153,7 +206,11 @@ function MainGroupComponent({ handleChange, keyChange, data, backgroundImage, me
 					</div>
 
 					<div className='group__search'>
-						<SearchField placeholder='Tìm kiếm sách, chủ để, hashtag ...' />
+						<SearchField
+							handleChange={handleChangeSearch}
+							value={valueGroupSearch}
+							placeholder='Tìm kiếm sách, chủ để, hashtag ...'
+						/>
 					</div>
 				</div>
 			</div>
@@ -162,18 +219,20 @@ function MainGroupComponent({ handleChange, keyChange, data, backgroundImage, me
 					<Tabs id='controlled-tab' activeKey={key} onSelect={k => setKey(k)} className='mb-3'>
 						<Tab eventKey='intro' title='Giới thiệu'>
 							<IntroGroup
+								data={data}
 								groupType={groupType}
 								description={description}
-								memberGroups={memberGroups}
 								createdAt={data.createdAt}
 							/>
 						</Tab>
 						<Tab eventKey='post' title='Bài viết'>
 							{show ? <MainPostGroup /> : <MainPostGroupView />}
 						</Tab>
-						<Tab eventKey='member' title='Thành viên'>
-							<MemberGroup memberGroups={member} />
-						</Tab>
+						{show && (
+							<Tab eventKey='member' title='Thành viên'>
+								<MemberGroup memberGroups={member} />
+							</Tab>
+						)}
 					</Tabs>
 				</div>
 			)}
@@ -181,6 +240,7 @@ function MainGroupComponent({ handleChange, keyChange, data, backgroundImage, me
 			{keyChange === 'settingsQuestion' && <SettingsQuestions handleChange={handleChange} />}
 			{keyChange === 'manageJoin' && <ManageJoin handleChange={handleChange} />}
 			{keyChange === 'managePost' && <PostWatting handleChange={handleChange} />}
+			{keyChange === 'search' && <SearchLayout data={getData} />}
 		</div>
 	);
 }
