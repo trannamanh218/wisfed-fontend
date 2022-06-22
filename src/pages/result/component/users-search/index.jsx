@@ -4,10 +4,9 @@ import PropTypes from 'prop-types';
 import ResultNotFound from '../result-not-found';
 import defaultAvatar from 'assets/images/avatar.jpeg';
 import Button from 'shared/button';
-import LoadingIndicator from 'shared/loading-indicator';
+// import LoadingIndicator from 'shared/loading-indicator';
 import { getFilterSearch } from 'reducers/redux-utils/search';
 import { NotificationError } from 'helpers/Error';
-import Storage from 'helpers/Storage';
 import { useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 

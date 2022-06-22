@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import BackButton from 'shared/back-button';
 import FilterQuotePane from 'shared/fitler-quote-pane';
 import QuoteCard from 'shared/quote-card';
@@ -19,6 +19,8 @@ const MainQuote = () => {
 		{ id: 2, title: 'Yêu thích', value: 'me-like' },
 	];
 
+	const { userId } = useParams();
+
 	const [quoteList, setQuoteList] = useState([]);
 	const [hasMore, setHasMore] = useState(true);
 	const [currentOption, setCurrentOption] = useState(filterOptions[0]);
@@ -26,28 +28,41 @@ const MainQuote = () => {
 	const [sortDirection, setSortDirection] = useState('DESC');
 	const [quotesUserName, setQuotesUserName] = useState('');
 	const [isMyQuotes, setIsMyQuotes] = useState();
+	const [inputSearchValue, setInputSearchValue] = useState('');
+	const [isLoading, setIsLoading] = useState(true);
+	const [filter, setFilter] = useState([]);
+	const [getDataFirstTimeStatus, setGetDataFirsttimeStatus] = useState(true);
 
 	const callApiStart = useRef(10);
 	const callApiPerPage = useRef(10);
+	const filterDefault = useRef([{ operator: 'eq', value: userId, property: 'createdBy' }]);
 
 	const resetQuoteList = useSelector(state => state.quote.resetQuoteList);
 	const userInfo = useSelector(state => state.auth.userInfo);
-
-	const { userId } = useParams();
 
 	const dispatch = useDispatch();
 
 	useEffect(() => {
 		setHasMore(true);
 		callApiStart.current = 10;
+		setInputSearchValue('');
+		setFilter([]);
 		getQuoteListFirstTime();
-	}, [resetQuoteList, sortValue, sortDirection, currentOption]);
+	}, [resetQuoteList, currentOption]);
+
+	useEffect(() => {
+		if (!getDataFirstTimeStatus) {
+			setHasMore(true);
+			callApiStart.current = 10;
+			getQuoteListFirstTime();
+		}
+	}, [filter, sortValue, sortDirection]);
 
 	useEffect(async () => {
 		if (!_.isEmpty(userInfo)) {
 			if (userId !== userInfo.id) {
 				const user = await dispatch(getUserDetail(userId)).unwrap();
-				setQuotesUserName(`Quoets của ${user.fullName}`);
+				setQuotesUserName(`Quoets của ${user.fullName || user.firstName + ' ' + user.lastName}`);
 				setIsMyQuotes(false);
 			} else {
 				setQuotesUserName('Quotes của tôi');
@@ -64,7 +79,7 @@ const MainQuote = () => {
 					start: 0,
 					limit: callApiPerPage.current,
 					sort: JSON.stringify([{ property: sortValue, direction: sortDirection }]),
-					filter: JSON.stringify([{ operator: 'eq', value: userId, property: 'createdBy' }]),
+					filter: JSON.stringify(filterDefault.current.concat(filter)),
 				};
 				quoteListData = await dispatch(getQuoteList(params)).unwrap();
 			} else {
@@ -72,21 +87,21 @@ const MainQuote = () => {
 					start: 0,
 					limit: callApiPerPage.current,
 					sort: JSON.stringify([{ property: sortValue, direction: sortDirection }]),
+					filter: JSON.stringify(filter),
 				};
 				const res = await dispatch(getMyLikedQuotes(params)).unwrap();
 				quoteListData = res;
 			}
 
-			if (quoteListData.length) {
-				setQuoteList(quoteListData);
-				if (quoteListData.length < callApiPerPage.current) {
-					setHasMore(false);
-				}
-			} else {
+			setQuoteList(quoteListData);
+			if (!quoteListData.length || quoteListData.length < callApiPerPage.current) {
 				setHasMore(false);
 			}
 		} catch (err) {
 			NotificationError(err);
+		} finally {
+			setGetDataFirsttimeStatus(false);
+			setIsLoading(false);
 		}
 	};
 
@@ -98,7 +113,7 @@ const MainQuote = () => {
 					start: callApiStart.current,
 					limit: callApiPerPage.current,
 					sort: JSON.stringify([{ property: sortValue, direction: sortDirection }]),
-					filter: JSON.stringify([{ operator: 'eq', value: userId, property: 'createdBy' }]),
+					filter: JSON.stringify(filterDefault.current.concat(filter)),
 				};
 				quoteListData = await dispatch(getQuoteList(params)).unwrap();
 			} else {
@@ -106,6 +121,7 @@ const MainQuote = () => {
 					start: callApiStart.current,
 					limit: callApiPerPage.current,
 					sort: JSON.stringify([{ property: sortValue, direction: sortDirection }]),
+					filter: JSON.stringify(filter),
 				};
 				const res = await dispatch(getMyLikedQuotes(params)).unwrap();
 				quoteListData = res;
@@ -139,6 +155,22 @@ const MainQuote = () => {
 		}
 	};
 
+	const updateInputSearch = value => {
+		if (value) {
+			setFilter([{ 'operator': 'search', 'value': value.trim(), 'property': 'quote' }]);
+		} else {
+			setFilter([]);
+		}
+	};
+
+	const debounceSearch = useCallback(_.debounce(updateInputSearch, 1000), []);
+
+	const onChangeInput = e => {
+		setIsLoading(true);
+		setInputSearchValue(e.target.value);
+		debounceSearch(e.target.value);
+	};
+
 	return (
 		<>
 			{!_.isEmpty(userInfo) && (
@@ -148,7 +180,9 @@ const MainQuote = () => {
 						<h4>{quotesUserName}</h4>
 						<SearchField
 							className='main-quote__search'
-							placeholder='Tìm kiếm theo sách, tác giả, chủ đề ...'
+							placeholder='Tìm kiếm theo nội dung quotes'
+							handleChange={onChangeInput}
+							value={inputSearchValue}
 						/>
 					</div>
 					<FilterQuotePane
@@ -158,20 +192,34 @@ const MainQuote = () => {
 						handleSortQuotes={handleSortQuotes}
 						isMyQuotes={isMyQuotes}
 					>
-						{quoteList.length > 0 ? (
-							<InfiniteScroll
-								dataLength={quoteList.length}
-								next={getQuoteListData}
-								hasMore={hasMore}
-								loader={<LoadingIndicator />}
-							>
-								{quoteList.map(item => (
-									<QuoteCard key={item.id} data={item} />
-								))}
-							</InfiniteScroll>
-						) : (
-							<h4>Chưa có dữ liệu</h4>
-						)}
+						<>
+							{isLoading ? (
+								<LoadingIndicator />
+							) : (
+								<>
+									{quoteList.length > 0 ? (
+										<InfiniteScroll
+											dataLength={quoteList.length}
+											next={getQuoteListData}
+											hasMore={hasMore}
+											loader={<LoadingIndicator />}
+										>
+											{quoteList.map(item => (
+												<QuoteCard key={item.id} data={item} />
+											))}
+										</InfiniteScroll>
+									) : (
+										<>
+											{inputSearchValue ? (
+												<h4>Không có kết quả phù hợp</h4>
+											) : (
+												<h4>Chưa có dữ liệu</h4>
+											)}
+										</>
+									)}
+								</>
+							)}
+						</>
 					</FilterQuotePane>
 				</div>
 			)}

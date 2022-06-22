@@ -4,6 +4,8 @@
 	display: flex;
 	flex-direction: column;
 	gap: 3.75rem;
+	min-height: 100vh;
+	padding-top: 12px;
 	&__reading__status {
 		margin-top: 1rem;
 		h4 {
@@ -12,5 +14,25 @@
 	}
 	.topic-column__container {
 		grid-template-columns: 1fr;
+	}
+
+	.sidebar-quote__category-list {
+		p {
+			margin-top: 24px;
+			text-align: center;
+		}
+
+		.dualColumn {
+			margin-top: 24px;
+			.dualColumn-item__number {
+				font-size: 15px;
+				color: $ash;
+				font-weight: 600;
+			}
+		}
+
+		.sidebar-quote__category-list__search {
+			border: 1px solid $ash-line;
+		}
 	}
 }

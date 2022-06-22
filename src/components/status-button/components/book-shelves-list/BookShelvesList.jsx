@@ -44,7 +44,7 @@ const BookShelvesList = ({ list, onChangeShelves, customLibrariesContainCurrentB
 
 	const handleSearch = e => {
 		setInputSearch(e.target.value);
-		const newArr = list.filter(item => item.name.includes(e.target.value));
+		const newArr = list.filter(item => item.name.toLowerCase().includes(e.target.value.toLowerCase()));
 		setSearchedList(newArr);
 	};
 
