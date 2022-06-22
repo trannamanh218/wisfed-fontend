@@ -13,7 +13,7 @@ import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { NotificationError } from 'helpers/Error';
 
-const SidebarQuote = ({ listHashtags, inMyQuote, inQuoteDetail }) => {
+const SidebarQuote = ({ listHashtags, inMyQuote, hasCountQuotes }) => {
 	const [inputSearch, setInputSearch] = useState('');
 	const [categoryList, setCategoryList] = useState([]);
 	const [categorySearchedList, setCategorySearchedList] = useState([]);
@@ -25,7 +25,7 @@ const SidebarQuote = ({ listHashtags, inMyQuote, inQuoteDetail }) => {
 	const myAllLibrary = useSelector(state => state.library.myAllLibrary);
 
 	useEffect(() => {
-		if (!inMyQuote && !inQuoteDetail) {
+		if (!inMyQuote && hasCountQuotes) {
 			getCountQuotesByCategoryData();
 		}
 	}, []);
@@ -48,7 +48,7 @@ const SidebarQuote = ({ listHashtags, inMyQuote, inQuoteDetail }) => {
 	return (
 		<div className='sidebar-quote'>
 			<>
-				{!inMyQuote && !inQuoteDetail ? (
+				{!inMyQuote && hasCountQuotes ? (
 					<>
 						{!!categoryList.length && (
 							<div className='sidebar-quote__category-list'>
@@ -98,6 +98,8 @@ const SidebarQuote = ({ listHashtags, inMyQuote, inQuoteDetail }) => {
 
 SidebarQuote.propTypes = {
 	listHashtags: PropTypes.array,
+	inMyQuote: PropTypes.bool,
+	hasCountQuotes: PropTypes.bool,
 };
 
 export default SidebarQuote;

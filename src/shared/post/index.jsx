@@ -36,7 +36,6 @@ function Post({ postInformations, className, showModalCreatPost }) {
 	const { bookId } = useParams();
 
 	useEffect(() => {
-		// const isLike = hasLikedPost();
 		setPostData({ ...postInformations });
 		if (!_.isEmpty(postInformations.preview) && postInformations.preview.url.includes('https://www.youtube.com/')) {
 			const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
@@ -48,7 +47,7 @@ function Post({ postInformations, className, showModalCreatPost }) {
 	}, [postInformations]);
 
 	const directUrl = url => {
-		window.open(url, '_blank');
+		window.open(url);
 	};
 
 	useEffect(() => {
@@ -76,16 +75,6 @@ function Post({ postInformations, className, showModalCreatPost }) {
 			}
 		}
 	}, [postData]);
-
-	// const hasLikedPost = () => {
-	// 	const { usersLikePost } = postInformations;
-	// 	let isLike = false;
-	// 	if (!_.isEmpty(usersLikePost) && !_.isEmpty(userInfo)) {
-	// 		const user = usersLikePost.find(item => item.id === userInfo.id);
-	// 		isLike = !_.isEmpty(user) ? true : false;
-	// 	}
-	// 	return isLike;
-	// };
 
 	const onCreateComment = async (content, replyId) => {
 		try {
@@ -131,8 +120,6 @@ function Post({ postInformations, className, showModalCreatPost }) {
 			NotificationError(err);
 		}
 	};
-
-	console.log(postData);
 
 	const handleLikeAction = async () => {
 		try {
@@ -191,7 +178,7 @@ function Post({ postInformations, className, showModalCreatPost }) {
 										<ReactRating
 											readonly={true}
 											initialRating={
-												postInformations?.book?.actorRating?.star
+												postInformations?.book?.actorRating
 													? postInformations?.book?.actorRating?.star
 													: 0
 											}
@@ -259,30 +246,44 @@ function Post({ postInformations, className, showModalCreatPost }) {
 				)}
 			</ul>
 			{postData.isShare && postData.verb === 'shareQuote' && <PostQuotes postsData={postData} />}
-			{postData.book && (
-				<PostBook
-					data={{ ...postData.book, bookLibrary: postData.bookLibrary, actorCreatedPost: postData.actor }}
-				/>
-			)}
-			{postData.verb === 'sharePost' && !_.isEmpty(postData.sharePost) && <PostsShare postData={postData} />}
-			{postData?.image?.length > 0 && <GridImage images={postData.image} inPost={true} postId={postData.id} />}
-
-			{postData?.image?.length === 0 && !_.isEmpty(postData?.preview) && (
+			{postData.book || !!postData?.image?.length ? (
 				<>
-					{videoId ? (
-						<iframe
-							className='post__video-youtube'
-							src={`//www.youtube.com/embed/${videoId}`}
-							frameBorder={0}
-							allowFullScreen={true}
-						></iframe>
-					) : (
-						<div onClick={() => directUrl(postInformations.preview.url)}>
-							<PreviewLink isFetching={false} urlData={postInformations.preview} />
-						</div>
+					{postData.book && (
+						<PostBook
+							data={{
+								...postData.book,
+								bookLibrary: postData.bookLibrary,
+								actorCreatedPost: postData.actor,
+							}}
+						/>
+					)}
+					{!!postData?.image?.length && (
+						<GridImage images={postData.image} inPost={true} postId={postData.id} />
+					)}
+				</>
+			) : (
+				<>
+					{!_.isEmpty(postData?.preview) && (
+						<>
+							{videoId ? (
+								<iframe
+									className='post__video-youtube'
+									src={`//www.youtube.com/embed/${videoId}`}
+									frameBorder={0}
+									allowFullScreen={true}
+								></iframe>
+							) : (
+								<div onClick={() => directUrl(postInformations.preview.url)}>
+									<PreviewLink isFetching={false} urlData={postInformations.preview} />
+								</div>
+							)}
+						</>
 					)}
 				</>
 			)}
+
+			{postData.verb === 'sharePost' && !_.isEmpty(postData.sharePost) && <PostsShare postData={postData} />}
+
 			{!isSharePosts && (
 				<>
 					<PostActionBar postData={postData} handleLikeAction={handleLikeAction} />

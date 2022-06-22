@@ -17,6 +17,7 @@ const PostEditBook = props => {
 	const inputRef = useRef(null);
 	const bookInfor = useSelector(state => state.book.bookInfo);
 	const dispatch = useDispatch();
+
 	const fetchData = async () => {
 		if (data?.id) {
 			try {
@@ -32,7 +33,7 @@ const PostEditBook = props => {
 				const data = res.data.rows;
 				setListRatingStar(data);
 			} catch (err) {
-				// toast.error('lỗi hệ thống');
+				NotificationError(err);
 			}
 		}
 	};
@@ -103,7 +104,7 @@ const PostEditBook = props => {
 						<small className='post-edit-book__message'>{validationInput}</small>
 					</div>
 				</div>
-				{data.status === STATUS_BOOK.read && (
+				{(data.status === STATUS_BOOK.read || data.progress == data.page) && (
 					<div className='post-edit-book__action'>
 						<div className='post-edit-book__ratings'>
 							<ReactRating

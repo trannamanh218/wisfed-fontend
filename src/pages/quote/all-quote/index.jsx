@@ -16,7 +16,7 @@ const QuoteAll = () => {
 	return (
 		<MainContainer
 			main={<MainAllQuotes />}
-			right={<SidebarQuote listHashtags={hashtagList} inMyQuote={false} inQuoteDetail={false} />}
+			right={<SidebarQuote listHashtags={hashtagList} inMyQuote={false} hasCountQuotes={true} />}
 		/>
 	);
 };

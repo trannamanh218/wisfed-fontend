@@ -1,5 +1,4 @@
 import PropTypes from 'prop-types';
-import React from 'react';
 import { CommentSvg, Like, LikeFill, Share } from 'components/svg';
 import './post-action-bar.scss';
 import { useDispatch } from 'react-redux';

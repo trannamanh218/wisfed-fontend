@@ -58,7 +58,7 @@ const QuoteDetail = () => {
 	return (
 		<MainContainer
 			main={<MainQuoteDetail quoteData={quoteData} onCreateComment={onCreateComment} />}
-			right={<SidebarQuote listHashtags={listHashtags} inMyQuote={false} inQuoteDetail={true} />}
+			right={<SidebarQuote listHashtags={listHashtags} inMyQuote={false} hasCountQuotes={false} />}
 		/>
 	);
 };
