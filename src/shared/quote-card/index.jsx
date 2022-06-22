@@ -3,43 +3,21 @@ import BadgeList from 'shared/badge-list';
 import QuoteActionBar from 'shared/quote-action-bar';
 import UserAvatar from 'shared/user-avatar';
 import './quote-card.scss';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { likeUnlikeQuote } from 'reducers/redux-utils/quote';
-import { checkLikeQuote } from 'reducers/redux-utils/quote';
 import { NotificationError } from 'helpers/Error';
 import { useDispatch } from 'react-redux';
 
-const QuoteCard = ({ data, isDetail = false, likedArray }) => {
-	const [isLiked, setIsLiked] = useState(false);
-	const [likeNumber, setLikeNumber] = useState(0);
+const QuoteCard = ({ data, isDetail = false }) => {
+	const [isLiked, setIsLiked] = useState(data.isLike);
+	const [likeNumber, setLikeNumber] = useState(data.like);
 	const dispatch = useDispatch();
-	useEffect(() => {
-		if (isDetail) {
-			getLikedArray();
-		} else {
-			if (likedArray.length > 0 && likedArray.includes(data.id)) {
-				setIsLiked(true);
-			}
-		}
-		setLikeNumber(data.like);
-	}, []);
 
 	const likeUnlikeQuoteFnc = async id => {
 		try {
 			const response = await dispatch(likeUnlikeQuote(id)).unwrap();
 			setIsLiked(response.liked);
 			setLikeNumber(response.quote?.like);
-		} catch (err) {
-			NotificationError(err);
-		}
-	};
-
-	const getLikedArray = async () => {
-		try {
-			const res = await dispatch(checkLikeQuote()).unwrap();
-			if (res.includes(data.id)) {
-				setIsLiked(true);
-			}
 		} catch (err) {
 			NotificationError(err);
 		}

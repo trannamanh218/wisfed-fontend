@@ -1,48 +1,26 @@
 import MainContainer from 'components/layout/main-container';
-import MainReadingAuthor from './main-books-author';
-import SidebarReadingSummary from '../reading-target/sidebar-reading-target';
+import MainBooksAuthor from './main-books-author';
+import SidebarBooksAuthor from './sidebar-books-author';
 import { useParams } from 'react-router-dom';
 import { handleShelvesGroup } from 'api/shelvesGroup.hooks';
 import Circle from 'shared/loading/circle';
-import { useState, useCallback } from 'react';
-import { getBookDetail } from 'reducers/redux-utils/book';
-import { useNavigate } from 'react-router-dom';
-import RouteLink from 'helpers/RouteLink';
-import { NotificationError } from 'helpers/Error';
-import { useDispatch } from 'react-redux';
+import { useEffect } from 'react';
 
 const BooksAuthor = () => {
-	const [isViewBookDetailLoading, setIsViewBookDetailLoading] = useState(false);
-
 	const { userId } = useParams();
-	const dispatch = useDispatch();
-	const navigate = useNavigate();
 
-	const { isLoading, shelveGroupName, isMine } = handleShelvesGroup(userId);
+	const { isLoading, shelveGroupName, isMine, allLibrary } = handleShelvesGroup(userId);
 
-	const handleViewBookDetail = useCallback(async data => {
-		setIsViewBookDetailLoading(true);
-		try {
-			await dispatch(getBookDetail(data.id)).unwrap();
-			setIsViewBookDetailLoading(false);
-			navigate(RouteLink.bookDetail(data.id, data.name));
-		} catch (err) {
-			NotificationError(err);
-		}
+	useEffect(() => {
+		window.scroll(0, 0);
 	}, []);
 
 	return (
 		<>
-			<Circle loading={isLoading || isViewBookDetailLoading} />
+			<Circle loading={isLoading} />
 			<MainContainer
-				main={<MainReadingAuthor shelveGroupName={`Sách của ${shelveGroupName}`} />}
-				right={
-					<SidebarReadingSummary
-						shelveGroupName={shelveGroupName}
-						isMine={isMine}
-						handleViewBookDetail={handleViewBookDetail}
-					/>
-				}
+				main={<MainBooksAuthor shelveGroupName={`Sách của ${shelveGroupName}`} />}
+				right={<SidebarBooksAuthor shelveGroupName={shelveGroupName} isMine={isMine} allLibrary={allLibrary} />}
 			/>
 		</>
 	);

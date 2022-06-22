@@ -9,9 +9,20 @@ import { useNavigate } from 'react-router-dom';
 import RouteLink from 'helpers/RouteLink';
 
 const DualColumn = props => {
-	const { list, background, isBackground, pageText = true, inCategory = false } = props;
+	const { list, background, isBackground, pageText = true, inCategory = false, inQuotes = false } = props;
 	const [isExpand, setIsExpand] = useState(false);
-	const [rows, setRows] = useState(DEFAULT_TOGGLE_ROWS);
+
+	let defaultItems;
+	let maxItems;
+	if (inQuotes) {
+		defaultItems = 6;
+		maxItems = 15;
+	} else {
+		defaultItems = DEFAULT_TOGGLE_ROWS;
+		maxItems = NUMBER_ROWS;
+	}
+
+	const [rows, setRows] = useState(defaultItems);
 
 	const navigate = useNavigate();
 
@@ -22,14 +33,14 @@ const DualColumn = props => {
 		if (inCategory) {
 			maxLength = length;
 		} else {
-			if (length <= NUMBER_ROWS) {
+			if (length <= maxItems) {
 				maxLength = length;
 			} else {
-				maxLength = NUMBER_ROWS;
+				maxLength = maxItems;
 			}
 		}
 
-		const newRows = isExpand ? DEFAULT_TOGGLE_ROWS : maxLength;
+		const newRows = isExpand ? defaultItems : maxLength;
 		setRows(newRows);
 		setIsExpand(!isExpand);
 	};
@@ -55,7 +66,7 @@ const DualColumn = props => {
 							</span>
 
 							{pageText ? (
-								<span className='dualColumn-item__number'>{item.books.length} cuốn</span>
+								<span className='dualColumn-item__number'>{item.count} Quotes</span>
 							) : (
 								<span className='dualColumn-item__number no-page-text'>
 									{inCategory ? item.category.numberBooks : item.books.length}
@@ -64,7 +75,7 @@ const DualColumn = props => {
 						</li>
 					))}
 				</ul>
-				{list.length > DEFAULT_TOGGLE_ROWS && (
+				{list.length > defaultItems && (
 					<button className='dualColumn-btn' onClick={handleViewMore}>
 						<img
 							className={classNames('view-caret', { 'view-more': isExpand })}

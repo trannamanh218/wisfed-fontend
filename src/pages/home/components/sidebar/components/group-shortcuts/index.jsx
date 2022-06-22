@@ -17,9 +17,9 @@ function GroupShortcuts() {
 				<div className={'group-short-cut__items-box ' + `${viewMoreGroupsStatus ? 'view-more' : 'view-less'}`}>
 					{!_.isEmpty(rows) ? (
 						rows?.map((item, index) => (
-							<>
+							<div key={index}>
 								<Link to={`/group/${item.id}`}>
-									<div key={index} className='group-short-cut__item'>
+									<div className='group-short-cut__item'>
 										<div className='group-short-cut__item__logo'>
 											<img
 												src={item.avatar}
@@ -30,7 +30,7 @@ function GroupShortcuts() {
 										<div className='group-short-cut__item__name'>{item.name}</div>
 									</div>
 								</Link>
-							</>
+							</div>
 						))
 					) : (
 						<p className='blank-content'>Không có dữ liệu</p>

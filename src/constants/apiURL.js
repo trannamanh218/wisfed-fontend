@@ -7,7 +7,6 @@ export const forgotPasswordAPIAdmin = '/api/v1/auth/adminForgotPassword/';
 export const resetPasswordAPI = '/api/v1/auth/resetPassword/';
 export const resetPasswordAPIAdmin = '/api/v1/auth/resetPasswordByMail/';
 export const checkTokenResetPassword = token => `/api/v1/auth/verify-password?token=${token}`;
-export const InforUserByEmail = email => `/api/v1/users/email?email=${email}`;
 export const checkJwt = '/api/v1/auth/jwt';
 
 // quote
@@ -15,11 +14,11 @@ export const quoteAPI = '/api/v1/quotes';
 export const quoteDetailAPI = id => `/api/v1/quotes/${id}`;
 export const quoteCommentAPI = '/api/v1/commentQuotes';
 export const likeQuoteAPI = id => `/api/v1/quotes/like/${id}`;
-export const checkLikeQuoteAPI = '/api/v1/quotes/checkLikeQuote';
 export const likeQuoteCommentAPI = id => `/api/v1/commentQuotes/like/${id}`;
 export const checkLikeQuoteCommentAPI = '/api/v1/quotes/checkLikeCmtQuote';
 export const getMyLikedQuotesAPI = '/api/v1/quotes/listQuotesLiked';
 export const getQuotesByFriendsOrFollowersAPI = '/api/v1/quotes/listQuotesRelation';
+export const countQuotesByCategoryAPI = id => `/api/v1/quotes/countQuotes/${id}`;
 
 // post
 export const postAPI = '/api/v1/posts';

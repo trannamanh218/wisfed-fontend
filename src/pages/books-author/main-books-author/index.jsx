@@ -1,5 +1,5 @@
 import SearchField from 'shared/search-field';
-import './main-reading-author.scss';
+import './books-author.scss';
 import { StarAuthor, ShareAuthor } from 'components/svg';
 import { useParams } from 'react-router-dom';
 import { getBookAuthorList } from 'reducers/redux-utils/book';

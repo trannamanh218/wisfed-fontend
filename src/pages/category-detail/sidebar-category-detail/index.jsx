@@ -17,7 +17,6 @@ import { useDispatch } from 'react-redux';
 
 const SidebarCategoryDetail = ({ viewCategoryDetail }) => {
 	const { categoryInfo } = useSelector(state => state.category);
-	const [currentPage, setCurrentPage] = useState(1);
 	const [name, setName] = useState();
 	const [authorList, setAuthorList] = useState([]);
 
@@ -31,7 +30,6 @@ const SidebarCategoryDetail = ({ viewCategoryDetail }) => {
 		let isMount = true;
 		if (isMount && !_.isEmpty(categoryInfo)) {
 			setName(categoryInfo.name);
-			setCurrentPage(1);
 		}
 
 		return () => {
@@ -40,7 +38,7 @@ const SidebarCategoryDetail = ({ viewCategoryDetail }) => {
 	}, [categoryInfo]);
 
 	const {
-		otherCategories: { rows: categoriesList = [], count: totalCategory = 0 },
+		otherCategories: { rows: categoriesList = [] },
 	} = useFetchOtherCategories(0, 30, name);
 
 	const { quoteData } = useFetchQuotes(0, 3);
@@ -48,12 +46,6 @@ const SidebarCategoryDetail = ({ viewCategoryDetail }) => {
 	const {
 		groups: { rows: groupList = [] },
 	} = useFetchGroups(0, 3, '[]');
-
-	const viewMoreCategories = () => {
-		if (currentPage < totalCategory) {
-			setCurrentPage(prev => prev + 1);
-		}
-	};
 
 	const getAuthorList = async () => {
 		try {
@@ -75,7 +67,6 @@ const SidebarCategoryDetail = ({ viewCategoryDetail }) => {
 						className='sidebar-category__topics'
 						title='Chủ đề khác'
 						topics={categoriesList}
-						handleViewMore={viewMoreCategories}
 						viewCategoryDetail={viewCategoryDetail}
 						inCategory={true}
 					/>

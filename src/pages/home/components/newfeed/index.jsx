@@ -18,6 +18,7 @@ const NewFeed = () => {
 	// const [modalShow, setModalShow] = useState(false);
 	const [hasMore, setHasMore] = useState(true);
 	const [postList, setPostList] = useState([]);
+	const [isLoading, setIsLoading] = useState(true);
 
 	const dispatch = useDispatch();
 
@@ -50,6 +51,8 @@ const NewFeed = () => {
 			setPostList(posts);
 		} catch (err) {
 			NotificationError(err);
+		} finally {
+			setIsLoading(false);
 		}
 	};
 
@@ -84,17 +87,23 @@ const NewFeed = () => {
 
 			{!_.isEmpty(userInfo) && <CreatePost onChangeNewPost={onChangeNewPost} />}
 
-			{postList.length > 0 && (
-				<InfiniteScroll
-					dataLength={postList.length}
-					next={getPostList}
-					hasMore={hasMore}
-					loader={<LoadingIndicator />}
-				>
-					{postList.map(item => (
-						<Post key={item.id} postInformations={item} />
-					))}
-				</InfiniteScroll>
+			{isLoading ? (
+				<LoadingIndicator />
+			) : (
+				<>
+					{postList.length > 0 && (
+						<InfiniteScroll
+							dataLength={postList.length}
+							next={getPostList}
+							hasMore={hasMore}
+							loader={<LoadingIndicator />}
+						>
+							{postList.map(item => (
+								<Post key={item.id} postInformations={item} />
+							))}
+						</InfiniteScroll>
+					)}
+				</>
 			)}
 		</div>
 	);

@@ -1,5 +1,4 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-// import { action } from '@storybook/addon-actions';
 import {
 	authAPI,
 	forgotPasswordAPI,
@@ -115,7 +114,7 @@ const authSlice = createSlice({
 		deleteUserInfo: state => {
 			state.userInfo = {};
 		},
-		checkUserInfor: (state, action) => {
+		updateUserInfo: (state, action) => {
 			state.userInfo = action.payload;
 		},
 	},
@@ -131,19 +130,6 @@ const authSlice = createSlice({
 			state.error = {};
 		},
 		[login.rejected]: (state, action) => {
-			state.isFetching = false;
-			state.userInfo = {};
-			state.error = action.payload;
-		},
-		[getCheckJwt.pending]: state => {
-			state.isFetching = true;
-		},
-		[getCheckJwt.fulfilled]: (state, action) => {
-			state.isFetching = false;
-			state.userInfo = action.payload;
-			state.error = {};
-		},
-		[getCheckJwt.rejected]: (state, action) => {
 			state.isFetching = false;
 			state.userInfo = {};
 			state.error = action.payload;
@@ -169,9 +155,24 @@ const authSlice = createSlice({
 			state.userInfo = action.payload;
 			state.error = {};
 		},
+		[getCheckJwt.pending]: (state, action) => {
+			state.isFetching = true;
+			state.userInfo = {};
+			state.error = action.payload;
+		},
+		[getCheckJwt.fulfilled]: (state, action) => {
+			state.isFetching = false;
+			state.userInfo = action.payload;
+			state.error = {};
+		},
+		[getCheckJwt.rejected]: (state, action) => {
+			state.isFetching = false;
+			state.userInfo = {};
+			state.error = action.payload;
+		},
 	},
 });
 
 const auth = authSlice.reducer;
-export const { checkLogin, checkUserLogin, deleteUserInfo, checkUserInfor } = authSlice.actions;
+export const { checkLogin, checkUserLogin, deleteUserInfo, updateUserInfo } = authSlice.actions;
 export default auth;

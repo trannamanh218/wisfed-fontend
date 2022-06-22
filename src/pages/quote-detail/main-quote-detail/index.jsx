@@ -4,8 +4,6 @@ import BackButton from 'shared/back-button';
 import Comment from 'shared/comments';
 import QuoteCard from 'shared/quote-card';
 import './main-quote-detail.scss';
-import { useParams } from 'react-router-dom';
-import { getQuoteDetail, creatQuotesComment } from 'reducers/redux-utils/quote';
 import { useDispatch } from 'react-redux';
 import _ from 'lodash';
 import CommentEditor from 'shared/comment-editor';
@@ -13,32 +11,20 @@ import { useSelector } from 'react-redux';
 import classNames from 'classnames';
 import { NotificationError } from 'helpers/Error';
 import { checkLikeQuoteComment } from 'reducers/redux-utils/quote';
+import PropTypes from 'prop-types';
 
-const MainQuoteDetail = () => {
-	const { id } = useParams();
+const MainQuoteDetail = ({ quoteData, onCreateComment }) => {
 	const dispatch = useDispatch();
 	const userInfo = useSelector(state => state.auth.userInfo);
 
-	const [quoteData, setQuoteData] = useState({});
 	const [commentLv1IdArray, setCommentLv1IdArray] = useState([]);
 	const [replyingCommentId, setReplyingCommentId] = useState(0);
 	const [clickReply, setClickReply] = useState(false);
 	const [quoteCommentsLikedArray, setQuoteCommentsLikedArray] = useState([]);
 
 	useEffect(() => {
-		window.scrollTo(0, 0);
-		getQuoteData();
 		checkQuoteCommentLiked();
 	}, []);
-
-	const getQuoteData = async () => {
-		try {
-			const response = await dispatch(getQuoteDetail(id)).unwrap();
-			setQuoteData(response);
-		} catch (err) {
-			NotificationError(err);
-		}
-	};
 
 	const checkQuoteCommentLiked = async () => {
 		try {
@@ -63,26 +49,6 @@ const MainQuoteDetail = () => {
 			setCommentLv1IdArray(commentLv1IdTemp);
 		}
 	}, [quoteData.commentQuotes]);
-
-	const onCreateComment = async (content, replyId) => {
-		const params = {
-			quoteId: Number(id),
-			content: content,
-			mediaUrl: [],
-			replyId: replyId,
-			mentionsUser: [],
-		};
-		try {
-			const res = await dispatch(creatQuotesComment(params));
-			if (!_.isEmpty(res)) {
-				getQuoteData();
-			}
-		} catch {
-			err => {
-				return err;
-			};
-		}
-	};
 
 	const handleReply = cmtLv1Id => {
 		setReplyingCommentId(cmtLv1Id);
@@ -162,6 +128,11 @@ const MainQuoteDetail = () => {
 			)}
 		</div>
 	);
+};
+
+MainQuoteDetail.propTypes = {
+	quoteData: PropTypes.object,
+	onCreateComment: PropTypes.func,
 };
 
 export default MainQuoteDetail;

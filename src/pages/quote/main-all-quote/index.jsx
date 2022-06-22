@@ -6,14 +6,12 @@ import SearchField from 'shared/search-field';
 import { getQuoteList } from 'reducers/redux-utils/quote';
 import { useDispatch, useSelector } from 'react-redux';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { checkLikeQuote } from 'reducers/redux-utils/quote';
 import { NotificationError } from 'helpers/Error';
 import LoadingIndicator from 'shared/loading-indicator';
 
 const MainAllQuotes = () => {
 	const [allQuoteList, setAllQuoteList] = useState([]);
 	const [hasMore, setHasMore] = useState(true);
-	const [likedArray, setLikedArray] = useState([]);
 	const [sortValue, setSortValue] = useState('like');
 	const [sortDirection, setSortDirection] = useState('DESC');
 
@@ -27,7 +25,6 @@ const MainAllQuotes = () => {
 	useEffect(() => {
 		callApiStart.current = 10;
 		getAllQuoteListFirstTime();
-		getLikedArray();
 	}, [resetQuoteList, sortValue, sortDirection]);
 
 	const getAllQuoteListFirstTime = async () => {
@@ -70,15 +67,6 @@ const MainAllQuotes = () => {
 		}
 	};
 
-	const getLikedArray = async () => {
-		try {
-			const res = await dispatch(checkLikeQuote()).unwrap();
-			setLikedArray(res);
-		} catch (err) {
-			NotificationError(err);
-		}
-	};
-
 	const handleSortQuotes = params => {
 		if (params === 'default') {
 			setSortValue('like');
@@ -108,7 +96,7 @@ const MainAllQuotes = () => {
 						loader={<LoadingIndicator />}
 					>
 						{allQuoteList.map(item => (
-							<QuoteCard key={item.id} data={item} likedArray={likedArray} />
+							<QuoteCard key={item.id} data={item} />
 						))}
 					</InfiniteScroll>
 				)}

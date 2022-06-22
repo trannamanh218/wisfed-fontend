@@ -14,6 +14,7 @@ import Shelf from 'shared/shelf';
 import SearchBook from './SearchBook';
 import './main-shelves.scss';
 import LoadingIndicator from 'shared/loading-indicator';
+import { NotificationError } from 'helpers/Error';
 
 const DEFAULT_LIBRARY = { value: 'all', title: 'Tất cả', id: 'all' };
 
@@ -51,7 +52,7 @@ const MainShelves = ({ allLibraryList, shelveGroupName, isMyShelve, handleViewBo
 			setCurrentBooks(data.rows);
 			setTotalPage(Math.ceil(data.count / itemsPerPage));
 		} catch (err) {
-			return err;
+			NotificationError(err);
 		} finally {
 			setIsLoading(false);
 			window.scroll(0, 0);

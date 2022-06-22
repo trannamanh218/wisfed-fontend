@@ -2,35 +2,20 @@ import QuoteCard from 'shared/quote-card';
 import './quotes-search.scss';
 import PropTypes from 'prop-types';
 import { NotificationError } from 'helpers/Error';
-import { checkLikeQuote } from 'reducers/redux-utils/quote';
 import ResultNotFound from '../result-not-found';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { getFilterSearch } from 'reducers/redux-utils/search';
-import Storage from 'helpers/Storage';
 import { useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import LoadingIndicator from 'shared/loading-indicator';
 
 const QuoteSearch = ({ isFetching, value, setIsFetching, searchResultInput, activeKeyDefault, updateBooks }) => {
-	const [likedArray, setLikedArray] = useState([1]);
 	const [listArrayQuotes, setListArrayQuotes] = useState([]);
 	const { isShowModal } = useSelector(state => state.search);
 	const [hasMore, setHasMore] = useState(true);
 	const dispatch = useDispatch();
 	const callApiStartQuotes = useRef(0);
 	const callApiPerPage = useRef(10);
-	const getLikedArray = async () => {
-		try {
-			const res = await dispatch(checkLikeQuote()).unwrap();
-			setLikedArray(res);
-		} catch (err) {
-			NotificationError(err);
-		}
-	};
-
-	useEffect(() => {
-		getLikedArray();
-	}, []);
 
 	useEffect(() => {
 		if (activeKeyDefault === 'quotes') {
@@ -85,7 +70,7 @@ const QuoteSearch = ({ isFetching, value, setIsFetching, searchResultInput, acti
 				>
 					{listArrayQuotes.map(item => (
 						<div key={item.id} className='quoteSearch__container__main'>
-							<QuoteCard data={item} likedArray={likedArray} />
+							<QuoteCard data={item} />
 						</div>
 					))}
 				</InfiniteScroll>

@@ -33,7 +33,7 @@ const Sidebar = () => {
 
 	return (
 		<div className='sidebar'>
-			{!_.isEmpty(userInfo) && <ReadingBook bookData={bookReading} />}
+			{!_.isEmpty(userInfo) && !_.isEmpty(bookReading) && <ReadingBook bookData={bookReading} />}
 			{!_.isEmpty(myAllLibraryRedux) && !_.isEmpty(userInfo) && myAllLibraryRedux.default.length > 0 && (
 				<div className='sidebar__block'>
 					<h4 className='sidebar__block__title'>Giá sách</h4>
