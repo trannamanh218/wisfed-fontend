@@ -89,8 +89,8 @@ function MemberGroup() {
 									<div className='member-item__info'>
 										<img
 											src={
-												item.avatar
-													? item.avatar
+												item.avatarImage
+													? item.avatarImage
 													: 'https://play-lh.googleusercontent.com/NIUu0OgXQO4nU-ugWTv6yNy92u9wQFFfwvlWOsCIG-tPYBagOZdpyrJCxfHULI_eeGI'
 											}
 											onError={e =>
@@ -102,20 +102,18 @@ function MemberGroup() {
 											alt=''
 										/>
 										<div className='member-item__text'>
-											<span>
-												{item?.firstName + ' ' + item?.lastName || item.fullName} <br /> (Quản
-												trị viên)
-											</span>
-											{item.mutualFriend ? (
+											<span>{item?.firstName + ' ' + item?.lastName || item.fullName}</span>
+											<span>(Quản trị viên)</span>
+											{/* {item.mutualFriend ? (
 												<p>
-													{1 < item.mutualFriend.length < 10
+													{item.mutualFriend < 10
 														? `0${item.mutualFriend} `
-														: item.mutualFriend}{' '}
+														: `${item.mutualFriend} `}
 													bạn chung
 												</p>
 											) : (
 												''
-											)}
+											)} */}
 										</div>
 									</div>
 
@@ -139,18 +137,26 @@ function MemberGroup() {
 											{item.relation === 'friend' && (
 												<button
 													className='member-item__btn bnt-add-friend'
-													onClick={() => handleUnFriend()}
+													onClick={() => handleUnFriend(item)}
 												>
 													- hủy kết bạn
 												</button>
 											)}
 											{item.relation === 'pending' && (
-												<button className='member-item__btn bnt-add-friend'>
+												<button
+													className='member-item__btn bnt-add-friend'
+													style={{ backgroundColor: '#EFF0F6', opacity: '0.8' }}
+												>
 													Đã gửi lời mời
 												</button>
 											)}
 											{item.relation === 'unknown' && (
-												<button className='member-item__btn bnt-add-friend'>+ Thêm bạn</button>
+												<button
+													className='member-item__btn bnt-add-friend'
+													onClick={() => handleAddFriend(item)}
+												>
+													+ Thêm bạn
+												</button>
 											)}
 											{/* {item.isAdmin && (x
 													<button className='more-icon-btn-group'>
@@ -178,8 +184,8 @@ function MemberGroup() {
 										<div className='member-item__info'>
 											<img
 												src={
-													item.avatar
-														? item.avatar
+													item.avatarImage
+														? item.avatarImage
 														: 'https://play-lh.googleusercontent.com/NIUu0OgXQO4nU-ugWTv6yNy92u9wQFFfwvlWOsCIG-tPYBagOZdpyrJCxfHULI_eeGI'
 												}
 												onError={e =>
@@ -191,12 +197,12 @@ function MemberGroup() {
 												alt=''
 											/>
 											<div className='member-item__text'>
-												<span>{item.fullName}</span>
+												<span>{item?.firstName + ' ' + item?.lastName || item.fullName}</span>
 												{item.mutualFriend ? (
 													<p>
-														{1 < item.mutualFriend.length < 10
+														{item.mutualFriend < 10
 															? `0${item.mutualFriend} `
-															: item.mutualFriend}{' '}
+															: `${item.mutualFriend} `}
 														bạn chung
 													</p>
 												) : (
@@ -231,7 +237,10 @@ function MemberGroup() {
 													</button>
 												)}
 												{item.relation === 'pending' && (
-													<button className='member-item__btn bnt-add-friend'>
+													<button
+														className='member-item__btn bnt-add-friend'
+														style={{ backgroundColor: '#EFF0F6', opacity: '0.8' }}
+													>
 														Đã gửi lời mời
 													</button>
 												)}
@@ -268,8 +277,8 @@ function MemberGroup() {
 										<div className='member-item__info'>
 											<img
 												src={
-													item.avatar
-														? item.avatar
+													item.avatarImage
+														? item.avatarImage
 														: 'https://play-lh.googleusercontent.com/NIUu0OgXQO4nU-ugWTv6yNy92u9wQFFfwvlWOsCIG-tPYBagOZdpyrJCxfHULI_eeGI'
 												}
 												onError={e =>
@@ -281,12 +290,12 @@ function MemberGroup() {
 												alt=''
 											/>
 											<div className='member-item__text'>
-												<span>{item.fullName}</span>
+												<span>{item?.firstName + ' ' + item?.lastName || item.fullName}</span>
 												{item.mutualFriend ? (
 													<p>
-														{1 < item.mutualFriend.length < 10
+														{item.mutualFriend < 10
 															? `0${item.mutualFriend} `
-															: item.mutualFriend}{' '}
+															: `${item.mutualFriend} `}
 														bạn chung
 													</p>
 												) : (
@@ -320,7 +329,10 @@ function MemberGroup() {
 													</button>
 												)}
 												{item.relation === 'pending' && (
-													<button className='member-item__btn bnt-add-friend'>
+													<button
+														className='member-item__btn bnt-add-friend'
+														style={{ backgroundColor: '#EFF0F6', opacity: '0.8' }}
+													>
 														Đã gửi lời mời
 													</button>
 												)}
@@ -359,8 +371,8 @@ function MemberGroup() {
 								<div className='member-item__info'>
 									<img
 										src={
-											item.avatar
-												? item.avatar
+											item.avatarImage
+												? item.avatarImage
 												: 'https://play-lh.googleusercontent.com/NIUu0OgXQO4nU-ugWTv6yNy92u9wQFFfwvlWOsCIG-tPYBagOZdpyrJCxfHULI_eeGI'
 										}
 										onError={e =>
@@ -372,12 +384,12 @@ function MemberGroup() {
 										alt=''
 									/>
 									<div className='member-item__text'>
-										<span>{item.fullName}</span>
+										<span>{item?.firstName + ' ' + item?.lastName || item.fullName}</span>
 										{item.mutualFriend ? (
 											<p>
-												{1 < item.mutualFriend.length < 10
+												{item.mutualFriend < 10
 													? `0${item.mutualFriend} `
-													: item.mutualFriend}{' '}
+													: `${item.mutualFriend} `}
 												bạn chung
 											</p>
 										) : (
@@ -413,7 +425,12 @@ function MemberGroup() {
 											</button>
 										)}
 										{item.relation === 'pending' && (
-											<button className='member-item__btn bnt-add-friend'>Đã gửi lời mời</button>
+											<button
+												className='member-item__btn bnt-add-friend'
+												style={{ backgroundColor: '#EFF0F6', opacity: '0.8' }}
+											>
+												Đã gửi lời mời
+											</button>
 										)}
 										{item.relation === 'unknown' && (
 											<button

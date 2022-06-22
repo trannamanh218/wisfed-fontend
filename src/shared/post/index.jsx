@@ -132,8 +132,6 @@ function Post({ postInformations, className, showModalCreatPost }) {
 		}
 	};
 
-	console.log(postData);
-
 	const handleLikeAction = async () => {
 		try {
 			if (location.pathname.includes('group')) {

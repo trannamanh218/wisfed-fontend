@@ -133,14 +133,16 @@ export const listTagGroup = id => `/api/v1/groups/groupTag/${id}`;
 export const commentGroup = '/api/v1/groupPosts/commentGroupPost';
 export const likeGroupPost = id => `/api/v1/groupPosts/like/${id}`;
 export const likeCommentGroup = id => `/api/v1/groupPosts/likeComment/${id}`;
-
-// search
-export const getSearchAPI = `/api/v1/searchs`;
 export const inviteFriend = id => `api/v1/groups/inviteMemberToGroup/${id}`;
 export const enjoyGroup = id => `/api/v1/groups/requestGroup/${id}`;
 export const leaveGroup = id => `/api/v1/groups/leaveGroup/${id}`;
 export const createPostGroup = id => `/api/v1/groups/${id}/createPost`;
 export const listPostGroup = id => `/api/v1/groups/${id}/groupFeed`;
+export const searchGroup = id => `/api/v1/groups/search/${id}`;
+
+// search
+export const getSearchAPI = `/api/v1/searchs`;
+
 //share
 export const shareInternalAPI = (id, type) => `/api/v1/getstream/share/${id}?type=${type}`;
 

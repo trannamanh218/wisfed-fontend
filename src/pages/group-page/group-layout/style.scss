@@ -27,22 +27,11 @@
 		color: #2d2c42;
 	}
 }
-.search-feild {
+.search {
 	display: flex;
-	position: relative;
-	input {
-		flex-grow: 1;
+	.search-field {
+		background-color: #eff0f6;
 		margin-right: 16px;
-		height: 57px;
-		border-radius: 12px;
-		padding-left: 67px;
-		background-color: #eff0f7;
-		outline: none;
-	}
-	svg {
-		position: absolute;
-		top: 16px;
-		left: 26px;
 	}
 	button {
 		height: 57px;
@@ -127,6 +116,13 @@
 	display: grid;
 	grid-template-columns: repeat(3, 1fr);
 	gap: 20px;
+}
+.result-search {
+	.list-group-container {
+		display: grid;
+		grid-template-columns: repeat(4, 1fr);
+		gap: 20px;
+	}
 }
 .item-group {
 	max-width: 295px;

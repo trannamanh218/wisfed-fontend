@@ -2,10 +2,13 @@ import { CircleActionsAlertQuestion, SettingIcon } from 'components/svg';
 import React, { useEffect, useState } from 'react';
 import './group-sibar.scss';
 import PropTypes from 'prop-types';
+import { useDispatch } from 'react-redux';
+import { updateKey } from 'reducers/redux-utils/group';
 
 const SidebarGroupLef = ({ handleChange, data, member }) => {
 	const [listFriend, setListFriend] = useState([]);
 	const [listFolow, setListFolow] = useState([]);
+	const dispatch = useDispatch();
 
 	useEffect(() => {
 		const newListFolow = member.filter(item => item.isFollowMe === true);
@@ -59,7 +62,7 @@ const SidebarGroupLef = ({ handleChange, data, member }) => {
 			</div>
 
 			<div className='group-sibar-left__btn'>
-				<button>Xem thêm</button>
+				<button onClick={() => dispatch(updateKey('intro'))}>Xem thêm</button>
 			</div>
 			<div>
 				<h3 className='group-sibar-left__title under-title'>Thành viên</h3>
@@ -73,8 +76,8 @@ const SidebarGroupLef = ({ handleChange, data, member }) => {
 										<div className='people-item'>
 											<img
 												src={
-													item.avatar
-														? item.avatar
+													item.avatarImage
+														? item.avatarImage
 														: 'https://play-lh.googleusercontent.com/NIUu0OgXQO4nU-ugWTv6yNy92u9wQFFfwvlWOsCIG-tPYBagOZdpyrJCxfHULI_eeGI'
 												}
 												onError={e =>
@@ -89,9 +92,9 @@ const SidebarGroupLef = ({ handleChange, data, member }) => {
 												<span>{item.fullName || item.firstName + ' ' + item.lastName}</span>
 												{item.mutualFriend ? (
 													<div>
-														{1 < item.mutualFriend.length < 10
+														{item.mutualFriend < 10
 															? `0${item.mutualFriend} `
-															: item.mutualFriend}{' '}
+															: `${item.mutualFriend} `}
 														bạn chung
 													</div>
 												) : (
@@ -114,8 +117,8 @@ const SidebarGroupLef = ({ handleChange, data, member }) => {
 												<div className='people-item'>
 													<img
 														src={
-															item.avatar
-																? item.avatar
+															item.avatarImage
+																? item.avatarImage
 																: 'https://play-lh.googleusercontent.com/NIUu0OgXQO4nU-ugWTv6yNy92u9wQFFfwvlWOsCIG-tPYBagOZdpyrJCxfHULI_eeGI'
 														}
 														onError={e =>
@@ -132,9 +135,9 @@ const SidebarGroupLef = ({ handleChange, data, member }) => {
 														</span>
 														{item.mutualFriend ? (
 															<div>
-																{1 < item.mutualFriend.length < 10
+																{item.mutualFriend < 10
 																	? `0${item.mutualFriend} `
-																	: item.mutualFriend}{' '}
+																	: `${item.mutualFriend} `}
 																bạn chung
 															</div>
 														) : (
@@ -158,8 +161,8 @@ const SidebarGroupLef = ({ handleChange, data, member }) => {
 												<div className='people-item'>
 													<img
 														src={
-															item.avatar
-																? item.avatar
+															item.avatarImage
+																? item.avatarImage
 																: 'https://play-lh.googleusercontent.com/NIUu0OgXQO4nU-ugWTv6yNy92u9wQFFfwvlWOsCIG-tPYBagOZdpyrJCxfHULI_eeGI'
 														}
 														onError={e =>
@@ -176,9 +179,9 @@ const SidebarGroupLef = ({ handleChange, data, member }) => {
 														</span>
 														{item.mutualFriend ? (
 															<div>
-																{1 < item.mutualFriend.length < 10
+																{item.mutualFriend < 10
 																	? `0${item.mutualFriend} `
-																	: item.mutualFriend}{' '}
+																	: `${item.mutualFriend} `}
 																bạn chung
 															</div>
 														) : (
@@ -195,7 +198,7 @@ const SidebarGroupLef = ({ handleChange, data, member }) => {
 				</div>
 			</div>
 			<div className='group-sibar-left__btn'>
-				<button>Xem tất cả</button>
+				<button onClick={() => dispatch(updateKey('member'))}>Xem tất cả</button>
 			</div>
 		</div>
 	);
