@@ -14,8 +14,8 @@ import { unwrapResult } from '@reduxjs/toolkit';
 import ModalLogin from './element/ModalLogin';
 import { useNavigate } from 'react-router-dom';
 import EyeIcon from 'shared/eye-icon';
-import _ from 'lodash';
 import Subtract from 'assets/images/Subtract.png';
+import _ from 'lodash';
 
 function Login() {
 	const [showImagePopover, setShowImagePopover] = useState(false);

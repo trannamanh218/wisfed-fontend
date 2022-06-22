@@ -22,7 +22,7 @@ export const register = createAsyncThunk('auth/register', async (params, { rejec
 	}
 });
 
-export const getCheckJwt = createAsyncThunk('user/getCheckJwt', async (params, { rejectWithValue }) => {
+export const getCheckJwt = createAsyncThunk('auth/getCheckJwt', async (params, { rejectWithValue }) => {
 	try {
 		const response = await Request.makeGet(checkJwt, params);
 		return response.data;

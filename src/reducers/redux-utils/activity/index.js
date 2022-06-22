@@ -102,9 +102,9 @@ export const updateReactionActivity = createAsyncThunk(
 
 export const updateReactionActivityGroup = createAsyncThunk(
 	'activity/updateReactionActivityGroup',
-	async (minipostId, { rejectWithValue }) => {
+	async (groupPostId, { rejectWithValue }) => {
 		try {
-			const response = await Request.makePatch(likeGroupPost(minipostId));
+			const response = await Request.makePatch(likeGroupPost(groupPostId));
 			return response.data;
 		} catch (err) {
 			const error = JSON.stringify(err.response);
