@@ -14,7 +14,7 @@ const FilterQuotePane = ({
 	handleChangeOption,
 	children,
 	handleSortQuotes,
-	isMyQuotes,
+	hasFilters,
 }) => {
 	const [showCreatQuotesModal, setShowCreatQuotesModal] = useState(false);
 	const [showDropdownMenu, setShowDropdownMenu] = useState(false);
@@ -112,7 +112,7 @@ const FilterQuotePane = ({
 					<Button className='filter-quote-pane__btn' varient='primary-light' onClick={creatQuotes}>
 						<Add className='filter-quote-pane__icon' /> Tạo Quotes
 					</Button>
-					{isMyQuotes && (
+					{hasFilters && (
 						<FitlerOptions
 							list={filterOptions}
 							currentOption={currentOption}
@@ -194,7 +194,7 @@ FilterQuotePane.propTypes = {
 	handleChangeOption: PropTypes.func,
 	children: PropTypes.any,
 	handleSortQuotes: PropTypes.func,
-	isMyQuotes: PropTypes.bool,
+	hasFilters: PropTypes.bool,
 };
 
 export default FilterQuotePane;

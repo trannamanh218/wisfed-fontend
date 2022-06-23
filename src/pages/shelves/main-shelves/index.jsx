@@ -91,15 +91,9 @@ const MainShelves = ({ allLibraryList, shelveGroupName, isMyShelve, handleViewBo
 		setCurrentPage(pageIndex);
 	};
 
-	const handleUpdateBookList = useCallback(
-		bookId => {
-			const newBookList = [...currentBooks];
-			const indexRemove = newBookList.findIndex(item => item.id === bookId);
-			newBookList.splice(indexRemove, 1);
-			setCurrentBooks(newBookList);
-		},
-		[currentBooks]
-	);
+	const handleUpdateBookList = useCallback(() => {
+		getBooksInCurrentLibrary();
+	}, [currentBooks]);
 
 	return (
 		<>

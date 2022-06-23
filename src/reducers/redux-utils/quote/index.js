@@ -108,7 +108,7 @@ export const getQuotesByFriendsOrFollowers = createAsyncThunk(
 	async (params, { rejectWithValue }) => {
 		try {
 			const response = await Request.makeGet(getQuotesByFriendsOrFollowersAPI, params);
-			return response.data.rows;
+			return response.data;
 		} catch (err) {
 			const error = JSON.parse(err.response);
 			return rejectWithValue(error);

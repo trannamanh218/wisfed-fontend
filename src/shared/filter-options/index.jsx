@@ -7,18 +7,19 @@ import classNames from 'classnames';
 const FitlerOptions = ({ list, name, className, currentOption, handleChangeOption }) => {
 	return (
 		<Form className={classNames('filter-options', { [`${className}`]: className })}>
-			{list.map((item, index) => {
-				return (
-					<RadioInput
-						key={`option-${index}`}
-						data={item}
-						name={name}
-						type='radio'
-						checked={currentOption.value === item.value}
-						handleChange={handleChangeOption}
-					/>
-				);
-			})}
+			{!!list.length &&
+				list.map((item, index) => {
+					return (
+						<RadioInput
+							key={`option-${index}`}
+							data={item}
+							name={name}
+							type='radio'
+							checked={currentOption.value === item.value}
+							handleChange={handleChangeOption}
+						/>
+					);
+				})}
 		</Form>
 	);
 };

@@ -107,8 +107,8 @@ export const removeBookFromLibrary = createAsyncThunk(
 	}
 );
 
-export const removeAllBookInLibraries = createAsyncThunk(
-	'library/removeAllBookInLibraries',
+export const removeBookInLibraries = createAsyncThunk(
+	'library/removeBookInLibraries',
 	async (params, { rejectWithValue }) => {
 		try {
 			const response = await Request.makePost(removeAllBookAPI, params);
@@ -166,7 +166,6 @@ const librarySlice = createSlice({
 		updateAuthLibrary: (state, action) => {
 			state.authLibraryData = action.payload;
 		},
-		//
 		getAllMyLibraryRedux: (state, action) => {
 			state.myAllLibrary = action.payload;
 		},

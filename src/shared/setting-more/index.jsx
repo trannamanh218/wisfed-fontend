@@ -16,7 +16,7 @@ import {
 	addRemoveBookInLibraries,
 	checkBookInLibraries,
 	createLibrary,
-	removeAllBookInLibraries,
+	removeBookInLibraries,
 	updateMyAllLibraryRedux,
 } from 'reducers/redux-utils/library';
 import './setting-more.scss';
@@ -170,8 +170,8 @@ const SettingMore = ({ bookData, handleUpdateBookList }) => {
 	const removeBook = async () => {
 		const params = { bookId: bookData.id };
 		try {
-			await dispatch(removeAllBookInLibraries(params)).unwrap();
-			handleUpdateBookList(bookData.id);
+			await dispatch(removeBookInLibraries(params)).unwrap();
+			handleUpdateBookList();
 			dispatch(updateMyAllLibraryRedux());
 			toast.success('Xoá sách thành công');
 		} catch (err) {

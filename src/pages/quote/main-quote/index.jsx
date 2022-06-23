@@ -190,36 +190,34 @@ const MainQuote = () => {
 						handleChangeOption={handleChangeOption}
 						currentOption={currentOption}
 						handleSortQuotes={handleSortQuotes}
-						isMyQuotes={isMyQuotes}
+						hasFilters={isMyQuotes}
 					>
-						<>
-							{isLoading ? (
-								<LoadingIndicator />
-							) : (
-								<>
-									{quoteList.length > 0 ? (
-										<InfiniteScroll
-											dataLength={quoteList.length}
-											next={getQuoteListData}
-											hasMore={hasMore}
-											loader={<LoadingIndicator />}
-										>
-											{quoteList.map(item => (
-												<QuoteCard key={item.id} data={item} />
-											))}
-										</InfiniteScroll>
-									) : (
-										<>
-											{inputSearchValue ? (
-												<h4>Không có kết quả phù hợp</h4>
-											) : (
-												<h4>Chưa có dữ liệu</h4>
-											)}
-										</>
-									)}
-								</>
-							)}
-						</>
+						{isLoading ? (
+							<LoadingIndicator />
+						) : (
+							<>
+								{quoteList.length > 0 ? (
+									<InfiniteScroll
+										dataLength={quoteList.length}
+										next={getQuoteListData}
+										hasMore={hasMore}
+										loader={<LoadingIndicator />}
+									>
+										{quoteList.map(item => (
+											<QuoteCard key={item.id} data={item} />
+										))}
+									</InfiniteScroll>
+								) : (
+									<>
+										{inputSearchValue ? (
+											<h4>Không có kết quả phù hợp</h4>
+										) : (
+											<h4>Chưa có dữ liệu</h4>
+										)}
+									</>
+								)}
+							</>
+						)}
 					</FilterQuotePane>
 				</div>
 			)}
