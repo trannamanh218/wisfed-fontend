@@ -244,7 +244,7 @@ const ReadingSummaryChartAuthor = () => {
 								handleChange={handleChange}
 								value={searchValue}
 							/>
-							{searchValue ? (
+							{searchValue.length > 0 ? (
 								<div className='book__author__charts__search'>
 									{resultSearch.slice(0, 3).map(item => (
 										<div

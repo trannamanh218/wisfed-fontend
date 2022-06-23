@@ -14,7 +14,7 @@ function ReadingBook({ bookData }) {
 
 	useEffect(() => {
 		if (!_.isEmpty(bookData)) {
-			const percentData = Math.round((bookData.bookProgress[0].progress / bookData.page) * 100);
+			const percentData = Math.round((bookData.bookProgress[0]?.progress / bookData.page) * 100);
 			setPercent(percentData);
 		}
 	}, [bookData, percent]);

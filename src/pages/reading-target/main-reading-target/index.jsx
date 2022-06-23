@@ -14,6 +14,10 @@ import { useSelector } from 'react-redux';
 import { useFetchUserParams } from 'api/user.hook';
 import { useFetchTargetReading } from 'api/readingTarget.hooks';
 import GoalsNotSetYet from './goals-not-set';
+import Circle from 'shared/loading/circle';
+import { STATUS_LOADING } from 'constants';
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const MainReadingTarget = () => {
 	const { userId } = useParams();
@@ -23,8 +27,8 @@ const MainReadingTarget = () => {
 	const [deleteModal, setDeleteModal] = useState(false);
 	const [inputSearch, setInputSearch] = useState('');
 	const [newArrSearch, setNewArrSearch] = useState([]);
-	const { booksReadYear, year } = useFetchTargetReading(userId, modalOpen, deleteModal);
-
+	const navigate = useNavigate();
+	const { booksReadYear, year, status } = useFetchTargetReading(userId, modalOpen, deleteModal);
 	const renderLinearProgressBar = item => {
 		let percent = 0;
 		if (item.booksReadCount > item.numberBook) {
@@ -43,6 +47,12 @@ const MainReadingTarget = () => {
 		setDeleteModal(true);
 		setModalOpen(true);
 	};
+
+	useEffect(() => {
+		if (booksReadYear.length < 1 && status === 'SUCCESS') {
+			navigate('/');
+		}
+	}, [status]);
 
 	const handleSearch = e => {
 		setInputSearch(e.target.value);
@@ -107,6 +117,7 @@ const MainReadingTarget = () => {
 
 	return (
 		<div className='reading-target'>
+			<Circle loading={status === STATUS_LOADING} />
 			<div className='reading-target__header'>
 				<h4>Mục tiêu đọc sách năm {booksReadYear[0]?.year || year}</h4>
 				<SearchField
@@ -116,56 +127,54 @@ const MainReadingTarget = () => {
 					value={inputSearch}
 				/>
 			</div>
-			{booksReadYear.length > 0 ? (
-				booksReadYear.map(item => (
-					<>
-						<div className='reading-target__process'>
-							<UserAvatar className='reading-target__user' source={userInfo?.avatarImage} size='lg' />
-							<div className='reading-target__content'>
-								{renderContentTop(item)}
-								<div className='reading-target__content__bottom'>
-									{renderLinearProgressBar(item)}
-									{userInfo.id === userId && (
-										<button className='btn btn-share btn-primary-light'>Chia sẻ</button>
-									)}
+			{booksReadYear.length > 0
+				? booksReadYear.map(item => (
+						<>
+							<div className='reading-target__process'>
+								<UserAvatar className='reading-target__user' source={userInfo?.avatarImage} size='lg' />
+								<div className='reading-target__content'>
+									{renderContentTop(item)}
+									<div className='reading-target__content__bottom'>
+										{renderLinearProgressBar(item)}
+										{userInfo.id === userId && (
+											<button className='btn btn-share btn-primary-light'>Chia sẻ</button>
+										)}
+									</div>
 								</div>
 							</div>
-						</div>
-						<ModalReadTarget
-							modalOpen={modalOpen}
-							toggleModal={toggleModal}
-							setModalOpen={setModalOpen}
-							deleteModal={deleteModal}
-						/>
-						{!_.isEmpty(item.booksRead) && (
-							<div className='reading-target__table'>
-								<Table>
-									<thead className='reading-target__table__header'>
-										<tr>
-											<th colSpan={3}>Tên sách</th>
-											<th>Tác giả</th>
-											<th>Ngày thêm</th>
-											<th>Ngày đọc</th>
-											<th colSpan={2}>Ngày hoàn thành</th>
-										</tr>
-										<tr className='empty-row' />
-									</thead>
-									<tbody>
-										{inputSearch.length > 0
-											? handleRenderUseSearch(newArrSearch)
-											: handleRenderUseSearch(item)}
-										<tr className='highlight'>
-											<td colSpan={8}></td>
-										</tr>
-									</tbody>
-								</Table>
-							</div>
-						)}
-					</>
-				))
-			) : (
-				<GoalsNotSetYet userInfo={userInfo} />
-			)}
+							<ModalReadTarget
+								modalOpen={modalOpen}
+								toggleModal={toggleModal}
+								setModalOpen={setModalOpen}
+								deleteModal={deleteModal}
+							/>
+							{!_.isEmpty(item.booksRead) && (
+								<div className='reading-target__table'>
+									<Table>
+										<thead className='reading-target__table__header'>
+											<tr>
+												<th colSpan={3}>Tên sách</th>
+												<th>Tác giả</th>
+												<th>Ngày thêm</th>
+												<th>Ngày đọc</th>
+												<th colSpan={2}>Ngày hoàn thành</th>
+											</tr>
+											<tr className='empty-row' />
+										</thead>
+										<tbody>
+											{inputSearch.length > 0
+												? handleRenderUseSearch(newArrSearch)
+												: handleRenderUseSearch(item)}
+											<tr className='highlight'>
+												<td colSpan={8}></td>
+											</tr>
+										</tbody>
+									</Table>
+								</div>
+							)}
+						</>
+				  ))
+				: userId === userInfo.id && status === 'SUCCESS' && <GoalsNotSetYet userInfo={userInfo} />}
 		</div>
 	);
 };

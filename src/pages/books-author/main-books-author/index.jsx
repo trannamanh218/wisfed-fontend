@@ -54,7 +54,7 @@ const MainBooksAuthor = ({ shelveGroupName }) => {
 				start: callApiStart.current,
 				limit: callApiPerPage.current,
 				filter: filter,
-				sort: JSON.stringify([{ 'direction': 'DESC', 'property': 'createdAt' }]),
+				sort: JSON.stringify([{ 'created_at': { 'order': 'desc' } }]),
 			};
 			const data = await dispatch(getBookAuthorList({ id: userId, params: params })).unwrap();
 			if (data.length) {
@@ -81,7 +81,9 @@ const MainBooksAuthor = ({ shelveGroupName }) => {
 		}
 	};
 	useEffect(() => {
-		fetchDataSearch();
+		if (inputSearch.length > 0) {
+			fetchDataSearch();
+		}
 	}, [filter]);
 
 	const fetchDataSearch = async () => {
@@ -89,6 +91,7 @@ const MainBooksAuthor = ({ shelveGroupName }) => {
 			authorId: userId,
 			type: 'books',
 			q: filter,
+			sort: JSON.stringify([{ 'created_at': { 'order': 'desc' } }]),
 		};
 		try {
 			if (filter) {

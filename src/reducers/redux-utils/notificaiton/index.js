@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import Request from 'helpers/Request';
-import { nottificationAPI } from 'constants/apiURL';
+import { nottificationAPI, postReadNotification } from 'constants/apiURL';
 
 export const getNotification = createAsyncThunk('notification/getNotification', async (params, { rejectWithValue }) => {
 	try {
@@ -12,11 +12,25 @@ export const getNotification = createAsyncThunk('notification/getNotification', 
 	}
 });
 
+export const readNotification = createAsyncThunk(
+	'notification/getNotification',
+	async (params, { rejectWithValue }) => {
+		try {
+			const response = await Request.makePost(postReadNotification, params);
+			return response.data;
+		} catch (err) {
+			const error = JSON.parse(err.response);
+			throw rejectWithValue(error);
+		}
+	}
+);
+
 const notificationSlice = createSlice({
 	name: 'notification',
 	initialState: {
 		toggle: null,
 		activeKeyTabs: '',
+		listNotifcaiton: [],
 	},
 	reducers: {
 		backgroundToggle: (state, action) => {
@@ -24,6 +38,9 @@ const notificationSlice = createSlice({
 		},
 		activeKeyTabsNotification: (state, action) => {
 			state.activeKeyTabs = action.payload;
+		},
+		handleListNotification: (state, action) => {
+			state.listNotifcaiton = action.payload;
 		},
 	},
 	extraReducers: {
@@ -43,7 +60,7 @@ const notificationSlice = createSlice({
 	},
 });
 
-export const { backgroundToggle, activeKeyTabsNotification } = notificationSlice.actions;
+export const { backgroundToggle, activeKeyTabsNotification, handleListNotification } = notificationSlice.actions;
 
 const notificationReducer = notificationSlice.reducer;
 export default notificationReducer;

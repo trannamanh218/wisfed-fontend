@@ -3,17 +3,19 @@ import { Minus } from 'components/svg';
 
 export const renderMessage = item => {
 	if (item.verb === 'addFriend') {
-		return <>đã gửi lời mời kết bạn</>;
+		return <> đã gửi lời mời kết bạn</>;
 	} else if (item.verb === 'likeQuote') {
-		return <>đã thích trích dẫn của bạn</>;
+		return <> đã thích trích dẫn của bạn</>;
 	} else if (item.verb === 'mention') {
 		return <>Đã nhắc bạn trong một bình luận</>;
 	} else if (item.verb === 'replyComment') {
-		return <>đã bình luận vào bài viết của bạn</>;
+		return <>đã trả lời vào bài viết của bạn</>;
 	} else if (item.verb === 'likeMiniPost') {
-		return <>đã thích bài viết của bạn</>;
+		return <> đã thích bài viết của bạn</>;
 	} else if (item.verb === 'likeGroupPost') {
-		return <>đã thích bài viết của bạn</>;
+		return <> đã thích bài viết của bạn</>;
+	} else if (item.verb === 'commentMiniPost') {
+		return <> đã bình luận bài viết của bạn</>;
 	}
 };
 

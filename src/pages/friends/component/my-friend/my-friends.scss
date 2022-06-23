@@ -42,12 +42,13 @@
 	.myfriends__layout__container {
 		display: flex;
 		gap: 28px;
-		flex-wrap: wrap;
 		margin: 28px 22px;
+		flex-wrap: wrap;
 		.myfriends__layout {
 			max-width: 200px;
 			background: #fbf7f2;
 			border-radius: 16px;
+
 			.myfriends__star {
 				display: flex;
 				align-items: center;
@@ -61,7 +62,6 @@
 					letter-spacing: 0.75px;
 					color: #2d2c42;
 					text-align: center;
-					min-height: 48px;
 				}
 			}
 			.myfriends__layout__img {
@@ -80,6 +80,10 @@
 			}
 			.myfriends__button__container {
 				padding: 0 11px 28px 11px;
+				display: flex;
+				justify-content: center;
+				flex-direction: column;
+				margin-top: auto;
 				.myfriends__button {
 					width: 180px;
 					border-radius: 12px;

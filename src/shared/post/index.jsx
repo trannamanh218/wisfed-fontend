@@ -132,8 +132,6 @@ function Post({ postInformations, className, showModalCreatPost }) {
 		}
 	};
 
-	console.log(postData);
-
 	const handleLikeAction = async () => {
 		try {
 			if (location.pathname.includes('group')) {
@@ -267,9 +265,10 @@ function Post({ postInformations, className, showModalCreatPost }) {
 			{postData.verb === 'sharePost' && !_.isEmpty(postData.sharePost) && <PostsShare postData={postData} />}
 			{postData?.image?.length > 0 && <GridImage images={postData.image} inPost={true} postId={postData.id} />}
 
-			{postData?.image?.length === 0 &&
+			{(postData?.image?.length === 0 &&
 				!_.isEmpty(postData.sharePost?.preview) &&
-				_.isEmpty(postData.sharePost?.book) && (
+				_.isEmpty(postData.sharePost?.book)) ||
+				(!_.isEmpty(postData.preview) && _.isEmpty(postData.book) && (
 					<>
 						{videoId ? (
 							<iframe
@@ -284,7 +283,7 @@ function Post({ postInformations, className, showModalCreatPost }) {
 							</div>
 						)}
 					</>
-				)}
+				))}
 			{!isSharePosts && (
 				<>
 					<PostActionBar postData={postData} handleLikeAction={handleLikeAction} />

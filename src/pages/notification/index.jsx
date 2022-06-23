@@ -17,12 +17,16 @@ import { ReplyFriendRequest, CancelFriendRequest } from 'reducers/redux-utils/us
 import { NotificationError } from 'helpers/Error';
 import { renderMessage } from 'helpers/HandleShare';
 import LoadingIndicator from 'shared/loading-indicator';
+import { readNotification } from 'reducers/redux-utils/notificaiton';
+import { handleListNotification } from 'reducers/redux-utils/notificaiton';
+import { useSelector } from 'react-redux';
 
 const NotificationModal = ({ setModalNotti, buttonModal }) => {
 	const notifymodal = useRef(null);
 	const [selectKey, setSelectKey] = useState('all');
 	const [isLoading, setIsLoading] = useState(true);
 	const dispatch = useDispatch();
+	const { listNotifcaiton } = useSelector(state => state.notification);
 	const history = useLocation();
 	const [getNotifications, setGetNotifications] = useState([]);
 	const navigate = useNavigate();
@@ -79,6 +83,9 @@ const NotificationModal = ({ setModalNotti, buttonModal }) => {
 	};
 
 	const hanleActiveIsReed = items => {
+		const params = {
+			notificationId: items.id,
+		};
 		if (items.verb !== 'addfriend') {
 			const newArr = getNotifications.map(item => {
 				if (item.id === items.id) {
@@ -89,6 +96,7 @@ const NotificationModal = ({ setModalNotti, buttonModal }) => {
 			});
 			setGetNotifications(newArr);
 		}
+		dispatch(readNotification(params)).unwrap();
 	};
 
 	useEffect(() => {
@@ -96,11 +104,17 @@ const NotificationModal = ({ setModalNotti, buttonModal }) => {
 	}, []);
 
 	const getMyNotification = async () => {
+		let arrNew = [];
 		try {
-			const notificationList = await dispatch(getNotification()).unwrap();
-			const arrNew = notificationList.map(item => item.activities).flat(1);
+			if (listNotifcaiton.length > 0) {
+				console.log('haha');
+			} else {
+				const notificationList = await dispatch(getNotification()).unwrap();
+				arrNew = notificationList.map(item => item.activities).flat(1);
+			}
+
 			const newArr = arrNew.map(item => {
-				const data = { ...item, isAccept: false, isRefuse: false, isRead: false };
+				const data = { ...item, isAccept: false, isRefuse: false };
 				return { ...data };
 			});
 			setGetNotifications(newArr.slice(0, 10));
@@ -137,81 +151,69 @@ const NotificationModal = ({ setModalNotti, buttonModal }) => {
 		}
 	};
 
-	const rendergGetNotifications = () => {
-		return getNotifications.map(
-			item =>
-				!item.isCheck && (
-					<div
-						onClick={() => hanleActiveIsReed(item)}
-						key={item.id}
-						className={item.isRead ? 'notificaiton__tabs__all__active' : 'notificaiton__tabs__all__seen'}
-					>
-						<div
-							onClick={() => {
-								handleLinkAddfriend(item);
-							}}
-							className='notificaiton__all__layout'
-						>
-							<UserAvatar size='mm' source={item.createdBy?.avatarImage} />
-							<div className='notificaiton__all__layout__status'>
-								<div className='notificaiton__all__infor'>
-									<p dangerouslySetInnerHTML={{ __html: item?.message }}></p>
-									{item.verb !== 'follow' && (
-										<>
-											<span>
-												{item.createdBy?.fullName ? (
-													item.createdBy.fullName
-												) : (
-													<>
-														<span> {item.createdBy?.firstName}</span>
-														<span> {item.createdBy?.lastName}</span>
-													</>
-												)}
-											</span>
-											&nbsp;
-											{renderMessage(item)}
-										</>
-									)}
-								</div>
-								<div
-									className={
-										item.isRead ? 'notificaiton__all__status__seen' : 'notificaiton__all__status'
-									}
-								>{`${calculateDurationTime(item.time)}`}</div>
-								{item.isAccept ? (
-									<div className='notificaiton___main__all__status'>Đã chấp nhận lời mời</div>
-								) : (
-									item.isRefuse && (
-										<div className='notificaiton___main__all__status'>Đã từ chối lời mời</div>
-									)
+	const rendergGetNotifications = item => {
+		return (
+			<div
+				onClick={() => hanleActiveIsReed(item)}
+				key={item.id}
+				className={item.isRead ? 'notificaiton__tabs__all__active' : 'notificaiton__tabs__all__seen'}
+			>
+				<div
+					onClick={() => {
+						handleLinkAddfriend(item);
+					}}
+					className='notificaiton__all__layout'
+				>
+					<UserAvatar size='mm' source={item.createdBy?.avatarImage} />
+					<div className='notificaiton__all__layout__status'>
+						<div className='notificaiton__all__infor'>
+							<p dangerouslySetInnerHTML={{ __html: item?.message }}></p>
+							{item.verb !== 'follow' &&
+								item.verb !== 'requestGroup' &&
+								item.vern !== 'commentGroupPost' && (
+									<>
+										<span>
+											{item.createdBy?.fullName ? (
+												item.createdBy.fullName
+											) : (
+												<>
+													<span> {item.createdBy?.firstName}</span>
+													<span> {item.createdBy?.lastName}</span>
+												</>
+											)}
+										</span>{' '}
+										{renderMessage(item)}
+									</>
 								)}
-							</div>
-							<div
-								className={item.isRead ? 'notificaiton__all__seen' : 'notificaiton__all__unseen'}
-							></div>
 						</div>
-						{item.verb === 'addFriend' ||
-							(item.verb === 'addfriend' &&
-								(item.isAccept || item.isRefuse ? (
-									''
-								) : (
-									<div className='notificaiton__all__friend'>
-										<div
-											onClick={() => ReplyFriendReq(item.object, item)}
-											className='notificaiton__all__accept'
-										>
-											Chấp nhận
-										</div>
-										<div
-											onClick={() => cancelFriend(item.object, item)}
-											className='notificaiton__all__refuse'
-										>
-											Từ chối
-										</div>
-									</div>
-								)))}
+						<div
+							className={item.isRead ? 'notificaiton__all__status__seen' : 'notificaiton__all__status'}
+						>{`${calculateDurationTime(item.time)}`}</div>
+						{item.isAccept ? (
+							<div className='notificaiton___main__all__status'>Đã chấp nhận lời mời</div>
+						) : (
+							item.isRefuse && <div className='notificaiton___main__all__status'>Đã từ chối lời mời</div>
+						)}
 					</div>
-				)
+					<div className={item.isRead ? 'notificaiton__all__seen' : 'notificaiton__all__unseen'}></div>
+				</div>
+				{item.verb === 'addFriend' &&
+					(item.isAccept || item.isRefuse ? (
+						''
+					) : (
+						<div className='notificaiton__all__friend'>
+							<div
+								onClick={() => ReplyFriendReq(item.object, item)}
+								className='notificaiton__all__accept'
+							>
+								Chấp nhận
+							</div>
+							<div onClick={() => cancelFriend(item.object, item)} className='notificaiton__all__refuse'>
+								Từ chối
+							</div>
+						</div>
+					))}
+			</div>
 		);
 	};
 
@@ -226,22 +228,13 @@ const NotificationModal = ({ setModalNotti, buttonModal }) => {
 						<Tabs onSelect={eventKey => setSelectKey(eventKey)} defaultActiveKey='all'>
 							<Tab eventKey='all' title='Tất cả'>
 								<div className='notificaiton__all__title'>Mới nhất</div>
-
-								<div className='notificaiton__tabs__all__seen'>
-									<div className='notificaiton__all__layout'>
-										<UserAvatar size='mm' source={avater} />
-										<div className='notificaiton__all__layout__status'>
-											<div className='notificaiton__all__infor'>
-												<span>Huy Đạt</span> đã đăng trong nhóm Thời đại sách 5.0 247: Nhóm khác
-												có vẻ cập nhật tốt hơn anh em mình nh...
-											</div>
-											<div className='notificaiton__all__status'>Khoảng 30 giờ trước</div>
-										</div>
-										<div className='notificaiton__all__unseen'></div>
-									</div>
-								</div>
+								{getNotifications
+									.slice(0, 1)
+									.map(item => !item.isCheck && rendergGetNotifications(item))}
 								<div className='notificaiton__all__title'>Gần đây</div>
-								{rendergGetNotifications()}
+								{getNotifications
+									.slice(1, 6)
+									.map(item => !item.isCheck && rendergGetNotifications(item))}
 								<Link
 									to={`/notification`}
 									onClick={handleNotificaiton}
@@ -252,7 +245,9 @@ const NotificationModal = ({ setModalNotti, buttonModal }) => {
 							</Tab>
 							<Tab eventKey='unread' title='Chưa đọc'>
 								<div className='notificaiton__all__title'>Thông báo chưa đọc</div>
-								{rendergGetNotifications()}
+								{getNotifications
+									.slice(0, 7)
+									.map(item => !item.isCheck && rendergGetNotifications(item))}
 								<Link
 									to={`/notification`}
 									onClick={handleNotificaiton}
