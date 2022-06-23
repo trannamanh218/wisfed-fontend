@@ -23,11 +23,11 @@ import MainPostGroupView from './component/MainPostGroupView';
 import _ from 'lodash';
 import { useParams } from 'react-router-dom';
 import SearchLayout from './component/SearchLayout';
+import { useVisible } from 'shared/hooks';
 
 function MainGroupComponent({ handleChange, keyChange, data, backgroundImage, member }) {
 	const [key, setKey] = useState('intro');
 	const { groupType, description, memberGroups, name } = data;
-	const [isShow, setIsShow] = useState(false);
 	const dispatch = useDispatch();
 	const [show, setShow] = useState(false);
 	const { userInfo } = useSelector(state => state.auth);
@@ -38,6 +38,7 @@ function MainGroupComponent({ handleChange, keyChange, data, backgroundImage, me
 	const [getData, setGetData] = useState([]);
 	const { id = '' } = useParams();
 	const keyRedux = useSelector(state => state.group.key);
+	const { ref: showRef, isVisible: isShow, setIsVisible: setIsShow } = useVisible(false);
 
 	const enjoyGroup = async () => {
 		setIsFetching(true);
@@ -198,7 +199,7 @@ function MainGroupComponent({ handleChange, keyChange, data, backgroundImage, me
 					<div style={{ position: 'fixed', left: '33%', top: '20%', zIndex: '2000' }}>
 						{isShow ? (
 							<div className='popup-container'>
-								<PopupInviteFriend handleClose={() => setIsShow(!isShow)} />
+								<PopupInviteFriend handleClose={() => setIsShow(!isShow)} showRef={showRef} />
 							</div>
 						) : (
 							''
@@ -240,7 +241,7 @@ function MainGroupComponent({ handleChange, keyChange, data, backgroundImage, me
 			{keyChange === 'settingsQuestion' && <SettingsQuestions handleChange={handleChange} />}
 			{keyChange === 'manageJoin' && <ManageJoin handleChange={handleChange} />}
 			{keyChange === 'managePost' && <PostWatting handleChange={handleChange} />}
-			{keyChange === 'search' && <SearchLayout data={getData} />}
+			{keyChange === 'search' && <SearchLayout data={getData} show={show} />}
 		</div>
 	);
 }

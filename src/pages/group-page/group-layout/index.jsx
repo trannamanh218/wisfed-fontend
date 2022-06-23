@@ -13,9 +13,9 @@ import { getFilterSearch } from 'reducers/redux-utils/search';
 import _ from 'lodash';
 import { NotificationError } from 'helpers/Error';
 import Circle from 'shared/loading/circle';
+import { useVisible } from 'shared/hooks';
 
 const LayoutGroup = () => {
-	const [isShow, setIsShow] = useState(false);
 	const [myGroup, setMyGroup] = useState([]);
 	const [adminGroup, setAdminGroup] = useState([]);
 	const [list, setList] = useState([]);
@@ -25,6 +25,7 @@ const LayoutGroup = () => {
 	const dispatch = useDispatch();
 	const [isShowScreen, setIsShhowScreen] = useState(true);
 	const [isFetching, setIsFetching] = useState(true);
+	const { ref: showRef, isVisible: isShow, setIsVisible: setIsShow } = useVisible(false);
 
 	const handleClose = () => {
 		setIsShow(!isShow);
@@ -91,6 +92,8 @@ const LayoutGroup = () => {
 		}, 700);
 	}, [valueGroupSearch]);
 
+	useEffect(() => {}, []);
+
 	const SearchGroup = () => {
 		const navigate = useNavigate();
 		const handleClick = () => {
@@ -117,7 +120,7 @@ const LayoutGroup = () => {
 			<Circle loading={isFetching} />
 			{isShow ? (
 				<div>
-					<PopupCreateGroup handleClose={handleClose} />
+					<PopupCreateGroup handleClose={handleClose} showRef={showRef} />
 				</div>
 			) : (
 				''
