@@ -394,7 +394,7 @@ function CreatPostModalContent({
 			const statusCode = err?.statusCode || 500;
 			if (err.errorCode === 702) {
 				NotificationError(err);
-			} else {
+			} else if (!location.pathname.includes('group')) {
 				toast.error('Tạo post thất bại!');
 			}
 			setStatus(statusCode);

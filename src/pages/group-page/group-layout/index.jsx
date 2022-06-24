@@ -31,12 +31,6 @@ const LayoutGroup = () => {
 		setIsShow(!isShow);
 	};
 
-	const listGroup = async () => {
-		const actionGetList = await dispatch(getGroupList());
-		setIsFetching(false);
-		setList(actionGetList.payload.rows);
-	};
-
 	const listMyGroup = async () => {
 		const actionListMyGroup = await dispatch(getMyGroup());
 		setMyGroup(actionListMyGroup.payload.data);
@@ -130,11 +124,14 @@ const LayoutGroup = () => {
 					<MainContainerLeft
 						sub={<SearchGroup />}
 						right={<SidebarLeft listMyGroup={myGroup} listAdminMyGroup={adminGroup} />}
-						main={<MainLayout listGroup={list} />}
+						main={<MainLayout filter={true} />}
 					/>
 				) : (
 					<div className='result-search'>
-						<MainContainerLeft sub={<SearchGroup />} main={<MainLayout listGroup={getListGroup} />} />
+						<MainContainerLeft
+							sub={<SearchGroup />}
+							main={<MainLayout listGroup={getListGroup} filter={false} />}
+						/>
 					</div>
 				)}
 			</>
