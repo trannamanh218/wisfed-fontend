@@ -46,7 +46,6 @@ const MainLayout = ({ filter }) => {
 	useEffect(() => {
 		listGroup();
 	}, []);
-	console.log(filter);
 
 	return (
 		<>

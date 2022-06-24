@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import MainLayout from './mainLayout';
 import SidebarLeft from './sidebarLeft';
 import PopupCreateGroup from '../PopupCreateGroup';
-import { getGroupList, getMyAdminGroup, getMyGroup } from 'reducers/redux-utils/group';
+import { getMyAdminGroup, getMyGroup } from 'reducers/redux-utils/group';
 import './style.scss';
 import { useDispatch } from 'react-redux';
 import MainContainerLeft from 'components/layout/main-container-left';
@@ -18,7 +18,6 @@ import { useVisible } from 'shared/hooks';
 const LayoutGroup = () => {
 	const [myGroup, setMyGroup] = useState([]);
 	const [adminGroup, setAdminGroup] = useState([]);
-	const [list, setList] = useState([]);
 	const [valueGroupSearch, setValueGroupSearch] = useState('');
 	const [getListGroup, setListGroup] = useState([]);
 	const [filter, setFilter] = useState('[]');
@@ -32,16 +31,25 @@ const LayoutGroup = () => {
 	};
 
 	const listMyGroup = async () => {
-		const actionListMyGroup = await dispatch(getMyGroup());
-		setMyGroup(actionListMyGroup.payload.data);
+		try {
+			const actionListMyGroup = await dispatch(getMyGroup());
+			setMyGroup(actionListMyGroup.payload.data);
+			setIsFetching(false);
+		} catch (error) {
+			NotificationError(error);
+		}
 	};
 	const listAdminMyGroup = async () => {
-		const actionlistAdminMyGroup = await dispatch(getMyAdminGroup());
-		setAdminGroup(actionlistAdminMyGroup.payload.data);
+		try {
+			const actionlistAdminMyGroup = await dispatch(getMyAdminGroup());
+			setAdminGroup(actionlistAdminMyGroup.payload.data);
+			setIsFetching(false);
+		} catch (error) {
+			NotificationError(error);
+		}
 	};
 
 	useEffect(() => {
-		listGroup();
 		listMyGroup();
 		listAdminMyGroup();
 	}, []);
