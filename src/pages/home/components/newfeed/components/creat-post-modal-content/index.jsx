@@ -35,7 +35,7 @@ import { saveDataShare, checkShare } from 'reducers/redux-utils/post';
 import Post from 'shared/post';
 
 function CreatPostModalContent({
-	hideCreatPostModal,
+	hideCreatePostModal,
 	setShowModalCreatPost,
 	showModalCreatPost,
 	option,
@@ -71,7 +71,7 @@ function CreatPostModalContent({
 	const location = useLocation();
 	const UpdateImg = useSelector(state => state.chart.updateImgPost);
 	const { resetTaggedData, isShare, postsData, isSharePosts } = useSelector(state => state.post);
-	const { id = '' } = useParams();
+	const { id } = useParams();
 	const {
 		auth: { userInfo },
 		book: { bookForCreatePost, bookInfo },
@@ -338,6 +338,7 @@ function CreatPostModalContent({
 					const query = {
 						id: postsData.sharePost ? postsData.sharePost.minipostId : postsData.id,
 						type: 'quote',
+						background: postsData.background,
 						...params,
 					};
 					await dispatch(getSharePostInternal(query)).unwrap();
@@ -403,7 +404,7 @@ function CreatPostModalContent({
 			dispatch(saveDataShare({}));
 			dispatch(checkShare(false));
 			setStatus(STATUS_IDLE);
-			hideCreatPostModal();
+			hideCreatePostModal();
 			onChangeOption({});
 			setShowModalCreatPost(false);
 		}
@@ -411,7 +412,7 @@ function CreatPostModalContent({
 
 	useEffect(() => {
 		checkActive();
-	}, [showMainModal, textFieldEdit?.current?.innerText, taggedData]);
+	}, [showMainModal, textFieldEdit?.current?.innerText, taggedData, imagesUpload]);
 
 	const checkActive = () => {
 		let isActive = false;
@@ -491,7 +492,7 @@ function CreatPostModalContent({
 						<CloseX />
 					</div>
 					<h5>Tạo bài viết</h5>
-					<button className='creat-post-modal-content__main__close' onClick={hideCreatPostModal}>
+					<button className='creat-post-modal-content__main__close' onClick={hideCreatePostModal}>
 						<CloseX />
 					</button>
 				</div>
@@ -563,11 +564,15 @@ function CreatPostModalContent({
 								removeTaggedItem={removeTaggedItem}
 								type='addCategory'
 							/>
-
-							{isShare && <PostQuotes postsData={postsData} />}
-							{isSharePosts && (
-								<Post postInformations={postsData} showModalCreatPost={showModalCreatPost} />
+							{(isShare || isSharePosts) && (
+								<div className='creat-post-modal-content__main__share-container'>
+									{isShare && <PostQuotes postsData={postsData} />}
+									{isSharePosts && (
+										<Post postInformations={postsData} showModalCreatPost={showModalCreatPost} />
+									)}
+								</div>
 							)}
+
 							{!_.isEmpty(taggedData.addBook) || showUpload ? (
 								<>
 									{!_.isEmpty(taggedData.addBook) && (
@@ -676,7 +681,7 @@ function CreatPostModalContent({
 }
 
 CreatPostModalContent.propTypes = {
-	hideCreatPostModal: PropTypes.func,
+	hideCreatePostModal: PropTypes.func,
 	showModalCreatPost: PropTypes.bool,
 	option: PropTypes.object,
 	onChangeOption: PropTypes.func,

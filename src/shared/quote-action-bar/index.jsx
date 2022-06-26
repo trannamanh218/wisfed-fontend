@@ -5,13 +5,22 @@ import './quote-action-bar.scss';
 import { RightArrow } from 'components/svg';
 import { Link } from 'react-router-dom';
 import Storage from 'helpers/Storage';
+import { useDispatch } from 'react-redux';
+import { saveDataShare, checkShare } from 'reducers/redux-utils/post';
+import { useNavigate } from 'react-router-dom';
 
 const QuoteActionBar = ({ data, isDetail, likeUnlikeQuoteFnc, isLiked, likeNumber, setModalShow }) => {
 	const { isShare, share, comments, id } = data;
+	const dispatch = useDispatch();
+	const navigate = useNavigate();
 
-	const handleCheckLoginShare = () => {
+	const handleCheckLoginShare = async () => {
 		if (!Storage.getAccessToken()) {
 			setModalShow(true);
+		} else {
+			dispatch(saveDataShare(data));
+			dispatch(checkShare(true));
+			navigate('/');
 		}
 	};
 
@@ -36,20 +45,18 @@ const QuoteActionBar = ({ data, isDetail, likeUnlikeQuoteFnc, isLiked, likeNumbe
 						<span className='quote-action__name'>{comments} Bình luận</span>
 					</>
 				) : (
-					<>
+					<div onClick={handleCheckLoginShare}>
 						<Share className={classNames('quote-icon', { 'active': isShare })} />
-						<span onClick={handleCheckLoginShare} className='quote-action__name'>
-							{share} Chia sẻ
-						</span>
-					</>
+						<span className='quote-action__name'>{share} Chia sẻ</span>
+					</div>
 				)}
 			</li>
 			<li className='quote-action__item'>
 				{isDetail ? (
-					<>
+					<div onClick={handleCheckLoginShare}>
 						<Share className='quote-icon active' />
 						<span className='quote-action__name'>{share} Chia sẻ</span>
-					</>
+					</div>
 				) : (
 					<Link to={`/quotes/detail/${id}`}>
 						<span className='quote-action__name'>Chi tiết</span>

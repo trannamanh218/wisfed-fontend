@@ -10,21 +10,32 @@ const PostQuotes = ({ postsData }) => {
 		} else if (postsData.bookName) {
 			return ` ${postsData.bookName}`;
 		} else if (postsData.sharePost?.quote) {
-			return ` ${postsData.sharePost?.authors[0]?.name} - ${postsData.sharePost?.book?.name}`;
+			return (
+				` ${
+					!_.isEmpty(postsData.sharePost?.authors[0]?.name)
+						? postsData.sharePost?.authors[0]?.name + ' - '
+						: ''
+				} ` + ` ${postsData.sharePost?.book?.name}`
+			);
+		}
+	};
+
+	const generateBackgroundColorQuotes = () => {
+		if (!postsData.background && !postsData.sharePost?.background) {
+			return {};
+		} else {
+			if (postsData.background) {
+				return { backgroundImage: `linear-gradient(${postsData.background})` };
+			} else {
+				return { backgroundImage: `linear-gradient(${postsData.sharePost?.background})` };
+			}
 		}
 	};
 
 	return (
 		!_.isEmpty(postsData) && (
 			<div className='post__quotes__container'>
-				<div
-					className='quote-card'
-					style={
-						postsData.background !== ''
-							? { backgroundImage: `linear-gradient(${postsData.background})` }
-							: {}
-					}
-				>
+				<div className='quote-card' style={generateBackgroundColorQuotes()}>
 					<div className='quote-card__quote-content'>
 						<p>{`"${postsData.quote || postsData.sharePost?.quote}"`}</p>
 						<p style={{ textDecoration: 'underline' }}>{renderAuthorAndbooksName()}</p>

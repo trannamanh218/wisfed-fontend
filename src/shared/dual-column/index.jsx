@@ -9,7 +9,15 @@ import { useNavigate } from 'react-router-dom';
 import RouteLink from 'helpers/RouteLink';
 
 const DualColumn = props => {
-	const { list, background, isBackground, pageText = true, inCategory = false, inQuotes = false } = props;
+	const {
+		list,
+		background,
+		isBackground,
+		pageText = true,
+		inCategory = false,
+		inQuotes = false,
+		filterQuotesByCategory,
+	} = props;
 	const [isExpand, setIsExpand] = useState(false);
 
 	let defaultItems;
@@ -59,7 +67,11 @@ const DualColumn = props => {
 						<li className={classNames('dualColumn-item', { 'has-background': isBackground })} key={index}>
 							<span
 								className='dualColumn-item__title'
-								onClick={() => handleOnClick(item.category)}
+								onClick={
+									pageText
+										? () => filterQuotesByCategory(item.id)
+										: () => handleOnClick(item.category)
+								}
 								style={inCategory ? { cursor: 'pointer' } : {}}
 							>
 								{inCategory ? item.category.name : item.name}
@@ -113,6 +125,7 @@ DualColumn.propTypes = {
 	]),
 	pageText: PropTypes.bool,
 	inCategory: PropTypes.bool,
+	filterQuotesByCategory: PropTypes.func,
 };
 
 export default memo(DualColumn);

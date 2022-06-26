@@ -5,7 +5,7 @@
 	justify-content: space-between;
 	align-items: center;
 	background-color: $white;
-	padding: 0 40px 15px;
+	padding: 0 40px 0;
 	position: fixed;
 	top: 0;
 	width: 100%;
@@ -16,12 +16,11 @@
 .header__left {
 	display: flex;
 	align-items: center;
-	margin-right: 50px;
 }
 
 .header__logo {
 	height: 42px;
-	margin-right: 32px;
+	margin-right: 96px;
 }
 
 .header__search {
@@ -71,7 +70,7 @@
 	margin-top: 15px;
 	border-radius: 12px;
 	width: 500px;
-	margin-left: 88px;
+	margin-left: 60px;
 	margin-bottom: 18px;
 }
 

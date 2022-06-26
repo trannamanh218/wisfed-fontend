@@ -778,3 +778,12 @@
 .url-color {
 	color: #0576f0;
 }
+
+.creat-post-modal-content__main__share-container {
+	padding: 16px;
+	border-radius: 12px;
+	background-color: #eff0f6;
+	.post__container {
+		margin-bottom: 0;
+	}
+}

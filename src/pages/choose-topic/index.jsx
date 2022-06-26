@@ -11,7 +11,6 @@ import SearchIcon from 'assets/icons/search.svg';
 import classNames from 'classnames';
 import { useFetchFilterCategories } from 'api/category.hook';
 import SearchCategoryChooseTopic from './searchCateChooseTopic';
-
 import _ from 'lodash';
 import { NotificationError } from 'helpers/Error';
 

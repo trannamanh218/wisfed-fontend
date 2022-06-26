@@ -6,7 +6,7 @@ import {
 	friendAPI,
 	likeActivityAPI,
 	likeGroupPost,
-	userAPI,
+	randomAuthorAPI,
 } from 'constants/apiURL';
 import Request from 'helpers/Request';
 
@@ -69,7 +69,7 @@ export const getSuggestionForPost = createAsyncThunk(
 					break;
 				}
 				case 'addAuthor': {
-					const response = await Request.makeGet(userAPI, query);
+					const response = await Request.makeGet(randomAuthorAPI, query);
 					data = response.data;
 					break;
 				}

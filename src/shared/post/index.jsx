@@ -215,36 +215,33 @@ function Post({ postInformations, className, showModalCreatPost }) {
 		<div className={classNames('post__container', { [`${className}`]: className })}>
 			{renderInfo()}
 
-			<ul className='tagged'>
-				{!!postData?.mentionsAuthors?.length && (
-					<>
-						{postData.mentionsAuthors?.map(item => (
-							<li key={item.id} className={classNames('badge bg-primary-light')}>
-								<Feather />
-								<span>
-									{item.authors.name ||
-										item.authors.fullName ||
-										item.authors.lastName ||
-										item.authors.firstName ||
-										'Không xác định'}
-								</span>
-							</li>
-						))}
-					</>
-				)}
-			</ul>
+			{!!postData?.mentionsAuthors?.length && (
+				<ul className='tagged'>
+					{postData.mentionsAuthors?.map(item => (
+						<li key={item.id} className={classNames('badge bg-primary-light')}>
+							<Feather />
+							<span>
+								{item.authors.name ||
+									item.authors.fullName ||
+									item.authors.lastName ||
+									item.authors.firstName ||
+									'Không xác định'}
+							</span>
+						</li>
+					))}
+				</ul>
+			)}
 
-			<ul className='tagged'>
-				{!!postData?.mentionsCategories?.length && (
-					<>
-						{postData.mentionsCategories?.map(item => (
-							<li key={item.id} className={classNames('badge bg-primary-light')}>
-								<span>{item.category.name}</span>
-							</li>
-						))}
-					</>
-				)}
-			</ul>
+			{!!postData?.mentionsCategories?.length && (
+				<ul className='tagged'>
+					{postData.mentionsCategories?.map(item => (
+						<li key={item.id} className={classNames('badge bg-primary-light')}>
+							<span>{item.category.name}</span>
+						</li>
+					))}
+				</ul>
+			)}
+
 			{postData.isShare && postData.verb === 'shareQuote' && <PostQuotes postsData={postData} />}
 			{postData.book || !!postData?.image?.length ? (
 				<>
