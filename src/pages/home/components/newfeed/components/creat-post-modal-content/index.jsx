@@ -333,6 +333,19 @@ function CreatPostModalContent({
 		// book, author , topic is required
 		setStatus(STATUS_LOADING);
 		try {
+			if (location.pathname.includes('group')) {
+				const query = {
+					id: postsData.id,
+					type: 'groupPost',
+					...params,
+				};
+				await dispatch(getSharePostInternal(query)).unwrap();
+			}
+		} catch (error) {
+			NotificationError(error);
+		}
+
+		try {
 			if (isShare || isSharePosts) {
 				if (isShare) {
 					const query = {

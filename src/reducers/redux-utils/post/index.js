@@ -32,7 +32,6 @@ export const getPostDetail = createAsyncThunk('post/getPostDetail', async (id, {
 
 export const getSharePostInternal = createAsyncThunk('post/getPostDetail', async (query, { rejectWithValue }) => {
 	const { id, type, ...params } = query;
-
 	try {
 		const response = await Request.makePost(shareInternalAPI(id, type), params);
 		return response.data;

@@ -283,6 +283,7 @@ function Post({ postInformations, className, showModalCreatPost }) {
 			)}
 
 			{postData.verb === 'sharePost' && !_.isEmpty(postData.sharePost) && <PostsShare postData={postData} />}
+			{postData.verb === 'shareGroupPost' && !_.isEmpty(postData.sharePost) && <PostsShare postData={postData} />}
 
 			{!isSharePosts && (
 				<>

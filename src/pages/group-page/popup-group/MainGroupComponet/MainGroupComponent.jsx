@@ -25,7 +25,7 @@ import { useParams } from 'react-router-dom';
 import SearchLayout from './component/SearchLayout';
 import { useVisible } from 'shared/hooks';
 
-function MainGroupComponent({ handleChange, keyChange, data, backgroundImage, member }) {
+function MainGroupComponent({ handleChange, keyChange, data, member }) {
 	const [key, setKey] = useState('intro');
 	const { groupType, description, memberGroups, name } = data;
 	const dispatch = useDispatch();
@@ -137,15 +137,18 @@ function MainGroupComponent({ handleChange, keyChange, data, backgroundImage, me
 				<div>
 					<img
 						src={
-							backgroundImage !== undefined
-								? backgroundImage
+							data.avatar !== undefined
+								? data.avatar
 								: 'https://img4.thuthuatphanmem.vn/uploads/2020/08/28/anh-bia-dep-danh-cho-zalo_093733432.jpg'
 						}
 						alt=''
 					/>
 				</div>
 				<div className='group__title-name'>
-					<span>Nhóm của Shadow</span>
+					<span>
+						Nhóm của{' '}
+						{data?.createdBy?.fullName || data?.createdBy?.firstName + ' ' + data?.createdBy?.lastName}
+					</span>
 				</div>
 			</div>
 			<div className='group-name'>

@@ -27,8 +27,8 @@ function IntroGroup({ groupType, description, createdAt, data }) {
 			<div className='intro-content'>
 				<div className='intro-content__title'>
 					<h3>
-						Giới thiệu về nhóm này (
-						{data.active ? <span>Tác giả đã xác nhận</span> : <span>Tác giả chưa xác nhận</span>})
+						Giới thiệu về nhóm này
+						{/* ({data.active ? <span>Tác giả đã xác nhận</span> : <span>Tác giả chưa xác nhận</span>}) */}
 					</h3>
 				</div>
 				<div>
@@ -52,7 +52,7 @@ function IntroGroup({ groupType, description, createdAt, data }) {
 								</>
 							);
 						})}
-						{data.active ? <p>(Đã xác nhận)</p> : <p>(Chưa xác nhận)</p>}
+						{/* {data.active ? <p>(Đã xác nhận)</p> : <p>(Chưa xác nhận)</p>} */}
 					</div>
 					<div className='group-sibar-left__text1'>
 						<span>
