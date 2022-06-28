@@ -102,7 +102,7 @@ function Login() {
 				<div className='login-gmail'>
 					<GmailIcon className='GmailIcon' /> <button>Đăng nhập bằng Gmail</button>
 				</div>
-				<hr style={{ opacity: '0.1' }} />
+				<hr style={{ opacity: '0.05' }} />
 				<div>
 					<div>
 						<span className='login__form-title'>Đăng nhập tài khoản Wisfeed</span>
@@ -226,7 +226,7 @@ function Login() {
 					<div className='login__form__link'>
 						<Link to='/forget-password'>Quên mật khẩu ?</Link>
 					</div>
-					<hr style={{ opacity: '0.1' }} />
+					<hr style={{ opacity: '0.05' }} />
 					<Link className='login__register' to='/register'>
 						Tạo tài khoản
 					</Link>

@@ -1,8 +1,7 @@
 @import 'src/scss/abstracts/_variables.scss';
 
 .select-box {
-	position: relative;
-	width: fit-content;
+	position: absolute;
 	font-size: 1rem;
 	line-height: 1.5;
 	svg {
@@ -17,20 +16,21 @@
 		border-radius: 12px;
 		background-color: $ash-background;
 		cursor: pointer;
+		min-width: 220px;
 	}
 
 	&__list {
 		position: absolute;
 		top: 100%;
 		left: 0;
-		width: 300px;
-		max-width: 300px;
-		max-height: 380px;
+		width: 220px;
+		max-height: 182px;
 		padding: 0.5rem 0;
 		overflow-x: hidden;
 		overflow-y: scroll;
 		box-shadow: 0px 0px 32px rgba(0, 0, 0, 0.1);
-		background-color: $white-off;
+		background-color: $secondary;
+		border-radius: 12px;
 		z-index: 10;
 
 		&::-webkit-scrollbar {
