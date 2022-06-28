@@ -6,6 +6,4 @@ const ReadingTarget = () => {
 	return <MainContainer main={<MainReadingTarget />} right={<SidebarReadingTarget />} />;
 };
 
-ReadingTarget.propTypes = {};
-
 export default ReadingTarget;

@@ -2,6 +2,8 @@ import MainContainer from 'components/layout/main-container';
 import { useEffect } from 'react';
 import MainQuote from './main-quote';
 import SidebarQuote from 'shared/sidebar-quote';
+import { useParams } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 const Quote = () => {
 	const hashtagList = [
@@ -14,13 +16,21 @@ const Quote = () => {
 		{ tag: { id: 4, name: '#One Piece' } },
 	];
 
+	const { userId } = useParams();
+	const userInfo = useSelector(state => state.auth.userInfo);
+
 	useEffect(() => {
 		setTimeout(function () {
 			window.scrollTo(0, 0);
 		}, 22);
 	});
 
-	return <MainContainer main={<MainQuote />} right={<SidebarQuote listHashtags={hashtagList} />} />;
+	return (
+		<MainContainer
+			main={<MainQuote />}
+			right={<SidebarQuote listHashtags={hashtagList} inMyQuote={userInfo.id === userId} hasCountQuotes={true} />}
+		/>
+	);
 };
 
 export default Quote;

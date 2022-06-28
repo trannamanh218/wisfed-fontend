@@ -6,7 +6,7 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { NotificationError } from 'helpers/Error';
-import { getQuoteList, checkLikeQuote, getQuotesByFriendsOrFollowers } from 'reducers/redux-utils/quote';
+import { getQuoteList, getQuotesByFriendsOrFollowers } from 'reducers/redux-utils/quote';
 import LoadingIndicator from 'shared/loading-indicator';
 import PropTypes from 'prop-types';
 
@@ -21,7 +21,6 @@ const QuotesTab = ({ currentTab }) => {
 
 	const [quoteList, setQuoteList] = useState([]);
 	const [hasMore, setHasMore] = useState(true);
-	const [likedArray, setLikedArray] = useState([]);
 
 	const callApiStart = useRef(10);
 	const callApiPerPage = useRef(10);
@@ -33,7 +32,6 @@ const QuotesTab = ({ currentTab }) => {
 		if (currentTab === 'quotes') {
 			setHasMore(true);
 			callApiStart.current = 10;
-			getLikedArray();
 			getQuoteListDataFirstTime();
 		}
 	}, [currentOption, currentTab]);
@@ -97,15 +95,6 @@ const QuotesTab = ({ currentTab }) => {
 		}
 	};
 
-	const getLikedArray = async () => {
-		try {
-			const res = await dispatch(checkLikeQuote()).unwrap();
-			setLikedArray(res);
-		} catch (err) {
-			NotificationError(err);
-		}
-	};
-
 	const handleChangeOption = item => {
 		setCurrentOption(item);
 	};
@@ -128,7 +117,7 @@ const QuotesTab = ({ currentTab }) => {
 						loader={<LoadingIndicator />}
 					>
 						{quoteList.map(item => (
-							<QuoteCard key={item.id} data={item} likedArray={likedArray} isDetail={false} />
+							<QuoteCard key={item.id} data={item} isDetail={false} />
 						))}
 					</InfiniteScroll>
 				) : (

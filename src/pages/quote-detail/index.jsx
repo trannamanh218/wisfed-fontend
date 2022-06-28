@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import MainQuoteDetail from './main-quote-detail';
 import { getQuoteDetail, creatQuotesComment } from 'reducers/redux-utils/quote';
 import { useParams } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
 import _ from 'lodash';
 
@@ -14,6 +14,8 @@ const QuoteDetail = () => {
 
 	const { id } = useParams();
 	const dispatch = useDispatch();
+
+	const userInfo = useSelector(state => state.auth.userInfo);
 
 	useEffect(() => {
 		window.scrollTo(0, 0);
@@ -39,9 +41,12 @@ const QuoteDetail = () => {
 			mentionsUser: [],
 		};
 		try {
-			const res = await dispatch(creatQuotesComment(params));
+			const res = await dispatch(creatQuotesComment(params)).unwrap();
 			if (!_.isEmpty(res)) {
-				getQuoteData();
+				const newComment = { ...res, user: userInfo };
+				const commentQuotes = [...quoteData.commentQuotes, newComment];
+				const newQuoteData = { ...quoteData, commentQuotes, comments: quoteData.comments + 1 };
+				setQuoteData(newQuoteData);
 			}
 		} catch {
 			err => {
@@ -53,7 +58,7 @@ const QuoteDetail = () => {
 	return (
 		<MainContainer
 			main={<MainQuoteDetail quoteData={quoteData} onCreateComment={onCreateComment} />}
-			right={<SidebarQuote quoteData={quoteData} listHashtags={listHashtags} />}
+			right={<SidebarQuote listHashtags={listHashtags} inMyQuote={false} hasCountQuotes={false} />}
 		/>
 	);
 };

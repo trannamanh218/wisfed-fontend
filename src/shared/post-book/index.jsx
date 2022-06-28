@@ -4,28 +4,10 @@ import ReactRating from 'shared/react-rating';
 import PropTypes from 'prop-types';
 import BookThumbnail from 'shared/book-thumbnail';
 import LinearProgressBar from 'shared/linear-progress-bar';
-import { getRatingBook } from 'reducers/redux-utils/book';
-import { useDispatch } from 'react-redux';
 import { useState, useEffect } from 'react';
-import { NotificationError } from 'helpers/Error';
 
 function PostBook({ data }) {
 	const [percenProgress, setPercenProgress] = useState();
-	const [listRatingStar, setListRatingStar] = useState({});
-	const dispatch = useDispatch();
-
-	const fetchData = async () => {
-		try {
-			const res = await dispatch(getRatingBook(data.id)).unwrap();
-			setListRatingStar(res.data);
-		} catch (err) {
-			NotificationError(err);
-		}
-	};
-
-	useEffect(() => {
-		fetchData();
-	}, [data?.id]);
 
 	useEffect(() => {
 		if (data.status === 'wantToRead') {
@@ -35,6 +17,7 @@ function PostBook({ data }) {
 			setPercenProgress(newPropgress);
 		}
 	}, []);
+
 	return (
 		<div className='post-book'>
 			{data.images.length > 0 && <BookThumbnail source={data?.images[0]} />}
@@ -62,11 +45,11 @@ function PostBook({ data }) {
 						postActor={data.actorCreatedPost}
 					/>
 					<div className='post-book__rating__group'>
-						<ReactRating initialRating={listRatingStar.avg} readonly={true} fractions={2} />
+						<ReactRating initialRating={data.avgRating} readonly={true} fractions={2} />
 						<div className='post-book__rating__number'>
-							{listRatingStar?.avg !== 0 ? (
+							{data.avgRating !== 0 ? (
 								<div>
-									( {listRatingStar.avg} sao ) ( {listRatingStar.count} đánh giá )
+									( {data.avgRating || 0} sao ) ( {data.countRating} đánh giá )
 								</div>
 							) : (
 								<div>(Chưa có đánh giá)</div>

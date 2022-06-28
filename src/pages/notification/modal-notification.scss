@@ -12,11 +12,8 @@
 	.notificaiton__container {
 		background: #fcfcfc;
 		font-family: 'Montserrat';
-		overflow-y: scroll;
-		overflow-x: hidden;
 		border-bottom-left-radius: 12px;
 		border-bottom-right-radius: 12px;
-		height: 700px;
 		width: 400px;
 		&::-webkit-scrollbar {
 			width: 8px;
@@ -75,19 +72,24 @@
 .notificaiton__tabs__all,
 .notificaiton__tabs__all__seen,
 .notificaiton__tabs__all__active {
-	margin: 20px 20px;
+	margin: 0 10px;
 	cursor: pointer;
 	.notificaiton__all__layout {
 		display: flex;
 		gap: 15px;
-		margin-top: 10px;
+		// margin-top: 10px;
 		align-items: center;
+		padding: 10px;
+		border-radius: 8px;
 		.notificaiton__all__layout__status {
 			display: flex;
 			flex-direction: column;
 			gap: 5px;
 			flex: 1;
 		}
+	}
+	.notificaiton__all__layout:hover {
+		background-color: #e2e4e5;
 	}
 }
 .notificaiton__all__title {
@@ -129,7 +131,7 @@
 	background: #fcfcfc;
 }
 .notificaiton__tabs__all__seen {
-	margin: 0 20px !important;
+	margin: 0 10px !important;
 	text-align: left;
 }
 .notificaiton__all__status__seen {

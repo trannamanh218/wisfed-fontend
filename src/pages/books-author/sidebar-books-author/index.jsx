@@ -1,22 +1,20 @@
-import { Link } from 'react-router-dom';
-import BookSlider from 'shared/book-slider';
 import MyShelvesList from 'shared/my-shelves-list';
 import QuotesLinks from 'shared/quote-links';
 import StatisticList from 'shared/statistic-list';
 import PropTypes from 'prop-types';
-import './sidebar-shelves.scss';
+import './sidebar-books-author.scss';
+import { useSelector } from 'react-redux';
 import { useFetchQuotes } from 'api/quote.hooks';
 import ChartsReading from 'shared/charts-Reading';
-import { useFetchAuthorBooks } from 'api/book.hooks';
 import { useParams } from 'react-router-dom';
 import RenderProgress from 'shared/render-progress';
 import ProgressBarCircle from 'shared/progress-circle';
 import _ from 'lodash';
 import { useFetchTargetReading } from 'api/readingTarget.hooks';
 
-const SidebarShelves = ({ shelveGroupName, isMyShelve, handleViewBookDetail, allLibrary }) => {
+const SidebarBooksAuthor = ({ shelveGroupName, isMine, allLibrary }) => {
 	const { userId } = useParams();
-	const { booksAuthor } = useFetchAuthorBooks(userId);
+	const { userInfo } = useSelector(state => state.auth);
 	const { quoteData } = useFetchQuotes(
 		0,
 		3,
@@ -26,7 +24,7 @@ const SidebarShelves = ({ shelveGroupName, isMyShelve, handleViewBookDetail, all
 	const { booksReadYear } = useFetchTargetReading(userId);
 
 	const handleRenderTargetReading = () => {
-		if (isMyShelve) {
+		if (isMine) {
 			return <RenderProgress userIdParams={userId} />;
 		} else {
 			if (booksReadYear.length > 0) {
@@ -36,12 +34,12 @@ const SidebarShelves = ({ shelveGroupName, isMyShelve, handleViewBookDetail, all
 	};
 
 	return (
-		<div className='sidebar-shelves'>
+		<div className='sidebar-books-author'>
 			{!_.isEmpty(allLibrary) && (
 				<>
 					{!!allLibrary.default.length && (
 						<StatisticList
-							className='sidebar-shelves__reading__status'
+							className='sidebar-books-author__reading__status'
 							title='Trạng thái đọc'
 							background='light'
 							isBackground={true}
@@ -49,44 +47,33 @@ const SidebarShelves = ({ shelveGroupName, isMyShelve, handleViewBookDetail, all
 							pageText={false}
 						/>
 					)}
-
 					{!!allLibrary.custom.length && <MyShelvesList list={allLibrary.custom} />}
 				</>
 			)}
 
-			{!!quoteData.length && <QuotesLinks list={quoteData} title={`Quotes của ${shelveGroupName}`} />}
-
-			{!!booksAuthor.length && (
-				<div className='my-compose'>
-					<BookSlider
-						className='book-reference__slider'
-						title={isMyShelve ? 'Sách tôi là tác giả' : `Sách của ${shelveGroupName}`}
-						list={booksAuthor}
-						handleViewBookDetail={handleViewBookDetail}
-					/>
-					<Link className='view-all-link' to={`/books-author/${userId}`}>
-						Xem thêm
-					</Link>
-				</div>
+			{!!quoteData.length && (
+				<QuotesLinks
+					list={quoteData}
+					title={userId === userInfo.id ? 'Quotes của tôi' : `Quotes của ${shelveGroupName}`}
+				/>
 			)}
+
 			{handleRenderTargetReading()}
 			<ChartsReading />
 		</div>
 	);
 };
 
-SidebarShelves.defaultProps = {
-	isMyShelve: true,
+SidebarBooksAuthor.defaultProps = {
+	isMine: true,
 	shelveGroupName: 'tôi',
-	handleViewBookDetail: () => {},
 	allLibrary: {},
 };
 
-SidebarShelves.propTypes = {
-	isMyShelve: PropTypes.bool,
+SidebarBooksAuthor.propTypes = {
+	isMine: PropTypes.bool,
 	shelveGroupName: PropTypes.string,
-	handleViewBookDetail: PropTypes.func,
 	allLibrary: PropTypes.object,
 };
 
-export default SidebarShelves;
+export default SidebarBooksAuthor;

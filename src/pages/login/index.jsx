@@ -15,6 +15,9 @@ import ModalLogin from './element/ModalLogin';
 import { useNavigate } from 'react-router-dom';
 import EyeIcon from 'shared/eye-icon';
 import Subtract from 'assets/images/Subtract.png';
+import _ from 'lodash';
+import { useEffect } from 'react';
+import Storage from 'helpers/Storage';
 
 function Login() {
 	const [showImagePopover, setShowImagePopover] = useState(false);
@@ -30,9 +33,8 @@ function Login() {
 			const infoUserLogin = unwrapResult(actionLogin);
 			if (infoUserLogin) {
 				toast.success('Đăng nhập thành công');
-				const actionCheckJwt = await dispatch(getCheckJwt());
-				const checkFavorite = actionCheckJwt.payload.favoriteCategory;
-				if (checkFavorite.length > 0) {
+				const actionCheckJwt = await dispatch(getCheckJwt()).unwrap();
+				if (!_.isEmpty(actionCheckJwt?.favoriteCategory)) {
 					navigate('/');
 				} else {
 					navigate('/choose-topic');
@@ -50,6 +52,12 @@ function Login() {
 			setIsShow(true);
 		}
 	};
+
+	useEffect(() => {
+		if (Storage.getAccessToken()) {
+			navigate('/');
+		}
+	}, []);
 
 	const handleChangeIcon = () => {
 		setIsPublic(!isPublic);

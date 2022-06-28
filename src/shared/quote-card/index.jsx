@@ -3,84 +3,62 @@ import BadgeList from 'shared/badge-list';
 import QuoteActionBar from 'shared/quote-action-bar';
 import UserAvatar from 'shared/user-avatar';
 import './quote-card.scss';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { likeUnlikeQuote } from 'reducers/redux-utils/quote';
-import { checkLikeQuote } from 'reducers/redux-utils/quote';
 import { NotificationError } from 'helpers/Error';
 import { useDispatch } from 'react-redux';
 
-const QuoteCard = ({ data, isDetail = false, likedArray }) => {
-	const [isLiked, setIsLiked] = useState(false);
-	const [likeNumber, setLikeNumber] = useState(0);
+const QuoteCard = ({ data, isDetail = false }) => {
+	const [quoteData, setQuoteData] = useState(data);
 	const dispatch = useDispatch();
-	useEffect(() => {
-		if (isDetail) {
-			getLikedArray();
-		} else {
-			if (likedArray.length > 0 && likedArray.includes(data.id)) {
-				setIsLiked(true);
-			}
-		}
-		setLikeNumber(data.like);
-	}, []);
 
 	const likeUnlikeQuoteFnc = async id => {
 		try {
-			const response = await dispatch(likeUnlikeQuote(id)).unwrap();
-			setIsLiked(response.liked);
-			setLikeNumber(response.quote?.like);
-		} catch (err) {
-			NotificationError(err);
-		}
-	};
-
-	const getLikedArray = async () => {
-		try {
-			const res = await dispatch(checkLikeQuote()).unwrap();
-			if (res.includes(data.id)) {
-				setIsLiked(true);
-			}
+			await dispatch(likeUnlikeQuote(id)).unwrap();
+			const setLike = !quoteData.isLike;
+			const numberOfLike = setLike ? quoteData.like + 1 : quoteData.like - 1;
+			setQuoteData({ ...quoteData, isLike: setLike, like: numberOfLike });
 		} catch (err) {
 			NotificationError(err);
 		}
 	};
 
 	const renderAuthorAndbooksName = () => {
-		if (data.book?.name) {
-			return `${data.book?.name}`;
+		if (quoteData.book?.name) {
+			return `${quoteData.book?.name}`;
 		}
-		return ` ${data.bookName}`;
+		return ` ${quoteData.bookName}`;
 	};
 
 	return (
 		<div
 			className='quote-card'
-			style={data.background !== '' ? { backgroundImage: `linear-gradient(${data.background})` } : {}}
+			style={quoteData.background !== '' ? { backgroundImage: `linear-gradient(${quoteData.background})` } : {}}
 		>
 			<div className='quote-card__quote-content'>
-				<p>{`"${data.quote}"`}</p>
+				<p>{`"${quoteData.quote}"`}</p>
 				<p style={{ textDecoration: 'underline' }}>{renderAuthorAndbooksName()}</p>
 			</div>
 
 			<div className='quote-card__author'>
 				<div className='quote-card__author__avatar'>
-					<UserAvatar size='sm' avatarImage={data?.user?.avatarImage} />
+					<UserAvatar size='sm' avatarImage={quoteData?.user?.avatarImage} />
 				</div>
 				<div className='quote-card__author__detail'>
 					<p className='quote-card__author__detail__text'>Quotes này tạo bởi</p>
-					<p className='quote-card__author__detail__name'>{data?.user?.fullName}</p>
+					<p className='quote-card__author__detail__name'>{quoteData?.user?.fullName}</p>
 				</div>
 			</div>
 			{isDetail && (
 				<div className='quote-card__categories-in-detail'>
-					<BadgeList list={data?.categories} className='quote-card__categories-badge' />
+					<BadgeList list={quoteData?.categories} className='quote-card__categories-badge' />
 				</div>
 			)}
 			<div className='quote-footer'>
 				{isDetail ? (
 					<div className='quote-footer__left'>
-						{data.tags.length > 0 &&
-							data.tags.map((tag, index) => (
+						{quoteData.tags.length > 0 &&
+							quoteData.tags.map((tag, index) => (
 								<span className='quote-card__hashtag' key={index}>
 									{tag.name}
 								</span>
@@ -88,15 +66,15 @@ const QuoteCard = ({ data, isDetail = false, likedArray }) => {
 					</div>
 				) : (
 					<div className='quote-footer__left'>
-						<BadgeList list={data?.categories?.slice(0, 2)} className='quote-footer__badge' />
+						<BadgeList list={quoteData?.categories?.slice(0, 2)} className='quote-footer__badge' />
 					</div>
 				)}
 				<div className='quote-footer__right'>
 					<QuoteActionBar
-						data={data}
+						data={quoteData}
 						isDetail={isDetail}
-						isLiked={isLiked}
-						likeNumber={likeNumber}
+						isLiked={quoteData.isLike}
+						likeNumber={quoteData.like}
 						likeUnlikeQuoteFnc={likeUnlikeQuoteFnc}
 					/>
 				</div>
@@ -106,7 +84,7 @@ const QuoteCard = ({ data, isDetail = false, likedArray }) => {
 };
 
 QuoteCard.defaultProps = {
-	data: {
+	quoteData: {
 		content: `Lorem ipsum dolor sit amet consectetur adipisicing elit. Veniam velit nemo voluptate. Eaque tenetur
 		dolore qui doloribus modi alias labore deleniti quisquam sunt. Accusantium, accusamus eius ipsum optio
 		distinctio laborum.`,
@@ -119,7 +97,7 @@ QuoteCard.defaultProps = {
 };
 
 QuoteCard.propTypes = {
-	data: PropTypes.object,
+	quoteData: PropTypes.object,
 	isDetail: PropTypes.bool,
 	likedArray: PropTypes.array,
 };

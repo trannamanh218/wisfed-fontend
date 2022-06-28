@@ -32,7 +32,7 @@ export const useFetchViewMoreCategories = (current = 0, perPage = 10, filter = '
 		const getCategories = async () => {
 			const query = generateQuery();
 			try {
-				const data = await dispatch(getCategoryList(query)).unwrap();
+				const data = await dispatch(getCategoryList({ option: false, params: query })).unwrap();
 				const { rows, count } = data;
 				if (categoryData.rows.length < count) {
 					setCategoryData(prev => ({ rows: [...prev.rows, ...rows], count }));

@@ -6,9 +6,12 @@ import { ReplyFriendRequest, CancelFriendRequest } from 'reducers/redux-utils/us
 import { readNotification } from 'reducers/redux-utils/notificaiton';
 import { useDispatch } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
+import { useNavigate } from 'react-router-dom';
 
 const NotificationStatus = ({ item, setGetNotifications, getNotifications }) => {
 	const dispatch = useDispatch();
+	const navigate = useNavigate();
+
 	const ReplyFriendReq = async (data, items) => {
 		const parseObject = JSON.parse(data);
 		const params = { id: parseObject.requestId, data: { reply: true } };
@@ -58,6 +61,9 @@ const NotificationStatus = ({ item, setGetNotifications, getNotifications }) => 
 				return { ...item };
 			});
 			setGetNotifications(newArr);
+			if (items.verb === 'likeMiniPost' || items.verb === 'commentMiniPost') {
+				navigate(`/detail-feed/${items.originId.minipostId}`);
+			}
 		}
 		dispatch(readNotification(params)).unwrap();
 	};
@@ -72,7 +78,7 @@ const NotificationStatus = ({ item, setGetNotifications, getNotifications }) => 
 				<div className='notificaiton__all__main__layout__status'>
 					<div className='notificaiton__main__all__infor'>
 						<p dangerouslySetInnerHTML={{ __html: item?.message }}></p>
-						{item.verb !== 'follow' && item.verb !== 'requestGroup' && item.vern !== 'commentGroupPost' && (
+						{item.verb !== 'follow' && item.verb !== 'requestGroup' && item.verb !== 'commentGroupPost' && (
 							<>
 								<span>
 									{item.createdBy?.fullName ? (

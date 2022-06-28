@@ -1,4 +1,4 @@
-import { BackArrow, Search } from 'components/svg';
+import { BackArrow } from 'components/svg';
 import React, { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MainLayout from './mainLayout';
@@ -12,6 +12,7 @@ import SearchField from 'shared/search-field';
 import { getFilterSearch } from 'reducers/redux-utils/search';
 import _ from 'lodash';
 import { NotificationError } from 'helpers/Error';
+import Circle from 'shared/loading/circle';
 
 const LayoutGroup = () => {
 	const [isShow, setIsShow] = useState(false);
@@ -22,6 +23,8 @@ const LayoutGroup = () => {
 	const [getListGroup, setListGroup] = useState([]);
 	const [filter, setFilter] = useState('[]');
 	const dispatch = useDispatch();
+	const [isShowScreen, setIsShhowScreen] = useState(true);
+	const [isFetching, setIsFetching] = useState(true);
 
 	const handleClose = () => {
 		setIsShow(!isShow);
@@ -29,6 +32,7 @@ const LayoutGroup = () => {
 
 	const listGroup = async () => {
 		const actionGetList = await dispatch(getGroupList());
+		setIsFetching(false);
 		setList(actionGetList.payload.rows);
 	};
 
@@ -55,12 +59,12 @@ const LayoutGroup = () => {
 	const updateInputSearch = value => {
 		if (value) {
 			const filterValue = value.toLowerCase().trim();
-			setFilter(JSON.stringify(filterValue));
+			setFilter(filterValue);
 		} else {
 			setFilter('[]');
 		}
 	};
-	const debounceSearch = useCallback(_.debounce(updateInputSearch, 1000), []);
+	const debounceSearch = useCallback(_.debounce(updateInputSearch, 500), []);
 
 	useEffect(async () => {
 		const params = {
@@ -77,6 +81,16 @@ const LayoutGroup = () => {
 		}
 	}, [filter]);
 
+	useEffect(() => {
+		setTimeout(() => {
+			if (valueGroupSearch !== '') {
+				setIsShhowScreen(false);
+			} else {
+				setIsShhowScreen(true);
+			}
+		}, 700);
+	}, [valueGroupSearch]);
+
 	const SearchGroup = () => {
 		const navigate = useNavigate();
 		const handleClick = () => {
@@ -90,16 +104,17 @@ const LayoutGroup = () => {
 					</button>{' '}
 					<span>Nhóm</span>
 				</div>
-				<div className='search-feild'>
-					{/* <Search /> */}
+				<div className='search'>
 					<SearchField placeholder='Tìm kiếm group' handleChange={handleChange} value={valueGroupSearch} />
 					<button onClick={() => handleClose()}>Tạo nhóm </button>
 				</div>
 			</div>
 		);
 	};
+
 	return (
 		<div style={{ position: 'relative' }}>
+			<Circle loading={isFetching} />
 			{isShow ? (
 				<div>
 					<PopupCreateGroup handleClose={handleClose} />
@@ -107,11 +122,25 @@ const LayoutGroup = () => {
 			) : (
 				''
 			)}
-			<MainContainerLeft
+			<>
+				{isShowScreen ? (
+					<MainContainerLeft
+						sub={<SearchGroup />}
+						right={<SidebarLeft listMyGroup={myGroup} listAdminMyGroup={adminGroup} />}
+						main={<MainLayout listGroup={list} />}
+					/>
+				) : (
+					<div className='result-search'>
+						<MainContainerLeft sub={<SearchGroup />} main={<MainLayout listGroup={getListGroup} />} />
+					</div>
+				)}
+			</>
+
+			{/* <MainContainerLeft
 				sub={<SearchGroup />}
 				right={<SidebarLeft listMyGroup={myGroup} listAdminMyGroup={adminGroup} />}
 				main={<MainLayout listGroup={list} />}
-			/>
+			/> */}
 		</div>
 	);
 };

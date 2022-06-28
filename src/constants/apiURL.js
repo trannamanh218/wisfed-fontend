@@ -7,7 +7,6 @@ export const forgotPasswordAPIAdmin = '/api/v1/auth/adminForgotPassword/';
 export const resetPasswordAPI = '/api/v1/auth/resetPassword/';
 export const resetPasswordAPIAdmin = '/api/v1/auth/resetPasswordByMail/';
 export const checkTokenResetPassword = token => `/api/v1/auth/verify-password?token=${token}`;
-export const InforUserByEmail = email => `/api/v1/users/email?email=${email}`;
 export const checkJwt = '/api/v1/auth/jwt';
 
 // quote
@@ -15,11 +14,11 @@ export const quoteAPI = '/api/v1/quotes';
 export const quoteDetailAPI = id => `/api/v1/quotes/${id}`;
 export const quoteCommentAPI = '/api/v1/commentQuotes';
 export const likeQuoteAPI = id => `/api/v1/quotes/like/${id}`;
-export const checkLikeQuoteAPI = '/api/v1/quotes/checkLikeQuote';
 export const likeQuoteCommentAPI = id => `/api/v1/commentQuotes/like/${id}`;
 export const checkLikeQuoteCommentAPI = '/api/v1/quotes/checkLikeCmtQuote';
 export const getMyLikedQuotesAPI = '/api/v1/quotes/listQuotesLiked';
 export const getQuotesByFriendsOrFollowersAPI = '/api/v1/quotes/listQuotesRelation';
+export const countQuotesByCategoryAPI = id => `/api/v1/quotes/countQuotes/${id}`;
 
 // post
 export const postAPI = '/api/v1/posts';
@@ -134,16 +133,21 @@ export const listTagGroup = id => `/api/v1/groups/groupTag/${id}`;
 export const commentGroup = '/api/v1/groupPosts/commentGroupPost';
 export const likeGroupPost = id => `/api/v1/groupPosts/like/${id}`;
 export const likeCommentGroup = id => `/api/v1/groupPosts/likeComment/${id}`;
-
-// search
-export const getSearchAPI = `/api/v1/searchs`;
 export const inviteFriend = id => `api/v1/groups/inviteMemberToGroup/${id}`;
 export const enjoyGroup = id => `/api/v1/groups/requestGroup/${id}`;
 export const leaveGroup = id => `/api/v1/groups/leaveGroup/${id}`;
 export const createPostGroup = id => `/api/v1/groups/${id}/createPost`;
 export const listPostGroup = id => `/api/v1/groups/${id}/groupFeed`;
+export const searchGroup = id => `/api/v1/groups/search/${id}`;
+
+// search
+export const getSearchAPI = `/api/v1/searchs`;
+
 //share
 export const shareInternalAPI = (id, type) => `/api/v1/getstream/share/${id}?type=${type}`;
 
 //authors
 export const randomAuthorAPI = '/api/v1/users/randomAuthor';
+
+// detail post
+export const detailFeedPost = id => `/api/v1/getstream/feedDetail/${id}`;

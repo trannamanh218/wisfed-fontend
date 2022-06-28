@@ -467,8 +467,8 @@ function CreatPostModalContent({
 	};
 
 	const userRating = async () => {
-		const params = { star: valueStar, id: bookInfo.id };
-		if (bookInfo.id && valueStar) {
+		const params = { star: valueStar, id: bookInfo.id || taggedData.addBook.id };
+		if (valueStar) {
 			try {
 				await dispatch(ratingUser(params));
 			} catch (err) {
@@ -574,30 +574,37 @@ function CreatPostModalContent({
 							{isSharePosts && (
 								<Post postInformations={postsData} showModalCreatPost={showModalCreatPost} />
 							)}
-							{!_.isEmpty(taggedData.addBook) && (
-								<PostEditBook
-									data={taggedData.addBook}
-									handleValidationInput={handleValidationInput}
-									validationInput={validationInput}
-									handleAddToPost={handleAddToPost}
-									handleChangeStar={handleChangeStar}
-									valueStar={valueStar}
-								/>
-							)}
-							{showUpload && (
-								<UploadImage
-									addOptionsToPost={addOptionsToPost}
-									images={imagesUpload}
-									setImages={setImagesUpload}
-									removeAllImages={removeAllImages}
-								/>
-							)}
-							{hasUrl && !showUpload && (
-								<PreviewLink
-									urlData={urlAdded}
-									isFetching={fetchingUrlInfo}
-									removeUrlPreview={removeUrlPreview}
-								/>
+							{!_.isEmpty(taggedData.addBook) || showUpload ? (
+								<>
+									{!_.isEmpty(taggedData.addBook) && (
+										<PostEditBook
+											data={taggedData.addBook}
+											handleValidationInput={handleValidationInput}
+											validationInput={validationInput}
+											handleAddToPost={handleAddToPost}
+											handleChangeStar={handleChangeStar}
+											valueStar={valueStar}
+										/>
+									)}
+									{showUpload && (
+										<UploadImage
+											addOptionsToPost={addOptionsToPost}
+											images={imagesUpload}
+											setImages={setImagesUpload}
+											removeAllImages={removeAllImages}
+										/>
+									)}
+								</>
+							) : (
+								<>
+									{hasUrl && !showUpload && (
+										<PreviewLink
+											urlData={urlAdded}
+											isFetching={fetchingUrlInfo}
+											removeUrlPreview={removeUrlPreview}
+										/>
+									)}
+								</>
 							)}
 						</div>
 					</div>

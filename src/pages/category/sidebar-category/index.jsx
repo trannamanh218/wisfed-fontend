@@ -16,7 +16,7 @@ const SidebarCategory = ({ status, viewCategoryDetail }) => {
 	const dispatch = useDispatch();
 
 	const {
-		categoryData: { rows = [], count = 0 },
+		categoryData: { rows = [] },
 	} = useFetchViewMoreCategories(0, 30, '[]');
 
 	useEffect(() => {
@@ -39,12 +39,12 @@ const SidebarCategory = ({ status, viewCategoryDetail }) => {
 	return (
 		<div className='sidebar-category'>
 			<Circle loading={status === STATUS_LOADING} />
-			{favoriteCategories.length > 0 && (
+			{!!favoriteCategories.length && (
 				<StatisticList
 					title='Chủ đề yêu thích'
 					background='light'
 					className='sidebar-category__list'
-					isBackground={false}
+					isBackground={true}
 					list={favoriteCategories}
 					pageText={false}
 					inCategory={true}

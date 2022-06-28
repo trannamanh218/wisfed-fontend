@@ -37,7 +37,6 @@ const Notification = () => {
 			} else {
 				setHasMore(false);
 			}
-
 			return;
 		} catch (err) {
 			NotificationError(err);
@@ -96,19 +95,26 @@ const Notification = () => {
 											)
 									)}
 								<div className='notificaiton__all__main__title'>Gần đây</div>
-								{getNotifications
-									.slice(1)
-									.map(
-										item =>
-											!item.isCheck && (
-												<NotificationStatus
-													key={item.id}
-													item={item}
-													setGetNotifications={setGetNotifications}
-													getNotifications={getNotifications}
-												/>
-											)
-									)}
+								<InfiniteScroll
+									dataLength={getListDefault.length}
+									next={getMyNotification}
+									hasMore={hasMore}
+									loader={<LoadingIndicator />}
+								>
+									{getNotifications
+										.slice(1)
+										.map(
+											item =>
+												!item.isCheck && (
+													<NotificationStatus
+														key={item.id}
+														item={item}
+														setGetNotifications={setGetNotifications}
+														getNotifications={getNotifications}
+													/>
+												)
+										)}
+								</InfiniteScroll>
 							</Tab>
 							<Tab eventKey='unread' title='Chưa đọc'>
 								<div className='notificaiton__all__main__title'>Thông báo chưa đọc</div>

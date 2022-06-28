@@ -5,6 +5,10 @@
 	border-radius: 16px;
 	overflow: hidden;
 	font-size: 0.825rem;
+	span {
+		display: flex;
+		align-items: center;
+	}
 }
 
 .dualColumn-item {

@@ -36,7 +36,6 @@ function Post({ postInformations, className, showModalCreatPost }) {
 	const { bookId } = useParams();
 
 	useEffect(() => {
-		// const isLike = hasLikedPost();
 		setPostData({ ...postInformations });
 		if (!_.isEmpty(postInformations.preview) && postInformations.preview.url.includes('https://www.youtube.com/')) {
 			const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
@@ -48,7 +47,7 @@ function Post({ postInformations, className, showModalCreatPost }) {
 	}, [postInformations]);
 
 	const directUrl = url => {
-		window.open(url, '_blank');
+		window.open(url);
 	};
 
 	useEffect(() => {
@@ -76,16 +75,6 @@ function Post({ postInformations, className, showModalCreatPost }) {
 			}
 		}
 	}, [postData]);
-
-	// const hasLikedPost = () => {
-	// 	const { usersLikePost } = postInformations;
-	// 	let isLike = false;
-	// 	if (!_.isEmpty(usersLikePost) && !_.isEmpty(userInfo)) {
-	// 		const user = usersLikePost.find(item => item.id === userInfo.id);
-	// 		isLike = !_.isEmpty(user) ? true : false;
-	// 	}
-	// 	return isLike;
-	// };
 
 	const onCreateComment = async (content, replyId) => {
 		try {
@@ -189,7 +178,7 @@ function Post({ postInformations, className, showModalCreatPost }) {
 										<ReactRating
 											readonly={true}
 											initialRating={
-												postInformations?.book?.actorRating?.star
+												postInformations?.book?.actorRating
 													? postInformations?.book?.actorRating?.star
 													: 0
 											}
@@ -279,7 +268,10 @@ function Post({ postInformations, className, showModalCreatPost }) {
 							></iframe>
 						) : (
 							<div onClick={() => directUrl(postData?.sharePost.url)}>
-								<PreviewLink isFetching={false} urlData={postData?.sharePost.preview} />
+								<PreviewLink
+									isFetching={false}
+									urlData={postData.sharePost?.preview || postData.preview}
+								/>
 							</div>
 						)}
 					</>

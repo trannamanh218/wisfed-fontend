@@ -7,7 +7,7 @@ import './header.scss';
 import NotificationModal from 'pages/notification/';
 import { useDispatch, useSelector } from 'react-redux';
 import { backgroundToggle } from 'reducers/redux-utils/notificaiton';
-import { checkUserLogin, checkUserInfor, deleteUserInfo } from 'reducers/redux-utils/auth';
+import { checkUserLogin, deleteUserInfo } from 'reducers/redux-utils/auth';
 import { useVisible } from 'shared/hooks';
 import SearchAllModal from 'shared/search-all';
 import Storage from 'helpers/Storage';
@@ -32,6 +32,7 @@ const Header = () => {
 	const { value } = useParams();
 	const [getSlugResult, setGetSlugResult] = useState('');
 	const [userLogin, setUserLogin] = useState(false);
+	const [activeNotificaiton, setActiveNotification] = useState(false);
 
 	const userOptions = useRef(null);
 
@@ -49,6 +50,13 @@ const Header = () => {
 			setIsShow(false);
 		}
 	}, [isShowModal]);
+
+	useEffect(() => {
+		if (pathname === '/notification') {
+			setActiveNotification(true);
+			setModalNotti(false);
+		}
+	}, []);
 
 	useEffect(() => {
 		if (Storage.getAccessToken()) {
@@ -72,11 +80,15 @@ const Header = () => {
 	};
 
 	const toglleModalNotify = () => {
-		if (Storage.getAccessToken()) {
-			setModalNotti(!modalNoti);
-			dispatch(backgroundToggle(modalNoti));
+		if (pathname === '/notification') {
+			setModalNotti(false);
 		} else {
-			dispatch(checkUserLogin(true));
+			if (Storage.getAccessToken()) {
+				setModalNotti(!modalNoti);
+				dispatch(backgroundToggle(modalNoti));
+			} else {
+				dispatch(checkUserLogin(true));
+			}
 		}
 	};
 
@@ -102,7 +114,6 @@ const Header = () => {
 		dispatch(updateTargetReading([]));
 		navigate('/login');
 		toast.success('Đăng xuất thành công');
-		dispatch(checkUserInfor({}));
 	};
 
 	return (
@@ -163,7 +174,7 @@ const Header = () => {
 					<div
 						ref={buttonModal}
 						onClick={toglleModalNotify}
-						className={classNames('header__notify__icon', { 'active': modalNoti })}
+						className={classNames('header__notify__icon', { 'active': modalNoti || activeNotificaiton })}
 					/>
 					{modalNoti && <NotificationModal setModalNotti={setModalNotti} buttonModal={buttonModal} />}
 				</div>

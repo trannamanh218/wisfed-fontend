@@ -13,6 +13,7 @@ const QuoteActionBar = ({ data, isDetail, likeUnlikeQuoteFnc, isLiked, likeNumbe
 	const { isShare, share, comments, id } = data;
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
+
 	const handleCheckLoginShare = async () => {
 		if (!Storage.getAccessToken()) {
 			setModalShow(true);

@@ -13,7 +13,12 @@ const QuoteAll = () => {
 		{ tag: { id: 4, name: '#One Piece' } },
 	];
 
-	return <MainContainer main={<MainAllQuotes />} right={<SidebarQuote listHashtags={hashtagList} />} />;
+	return (
+		<MainContainer
+			main={<MainAllQuotes />}
+			right={<SidebarQuote listHashtags={hashtagList} inMyQuote={false} hasCountQuotes={true} />}
+		/>
+	);
 };
 
 export default QuoteAll;

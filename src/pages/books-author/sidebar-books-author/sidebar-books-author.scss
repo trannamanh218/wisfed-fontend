@@ -1,0 +1,19 @@
+@import 'src/scss/abstracts/_variables.scss';
+
+.sidebar-books-author {
+	display: flex;
+	flex-direction: column;
+	gap: 3.75rem;
+	padding-top: 12px;
+	.read-challenge {
+		margin-bottom: 0;
+	}
+	&__reading__status {
+		h4 {
+			margin-bottom: 1.5rem;
+		}
+	}
+	.book-reference__slider {
+		margin-bottom: 0;
+	}
+}
