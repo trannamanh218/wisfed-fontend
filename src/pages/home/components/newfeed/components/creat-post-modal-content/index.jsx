@@ -333,6 +333,19 @@ function CreatPostModalContent({
 		// book, author , topic is required
 		setStatus(STATUS_LOADING);
 		try {
+			if (location.pathname.includes('group')) {
+				const query = {
+					id: postsData.id,
+					type: 'groupPost',
+					...params,
+				};
+				await dispatch(getSharePostInternal(query)).unwrap();
+			}
+		} catch (error) {
+			NotificationError(error);
+		}
+
+		try {
 			if (isShare || isSharePosts) {
 				if (isShare) {
 					const query = {
@@ -395,7 +408,7 @@ function CreatPostModalContent({
 			const statusCode = err?.statusCode || 500;
 			if (err.errorCode === 702) {
 				NotificationError(err);
-			} else {
+			} else if (!location.pathname.includes('group')) {
 				toast.error('Tạo post thất bại!');
 			}
 			setStatus(statusCode);

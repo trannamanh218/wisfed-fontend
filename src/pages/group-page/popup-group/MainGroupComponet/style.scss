@@ -57,6 +57,20 @@
 		color: #6e7191;
 	}
 }
+
+.main__title {
+	font-family: 'Montserrat';
+	font-style: normal;
+	font-weight: 600;
+	font-size: 18.0357px;
+	line-height: 29px;
+	display: flex;
+	align-items: center;
+	letter-spacing: 0.676339px;
+	color: #2d2c42;
+	margin-bottom: 8px;
+	margin-left: 5px;
+}
 .group-name__btn {
 	margin-left: 12px;
 	.search-field__input {

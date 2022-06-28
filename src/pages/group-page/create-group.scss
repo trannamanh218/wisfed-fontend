@@ -54,7 +54,7 @@
 	width: 100%;
 	position: absolute;
 	z-index: 1000;
-	top: 20%;
+	top: 10%;
 	left: 30%;
 	box-shadow: 0px 0px 32px rgba(0, 0, 0, 0.14);
 	border-radius: 24px;
@@ -76,16 +76,21 @@
 
 	.list__author-tags {
 		display: flex;
+		flex-wrap: wrap;
 		background-color: #f7f7fc;
 		border-radius: 12px;
+		.input {
+			width: fit-content;
+		}
 	}
 
 	.input__authors {
+		flex-wrap: wrap;
 		display: flex;
 		cursor: pointer;
-		justify-content: space-between;
 		align-items: center;
-
+		margin-bottom: 10px;
+		margin-top: 10px;
 		gap: 10px;
 		span {
 			width: max-content;
@@ -96,18 +101,22 @@
 			font-size: 0.75rem;
 		}
 	}
+	.close__author {
+		align-items: center;
+		margin-left: 5px;
+		svg {
+			width: 16px;
+			height: 16px;
+		}
+	}
 	.form-field-select__transparent,
 	.form-field--hastag,
 	.form-field-authors,
 	.form-field--discription,
 	.form-field-select__kind-of-group {
-		width: 100%;
 		label {
 			margin-top: 39px;
 			margin-bottom: 23px;
-		}
-		input {
-			width: 100%;
 		}
 	}
 	.select-box {

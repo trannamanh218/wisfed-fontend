@@ -9,7 +9,7 @@ import { NotificationError } from 'helpers/Error';
 import { getInviteFriend } from 'reducers/redux-utils/group';
 import { useParams } from 'react-router-dom';
 
-const PopupInviteFriend = ({ handleClose }) => {
+const PopupInviteFriend = ({ handleClose, showRef }) => {
 	const [listFriend, setListFriend] = useState([]);
 	const [listFriendSelect, setListFriendSelect] = useState([]);
 	const dispatch = useDispatch();
@@ -60,7 +60,7 @@ const PopupInviteFriend = ({ handleClose }) => {
 	};
 
 	return (
-		<div className='popup-invite-friend-container'>
+		<div className='popup-invite-friend-container' ref={showRef}>
 			<div className='title-popup'>
 				<button onClick={handleClose}>
 					<CloseIconX />
@@ -133,6 +133,7 @@ const PopupInviteFriend = ({ handleClose }) => {
 
 PopupInviteFriend.propTypes = {
 	handleClose: PropTypes.func,
+	showRef: PropTypes.func,
 };
 
 export default PopupInviteFriend;

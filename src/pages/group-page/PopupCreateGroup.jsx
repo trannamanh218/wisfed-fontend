@@ -6,14 +6,16 @@ import SelectBox from 'shared/select-box';
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import './create-group.scss';
-import { getUserList } from 'reducers/redux-utils/user';
+import { getRandomAuthor } from 'reducers/redux-utils/user';
 import { getCreatGroup } from 'reducers/redux-utils/group';
 import Dropzone from 'react-dropzone';
 import { useDropzone } from 'react-dropzone';
 import { uploadImage } from 'reducers/redux-utils/common';
 import { NotificationError } from 'helpers/Error';
+import _ from 'lodash';
+import { toast } from 'react-toastify';
 
-const PopupCreateGroup = ({ handleClose }) => {
+const PopupCreateGroup = ({ handleClose, showRef }) => {
 	const [inputNameGroup, setInputNameGroup] = useState('');
 	const [inputDiscription, setInputDiscription] = useState('');
 	const [inputAuthors, setInputAuthors] = useState('');
@@ -42,8 +44,8 @@ const PopupCreateGroup = ({ handleClose }) => {
 			]),
 		};
 		try {
-			const res = await dispatch(getUserList(params)).unwrap();
-			setUserList(res.rows);
+			const res = await dispatch(getRandomAuthor(params)).unwrap();
+			setUserList(res);
 		} catch (err) {
 			Notification(err);
 		}
@@ -84,9 +86,10 @@ const PopupCreateGroup = ({ handleClose }) => {
 
 	useEffect(() => {
 		if (
+			kindOfGroup.value !== 'default' &&
 			imgUrl !== undefined &&
-			listAuthors !== [] &&
-			listHashtags !== [] &&
+			!_.isEmpty(listAuthors) &&
+			!_.isEmpty(listHashtags) &&
 			inputDiscription !== '' &&
 			inputNameGroup !== ''
 		) {
@@ -96,20 +99,24 @@ const PopupCreateGroup = ({ handleClose }) => {
 
 	const creatGroup = async () => {
 		const listIdAuthor = listAuthors.map(item => item.id);
+		const newListHastag = listHashtags.map(item => `#${item}`);
 		const data = {
 			name: inputNameGroup,
 			description: inputDiscription,
 			avatar: imgUrl,
 			groupType: kindOfGroup.value,
 			authorIds: listIdAuthor,
-			tags: listHashtags,
+			tags: newListHastag,
 			categoryIds: [27, 1, 2, 3, 4],
 			bookIds: [13, 44, 212, 435, 124, 2342, 123, 12],
 		};
 		try {
 			await dispatch(getCreatGroup(data)).unwrap();
+			toast.success('Tạo nhóm thành công');
 		} catch (err) {
 			NotificationError(err);
+		} finally {
+			handleClose();
 		}
 	};
 
@@ -126,7 +133,7 @@ const PopupCreateGroup = ({ handleClose }) => {
 	// 	tranparentRef.current = data;
 	// };
 	const onchangeKindOfGroup = data => {
-		kindOfGroupRef.current = data;
+		setKindOfGroup(data);
 	};
 
 	useEffect(() => {
@@ -135,16 +142,31 @@ const PopupCreateGroup = ({ handleClose }) => {
 	const onInputChange = f => e => f(e.target.value);
 
 	const handleAddAuthors = e => {
-		const checkItem = listAuthors.filter(item => item === e);
-		if (checkItem.length < 1) {
-			setListAuthors([...listAuthors, e]);
+		try {
+			const checkItem = listAuthors.filter(item => item.id === e.id);
+			if (checkItem.length < 1) {
+				setListAuthors([...listAuthors, e]);
+			}
+		} catch (err) {
+			// console.log(err);
+		} finally {
+			inputRefAuthor.current.value = '';
+			setUserList([]);
 		}
-		inputRefAuthor.current.value = '';
-		setUserList([]);
+	};
+
+	const handleRemove = e => {
+		const newList = listAuthors.filter(item => item.id !== e.id);
+		setListAuthors(newList);
+	};
+
+	const handleRemoveTag = e => {
+		const newList = listHashtags.filter(item => item !== e);
+		setListHashtags(newList);
 	};
 
 	return (
-		<div className='popup-group__container '>
+		<div className='popup-group__container ' ref={showRef}>
 			<div className='popup-group__header'>
 				<h3>Tạo nhóm</h3>
 				<button onClick={handleClose}>
@@ -206,6 +228,14 @@ const PopupCreateGroup = ({ handleClose }) => {
 									<>
 										<span>
 											{item.fullName ? item.fullName : `${item.firstName + ' ' + item.lastName}`}
+											<button
+												className='close__author'
+												onClick={() => {
+													handleRemove(item);
+												}}
+											>
+												<CloseIconX />
+											</button>
 										</span>
 									</>
 								))}
@@ -222,8 +252,8 @@ const PopupCreateGroup = ({ handleClose }) => {
 					</div>
 
 					<div className='author__list'>
-						{userlist.length > 0
-							? userlist.map(item => {
+						{userlist?.length > 0
+							? userlist?.map(item => {
 									return (
 										<>
 											<span
@@ -256,7 +286,17 @@ const PopupCreateGroup = ({ handleClose }) => {
 							<div className='input__authors'>
 								{listHashtags.map(item => (
 									<>
-										<span key={item}>{item}</span>
+										<span key={item}>
+											{item}
+											<button
+												className='close__author'
+												onClick={() => {
+													handleRemoveTag(item);
+												}}
+											>
+												<CloseIconX />
+											</button>
+										</span>
 									</>
 								))}
 							</div>
@@ -280,6 +320,7 @@ const PopupCreateGroup = ({ handleClose }) => {
 
 PopupCreateGroup.propTypes = {
 	handleClose: PropTypes.func,
+	showRef: PropTypes.func,
 };
 
 export default PopupCreateGroup;
