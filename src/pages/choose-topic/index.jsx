@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import './chooseTopic.scss';
 import Logo from 'assets/images/Logo 2.png';
 import { Form } from 'react-bootstrap';
@@ -9,19 +9,17 @@ import { editUserInfo } from 'reducers/redux-utils/user';
 import { useNavigate } from 'react-router-dom';
 import SearchIcon from 'assets/icons/search.svg';
 import classNames from 'classnames';
-import { useFetchFilterCategories } from 'api/category.hook';
 import SearchCategoryChooseTopic from './searchCateChooseTopic';
-import _ from 'lodash';
 import { NotificationError } from 'helpers/Error';
 
 function ChooseTopic() {
 	const [listCategory, setListCategory] = useState([]);
+	const [listCategorySearched, setListCategorySearched] = useState([]);
 	const [addFavorite, setAddFavorite] = useState([]);
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const { userInfo } = useSelector(state => state.auth);
 	const [inputValue, setInputValue] = useState('');
-	const { searchCategories, fetchFilterData, hasMoreFilterData } = useFetchFilterCategories(inputValue);
 
 	const getListCategory = async () => {
 		const params = {
@@ -32,11 +30,12 @@ function ChooseTopic() {
 		setListCategory(listCategoryAction.rows);
 	};
 
-	const hadllerSearch = e => {
+	const handleSearchCategory = e => {
 		setInputValue(e.target.value);
+		setListCategorySearched(
+			listCategory.filter(item => item.name.toLowerCase().includes(e.target.value.toLowerCase()))
+		);
 	};
-
-	const debounceSearch = useCallback(_.debounce(hadllerSearch, 1000), []);
 
 	const updateUser = async () => {
 		try {
@@ -88,69 +87,39 @@ function ChooseTopic() {
 						<input
 							className='search-field__input'
 							placeholder='Tìm kiếm chủ đề'
-							onChange={debounceSearch}
+							onChange={handleSearchCategory}
 						/>
 					</div>
 				</div>
 				<div className='choose-topic__box'>
 					{inputValue === '' ? (
 						<>
-							{' '}
 							{listCategory.map(item => {
 								return (
 									<>
-										{addFavorite.includes(item.id) ? (
-											<div key={item.id} className='form-check-wrapper'>
-												<Form.Check
-													className='form-check-custom'
+										<div key={item.id} className='form-check-wrapper'>
+											<Form.Check className='form-check-custom' type={'checkbox'} id={item.id}>
+												<Form.Check.Input
+													className={`form-check-custom--'checkbox'`}
 													type={'checkbox'}
-													id={item.id}
-												>
-													<Form.Check.Input
-														className={`form-check-custom--'checkbox'`}
-														type={'checkbox'}
-														name={item.name}
-														checked
-														value={item.id}
-														onClick={handleChange}
-														// defaultChecked={data.value === value}
-													/>
-													<Form.Check.Label className='form-check-label--custom'>
-														{item.name}
-													</Form.Check.Label>
-												</Form.Check>
-											</div>
-										) : (
-											<div key={item.id} className='form-check-wrapper'>
-												<Form.Check
-													className='form-check-custom'
-													type={'checkbox'}
-													id={item.id}
-												>
-													<Form.Check.Input
-														className={`form-check-custom--'checkbox'`}
-														type={'checkbox'}
-														name={item.name}
-														isValid
-														value={item.id}
-														onClick={handleChange}
-														// defaultChecked={data.value === value}
-													/>
-													<Form.Check.Label className='form-check-label--custom'>
-														{item.name}
-													</Form.Check.Label>
-												</Form.Check>
-											</div>
-										)}
+													name={item.name}
+													checked={addFavorite.includes(item.id)}
+													value={item.id}
+													onClick={handleChange}
+												/>
+												<Form.Check.Label className='form-check-label--custom'>
+													{item.name}
+												</Form.Check.Label>
+											</Form.Check>
+										</div>
 									</>
 								);
 							})}
 						</>
 					) : (
 						<SearchCategoryChooseTopic
-							searchCategories={searchCategories}
-							fetchFilterData={fetchFilterData}
-							hasMoreFilterData={hasMoreFilterData}
+							searchCategories={listCategorySearched}
+							addFavorite={addFavorite}
 							handleChange={handleChange}
 						/>
 					)}

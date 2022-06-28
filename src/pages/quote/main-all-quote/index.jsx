@@ -149,7 +149,7 @@ const MainAllQuotes = () => {
 	return (
 		<div className='main-quote'>
 			<div className='main-quote__header'>
-				<BackButton />
+				<BackButton destination='/' />
 				<h4>Tất cả Quotes</h4>
 				<SearchField
 					className='main-quote__search'

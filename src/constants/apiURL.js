@@ -18,7 +18,8 @@ export const likeQuoteCommentAPI = id => `/api/v1/commentQuotes/like/${id}`;
 export const checkLikeQuoteCommentAPI = '/api/v1/quotes/checkLikeCmtQuote';
 export const getMyLikedQuotesAPI = '/api/v1/quotes/listQuotesLiked';
 export const getQuotesByFriendsOrFollowersAPI = '/api/v1/quotes/listQuotesRelation';
-export const countQuotesByCategoryAPI = id => `/api/v1/quotes/countQuotes/${id}`;
+export const countQuotesByCategoryWithUserIdAPI = id => `/api/v1/quotes/countQuotes/${id}`;
+export const countAllQuotesByCategorydAPI = '/api/v1/quotes/countQuotes';
 
 // post
 export const postAPI = '/api/v1/posts';
