@@ -45,13 +45,20 @@
 	letter-spacing: 0.75px;
 	padding: 32px 40px;
 }
+.notificaiton__tabs__main__all__active {
+	opacity: 0.8;
+}
 .notificaiton__tabs__main__all,
-.notificaiton__tabs__main__all__seen {
-	margin: 0 40px 20px 40px;
+.notificaiton__tabs__main__all__seen,
+.notificaiton__tabs__main__all__active {
+	margin: 0 32px 12px 32px;
+	cursor: pointer;
 	.notificaiton__all__main__layout {
 		display: flex;
 		gap: 15px;
 		align-items: center;
+		padding: 8px;
+		border-radius: 8px;
 		.notificaiton__all__main__layout__image {
 			border-radius: 50%;
 		}
@@ -84,6 +91,9 @@
 			line-height: 22px;
 			letter-spacing: 0.25px;
 		}
+	}
+	.notificaiton__all__main__layout:hover {
+		background-color: #eaecec;
 	}
 }
 .notificaiton__main__all__friend {

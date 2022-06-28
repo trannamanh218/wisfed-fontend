@@ -13,6 +13,7 @@ import ResultNotFound from '../result-not-found';
 import { getEnjoyGroup } from 'reducers/redux-utils/group';
 import { toast } from 'react-toastify';
 import { checkUserLogin } from 'reducers/redux-utils/auth';
+import { Link } from 'react-router-dom';
 
 const GroupSearch = ({ value, setIsFetching, searchResultInput, activeKeyDefault, updateBooks, isFetching }) => {
 	const [listArrayGroup, setListArrayGroup] = useState([]);
@@ -42,7 +43,6 @@ const GroupSearch = ({ value, setIsFetching, searchResultInput, activeKeyDefault
 	}, [callApiStart.current, value, isShowModal, listArrayGroup]);
 
 	const handleGetGroupSearch = async () => {
-		setIsFetching(true);
 		try {
 			const params = {
 				q: searchResultInput,
@@ -54,6 +54,7 @@ const GroupSearch = ({ value, setIsFetching, searchResultInput, activeKeyDefault
 			if (result.rows.length > 0) {
 				callApiStart.current += callApiPerPage.current;
 				setListArrayGroup(listArrayGroup.concat(result.rows));
+				setIsFetching(true);
 			} else {
 				setHasMore(false);
 			}
@@ -99,9 +100,19 @@ const GroupSearch = ({ value, setIsFetching, searchResultInput, activeKeyDefault
 									</div>
 								</div>
 							</div>
-							<Button onClick={() => enjoyGroup(item.id)}>
-								<span className='group__search__button'>Tham gia nhóm</span>
-							</Button>
+							{item.isJoined ? (
+								<Link to={`/group/${item.id}`}>
+									<Button>
+										<span className='group__search__button'>
+											<div>Truy cập đến nhóm</div>
+										</span>
+									</Button>
+								</Link>
+							) : (
+								<Button onClick={() => enjoyGroup(item.id)}>
+									<span className='group__search__button'>Tham gia nhóm</span>
+								</Button>
+							)}
 						</div>
 					))}
 				</InfiniteScroll>

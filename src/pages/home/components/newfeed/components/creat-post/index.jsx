@@ -13,6 +13,7 @@ import { updateImg } from 'reducers/redux-utils/chart';
 function CreatePost({ onChangeNewPost }) {
 	const [showModalCreatPost, setShowModalCreatPost] = useState(false);
 	const [option, setOption] = useState({});
+	const [showSubModal, setShowSubModal] = useState(false);
 	const creatPostModalContainer = useRef(null);
 	const scrollBlocked = useRef(false);
 	const location = useLocation();
@@ -136,6 +137,7 @@ function CreatePost({ onChangeNewPost }) {
 		dispatch(updateCurrentBook({}));
 		setOption({});
 		setShowModalCreatPost(false);
+		setShowSubModal(false);
 	};
 
 	const onChangeOption = data => {
@@ -151,6 +153,7 @@ function CreatePost({ onChangeNewPost }) {
 					onChangeOption(item);
 					setShowModalCreatPost(true);
 					dispatch(resetTaggedDataFunc(false));
+					setShowSubModal(true);
 				}}
 			>
 				<div className='newfeed__creat-post__options__item__logo'>{item.icon}</div>
@@ -179,6 +182,7 @@ function CreatePost({ onChangeNewPost }) {
 						onChangeOption={onChangeOption}
 						onChangeNewPost={onChangeNewPost}
 						setShowModalCreatPost={setShowModalCreatPost}
+						showSubModal={showSubModal}
 					/>
 				</div>
 			)}

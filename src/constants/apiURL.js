@@ -98,6 +98,7 @@ export const commentActivityDetailAPI = id => `/api/v1/commentMiniposts/${id}`;
 
 // notification
 export const nottificationAPI = '/api/v1/getstream/notifications';
+export const postReadNotification = `/api/v1/getstream/readNotification`;
 
 // followrs
 export const listFolowrs = id => `/api/v1/users/listFollowers/${id}`;
@@ -148,3 +149,6 @@ export const shareInternalAPI = (id, type) => `/api/v1/getstream/share/${id}?typ
 
 //authors
 export const randomAuthorAPI = '/api/v1/users/randomAuthor';
+
+// detail post
+export const detailFeedPost = id => `/api/v1/getstream/feedDetail/${id}`;

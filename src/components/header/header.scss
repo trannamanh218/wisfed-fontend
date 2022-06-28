@@ -170,7 +170,7 @@
 		&::before {
 			position: absolute;
 			top: 0;
-			right: 0;
+			right: -1px;
 			transform: translateY(-50%);
 			content: '';
 			display: inline-block;

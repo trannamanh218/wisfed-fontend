@@ -24,7 +24,7 @@ const PostActionBar = ({ postData, handleLikeAction }) => {
 			</div>
 			<div onClick={handleShare} className='post-action-bar__item'>
 				<Share />
-				<div className='post-action-bar__title'>{postData.share || 0} Chia sẻ</div>
+				<div className='post-action-bar__title'>{postData.countShare || 0} Chia sẻ</div>
 			</div>
 		</div>
 	);

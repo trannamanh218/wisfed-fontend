@@ -59,7 +59,12 @@ const PostsShare = ({ postData, className }) => {
 					<div className='post__user-status__name-and-post-time-status'>
 						<div data-testid='post__user-name' className='post__user-status__name'>
 							{postData.sharePost
-								? postData.sharePost.createdBy.fullName
+								? postData.sharePost.createdBy.fullName || (
+										<>
+											{postData.sharePost.createdBy.firstName}{' '}
+											{postData.sharePost.createdBy.lastName}
+										</>
+								  )
 								: postData?.createdBy?.fullName || postData?.user?.fullName || 'Ẩn danh'}
 						</div>
 						<div className='post__user-status__post-time-status'>
@@ -121,8 +126,8 @@ const PostsShare = ({ postData, className }) => {
 				)}
 
 				{postData?.sharePost.image?.length === 0 &&
-					!_.isEmpty(postData?.sharePost.preview) &&
-					_.isEmpty(postData?.sharePost.book) && (
+					!_.isEmpty(postData.sharePost?.preview) &&
+					_.isEmpty(postData.sharePost?.book) && (
 						<>
 							{videoId ? (
 								<iframe

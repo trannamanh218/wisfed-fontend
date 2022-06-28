@@ -243,45 +243,37 @@ function Post({ postInformations, className, showModalCreatPost }) {
 			)}
 
 			{postData.isShare && postData.verb === 'shareQuote' && <PostQuotes postsData={postData} />}
-			{postData.book || !!postData?.image?.length ? (
-				<>
-					{postData.book && (
-						<PostBook
-							data={{
-								...postData.book,
-								bookLibrary: postData.bookLibrary,
-								actorCreatedPost: postData.actor,
-							}}
-						/>
-					)}
-					{!!postData?.image?.length && (
-						<GridImage images={postData.image} inPost={true} postId={postData.id} />
-					)}
-				</>
-			) : (
-				<>
-					{!_.isEmpty(postData?.preview) && (
-						<>
-							{videoId ? (
-								<iframe
-									className='post__video-youtube'
-									src={`//www.youtube.com/embed/${videoId}`}
-									frameBorder={0}
-									allowFullScreen={true}
-								></iframe>
-							) : (
-								<div onClick={() => directUrl(postInformations.preview.url)}>
-									<PreviewLink isFetching={false} urlData={postInformations.preview} />
-								</div>
-							)}
-						</>
-					)}
-				</>
+			{postData.book && (
+				<PostBook
+					data={{ ...postData.book, bookLibrary: postData.bookLibrary, actorCreatedPost: postData.actor }}
+				/>
 			)}
-
 			{postData.verb === 'sharePost' && !_.isEmpty(postData.sharePost) && <PostsShare postData={postData} />}
 			{postData.verb === 'shareGroupPost' && !_.isEmpty(postData.sharePost) && <PostsShare postData={postData} />}
+			{postData?.image?.length > 0 && <GridImage images={postData.image} inPost={true} postId={postData.id} />}
 
+			{(postData?.image?.length === 0 &&
+				!_.isEmpty(postData.sharePost?.preview) &&
+				_.isEmpty(postData.sharePost?.book)) ||
+				(!_.isEmpty(postData.preview) && _.isEmpty(postData.book) && (
+					<>
+						{videoId ? (
+							<iframe
+								className='post__video-youtube'
+								src={`//www.youtube.com/embed/${videoId}`}
+								frameBorder={0}
+								allowFullScreen={true}
+							></iframe>
+						) : (
+							<div onClick={() => directUrl(postData?.sharePost.url)}>
+								<PreviewLink
+									isFetching={false}
+									urlData={postData.sharePost?.preview || postData.preview}
+								/>
+							</div>
+						)}
+					</>
+				))}
 			{!isSharePosts && (
 				<>
 					<PostActionBar postData={postData} handleLikeAction={handleLikeAction} />
