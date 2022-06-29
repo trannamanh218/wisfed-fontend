@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { Feather } from 'components/svg';
+import { Feather, Forward } from 'components/svg';
 import { calculateDurationTime } from 'helpers/Common';
 import _ from 'lodash';
 import './posts-Share.scss';
@@ -11,6 +11,7 @@ import UserAvatar from 'shared/user-avatar';
 import PreviewLink from 'shared/preview-link/PreviewLink';
 import ReactRating from 'shared/react-rating';
 import PostQuotes from 'shared/post-quotes';
+import { Link } from 'react-router-dom';
 
 const PostsShare = ({ postData, className }) => {
 	const [videoId, setVideoId] = useState('');
@@ -61,6 +62,16 @@ const PostsShare = ({ postData, className }) => {
 							{postData.sharePost
 								? postData.sharePost.createdBy.fullName
 								: postData?.createdBy?.fullName || postData?.user?.fullName || 'Ẩn danh'}
+
+							{postData?.group && (
+								<>
+									<Link to={`/group/${postData?.group?.id}`}>
+										<span className='img-share__group'>
+											<Forward /> {postData.group?.name}
+										</span>
+									</Link>
+								</>
+							)}
 						</div>
 						<div className='post__user-status__post-time-status'>
 							<span>{calculateDurationTime(postData.time || postData.createdAt)}</span>

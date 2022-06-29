@@ -10,7 +10,7 @@ import './search-group.scss';
 import _ from 'lodash';
 import ResultNotFound from 'pages/result/component/result-not-found';
 
-function SearchLayout({ data }) {
+function SearchLayout({ dataGroup }) {
 	const [isCallApi, setIsCallApi] = useState(false);
 	const dispatch = useDispatch();
 	const [listPost, setListPost] = useState([]);
@@ -18,12 +18,12 @@ function SearchLayout({ data }) {
 	const [isFetching, setIsFetching] = useState(true);
 
 	useEffect(() => {
-		setListMember(data.usersData);
-		setListPost(data.postData);
+		setListMember(dataGroup?.usersData);
+		setListPost(dataGroup?.postData);
 		setTimeout(() => {
 			setIsFetching(false);
 		}, 1000);
-	}, [data]);
+	}, [dataGroup, isFetching]);
 
 	const handleAddFriend = item => {
 		try {
@@ -67,14 +67,14 @@ function SearchLayout({ data }) {
 
 	return (
 		<>
-			{_.isEmpty(listMember) && _.isEmpty(listPost) && isFetching === false ? (
+			{_.isEmpty(listMember) && _.isEmpty(listPost) ? (
 				<div className='not-found-group'>
 					<ResultNotFound />
 				</div>
 			) : (
 				<div className='search-group__container'>
 					<Circle loading={isFetching} />
-					{!_.isEmpty(data?.usersData) && (
+					{!_.isEmpty(dataGroup?.usersData) && (
 						<div className='searh-group__member'>
 							{listMember?.map(item => {
 								return (
@@ -175,7 +175,7 @@ function SearchLayout({ data }) {
 }
 
 SearchLayout.propTypes = {
-	data: PropTypes.array,
+	dataGroup: PropTypes.array,
 };
 
 export default SearchLayout;

@@ -14,6 +14,7 @@ import _ from 'lodash';
 import { NotificationError } from 'helpers/Error';
 import Circle from 'shared/loading/circle';
 import { useVisible } from 'shared/hooks';
+import MainLayoutSearch from './MainLayoutSearch';
 
 const LayoutGroup = () => {
 	const [myGroup, setMyGroup] = useState([]);
@@ -138,7 +139,7 @@ const LayoutGroup = () => {
 					<div className='result-search'>
 						<MainContainerLeft
 							sub={<SearchGroup />}
-							main={<MainLayout listGroup={getListGroup} filter={false} />}
+							main={<MainLayoutSearch valueGroupSearch={valueGroupSearch} />}
 						/>
 					</div>
 				)}
