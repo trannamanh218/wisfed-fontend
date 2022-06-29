@@ -113,6 +113,9 @@
 		height: 24px;
 		margin-right: 12px;
 	}
+	&:hover {
+		cursor: pointer;
+	}
 }
 .group-name__joined-group {
 	padding-left: 24px;
@@ -191,6 +194,9 @@
 			width: 18px;
 			height: 18px;
 		}
+	}
+	&:hover {
+		cursor: pointer;
 	}
 }
 .group__search {
