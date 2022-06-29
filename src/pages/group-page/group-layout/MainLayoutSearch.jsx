@@ -1,16 +1,14 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import './style.scss';
 import { Link } from 'react-router-dom';
 import ResultNotFound from 'pages/result/component/result-not-found';
-import LoadingIndicator from 'shared/loading-indicator';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { useDispatch } from 'react-redux';
-import { getFillterGroup, getGroupList } from 'reducers/redux-utils/group';
 import { NotificationError } from 'helpers/Error';
-import _ from 'lodash';
 import defaultAvatar from 'assets/images/Rectangle 17435.png';
 import { getFilterSearch } from 'reducers/redux-utils/search';
+import LoadingIndicator from 'shared/loading-indicator';
 
 const MainLayoutSearch = ({ valueGroupSearch }) => {
 	const [list, setList] = useState([]);
@@ -18,6 +16,7 @@ const MainLayoutSearch = ({ valueGroupSearch }) => {
 	const callApiStart = useRef(0);
 	const callApiPerPage = useRef(8);
 	const dispatch = useDispatch();
+	const [show, setShow] = useState(false);
 
 	const getSearch = async () => {
 		try {
@@ -45,12 +44,28 @@ const MainLayoutSearch = ({ valueGroupSearch }) => {
 	useEffect(() => {
 		getSearch();
 	}, [valueGroupSearch]);
+	useEffect(() => {
+		if (list.length > 0) {
+			setShow(false);
+		} else {
+			setTimeout(() => {
+				setShow(true);
+			}, 1000);
+		}
+	}, [list]);
+
 	return (
 		<>
-			{list?.length < 1 && !_.isEmpty(valueGroupSearch) ? (
-				<div style={{ marginTop: '54px', padding: '24px' }}>
-					<ResultNotFound />
-				</div>
+			{list?.length < 1 ? (
+				<>
+					{show === true ? (
+						<div style={{ marginTop: '54px', padding: '24px', transitionDelay: '1s' }}>
+							<ResultNotFound />
+						</div>
+					) : (
+						<LoadingIndicator />
+					)}
+				</>
 			) : (
 				<>
 					{

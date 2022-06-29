@@ -9,7 +9,6 @@ import './style.scss';
 import { useDispatch } from 'react-redux';
 import MainContainerLeft from 'components/layout/main-container-left';
 import SearchField from 'shared/search-field';
-import { getFilterSearch } from 'reducers/redux-utils/search';
 import _ from 'lodash';
 import { NotificationError } from 'helpers/Error';
 import Circle from 'shared/loading/circle';
@@ -20,7 +19,6 @@ const LayoutGroup = () => {
 	const [myGroup, setMyGroup] = useState([]);
 	const [adminGroup, setAdminGroup] = useState([]);
 	const [valueGroupSearch, setValueGroupSearch] = useState('');
-	const [getListGroup, setListGroup] = useState([]);
 	const [filter, setFilter] = useState('[]');
 	const dispatch = useDispatch();
 	const [isShowScreen, setIsShhowScreen] = useState(true);
@@ -69,21 +67,6 @@ const LayoutGroup = () => {
 		}
 	};
 	const debounceSearch = useCallback(_.debounce(updateInputSearch, 500), []);
-
-	useEffect(async () => {
-		const params = {
-			q: filter,
-			type: 'groups',
-		};
-		try {
-			if (valueGroupSearch.length > 0) {
-				const result = await dispatch(getFilterSearch({ ...params })).unwrap();
-				setListGroup(result.rows);
-			}
-		} catch (err) {
-			NotificationError(err);
-		}
-	}, [filter]);
 
 	useEffect(() => {
 		setTimeout(() => {
@@ -139,7 +122,7 @@ const LayoutGroup = () => {
 					<div className='result-search'>
 						<MainContainerLeft
 							sub={<SearchGroup />}
-							main={<MainLayoutSearch valueGroupSearch={valueGroupSearch} />}
+							main={<MainLayoutSearch valueGroupSearch={filter} />}
 						/>
 					</div>
 				)}

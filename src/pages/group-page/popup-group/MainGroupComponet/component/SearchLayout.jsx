@@ -9,6 +9,7 @@ import Circle from 'shared/loading/circle';
 import './search-group.scss';
 import _ from 'lodash';
 import ResultNotFound from 'pages/result/component/result-not-found';
+import LoadingIndicator from 'shared/loading-indicator';
 
 function SearchLayout({ dataGroup }) {
 	const [isCallApi, setIsCallApi] = useState(false);
@@ -16,6 +17,7 @@ function SearchLayout({ dataGroup }) {
 	const [listPost, setListPost] = useState([]);
 	const [listMember, setListMember] = useState([]);
 	const [isFetching, setIsFetching] = useState(true);
+	const [show, setShow] = useState(false);
 
 	useEffect(() => {
 		setListMember(dataGroup?.usersData);
@@ -24,6 +26,16 @@ function SearchLayout({ dataGroup }) {
 			setIsFetching(false);
 		}, 1000);
 	}, [dataGroup, isFetching]);
+
+	useEffect(() => {
+		if (dataGroup.length > 0) {
+			setShow(false);
+		} else {
+			setTimeout(() => {
+				setShow(true);
+			}, 1000);
+		}
+	}, [dataGroup]);
 
 	const handleAddFriend = item => {
 		try {
@@ -68,9 +80,15 @@ function SearchLayout({ dataGroup }) {
 	return (
 		<>
 			{_.isEmpty(listMember) && _.isEmpty(listPost) ? (
-				<div className='not-found-group'>
-					<ResultNotFound />
-				</div>
+				<>
+					{show === true ? (
+						<div style={{ marginTop: '54px', padding: '24px', transitionDelay: '1s' }}>
+							<ResultNotFound />
+						</div>
+					) : (
+						<LoadingIndicator />
+					)}
+				</>
 			) : (
 				<div className='search-group__container'>
 					<Circle loading={isFetching} />
