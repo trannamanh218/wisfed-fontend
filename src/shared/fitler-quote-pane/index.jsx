@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import Button from 'shared/button';
 import FitlerOptions from 'shared/filter-options';
-import { Add, Configure } from 'components/svg';
+import { Add, ArrowsDownUp } from 'components/svg';
 import './filter-quote-pane.scss';
 import CreatQuotesModal from 'shared/creat-quotes-modal';
 import FormCheckGroup from 'shared/form-check-group';
@@ -127,7 +127,7 @@ const FilterQuotePane = ({
 							className='filter-pane__btn dropdown-toggle'
 							onClick={() => setShowDropdownMenu(!showDropdownMenu)}
 						>
-							<Configure />
+							<ArrowsDownUp />
 						</button>
 						<div
 							className={classNames('filter-quote-pane__setting dropdown-menu', {
