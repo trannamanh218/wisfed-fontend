@@ -2,9 +2,8 @@ import { useState, memo } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import caretIcon from 'assets/images/caret.png';
-import { DEFAULT_TOGGLE_ROWS } from 'constants';
+import { DEFAULT_TOGGLE_ROWS, NUMBER_ROWS } from 'constants';
 import './dual-column.scss';
-import { NUMBER_ROWS } from 'constants';
 import { useNavigate } from 'react-router-dom';
 import RouteLink from 'helpers/RouteLink';
 
@@ -126,6 +125,7 @@ DualColumn.propTypes = {
 	pageText: PropTypes.bool,
 	inCategory: PropTypes.bool,
 	filterQuotesByCategory: PropTypes.func,
+	inQuotes: PropTypes.bool,
 };
 
 export default memo(DualColumn);

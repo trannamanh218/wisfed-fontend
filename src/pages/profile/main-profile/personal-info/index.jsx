@@ -22,6 +22,7 @@ import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import backgroundImageDefault from 'assets/images/background-profile.png';
 import { updateUserInfo } from 'reducers/redux-utils/auth';
+import { useNavigate } from 'react-router-dom';
 
 const PersonalInfo = ({ currentUserInfo }) => {
 	const { ref: settingsRef, isVisible: isSettingsVisible, setIsVisible: setSettingsVisible } = useVisible(false);
@@ -32,6 +33,7 @@ const PersonalInfo = ({ currentUserInfo }) => {
 	const [bgImage, setBgImage] = useState('');
 	const { userInfo } = useSelector(state => state.auth);
 	const dispatch = useDispatch();
+	const navigate = useNavigate();
 
 	const item = {
 		isFollow: false,
@@ -147,7 +149,13 @@ const PersonalInfo = ({ currentUserInfo }) => {
 											</li>
 										)}
 
-										<li className='setting-item' onClick={handleSettings}>
+										<li
+											className='setting-item'
+											onClick={() => {
+												handleSettings();
+												navigate(`/quotes/${currentUserInfo.id}`);
+											}}
+										>
 											<QuoteIcon />
 											<span className='setting-item__content'>Quotes</span>
 										</li>

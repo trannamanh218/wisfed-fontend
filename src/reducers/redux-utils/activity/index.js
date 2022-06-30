@@ -7,6 +7,7 @@ import {
 	likeActivityAPI,
 	likeGroupPost,
 	randomAuthorAPI,
+	likeCommentPostAPI,
 } from 'constants/apiURL';
 import Request from 'helpers/Request';
 
@@ -109,6 +110,19 @@ export const updateReactionActivityGroup = createAsyncThunk(
 		} catch (err) {
 			const error = JSON.stringify(err.response);
 			throw rejectWithValue(error);
+		}
+	}
+);
+
+export const likeAndUnlikeCommentPost = createAsyncThunk(
+	'activity/like comment miniPost',
+	async (id, { rejectWithValue }) => {
+		try {
+			const response = await Request.makePatch(likeCommentPostAPI(id));
+			return response.data;
+		} catch (err) {
+			const error = JSON.parse(err.response);
+			return rejectWithValue(error);
 		}
 	}
 );

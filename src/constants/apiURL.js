@@ -15,7 +15,6 @@ export const quoteDetailAPI = id => `/api/v1/quotes/${id}`;
 export const quoteCommentAPI = '/api/v1/commentQuotes';
 export const likeQuoteAPI = id => `/api/v1/quotes/like/${id}`;
 export const likeQuoteCommentAPI = id => `/api/v1/commentQuotes/like/${id}`;
-export const checkLikeQuoteCommentAPI = '/api/v1/quotes/checkLikeCmtQuote';
 export const getMyLikedQuotesAPI = '/api/v1/quotes/listQuotesLiked';
 export const getQuotesByFriendsOrFollowersAPI = '/api/v1/quotes/listQuotesRelation';
 export const countQuotesByCategoryWithUserIdAPI = id => `/api/v1/quotes/countQuotes/${id}`;
@@ -25,6 +24,7 @@ export const countAllQuotesByCategorydAPI = '/api/v1/quotes/countQuotes';
 export const postAPI = '/api/v1/posts';
 export const postDetailAPI = id => `/api/v1/posts/${id}`;
 export const previewLink = '/api/v1/preview/demo';
+export const likeCommentPostAPI = id => `/api/v1/commentMiniposts/like/${id}`;
 
 // group
 export const groupAPI = '/api/v1/groups';
@@ -36,6 +36,7 @@ export const bookDetailAPI = id => `/api/v1/books/${id}`;
 export const bookElasticSearchAPI = '/api/v1/books/search';
 export const bookCopyrightsAPI = '/api/v1/bookCopyrights';
 export const bookReviewAPI = '/api/v1/reviews';
+export const likeReviewsAPI = reviewId => `/api/v1/reviews/like/${reviewId}`;
 export const commentBookReviewAPI = '/api/v1/commentReviews';
 export const bookFollowReviewAPI = id => `/api/v1/books/${id}/followReviews`;
 export const bookFriendReviewAPI = id => `/api/v1/books/${id}/friendReviews`;
@@ -70,7 +71,6 @@ export const myFriendsReq = `/api/v1/users/friendReqToMe/`;
 //activity
 export const activityAPI = '/api/v1/getstream';
 export const likeActivityAPI = id => `/api/v1/getstream/like/${id}`;
-export const listLikedActivityAPI = '/api/v1/users/likedActivities';
 export const getPostsByUserAPI = id => `/api/v1/getstream/profile/${id}`;
 
 // upload files

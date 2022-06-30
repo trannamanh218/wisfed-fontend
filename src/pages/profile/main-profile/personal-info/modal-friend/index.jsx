@@ -140,7 +140,7 @@ const ModalFriend = ({ setModalFriend, modalFriend, userInfoDetail }) => {
 									</div>
 									<div className='author-card__right'>
 										{item.userTwo.id !== userInfo.id && (
-											<div className={`connect-buttons ${'row'}`}>
+											<div className='connect-buttons row'>
 												{renderButtonFollows(item)}
 												<Button
 													className='connect-button'
