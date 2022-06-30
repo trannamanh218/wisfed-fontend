@@ -410,8 +410,6 @@ function CreatPostModalContent({
 				NotificationError(err);
 			} else if (!location.pathname.includes('group')) {
 				toast.error('Tạo post thất bại!');
-			} else {
-				return;
 			}
 			setStatus(statusCode);
 		} finally {
