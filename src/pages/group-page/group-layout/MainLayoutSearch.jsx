@@ -3,27 +3,30 @@ import PropTypes from 'prop-types';
 import './style.scss';
 import { Link } from 'react-router-dom';
 import ResultNotFound from 'pages/result/component/result-not-found';
-import LoadingIndicator from 'shared/loading-indicator';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { useDispatch } from 'react-redux';
-import { getGroupList } from 'reducers/redux-utils/group';
 import { NotificationError } from 'helpers/Error';
-import _ from 'lodash';
 import defaultAvatar from 'assets/images/Rectangle 17435.png';
+import { getFilterSearch } from 'reducers/redux-utils/search';
+import LoadingIndicator from 'shared/loading-indicator';
 
-const MainLayout = ({ filter }) => {
+const MainLayoutSearch = ({ valueGroupSearch }) => {
 	const [list, setList] = useState([]);
 	const [hasMore, setHasMore] = useState(true);
-	const callApiStart = useRef(9);
-	const callApiPerPage = useRef(9);
+	const callApiStart = useRef(0);
+	const callApiPerPage = useRef(8);
 	const dispatch = useDispatch();
-	const groupList = async () => {
+	const [show, setShow] = useState(false);
+
+	const getSearch = async () => {
 		try {
 			const params = {
+				q: valueGroupSearch,
+				type: 'groups',
 				start: callApiStart.current,
 				limit: callApiPerPage.current,
 			};
-			const data = await dispatch(getGroupList(params)).unwrap();
+			const data = await dispatch(getFilterSearch({ ...params })).unwrap();
 			if (data.rows.length) {
 				if (data.length < callApiPerPage.current) {
 					setHasMore(false);
@@ -38,32 +41,35 @@ const MainLayout = ({ filter }) => {
 			NotificationError(err);
 		}
 	};
-
-	const listGroup = async () => {
-		const actionGetList = await dispatch(getGroupList());
-		setList(actionGetList.payload.rows);
-	};
-
 	useEffect(() => {
-		listGroup();
-	}, []);
+		getSearch();
+	}, [valueGroupSearch]);
+	useEffect(() => {
+		if (list.length > 0) {
+			setShow(false);
+		} else {
+			setTimeout(() => {
+				setShow(true);
+			}, 1000);
+		}
+	}, [list]);
 
 	return (
 		<>
-			{list?.length < 1 && !_.isEmpty(filter) ? (
-				<div style={{ marginTop: '54px', padding: '24px' }}>
-					<ResultNotFound />
-				</div>
+			{list?.length < 1 ? (
+				<>
+					{show === true ? (
+						<div style={{ marginTop: '54px', padding: '24px', transitionDelay: '1s' }}>
+							<ResultNotFound />
+						</div>
+					) : (
+						<LoadingIndicator />
+					)}
+				</>
 			) : (
 				<>
-					{!filter ? '' : <h2 className='main__title'>Gợi ý nhóm</h2>}
 					{
-						<InfiniteScroll
-							dataLength={list.length}
-							next={groupList}
-							hasMore={hasMore}
-							loader={<LoadingIndicator />}
-						>
+						<InfiniteScroll dataLength={list.length} next={getSearch} hasMore={hasMore}>
 							<div className='list-group-container'>
 								{list.map(item => {
 									return (
@@ -108,9 +114,9 @@ const MainLayout = ({ filter }) => {
 	);
 };
 
-MainLayout.propTypes = {
+MainLayoutSearch.propTypes = {
 	listGroup: PropTypes.array,
-	filter: PropTypes.string,
+	valueGroupSearch: PropTypes.string,
 };
 
-export default MainLayout;
+export default MainLayoutSearch;

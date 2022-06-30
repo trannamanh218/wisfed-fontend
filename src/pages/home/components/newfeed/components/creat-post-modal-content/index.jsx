@@ -333,7 +333,7 @@ function CreatPostModalContent({
 		// book, author , topic is required
 		setStatus(STATUS_LOADING);
 		try {
-			if (location.pathname.includes('group')) {
+			if (location.pathname.includes('group') && (isShare || isSharePosts)) {
 				const query = {
 					id: postsData.id,
 					type: 'groupPost',
@@ -410,6 +410,8 @@ function CreatPostModalContent({
 				NotificationError(err);
 			} else if (!location.pathname.includes('group')) {
 				toast.error('Tạo post thất bại!');
+			} else {
+				return;
 			}
 			setStatus(statusCode);
 		} finally {
