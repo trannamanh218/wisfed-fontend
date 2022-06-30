@@ -69,6 +69,7 @@ import { ReactComponent as IconGroup } from 'assets/icons/UsersThree.svg';
 import { ReactComponent as StarAuthor } from 'assets/icons/StarAuthor.svg';
 import { ReactComponent as ShareAuthor } from 'assets/icons/shareAuthor.svg';
 import { ReactComponent as Setting } from 'assets/icons/Setting_fill.svg';
+import { ReactComponent as ArrowsDownUp } from 'assets/icons/ArrowsDownUp.svg';
 
 export {
 	Setting,
@@ -142,4 +143,5 @@ export {
 	LogOutGroup,
 	ForwardGroup,
 	IconGroup,
+	ArrowsDownUp,
 };
