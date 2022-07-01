@@ -17,7 +17,8 @@ export const useFetchTargetReading = (userIdParams, modalOpen, deleteModal) => {
 	const retryRequest = () => {
 		setRetry(!retry);
 	};
-
+	const dob = new Date();
+	const year = dob.getFullYear();
 	useEffect(async () => {
 		let isMount = true;
 		if (isMount) {
@@ -25,8 +26,6 @@ export const useFetchTargetReading = (userIdParams, modalOpen, deleteModal) => {
 			const fetchData = async () => {
 				try {
 					if (userIdParams) {
-						const dob = new Date();
-						const year = dob.getFullYear();
 						let newData = [];
 						const newTargetReading = targetReading.filter(item => item.year === year);
 						if (
@@ -58,5 +57,5 @@ export const useFetchTargetReading = (userIdParams, modalOpen, deleteModal) => {
 		};
 	}, [retry, modalOpen, deleteModal, userIdParams, renderTarget, checkRenderTarget]);
 
-	return { status, booksReadYear, retryRequest, setBooksReadYear };
+	return { status, booksReadYear, retryRequest, setBooksReadYear, year };
 };

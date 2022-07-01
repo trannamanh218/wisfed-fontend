@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import BookSlider from 'shared/book-slider';
-import DualColumn from 'shared/dual-column';
 import ReadingBook from 'shared/reading-book';
 import './sidebar-profile.scss';
 import classNames from 'classnames';
@@ -14,7 +13,7 @@ import ProgressBarCircle from 'shared/progress-circle';
 import RenderProgress from 'shared/render-progress';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
-const DEFAULT_TOGGLE_ROWS = 0;
+import { DEFAULT_TOGGLE_ROWS } from 'constants';
 
 const SidebarProfile = ({ currentUserInfo }) => {
 	const { userId } = useParams();
@@ -54,14 +53,17 @@ const SidebarProfile = ({ currentUserInfo }) => {
 
 	const handleViewMore = () => {
 		const length = myAllLibraryRedux.custom.length;
-		const maxRows = 7;
-		if (length <= maxRows) {
-			const numberRows = length;
-			setRows(numberRows);
+		let maxLength;
+
+		if (length <= 20) {
+			maxLength = length;
 		} else {
-			setRows(maxRows);
+			maxLength = 20;
 		}
-		setIsExpand(true);
+
+		const newRows = isExpand ? DEFAULT_TOGGLE_ROWS : maxLength;
+		setRows(newRows);
+		setIsExpand(!isExpand);
 	};
 
 	const handleRenderTargetReading = () => {
@@ -89,7 +91,6 @@ const SidebarProfile = ({ currentUserInfo }) => {
 					{!_.isEmpty(myAllLibraryRedux) && (
 						<div className='sidebar-profile__personal__category'>
 							<h4>Giá sách cá nhân</h4>
-							<DualColumn list={myAllLibraryRedux.default} />
 							<div className='dualColumn'>
 								<ul className={classNames('dualColumn-list', { [`bg-light`]: false })}>
 									{myAllLibraryRedux.custom.length > 0 &&

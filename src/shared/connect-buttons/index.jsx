@@ -1,5 +1,5 @@
 import { Add, Minus } from 'components/svg';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Button from 'shared/button';
 import PropTypes from 'prop-types';
 import './connect-buttons.scss';
@@ -7,7 +7,7 @@ import { makeFriendRequest, addFollower, unFollower, unFriendRequest } from 'red
 import { useDispatch } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
 
-const ConnectButtons = ({ data, direction, item }) => {
+const ConnectButtons = ({ direction, item }) => {
 	const dispatch = useDispatch();
 	const [unFriend, setUnFriend] = useState(true);
 	const [toggleUnFollow, setToggleUnFollow] = useState(true);

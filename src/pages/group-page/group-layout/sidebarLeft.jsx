@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Link } from 'react-router-dom';
+import defaultAvatar from 'assets/images/Rectangle 17435.png';
 
 const SidebarLeft = ({ listMyGroup, listAdminMyGroup }) => {
 	return (
@@ -13,7 +14,11 @@ const SidebarLeft = ({ listMyGroup, listAdminMyGroup }) => {
 							{index < 3 && (
 								<Link to={`/group/${item.id}`}>
 									<div className='item-list-group'>
-										<img src={item.avatar} alt='' />
+										<img
+											src={item.avatar}
+											onError={e => e.target.setAttribute('src', defaultAvatar)}
+											alt=''
+										/>
 										<div className='item-infor'>
 											<span className='item-infor__name'>{item.name}</span>
 											<div className='item-update'>
@@ -36,7 +41,11 @@ const SidebarLeft = ({ listMyGroup, listAdminMyGroup }) => {
 							{index < 3 && (
 								<Link to={`/group/${item.id}`}>
 									<div className='item-list-group'>
-										<img src={item.avatar} alt='' />
+										<img
+											src={item.avatar}
+											onError={e => e.target.setAttribute('src', defaultAvatar)}
+											alt=''
+										/>
 										<div className='item-infor'>
 											<span className='item-infor__name'>{item.name}</span>
 											<div className='item-update'>

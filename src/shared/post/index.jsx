@@ -21,8 +21,10 @@ import { createCommentReview } from 'reducers/redux-utils/book';
 import Comment from 'shared/comments';
 import PostQuotes from 'shared/post-quotes';
 import PostsShare from 'shared/posts-Share';
+import { likeAndUnlikeReview } from 'reducers/redux-utils/book';
+import { POST_TYPE, REVIEW_TYPE } from 'constants';
 
-function Post({ postInformations, className, showModalCreatPost }) {
+function Post({ postInformations, className, showModalCreatPost, inReviews = false }) {
 	const [postData, setPostData] = useState({});
 	const [videoId, setVideoId] = useState('');
 	const { userInfo } = useSelector(state => state.auth);
@@ -125,6 +127,8 @@ function Post({ postInformations, className, showModalCreatPost }) {
 		try {
 			if (location.pathname.includes('group')) {
 				await dispatch(updateReactionActivityGroup(postData.id)).unwrap();
+			} else if (inReviews) {
+				await dispatch(likeAndUnlikeReview(postData.id)).unwrap();
 			} else {
 				await dispatch(updateReactionActivity(postData.minipostId || postData.id)).unwrap();
 			}
@@ -243,45 +247,37 @@ function Post({ postInformations, className, showModalCreatPost }) {
 			)}
 
 			{postData.isShare && postData.verb === 'shareQuote' && <PostQuotes postsData={postData} />}
-			{postData.book || !!postData?.image?.length ? (
-				<>
-					{postData.book && (
-						<PostBook
-							data={{
-								...postData.book,
-								bookLibrary: postData.bookLibrary,
-								actorCreatedPost: postData.actor,
-							}}
-						/>
-					)}
-					{!!postData?.image?.length && (
-						<GridImage images={postData.image} inPost={true} postId={postData.id} />
-					)}
-				</>
-			) : (
-				<>
-					{!_.isEmpty(postData?.preview) && (
-						<>
-							{videoId ? (
-								<iframe
-									className='post__video-youtube'
-									src={`//www.youtube.com/embed/${videoId}`}
-									frameBorder={0}
-									allowFullScreen={true}
-								></iframe>
-							) : (
-								<div onClick={() => directUrl(postInformations.preview.url)}>
-									<PreviewLink isFetching={false} urlData={postInformations.preview} />
-								</div>
-							)}
-						</>
-					)}
-				</>
+			{postData.book && (
+				<PostBook
+					data={{ ...postData.book, bookLibrary: postData.bookLibrary, actorCreatedPost: postData.actor }}
+				/>
 			)}
-
 			{postData.verb === 'sharePost' && !_.isEmpty(postData.sharePost) && <PostsShare postData={postData} />}
 			{postData.verb === 'shareGroupPost' && !_.isEmpty(postData.sharePost) && <PostsShare postData={postData} />}
+			{postData?.image?.length > 0 && <GridImage images={postData.image} inPost={true} postId={postData.id} />}
 
+			{(postData?.image?.length === 0 &&
+				!_.isEmpty(postData.sharePost?.preview) &&
+				_.isEmpty(postData.sharePost?.book)) ||
+				(!_.isEmpty(postData.preview) && _.isEmpty(postData.book) && (
+					<>
+						{videoId ? (
+							<iframe
+								className='post__video-youtube'
+								src={`//www.youtube.com/embed/${videoId}`}
+								frameBorder={0}
+								allowFullScreen={true}
+							></iframe>
+						) : (
+							<div onClick={() => directUrl(postData?.sharePost.url)}>
+								<PreviewLink
+									isFetching={false}
+									urlData={postData.sharePost?.preview || postData.preview}
+								/>
+							</div>
+						)}
+					</>
+				))}
 			{!isSharePosts && (
 				<>
 					<PostActionBar postData={postData} handleLikeAction={handleLikeAction} />
@@ -294,7 +290,7 @@ function Post({ postInformations, className, showModalCreatPost }) {
 									postData={postData}
 									handleReply={handleReply}
 									postCommentsLikedArray={[]}
-									inQuotes={false}
+									type={inReviews ? REVIEW_TYPE : POST_TYPE}
 								/>
 							)}
 							<div className='comment-reply-container'>
@@ -308,7 +304,7 @@ function Post({ postInformations, className, showModalCreatPost }) {
 													postData={postData}
 													handleReply={handleReply}
 													postCommentsLikedArray={[]}
-													inQuotes={false}
+													type={inReviews ? REVIEW_TYPE : POST_TYPE}
 												/>
 											</div>
 										);
@@ -345,6 +341,7 @@ Post.propTypes = {
 	likeAction: PropTypes.func,
 	className: PropTypes.string,
 	showModalCreatPost: PropTypes.bool,
+	inReviews: PropTypes.bool,
 };
 
 export default Post;

@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import classNames from 'classnames';
 import './read-more.scss';
 
 const ReadMore = ({ text, length = 450 }) => {
@@ -14,18 +13,15 @@ const ReadMore = ({ text, length = 450 }) => {
 		} else {
 			setShowReadmore(false);
 		}
+		setTextFormated(text.replace(/<[^>]+>/g, ''));
 	}, [text]);
 
 	const handleShow = () => {
 		setShowLess(!showLess);
 	};
 
-	useEffect(() => {
-		setTextFormated(text.replace(/<[^>]+>/g, ''));
-	}, []);
-
 	return (
-		<p className={classNames('read-more')}>
+		<p className='read-more'>
 			{showReadmore ? <>{showLess ? `${textFormated.slice(0, length)}...` : textFormated}</> : textFormated}
 			{showReadmore && (
 				<button className='read-more__btn' onClick={handleShow}>

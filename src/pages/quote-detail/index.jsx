@@ -7,6 +7,7 @@ import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
 import _ from 'lodash';
+import { likeUnlikeQuote } from 'reducers/redux-utils/quote';
 
 const QuoteDetail = () => {
 	const [quoteData, setQuoteData] = useState({});
@@ -55,9 +56,26 @@ const QuoteDetail = () => {
 		}
 	};
 
+	const likeUnlikeQuoteFnc = async id => {
+		try {
+			await dispatch(likeUnlikeQuote(id)).unwrap();
+			const setLike = !quoteData.isLike;
+			const numberOfLike = setLike ? quoteData.like + 1 : quoteData.like - 1;
+			setQuoteData({ ...quoteData, isLike: setLike, like: numberOfLike });
+		} catch (err) {
+			NotificationError(err);
+		}
+	};
+
 	return (
 		<MainContainer
-			main={<MainQuoteDetail quoteData={quoteData} onCreateComment={onCreateComment} />}
+			main={
+				<MainQuoteDetail
+					quoteData={quoteData}
+					onCreateComment={onCreateComment}
+					likeUnlikeQuoteFnc={likeUnlikeQuoteFnc}
+				/>
+			}
 			right={<SidebarQuote listHashtags={listHashtags} inMyQuote={false} hasCountQuotes={false} />}
 		/>
 	);

@@ -57,11 +57,12 @@ const PostEditBook = props => {
 		}
 		let message = '';
 		if (value > data.page) {
-			message = `Số trang không vượt quá ${data.page}`;
+			handleAddToPost({ ...data, progress: data.page });
 		} else if (value < 0) {
 			message = 'Số trang không được bé hơn 0';
+		} else {
+			handleAddToPost({ ...data, progress: value });
 		}
-		handleAddToPost({ ...data, progress: value });
 		handleValidationInput(message);
 	};
 

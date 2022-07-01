@@ -41,6 +41,7 @@ function CreatPostModalContent({
 	option,
 	onChangeOption,
 	onChangeNewPost,
+	showSubModal,
 }) {
 	// const [shareMode, setShareMode] = useState({ value: 'public', title: 'Mọi người', icon: <WorldNet /> });
 	const [showTextFieldEditPlaceholder, setShowTextFieldEditPlaceholder] = useState(true);
@@ -327,13 +328,12 @@ function CreatPostModalContent({
 			return Promise.all([addToDefaultLibraryRequest, updateProgressRequest]);
 		}
 	};
-
 	const onCreatePost = async () => {
 		const params = await generateData();
 		// book, author , topic is required
 		setStatus(STATUS_LOADING);
 		try {
-			if (location.pathname.includes('group')) {
+			if (location.pathname.includes('group') && (isShare || isSharePosts)) {
 				const query = {
 					id: postsData.id,
 					type: 'groupPost',
@@ -490,6 +490,12 @@ function CreatPostModalContent({
 			}
 		}
 	};
+
+	useEffect(() => {
+		if (showSubModal) {
+			setShowMainModal(false);
+		}
+	}, [showSubModal]);
 
 	return (
 		<div className='creat-post-modal-content'>
@@ -701,6 +707,7 @@ CreatPostModalContent.propTypes = {
 	onChangeNewPost: PropTypes.func,
 	renderBookReading: PropTypes.object,
 	setShowModalCreatPost: PropTypes.func,
+	showSubModal: PropTypes.bool,
 };
 
 export default CreatPostModalContent;

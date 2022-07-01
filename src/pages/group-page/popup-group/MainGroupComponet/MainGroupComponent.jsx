@@ -24,6 +24,7 @@ import _ from 'lodash';
 import { useParams } from 'react-router-dom';
 import SearchLayout from './component/SearchLayout';
 import { useVisible } from 'shared/hooks';
+import defaultAvatar from 'assets/images/Rectangle 17435.png';
 
 function MainGroupComponent({ handleChange, keyChange, data, member }) {
 	const [key, setKey] = useState('intro');
@@ -97,6 +98,7 @@ function MainGroupComponent({ handleChange, keyChange, data, member }) {
 		const params = {
 			q: filter,
 			id: id,
+			limit: 50,
 		};
 		try {
 			if (valueGroupSearch.length > 0) {
@@ -136,11 +138,8 @@ function MainGroupComponent({ handleChange, keyChange, data, member }) {
 			<div className='group__background'>
 				<div>
 					<img
-						src={
-							data.avatar !== undefined
-								? data.avatar
-								: 'https://img4.thuthuatphanmem.vn/uploads/2020/08/28/anh-bia-dep-danh-cho-zalo_093733432.jpg'
-						}
+						src={data.avatar ? data.avatar : defaultAvatar}
+						onError={e => e.target.setAttribute('src', defaultAvatar)}
 						alt=''
 					/>
 				</div>
@@ -244,7 +243,15 @@ function MainGroupComponent({ handleChange, keyChange, data, member }) {
 			{keyChange === 'settingsQuestion' && <SettingsQuestions handleChange={handleChange} />}
 			{keyChange === 'manageJoin' && <ManageJoin handleChange={handleChange} />}
 			{keyChange === 'managePost' && <PostWatting handleChange={handleChange} />}
-			{keyChange === 'search' && <SearchLayout data={getData} show={show} />}
+			{keyChange === 'search' && getData && (
+				<SearchLayout
+					dataGroup={getData}
+					filter={filter}
+					valueGroupSearch={valueGroupSearch}
+					show={show}
+					id={id}
+				/>
+			)}
 		</div>
 	);
 }

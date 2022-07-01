@@ -2,6 +2,9 @@
 	max-width: 200px;
 	background: #fbf7f2;
 	border-radius: 16px;
+	align-items: stretch;
+	flex-direction: column;
+	display: flex;
 	.myfriends__star {
 		display: flex;
 		align-items: center;
@@ -35,6 +38,9 @@
 	}
 	.myfriends__button__container {
 		padding: 0 11px 28px 11px;
+
+		margin-top: auto;
+
 		.myfriends__button {
 			width: 180px;
 			border-radius: 12px;

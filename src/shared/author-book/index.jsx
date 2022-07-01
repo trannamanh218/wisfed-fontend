@@ -11,7 +11,7 @@ const AuthorBook = props => {
 	const authorsName = data.authors?.map(author => author?.authorName);
 	const handleShare = () => {
 		if (Storage.getAccessToken()) {
-			console.log('ok');
+			// navigate('/');
 		} else {
 			setModalShow(true);
 		}
@@ -35,10 +35,12 @@ const AuthorBook = props => {
 				<p className='author-book__writers'>{authorsName && authorsName.join('- ')}</p>
 				<div className='author-book__rating'>
 					<ReactRating readonly={true} initialRating={data.avgRating} checkStar={checkStar} />
-					<span className='author-book__rating__number'>{data.avgRating || data.rateAvg} sao</span>
+					<span className='author-book__rating__number'>{data?.avgRating || data?.rateAvg || 0} sao</span>
 				</div>
 				<div className='author-book__bottom'>
-					<span className='author-book__stats'>{data?.count ? `${data?.count} (đánh giá)` : ''}</span>
+					<span className='author-book__stats'>
+						{data?.countRating ? `${data?.countRating} (đánh giá)` : '0 (đánh giá)'}
+					</span>
 					<StatusButton bookData={data} status={data.status} />
 				</div>
 			</div>

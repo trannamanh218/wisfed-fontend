@@ -11,6 +11,7 @@ import {
 	userRating,
 	bookRating,
 	commentBookReviewAPI,
+	likeReviewsAPI,
 } from 'constants/apiURL';
 import Request from 'helpers/Request';
 
@@ -156,6 +157,16 @@ export const updateProgressReadingBook = createAsyncThunk(
 		}
 	}
 );
+
+export const likeAndUnlikeReview = createAsyncThunk('book/like comment review', async (id, { rejectWithValue }) => {
+	try {
+		const response = await Request.makePatch(likeReviewsAPI(id));
+		return response.data;
+	} catch (err) {
+		const error = JSON.parse(err.response);
+		return rejectWithValue(error);
+	}
+});
 
 const bookSlice = createSlice({
 	name: 'book',

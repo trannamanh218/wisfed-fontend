@@ -59,7 +59,7 @@ const Review = () => {
 
 	const getBookData = async () => {
 		try {
-			const res = await dispatch(getBookDetail({ id: bookId })).unwrap();
+			const res = await dispatch(getBookDetail(bookId)).unwrap();
 			setBookInfo(res);
 			return res.name;
 		} catch (err) {
@@ -96,7 +96,7 @@ const Review = () => {
 							{listReview.length > 0 ? (
 								listReview.map((item, index) => (
 									<div clas key={item.id}>
-										<Post postInformations={item} />
+										<Post postInformations={item} inReviews={true} />
 										{listReview.length > 1 && index < listReview.length - 1 && <hr />}
 									</div>
 								))
