@@ -28,6 +28,9 @@
 		.select-box__btn {
 			background-color: $primary-light;
 		}
+		& .select-box {
+			width: 220px;
+		}
 	}
 
 	// .shelf {

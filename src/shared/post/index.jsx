@@ -157,6 +157,25 @@ function Post({ postInformations, className, showModalCreatPost, inReviews = fal
 		setClickReply(!clickReply);
 	};
 
+	const withFriends = paramInfo => {
+		return (
+			<>
+				<span>
+					{' '}
+					cùng với{' '}
+					{paramInfo.map((element, index) => {
+						return (
+							<span key={index}>
+								{element.users.fullName || element.users.firstName}
+								{index === paramInfo.length - 1 ? '.' : ', '}
+							</span>
+						);
+					})}
+				</span>
+			</>
+		);
+	};
+
 	const infoUser = () => {
 		return (
 			<>
@@ -169,7 +188,15 @@ function Post({ postInformations, className, showModalCreatPost, inReviews = fal
 
 					<div className='post__user-status__name-and-post-time-status'>
 						<div data-testid='post__user-name' className='post__user-status__name'>
-							{postData?.createdBy?.fullName || postData?.user?.fullName || 'Ẩn danh'}
+							{/* who posted the post */}
+							{postData?.createdBy?.fullName || postData?.user?.firstName || 'Ẩn danh'}
+
+							{/* tagged people */}
+							{postData.mentionsUsers && postData.mentionsUsers.length !== 0 ? (
+								withFriends(postData.mentionsUsers)
+							) : (
+								<div></div>
+							)}
 						</div>
 						<div className='post__user-status__post-time-status'>
 							<span>{calculateDurationTime(postData.time || postData.createdAt)}</span>

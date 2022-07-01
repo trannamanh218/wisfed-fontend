@@ -57,7 +57,11 @@ const Comment = ({ data, handleReply, postData, commentLv1Id, type }) => {
 				<div className='comment__container'>
 					<div className='comment__header'>
 						<span className='comment__author'>
-							{data.user.name ||
+							{data['user.name'] ||
+								data['.user.fullName'] ||
+								data['user.lastName'] ||
+								data['user.firstName'] ||
+								data.user.name ||
 								data.user.fullName ||
 								data.user.lastName ||
 								data.user.firstName ||
