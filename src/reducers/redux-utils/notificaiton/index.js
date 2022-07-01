@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import Request from 'helpers/Request';
-import { nottificationAPI, postReadNotification, detailFeedPost } from 'constants/apiURL';
+import { nottificationAPI, postReadNotification, detailFeedPost, detailFeedPostGroup } from 'constants/apiURL';
 
 export const getNotification = createAsyncThunk('notification/getNotification', async (params, { rejectWithValue }) => {
 	try {
@@ -22,6 +22,20 @@ export const getDetailFeed = createAsyncThunk('notification/getDetailFeed', asyn
 		throw rejectWithValue(error);
 	}
 });
+
+export const getDetailFeedGroup = createAsyncThunk(
+	'notification/getDetailFeedGroup',
+	async (params, { rejectWithValue }) => {
+		const { id } = params;
+		try {
+			const response = await Request.makeGet(detailFeedPostGroup(id));
+			return response.data;
+		} catch (err) {
+			const error = JSON.parse(err.response);
+			throw rejectWithValue(error);
+		}
+	}
+);
 
 export const readNotification = createAsyncThunk(
 	'notification/getNotification',

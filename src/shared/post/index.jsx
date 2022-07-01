@@ -21,6 +21,8 @@ import { createCommentReview } from 'reducers/redux-utils/book';
 import Comment from 'shared/comments';
 import PostQuotes from 'shared/post-quotes';
 import PostsShare from 'shared/posts-Share';
+import Play from 'assets/images/play.png';
+import { Link } from 'react-router-dom';
 
 function Post({ postInformations, className, showModalCreatPost }) {
 	const [postData, setPostData] = useState({});
@@ -34,6 +36,7 @@ function Post({ postInformations, className, showModalCreatPost }) {
 
 	const dispatch = useDispatch();
 	const { bookId } = useParams();
+	const { type } = useParams();
 
 	useEffect(() => {
 		setPostData({ ...postInformations });
@@ -164,9 +167,16 @@ function Post({ postInformations, className, showModalCreatPost }) {
 					/>
 
 					<div className='post__user-status__name-and-post-time-status'>
-						<div data-testid='post__user-name' className='post__user-status__name'>
-							{postData?.createdBy?.fullName || postData?.user?.fullName || 'Ẩn danh'}
+						<div className='post__user__container'>
+							<div data-testid='post__user-name' className='post__user-status__name'>
+								{postData?.createdBy?.fullName || postData?.user?.fullName || 'Ẩn danh'}
+							</div>
+							{postData.groupInfo && <img className='post__user-icon' src={Play} alt='' />}
+							<Link to={`/group/${postData.groupInfo?.id}`} className='post__name__group'>
+								{postData.groupInfo && postData.groupInfo.name}
+							</Link>
 						</div>
+
 						<div className='post__user-status__post-time-status'>
 							<span>{calculateDurationTime(postData.time || postData.createdAt)}</span>
 							<>

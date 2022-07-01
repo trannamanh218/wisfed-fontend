@@ -173,6 +173,21 @@
 	margin: 24px 0;
 }
 
+.post__user__container {
+	display: flex;
+	align-items: center;
+	gap: 16px;
+	.post__user-icon {
+		height: 12px;
+		width: 12px;
+		margin-right: 8px;
+	}
+	.post__name__group {
+		font-weight: 600;
+		font-size: 15px;
+	}
+}
+
 @media only screen and (max-width: 1366px) {
 	.post__video-youtube {
 		height: 350px;

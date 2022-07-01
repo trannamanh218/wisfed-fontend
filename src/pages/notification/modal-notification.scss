@@ -4,7 +4,6 @@
 	top: 100%;
 	right: -170%;
 	padding-right: 4px;
-	padding-bottom: 2px;
 	background: #fcfcfc;
 	border-bottom-left-radius: 12px;
 	border-bottom-right-radius: 12px;
@@ -31,7 +30,9 @@
 		}
 	}
 }
-
+.notificaiton__loading__container {
+	cursor: context-menu;
+}
 .notificaiton__title {
 	font-size: 20px;
 	line-height: 32px;

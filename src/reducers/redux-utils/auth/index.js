@@ -8,6 +8,7 @@ import {
 	forgotPasswordAPIAdmin,
 	resetPasswordAPIAdmin,
 	checkJwt,
+	newNotification,
 } from 'constants/apiURL';
 import Request from 'helpers/Request';
 import Storage from 'helpers/Storage';
@@ -93,6 +94,19 @@ export const resetPasswordAdmin = createAsyncThunk('auth/resetPasswordAdmin', as
 		return rejectWithValue(err.response);
 	}
 });
+
+export const patchNewNotification = createAsyncThunk(
+	'notification/patchNewNotification',
+	async (params, { rejectWithValue }) => {
+		try {
+			const response = await Request.makePatch(newNotification, params);
+			return response.data;
+		} catch (err) {
+			const error = JSON.parse(err.response);
+			throw rejectWithValue(error);
+		}
+	}
+);
 
 const authSlice = createSlice({
 	name: 'auth',

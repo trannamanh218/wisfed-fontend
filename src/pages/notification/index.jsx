@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { backgroundToggle, activeKeyTabsNotification } from 'reducers/redux-utils/notificaiton';
+import { backgroundToggle, activeKeyTabsNotification, handleListNotification } from 'reducers/redux-utils/notificaiton';
 import { useLocation } from 'react-router-dom';
 import UserAvatar from 'shared/user-avatar';
 import { getNotification } from 'reducers/redux-utils/notificaiton';
@@ -14,11 +14,11 @@ import { useNavigate } from 'react-router-dom';
 import { ReplyFriendRequest, CancelFriendRequest } from 'reducers/redux-utils/user';
 import { NotificationError } from 'helpers/Error';
 import { renderMessage } from 'helpers/HandleShare';
-import LoadingIndicator from 'shared/loading-indicator';
 import { readNotification } from 'reducers/redux-utils/notificaiton';
 import { useSelector } from 'react-redux';
+import LoadingTimeLine from './loading-timeline';
 
-const NotificationModal = ({ setModalNotti, buttonModal }) => {
+const NotificationModal = ({ setModalNotti, buttonModal, realTime }) => {
 	const notifymodal = useRef(null);
 	const [selectKey, setSelectKey] = useState('all');
 	const [isLoading, setIsLoading] = useState(true);
@@ -98,7 +98,11 @@ const NotificationModal = ({ setModalNotti, buttonModal }) => {
 				items.verb === 'likeGroupPost' ||
 				items.verb === 'commentGroupPost'
 			) {
-				navigate(`/detail-feed/${items.originId.minipostId || items.originId.groupPostId}`);
+				navigate(
+					`/detail-feed/${items.verb === 'commentMiniPost' ? 'commentMiniPost' : 'commentGroupPost'}/${
+						items.originId.minipostId || items.originId.groupPostId
+					}`
+				);
 				dispatch(backgroundToggle(true));
 				setModalNotti(false);
 			}
@@ -108,7 +112,7 @@ const NotificationModal = ({ setModalNotti, buttonModal }) => {
 
 	useEffect(() => {
 		getMyNotification();
-	}, []);
+	}, [realTime]);
 
 	useEffect(() => {
 		if (getNotifications.length > 0) {
@@ -159,7 +163,6 @@ const NotificationModal = ({ setModalNotti, buttonModal }) => {
 	const handleNotificaiton = () => {
 		dispatch(backgroundToggle(true));
 		setModalNotti(false);
-
 		dispatch(activeKeyTabsNotification(selectKey));
 	};
 
@@ -182,7 +185,8 @@ const NotificationModal = ({ setModalNotti, buttonModal }) => {
 							<p dangerouslySetInnerHTML={{ __html: item?.message }}></p>
 							{item.verb !== 'follow' &&
 								item.verb !== 'requestGroup' &&
-								item.vern !== 'commentGroupPost' && (
+								item.verb !== 'commentGroupPost' &&
+								item.verb !== 'commentQuote' && (
 									<>
 										<span>
 											{item.createdBy?.fullName ? (
@@ -234,7 +238,9 @@ const NotificationModal = ({ setModalNotti, buttonModal }) => {
 			<div ref={notifymodal} className='notificaiton__container'>
 				<div className='notificaiton__title'>Thông báo</div>
 				{isLoading ? (
-					<LoadingIndicator />
+					<div className='notificaiton__loading__container'>
+						<LoadingTimeLine />
+					</div>
 				) : (
 					<div className='notificaiton__tabs'>
 						<Tabs onSelect={eventKey => setSelectKey(eventKey)} defaultActiveKey='all'>
@@ -259,7 +265,7 @@ const NotificationModal = ({ setModalNotti, buttonModal }) => {
 								<Tab eventKey='unread' title='Chưa đọc'>
 									<div className='notificaiton__all__title'>Thông báo chưa đọc</div>
 									{getNotifications
-										.slice(0, 8)
+										.slice(0, 6)
 										.map(item => !item.isCheck && !item.isRead && rendergGetNotifications(item))}
 									<Link
 										to={`/notification`}
@@ -372,5 +378,6 @@ const NotificationModal = ({ setModalNotti, buttonModal }) => {
 NotificationModal.propTypes = {
 	setModalNotti: PropTypes.func,
 	buttonModal: PropTypes.object,
+	realTime: PropTypes.bool,
 };
 export default NotificationModal;

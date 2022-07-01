@@ -89,7 +89,7 @@ function App({ children }) {
 			<ModalCheckLogin routerLogin={routerLogin} />
 			<Routes>
 				<Route path='/top100' element={<Ranks />} />
-				<Route path='/detail-feed/:idPost' element={<DetailFeed />} />
+				<Route path='/detail-feed/:type/:idPost' element={<DetailFeed />} />
 				<Route path='/books-author/:userId' element={<BooksAuthor />} />
 				<Route path='/book-author-charts/:bookId' element={<ReadingSummaryChartAuthor />} />
 				<Route path='/result/q=:value' element={<Result />} />

@@ -78,21 +78,24 @@ const NotificationStatus = ({ item, setGetNotifications, getNotifications }) => 
 				<div className='notificaiton__all__main__layout__status'>
 					<div className='notificaiton__main__all__infor'>
 						<p dangerouslySetInnerHTML={{ __html: item?.message }}></p>
-						{item.verb !== 'follow' && item.verb !== 'requestGroup' && item.verb !== 'commentGroupPost' && (
-							<>
-								<span>
-									{item.createdBy?.fullName ? (
-										item.createdBy.fullName
-									) : (
-										<>
-											<span> {item.createdBy?.firstName}</span>
-											<span> {item.createdBy?.lastName}</span>
-										</>
-									)}
-								</span>
-								{renderMessage(item)}
-							</>
-						)}
+						{item.verb !== 'follow' &&
+							item.verb !== 'requestGroup' &&
+							item.verb !== 'commentGroupPost' &&
+							item.verb !== 'commentQuote' && (
+								<>
+									<span>
+										{item.createdBy?.fullName ? (
+											item.createdBy.fullName
+										) : (
+											<>
+												<span> {item.createdBy?.firstName}</span>
+												<span> {item.createdBy?.lastName}</span>
+											</>
+										)}
+									</span>
+									{renderMessage(item)}
+								</>
+							)}
 					</div>
 					<div
 						className={

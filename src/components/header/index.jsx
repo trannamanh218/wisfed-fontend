@@ -16,6 +16,9 @@ import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { updateTargetReading } from 'reducers/redux-utils/chart';
 import defaultAvatar from 'assets/images/avatar.jpeg';
+import * as stream from 'getstream';
+import _ from 'lodash';
+import { patchNewNotification, updateUserInfo } from 'reducers/redux-utils/auth';
 
 const Header = () => {
 	const { isShowModal } = useSelector(state => state.search);
@@ -33,6 +36,7 @@ const Header = () => {
 	const [getSlugResult, setGetSlugResult] = useState('');
 	const [userLogin, setUserLogin] = useState(false);
 	const [activeNotificaiton, setActiveNotification] = useState(false);
+	const [realTime, setRealTime] = useState(false);
 
 	const userOptions = useRef(null);
 
@@ -55,8 +59,25 @@ const Header = () => {
 		if (pathname === '/notification') {
 			setActiveNotification(true);
 			setModalNotti(false);
+			setTimeout(() => setRealTime(false), 1500);
+		} else if (modalNoti) {
+			const params = {
+				isNewNotification: false,
+			};
+			updateNewNotificaionFalse(params);
+			setTimeout(() => setRealTime(false), 1500);
 		}
-	}, []);
+	}, [realTime]);
+
+	useEffect(() => {
+		if (!_.isEmpty(userInfo)) {
+			if (userInfo.isNewNotification) {
+				setRealTime(true);
+			} else {
+				setRealTime(false);
+			}
+		}
+	}, [userInfo]);
 
 	useEffect(() => {
 		if (Storage.getAccessToken()) {
@@ -79,13 +100,40 @@ const Header = () => {
 		}
 	};
 
+	const updateNewNotificaionFalse = async params => {
+		if (userInfo.isNewNotification) {
+			const updateUserInfoData = await dispatch(patchNewNotification(params)).unwrap();
+			if (!_.isEmpty(updateUserInfoData)) {
+				const dataNewNoti = { ...userInfo, isNewNotification: updateUserInfoData.isNewNotification };
+				dispatch(updateUserInfo(dataNewNoti));
+			}
+		}
+	};
+
+	const updateNewNotificaionTrue = params => {
+		if (!userInfo.isNewNotification) {
+			const updateUserInfoData = dispatch(patchNewNotification(params)).unwrap();
+			if (!_.isEmpty(updateUserInfoData)) {
+				const dataNewNoti = { ...userInfo, isNewNotification: updateUserInfoData.isNewNotification };
+				dispatch(updateUserInfo(dataNewNoti));
+			}
+		}
+	};
+
 	const toglleModalNotify = () => {
+		const params = {
+			isNewNotification: false,
+		};
 		if (pathname === '/notification') {
 			setModalNotti(false);
+			setRealTime(false);
+			updateNewNotificaionFalse(params);
 		} else {
 			if (Storage.getAccessToken()) {
 				setModalNotti(!modalNoti);
 				dispatch(backgroundToggle(modalNoti));
+				setRealTime(false);
+				updateNewNotificaionFalse(params);
 			} else {
 				dispatch(checkUserLogin(true));
 			}
@@ -115,6 +163,29 @@ const Header = () => {
 		navigate('/login');
 		toast.success('Đăng xuất thành công');
 	};
+
+	useEffect(() => {
+		if (!_.isEmpty(userInfo)) {
+			const client = stream.connect('p77uwpux9zwu', null, '1169912');
+			const notificationFeed = client.feed('notification', userInfo.id, userInfo.userToken);
+			const callback = data => {
+				if (!_.isEmpty(data)) {
+					setRealTime(true);
+					const params = {
+						isNewNotification: true,
+					};
+					return updateNewNotificaionTrue(params);
+				}
+			};
+			const successCallback = () => {
+				// console.log('now listening to changes in realtime');
+			};
+			const failCallback = data => {
+				// console.log('something went wrong, check the console logs');
+			};
+			notificationFeed.subscribe(callback).then(successCallback, failCallback);
+		}
+	}, []);
 
 	return (
 		<div className='header'>
@@ -170,13 +241,24 @@ const Header = () => {
 						<GroupIcon className='header__nav__icon' />
 					</Link>
 				</li>
+
 				<div className='notify-icon'>
 					<div
 						ref={buttonModal}
 						onClick={toglleModalNotify}
-						className={classNames('header__notify__icon', { 'active': modalNoti || activeNotificaiton })}
+						className={classNames('header__notify__icon', {
+							'active': modalNoti || activeNotificaiton,
+							'header__notify__icon__active': realTime,
+						})}
 					/>
-					{modalNoti && <NotificationModal setModalNotti={setModalNotti} buttonModal={buttonModal} />}
+
+					{modalNoti && (
+						<NotificationModal
+							setModalNotti={setModalNotti}
+							buttonModal={buttonModal}
+							realTime={realTime}
+						/>
+					)}
 				</div>
 			</ul>
 

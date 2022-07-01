@@ -1,7 +1,7 @@
 import NormalContainer from 'components/layout/normal-container';
 import Post from 'shared/post';
-import { getDetailFeed } from 'reducers/redux-utils/notificaiton';
-import { useEffect, useRef, useState } from 'react';
+import { getDetailFeed, getDetailFeedGroup } from 'reducers/redux-utils/notificaiton';
+import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { NotificationError } from 'helpers/Error';
@@ -10,8 +10,7 @@ import './detail-feed.scss';
 const DetailFeed = () => {
 	const dispatch = useDispatch();
 	const [detailFeed, setDetailFedd] = useState([]);
-
-	const { idPost } = useParams();
+	const { idPost, type } = useParams();
 
 	useEffect(async () => {
 		const params = {
@@ -19,7 +18,12 @@ const DetailFeed = () => {
 		};
 
 		try {
-			const res = await dispatch(getDetailFeed(params)).unwrap();
+			let res = [];
+			if (type === 'commentMiniPost') {
+				res = await dispatch(getDetailFeed(params)).unwrap();
+			} else {
+				res = await dispatch(getDetailFeedGroup(params)).unwrap();
+			}
 			setDetailFedd(res);
 		} catch (err) {
 			NotificationError(err);
@@ -29,9 +33,11 @@ const DetailFeed = () => {
 	return (
 		<NormalContainer>
 			<div className='detail_feed_container'>
-				{detailFeed.map(item => (
-					<Post postInformations={item} key={item.id} />
-				))}
+				{type === 'commentMiniPost' ? (
+					detailFeed.map(item => <Post postInformations={item} key={item.id} />)
+				) : (
+					<Post postInformations={detailFeed} />
+				)}
 			</div>
 		</NormalContainer>
 	);
