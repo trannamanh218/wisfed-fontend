@@ -158,22 +158,34 @@ function Post({ postInformations, className, showModalCreatPost, inReviews = fal
 	};
 
 	const withFriends = paramInfo => {
-		return (
-			<>
+		if (paramInfo.length === 1) {
+			return (
 				<span>
-					{' '}
-					cùng với{' '}
-					{paramInfo.map((element, index) => {
-						return (
-							<span key={index}>
-								{element.users.fullName || element.users.firstName}
-								{index === paramInfo.length - 1 ? '.' : ', '}
-							</span>
-						);
-					})}
+					{' cùng với '}
+					{paramInfo[0].users.fullName || paramInfo[0].users.firstName + ' ' + paramInfo[0].users.lastName}
+					{'.'}
 				</span>
-			</>
-		);
+			);
+		} else if (paramInfo.length === 2) {
+			return (
+				<span>
+					{' cùng với '}
+					{paramInfo[0].users.fullName || paramInfo[0].users.firstName + ' ' + paramInfo[0].users.lastName}
+					{' và '}
+					{paramInfo[1].users.fullName || paramInfo[1].users.firstName + ' ' + paramInfo[1].users.lastName}
+				</span>
+			);
+		} else {
+			return (
+				<span>
+					{' cùng với '}
+					{paramInfo[0].users.fullName || paramInfo[0].users.firstName + ' ' + paramInfo[0].users.lastName}
+					{' và '}
+					{paramInfo.length - 1}
+					{' người khác'}
+				</span>
+			);
+		}
 	};
 
 	const infoUser = () => {
@@ -195,7 +207,7 @@ function Post({ postInformations, className, showModalCreatPost, inReviews = fal
 							{postData.mentionsUsers && postData.mentionsUsers.length !== 0 ? (
 								withFriends(postData.mentionsUsers)
 							) : (
-								<div></div>
+								<span></span>
 							)}
 						</div>
 						<div className='post__user-status__post-time-status'>
