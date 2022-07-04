@@ -35,7 +35,7 @@ import { saveDataShare, checkShare } from 'reducers/redux-utils/post';
 import Post from 'shared/post';
 
 function CreatPostModalContent({
-	hideCreatPostModal,
+	hideCreatePostModal,
 	setShowModalCreatPost,
 	showModalCreatPost,
 	option,
@@ -72,7 +72,7 @@ function CreatPostModalContent({
 	const location = useLocation();
 	const UpdateImg = useSelector(state => state.chart.updateImgPost);
 	const { resetTaggedData, isShare, postsData, isSharePosts } = useSelector(state => state.post);
-	const { id = '' } = useParams();
+	const { id } = useParams();
 	const {
 		auth: { userInfo },
 		book: { bookForCreatePost, bookInfo },
@@ -333,11 +333,25 @@ function CreatPostModalContent({
 		// book, author , topic is required
 		setStatus(STATUS_LOADING);
 		try {
+			if (location.pathname.includes('group') && (isShare || isSharePosts)) {
+				const query = {
+					id: postsData.id,
+					type: 'groupPost',
+					...params,
+				};
+				await dispatch(getSharePostInternal(query)).unwrap();
+			}
+		} catch (error) {
+			NotificationError(error);
+		}
+
+		try {
 			if (isShare || isSharePosts) {
 				if (isShare) {
 					const query = {
 						id: postsData.sharePost ? postsData.sharePost.minipostId : postsData.id,
 						type: 'quote',
+						background: postsData.background,
 						...params,
 					};
 					await dispatch(getSharePostInternal(query)).unwrap();
@@ -394,7 +408,7 @@ function CreatPostModalContent({
 			const statusCode = err?.statusCode || 500;
 			if (err.errorCode === 702) {
 				NotificationError(err);
-			} else {
+			} else if (!location.pathname.includes('group')) {
 				toast.error('Tạo post thất bại!');
 			}
 			setStatus(statusCode);
@@ -403,7 +417,7 @@ function CreatPostModalContent({
 			dispatch(saveDataShare({}));
 			dispatch(checkShare(false));
 			setStatus(STATUS_IDLE);
-			hideCreatPostModal();
+			hideCreatePostModal();
 			onChangeOption({});
 			setShowModalCreatPost(false);
 		}
@@ -411,7 +425,7 @@ function CreatPostModalContent({
 
 	useEffect(() => {
 		checkActive();
-	}, [showMainModal, textFieldEdit?.current?.innerText, taggedData]);
+	}, [showMainModal, textFieldEdit?.current?.innerText, taggedData, imagesUpload]);
 
 	const checkActive = () => {
 		let isActive = false;
@@ -497,7 +511,7 @@ function CreatPostModalContent({
 						<CloseX />
 					</div>
 					<h5>Tạo bài viết</h5>
-					<button className='creat-post-modal-content__main__close' onClick={hideCreatPostModal}>
+					<button className='creat-post-modal-content__main__close' onClick={hideCreatePostModal}>
 						<CloseX />
 					</button>
 				</div>
@@ -569,11 +583,15 @@ function CreatPostModalContent({
 								removeTaggedItem={removeTaggedItem}
 								type='addCategory'
 							/>
-
-							{isShare && <PostQuotes postsData={postsData} />}
-							{isSharePosts && (
-								<Post postInformations={postsData} showModalCreatPost={showModalCreatPost} />
+							{(isShare || isSharePosts) && (
+								<div className='creat-post-modal-content__main__share-container'>
+									{isShare && <PostQuotes postsData={postsData} isShare={isShare} />}
+									{isSharePosts && (
+										<Post postInformations={postsData} showModalCreatPost={showModalCreatPost} />
+									)}
+								</div>
 							)}
+
 							{!_.isEmpty(taggedData.addBook) || showUpload ? (
 								<>
 									{!_.isEmpty(taggedData.addBook) && (
@@ -682,7 +700,7 @@ function CreatPostModalContent({
 }
 
 CreatPostModalContent.propTypes = {
-	hideCreatPostModal: PropTypes.func,
+	hideCreatePostModal: PropTypes.func,
 	showModalCreatPost: PropTypes.bool,
 	option: PropTypes.object,
 	onChangeOption: PropTypes.func,

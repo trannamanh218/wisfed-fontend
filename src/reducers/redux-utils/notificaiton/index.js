@@ -1,6 +1,12 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import Request from 'helpers/Request';
-import { nottificationAPI, postReadNotification, detailFeedPost, detailFeedPostGroup } from 'constants/apiURL';
+import {
+	nottificationAPI,
+	postReadNotification,
+	detailFeedPost,
+	detailFeedPostGroup,
+	notificationUnRead,
+} from 'constants/apiURL';
 
 export const getNotification = createAsyncThunk('notification/getNotification', async (params, { rejectWithValue }) => {
 	try {
@@ -50,12 +56,26 @@ export const readNotification = createAsyncThunk(
 	}
 );
 
+export const getListNotificationUnRead = createAsyncThunk(
+	'notification/getListUnReadNotficaiton',
+	async (params, { rejectWithValue }) => {
+		try {
+			const response = await Request.makeGet(notificationUnRead, params);
+			return response.data;
+		} catch (err) {
+			const error = JSON.parse(err.response);
+			throw rejectWithValue(error);
+		}
+	}
+);
+
 const notificationSlice = createSlice({
 	name: 'notification',
 	initialState: {
 		toggle: null,
 		activeKeyTabs: '',
 		listNotifcaiton: [],
+		isRealTime: null,
 	},
 	reducers: {
 		backgroundToggle: (state, action) => {
@@ -66,6 +86,9 @@ const notificationSlice = createSlice({
 		},
 		handleListNotification: (state, action) => {
 			state.listNotifcaiton = action.payload;
+		},
+		depenRenderNotificaion: (state, action) => {
+			state.isRealTime = action.payload;
 		},
 	},
 	extraReducers: {
@@ -85,7 +108,8 @@ const notificationSlice = createSlice({
 	},
 });
 
-export const { backgroundToggle, activeKeyTabsNotification, handleListNotification } = notificationSlice.actions;
+export const { backgroundToggle, activeKeyTabsNotification, handleListNotification, depenRenderNotificaion } =
+	notificationSlice.actions;
 
 const notificationReducer = notificationSlice.reducer;
 export default notificationReducer;

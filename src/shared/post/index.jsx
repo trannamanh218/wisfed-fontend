@@ -23,8 +23,10 @@ import PostQuotes from 'shared/post-quotes';
 import PostsShare from 'shared/posts-Share';
 import Play from 'assets/images/play.png';
 import { Link } from 'react-router-dom';
+import { likeAndUnlikeReview } from 'reducers/redux-utils/book';
+import { POST_TYPE, REVIEW_TYPE } from 'constants';
 
-function Post({ postInformations, className, showModalCreatPost }) {
+function Post({ postInformations, className, showModalCreatPost, inReviews = false }) {
 	const [postData, setPostData] = useState({});
 	const [videoId, setVideoId] = useState('');
 	const { userInfo } = useSelector(state => state.auth);
@@ -36,7 +38,6 @@ function Post({ postInformations, className, showModalCreatPost }) {
 
 	const dispatch = useDispatch();
 	const { bookId } = useParams();
-	const { type } = useParams();
 
 	useEffect(() => {
 		setPostData({ ...postInformations });
@@ -128,6 +129,8 @@ function Post({ postInformations, className, showModalCreatPost }) {
 		try {
 			if (location.pathname.includes('group')) {
 				await dispatch(updateReactionActivityGroup(postData.id)).unwrap();
+			} else if (inReviews) {
+				await dispatch(likeAndUnlikeReview(postData.id)).unwrap();
 			} else {
 				await dispatch(updateReactionActivity(postData.minipostId || postData.id)).unwrap();
 			}
@@ -171,9 +174,15 @@ function Post({ postInformations, className, showModalCreatPost }) {
 							<div data-testid='post__user-name' className='post__user-status__name'>
 								{postData?.createdBy?.fullName || postData?.user?.fullName || 'Ẩn danh'}
 							</div>
-							{postData.groupInfo && <img className='post__user-icon' src={Play} alt='' />}
-							<Link to={`/group/${postData.groupInfo?.id}`} className='post__name__group'>
-								{postData.groupInfo && postData.groupInfo.name}
+							{(postData.groupInfo || postData.group) && (
+								<img className='post__user-icon' src={Play} alt='' />
+							)}
+
+							<Link
+								to={`/group/${postData.groupInfo?.id || postData.group?.id}`}
+								className='post__name__group'
+							>
+								{postData.groupInfo ? postData.groupInfo?.name : postData.group?.name}
 							</Link>
 						</div>
 
@@ -225,36 +234,33 @@ function Post({ postInformations, className, showModalCreatPost }) {
 		<div className={classNames('post__container', { [`${className}`]: className })}>
 			{renderInfo()}
 
-			<ul className='tagged'>
-				{!!postData?.mentionsAuthors?.length && (
-					<>
-						{postData.mentionsAuthors?.map(item => (
-							<li key={item.id} className={classNames('badge bg-primary-light')}>
-								<Feather />
-								<span>
-									{item.authors.name ||
-										item.authors.fullName ||
-										item.authors.lastName ||
-										item.authors.firstName ||
-										'Không xác định'}
-								</span>
-							</li>
-						))}
-					</>
-				)}
-			</ul>
+			{!!postData?.mentionsAuthors?.length && (
+				<ul className='tagged'>
+					{postData.mentionsAuthors?.map(item => (
+						<li key={item.id} className={classNames('badge bg-primary-light')}>
+							<Feather />
+							<span>
+								{item.authors.name ||
+									item.authors.fullName ||
+									item.authors.lastName ||
+									item.authors.firstName ||
+									'Không xác định'}
+							</span>
+						</li>
+					))}
+				</ul>
+			)}
 
-			<ul className='tagged'>
-				{!!postData?.mentionsCategories?.length && (
-					<>
-						{postData.mentionsCategories?.map(item => (
-							<li key={item.id} className={classNames('badge bg-primary-light')}>
-								<span>{item.category.name}</span>
-							</li>
-						))}
-					</>
-				)}
-			</ul>
+			{!!postData?.mentionsCategories?.length && (
+				<ul className='tagged'>
+					{postData.mentionsCategories?.map(item => (
+						<li key={item.id} className={classNames('badge bg-primary-light')}>
+							<span>{item.category.name}</span>
+						</li>
+					))}
+				</ul>
+			)}
+
 			{postData.isShare && postData.verb === 'shareQuote' && <PostQuotes postsData={postData} />}
 			{postData.book && (
 				<PostBook
@@ -262,6 +268,7 @@ function Post({ postInformations, className, showModalCreatPost }) {
 				/>
 			)}
 			{postData.verb === 'sharePost' && !_.isEmpty(postData.sharePost) && <PostsShare postData={postData} />}
+			{postData.verb === 'shareGroupPost' && !_.isEmpty(postData.sharePost) && <PostsShare postData={postData} />}
 			{postData?.image?.length > 0 && <GridImage images={postData.image} inPost={true} postId={postData.id} />}
 
 			{(postData?.image?.length === 0 &&
@@ -298,7 +305,7 @@ function Post({ postInformations, className, showModalCreatPost }) {
 									postData={postData}
 									handleReply={handleReply}
 									postCommentsLikedArray={[]}
-									inQuotes={false}
+									type={inReviews ? REVIEW_TYPE : POST_TYPE}
 								/>
 							)}
 							<div className='comment-reply-container'>
@@ -312,7 +319,7 @@ function Post({ postInformations, className, showModalCreatPost }) {
 													postData={postData}
 													handleReply={handleReply}
 													postCommentsLikedArray={[]}
-													inQuotes={false}
+													type={inReviews ? REVIEW_TYPE : POST_TYPE}
 												/>
 											</div>
 										);
@@ -349,6 +356,7 @@ Post.propTypes = {
 	likeAction: PropTypes.func,
 	className: PropTypes.string,
 	showModalCreatPost: PropTypes.bool,
+	inReviews: PropTypes.bool,
 };
 
 export default Post;

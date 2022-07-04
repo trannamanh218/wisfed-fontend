@@ -9,13 +9,19 @@
 .quote-action__item {
 	display: flex;
 	align-items: center;
-	gap: 12px;
+	gap: 10px;
 	font-size: 13px;
 	color: #6e7191;
 	font-weight: 600;
 	cursor: pointer;
 	-webkit-user-select: none;
 	user-select: none;
+
+	& > div {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+	}
 
 	span {
 		line-height: 24px;
@@ -25,7 +31,6 @@
 	svg {
 		width: 24px;
 		height: 24px;
-		margin-left: 12px;
 	}
 
 	.quote-icon {
@@ -37,11 +42,10 @@
 		}
 	}
 
-	button {
+	a {
 		font-weight: 600;
-		color: $blue;
 		.quote-action__right-arrow {
-			margin-left: 12px;
+			margin-left: 10px;
 			height: 16px;
 		}
 	}

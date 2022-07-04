@@ -10,7 +10,6 @@ import { checkGetUser } from 'reducers/redux-utils/profile';
 
 const Profile = () => {
 	const [currentUserInfo, setCurrentUserInfo] = useState({});
-	const [checkUserId, setCheckUserId] = useState(false);
 	const dispatch = useDispatch();
 	const { userInfo } = useSelector(state => state.auth);
 	const { userId } = useParams();
@@ -37,7 +36,7 @@ const Profile = () => {
 	return (
 		<MainContainer
 			main={<MainProfile currentUserInfo={currentUserInfo} />}
-			right={<SidebarProfile currentUserInfo={currentUserInfo} checkUserId={checkUserId} />}
+			right={<SidebarProfile currentUserInfo={currentUserInfo} />}
 		/>
 	);
 };

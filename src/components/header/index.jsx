@@ -6,7 +6,7 @@ import classNames from 'classnames';
 import './header.scss';
 import NotificationModal from 'pages/notification/';
 import { useDispatch, useSelector } from 'react-redux';
-import { backgroundToggle } from 'reducers/redux-utils/notificaiton';
+import { backgroundToggle, depenRenderNotificaion } from 'reducers/redux-utils/notificaiton';
 import { checkUserLogin, deleteUserInfo } from 'reducers/redux-utils/auth';
 import { useVisible } from 'shared/hooks';
 import SearchAllModal from 'shared/search-all';
@@ -37,7 +37,6 @@ const Header = () => {
 	const [userLogin, setUserLogin] = useState(false);
 	const [activeNotificaiton, setActiveNotification] = useState(false);
 	const [realTime, setRealTime] = useState(false);
-
 	const userOptions = useRef(null);
 
 	useEffect(() => {
@@ -56,14 +55,15 @@ const Header = () => {
 	}, [isShowModal]);
 
 	useEffect(() => {
+		const params = {
+			isNewNotification: false,
+		};
 		if (pathname === '/notification') {
 			setActiveNotification(true);
 			setModalNotti(false);
+			updateNewNotificaionFalse(params);
 			setTimeout(() => setRealTime(false), 1500);
-		} else if (modalNoti) {
-			const params = {
-				isNewNotification: false,
-			};
+		} else if (modalNoti && realTime) {
 			updateNewNotificaionFalse(params);
 			setTimeout(() => setRealTime(false), 1500);
 		}
@@ -97,26 +97,6 @@ const Header = () => {
 	const closeUserOptions = e => {
 		if (userOptions.current && !userOptions.current.contains(e.target)) {
 			setModalInforUser(false);
-		}
-	};
-
-	const updateNewNotificaionFalse = async params => {
-		if (userInfo.isNewNotification) {
-			const updateUserInfoData = await dispatch(patchNewNotification(params)).unwrap();
-			if (!_.isEmpty(updateUserInfoData)) {
-				const dataNewNoti = { ...userInfo, isNewNotification: updateUserInfoData.isNewNotification };
-				dispatch(updateUserInfo(dataNewNoti));
-			}
-		}
-	};
-
-	const updateNewNotificaionTrue = params => {
-		if (!userInfo.isNewNotification) {
-			const updateUserInfoData = dispatch(patchNewNotification(params)).unwrap();
-			if (!_.isEmpty(updateUserInfoData)) {
-				const dataNewNoti = { ...userInfo, isNewNotification: updateUserInfoData.isNewNotification };
-				dispatch(updateUserInfo(dataNewNoti));
-			}
 		}
 	};
 
@@ -169,12 +149,15 @@ const Header = () => {
 			const client = stream.connect('p77uwpux9zwu', null, '1169912');
 			const notificationFeed = client.feed('notification', userInfo.id, userInfo.userToken);
 			const callback = data => {
-				if (!_.isEmpty(data)) {
-					setRealTime(true);
-					const params = {
-						isNewNotification: true,
-					};
-					return updateNewNotificaionTrue(params);
+				setRealTime(true);
+				dispatch(depenRenderNotificaion(true));
+				const params = {
+					isNewNotification: true,
+				};
+				if (!userInfo.isNewNotification) {
+					dispatch(patchNewNotification(params)).unwrap();
+					const dataNewNoti = { ...userInfo, isNewNotification: true };
+					dispatch(updateUserInfo(dataNewNoti));
 				}
 			};
 			const successCallback = () => {
@@ -185,7 +168,16 @@ const Header = () => {
 			};
 			notificationFeed.subscribe(callback).then(successCallback, failCallback);
 		}
-	}, []);
+	}, [userInfo]);
+
+	const updateNewNotificaionFalse = params => {
+		if (userInfo.isNewNotification) {
+			dispatch(patchNewNotification(params)).unwrap();
+			const dataNewNoti = { ...userInfo, isNewNotification: false };
+			dispatch(updateUserInfo(dataNewNoti));
+			dispatch(depenRenderNotificaion(false));
+		}
+	};
 
 	return (
 		<div className='header'>

@@ -336,13 +336,11 @@ const PersonalInfoForm = ({ userData, toggleModal }) => {
 	]);
 
 	useEffect(() => {
-		if (userFavoriteCategories.length > 0) {
-			const arrayTemp = [];
-			userFavoriteCategories.forEach(item => {
-				arrayTemp.push(item.id);
-			});
-			favoriteCategoriesAddId.current = arrayTemp;
-		}
+		const arrayTemp = [];
+		userFavoriteCategories.forEach(item => {
+			arrayTemp.push(item.id);
+		});
+		favoriteCategoriesAddId.current = arrayTemp;
 	}, [userFavoriteCategories]);
 
 	return (

@@ -1,39 +1,23 @@
-// import { Forward } from 'components/svg';
+import { Forward } from 'components/svg';
 import { useState, useEffect } from 'react';
 import BackButton from 'shared/back-button';
 import Comment from 'shared/comments';
 import QuoteCard from 'shared/quote-card';
 import './main-quote-detail.scss';
-import { useDispatch } from 'react-redux';
 import _ from 'lodash';
 import CommentEditor from 'shared/comment-editor';
 import { useSelector } from 'react-redux';
 import classNames from 'classnames';
-import { NotificationError } from 'helpers/Error';
-import { checkLikeQuoteComment } from 'reducers/redux-utils/quote';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
+import { QUOTE_TYPE } from 'constants';
 
-const MainQuoteDetail = ({ quoteData, onCreateComment }) => {
-	const dispatch = useDispatch();
+const MainQuoteDetail = ({ quoteData, onCreateComment, likeUnlikeQuoteFnc }) => {
 	const userInfo = useSelector(state => state.auth.userInfo);
 
 	const [commentLv1IdArray, setCommentLv1IdArray] = useState([]);
 	const [replyingCommentId, setReplyingCommentId] = useState(0);
 	const [clickReply, setClickReply] = useState(false);
-	const [quoteCommentsLikedArray, setQuoteCommentsLikedArray] = useState([]);
-
-	useEffect(() => {
-		checkQuoteCommentLiked();
-	}, []);
-
-	const checkQuoteCommentLiked = async () => {
-		try {
-			const res = await dispatch(checkLikeQuoteComment()).unwrap();
-			setQuoteCommentsLikedArray(res);
-		} catch (err) {
-			NotificationError(err);
-		}
-	};
 
 	useEffect(() => {
 		if (quoteData?.commentQuotes?.length > 0) {
@@ -63,22 +47,53 @@ const MainQuoteDetail = ({ quoteData, onCreateComment }) => {
 				top: textareaInCommentEdit.offsetTop - 400,
 				behavior: 'smooth',
 			});
+			// textareaInCommentEdit.innerHTML = `<span class="url-color">${mentionUsersComment[0].userFullName}</span>`;
+			// placeCaretAtEnd(textareaInCommentEdit);
 		}
 	}, [replyingCommentId, clickReply]);
+
+	// const placeCaretAtEnd = element => {
+	// 	element.focus();
+	// 	if (typeof window.getSelection != 'undefined' && typeof document.createRange != 'undefined') {
+	// 		const range = document.createRange();
+	// 		range.selectNodeContents(element);
+	// 		range.collapse(false);
+	// 		const selection = window.getSelection();
+	// 		selection.removeAllRanges();
+	// 		selection.addRange(range);
+	// 	} else if (typeof document.body.createTextRange != 'undefined') {
+	// 		const textRange = document.body.createTextRange();
+	// 		textRange.moveToElementText(element);
+	// 		textRange.collapse(false);
+	// 		textRange.select();
+	// 	}
+	// };
 
 	return (
 		<div className='main-quote-detail'>
 			<div className='main-quote-detail__header'>
 				<BackButton destination={-1} />
 				<h4>Chi tiết Quote</h4>
-				{/* <a className='main-quote-detail__link' href='#'>
-					<span>Xem tất cả của Adam Khort</span>
-					<Forward />
-				</a> */}
+				{quoteData?.user?.fullName || (quoteData?.user?.firstName && quoteData?.user?.lastName) ? (
+					<Link to={`/quotes/${quoteData.user.id}`} className='main-quote-detail__link'>
+						<span>
+							Xem tất cả Quotes của{' '}
+							{quoteData.user.fullName || quoteData.user.firstName + ' ' + quoteData.user.lastName}{' '}
+						</span>
+						<Forward />
+					</Link>
+				) : (
+					<></>
+				)}
 			</div>
 			{!_.isEmpty(quoteData) && (
 				<div className='main-quote-detail__pane'>
-					<QuoteCard className='mx-auto' isDetail={true} data={quoteData} />
+					<QuoteCard
+						className='mx-auto'
+						isDetail={true}
+						data={quoteData}
+						likeUnlikeQuoteFnc={likeUnlikeQuoteFnc}
+					/>
 					{quoteData.commentQuotes?.map(comment => (
 						<div key={comment.id}>
 							{comment.replyId === null && (
@@ -87,8 +102,7 @@ const MainQuoteDetail = ({ quoteData, onCreateComment }) => {
 									data={comment}
 									postData={quoteData}
 									handleReply={handleReply}
-									postCommentsLikedArray={quoteCommentsLikedArray}
-									inQuotes={true}
+									type={QUOTE_TYPE}
 								/>
 							)}
 
@@ -102,8 +116,7 @@ const MainQuoteDetail = ({ quoteData, onCreateComment }) => {
 													data={commentChild}
 													postData={quoteData}
 													handleReply={handleReply}
-													postCommentsLikedArray={quoteCommentsLikedArray}
-													inQuotes={true}
+													type={QUOTE_TYPE}
 												/>
 											</div>
 										);
@@ -133,6 +146,7 @@ const MainQuoteDetail = ({ quoteData, onCreateComment }) => {
 MainQuoteDetail.propTypes = {
 	quoteData: PropTypes.object,
 	onCreateComment: PropTypes.func,
+	likeUnlikeQuoteFnc: PropTypes.func,
 };
 
 export default MainQuoteDetail;

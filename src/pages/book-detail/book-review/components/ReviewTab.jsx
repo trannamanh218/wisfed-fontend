@@ -134,7 +134,7 @@ const ReviewTab = ({ currentTab }) => {
 					>
 						{reviewList.map(item => (
 							<Fragment key={`post-${item.id}`}>
-								<Post className='post-container--review' postInformations={item} />
+								<Post className='post-container--review' postInformations={item} inReviews={true} />
 								<hr />
 							</Fragment>
 						))}

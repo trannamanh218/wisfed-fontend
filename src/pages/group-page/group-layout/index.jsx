@@ -4,49 +4,51 @@ import { useNavigate } from 'react-router-dom';
 import MainLayout from './mainLayout';
 import SidebarLeft from './sidebarLeft';
 import PopupCreateGroup from '../PopupCreateGroup';
-import { getGroupList, getMyAdminGroup, getMyGroup } from 'reducers/redux-utils/group';
+import { getMyAdminGroup, getMyGroup } from 'reducers/redux-utils/group';
 import './style.scss';
 import { useDispatch } from 'react-redux';
 import MainContainerLeft from 'components/layout/main-container-left';
 import SearchField from 'shared/search-field';
-import { getFilterSearch } from 'reducers/redux-utils/search';
 import _ from 'lodash';
 import { NotificationError } from 'helpers/Error';
 import Circle from 'shared/loading/circle';
+import { useVisible } from 'shared/hooks';
+import MainLayoutSearch from './MainLayoutSearch';
 
 const LayoutGroup = () => {
-	const [isShow, setIsShow] = useState(false);
 	const [myGroup, setMyGroup] = useState([]);
 	const [adminGroup, setAdminGroup] = useState([]);
-	const [list, setList] = useState([]);
 	const [valueGroupSearch, setValueGroupSearch] = useState('');
-	const [getListGroup, setListGroup] = useState([]);
 	const [filter, setFilter] = useState('[]');
 	const dispatch = useDispatch();
 	const [isShowScreen, setIsShhowScreen] = useState(true);
 	const [isFetching, setIsFetching] = useState(true);
+	const { ref: showRef, isVisible: isShow, setIsVisible: setIsShow } = useVisible(false);
 
 	const handleClose = () => {
 		setIsShow(!isShow);
 	};
 
-	const listGroup = async () => {
-		const actionGetList = await dispatch(getGroupList());
-		setIsFetching(false);
-		setList(actionGetList.payload.rows);
-	};
-
 	const listMyGroup = async () => {
-		const actionListMyGroup = await dispatch(getMyGroup());
-		setMyGroup(actionListMyGroup.payload.data);
+		try {
+			const actionListMyGroup = await dispatch(getMyGroup());
+			setMyGroup(actionListMyGroup.payload.data);
+			setIsFetching(false);
+		} catch (error) {
+			NotificationError(error);
+		}
 	};
 	const listAdminMyGroup = async () => {
-		const actionlistAdminMyGroup = await dispatch(getMyAdminGroup());
-		setAdminGroup(actionlistAdminMyGroup.payload.data);
+		try {
+			const actionlistAdminMyGroup = await dispatch(getMyAdminGroup());
+			setAdminGroup(actionlistAdminMyGroup.payload.data);
+			setIsFetching(false);
+		} catch (error) {
+			NotificationError(error);
+		}
 	};
 
 	useEffect(() => {
-		listGroup();
 		listMyGroup();
 		listAdminMyGroup();
 	}, []);
@@ -66,21 +68,6 @@ const LayoutGroup = () => {
 	};
 	const debounceSearch = useCallback(_.debounce(updateInputSearch, 500), []);
 
-	useEffect(async () => {
-		const params = {
-			q: filter,
-			type: 'groups',
-		};
-		try {
-			if (valueGroupSearch.length > 0) {
-				const result = await dispatch(getFilterSearch({ ...params })).unwrap();
-				setListGroup(result.rows);
-			}
-		} catch (err) {
-			NotificationError(err);
-		}
-	}, [filter]);
-
 	useEffect(() => {
 		setTimeout(() => {
 			if (valueGroupSearch !== '') {
@@ -90,6 +77,8 @@ const LayoutGroup = () => {
 			}
 		}, 700);
 	}, [valueGroupSearch]);
+
+	useEffect(() => {}, []);
 
 	const SearchGroup = () => {
 		const navigate = useNavigate();
@@ -117,7 +106,7 @@ const LayoutGroup = () => {
 			<Circle loading={isFetching} />
 			{isShow ? (
 				<div>
-					<PopupCreateGroup handleClose={handleClose} />
+					<PopupCreateGroup handleClose={handleClose} showRef={showRef} />
 				</div>
 			) : (
 				''
@@ -127,11 +116,14 @@ const LayoutGroup = () => {
 					<MainContainerLeft
 						sub={<SearchGroup />}
 						right={<SidebarLeft listMyGroup={myGroup} listAdminMyGroup={adminGroup} />}
-						main={<MainLayout listGroup={list} />}
+						main={<MainLayout filter={true} />}
 					/>
 				) : (
 					<div className='result-search'>
-						<MainContainerLeft sub={<SearchGroup />} main={<MainLayout listGroup={getListGroup} />} />
+						<MainContainerLeft
+							sub={<SearchGroup />}
+							main={<MainLayoutSearch valueGroupSearch={filter} />}
+						/>
 					</div>
 				)}
 			</>

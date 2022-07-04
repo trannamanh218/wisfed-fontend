@@ -23,11 +23,12 @@ import MainPostGroupView from './component/MainPostGroupView';
 import _ from 'lodash';
 import { useParams } from 'react-router-dom';
 import SearchLayout from './component/SearchLayout';
+import { useVisible } from 'shared/hooks';
+import defaultAvatar from 'assets/images/Rectangle 17435.png';
 
-function MainGroupComponent({ handleChange, keyChange, data, backgroundImage, member }) {
+function MainGroupComponent({ handleChange, keyChange, data, member }) {
 	const [key, setKey] = useState('intro');
 	const { groupType, description, memberGroups, name } = data;
-	const [isShow, setIsShow] = useState(false);
 	const dispatch = useDispatch();
 	const [show, setShow] = useState(false);
 	const { userInfo } = useSelector(state => state.auth);
@@ -38,6 +39,7 @@ function MainGroupComponent({ handleChange, keyChange, data, backgroundImage, me
 	const [getData, setGetData] = useState([]);
 	const { id = '' } = useParams();
 	const keyRedux = useSelector(state => state.group.key);
+	const { ref: showRef, isVisible: isShow, setIsVisible: setIsShow } = useVisible(false);
 
 	const enjoyGroup = async () => {
 		setIsFetching(true);
@@ -96,6 +98,7 @@ function MainGroupComponent({ handleChange, keyChange, data, backgroundImage, me
 		const params = {
 			q: filter,
 			id: id,
+			limit: 50,
 		};
 		try {
 			if (valueGroupSearch.length > 0) {
@@ -135,16 +138,16 @@ function MainGroupComponent({ handleChange, keyChange, data, backgroundImage, me
 			<div className='group__background'>
 				<div>
 					<img
-						src={
-							backgroundImage !== undefined
-								? backgroundImage
-								: 'https://img4.thuthuatphanmem.vn/uploads/2020/08/28/anh-bia-dep-danh-cho-zalo_093733432.jpg'
-						}
+						src={data.avatar ? data.avatar : defaultAvatar}
+						onError={e => e.target.setAttribute('src', defaultAvatar)}
 						alt=''
 					/>
 				</div>
 				<div className='group__title-name'>
-					<span>Nhóm của Shadow</span>
+					<span>
+						Nhóm của{' '}
+						{data?.createdBy?.fullName || data?.createdBy?.firstName + ' ' + data?.createdBy?.lastName}
+					</span>
 				</div>
 			</div>
 			<div className='group-name'>
@@ -198,7 +201,7 @@ function MainGroupComponent({ handleChange, keyChange, data, backgroundImage, me
 					<div style={{ position: 'fixed', left: '33%', top: '20%', zIndex: '2000' }}>
 						{isShow ? (
 							<div className='popup-container'>
-								<PopupInviteFriend handleClose={() => setIsShow(!isShow)} />
+								<PopupInviteFriend handleClose={() => setIsShow(!isShow)} showRef={showRef} />
 							</div>
 						) : (
 							''
@@ -240,7 +243,15 @@ function MainGroupComponent({ handleChange, keyChange, data, backgroundImage, me
 			{keyChange === 'settingsQuestion' && <SettingsQuestions handleChange={handleChange} />}
 			{keyChange === 'manageJoin' && <ManageJoin handleChange={handleChange} />}
 			{keyChange === 'managePost' && <PostWatting handleChange={handleChange} />}
-			{keyChange === 'search' && <SearchLayout data={getData} />}
+			{keyChange === 'search' && getData && (
+				<SearchLayout
+					dataGroup={getData}
+					filter={filter}
+					valueGroupSearch={valueGroupSearch}
+					show={show}
+					id={id}
+				/>
+			)}
 		</div>
 	);
 }

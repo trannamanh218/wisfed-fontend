@@ -2,14 +2,21 @@ import { useState, memo } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import caretIcon from 'assets/images/caret.png';
-import { DEFAULT_TOGGLE_ROWS } from 'constants';
+import { DEFAULT_TOGGLE_ROWS, NUMBER_ROWS } from 'constants';
 import './dual-column.scss';
-import { NUMBER_ROWS } from 'constants';
 import { useNavigate } from 'react-router-dom';
 import RouteLink from 'helpers/RouteLink';
 
 const DualColumn = props => {
-	const { list, background, isBackground, pageText = true, inCategory = false, inQuotes = false } = props;
+	const {
+		list,
+		background,
+		isBackground,
+		pageText = true,
+		inCategory = false,
+		inQuotes = false,
+		filterQuotesByCategory,
+	} = props;
 	const [isExpand, setIsExpand] = useState(false);
 
 	let defaultItems;
@@ -59,14 +66,18 @@ const DualColumn = props => {
 						<li className={classNames('dualColumn-item', { 'has-background': isBackground })} key={index}>
 							<span
 								className='dualColumn-item__title'
-								onClick={() => handleOnClick(item.category)}
+								onClick={
+									pageText
+										? () => filterQuotesByCategory(item.id)
+										: () => handleOnClick(item.category)
+								}
 								style={inCategory ? { cursor: 'pointer' } : {}}
 							>
 								{inCategory ? item.category.name : item.name}
 							</span>
 
 							{pageText ? (
-								<span className='dualColumn-item__number'>{item.count} Quotes</span>
+								<span className='dualColumn-item__number'>{item?.quoteCount} Quotes</span>
 							) : (
 								<span className='dualColumn-item__number no-page-text'>
 									{inCategory ? item.category.numberBooks : item.books.length}
@@ -113,6 +124,8 @@ DualColumn.propTypes = {
 	]),
 	pageText: PropTypes.bool,
 	inCategory: PropTypes.bool,
+	filterQuotesByCategory: PropTypes.func,
+	inQuotes: PropTypes.bool,
 };
 
 export default memo(DualColumn);

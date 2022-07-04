@@ -56,6 +56,10 @@
 	}
 }
 
+.post__custom {
+	padding: 0;
+}
+
 .post__user-status {
 	display: flex;
 	align-items: center;
@@ -176,11 +180,11 @@
 .post__user__container {
 	display: flex;
 	align-items: center;
-	gap: 16px;
+	gap: 5px;
 	.post__user-icon {
 		height: 12px;
 		width: 12px;
-		margin-right: 8px;
+		margin-right: 6px;
 	}
 	.post__name__group {
 		font-weight: 600;

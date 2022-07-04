@@ -163,7 +163,7 @@ const ModalWatching = ({ setModalFollowing, modalFollowing, userInfoDetail }) =>
 									</div>
 									<div className='author-card__right'>
 										{item.relation !== 'isMe' && (
-											<div className={`connect-buttons ${'row'}`}>
+											<div className='connect-buttons row'>
 												<Button
 													onClick={() => {
 														unFolow(item.userIdTwo);

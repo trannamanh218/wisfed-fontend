@@ -97,7 +97,7 @@ function CreatePost({ onChangeNewPost }) {
 		if (showModalCreatPost) {
 			creatPostModalContainer.current.addEventListener('mousedown', e => {
 				if (e.target === creatPostModalContainer.current) {
-					hideCreatPostModal();
+					hideCreatePostModal();
 				}
 			});
 			blockScroll();
@@ -128,7 +128,7 @@ function CreatePost({ onChangeNewPost }) {
 		scrollBlocked.current = false;
 	};
 
-	const hideCreatPostModal = () => {
+	const hideCreatePostModal = () => {
 		dispatch(resetTaggedDataFunc(true));
 		dispatch(saveDataShare({}));
 		dispatch(sharePosts(false));
@@ -176,7 +176,7 @@ function CreatePost({ onChangeNewPost }) {
 			{showModalCreatPost && (
 				<div className='newfeed__creat-post__modal' ref={creatPostModalContainer}>
 					<CreatPostModalContent
-						hideCreatPostModal={hideCreatPostModal}
+						hideCreatePostModal={hideCreatePostModal}
 						showModalCreatPost={showModalCreatPost}
 						option={option}
 						onChangeOption={onChangeOption}

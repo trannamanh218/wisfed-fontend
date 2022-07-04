@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import Button from 'shared/button';
 import FitlerOptions from 'shared/filter-options';
-import { Add, Configure } from 'components/svg';
+import { Add, ArrowsDownUp } from 'components/svg';
 import './filter-quote-pane.scss';
 import CreatQuotesModal from 'shared/creat-quotes-modal';
 import FormCheckGroup from 'shared/form-check-group';
@@ -14,7 +14,7 @@ const FilterQuotePane = ({
 	handleChangeOption,
 	children,
 	handleSortQuotes,
-	isMyQuotes,
+	hasFilters,
 }) => {
 	const [showCreatQuotesModal, setShowCreatQuotesModal] = useState(false);
 	const [showDropdownMenu, setShowDropdownMenu] = useState(false);
@@ -112,7 +112,7 @@ const FilterQuotePane = ({
 					<Button className='filter-quote-pane__btn' varient='primary-light' onClick={creatQuotes}>
 						<Add className='filter-quote-pane__icon' /> Tạo Quotes
 					</Button>
-					{isMyQuotes && (
+					{hasFilters && (
 						<FitlerOptions
 							list={filterOptions}
 							currentOption={currentOption}
@@ -127,7 +127,7 @@ const FilterQuotePane = ({
 							className='filter-pane__btn dropdown-toggle'
 							onClick={() => setShowDropdownMenu(!showDropdownMenu)}
 						>
-							<Configure />
+							<ArrowsDownUp />
 						</button>
 						<div
 							className={classNames('filter-quote-pane__setting dropdown-menu', {
@@ -194,7 +194,7 @@ FilterQuotePane.propTypes = {
 	handleChangeOption: PropTypes.func,
 	children: PropTypes.any,
 	handleSortQuotes: PropTypes.func,
-	isMyQuotes: PropTypes.bool,
+	hasFilters: PropTypes.bool,
 };
 
 export default FilterQuotePane;

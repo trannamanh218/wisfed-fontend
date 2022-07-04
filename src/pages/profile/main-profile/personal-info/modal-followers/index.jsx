@@ -141,7 +141,7 @@ const ModalFollowers = ({ modalFollower, setModalFollower, userInfoDetail }) => 
 								</div>
 								<div className='author-card__right'>
 									{item.relation !== 'isMe' && (
-										<div className={`connect-buttons ${'row'}`}>
+										<div className='connect-buttons row'>
 											<Button className='connect-button follow'>
 												<span className='connect-button__content'> Theo dõi </span>
 											</Button>

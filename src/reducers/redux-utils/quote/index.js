@@ -5,14 +5,12 @@ import {
 	quoteCommentAPI,
 	likeQuoteAPI,
 	likeQuoteCommentAPI,
-	checkLikeQuoteCommentAPI,
 	getMyLikedQuotesAPI,
 	getQuotesByFriendsOrFollowersAPI,
-	likeCommentGroup,
-	countQuotesByCategoryAPI,
+	countQuotesByCategoryWithUserIdAPI,
+	countAllQuotesByCategorydAPI,
 } from 'constants/apiURL';
 import Request from 'helpers/Request';
-import { useLocation } from 'react-router-dom';
 
 export const getQuoteList = createAsyncThunk('quote/get quote list', async (params, { rejectWithValue }) => {
 	try {
@@ -65,33 +63,14 @@ export const likeUnlikeQuote = createAsyncThunk('quote/like quote', async (id, {
 });
 
 export const likeQuoteComment = createAsyncThunk('quote/like quote', async (id, { rejectWithValue }) => {
-	let response;
-	const location = useLocation();
 	try {
-		if (location.pathname.includes('group')) {
-			response = await Request.makePatch(likeCommentGroup(id));
-		} else {
-			response = await Request.makePatch(likeQuoteCommentAPI(id));
-		}
+		const response = await Request.makePatch(likeQuoteCommentAPI(id));
 		return response.data;
 	} catch (err) {
 		const error = JSON.parse(err.response);
 		return rejectWithValue(error);
 	}
 });
-
-export const checkLikeQuoteComment = createAsyncThunk(
-	'quote/check like quote comment',
-	async (_, { rejectWithValue }) => {
-		try {
-			const response = await Request.makeGet(checkLikeQuoteCommentAPI);
-			return response.data;
-		} catch (err) {
-			const error = JSON.parse(err.response);
-			return rejectWithValue(error);
-		}
-	}
-);
 
 export const getMyLikedQuotes = createAsyncThunk('quote/get my liked quotes', async (params, { rejectWithValue }) => {
 	try {
@@ -108,7 +87,7 @@ export const getQuotesByFriendsOrFollowers = createAsyncThunk(
 	async (params, { rejectWithValue }) => {
 		try {
 			const response = await Request.makeGet(getQuotesByFriendsOrFollowersAPI, params);
-			return response.data.rows;
+			return response.data;
 		} catch (err) {
 			const error = JSON.parse(err.response);
 			return rejectWithValue(error);
@@ -118,9 +97,15 @@ export const getQuotesByFriendsOrFollowers = createAsyncThunk(
 
 export const getCountQuotesByCategory = createAsyncThunk(
 	'quote/get count quotes by category',
-	async (userId, { rejectWithValue }) => {
+	async (data, { rejectWithValue }) => {
 		try {
-			const response = await Request.makeGet(countQuotesByCategoryAPI(userId));
+			const { userId, params } = data;
+			let response;
+			if (userId) {
+				response = await Request.makeGet(countQuotesByCategoryWithUserIdAPI(userId), params);
+			} else {
+				response = await Request.makeGet(countAllQuotesByCategorydAPI, params);
+			}
 			return response.data;
 		} catch (err) {
 			const error = JSON.parse(err.response);

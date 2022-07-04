@@ -50,7 +50,7 @@ function CreateNewPasswordForm() {
 				title: 'Tạo mật khẩu',
 				title2: ' mới thất bại',
 				isShowIcon: false,
-				scribe: 'Vui lòng kiểm tra vào thử lại',
+				scribe: 'Vui lòng kiểm tra và thử lại',
 				scribe2: '',
 			});
 		}
@@ -146,7 +146,7 @@ function CreateNewPasswordForm() {
 					</div>
 					<div className='forget__subcribe'>
 						<span>
-							Nhập mã xác nhận 06 chữ số vừa được gửi <br /> về Email đã đăng ký của bạn. Sau đó <br />
+							Nhập mã xác nhận 08 chữ số vừa được gửi <br /> về Email đã đăng ký của bạn. Sau đó <br />
 							tạo mật khẩu mới
 						</span>
 					</div>

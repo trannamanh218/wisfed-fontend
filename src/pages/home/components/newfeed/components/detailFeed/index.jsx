@@ -19,7 +19,7 @@ const DetailFeed = () => {
 
 		try {
 			let res = [];
-			if (type === 'commentMiniPost') {
+			if (type === 'MiniPost') {
 				res = await dispatch(getDetailFeed(params)).unwrap();
 			} else {
 				res = await dispatch(getDetailFeedGroup(params)).unwrap();
@@ -33,7 +33,7 @@ const DetailFeed = () => {
 	return (
 		<NormalContainer>
 			<div className='detail_feed_container'>
-				{type === 'commentMiniPost' ? (
+				{type === 'MiniPost' ? (
 					detailFeed.map(item => <Post postInformations={item} key={item.id} />)
 				) : (
 					<Post postInformations={detailFeed} />

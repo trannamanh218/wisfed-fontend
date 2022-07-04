@@ -3,6 +3,7 @@ import { CommentSvg, Like, LikeFill, Share } from 'components/svg';
 import './post-action-bar.scss';
 import { useDispatch } from 'react-redux';
 import { sharePosts, saveDataShare } from 'reducers/redux-utils/post';
+
 const PostActionBar = ({ postData, handleLikeAction }) => {
 	const dispatch = useDispatch();
 

@@ -45,6 +45,7 @@ const QuotesTab = ({ currentTab }) => {
 				filter: JSON.stringify([{ operator: 'eq', value: bookId, property: 'bookId' }]),
 			};
 			let quoteListData = [];
+
 			if (currentOption.value === 'allQuotes') {
 				quoteListData = await dispatch(getQuoteList(params)).unwrap();
 			} else if (currentOption.value === 'friendsQuotes') {

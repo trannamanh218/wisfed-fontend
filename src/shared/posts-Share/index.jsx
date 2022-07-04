@@ -11,12 +11,15 @@ import UserAvatar from 'shared/user-avatar';
 import PreviewLink from 'shared/preview-link/PreviewLink';
 import ReactRating from 'shared/react-rating';
 import PostQuotes from 'shared/post-quotes';
-
-const PostsShare = ({ postData, className }) => {
+import { Link } from 'react-router-dom';
+import Play from 'assets/images/play.png';
+import { useSelector } from 'react-redux';
+const PostsShare = ({ postData }) => {
 	const [videoId, setVideoId] = useState('');
 	const directUrl = url => {
 		window.open(url, '_blank');
 	};
+	const { isSharePosts } = useSelector(state => state.post);
 
 	useEffect(() => {
 		if (
@@ -44,7 +47,11 @@ const PostsShare = ({ postData, className }) => {
 
 	return (
 		<div className='post__main__container'>
-			<div className={classNames('post__container', { [`${className}`]: className })}>
+			<div
+				className={classNames('post__container', {
+					'post__custom': isSharePosts,
+				})}
+			>
 				<div className='post__user-status'>
 					<UserAvatar
 						data-testid='post__user-avatar'
@@ -66,6 +73,16 @@ const PostsShare = ({ postData, className }) => {
 										</>
 								  )
 								: postData?.createdBy?.fullName || postData?.user?.fullName || 'Ẩn danh'}
+
+							{postData?.group && (
+								<>
+									<Link to={`/group/${postData?.group?.id}`}>
+										<span className='img-share__group'>
+											<img className='post__user-icon' src={Play} alt='' /> {postData.group?.name}
+										</span>
+									</Link>
+								</>
+							)}
 						</div>
 						<div className='post__user-status__post-time-status'>
 							<span>{calculateDurationTime(postData.time || postData.createdAt)}</span>

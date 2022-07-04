@@ -10,7 +10,6 @@ import { saveDataShare, checkShare } from 'reducers/redux-utils/post';
 import { useNavigate } from 'react-router-dom';
 
 const QuoteActionBar = ({ data, isDetail, likeUnlikeQuoteFnc, isLiked, likeNumber, setModalShow }) => {
-	const { isShare, share, comments, id } = data;
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
@@ -28,7 +27,7 @@ const QuoteActionBar = ({ data, isDetail, likeUnlikeQuoteFnc, isLiked, likeNumbe
 		if (!Storage.getAccessToken()) {
 			setModalShow(true);
 		} else {
-			likeUnlikeQuoteFnc(id);
+			likeUnlikeQuoteFnc(data.id);
 		}
 	};
 
@@ -41,26 +40,24 @@ const QuoteActionBar = ({ data, isDetail, likeUnlikeQuoteFnc, isLiked, likeNumbe
 			<li className='quote-action__item'>
 				{isDetail ? (
 					<>
-						<CommentSvg className='quote-icon active' />
-						<span className='quote-action__name'>{comments} Bình luận</span>
+						<CommentSvg className='quote-icon' />
+						<span className='quote-action__name'>{data.comments} Bình luận</span>
 					</>
 				) : (
-					<>
-						<Share className={classNames('quote-icon', { 'active': isShare })} />
-						<span onClick={handleCheckLoginShare} className='quote-action__name'>
-							{share} Chia sẻ
-						</span>
-					</>
+					<div onClick={handleCheckLoginShare}>
+						<Share className={classNames('quote-icon', { 'active': data.isShare })} />
+						<span className='quote-action__name'>{data.share} Chia sẻ</span>
+					</div>
 				)}
 			</li>
 			<li className='quote-action__item'>
 				{isDetail ? (
-					<>
-						<Share className='quote-icon active' />
-						<span className='quote-action__name'>{share} Chia sẻ</span>
-					</>
+					<div onClick={handleCheckLoginShare}>
+						<Share className='quote-icon' />
+						<span className='quote-action__name'>{data.share} Chia sẻ</span>
+					</div>
 				) : (
-					<Link to={`/quotes/detail/${id}`}>
+					<Link to={`/quotes/detail/${data.id}`}>
 						<span className='quote-action__name'>Chi tiết</span>
 						<RightArrow className='quote-action__right-arrow' />
 					</Link>

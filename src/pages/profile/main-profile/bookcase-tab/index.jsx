@@ -67,7 +67,7 @@ function Bookcase({ userInfo, currentTab }) {
 	const navigateToBookReview = async book => {
 		setStatus(STATUS_LOADING);
 		try {
-			const bookData = await dispatch(getBookDetail({ id: book.id })).unwrap();
+			const bookData = await dispatch(getBookDetail(book.id)).unwrap();
 			if (!_.isEmpty(bookData)) {
 				dispatch(updateTitleReviewPage(`Bài Review về ${book.name} của ${userInfo.fullName}`));
 				dispatch(updateDirectFromProfile(true));

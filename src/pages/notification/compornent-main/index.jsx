@@ -13,11 +13,12 @@ import Circle from 'shared/loading/circle';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import LoadingIndicator from 'shared/loading-indicator';
 import { useState, useEffect, useRef } from 'react';
-
+import { depenRenderNotificaion } from 'reducers/redux-utils/notificaiton';
 const Notification = () => {
 	const [getNotifications, setGetNotifications] = useState([]);
 	const [getListDefault, setListDefault] = useState([]);
 	const keyTabsActive = useSelector(state => state.notificationReducer.activeKeyTabs);
+	const { isRealTime } = useSelector(state => state.notificationReducer);
 	const [isLoading, setIsLoading] = useState(true);
 	const dispatch = useDispatch();
 	const [hasMore, setHasMore] = useState(true);
@@ -30,6 +31,7 @@ const Notification = () => {
 				start: callApiStart.current,
 				limit: callApiPerPage.current,
 			};
+
 			const notificationList = await dispatch(getNotification(params)).unwrap();
 			if (notificationList.length) {
 				callApiStart.current += callApiPerPage.current;
@@ -42,11 +44,12 @@ const Notification = () => {
 			NotificationError(err);
 		} finally {
 			setIsLoading(false);
+			dispatch(depenRenderNotificaion(null));
 		}
 	};
 
 	useEffect(() => {
-		if (getListDefault.length > 0) {
+		if (getListDefault.length > 0 && !isRealTime) {
 			const arrNew = getListDefault.map(item => item.activities).flat(1);
 			const newArr = arrNew.map(item => {
 				const data = { ...item, isAccept: false, isRefuse: false };
@@ -54,11 +57,16 @@ const Notification = () => {
 			});
 			setGetNotifications(newArr);
 		}
-	}, [getListDefault]);
+	}, [getListDefault, isRealTime]);
 
 	useEffect(() => {
-		getMyNotification();
-	}, [dispatch]);
+		if (!isRealTime) {
+			getMyNotification();
+		} else {
+			callApiStart.current = 0;
+			setListDefault([]);
+		}
+	}, [isRealTime]);
 
 	const lengthAddFriend = () => {
 		const length = getNotifications.filter(item => item.verb === 'addFriend' && !item.isCheck);

@@ -4,7 +4,7 @@
 	&__nav {
 		background-color: white;
 		margin-bottom: 2rem !important;
-		padding: 0.75rem 3.125rem;
+		padding: 12px 54px !important;
 		border-radius: 16px;
 
 		display: flex;
@@ -14,14 +14,15 @@
 	}
 
 	.nav-item {
-		font-size: 1.25rem;
+		font-size: 18px;
+		font-weight: 400;
 		color: $ash;
 	}
 
 	.nav-link {
 		color: $ash;
 		&.active {
-			font-weight: 600;
+			font-weight: 600 !important;
 		}
 	}
 

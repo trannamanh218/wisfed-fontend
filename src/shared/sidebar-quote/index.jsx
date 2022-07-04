@@ -32,7 +32,8 @@ const SidebarQuote = ({ listHashtags, inMyQuote, hasCountQuotes }) => {
 
 	const getCountQuotesByCategoryData = async () => {
 		try {
-			const res = await dispatch(getCountQuotesByCategory(userId)).unwrap();
+			const params = { limit: 100, sort: JSON.stringify([{ property: 'quoteCount', direction: 'DESC' }]) };
+			const res = await dispatch(getCountQuotesByCategory({ userId: userId || '', params: params })).unwrap();
 			setCategoryList(res);
 		} catch (err) {
 			NotificationError(err);
@@ -43,6 +44,10 @@ const SidebarQuote = ({ listHashtags, inMyQuote, hasCountQuotes }) => {
 		setInputSearch(e.target.value);
 		const newArray = categoryList.filter(item => item.name.toLowerCase().includes(e.target.value.toLowerCase()));
 		setCategorySearchedList(newArray);
+	};
+
+	const filterQuotesByCategory = categoryId => {
+		console.log(categoryId);
 	};
 
 	return (
@@ -60,9 +65,19 @@ const SidebarQuote = ({ listHashtags, inMyQuote, hasCountQuotes }) => {
 									value={inputSearch}
 								/>
 								{inputSearch ? (
-									<DualColumn list={categorySearchedList} pageText={true} inQuotes={true} />
+									<DualColumn
+										list={categorySearchedList}
+										pageText={true}
+										inQuotes={true}
+										filterQuotesByCategory={filterQuotesByCategory}
+									/>
 								) : (
-									<DualColumn list={categoryList} pageText={true} inQuotes={true} />
+									<DualColumn
+										list={categoryList}
+										pageText={true}
+										inQuotes={true}
+										filterQuotesByCategory={filterQuotesByCategory}
+									/>
 								)}
 							</div>
 						)}

@@ -5,9 +5,10 @@ import BookThumbnail from 'shared/book-thumbnail';
 import LinearProgressBar from 'shared/linear-progress-bar';
 import ReactRating from 'shared/react-rating';
 import './post-edit-book.scss';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { getRatingBook } from 'reducers/redux-utils/book';
 import { NotificationError } from 'helpers/Error';
+import _ from 'lodash';
 
 const PostEditBook = props => {
 	const { data, handleValidationInput, validationInput, handleAddToPost, handleChangeStar, valueStar } = props;
@@ -15,30 +16,23 @@ const PostEditBook = props => {
 	const [showText, setShowText] = useState(true);
 
 	const inputRef = useRef(null);
-	const bookInfor = useSelector(state => state.book.bookInfo);
 	const dispatch = useDispatch();
 
 	const fetchData = async () => {
-		if (data?.id) {
-			try {
-				const res = await dispatch(getRatingBook(data?.id)).unwrap();
-				const data = res.data.rows;
-				setListRatingStar(data);
-			} catch (err) {
-				NotificationError(err);
-			}
-		} else if (bookInfor?.id) {
-			try {
-				const res = await dispatch(getRatingBook(bookInfor?.id)).unwrap();
-				const data = res.data.rows;
-				setListRatingStar(data);
-			} catch (err) {
-				NotificationError(err);
-			}
+		try {
+			const res = await dispatch(getRatingBook(data?.id)).unwrap();
+			setListRatingStar(res.data);
+		} catch (err) {
+			NotificationError(err);
 		}
 	};
+
 	useEffect(() => {
-		fetchData();
+		if (data.countRating === undefined) {
+			fetchData();
+		} else {
+			setListRatingStar({ count: data.countRating, avg: data.avgRating });
+		}
 	}, []);
 
 	// rating là rating của user cho cuốn sách, không phải rating tổng -- rating 1 lần duy nhất)
@@ -63,11 +57,12 @@ const PostEditBook = props => {
 		}
 		let message = '';
 		if (value > data.page) {
-			message = `Số trang không vượt quá ${data.page}`;
+			handleAddToPost({ ...data, progress: data.page });
 		} else if (value < 0) {
 			message = 'Số trang không được bé hơn 0';
+		} else {
+			handleAddToPost({ ...data, progress: value });
 		}
-		handleAddToPost({ ...data, progress: value });
 		handleValidationInput(message);
 	};
 
@@ -107,18 +102,12 @@ const PostEditBook = props => {
 				{(data.status === STATUS_BOOK.read || data.progress == data.page) && (
 					<div className='post-edit-book__action'>
 						<div className='post-edit-book__ratings'>
-							<ReactRating
-								initialRating={valueStar}
-								ratingTotal={listRatingStar?.length}
-								fractions={1}
-								handleChange={handleChangeStar}
-							/>
+							<ReactRating initialRating={valueStar} fractions={1} handleChange={handleChangeStar} />
 							<div className='post-edit-book__rating__number'>
-								{listRatingStar?.avg !== 0 ? (
-									<div>
-										{listRatingStar?.avg ? `(${listRatingStar?.avg}) ` : ''} (
-										{listRatingStar?.count || 'chưa có'} đánh giá)
-									</div>
+								{!_.isEmpty(listRatingStar) &&
+								listRatingStar.count > 0 &&
+								listRatingStar.avg !== null ? (
+									<div>{`(${listRatingStar.avg}) (${listRatingStar.count} đánh giá)`}</div>
 								) : (
 									<div>(chưa có đánh giá)</div>
 								)}

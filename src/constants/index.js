@@ -42,3 +42,8 @@ export const LIBRARY_LIMIT = 20;
 // BXH
 export const CHECK_STAR = true;
 export const CHECK_SHARE = true;
+
+//type
+export const POST_TYPE = 'post';
+export const QUOTE_TYPE = 'quote';
+export const REVIEW_TYPE = 'review';
