@@ -1,6 +1,17 @@
 import { useEffect, useState, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { LogoIcon, BookFillIcon, BookIcon, CategoryIcon, GroupIcon, HomeIcon, IconGroup } from 'components/svg';
+import {
+	LogoIcon,
+	BookFillIcon,
+	BookIcon,
+	CategoryIcon,
+	GroupIcon,
+	HomeIcon,
+	IconGroup,
+	LogOutIcon,
+	ProfileIcon,
+	ArrowDownIcon,
+} from 'components/svg';
 import SearchIcon from 'assets/icons/search.svg';
 import classNames from 'classnames';
 import './header.scss';
@@ -187,13 +198,22 @@ const Header = () => {
 						onError={e => e.target.setAttribute('src', `${defaultAvatar}`)}
 						alt='avatar'
 					/>
+					<span id='arrow-down-icon'>
+						<ArrowDownIcon />
+					</span>
 				</div>
 				{modalInforUser && localStorage.getItem('accessToken') && (
 					<ul className='header__option-info'>
 						<Link to={localStorage.getItem('accessToken') && `/profile/${userInfo.id}`}>
-							<li>Thông tin cá nhân</li>
+							<li>
+								<ProfileIcon />
+								&nbsp;Thông tin cá nhân
+							</li>
 						</Link>
-						<li onClick={() => handleLogout()}>Đăng xuất</li>
+						<li onClick={() => handleLogout()}>
+							<LogOutIcon />
+							&nbsp;Đăng xuất
+						</li>
 					</ul>
 				)}
 			</div>

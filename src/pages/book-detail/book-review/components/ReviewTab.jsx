@@ -12,6 +12,11 @@ import { updateCurrentBookReviewsNumber } from 'reducers/redux-utils/book';
 import _ from 'lodash';
 import LoadingIndicator from 'shared/loading-indicator';
 import PropTypes from 'prop-types';
+import './ReviewTab.scss';
+import { Modal } from 'react-bootstrap';
+import { useModal } from 'shared/hooks';
+import FormCheckGroup from 'shared/form-check-group';
+import Button from 'shared/button';
 
 const ReviewTab = ({ currentTab }) => {
 	const filterOptions = [
@@ -20,10 +25,63 @@ const ReviewTab = ({ currentTab }) => {
 		{ id: 3, title: 'Người theo dõi', value: 'followReviews' },
 	];
 
+	const radioOptions = [
+		{
+			value: 'mostLiked',
+			title: 'Review nhiều like nhất',
+		},
+		{
+			value: 'lastest',
+			title: 'Mới nhất',
+		},
+		{
+			value: 'oldest',
+			title: 'Cũ nhất',
+		},
+	];
+	const checkBoxStarOptions = [
+		{
+			value: 5,
+			title: '5 sao',
+		},
+		{
+			value: 4,
+			title: '4 sao',
+		},
+		{
+			value: 3,
+			title: '3 sao',
+		},
+		{
+			value: 2,
+			title: '2 sao',
+		},
+		{
+			value: 1,
+			title: '1 sao',
+		},
+	];
+	const checkBoxPeopleOptions = [
+		{
+			value: 'mostFollow',
+			title: 'Có nhiều Follow nhất',
+		},
+		{
+			value: 'mostReview',
+			title: 'Có nhiều Review nhất',
+		},
+	];
+
 	const [currentOption, setCurrentOption] = useState(filterOptions[0]);
 	const [reviewList, setReviewList] = useState([]);
 	const [reviewCount, setReviewCount] = useState(0);
 	const [hasMore, setHasMore] = useState(true);
+	const { modalOpen, toggleModal } = useModal(false);
+	const [sortValue, setSortValue] = useState('mostLiked');
+	const [checkedStarArr, setCheckedStarArr] = useState([]);
+	const [checkedPeopleArr, setCheckedPeopleArr] = useState([]);
+	const [directionSort, setDirectionSort] = useState('DESC');
+	const [propertySort, setPropertySort] = useState('like');
 
 	const callApiStart = useRef(10);
 	const callApiPerPage = useRef(10);
@@ -39,14 +97,14 @@ const ReviewTab = ({ currentTab }) => {
 			callApiStart.current = 10;
 			getReviewListFirstTime();
 		}
-	}, [currentOption, currentTab]);
+	}, [currentOption, currentTab, directionSort, propertySort]);
 
 	const getReviewListFirstTime = async () => {
 		try {
 			const params = {
 				start: 0,
 				limit: callApiPerPage.current,
-				sort: JSON.stringify([{ direction: 'DESC', property: 'createdAt' }]),
+				sort: JSON.stringify([{ direction: directionSort, property: propertySort }]),
 				filter: JSON.stringify([
 					{ operator: 'eq', value: bookId, property: 'bookId' },
 					{ operator: 'eq', value: bookInfo.page, property: 'curProgress' },
@@ -79,7 +137,7 @@ const ReviewTab = ({ currentTab }) => {
 			const params = {
 				start: callApiStart.current,
 				limit: callApiPerPage.current,
-				sort: JSON.stringify([{ direction: 'DESC', property: 'createdAt' }]),
+				sort: JSON.stringify([{ direction: directionSort, property: propertySort }]),
 				filter: JSON.stringify([
 					{ operator: 'eq', value: bookId, property: 'bookId' },
 					{ operator: 'eq', value: bookInfo.page, property: 'curProgress' },
@@ -111,9 +169,65 @@ const ReviewTab = ({ currentTab }) => {
 		setCurrentOption(item);
 	};
 
+	const onBtnConfirmClick = () => {
+		switch (sortValue) {
+			case 'oldest':
+				setPropertySort('createdAt');
+				setDirectionSort('ASC');
+				break;
+			case 'lastest':
+				setPropertySort('createdAt');
+				setDirectionSort('DESC');
+				break;
+			case 'mostLiked':
+				setPropertySort('like');
+				setDirectionSort('DESC');
+				break;
+			default:
+			//
+		}
+	};
+
+	const handleChange = data => {
+		setSortValue(data);
+	};
+
+	const handleChangeStar = data => {
+		const newArr = [...checkedStarArr];
+		if (!newArr.length) {
+			newArr.push(data);
+		} else {
+			if (!newArr.includes(data)) {
+				newArr.push(data);
+			} else {
+				newArr.splice(newArr.indexOf(data), 1);
+			}
+		}
+		setCheckedStarArr(newArr);
+	};
+
+	const handleChangePeople = data => {
+		const newArr = [...checkedPeopleArr];
+		if (!newArr.length) {
+			newArr.push(data);
+		} else {
+			if (!newArr.includes(data)) {
+				newArr.push(data);
+			} else {
+				newArr.splice(newArr.indexOf(data), 1);
+			}
+		}
+		setCheckedPeopleArr(newArr);
+	};
+
 	return (
 		<div className='review-tab'>
-			<FilterPane title='Bài review' subtitle={`(${reviewCount} đánh giá)`} key='Bài-review'>
+			<FilterPane
+				title='Bài review'
+				subtitle={`(${reviewCount} đánh giá)`}
+				key='Bài-review'
+				handleSortFilter={toggleModal}
+			>
 				<FitlerOptions
 					list={filterOptions}
 					currentOption={currentOption}
@@ -143,6 +257,89 @@ const ReviewTab = ({ currentTab }) => {
 					<h5>Chưa có bài Review nào</h5>
 				)}
 			</FilterPane>
+
+			<Modal className='sort-review-modal' show={modalOpen} onHide={toggleModal}>
+				<Modal.Body>
+					<div className='filter-quote-pane__setting__group'>
+						<div className='sort-review-modal__item'>
+							<span className='filter-quote-pane__setting__title'>Mặc định</span>
+						</div>
+						<div className='sort-review-modal__item'>
+							<FormCheckGroup
+								data={radioOptions[0]}
+								name='custom-radio'
+								type='radio'
+								handleChange={handleChange}
+								checked={radioOptions[0].value === sortValue}
+							/>
+						</div>
+						<div className='sort-review-modal__item'>
+							<span className='filter-quote-pane__setting__title'>Theo số sao</span>
+						</div>
+						{checkBoxStarOptions.map((element, index) => {
+							return (
+								<div key={index} className='sort-review-modal__item'>
+									<FormCheckGroup
+										data={element}
+										name='checkbox-star'
+										type='checkbox'
+										handleChange={handleChangeStar}
+										checked={checkedStarArr.includes(element.value)}
+									/>
+								</div>
+							);
+						})}
+						<div className='sort-review-modal__item'>
+							<span className='filter-quote-pane__setting__title'>Theo thời gian phát hành</span>
+						</div>
+						<div className='sort-review-modal__item'>
+							<FormCheckGroup
+								data={radioOptions[1]}
+								name='custom-radio'
+								type='radio'
+								handleChange={handleChange}
+								checked={radioOptions[1].value === sortValue}
+							/>
+						</div>
+						<div className='sort-review-modal__item'>
+							<FormCheckGroup
+								data={radioOptions[2]}
+								name='custom-radio'
+								type='radio'
+								handleChange={handleChange}
+								checked={radioOptions[2].value === sortValue}
+							/>
+						</div>
+						<div className='sort-review-modal__item'>
+							<span className='filter-quote-pane__setting__title'>Theo người Review</span>
+						</div>
+						{checkBoxPeopleOptions.map((element, index) => {
+							return (
+								<div key={index} className='sort-review-modal__item'>
+									<FormCheckGroup
+										data={element}
+										name='checkbox-people'
+										type='checkbox'
+										handleChange={handleChangePeople}
+										checked={checkedPeopleArr.includes(element.value)}
+									/>
+								</div>
+							);
+						})}
+						<div className='sort-review-modal__item' style={{ marginTop: '10px' }}>
+							<Button
+								className='btn'
+								varient='primary'
+								onClick={() => {
+									onBtnConfirmClick(), toggleModal();
+								}}
+							>
+								Xác nhận
+							</Button>
+						</div>
+					</div>
+				</Modal.Body>
+			</Modal>
 		</div>
 	);
 };

@@ -1,4 +1,4 @@
-import { Configure } from 'components/svg';
+import { ArrowsDownUp } from 'components/svg';
 import PropTypes from 'prop-types';
 import './filter-pane.scss';
 
@@ -11,7 +11,7 @@ const FilterPane = ({ children, title, subtitle, handleSortFilter, hasHeaderLine
 					<span className='filter-pane__subtitle'>{subtitle}</span>
 				</h4>
 				<button className='filter-pane__btn' onClick={handleSortFilter}>
-					<Configure />
+					<ArrowsDownUp />
 				</button>
 			</div>
 			{hasHeaderLine && <hr />}

@@ -173,6 +173,7 @@ function Post({ postInformations, className, showModalCreatPost, inReviews = fal
 					{paramInfo[0].users.fullName || paramInfo[0].users.firstName + ' ' + paramInfo[0].users.lastName}
 					{' và '}
 					{paramInfo[1].users.fullName || paramInfo[1].users.firstName + ' ' + paramInfo[1].users.lastName}
+					{'.'}
 				</span>
 			);
 		} else {
@@ -182,7 +183,7 @@ function Post({ postInformations, className, showModalCreatPost, inReviews = fal
 					{paramInfo[0].users.fullName || paramInfo[0].users.firstName + ' ' + paramInfo[0].users.lastName}
 					{' và '}
 					{paramInfo.length - 1}
-					{' người khác'}
+					{' người khác.'}
 				</span>
 			);
 		}

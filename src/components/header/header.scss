@@ -127,9 +127,17 @@
 	display: flex;
 	align-items: center;
 	cursor: pointer;
-	svg {
-		width: 30px;
-		height: 28px;
+	& svg {
+		width: 21px;
+		height: 21px;
+	}
+	#arrow-down-icon {
+		position: relative;
+		top: 8px;
+		left: 5px;
+		& svg {
+			transform: scale(0.8);
+		}
 	}
 }
 
