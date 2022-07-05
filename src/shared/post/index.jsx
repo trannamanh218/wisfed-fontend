@@ -16,7 +16,7 @@ import './post.scss';
 import PreviewLink from 'shared/preview-link/PreviewLink';
 import { NotificationError } from 'helpers/Error';
 import ReactRating from 'shared/react-rating';
-import { useParams, useLocation } from 'react-router-dom';
+import { useParams, useLocation, Link } from 'react-router-dom';
 import { createCommentReview } from 'reducers/redux-utils/book';
 import Comment from 'shared/comments';
 import PostQuotes from 'shared/post-quotes';
@@ -168,9 +168,14 @@ function Post({ postInformations, className, showModalCreatPost, inReviews = fal
 					/>
 
 					<div className='post__user-status__name-and-post-time-status'>
-						<div data-testid='post__user-name' className='post__user-status__name'>
-							{postData?.createdBy?.fullName || postData?.user?.fullName || 'Ẩn danh'}
+						<div>
+							<Link to={`/profile/${postData.createdBy?.id}`}>
+								<div data-testid='post__user-name' className='post__user-status__name'>
+									{postData?.createdBy?.fullName || postData?.user?.fullName || 'Ẩn danh'}
+								</div>
+							</Link>
 						</div>
+
 						<div className='post__user-status__post-time-status'>
 							<span>{calculateDurationTime(postData.time || postData.createdAt)}</span>
 							<>
