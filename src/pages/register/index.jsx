@@ -77,11 +77,7 @@ function Register() {
 	return (
 		<div className='register__container'>
 			<Circle loading={isLoading} />
-			<div
-				className='register__header'
-				onMouseEnter={e => (e.target.style.cursor = 'pointer')}
-				onClick={() => navigate('/')}
-			>
+			<div className='register__header'>
 				<img src={Logo} alt='logo' />
 			</div>
 			{isShow ? (

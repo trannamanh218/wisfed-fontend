@@ -19,7 +19,7 @@ function ForgetPassWordComponet() {
 	}, []);
 	return (
 		<div className='forget__container'>
-			<div className='login__header' onClick={() => navigate('/')}>
+			<div className='login__header'>
 				<img src={Logo} alt='logo' />
 			</div>
 			<div className='forget__body'>
