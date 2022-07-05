@@ -90,7 +90,7 @@ const Header = () => {
 		}
 	};
 
-	const toglleModalNotify = () => {
+	const toggleModalNotify = () => {
 		if (pathname === '/notification') {
 			setModalNotti(false);
 		} else {
@@ -184,7 +184,7 @@ const Header = () => {
 				<div className='notify-icon'>
 					<div
 						ref={buttonModal}
-						onClick={toglleModalNotify}
+						onClick={toggleModalNotify}
 						className={classNames('header__notify__icon', { 'active': modalNoti || activeNotificaiton })}
 					/>
 					{modalNoti && <NotificationModal setModalNotti={setModalNotti} buttonModal={buttonModal} />}

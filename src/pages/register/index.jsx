@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './register.scss';
 import Logo from 'assets/images/Logo 2.png';
 import Subtract from 'assets/images/Subtract.png';
@@ -11,6 +11,8 @@ import { useDispatch } from 'react-redux';
 import ModalLogin from 'pages/login/element/ModalLogin';
 import { register } from 'reducers/redux-utils/auth';
 import Circle from 'shared/loading/circle';
+import { useNavigate } from 'react-router-dom';
+import Storage from 'helpers/Storage';
 
 function Register() {
 	const dispatch = useDispatch();
@@ -18,6 +20,8 @@ function Register() {
 	const [isShow, setIsShow] = useState(false);
 	const [dataModal, setDataModal] = useState({});
 	const [isLoading, setIsLoading] = useState(false);
+
+	const navigate = useNavigate();
 
 	const handleSubmit = async data => {
 		const newData = {
@@ -64,10 +68,20 @@ function Register() {
 		setIsShow(false);
 	};
 
+	useEffect(() => {
+		if (Storage.getAccessToken()) {
+			navigate('/');
+		}
+	}, []);
+
 	return (
 		<div className='register__container'>
 			<Circle loading={isLoading} />
-			<div className='register__header'>
+			<div
+				className='register__header'
+				onMouseEnter={e => (e.target.style.cursor = 'pointer')}
+				onClick={() => navigate('/')}
+			>
 				<img src={Logo} alt='logo' />
 			</div>
 			{isShow ? (
