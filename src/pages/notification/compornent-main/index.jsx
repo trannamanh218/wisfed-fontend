@@ -20,6 +20,7 @@ const Notification = () => {
 	const keyTabsActive = useSelector(state => state.notificationReducer.activeKeyTabs);
 	const { isRealTime } = useSelector(state => state.notificationReducer);
 	const [isLoading, setIsLoading] = useState(true);
+	const [renderFriend, setRenderFriend] = useState(false);
 	const dispatch = useDispatch();
 	const [hasMore, setHasMore] = useState(true);
 	const callApiStart = useRef(0);
@@ -67,6 +68,15 @@ const Notification = () => {
 			setListDefault([]);
 		}
 	}, [isRealTime]);
+
+	useEffect(() => {
+		if (getNotifications.length > 0) {
+			const filterFriend = getNotifications.filter(item => item.verb === 'addFriend' && !item.isCheck);
+			if (filterFriend.length > 0) {
+				setRenderFriend(true);
+			}
+		}
+	}, [getNotifications]);
 
 	const lengthAddFriend = () => {
 		const length = getNotifications.filter(item => item.verb === 'addFriend' && !item.isCheck);
@@ -146,23 +156,25 @@ const Notification = () => {
 									)}
 								</InfiniteScroll>
 							</Tab>
-							<Tab eventKey='friendrequest' title='Lời mời kết bạn'>
-								<div className='notificaiton__all__main__title'>
-									{lengthAddFriend()}&nbsp;lời kết bạn
-								</div>
-								{getNotifications.map(
-									item =>
-										item.verb === 'addFriend' &&
-										!item.isCheck && (
-											<NotificationStatus
-												key={item.id}
-												item={item}
-												setGetNotifications={setGetNotifications}
-												getNotifications={getNotifications}
-											/>
-										)
-								)}
-							</Tab>
+							{renderFriend && (
+								<Tab eventKey='friendrequest' title='Lời mời kết bạn'>
+									<div className='notificaiton__all__main__title'>
+										{lengthAddFriend()}&nbsp;lời kết bạn
+									</div>
+									{getNotifications.map(
+										item =>
+											item.verb === 'addFriend' &&
+											!item.isCheck && (
+												<NotificationStatus
+													key={item.id}
+													item={item}
+													setGetNotifications={setGetNotifications}
+													getNotifications={getNotifications}
+												/>
+											)
+									)}
+								</Tab>
+							)}
 						</Tabs>
 					</div>
 				</div>

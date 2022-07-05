@@ -18,8 +18,8 @@ export const registerValidate = yup.object().shape({
 		.required('*Vui lòng điền đầy đủ thông tin'),
 	password: yup
 		.string()
-		.min(6, '*Mật khẩu từ 6-15 kí tự. Vui lòng kiểm tra lại')
-		.max(15, '*Mật khẩu từ 6-15 kí tự. Vui lòng kiểm tra lại')
+		.min(8, '*Mật khẩu từ 8-15 kí tự. Vui lòng kiểm tra lại')
+		.max(15, '*Mật khẩu từ 8-15 kí tự. Vui lòng kiểm tra lại')
 		.required('*Vui lòng điền đầy đủ thông tin'),
 });
 
@@ -43,8 +43,8 @@ export const resetPasswordValidate = yup.object().shape({
 	OTP: yup.string().required('*Vui lòng điền mã OTP'),
 	newPassword: yup
 		.string()
-		.min(6, '*Mật khẩu từ 6-15 kí tự. Vui lòng kiểm tra lại')
-		.max(15, '*Mật khẩu từ 6-15 kí tự. Vui lòng kiểm tra lại')
+		.min(8, '*Mật khẩu từ 8-15 kí tự. Vui lòng kiểm tra lại')
+		.max(15, '*Mật khẩu từ 8-15 kí tự. Vui lòng kiểm tra lại')
 		.required('*Vui lòng điền đầy đủ thông tin'),
 	confirmPassword: yup
 		.string()
@@ -57,8 +57,8 @@ export const resetPasswordValidate = yup.object().shape({
 export const resetPasswordValidateAdmin = yup.object().shape({
 	newPassword: yup
 		.string()
-		.min(6, '*Mật khẩu từ 6-15 kí tự. Vui lòng kiểm tra lại')
-		.max(15, '*Mật khẩu từ 6-15 kí tự. Vui lòng kiểm tra lại')
+		.min(8, '*Mật khẩu từ 8-15 kí tự. Vui lòng kiểm tra lại')
+		.max(15, '*Mật khẩu từ 8-15 kí tự. Vui lòng kiểm tra lại')
 		.required('*Vui lòng điền đầy đủ thông tin'),
 	confirmPassword: yup
 		.string()
@@ -79,8 +79,8 @@ class Validation {
 				.required('*Vui lòng điền đầy đủ thông tin'),
 			password: yup
 				.string()
-				.min(6, '*Mật khẩu từ 6-15 kí tự. Vui lòng kiểm tra lại')
-				.max(15, '*Mật khẩu từ 6-15 kí tự. Vui lòng kiểm tra lại')
+				.min(6, '*Mật khẩu từ 8-15 kí tự. Vui lòng kiểm tra lại')
+				.max(15, '*Mật khẩu từ 8-15 kí tự. Vui lòng kiểm tra lại')
 				.required('*Vui lòng điền đầy đủ thông tin'),
 		});
 	}

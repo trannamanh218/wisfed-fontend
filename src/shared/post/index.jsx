@@ -159,6 +159,37 @@ function Post({ postInformations, className, showModalCreatPost, inReviews = fal
 		setClickReply(!clickReply);
 	};
 
+	const withFriends = paramInfo => {
+		if (paramInfo.length === 1) {
+			return (
+				<span>
+					{' cùng với '}
+					{paramInfo[0].users.fullName || paramInfo[0].users.firstName + ' ' + paramInfo[0].users.lastName}
+					{'.'}
+				</span>
+			);
+		} else if (paramInfo.length === 2) {
+			return (
+				<span>
+					{' cùng với '}
+					{paramInfo[0].users.fullName || paramInfo[0].users.firstName + ' ' + paramInfo[0].users.lastName}
+					{' và '}
+					{paramInfo[1].users.fullName || paramInfo[1].users.firstName + ' ' + paramInfo[1].users.lastName}
+				</span>
+			);
+		} else {
+			return (
+				<span>
+					{' cùng với '}
+					{paramInfo[0].users.fullName || paramInfo[0].users.firstName + ' ' + paramInfo[0].users.lastName}
+					{' và '}
+					{paramInfo.length - 1}
+					{' người khác'}
+				</span>
+			);
+		}
+	};
+
 	const infoUser = () => {
 		return (
 			<>

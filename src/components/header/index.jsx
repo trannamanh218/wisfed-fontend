@@ -6,7 +6,12 @@ import classNames from 'classnames';
 import './header.scss';
 import NotificationModal from 'pages/notification/';
 import { useDispatch, useSelector } from 'react-redux';
-import { backgroundToggle, depenRenderNotificaion } from 'reducers/redux-utils/notificaiton';
+import {
+	backgroundToggle,
+	depenRenderNotificaion,
+	handleListNotification,
+	handleListUnRead,
+} from 'reducers/redux-utils/notificaiton';
 import { checkUserLogin, deleteUserInfo } from 'reducers/redux-utils/auth';
 import { useVisible } from 'shared/hooks';
 import SearchAllModal from 'shared/search-all';
@@ -142,6 +147,8 @@ const Header = () => {
 		dispatch(updateTargetReading([]));
 		navigate('/login');
 		toast.success('Đăng xuất thành công');
+		dispatch(handleListUnRead([]));
+		dispatch(handleListNotification([]));
 	};
 
 	useEffect(() => {

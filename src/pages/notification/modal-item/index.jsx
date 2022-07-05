@@ -9,35 +9,45 @@ import { NotificationError } from 'helpers/Error';
 import { renderMessage } from 'helpers/HandleShare';
 import { readNotification } from 'reducers/redux-utils/notificaiton';
 import PropTypes from 'prop-types';
-
-const ModalItem = ({ item, setModalNotti }) => {
-	const [getNotifications, setGetNotifications] = useState([]);
-	const [isRead, setIsRead] = useState(false);
+import { handleListNotification, handleListUnRead } from 'reducers/redux-utils/notificaiton';
+const ModalItem = ({
+	item,
+	setModalNotti,
+	getNotifications,
+	setGetNotifications,
+	getListUnread,
+	selectKey,
+	setGetListUnRead,
+}) => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
-
-	const handleLinkAddfriend = item => {
-		if (item.verb === 'addfriend') {
-			navigate('/profile');
-			dispatch(backgroundToggle(true));
-			setModalNotti(false);
-		}
-	};
 
 	const ReplyFriendReq = async (data, items) => {
 		try {
 			const parseObject = JSON.parse(data);
 			const params = { id: parseObject.requestId, data: { reply: true } };
-			const newArr = getNotifications.map(item => {
+			let newListArr = [];
+			if (selectKey === 'unread') {
+				newListArr = getListUnread;
+			} else {
+				newListArr = getNotifications;
+			}
+			const newArr = newListArr.map(item => {
 				if (items.id === item.id) {
-					const data = { ...item, isAccept: true, isRead: true };
+					const data = { ...item, isAccept: true };
 					return { ...data };
 				}
 				return { ...item };
 			});
-			setGetNotifications(newArr);
-
+			if (selectKey === 'unread') {
+				setGetListUnRead(newArr);
+				dispatch(handleListUnRead(newArr));
+			} else {
+				setGetNotifications(newArr);
+				dispatch(handleListNotification(newArr));
+			}
 			await dispatch(ReplyFriendRequest(params)).unwrap();
+			await dispatch(readNotification(params)).unwrap();
 		} catch (err) {
 			NotificationError(err);
 		}
@@ -47,25 +57,39 @@ const ModalItem = ({ item, setModalNotti }) => {
 		try {
 			const parseObject = JSON.parse(data);
 			const params = { id: parseObject.requestId, data: { level: 'normal' } };
-			const newArr = getNotifications.map(item => {
+			let newListArr = [];
+			if (selectKey === 'unread') {
+				newListArr = getListUnread;
+			} else {
+				newListArr = getNotifications;
+			}
+			const newArr = newListArr.map(item => {
 				if (items.id === item.id) {
-					const data = { ...item, isRefuse: true, isRead: true };
+					const data = { ...item, isRefuse: true };
 					return { ...data };
 				}
 				return { ...item };
 			});
-			setGetNotifications(newArr);
+
+			if (selectKey === 'unread') {
+				setGetListUnRead(newArr);
+				dispatch(handleListUnRead(newArr));
+			} else {
+				setGetNotifications(newArr);
+				dispatch(handleListNotification(newArr));
+			}
 			await dispatch(CancelFriendRequest(params)).unwrap();
+			await dispatch(readNotification(params)).unwrap();
 		} catch (err) {
 			NotificationError(err);
 		}
 	};
+
 	const hanleActiveIsReed = items => {
 		const params = {
-			notificationId: items.originId.minipostId || items.originId.groupPostId,
+			notificationId: items.id,
 		};
-		if (items.verb !== 'addfriend') {
-			setIsRead(true);
+		if (items.verb !== 'addFriend') {
 			if (
 				items.verb === 'likeMiniPost' ||
 				items.verb === 'commentMiniPost' ||
@@ -77,25 +101,45 @@ const ModalItem = ({ item, setModalNotti }) => {
 						items.originId.minipostId || items.originId.groupPostId
 					}`
 				);
-				dispatch(backgroundToggle(true));
-				setModalNotti(false);
 			}
+		} else {
+			navigate(`/profile/${items.createdBy.id}`);
 		}
+		let newListArr = [];
+		if (selectKey === 'unread') {
+			newListArr = getListUnread;
+		} else {
+			newListArr = getNotifications;
+		}
+		const newArr = newListArr.map(item => {
+			if (items.id === item.id) {
+				const data = { ...item, isRead: true };
+				return { ...data };
+			}
+			return { ...item };
+		});
+		if (selectKey === 'unread') {
+			setGetListUnRead(newArr);
+			dispatch(handleListUnRead(newArr));
+		} else {
+			setGetNotifications(newArr);
+			dispatch(handleListNotification(newArr));
+		}
+		dispatch(backgroundToggle(true));
+		setModalNotti(false);
 		dispatch(readNotification(params)).unwrap();
 	};
 
 	return (
 		<div
-			onClick={() => hanleActiveIsReed(item)}
 			key={item.id}
-			className={isRead || item.isRead ? 'notificaiton__tabs__all__active' : 'notificaiton__tabs__all__seen'}
+			className={
+				item.isRead || item.isAccept || item.isRefuse
+					? 'notificaiton__tabs__all__active'
+					: 'notificaiton__tabs__all__seen'
+			}
 		>
-			<div
-				onClick={() => {
-					handleLinkAddfriend(item);
-				}}
-				className='notificaiton__all__layout'
-			>
+			<div onClick={() => hanleActiveIsReed(item)} className='notificaiton__all__layout'>
 				<UserAvatar size='mm' source={item.createdBy?.avatarImage} />
 				<div className='notificaiton__all__layout__status'>
 					<div className='notificaiton__all__infor'>
@@ -121,7 +165,11 @@ const ModalItem = ({ item, setModalNotti }) => {
 							)}
 					</div>
 					<div
-						className={item.isRead ? 'notificaiton__all__status__seen' : 'notificaiton__all__status'}
+						className={
+							item.isRead || item.isAccept || item.isRefuse
+								? 'notificaiton__all__status__seen'
+								: 'notificaiton__all__status'
+						}
 					>{`${calculateDurationTime(item.time)}`}</div>
 					{item.isAccept ? (
 						<div className='notificaiton___main__all__status'>Đã chấp nhận lời mời</div>
@@ -129,7 +177,13 @@ const ModalItem = ({ item, setModalNotti }) => {
 						item.isRefuse && <div className='notificaiton___main__all__status'>Đã từ chối lời mời</div>
 					)}
 				</div>
-				<div className={isRead || item.isRead ? 'notificaiton__all__seen' : 'notificaiton__all__unseen'}></div>
+				<div
+					className={
+						item.isRead || item.isAccept || item.isRefuse
+							? 'notificaiton__all__seen'
+							: 'notificaiton__all__unseen'
+					}
+				></div>
 			</div>
 			{item.verb === 'addFriend' &&
 				(item.isAccept || item.isRefuse ? (
@@ -151,5 +205,10 @@ const ModalItem = ({ item, setModalNotti }) => {
 ModalItem.propTypes = {
 	item: PropTypes.object,
 	setModalNotti: PropTypes.func,
+	getNotifications: PropTypes.array,
+	setGetNotifications: PropTypes.func,
+	getListUnread: PropTypes.array,
+	selectKey: PropTypes.string,
+	setGetListUnRead: PropTypes.func,
 };
 export default ModalItem;

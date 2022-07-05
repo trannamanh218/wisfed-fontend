@@ -75,6 +75,7 @@
 .notificaiton__tabs__all__active {
 	margin: 0 10px;
 	cursor: pointer;
+	border-radius: 8px;
 	.notificaiton__all__layout {
 		display: flex;
 		gap: 15px;
@@ -89,9 +90,13 @@
 			flex: 1;
 		}
 	}
-	.notificaiton__all__layout:hover {
-		background-color: #e2e4e5;
-	}
+}
+.notificaiton__tabs__all__seen:hover,
+.notificaiton__tabs__all__active:hover {
+	background-color: #e2e4e5;
+}
+.notificaiton__all__accept:hover .notificaiton__tabs__all__active {
+	background-color: #fcfcfc !important;
 }
 .notificaiton__all__title {
 	font-family: 'Montserrat';
@@ -145,7 +150,7 @@
 }
 .notificaiton__all__friend {
 	display: flex;
-	margin: 15px 0;
+	padding: 0 15px 15px 10px;
 	justify-content: space-between;
 	min-width: 360px;
 	.notificaiton__all__accept,
@@ -159,6 +164,7 @@
 		text-align: center;
 		cursor: pointer;
 	}
+
 	.notificaiton__all__accept {
 		background: #e0af7e;
 		color: #fcfcfc;

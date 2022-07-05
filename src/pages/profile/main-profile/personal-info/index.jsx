@@ -247,7 +247,7 @@ const PersonalInfo = ({ currentUserInfo }) => {
 						<CloseX />
 					</button>
 				</Modal.Header>
-				<Modal.Body className='personal-info__modal__body'>
+				<Modal.Body>
 					<PersonalInfoForm userData={currentUserInfo} toggleModal={toggleModal} />
 				</Modal.Body>
 			</Modal>

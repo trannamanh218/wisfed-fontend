@@ -14,6 +14,7 @@ import { NotificationError } from 'helpers/Error';
 import Circle from 'shared/loading/circle';
 import { useVisible } from 'shared/hooks';
 import MainLayoutSearch from './MainLayoutSearch';
+import { Modal } from 'react-bootstrap';
 
 const LayoutGroup = () => {
 	const [myGroup, setMyGroup] = useState([]);
@@ -25,9 +26,9 @@ const LayoutGroup = () => {
 	const [isFetching, setIsFetching] = useState(true);
 	const { ref: showRef, isVisible: isShow, setIsVisible: setIsShow } = useVisible(false);
 
-	const handleClose = () => {
-		setIsShow(!isShow);
-	};
+	// const handleClose = () => {
+	// 	setIsShow(!isShow);
+	// };
 
 	const listMyGroup = async () => {
 		try {
@@ -95,45 +96,59 @@ const LayoutGroup = () => {
 				</div>
 				<div className='search'>
 					<SearchField placeholder='Tìm kiếm group' handleChange={handleChange} value={valueGroupSearch} />
-					<button onClick={() => handleClose()}>Tạo nhóm </button>
+					{/* <button onClick={() => handleClose()}>Tạo nhóm </button> */}
+					<button onClick={() => handleShowModal()}>Tạo nhóm </button>
 				</div>
 			</div>
 		);
 	};
 
+	const [show, setShow] = useState(false);
+
+	const handleCloseModal = () => setShow(false);
+	const handleShowModal = () => setShow(true);
+
 	return (
-		<div style={{ position: 'relative' }}>
-			<Circle loading={isFetching} />
-			{isShow ? (
-				<div>
-					<PopupCreateGroup handleClose={handleClose} showRef={showRef} />
-				</div>
-			) : (
-				''
-			)}
-			<>
-				{isShowScreen ? (
-					<MainContainerLeft
-						sub={<SearchGroup />}
-						right={<SidebarLeft listMyGroup={myGroup} listAdminMyGroup={adminGroup} />}
-						main={<MainLayout filter={true} />}
-					/>
+		<>
+			<div style={{ position: 'relative' }}>
+				<Circle loading={isFetching} />
+				{/* {isShow ? (
+					<div>
+						<PopupCreateGroup handleClose={handleClose} showRef={showRef} />
+					</div>
 				) : (
-					<div className='result-search'>
+					''
+				)} */}
+				<>
+					{isShowScreen ? (
 						<MainContainerLeft
 							sub={<SearchGroup />}
-							main={<MainLayoutSearch valueGroupSearch={filter} />}
+							right={<SidebarLeft listMyGroup={myGroup} listAdminMyGroup={adminGroup} />}
+							main={<MainLayout filter={true} />}
 						/>
-					</div>
-				)}
-			</>
+					) : (
+						<div className='result-search'>
+							<MainContainerLeft
+								sub={<SearchGroup />}
+								main={<MainLayoutSearch valueGroupSearch={filter} />}
+							/>
+						</div>
+					)}
+				</>
 
-			{/* <MainContainerLeft
+				{/* <MainContainerLeft
 				sub={<SearchGroup />}
 				right={<SidebarLeft listMyGroup={myGroup} listAdminMyGroup={adminGroup} />}
 				main={<MainLayout listGroup={list} />}
 			/> */}
-		</div>
+			</div>
+
+			<Modal className='create-group-modal' show={show} onHide={handleCloseModal}>
+				<Modal.Body>
+					<PopupCreateGroup handleClose={handleCloseModal} showRef={showRef} />
+				</Modal.Body>
+			</Modal>
+		</>
 	);
 };
 

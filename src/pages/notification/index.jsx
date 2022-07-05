@@ -5,7 +5,13 @@ import { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { backgroundToggle, activeKeyTabsNotification, handleListNotification } from 'reducers/redux-utils/notificaiton';
+import {
+	backgroundToggle,
+	activeKeyTabsNotification,
+	handleListNotification,
+	getListNotificationUnRead,
+	handleListUnRead,
+} from 'reducers/redux-utils/notificaiton';
 import { getNotification } from 'reducers/redux-utils/notificaiton';
 import { NotificationError } from 'helpers/Error';
 import { useSelector } from 'react-redux';
@@ -16,10 +22,11 @@ const NotificationModal = ({ setModalNotti, buttonModal, realTime }) => {
 	const notifymodal = useRef(null);
 	const [selectKey, setSelectKey] = useState('all');
 	const [isLoading, setIsLoading] = useState(true);
-	const [renderFriend, setRenderFriend] = useState(true);
+	const [renderFriend, setRenderFriend] = useState(false);
 	const [renderRead, setRenderRead] = useState(false);
 	const [getNotifications, setGetNotifications] = useState([]);
-	const { listNotifcaiton } = useSelector(state => state.notificationReducer);
+	const [getListUnread, setGetListUnRead] = useState([]);
+	const { listNotifcaiton, listUnRead } = useSelector(state => state.notificationReducer);
 	const dispatch = useDispatch();
 
 	const handleClickOutside = e => {
@@ -38,35 +45,63 @@ const NotificationModal = ({ setModalNotti, buttonModal, realTime }) => {
 
 	useEffect(() => {
 		getMyNotification();
+		getListUnRead();
 	}, [realTime]);
 
 	useEffect(() => {
 		if (getNotifications.length > 0) {
 			const filterFriend = getNotifications.filter(item => item.verb === 'addFriend' && !item.isCheck);
-			const filterRead = getNotifications.filter(item => !item.isCheck && !item.isRead);
-			if (filterFriend) {
-				setRenderFriend(false);
-			}
-			if (filterRead) {
-				setRenderRead(true);
+			if (filterFriend.length > 0) {
+				setRenderFriend(true);
 			}
 		}
 	}, [getNotifications]);
 
+	useEffect(() => {
+		if (getListUnread.length > 0) {
+			const filterRead = getListUnread.filter(item => !item.isRead);
+			if (filterRead.length > 0) {
+				setRenderRead(true);
+			}
+		}
+	}, [getListUnread]);
+
 	const getMyNotification = async () => {
-		let arrNew = [];
 		try {
 			if (listNotifcaiton.length > 0 && !realTime) {
 				setGetNotifications(listNotifcaiton.slice(0, 10));
 			} else {
 				const notificationList = await dispatch(getNotification()).unwrap();
+				const arrNew = notificationList.map(item => item.activities).flat(1);
+				const newArr = arrNew.map(item => {
+					const data = { ...item, isAccept: false, isRefuse: false };
+					return { ...data };
+				});
+				const filterFriend = newArr.filter(item => !item.isCheck);
+				dispatch(handleListNotification(filterFriend));
+				setGetNotifications(filterFriend);
+			}
+		} catch (err) {
+			NotificationError(err);
+		} finally {
+			setIsLoading(false);
+		}
+	};
+
+	const getListUnRead = async () => {
+		let arrNew = [];
+		try {
+			if (listUnRead.length > 0 && !realTime) {
+				setGetListUnRead(listUnRead.slice(0, 10));
+			} else {
+				const notificationList = await dispatch(getListNotificationUnRead()).unwrap();
 				arrNew = notificationList.map(item => item.activities).flat(1);
 				const newArr = arrNew.map(item => {
 					const data = { ...item, isAccept: false, isRefuse: false };
 					return { ...data };
 				});
-				dispatch(handleListNotification(newArr));
-				setGetNotifications(newArr.slice(0, 10));
+				dispatch(handleListUnRead(newArr));
+				setGetListUnRead(newArr);
 			}
 		} catch (err) {
 			NotificationError(err);
@@ -104,13 +139,31 @@ const NotificationModal = ({ setModalNotti, buttonModal, realTime }) => {
 								{getNotifications
 									.slice(0, 1)
 									.map(
-										item => !item.isCheck && <ModalItem item={item} setModalNotti={setModalNotti} />
+										item =>
+											!item.isCheck && (
+												<ModalItem
+													item={item}
+													setModalNotti={setModalNotti}
+													getNotifications={getNotifications}
+													setGetNotifications={setGetNotifications}
+													selectKey={selectKey}
+												/>
+											)
 									)}
 								<div className='notificaiton__all__title'>Gần đây</div>
 								{getNotifications
 									.slice(1, 5)
 									.map(
-										item => !item.isCheck && <ModalItem item={item} setModalNotti={setModalNotti} />
+										item =>
+											!item.isCheck && (
+												<ModalItem
+													item={item}
+													setModalNotti={setModalNotti}
+													getNotifications={getNotifications}
+													setGetNotifications={setGetNotifications}
+													selectKey={selectKey}
+												/>
+											)
 									)}
 								<Link
 									to={`/notification`}
@@ -123,12 +176,20 @@ const NotificationModal = ({ setModalNotti, buttonModal, realTime }) => {
 							{renderRead && (
 								<Tab eventKey='unread' title='Chưa đọc'>
 									<div className='notificaiton__all__title'>Thông báo chưa đọc</div>
-									{getNotifications
+									{getListUnread
 										.slice(0, 6)
 										.map(
 											item =>
-												!item.isCheck &&
-												!item.isRead && <ModalItem item={item} setModalNotti={setModalNotti} />
+												!item.isRead &&
+												!item.isCheck && (
+													<ModalItem
+														item={item}
+														setModalNotti={setModalNotti}
+														getListUnread={getListUnread}
+														selectKey={selectKey}
+														setGetListUnRead={setGetListUnRead}
+													/>
+												)
 										)}
 									<Link
 										to={`/notification`}
@@ -145,7 +206,15 @@ const NotificationModal = ({ setModalNotti, buttonModal, realTime }) => {
 									{getNotifications.map(
 										item =>
 											item.verb === 'addFriend' &&
-											!item.isCheck && <ModalItem item={item} setModalNotti={setModalNotti} />
+											!item.isCheck && (
+												<ModalItem
+													item={item}
+													setModalNotti={setModalNotti}
+													selectKey={selectKey}
+													getNotifications={getNotifications}
+													setGetNotifications={setGetNotifications}
+												/>
+											)
 									)}
 									<Link
 										to={`/notification`}
