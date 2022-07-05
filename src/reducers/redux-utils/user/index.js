@@ -3,17 +3,16 @@ import {
 	friendAPI,
 	makeFriendAPI,
 	userAPI,
-	checkLikedAPI,
 	replyFriendReqApi,
 	cancelFriendApi,
 	listFolowrs,
 	addfollow,
 	unFollow,
 	unFriend,
-	updateLikeCategory,
 	listFollowing,
 	userDetailAPI,
 	myFriendsReq,
+	randomAuthorAPI,
 } from 'constants/apiURL';
 import Request from 'helpers/Request';
 
@@ -138,43 +137,6 @@ export const CancelFriendRequest = createAsyncThunk('user/makeFriendRequest', as
 	}
 });
 
-export const getCheckLiked = createAsyncThunk('user/check liked', async (params, { rejectWithValue }) => {
-	const { id, ...restParams } = params;
-	try {
-		const response = await Request.makeGet(checkLikedAPI(id), restParams);
-		return response.data;
-	} catch (err) {
-		const error = JSON.parse(err.response);
-		throw rejectWithValue(error);
-	}
-});
-
-export const getLikeCategory = createAsyncThunk('user/updateLikeCategory', async (params, { rejectWithValue }) => {
-	const { id, ...restParams } = params;
-	try {
-		const response = await Request.makePatch(updateLikeCategory(id), restParams);
-		return response.data;
-	} catch (err) {
-		const error = JSON.parse(err.response);
-		throw rejectWithValue(error);
-	}
-});
-
-export const addToFavoriteCategory = createAsyncThunk(
-	'user/updateLikeCategory',
-	async (params, { rejectWithValue }) => {
-		const { id, ...restParams } = params;
-
-		try {
-			const response = await Request.makePatch(updateLikeCategory(id), restParams);
-			return response.data;
-		} catch (err) {
-			const error = JSON.parse(err.response);
-			throw rejectWithValue(error);
-		}
-	}
-);
-
 export const editUserInfo = createAsyncThunk('user/edit user info', async (data, { rejectWithValue }) => {
 	try {
 		const { userId, params } = data;
@@ -190,6 +152,16 @@ export const getUserDetail = createAsyncThunk('user/get user detail', async (use
 	try {
 		const response = await Request.makeGet(userDetailAPI(userId));
 		return response.data;
+	} catch (err) {
+		const error = JSON.parse(err.response);
+		throw rejectWithValue(error);
+	}
+});
+
+export const getRandomAuthor = createAsyncThunk('user/get random author', async (params, { rejectWithValue }) => {
+	try {
+		const response = await Request.makeGet(randomAuthorAPI, params);
+		return response.data.rows;
 	} catch (err) {
 		const error = JSON.parse(err.response);
 		throw rejectWithValue(error);

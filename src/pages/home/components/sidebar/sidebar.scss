@@ -1,5 +1,9 @@
 @import 'src/scss/abstracts/_global.scss';
 
+.sidebar {
+	padding-top: 24px;
+}
+
 .sidebar__block {
 	margin-bottom: 60px;
 	.slick-arrow {
@@ -118,12 +122,17 @@
 	}
 }
 
+.sidebar__view-more-btn--blue {
+	font-size: 13px;
+}
+
 .quotes__content {
 	background-color: white;
 	padding: 20px 16px;
 	border-radius: 16px;
 	line-height: 24px;
 	margin-bottom: 20px;
+	word-break: break-word;
 }
 
 .quotes__content__author-name {

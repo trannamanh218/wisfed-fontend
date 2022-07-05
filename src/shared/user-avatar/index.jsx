@@ -1,4 +1,3 @@
-import React from 'react';
 import defaultAvatar from 'assets/images/avatar.jpeg';
 import PropTypes from 'prop-types';
 import './user-avatar.scss';

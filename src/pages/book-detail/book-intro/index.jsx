@@ -15,6 +15,8 @@ import { getRatingBook } from 'reducers/redux-utils/book';
 import { useDispatch } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
 import { FacebookShareButton } from 'react-share';
+import Storage from 'helpers/Storage';
+import { checkUserLogin } from 'reducers/redux-utils/auth';
 
 const BookIntro = () => {
 	const { bookInfo } = useSelector(state => state.book);
@@ -23,6 +25,7 @@ const BookIntro = () => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	const [lisRatingStar, setLisRatingStar] = useState({});
+	const [urlShare, seturlShare] = useState('');
 
 	const handleClick = () => {
 		if (location.pathname !== '/' || location.pathname !== '/home') {
@@ -43,6 +46,15 @@ const BookIntro = () => {
 		fetchData();
 	}, []);
 
+	const handleShareFaceBook = () => {
+		if (Storage.getAccessToken()) {
+			dispatch(checkUserLogin(false));
+			seturlShare('https://peing.net/ja/');
+		} else {
+			dispatch(checkUserLogin(true));
+		}
+	};
+
 	return (
 		<div className='book-intro'>
 			<div className='book-intro__image'>
@@ -52,6 +64,7 @@ const BookIntro = () => {
 					handleClick={handleClick}
 					bookData={bookInfo}
 					status={bookInfo.status}
+					hasBookStatus={false}
 				/>
 			</div>
 			<div className='book-intro__content'>
@@ -69,8 +82,8 @@ const BookIntro = () => {
 				<div className='book-intro__description'>
 					<ReadMore text={convertToPlainString(bookInfo.description) || 'Chưa cập nhật'} />
 				</div>
-				<FacebookShareButton url='https://peing.net/ja/' quote='Phải chăng ta đã yêu' hashtag=''>
-					<div className='book-intro__action'>
+				<FacebookShareButton url={urlShare} quote='Phải chăng ta đã yêu' hashtag=''>
+					<div onClick={handleShareFaceBook} className='book-intro__action'>
 						<div className='book-intro__share'>
 							<img src={shareImg} alt='share' />
 							<span className='book-intro__share__text'>Chia sẻ</span>

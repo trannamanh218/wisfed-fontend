@@ -10,7 +10,7 @@ import TopQuotes from './component/top-quotes';
 import { useFetchViewMoreCategories } from 'api/category.hook';
 const MAX_PER_PAGE = 30;
 
-const Ranks = ({ loginId }) => {
+const Ranks = () => {
 	const {
 		categoryData: { rows = [] },
 	} = useFetchViewMoreCategories(1, MAX_PER_PAGE, '[]');

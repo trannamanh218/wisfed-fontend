@@ -1,28 +1,47 @@
-import { useFetchRelatedBooks } from 'api/book.hooks';
 import { STATUS_SUCCESS } from 'constants';
 import { STATUS_LOADING } from 'constants';
 import { STATUS_IDLE } from 'constants';
 import RouteLink from 'helpers/RouteLink';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { getBookDetail } from 'reducers/redux-utils/book';
 import BookSlider from 'shared/book-slider';
-import StatisticList from 'shared/statistic-list';
 import Circle from 'shared/loading/circle';
 import './book-reference.scss';
 import { NotificationError } from 'helpers/Error';
-import { useFetchStatsReadingBooks } from 'api/library.hook';
+import { getCategoryList, getListBookByCategory } from 'reducers/redux-utils/category';
+import caretIcon from 'assets/images/caret.png';
+import { Link } from 'react-router-dom';
+import { useFetchAuthorBooks } from 'api/book.hooks';
 
 const BookReference = () => {
 	const [status, setStatus] = useState(STATUS_IDLE);
+	const [allCategories, setAllCategories] = useState([]);
+	const [isExpand, setIsExpand] = useState(false);
+	const [rows, setRows] = useState(3);
+	const [relatedBooks, setRelateBooks] = useState([]);
+
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
-	const { bookInfo } = useSelector(state => state.book);
-	const { relatedBook } = useFetchRelatedBooks(bookInfo.categoryId);
-	const { readingData } = useFetchStatsReadingBooks();
 
-	const bookList = new Array(10).fill({ source: '/images/book1.jpg', name: 'Design pattern' });
+	const { bookInfo } = useSelector(state => state.book);
+
+	const { booksAuthor } = useFetchAuthorBooks(Number(bookInfo.authors[0]?.authorId));
+
+	useEffect(() => {
+		getBooksByCategory();
+		getAllCategories();
+	}, []);
+
+	const getAllCategories = async () => {
+		try {
+			const res = await dispatch(getCategoryList({ option: false })).unwrap();
+			setAllCategories(res.rows);
+		} catch (err) {
+			NotificationError(err);
+		}
+	};
 
 	const handleViewBookDetail = async data => {
 		setStatus(STATUS_LOADING);
@@ -37,42 +56,113 @@ const BookReference = () => {
 		}
 	};
 
+	const handleViewMore = () => {
+		const length = allCategories.length;
+		const maxRows = 10;
+		if (length <= maxRows) {
+			const numberRows = length;
+			setRows(numberRows);
+		} else {
+			setRows(maxRows);
+		}
+		setIsExpand(true);
+	};
+
+	const getBooksByCategory = async () => {
+		try {
+			const params = {
+				start: 0,
+				limit: 10,
+				sort: JSON.stringify([{ property: 'createdAt', direction: 'DESC' }]),
+			};
+			const res = await dispatch(
+				getListBookByCategory({ categoryId: bookInfo.categories[0]?.categoryId, params: params })
+			).unwrap();
+			setRelateBooks(res);
+		} catch (err) {
+			NotificationError(err);
+		}
+	};
+
+	const directNewUrl = () => {
+		window.open('https://www.tecinus.vn');
+	};
+
 	return (
 		<div className='book-reference'>
 			<Circle loading={status === STATUS_LOADING} />
 			{/* sách của tac gia */}
-			<BookSlider className='book-reference__slider' title='Sách của Chris' list={bookList} />
-			{/* series sách đó */}
-			<BookSlider className='book-reference__slider' title='Seris dạy con làm giàu' list={bookList} />
-			<BookSlider
-				className='book-reference__slider'
-				title='Gợi ý cùng thể loại'
-				list={relatedBook}
-				handleViewBookDetail={handleViewBookDetail}
-			/>
+			{!!bookInfo.authors.length && (
+				<BookSlider
+					className='book-reference__slider'
+					title={`Sách của ${bookInfo.authors[0]?.authorName} `}
+					list={booksAuthor}
+					handleViewBookDetail={handleViewBookDetail}
+				/>
+			)}
 
-			<h4>Bài viết nổi bật</h4>
-			<div className='card card-link book-reference__highlight__post'>
-				<ul className='card-link__list'>
-					<li className='card-link__item'>
-						<a>Cuốn sách fefefegegeegxuất sắc nhất về nuôi dạy con năm 2021</a>
-					</li>
-					<li className='card-link__item'>
-						<a>Cuốn sách fefefegegeegxuất sắc nhất về nuôi dạy con năm 2021</a>
-					</li>
-					<li className='card-link__item'>
-						<a>Cuốn sách fefefegegeegxuất sắc nhất về nuôi dạy con năm 2021</a>
-					</li>
-					<li className='card-link__item'>
-						<a>Cuốn sách fefefegegeegxuất sắc nhất về nuôi dạy con năm 2021</a>
-					</li>
-				</ul>
+			{/* series sách đó */}
+			{/* <BookSlider className='book-reference__slider' title='Seris dạy con làm giàu' list={bookList} /> */}
+			{relatedBooks.length > 0 && (
+				<BookSlider
+					className='book-reference__slider'
+					title='Gợi ý cùng thể loại'
+					list={relatedBooks}
+					handleViewBookDetail={handleViewBookDetail}
+				/>
+			)}
+			<div className='book-reference__highlight__post'>
+				<h4>Bài viết nổi bật</h4>
+				<div className='card card-link'>
+					<ul className='card-link__list'>
+						<li className='card-link__item'>
+							<span>Cuốn sách fefefegegeegxuất sắc nhất về nuôi dạy con năm 2021</span>
+						</li>
+						<li className='card-link__item'>
+							<span>Cuốn sách fefefegegeegxuất sắc nhất về nuôi dạy con năm 2021</span>
+						</li>
+						<li className='card-link__item'>
+							<span>Cuốn sách fefefegegeegxuất sắc nhất về nuôi dạy con năm 2021</span>
+						</li>
+						<li className='card-link__item'>
+							<span>Cuốn sách fefefegegeegxuất sắc nhất về nuôi dạy con năm 2021</span>
+						</li>
+					</ul>
+				</div>
+				<button className='sidebar__view-more-btn--blue' onClick={directNewUrl}>
+					Xem thêm
+				</button>
 			</div>
-			<StatisticList title='Trạng thái đọc' background='light' isBackground={false} list={readingData} />
+
+			{allCategories.length > 0 && (
+				<>
+					<h4 className='statistic-title'>Chủ đề</h4>
+					<div className='dualColumn'>
+						<ul className='dualColumn-list'>
+							{allCategories.length > 0 &&
+								allCategories.slice(0, rows).map((item, index) => (
+									<li className='dualColumn-item' key={index}>
+										<span className='dualColumn-item__title'>{item.name}</span>
+										<span className='dualColumn-item__number'>{item.numberBooks} cuốn</span>
+									</li>
+								))}
+						</ul>
+						{!isExpand && allCategories.length > 0 && (
+							<button className='dualColumn-btn' onClick={handleViewMore}>
+								<img className='view-caret' src={caretIcon} alt='caret-icon' />
+								<span>Xem thêm</span>
+							</button>
+						)}
+						{isExpand && (
+							<Link to={`/category`} className='sidebar__view-more-btn--blue'>
+								Xem thêm
+							</Link>
+						)}
+					</div>
+				</>
+			)}
 		</div>
 	);
 };
-
-BookReference.propTypes = {};
 
 export default BookReference;

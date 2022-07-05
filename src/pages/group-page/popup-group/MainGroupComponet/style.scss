@@ -1,5 +1,6 @@
 .group__background {
 	img {
+		border-radius: 12px 12px 0px 0px;
 		height: 266px;
 		width: 100%;
 	}
@@ -28,6 +29,7 @@
 .group-name {
 	margin-top: 25px;
 	display: flex;
+	justify-content: space-between;
 }
 .group-name__content {
 	margin-top: 8px;
@@ -54,6 +56,20 @@
 		letter-spacing: 0.75px;
 		color: #6e7191;
 	}
+}
+
+.main__title {
+	font-family: 'Montserrat';
+	font-style: normal;
+	font-weight: 600;
+	font-size: 18.0357px;
+	line-height: 29px;
+	display: flex;
+	align-items: center;
+	letter-spacing: 0.676339px;
+	color: #2d2c42;
+	margin-bottom: 8px;
+	margin-left: 5px;
 }
 .group-name__btn {
 	margin-left: 12px;
@@ -97,6 +113,60 @@
 		height: 24px;
 		margin-right: 12px;
 	}
+	&:hover {
+		cursor: pointer;
+	}
+}
+.group-name__joined-group {
+	padding-left: 24px;
+	width: 206px;
+	height: 57px;
+	background: #eff0f6;
+	border-radius: 12px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	position: relative;
+	button {
+		font-family: 'Montserrat';
+		font-style: normal;
+		font-weight: 600;
+		font-size: 13px;
+		line-height: 22px;
+		display: flex;
+		align-items: center;
+		text-align: center;
+		letter-spacing: 0.25px;
+		color: #2d2c42;
+		span {
+			margin-right: 22px;
+		}
+	}
+	svg {
+		width: 24px;
+		height: 24px;
+		margin-right: 12px;
+	}
+	.list__dropdown {
+		border-radius: 0px 0px 12px 12px;
+		position: absolute;
+		width: 206px;
+		z-index: 1000;
+		background-color: #eff0f6;
+		padding-bottom: 20px;
+		top: 46px;
+		left: 0;
+		padding-left: 24px;
+		li {
+			margin-top: 35px;
+			font-family: 'Montserrat';
+			font-style: normal;
+			font-weight: 600;
+			font-size: 13px;
+			line-height: 22px;
+			cursor: pointer;
+		}
+	}
 }
 .group-name__invite-group {
 	display: flex;
@@ -124,6 +194,9 @@
 			width: 18px;
 			height: 18px;
 		}
+	}
+	&:hover {
+		cursor: pointer;
 	}
 }
 .group__search {

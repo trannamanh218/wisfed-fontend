@@ -3,7 +3,7 @@ import { CloseX, WeatherStars, BackChevron, Search } from 'components/svg';
 import { useEffect, useState, useRef, useCallback } from 'react';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
-import avatarTest from 'assets/images/avatar2.png';
+// import avatarTest from 'assets/images/avatar2.png';
 import bookSample from 'assets/images/sample-book-img.jpg';
 import { getSuggestionForPost } from 'reducers/redux-utils/activity';
 import { useDispatch } from 'react-redux';
@@ -18,13 +18,13 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 	const [showTextFieldEditPlaceholder, setShowTextFieldEditPlaceholder] = useState(true);
 	const [showTextFieldBackgroundSelect, setShowTextFieldBackgroundSelect] = useState(false);
 	const [backgroundColor, setBackgroundColor] = useState('');
-	const [inputAuthorValue, setInputAuthorValue] = useState('');
+	// const [inputAuthorValue, setInputAuthorValue] = useState('');
 	const [inputBookValue, setInputBookValue] = useState('');
 	const [inputCategoryValue, setInputCategoryValue] = useState('');
 	const [inputHashtagValue, setInputHashtagValue] = useState('');
 	const [colorActiveIndex, setColorActiveIndex] = useState(-1);
-	const [authorSearchedList, setAuthorSearchedList] = useState([]);
-	const [authorAdded, setAuthorAdded] = useState('');
+	// const [authorSearchedList, setAuthorSearchedList] = useState([]);
+	// const [authorAdded, setAuthorAdded] = useState('');
 	const [bookSearchedList, setBookSearchedList] = useState([]);
 	const [bookAdded, setBookAdded] = useState({});
 	const [categorySearchedList, setCategorySearchedList] = useState([]);
@@ -91,9 +91,10 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 	const getSuggestionForCreatQuotes = async (input, option) => {
 		try {
 			const data = await dispatch(getSuggestionForPost({ input, option })).unwrap();
-			if (option.value === 'addAuthor') {
-				setAuthorSearchedList(data.rows.slice(0, 5));
-			} else if (option.value === 'addBook') {
+			// if (option.value === 'addAuthor') {
+			// 	setAuthorSearchedList(data.rows.slice(0, 5));
+			// }
+			if (option.value === 'addBook') {
 				setBookSearchedList(data.rows.slice(0, 3));
 			} else if (option.value === 'addCategory') {
 				setCategorySearchedList(data.rows);
@@ -110,18 +111,18 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 		[]
 	);
 
-	const searchAuthor = e => {
-		setGetDataFinish(false);
-		setAuthorSearchedList([]);
-		setInputAuthorValue(e.target.value);
-		debounceSearch(e.target.value, { value: 'addAuthor' });
-	};
+	// const searchAuthor = e => {
+	// 	setGetDataFinish(false);
+	// 	setAuthorSearchedList([]);
+	// 	setInputAuthorValue(e.target.value);
+	// 	debounceSearch(e.target.value, { value: 'addAuthor' });
+	// };
 
-	const addAuthor = authorName => {
-		setAuthorAdded(authorName);
-		setInputAuthorValue('');
-		setAuthorSearchedList([]);
-	};
+	// const addAuthor = authorName => {
+	// 	setAuthorAdded(authorName);
+	// 	setInputAuthorValue('');
+	// 	setAuthorSearchedList([]);
+	// };
 
 	const searchBook = e => {
 		setGetDataFinish(false);
@@ -141,7 +142,9 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 		setCategorySearchedList([]);
 		setInputCategoryValue(e.target.value);
 		debounceSearch(e.target.value, { value: 'addCategory' });
-		categoryInputWrapper.current.style.width = categoryInput.current.value.length + 0.5 + 'ch';
+		if (categoryInputWrapper.current) {
+			categoryInputWrapper.current.style.width = categoryInput.current.value.length + 0.5 + 'ch';
+		}
 	};
 
 	const addCategory = category => {
@@ -153,7 +156,9 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 			setCategoryAddedList(categoryArrayTemp);
 			setInputCategoryValue('');
 			setCategorySearchedList([]);
-			categoryInputWrapper.current.style.width = '0.5ch';
+			if (categoryInputWrapper.current) {
+				categoryInputWrapper.current.style.width = '0.5ch';
+			}
 		}
 	};
 
@@ -188,9 +193,9 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 			const data = {
 				quote: textFieldEdit.current.innerText,
 				bookId: bookAdded.id,
-				authorName: authorAdded,
+				// authorName: authorAdded,
 				categories: categoryAddedIdList,
-				tag: hashTagsAddedArray,
+				tags: hashTagsAddedArray,
 				background: backgroundColor,
 			};
 			const response = await dispatch(creatQuotes(data)).unwrap();
@@ -291,7 +296,7 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 					</div>
 				</div>
 				<div className='creat-quotes-modal__body__add-options'>
-					<div className='creat-quotes-modal__body__option-item'>
+					{/* <div className='creat-quotes-modal__body__option-item'>
 						<div className='creat-quotes-modal__body__option-item__title'>Tác giả</div>
 						<div className='creat-quotes-modal__body__option-item__search-container'>
 							{authorAdded ? (
@@ -336,7 +341,7 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 								)}
 							</>
 						)}
-					</div>
+					</div> */}
 					<div className='creat-quotes-modal__body__option-item'>
 						<div className='creat-quotes-modal__body__option-item__title'>*Sách (Bắt buộc)</div>
 						<div className='creat-quotes-modal__body__option-item__search-container'>

@@ -15,9 +15,10 @@
 		align-items: center;
 
 		&__creator {
+			margin-top: 12px;
 			max-width: 55px;
 			font-size: 0.825rem;
-			font-weight: 500;
+			font-weight: 600;
 			line-height: 1.5;
 			color: $ash-label;
 			display: -webkit-box;
@@ -25,7 +26,6 @@
 			-webkit-line-clamp: 2;
 			text-overflow: ellipsis;
 			overflow: hidden;
-			margin-top: 0.75rem;
 			text-align: center;
 		}
 	}

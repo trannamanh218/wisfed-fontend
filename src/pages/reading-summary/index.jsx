@@ -1,11 +1,12 @@
-import React from 'react';
 import MainContainer from 'components/layout/main-container';
+import { useEffect } from 'react';
 import MainReadingSummary from './main-reading-summary';
 import SidebarReadingSummary from './sidebar-reading-summary';
-import { useFetchMyLibraries } from 'api/library.hook';
 
 const ReadingSummary = () => {
-	useFetchMyLibraries();
+	useEffect(() => {
+		window.scroll(0, 0);
+	}, []);
 
 	return <MainContainer main={<MainReadingSummary />} right={<SidebarReadingSummary />} />;
 };

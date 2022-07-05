@@ -5,7 +5,13 @@
 	&__heading {
 		display: flex;
 		justify-content: space-between;
+		align-items: center;
 		padding: 40px 40px 20px;
+	}
+
+	hr {
+		margin: 0;
+		background: #d1d1d1;
 	}
 
 	&__title {

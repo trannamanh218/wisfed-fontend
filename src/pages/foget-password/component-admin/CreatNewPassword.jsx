@@ -44,7 +44,7 @@ function CreatNewPasswordAdminForm() {
 				title: 'Tạo mật khẩu',
 				title2: ' mới thất bại',
 				isShowIcon: false,
-				scribe: 'Vui lòng kiểm tra vào thử lại',
+				scribe: 'Vui lòng kiểm tra và thử lại',
 				scribe2: '',
 			});
 		}

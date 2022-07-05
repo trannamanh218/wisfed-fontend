@@ -45,6 +45,7 @@
 	display: flex;
 	justify-content: end;
 	align-items: center;
+	margin-bottom: 20px;
 
 	button {
 		color: #0576f0;
@@ -57,10 +58,11 @@
 	background: #ffffff;
 	border-radius: 16px;
 	margin-top: 32px;
-	padding: 20px 0px 24px 16px;
+	padding: 20px 6px 24px 16px;
 	img {
 		width: 54px;
 		height: 54 px;
+		object-fit: cover;
 		border-radius: 50%;
 	}
 }
@@ -72,9 +74,14 @@
 	margin-top: 21px;
 }
 .people-item {
+	height: 54px;
 	display: flex;
 	margin-top: 15px;
 	.people-item__text {
+		display: flex;
+
+		justify-content: center;
+		flex-direction: column;
 		margin-left: 14.5px;
 		span {
 			font-family: 'Montserrat';
@@ -82,10 +89,15 @@
 			font-weight: 600;
 			font-size: 15px;
 			line-height: 24px;
-			display: flex;
+			display: -webkit-box;
+			-webkit-line-clamp: 1;
+			-webkit-box-orient: vertical;
+			text-overflow: ellipsis;
+			overflow: hidden;
 			align-items: center;
 			letter-spacing: 0.75px;
 			color: #2d2c42;
+			max-height: 24px;
 		}
 		div {
 			margin-top: 5px;

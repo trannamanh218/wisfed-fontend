@@ -1,51 +1,48 @@
-import React from 'react';
 import AuthorCard from 'shared/author-card';
-import PropTypes from 'prop-types';
 import './favorite-author-tab.scss';
+import { getFavoriteAuthor } from 'reducers/redux-utils/profile';
+import { useState, useEffect, memo } from 'react';
+import { useDispatch } from 'react-redux';
+import { NotificationError } from 'helpers/Error';
 
-const FavoriteAuthorTab = () => {
-	const list = Array.from(Array(5)).fill({
-		active: true,
-		address: null,
-		avatarImage: null,
-		backgroundImage: null,
-		birthday: null,
-		createdAt: '2022-03-14T09:28:02.396Z',
-		descriptions: null,
-		email: 'register2@gmail.com',
-		facebookId: null,
-		firstName: 'Test',
-		fullName: null,
-		gender: null,
-		googleId: null,
-		highSchool: null,
-		id: '77177554-2322-41d3-8bb3-1335aa906c25',
-		interest: null,
-		lastName: 'Gao',
-		numberFollowing: 2,
-		role: 'reader',
-		socials: null,
-		university: null,
-		updatedAt: '2022-03-14T09:28:02.396Z',
-		works: null,
-	});
+const FavoriteAuthorTab = ({ currentTab }) => {
+	const [favoriteAuthorList, setFavoriteAuthorList] = useState([]);
+
+	const dispatch = useDispatch();
+
+	useEffect(() => {
+		if (currentTab === 'favorite-authors') {
+			getFavoriteAuthorList();
+		}
+	}, [currentTab]);
+
+	const getFavoriteAuthorList = async () => {
+		try {
+			const res = await dispatch(getFavoriteAuthor()).unwrap();
+			setFavoriteAuthorList(res);
+		} catch (err) {
+			NotificationError(err);
+		}
+	};
 
 	return (
 		<div className='favorite-author-tab'>
-			<h4>Tác giả yêu thích</h4>
-			<div className='favorite-author-tab__list'>
-				{list && list.length > 0 ? (
-					list.map((item, index) => <AuthorCard key={index} direction={'column'} size={'lg'} item={item} />)
-				) : (
-					<p>Không có dữ liệu</p>
-				)}
-			</div>
+			{currentTab === 'favorite-authors' && (
+				<>
+					<h4>Tác giả yêu thích</h4>
+					<div className='favorite-author-tab__list'>
+						{favoriteAuthorList.length ? (
+							favoriteAuthorList.map(item => (
+								<AuthorCard key={item.id} direction={'column'} size={'lg'} item={item} />
+							))
+						) : (
+							<p>Không có dữ liệu</p>
+						)}
+					</div>
+				</>
+			)}
 		</div>
 	);
 };
 
-FavoriteAuthorTab.propTypes = {
-	list: PropTypes.array.isRequired,
-};
-
-export default FavoriteAuthorTab;
+export default memo(FavoriteAuthorTab);

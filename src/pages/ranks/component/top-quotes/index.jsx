@@ -6,7 +6,6 @@ import { getTopQuotes } from 'reducers/redux-utils/ranks';
 import { useDispatch } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
 import PropTypes from 'prop-types';
-import _ from 'lodash';
 
 const TopQuotes = ({ rows, listYear }) => {
 	const [topQuotesId, setTopQuotesId] = useState();

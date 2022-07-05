@@ -15,10 +15,12 @@
 
 		&.form-field-flex {
 			display: flex;
+			flex-wrap: wrap;
 			align-items: center;
 			gap: 0.625rem;
-			padding: 0 1rem;
+			padding: 12px 16px;
 			background-color: $ash-background;
+			height: fit-content;
 		}
 
 		&-socials-link {

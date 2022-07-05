@@ -14,7 +14,7 @@ import { NotificationError } from 'helpers/Error';
 import { useDispatch } from 'react-redux';
 import React, { useState } from 'react';
 import { changeToggleFollows } from 'reducers/redux-utils/friends';
-import ModalUnFriend from 'pages/group/component/modalUnFriends';
+import ModalUnFriend from 'pages/friends/component/modalUnFriends';
 import { Link } from 'react-router-dom';
 
 const FriendsItem = ({ list, keyTabs, getListFollower, getMyListFriendReq }) => {
@@ -221,6 +221,7 @@ const FriendsItem = ({ list, keyTabs, getListFollower, getMyListFriendReq }) => 
 						className='myfriends__layout__img'
 						src={list.userTwo.avatarImage ? list.userTwo.avatarImage : defaultAvatar}
 						alt=''
+						onError={e => e.target.setAttribute('src', `${defaultAvatar}`)}
 					/>
 					<div className='myfriends__star'>
 						<div className='myfriends__star__name'>

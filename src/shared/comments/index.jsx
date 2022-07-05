@@ -8,15 +8,17 @@ import UserAvatar from 'shared/user-avatar';
 import './comment.scss';
 import { likeQuoteComment } from 'reducers/redux-utils/quote';
 import { NotificationError } from 'helpers/Error';
+import { likeAndUnlikeCommentPost } from 'reducers/redux-utils/activity';
+import { POST_TYPE, QUOTE_TYPE, REVIEW_TYPE } from 'constants';
 
-const Comment = ({ data, handleReply, postData, commentLv1Id, postCommentsLikedArray, inQuotes }) => {
+const Comment = ({ data, handleReply, postData, commentLv1Id, type }) => {
 	const [isLiked, setIsLiked] = useState(false);
 	const [isAuthor, setIsAuthor] = useState(false);
 
 	const dispatch = useDispatch();
 
 	useEffect(() => {
-		if (inQuotes) {
+		if (type === QUOTE_TYPE) {
 			if (data.createdBy === postData.createdBy) {
 				setIsAuthor(true);
 			}
@@ -25,18 +27,24 @@ const Comment = ({ data, handleReply, postData, commentLv1Id, postCommentsLikedA
 				setIsAuthor(true);
 			}
 		}
+
+		if (data.isLike) {
+			setIsLiked(true);
+		} else {
+			setIsLiked(false);
+		}
 	}, []);
 
-	useEffect(() => {
-		if (postCommentsLikedArray.includes(data.id)) {
-			setIsLiked(true);
-		}
-	}, [postCommentsLikedArray]);
-
-	const handleLikeUnlikeQuoteCmt = async commentId => {
+	const handleLikeUnlikeCmt = async commentId => {
 		try {
-			const res = await dispatch(likeQuoteComment(commentId)).unwrap();
-			setIsLiked(res.liked);
+			if (type === POST_TYPE) {
+				await dispatch(likeAndUnlikeCommentPost(commentId));
+			} else if (type === QUOTE_TYPE) {
+				await dispatch(likeQuoteComment(commentId));
+			} else {
+				console.log('like and unlike review comment');
+			}
+			setIsLiked(!isLiked);
 		} catch (err) {
 			NotificationError(err);
 		}
@@ -69,7 +77,7 @@ const Comment = ({ data, handleReply, postData, commentLv1Id, postCommentsLikedA
 						className={classNames('comment__item', {
 							'liked': isLiked,
 						})}
-						onClick={() => handleLikeUnlikeQuoteCmt(data.id)}
+						onClick={() => handleLikeUnlikeCmt(data.id)}
 					>
 						Thích
 					</li>
@@ -97,6 +105,7 @@ Comment.propTypes = {
 	commentLv1Id: PropTypes.number,
 	postCommentsLikedArray: PropTypes.array,
 	inQuotes: PropTypes.bool,
+	type: PropTypes.string,
 };
 
 export default Comment;

@@ -1,8 +1,7 @@
-import { Fragment, useCallback, useEffect, useState } from 'react';
+import { Fragment, useCallback, useEffect, useState, useRef } from 'react';
 import { useFetchCategoryDetail } from 'api/category.hook';
 import classNames from 'classnames';
 import { Heart } from 'components/svg';
-import { NUMBER_OF_BOOKS } from 'constants';
 import _ from 'lodash';
 import { useNavigate, useParams } from 'react-router-dom';
 import BackButton from 'shared/back-button';
@@ -12,42 +11,58 @@ import CategoryGroup from 'shared/category-group';
 import FilterPane from 'shared/filter-pane';
 import Post from 'shared/post';
 import SearchField from 'shared/search-field';
-import RouteLink from 'helpers/RouteLink';
 import './main-category-detail.scss';
 import SearchBook from './SearchBook';
-import { useFetchBooks } from 'api/book.hooks';
 import PropTypes from 'prop-types';
 import { Modal, ModalBody } from 'react-bootstrap';
-import MultipleRadio from 'shared/multiple-radio';
-import { useModal } from 'shared/hooks';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-import { addToFavoriteCategory } from 'reducers/redux-utils/user';
+import { editUserInfo } from 'reducers/redux-utils/user';
 import { NotificationError } from 'helpers/Error';
+import { getListBookByCategory, getPostsByCategory } from 'reducers/redux-utils/category';
+import caretIcon from 'assets/images/caret.png';
+import { getBookDetail } from 'reducers/redux-utils/book';
+import RouteLink from 'helpers/RouteLink';
+import Circle from 'shared/loading/circle';
+import LoadingIndicator from 'shared/loading-indicator';
+import { STATUS_LOADING } from 'constants';
+import InfiniteScroll from 'react-infinite-scroll-component';
+import FormCheckGroup from 'shared/form-check-group';
+import { getFavoriteCategories } from 'reducers/redux-utils/category';
 
-const MainCategoryDetail = ({ handleViewBookDetail }) => {
+const MainCategoryDetail = () => {
 	const { id } = useParams();
-	const { categoryInfo } = useFetchCategoryDetail(id);
-	const books = categoryInfo?.books || [];
-	const topBooks = books.slice(0, 10);
-	const [bookList, setBookList] = useState(books.slice(0, 10));
+	const { categoryInfo, status } = useFetchCategoryDetail(id);
+
+	const [bookList, setBookList] = useState([]);
 	const [isLike, setIsLike] = useState(false);
 	const [inputSearch, setInputSearch] = useState('');
 	const [filter, setFilter] = useState('[]');
-	const { modalOpen, setModalOpen, toggleModal } = useModal(false);
-	const { books: searchResults } = useFetchBooks(1, 10, filter);
+	const [hasMore, setHasMore] = useState(true);
+	const [showModal, setShowModal] = useState(false);
+	const [isFetchingBookList, setIsFetchingBookList] = useState(true);
+	const [isFetchingBookDetail, setIsFetchingBookDetail] = useState(false);
+	const [postsByCategory, setPostsByCategory] = useState([]);
+	const [hasMorePost, setHasMorePost] = useState(true);
+	const [sortValue, setSortValue] = useState('like');
+	const [sortDirection, setSortDirection] = useState('DESC');
+	const [sortValueTemp, setSortValueTemp] = useState('default');
+	const [favoriteCategories, setFavorriteCategories] = useState([]);
+
+	const callApiStart = useRef(16);
+	const callApiPerPage = useRef(16);
+	const callApiStartGetPosts = useRef(10);
+	const callApiPerPageGetPosts = useRef(10);
+
 	const navigate = useNavigate();
 	const { userInfo } = useSelector(state => state.auth);
 	const dispatch = useDispatch();
 
-	const checkOptions = [
+	const radioOptions = [
 		{
-			value: 'likeMost',
-			title: 'Review nhiều like nhất',
+			value: 'default',
+			title: 'Bài viết nhiều like nhất',
 		},
-	];
-	// const starOptions = new Array(5).fill({}).map((_, index) => ({ value: index + 1, title: `${index + 1} sao` }));
-	const publishOptiosn = [
 		{
 			value: 'newest',
 			title: 'Mới nhất',
@@ -57,32 +72,48 @@ const MainCategoryDetail = ({ handleViewBookDetail }) => {
 			title: 'Cũ nhất',
 		},
 	];
-	// const reviewOptions = [
-	// 	{ value: 'followMost', title: 'Có nhiều Follow nhất' },
-	// 	{ value: 'reviewMost', title: 'Có nhiều Review nhất' },
-	// ];
 
 	useEffect(() => {
-		if (books && books.length) {
-			const data = books.slice(0, NUMBER_OF_BOOKS);
-			setBookList(data);
-		}
-		if (!_.isEmpty(categoryInfo)) {
-			navigate(RouteLink.categoryDetail(categoryInfo.id, categoryInfo.name));
-		}
-	}, [categoryInfo]);
+		checkFavoriteCategoriesData();
+	}, [id]);
 
 	useEffect(() => {
-		if (!_.isEmpty(userInfo)) {
-			const { favoriteCategory } = userInfo;
-			const index = favoriteCategory.findIndex(item => item.categoryId === parseInt(id));
-			if (index !== -1) {
-				setIsLike(true);
+		setHasMore(true);
+		callApiStart.current = 16;
+		setFilter('[]');
+		getBooksByCategoryFirstTime();
+	}, [userInfo, id]);
+
+	useEffect(() => {
+		setHasMorePost(true);
+		callApiStartGetPosts.current = 10;
+		handleGetPostsByCategoryFirstTime();
+	}, [userInfo, id, sortDirection, sortValue]);
+
+	useEffect(() => {
+		setHasMore(true);
+		callApiStart.current = 16;
+		getBooksByCategoryFirstTime();
+	}, [filter]);
+
+	const checkFavoriteCategoriesData = async () => {
+		try {
+			const res = await dispatch(getFavoriteCategories()).unwrap();
+			if (res.rows.length) {
+				const index = res.rows.findIndex(item => item.categoryId === parseInt(id));
+				if (index !== -1) {
+					setIsLike(true);
+				} else {
+					setIsLike(false);
+				}
+				setFavorriteCategories(res.rows);
 			} else {
 				setIsLike(false);
 			}
+		} catch (err) {
+			NotificationError(err);
 		}
-	}, [userInfo, id]);
+	};
 
 	const handleLikeCategory = async () => {
 		const categoryId = parseInt(id);
@@ -91,56 +122,87 @@ const MainCategoryDetail = ({ handleViewBookDetail }) => {
 		} else {
 			let favoriteCategory = [];
 			if (isLike) {
-				favoriteCategory = userInfo.favoriteCategory.forEach(item => {
+				favoriteCategories.forEach(item => {
 					if (item.categoryId !== categoryId) {
 						favoriteCategory.push(item.categoryId);
 					}
 				});
 			} else {
-				favoriteCategory = userInfo.favoriteCategory.map(item => item.categoryId);
+				favoriteCategory = favoriteCategories.map(item => item.categoryId);
 				favoriteCategory.push(categoryId);
 			}
 
 			try {
 				const params = {
-					id: userInfo.id,
-					favoriteCategory,
+					favoriteCategory: favoriteCategory,
 				};
-				await dispatch(addToFavoriteCategory(params));
-				setIsLike(like => !like);
+				await dispatch(editUserInfo({ userId: userInfo.id, params: params }));
+				setIsLike(!isLike);
 			} catch (err) {
 				NotificationError(err);
 			}
 		}
 	};
 
-	const handleViewMore = () => {
-		const currentLength = bookList.length;
-		const total = books.length;
-		if (currentLength < total) {
-			const moreData = books.slice(currentLength, currentLength + NUMBER_OF_BOOKS);
-			const data = bookList.concat(moreData);
-			setBookList(data);
+	const getBooksByCategoryFirstTime = async () => {
+		setIsFetchingBookList(true);
+		try {
+			const params = {
+				start: 0,
+				limit: callApiPerPage.current,
+				sort: JSON.stringify([{ property: 'createdAt', direction: 'DESC' }]),
+				filter: filter,
+			};
+			const res = await dispatch(getListBookByCategory({ categoryId: id, params: params })).unwrap();
+			setBookList(res);
+			if (!res.length || res.length < callApiPerPage.current) {
+				setHasMore(false);
+			}
+		} catch (err) {
+			NotificationError(err);
+		} finally {
+			setIsFetchingBookList(false);
 		}
 	};
 
-	const postList = Array.from(Array(5)).fill({
-		id: 1,
-		userAvatar: '/images/avatar.png',
-		userName: 'Trần Văn Đức',
-		bookImage: '',
-		bookName: '',
-		isLike: true,
-		likeNumber: 15,
-		commentNumber: 1,
-		shareNumber: 3,
-	});
+	const getBooksByCategory = async () => {
+		setIsFetchingBookList(true);
+		try {
+			const params = {
+				start: callApiStart.current,
+				limit: callApiPerPage.current,
+				sort: JSON.stringify([{ property: 'createdAt', direction: 'DESC' }]),
+				filter: filter,
+			};
+			const res = await dispatch(getListBookByCategory({ categoryId: id, params: params })).unwrap();
+			if (res.length) {
+				if (res.length < callApiPerPage.current) {
+					setHasMore(false);
+				} else {
+					callApiStart.current += callApiPerPage.current;
+				}
+				setBookList(bookList.concat(res));
+			} else {
+				setHasMore(false);
+			}
+		} catch (err) {
+			NotificationError(err);
+		} finally {
+			setIsFetchingBookList(false);
+		}
+	};
+
+	const handleViewMore = () => {
+		getBooksByCategory();
+	};
 
 	const updateInputSearch = value => {
 		if (value) {
-			const filterValue = [{ 'operator': 'eq', 'value': id, 'property': 'categoryId' }];
-			filterValue.push({ 'operator': 'search', 'value': value.trim(), 'property': 'name' });
+			const filterValue = [{ 'operator': 'search', 'value': value.trim(), 'property': 'name' }];
+			callApiStart.current = 16;
+			setBookList([]);
 			setFilter(JSON.stringify(filterValue));
+			setHasMore(true);
 		} else {
 			setFilter('[]');
 		}
@@ -153,111 +215,249 @@ const MainCategoryDetail = ({ handleViewBookDetail }) => {
 		debounceSearch(e.target.value);
 	};
 
-	if (_.isEmpty(categoryInfo)) {
-		return (
-			<div className='main-category-detail'>
-				<div className='main-category-detail__header'>
-					<BackButton destination='/category' />
-				</div>
-				<p className='main-category-detail__intro'>Không tìm thấy chủ đề</p>
-			</div>
-		);
-	}
+	const handleSortPost = () => {
+		setShowModal(true);
+	};
 
-	const handleFilter = () => {
-		setModalOpen(true);
+	const handleViewBookDetail = async data => {
+		setIsFetchingBookDetail(true);
+		try {
+			await dispatch(getBookDetail(data.id)).unwrap();
+			setIsFetchingBookDetail(false);
+			navigate(RouteLink.bookDetail(data.id, data.name));
+		} catch (err) {
+			NotificationError(err);
+		}
+	};
+
+	const handleGetPostsByCategoryFirstTime = async () => {
+		try {
+			const params = {
+				start: 0,
+				limit: callApiPerPageGetPosts.current,
+				sort: JSON.stringify([{ direction: sortDirection, property: sortValue }]),
+			};
+			const res = await dispatch(getPostsByCategory({ categoryId: id, params })).unwrap();
+			setPostsByCategory(res);
+			if (!res.length || res.length < callApiPerPageGetPosts.current) {
+				setHasMorePost(false);
+			}
+		} catch (err) {
+			NotificationError(err);
+		}
+	};
+
+	const handleGetPostsByCategory = async () => {
+		try {
+			const params = {
+				start: callApiStartGetPosts.current,
+				limit: callApiPerPageGetPosts.current,
+				sort: JSON.stringify([{ direction: sortDirection, property: sortValue }]),
+			};
+			const res = await dispatch(getPostsByCategory({ categoryId: id, params })).unwrap();
+			if (res.length) {
+				if (res.length < callApiPerPageGetPosts.current) {
+					setHasMorePost(false);
+				} else {
+					callApiStartGetPosts.current += callApiPerPageGetPosts.current;
+				}
+				setPostsByCategory(postsByCategory.concat(res));
+			} else {
+				setHasMorePost(false);
+			}
+		} catch (err) {
+			NotificationError(err);
+		}
+	};
+
+	const handleChange = data => {
+		setSortValueTemp(data);
+	};
+
+	const handleSortQuotes = () => {
+		if (sortValueTemp === 'default') {
+			setSortValue('like');
+			setSortDirection('DESC');
+		} else if (sortValueTemp === 'newest') {
+			setSortValue('createdAt');
+			setSortDirection('DESC');
+		} else if (sortValueTemp === 'oldest') {
+			setSortValue('createdAt');
+			setSortDirection('ASC');
+		}
+		setShowModal(false);
 	};
 
 	return (
 		<div className='main-category-detail'>
-			<div className='main-category-detail__header'>
-				<BackButton destination='/category' />
-				<h4>{categoryInfo.name}</h4>
-				<Button
-					className={classNames('btn-like', { 'active': isLike })}
-					isOutline={true}
-					onClick={handleLikeCategory}
-				>
-					<span className='heart-icon'>
-						<Heart />
-					</span>
-					<span>{isLike ? 'Đã yêu thích' : 'Yêu thích'}</span>
-				</Button>
-			</div>
+			<Circle loading={isFetchingBookDetail || status === STATUS_LOADING} />
+			{status !== STATUS_LOADING && (
+				<>
+					{_.isEmpty(categoryInfo) ? (
+						<>
+							<div className='main-category-detail__header'>
+								<BackButton destination='/category' />
+							</div>
+							<p className='main-category-detail__intro'>Không tìm thấy chủ đề</p>
+						</>
+					) : (
+						<>
+							<div className='main-category-detail__header'>
+								<BackButton destination='/category' />
+								<h4>{categoryInfo.name}</h4>
+								{isLike !== null && (
+									<Button
+										className={classNames('btn-like', { 'active': isLike })}
+										isOutline={true}
+										onClick={handleLikeCategory}
+									>
+										<span className='heart-icon'>
+											<Heart />
+										</span>
+										<span>{isLike ? 'Đã yêu thích' : 'Yêu thích'}</span>
+									</Button>
+								)}
+							</div>
 
-			<p className='main-category-detail__intro'>{categoryInfo.description || 'Chưa cập nhật'}</p>
+							{categoryInfo.description && (
+								<p className='main-category-detail__intro'>{categoryInfo.description}</p>
+							)}
 
-			<div className='main-category-detail__container'>
-				<SearchField
-					placeholder='Tìm kiếm sách trong chủ đề kinh doanh'
-					handleChange={handleSearch}
-					value={inputSearch}
-				/>
-				{inputSearch && <SearchBook list={searchResults} handleViewBookDetail={handleViewBookDetail} />}
-				<CategoryGroup
-					key={`category-group`}
-					list={topBooks}
-					title='Đọc nhiều nhất tuần này'
-					handleViewBookDetail={handleViewBookDetail}
-				/>
-				<div className='main-category-detail__allbook'>
-					<h4>Tất cả sách chủ đề {categoryInfo.name ? categoryInfo.name.toLowerCase() : ''}</h4>
-					<div className='books'>
-						{bookList.map((item, index) => (
-							<BookThumbnail
-								key={index}
-								{...item}
-								source={item.source}
-								size='lg'
-								data={item}
-								handleClick={handleViewBookDetail}
-							/>
-						))}
-					</div>
-					<a className='view-all-link' onClick={handleViewMore}>
-						Xem tất cả
-					</a>
-				</div>
-			</div>
+							<div className='main-category-detail__container'>
+								<SearchField
+									placeholder={`Tìm kiếm sách trong chủ đề ${categoryInfo.name}`}
+									handleChange={handleSearch}
+									value={inputSearch}
+								/>
 
-			<FilterPane title='Bài viết hay nhất' onFilter={handleFilter}>
-				<div className='main-category-detail__posts'>
-					{postList && postList.length
-						? postList.map((item, index) => (
-								<Fragment key={`post-${index}`}>
-									<Post className='post__container--category' postInformations={item} />
-								</Fragment>
-						  ))
-						: null}
-				</div>
-				<Modal
-					show={modalOpen}
-					onHide={toggleModal}
-					className='main-category-detail__modal'
-					keyboard={false}
-					centered
-				>
-					<ModalBody>
-						<div className='main-category-detail__modal__option__group'>
-							<h4>Mặc định</h4>
-							<MultipleRadio list={checkOptions} name='default' defaultValue='likeMost' />
-						</div>
-						{/* <div className='main-category-detail__modal__option__group'>
-							<h4>Theo số sao</h4>
-							<MultipleCheckbox list={starOptions} name='star' value='1' />
-						</div> */}
-						<div className='main-category-detail__modal__option__group'>
-							<h4>Theo thời gian phát hành</h4>
-							<MultipleRadio list={publishOptiosn} name='pulish-time' defaultValue='' />
-						</div>
-						{/* <div className='main-category-detail__modal__option__group'>
-							<h4>Theo người review</h4>
-							<MultipleCheckbox list={reviewOptions} name='review' value='' />
-						</div> */}
-						<Button className='btn-confirm'>Xác nhận</Button>
-					</ModalBody>
-				</Modal>
-			</FilterPane>
+								<>
+									{filter !== '[]' ? (
+										<SearchBook
+											list={bookList}
+											handleViewBookDetail={handleViewBookDetail}
+											inputSearch={inputSearch}
+										/>
+									) : (
+										<>
+											{!!categoryInfo?.topBookReads.length && (
+												<CategoryGroup
+													key={`category-group`}
+													list={categoryInfo.topBookReads}
+													title='Đọc nhiều nhất tuần này'
+													handleViewBookDetail={handleViewBookDetail}
+													inCategoryDetail={true}
+												/>
+											)}
+
+											<div className='main-category-detail__allbook'>
+												<h4>
+													{`Tất cả sách chủ đề "${
+														categoryInfo.name ? categoryInfo.name.toLowerCase() : ''
+													}"`}
+												</h4>
+												<div className='books'>
+													{bookList.map((item, index) => (
+														<BookThumbnail
+															key={index}
+															{...item}
+															source={item.source}
+															size='lg'
+															data={item}
+															handleClick={handleViewBookDetail}
+														/>
+													))}
+												</div>
+											</div>
+										</>
+									)}
+									{isFetchingBookList && <LoadingIndicator />}
+									{hasMore && (
+										<button className='get-more-books-btn' onClick={handleViewMore}>
+											<img src={caretIcon} alt='caret-icon' />
+											<span>Xem thêm</span>
+										</button>
+									)}
+								</>
+							</div>
+
+							{!!postsByCategory.length && (
+								<FilterPane
+									title='Bài viết hay nhất'
+									handleSortFilter={handleSortPost}
+									hasHeaderLine={true}
+								>
+									<div className='main-category-detail__posts'>
+										<InfiniteScroll
+											dataLength={postsByCategory.length}
+											next={handleGetPostsByCategory}
+											hasMore={hasMorePost}
+											loader={<LoadingIndicator />}
+										>
+											{postsByCategory.map(item => (
+												<Fragment key={item.id}>
+													<Post
+														className='post__container--category'
+														postInformations={item}
+													/>
+												</Fragment>
+											))}
+										</InfiniteScroll>
+									</div>
+									<Modal
+										show={showModal}
+										onHide={() => setShowModal(false)}
+										className='main-category-detail__modal'
+										keyboard={false}
+										centered
+									>
+										<ModalBody className='main-category-detail__modal__content'>
+											<div className='main-category-detail__modal__group'>
+												<h6 className='main-category-detail__modal__title'>Mặc định</h6>
+												<FormCheckGroup
+													data={radioOptions[0]}
+													name='custom'
+													type='radio'
+													defaultValue='default'
+													handleChange={handleChange}
+													currentSortValue={sortValueTemp}
+												/>
+												<h6
+													style={{ marginTop: '24px' }}
+													className='main-category-detail__modal__title'
+												>
+													Theo thời gian tạo
+												</h6>
+												<FormCheckGroup
+													data={radioOptions[1]}
+													name='custom'
+													type='radio'
+													defaultValue='default'
+													handleChange={handleChange}
+													currentSortValue={sortValueTemp}
+												/>
+												<FormCheckGroup
+													data={radioOptions[2]}
+													name='custom'
+													type='radio'
+													defaultValue='default'
+													handleChange={handleChange}
+													currentSortValue={sortValueTemp}
+												/>
+											</div>
+											<Button
+												className='main-category-detail__modal__btn'
+												onClick={handleSortQuotes}
+											>
+												Xác nhận
+											</Button>
+										</ModalBody>
+									</Modal>
+								</FilterPane>
+							)}
+						</>
+					)}
+				</>
+			)}
 		</div>
 	);
 };

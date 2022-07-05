@@ -3,16 +3,13 @@ import 'react-circular-progressbar/dist/styles.css';
 import './progress-circle.scss';
 import { Link } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
-import { useFetchTargetReading } from 'api/readingTarget.hooks';
 import { useSelector } from 'react-redux';
 import _ from 'lodash';
+import PropTypes from 'prop-types';
 
-const ProgressBarCircle = () => {
+const ProgressBarCircle = ({ booksReadYear }) => {
 	const { userId } = useParams();
 	const { userInfo } = useSelector(state => state.auth);
-	const id = userId || userInfo?.id;
-	const { booksReadYear } = useFetchTargetReading(id);
-
 	const idCSS = 'library';
 	const SVG = () => {
 		const gradientTransform = `rotate(90)`;
@@ -31,8 +28,10 @@ const ProgressBarCircle = () => {
 		let percent = 0;
 		if (item.booksReadCount > item.numberBook) {
 			return (percent = 100);
-		} else {
+		} else if (0 < item.booksReadCount !== undefined < item.numberBook) {
 			percent = ((item.booksReadCount / item.numberBook) * 100).toFixed();
+		} else {
+			percent = 0;
 		}
 		return percent;
 	};
@@ -40,20 +39,21 @@ const ProgressBarCircle = () => {
 	return (
 		<div>
 			<div className='progress__circle__title'>Mục tiêu đọc sách</div>
-			{booksReadYear.length > 0 &&
-				!_.isEmpty(userInfo) &&
-				booksReadYear.map(item => (
-					<div key={item.id} className='progress__circle__container'>
-						<div>
+			{!_.isEmpty(booksReadYear) && !_.isEmpty(userInfo) && (
+				<div className='progress__circle__container'>
+					{booksReadYear.map(item => (
+						<div key={item.id}>
 							<CircularProgressbarWithChildren
 								strokeWidth={4}
 								value={renderLinearProgressBar(item)}
-								text={`${item.booksReadCount}/${item.numberBook}`}
+								text={`${item.booksReadCount || 0}/${item.numberBook}`}
 								styles={{
 									path: { stroke: `url(#${idCSS})`, height: '100%' },
 								}}
 							/>
-							<div className='progress__circle__container__title'>Số cuốn sách đọc trong năm 2022</div>
+							<div className='progress__circle__container__title'>
+								Số cuốn sách đọc trong năm {item.year}
+							</div>
 							{SVG()}
 							<Link
 								to={`/reading-target/${userId || userInfo?.id}`}
@@ -63,9 +63,14 @@ const ProgressBarCircle = () => {
 								Xem chi tiết
 							</Link>
 						</div>
-					</div>
-				))}
+					))}
+				</div>
+			)}
 		</div>
 	);
+};
+
+ProgressBarCircle.propTypes = {
+	booksReadYear: PropTypes.string,
 };
 export default ProgressBarCircle;

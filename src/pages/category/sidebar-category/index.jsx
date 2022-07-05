@@ -1,43 +1,62 @@
-import { useFetchFavoriteCategories, useFetchViewMoreCategories } from 'api/category.hook';
-import { MAX_PER_PAGE } from 'constants';
-import { useState } from 'react';
+import { useFetchViewMoreCategories } from 'api/category.hook';
+import { useEffect, useState } from 'react';
 import StatisticList from 'shared/statistic-list';
 import TopicColumn from 'shared/topic-column';
 import PropTypes from 'prop-types';
 import Circle from 'shared/loading/circle';
 import { STATUS_LOADING } from 'constants';
 import './sidebar-category.scss';
+import { useDispatch } from 'react-redux';
+import { getFavoriteCategories } from 'reducers/redux-utils/category';
+import { NotificationError } from 'helpers/Error';
 
 const SidebarCategory = ({ status, viewCategoryDetail }) => {
-	const [currentPage, setCurrentPage] = useState(1);
-	const {
-		categoryData: { rows = [], count = 0 },
-	} = useFetchViewMoreCategories(currentPage, MAX_PER_PAGE, '[]');
+	const [favoriteCategories, setFavorriteCategories] = useState([]);
 
-	const handleViewMore = () => {
-		if (rows.length < count) {
-			setCurrentPage(prev => prev + 1);
+	const dispatch = useDispatch();
+
+	const {
+		categoryData: { rows = [] },
+	} = useFetchViewMoreCategories(0, 30, '[]');
+
+	useEffect(() => {
+		getFavoriteCategoriesData();
+	}, []);
+
+	const getFavoriteCategoriesData = async () => {
+		try {
+			const params = {
+				start: 0,
+				limit: 20,
+			};
+			const res = await dispatch(getFavoriteCategories(params)).unwrap();
+			setFavorriteCategories(res.rows);
+		} catch (err) {
+			NotificationError(err);
 		}
 	};
-
-	const { favoriteCategoryData } = useFetchFavoriteCategories();
 
 	return (
 		<div className='sidebar-category'>
 			<Circle loading={status === STATUS_LOADING} />
-			<StatisticList
-				title='Chủ đề yêu thích'
-				background='light'
-				className='sidebar-category__list'
-				isBackground={false}
-				list={favoriteCategoryData.rows}
-			/>
+			{!!favoriteCategories.length && (
+				<StatisticList
+					title='Chủ đề yêu thích'
+					background='light'
+					className='sidebar-category__list'
+					isBackground={true}
+					list={favoriteCategories}
+					pageText={false}
+					inCategory={true}
+				/>
+			)}
+
 			<TopicColumn
 				className='sidebar-category__topics'
 				topics={rows}
 				title='Tất cả chủ đề'
-				handleViewMore={handleViewMore}
 				viewCategoryDetail={viewCategoryDetail}
+				inCategory={true}
 			/>
 		</div>
 	);

@@ -69,22 +69,22 @@
 
 	&__overlay {
 		position: absolute;
-		inset: 0;
-		bottom: 20%;
+		top: 12px;
+		right: 12px;
 		display: flex;
-		margin-right: 12px;
-		padding-top: 12px;
 		flex-direction: column;
 		align-items: center;
+		&.position {
+			left: 50%;
+			right: 50%;
+			bottom: 60px;
+		}
 
 		.btn-status {
 			padding: 1em 0.5em;
 			width: 170px;
 			color: $white;
 			margin-top: auto;
-			margin-right: -12px;
-			// visibility: hidden;
-			// display: none;
 			transition: all 0.2s ease-in-out;
 		}
 

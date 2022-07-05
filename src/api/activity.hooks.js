@@ -27,8 +27,6 @@ export const useFetchActivities = (current = 1, perPage = 10, filter = '[]', isN
 				setStatus(STATUS_SUCCESS);
 			} catch (err) {
 				NotificationError(err);
-				const statusCode = err?.statusCode || 500;
-				setStatus(statusCode);
 			}
 		}
 

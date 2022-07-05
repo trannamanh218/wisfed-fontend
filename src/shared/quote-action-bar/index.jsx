@@ -1,48 +1,67 @@
-import React from 'react';
 import { Like, LikeFill, CommentSvg, Share } from 'components/svg';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import './quote-action-bar.scss';
 import { RightArrow } from 'components/svg';
 import { Link } from 'react-router-dom';
+import Storage from 'helpers/Storage';
+import { useDispatch } from 'react-redux';
+import { saveDataShare, checkShare } from 'reducers/redux-utils/post';
+import { useNavigate } from 'react-router-dom';
 
-const QuoteActionBar = ({ data, isDetail, likeUnlikeQuoteFnc, isLiked, likeNumber }) => {
-	const { isShare, share, comments, id } = data;
+const QuoteActionBar = ({ data, isDetail, likeUnlikeQuoteFnc, isLiked, likeNumber, setModalShow }) => {
+	const dispatch = useDispatch();
+	const navigate = useNavigate();
 
-	if (isDetail) {
-		return (
-			<ul className='quote-action-bar'>
-				<li className='quote-action__item' onClick={() => likeUnlikeQuoteFnc(id)}>
-					{isLiked ? <LikeFill /> : <Like />}
-					<span className='quote-action__name'>{likeNumber} Thích</span>
-				</li>
-				<li className='quote-action__item'>
-					<CommentSvg className='quote-icon active' />
-					<span className='quote-action__name'>{comments} Bình luận</span>
-				</li>
-				<li className='quote-action__item'>
-					<Share className='quote-icon active' />
-					<span className='quote-action__name'>{share} Chia sẻ</span>
-				</li>
-			</ul>
-		);
-	}
+	const handleCheckLoginShare = async () => {
+		if (!Storage.getAccessToken()) {
+			setModalShow(true);
+		} else {
+			dispatch(saveDataShare(data));
+			dispatch(checkShare(true));
+			navigate('/');
+		}
+	};
+
+	const handleCheckLoginLike = () => {
+		if (!Storage.getAccessToken()) {
+			setModalShow(true);
+		} else {
+			likeUnlikeQuoteFnc(data.id);
+		}
+	};
 
 	return (
 		<ul className='quote-action-bar'>
-			<li className='quote-action__item' onClick={() => likeUnlikeQuoteFnc(id)}>
+			<li className='quote-action__item' onClick={handleCheckLoginLike}>
 				{isLiked ? <LikeFill /> : <Like />}
 				<span className='quote-action__name'>{likeNumber} Thích</span>
 			</li>
 			<li className='quote-action__item'>
-				<Share className={classNames('quote-icon', { 'active': isShare })} />
-				<span className='quote-action__name'>{share} Chia sẻ</span>
+				{isDetail ? (
+					<>
+						<CommentSvg className='quote-icon' />
+						<span className='quote-action__name'>{data.comments} Bình luận</span>
+					</>
+				) : (
+					<div onClick={handleCheckLoginShare}>
+						<Share className={classNames('quote-icon', { 'active': data.isShare })} />
+						<span className='quote-action__name'>{data.share} Chia sẻ</span>
+					</div>
+				)}
 			</li>
 			<li className='quote-action__item'>
-				<Link to={`/quotes/detail/${id}`}>
-					<span className='quote-action__name'>Chi tiết</span>
-					<RightArrow className='quote-action__right-arrow' />
-				</Link>
+				{isDetail ? (
+					<div onClick={handleCheckLoginShare}>
+						<Share className='quote-icon' />
+						<span className='quote-action__name'>{data.share} Chia sẻ</span>
+					</div>
+				) : (
+					<Link to={`/quotes/detail/${data.id}`}>
+						<span className='quote-action__name'>Chi tiết</span>
+						<RightArrow className='quote-action__right-arrow' />
+					</Link>
+				)}
 			</li>
 		</ul>
 	);
@@ -67,6 +86,7 @@ QuoteActionBar.propTypes = {
 	isLiked: PropTypes.bool,
 	likeNumber: PropTypes.number,
 	likeUnlikeQuoteFnc: PropTypes.func,
+	setModalShow: PropTypes.func,
 };
 
 export default QuoteActionBar;

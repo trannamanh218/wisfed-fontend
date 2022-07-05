@@ -30,7 +30,7 @@ function PreviewLink({ urlData, isFetching, removeUrlPreview }) {
 				</div>
 			) : (
 				<div className='preview-link__content'>
-					{urlData.images.length > 0 && (
+					{urlData.images?.length > 0 && (
 						<div className='preview-link__image'>
 							<img src={urlData.images[0]} alt='preview-link-image' />
 						</div>

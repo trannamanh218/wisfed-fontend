@@ -6,16 +6,19 @@ import UserAvatar from 'shared/user-avatar';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import { updateCurrentBook } from 'reducers/redux-utils/book';
-import { resetTaggedDataFunc } from 'reducers/redux-utils/post';
+import { resetTaggedDataFunc, saveDataShare, sharePosts, checkShare } from 'reducers/redux-utils/post';
 import { useLocation } from 'react-router-dom';
+import { updateImg } from 'reducers/redux-utils/chart';
 
 function CreatePost({ onChangeNewPost }) {
 	const [showModalCreatPost, setShowModalCreatPost] = useState(false);
 	const [option, setOption] = useState({});
+	const [showSubModal, setShowSubModal] = useState(false);
 	const creatPostModalContainer = useRef(null);
 	const scrollBlocked = useRef(false);
 	const location = useLocation();
-
+	const { postsData } = useSelector(state => state.post);
+	const { updateImgPost } = useSelector(state => state.chart);
 	const {
 		auth: { userInfo },
 		book: { bookForCreatePost },
@@ -27,7 +30,7 @@ function CreatePost({ onChangeNewPost }) {
 	const html = safeDocument.documentElement;
 	let optionList = null;
 
-	if (location.pathname === '/group') {
+	if (location.pathname.includes('group')) {
 		optionList = [
 			{
 				value: 'addBook',
@@ -84,18 +87,17 @@ function CreatePost({ onChangeNewPost }) {
 	}
 
 	useEffect(() => {
-		if (!_.isEmpty(bookForCreatePost)) {
+		if (!_.isEmpty(bookForCreatePost) || !_.isEmpty(postsData) || !_.isEmpty(updateImgPost)) {
 			setShowModalCreatPost(true);
 			dispatch(resetTaggedDataFunc(false));
 		}
-	}, [bookForCreatePost]);
+	}, [bookForCreatePost, postsData, updateImgPost]);
 
 	useEffect(() => {
 		if (showModalCreatPost) {
 			creatPostModalContainer.current.addEventListener('mousedown', e => {
 				if (e.target === creatPostModalContainer.current) {
-					hideCreatPostModal();
-					dispatch(updateCurrentBook({}));
+					hideCreatePostModal();
 				}
 			});
 			blockScroll();
@@ -126,10 +128,16 @@ function CreatePost({ onChangeNewPost }) {
 		scrollBlocked.current = false;
 	};
 
-	const hideCreatPostModal = () => {
-		setShowModalCreatPost(false);
-		setOption({});
+	const hideCreatePostModal = () => {
 		dispatch(resetTaggedDataFunc(true));
+		dispatch(saveDataShare({}));
+		dispatch(sharePosts(false));
+		dispatch(checkShare(false));
+		dispatch(updateImg([]));
+		dispatch(updateCurrentBook({}));
+		setOption({});
+		setShowModalCreatPost(false);
+		setShowSubModal(false);
 	};
 
 	const onChangeOption = data => {
@@ -145,6 +153,7 @@ function CreatePost({ onChangeNewPost }) {
 					onChangeOption(item);
 					setShowModalCreatPost(true);
 					dispatch(resetTaggedDataFunc(false));
+					setShowSubModal(true);
 				}}
 			>
 				<div className='newfeed__creat-post__options__item__logo'>{item.icon}</div>
@@ -167,11 +176,13 @@ function CreatePost({ onChangeNewPost }) {
 			{showModalCreatPost && (
 				<div className='newfeed__creat-post__modal' ref={creatPostModalContainer}>
 					<CreatPostModalContent
-						hideCreatPostModal={hideCreatPostModal}
+						hideCreatePostModal={hideCreatePostModal}
 						showModalCreatPost={showModalCreatPost}
 						option={option}
 						onChangeOption={onChangeOption}
 						onChangeNewPost={onChangeNewPost}
+						setShowModalCreatPost={setShowModalCreatPost}
+						showSubModal={showSubModal}
 					/>
 				</div>
 			)}

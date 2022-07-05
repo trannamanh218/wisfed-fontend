@@ -4,9 +4,11 @@ import {
 	quoteDetailAPI,
 	quoteCommentAPI,
 	likeQuoteAPI,
-	checkLikeQuoteAPI,
 	likeQuoteCommentAPI,
-	checkLikeQuoteCommentAPI,
+	getMyLikedQuotesAPI,
+	getQuotesByFriendsOrFollowersAPI,
+	countQuotesByCategoryWithUserIdAPI,
+	countAllQuotesByCategorydAPI,
 } from 'constants/apiURL';
 import Request from 'helpers/Request';
 
@@ -60,16 +62,6 @@ export const likeUnlikeQuote = createAsyncThunk('quote/like quote', async (id, {
 	}
 });
 
-export const checkLikeQuote = createAsyncThunk('quote/check like quote', async () => {
-	try {
-		const response = await Request.makeGet(checkLikeQuoteAPI, { limit: 1000 });
-		return response.data;
-	} catch (err) {
-		const error = JSON.parse(err.response);
-		return error;
-	}
-});
-
 export const likeQuoteComment = createAsyncThunk('quote/like quote', async (id, { rejectWithValue }) => {
 	try {
 		const response = await Request.makePatch(likeQuoteCommentAPI(id));
@@ -80,15 +72,47 @@ export const likeQuoteComment = createAsyncThunk('quote/like quote', async (id, 
 	}
 });
 
-export const checkLikeQuoteComment = createAsyncThunk('quote/check like quote comment', async () => {
+export const getMyLikedQuotes = createAsyncThunk('quote/get my liked quotes', async (params, { rejectWithValue }) => {
 	try {
-		const response = await Request.makeGet(checkLikeQuoteCommentAPI);
+		const response = await Request.makeGet(getMyLikedQuotesAPI, params);
 		return response.data;
 	} catch (err) {
 		const error = JSON.parse(err.response);
-		return error;
+		return rejectWithValue(error);
 	}
 });
+
+export const getQuotesByFriendsOrFollowers = createAsyncThunk(
+	'quote/get quote by friends or quote',
+	async (params, { rejectWithValue }) => {
+		try {
+			const response = await Request.makeGet(getQuotesByFriendsOrFollowersAPI, params);
+			return response.data;
+		} catch (err) {
+			const error = JSON.parse(err.response);
+			return rejectWithValue(error);
+		}
+	}
+);
+
+export const getCountQuotesByCategory = createAsyncThunk(
+	'quote/get count quotes by category',
+	async (data, { rejectWithValue }) => {
+		try {
+			const { userId, params } = data;
+			let response;
+			if (userId) {
+				response = await Request.makeGet(countQuotesByCategoryWithUserIdAPI(userId), params);
+			} else {
+				response = await Request.makeGet(countAllQuotesByCategorydAPI, params);
+			}
+			return response.data;
+		} catch (err) {
+			const error = JSON.parse(err.response);
+			return rejectWithValue(error);
+		}
+	}
+);
 
 const quoteSlice = createSlice({
 	name: 'quoteSlice',

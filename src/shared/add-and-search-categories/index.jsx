@@ -18,7 +18,9 @@ function AddAndSearchCategories({
 	hasSearchIcon,
 }) {
 	const focusCategoryInput = () => {
-		categoryInput.current.focus();
+		if (categoryInput.current) {
+			categoryInput.current.focus();
+		}
 	};
 
 	useEffect(() => {
@@ -31,7 +33,7 @@ function AddAndSearchCategories({
 		if (categoryInputContainer.current) {
 			categoryInputContainer.current.addEventListener('click', focusCategoryInput);
 			return () => {
-				categoryInputContainer.current.removeEventListener('click', focusCategoryInput);
+				categoryInputContainer?.current.removeEventListener('click', focusCategoryInput);
 			};
 		}
 	}, []);

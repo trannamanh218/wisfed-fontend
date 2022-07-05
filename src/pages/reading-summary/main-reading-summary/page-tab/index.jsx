@@ -1,8 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { useEffect, useState, useCallback } from 'react';
-import { Bar, BarChart, Legend, Tooltip, XAxis, YAxis } from 'recharts';
+import { Bar, BarChart, Tooltip, XAxis, YAxis, CartesianGrid } from 'recharts';
 import SelectBox from 'shared/select-box';
-import caretChart from 'assets/images/caret-chart.png';
 import './page-tab.scss';
 import { useDispatch } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
@@ -13,7 +12,7 @@ import Circle from 'shared/loading/circle';
 import { useCurrentPng } from 'recharts-to-png';
 
 const PageTab = () => {
-	const [currentOption, setCurrentOption] = useState({ value: 'month', title: 'Tháng' });
+	const [currentOption, setCurrentOption] = useState({ value: 'month', title: 'Theo tháng' });
 	const [loading, setLoading] = useState(false);
 	const { userId } = useParams();
 	const [chartsData, setChartsData] = useState([]);
@@ -21,9 +20,13 @@ const PageTab = () => {
 	const [getAreaPng, { ref: areaRef }] = useCurrentPng();
 	const navigate = useNavigate();
 	const options = [
-		{ value: 'month', title: 'Tháng' },
-		{ value: 'year', title: 'Năm' },
+		{ value: 'month', title: 'Theo tháng' },
+		{ value: 'year', title: 'Theo năm' },
 	];
+
+	useEffect(() => {
+		fetchData();
+	}, [currentOption]);
 
 	const fetchData = async () => {
 		try {
@@ -41,7 +44,6 @@ const PageTab = () => {
 					by: 'year',
 					userId: userId,
 				};
-
 				const data = await dispatch(getChartsByid(params)).unwrap();
 				setChartsData(data);
 			}
@@ -75,27 +77,55 @@ const PageTab = () => {
 		}
 	}, [getAreaPng]);
 
+	const onChangeOption = item => {
+		setCurrentOption(item);
+	};
+
 	function CustomTooltip(props) {
 		const { label, payload } = props;
 		return (
 			<div className='custom-tooltip'>
-				<p className='label'>{` ${currentOption.value === 'month' ? 'Tháng' : 'Năm'} ${label} : Đã đọc ${
+				<p className='label'>{`${currentOption.value === 'month' ? 'T' : ''}${label} : Đã đọc ${
 					payload[0]?.payload.count
 				} trang`}</p>
 			</div>
 		);
 	}
 
-	useEffect(() => {
-		fetchData();
-	}, [currentOption]);
+	function CustomizedAxisXTick(props) {
+		const { x, y, payload } = props;
+		return (
+			<g transform={`translate(${x},${y})`}>
+				<text x={0} y={15} textAnchor='middle'>
+					{currentOption.value === 'month' && 'T'}
+					{payload.value}
+				</text>
+			</g>
+		);
+	}
 
-	const onChangeOption = item => {
-		setCurrentOption(item);
+	const handleTickYCount = () => {
+		let max = 1;
+		chartsData.forEach(item => {
+			if (item.count > max) {
+				max = item.count;
+			}
+		});
+		if (max < 10) {
+			return max + 1;
+		} else {
+			return 11;
+		}
 	};
 
 	CustomTooltip.propTypes = {
 		label: PropTypes.string,
+		payload: PropTypes.object,
+	};
+
+	CustomizedAxisXTick.propTypes = {
+		x: PropTypes.number,
+		y: PropTypes.number,
 		payload: PropTypes.object,
 	};
 
@@ -110,92 +140,65 @@ const PageTab = () => {
 				onChangeOption={onChangeOption}
 			/>
 
-			<div className='reading-summary-page-tab__chart-wrapper'>
-				<img className='caretY' src={caretChart} />
-				<img className='caretX' src={caretChart} />
-				<BarChart
-					width={900}
-					height={500}
-					data={chartsData}
-					margin={{
-						top: 50,
-						right: 30,
-						left: 20,
-						bottom: 5,
-					}}
-					barSize={36}
-					ref={areaRef}
-				>
-					<XAxis
-						stroke='#6E7191'
-						dataKey={currentOption.value === 'month' ? 'month' : 'year'}
-						tick={<CustomizedAxisXTick />}
-						strokeDasharray='5 5'
-						strokeWidth={3}
-						padding={{ right: 40 }}
-					></XAxis>
-					<YAxis
-						label={{ value: 'Số trang', position: 'top', offset: 30 }}
-						tick={<CustomizedAxisYTick />}
-						allowDataOverflow={true}
-						domain={[0, 'auto']}
-						strokeDasharray='5 5'
-						tickCount={10}
-						strokeWidth={3}
-						stroke='#6e7191'
-					></YAxis>
-					<Tooltip cursor={false} content={<CustomTooltip />} />
-					<Legend wrapperStyle={{ top: 460, left: 30 }} />
-					<Bar dataKey='count' fill='#9ad0f5' name={currentOption.value === 'month' ? 'Tháng' : 'Năm'} />
-				</BarChart>
-			</div>
+			{chartsData.length > 0 ? (
+				<>
+					<div className='reading-summary-page-tab__chart-wrapper'>
+						<BarChart
+							width={880}
+							height={500}
+							data={chartsData}
+							ref={areaRef}
+							margin={{
+								top: 50,
+								left: 30,
+							}}
+						>
+							<defs>
+								<linearGradient id='colorUv' x1='0' y1='0' x2='0' y2='1'>
+									<stop offset='70%' stopColor='#FFA933' />
+									<stop offset='100%' stopColor='#FFDDAE' />
+								</linearGradient>
+							</defs>
+							<CartesianGrid strokeDasharray='3 3' />
+							<XAxis
+								stroke='#6E7191'
+								dataKey={currentOption.value === 'month' ? 'month' : 'year'}
+								tick={<CustomizedAxisXTick />}
+							></XAxis>
+							<YAxis
+								label={{ value: 'Số trang', position: 'top', offset: 30 }}
+								tickCount={handleTickYCount()}
+							/>
+							<Bar
+								dataKey='count'
+								fill='url(#colorUv)'
+								name={currentOption.value === 'month' ? 'Tháng' : 'Năm'}
+								barSize={36}
+							/>
+							<Tooltip
+								cursor={false}
+								content={<CustomTooltip />}
+								wrapperStyle={{
+									backgroundColor: 'white',
+									borderRadius: '10px',
+									padding: '12px 16px',
+									border: '#ccc 1px solid',
+									fontWeight: 600,
+									fontSize: '0.875rem',
+								}}
+							/>
+						</BarChart>
+					</div>
 
-			<button className='btn reading-summary-page-tab__btn' onClick={handleAreaDownload}>
-				Chia sẻ
-			</button>
+					<button className='btn reading-summary-page-tab__btn' onClick={handleAreaDownload}>
+						Chia sẻ
+					</button>
+				</>
+			) : (
+				<h4 style={{ marginTop: '28px' }}>Không có dữ liệu</h4>
+			)}
 		</div>
 	);
-};
-
-function CustomizedAxisXTick(props) {
-	const { x, y, payload } = props;
-
-	return (
-		<g transform={`translate(${x},${y})`}>
-			<text x={0} y={10} dy={16} textAnchor='middle' fill='#2d2c42'>
-				{payload.value}
-			</text>
-		</g>
-	);
-}
-
-function formatNumber(number) {
-	return number.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
-}
-
-function CustomizedAxisYTick(props) {
-	const { x, y, payload } = props;
-	const numberFomat = formatNumber(payload.value);
-	return (
-		<g transform={`translate(${x},${y})`}>
-			<text x={-8} y={0} textAnchor='end' fill='#2d2c42'>
-				{numberFomat}
-			</text>
-		</g>
-	);
-}
-
-PageTab.propTypes = {};
-CustomizedAxisYTick.propTypes = {
-	x: PropTypes.number,
-	y: PropTypes.number,
-	payload: PropTypes.object,
-};
-
-CustomizedAxisXTick.propTypes = {
-	x: PropTypes.number,
-	y: PropTypes.number,
-	payload: PropTypes.object,
 };
 
 export default PageTab;

@@ -1,35 +1,60 @@
-import React, { useState } from 'react';
+import { useState, memo } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import caretIcon from 'assets/images/caret.png';
-import { DEFAULT_TOGGLE_ROWS } from 'constants';
+import { DEFAULT_TOGGLE_ROWS, NUMBER_ROWS } from 'constants';
 import './dual-column.scss';
-import { NUMBER_ROWS } from 'constants';
+import { useNavigate } from 'react-router-dom';
+import RouteLink from 'helpers/RouteLink';
 
 const DualColumn = props => {
-	const { list, background, isBackground } = props;
+	const {
+		list,
+		background,
+		isBackground,
+		pageText = true,
+		inCategory = false,
+		inQuotes = false,
+		filterQuotesByCategory,
+	} = props;
 	const [isExpand, setIsExpand] = useState(false);
-	const [rows, setRows] = useState(DEFAULT_TOGGLE_ROWS);
+
+	let defaultItems;
+	let maxItems;
+	if (inQuotes) {
+		defaultItems = 6;
+		maxItems = 15;
+	} else {
+		defaultItems = DEFAULT_TOGGLE_ROWS;
+		maxItems = NUMBER_ROWS;
+	}
+
+	const [rows, setRows] = useState(defaultItems);
+
+	const navigate = useNavigate();
 
 	const handleViewMore = () => {
 		const length = list.length;
-		if (length <= NUMBER_ROWS) {
-			const maxLength = length < NUMBER_ROWS ? length : NUMBER_ROWS;
-			const newRows = isExpand ? DEFAULT_TOGGLE_ROWS : maxLength;
-			setIsExpand(prev => !prev);
-			return setRows(newRows);
+		let maxLength;
+
+		if (inCategory) {
+			maxLength = length;
 		} else {
-			if (rows < NUMBER_ROWS) {
-				setRows(NUMBER_ROWS);
+			if (length <= maxItems) {
+				maxLength = length;
 			} else {
-				setRows(length);
-				setIsExpand(true);
+				maxLength = maxItems;
 			}
 		}
 
-		if (isExpand) {
-			setRows(DEFAULT_TOGGLE_ROWS);
-			setIsExpand(false);
+		const newRows = isExpand ? defaultItems : maxLength;
+		setRows(newRows);
+		setIsExpand(!isExpand);
+	};
+
+	const handleOnClick = data => {
+		if (inCategory) {
+			navigate(RouteLink.categoryDetail(data.id, data.name));
 		}
 	};
 
@@ -39,13 +64,35 @@ const DualColumn = props => {
 				<ul className={classNames('dualColumn-list', { [`bg-${background}`]: isBackground })}>
 					{list.slice(0, rows).map((item, index) => (
 						<li className={classNames('dualColumn-item', { 'has-background': isBackground })} key={index}>
-							<span className='dualColumn-item__title'>{item.name}</span>
-							<span className='dualColumn-item__number'>{item.quantity}</span>
+							<span
+								className='dualColumn-item__title'
+								onClick={
+									pageText
+										? () => filterQuotesByCategory(item.id)
+										: () => handleOnClick(item.category)
+								}
+								style={inCategory ? { cursor: 'pointer' } : {}}
+							>
+								{inCategory ? item.category.name : item.name}
+							</span>
+
+							{pageText ? (
+								<span className='dualColumn-item__number'>{item?.quoteCount} Quotes</span>
+							) : (
+								<span className='dualColumn-item__number no-page-text'>
+									{inCategory ? item.category.numberBooks : item.books.length}
+								</span>
+							)}
 						</li>
 					))}
 				</ul>
-				{list.length > DEFAULT_TOGGLE_ROWS && (
+				{list.length > defaultItems && (
 					<button className='dualColumn-btn' onClick={handleViewMore}>
+						<img
+							className={classNames('view-caret', { 'view-more': isExpand })}
+							src={caretIcon}
+							alt='caret-icon'
+						/>
 						<span>{isExpand ? 'Rút gọn' : 'Xem thêm'}</span>
 					</button>
 				)}
@@ -75,6 +122,10 @@ DualColumn.propTypes = {
 		'light',
 		'dark',
 	]),
+	pageText: PropTypes.bool,
+	inCategory: PropTypes.bool,
+	filterQuotesByCategory: PropTypes.func,
+	inQuotes: PropTypes.bool,
 };
 
-export default DualColumn;
+export default memo(DualColumn);

@@ -1,8 +1,15 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { activityAPI, bookAPI, categoryAPI, friendAPI, likeActivityAPI, userAPI } from 'constants/apiURL';
+import {
+	activityAPI,
+	bookAPI,
+	categoryAPI,
+	friendAPI,
+	likeActivityAPI,
+	likeGroupPost,
+	randomAuthorAPI,
+	likeCommentPostAPI,
+} from 'constants/apiURL';
 import Request from 'helpers/Request';
-// import { checkBookInLibraries } from '../library';
-// import { NotificationError } from 'helpers/Error';
 
 export const createActivity = createAsyncThunk('activity/createActivity', async (params, { rejectWithValue }) => {
 	try {
@@ -58,12 +65,12 @@ export const getSuggestionForPost = createAsyncThunk(
 					break;
 				}
 				case 'addCategory': {
-					const response = await Request.makeGet(categoryAPI, query);
+					const response = await Request.makeGet(categoryAPI({ option: false }), query);
 					data = response.data;
 					break;
 				}
 				case 'addAuthor': {
-					const response = await Request.makeGet(userAPI, query);
+					const response = await Request.makeGet(randomAuthorAPI, query);
 					data = response.data;
 					break;
 				}
@@ -72,8 +79,6 @@ export const getSuggestionForPost = createAsyncThunk(
 					data = response.data;
 					break;
 				}
-				default:
-					break;
 			}
 			return data;
 		} catch (err) {
@@ -85,13 +90,39 @@ export const getSuggestionForPost = createAsyncThunk(
 
 export const updateReactionActivity = createAsyncThunk(
 	'activity/updateReactionActivity',
-	async (params, { rejectWithValue }) => {
+	async (minipostId, { rejectWithValue }) => {
 		try {
-			const response = await Request.makePatch(likeActivityAPI(params.minipostId), params);
+			const response = await Request.makePatch(likeActivityAPI(minipostId));
 			return response.data;
 		} catch (err) {
 			const error = JSON.stringify(err.response);
 			throw rejectWithValue(error);
+		}
+	}
+);
+
+export const updateReactionActivityGroup = createAsyncThunk(
+	'activity/updateReactionActivityGroup',
+	async (groupPostId, { rejectWithValue }) => {
+		try {
+			const response = await Request.makePatch(likeGroupPost(groupPostId));
+			return response.data;
+		} catch (err) {
+			const error = JSON.stringify(err.response);
+			throw rejectWithValue(error);
+		}
+	}
+);
+
+export const likeAndUnlikeCommentPost = createAsyncThunk(
+	'activity/like comment miniPost',
+	async (id, { rejectWithValue }) => {
+		try {
+			const response = await Request.makePatch(likeCommentPostAPI(id));
+			return response.data;
+		} catch (err) {
+			const error = JSON.parse(err.response);
+			return rejectWithValue(error);
 		}
 	}
 );

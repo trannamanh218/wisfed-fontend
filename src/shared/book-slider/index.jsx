@@ -5,37 +5,44 @@ import arrowNext from 'assets/images/arrow-chevron-forward.png';
 import arrowPrev from 'assets/images/arrow-chevron-back.png';
 import './book-slider.scss';
 import classNames from 'classnames';
+import { memo } from 'react';
 
-const BookSlider = ({ list, title = '', className, size = 'sm', handleViewBookDetail, ...rest }) => {
-	const settingSlider = settings();
-	if (list && list.length) {
-		return (
-			<div className={classNames('book-slider', { [`${className}`]: className })}>
-				<h4 className='book-slider__title'>{title}</h4>
-				<div className='book-slider__content'>
-					<Slider {...settingSlider}>
-						{list.map((item, index) => (
-							<BookThumbnail
-								key={index}
-								{...item}
-								data={item}
-								source={item.source}
-								name={item.name}
-								size={size}
-								{...rest}
-								handleClick={handleViewBookDetail}
-							/>
-						))}
-					</Slider>
-				</div>
-			</div>
-		);
-	}
+const BookSlider = ({
+	list,
+	title = '',
+	className,
+	size = 'sm',
+	handleViewBookDetail,
+	inCategory = false,
+	inCategoryDetail = false,
+	...rest
+}) => {
+	const settingSlider = settings(inCategory, inCategoryDetail);
 
 	return (
-		<div className={classNames('book-slider', { [`${className}`]: className })}>
-			<p>Không có dữ liệu</p>
-		</div>
+		<>
+			{!!list.length && (
+				<div className={classNames('book-slider', { [`${className}`]: className })}>
+					<h4 className='book-slider__title'>{title}</h4>
+					<div className='book-slider__content'>
+						<Slider {...settingSlider}>
+							{list.map((item, index) => (
+								<BookThumbnail
+									key={index}
+									{...item}
+									data={item}
+									source={item.source}
+									name={item.name}
+									size={size}
+									{...rest}
+									handleClick={handleViewBookDetail}
+								/>
+							))}
+						</Slider>
+					</div>
+				</div>
+			)}
+		</>
 	);
 };
 
@@ -55,18 +62,18 @@ function SlidePrevBtn({ className, style, onClick }) {
 	);
 }
 
-function settings() {
+function settings(inCategory, inCategoryDetail) {
 	return {
 		dots: false,
 		speed: 600,
-		slidesToShow: 1,
+		slidesToShow: inCategory ? 4 : 1,
 		slidesToScroll: 2,
 		initialSlide: 0,
-		infinite: true,
+		infinite: inCategoryDetail ? false : true,
 		lazyLoad: false,
 		autoplay: false,
 		swipeToSlide: true,
-		variableWidth: true,
+		variableWidth: inCategory ? false : true,
 		touchMove: true,
 		nextArrow: <SlideNextBtn />,
 		prevArrow: <SlidePrevBtn />,
@@ -144,4 +151,4 @@ SlidePrevBtn.propTypes = {
 	onClick: PropTypes.func,
 };
 
-export default BookSlider;
+export default memo(BookSlider);

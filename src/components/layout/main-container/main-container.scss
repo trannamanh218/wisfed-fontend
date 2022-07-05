@@ -1,6 +1,6 @@
 @import 'src/scss/abstracts/_global.scss';
 .mainContainer {
-	padding: 2.5rem 5.625rem;
+	padding: 40px 72px;
 	display: flex;
 	justify-content: space-between;
 	overflow: hidden;
@@ -8,12 +8,24 @@
 
 .mainContainer__right {
 	max-width: 280px;
+	width: 22.22%;
 }
 
 .mainContainer__main {
+	max-width: 976px;
 	margin-right: 2.5em;
 	flex-grow: 1;
-	max-width: 58rem;
+	width: 77.78%;
+}
+
+.mainContainer__right-left {
+	max-width: 280px;
+	width: 22.22%;
+	margin-right: 2.5em;
+}
+
+.mainContainer__main-left {
+	flex-grow: 1;
 }
 
 // @media only screen and (min-width: 992px) and (max-width: 1440px) {

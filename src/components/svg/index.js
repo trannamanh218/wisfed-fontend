@@ -60,7 +60,22 @@ import { ReactComponent as StarRanksBXH } from 'assets/icons/StarRanksBXH.svg';
 import { ReactComponent as StarRanksActive } from 'assets/icons/StarRanksActive.svg';
 import { ReactComponent as ShareRanks } from 'assets/icons/ShareRanks.svg';
 import { ReactComponent as Crown } from 'assets/icons/Crown.svg';
+import { ReactComponent as TimeIcon } from 'assets/icons/Time.svg';
+import { ReactComponent as DropdownGroup } from 'assets/icons/Arrow Caret Down.svg';
+import { ReactComponent as IconCheck } from 'assets/icons/circleCheck.svg';
+import { ReactComponent as LogOutGroup } from 'assets/icons/Log Out Square.svg';
+import { ReactComponent as ForwardGroup } from 'assets/icons/ForwardGroup.svg';
+import { ReactComponent as IconGroup } from 'assets/icons/UsersThree.svg';
+import { ReactComponent as StarAuthor } from 'assets/icons/StarAuthor.svg';
+import { ReactComponent as ShareAuthor } from 'assets/icons/shareAuthor.svg';
+import { ReactComponent as Setting } from 'assets/icons/Setting_fill.svg';
+import { ReactComponent as ArrowsDownUp } from 'assets/icons/ArrowsDownUp.svg';
+
 export {
+	Setting,
+	ShareAuthor,
+	StarAuthor,
+	TimeIcon,
 	Crown,
 	ShareRanks,
 	StarRanksActive,
@@ -123,4 +138,10 @@ export {
 	LogInCircle,
 	CircleActionsAlertQuestion,
 	SettingIcon,
+	DropdownGroup,
+	IconCheck,
+	LogOutGroup,
+	ForwardGroup,
+	IconGroup,
+	ArrowsDownUp,
 };

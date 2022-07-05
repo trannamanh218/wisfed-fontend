@@ -1,5 +1,20 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { groupAPI, detailGroup, creatGroup } from 'constants/apiURL';
+
+import {
+	groupAPI,
+	detailGroup,
+	creatGroup,
+	inviteFriend,
+	enjoyGroup,
+	leaveGroup,
+	listPostGroup,
+	createPostGroup,
+	myGroup,
+	adminGroup,
+	memberGroup,
+	listTagGroup,
+	searchGroup,
+} from 'constants/apiURL';
 import Request from 'helpers/Request';
 
 export const getGroupList = createAsyncThunk('group/getGroupList', async (params = {}, { rejectWithValue }) => {
@@ -15,6 +30,7 @@ export const getGroupList = createAsyncThunk('group/getGroupList', async (params
 export const getGroupDettail = createAsyncThunk('group/getGroupDettail', async (id = {}, { rejectWithValue }) => {
 	try {
 		const res = await Request.makeGet(detailGroup(id));
+
 		return res;
 	} catch (err) {
 		const error = JSON.parse(err.response);
@@ -22,9 +38,120 @@ export const getGroupDettail = createAsyncThunk('group/getGroupDettail', async (
 	}
 });
 
-export const getCreatGroup = createAsyncThunk('group/getCreatGroup', async (params = {}, { rejectWithValue }) => {
+export const getTagGroup = createAsyncThunk('group/getTagGroup', async (id = {}, { rejectWithValue }) => {
 	try {
-		const res = await Request.makePost(creatGroup, params);
+		const res = await Request.makeGet(listTagGroup(id));
+
+		return res.data;
+	} catch (err) {
+		const error = JSON.parse(err.response);
+		return rejectWithValue(error);
+	}
+});
+
+export const getMyGroup = createAsyncThunk('group/getMyGroup', async (params = {}, { rejectWithValue }) => {
+	try {
+		const res = await Request.makeGet(myGroup, params);
+		return res;
+	} catch (err) {
+		const error = JSON.parse(err.response);
+		return rejectWithValue(error);
+	}
+});
+export const getMyAdminGroup = createAsyncThunk('group/getMyAdminGroup', async (params = {}, { rejectWithValue }) => {
+	try {
+		const res = await Request.makeGet(adminGroup, params);
+		return res;
+	} catch (err) {
+		const error = JSON.parse(err.response);
+		return rejectWithValue(error);
+	}
+});
+
+export const getFillterGroup = createAsyncThunk('search/getFillterGroup', async (params, { rejectWithValue }) => {
+	const { id } = params;
+	const newParams = { q: params.q };
+	try {
+		const response = await Request.makeGet(searchGroup(id), newParams);
+		return response.data;
+	} catch (err) {
+		return rejectWithValue(err.response);
+	}
+});
+
+export const getMember = createAsyncThunk('group/getMember', async (id = {}, { rejectWithValue }) => {
+	try {
+		const res = await Request.makeGet(memberGroup(id));
+		return res.data;
+	} catch (err) {
+		const error = JSON.parse(err.response);
+		return rejectWithValue(error);
+	}
+});
+
+export const getCreatGroup = createAsyncThunk('group/getCreatGroup', async (data = {}, { rejectWithValue }) => {
+	try {
+		const res = await Request.makePost(creatGroup, data);
+		return res;
+	} catch (err) {
+		const error = JSON.parse(err.response);
+		return rejectWithValue(error);
+	}
+});
+
+export const getListPost = createAsyncThunk('group/getListPost', async (params = {}, { rejectWithValue }) => {
+	const { id, query } = params;
+	try {
+		const res = await Request.makeGet(listPostGroup(id), query);
+		return res.data;
+	} catch (err) {
+		const error = JSON.parse(err.response);
+		return rejectWithValue(error);
+	}
+});
+
+export const creatNewPost = createAsyncThunk('group/creatNewPost', async (params = {}, { rejectWithValue }) => {
+	const { id, data } = params;
+
+	try {
+		const res = await Request.makePost(createPostGroup(id), data);
+		return res;
+	} catch (err) {
+		const error = JSON.parse(err.response);
+		return rejectWithValue(error);
+	}
+});
+
+export const getEnjoyGroup = createAsyncThunk('group/getEnjoyGroup', async (id = {}, { rejectWithValue }) => {
+	try {
+		const res = await Request.makePost(enjoyGroup(id));
+		return res;
+	} catch (err) {
+		const error = JSON.parse(err.response);
+		return rejectWithValue(error);
+	}
+});
+
+export const getInviteFriend = createAsyncThunk('group/getInviteFriend', async (params = {}, { rejectWithValue }) => {
+	const { id } = params;
+
+	const userId = {
+		userIds: params.userIds,
+	};
+	try {
+		const res = await Request.makePost(inviteFriend(id), userId);
+		return res;
+	} catch (err) {
+		const error = JSON.parse(err.response);
+		return rejectWithValue(error);
+	}
+});
+
+export const leaveGroupUser = createAsyncThunk('group/leaveGroupUser', async (params = {}, { rejectWithValue }) => {
+	const { id } = params;
+
+	try {
+		const res = await Request.makeDelete(leaveGroup(id));
 		return res;
 	} catch (err) {
 		const error = JSON.parse(err.response);
@@ -38,6 +165,12 @@ const groupSlice = createSlice({
 		isFetching: false,
 		groupsData: {},
 		error: {},
+		key: 'intro',
+	},
+	reducers: {
+		updateKey: (state, action) => {
+			state.key = action.payload;
+		},
 	},
 	extraReducers: {
 		[getGroupList.pending]: state => {
@@ -66,4 +199,6 @@ const groupSlice = createSlice({
 });
 
 const group = groupSlice.reducer;
+
 export default group;
+export const { updateKey } = groupSlice.actions;

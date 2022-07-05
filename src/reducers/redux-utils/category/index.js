@@ -1,10 +1,17 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { categoryAPI, categoryDetailAPI, favoriteCategoriesAPI } from 'constants/apiURL';
+import {
+	categoryAPI,
+	categoryDetailAPI,
+	favoriteCategoriesAPI,
+	listBookByCategoryAPI,
+	postByCategoryAPI,
+} from 'constants/apiURL';
 import Request from 'helpers/Request';
 
-export const getCategoryList = createAsyncThunk('categroy/getCategoryList', async (params, { rejectWithValue }) => {
+export const getCategoryList = createAsyncThunk('categroy/getCategoryList', async (data, { rejectWithValue }) => {
+	const { option, params } = data;
 	try {
-		const response = await Request.makeGet(categoryAPI, params);
+		const response = await Request.makeGet(categoryAPI(option), params);
 		return response.data;
 	} catch (err) {
 		const error = JSON.parse(err.response);
@@ -27,6 +34,34 @@ export const getFavoriteCategories = createAsyncThunk(
 	async (params, { rejectWithValue }) => {
 		try {
 			const response = await Request.makeGet(favoriteCategoriesAPI, params);
+			return response.data;
+		} catch (err) {
+			const error = JSON.parse(err.response);
+			throw rejectWithValue(error);
+		}
+	}
+);
+
+export const getListBookByCategory = createAsyncThunk(
+	'category/get books by category',
+	async (data, { rejectWithValue }) => {
+		try {
+			const { categoryId, params } = data;
+			const response = await Request.makeGet(listBookByCategoryAPI(categoryId), params);
+			return response.data.rows;
+		} catch (err) {
+			const error = JSON.parse(err.response);
+			throw rejectWithValue(error);
+		}
+	}
+);
+
+export const getPostsByCategory = createAsyncThunk(
+	'category/get posts by category',
+	async (data, { rejectWithValue }) => {
+		try {
+			const { categoryId, params } = data;
+			const response = await Request.makeGet(postByCategoryAPI(categoryId), params);
 			return response.data;
 		} catch (err) {
 			const error = JSON.parse(err.response);

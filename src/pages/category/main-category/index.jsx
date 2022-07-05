@@ -1,6 +1,5 @@
-import { useFetchAllCategoriesWithBooks, useFetchFilterCategories } from 'api/category.hook';
 import _ from 'lodash';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState, useRef } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import CategoryGroup from 'shared/category-group';
 import LoadingIndicator from 'shared/loading-indicator';
@@ -11,17 +10,75 @@ import SearchIcon from 'assets/icons/search.svg';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import './main-category.scss';
+import { getCategoryList } from 'reducers/redux-utils/category';
+import { useDispatch } from 'react-redux';
+import { NotificationError } from 'helpers/Error';
 
 const MainCategory = ({ status, handleViewBookDetail, viewCategoryDetail }) => {
 	const [inputValue, setInputValue] = useState('');
-	const { categories, fetchData, hasMore } = useFetchAllCategoriesWithBooks();
-	const { searchCategories, fetchFilterData, hasMoreFilterData } = useFetchFilterCategories(inputValue);
+	const [filter, setFilter] = useState('[]');
 
-	const changeHandler = event => {
-		setInputValue(event?.target?.value);
+	const [categoryList, setCategoryList] = useState([]);
+	const [hasMore, setHasMore] = useState(true);
+
+	const callApiStart = useRef(3);
+	const callApiPerPage = useRef(3);
+
+	const dispatch = useDispatch();
+
+	useEffect(() => {
+		setHasMore(true);
+		callApiStart.current = 3;
+		getCategoryListDataFirstTime();
+	}, [filter]);
+
+	const getCategoryListDataFirstTime = async () => {
+		try {
+			const params = { start: 0, limit: callApiPerPage.current, filter: filter };
+			const categoryListData = await dispatch(getCategoryList({ option: true, params })).unwrap();
+			setCategoryList(categoryListData.rows);
+			if (!categoryListData.rows.length || categoryListData.rows.length < callApiPerPage.current) {
+				setHasMore(false);
+			}
+		} catch (err) {
+			NotificationError(err);
+		}
 	};
 
-	const debounceSearch = useCallback(_.debounce(changeHandler, 1000), []);
+	const getCategoryListData = async () => {
+		try {
+			const params = { start: callApiStart.current, limit: callApiPerPage.current, filter: filter };
+			const categoryListData = await dispatch(getCategoryList({ option: true, params })).unwrap();
+			if (categoryListData.rows.length) {
+				if (categoryListData.rows.length < callApiPerPage.current) {
+					setHasMore(false);
+				} else {
+					callApiStart.current += callApiPerPage.current;
+				}
+				setCategoryList(categoryList.concat(categoryListData.rows));
+			} else {
+				setHasMore(false);
+			}
+		} catch (err) {
+			NotificationError(err);
+		}
+	};
+
+	const updateFilter = value => {
+		if (value) {
+			const filterValue = [{ 'operator': 'search', 'value': value.trim(), 'property': 'name' }];
+			setFilter(JSON.stringify(filterValue));
+		} else {
+			setFilter('[]');
+		}
+	};
+
+	const updateInputSearch = event => {
+		setInputValue(event.target.value);
+		debounceSearch(event.target.value);
+	};
+
+	const debounceSearch = useCallback(_.debounce(updateFilter, 700), []);
 
 	return (
 		<div className='main-category'>
@@ -30,32 +87,34 @@ const MainCategory = ({ status, handleViewBookDetail, viewCategoryDetail }) => {
 			<div className='main-category__container'>
 				<div className={classNames('search-field')}>
 					<img className='search-field__icon' src={SearchIcon} alt='search-icon' />
-					<input className='search-field__input' placeholder='Tìm kiếm chủ đề' onChange={debounceSearch} />
+					<input className='search-field__input' placeholder='Tìm kiếm chủ đề' onChange={updateInputSearch} />
 				</div>
-				{!inputValue ? (
+				{filter === '[]' ? (
 					<InfiniteScroll
-						dataLength={categories.length}
-						next={fetchData}
+						dataLength={categoryList.length}
+						next={getCategoryListData}
 						hasMore={hasMore}
 						loader={<LoadingIndicator />}
 					>
-						{categories.map(category => (
+						{categoryList.map(category => (
 							<CategoryGroup
 								key={`category-group-${category.id}`}
 								list={category.books}
 								title={category.name}
 								data={category}
 								handleViewBookDetail={handleViewBookDetail}
-								handleClick={viewCategoryDetail}
+								viewCategoryDetail={viewCategoryDetail}
 							/>
 						))}
 					</InfiniteScroll>
 				) : (
 					<SearchCategory
-						searchCategories={searchCategories}
-						fetchFilterData={fetchFilterData}
-						hasMoreFilterData={hasMoreFilterData}
+						searchCategories={categoryList}
+						fetchFilterData={getCategoryListData}
+						hasMoreFilterData={hasMore}
 						handleViewBookDetail={handleViewBookDetail}
+						viewCategoryDetail={viewCategoryDetail}
+						inputValue={inputValue}
 					/>
 				)}
 			</div>

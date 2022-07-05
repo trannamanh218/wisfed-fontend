@@ -41,12 +41,11 @@ export const useFetchBooks = (current = 1, perPage = 10, filter = '[]') => {
 	return { status, books, retryRequest };
 };
 
-export const useFetchAuthorBooks = (firstName, lastName) => {
+export const useFetchAuthorBooks = userId => {
 	const [status, setStatus] = useState(STATUS_IDLE);
 	const [booksAuthor, setBooksAuthor] = useState([]);
 	const [retry, setRetry] = useState(false);
 	const dispatch = useDispatch();
-
 	const retryRequest = useCallback(() => {
 		setRetry(prev => !prev);
 	}, [setRetry]);
@@ -56,13 +55,17 @@ export const useFetchAuthorBooks = (firstName, lastName) => {
 		if (isMount) {
 			setStatus(STATUS_LOADING);
 			const query = generateQuery(
-				1,
+				0,
 				10,
-				JSON.stringify([{ 'operator': 'search', 'value': `${firstName}`, 'property': 'authorName' }])
+				JSON.stringify([{ 'operator': 'search', 'value': `${userId}`, 'property': 'authorId' }])
 			);
 			const fetchData = async () => {
+				const params = {
+					id: userId,
+					...query,
+				};
 				try {
-					const data = await dispatch(getBookAuthorList(query)).unwrap();
+					const data = await dispatch(getBookAuthorList(params)).unwrap();
 					setBooksAuthor(data);
 				} catch (err) {
 					NotificationError(err);
@@ -73,7 +76,7 @@ export const useFetchAuthorBooks = (firstName, lastName) => {
 
 			fetchData();
 		}
-	}, [retry, firstName, lastName]);
+	}, [retry, userId]);
 
 	return { status, booksAuthor, retryRequest };
 };
@@ -81,7 +84,6 @@ export const useFetchAuthorBooks = (firstName, lastName) => {
 export const useFetchBookDetail = id => {
 	const {
 		book: { bookInfo },
-		auth: { userInfo },
 	} = useSelector(state => state);
 	const [status, setStatus] = useState(STATUS_IDLE);
 	const dispatch = useDispatch();
@@ -90,10 +92,8 @@ export const useFetchBookDetail = id => {
 		let isMount = true;
 		setStatus(STATUS_LOADING);
 		const fetchBookDetail = async () => {
-			const params = { id, userId: userInfo.id };
-
 			try {
-				await dispatch(getBookDetail(params)).unwrap();
+				await dispatch(getBookDetail(id)).unwrap();
 				setStatus(STATUS_SUCCESS);
 			} catch (err) {
 				NotificationError(err);
@@ -110,13 +110,14 @@ export const useFetchBookDetail = id => {
 			isMount = false;
 		};
 	}, [id]);
+
 	return { bookInfo, status };
 };
 
 export const useFetchRelatedBooks = categoryId => {
 	const [retry, setRetry] = useState(false);
 	const [status, setStatus] = useState(STATUS_IDLE);
-	const [relatedBook, setRelatedBook] = useState([]);
+	const [relatedBooks, setRelatedBooks] = useState([]);
 	const dispatch = useDispatch();
 
 	const retryRequest = useCallback(() => {
@@ -128,7 +129,7 @@ export const useFetchRelatedBooks = categoryId => {
 
 		if (categoryId && isMount) {
 			const query = generateQuery(
-				1,
+				0,
 				10,
 				JSON.stringify([{ 'operator': 'eq', 'value': categoryId, 'property': 'categoryId' }])
 			);
@@ -136,7 +137,7 @@ export const useFetchRelatedBooks = categoryId => {
 			const fetchBook = async () => {
 				try {
 					const response = await dispatch(getBookList(query)).unwrap();
-					setRelatedBook(response.rows);
+					setRelatedBooks(response.rows);
 					setStatus(STATUS_SUCCESS);
 				} catch (err) {
 					NotificationError(err);
@@ -153,5 +154,5 @@ export const useFetchRelatedBooks = categoryId => {
 		};
 	}, [categoryId, retry]);
 
-	return { relatedBook, status, retryRequest };
+	return { relatedBooks, status, retryRequest };
 };

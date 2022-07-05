@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import Button from 'shared/button';
 import FitlerOptions from 'shared/filter-options';
-import { Add, Configure } from 'components/svg';
+import { Add, ArrowsDownUp } from 'components/svg';
 import './filter-quote-pane.scss';
 import CreatQuotesModal from 'shared/creat-quotes-modal';
 import FormCheckGroup from 'shared/form-check-group';
@@ -14,14 +14,14 @@ const FilterQuotePane = ({
 	handleChangeOption,
 	children,
 	handleSortQuotes,
-	isMyQuotes,
+	hasFilters,
 }) => {
 	const [showCreatQuotesModal, setShowCreatQuotesModal] = useState(false);
 	const [showDropdownMenu, setShowDropdownMenu] = useState(false);
+	const [sortValue, setSortValue] = useState('default');
 
 	const creatQuotesModalContainer = useRef(null);
 	const scrollBlocked = useRef(false);
-	const sortValue = useRef('default');
 	const sortDropdownMenu = useRef(null);
 
 	const safeDocument = typeof document !== 'undefined' ? document : {};
@@ -96,15 +96,11 @@ const FilterQuotePane = ({
 	};
 
 	const handleChange = data => {
-		sortValue.current = data;
+		setSortValue(data);
 	};
 
 	const checkClickTarget = e => {
-		let onTarget = false;
-		if (sortDropdownMenu.current.contains(e.target)) {
-			onTarget = true;
-		}
-		if (!onTarget) {
+		if (!sortDropdownMenu.current.contains(e.target)) {
 			setShowDropdownMenu(false);
 		}
 	};
@@ -116,7 +112,7 @@ const FilterQuotePane = ({
 					<Button className='filter-quote-pane__btn' varient='primary-light' onClick={creatQuotes}>
 						<Add className='filter-quote-pane__icon' /> Tạo Quotes
 					</Button>
-					{isMyQuotes && (
+					{hasFilters && (
 						<FitlerOptions
 							list={filterOptions}
 							currentOption={currentOption}
@@ -131,7 +127,7 @@ const FilterQuotePane = ({
 							className='filter-pane__btn dropdown-toggle'
 							onClick={() => setShowDropdownMenu(!showDropdownMenu)}
 						>
-							<Configure />
+							<ArrowsDownUp />
 						</button>
 						<div
 							className={classNames('filter-quote-pane__setting dropdown-menu', {
@@ -146,6 +142,7 @@ const FilterQuotePane = ({
 									type='radio'
 									defaultValue='default'
 									handleChange={handleChange}
+									currentSortValue={sortValue}
 								/>
 								<h6 style={{ marginTop: '24px' }} className='filter-quote-pane__setting__title'>
 									Theo thời gian tạo
@@ -156,6 +153,7 @@ const FilterQuotePane = ({
 									type='radio'
 									defaultValue='default'
 									handleChange={handleChange}
+									currentSortValue={sortValue}
 								/>
 								<FormCheckGroup
 									data={radioOptions[2]}
@@ -163,12 +161,13 @@ const FilterQuotePane = ({
 									type='radio'
 									defaultValue='default'
 									handleChange={handleChange}
+									currentSortValue={sortValue}
 								/>
 							</div>
 							<Button
 								className='filter-quote-pane__setting__btn'
 								onClick={() => {
-									handleSortQuotes(sortValue.current);
+									handleSortQuotes(sortValue);
 									setShowDropdownMenu(false);
 								}}
 							>
@@ -195,7 +194,7 @@ FilterQuotePane.propTypes = {
 	handleChangeOption: PropTypes.func,
 	children: PropTypes.any,
 	handleSortQuotes: PropTypes.func,
-	isMyQuotes: PropTypes.bool,
+	hasFilters: PropTypes.bool,
 };
 
 export default FilterQuotePane;

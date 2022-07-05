@@ -15,8 +15,9 @@ import DropdownType from './dropdown-type';
 import SelectType from './select-type';
 import TextareaType from './textarea-type';
 import GroupType from './group-type';
+import { updateUserInfo } from 'reducers/redux-utils/auth';
 
-const PersonalInfoForm = ({ userData }) => {
+const PersonalInfoForm = ({ userData, toggleModal }) => {
 	const [userFirstName, setUserFirstName] = useState(userData.firstName);
 	const [userLastName, setUserLastName] = useState(userData.lastName);
 	const [editName, setEditName] = useState(false);
@@ -259,12 +260,14 @@ const PersonalInfoForm = ({ userData }) => {
 				favoriteCategory: favoriteCategoriesAddId.current,
 			};
 			const data = { userId: userData.id, params: params };
-			const changeUserAvatar = await dispatch(editUserInfo(data)).unwrap();
-			if (!_.isEmpty(changeUserAvatar)) {
+			const userDataChanged = await dispatch(editUserInfo(data)).unwrap();
+			if (!_.isEmpty(userDataChanged)) {
 				toast.success('Chỉnh sửa thành công', {
 					autoClose: 1500,
 				});
 			}
+			dispatch(updateUserInfo(userDataChanged));
+			toggleModal();
 		} catch {
 			toast.error('Chỉnh sửa thất bại');
 		}
@@ -333,13 +336,11 @@ const PersonalInfoForm = ({ userData }) => {
 	]);
 
 	useEffect(() => {
-		if (userFavoriteCategories.length > 0) {
-			const arrayTemp = [];
-			userFavoriteCategories.forEach(item => {
-				arrayTemp.push(item.id);
-			});
-			favoriteCategoriesAddId.current = arrayTemp;
-		}
+		const arrayTemp = [];
+		userFavoriteCategories.forEach(item => {
+			arrayTemp.push(item.id);
+		});
+		favoriteCategoriesAddId.current = arrayTemp;
 	}, [userFavoriteCategories]);
 
 	return (

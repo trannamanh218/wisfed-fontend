@@ -7,7 +7,7 @@ import {
 	checkBookLibraryAPI,
 	libraryAPI,
 	listBookLibraryAPI,
-	myLibraryAPI,
+	allLibraryListAPI,
 	removeAllBookAPI,
 	removeBookFromLibraryAPI,
 } from 'constants/apiURL';
@@ -16,7 +16,6 @@ import Request from 'helpers/Request';
 export const createLibrary = createAsyncThunk('library/createLibrary', async (params, { rejectWithValue }) => {
 	try {
 		const response = await Request.makePost(libraryAPI, params);
-
 		return { ...response.data, books: [] };
 	} catch (err) {
 		const error = JSON.parse(err.response);
@@ -24,21 +23,11 @@ export const createLibrary = createAsyncThunk('library/createLibrary', async (pa
 	}
 });
 
-export const getLibraryList = createAsyncThunk('library/getLibraryList', async (params, { rejectWithValue }) => {
+export const getAllLibraryList = createAsyncThunk('library/getLibraryList', async (data, { rejectWithValue }) => {
+	const { userId, params } = data;
 	try {
-		const response = await Request.makeGet(libraryAPI, params);
-		return response.data;
-	} catch (err) {
-		const error = JSON.parse(err.response);
-		return rejectWithValue(error);
-	}
-});
-
-export const getMyLibraryList = createAsyncThunk('library/getMyLibraryList', async (params, { rejectWithValue }) => {
-	const { userId, ...query } = params;
-	try {
-		const response = await Request.makeGet(myLibraryAPI(userId), query);
-		return response.data;
+		const response = await Request.makeGet(allLibraryListAPI(userId), params);
+		return response.data.rows;
 	} catch (err) {
 		const error = JSON.parse(err.response);
 		return rejectWithValue(error);
@@ -118,8 +107,8 @@ export const removeBookFromLibrary = createAsyncThunk(
 	}
 );
 
-export const removeAllBookInLibraries = createAsyncThunk(
-	'library/removeAllBookInLibraries',
+export const removeBookInLibraries = createAsyncThunk(
+	'library/removeBookInLibraries',
 	async (params, { rejectWithValue }) => {
 		try {
 			const response = await Request.makePost(removeAllBookAPI, params);
@@ -134,7 +123,7 @@ export const removeAllBookInLibraries = createAsyncThunk(
 export const addRemoveBookInLibraries = createAsyncThunk(
 	'library/addRemoveBookInLibrary',
 	async (params, { rejectWithValue }) => {
-		const { id, ...data } = params;
+		const { id, data } = params;
 		try {
 			const response = await Request.makePost(addRemoveBookAPI(id), data);
 			return response.data;
@@ -148,7 +137,7 @@ export const addRemoveBookInLibraries = createAsyncThunk(
 export const checkBookInLibraries = createAsyncThunk('library/checkBookInLibrarie', async (id, { rejectWithValue }) => {
 	try {
 		const response = await Request.makeGet(checkBookLibraryAPI(id));
-		return response.data;
+		return response.data.rows;
 	} catch (err) {
 		const error = JSON.parse(err.response);
 		return rejectWithValue(error);
@@ -167,18 +156,24 @@ const librarySlice = createSlice({
 			rows: [],
 			count: 0,
 		},
-
 		error: {},
+
+		myAllLibrary: {},
+		updateMyLibrary: false,
 	},
+
 	reducers: {
-		updateLibrary: (state, action) => {
-			const { rows, count } = action.payload;
-			state.libraryData = { rows, count };
-		},
 		updateAuthLibrary: (state, action) => {
 			state.authLibraryData = action.payload;
 		},
+		getAllMyLibraryRedux: (state, action) => {
+			state.myAllLibrary = action.payload;
+		},
+		updateMyAllLibraryRedux: state => {
+			state.updateMyLibrary = !state.updateMyLibrary;
+		},
 	},
+
 	extraReducers: {
 		[createLibrary.pending]: state => {
 			state.isFetching = true;
@@ -217,7 +212,7 @@ const librarySlice = createSlice({
 		[addBookToDefaultLibrary.fulfilled]: state => {
 			state.isFetching = false;
 		},
-		[addBookToDefaultLibrary.pending]: state => {
+		[addBookToDefaultLibrary.rejected]: state => {
 			state.isFetching = false;
 		},
 	},
@@ -225,4 +220,4 @@ const librarySlice = createSlice({
 
 const library = librarySlice.reducer;
 export default library;
-export const { updateLibrary, updateAuthLibrary } = librarySlice.actions;
+export const { updateAuthLibrary, getAllMyLibraryRedux, updateMyAllLibraryRedux } = librarySlice.actions;

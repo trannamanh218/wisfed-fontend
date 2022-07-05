@@ -1,26 +1,19 @@
 import { Add, Minus } from 'components/svg';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Button from 'shared/button';
 import PropTypes from 'prop-types';
 import './connect-buttons.scss';
-import {
-	makeFriendRequest,
-	addFollower,
-	unFollower,
-	ReplyFriendRequest,
-	unFriendRequest,
-} from 'reducers/redux-utils/user';
+import { makeFriendRequest, addFollower, unFollower, unFriendRequest } from 'reducers/redux-utils/user';
 import { useDispatch } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
-import { NavItem } from 'react-bootstrap';
 
-const ConnectButtons = ({ data, direction, item }) => {
+const ConnectButtons = ({ direction, item }) => {
 	const dispatch = useDispatch();
 	const [unFriend, setUnFriend] = useState(true);
 	const [toggleUnFollow, setToggleUnFollow] = useState(true);
 	const [toggleAddFollow, setToggleAddFollow] = useState(true);
 	const [togglePendingFriend, setTogglePendingFriend] = useState(true);
-	const [toggleModalUnFriends, setModalUnfriends] = useState(false);
+	// const [toggleModalUnFriends, setModalUnfriends] = useState(false);
 
 	const buttonUnFollow = () => {
 		return (
@@ -29,6 +22,7 @@ const ConnectButtons = ({ data, direction, item }) => {
 			</Button>
 		);
 	};
+
 	const buttonAddFollow = () => {
 		return (
 			<Button className=' connect-button follow' isOutline={true} name='friend' onClick={handleFollow}>
@@ -46,6 +40,7 @@ const ConnectButtons = ({ data, direction, item }) => {
 			</Button>
 		);
 	};
+
 	const buttonUnFriend = () => {
 		return (
 			<Button className='connect-button' onClick={handleUnFriend}>
@@ -54,6 +49,7 @@ const ConnectButtons = ({ data, direction, item }) => {
 			</Button>
 		);
 	};
+
 	const buttonPendingFriend = () => {
 		return (
 			<Button className='connect-button'>
@@ -75,9 +71,9 @@ const ConnectButtons = ({ data, direction, item }) => {
 		}
 	};
 	const handleUnFriend = () => {
-		setModalUnfriends(false);
+		// setModalUnfriends(false);
 		try {
-			// dispatch(unFriendRequest(item.id)).unwrap();
+			dispatch(unFriendRequest(item.id)).unwrap();
 			setUnFriend(false);
 		} catch (err) {
 			NotificationError(err);
@@ -98,7 +94,7 @@ const ConnectButtons = ({ data, direction, item }) => {
 	};
 	const handleUnFollow = () => {
 		try {
-			dispatch(unFollower(NavItem.id)).unwrap();
+			dispatch(unFollower(item.id)).unwrap();
 			setToggleAddFollow(true);
 			setToggleUnFollow(false);
 		} catch (err) {
@@ -115,17 +111,24 @@ const ConnectButtons = ({ data, direction, item }) => {
 	};
 
 	const handleRenderButtonFriend = () => {
-		if (item.isFriend) {
+		if (item.relation === 'friend') {
 			return unFriend ? buttonUnFriend() : togglePendingFriend ? buttonAddFriend() : buttonPendingFriend();
-		} else {
+		} else if (item.relation === 'pending') {
+			return buttonPendingFriend();
+		} else if (item.relation === 'unknown') {
 			return togglePendingFriend ? buttonAddFriend() : buttonPendingFriend();
 		}
 	};
 
 	return (
 		<div className={`connect-buttons ${direction}`}>
-			{handleRenderButtonFriend()}
-			{handleRenderButtonFollow()}
+			{item.relation !== 'isMe' && (
+				<>
+					{' '}
+					{handleRenderButtonFriend()}
+					{handleRenderButtonFollow()}
+				</>
+			)}
 		</div>
 	);
 };

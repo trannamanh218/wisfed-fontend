@@ -5,11 +5,13 @@
 	border-radius: 16px;
 	overflow: hidden;
 	font-size: 0.825rem;
-	margin-left: 10px;
+	span {
+		display: flex;
+		align-items: center;
+	}
 }
 
 .dualColumn-item {
-	width: 17.5rem;
 	padding: 1rem 0 1rem;
 	display: flex;
 	color: $ash;
@@ -17,7 +19,7 @@
 	justify-content: space-between;
 
 	&.has-background {
-		padding: 1rem 1rem 0.5rem;
+		padding: 1rem 1rem 0;
 		&:last-of-type {
 			padding-bottom: 1rem;
 		}
@@ -25,12 +27,18 @@
 
 	&__title {
 		display: inline-block;
-		font-weight: 500;
+		font-weight: 600;
 	}
 
 	&__number {
 		display: inline-block;
-		font-weight: 600;
+		font-weight: 500;
+		color: $ash-placeholder;
+		&.no-page-text {
+			color: $ash;
+			font-size: 15px;
+			font-weight: 600;
+		}
 	}
 }
 

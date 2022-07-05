@@ -1,5 +1,4 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-// import { action } from '@storybook/addon-actions';
 import {
 	authAPI,
 	forgotPasswordAPI,
@@ -8,11 +7,11 @@ import {
 	checkTokenResetPassword,
 	forgotPasswordAPIAdmin,
 	resetPasswordAPIAdmin,
+	checkJwt,
 } from 'constants/apiURL';
 import Request from 'helpers/Request';
 import Storage from 'helpers/Storage';
 import _ from 'lodash';
-import { editUserInfo } from '../user';
 
 export const register = createAsyncThunk('auth/register', async (params, { rejectWithValue }) => {
 	try {
@@ -20,6 +19,16 @@ export const register = createAsyncThunk('auth/register', async (params, { rejec
 		return response;
 	} catch (err) {
 		return rejectWithValue(err.response);
+	}
+});
+
+export const getCheckJwt = createAsyncThunk('auth/getCheckJwt', async (params, { rejectWithValue }) => {
+	try {
+		const response = await Request.makeGet(checkJwt, params);
+		return response.data;
+	} catch (err) {
+		const error = JSON.parse(err.response);
+		throw rejectWithValue(error);
 	}
 });
 
@@ -58,16 +67,6 @@ export const forgotPassword = createAsyncThunk('auth/forgotPassword', async (par
 	}
 });
 
-export const getUserInfo = createAsyncThunk('auth/getUserInfo', async () => {
-	const accessToken = localStorage.getItem('accessToken');
-	if (accessToken !== null) {
-		const response = await Request.makeGet(checkApiToken());
-		return response;
-	} else {
-		return {};
-	}
-});
-
 export const forgotPasswordAdmin = createAsyncThunk('auth/forgotPasswordAdmin', async (params, { rejectWithValue }) => {
 	try {
 		const response = await Request.makePost(forgotPasswordAPIAdmin, params);
@@ -103,10 +102,20 @@ const authSlice = createSlice({
 		userInfo: {},
 		error: {},
 		infoForgot: {},
+		routerLogin: false,
 	},
 	reducers: {
 		checkLogin: (state, action) => {
 			state.isAuth = action.payload;
+		},
+		checkUserLogin: (state, action) => {
+			state.routerLogin = action.payload;
+		},
+		deleteUserInfo: state => {
+			state.userInfo = {};
+		},
+		updateUserInfo: (state, action) => {
+			state.userInfo = action.payload;
 		},
 	},
 
@@ -121,32 +130,6 @@ const authSlice = createSlice({
 			state.error = {};
 		},
 		[login.rejected]: (state, action) => {
-			state.isFetching = false;
-			state.userInfo = {};
-			state.error = action.payload;
-		},
-		[register.pending]: state => {
-			state.isFetching = true;
-		},
-		[register.fulfilled]: (state, action) => {
-			state.isFetching = false;
-			state.userInfo = action.payload;
-			state.error = {};
-		},
-		[register.rejected]: (state, action) => {
-			state.isFetching = false;
-			state.userInfo = {};
-			state.error = action.payload;
-		},
-		[forgotPassword.pending]: state => {
-			state.isFetching = true;
-		},
-		[forgotPassword.fulfilled]: (state, action) => {
-			state.isFetching = false;
-			state.userInfo = action.payload;
-			state.error = {};
-		},
-		[forgotPassword.rejected]: (state, action) => {
 			state.isFetching = false;
 			state.userInfo = {};
 			state.error = action.payload;
@@ -172,33 +155,17 @@ const authSlice = createSlice({
 			state.userInfo = action.payload;
 			state.error = {};
 		},
-		[getUserInfo.rejected]: (state, action) => {
-			state.isFetching = false;
+		[getCheckJwt.pending]: (state, action) => {
+			state.isFetching = true;
 			state.userInfo = {};
 			state.error = action.payload;
 		},
-		[getUserInfo.fulfilled]: (state, action) => {
+		[getCheckJwt.fulfilled]: (state, action) => {
 			state.isFetching = false;
 			state.userInfo = action.payload;
 			state.error = {};
 		},
-		[getUserInfo.rejected]: (state, action) => {
-			state.isFetching = false;
-
-			state.userInfo = {};
-			state.error = action.payload;
-		},
-		[editUserInfo.rejected]: (state, action) => {
-			state.isFetching = false;
-			state.userInfo = {};
-			state.error = action.payload;
-		},
-		[editUserInfo.fulfilled]: (state, action) => {
-			state.isFetching = false;
-			state.userInfo = action.payload;
-			state.error = {};
-		},
-		[editUserInfo.rejected]: (state, action) => {
+		[getCheckJwt.rejected]: (state, action) => {
 			state.isFetching = false;
 			state.userInfo = {};
 			state.error = action.payload;
@@ -207,5 +174,5 @@ const authSlice = createSlice({
 });
 
 const auth = authSlice.reducer;
-export const { checkLogin } = authSlice.actions;
+export const { checkLogin, checkUserLogin, deleteUserInfo, updateUserInfo } = authSlice.actions;
 export default auth;

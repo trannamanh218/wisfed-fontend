@@ -1,46 +1,120 @@
 import MyShelvesList from 'shared/my-shelves-list';
 import StatisticList from 'shared/statistic-list';
-import ToggleList from 'shared/toggle-list';
 import './sidebar-quote.scss';
+import { useSelector } from 'react-redux';
+import TopicColumn from 'shared/topic-column';
+import PropTypes from 'prop-types';
+import _ from 'lodash';
+import SearchField from 'shared/search-field';
+import { useState, useEffect } from 'react';
+import DualColumn from 'shared/dual-column';
+import { getCountQuotesByCategory } from 'reducers/redux-utils/quote';
+import { useDispatch } from 'react-redux';
+import { useParams } from 'react-router-dom';
+import { NotificationError } from 'helpers/Error';
 
-const SidebarQuote = () => {
-	const hashtagList = [
-		{ id: 1, title: 'Tiểu thuyết' },
-		{ id: 2, title: 'Hạnh phúc' },
-		{ id: 3, title: 'Đầu tư' },
-		{ id: 4, title: 'Kinh doanh' },
-		{ id: 4, title: 'Kinh doanh' },
-		{ id: 4, title: 'Kinh doanh' },
-		{ id: 4, title: 'Kinh doanh' },
-	];
+const SidebarQuote = ({ listHashtags, inMyQuote, hasCountQuotes }) => {
+	const [inputSearch, setInputSearch] = useState('');
+	const [categoryList, setCategoryList] = useState([]);
+	const [categorySearchedList, setCategorySearchedList] = useState([]);
 
-	const statusList = [
-		{ name: 'Muốn đọc', quantity: 30 },
-		{ name: 'Đang đọc', quantity: 110 },
-		{ name: 'Đã đọc', quantity: 8 },
-	];
+	const { userId } = useParams();
 
-	const shelfList = [
-		{ name: 'giasach2021', quantity: 30 },
-		{ name: 'sach cua toi', quantity: 110 },
-		{ name: 'tu sanch thang 1', quantity: 8 },
-		{ name: 'tu sanch thang 2', quantity: 8 },
-		{ name: 'tu sanch thang 3', quantity: 8 },
-	];
+	const dispatch = useDispatch();
+
+	const myAllLibrary = useSelector(state => state.library.myAllLibrary);
+
+	useEffect(() => {
+		if (!inMyQuote && hasCountQuotes) {
+			getCountQuotesByCategoryData();
+		}
+	}, []);
+
+	const getCountQuotesByCategoryData = async () => {
+		try {
+			const params = { limit: 100, sort: JSON.stringify([{ property: 'quoteCount', direction: 'DESC' }]) };
+			const res = await dispatch(getCountQuotesByCategory({ userId: userId || '', params: params })).unwrap();
+			setCategoryList(res);
+		} catch (err) {
+			NotificationError(err);
+		}
+	};
+
+	const handleSearchCategories = e => {
+		setInputSearch(e.target.value);
+		const newArray = categoryList.filter(item => item.name.toLowerCase().includes(e.target.value.toLowerCase()));
+		setCategorySearchedList(newArray);
+	};
+
+	const filterQuotesByCategory = categoryId => {
+		console.log(categoryId);
+	};
 
 	return (
-		<div className='sidebar-my-quote'>
-			<ToggleList list={hashtagList} title='Hashtag từ Quotes' />
-			<StatisticList
-				className='sidebar-my-quote__reading__status'
-				title='Trạng thái đọc'
-				background='light'
-				isBackground={true}
-				list={statusList}
-			/>
-			<MyShelvesList list={shelfList} />
+		<div className='sidebar-quote'>
+			<>
+				{!inMyQuote && hasCountQuotes ? (
+					<>
+						{!!categoryList.length && (
+							<div className='sidebar-quote__category-list'>
+								<h4>Chủ đề Quotes</h4>
+								<SearchField
+									placeholder='Tìm kiếm danh mục'
+									className='sidebar-quote__category-list__search'
+									handleChange={handleSearchCategories}
+									value={inputSearch}
+								/>
+								{inputSearch ? (
+									<DualColumn
+										list={categorySearchedList}
+										pageText={true}
+										inQuotes={true}
+										filterQuotesByCategory={filterQuotesByCategory}
+									/>
+								) : (
+									<DualColumn
+										list={categoryList}
+										pageText={true}
+										inQuotes={true}
+										filterQuotesByCategory={filterQuotesByCategory}
+									/>
+								)}
+							</div>
+						)}
+					</>
+				) : (
+					<>
+						{!!listHashtags.length && (
+							<TopicColumn
+								className='sidebar-category__topics'
+								title='Hashtag từ Quotes'
+								topics={listHashtags}
+							/>
+						)}
+						{!_.isEmpty(myAllLibrary) && (
+							<>
+								<StatisticList
+									className='sidebar-quote__reading__status'
+									title='Trạng thái đọc'
+									background='light'
+									isBackground={true}
+									list={myAllLibrary.default}
+									pageText={false}
+								/>
+								<MyShelvesList list={myAllLibrary.custom} />
+							</>
+						)}
+					</>
+				)}
+			</>
 		</div>
 	);
+};
+
+SidebarQuote.propTypes = {
+	listHashtags: PropTypes.array,
+	inMyQuote: PropTypes.bool,
+	hasCountQuotes: PropTypes.bool,
 };
 
 export default SidebarQuote;

@@ -15,6 +15,8 @@ import friends from './friends';
 import chart from './chart';
 import common from './common';
 import ranks from './ranks';
+import search from './search';
+import shelves from './shelves';
 
 const rootReducer = {
 	auth,
@@ -34,6 +36,8 @@ const rootReducer = {
 	chart,
 	common,
 	ranks,
+	search,
+	shelves,
 };
 
 export default rootReducer;

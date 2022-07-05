@@ -2,7 +2,12 @@ import './style.scss';
 import readChallengeImg from 'assets/images/read-challenge-img.jpg';
 import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { updateTargetRead, createTargetRead } from 'reducers/redux-utils/chart';
+import {
+	updateTargetRead,
+	createTargetRead,
+	renderTargetReadingProgress,
+	checkRenderTargetReading,
+} from 'reducers/redux-utils/chart';
 import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 import { NotificationError } from 'helpers/Error';
@@ -10,6 +15,7 @@ import { NotificationError } from 'helpers/Error';
 function ReadChallenge({ modalOpen, setModalOpen }) {
 	const [inputValue, setInputValue] = useState(0);
 	const dispatch = useDispatch();
+
 	useEffect(() => {
 		if (inputValue < 0) {
 			setInputValue(0);
@@ -34,12 +40,14 @@ function ReadChallenge({ modalOpen, setModalOpen }) {
 					year: year,
 					...query,
 				};
+				dispatch(checkRenderTargetReading(true));
 				return await dispatch(updateTargetRead(params)).unwrap();
 			} catch (err) {
 				NotificationError(err);
 			} finally {
 				toast.success('Sửa mục tiêu thành công');
 				setModalOpen(false);
+				dispatch(checkRenderTargetReading(false));
 			}
 		} else {
 			try {
@@ -53,6 +61,8 @@ function ReadChallenge({ modalOpen, setModalOpen }) {
 				return toast.success('Tạo mục tiêu thành công');
 			} catch (err) {
 				NotificationError(err);
+			} finally {
+				dispatch(renderTargetReadingProgress(true));
 			}
 		}
 	};

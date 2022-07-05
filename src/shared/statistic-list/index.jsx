@@ -1,16 +1,21 @@
-import React from 'react';
 import PropTypes from 'prop-types';
 import DualColumn from 'shared/dual-column';
 import classNames from 'classnames';
 import './statistic-list.scss';
 
 const StatisticList = props => {
-	const { background, list, title, isBackground, className } = props;
+	const { background, list, title, isBackground, className, pageText, inCategory } = props;
 
 	return (
 		<div className={classNames('statistic', { [`${className}`]: className })}>
 			<h4 className={`statistic-title ${isBackground ? 'custom' : ''}`}>{title}</h4>
-			<DualColumn list={list} isBackground={isBackground} background={background} />
+			<DualColumn
+				list={list}
+				isBackground={isBackground}
+				background={background}
+				pageText={pageText}
+				inCategory={inCategory}
+			/>
 		</div>
 	);
 };
@@ -39,5 +44,7 @@ StatisticList.propTypes = {
 		'light',
 		'dark',
 	]),
+	pageText: PropTypes.bool,
+	inCategory: PropTypes.bool,
 };
 export default StatisticList;

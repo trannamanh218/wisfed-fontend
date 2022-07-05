@@ -4,7 +4,7 @@ import '../forget-password.scss';
 import ImgForget from 'assets/images/quen-mk 1.png';
 import CreatNewPasswordAdminForm from './CreatNewPassword';
 
-function AdminCreatNewPassword() {
+function AdminCreateNewPassword() {
 	return (
 		<div className='forget__container'>
 			<div className='login__header'>
@@ -20,4 +20,4 @@ function AdminCreatNewPassword() {
 	);
 }
 
-export default AdminCreatNewPassword;
+export default AdminCreateNewPassword;

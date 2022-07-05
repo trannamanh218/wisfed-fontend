@@ -1,0 +1,12 @@
+.post__quotes__container {
+	background: #eff0f7;
+	border-radius: 12px;
+	margin-bottom: 24px;
+	.quote-card {
+		margin-bottom: 0px;
+		padding: 20px 16px;
+		.quote-card__quote-content p:first-child {
+			max-width: 100% !important;
+		}
+	}
+}

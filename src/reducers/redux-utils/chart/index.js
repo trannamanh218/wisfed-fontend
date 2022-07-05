@@ -5,6 +5,7 @@ import {
 	updateTargetReadAPI,
 	getAPIchartsByid,
 	getReadingTargetIdAPI,
+	getBooksChartsData,
 } from 'constants/apiURL';
 import Request from 'helpers/Request';
 
@@ -18,6 +19,20 @@ export const getChartsByid = createAsyncThunk('targetReading/getListChartsId', a
 		throw rejectWithValue(error);
 	}
 });
+
+export const getChartsBooks = createAsyncThunk(
+	'targetReading/getListChartsBook',
+	async (params, { rejectWithValue }) => {
+		const { id, ...query } = params;
+		try {
+			const response = await Request.makeGet(getBooksChartsData(id), query);
+			return response.data;
+		} catch (err) {
+			const error = JSON.stringify(err.response);
+			throw rejectWithValue(error);
+		}
+	}
+);
 
 export const getListBooksReadYear = createAsyncThunk(
 	'chart/getListBooksReadYear',
@@ -35,10 +50,9 @@ export const getListBooksReadYear = createAsyncThunk(
 
 export const getListBooksTargetReading = createAsyncThunk(
 	'targetReading/getListBooksTargetRead',
-	async (params, { rejectWithValue }) => {
-		const { userId, ...query } = params;
+	async (userId, { rejectWithValue }) => {
 		try {
-			const response = await Request.makeGet(getReadingTargetIdAPI(userId), query);
+			const response = await Request.makeGet(getReadingTargetIdAPI(userId));
 			return response.data.rows;
 		} catch (err) {
 			const error = JSON.stringify(err.response);
@@ -95,6 +109,8 @@ const chartSlice = createSlice({
 		isFetching: false,
 		error: {},
 		targetReading: [],
+		renderTarget: false,
+		checkRenderTarget: false,
 	},
 	reducers: {
 		updateImg: (state, action) => {
@@ -102,6 +118,12 @@ const chartSlice = createSlice({
 		},
 		updateTargetReading: (state, action) => {
 			state.targetReading = action.payload;
+		},
+		renderTargetReadingProgress: (state, action) => {
+			state.renderTarget = action.payload;
+		},
+		checkRenderTargetReading: (state, action) => {
+			state.checkRenderTarget = action.payload;
 		},
 	},
 	extraReducers: {
@@ -120,6 +142,7 @@ const chartSlice = createSlice({
 		},
 	},
 });
-export const { updateImg, updateTargetReading } = chartSlice.actions;
+export const { updateImg, updateTargetReading, renderTargetReadingProgress, checkRenderTargetReading } =
+	chartSlice.actions;
 const chart = chartSlice.reducer;
 export default chart;

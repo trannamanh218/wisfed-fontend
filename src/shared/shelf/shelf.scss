@@ -1,14 +1,20 @@
 @import 'src/scss/abstracts/_variables.scss';
 
 .shelf {
-	display: flex;
-	flex-wrap: wrap;
-	gap: 1rem;
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+	grid-gap: 1rem;
 	.book-item {
 		margin-bottom: 2rem;
 	}
 
 	.book-thumbnail {
 		border: 1px solid $ash-line;
+		img {
+			&:hover {
+				transform: scale(1.1);
+				transition: all 0.2s ease-out;
+			}
+		}
 	}
 }

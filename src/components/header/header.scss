@@ -2,28 +2,25 @@
 
 .header {
 	display: flex;
-	justify-content: space-around;
-	align-items: stretch;
+	justify-content: space-between;
+	align-items: center;
 	background-color: $white;
 	padding: 0 40px 0;
 	position: fixed;
 	top: 0;
-	left: 50%;
 	width: 100%;
 	z-index: 1000;
-	transform: translateX(-50%);
 	max-width: 1440px;
 }
 
 .header__left {
 	display: flex;
 	align-items: center;
-	margin-right: 50px;
 }
 
 .header__logo {
 	height: 42px;
-	margin-right: 32px;
+	margin-right: 96px;
 }
 
 .header__search {
@@ -33,14 +30,17 @@
 		letter-spacing: 0.75px;
 		font-size: 15px;
 	}
-	height: 56px;
-	width: 100%;
+	margin-top: 15px;
+	height: 63px;
+	// width: 100%;
+	min-width: 380px;
 	padding: 0 1.5em;
 	border-radius: 16px;
 	overflow: hidden;
 	display: flex;
+	margin-bottom: 18px;
 	align-items: center;
-	background-color: $ash-background;
+	background-color: #eff0f7;
 
 	&__icon {
 		width: 20px;
@@ -61,32 +61,43 @@
 }
 
 .header__nav {
-	flex-grow: 1;
+	// flex-grow: 1;
 	display: flex;
 	justify-content: space-around;
-	margin-right: 32px;
+	margin-right: 20px;
+	background-color: #eff0f7;
+	height: 63px;
+	margin-top: 15px;
+	border-radius: 12px;
+	width: 500px;
+	margin-left: 60px;
+	margin-bottom: 18px;
 }
 
 .header__nav__item {
-	width: 20%;
-	max-width: 116px;
+	width: 15%;
+	max-width: 80px;
 	position: relative;
 	text-align: center;
 	transition: all 3s ease;
 	padding: 32px 0;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	cursor: pointer;
 
 	&.active {
-		&::after {
-			position: absolute;
-			bottom: 0;
-			left: 0;
-			content: '';
-			width: 100%;
-			height: 4px;
-			margin-bottom: -2px;
-			border-radius: 8px;
-			background-color: $primary;
-		}
+		// &::after {
+		// 	position: absolute;
+		// 	bottom: 0;
+		// 	left: 0;
+		// 	content: '';
+		// 	width: 100%;
+		// 	height: 4px;
+		// 	margin-bottom: -2px;
+		// 	border-radius: 8px;
+		// 	background-color: $primary;
+		// }
 		.header__nav__icon {
 			fill: $primary;
 			path {
@@ -97,8 +108,8 @@
 	}
 
 	svg {
-		width: 30px;
-		height: 30px;
+		width: 27px;
+		height: 27px;
 		margin-bottom: 5px;
 	}
 }
@@ -113,14 +124,25 @@
 
 .header__userInfo {
 	display: flex;
-	justify-content: space-around;
 	align-items: center;
-	margin-left: auto;
 	cursor: pointer;
 	svg {
 		width: 30px;
 		height: 28px;
 	}
+}
+
+.notify-icon {
+	width: 15%;
+	max-width: 80px;
+	position: relative;
+	transition: all 3s ease;
+	padding: 32px 0;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin-bottom: 18px;
+	cursor: pointer;
 }
 
 .header__notify__icon {
@@ -143,46 +165,59 @@
 		border-radius: 50%;
 		background-color: $primary;
 	}
-}
-.header__notify__icon__active {
-	position: relative;
-	background-image: url('../../assets/icons/Notification.svg');
-	width: 30px;
-	height: 30px;
-	background-size: contain;
-	background-repeat: no-repeat;
-	&::before {
-		position: absolute;
-		top: 0;
-		right: 0;
-		transform: translateY(-50%);
-		content: '';
-		display: inline-block;
-		width: 18px;
-		height: 19px;
-		border-radius: 50%;
-		background-color: #fff;
-		z-index: 0;
-	}
+	&.active {
+		background-image: url('../../assets/icons/Notification.svg');
+		&::before {
+			position: absolute;
+			top: 0;
+			right: -1px;
+			transform: translateY(-50%);
+			content: '';
+			display: inline-block;
+			width: 18px;
+			height: 19px;
+			border-radius: 50%;
+			background-color: #fff;
+			z-index: 0;
+		}
 
-	&::after {
-		position: absolute;
-		top: 0;
-		right: 0;
-		transform: translateY(-50%);
-		content: '';
-		display: inline-block;
-		width: 16px;
-		height: 16px;
-		border-radius: 50%;
-		background-color: $primary;
-		z-index: 1;
+		&::after {
+			position: absolute;
+			top: 0;
+			right: 0;
+			transform: translateY(-50%);
+			content: '';
+			display: inline-block;
+			width: 16px;
+			height: 16px;
+			border-radius: 50%;
+			background-color: $primary;
+			z-index: 1;
+		}
 	}
 }
+
 .header__avatar {
-	width: 48px;
-	height: 48px;
-	margin-left: 40px;
+	img {
+		border-radius: 50%;
+		width: 60px;
+		height: 60px;
+		object-fit: cover;
+	}
+}
+
+.header__option-info {
+	position: absolute;
+	background-color: #fff;
+	box-shadow: 0px 0px 32px rgba(0, 0, 0, 0.12);
+	padding: 12px;
+	border-radius: 12px;
+	width: fit-content;
+	right: 8px;
+	bottom: -60%;
+	li {
+		margin-top: 10px;
+	}
 }
 
 @media only screen and (max-width: 1200px) {
@@ -251,6 +286,7 @@
 
 	.header__logo {
 		margin-right: 16px;
+		margin-bottom: 18px;
 	}
 
 	.header__search {

@@ -1,30 +1,23 @@
+@import 'src/scss/abstracts/_variables.scss';
+
 .login__container {
 	max-width: 1440px;
 	margin: auto;
 	position: relative;
-	.eye-icon {
-		margin-right: 10px;
-	}
 }
-.error--text {
-	margin-right: 10px;
-}
+
 .login__form__error {
 	position: relative;
-	img {
-		margin-bottom: 5px;
-	}
 }
 
 .login__form__error__popover-container {
 	position: absolute;
-
+	top: 115%;
 	right: -130%;
-
-	opacity: 0;
+	display: none;
+	z-index: 1000;
 	&.show {
-		opacity: 1;
-		transition: opacity 0.2s ease-in;
+		display: block;
 	}
 }
 
@@ -42,11 +35,13 @@
 	padding: 8px 36px;
 	line-height: 22px;
 }
+
 .error--textbox {
 	display: flex;
 	justify-content: flex-end;
 	margin-right: 30px;
 }
+
 .error--textbox--logo {
 	border-left: 10px transparent solid;
 	border-bottom: 10px red solid;
@@ -70,11 +65,13 @@
 .login__header {
 	height: 120px;
 	background-color: #fbf7f2;
+	padding-left: 200px;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
 	img {
 		height: 46px;
 		width: 173px;
-		margin-left: 200px;
-		margin-top: 40px;
 	}
 }
 
@@ -159,17 +156,22 @@
 
 .login__form__field {
 	margin-top: 19px;
-	text-align: left;
-}
-
-.login__form__group {
+	border-radius: 12px;
+	position: relative;
 	background-color: #eff0f6;
 	display: flex;
-	border-radius: 8px;
+	justify-content: space-between;
 	align-items: center;
-
+	padding: 16px 12px;
 	&.error {
-		border-color: red;
+		border: $red 1px solid;
+	}
+	.error--text {
+		display: none;
+		&.show {
+			display: block;
+			margin-left: 8px;
+		}
 	}
 }
 
@@ -180,17 +182,16 @@
 	height: 45px;
 	margin-top: 12px;
 	color: #0576f0;
+	flex-grow: 1;
 }
 
 .login__form__input {
 	background-color: #eff0f6;
-	flex-grow: 1;
-	height: 56px;
-	padding: 0 12px;
 	border: none;
-	line-height: 40px;
+	line-height: 24px;
 	border: none;
 	outline: none;
+	padding-left: 8px;
 	&::placeholder {
 		color: #a0a3bd;
 		font-family: 'Montserrat';
@@ -245,6 +246,7 @@
 	color: #2d2c42;
 	margin-top: 20px;
 }
+
 .login__register {
 	height: 56px;
 	width: 100%;
@@ -253,7 +255,8 @@
 	align-items: center;
 	background-color: #18bb0c;
 	border-radius: 12px;
-	button {
+	color: #fcfcfc;
+	&:hover {
 		color: #fcfcfc;
 	}
 }

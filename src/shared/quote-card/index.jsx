@@ -1,59 +1,15 @@
 import PropTypes from 'prop-types';
-import React from 'react';
 import BadgeList from 'shared/badge-list';
 import QuoteActionBar from 'shared/quote-action-bar';
 import UserAvatar from 'shared/user-avatar';
 import './quote-card.scss';
-import { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
-import { likeUnlikeQuote } from 'reducers/redux-utils/quote';
-import { checkLikeQuote } from 'reducers/redux-utils/quote';
-import { NotificationError } from 'helpers/Error';
 
-const QuoteCard = ({ data, isDetail, likedArray }) => {
-	const [isLiked, setIsLiked] = useState(false);
-	const [likeNumber, setLikeNumber] = useState(0);
-	const [hashTags, setHashTags] = useState([]);
-
-	const dispatch = useDispatch();
-
-	useEffect(() => {
-		if (isDetail) {
-			getLikedArray();
-		} else {
-			if (likedArray.length > 0 && likedArray.includes(data.id)) {
-				setIsLiked(true);
-			}
+const QuoteCard = ({ data, likeUnlikeQuoteFnc, isDetail = false }) => {
+	const renderAuthorAndbooksName = () => {
+		if (data.book?.name) {
+			return `${data.book?.name}`;
 		}
-		if (data.tags.length > 0) {
-			const tagsArr = [];
-			data.tags.forEach(item => {
-				tagsArr.push('#' + item.tag.slug);
-			});
-			setHashTags(tagsArr);
-		}
-		setLikeNumber(data.like);
-	}, []);
-
-	const likeUnlikeQuoteFnc = async id => {
-		try {
-			const response = await dispatch(likeUnlikeQuote(id)).unwrap();
-			setIsLiked(response.liked);
-			setLikeNumber(response.quote?.like);
-		} catch (err) {
-			NotificationError(err);
-		}
-	};
-
-	const getLikedArray = async () => {
-		try {
-			const res = await dispatch(checkLikeQuote()).unwrap();
-			if (res.includes(data.id)) {
-				setIsLiked(true);
-			}
-		} catch (err) {
-			NotificationError(err);
-		}
+		return ` ${data.bookName}`;
 	};
 
 	return (
@@ -63,7 +19,7 @@ const QuoteCard = ({ data, isDetail, likedArray }) => {
 		>
 			<div className='quote-card__quote-content'>
 				<p>{`"${data.quote}"`}</p>
-				<p style={{ textDecoration: 'underline' }}>{`${data.authorName} - ${data.book?.name}`}</p>
+				<p style={{ textDecoration: 'underline' }}>{renderAuthorAndbooksName()}</p>
 			</div>
 
 			<div className='quote-card__author'>
@@ -83,10 +39,10 @@ const QuoteCard = ({ data, isDetail, likedArray }) => {
 			<div className='quote-footer'>
 				{isDetail ? (
 					<div className='quote-footer__left'>
-						{hashTags.length > 0 &&
-							hashTags.map((tag, index) => (
+						{data.tags.length > 0 &&
+							data.tags.map((tag, index) => (
 								<span className='quote-card__hashtag' key={index}>
-									{tag}
+									{tag.tag.name}
 								</span>
 							))}
 					</div>
@@ -99,8 +55,8 @@ const QuoteCard = ({ data, isDetail, likedArray }) => {
 					<QuoteActionBar
 						data={data}
 						isDetail={isDetail}
-						isLiked={isLiked}
-						likeNumber={likeNumber}
+						isLiked={data.isLike}
+						likeNumber={data.like}
 						likeUnlikeQuoteFnc={likeUnlikeQuoteFnc}
 					/>
 				</div>
@@ -126,6 +82,7 @@ QuoteCard.propTypes = {
 	data: PropTypes.object,
 	isDetail: PropTypes.bool,
 	likedArray: PropTypes.array,
+	likeUnlikeQuoteFnc: PropTypes.func,
 };
 
 export default QuoteCard;

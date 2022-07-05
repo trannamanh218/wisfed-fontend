@@ -1,0 +1,40 @@
+.group__search__container {
+	padding: 1rem 2.3rem 1.2rem;
+	.group__search__main {
+		background: #fbf7f2;
+		border-radius: 16px;
+		display: flex;
+		padding: 25px 29px 25px 49px;
+		justify-content: space-between;
+		align-items: center;
+		margin-bottom: 20px;
+		.group__search__left {
+			display: flex;
+			align-items: center;
+			gap: 40px;
+			.group__search__img {
+				max-width: 150px;
+				border-radius: 8px;
+			}
+		}
+		.group__search__content {
+			.group__search__title {
+				font-size: 18px;
+				font-weight: 600;
+				line-height: 32px;
+				max-width: 300px;
+			}
+			.group__search__info {
+				font-size: 13px;
+				font-weight: 600;
+				max-width: 225px;
+				margin-top: 30px;
+				line-height: 22px;
+			}
+		}
+	}
+
+	.group__search__button {
+		font-size: 16px;
+	}
+}

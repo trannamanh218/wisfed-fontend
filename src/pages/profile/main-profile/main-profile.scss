@@ -15,15 +15,25 @@
 
 	&__tabs {
 		&.nav-tabs {
-			gap: 1.5rem;
+			justify-content: space-between;
+			padding: 44px 40px 0 40px;
 			.nav-link {
 				font-weight: 600;
 				line-height: 1.5;
+				padding: 0 0 32px;
 			}
+		}
+		&.none-books {
+			justify-content: space-around;
 		}
 	}
 
 	.favorite-quotes {
 		margin-top: 3.75rem;
+	}
+
+	.none-data {
+		width: fit-content;
+		margin: auto;
 	}
 }

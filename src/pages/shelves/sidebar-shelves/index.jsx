@@ -1,77 +1,92 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 import BookSlider from 'shared/book-slider';
 import MyShelvesList from 'shared/my-shelves-list';
 import QuotesLinks from 'shared/quote-links';
-import ReadChallenge from 'shared/read-challenge';
 import StatisticList from 'shared/statistic-list';
 import PropTypes from 'prop-types';
 import './sidebar-shelves.scss';
-import { useSelector } from 'react-redux';
 import { useFetchQuotes } from 'api/quote.hooks';
-import { useFetchStatsReadingBooks } from 'api/library.hook';
 import ChartsReading from 'shared/charts-Reading';
 import { useFetchAuthorBooks } from 'api/book.hooks';
 import { useParams } from 'react-router-dom';
+import RenderProgress from 'shared/render-progress';
 import ProgressBarCircle from 'shared/progress-circle';
-import { useFetchUserParams } from 'api/user.hook';
+import _ from 'lodash';
 import { useFetchTargetReading } from 'api/readingTarget.hooks';
-const SidebarShelves = ({ isUpdate }) => {
+
+const SidebarShelves = ({ shelveGroupName, isMyShelve, handleViewBookDetail, allLibrary }) => {
 	const { userId } = useParams();
-	const { userData } = useFetchUserParams(userId);
-	const { booksAuthor } = useFetchAuthorBooks(userData.firstName, userData.lastName);
-	const { userInfo } = useSelector(state => state.auth);
-	const { libraryData } = useSelector(state => state.library);
-	const { booksReadYear } = useFetchTargetReading(userId);
-	const libraryList = libraryData?.rows?.map(item => ({ ...item, quantity: item.books.length }));
+	const { booksAuthor } = useFetchAuthorBooks(userId);
 	const { quoteData } = useFetchQuotes(
-		1,
+		0,
 		3,
-		JSON.stringify([{ operator: 'eq', value: userInfo.id, property: 'createdBy' }])
+		JSON.stringify([{ operator: 'eq', value: userId, property: 'createdBy' }])
 	);
 
-	const { readingData } = useFetchStatsReadingBooks(isUpdate);
+	const { booksReadYear } = useFetchTargetReading(userId);
+
+	const handleRenderTargetReading = () => {
+		if (isMyShelve) {
+			return <RenderProgress userIdParams={userId} />;
+		} else {
+			if (booksReadYear.length > 0) {
+				return <ProgressBarCircle booksReadYear={booksReadYear} />;
+			}
+		}
+	};
+
 	return (
 		<div className='sidebar-shelves'>
-			<StatisticList
-				className='sidebar-shelves__reading__status'
-				title='Trạng thái đọc'
-				background='light'
-				isBackground={true}
-				list={readingData}
-			/>
-			<MyShelvesList list={libraryList} userId={userId} />
-			<QuotesLinks
-				list={quoteData}
-				title={userId === userInfo.id ? 'Quotes của tôi' : `Quotes của ${userData.fullName}`}
-			/>
-			{booksAuthor.length > 0 && (
+			{!_.isEmpty(allLibrary) && (
+				<>
+					{!!allLibrary.default.length && (
+						<StatisticList
+							className='sidebar-shelves__reading__status'
+							title='Trạng thái đọc'
+							background='light'
+							isBackground={true}
+							list={allLibrary.default}
+							pageText={false}
+						/>
+					)}
+
+					{!!allLibrary.custom.length && <MyShelvesList list={allLibrary.custom} />}
+				</>
+			)}
+
+			{!!quoteData.length && <QuotesLinks list={quoteData} title={`Quotes của ${shelveGroupName}`} />}
+
+			{!!booksAuthor.length && (
 				<div className='my-compose'>
 					<BookSlider
 						className='book-reference__slider'
-						title={`Sách của ${userData.fullName}`}
+						title={isMyShelve ? 'Sách tôi là tác giả' : `Sách của ${shelveGroupName}`}
 						list={booksAuthor}
+						handleViewBookDetail={handleViewBookDetail}
 					/>
-					<Link className='view-all-link' to='/'>
+					<Link className='view-all-link' to={`/books-author/${userId}`}>
 						Xem thêm
 					</Link>
 				</div>
 			)}
-
-			{booksReadYear.length > 0 ? <ProgressBarCircle /> : <ReadChallenge />}
+			{handleRenderTargetReading()}
 			<ChartsReading />
 		</div>
 	);
 };
 
 SidebarShelves.defaultProps = {
-	libraryData: {},
-	isUpdate: false,
+	isMyShelve: true,
+	shelveGroupName: 'tôi',
+	handleViewBookDetail: () => {},
+	allLibrary: {},
 };
 
 SidebarShelves.propTypes = {
-	libraryData: PropTypes.object,
-	isUpdate: PropTypes.bool,
+	isMyShelve: PropTypes.bool,
+	shelveGroupName: PropTypes.string,
+	handleViewBookDetail: PropTypes.func,
+	allLibrary: PropTypes.object,
 };
 
 export default SidebarShelves;

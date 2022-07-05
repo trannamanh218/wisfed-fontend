@@ -1,7 +1,7 @@
 import BookDetail from 'pages/book-detail';
 import Category from 'pages/category';
 import CategoryDetail from 'pages/category-detail';
-import Friends from 'pages/group';
+import Friends from 'pages/friends';
 import Home from 'pages/home';
 import Profile from 'pages/profile';
 import QuoteDetail from 'pages/quote-detail';
@@ -10,53 +10,66 @@ import Review from 'pages/review';
 import BookShelves from 'pages/shelves';
 import ConfirmMyBook from 'pages/confirm-my-book';
 import Notification from 'pages/notification/compornent-main';
-import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Routes, Route } from 'react-router-dom';
-import { login, checkLogin } from 'reducers/redux-utils/auth';
+import { checkLogin } from 'reducers/redux-utils/auth';
 import { ToastContainer } from 'react-toastify';
-import Login from 'pages/login/element';
-import Register from 'pages/register/component';
+import Login from 'pages/login';
+import Register from 'pages/register';
 import ForgetPassWord from 'pages/foget-password/component';
 import ChooseTopic from 'pages/choose-topic';
 import Direct from 'pages/choose-topic/DirectPage';
 import PropTypes from 'prop-types';
 import NotFound from 'pages/not-found';
-import { NotificationError } from 'helpers/Error';
+import { getCheckJwt } from 'reducers/redux-utils/auth';
 import ReadingSummary from 'pages/reading-summary';
 import ReadingTarget from 'pages/reading-target';
 import ForgetPassWordAdminComponet from 'pages/foget-password/component-admin/ForgotAdmin';
 import AdminCreatNewPassword from 'pages/foget-password/component-admin/CreatNewPasswordAdmin';
-import DetailFriend from 'pages/group/component/detail-friend';
+import LayoutGroup from 'pages/group-page/group-layout';
+import DetailFriend from 'pages/friends/component/detail-friend';
 import 'scss/main.scss';
 import QuoteAll from 'pages/quote/all-quote/';
 import Group from 'pages/group-page';
 import Ranks from 'pages/ranks';
+import { getAllLibraryList, getAllMyLibraryRedux } from 'reducers/redux-utils/library';
+import Result from 'pages/result';
+import { NotificationError } from 'helpers/Error';
+import Storage from 'helpers/Storage';
+import _ from 'lodash';
+import ModalCheckLogin from 'shared/modal-check-login';
+import BooksAuthor from 'pages/books-author';
+import ReadingSummaryChartAuthor from 'pages/reading-summary-author';
+import DetailFeed from 'pages/home/components/newfeed/components/detailFeed';
 
 function App({ children }) {
 	const dispatch = useDispatch();
+	const updateMyLibrary = useSelector(state => state.library.updateMyLibrary);
+	const { routerLogin, userInfo } = useSelector(state => state.auth);
 
-	useEffect(() => {
-		const params = {
-			// email: 'register@gmail.com',
-			// password: '12345678',
-			// email: 'hungngonzai@gmail.com',
-			// password: '123456',
-			email: 'admin@gmail.com',
-			password: '123456',
-		};
-
-		fetchLogin(params);
+	useEffect(async () => {
+		const accsetToken = Storage.getAccessToken();
+		if (accsetToken) {
+			dispatch(checkLogin(true));
+			await dispatch(getCheckJwt());
+		} else {
+			dispatch(checkLogin(false));
+		}
 	}, []);
 
-	const fetchLogin = async params => {
+	useEffect(() => {
+		if (!_.isEmpty(userInfo)) {
+			getAllMyLibrary(userInfo.id);
+		}
+	}, [userInfo, updateMyLibrary]);
+
+	const getAllMyLibrary = async userId => {
 		try {
-			await dispatch(login(params)).unwrap();
-			dispatch(checkLogin(true));
+			const data = await dispatch(getAllLibraryList({ userId })).unwrap();
+			dispatch(getAllMyLibraryRedux(data));
 		} catch (err) {
-			dispatch(checkLogin(false));
-			// NotificationError(JSON.parse(err));
-			// const statusCode = err?.statusCode || 500;
+			NotificationError(err);
 		}
 	};
 
@@ -73,8 +86,13 @@ function App({ children }) {
 				draggable
 				pauseOnHover
 			/>
+			<ModalCheckLogin routerLogin={routerLogin} />
 			<Routes>
 				<Route path='/top100' element={<Ranks />} />
+				<Route path='/detail-feed/:idPost' element={<DetailFeed />} />
+				<Route path='/books-author/:userId' element={<BooksAuthor />} />
+				<Route path='/book-author-charts/:bookId' element={<ReadingSummaryChartAuthor />} />
+				<Route path='/result/q=:value' element={<Result />} />
 				<Route path='/notification' element={<Notification />} />
 				<Route path='/category' element={<Category />} />
 				<Route path='/category/detail/:id' element={<CategoryDetail />} />
@@ -97,9 +115,11 @@ function App({ children }) {
 				<Route path='/creat-newpassword-admin' element={<AdminCreatNewPassword />} />
 				<Route path='/choose-topic' element={<ChooseTopic />} />
 				<Route path='/direct' element={<Direct />} />
+				<Route path='direct/login' element={<Direct />} />
 				<Route path='/reading-summary/:userId' element={<ReadingSummary />} />
 				<Route path='/reading-target/:userId' element={<ReadingTarget />} />
-				<Route path='/group' element={<Group />} />
+				<Route path='/group' element={<LayoutGroup />} />
+				<Route path='/group/:id' element={<Group />} />
 				<Route path='/' element={<Home />} />
 				<Route path='*' element={<NotFound />} />
 				{children}

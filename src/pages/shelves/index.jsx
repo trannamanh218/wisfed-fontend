@@ -1,22 +1,68 @@
-import { useFetchMyLibraries } from 'api/library.hook';
 import MainContainer from 'components/layout/main-container';
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import MainShelves from './main-shelves';
 import SidebarShelves from './sidebar-shelves';
+import Circle from 'shared/loading/circle';
+import { useDispatch } from 'react-redux';
+import { useParams } from 'react-router-dom';
+import _ from 'lodash';
+import { NotificationError } from 'helpers/Error';
+import { getBookDetail } from 'reducers/redux-utils/book';
+import { useNavigate } from 'react-router-dom';
+import RouteLink from 'helpers/RouteLink';
+import { handleShelvesGroup } from 'api/shelvesGroup.hooks';
 
 const BookShelves = () => {
-	const [isUpdate, setIsUpdate] = useState(false);
-	useFetchMyLibraries(isUpdate);
+	const [allLibraryList, setAllLibraryList] = useState([]);
+	const [isViewBookDetailLoading, setIsViewBookDetailLoading] = useState(false);
 
-	const handleUpdateLibrary = () => {
-		setIsUpdate(!isUpdate);
-	};
+	const { userId } = useParams();
+	const dispatch = useDispatch();
+	const navigate = useNavigate();
+
+	const { isLoading, shelveGroupName, isMine, allLibrary } = handleShelvesGroup(userId);
+
+	useEffect(() => {
+		if (!_.isEmpty(allLibrary)) {
+			setAllLibraryList(allLibrary.default.concat(allLibrary.custom));
+		}
+	}, [allLibrary]);
+
+	const handleViewBookDetail = useCallback(async data => {
+		setIsViewBookDetailLoading(true);
+		try {
+			await dispatch(getBookDetail(data.id)).unwrap();
+			setIsViewBookDetailLoading(false);
+			navigate(RouteLink.bookDetail(data.id, data.name));
+		} catch (err) {
+			NotificationError(err);
+		}
+	}, []);
 
 	return (
-		<MainContainer
-			main={<MainShelves handleUpdateLibrary={handleUpdateLibrary} isUpdate={isUpdate} />}
-			right={<SidebarShelves isUpdate={isUpdate} />}
-		/>
+		<>
+			<Circle loading={isLoading || isViewBookDetailLoading} />
+			<MainContainer
+				main={
+					shelveGroupName && (
+						<MainShelves
+							allLibraryList={allLibraryList}
+							shelveGroupName={`Tủ sách của ${shelveGroupName}`}
+							isMyShelve={isMine}
+							handleViewBookDetail={handleViewBookDetail}
+						/>
+					)
+				}
+				right={
+					<SidebarShelves
+						shelveGroupName={shelveGroupName}
+						isMyShelve={isMine}
+						handleViewBookDetail={handleViewBookDetail}
+						allLibrary={allLibrary}
+					/>
+				}
+			/>
+		</>
 	);
 };
 

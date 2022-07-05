@@ -1,4 +1,3 @@
-import React from 'react';
 import { Col, Nav, Row, Tab, TabContainer } from 'react-bootstrap';
 import BookTab from './book-tab';
 import './main-reading-summary.scss';

@@ -1,6 +1,6 @@
 import { act, fireEvent, render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import StatusModalContainer from 'components/status-button/StatusModalContainer';
+import StatusModalContainer from 'shared/status-modal/StatusModalContainer';
 import { CoffeeCupIcon, TargetIcon } from 'components/svg';
 import { STATUS_BOOK } from 'constants';
 

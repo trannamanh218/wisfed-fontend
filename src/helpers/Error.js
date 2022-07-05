@@ -1,4 +1,5 @@
 import { toast } from 'react-toastify';
+import Storage from './Storage';
 
 const errVN = {
 	301: {
@@ -153,19 +154,58 @@ const errVN = {
 	742: {
 		vi: 'Mục tiêu không tồn tại',
 	},
+	321: {
+		vi: 'Bạn không có quyền này',
+	},
+	475: {
+		vi: 'Bạn đã vào nhóm này rồi',
+	},
+	753: {
+		vi: 'Mỗi nhóm có số tác giả tối đa là 5',
+	},
+	511: {
+		vi: 'Quá số lượng giá trị nhập vào',
+	},
+	902: {
+		vi: 'Nội dung nhóm phải là Yêu đọc sách hoặc Thách thức đọc sách',
+	},
+	754: {
+		vi: 'Người này đã vào group rồi.',
+	},
+	755: {
+		vi: 'Bạn đã mời người này rồi.',
+	},
+	756: {
+		vi: 'Lời mời này đã được xử lý',
+	},
+	757: {
+		vi: 'Bạn đã ở trong nhóm này rồi',
+	},
+	758: {
+		vi: 'Bạn đã xin vào nhóm này rồi',
+	},
+	903: {
+		vi: 'hashtag không hợp lệ',
+	},
+	759: {
+		vi: 'Type không hợp lệ',
+	},
 };
 
 export const NotificationError = err => {
 	let errCode = {};
-	if (typeof err === 'string') {
+	if (Storage.getAccessToken()) {
 		if (typeof err === 'string') {
-			errCode = JSON.parse(JSON.parse(err));
+			const errParse = JSON.parse(err);
+			if (typeof errParse === 'string') {
+				errCode = JSON.parse(JSON.parse(err));
+			} else {
+				errCode = errParse;
+			}
 		} else {
-			errCode = JSON.parse(err);
+			errCode = err;
 		}
-	} else {
-		errCode = err;
+		const statusCodeError = errCode?.errorCode;
+		return toast.error(errVN[statusCodeError].vi);
 	}
-	const statusCodeError = errCode?.errorCode;
-	return toast.error(errVN[statusCodeError].vi);
 };

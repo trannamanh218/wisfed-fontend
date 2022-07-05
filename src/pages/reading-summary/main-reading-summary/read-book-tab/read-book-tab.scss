@@ -7,12 +7,13 @@
 	}
 
 	&__year {
+		font-size: 15px;
 		color: #000000;
 	}
 
 	&__quantity {
 		color: #000000;
-		font-size: 1.5rem;
+		font-size: 1.125rem;
 		font-weight: 700;
 		line-height: 1.5;
 		margin-bottom: 0;
@@ -22,12 +23,21 @@
 	.accordion-button:not(.collapsed) {
 		background-color: white;
 		box-shadow: unset;
+		&::after {
+			background-position: center;
+			background-repeat: no-repeat;
+			background-image: url('../../../../assets/images/caret.png');
+			background-size: 10.44px 5.22px;
+		}
 	}
 
 	.accordion-button {
 		&::after {
-			background-image: url('../../../../assets/images/caret-up.png');
+			background-image: url('../../../../assets/images/caret.png');
 			margin-right: 90px;
+			background-position: center;
+			background-repeat: no-repeat;
+			background-size: 10.44px 5.22px;
 		}
 
 		&:focus {

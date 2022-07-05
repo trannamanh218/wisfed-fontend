@@ -12,6 +12,7 @@ const BookReview = () => {
 	const bookInfor = useSelector(state => state.book.bookInfo);
 	const dispatch = useDispatch();
 	const [listRatingStar, setListRatingStar] = useState({});
+	const [currentTab, setCurrentTab] = useState('reviews');
 
 	const listRating = [
 		{
@@ -76,12 +77,12 @@ const BookReview = () => {
 				ratingTotal={listRatingStar?.count}
 				className='book-review__rating'
 			/>
-			<Tabs className='book-review__tabs'>
-				<Tab eventKey='review' title='Reviews'>
-					<ReviewTab />
+			<Tabs className='book-review__tabs' onSelect={activeKey => setCurrentTab(activeKey)}>
+				<Tab eventKey='reviews' title='Reviews'>
+					<ReviewTab currentTab={currentTab} />
 				</Tab>
 				<Tab eventKey='quotes' title='Quotes'>
-					<QuotesTab />
+					<QuotesTab currentTab={currentTab} />
 				</Tab>
 			</Tabs>
 		</div>

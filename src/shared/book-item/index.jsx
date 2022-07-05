@@ -1,25 +1,28 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import BookThumbnail from 'shared/book-thumbnail';
 import ReactRating from 'shared/react-rating';
 import PropTypes from 'prop-types';
 import SettingMore from 'shared/setting-more';
-import EyeIcon from 'shared/eye-icon';
+// import EyeIcon from 'shared/eye-icon';
 import StatusButton from 'components/status-button';
 import './book-item.scss';
 import _ from 'lodash';
 import { getRatingBook } from 'reducers/redux-utils/book';
 import { useDispatch } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
+import classNames from 'classnames';
 
-const BookItem = props => {
-	const { data, handleClick, isMyShelve, handleUpdateLibrary } = props;
-	const [isPublic, setIsPublic] = useState(data.isPublic);
+const BookItem = ({ data, handleViewBookDetail, isMyShelve, handleUpdateBookList }) => {
+	// const [isPublic, setIsPublic] = useState(data.isPublic);
 	const dispatch = useDispatch();
 	const [listRatingStar, setListRatingStar] = useState({});
 
-	const handlePublic = () => {
-		setIsPublic(prev => !prev);
-	};
+	const bookOverlay = useRef(null);
+	const bookItemContainer = useRef(null);
+
+	// const handlePublic = () => {
+	// 	setIsPublic(prev => !prev);
+	// };
 
 	const fetchData = async () => {
 		try {
@@ -37,21 +40,29 @@ const BookItem = props => {
 	const renderOverlay = () => {
 		if (isMyShelve) {
 			return (
-				<span className='book-item__icon' title='Chế độ công khai'>
-					<EyeIcon isPublic={isPublic} handlePublic={handlePublic} />
-				</span>
+				<>
+					<SettingMore bookData={data} handleUpdateBookList={handleUpdateBookList} />
+					{/* <span className='book-item__icon' title='Chế độ công khai'>
+						<EyeIcon isPublic={isPublic} handlePublic={handlePublic} />
+					</span> */}
+				</>
 			);
+		} else {
+			return <StatusButton bookData={data} />;
 		}
+	};
 
-		return <StatusButton bookData={data} />;
+	const viewBookDetail = e => {
+		if (bookItemContainer.current.contains(e.target) && !bookOverlay.current.contains(e.target)) {
+			handleViewBookDetail(data);
+		}
 	};
 
 	return (
-		<div className='book-item' onClick={handleClick}>
+		<div className='book-item' onClick={viewBookDetail} ref={bookItemContainer}>
 			<div className='book-item__container'>
 				<BookThumbnail size='lg' {...data} />
-				<div className='book-item__overlay'>
-					{isMyShelve && <SettingMore bookData={data} handleUpdateLibrary={handleUpdateLibrary} />}
+				<div className={classNames('book-item__overlay', { 'position': !isMyShelve })} ref={bookOverlay}>
 					{renderOverlay()}
 				</div>
 			</div>
@@ -79,8 +90,8 @@ BookItem.defaultProps = {
 		isPublic: true,
 	},
 	isMyShelve: false,
-	handleClick: () => {},
-	handleUpdateLibrary: () => {},
+	handleViewBookDetail: () => {},
+	handleUpdateBookList: () => {},
 };
 
 BookItem.propTypes = {
@@ -94,7 +105,7 @@ BookItem.propTypes = {
 		id: PropTypes.number,
 	}),
 	isMyShelve: PropTypes.bool,
-	handleClick: PropTypes.func,
-	handleUpdateLibrary: PropTypes.func,
+	handleViewBookDetail: PropTypes.func,
+	handleUpdateBookList: PropTypes.func,
 };
 export default BookItem;
