@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { backgroundToggle, activeKeyTabsNotification } from 'reducers/redux-utils/notificaiton';
-import { useLocation } from 'react-router-dom';
+// import { useLocation } from 'react-router-dom';
 import UserAvatar from 'shared/user-avatar';
 import { getNotification } from 'reducers/redux-utils/notificaiton';
 import { calculateDurationTime } from 'helpers/Common';
@@ -16,7 +16,7 @@ import { NotificationError } from 'helpers/Error';
 import { renderMessage } from 'helpers/HandleShare';
 import LoadingIndicator from 'shared/loading-indicator';
 import { readNotification } from 'reducers/redux-utils/notificaiton';
-import { useSelector } from 'react-redux';
+// import { useSelector } from 'react-redux';
 
 const NotificationModal = ({ setModalNotti, buttonModal }) => {
 	const notifymodal = useRef(null);
