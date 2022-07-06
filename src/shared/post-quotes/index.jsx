@@ -2,6 +2,7 @@ import './post-quotes.scss';
 import UserAvatar from 'shared/user-avatar';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
+import { useNavigate } from 'react-router-dom';
 
 const PostQuotes = ({ postsData }) => {
 	const renderAuthorAndbooksName = () => {
@@ -32,6 +33,12 @@ const PostQuotes = ({ postsData }) => {
 		}
 	};
 
+	const navigate = useNavigate();
+	const onClickRedirectToAuthor = data => {
+		const id = data.createdBy || data.user.id;
+		navigate(`/profile/${id}`);
+	};
+
 	return (
 		!_.isEmpty(postsData) && (
 			<div className='post__quotes__container'>
@@ -42,7 +49,7 @@ const PostQuotes = ({ postsData }) => {
 					</div>
 
 					<div className='quote-card__author'>
-						<div className='quote-card__author__avatar'>
+						<div className='quote-card__author__avatar' onClick={() => onClickRedirectToAuthor(postsData)}>
 							<UserAvatar
 								size='sm'
 								avatarImage={postsData?.user?.avatarImage || postsData.createdBy?.avatarImage}
@@ -50,7 +57,10 @@ const PostQuotes = ({ postsData }) => {
 						</div>
 						<div className='quote-card__author__detail'>
 							<p className='quote-card__author__detail__text'>Quotes này tạo bởi</p>
-							<p className='quote-card__author__detail__name'>
+							<p
+								className='quote-card__author__detail__name'
+								onClick={() => onClickRedirectToAuthor(postsData)}
+							>
 								{postsData.createdBy?.fullName ||
 									postsData?.user?.fullName ||
 									postsData?.user?.firstName + ' ' + postsData?.user?.lastName}
