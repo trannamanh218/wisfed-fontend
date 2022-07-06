@@ -9,6 +9,7 @@ import { NotificationError } from 'helpers/Error';
 import { renderMessage } from 'helpers/HandleShare';
 import { readNotification } from 'reducers/redux-utils/notificaiton';
 import PropTypes from 'prop-types';
+import { addFollower } from 'reducers/redux-utils/user';
 import { handleListNotification, handleListUnRead } from 'reducers/redux-utils/notificaiton';
 const ModalItem = ({
 	item,
@@ -21,6 +22,13 @@ const ModalItem = ({
 }) => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
+
+	const addFollow = items => {
+		const param = {
+			data: { userId: items.actor },
+		};
+		dispatch(addFollower(param)).unwrap();
+	};
 
 	const ReplyFriendReq = async (data, items) => {
 		try {
@@ -41,13 +49,14 @@ const ModalItem = ({
 			});
 			if (selectKey === 'unread') {
 				setGetListUnRead(newArr);
-				dispatch(handleListUnRead(newArr));
+				// dispatch(handleListUnRead(newArr));
 			} else {
 				setGetNotifications(newArr);
-				dispatch(handleListNotification(newArr));
+				// dispatch(handleListNotification(newArr));
 			}
 			await dispatch(ReplyFriendRequest(params)).unwrap();
-			await dispatch(readNotification(params)).unwrap();
+			await dispatch(readNotification({ notificationId: items.id })).unwrap();
+			addFollow(items);
 		} catch (err) {
 			NotificationError(err);
 		}
@@ -73,13 +82,13 @@ const ModalItem = ({
 
 			if (selectKey === 'unread') {
 				setGetListUnRead(newArr);
-				dispatch(handleListUnRead(newArr));
+				// dispatch(handleListUnRead(newArr));
 			} else {
 				setGetNotifications(newArr);
-				dispatch(handleListNotification(newArr));
+				// dispatch(handleListNotification(newArr));
 			}
 			await dispatch(CancelFriendRequest(params)).unwrap();
-			await dispatch(readNotification(params)).unwrap();
+			await dispatch(readNotification({ notificationId: items.id })).unwrap();
 		} catch (err) {
 			NotificationError(err);
 		}
@@ -89,22 +98,22 @@ const ModalItem = ({
 		const params = {
 			notificationId: items.id,
 		};
-		if (items.verb !== 'addFriend') {
-			if (
-				items.verb === 'likeMiniPost' ||
-				items.verb === 'commentMiniPost' ||
-				items.verb === 'likeGroupPost' ||
-				items.verb === 'commentGroupPost'
-			) {
-				navigate(
-					`/detail-feed/${items.verb === 'commentMiniPost' ? 'MiniPost' : 'GroupPost'}/${
-						items.originId.minipostId || items.originId.groupPostId
-					}`
-				);
-			}
-		} else {
+
+		if (
+			items.verb === 'likeMiniPost' ||
+			items.verb === 'commentMiniPost' ||
+			items.verb === 'likeGroupPost' ||
+			items.verb === 'commentGroupPost'
+		) {
+			navigate(
+				`/detail-feed/${items.verb === 'commentMiniPost' ? 'MiniPost' : 'GroupPost'}/${
+					items.originId.minipostId || items.originId.groupPostId
+				}`
+			);
+		} else if (items.verb === 'follow' || items.verb === 'addFriend') {
 			navigate(`/profile/${items.createdBy.id}`);
 		}
+
 		let newListArr = [];
 		if (selectKey === 'unread') {
 			newListArr = getListUnread;
@@ -120,10 +129,10 @@ const ModalItem = ({
 		});
 		if (selectKey === 'unread') {
 			setGetListUnRead(newArr);
-			dispatch(handleListUnRead(newArr));
+			// dispatch(handleListUnRead(newArr));
 		} else {
 			setGetNotifications(newArr);
-			dispatch(handleListNotification(newArr));
+			// dispatch(handleListNotification(newArr));
 		}
 		dispatch(backgroundToggle(true));
 		setModalNotti(false);

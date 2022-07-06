@@ -117,6 +117,7 @@ const authSlice = createSlice({
 		error: {},
 		infoForgot: {},
 		routerLogin: false,
+		userInfoJwt: {},
 	},
 	reducers: {
 		checkLogin: (state, action) => {
@@ -172,16 +173,19 @@ const authSlice = createSlice({
 		[getCheckJwt.pending]: (state, action) => {
 			state.isFetching = true;
 			state.userInfo = {};
+			state.userInfoJwt = {};
 			state.error = action.payload;
 		},
 		[getCheckJwt.fulfilled]: (state, action) => {
 			state.isFetching = false;
 			state.userInfo = action.payload;
+			state.userInfoJwt = action.payload;
 			state.error = {};
 		},
 		[getCheckJwt.rejected]: (state, action) => {
 			state.isFetching = false;
 			state.userInfo = {};
+			state.userInfoJwt = {};
 			state.error = action.payload;
 		},
 	},

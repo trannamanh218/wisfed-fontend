@@ -27,6 +27,7 @@ const NotificationModal = ({ setModalNotti, buttonModal, realTime }) => {
 	const [getNotifications, setGetNotifications] = useState([]);
 	const [getListUnread, setGetListUnRead] = useState([]);
 	const { listNotifcaiton, listUnRead } = useSelector(state => state.notificationReducer);
+
 	const dispatch = useDispatch();
 
 	const handleClickOutside = e => {
@@ -59,7 +60,7 @@ const NotificationModal = ({ setModalNotti, buttonModal, realTime }) => {
 
 	useEffect(() => {
 		if (getListUnread.length > 0) {
-			const filterRead = getListUnread.filter(item => !item.isRead);
+			const filterRead = getListUnread.filter(item => !item.isRead && !item.isCheck);
 			if (filterRead.length > 0) {
 				setRenderRead(true);
 			}
@@ -68,19 +69,15 @@ const NotificationModal = ({ setModalNotti, buttonModal, realTime }) => {
 
 	const getMyNotification = async () => {
 		try {
-			if (listNotifcaiton.length > 0 && !realTime) {
-				setGetNotifications(listNotifcaiton.slice(0, 10));
-			} else {
-				const notificationList = await dispatch(getNotification()).unwrap();
-				const arrNew = notificationList.map(item => item.activities).flat(1);
-				const newArr = arrNew.map(item => {
-					const data = { ...item, isAccept: false, isRefuse: false };
-					return { ...data };
-				});
-				const filterFriend = newArr.filter(item => !item.isCheck);
-				dispatch(handleListNotification(filterFriend));
-				setGetNotifications(filterFriend);
-			}
+			const notificationList = await dispatch(getNotification()).unwrap();
+			const arrNew = notificationList.map(item => item.activities).flat(1);
+			const newArr = arrNew.map(item => {
+				const data = { ...item, isAccept: false, isRefuse: false };
+				return { ...data };
+			});
+			const filterFriend = newArr.filter(item => !item.isCheck);
+			// dispatch(handleListNotification(filterFriend));
+			setGetNotifications(filterFriend);
 		} catch (err) {
 			NotificationError(err);
 		} finally {
@@ -91,18 +88,15 @@ const NotificationModal = ({ setModalNotti, buttonModal, realTime }) => {
 	const getListUnRead = async () => {
 		let arrNew = [];
 		try {
-			if (listUnRead.length > 0 && !realTime) {
-				setGetListUnRead(listUnRead.slice(0, 10));
-			} else {
-				const notificationList = await dispatch(getListNotificationUnRead()).unwrap();
-				arrNew = notificationList.map(item => item.activities).flat(1);
-				const newArr = arrNew.map(item => {
-					const data = { ...item, isAccept: false, isRefuse: false };
-					return { ...data };
-				});
-				dispatch(handleListUnRead(newArr));
-				setGetListUnRead(newArr);
-			}
+			const notificationList = await dispatch(getListNotificationUnRead()).unwrap();
+			arrNew = notificationList.map(item => item.activities).flat(1);
+			const newArr = arrNew.map(item => {
+				const data = { ...item, isAccept: false, isRefuse: false };
+				return { ...data };
+			});
+
+			// dispatch(handleListUnRead(newArr));
+			setGetListUnRead(newArr);
 		} catch (err) {
 			NotificationError(err);
 		} finally {
@@ -111,9 +105,7 @@ const NotificationModal = ({ setModalNotti, buttonModal, realTime }) => {
 	};
 
 	const lengthAddFriend = () => {
-		const length = getNotifications.filter(
-			item => (item.verb === 'addFriend' || item.verb === 'addfriend') && !item.isCheck
-		);
+		const length = getNotifications.filter(item => item.verb === 'addFriend' && !item.isCheck);
 		return length.length;
 	};
 

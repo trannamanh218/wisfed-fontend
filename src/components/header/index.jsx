@@ -32,7 +32,7 @@ const Header = () => {
 	const [activeLink, setActiveLink] = useState('/');
 	const location = useLocation();
 	const { pathname } = location;
-	const { userInfo } = useSelector(state => state.auth);
+	const { userInfo, userInfoJwt } = useSelector(state => state.auth);
 	const dispatch = useDispatch();
 	const [modalNoti, setModalNotti] = useState(false);
 	const buttonModal = useRef(null);
@@ -152,9 +152,9 @@ const Header = () => {
 	};
 
 	useEffect(() => {
-		if (!_.isEmpty(userInfo)) {
+		if (!_.isEmpty(userInfoJwt)) {
 			const client = stream.connect('p77uwpux9zwu', null, '1169912');
-			const notificationFeed = client.feed('notification', userInfo.id, userInfo.userToken);
+			const notificationFeed = client.feed('notification', userInfoJwt.id, userInfoJwt.userToken);
 			const callback = data => {
 				setRealTime(true);
 				dispatch(depenRenderNotificaion(true));
@@ -175,7 +175,7 @@ const Header = () => {
 			};
 			notificationFeed.subscribe(callback).then(successCallback, failCallback);
 		}
-	}, [userInfo]);
+	}, [userInfoJwt]);
 
 	const updateNewNotificaionFalse = params => {
 		if (userInfo.isNewNotification) {

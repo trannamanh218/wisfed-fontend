@@ -54,20 +54,20 @@ const NotificationStatus = ({ item, setGetNotifications, getNotifications }) => 
 		const params = {
 			notificationId: items.id,
 		};
-		if (items.verb !== 'addfriend') {
-			setIsRead(true);
-			if (
-				items.verb === 'likeMiniPost' ||
-				items.verb === 'commentMiniPost' ||
-				items.verb === 'likeGroupPost' ||
-				items.verb === 'commentGroupPost'
-			) {
-				navigate(
-					`/detail-feed/${items.verb === 'commentMiniPost' ? 'MiniPost' : 'GroupPost'}/${
-						items.originId.minipostId || items.originId.groupPostId
-					}`
-				);
-			}
+		setIsRead(true);
+		if (
+			items.verb === 'likeMiniPost' ||
+			items.verb === 'commentMiniPost' ||
+			items.verb === 'likeGroupPost' ||
+			items.verb === 'commentGroupPost'
+		) {
+			navigate(
+				`/detail-feed/${items.verb === 'commentMiniPost' ? 'MiniPost' : 'GroupPost'}/${
+					items.originId.minipostId || items.originId.groupPostId
+				}`
+			);
+		} else if (items.verb === 'follow' || items.verb === 'addFriend') {
+			navigate(`/profile/${items.createdBy.id}`);
 		}
 		dispatch(readNotification(params)).unwrap();
 	};

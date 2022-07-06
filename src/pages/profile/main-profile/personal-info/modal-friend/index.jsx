@@ -97,7 +97,7 @@ const ModalFriend = ({ setModalFriend, modalFriend, userInfoDetail }) => {
 		};
 		try {
 			const friendList = await dispatch(getFriendList(param)).unwrap();
-			const newArrFriend = friendList.rows.map(item => {
+			const newArrFriend = friendList.map(item => {
 				return { ...item, checkFolow: false, checkUnfollow: false, checkUnfriend: true };
 			});
 			setGetMyListFriend(newArrFriend);
@@ -127,19 +127,19 @@ const ModalFriend = ({ setModalFriend, modalFriend, userInfoDetail }) => {
 								<div key={item.id} className='author-card'>
 									<div className='author-card__left'>
 										<UserAvatar
-											source={item.userTwo.avatarImage}
+											source={item.avatarImage}
 											className='author-card__avatar'
 											size={'md'}
 										/>
 										<div className='author-card__info'>
 											<h5>
-												{item.userTwo.firstName} {item.userTwo.lastName}
+												{item.firstName} {item.lastName}
 											</h5>
 											<p className='author-card__subtitle'>3K follow, 300 bạn bè</p>
 										</div>
 									</div>
 									<div className='author-card__right'>
-										{item.userTwo.id !== userInfo.id && (
+										{item.id !== userInfo.id && (
 											<div className='connect-buttons row'>
 												{renderButtonFollows(item)}
 												<Button

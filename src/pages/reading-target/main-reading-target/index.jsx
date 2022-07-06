@@ -16,8 +16,6 @@ import { useFetchTargetReading } from 'api/readingTarget.hooks';
 import GoalsNotSetYet from './goals-not-set';
 import Circle from 'shared/loading/circle';
 import { STATUS_LOADING } from 'constants';
-import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 const MainReadingTarget = () => {
 	const { userId } = useParams();
@@ -27,7 +25,6 @@ const MainReadingTarget = () => {
 	const [deleteModal, setDeleteModal] = useState(false);
 	const [inputSearch, setInputSearch] = useState('');
 	const [newArrSearch, setNewArrSearch] = useState([]);
-	const navigate = useNavigate();
 	const { booksReadYear, year, status } = useFetchTargetReading(userId, modalOpen, deleteModal);
 	const renderLinearProgressBar = item => {
 		let percent = 0;
@@ -47,12 +44,6 @@ const MainReadingTarget = () => {
 		setDeleteModal(true);
 		setModalOpen(true);
 	};
-
-	useEffect(() => {
-		if (booksReadYear.length < 1 && status === 'SUCCESS') {
-			navigate('/');
-		}
-	}, [status]);
 
 	const handleSearch = e => {
 		setInputSearch(e.target.value);

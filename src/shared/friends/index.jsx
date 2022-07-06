@@ -271,8 +271,9 @@ const FriendsItem = ({ list, keyTabs, getListFollower, getMyListFriendReq, getLi
 				<Link to={`/profile/${list.userOne.id}`}>
 					<img
 						className='myfriends__layout__img'
-						src={list.userOne.avatarImage ? defaultAvatar : defaultAvatar}
+						src={list.userOne.avatarImage ? list.userOne.avatarImage : defaultAvatar}
 						alt=''
+						onError={e => e.target.setAttribute('src', `${defaultAvatar}`)}
 					/>
 					<div className='myfriends__star'>
 						<div className='myfriends__star__name'>
@@ -302,8 +303,9 @@ const FriendsItem = ({ list, keyTabs, getListFollower, getMyListFriendReq, getLi
 				<Link to={`/profile/${list.id}`}>
 					<img
 						className='myfriends__layout__img'
-						src={list.avatarImage ? defaultAvatar : defaultAvatar}
+						src={list.avatarImage ? list.avatarImage : defaultAvatar}
 						alt=''
+						onError={e => e.target.setAttribute('src', `${defaultAvatar}`)}
 					/>
 					<div className='myfriends__star'>
 						<div className='myfriends__star__name'>
