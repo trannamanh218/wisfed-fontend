@@ -239,7 +239,7 @@
 		width: 18px;
 		height: 18px;
 	}
-	> input {
+	> Input {
 		width: 95%;
 		background-color: unset;
 		margin-left: 16px;
@@ -249,6 +249,10 @@
 			color: $ash-placeholder;
 		}
 	}
+}
+.creat-quotes-modal__body__option-item__search-container {
+	height: 57px;
+	margin-bottom: 24px;
 }
 
 .creat-quotes-modal__body__option-item-added {
@@ -359,5 +363,17 @@
 			color: white;
 			cursor: pointer !important;
 		}
+	}
+}
+
+.input__authors {
+	display: flex;
+	span {
+		width: max-content;
+		color: #b38c64;
+		background-color: #f5e7d8;
+		padding: 0.75rem 1.25rem;
+		border-radius: 10px;
+		font-size: 0.75rem;
 	}
 }

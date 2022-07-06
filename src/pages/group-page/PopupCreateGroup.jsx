@@ -32,11 +32,6 @@ const PopupCreateGroup = ({ handleClose, showRef }) => {
 	const [isShowBtn, setIsShowBtn] = useState(false);
 	const [kindOfGroup, setKindOfGroup] = useState('');
 
-	// const listTransparent = [
-	// 	{ value: 'public', title: 'Công khai', img: <CheckIcon /> },
-	// 	{ value: 'private', title: 'Riêng tư', img: <CheckIcon /> },
-	// ];
-
 	const getDataAuthor = async () => {
 		const params = {
 			filter: JSON.stringify([
@@ -74,6 +69,7 @@ const PopupCreateGroup = ({ handleClose, showRef }) => {
 
 		if (dataRef.current !== '' && dataCheck.length < 1) {
 			const newList = [...listHashtags, dataRef.current];
+			console.log(newList);
 			setListHashtags(newList);
 		}
 	}, [dataRef.current]);
@@ -200,15 +196,7 @@ const PopupCreateGroup = ({ handleClose, showRef }) => {
 					<label>Tên nhóm</label>
 					<Input isBorder={false} placeholder='Tên nhóm' handleChange={onInputChange(setInputNameGroup)} />
 				</div>
-				{/* <div className='form-field-select__transparent'>
-					<label>Quyền riêng tư</label>
-					<SelectBox
-						name='transparent'
-						list={listTransparent}
-						defaultOption={tranparentRef.current}
-						onChangeOption={onchangeTransparent}
-					/>
-				</div> */}
+
 				<div className='form-field-select__kind-of-group'>
 					<label>Kiểu nội dung</label>
 					<SelectBox
