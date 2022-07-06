@@ -19,7 +19,7 @@ import { Link } from 'react-router-dom';
 
 const FriendsItem = ({ list, keyTabs, getListFollower, getMyListFriendReq }) => {
 	const dispatch = useDispatch();
-	const suggestions = location.pathname === '/friends/suggestions';
+	// const suggestions = location.pathname === '/friends/suggestions';
 	const invitation = location.pathname === '/friends/invitation';
 	const following = location.pathname === '/friends/following';
 	const follower = location.pathname === '/friends/follower';
@@ -40,10 +40,10 @@ const FriendsItem = ({ list, keyTabs, getListFollower, getMyListFriendReq }) => 
 		try {
 			if (getListFollower) {
 				dispatch(unFriendRequest(list.userOne.id)).unwrap();
-				dispatch(changeToggleFollows(list.userTwo.id));
+				dispatch(changeToggleFollows(list.id));
 			} else {
-				dispatch(unFriendRequest(list.userTwo.id)).unwrap();
-				dispatch(changeToggleFollows(list.userTwo.id));
+				dispatch(unFriendRequest(list.id)).unwrap();
+				dispatch(changeToggleFollows(list.id));
 			}
 			setUnFriend(false);
 			setToggleAddFriend(false);
@@ -58,8 +58,8 @@ const FriendsItem = ({ list, keyTabs, getListFollower, getMyListFriendReq }) => 
 				dispatch(unFollower(list.userOne.id)).unwrap();
 				dispatch(changeToggleFollows(list.userOne.id));
 			} else {
-				dispatch(unFollower(list.userTwo.id)).unwrap();
-				dispatch(changeToggleFollows(list.userTwo.id));
+				dispatch(unFollower(list.id)).unwrap();
+				dispatch(changeToggleFollows(list.id));
 			}
 			setToggleAddFollow(true);
 			setToggleUnFollow(false);
@@ -78,10 +78,10 @@ const FriendsItem = ({ list, keyTabs, getListFollower, getMyListFriendReq }) => 
 				dispatch(changeToggleFollows(list.userOne.id));
 			} else {
 				const param = {
-					data: { userId: list.userTwo.id },
+					data: { userId: list.id },
 				};
 				dispatch(addFollower(param)).unwrap();
-				dispatch(changeToggleFollows(list.userTwo.id));
+				dispatch(changeToggleFollows(list.id));
 			}
 			setToggleAddFollow(false);
 			setToggleUnFollow(true);
@@ -97,13 +97,13 @@ const FriendsItem = ({ list, keyTabs, getListFollower, getMyListFriendReq }) => 
 					userId: list.userOne.id,
 				};
 				dispatch(makeFriendRequest(param)).unwrap();
-				dispatch(changeToggleFollows(list.userTwo.id));
+				dispatch(changeToggleFollows(list.id));
 			} else {
 				const param = {
-					userId: list.userTwo.id,
+					userId: list.id,
 				};
 				dispatch(makeFriendRequest(param)).unwrap();
-				dispatch(changeToggleFollows(list.userTwo.id));
+				dispatch(changeToggleFollows(list.id));
 			}
 			setTogglePendingFriend(false);
 		} catch (err) {
@@ -216,22 +216,22 @@ const FriendsItem = ({ list, keyTabs, getListFollower, getMyListFriendReq }) => 
 	const renderDisplay = () => {
 		return (
 			<div className='myfriends__layout'>
-				<Link to={`/profile/${list.userTwo.id}`}>
+				<Link to={`/profile/${list.id}`}>
 					<img
 						className='myfriends__layout__img'
-						src={list.userTwo.avatarImage ? list.userTwo.avatarImage : defaultAvatar}
+						src={list.avatarImage ? list.avatarImage : defaultAvatar}
 						alt=''
 						onError={e => e.target.setAttribute('src', `${defaultAvatar}`)}
 					/>
 					<div className='myfriends__star'>
 						<div className='myfriends__star__name'>
 							{' '}
-							{list.userTwo.fullName ? (
-								list.userTwo.fullName
+							{list.fullName ? (
+								list.fullName
 							) : (
 								<>
-									<span>{list.userTwo.firstName}</span>&nbsp;
-									<span>{list.userTwo.lastName}</span>
+									<span>{list.firstName}</span>&nbsp;
+									<span>{list.lastName}</span>
 								</>
 							)}
 						</div>

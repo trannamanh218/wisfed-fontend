@@ -51,7 +51,9 @@ const PostQuotes = ({ postsData }) => {
 						<div className='quote-card__author__detail'>
 							<p className='quote-card__author__detail__text'>Quotes này tạo bởi</p>
 							<p className='quote-card__author__detail__name'>
-								{postsData?.user?.fullName || postsData.createdBy?.fullName}
+								{postsData.createdBy?.fullName ||
+									postsData?.user?.fullName ||
+									postsData?.user?.firstName + ' ' + postsData?.user?.lastName}
 							</p>
 						</div>
 					</div>

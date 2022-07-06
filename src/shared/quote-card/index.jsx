@@ -28,7 +28,9 @@ const QuoteCard = ({ data, likeUnlikeQuoteFnc, isDetail = false }) => {
 				</div>
 				<div className='quote-card__author__detail'>
 					<p className='quote-card__author__detail__text'>Quotes này tạo bởi</p>
-					<p className='quote-card__author__detail__name'>{data?.user?.fullName}</p>
+					<p className='quote-card__author__detail__name'>
+						{data?.user?.fullName || data?.user?.firstName + ' ' + data?.user?.lastName}
+					</p>
 				</div>
 			</div>
 			{isDetail && (

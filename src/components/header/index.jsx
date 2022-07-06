@@ -7,10 +7,13 @@ import {
 	CategoryIcon,
 	GroupIcon,
 	HomeIcon,
-	IconGroup,
 	LogOutIcon,
 	ProfileIcon,
 	ArrowDownIcon,
+	GroupFillIcon,
+	FriendsFillIcon,
+	FriendsIcon,
+	CategoryFillIcon,
 } from 'components/svg';
 import SearchIcon from 'assets/icons/search.svg';
 import classNames from 'classnames';
@@ -154,14 +157,6 @@ const Header = () => {
 				</li>
 				<li
 					onClick={handleUserLogin}
-					className={classNames('header__nav__item', { active: activeLink === '/category' })}
-				>
-					<Link className='header__nav__link' to={userLogin && '/category'}>
-						<CategoryIcon className='header__nav__icon' />
-					</Link>
-				</li>
-				<li
-					onClick={handleUserLogin}
 					className={classNames('header__nav__item', { active: activeLink === `/shelves/${userInfo.id}` })}
 				>
 					<Link className='header__nav__link' to={userLogin && `/shelves/${userInfo.id}`}>
@@ -170,7 +165,16 @@ const Header = () => {
 				</li>
 				<li className={classNames('header__nav__item', { active: activeLink === '/group' })}>
 					<Link className='header__nav__link' to='/group'>
-						<IconGroup className='header__nav__icon' />
+						{activeLink === '/group' ? <GroupFillIcon /> : <GroupIcon />}
+					</Link>
+				</li>
+				<li
+					onClick={handleUserLogin}
+					className={classNames('header__nav__item', { active: activeLink === '/category' })}
+				>
+					<Link className='header__nav__link' to={userLogin && '/category'}>
+						{/* <CategoryIcon className='header__nav__icon' /> */}
+						{activeLink === '/category' ? <CategoryFillIcon /> : <CategoryIcon />}
 					</Link>
 				</li>
 				<li
@@ -178,7 +182,7 @@ const Header = () => {
 					className={classNames('header__nav__item', { active: activeLink === '/friends' })}
 				>
 					<Link className='header__nav__link' to={userLogin && '/friends'}>
-						<GroupIcon className='header__nav__icon' />
+						{activeLink === '/friends' ? <FriendsFillIcon /> : <FriendsIcon />}
 					</Link>
 				</li>
 				<div className='notify-icon'>
