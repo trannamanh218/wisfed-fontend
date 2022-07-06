@@ -36,7 +36,9 @@ const NotificationModal = ({ setModalNotti, buttonModal }) => {
 	};
 
 	useEffect(() => {
-		document.addEventListener('click', handleClickOutside, true);
+		if (notifymodal.current) {
+			document.addEventListener('click', handleClickOutside, true);
+		}
 		return () => {
 			document.removeEventListener('click', handleClickOutside, true);
 		};

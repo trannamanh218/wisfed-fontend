@@ -81,10 +81,10 @@ const Header = () => {
 
 		if (userOptions.current) {
 			document.addEventListener('click', closeUserOptions);
-			return () => {
-				document.removeEventListener('click', closeUserOptions);
-			};
 		}
+		return () => {
+			document.removeEventListener('click', closeUserOptions);
+		};
 	}, []);
 
 	const closeUserOptions = e => {
