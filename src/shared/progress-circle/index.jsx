@@ -71,6 +71,6 @@ const ProgressBarCircle = ({ booksReadYear }) => {
 };
 
 ProgressBarCircle.propTypes = {
-	booksReadYear: PropTypes.string,
+	booksReadYear: PropTypes.array,
 };
 export default ProgressBarCircle;

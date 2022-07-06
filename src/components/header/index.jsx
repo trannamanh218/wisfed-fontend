@@ -144,6 +144,7 @@ const Header = () => {
 						onClick={() => setIsShow(true)}
 						disabled={isShow}
 						value={getSlugResult || ''}
+						onChange={() => {}}
 					/>
 				</div>
 				{isShow ? <SearchAllModal showRef={showRef} setIsShow={setIsShow} /> : ''}
