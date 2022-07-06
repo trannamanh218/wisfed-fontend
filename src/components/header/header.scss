@@ -166,11 +166,11 @@
 		position: absolute;
 		top: 0;
 		right: 0;
-		transform: translateY(-50%);
+		transform: translateY(-15%) translateX(20%);
 		content: '';
 		display: inline-block;
-		width: 16px;
-		height: 16px;
+		width: 18px;
+		height: 18px;
 		border-radius: 50%;
 		background-color: $primary;
 	}
@@ -180,10 +180,10 @@
 			position: absolute;
 			top: 0;
 			right: -1px;
-			transform: translateY(-50%);
+			transform: translateY(-15%) translateX(20%);
 			content: '';
 			display: inline-block;
-			width: 18px;
+			width: 19px;
 			height: 19px;
 			border-radius: 50%;
 			background-color: #fff;
@@ -194,11 +194,11 @@
 			position: absolute;
 			top: 0;
 			right: 0;
-			transform: translateY(-50%);
+			transform: translateY(-10%) translateX(21%);
 			content: '';
 			display: inline-block;
-			width: 16px;
-			height: 16px;
+			width: 17px;
+			height: 17px;
 			border-radius: 50%;
 			background-color: $primary;
 			z-index: 1;
