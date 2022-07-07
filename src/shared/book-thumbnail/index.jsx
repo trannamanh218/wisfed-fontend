@@ -13,7 +13,7 @@ const BookThumbnail = props => {
 			className={classNames(`book-thumbnail book-thumbnail-${size}`, { [`${className}`]: className })}
 			onClick={() => {
 				if (!_.isEmpty(data)) {
-					navigate(`/book/detail/${data.id}`);
+					// navigate(`/book/detail/${data.id}`);
 				}
 			}}
 			title={name}

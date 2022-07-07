@@ -18,6 +18,9 @@ const QuoteCard = ({ data, likeUnlikeQuoteFnc, isDetail = false }) => {
 		const id = data.createdBy || data.user.id;
 		navigate(`/profile/${id}`);
 	};
+	const onClickRedirectToBook = data => {
+		navigate(`/book/detail/${data.bookId}`);
+	};
 
 	return (
 		<div
@@ -26,7 +29,13 @@ const QuoteCard = ({ data, likeUnlikeQuoteFnc, isDetail = false }) => {
 		>
 			<div className='quote-card__quote-content'>
 				<p>{`"${data.quote}"`}</p>
-				<p style={{ textDecoration: 'underline' }}>{renderAuthorAndbooksName()}</p>
+				<p
+					onMouseEnter={e => (e.target.style.cursor = 'pointer')}
+					onClick={() => onClickRedirectToBook(data)}
+					style={{ textDecoration: 'underline' }}
+				>
+					{renderAuthorAndbooksName()}
+				</p>
 			</div>
 
 			<div className='quote-card__author'>

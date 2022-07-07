@@ -31,6 +31,8 @@ import { toast } from 'react-toastify';
 import { updateTargetReading } from 'reducers/redux-utils/chart';
 import defaultAvatar from 'assets/images/avatar.jpeg';
 
+import { increment } from 'reducers/redux-utils/reloadPostHomePage';
+
 const Header = () => {
 	const { isShowModal } = useSelector(state => state.search);
 	const { ref: showRef, isVisible: isShow, setIsVisible: setIsShow } = useVisible(false);
@@ -130,10 +132,14 @@ const Header = () => {
 		toast.success('Đăng xuất thành công');
 	};
 
+	const onClickReloadPosts = () => {
+		dispatch(increment());
+	};
+
 	return (
 		<div className='header'>
 			<div className='header__left'>
-				<Link to='/'>
+				<Link to='/' onClick={onClickReloadPosts}>
 					<LogoIcon className='header__logo' />
 				</Link>
 				<div className='header__search'>
@@ -152,7 +158,7 @@ const Header = () => {
 
 			<ul className='header__nav'>
 				<li className={classNames('header__nav__item', { active: activeLink === '/' })}>
-					<Link className='header__nav__link' to='/'>
+					<Link className='header__nav__link' to='/' onClick={onClickReloadPosts}>
 						<HomeIcon className='header__nav__icon' />
 					</Link>
 				</li>

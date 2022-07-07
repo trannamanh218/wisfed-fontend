@@ -38,6 +38,9 @@ const PostQuotes = ({ postsData }) => {
 		const id = data.createdBy || data.user.id;
 		navigate(`/profile/${id}`);
 	};
+	const onClickRedirectToBook = data => {
+		navigate(`/book/detail/${data.bookId}`);
+	};
 
 	return (
 		!_.isEmpty(postsData) && (
@@ -45,7 +48,13 @@ const PostQuotes = ({ postsData }) => {
 				<div className='quote-card' style={generateBackgroundColorQuotes()}>
 					<div className='quote-card__quote-content'>
 						<p>{`"${postsData.quote || postsData.sharePost?.quote}"`}</p>
-						<p style={{ textDecoration: 'underline' }}>{renderAuthorAndbooksName()}</p>
+						<p
+							onMouseEnter={e => (e.target.style.cursor = 'pointer')}
+							onClick={() => onClickRedirectToBook(postsData)}
+							style={{ textDecoration: 'underline' }}
+						>
+							{renderAuthorAndbooksName()}
+						</p>
 					</div>
 
 					<div className='quote-card__author'>

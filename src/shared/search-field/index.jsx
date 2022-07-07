@@ -34,6 +34,7 @@ SearchField.propTypes = {
 	className: PropTypes.string,
 	value: PropTypes.string,
 	onKeyDown: PropTypes.func,
+	onChange: PropTypes.func,
 };
 
 export default SearchField;
