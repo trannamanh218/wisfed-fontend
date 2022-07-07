@@ -1,11 +1,8 @@
 import './authors-search.scss';
 import AuthorCard from 'shared/author-card';
-import Button from 'shared/button';
 import PropTypes from 'prop-types';
-import LoadingIndicator from 'shared/loading-indicator';
 import { getFilterSearch } from 'reducers/redux-utils/search';
 import { NotificationError } from 'helpers/Error';
-
 import { useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import InfiniteScroll from 'react-infinite-scroll-component';
@@ -65,12 +62,7 @@ const AuthorSearch = ({ value, setIsFetching, searchResultInput, activeKeyDefaul
 	return (
 		<div className='authors__search__container'>
 			{listArrayAuthors?.length > 0 && activeKeyDefault === 'authors' ? (
-				<InfiniteScroll
-					next={handleGetAuthorsSearch}
-					dataLength={listArrayAuthors.length}
-					hasMore={hasMore}
-					// loader={<LoadingIndicator />}
-				>
+				<InfiniteScroll next={handleGetAuthorsSearch} dataLength={listArrayAuthors.length} hasMore={hasMore}>
 					<div className='myfriends__layout__container'>
 						{listArrayAuthors.map(item => (
 							<AuthorCard key={item.id} item={item} size={'lg'} checkAuthors={true} />
