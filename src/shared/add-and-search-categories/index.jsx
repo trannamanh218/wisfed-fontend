@@ -33,10 +33,11 @@ function AddAndSearchCategories({
 		if (categoryInputContainer.current) {
 			categoryInputContainer.current.addEventListener('click', focusCategoryInput);
 			return () => {
-				categoryInputContainer?.current.removeEventListener('click', focusCategoryInput);
+				categoryInputContainer?.current?.removeEventListener('click', focusCategoryInput);
 			};
 		}
 	}, []);
+	console.log(categorySearchedList);
 
 	return (
 		<div className='add-and-search-categories'>
