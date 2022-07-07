@@ -59,7 +59,13 @@
 .post__custom {
 	padding: 0;
 }
-
+.post__custom__main__container {
+	background-color: white !important;
+	margin-bottom: 0 !important;
+	.grid-image {
+		margin: 0;
+	}
+}
 .post__user-status {
 	display: flex;
 	align-items: center;

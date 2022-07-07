@@ -1,5 +1,12 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { postAPI, postDetailAPI, previewLink, getPostsByUserAPI, shareInternalAPI } from 'constants/apiURL';
+import {
+	shareApiRanks,
+	postAPI,
+	postDetailAPI,
+	previewLink,
+	getPostsByUserAPI,
+	shareInternalAPI,
+} from 'constants/apiURL';
 import Request from 'helpers/Request';
 
 export const getPostsByUser = createAsyncThunk('post/getPostListByUser', async (data, { rejectWithValue }) => {
@@ -27,6 +34,17 @@ export const getSharePostInternal = createAsyncThunk('post/getPostDetail', async
 	const { id, type, ...params } = query;
 	try {
 		const response = await Request.makePost(shareInternalAPI(id, type), params);
+		return response.data;
+	} catch (err) {
+		const error = JSON.parse(err.response);
+		return rejectWithValue(error);
+	}
+});
+
+export const getSharePostRanks = createAsyncThunk('post/getPostRanks', async (query, { rejectWithValue }) => {
+	const { id, ...params } = query;
+	try {
+		const response = await Request.makePost(shareApiRanks(id), params);
 		return response.data;
 	} catch (err) {
 		const error = JSON.parse(err.response);
@@ -64,6 +82,7 @@ const postSlice = createSlice({
 		resetTaggedData: false,
 		isShare: false,
 		isSharePosts: false,
+		isSharePostsAll: '',
 	},
 	reducers: {
 		resetTaggedDataFunc: (state, action) => {
@@ -77,6 +96,9 @@ const postSlice = createSlice({
 		},
 		sharePosts: (state, action) => {
 			state.isSharePosts = action.payload;
+		},
+		sharePostsAll: (state, action) => {
+			state.isSharePostsAll = action.payload;
 		},
 	},
 	extraReducers: {
@@ -94,6 +116,6 @@ const postSlice = createSlice({
 		},
 	},
 });
-export const { resetTaggedDataFunc, saveDataShare, checkShare, sharePosts } = postSlice.actions;
+export const { resetTaggedDataFunc, saveDataShare, checkShare, sharePosts, sharePostsAll } = postSlice.actions;
 const post = postSlice.reducer;
 export default post;

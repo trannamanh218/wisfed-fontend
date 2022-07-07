@@ -35,9 +35,7 @@ const NewFeed = () => {
 
 	useEffect(async () => {
 		callApiStart.current = 10;
-		if (!_.isEmpty(userInfo)) {
-			getPostListFirstTime();
-		}
+		getPostListFirstTime();
 	}, [isNewPost, userInfo]);
 
 	const getPostListFirstTime = async () => {
@@ -48,6 +46,7 @@ const NewFeed = () => {
 				sort: JSON.stringify([{ property: 'createdAt', direction: 'DESC' }]),
 			};
 			const posts = await dispatch(getActivityList(params)).unwrap();
+
 			setPostList(posts);
 		} catch (err) {
 			NotificationError(err);

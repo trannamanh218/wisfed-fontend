@@ -12,6 +12,8 @@ import { getTopUser, getTopUserAuth } from 'reducers/redux-utils/ranks';
 import dropdownIcon from 'assets/images/dropdown.png';
 import ModalCheckLogin from 'shared/modal-check-login';
 import Storage from 'helpers/Storage';
+import { saveDataShare, sharePostsAll } from 'reducers/redux-utils/post';
+import { useNavigate } from 'react-router-dom';
 
 const TopUser = ({ rows, listYear }) => {
 	const kindOfGroupRef = useRef({ value: 'default', title: 'Chủ đề' });
@@ -25,6 +27,7 @@ const TopUser = ({ rows, listYear }) => {
 	const [checkSelectBox, setCheckSelectBox] = useState(false);
 	const [modalShow, setModalShow] = useState(false);
 	const dispatch = useDispatch();
+	const navigate = useNavigate();
 	const listDataSortType = [
 		{ value: 'topRead', title: 'Đọc nhiều nhất' },
 		{ value: 'topReview', title: 'Review nhiều nhất' },
@@ -81,9 +84,19 @@ const TopUser = ({ rows, listYear }) => {
 		setValueDataSort(data.value);
 	};
 
-	const handleShare = () => {
+	const handleShare = data => {
+		const newData = {
+			time: valueDate,
+			categoryId: kindOfGroupRef.current.id || null,
+			categoryName: kindOfGroupRef.current.name || 'Văn Học',
+			type: 'topUser',
+			userType: valueDataSort,
+			...data,
+		};
 		if (Storage.getAccessToken()) {
-			console.log('ok');
+			dispatch(saveDataShare(newData));
+			dispatch(sharePostsAll('shareTopUser'));
+			navigate('/');
 		} else {
 			setModalShow(true);
 		}
@@ -138,7 +151,7 @@ const TopUser = ({ rows, listYear }) => {
 						<div className='topbooks__container__main__layout'>
 							<AuthorCard size='lg' item={item} setModalShow={setModalShow} />
 						</div>
-						<div onClick={handleShare} className='author-book__share'>
+						<div onClick={() => handleShare(item)} className='author-book__share'>
 							<ShareRanks />
 						</div>
 					</div>

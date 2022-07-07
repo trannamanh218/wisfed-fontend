@@ -141,8 +141,8 @@ const Header = () => {
 	};
 
 	const handleLogout = () => {
-		localStorage.removeItem('accessToken');
-		localStorage.removeItem('refreshToken');
+		Storage.removeItem('accessToken');
+		Storage.removeItem('refreshToken');
 		dispatch(deleteUserInfo());
 		dispatch(updateTargetReading([]));
 		navigate('/login');

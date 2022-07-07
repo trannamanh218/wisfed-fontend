@@ -2,8 +2,22 @@ import QuoteActionBar from 'shared/quote-action-bar';
 import UserAvatar from 'shared/user-avatar';
 import './top-quotes.scss';
 import PropTypes from 'prop-types';
+import { useEffect } from 'react';
+import { useState } from 'react';
 
-const TopQuotesComponent = ({ item }) => {
+const TopQuotesComponent = ({ item, valueDate, categoryItem }) => {
+	const [newData, setNewData] = useState({});
+
+	useEffect(() => {
+		const data = {
+			time: valueDate,
+			categoryName: categoryItem.name || '',
+			categoryId: categoryItem.id || '',
+			...item,
+		};
+		setNewData(data);
+	}, []);
+
 	return (
 		<div className='top__quotes__container'>
 			<div className='top__quotes__description'>{item.quote}</div>
@@ -18,12 +32,14 @@ const TopQuotesComponent = ({ item }) => {
 						<p className='quote-card__author__detail__name'>{item.user.fullName}</p>
 					</div>
 				</div>
-				<QuoteActionBar data={item} />
+				<QuoteActionBar data={newData} />
 			</div>
 		</div>
 	);
 };
 TopQuotesComponent.propTypes = {
 	item: PropTypes.array,
+	valueDate: PropTypes.string,
+	categoryItem: PropTypes.object,
 };
 export default TopQuotesComponent;

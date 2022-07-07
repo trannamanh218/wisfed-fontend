@@ -147,7 +147,8 @@ export const getSearchAPI = `/api/v1/searchs`;
 
 //share
 export const shareInternalAPI = (id, type) => `/api/v1/getstream/share/${id}?type=${type}`;
-
+// share BXH
+export const shareApiRanks = id => `/api/v1/getstream/shareTop/${id}`;
 //authors
 export const randomAuthorAPI = '/api/v1/users/randomAuthor';
 

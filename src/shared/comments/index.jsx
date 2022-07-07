@@ -10,6 +10,7 @@ import { likeQuoteComment } from 'reducers/redux-utils/quote';
 import { NotificationError } from 'helpers/Error';
 import { likeAndUnlikeCommentPost } from 'reducers/redux-utils/activity';
 import { POST_TYPE, QUOTE_TYPE, REVIEW_TYPE } from 'constants';
+import { Link } from 'react-router-dom';
 
 const Comment = ({ data, handleReply, postData, commentLv1Id, type }) => {
 	const [isLiked, setIsLiked] = useState(false);
@@ -59,24 +60,28 @@ const Comment = ({ data, handleReply, postData, commentLv1Id, type }) => {
 			/>
 			<div className='comment__wrapper'>
 				<div className='comment__container'>
-					<div className='comment__header'>
-						<span className='comment__author'>
-							{data['user.name'] ||
-								data['user.fullName'] ||
-								data['user.lastName '] ||
-								data['user.firstName'] ||
-								data.user.fullName ||
-								data.user.fullName ||
-								data.user.lastName ||
-								data.user.firstName ||
-								'Không xác định'}
-						</span>
-						{isAuthor && (
-							<Badge className='comment__badge' bg='primary-light'>
-								Tác giả
-							</Badge>
-						)}
-					</div>
+					<Link to={`/profile/${postData.usersComments?.id || postData.commentQuotes?.id}`}>
+						{' '}
+						<div className='comment__header'>
+							<Link to={`/profile/${data.user.id}`}>
+								{' '}
+								<span className='comment__author'>
+									{data.user.name ||
+										data.user.fullName ||
+										data.user.lastName ||
+										data.user.firstName ||
+										'Không xác định'}
+								</span>
+							</Link>
+
+							{isAuthor && (
+								<Badge className='comment__badge' bg='primary-light'>
+									Tác giả
+								</Badge>
+							)}
+						</div>
+					</Link>
+
 					<p className='comment__content'>{data.content}</p>
 				</div>
 

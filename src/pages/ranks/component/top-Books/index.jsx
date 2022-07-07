@@ -86,6 +86,8 @@ const TopBooks = ({ rows, listYear }) => {
 								checkStar={CHECK_STAR}
 								checkshare={CHECK_SHARE}
 								setModalShow={setModalShow}
+								valueDate={valueDate}
+								topBooksId={topBooksId}
 							/>
 						</div>
 					</div>

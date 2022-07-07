@@ -16,15 +16,16 @@ import './post.scss';
 import PreviewLink from 'shared/preview-link/PreviewLink';
 import { NotificationError } from 'helpers/Error';
 import ReactRating from 'shared/react-rating';
-import { useParams, useLocation } from 'react-router-dom';
+import { useParams, useLocation, Link } from 'react-router-dom';
 import { createCommentReview } from 'reducers/redux-utils/book';
 import Comment from 'shared/comments';
 import PostQuotes from 'shared/post-quotes';
 import PostsShare from 'shared/posts-Share';
 import Play from 'assets/images/play.png';
-import { Link } from 'react-router-dom';
 import { likeAndUnlikeReview } from 'reducers/redux-utils/book';
 import { POST_TYPE, REVIEW_TYPE } from 'constants';
+import { IconRanks } from 'components/svg';
+import AuthorBook from 'shared/author-book';
 
 function Post({ postInformations, className, showModalCreatPost, inReviews = false }) {
 	const [postData, setPostData] = useState({});
@@ -33,7 +34,7 @@ function Post({ postInformations, className, showModalCreatPost, inReviews = fal
 	const [commentLv1IdArray, setCommentLv1IdArray] = useState([]);
 	const [replyingCommentId, setReplyingCommentId] = useState(null);
 	const [clickReply, setClickReply] = useState(false);
-	const { isSharePosts } = useSelector(state => state.post);
+	const { isSharePosts, isShare } = useSelector(state => state.post);
 	const location = useLocation();
 
 	const dispatch = useDispatch();
@@ -197,14 +198,18 @@ function Post({ postInformations, className, showModalCreatPost, inReviews = fal
 					<UserAvatar
 						data-testid='post__user-avatar'
 						className='post__user-status__avatar'
-						source={postData?.createdBy?.avatarImage}
+						source={postData?.createdBy?.avatarImage || postData.user?.avatarImage}
 					/>
 
 					<div className='post__user-status__name-and-post-time-status'>
 						<div className='post__user__container'>
-							<div data-testid='post__user-name' className='post__user-status__name'>
+							<Link
+								to={`/profile/${postData.createdBy?.id || postData.user?.id}`}
+								data-testid='post__user-name'
+								className='post__user-status__name'
+							>
 								{postData?.createdBy?.fullName || postData?.user?.fullName || 'Ẩn danh'}
-							</div>
+							</Link>
 							{(postData.groupInfo || postData.group) && (
 								<img className='post__user-icon' src={Play} alt='' />
 							)}
@@ -261,9 +266,28 @@ function Post({ postInformations, className, showModalCreatPost, inReviews = fal
 		}
 	};
 
+	const handleTime = () => {
+		if (!_.isEmpty(postData.originId)) {
+			switch (postData.originId.by) {
+				case 'week':
+					return 'tuần';
+				case 'month':
+					return 'tháng';
+				case 'year':
+					return 'năm';
+				default:
+					break;
+			}
+		}
+	};
+
 	return (
-		<div className={classNames('post__container', { [`${className}`]: className })}>
-			{renderInfo()}
+		<div
+			className={classNames('post__container', {
+				'post__custom': isSharePosts && postData.verb === 'shareQuote',
+			})}
+		>
+			{postData.verb === 'shareTopQuoteRanking' && isSharePosts ? '' : renderInfo()}
 
 			{!!postData?.mentionsAuthors?.length && (
 				<ul className='tagged'>
@@ -291,13 +315,26 @@ function Post({ postInformations, className, showModalCreatPost, inReviews = fal
 					))}
 				</ul>
 			)}
-
+			{!_.isEmpty(postData.originId) && (
+				<div className='post__title__share__rank'>
+					<span className='number__title__rank'># Top {postData.originId.rank} quotes </span>
+					<span className='title__rank'>
+						{postData.categoryId
+							? `  được like nhiều nhất thuộc ${postData.categoryName} theo ${handleTime()} `
+							: `  được like nhiều nhất theo ${handleTime()} `}
+					</span>
+					<IconRanks />
+				</div>
+			)}
 			{postData.isShare && postData.verb === 'shareQuote' && <PostQuotes postsData={postData} />}
+			{postData.verb === 'shareTopQuoteRanking' && <PostQuotes postsData={postData} />}
+			{postData.verb === 'shareTopBookRanking' && <AuthorBook data={postData} />}
 			{postData.book && (
 				<PostBook
 					data={{ ...postData.book, bookLibrary: postData.bookLibrary, actorCreatedPost: postData.actor }}
 				/>
 			)}
+
 			{postData.verb === 'sharePost' && !_.isEmpty(postData.sharePost) && <PostsShare postData={postData} />}
 			{postData.verb === 'shareGroupPost' && !_.isEmpty(postData.sharePost) && <PostsShare postData={postData} />}
 			{postData?.image?.length > 0 && <GridImage images={postData.image} inPost={true} postId={postData.id} />}
