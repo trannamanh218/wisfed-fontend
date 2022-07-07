@@ -22,7 +22,11 @@ const AuthorBook = props => {
 
 	return (
 		<div className='author-book'>
-			<BookThumbnail source={data?.book?.images || data?.images[0]} data={data} />
+			<BookThumbnail
+				handleClick={() => navigate(`/book/detail/${data.id}`)}
+				source={data?.book?.images || data?.images[0]}
+				data={data}
+			/>
 			<div className='author-book__info'>
 				<div className='author-book__header'>
 					<h4
