@@ -170,7 +170,10 @@ const Header = () => {
 						{activeLink === `/shelves/${userInfo.id}` ? <BookFillIcon /> : <BookIcon />}
 					</Link>
 				</li>
-				<li className={classNames('header__nav__item', { active: activeLink === '/group' })}>
+				<li
+					onClick={handleUserLogin}
+					className={classNames('header__nav__item', { active: activeLink === '/group' })}
+				>
 					<Link className='header__nav__link' to='/group'>
 						{activeLink === '/group' ? <GroupFillIcon /> : <GroupIcon />}
 					</Link>

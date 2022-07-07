@@ -12,6 +12,8 @@
 	transition: transform 0.2s ease-in;
 	transform: translateX(0%);
 	visibility: visible;
+	overflow-y: auto;
+	max-height: 90vh;
 	&.hide {
 		transform: translateX(-100%);
 		visibility: hidden;
