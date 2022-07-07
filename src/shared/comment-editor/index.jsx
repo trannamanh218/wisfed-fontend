@@ -2,8 +2,13 @@ import { useRef } from 'react';
 import UserAvatar from 'shared/user-avatar';
 import PropTypes from 'prop-types';
 import './comment-editor.scss';
+import { useDispatch } from 'react-redux';
+import Storage from 'helpers/Storage';
+import { checkUserLogin } from 'reducers/redux-utils/auth';
 
 const CommentEditor = ({ userInfo, onCreateComment, className, replyId, textareaId }) => {
+	const dispatch = useDispatch();
+
 	const commentArea = useRef(null);
 
 	const onChangeComment = () => {
@@ -12,11 +17,15 @@ const CommentEditor = ({ userInfo, onCreateComment, className, replyId, textarea
 	};
 
 	const handleKeyPress = e => {
-		if (e.which === 13 && !e.shiftKey && commentArea.current.value) {
-			e.preventDefault();
-			onCreateComment(commentArea.current.value, replyId);
-			commentArea.current.value = '';
-			onChangeComment();
+		if (!Storage.getAccessToken()) {
+			dispatch(checkUserLogin(true));
+		} else {
+			if (e.which === 13 && !e.shiftKey && commentArea.current.value) {
+				e.preventDefault();
+				onCreateComment(commentArea.current.value, replyId);
+				commentArea.current.value = '';
+				onChangeComment();
+			}
 		}
 	};
 

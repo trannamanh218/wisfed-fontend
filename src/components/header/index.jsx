@@ -174,7 +174,7 @@ const Header = () => {
 					onClick={handleUserLogin}
 					className={classNames('header__nav__item', { active: activeLink === '/group' })}
 				>
-					<Link className='header__nav__link' to='/group'>
+					<Link className='header__nav__link' to={userLogin && '/group'}>
 						{activeLink === '/group' ? <GroupFillIcon /> : <GroupIcon />}
 					</Link>
 				</li>
