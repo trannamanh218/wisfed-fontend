@@ -142,7 +142,7 @@ const FilterQuotePane = ({
 									type='radio'
 									defaultValue='default'
 									handleChange={handleChange}
-									currentSortValue={sortValue}
+									checked={radioOptions[0].value === sortValue}
 								/>
 								<h6 style={{ marginTop: '24px' }} className='filter-quote-pane__setting__title'>
 									Theo thời gian tạo
@@ -153,7 +153,7 @@ const FilterQuotePane = ({
 									type='radio'
 									defaultValue='default'
 									handleChange={handleChange}
-									currentSortValue={sortValue}
+									checked={radioOptions[1].value === sortValue}
 								/>
 								<FormCheckGroup
 									data={radioOptions[2]}
@@ -161,7 +161,7 @@ const FilterQuotePane = ({
 									type='radio'
 									defaultValue='default'
 									handleChange={handleChange}
-									currentSortValue={sortValue}
+									checked={radioOptions[2].value === sortValue}
 								/>
 							</div>
 							<Button

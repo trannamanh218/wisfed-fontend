@@ -7,7 +7,7 @@ const MainContainer = ({ main, right, sub }) => {
 	const ErrorFallback = () => {
 		return (
 			<div>
-				<p>Máy chú không phản hồi</p>
+				<p>Máy chủ không phản hồi</p>
 			</div>
 		);
 	};

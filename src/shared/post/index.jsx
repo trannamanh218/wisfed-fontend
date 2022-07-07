@@ -26,6 +26,8 @@ import { likeAndUnlikeReview } from 'reducers/redux-utils/book';
 import { POST_TYPE, REVIEW_TYPE } from 'constants';
 import { IconRanks } from 'components/svg';
 import AuthorBook from 'shared/author-book';
+import Storage from 'helpers/Storage';
+import { checkUserLogin } from 'reducers/redux-utils/auth';
 
 function Post({ postInformations, className, showModalCreatPost, inReviews = false }) {
 	const [postData, setPostData] = useState({});
@@ -127,20 +129,24 @@ function Post({ postInformations, className, showModalCreatPost, inReviews = fal
 	};
 
 	const handleLikeAction = async () => {
-		try {
-			if (location.pathname.includes('group')) {
-				await dispatch(updateReactionActivityGroup(postData.id)).unwrap();
-			} else if (inReviews) {
-				await dispatch(likeAndUnlikeReview(postData.id)).unwrap();
-			} else {
-				await dispatch(updateReactionActivity(postData.minipostId || postData.id)).unwrap();
-			}
+		if (!Storage.getAccessToken()) {
+			dispatch(checkUserLogin(true));
+		} else {
+			try {
+				if (location.pathname.includes('group')) {
+					await dispatch(updateReactionActivityGroup(postData.id)).unwrap();
+				} else if (inReviews) {
+					await dispatch(likeAndUnlikeReview(postData.id)).unwrap();
+				} else {
+					await dispatch(updateReactionActivity(postData.minipostId || postData.id)).unwrap();
+				}
 
-			const setLike = !postData.isLike;
-			const numberOfLike = setLike ? postData.like + 1 : postData.like - 1;
-			setPostData(prev => ({ ...prev, isLike: !prev.isLike, like: numberOfLike }));
-		} catch (err) {
-			NotificationError(err);
+				const setLike = !postData.isLike;
+				const numberOfLike = setLike ? postData.like + 1 : postData.like - 1;
+				setPostData(prev => ({ ...prev, isLike: !prev.isLike, like: numberOfLike }));
+			} catch (err) {
+				NotificationError(err);
+			}
 		}
 	};
 
@@ -176,6 +182,7 @@ function Post({ postInformations, className, showModalCreatPost, inReviews = fal
 					{paramInfo[0].users.fullName || paramInfo[0].users.firstName + ' ' + paramInfo[0].users.lastName}
 					{' và '}
 					{paramInfo[1].users.fullName || paramInfo[1].users.firstName + ' ' + paramInfo[1].users.lastName}
+					{'.'}
 				</span>
 			);
 		} else {
@@ -185,7 +192,7 @@ function Post({ postInformations, className, showModalCreatPost, inReviews = fal
 					{paramInfo[0].users.fullName || paramInfo[0].users.firstName + ' ' + paramInfo[0].users.lastName}
 					{' và '}
 					{paramInfo.length - 1}
-					{' người khác'}
+					{' người khác.'}
 				</span>
 			);
 		}

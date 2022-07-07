@@ -11,7 +11,7 @@ import MainContainerLeft from 'components/layout/main-container-left';
 import SearchField from 'shared/search-field';
 import _ from 'lodash';
 import { NotificationError } from 'helpers/Error';
-import Circle from 'shared/loading/circle';
+// import Circle from 'shared/loading/circle';
 import { useVisible } from 'shared/hooks';
 import MainLayoutSearch from './MainLayoutSearch';
 import { Modal } from 'react-bootstrap';
@@ -111,7 +111,7 @@ const LayoutGroup = () => {
 	return (
 		<>
 			<div style={{ position: 'relative' }}>
-				<Circle loading={isFetching} />
+				{/* <Circle loading={isFetching} /> */}
 				{/* {isShow ? (
 					<div>
 						<PopupCreateGroup handleClose={handleClose} showRef={showRef} />

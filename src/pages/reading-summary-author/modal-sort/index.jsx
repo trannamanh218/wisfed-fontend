@@ -103,7 +103,7 @@ const ModalChart = ({ setChangeValue, changeValue, setSortValue, setSortValueKey
 							type='radio'
 							defaultValue='week'
 							handleChange={handleChange}
-							currentSortValue={dataValue}
+							checked={radioOptions[index].value === dataValue}
 						/>
 					))}
 					<h6 style={{ marginTop: '24px' }} className='filter-quote-pane__setting__title'>
@@ -117,7 +117,7 @@ const ModalChart = ({ setChangeValue, changeValue, setSortValue, setSortValueKey
 							type='radio'
 							defaultValue='read'
 							handleChange={handleChangekey}
-							currentSortValue={keyDatavalue}
+							checked={radioOptionsValue[index].value === keyDatavalue}
 						/>
 					))}
 				</div>

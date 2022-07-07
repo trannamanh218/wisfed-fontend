@@ -2,8 +2,8 @@ import { Form } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import './form-check-group.scss';
 
-const FormCheckGroup = ({ type, handleChange, defaultValue, ...rest }) => {
-	const { data, name, currentSortValue } = rest;
+const FormCheckGroup = ({ type, handleChange, defaultValue, checked, ...rest }) => {
+	const { data, name } = rest;
 	const { title } = data;
 	return (
 		<div key={type} className='form-check-wrapper'>
@@ -16,7 +16,7 @@ const FormCheckGroup = ({ type, handleChange, defaultValue, ...rest }) => {
 					value={data.value}
 					onChange={() => handleChange(data.value)}
 					defaultChecked={data.value === defaultValue}
-					checked={data.value === currentSortValue}
+					checked={checked}
 				/>
 				<Form.Check.Label className='form-check-label--custom'>{data.title}</Form.Check.Label>
 			</Form.Check>

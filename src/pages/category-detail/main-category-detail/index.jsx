@@ -419,7 +419,7 @@ const MainCategoryDetail = () => {
 													type='radio'
 													defaultValue='default'
 													handleChange={handleChange}
-													currentSortValue={sortValueTemp}
+													checked={radioOptions[0].value === sortValueTemp}
 												/>
 												<h6
 													style={{ marginTop: '24px' }}
@@ -433,7 +433,7 @@ const MainCategoryDetail = () => {
 													type='radio'
 													defaultValue='default'
 													handleChange={handleChange}
-													currentSortValue={sortValueTemp}
+													checked={radioOptions[1].value === sortValueTemp}
 												/>
 												<FormCheckGroup
 													data={radioOptions[2]}
@@ -441,7 +441,7 @@ const MainCategoryDetail = () => {
 													type='radio'
 													defaultValue='default'
 													handleChange={handleChange}
-													currentSortValue={sortValueTemp}
+													checked={radioOptions[2].value === sortValueTemp}
 												/>
 											</div>
 											<Button

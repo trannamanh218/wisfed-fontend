@@ -3,13 +3,19 @@ import { CommentSvg, Like, LikeFill, Share } from 'components/svg';
 import './post-action-bar.scss';
 import { useDispatch } from 'react-redux';
 import { sharePosts, saveDataShare } from 'reducers/redux-utils/post';
+import Storage from 'helpers/Storage';
+import { checkUserLogin } from 'reducers/redux-utils/auth';
 
 const PostActionBar = ({ postData, handleLikeAction }) => {
 	const dispatch = useDispatch();
 
 	const handleShare = () => {
-		dispatch(sharePosts(true));
-		dispatch(saveDataShare(postData));
+		if (!Storage.getAccessToken()) {
+			dispatch(checkUserLogin(true));
+		} else {
+			dispatch(sharePosts(true));
+			dispatch(saveDataShare(postData));
+		}
 	};
 
 	return (
@@ -18,7 +24,14 @@ const PostActionBar = ({ postData, handleLikeAction }) => {
 				{postData.isLike ? <LikeFill /> : <Like />}
 				<div className='post-action-bar__title'>{postData.like || 0} Thích</div>
 			</div>
-			<div className='post-action-bar__item'>
+			<div
+				className='post-action-bar__item'
+				onClick={() => {
+					if (!Storage.getAccessToken()) {
+						dispatch(checkUserLogin(true));
+					}
+				}}
+			>
 				<CommentSvg />
 				<div className='post-action-bar__title'>{postData.comments || 0} Bình luận</div>
 			</div>

@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import _ from 'lodash';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-
+import { useNavigate } from 'react-router-dom';
 const PostQuotes = ({ postsData, isShare }) => {
 	const { isSharePosts } = useSelector(state => state.post);
 
@@ -36,6 +36,16 @@ const PostQuotes = ({ postsData, isShare }) => {
 				return { backgroundImage: `linear-gradient(${postsData.sharePost?.background})` };
 			}
 		}
+	};
+
+	const navigate = useNavigate();
+
+	const onClickRedirectToAuthor = data => {
+		const id = data.createdBy || data.user.id;
+		navigate(`/profile/${id}`);
+	};
+	const onClickRedirectToBook = data => {
+		navigate(`/book/detail/${data.bookId}`);
 	};
 
 	return (

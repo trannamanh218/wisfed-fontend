@@ -322,7 +322,7 @@ const PopupCreateGroup = ({ handleClose, showRef }) => {
 
 PopupCreateGroup.propTypes = {
 	handleClose: PropTypes.func,
-	showRef: PropTypes.func,
+	showRef: PropTypes.object,
 };
 
 export default PopupCreateGroup;

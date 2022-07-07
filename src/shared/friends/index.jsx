@@ -19,7 +19,7 @@ import { Link } from 'react-router-dom';
 
 const FriendsItem = ({ list, keyTabs, getListFollower, getMyListFriendReq, getListFollowings }) => {
 	const dispatch = useDispatch();
-	const suggestions = location.pathname === '/friends/suggestions';
+	// const suggestions = location.pathname === '/friends/suggestions';
 	const invitation = location.pathname === '/friends/invitation';
 	const following = location.pathname === '/friends/following';
 	const follower = location.pathname === '/friends/follower';
@@ -84,7 +84,7 @@ const FriendsItem = ({ list, keyTabs, getListFollower, getMyListFriendReq, getLi
 				dispatch(changeToggleFollows(list.userOne.id));
 			} else if (getMyListFriendReq || getListFollowings) {
 				const param = {
-					data: { userId: list.userTwo.id },
+					data: { userId: list.id },
 				};
 				dispatch(addFollower(param)).unwrap();
 				dispatch(changeToggleFollows(list.userTwo.id));
@@ -112,7 +112,7 @@ const FriendsItem = ({ list, keyTabs, getListFollower, getMyListFriendReq, getLi
 				dispatch(changeToggleFollows(list.userTwo.id));
 			} else if (getMyListFriendReq || getListFollowings) {
 				const param = {
-					userId: list.userTwo.id,
+					userId: list.id,
 				};
 				dispatch(makeFriendRequest(param)).unwrap();
 				dispatch(changeToggleFollows(list.userTwo.id));

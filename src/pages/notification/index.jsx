@@ -17,6 +17,10 @@ import { NotificationError } from 'helpers/Error';
 import { useSelector } from 'react-redux';
 import LoadingTimeLine from './loading-timeline';
 import ModalItem from './modal-item';
+import { renderMessage } from 'helpers/HandleShare';
+import LoadingIndicator from 'shared/loading-indicator';
+import { readNotification } from 'reducers/redux-utils/notificaiton';
+// import { useSelector } from 'react-redux';
 
 const NotificationModal = ({ setModalNotti, buttonModal, realTime }) => {
 	const notifymodal = useRef(null);
@@ -38,7 +42,9 @@ const NotificationModal = ({ setModalNotti, buttonModal, realTime }) => {
 	};
 
 	useEffect(() => {
-		document.addEventListener('click', handleClickOutside, true);
+		if (notifymodal.current) {
+			document.addEventListener('click', handleClickOutside, true);
+		}
 		return () => {
 			document.removeEventListener('click', handleClickOutside, true);
 		};
