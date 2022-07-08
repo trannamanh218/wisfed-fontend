@@ -78,8 +78,9 @@ import { ReactComponent as IconRanks } from 'assets/icons/medal.svg';
 import { ReactComponent as LogOutIcon } from 'assets/icons/LogOutIcon.svg';
 import { ReactComponent as ProfileIcon } from 'assets/icons/ProfileIcon.svg';
 import { ReactComponent as ArrowDownIcon } from 'assets/icons/ArrowDownIcon.svg';
-
+import { ReactComponent as CrowSmall } from 'assets/icons/CrownSmall.svg';
 export {
+	CrowSmall,
 	IconRanks,
 	Setting,
 	ShareAuthor,

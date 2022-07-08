@@ -331,7 +331,7 @@ function CreatPostModalContent({
 			return Promise.all([addToDefaultLibraryRequest, updateProgressRequest]);
 		}
 	};
-	console.log(postsData);
+
 	const onCreatePost = async () => {
 		const params = await generateData();
 		// book, author , topic is required
@@ -350,7 +350,7 @@ function CreatPostModalContent({
 		}
 
 		try {
-			if (isShare || isSharePosts || isSharePostsAll === 'shareTopBook') {
+			if (isShare || isSharePosts || isSharePostsAll.length > 0) {
 				if (isShare) {
 					if (postsData.categoryName !== undefined) {
 						const query = {
@@ -379,7 +379,9 @@ function CreatPostModalContent({
 							type: postsData.originId.type,
 							categoryId: postsData.originId.categoryId || null,
 							msg: textFieldEdit?.current?.innerHTML,
+							userType: postsData.originId.type === 'topUser' && postsData.originId.userType,
 						};
+
 						await dispatch(getSharePostRanks(query)).unwrap();
 					} else {
 						let newId;
@@ -406,10 +408,11 @@ function CreatPostModalContent({
 				} else {
 					const query = {
 						by: postsData.by,
-						id: postsData.bookId,
+						id: postsData.type === 'topUser' ? postsData.id : postsData.bookId,
 						type: postsData.type,
 						categoryId: postsData.categoryId || null,
 						msg: textFieldEdit?.current?.innerHTML,
+						userType: postsData.type === 'topUser' && postsData.userType,
 					};
 
 					await dispatch(getSharePostRanks(query)).unwrap();
@@ -494,7 +497,7 @@ function CreatPostModalContent({
 					}
 				}
 			}
-		} else if (isShare || isSharePosts || isSharePostsAll === 'shareTopBook') {
+		} else if (isShare || isSharePosts || isSharePostsAll.length > 0) {
 			if (textFieldEdit.current?.innerText) {
 				isActive = true;
 			}
@@ -563,9 +566,7 @@ function CreatPostModalContent({
 						<CloseX />
 					</div>
 					<h5>
-						{isShare || isSharePosts || isSharePostsAll === 'shareTopBook'
-							? 'Chia sẻ bài viết'
-							: 'Tạo bài viết'}
+						{isShare || isSharePosts || isSharePostsAll.length > 0 ? 'Chia sẻ bài viết' : 'Tạo bài viết'}
 					</h5>
 					<button className='creat-post-modal-content__main__close' onClick={hideCreatePostModal}>
 						<CloseX />
@@ -642,7 +643,7 @@ function CreatPostModalContent({
 								removeTaggedItem={removeTaggedItem}
 								type='addCategory'
 							/>
-							{postsData.categoryName !== undefined && (
+							{postsData.type === 'topQuote' && (
 								<div className='post__title__share__rank'>
 									<span className='number__title__rank'># Top {postsData.rank} quotes </span>{' '}
 									<span className='title__rank'>
@@ -656,7 +657,13 @@ function CreatPostModalContent({
 								</div>
 							)}
 							{(isShare || isSharePosts || isSharePostsAll === 'shareTopBook') && (
-								<div className='creat-post-modal-content__main__share-container'>
+								<div
+									className={
+										postsData.verb !== 'shareTopBookRanking' &&
+										postsData.verb !== 'shareTopUserRanking' &&
+										'creat-post-modal-content__main__share-container'
+									}
+								>
 									{isShare && <PostQuotes postsData={postsData} isShare={isShare} />}
 									{isSharePosts && (
 										<Post postInformations={postsData} showModalCreatPost={showModalCreatPost} />
@@ -713,7 +720,11 @@ function CreatPostModalContent({
 								<span
 									className={classNames('creat-post-modal-content__main__options__item-add-to-post', {
 										'active': imagesUpload.length > 0 && _.isEmpty(taggedData.addBook),
-										'disabled': !_.isEmpty(taggedData.addBook) || isShare || isSharePosts,
+										'disabled':
+											!_.isEmpty(taggedData.addBook) ||
+											isShare ||
+											isSharePosts ||
+											isSharePostsAll.length > 0,
 									})}
 									onMouseOver={() => setShowImagePopover(true)}
 									onMouseLeave={() => setShowImagePopover(false)}

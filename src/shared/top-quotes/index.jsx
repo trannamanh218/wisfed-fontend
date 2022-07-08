@@ -14,6 +14,7 @@ const TopQuotesComponent = ({ item, valueDate, categoryItem }) => {
 			time: valueDate,
 			categoryName: categoryItem.name || '',
 			categoryId: categoryItem.id || '',
+			type: 'topQuote',
 			...item,
 		};
 		setNewData(data);

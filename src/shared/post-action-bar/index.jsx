@@ -5,14 +5,19 @@ import { useDispatch } from 'react-redux';
 import { sharePosts, saveDataShare } from 'reducers/redux-utils/post';
 import Storage from 'helpers/Storage';
 import { checkUserLogin } from 'reducers/redux-utils/auth';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const PostActionBar = ({ postData, handleLikeAction }) => {
 	const dispatch = useDispatch();
-
+	const location = useLocation();
+	const navigate = useNavigate();
 	const handleShare = () => {
 		if (!Storage.getAccessToken()) {
 			dispatch(checkUserLogin(true));
 		} else {
+			if (location.pathname.includes('/detail-feed')) {
+				navigate('/');
+			}
 			dispatch(sharePosts(true));
 			dispatch(saveDataShare(postData));
 		}

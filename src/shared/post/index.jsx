@@ -28,6 +28,7 @@ import { IconRanks } from 'components/svg';
 import AuthorBook from 'shared/author-book';
 import Storage from 'helpers/Storage';
 import { checkUserLogin } from 'reducers/redux-utils/auth';
+import ShareUsers from 'pages/home/components/newfeed/components/modal-share-users';
 
 function Post({ postInformations, className, showModalCreatPost, inReviews = false }) {
 	const [postData, setPostData] = useState({});
@@ -36,7 +37,7 @@ function Post({ postInformations, className, showModalCreatPost, inReviews = fal
 	const [commentLv1IdArray, setCommentLv1IdArray] = useState([]);
 	const [replyingCommentId, setReplyingCommentId] = useState(null);
 	const [clickReply, setClickReply] = useState(false);
-	const { isSharePosts, isShare } = useSelector(state => state.post);
+	const { isSharePosts } = useSelector(state => state.post);
 	const location = useLocation();
 
 	const dispatch = useDispatch();
@@ -291,10 +292,16 @@ function Post({ postInformations, className, showModalCreatPost, inReviews = fal
 	return (
 		<div
 			className={classNames('post__container', {
-				'post__custom': isSharePosts && postData.verb === 'shareQuote',
+				'post__custom':
+					isSharePosts && (postData.verb === 'shareQuote' || postData.verb === 'shareTopUserRanking'),
 			})}
 		>
-			{postData.verb === 'shareTopQuoteRanking' && isSharePosts ? '' : renderInfo()}
+			{(postData.verb === 'shareTopQuoteRanking' ||
+				postData.verb === 'shareTopBookRanking' ||
+				postData.verb === 'shareTopUserRanking') &&
+			isSharePosts
+				? ''
+				: renderInfo()}
 
 			{!!postData?.mentionsAuthors?.length && (
 				<ul className='tagged'>
@@ -322,7 +329,7 @@ function Post({ postInformations, className, showModalCreatPost, inReviews = fal
 					))}
 				</ul>
 			)}
-			{!_.isEmpty(postData.originId) && (
+			{!_.isEmpty(postData.originId) && postData.originId.type === 'topQuote' && (
 				<div className='post__title__share__rank'>
 					<span className='number__title__rank'># Top {postData.originId.rank} quotes </span>
 					<span className='title__rank'>
@@ -336,6 +343,7 @@ function Post({ postInformations, className, showModalCreatPost, inReviews = fal
 			{postData.isShare && postData.verb === 'shareQuote' && <PostQuotes postsData={postData} />}
 			{postData.verb === 'shareTopQuoteRanking' && <PostQuotes postsData={postData} />}
 			{postData.verb === 'shareTopBookRanking' && <AuthorBook data={postData} />}
+			{postData.verb === 'shareTopUserRanking' && <ShareUsers postsData={postData} />}
 			{postData.book && (
 				<PostBook
 					data={{ ...postData.book, bookLibrary: postData.bookLibrary, actorCreatedPost: postData.actor }}
