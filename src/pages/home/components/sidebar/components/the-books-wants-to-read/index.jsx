@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 
 function TheBooksWantsToRead(props) {
 	const { list } = props;
+
 	return (
 		<>
 			{list.length > 0 && (
