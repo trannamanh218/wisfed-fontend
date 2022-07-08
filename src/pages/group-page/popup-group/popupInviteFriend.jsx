@@ -16,6 +16,8 @@ const PopupInviteFriend = ({ handleClose, showRef }) => {
 	const { id = '' } = useParams();
 	const { userInfo } = useSelector(state => state.auth);
 
+	console.log(showRef);
+
 	const getListFriend = async () => {
 		const params = {
 			userId: userInfo.id,

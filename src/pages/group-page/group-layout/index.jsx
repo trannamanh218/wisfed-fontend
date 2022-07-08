@@ -116,7 +116,7 @@ const LayoutGroup = () => {
 					<MainContainerLeft
 						sub={<SearchGroup />}
 						right={<SidebarLeft listMyGroup={myGroup} listAdminMyGroup={adminGroup} />}
-						main={<MainLayout filter={true} />}
+						main={<MainLayout />}
 					/>
 				) : (
 					<div className='result-search'>
