@@ -149,12 +149,11 @@ const ModalFollowers = ({ modalFollower, setModalFollower, userInfoDetail }) => 
 					<div className='modalFollowers__info'>
 						{getMyListFollowing.map(item => (
 							<div key={item.id} className='author-card'>
-								<div className='author-card__left'>
+								<div className='author-card__left' onClick={() => goToUser(item)}>
 									<UserAvatar
 										source={item.userOne.avatarImage}
 										className='author-card__avatar'
 										size={'md'}
-										handleClick={() => goToUser(item)}
 									/>
 									<div className='author-card__info'>
 										<h5>
