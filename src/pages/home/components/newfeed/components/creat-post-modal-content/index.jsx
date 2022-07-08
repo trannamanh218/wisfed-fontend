@@ -34,6 +34,7 @@ import PostQuotes from 'shared/post-quotes';
 import { saveDataShare, checkShare } from 'reducers/redux-utils/post';
 import Post from 'shared/post';
 import AuthorBook from 'shared/author-book';
+import ShareUsers from '../modal-share-users';
 
 function CreatPostModalContent({
 	hideCreatePostModal,
@@ -201,7 +202,7 @@ function CreatPostModalContent({
 	};
 
 	const addOptionsToPost = param => {
-		if (isShare || isSharePosts || isSharePostsAll === 'shareTopBook') {
+		if (isShare || isSharePosts || isSharePostsAll.length > 0) {
 			return;
 		} else {
 			if (imagesUpload.length > 0 && param.value === 'addBook') {
@@ -214,7 +215,7 @@ function CreatPostModalContent({
 	};
 
 	const handleOpenUploadImage = () => {
-		if (isShare || isSharePosts || isSharePostsAll === 'shareTopBook') {
+		if (isShare || isSharePosts || isSharePostsAll.length > 0) {
 			return;
 		} else {
 			if (_.isEmpty(taggedData.addBook)) {
@@ -654,16 +655,16 @@ function CreatPostModalContent({
 									<IconRanks />
 								</div>
 							)}
-							{(isShare || isSharePosts || isSharePostsAll.length > 0) && (
+							{(isShare || isSharePosts || isSharePostsAll === 'shareTopBook') && (
 								<div className='creat-post-modal-content__main__share-container'>
 									{isShare && <PostQuotes postsData={postsData} isShare={isShare} />}
 									{isSharePosts && (
 										<Post postInformations={postsData} showModalCreatPost={showModalCreatPost} />
 									)}
 									{isSharePostsAll === 'shareTopBook' && <AuthorBook data={postsData} />}
-									{isSharePostsAll === 'shareTopuser' && <>haha</>}
 								</div>
 							)}
+							{isSharePostsAll === 'shareTopUser' && <ShareUsers postsData={postsData} />}
 
 							{!_.isEmpty(taggedData.addBook) || showUpload ? (
 								<>

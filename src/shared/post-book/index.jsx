@@ -6,11 +6,9 @@ import BookThumbnail from 'shared/book-thumbnail';
 import LinearProgressBar from 'shared/linear-progress-bar';
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
 
 function PostBook({ data }) {
 	const [percenProgress, setPercenProgress] = useState();
-	const navigate = useNavigate();
 
 	useEffect(() => {
 		if (data.status === 'wantToRead') {
@@ -21,20 +19,12 @@ function PostBook({ data }) {
 		}
 	}, []);
 
-	const goToBookDetail = data => {
-		navigate(`/book/detail/${data.id}`);
-	};
-
 	return (
 		<div className='post-book'>
 			<Link to={`/book/detail/${data.id}`}>
 				{' '}
 				{data.images.length > 0 && <BookThumbnail source={data?.images[0]} />}
 			</Link>
-
-			{data.images.length > 0 && (
-				<BookThumbnail handleClick={() => goToBookDetail(data)} source={data?.images[0]} />
-			)}
 			<div className='post-book__informations'>
 				<div className='post-book__name-and-author'>
 					<div className='post-book__name' title={data.name}>

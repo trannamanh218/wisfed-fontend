@@ -30,7 +30,7 @@ const MainReadingTarget = () => {
 		let percent = 0;
 		if (item.booksReadCount > item.numberBook) {
 			percent = 100;
-		} else {
+		} else if (0 < item.booksReadCount < item.numberBook) {
 			percent = ((item.booksReadCount / item.numberBook) * 100).toFixed();
 		}
 		return <LinearProgressBar height={2.75} percent={percent} label={`${percent} %`} />;
@@ -122,7 +122,11 @@ const MainReadingTarget = () => {
 				? booksReadYear.map(item => (
 						<>
 							<div className='reading-target__process'>
-								<UserAvatar className='reading-target__user' source={userInfo?.avatarImage} size='lg' />
+								<UserAvatar
+									className='reading-target__user'
+									source={userData.avatarImage || userInfo?.avatarImage}
+									size='lg'
+								/>
 								<div className='reading-target__content'>
 									{renderContentTop(item)}
 									<div className='reading-target__content__bottom'>
