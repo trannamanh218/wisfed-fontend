@@ -88,7 +88,7 @@ const SidebarProfile = ({ currentUserInfo }) => {
 
 					{handleRenderTargetReading()}
 
-					{!_.isEmpty(myAllLibraryRedux) && (
+					{!_.isEmpty(myAllLibraryRedux.custom) && (
 						<div className='sidebar-profile__personal__category'>
 							<h4>Giá sách cá nhân</h4>
 							<div className='dualColumn'>
