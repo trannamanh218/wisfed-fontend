@@ -50,7 +50,7 @@ const Comment = ({ data, handleReply, postData, commentLv1Id, type }) => {
 			NotificationError(err);
 		}
 	};
-	console.log(postData);
+
 	return (
 		<div className='comment'>
 			<UserAvatar className='comment__avatar' size='sm' source={data.user?.avatarImage} />
