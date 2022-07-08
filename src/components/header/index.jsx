@@ -30,8 +30,8 @@ import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { updateTargetReading } from 'reducers/redux-utils/chart';
 import defaultAvatar from 'assets/images/avatar.jpeg';
-
 import { increment } from 'reducers/redux-utils/reloadPostHomePage';
+import Request from 'helpers/Request';
 
 const Header = () => {
 	const { isShowModal } = useSelector(state => state.search);
@@ -126,6 +126,7 @@ const Header = () => {
 	const handleLogout = () => {
 		localStorage.removeItem('accessToken');
 		localStorage.removeItem('refreshToken');
+		Request.clearToken();
 		dispatch(deleteUserInfo());
 		dispatch(updateTargetReading([]));
 		navigate('/login');

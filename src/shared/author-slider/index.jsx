@@ -6,9 +6,17 @@ import React from 'react';
 import Slider from 'react-slick';
 import UserAvatar from 'shared/user-avatar';
 import './author-slider.scss';
+import { useNavigate } from 'react-router-dom';
 
 const AuthorSlider = ({ list, title, className, size = 'sm' }) => {
 	const settingSlider = settings();
+
+	const navigate = useNavigate();
+
+	const goToAuthor = item => {
+		navigate(`/profile/${item.id}`);
+	};
+
 	if (list && list.length) {
 		return (
 			<div className={classNames('author-slider', { [`${className}`]: className })}>
@@ -19,6 +27,7 @@ const AuthorSlider = ({ list, title, className, size = 'sm' }) => {
 							<div key={item.id}>
 								<div className='author-slider__item'>
 									<UserAvatar
+										handleClick={() => goToAuthor(item)}
 										{...item}
 										name={item.fullName || item.lastName || item.firstName || 'Không xác định'}
 										size={size}
