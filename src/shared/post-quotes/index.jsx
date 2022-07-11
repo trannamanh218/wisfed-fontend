@@ -2,6 +2,7 @@ import './post-quotes.scss';
 import UserAvatar from 'shared/user-avatar';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
+import { Link } from 'react-router-dom';
 
 const PostQuotes = ({ postsData }) => {
 	const renderAuthorAndbooksName = () => {
@@ -31,32 +32,40 @@ const PostQuotes = ({ postsData }) => {
 			}
 		}
 	};
+	console.log(postsData.sharePost.bookId);
 
 	return (
 		!_.isEmpty(postsData) && (
-			<div className='post__quotes__container'>
-				<div className='quote-card' style={generateBackgroundColorQuotes()}>
-					<div className='quote-card__quote-content'>
-						<p>{`"${postsData.quote || postsData.sharePost?.quote}"`}</p>
-						<p style={{ textDecoration: 'underline' }}>{renderAuthorAndbooksName()}</p>
-					</div>
-
-					<div className='quote-card__author'>
-						<div className='quote-card__author__avatar'>
-							<UserAvatar
-								size='sm'
-								avatarImage={postsData?.user?.avatarImage || postsData.createdBy?.avatarImage}
-							/>
+			<Link to={`/quotes/detail/${postsData.sharePost.id}`}>
+				{' '}
+				<div className='post__quotes__container'>
+					<div className='quote-card' style={generateBackgroundColorQuotes()}>
+						<div className='quote-card__quote-content'>
+							<p>{`"${postsData.quote || postsData.sharePost?.quote}"`}</p>
+							<Link to={`/book/detail/${postsData.sharePost.bookId}`}>
+								<p style={{ textDecoration: 'underline' }}>{renderAuthorAndbooksName()}</p>
+							</Link>
 						</div>
-						<div className='quote-card__author__detail'>
-							<p className='quote-card__author__detail__text'>Quotes này tạo bởi</p>
-							<p className='quote-card__author__detail__name'>
-								{postsData?.user?.fullName || postsData.createdBy?.fullName}
-							</p>
+
+						<div className='quote-card__author'>
+							<div className='quote-card__author__avatar'>
+								<UserAvatar
+									size='sm'
+									avatarImage={postsData?.user?.avatarImage || postsData.createdBy?.avatarImage}
+								/>
+							</div>
+							<div className='quote-card__author__detail'>
+								<p className='quote-card__author__detail__text'>Quotes này tạo bởi</p>
+								<Link to={`/profile/${postsData.createdBy?.id}`}>
+									<p className='quote-card__author__detail__name'>
+										{postsData?.user?.fullName || postsData.createdBy?.fullName}
+									</p>
+								</Link>
+							</div>
 						</div>
 					</div>
 				</div>
-			</div>
+			</Link>
 		)
 	);
 };

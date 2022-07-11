@@ -35,6 +35,11 @@
 
 		.sidebar-quote__category-list__search {
 			border: 1px solid $ash-line;
+			::placeholder {
+				font-weight: 500;
+				letter-spacing: 0.75px;
+				color: #a0a3bd;
+			}
 		}
 	}
 }

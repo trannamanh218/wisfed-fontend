@@ -10,6 +10,7 @@ import { likeQuoteComment } from 'reducers/redux-utils/quote';
 import { NotificationError } from 'helpers/Error';
 import { likeAndUnlikeCommentPost } from 'reducers/redux-utils/activity';
 import { POST_TYPE, QUOTE_TYPE, REVIEW_TYPE } from 'constants';
+import { Link } from 'react-router-dom';
 
 const Comment = ({ data, handleReply, postData, commentLv1Id, type }) => {
 	const [isLiked, setIsLiked] = useState(false);

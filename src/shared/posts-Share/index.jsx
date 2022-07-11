@@ -46,61 +46,65 @@ const PostsShare = ({ postData, className }) => {
 	return (
 		<div className='post__main__container'>
 			<div className={classNames('post__container', { [`${className}`]: className })}>
-				<div className='post__user-status'>
-					<UserAvatar
-						data-testid='post__user-avatar'
-						className='post__user-status__avatar'
-						source={
-							postData.sharePost
-								? postData.sharePost.createdBy.avatarImage
-								: postData?.createdBy?.avatarImage
-						}
-					/>
+				<Link to={`/profile/${postData.sharePost.createdBy?.id}`}>
+					{' '}
+					<div className='post__user-status'>
+						<UserAvatar
+							data-testid='post__user-avatar'
+							className='post__user-status__avatar'
+							source={
+								postData.sharePost
+									? postData.sharePost.createdBy.avatarImage
+									: postData?.createdBy?.avatarImage
+							}
+						/>
 
-					<div className='post__user-status__name-and-post-time-status'>
-						<div data-testid='post__user-name' className='post__user-status__name'>
-							{postData.sharePost
-								? postData.sharePost.createdBy.fullName || (
-										<>
-											{postData.sharePost.createdBy.firstName}{' '}
-											{postData.sharePost.createdBy.lastName}
-										</>
-								  )
-								: postData?.createdBy?.fullName || postData?.user?.fullName || 'Ẩn danh'}
+						<div className='post__user-status__name-and-post-time-status'>
+							<div data-testid='post__user-name' className='post__user-status__name'>
+								{postData.sharePost
+									? postData.sharePost.createdBy.fullName || (
+											<>
+												{postData.sharePost.createdBy.firstName}{' '}
+												{postData.sharePost.createdBy.lastName}
+											</>
+									  )
+									: postData?.createdBy?.fullName || postData?.user?.fullName || 'Ẩn danh'}
 
-							{postData?.group && (
+								{postData?.group && (
+									<>
+										<Link to={`/group/${postData?.group?.id}`}>
+											<span className='img-share__group'>
+												<Forward /> {postData.group?.name}
+											</span>
+										</Link>
+									</>
+								)}
+							</div>
+							<div className='post__user-status__post-time-status'>
+								<span>{calculateDurationTime(postData.time || postData.createdAt)}</span>
 								<>
-									<Link to={`/group/${postData?.group?.id}`}>
-										<span className='img-share__group'>
-											<Forward /> {postData.group?.name}
-										</span>
-									</Link>
+									{postData.book ||
+										(postData.sharePost.book && (
+											<div className='post__user-status__subtitle'>
+												<span>Cập nhật tiến độ đọc sách</span>
+												<div className='post__user-status__post-time-status__online-dot'></div>
+												<span>Xếp hạng</span>
+												<ReactRating
+													readonly={true}
+													initialRating={
+														postData?.book?.actorRating?.star
+															? postData?.book?.actorRating?.star
+															: 0
+													}
+												/>
+											</div>
+										))}
 								</>
-							)}
-						</div>
-						<div className='post__user-status__post-time-status'>
-							<span>{calculateDurationTime(postData.time || postData.createdAt)}</span>
-							<>
-								{postData.book ||
-									(postData.sharePost.book && (
-										<div className='post__user-status__subtitle'>
-											<span>Cập nhật tiến độ đọc sách</span>
-											<div className='post__user-status__post-time-status__online-dot'></div>
-											<span>Xếp hạng</span>
-											<ReactRating
-												readonly={true}
-												initialRating={
-													postData?.book?.actorRating?.star
-														? postData?.book?.actorRating?.star
-														: 0
-												}
-											/>
-										</div>
-									))}
-							</>
+							</div>
 						</div>
 					</div>
-				</div>
+				</Link>
+
 				<div
 					className='post__description'
 					dangerouslySetInnerHTML={{

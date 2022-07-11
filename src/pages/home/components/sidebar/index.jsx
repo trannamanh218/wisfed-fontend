@@ -22,12 +22,13 @@ const Sidebar = () => {
 			const readingLibrary = myAllLibraryRedux?.default?.filter(item => item.defaultType === 'reading');
 			if (readingLibrary.length && readingLibrary[0]?.books.length) {
 				const readingBooks = readingLibrary[0]?.books;
-				const wantToReadLibrary = myAllLibraryRedux?.default?.filter(item => item.defaultType === 'wantToRead');
-				const newWantToReadList = [];
-				wantToReadLibrary[0]?.books?.forEach(item => newWantToReadList.push(item.book));
+
 				setBookReading(readingBooks[readingBooks?.length - 1].book);
-				setWantToReadList(newWantToReadList);
 			}
+			const wantToReadLibrary = myAllLibraryRedux?.default?.filter(item => item.defaultType === 'wantToRead');
+			const newWantToReadList = [];
+			wantToReadLibrary[0]?.books?.forEach(item => newWantToReadList.push(item.book));
+			setWantToReadList(newWantToReadList);
 		}
 	}, [myAllLibraryRedux]);
 

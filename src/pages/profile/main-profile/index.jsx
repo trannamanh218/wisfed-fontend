@@ -19,13 +19,14 @@ const MainProfile = ({ currentUserInfo }) => {
 		<>
 			{!_.isEmpty(currentUserInfo) && (
 				<div className='main-profile'>
-					<PersonalInfo currentUserInfo={currentUserInfo} />
+					<PersonalInfo currentUserInfo={currentUserInfo} setCurrentTab={setCurrentTab} />
 					<Tabs
 						className={classNames('main-profile__tabs', {
 							'none-books': currentUserInfo?.role !== 'author',
 						})}
-						defaultActiveKey={'bookcase'}
-						onSelect={activeKey => setCurrentTab(activeKey)}
+						// defaultActiveKey
+						activeKey={currentTab}
+						onSelect={eventKey => setCurrentTab(eventKey)}
 					>
 						<Tab eventKey='bookcase' title='Tủ sách'>
 							<Bookcase userInfo={currentUserInfo} currentTab={currentTab} />

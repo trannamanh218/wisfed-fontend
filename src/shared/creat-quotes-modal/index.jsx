@@ -1,5 +1,5 @@
 import './creat-quotes-modal.scss';
-import { CloseX, WeatherStars, BackChevron, Search } from 'components/svg';
+import { CloseX, WeatherStars, BackChevron, Search, CloseIconX } from 'components/svg';
 import { useEffect, useState, useRef, useCallback } from 'react';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
@@ -13,18 +13,19 @@ import { toast } from 'react-toastify';
 import { handleAfterCreatQuote } from 'reducers/redux-utils/quote';
 import { NotificationError } from 'helpers/Error';
 import AddAndSearchCategories from 'shared/add-and-search-categories';
+import Input from 'shared/input';
 
 function CreatQuotesModal({ hideCreatQuotesModal }) {
+	const dataRef = useRef('');
+	const [inputHashtag, setInputHashtag] = useState('');
+	const inputRefHashtag = useRef('');
 	const [showTextFieldEditPlaceholder, setShowTextFieldEditPlaceholder] = useState(true);
 	const [showTextFieldBackgroundSelect, setShowTextFieldBackgroundSelect] = useState(false);
 	const [backgroundColor, setBackgroundColor] = useState('');
-	// const [inputAuthorValue, setInputAuthorValue] = useState('');
 	const [inputBookValue, setInputBookValue] = useState('');
 	const [inputCategoryValue, setInputCategoryValue] = useState('');
 	const [inputHashtagValue, setInputHashtagValue] = useState('');
 	const [colorActiveIndex, setColorActiveIndex] = useState(-1);
-	// const [authorSearchedList, setAuthorSearchedList] = useState([]);
-	// const [authorAdded, setAuthorAdded] = useState('');
 	const [bookSearchedList, setBookSearchedList] = useState([]);
 	const [bookAdded, setBookAdded] = useState({});
 	const [categorySearchedList, setCategorySearchedList] = useState([]);
@@ -36,9 +37,10 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 	const categoryInputContainer = useRef(null);
 	const categoryInputWrapper = useRef(null);
 	const categoryInput = useRef(null);
+	const [listHashtags, setListHashtags] = useState([]);
+	const [show, setShow] = useState(false);
 
 	const dispatch = useDispatch();
-
 	const colorData = [
 		'100deg, #E3F7FF, #FFD8C3',
 		'100deg, #FACEB8, #E6AFCC, #C8BEE5, #ACD1F1',
@@ -48,6 +50,35 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 		'100deg, #FFD42A, #FFFC49',
 		'100deg, #C5FFAA, #00BAC6',
 	];
+
+	useEffect(() => {
+		document.getElementById('hashtag').addEventListener('keydown', e => {
+			if (e.keyCode === 32 && inputHashtag.includes('#')) {
+				dataRef.current = inputHashtag.trim();
+				inputRefHashtag.current.value = '';
+			}
+		});
+	}, [inputHashtag]);
+
+	const handleChangeHashtag = e => {
+		setInputHashtag(e.target.value);
+		setShow(true);
+	};
+
+	useEffect(() => {
+		const dataCheck = listHashtags.filter(item => dataRef.current === item);
+
+		if (dataRef.current !== '' && dataCheck.length < 1) {
+			const check = dataRef.current
+				.normalize('NFD')
+				.replace(/[\u0300-\u036f]/g, '')
+				.replace(/đ/g, 'd')
+				.replace(/Đ/g, 'D');
+			const newList = [...listHashtags, check];
+			setShow(false);
+			setListHashtags(newList);
+		}
+	}, [dataRef.current]);
 
 	useEffect(() => {
 		textFieldEdit.current.focus();
@@ -91,9 +122,7 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 	const getSuggestionForCreatQuotes = async (input, option) => {
 		try {
 			const data = await dispatch(getSuggestionForPost({ input, option })).unwrap();
-			// if (option.value === 'addAuthor') {
-			// 	setAuthorSearchedList(data.rows.slice(0, 5));
-			// }
+
 			if (option.value === 'addBook') {
 				setBookSearchedList(data.rows.slice(0, 3));
 			} else if (option.value === 'addCategory') {
@@ -110,19 +139,10 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 		_.debounce((inputValue, option) => getSuggestionForCreatQuotes(inputValue, option), 700),
 		[]
 	);
-
-	// const searchAuthor = e => {
-	// 	setGetDataFinish(false);
-	// 	setAuthorSearchedList([]);
-	// 	setInputAuthorValue(e.target.value);
-	// 	debounceSearch(e.target.value, { value: 'addAuthor' });
-	// };
-
-	// const addAuthor = authorName => {
-	// 	setAuthorAdded(authorName);
-	// 	setInputAuthorValue('');
-	// 	setAuthorSearchedList([]);
-	// };
+	const handleRemoveTag = e => {
+		const newList = listHashtags.filter(item => item !== e);
+		setListHashtags(newList);
+	};
 
 	const searchBook = e => {
 		setGetDataFinish(false);
@@ -296,52 +316,6 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 					</div>
 				</div>
 				<div className='creat-quotes-modal__body__add-options'>
-					{/* <div className='creat-quotes-modal__body__option-item'>
-						<div className='creat-quotes-modal__body__option-item__title'>Tác giả</div>
-						<div className='creat-quotes-modal__body__option-item__search-container'>
-							{authorAdded ? (
-								<div className='creat-quotes-modal__body__option-item-added'>
-									<span>{authorAdded}</span>
-									<button onClick={() => setAuthorAdded('')}>
-										<CloseX />
-									</button>
-								</div>
-							) : (
-								<>
-									<Search />
-									<input
-										placeholder='Tìm kiếm và thêm tác giả'
-										value={inputAuthorValue}
-										onChange={searchAuthor}
-									/>
-								</>
-							)}
-						</div>
-						{inputAuthorValue.trim() !== '' && getDataFinish && (
-							<>
-								{authorSearchedList.length > 0 ? (
-									<div className='creat-quotes-modal__body__option-item__search-result author'>
-										{authorSearchedList.map(item => (
-											<div
-												className='creat-quotes-modal__searched-item author'
-												key={item.id}
-												onClick={() => addAuthor(`${item.firstName} ${item.lastName}`)}
-											>
-												<img
-													className='creat-quotes-modal__author__avatar'
-													src={item.avatarImage || avatarTest}
-													alt='author'
-												/>
-												<div className='creat-quotes-modal__author__name'>{`${item.firstName} ${item.lastName}`}</div>
-											</div>
-										))}
-									</div>
-								) : (
-									<>{renderNoSearchResult()}</>
-								)}
-							</>
-						)}
-					</div> */}
 					<div className='creat-quotes-modal__body__option-item'>
 						<div className='creat-quotes-modal__body__option-item__title'>*Sách (Bắt buộc)</div>
 						<div className='creat-quotes-modal__body__option-item__search-container'>
@@ -410,19 +384,44 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 					<div className='creat-quotes-modal__body__option-item'>
 						<div className='creat-quotes-modal__body__option-item__title'>Từ khóa</div>
 						<div className='creat-quotes-modal__body__option-item__search-container'>
-							<input
-								style={{ margin: '0' }}
-								placeholder='Nhập từ khóa'
-								value={inputHashtagValue}
-								onChange={updateHashTagsInputValue}
+							{listHashtags.length > 0 && (
+								<div className='input__authors'>
+									{listHashtags.map(item => (
+										<>
+											<span key={item}>
+												{item}
+												<button
+													className='close__author'
+													onClick={() => {
+														handleRemoveTag(item);
+													}}
+												>
+													<CloseIconX />
+												</button>
+											</span>
+										</>
+									))}
+								</div>
+							)}
+							<Input
+								id='hashtag'
+								isBorder={false}
+								placeholder='Nhập hashtag'
+								handleChange={handleChangeHashtag}
+								inputRef={inputRefHashtag}
 							/>
 						</div>
+						{show ? <span>Vui lòng nhập đúng định dạng</span> : ''}
 					</div>
 				</div>
 			</div>
 			<div className='creat-quotes-modal__footer'>
 				<button
-					className={!showTextFieldEditPlaceholder && !_.isEmpty(bookAdded) ? 'active' : ''}
+					className={
+						!showTextFieldEditPlaceholder && !_.isEmpty(bookAdded) && !_.isEmpty(listHashtags)
+							? 'active'
+							: ''
+					}
 					onClick={creatQuotesFnc}
 				>
 					Tạo Quotes
