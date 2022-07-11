@@ -22,7 +22,6 @@ function PostBook({ data }) {
 	return (
 		<div className='post-book'>
 			<Link to={`/book/detail/${data.id}`}>
-				{' '}
 				{data.images.length > 0 && <BookThumbnail source={data?.images[0]} />}
 			</Link>
 

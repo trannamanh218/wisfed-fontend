@@ -40,55 +40,50 @@ const MyShelvesList = ({ list }) => {
 		}
 	};
 
-	console.log(list);
 	return (
-		<>
-			{' '}
-			{list.length > 0 && (
-				<div>
-					<StatisticList
-						className='my-shelves-list'
-						title='Giá sách'
-						background='light'
-						isBackground={false}
-						list={list}
-						pageText={false}
-					/>
-					{checkAuthorize() ? (
-						<Formik
-							initialValues={{
-								name: '',
+		<div>
+			<StatisticList
+				className='my-shelves-list'
+				title='Giá sách'
+				background='light'
+				isBackground={false}
+				list={list}
+				pageText={false}
+			/>
+
+			{checkAuthorize() && (
+				<Formik
+					initialValues={{
+						name: '',
+					}}
+					validationSchema={nameBookShelve}
+					onSubmit={handleSubmit}
+				>
+					<Form>
+						<Field name='name'>
+							{({ field, meta }) => {
+								return (
+									<>
+										<Input
+											className='my-shelves__input'
+											type='text'
+											placeholder='Nhập để thêm giá sách'
+											{...field}
+										/>
+										{meta.touched && meta.error && (
+											<small className='error-message'>{meta.error}</small>
+										)}
+									</>
+								);
 							}}
-							validationSchema={nameBookShelve}
-							onSubmit={handleSubmit}
-						>
-							<Form>
-								<Field name='name'>
-									{({ field, meta }) => {
-										return (
-											<>
-												<Input
-													className='my-shelves__input'
-													type='text'
-													placeholder='Nhập để thêm giá sách'
-													{...field}
-												/>
-												{meta.touched && meta.error && (
-													<small className='error-message'>{meta.error}</small>
-												)}
-											</>
-										);
-									}}
-								</Field>
-								<button type='submit' className='my-shelves__btn__submit btn btn-primary'>
-									Áp dụng
-								</button>
-							</Form>
-						</Formik>
-					) : null}
-				</div>
+						</Field>
+						<button type='submit' className='my-shelves__btn__submit btn btn-primary'>
+							Áp dụng
+						</button>
+					</Form>
+				</Formik>
 			)}
-		</>
+		</div>
 	);
 };
 

@@ -3,6 +3,7 @@ import BadgeList from 'shared/badge-list';
 import QuoteActionBar from 'shared/quote-action-bar';
 import UserAvatar from 'shared/user-avatar';
 import './quote-card.scss';
+import { useNavigate } from 'react-router-dom';
 
 const QuoteCard = ({ data, likeUnlikeQuoteFnc, isDetail = false }) => {
 	const renderAuthorAndbooksName = () => {
@@ -12,6 +13,15 @@ const QuoteCard = ({ data, likeUnlikeQuoteFnc, isDetail = false }) => {
 		return ` ${data.bookName}`;
 	};
 
+	const navigate = useNavigate();
+	const onClickRedirectToAuthor = data => {
+		const id = data.createdBy || data.user.id;
+		navigate(`/profile/${id}`);
+	};
+	const onClickRedirectToBook = data => {
+		navigate(`/book/detail/${data.bookId}`);
+	};
+
 	return (
 		<div
 			className='quote-card'
@@ -19,16 +29,24 @@ const QuoteCard = ({ data, likeUnlikeQuoteFnc, isDetail = false }) => {
 		>
 			<div className='quote-card__quote-content'>
 				<p>{`"${data.quote}"`}</p>
-				<p style={{ textDecoration: 'underline' }}>{renderAuthorAndbooksName()}</p>
+				<p
+					onMouseEnter={e => (e.target.style.cursor = 'pointer')}
+					onClick={() => onClickRedirectToBook(data)}
+					style={{ textDecoration: 'underline' }}
+				>
+					{renderAuthorAndbooksName()}
+				</p>
 			</div>
 
 			<div className='quote-card__author'>
-				<div className='quote-card__author__avatar'>
+				<div className='quote-card__author__avatar' onClick={() => onClickRedirectToAuthor(data)}>
 					<UserAvatar size='sm' avatarImage={data?.user?.avatarImage} />
 				</div>
 				<div className='quote-card__author__detail'>
 					<p className='quote-card__author__detail__text'>Quotes này tạo bởi</p>
-					<p className='quote-card__author__detail__name'>{data?.user?.fullName}</p>
+					<p className='quote-card__author__detail__name' onClick={() => onClickRedirectToAuthor(data)}>
+						{data?.user?.fullName || data?.user?.firstName + ' ' + data?.user?.lastName}
+					</p>
 				</div>
 			</div>
 			{isDetail && (

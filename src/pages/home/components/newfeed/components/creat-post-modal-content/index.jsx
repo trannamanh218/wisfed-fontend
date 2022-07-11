@@ -254,7 +254,9 @@ function CreatPostModalContent({
 			const listData = [...taggedData[option.value]];
 			const lastItem = listData[listData.length - 1];
 			if (!listData.length || (!_.isEmpty(lastItem) && lastItem.id !== data.id)) {
-				listData.push(data);
+				if (!listData.includes(data)) {
+					listData.push(data);
+				}
 			}
 			newData[option.value] = listData;
 		} else if (option.value === 'addBook' || data.hasOwnProperty('page')) {
@@ -541,7 +543,10 @@ function CreatPostModalContent({
 							</div>
 							<div className='creat-post-modal-content__main__body__user-info__block-right'>
 								<p>
-									{userInfo.fullName || userInfo.lastName || userInfo.firstName || 'Không xác định'}
+									{userInfo?.fullName ||
+										userInfo?.lastName ||
+										userInfo?.firstName ||
+										'Không xác định'}
 									{taggedData.addFriends.length > 0 && (
 										<>
 											<span className='d-inline-block mx-1'>cùng với</span>

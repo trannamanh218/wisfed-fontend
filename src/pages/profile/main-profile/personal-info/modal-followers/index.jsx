@@ -12,10 +12,14 @@ import Button from 'shared/button';
 import { Add, Minus } from 'components/svg';
 import { buttonReqFriend } from 'helpers/HandleShare';
 import { useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const ModalFollowers = ({ modalFollower, setModalFollower, userInfoDetail }) => {
 	const { userInfo } = useSelector(state => state.auth);
 	const [getMyListFollowing, setGetMyListFollowing] = useState([]);
+	const [inputSearch, setValueSearch] = useState('');
+	const navigate = useNavigate();
+
 	const dispatch = useDispatch();
 	const { userId } = useParams();
 	useEffect(async () => {
@@ -27,14 +31,24 @@ const ModalFollowers = ({ modalFollower, setModalFollower, userInfoDetail }) => 
 			const newArrFriend = followList.rows.map(item => {
 				return { ...item, checkUnfollow: false, isPending: false, isAddFriend: true };
 			});
-			setGetMyListFollowing(newArrFriend);
+			setGetMyListFollowing(
+				newArrFriend.filter(
+					x =>
+						x.userOne.firstName.toLocaleLowerCase().includes(inputSearch.toLocaleLowerCase()) ||
+						x.userOne.lastName.toLocaleLowerCase().includes(inputSearch.toLocaleLowerCase())
+				)
+			);
 		} catch (err) {
 			NotificationError(err);
 		}
-	}, [userInfo, dispatch]);
+	}, [userInfo, dispatch, inputSearch]);
 
 	const toggleModal = () => {
 		setModalFollower(!modalFollower);
+	};
+
+	const onChangeValueSearch = e => {
+		setValueSearch(e.target.value);
 	};
 
 	const handleAddFriend = id => {
@@ -108,6 +122,11 @@ const ModalFollowers = ({ modalFollower, setModalFollower, userInfoDetail }) => 
 		}
 	};
 
+	const goToUser = item => {
+		toggleModal();
+		navigate(`/profile/${item.userIdOne}`);
+	};
+
 	return (
 		<>
 			<Modal size='lg' className='modalFollowers__container__main' show={modalFollower} onHide={toggleModal}>
@@ -121,12 +140,16 @@ const ModalFollowers = ({ modalFollower, setModalFollower, userInfoDetail }) => 
 						</div>
 					</div>
 					<div className='modalFollowers__search'>
-						<SearchField placeholder='Tìm kiếm trên Wisfeed' />
+						<SearchField
+							placeholder='Tìm kiếm trên Wisfeed'
+							value={inputSearch}
+							handleChange={onChangeValueSearch}
+						/>
 					</div>
 					<div className='modalFollowers__info'>
 						{getMyListFollowing.map(item => (
 							<div key={item.id} className='author-card'>
-								<div className='author-card__left'>
+								<div className='author-card__left' onClick={() => goToUser(item)}>
 									<UserAvatar
 										source={item.userOne.avatarImage}
 										className='author-card__avatar'

@@ -2,8 +2,9 @@ import { useState, useRef, useEffect } from 'react';
 import UserAvatar from 'shared/user-avatar';
 import PropTypes from 'prop-types';
 import './comment-editor.scss';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import classNames from 'classnames';
+import { checkUserLogin } from 'reducers/redux-utils/auth';
 
 const CommentEditor = ({
 	onCreateComment,
@@ -19,6 +20,8 @@ const CommentEditor = ({
 	const [showPlaceholder, setShowPlaceholder] = useState(true);
 
 	const commentArea = useRef(null);
+
+	const dispatch = useDispatch();
 
 	useEffect(() => {
 		commentArea.current.addEventListener('input', handlePlaceholder);
@@ -79,11 +82,15 @@ const CommentEditor = ({
 	};
 
 	const handleKeyPress = e => {
-		if (e.which === 13 && !e.shiftKey && commentArea.current.value) {
-			e.preventDefault();
-			onCreateComment(commentArea.current.value, replyId);
-			commentArea.current.value = '';
-			onChangeComment();
+		if (!Storage.getAccessToken()) {
+			dispatch(checkUserLogin(true));
+		} else {
+			if (e.which === 13 && !e.shiftKey && commentArea.current.value) {
+				e.preventDefault();
+				onCreateComment(commentArea.current.value, replyId);
+				commentArea.current.value = '';
+				onChangeComment();
+			}
 		}
 	};
 

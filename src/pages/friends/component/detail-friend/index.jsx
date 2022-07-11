@@ -40,11 +40,20 @@ const DetailFriend = () => {
 		}
 	};
 
-	const debounceSearch = useCallback(_.debounce(updateInputSearch, 1000), []);
+	const debounceSearch = useCallback(_.debounce(updateInputSearch, 0), []);
 
 	const handleSearch = e => {
 		setInputSearch(e.target.value);
-		debounceSearch(e.target.value);
+	};
+
+	const onClickSearchBtn = () => {
+		debounceSearch(inputSearch);
+	};
+
+	const onBtnEnterPress = e => {
+		if (e.key === 'Enter') {
+			debounceSearch(inputSearch);
+		}
 	};
 
 	useEffect(async () => {
@@ -149,8 +158,14 @@ const DetailFriend = () => {
 				</div>
 				<div className='friends__detail__header'>
 					<div className='friends__search'>
-						<SearchField placeholder='Tìm kiếm bạn bè' handleChange={handleSearch} value={inputSearch} />
-						<Button className='connect-button' isOutline={false} name='friend'>
+						<SearchField
+							handleClickSearch={onClickSearchBtn}
+							placeholder='Tìm kiếm bạn bè'
+							handleChange={handleSearch}
+							value={inputSearch}
+							onKeyDown={onBtnEnterPress}
+						/>
+						<Button onClick={onClickSearchBtn} className='connect-button' isOutline={false} name='friend'>
 							<span>Tìm kiếm</span>
 						</Button>
 					</div>

@@ -2,7 +2,7 @@ import './post-quotes.scss';
 import UserAvatar from 'shared/user-avatar';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const PostQuotes = ({ postsData }) => {
 	const renderAuthorAndbooksName = () => {
@@ -32,40 +32,52 @@ const PostQuotes = ({ postsData }) => {
 			}
 		}
 	};
-	console.log(postsData.sharePost.bookId);
+
+	const navigate = useNavigate();
+	const onClickRedirectToAuthor = data => {
+		const id = data.createdBy || data.user.id;
+		navigate(`/profile/${id}`);
+	};
+	const onClickRedirectToBook = data => {
+		navigate(`/book/detail/${data.bookId}`);
+	};
 
 	return (
 		!_.isEmpty(postsData) && (
-			<Link to={`/quotes/detail/${postsData.sharePost.id}`}>
-				{' '}
-				<div className='post__quotes__container'>
-					<div className='quote-card' style={generateBackgroundColorQuotes()}>
-						<div className='quote-card__quote-content'>
-							<p>{`"${postsData.quote || postsData.sharePost?.quote}"`}</p>
-							<Link to={`/book/detail/${postsData.sharePost.bookId}`}>
-								<p style={{ textDecoration: 'underline' }}>{renderAuthorAndbooksName()}</p>
-							</Link>
-						</div>
+			<div className='post__quotes__container'>
+				<div className='quote-card' style={generateBackgroundColorQuotes()}>
+					<div className='quote-card__quote-content'>
+						<p>{`"${postsData.quote || postsData.sharePost?.quote}"`}</p>
+						<p
+							onMouseEnter={e => (e.target.style.cursor = 'pointer')}
+							onClick={() => onClickRedirectToBook(postsData)}
+							style={{ textDecoration: 'underline' }}
+						>
+							{renderAuthorAndbooksName()}
+						</p>
+					</div>
 
-						<div className='quote-card__author'>
-							<div className='quote-card__author__avatar'>
-								<UserAvatar
-									size='sm'
-									avatarImage={postsData?.user?.avatarImage || postsData.createdBy?.avatarImage}
-								/>
-							</div>
-							<div className='quote-card__author__detail'>
-								<p className='quote-card__author__detail__text'>Quotes này tạo bởi</p>
-								<Link to={`/profile/${postsData.createdBy?.id}`}>
-									<p className='quote-card__author__detail__name'>
-										{postsData?.user?.fullName || postsData.createdBy?.fullName}
-									</p>
-								</Link>
-							</div>
+					<div className='quote-card__author'>
+						<div className='quote-card__author__avatar' onClick={() => onClickRedirectToAuthor(postsData)}>
+							<UserAvatar
+								size='sm'
+								avatarImage={postsData?.user?.avatarImage || postsData.createdBy?.avatarImage}
+							/>
+						</div>
+						<div className='quote-card__author__detail'>
+							<p className='quote-card__author__detail__text'>Quotes này tạo bởi</p>
+							<p
+								className='quote-card__author__detail__name'
+								onClick={() => onClickRedirectToAuthor(postsData)}
+							>
+								{postsData.createdBy?.fullName ||
+									postsData?.user?.fullName ||
+									postsData?.user?.firstName + ' ' + postsData?.user?.lastName}
+							</p>
 						</div>
 					</div>
 				</div>
-			</Link>
+			</div>
 		)
 	);
 };

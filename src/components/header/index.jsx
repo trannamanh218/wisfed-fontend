@@ -1,6 +1,20 @@
 import { useEffect, useState, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { LogoIcon, BookFillIcon, BookIcon, CategoryIcon, GroupIcon, HomeIcon, IconGroup } from 'components/svg';
+import {
+	LogoIcon,
+	BookFillIcon,
+	BookIcon,
+	CategoryIcon,
+	GroupIcon,
+	HomeIcon,
+	LogOutIcon,
+	ProfileIcon,
+	ArrowDownIcon,
+	GroupFillIcon,
+	FriendsFillIcon,
+	FriendsIcon,
+	CategoryFillIcon,
+} from 'components/svg';
 import SearchIcon from 'assets/icons/search.svg';
 import classNames from 'classnames';
 import './header.scss';
@@ -16,6 +30,7 @@ import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { updateTargetReading } from 'reducers/redux-utils/chart';
 import defaultAvatar from 'assets/images/avatar.jpeg';
+import { increment } from 'reducers/redux-utils/reloadPostHomePage';
 import Request from 'helpers/Request';
 
 const Header = () => {
@@ -68,10 +83,10 @@ const Header = () => {
 
 		if (userOptions.current) {
 			document.addEventListener('click', closeUserOptions);
-			return () => {
-				document.removeEventListener('click', closeUserOptions);
-			};
 		}
+		return () => {
+			document.removeEventListener('click', closeUserOptions);
+		};
 	}, []);
 
 	const closeUserOptions = e => {
@@ -80,7 +95,7 @@ const Header = () => {
 		}
 	};
 
-	const toglleModalNotify = () => {
+	const toggleModalNotify = () => {
 		if (pathname === '/notification') {
 			setModalNotti(false);
 		} else {
@@ -118,10 +133,14 @@ const Header = () => {
 		toast.success('Đăng xuất thành công');
 	};
 
+	const onClickReloadPosts = () => {
+		dispatch(increment());
+	};
+
 	return (
 		<div className='header'>
 			<div className='header__left'>
-				<Link to='/'>
+				<Link to='/' onClick={onClickReloadPosts}>
 					<LogoIcon className='header__logo' />
 				</Link>
 				<div className='header__search'>
@@ -132,6 +151,7 @@ const Header = () => {
 						onClick={() => setIsShow(true)}
 						disabled={isShow}
 						value={getSlugResult || ''}
+						onChange={() => {}}
 					/>
 				</div>
 				{isShow ? <SearchAllModal showRef={showRef} setIsShow={setIsShow} /> : ''}
@@ -139,16 +159,8 @@ const Header = () => {
 
 			<ul className='header__nav'>
 				<li className={classNames('header__nav__item', { active: activeLink === '/' })}>
-					<Link className='header__nav__link' to='/'>
+					<Link className='header__nav__link' to='/' onClick={onClickReloadPosts}>
 						<HomeIcon className='header__nav__icon' />
-					</Link>
-				</li>
-				<li
-					onClick={handleUserLogin}
-					className={classNames('header__nav__item', { active: activeLink === '/category' })}
-				>
-					<Link className='header__nav__link' to={userLogin && '/category'}>
-						<CategoryIcon className='header__nav__icon' />
 					</Link>
 				</li>
 				<li
@@ -161,7 +173,16 @@ const Header = () => {
 				</li>
 				<li className={classNames('header__nav__item', { active: activeLink === '/group' })}>
 					<Link className='header__nav__link' to='/group'>
-						<IconGroup className='header__nav__icon' />
+						{activeLink === '/group' ? <GroupFillIcon /> : <GroupIcon />}
+					</Link>
+				</li>
+				<li
+					onClick={handleUserLogin}
+					className={classNames('header__nav__item', { active: activeLink === '/category' })}
+				>
+					<Link className='header__nav__link' to={userLogin && '/category'}>
+						{/* <CategoryIcon className='header__nav__icon' /> */}
+						{activeLink === '/category' ? <CategoryFillIcon /> : <CategoryIcon />}
 					</Link>
 				</li>
 				<li
@@ -169,13 +190,13 @@ const Header = () => {
 					className={classNames('header__nav__item', { active: activeLink === '/friends' })}
 				>
 					<Link className='header__nav__link' to={userLogin && '/friends'}>
-						<GroupIcon className='header__nav__icon' />
+						{activeLink === '/friends' ? <FriendsFillIcon /> : <FriendsIcon />}
 					</Link>
 				</li>
 				<div className='notify-icon'>
 					<div
 						ref={buttonModal}
-						onClick={toglleModalNotify}
+						onClick={toggleModalNotify}
 						className={classNames('header__notify__icon', { 'active': modalNoti || activeNotificaiton })}
 					/>
 					{modalNoti && <NotificationModal setModalNotti={setModalNotti} buttonModal={buttonModal} />}
@@ -189,13 +210,22 @@ const Header = () => {
 						onError={e => e.target.setAttribute('src', `${defaultAvatar}`)}
 						alt='avatar'
 					/>
+					<span id='arrow-down-icon'>
+						<ArrowDownIcon />
+					</span>
 				</div>
 				{modalInforUser && localStorage.getItem('accessToken') && (
 					<ul className='header__option-info'>
 						<Link to={localStorage.getItem('accessToken') && `/profile/${userInfo.id}`}>
-							<li>Thông tin cá nhân</li>
+							<li>
+								<ProfileIcon />
+								&nbsp;Thông tin cá nhân
+							</li>
 						</Link>
-						<li onClick={() => handleLogout()}>Đăng xuất</li>
+						<li onClick={() => handleLogout()}>
+							<LogOutIcon />
+							&nbsp;Đăng xuất
+						</li>
 					</ul>
 				)}
 			</div>

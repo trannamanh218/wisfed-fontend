@@ -1,20 +1,20 @@
 // import { Configure } from 'components/svg';
 import _ from 'lodash';
 import { useState, useRef, useEffect } from 'react';
-import { useSelector } from 'react-redux';
 import Post from 'shared/post';
 import CreatePost from './components/creat-post';
 import './newfeed.scss';
 // import ModalfilterHome from './components/modal-filter-home';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { getActivityList } from 'reducers/redux-utils/activity';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
 import LoadingIndicator from 'shared/loading-indicator';
 
 const NewFeed = () => {
 	const [isNewPost, setIsNewPost] = useState(false);
 	const { userInfo } = useSelector(state => state.auth);
+	const { reloadCount } = useSelector(state => state.task);
 	// const [modalShow, setModalShow] = useState(false);
 	const [hasMore, setHasMore] = useState(true);
 	const [postList, setPostList] = useState([]);
@@ -34,11 +34,13 @@ const NewFeed = () => {
 	// };
 
 	useEffect(async () => {
+		window.scrollTo(0, 0);
 		callApiStart.current = 10;
 		getPostListFirstTime();
-	}, [isNewPost, userInfo]);
+	}, [isNewPost, userInfo, reloadCount]);
 
 	const getPostListFirstTime = async () => {
+		setIsLoading(true);
 		try {
 			const params = {
 				start: 0,

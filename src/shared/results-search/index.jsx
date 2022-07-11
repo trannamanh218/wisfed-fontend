@@ -148,7 +148,7 @@ const ResultSearch = ({ valueInputSearch, resultSearch, setIsShow }) => {
 };
 ResultSearch.propTypes = {
 	valueInputSearch: PropTypes.string,
-	resultSearch: PropTypes.object,
+	resultSearch: PropTypes.any,
 	setIsShow: PropTypes.func,
 };
 export default ResultSearch;

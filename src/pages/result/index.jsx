@@ -13,7 +13,7 @@ import { useEffect, useState } from 'react';
 import Circle from 'shared/loading/circle';
 import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-import LoadingIndicator from 'shared/loading-indicator';
+// import LoadingIndicator from 'shared/loading-indicator';
 
 const Result = () => {
 	const { value } = useParams();

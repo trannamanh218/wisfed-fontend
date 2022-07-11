@@ -3,18 +3,14 @@ import bookImage from 'assets/images/default-book.png';
 import './book-thumbnail.scss';
 import classNames from 'classnames';
 import _ from 'lodash';
-import { Link } from 'react-router-dom';
 
 const BookThumbnail = props => {
 	const { images = [], source = '', name = 'book', size = 'md', handleClick, className = '', data = {} } = props;
-
 	return (
 		<div
 			className={classNames(`book-thumbnail book-thumbnail-${size}`, { [`${className}`]: className })}
 			onClick={() => {
-				if (!_.isEmpty(data)) {
-					handleClick(data);
-				}
+				handleClick(data);
 			}}
 			title={name}
 		>

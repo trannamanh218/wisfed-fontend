@@ -8,6 +8,7 @@ import Storage from 'helpers/Storage';
 import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import _ from 'lodash';
+import { useNavigate } from 'react-router-dom';
 
 const AuthorBook = props => {
 	const { data, checkStar, checkshare, setModalShow } = props;
@@ -15,6 +16,7 @@ const AuthorBook = props => {
 
 	const { userId } = useParams();
 	const userInfo = useSelector(state => state.auth.userInfo);
+	const navigate = useNavigate();
 
 	const handleShare = () => {
 		if (Storage.getAccessToken()) {
@@ -26,10 +28,19 @@ const AuthorBook = props => {
 
 	return (
 		<div className='author-book'>
-			<BookThumbnail source={data?.book?.images || data?.images[0]} />
+			<BookThumbnail
+				handleClick={() => navigate(`/book/detail/${data.id}`)}
+				source={data?.book?.images || data?.images[0]}
+				data={data}
+			/>
 			<div className='author-book__info'>
 				<div className='author-book__header'>
-					<h4 className='author-book__title' title={data.book?.name || data?.name}>
+					<h4
+						className='author-book__title'
+						title={data.book?.name || data?.name}
+						onMouseEnter={e => (e.target.style.cursor = 'pointer')}
+						onClick={() => navigate(`/book/detail/${data.id}`)}
+					>
 						{data.book?.name || data?.name}
 					</h4>
 					{checkshare && (
