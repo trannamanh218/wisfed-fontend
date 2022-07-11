@@ -1,0 +1,20 @@
+@import 'src/scss/abstracts/_variables.scss';
+
+.main-quotes-by-category {
+	&__header {
+		display: flex;
+		align-items: center;
+		gap: 1.5rem;
+		margin-bottom: 2rem;
+		h4 {
+			margin-bottom: 0;
+			font-size: 18px;
+		}
+	}
+
+	&__search {
+		max-width: 28.5rem;
+		border: 1px solid $ash-line;
+		margin-left: auto;
+	}
+}

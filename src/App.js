@@ -42,6 +42,7 @@ import ModalCheckLogin from 'shared/modal-check-login';
 import BooksAuthor from 'pages/books-author';
 import ReadingSummaryChartAuthor from 'pages/reading-summary-author';
 import DetailFeed from 'pages/home/components/newfeed/components/detailFeed';
+import QuotesByCategory from 'pages/quotes-by-category';
 
 function App({ children }) {
 	const dispatch = useDispatch();
@@ -105,6 +106,7 @@ function App({ children }) {
 				<Route path='/review/:bookId/:userId' element={<Review />} />
 				<Route path='/quotes/:userId' element={<Quote />} />
 				<Route path='/quotes/all' element={<QuoteAll />} />
+				<Route path='/quotes/category/:categoryId' element={<QuotesByCategory />} />
 				<Route path='/quotes/detail/:id' element={<QuoteDetail />} />
 				<Route path='/profile/:userId' element={<Profile />} />
 				<Route path='/confirm-my-book/:bookId' element={<ConfirmMyBook />} />

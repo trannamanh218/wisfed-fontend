@@ -18,11 +18,13 @@
 			font-weight: 600;
 			line-height: 1.5;
 			word-break: break-word;
+			cursor: pointer;
 		}
 
 		span {
 			font-size: 0.75rem;
 			color: $ash-label;
+			cursor: pointer;
 		}
 	}
 }

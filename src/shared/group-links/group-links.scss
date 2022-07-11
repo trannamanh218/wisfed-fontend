@@ -9,6 +9,7 @@
 
 	&__item {
 		padding: 1.5rem 1rem;
+		cursor: auto;
 
 		&:not(:last-of-type) {
 			border-bottom: 1px solid $grey-border;

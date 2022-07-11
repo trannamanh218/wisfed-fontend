@@ -40,6 +40,7 @@ import _ from 'lodash';
 import { patchNewNotification, updateUserInfo } from 'reducers/redux-utils/auth';
 
 import { increment } from 'reducers/redux-utils/reloadPostHomePage';
+import Request from 'helpers/Request';
 
 const Header = () => {
 	const { isShowModal } = useSelector(state => state.search);
@@ -157,8 +158,9 @@ const Header = () => {
 	};
 
 	const handleLogout = () => {
-		Storage.removeItem('accessToken');
-		Storage.removeItem('refreshToken');
+		localStorage.removeItem('accessToken');
+		localStorage.removeItem('refreshToken');
+		Request.clearToken();
 		dispatch(deleteUserInfo());
 		dispatch(updateTargetReading([]));
 		navigate('/login');

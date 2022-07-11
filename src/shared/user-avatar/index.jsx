@@ -4,7 +4,11 @@ import './user-avatar.scss';
 
 const UserAvatar = ({ avatarImage, name, size, handleClick, className, source }) => {
 	return (
-		<div className={`user-avatar user-avatar-${size} ${className ? className : ''}`} onClick={handleClick}>
+		<div
+			onMouseEnter={e => (e.target.style.cursor = 'pointer')}
+			className={`user-avatar user-avatar-${size} ${className ? className : ''}`}
+			onClick={handleClick}
+		>
 			<img
 				className='user-avatar__img'
 				src={avatarImage || source || defaultAvatar}
