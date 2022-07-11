@@ -24,7 +24,7 @@ import backgroundImageDefault from 'assets/images/background-profile.png';
 import { updateUserInfo } from 'reducers/redux-utils/auth';
 import { useNavigate } from 'react-router-dom';
 
-const PersonalInfo = ({ currentUserInfo }) => {
+const PersonalInfo = ({ currentUserInfo, setCurrentTab }) => {
 	const { ref: settingsRef, isVisible: isSettingsVisible, setIsVisible: setSettingsVisible } = useVisible(false);
 	const { modalOpen, setModalOpen, toggleModal } = useModal(false);
 	const [modalFriend, setModalFriend] = useState(false);
@@ -185,7 +185,12 @@ const PersonalInfo = ({ currentUserInfo }) => {
 					</div>
 					<div className='personal-info__detail__introduction'>
 						<ul className='personal-info__list'>
-							<li className='personal-info__item'>
+							<li
+								onClick={() => {
+									setCurrentTab('post');
+								}}
+								className='personal-info__item'
+							>
 								<span className='number'>{currentUserInfo.posts}</span>
 								<span>Bài viết</span>
 							</li>
