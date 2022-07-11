@@ -112,6 +112,8 @@ const ModalItem = ({
 			);
 		} else if (items.verb === 'follow' || items.verb === 'addFriend') {
 			navigate(`/profile/${items.createdBy.id}`);
+		} else if (item.verb === 'topUserRanking') {
+			navigate(`/top100`);
 		}
 
 		let newListArr = [];
