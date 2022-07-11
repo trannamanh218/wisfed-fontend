@@ -10,8 +10,9 @@ import { useState, useEffect } from 'react';
 import DualColumn from 'shared/dual-column';
 import { getCountQuotesByCategory } from 'reducers/redux-utils/quote';
 import { useDispatch } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { NotificationError } from 'helpers/Error';
+import { handleCategoryByQuotesName } from 'reducers/redux-utils/quote';
 
 const SidebarQuote = ({ listHashtags, inMyQuote, hasCountQuotes }) => {
 	const [inputSearch, setInputSearch] = useState('');
@@ -21,6 +22,7 @@ const SidebarQuote = ({ listHashtags, inMyQuote, hasCountQuotes }) => {
 	const { userId } = useParams();
 
 	const dispatch = useDispatch();
+	const navigate = useNavigate();
 
 	const myAllLibrary = useSelector(state => state.library.myAllLibrary);
 
@@ -46,8 +48,9 @@ const SidebarQuote = ({ listHashtags, inMyQuote, hasCountQuotes }) => {
 		setCategorySearchedList(newArray);
 	};
 
-	const filterQuotesByCategory = categoryId => {
-		console.log(categoryId);
+	const filterQuotesByCategory = (categoryId, categoryName) => {
+		dispatch(handleCategoryByQuotesName(categoryName));
+		navigate(`/quotes/category/${categoryId}`);
 	};
 
 	return (

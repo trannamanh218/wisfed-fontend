@@ -35,9 +35,7 @@ const NewFeed = () => {
 
 	useEffect(async () => {
 		callApiStart.current = 10;
-		if (!_.isEmpty(userInfo)) {
-			getPostListFirstTime();
-		}
+		getPostListFirstTime();
 	}, [isNewPost, userInfo]);
 
 	const getPostListFirstTime = async () => {

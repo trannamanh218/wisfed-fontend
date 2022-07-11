@@ -5,10 +5,17 @@ import StatusButton from 'components/status-button';
 import './author-book.scss';
 import { ShareRanks } from 'components/svg';
 import Storage from 'helpers/Storage';
+import { useParams } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import _ from 'lodash';
 
 const AuthorBook = props => {
 	const { data, checkStar, checkshare, setModalShow } = props;
 	const authorsName = data.authors?.map(author => author?.authorName);
+
+	const { userId } = useParams();
+	const userInfo = useSelector(state => state.auth.userInfo);
+
 	const handleShare = () => {
 		if (Storage.getAccessToken()) {
 			// navigate('/');
@@ -41,7 +48,11 @@ const AuthorBook = props => {
 					<span className='author-book__stats'>
 						{data?.countRating ? `${data?.countRating} (đánh giá)` : '0 (đánh giá)'}
 					</span>
-					<StatusButton bookData={data} status={data.status} />
+					{!_.isEmpty(userInfo) && userInfo.role === 'author' && userId === userInfo.id ? (
+						<></>
+					) : (
+						<StatusButton bookData={data} />
+					)}
 				</div>
 			</div>
 		</div>

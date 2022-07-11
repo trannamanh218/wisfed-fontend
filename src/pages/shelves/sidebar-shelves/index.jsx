@@ -37,22 +37,18 @@ const SidebarShelves = ({ shelveGroupName, isMyShelve, handleViewBookDetail, all
 
 	return (
 		<div className='sidebar-shelves'>
-			{!_.isEmpty(allLibrary) && (
-				<>
-					{!!allLibrary.default.length && (
-						<StatisticList
-							className='sidebar-shelves__reading__status'
-							title='Trạng thái đọc'
-							background='light'
-							isBackground={true}
-							list={allLibrary.default}
-							pageText={false}
-						/>
-					)}
-
-					{!!allLibrary.custom.length && <MyShelvesList list={allLibrary.custom} />}
-				</>
+			{!_.isEmpty(allLibrary) && !!allLibrary.default.length && (
+				<StatisticList
+					className='sidebar-shelves__reading__status'
+					title='Trạng thái đọc'
+					background='light'
+					isBackground={true}
+					list={allLibrary.default}
+					pageText={false}
+				/>
 			)}
+
+			<MyShelvesList list={allLibrary.custom} />
 
 			{!!quoteData.length && <QuotesLinks list={quoteData} title={`Quotes của ${shelveGroupName}`} />}
 

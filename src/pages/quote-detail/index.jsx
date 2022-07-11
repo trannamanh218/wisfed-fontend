@@ -12,6 +12,7 @@ import { likeUnlikeQuote } from 'reducers/redux-utils/quote';
 const QuoteDetail = () => {
 	const [quoteData, setQuoteData] = useState({});
 	const [listHashtags, setListHashtags] = useState([]);
+	const [mentionUsersArr, setMentionUsersArr] = useState([]);
 
 	const { id } = useParams();
 	const dispatch = useDispatch();
@@ -34,12 +35,14 @@ const QuoteDetail = () => {
 	};
 
 	const onCreateComment = async (content, replyId) => {
+		const newArr = [];
+		mentionUsersArr.forEach(item => newArr.push(item.userId));
 		const params = {
 			quoteId: Number(id),
 			content: content,
 			mediaUrl: [],
 			replyId: replyId,
-			mentionsUser: [],
+			mentionsUser: newArr,
 		};
 		try {
 			const res = await dispatch(creatQuotesComment(params)).unwrap();
@@ -74,6 +77,8 @@ const QuoteDetail = () => {
 					quoteData={quoteData}
 					onCreateComment={onCreateComment}
 					likeUnlikeQuoteFnc={likeUnlikeQuoteFnc}
+					setMentionUsersArr={setMentionUsersArr}
+					mentionUsersArr={mentionUsersArr}
 				/>
 			}
 			right={<SidebarQuote listHashtags={listHashtags} inMyQuote={false} hasCountQuotes={false} />}

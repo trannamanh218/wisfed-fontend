@@ -94,114 +94,125 @@ function Bookcase({ userInfo, currentTab }) {
 					{!!readBooks.length || !!readingBooks.length ? (
 						<>
 							<Circle loading={status === STATUS_LOADING} />
-							<div className='bookcase__item-name'>Sách đang đọc</div>
-							{readingBooks.length > 0 &&
-								readingBooks.map(item => (
-									<div key={item.bookId} className='bookcase__item'>
-										<div className='bookcase__item__book'>
-											<BookThumbnail source={item.book?.images[0]} size='lg' />
-											<div className='bookcase__item__book-info'>
-												<div className='bookcase__item__book-info__detail'>
-													<div className='bookcase__item__book-name'>{item.book?.name}</div>
-													<div className='bookcase__item__author-name'>
-														{item.book?.author
-															? item.book?.author
-															: 'Tác giả chưa xác định'}
-													</div>
-													{progressBarPercenNumber(item)}
-												</div>
-												<div className='bookcase__item__button'>
-													<button onClick={() => createReview(item.book, 'reading')}>
-														Viết Review
-													</button>
-												</div>
-											</div>
-										</div>
-										{item.reviewBook.length > 0 && (
-											<div className='bookcase__item__reviews'>
-												<div className='bookcase__item__reviews-name'>{`Bài Review ${item.book?.name}`}</div>
-												<div className='bookcase__item__reviews-list'>
-													{item.reviewBook.slice(0, 3).map((reviewItem, index) => (
-														<div key={reviewItem.id} className='bookcase__review-item'>
-															<div className='bookcase__review-item__svg'>
-																<BoldCenterCircle />
-																{index > 0 && (
-																	<div className='bookcase__review-item__vertical-stick'>
-																		<div className='bookcase__vertical-stick'></div>
-																	</div>
-																)}
-															</div>
-															<div className='bookcase__review-item__text'>
-																Ngày {formatDate(reviewItem.createdAt)} đọc được{' '}
-																{reviewItem.curProgress}/{item.book.page} trang sách
-															</div>
+							{readingBooks.length > 0 && (
+								<>
+									<div className='bookcase__item-name'>Sách đang đọc</div>
+									{readingBooks.map(item => (
+										<div key={item.bookId} className='bookcase__item'>
+											<div className='bookcase__item__book'>
+												<BookThumbnail source={item.book?.images[0]} size='lg' />
+												<div className='bookcase__item__book-info'>
+													<div className='bookcase__item__book-info__detail'>
+														<div className='bookcase__item__book-name'>
+															{item.book?.name}
 														</div>
-													))}
-												</div>
-												<div className='bookcase__review-all'>
-													<button onClick={() => navigateToBookReview(item.book)}>
-														<span>Xem toàn bộ Review</span>
-														<RightArrow />
-													</button>
-												</div>
-											</div>
-										)}
-									</div>
-								))}
-							<div className='bookcase__item-name'>Sách đã đọc</div>
-							{readBooks.length > 0 &&
-								readBooks.map(item => (
-									<div key={item.bookId} className='bookcase__item'>
-										<div className='bookcase__item__book'>
-											<BookThumbnail source={item.book?.images[0]} size='lg' />
-											<div className='bookcase__item__book-info'>
-												<div className='bookcase__item__book-info__detail'>
-													<div className='bookcase__item__book-name'>{item.book?.name}</div>
-													<div className='bookcase__item__author-name'>
-														{item.book?.author
-															? item.book?.author
-															: 'Tác giả chưa xác định'}
-													</div>
-													{progressBarPercenNumber(item)}
-												</div>
-												<div className='bookcase__item__button'>
-													<button onClick={() => createReview(item.book, 'read')}>
-														Viết Review
-													</button>
-												</div>
-											</div>
-										</div>
-										{item.reviewBook.length > 0 && (
-											<div className='bookcase__item__reviews'>
-												<div className='bookcase__item__reviews-name'>{`Bài Review ${item.book?.name}`}</div>
-												<div className='bookcase__item__reviews-list'>
-													{item.reviewBook.slice(0, 3).map((reviewItem, index) => (
-														<div key={reviewItem.id} className='bookcase__review-item'>
-															<div className='bookcase__review-item__svg'>
-																<BoldCenterCircle />
-																{index > 0 && (
-																	<div className='bookcase__review-item__vertical-stick'>
-																		<div className='bookcase__vertical-stick'></div>
-																	</div>
-																)}
-															</div>
-															<div className='bookcase__review-item__text'>
-																Ngày {formatDate(reviewItem.createdAt)} đọc được{' '}
-																{reviewItem.curProgress}/{item.book.page} trang sách
-															</div>
+														<div className='bookcase__item__author-name'>
+															{item.book?.author
+																? item.book?.author
+																: 'Tác giả chưa xác định'}
 														</div>
-													))}
-												</div>
-												<div className='bookcase__review-all'>
-													<button onClick={() => navigateToBookReview(item.book)}>
-														<span>Xem toàn bộ Review</span>
-														<RightArrow />
-													</button>
+														{progressBarPercenNumber(item)}
+													</div>
+													<div className='bookcase__item__button'>
+														<button onClick={() => createReview(item.book, 'reading')}>
+															Viết Review
+														</button>
+													</div>
 												</div>
 											</div>
-										)}
-									</div>
-								))}
+											{item.reviewBook.length > 0 && (
+												<div className='bookcase__item__reviews'>
+													<div className='bookcase__item__reviews-name'>{`Bài Review ${item.book?.name}`}</div>
+													<div className='bookcase__item__reviews-list'>
+														{item.reviewBook.slice(0, 3).map((reviewItem, index) => (
+															<div key={reviewItem.id} className='bookcase__review-item'>
+																<div className='bookcase__review-item__svg'>
+																	<BoldCenterCircle />
+																	{index > 0 && (
+																		<div className='bookcase__review-item__vertical-stick'>
+																			<div className='bookcase__vertical-stick'></div>
+																		</div>
+																	)}
+																</div>
+																<div className='bookcase__review-item__text'>
+																	Ngày {formatDate(reviewItem.createdAt)} đọc được{' '}
+																	{reviewItem.curProgress}/{item.book.page} trang sách
+																</div>
+															</div>
+														))}
+													</div>
+													<div className='bookcase__review-all'>
+														<button onClick={() => navigateToBookReview(item.book)}>
+															<span>Xem toàn bộ Review</span>
+															<RightArrow />
+														</button>
+													</div>
+												</div>
+											)}
+										</div>
+									))}
+								</>
+							)}
+
+							{readBooks.length > 0 && (
+								<>
+									<div className='bookcase__item-name'>Sách đã đọc</div>
+									{readBooks.map(item => (
+										<div key={item.bookId} className='bookcase__item'>
+											<div className='bookcase__item__book'>
+												<BookThumbnail source={item.book?.images[0]} size='lg' />
+												<div className='bookcase__item__book-info'>
+													<div className='bookcase__item__book-info__detail'>
+														<div className='bookcase__item__book-name'>
+															{item.book?.name}
+														</div>
+														<div className='bookcase__item__author-name'>
+															{item.book?.author
+																? item.book?.author
+																: 'Tác giả chưa xác định'}
+														</div>
+														{progressBarPercenNumber(item)}
+													</div>
+													<div className='bookcase__item__button'>
+														<button onClick={() => createReview(item.book, 'read')}>
+															Viết Review
+														</button>
+													</div>
+												</div>
+											</div>
+											{item.reviewBook.length > 0 && (
+												<div className='bookcase__item__reviews'>
+													<div className='bookcase__item__reviews-name'>{`Bài Review ${item.book?.name}`}</div>
+													<div className='bookcase__item__reviews-list'>
+														{item.reviewBook.slice(0, 3).map((reviewItem, index) => (
+															<div key={reviewItem.id} className='bookcase__review-item'>
+																<div className='bookcase__review-item__svg'>
+																	<BoldCenterCircle />
+																	{index > 0 && (
+																		<div className='bookcase__review-item__vertical-stick'>
+																			<div className='bookcase__vertical-stick'></div>
+																		</div>
+																	)}
+																</div>
+																<div className='bookcase__review-item__text'>
+																	Ngày {formatDate(reviewItem.createdAt)} đọc được{' '}
+																	{reviewItem.curProgress}/{item.book.page} trang sách
+																</div>
+															</div>
+														))}
+													</div>
+													<div className='bookcase__review-all'>
+														<button onClick={() => navigateToBookReview(item.book)}>
+															<span>Xem toàn bộ Review</span>
+															<RightArrow />
+														</button>
+													</div>
+												</div>
+											)}
+										</div>
+									))}
+								</>
+							)}
 						</>
 					) : (
 						<p className='none-data'>Chưa có cuốn sách nào</p>

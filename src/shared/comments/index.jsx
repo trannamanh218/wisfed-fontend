@@ -57,7 +57,11 @@ const Comment = ({ data, handleReply, postData, commentLv1Id, type }) => {
 				<div className='comment__container'>
 					<div className='comment__header'>
 						<span className='comment__author'>
-							{data.user.name ||
+							{data['user.name'] ||
+								data['user.fullName'] ||
+								data['user.lastName'] ||
+								data['user.firstName'] ||
+								data.user.name ||
 								data.user.fullName ||
 								data.user.lastName ||
 								data.user.firstName ||
@@ -81,7 +85,15 @@ const Comment = ({ data, handleReply, postData, commentLv1Id, type }) => {
 					>
 						Thích
 					</li>
-					<li className='comment__item' onClick={() => handleReply(commentLv1Id)}>
+					<li
+						className='comment__item'
+						onClick={() =>
+							handleReply(commentLv1Id, {
+								userId: data.user.id,
+								userFullName: data.user.fullName || data.user.firstName + ' ' + data.user.lastName,
+							})
+						}
+					>
 						Phản hồi
 					</li>
 					<li className='comment__item comment__item--timeline'>

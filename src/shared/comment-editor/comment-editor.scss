@@ -11,25 +11,33 @@
 	}
 }
 
-.comment-editor__form {
-	flex-grow: 1;
-}
-
-.comment-editor__textarea {
+.comment-editor__text-area-wrapper {
 	width: 100%;
-	padding: 11px 16px;
 	background: #fefdfa;
 	border: 1px solid #d9dbe9;
 	border-radius: 15px;
-	resize: none;
-	font-size: 13px;
 	overflow: hidden;
-	outline: none;
+	font-size: 13px;
 	color: #2d2c42;
+	position: relative;
+}
+
+.comment-editor__text-area {
+	width: 100%;
+	line-height: 22px !important;
+	padding: 11px 16px;
+}
+
+.comment-editor__text-area-placeholder {
+	position: absolute;
+	top: 0;
+	left: 16px;
+	transform: translate(0, 50%);
+	color: #a0a3bd;
+	font-size: 13px;
 	line-height: 22px;
-	&::placeholder {
-		color: #a0a3bd;
-		font-size: 13px;
-		line-height: 22px;
+	z-index: 1;
+	&.hide {
+		display: none;
 	}
 }

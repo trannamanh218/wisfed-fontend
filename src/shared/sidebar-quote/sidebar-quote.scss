@@ -7,7 +7,6 @@
 	min-height: 100vh;
 	padding-top: 12px;
 	&__reading__status {
-		margin-top: 1rem;
 		h4 {
 			margin-bottom: 1.5rem;
 		}
@@ -24,10 +23,13 @@
 
 		.dualColumn {
 			margin-top: 24px;
-			.dualColumn-item__number {
-				font-size: 15px;
-				color: $ash;
-				font-weight: 600;
+			.dualColumn-item {
+				cursor: pointer;
+				.dualColumn-item__number {
+					font-size: 15px;
+					color: $ash;
+					font-weight: 600;
+				}
 			}
 		}
 

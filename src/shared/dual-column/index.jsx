@@ -68,7 +68,7 @@ const DualColumn = props => {
 								className='dualColumn-item__title'
 								onClick={
 									pageText
-										? () => filterQuotesByCategory(item.id)
+										? () => filterQuotesByCategory(item.id, item.name)
 										: () => handleOnClick(item.category)
 								}
 								style={inCategory ? { cursor: 'pointer' } : {}}

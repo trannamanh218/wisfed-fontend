@@ -6,15 +6,12 @@ import QuoteCard from 'shared/quote-card';
 import './main-quote-detail.scss';
 import _ from 'lodash';
 import CommentEditor from 'shared/comment-editor';
-import { useSelector } from 'react-redux';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { QUOTE_TYPE } from 'constants';
 
-const MainQuoteDetail = ({ quoteData, onCreateComment, likeUnlikeQuoteFnc }) => {
-	const userInfo = useSelector(state => state.auth.userInfo);
-
+const MainQuoteDetail = ({ quoteData, onCreateComment, likeUnlikeQuoteFnc, setMentionUsersArr, mentionUsersArr }) => {
 	const [commentLv1IdArray, setCommentLv1IdArray] = useState([]);
 	const [replyingCommentId, setReplyingCommentId] = useState(0);
 	const [clickReply, setClickReply] = useState(false);
@@ -34,40 +31,13 @@ const MainQuoteDetail = ({ quoteData, onCreateComment, likeUnlikeQuoteFnc }) => 
 		}
 	}, [quoteData.commentQuotes]);
 
-	const handleReply = cmtLv1Id => {
+	const handleReply = (cmtLv1Id, userData) => {
+		const arr = [];
+		arr.push(userData);
+		setMentionUsersArr(arr);
 		setReplyingCommentId(cmtLv1Id);
 		setClickReply(!clickReply);
 	};
-
-	useEffect(() => {
-		const textareaInCommentEdit = document.querySelector(`#textarea-${replyingCommentId}`);
-		if (textareaInCommentEdit) {
-			textareaInCommentEdit.focus();
-			window.scroll({
-				top: textareaInCommentEdit.offsetTop - 400,
-				behavior: 'smooth',
-			});
-			// textareaInCommentEdit.innerHTML = `<span class="url-color">${mentionUsersComment[0].userFullName}</span>`;
-			// placeCaretAtEnd(textareaInCommentEdit);
-		}
-	}, [replyingCommentId, clickReply]);
-
-	// const placeCaretAtEnd = element => {
-	// 	element.focus();
-	// 	if (typeof window.getSelection != 'undefined' && typeof document.createRange != 'undefined') {
-	// 		const range = document.createRange();
-	// 		range.selectNodeContents(element);
-	// 		range.collapse(false);
-	// 		const selection = window.getSelection();
-	// 		selection.removeAllRanges();
-	// 		selection.addRange(range);
-	// 	} else if (typeof document.body.createTextRange != 'undefined') {
-	// 		const textRange = document.body.createTextRange();
-	// 		textRange.moveToElementText(element);
-	// 		textRange.collapse(false);
-	// 		textRange.select();
-	// 	}
-	// };
 
 	return (
 		<div className='main-quote-detail'>
@@ -124,19 +94,22 @@ const MainQuoteDetail = ({ quoteData, onCreateComment, likeUnlikeQuoteFnc }) => 
 								})}
 								{commentLv1IdArray.includes(comment.id) && (
 									<CommentEditor
-										userInfo={userInfo}
 										onCreateComment={onCreateComment}
 										className={classNames('reply-comment-editor', {
 											'show': comment.id === replyingCommentId,
 										})}
 										replyId={replyingCommentId}
 										textareaId={`textarea-${comment.id}`}
+										mentionUsersArr={mentionUsersArr}
+										replyingCommentId={replyingCommentId}
+										clickReply={clickReply}
+										setMentionUsersArr={setMentionUsersArr}
 									/>
 								)}
 							</div>
 						</div>
 					))}
-					<CommentEditor userInfo={userInfo} replyId={null} onCreateComment={onCreateComment} />
+					<CommentEditor replyId={null} onCreateComment={onCreateComment} mentionUsersArr={mentionUsersArr} />
 				</div>
 			)}
 		</div>

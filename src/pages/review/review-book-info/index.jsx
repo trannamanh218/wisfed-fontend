@@ -32,7 +32,9 @@ const ReviewBookInfo = ({ bookInfo }) => {
 			<div className='review-book-info__content'>
 				<div className='review-book-info__name-author'>
 					<h1 className='review-book-info__name'>{bookInfo.name}</h1>
-					<div className='review-book-info__author'>Bởi {bookInfo.authors[0].authorName}</div>
+					{!!bookInfo.authors.length && (
+						<div className='review-book-info__author'>Bởi {bookInfo.authors[0].authorName}</div>
+					)}
 				</div>
 				<div className='review-book-info__stars'>
 					<ReactRating readonly={true} initialRating={lisRatingStar?.avg} />

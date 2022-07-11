@@ -1,3 +1,4 @@
+import './main-quotes-by-category.scss';
 import { useState, useEffect, useRef, useCallback } from 'react';
 import BackButton from 'shared/back-button';
 import FilterQuotePane from 'shared/fitler-quote-pane';
@@ -9,8 +10,10 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import { NotificationError } from 'helpers/Error';
 import LoadingIndicator from 'shared/loading-indicator';
 import _ from 'lodash';
+import { useParams } from 'react-router-dom';
+import { getCategoryDetail } from 'reducers/redux-utils/category';
 
-const MainAllQuotes = () => {
+const MainQuotesByCategory = () => {
 	const filterOptions = [
 		{ id: 1, title: 'Tất cả', value: 'all' },
 		{ id: 2, title: 'Bạn bè', value: 'friends' },
@@ -26,36 +29,55 @@ const MainAllQuotes = () => {
 	const [isLoading, setIsLoading] = useState(true);
 	const [filter, setFilter] = useState([]);
 	const [getDataFirstTimeStatus, setGetDataFirsttimeStatus] = useState(true);
+	const [categoryName, setCategoryName] = useState('');
 
 	const callApiStart = useRef(10);
 	const callApiPerPage = useRef(10);
 
 	const resetQuoteList = useSelector(state => state.quote.resetQuoteList);
+	const categoryByQuotesName = useSelector(state => state.quote.categoryByQuotesName);
 	const userInfo = useSelector(state => state.auth.userInfo);
 
+	const { categoryId } = useParams();
 	const dispatch = useDispatch();
 
 	useEffect(() => {
+		window.scroll(0, 0);
 		setHasMore(true);
 		callApiStart.current = 10;
 		setInputSearchValue('');
 		setFilter([]);
-		getAllQuoteListFirstTime();
-	}, [resetQuoteList, currentOption]);
+		if (categoryByQuotesName) {
+			setCategoryName(categoryByQuotesName);
+		} else {
+			getCategoryData();
+		}
+		getQuotesByCategoryFirstTime();
+	}, [resetQuoteList, currentOption, categoryId]);
 
 	useEffect(() => {
 		if (!getDataFirstTimeStatus) {
 			setHasMore(true);
 			callApiStart.current = 10;
-			getAllQuoteListFirstTime();
+			getQuotesByCategoryFirstTime();
 		}
 	}, [filter, sortValue, sortDirection]);
 
-	const getAllQuoteListFirstTime = async () => {
+	const getCategoryData = async () => {
+		try {
+			const res = await dispatch(getCategoryDetail(categoryId)).unwrap();
+			setCategoryName(res.name);
+		} catch (err) {
+			NotificationError(err);
+		}
+	};
+
+	const getQuotesByCategoryFirstTime = async () => {
 		try {
 			let params = {
 				start: 0,
 				limit: callApiPerPage.current,
+				categoryId: categoryId,
 				sort: JSON.stringify([{ property: sortValue, direction: sortDirection }]),
 				filter: JSON.stringify(filter),
 			};
@@ -83,11 +105,12 @@ const MainAllQuotes = () => {
 		}
 	};
 
-	const getAllQuoteList = async () => {
+	const getQuotesByCategory = async () => {
 		try {
 			let params = {
 				start: callApiStart.current,
 				limit: callApiPerPage.current,
+				categoryId: categoryId,
 				sort: JSON.stringify([{ property: sortValue, direction: sortDirection }]),
 				filter: JSON.stringify(filter),
 			};
@@ -148,12 +171,12 @@ const MainAllQuotes = () => {
 	};
 
 	return (
-		<div className='main-quote'>
-			<div className='main-quote__header'>
-				<BackButton destination='/' />
-				<h4>Tất cả Quotes</h4>
+		<div className='main-quotes-by-category'>
+			<div className='main-quotes-by-category__header'>
+				<BackButton destination={-1} />
+				<h4>Quotes theo chủ đề "{categoryName.toLowerCase()}"</h4>
 				<SearchField
-					className='main-quote__search'
+					className='main-quotes-by-category__search'
 					placeholder='Tìm kiếm nội dung quotes'
 					handleChange={onChangeInput}
 					value={inputSearchValue}
@@ -173,7 +196,7 @@ const MainAllQuotes = () => {
 						{allQuoteList.length > 0 ? (
 							<InfiniteScroll
 								dataLength={allQuoteList.length}
-								next={getAllQuoteList}
+								next={getQuotesByCategory}
 								hasMore={hasMore}
 								loader={<LoadingIndicator />}
 							>
@@ -191,4 +214,4 @@ const MainAllQuotes = () => {
 	);
 };
 
-export default MainAllQuotes;
+export default MainQuotesByCategory;

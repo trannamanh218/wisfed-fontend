@@ -62,7 +62,7 @@ const Sidebar = () => {
 			{wantToReadList.length > 0 && !_.isEmpty(userInfo) && <TheBooksWantsToRead list={wantToReadList} />}
 			<div className='sidebar__block'>
 				<h4 className='sidebar__block__title'>Quotes</h4>
-				{!_.isEmpty(quoteRandom) && (
+				{!_.isEmpty(quoteRandom) ? (
 					<div className='sidebar__block__content'>
 						<div className='quotes__content'>
 							<p>{`“ ${quoteRandom?.quote} ”`}</p>
@@ -72,6 +72,8 @@ const Sidebar = () => {
 							Xem thêm
 						</Link>
 					</div>
+				) : (
+					<p>Không có dữ liệu</p>
 				)}
 			</div>
 
