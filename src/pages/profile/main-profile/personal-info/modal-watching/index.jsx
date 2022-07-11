@@ -16,6 +16,7 @@ import { useParams } from 'react-router-dom';
 const ModalWatching = ({ setModalFollowing, modalFollowing, userInfoDetail }) => {
 	const { userInfo } = useSelector(state => state.auth);
 	const [getListFollow, setGetListFollow] = useState([]);
+	// const [inputSearch, setInputSearch] = useSelector('');
 	const dispatch = useDispatch();
 	const { userId } = useParams();
 	useEffect(async () => {
@@ -127,6 +128,10 @@ const ModalWatching = ({ setModalFollowing, modalFollowing, userInfoDetail }) =>
 		}
 	};
 
+	// const onChangeInputSearch = e => {
+	// 	setInputSearch(e.target.value);
+	// };
+
 	return (
 		<>
 			<Modal size='lg' className='modalFollowers__container__main' show={true} onHide={toggleModal}>
@@ -140,7 +145,11 @@ const ModalWatching = ({ setModalFollowing, modalFollowing, userInfoDetail }) =>
 						</div>
 					</div>
 					<div className='modalFollowers__search'>
-						<SearchField placeholder='Tìm kiếm trên Wisfeed' />
+						<SearchField
+							placeholder='Tìm kiếm trên Wisfeed'
+							// value={inputSearch}
+							// handleChange={onChangeInputSearch}
+						/>
 					</div>
 					<div className='modalFollowers__info'>
 						{getListFollow.map(item =>
@@ -150,7 +159,7 @@ const ModalWatching = ({ setModalFollowing, modalFollowing, userInfoDetail }) =>
 								<div key={item.id} className='author-card'>
 									<div className='author-card__left'>
 										<UserAvatar
-											source={item.userTwo.avatarImage}
+											source={item?.userTwo?.avatarImage}
 											className='author-card__avatar'
 											size={'md'}
 										/>
@@ -158,7 +167,7 @@ const ModalWatching = ({ setModalFollowing, modalFollowing, userInfoDetail }) =>
 											<h5>
 												{item.userTwo.firstName} {item.userTwo.lastName}
 											</h5>
-											<p className='author-card__subtitle'>3K follow, 300 bạn bè</p>
+											<p className='author-card__subtitle'>3k follow, 300 bạn bè</p>
 										</div>
 									</div>
 									<div className='author-card__right'>
