@@ -50,7 +50,7 @@ const SidebarShelves = ({ shelveGroupName, isMyShelve, handleViewBookDetail, all
 						/>
 					)}
 
-					{!!allLibrary.custom.length && <MyShelvesList list={allLibrary.custom} />}
+					<MyShelvesList list={allLibrary.custom} />
 				</>
 			)}
 
