@@ -15,7 +15,6 @@ const NewFeed = () => {
 	const [isNewPost, setIsNewPost] = useState(false);
 	const { userInfo } = useSelector(state => state.auth);
 	const { reloadCount } = useSelector(state => state.task);
-	// const [modalShow, setModalShow] = useState(false);
 	const [hasMore, setHasMore] = useState(true);
 	const [postList, setPostList] = useState([]);
 	const [isLoading, setIsLoading] = useState(true);
@@ -29,12 +28,7 @@ const NewFeed = () => {
 		setIsNewPost(!isNewPost);
 	};
 
-	// const handleModalFilter = () => {
-	// 	setModalShow(true);
-	// };
-
 	useEffect(async () => {
-		// window.scrollTo(0, 0);
 		callApiStart.current = 10;
 		// if (!_.isEmpty(userInfo)) {
 		getPostListFirstTime();
@@ -81,12 +75,7 @@ const NewFeed = () => {
 		<div className='newfeed'>
 			<div className='newfeed__header'>
 				<p>Bảng tin</p>
-				{/* <div onClick={handleModalFilter}>
-					<Configure />
-				</div> */}
 			</div>
-			{/* <ModalfilterHome modalShow={modalShow} setModalShow={setModalShow} /> */}
-
 			{!_.isEmpty(userInfo) && <CreatePost onChangeNewPost={onChangeNewPost} />}
 
 			{isLoading ? (
