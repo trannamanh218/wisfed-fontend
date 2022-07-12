@@ -2,7 +2,6 @@ import PropTypes from 'prop-types';
 import bookImage from 'assets/images/default-book.png';
 import './book-thumbnail.scss';
 import classNames from 'classnames';
-import _ from 'lodash';
 
 const BookThumbnail = props => {
 	const { images = [], source = '', name = 'book', size = 'md', handleClick, className = '', data = {} } = props;

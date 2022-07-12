@@ -5,7 +5,6 @@ import './grid-image.scss';
 import classNames from 'classnames';
 import _ from 'lodash';
 import { Modal } from 'react-bootstrap';
-import { Button, ModalBody } from 'reactstrap';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
