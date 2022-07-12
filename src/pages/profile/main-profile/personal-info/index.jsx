@@ -35,12 +35,6 @@ const PersonalInfo = ({ currentUserInfo, setCurrentTab }) => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
-	const item = {
-		isFollow: false,
-		isFriend: true,
-		pending: false,
-	};
-
 	useEffect(() => {
 		setModalOpen(false);
 	}, [userInfo]);
@@ -181,7 +175,7 @@ const PersonalInfo = ({ currentUserInfo, setCurrentTab }) => {
 
 				<div className='personal-info__detail__connect-buttons-and-introduction'>
 					<div className={currentUserInfo.id !== userInfo.id ? 'personal-info' : 'personal-info-none'}>
-						<ConnectButtons item={item} />
+						<ConnectButtons item={currentUserInfo} />
 					</div>
 					<div className='personal-info__detail__introduction'>
 						<ul className='personal-info__list'>

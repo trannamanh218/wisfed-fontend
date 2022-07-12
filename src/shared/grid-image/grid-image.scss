@@ -48,3 +48,10 @@
 		letter-spacing: 5px;
 	}
 }
+.slick-prev {
+	margin-left: -15px !important;
+}
+
+.slick-next:before {
+	margin-left: 15px;
+}
