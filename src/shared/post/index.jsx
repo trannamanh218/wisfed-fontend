@@ -23,8 +23,14 @@ import PostQuotes from 'shared/post-quotes';
 import PostsShare from 'shared/posts-Share';
 import { likeAndUnlikeReview } from 'reducers/redux-utils/book';
 import { POST_TYPE, REVIEW_TYPE } from 'constants';
+import { Modal } from 'react-bootstrap';
+import { Button, ModalBody } from 'reactstrap';
 
 function Post({ postInformations, className, showModalCreatPost, inReviews = false }) {
+	const [show, setShow] = useState(false);
+
+	const handleClose = () => setShow(false);
+	const handleShow = () => setShow(true);
 	const [postData, setPostData] = useState({});
 	const [videoId, setVideoId] = useState('');
 	const { userInfo } = useSelector(state => state.auth);

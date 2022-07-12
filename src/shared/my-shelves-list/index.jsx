@@ -39,7 +39,7 @@ const MyShelvesList = ({ list }) => {
 			return false;
 		}
 	};
-	console.log(list);
+
 	return (
 		<>
 			{' '}
