@@ -8,6 +8,7 @@
 	border-bottom-left-radius: 12px;
 	border-bottom-right-radius: 12px;
 	box-shadow: 0px 0px 32px rgba(0, 0, 0, 0.04);
+	cursor: default;
 	.notificaiton__container {
 		background: #fcfcfc;
 		font-family: 'Montserrat';
@@ -65,6 +66,13 @@
 		border-bottom-left-radius: 12px;
 		border-bottom-right-radius: 12px;
 		padding-bottom: 0;
+	}
+	.no__notificaion {
+		font-size: 1.25rem;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		margin: 50px 0;
 	}
 }
 .notificaiton__tabs__all__active {
