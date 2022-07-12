@@ -10,6 +10,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { sharePostsAll, saveDataShare } from 'reducers/redux-utils/post';
 import classNames from 'classnames';
 import _ from 'lodash';
+import { useEffect } from 'react';
 
 const AuthorBook = props => {
 	const { data, checkStar, checkshare, setModalShow, topBooksId, valueDate, categoryName } = props;
@@ -37,6 +38,18 @@ const AuthorBook = props => {
 		}
 	};
 
+	const generateBookThumbnailSrc = data => {
+		if (data?.info && data.info?.images.length > 0) {
+			return data.info.images[0];
+		} else if (data?.book && data.book?.images.length > 0) {
+			return data.book.images[0];
+		} else if (data?.images && data.images.length > 0) {
+			return data.images[0];
+		} else {
+			return '';
+		}
+	};
+
 	return (
 		!_.isEmpty(data) && (
 			<div className={data.verb === 'shareTopBookRanking' && 'creat-post-modal-content__main__share-container'}>
@@ -46,7 +59,8 @@ const AuthorBook = props => {
 					})}
 				>
 					<BookThumbnail
-						source={data?.info ? data.info?.images[0] : data?.book?.images[0] || data?.images[0]}
+						// source={data?.info ? data.info?.images[0] : data?.book?.images[0] || data?.images[0]}
+						source={generateBookThumbnailSrc(data)}
 					/>
 					<div className='author-book__info'>
 						<div className='author-book__header'>

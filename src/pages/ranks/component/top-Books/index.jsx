@@ -9,6 +9,7 @@ import { getTopBooks, getTopBooksAuth } from 'reducers/redux-utils/ranks';
 import { useDispatch, useSelector } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
 import ModalCheckLogin from 'shared/modal-check-login';
+import LoadingIndicator from 'shared/loading-indicator';
 
 const TopBooks = ({ rows, listYear }) => {
 	const kindOfGroupRef = useRef({ value: 'default', title: 'Chủ đề' });
@@ -18,14 +19,16 @@ const TopBooks = ({ rows, listYear }) => {
 	const [valueDate, setValueData] = useState('week');
 	const [getListTopBooks, setGetListTopBooks] = useState([]);
 	const [modalShow, setModalShow] = useState(false);
+	const [loadingState, setLoadingState] = useState(false);
 	const dispatch = useDispatch();
 
 	const onchangeKindOfGroup = data => {
 		kindOfGroupRef.current = data;
 		setTopQuotesId(data.id);
 	};
-	console.log();
+
 	const getTopBooksData = async () => {
+		setLoadingState(true);
 		const params = {
 			categoryId: topBooksId,
 			by: valueDate,
@@ -40,6 +43,8 @@ const TopBooks = ({ rows, listYear }) => {
 			}
 		} catch (err) {
 			NotificationError(err);
+		} finally {
+			setLoadingState(false);
 		}
 	};
 
@@ -48,6 +53,7 @@ const TopBooks = ({ rows, listYear }) => {
 	}, [topBooksId, valueDate, isAuth]);
 
 	const onchangeKindOfDate = data => {
+		window.scrollTo(0, 0);
 		listYearRef.current = data;
 		setValueData(data.value);
 	};
@@ -76,25 +82,31 @@ const TopBooks = ({ rows, listYear }) => {
 					/>
 				</div>
 			</div>
-			{getListTopBooks.length > 0 ? (
-				getListTopBooks.map((item, index) => (
-					<div key={item.bookId} className='topbooks__container__main top__book'>
-						<StarRanking index={index} />
-						<div className='topbooks__container__main__layout'>
-							<AuthorBook
-								data={item}
-								checkStar={CHECK_STAR}
-								checkshare={CHECK_SHARE}
-								setModalShow={setModalShow}
-								valueDate={valueDate}
-								topBooksId={topBooksId}
-								categoryName={kindOfGroupRef.current.name}
-							/>
-						</div>
-					</div>
-				))
+			{loadingState ? (
+				<LoadingIndicator />
 			) : (
-				<div className='topbooks__notthing'>Không có dữ liệu</div>
+				<>
+					{getListTopBooks.length > 0 ? (
+						getListTopBooks.map((item, index) => (
+							<div key={item.bookId} className='topbooks__container__main top__book'>
+								<StarRanking index={index} />
+								<div className='topbooks__container__main__layout'>
+									<AuthorBook
+										data={item}
+										checkStar={CHECK_STAR}
+										checkshare={CHECK_SHARE}
+										setModalShow={setModalShow}
+										valueDate={valueDate}
+										topBooksId={topBooksId}
+										categoryName={kindOfGroupRef.current.name}
+									/>
+								</div>
+							</div>
+						))
+					) : (
+						<div className='topbooks__notthing'>Không có dữ liệu</div>
+					)}
+				</>
 			)}
 		</div>
 	);
