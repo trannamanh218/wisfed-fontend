@@ -32,8 +32,8 @@ function Login() {
 			const actionLogin = await dispatch(login(data));
 			const infoUserLogin = unwrapResult(actionLogin);
 			if (infoUserLogin) {
-				toast.success('Đăng nhập thành công');
 				const actionCheckJwt = await dispatch(getCheckJwt()).unwrap();
+				toast.success('Đăng nhập thành công');
 				if (!_.isEmpty(actionCheckJwt?.favoriteCategory)) {
 					navigate('/');
 				} else {

@@ -102,28 +102,46 @@ const CommentEditor = ({
 		}
 	};
 
+	// return (
+	// 	<div className={`comment-editor ${className ? className : ''}`}>
+	// 		<div className='comment-editor__avatar'>
+	// 			<UserAvatar size='sm' source={userInfo.avatarImage} />
+	// 		</div>
+	// 		<div className='comment-editor__text-area-wrapper'>
+	// 			<div
+	// 				ref={commentArea}
+	// 				className='comment-editor__text-area'
+	// 				contentEditable={true}
+	// 				onChange={onChangeComment}
+	// 				id={textareaId}
+	// 				onKeyPress={handleKeyPress}
+	// 			></div>
+	// 			<div
+	// 				className={classNames('comment-editor__text-area-placeholder', {
+	// 					'hide': !showPlaceholder,
+	// 				})}
+	// 			>
+	// 				Viết bình luận...
+	// 			</div>
+	// 		</div>
+	// 	</div>
+	// );
+
 	return (
 		<div className={`comment-editor ${className ? className : ''}`}>
 			<div className='comment-editor__avatar'>
 				<UserAvatar size='sm' source={userInfo.avatarImage} />
 			</div>
-			<div className='comment-editor__text-area-wrapper'>
-				<div
-					ref={commentArea}
-					className='comment-editor__text-area'
-					contentEditable={true}
-					onChange={onChangeComment}
-					id={textareaId}
-					onKeyPress={handleKeyPress}
-				></div>
-				<div
-					className={classNames('comment-editor__text-area-placeholder', {
-						'hide': !showPlaceholder,
-					})}
-				>
-					Viết bình luận...
-				</div>
-			</div>
+			<textarea
+				ref={commentArea}
+				className='comment-editor__textarea'
+				placeholder='Viết bình luận...'
+				rows='1'
+				onChange={onChangeComment}
+				name='content'
+				id={textareaId}
+				onKeyPress={handleKeyPress}
+			/>
 		</div>
 	);
 };
