@@ -46,7 +46,7 @@ const TopQuotesComponent = ({ item, valueDate, categoryItem }) => {
 	);
 };
 TopQuotesComponent.propTypes = {
-	item: PropTypes.array,
+	item: PropTypes.any,
 	valueDate: PropTypes.string,
 	categoryItem: PropTypes.object,
 };

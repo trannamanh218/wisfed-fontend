@@ -60,25 +60,25 @@ const Comment = ({ data, handleReply, postData, commentLv1Id, type }) => {
 			/>
 			<div className='comment__wrapper'>
 				<div className='comment__container'>
-					<Link to={`/profile/${postData.usersComments?.id || postData.commentQuotes?.id}`}>
-						<div className='comment__header'>
-							<Link to={`/profile/${data.user.id}`}>
-								<span className='comment__author'>
-									{data.user.name ||
-										data.user.fullName ||
-										data.user.lastName ||
-										data.user.firstName ||
-										'Không xác định'}
-								</span>
-							</Link>
+					{/* <Link to={`/profile/${postData.usersComments?.id || postData.commentQuotes?.id}`}> */}
+					<div className='comment__header'>
+						<Link to={`/profile/${data.user.id}`}>
+							<span className='comment__author'>
+								{data.user.name ||
+									data.user.fullName ||
+									data.user.lastName ||
+									data.user.firstName ||
+									'Không xác định'}
+							</span>
+						</Link>
 
-							{isAuthor && (
-								<Badge className='comment__badge' bg='primary-light'>
-									Tác giả
-								</Badge>
-							)}
-						</div>
-					</Link>
+						{isAuthor && (
+							<Badge className='comment__badge' bg='primary-light'>
+								Tác giả
+							</Badge>
+						)}
+					</div>
+					{/* </Link> */}
 
 					<p className='comment__content'>{data.content}</p>
 				</div>
