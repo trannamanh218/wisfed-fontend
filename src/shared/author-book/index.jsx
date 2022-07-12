@@ -12,7 +12,7 @@ import classNames from 'classnames';
 import _ from 'lodash';
 
 const AuthorBook = props => {
-	const { data, checkStar, checkshare, setModalShow, topBooksId, valueDate } = props;
+	const { data, checkStar, checkshare, setModalShow, topBooksId, valueDate, categoryName } = props;
 	const { isSharePostsAll } = useSelector(state => state.post);
 	const authorsName = data.authors?.map(author => author?.authorName);
 	const dispatch = useDispatch();
@@ -22,6 +22,7 @@ const AuthorBook = props => {
 			by: valueDate,
 			type: 'topBook',
 			categoryId: topBooksId || null,
+			categoryName: categoryName || null,
 			...data,
 		};
 		if (Storage.getAccessToken()) {
@@ -95,6 +96,7 @@ AuthorBook.propTypes = {
 	setModalShow: PropTypes.func,
 	valueDate: PropTypes.string,
 	topBooksId: PropTypes.number,
+	categoryName: PropTypes.string,
 };
 
 export default AuthorBook;

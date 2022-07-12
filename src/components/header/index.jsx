@@ -38,7 +38,6 @@ import defaultAvatar from 'assets/images/avatar.jpeg';
 import * as stream from 'getstream';
 import _ from 'lodash';
 import { patchNewNotification, updateUserInfo } from 'reducers/redux-utils/auth';
-
 import { increment } from 'reducers/redux-utils/reloadPostHomePage';
 import Request from 'helpers/Request';
 

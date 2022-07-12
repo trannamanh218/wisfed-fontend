@@ -20,7 +20,6 @@ import ModalItem from './modal-item';
 import { renderMessage } from 'helpers/HandleShare';
 import LoadingIndicator from 'shared/loading-indicator';
 import { readNotification } from 'reducers/redux-utils/notificaiton';
-// import { useSelector } from 'react-redux';
 
 const NotificationModal = ({ setModalNotti, buttonModal, realTime }) => {
 	const notifymodal = useRef(null);

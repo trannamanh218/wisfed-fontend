@@ -11,6 +11,7 @@ import { readNotification } from 'reducers/redux-utils/notificaiton';
 import PropTypes from 'prop-types';
 import { addFollower } from 'reducers/redux-utils/user';
 import { handleListNotification, handleListUnRead } from 'reducers/redux-utils/notificaiton';
+import { useSelector } from 'react-redux';
 const ModalItem = ({
 	item,
 	setModalNotti,
@@ -22,7 +23,7 @@ const ModalItem = ({
 }) => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
-
+	const { userInfo } = useSelector(state => state.auth);
 	const addFollow = items => {
 		const param = {
 			data: { userId: items.actor },
@@ -106,14 +107,24 @@ const ModalItem = ({
 			items.verb === 'commentGroupPost'
 		) {
 			navigate(
-				`/detail-feed/${items.verb === 'commentMiniPost' ? 'MiniPost' : 'GroupPost'}/${
-					items.originId.minipostId || items.originId.groupPostId
+				`/detail-feed/${items.verb === 'commentMiniPost' ? 'mini-post' : 'group-post'}/${
+					items.originId?.minipostId || items.originId?.groupPostId
 				}`
 			);
-		} else if (items.verb === 'follow' || items.verb === 'addFriend') {
-			navigate(`/profile/${items.createdBy.id}`);
+		} else if (items.verb === 'follow' || items.verb === 'addFriend' || items.verb === 'friendAccepted') {
+			navigate(`/profile/${items.createdBy?.id || items.originId.userId}`);
 		} else if (item.verb === 'topUserRanking') {
 			navigate(`/top100`);
+		} else if (item.verb === 'readingGoal') {
+			navigate(`/reading-target/${userInfo.id}`);
+		} else if (item.verb === 'inviteGroup') {
+			navigate(`/Group/${items.originId.groupId}`);
+		} else if (items.verb === 'replyComment' || items.verb === 'shareQuote') {
+			navigate(`/detail-feed/${'MiniPost'}/${items.originId.minipostId}`);
+		} else if (items.verb === 'commentQuote') {
+			navigate(`/quotes/detail/${items.originId.quoteId}`);
+		} else if (items.verb === 'mention') {
+			navigate(`/detail-feed/${'mini-post'}/${items.originId.minipostId}`);
 		}
 
 		let newListArr = [];

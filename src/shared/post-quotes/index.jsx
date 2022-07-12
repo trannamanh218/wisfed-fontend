@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 const PostQuotes = ({ postsData, isShare }) => {
 	const { isSharePosts } = useSelector(state => state.post);
-
+	// console.log(postsData);
 	const renderAuthorAndbooksName = () => {
 		if (postsData.book?.name) {
 			return `${postsData.book?.name}`;
@@ -22,7 +22,7 @@ const PostQuotes = ({ postsData, isShare }) => {
 				} ` + ` ${postsData.sharePost?.book?.name}`
 			);
 		} else {
-			return `${postsData.info?.book.name}`;
+			return `${postsData.info.book?.name}`;
 		}
 	};
 
@@ -36,16 +36,6 @@ const PostQuotes = ({ postsData, isShare }) => {
 				return { backgroundImage: `linear-gradient(${postsData.sharePost?.background})` };
 			}
 		}
-	};
-
-	const navigate = useNavigate();
-
-	const onClickRedirectToAuthor = data => {
-		const id = data.createdBy || data.user.id;
-		navigate(`/profile/${id}`);
-	};
-	const onClickRedirectToBook = data => {
-		navigate(`/book/detail/${data.bookId}`);
 	};
 
 	return (

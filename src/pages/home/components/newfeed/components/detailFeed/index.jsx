@@ -20,11 +20,12 @@ const DetailFeed = () => {
 
 		try {
 			let res = [];
-			if (type === 'MiniPost') {
+			if (type === 'mini-post') {
 				res = await dispatch(getDetailFeed(params)).unwrap();
 			} else {
 				res = await dispatch(getDetailFeedGroup(params)).unwrap();
 			}
+			console.log(res);
 			setDetailFedd(res);
 		} catch (err) {
 			NotificationError(err);
@@ -37,7 +38,7 @@ const DetailFeed = () => {
 		<NormalContainer>
 			<Circle loading={isLoading} />
 			<div className='detail_feed_container'>
-				{type === 'MiniPost' ? (
+				{type === 'mini-post' ? (
 					detailFeed.map(item => <Post postInformations={item} key={item.id} />)
 				) : (
 					<Post postInformations={detailFeed} />

@@ -354,7 +354,7 @@ function CreatPostModalContent({
 				if (isShare) {
 					if (postsData.categoryName !== undefined) {
 						const query = {
-							by: postsData.time,
+							by: postsData.by,
 							id: postsData.id,
 							type: 'topQuote',
 							categoryId: postsData.categoryId || null,
@@ -530,7 +530,7 @@ function CreatPostModalContent({
 			}
 		}
 	};
-
+	console.log(postsData);
 	useEffect(() => {
 		if (showSubModal) {
 			setShowMainModal(false);
@@ -538,17 +538,15 @@ function CreatPostModalContent({
 	}, [showSubModal]);
 
 	const handleTime = () => {
-		if (postsData.time.length > 0) {
-			switch (postsData.time) {
-				case 'week':
-					return 'tuần';
-				case 'month':
-					return 'tháng';
-				case 'year':
-					return 'năm';
-				default:
-					break;
-			}
+		switch (postsData.by) {
+			case 'week':
+				return 'tuần';
+			case 'month':
+				return 'tháng';
+			case 'year':
+				return 'năm';
+			default:
+				break;
 		}
 	};
 
@@ -652,6 +650,17 @@ function CreatPostModalContent({
 													postsData.categoryName
 											  } theo ${handleTime()} `
 											: `  được like nhiều nhất theo ${handleTime()} `}
+									</span>
+									<IconRanks />
+								</div>
+							)}
+							{postsData.type === 'topBook' && (
+								<div className='post__title__share__rank'>
+									<span className='number__title__rank'># Top {postsData.rank} </span>{' '}
+									<span className='title__rank'>
+										{postsData.categoryName
+											? `  cuốn sách tốt nhất  ${postsData.categoryName} theo ${handleTime()} `
+											: `  cuốn sách tốt nhất theo ${handleTime()} `}
 									</span>
 									<IconRanks />
 								</div>

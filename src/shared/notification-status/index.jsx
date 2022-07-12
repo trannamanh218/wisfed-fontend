@@ -4,7 +4,7 @@ import UserAvatar from 'shared/user-avatar';
 import { renderMessage } from 'helpers/HandleShare';
 import { ReplyFriendRequest, CancelFriendRequest } from 'reducers/redux-utils/user';
 import { readNotification } from 'reducers/redux-utils/notificaiton';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
@@ -13,7 +13,7 @@ const NotificationStatus = ({ item, setGetNotifications, getNotifications }) => 
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const [isRead, setIsRead] = useState(false);
-
+	const { userInfo } = useSelector(state => state.auth);
 	const ReplyFriendReq = async (data, items) => {
 		const parseObject = JSON.parse(data);
 		const params = { id: parseObject.requestId, data: { reply: true } };
@@ -54,6 +54,7 @@ const NotificationStatus = ({ item, setGetNotifications, getNotifications }) => 
 		const params = {
 			notificationId: items.id,
 		};
+
 		setIsRead(true);
 		if (
 			items.verb === 'likeMiniPost' ||
@@ -62,12 +63,24 @@ const NotificationStatus = ({ item, setGetNotifications, getNotifications }) => 
 			items.verb === 'commentGroupPost'
 		) {
 			navigate(
-				`/detail-feed/${items.verb === 'commentMiniPost' ? 'MiniPost' : 'GroupPost'}/${
-					items.originId.minipostId || items.originId.groupPostId
+				`/detail-feed/${items.verb === 'commentMiniPost' ? 'mini-post' : 'group-post'}/${
+					items.originId?.minipostId || items.originId?.groupPostId
 				}`
 			);
-		} else if (items.verb === 'follow' || items.verb === 'addFriend') {
-			navigate(`/profile/${items.createdBy.id}`);
+		} else if (items.verb === 'follow' || items.verb === 'addFriend' || items.verb === 'friendAccepted') {
+			navigate(`/profile/${items.createdBy?.id || items.originId.userId}`);
+		} else if (item.verb === 'topUserRanking') {
+			navigate(`/top100`);
+		} else if (item.verb === 'readingGoal') {
+			navigate(`/reading-target/${userInfo.id}`);
+		} else if (item.verb === 'inviteGroup') {
+			navigate(`/Group/${items.originId.groupId}`);
+		} else if (items.verb === 'replyComment' || items.verb === 'shareQuote') {
+			navigate(`/detail-feed/${'mini-post'}/${items.originId.minipostId}`);
+		} else if (items.verb === 'commentQuote') {
+			navigate(`/quotes/detail/${items.originId.quoteId}`);
+		} else if (items.verb === 'mention') {
+			navigate(`/detail-feed/${'mini-post'}/${items.originId.minipostId}`);
 		}
 		dispatch(readNotification(params)).unwrap();
 	};

@@ -24,7 +24,7 @@ const TopBooks = ({ rows, listYear }) => {
 		kindOfGroupRef.current = data;
 		setTopQuotesId(data.id);
 	};
-
+	console.log();
 	const getTopBooksData = async () => {
 		const params = {
 			categoryId: topBooksId,
@@ -88,6 +88,7 @@ const TopBooks = ({ rows, listYear }) => {
 								setModalShow={setModalShow}
 								valueDate={valueDate}
 								topBooksId={topBooksId}
+								categoryName={kindOfGroupRef.current.name}
 							/>
 						</div>
 					</div>

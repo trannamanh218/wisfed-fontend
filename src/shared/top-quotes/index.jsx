@@ -11,7 +11,7 @@ const TopQuotesComponent = ({ item, valueDate, categoryItem }) => {
 
 	useEffect(() => {
 		const data = {
-			time: valueDate,
+			by: valueDate,
 			categoryName: categoryItem.name || '',
 			categoryId: categoryItem.id || '',
 			type: 'topQuote',
