@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import BookThumbnail from 'shared/book-thumbnail';
 import { BoldCenterCircle, RightArrow } from 'components/svg';
 import { useEffect, useState, memo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { STATUS_SUCCESS, STATUS_IDLE, STATUS_LOADING } from 'constants';
 import { getBookDetail } from 'reducers/redux-utils/book';
 import { NotificationError } from 'helpers/Error';
@@ -14,29 +14,50 @@ import Circle from 'shared/loading/circle';
 import { updateTitleReviewPage, updateDirectFromProfile } from 'reducers/redux-utils/common';
 import PropTypes from 'prop-types';
 import { updateCurrentBook } from 'reducers/redux-utils/book';
-
-function Bookcase({ userInfo, currentTab }) {
+import { getAllLibraryList } from 'reducers/redux-utils/library';
+function Bookcase({ currentUserInfo, currentTab }) {
 	const [readingBooks, setReadingBooks] = useState([]);
 	const [readBooks, setReadBooks] = useState([]);
 	const [status, setStatus] = useState(STATUS_IDLE);
 
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
+	const { userId } = useParams();
 
 	const myAllLibraryDefault = useSelector(state => state.library.myAllLibrary).default;
 
+	const { userInfo } = useSelector(state => state.auth);
+
 	useEffect(() => {
-		if (!_.isEmpty(myAllLibraryDefault)) {
-			const filterReadbooks = myAllLibraryDefault.filter(item => item.defaultType === 'read');
-			const filterReadingbooks = myAllLibraryDefault.filter(item => item.defaultType === 'reading');
-			if (filterReadbooks.length) {
-				setReadBooks([...filterReadbooks[0].books].reverse());
-			}
-			if (filterReadingbooks.length) {
-				setReadingBooks([...filterReadingbooks[0].books].reverse().slice(0, 3));
+		if (!_.isEmpty(userInfo)) {
+			if (userId === userInfo.id) {
+				if (!_.isEmpty(myAllLibraryDefault)) {
+					const filterReadbooks = myAllLibraryDefault.filter(item => item.defaultType === 'read');
+					const filterReadingbooks = myAllLibraryDefault.filter(item => item.defaultType === 'reading');
+					if (filterReadbooks.length) {
+						setReadBooks([...filterReadbooks[0].books].reverse());
+					}
+					if (filterReadingbooks.length) {
+						setReadingBooks([...filterReadingbooks[0].books].reverse().slice(0, 3));
+					}
+				}
+			} else {
+				getBooksInCurrentLibrary();
 			}
 		}
-	}, [myAllLibraryDefault]);
+	}, [userInfo, userId, myAllLibraryDefault]);
+
+	const getBooksInCurrentLibrary = async () => {
+		try {
+			const data = await dispatch(getAllLibraryList({ userId: userId })).unwrap();
+			const readingBooksResponse = data.default.filter(x => x.defaultType === 'reading');
+			setReadingBooks(readingBooksResponse[0].books.reverse().slice(0, 3));
+			const haveReadResponse = data.default.filter(x => x.defaultType === 'read');
+			setReadBooks(haveReadResponse[0].books);
+		} catch (err) {
+			NotificationError(err);
+		}
+	};
 
 	const progressBarPercenNumber = item => {
 		const progress = ((item.book.bookProgress[0]?.progress / item.book.page) * 100).toFixed();
@@ -69,10 +90,10 @@ function Bookcase({ userInfo, currentTab }) {
 		try {
 			const bookData = await dispatch(getBookDetail(book.id)).unwrap();
 			if (!_.isEmpty(bookData)) {
-				dispatch(updateTitleReviewPage(`Bài Review về ${book.name} của ${userInfo.fullName}`));
+				dispatch(updateTitleReviewPage(`Bài Review về ${book.name} của ${currentUserInfo.fullName}`));
 				dispatch(updateDirectFromProfile(true));
 				setStatus(STATUS_SUCCESS);
-				navigate(`/review/${book.id}/${userInfo.id}`);
+				navigate(`/review/${book.id}/${currentUserInfo.id}`);
 			}
 		} catch (err) {
 			NotificationError(err);
@@ -224,7 +245,7 @@ function Bookcase({ userInfo, currentTab }) {
 }
 
 Bookcase.propTypes = {
-	userInfo: PropTypes.object,
+	currentUserInfo: PropTypes.object,
 	currentTab: PropTypes.string,
 };
 

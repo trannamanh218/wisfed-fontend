@@ -2,12 +2,11 @@ import { Add, Minus } from 'components/svg';
 import { useState } from 'react';
 import Button from 'shared/button';
 import PropTypes from 'prop-types';
-import './connect-buttons.scss';
 import { makeFriendRequest, addFollower, unFollower, unFriendRequest } from 'reducers/redux-utils/user';
 import { useDispatch } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
 
-const ConnectButtons = ({ direction, item }) => {
+const ConnectButtonsFriends = ({ direction, item }) => {
 	const dispatch = useDispatch();
 	const [unFriend, setUnFriend] = useState(true);
 	const [toggleUnFollow, setToggleUnFollow] = useState(true);
@@ -111,29 +110,21 @@ const ConnectButtons = ({ direction, item }) => {
 	};
 
 	const handleRenderButtonFriend = () => {
-		if (item.relation === 'friend') {
-			return unFriend ? buttonUnFriend() : togglePendingFriend ? buttonAddFriend() : buttonPendingFriend();
-		} else if (item.relation === 'pending') {
-			return buttonPendingFriend();
-		} else if (item.relation === 'unknown') {
-			return togglePendingFriend ? buttonAddFriend() : buttonPendingFriend();
-		}
+		return unFriend ? buttonUnFriend() : togglePendingFriend ? buttonAddFriend() : buttonPendingFriend();
 	};
 
 	return (
 		<div className={`connect-buttons ${direction}`}>
-			{item.relation !== 'isMe' && (
-				<>
-					{' '}
-					{handleRenderButtonFriend()}
-					{handleRenderButtonFollow()}
-				</>
-			)}
+			<>
+				{' '}
+				{handleRenderButtonFriend()}
+				{handleRenderButtonFollow()}
+			</>
 		</div>
 	);
 };
 
-ConnectButtons.defaultProps = {
+ConnectButtonsFriends.defaultProps = {
 	data: {
 		isFriend: false,
 		isFollow: false,
@@ -141,7 +132,7 @@ ConnectButtons.defaultProps = {
 	direction: 'column',
 };
 
-ConnectButtons.propTypes = {
+ConnectButtonsFriends.propTypes = {
 	data: PropTypes.shape({
 		isFollow: PropTypes.bool.isRequired,
 		isFriend: PropTypes.bool.isRequired,
@@ -150,4 +141,4 @@ ConnectButtons.propTypes = {
 	direction: PropTypes.oneOf(['row', 'column']),
 };
 
-export default ConnectButtons;
+export default ConnectButtonsFriends;

@@ -117,7 +117,7 @@ function Post({ postInformations, className, showModalCreatPost, inReviews = fal
 			if (!_.isEmpty(res)) {
 				const newComment = { ...res, user: userInfo };
 				const usersComments = [...postData.usersComments, newComment];
-				const newPostData = { ...postData, usersComments, comments: postData.comments + 1 };
+				const newPostData = { ...postData, usersComments, comment: postData.comment + 1 }; // Tự động cập nhật đếm comment
 				setPostData(newPostData);
 			}
 		} catch (err) {

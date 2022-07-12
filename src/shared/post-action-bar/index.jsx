@@ -17,12 +17,11 @@ const PostActionBar = ({ postData, handleLikeAction }) => {
 			dispatch(saveDataShare(postData));
 		}
 	};
-
 	return (
 		<div className='post-action-bar'>
 			<div data-testid='post__options__like-btn' className='post-action-bar__item' onClick={handleLikeAction}>
 				{postData.isLike ? <LikeFill /> : <Like />}
-				<div className='post-action-bar__title'>{postData.like || 0} Thích</div>
+				<div className='post-action-bar__title'>{postData.like || null} Thích</div>
 			</div>
 			<div
 				className='post-action-bar__item'
@@ -33,11 +32,11 @@ const PostActionBar = ({ postData, handleLikeAction }) => {
 				}}
 			>
 				<CommentSvg />
-				<div className='post-action-bar__title'>{postData.comments || 0} Bình luận</div>
+				<div className='post-action-bar__title'>{postData.comment || null} Bình luận</div>
 			</div>
 			<div onClick={handleShare} className='post-action-bar__item'>
 				<Share />
-				<div className='post-action-bar__title'>{postData.countShare || 0} Chia sẻ</div>
+				<div className='post-action-bar__title'>{postData.share || null} Chia sẻ</div>
 			</div>
 		</div>
 	);
