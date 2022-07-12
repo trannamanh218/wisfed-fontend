@@ -174,13 +174,12 @@ const Header = () => {
 			const notificationFeed = client.feed('notification', userInfoJwt.id, userInfoJwt.userToken);
 
 			const callback = data => {
-				setRealTime(true);
 				dispatch(depenRenderNotificaion(true));
 				const params = {
 					isNewNotification: true,
 				};
-
 				if (!userInfoJwt.isNewNotification && !_.isEmpty(data)) {
+					setRealTime(true);
 					dispatch(patchNewNotification(params)).unwrap();
 					const dataNewNoti = { ...userInfoJwt, isNewNotification: true };
 					dispatch(updateIsNewNotificationUserInfo(dataNewNoti));
