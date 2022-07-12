@@ -17,7 +17,6 @@ const PostActionBar = ({ postData, handleLikeAction }) => {
 			dispatch(saveDataShare(postData));
 		}
 	};
-	console.log(postData);
 	return (
 		<div className='post-action-bar'>
 			<div data-testid='post__options__like-btn' className='post-action-bar__item' onClick={handleLikeAction}>
