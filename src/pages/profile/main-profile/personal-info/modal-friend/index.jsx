@@ -32,7 +32,7 @@ const ModalFriend = ({ setModalFriend, modalFriend, userInfoDetail }) => {
 		};
 		try {
 			const friendList = await dispatch(getFriendList(param)).unwrap();
-			const newArrFriend = friendList.rows.map(item => {
+			const newArrFriend = friendList.map(item => {
 				return { ...item, checkFolow: false, checkUnfollow: false, checkUnfriend: true };
 			});
 			setGetMyListFriend(

@@ -34,7 +34,7 @@ const MyFriends = ({ activeTabs, inputSearch, filter }) => {
 	return (
 		<div className='myfriends__container'>
 			<div className='myfriends__title'>
-				({getMyListFriend.length}) Bạn bè của{' '}
+				({getMyListFriend?.length}) Bạn bè của{' '}
 				{userInfo.fullName ? (
 					userInfo.fullName
 				) : (
@@ -45,7 +45,7 @@ const MyFriends = ({ activeTabs, inputSearch, filter }) => {
 				)}
 			</div>
 			<div className='myfriends__layout__container'>
-				{getMyListFriend.map(item => (
+				{getMyListFriend?.map(item => (
 					<FriendsItem key={item.id} list={item} keyTabs={activeTabs} />
 				))}
 			</div>

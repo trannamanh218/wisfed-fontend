@@ -16,8 +16,6 @@ import { useFetchTargetReading } from 'api/readingTarget.hooks';
 import GoalsNotSetYet from './goals-not-set';
 import Circle from 'shared/loading/circle';
 import { STATUS_LOADING } from 'constants';
-import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 const MainReadingTarget = () => {
 	const { userId } = useParams();
@@ -27,13 +25,12 @@ const MainReadingTarget = () => {
 	const [deleteModal, setDeleteModal] = useState(false);
 	const [inputSearch, setInputSearch] = useState('');
 	const [newArrSearch, setNewArrSearch] = useState([]);
-	const navigate = useNavigate();
 	const { booksReadYear, year, status } = useFetchTargetReading(userId, modalOpen, deleteModal);
 	const renderLinearProgressBar = item => {
 		let percent = 0;
 		if (item.booksReadCount > item.numberBook) {
 			percent = 100;
-		} else {
+		} else if (0 < item.booksReadCount < item.numberBook) {
 			percent = ((item.booksReadCount / item.numberBook) * 100).toFixed();
 		}
 		return <LinearProgressBar height={2.75} percent={percent} label={`${percent} %`} />;
@@ -47,12 +44,6 @@ const MainReadingTarget = () => {
 		setDeleteModal(true);
 		setModalOpen(true);
 	};
-
-	useEffect(() => {
-		if (booksReadYear.length < 1 && status === 'SUCCESS') {
-			navigate('/');
-		}
-	}, [status]);
 
 	const handleSearch = e => {
 		setInputSearch(e.target.value);
@@ -131,7 +122,11 @@ const MainReadingTarget = () => {
 				? booksReadYear.map(item => (
 						<>
 							<div className='reading-target__process'>
-								<UserAvatar className='reading-target__user' source={userInfo?.avatarImage} size='lg' />
+								<UserAvatar
+									className='reading-target__user'
+									source={userData.avatarImage || userInfo?.avatarImage}
+									size='lg'
+								/>
 								<div className='reading-target__content'>
 									{renderContentTop(item)}
 									<div className='reading-target__content__bottom'>

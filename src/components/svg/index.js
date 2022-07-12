@@ -74,11 +74,14 @@ import { ReactComponent as StarAuthor } from 'assets/icons/StarAuthor.svg';
 import { ReactComponent as ShareAuthor } from 'assets/icons/shareAuthor.svg';
 import { ReactComponent as Setting } from 'assets/icons/Setting_fill.svg';
 import { ReactComponent as ArrowsDownUp } from 'assets/icons/ArrowsDownUp.svg';
+import { ReactComponent as IconRanks } from 'assets/icons/medal.svg';
 import { ReactComponent as LogOutIcon } from 'assets/icons/LogOutIcon.svg';
 import { ReactComponent as ProfileIcon } from 'assets/icons/ProfileIcon.svg';
 import { ReactComponent as ArrowDownIcon } from 'assets/icons/ArrowDownIcon.svg';
-
+import { ReactComponent as CrowSmall } from 'assets/icons/CrownSmall.svg';
 export {
+	CrowSmall,
+	IconRanks,
 	Setting,
 	ShareAuthor,
 	StarAuthor,

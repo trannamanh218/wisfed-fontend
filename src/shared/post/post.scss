@@ -56,6 +56,16 @@
 	}
 }
 
+.post__custom {
+	padding: 0;
+}
+.post__custom__main__container {
+	background-color: white !important;
+	margin-bottom: 0 !important;
+	.grid-image {
+		margin: 0;
+	}
+}
 .post__user-status {
 	display: flex;
 	align-items: center;
@@ -171,6 +181,21 @@
 	width: 100%;
 	height: 375px;
 	margin: 24px 0;
+}
+
+.post__user__container {
+	display: flex;
+	align-items: center;
+	gap: 5px;
+	.post__user-icon {
+		height: 12px;
+		width: 12px;
+		margin-right: 6px;
+	}
+	.post__name__group {
+		font-weight: 600;
+		font-size: 15px;
+	}
 }
 
 @media only screen and (max-width: 1366px) {

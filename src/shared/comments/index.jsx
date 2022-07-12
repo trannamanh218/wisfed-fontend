@@ -53,27 +53,33 @@ const Comment = ({ data, handleReply, postData, commentLv1Id, type }) => {
 
 	return (
 		<div className='comment'>
-			<UserAvatar className='comment__avatar' size='sm' source={data.user?.avatarImage} />
+			<UserAvatar
+				className='comment__avatar'
+				size='sm'
+				source={data.user?.avatarImage ? data.user?.avatarImage : data['user.avatarImage']}
+			/>
 			<div className='comment__wrapper'>
 				<div className='comment__container'>
-					<div className='comment__header'>
-						<span className='comment__author'>
-							{data['user.name'] ||
-								data['user.fullName'] ||
-								data['user.lastName'] ||
-								data['user.firstName'] ||
-								data.user.name ||
-								data.user.fullName ||
-								data.user.lastName ||
-								data.user.firstName ||
-								'Không xác định'}
-						</span>
-						{isAuthor && (
-							<Badge className='comment__badge' bg='primary-light'>
-								Tác giả
-							</Badge>
-						)}
-					</div>
+					<Link to={`/profile/${postData.usersComments?.id || postData.commentQuotes?.id}`}>
+						<div className='comment__header'>
+							<Link to={`/profile/${data.user.id}`}>
+								<span className='comment__author'>
+									{data.user.name ||
+										data.user.fullName ||
+										data.user.lastName ||
+										data.user.firstName ||
+										'Không xác định'}
+								</span>
+							</Link>
+
+							{isAuthor && (
+								<Badge className='comment__badge' bg='primary-light'>
+									Tác giả
+								</Badge>
+							)}
+						</div>
+					</Link>
+
 					<p className='comment__content'>{data.content}</p>
 				</div>
 

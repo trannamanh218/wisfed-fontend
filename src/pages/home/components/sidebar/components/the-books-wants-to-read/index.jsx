@@ -16,23 +16,25 @@ function TheBooksWantsToRead(props) {
 	};
 
 	return (
-		<div className='sidebar__block'>
-			<h4 className='sidebar__block__title'>Sách muốn đọc</h4>
-			<div className='sidebar__block__content'>
-				<Slider {...SlideSettings}>
-					{list.map((item, index) => (
-						<div
-							key={index}
-							className='wants-to-read__thumbnail'
-							onMouseEnter={onMouseEnterImgBook}
-							onClick={() => onClickImgBook(item)}
-						>
-							<img src={item.images[0]} alt='' />
-						</div>
-					))}
-				</Slider>
+		list.length > 0 && (
+			<div className='sidebar__block'>
+				<h4 className='sidebar__block__title'>Sách muốn đọc</h4>
+				<div className='sidebar__block__content'>
+					<Slider {...SlideSettings}>
+						{list.map((item, index) => (
+							<div
+								key={index}
+								className='wants-to-read__thumbnail'
+								onMouseEnter={onMouseEnterImgBook}
+								onClick={() => onClickImgBook(item)}
+							>
+								<img src={item.images[0]} alt='' />
+							</div>
+						))}
+					</Slider>
+				</div>
 			</div>
-		</div>
+		)
 	);
 }
 

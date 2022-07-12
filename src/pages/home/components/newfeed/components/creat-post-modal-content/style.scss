@@ -1,7 +1,7 @@
 @import 'src/scss/abstracts/_global.scss';
 
 .creat-post-modal-content {
-	width: 600px;
+	width: 700px;
 	background-color: white;
 	border-radius: 16px;
 	position: relative;
@@ -780,13 +780,27 @@
 .url-color {
 	color: #0576f0;
 }
-
+.post__title__share__rank {
+	.number__title__rank {
+		color: #eaac30;
+		font-weight: 600;
+		font-size: 15px;
+		line-height: 32px;
+	}
+	.title__rank {
+		font-weight: 600;
+		font-size: 15px;
+		line-height: 32px;
+	}
+}
 .creat-post-modal-content__main__share-container {
 	padding: 16px;
 	border-radius: 12px;
 	background-color: #eff0f6;
-	.post__container {
+	.post__container,
+	.post__quotes__container {
 		margin-bottom: 0;
+		// padding: 0;
 		.post__user-status__post-time-status {
 			font-size: 10px;
 		}

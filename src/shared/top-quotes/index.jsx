@@ -2,10 +2,24 @@ import QuoteActionBar from 'shared/quote-action-bar';
 import UserAvatar from 'shared/user-avatar';
 import './top-quotes.scss';
 import PropTypes from 'prop-types';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const TopQuotesComponent = ({ item }) => {
+const TopQuotesComponent = ({ item, valueDate, categoryItem }) => {
+	const [newData, setNewData] = useState({});
 	const navigate = useNavigate();
+
+	useEffect(() => {
+		const data = {
+			by: valueDate,
+			categoryName: categoryItem.name || '',
+			categoryId: categoryItem.id || '',
+			type: 'topQuote',
+			...item,
+		};
+		setNewData(data);
+	}, []);
+
 	const onClickRedirectToAuthor = data => {
 		const id = data.createdBy || data.user.id;
 		navigate(`/profile/${id}`);
@@ -26,12 +40,14 @@ const TopQuotesComponent = ({ item }) => {
 						</p>
 					</div>
 				</div>
-				<QuoteActionBar data={item} />
+				<QuoteActionBar data={newData} />
 			</div>
 		</div>
 	);
 };
 TopQuotesComponent.propTypes = {
 	item: PropTypes.array,
+	valueDate: PropTypes.string,
+	categoryItem: PropTypes.object,
 };
 export default TopQuotesComponent;

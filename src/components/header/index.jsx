@@ -20,7 +20,12 @@ import classNames from 'classnames';
 import './header.scss';
 import NotificationModal from 'pages/notification/';
 import { useDispatch, useSelector } from 'react-redux';
-import { backgroundToggle } from 'reducers/redux-utils/notificaiton';
+import {
+	backgroundToggle,
+	depenRenderNotificaion,
+	handleListNotification,
+	handleListUnRead,
+} from 'reducers/redux-utils/notificaiton';
 import { checkUserLogin, deleteUserInfo } from 'reducers/redux-utils/auth';
 import { useVisible } from 'shared/hooks';
 import SearchAllModal from 'shared/search-all';
@@ -30,6 +35,9 @@ import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { updateTargetReading } from 'reducers/redux-utils/chart';
 import defaultAvatar from 'assets/images/avatar.jpeg';
+import * as stream from 'getstream';
+import _ from 'lodash';
+import { patchNewNotification, updateIsNewNotificationUserInfo } from 'reducers/redux-utils/auth';
 import { increment } from 'reducers/redux-utils/reloadPostHomePage';
 import Request from 'helpers/Request';
 
@@ -40,7 +48,7 @@ const Header = () => {
 	const [activeLink, setActiveLink] = useState('/');
 	const location = useLocation();
 	const { pathname } = location;
-	const { userInfo } = useSelector(state => state.auth);
+	const { userInfo, userInfoJwt } = useSelector(state => state.auth);
 	const dispatch = useDispatch();
 	const [modalNoti, setModalNotti] = useState(false);
 	const buttonModal = useRef(null);
@@ -49,7 +57,7 @@ const Header = () => {
 	const [getSlugResult, setGetSlugResult] = useState('');
 	const [userLogin, setUserLogin] = useState(false);
 	const [activeNotificaiton, setActiveNotification] = useState(false);
-
+	const [realTime, setRealTime] = useState(false);
 	const userOptions = useRef(null);
 
 	useEffect(() => {
@@ -68,11 +76,29 @@ const Header = () => {
 	}, [isShowModal]);
 
 	useEffect(() => {
+		const params = {
+			isNewNotification: false,
+		};
 		if (pathname === '/notification') {
 			setActiveNotification(true);
 			setModalNotti(false);
+			updateNewNotificaionFalse(params);
+			setTimeout(() => setRealTime(false), 1500);
+		} else if (modalNoti && realTime) {
+			updateNewNotificaionFalse(params);
+			setTimeout(() => setRealTime(false), 1500);
 		}
-	}, []);
+	}, [realTime]);
+
+	useEffect(() => {
+		if (!_.isEmpty(userInfoJwt)) {
+			if (userInfoJwt.isNewNotification) {
+				setRealTime(true);
+			} else {
+				setRealTime(false);
+			}
+		}
+	}, [userInfoJwt]);
 
 	useEffect(() => {
 		if (Storage.getAccessToken()) {
@@ -95,13 +121,20 @@ const Header = () => {
 		}
 	};
 
-	const toggleModalNotify = () => {
+	const toglleModalNotify = () => {
+		const params = {
+			isNewNotification: false,
+		};
 		if (pathname === '/notification') {
 			setModalNotti(false);
+			setRealTime(false);
+			updateNewNotificaionFalse(params);
 		} else {
 			if (Storage.getAccessToken()) {
 				setModalNotti(!modalNoti);
 				dispatch(backgroundToggle(modalNoti));
+				setRealTime(false);
+				updateNewNotificaionFalse(params);
 			} else {
 				dispatch(checkUserLogin(true));
 			}
@@ -131,6 +164,45 @@ const Header = () => {
 		dispatch(updateTargetReading([]));
 		navigate('/login');
 		toast.success('Đăng xuất thành công');
+		dispatch(handleListUnRead([]));
+		dispatch(handleListNotification([]));
+	};
+
+	useEffect(() => {
+		if (!_.isEmpty(userInfoJwt)) {
+			const client = stream.connect('p77uwpux9zwu', null, '1169912');
+			const notificationFeed = client.feed('notification', userInfoJwt.id, userInfoJwt.userToken);
+
+			const callback = data => {
+				setRealTime(true);
+				dispatch(depenRenderNotificaion(true));
+				const params = {
+					isNewNotification: true,
+				};
+
+				if (!userInfoJwt.isNewNotification && !_.isEmpty(data)) {
+					dispatch(patchNewNotification(params)).unwrap();
+					const dataNewNoti = { ...userInfoJwt, isNewNotification: true };
+					dispatch(updateIsNewNotificationUserInfo(dataNewNoti));
+				}
+			};
+			const successCallback = () => {
+				// console.log('now listening to changes in realtime');
+			};
+			const failCallback = data => {
+				// console.log('something went wrong, check the console logs');
+			};
+			notificationFeed.subscribe(callback).then(successCallback, failCallback);
+		}
+	}, [userInfoJwt]);
+
+	const updateNewNotificaionFalse = params => {
+		if (userInfoJwt.isNewNotification) {
+			dispatch(patchNewNotification(params)).unwrap();
+			const dataNewNoti = { ...userInfoJwt, isNewNotification: false };
+			dispatch(depenRenderNotificaion(false));
+			dispatch(updateIsNewNotificationUserInfo(dataNewNoti));
+		}
 	};
 
 	const onClickReloadPosts = () => {
@@ -194,13 +266,24 @@ const Header = () => {
 						{activeLink === '/friends' ? <FriendsFillIcon /> : <FriendsIcon />}
 					</Link>
 				</li>
+
 				<div className='notify-icon'>
 					<div
 						ref={buttonModal}
-						onClick={toggleModalNotify}
-						className={classNames('header__notify__icon', { 'active': modalNoti || activeNotificaiton })}
+						onClick={toglleModalNotify}
+						className={classNames('header__notify__icon', {
+							'active': modalNoti || activeNotificaiton,
+							'header__notify__icon__active': realTime,
+						})}
 					/>
-					{modalNoti && <NotificationModal setModalNotti={setModalNotti} buttonModal={buttonModal} />}
+
+					{modalNoti && (
+						<NotificationModal
+							setModalNotti={setModalNotti}
+							buttonModal={buttonModal}
+							realTime={realTime}
+						/>
+					)}
 				</div>
 			</ul>
 

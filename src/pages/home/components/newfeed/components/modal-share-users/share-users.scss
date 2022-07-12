@@ -1,0 +1,52 @@
+.share__users__container {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	background-image: url(../../../../../../assets//images//BackGroudShareRach.png);
+	background-repeat: no-repeat;
+	text-align: center;
+	max-width: 500px;
+	min-height: 271px;
+	margin: auto;
+	margin-bottom: 30px;
+	.share__users__ranks__one {
+		position: relative;
+		.Crown {
+			position: absolute;
+			top: 0;
+			margin-top: -20px;
+			left: 5%;
+		}
+		.share__users__ranks__avatar {
+			background-color: #ffca28;
+			padding: 5px;
+			border-radius: 50%;
+			margin: 60px auto 0 auto;
+			max-width: 110px;
+
+			.author-card__avatar {
+				margin-right: 0;
+				display: block;
+			}
+		}
+	}
+	.share__users__ranks__title {
+		font-weight: 500;
+		font-size: 18px;
+		line-height: 32px;
+	}
+	.share__users__ranks__title__rank {
+		color: #2d2c42;
+		font-weight: 500;
+		font-size: 12px;
+	}
+	.title__ranks {
+		display: flex;
+		background: #d9dbe9;
+		border-radius: 15px;
+		align-items: center;
+		padding: 5px 10px;
+		gap: 4.5px;
+	}
+}
