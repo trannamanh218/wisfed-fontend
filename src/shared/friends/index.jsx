@@ -156,7 +156,7 @@ const FriendsItem = ({ list, keyTabs, getListFollower, getMyListFriendReq }) => 
 	const buttonUnfollow = () => {
 		return (
 			<Button onClick={handleUnFollow} className='myfriends__button' isOutline={true} name='friend'>
-				<span className='myfriends__button__content'>Hủy theo dõi</span>
+				<span className='myfriends__button__content'>Bỏ theo dõi</span>
 			</Button>
 		);
 	};

@@ -3,7 +3,7 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import PropTypes from 'prop-types';
 import ResultNotFound from '../result-not-found';
 import defaultAvatar from 'assets/images/avatar.jpeg';
-import Button from 'shared/button';
+// import Button from 'shared/button';
 // import LoadingIndicator from 'shared/loading-indicator';
 import { getFilterSearch } from 'reducers/redux-utils/search';
 import { NotificationError } from 'helpers/Error';

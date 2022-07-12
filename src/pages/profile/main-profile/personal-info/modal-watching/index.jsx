@@ -11,12 +11,13 @@ import Button from 'shared/button';
 import { unFollower, makeFriendRequest, unFriendRequest } from 'reducers/redux-utils/user';
 import { NotificationError } from 'helpers/Error';
 import { buttonReqFriend } from 'helpers/HandleShare';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 
 const ModalWatching = ({ setModalFollowing, modalFollowing, userInfoDetail }) => {
+	const navigate = useNavigate();
 	const { userInfo } = useSelector(state => state.auth);
 	const [getListFollow, setGetListFollow] = useState([]);
-	// const [inputSearch, setInputSearch] = useSelector('');
+	const [inputSearch, setInputSearch] = useState('');
 	const dispatch = useDispatch();
 	const { userId } = useParams();
 	useEffect(async () => {
@@ -28,11 +29,17 @@ const ModalWatching = ({ setModalFollowing, modalFollowing, userInfoDetail }) =>
 			const newArrFriend = followingList.rows.map(item => {
 				return { ...item, checkUnfollow: false, isPending: false, isAddFriend: true };
 			});
-			setGetListFollow(newArrFriend);
+			setGetListFollow(
+				newArrFriend.filter(
+					x =>
+						x.userTwo?.firstName.toLocaleLowerCase().includes(inputSearch.toLocaleLowerCase()) ||
+						x.userTwo?.lastName.toLocaleLowerCase().includes(inputSearch.toLocaleLowerCase())
+				)
+			);
 		} catch (err) {
 			NotificationError(err);
 		}
-	}, [userInfo, dispatch]);
+	}, [userInfo, dispatch, inputSearch]);
 
 	const unFolow = id => {
 		try {
@@ -128,9 +135,9 @@ const ModalWatching = ({ setModalFollowing, modalFollowing, userInfoDetail }) =>
 		}
 	};
 
-	// const onChangeInputSearch = e => {
-	// 	setInputSearch(e.target.value);
-	// };
+	const onChangeInputSearch = e => {
+		setInputSearch(e.target.value);
+	};
 
 	return (
 		<>
@@ -147,8 +154,8 @@ const ModalWatching = ({ setModalFollowing, modalFollowing, userInfoDetail }) =>
 					<div className='modalFollowers__search'>
 						<SearchField
 							placeholder='Tìm kiếm trên Wisfeed'
-							// value={inputSearch}
-							// handleChange={onChangeInputSearch}
+							value={inputSearch}
+							handleChange={onChangeInputSearch}
 						/>
 					</div>
 					<div className='modalFollowers__info'>
@@ -162,9 +169,17 @@ const ModalWatching = ({ setModalFollowing, modalFollowing, userInfoDetail }) =>
 											source={item?.userTwo?.avatarImage}
 											className='author-card__avatar'
 											size={'md'}
+											handleClick={() => {
+												toggleModal(), navigate(`/profile/${item.userIdTwo}`);
+											}}
 										/>
+
 										<div className='author-card__info'>
-											<h5>
+											<h5
+												onClick={() => {
+													toggleModal(), navigate(`/profile/${item.userIdTwo}`);
+												}}
+											>
 												{item.userTwo.firstName} {item.userTwo.lastName}
 											</h5>
 											<p className='author-card__subtitle'>3k follow, 300 bạn bè</p>
@@ -179,7 +194,7 @@ const ModalWatching = ({ setModalFollowing, modalFollowing, userInfoDetail }) =>
 													}}
 													className='connect-button follow'
 												>
-													<span className='connect-button__content'>Hủy theo dõi </span>
+													<span className='connect-button__content'>Bỏ theo dõi </span>
 												</Button>
 												{renderButtonFriend(item)}
 											</div>

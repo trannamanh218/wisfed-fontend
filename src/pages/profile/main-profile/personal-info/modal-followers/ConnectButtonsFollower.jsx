@@ -1,3 +1,4 @@
+import { Add, Minus } from 'components/svg';
 import { useState } from 'react';
 import Button from 'shared/button';
 import PropTypes from 'prop-types';
@@ -5,49 +6,54 @@ import { makeFriendRequest, addFollower, unFollower, unFriendRequest } from 'red
 import { useDispatch } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
 
-const ConnectButtonsSearch = ({ direction, item }) => {
+const ConnectButtonsFollower = ({ direction, item }) => {
 	const dispatch = useDispatch();
 	const [unFriend, setUnFriend] = useState(true);
 	const [toggleUnFollow, setToggleUnFollow] = useState(true);
 	const [toggleAddFollow, setToggleAddFollow] = useState(true);
 	const [togglePendingFriend, setTogglePendingFriend] = useState(true);
+	// const [toggleModalUnFriends, setModalUnfriends] = useState(false);
 
 	const buttonUnFollow = () => {
 		return (
-			<Button className='myfriends__button' isOutline={true} name='friend' onClick={handleUnFollow}>
-				<span className='myfriends__button__content'>Bỏ theo dõi </span>
+			<Button className='connect-button follow' name='friend' onClick={handleUnFollow}>
+				<span className='connect-button__content follow'>Bỏ theo dõi </span>
 			</Button>
 		);
 	};
 
 	const buttonAddFollow = () => {
 		return (
-			<Button className=' myfriends__button' isOutline={true} name='friend' onClick={handleFollow}>
-				<span className='myfriends__button__content'>Theo dõi </span>
+			<Button className=' connect-button follow' name='friend' onClick={handleFollow}>
+				<span className='connect-button__content follow'>Theo dõi </span>
 			</Button>
 		);
 	};
 
 	const buttonAddFriend = () => {
 		return (
-			<Button className='myfriends__button' onClick={handleAddFriend}>
-				<span className='myfriends__button__content'>Kết bạn</span>
+			<Button className='connect-button' isOutline={true} onClick={handleAddFriend}>
+				<Add className='connect-button__icon' />
+
+				<span className='connect-button__content'>Kết bạn</span>
 			</Button>
 		);
 	};
 
 	const buttonUnFriend = () => {
 		return (
-			<Button className='myfriends__button' onClick={handleUnFriend}>
-				<span className='myfriends__button__content'>Huỷ kết bạn</span>
+			<Button className='connect-button' isOutline={true} onClick={handleUnFriend}>
+				<Minus className='connect-button__icon' />
+				<span className='connect-button__content'>Huỷ kết bạn</span>
 			</Button>
 		);
 	};
 
 	const buttonPendingFriend = () => {
 		return (
-			<Button className='myfriends__button'>
-				<span className='myfriends__button__content'>Đã gửi lời mời</span>
+			<Button className='connect-button' isOutline={true}>
+				<Minus className='connect-button__icon' />
+				<span className='connect-button__content'>Đã gửi lời mời</span>
 			</Button>
 		);
 	};
@@ -55,7 +61,7 @@ const ConnectButtonsSearch = ({ direction, item }) => {
 	const handleAddFriend = () => {
 		try {
 			const param = {
-				userId: item.id,
+				userId: item.userIdOne,
 			};
 			dispatch(makeFriendRequest(param)).unwrap();
 			setTogglePendingFriend(false);
@@ -64,8 +70,9 @@ const ConnectButtonsSearch = ({ direction, item }) => {
 		}
 	};
 	const handleUnFriend = () => {
+		// setModalUnfriends(false);
 		try {
-			dispatch(unFriendRequest(item.id)).unwrap();
+			dispatch(unFriendRequest(item.userIdOne)).unwrap();
 			setUnFriend(false);
 		} catch (err) {
 			NotificationError(err);
@@ -75,7 +82,7 @@ const ConnectButtonsSearch = ({ direction, item }) => {
 	const handleFollow = () => {
 		try {
 			const param = {
-				data: { userId: item.id },
+				data: { userId: item.userIdOne },
 			};
 			dispatch(addFollower(param)).unwrap();
 			setToggleAddFollow(false);
@@ -86,7 +93,7 @@ const ConnectButtonsSearch = ({ direction, item }) => {
 	};
 	const handleUnFollow = () => {
 		try {
-			dispatch(unFollower(item.id)).unwrap();
+			dispatch(unFollower(item.userIdOne)).unwrap();
 			setToggleAddFollow(true);
 			setToggleUnFollow(false);
 		} catch (err) {
@@ -113,19 +120,19 @@ const ConnectButtonsSearch = ({ direction, item }) => {
 	};
 
 	return (
-		<div className={`myfriends__buttons ${direction}`}>
+		<div className={`connect-buttons ${direction}`}>
 			{item.relation !== 'isMe' && (
 				<>
 					{' '}
-					{handleRenderButtonFriend()}
 					{handleRenderButtonFollow()}
+					{handleRenderButtonFriend()}
 				</>
 			)}
 		</div>
 	);
 };
 
-ConnectButtonsSearch.defaultProps = {
+ConnectButtonsFollower.defaultProps = {
 	data: {
 		isFriend: false,
 		isFollow: false,
@@ -133,7 +140,7 @@ ConnectButtonsSearch.defaultProps = {
 	direction: 'column',
 };
 
-ConnectButtonsSearch.propTypes = {
+ConnectButtonsFollower.propTypes = {
 	data: PropTypes.shape({
 		isFollow: PropTypes.bool.isRequired,
 		isFriend: PropTypes.bool.isRequired,
@@ -142,4 +149,4 @@ ConnectButtonsSearch.propTypes = {
 	direction: PropTypes.oneOf(['row', 'column']),
 };
 
-export default ConnectButtonsSearch;
+export default ConnectButtonsFollower;

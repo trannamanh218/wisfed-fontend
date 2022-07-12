@@ -3,92 +3,27 @@ import SearchField from 'shared/search-field';
 import PropTypes from 'prop-types';
 import React, { useState, useEffect } from 'react';
 import { Modal } from 'react-bootstrap';
-import { getFriendList, addFollower, unFollower, unFriendRequest } from 'reducers/redux-utils/user';
+import { getFriendList } from 'reducers/redux-utils/user';
 import { useDispatch, useSelector } from 'react-redux';
 import UserAvatar from 'shared/user-avatar';
-import Button from 'shared/button';
-import { Minus } from 'components/svg';
 import { NotificationError } from 'helpers/Error';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
+import ConnectButtonsFriends from './ConnectButtonsFriends';
 
 const ModalFriend = ({ setModalFriend, modalFriend, userInfoDetail }) => {
 	const { userInfo } = useSelector(state => state.auth);
 	const [getMyListFriend, setGetMyListFriend] = useState([]);
+	const [inputSearch, setInputSearch] = useState('');
 	const dispatch = useDispatch();
 	const { userId } = useParams();
-
-	const unFolow = id => {
-		try {
-			dispatch(unFollower(id)).unwrap();
-			const newArrFriend = getMyListFriend.map(item => {
-				if (item.userIdTwo === id) {
-					return { ...item, checkUnfollow: true, checkFolow: false };
-				}
-				return { ...item };
-			});
-			setGetMyListFriend(newArrFriend);
-		} catch (err) {
-			NotificationError(err);
-		}
-	};
-
-	const addFolow = id => {
-		const param = {
-			data: { userId: id },
-		};
-		try {
-			dispatch(addFollower(param)).unwrap();
-			const newArrFriend = getMyListFriend.map(item => {
-				if (item.userIdTwo === id) {
-					return { ...item, checkFolow: true, checkUnfollow: false };
-				}
-				return { ...item };
-			});
-			setGetMyListFriend(newArrFriend);
-		} catch (err) {
-			NotificationError(err);
-		}
-	};
-
-	const handleUnFriend = id => {
-		try {
-			dispatch(unFriendRequest(id)).unwrap();
-			const newArrFriend = getMyListFriend.map(item => {
-				if (item.userIdTwo === id) {
-					return { ...item, checkUnfriend: false };
-				}
-				return { ...item };
-			});
-			setGetMyListFriend(newArrFriend);
-		} catch (err) {
-			NotificationError(err);
-		}
-	};
+	const navigate = useNavigate();
 
 	const toggleModal = () => {
 		setModalFriend(!modalFriend);
 	};
 
-	const renderButtonFollows = item => {
-		return item.isFollow ? (
-			item.checkUnfollow ? (
-				<Button onClick={() => addFolow(item.userIdTwo)} className='connect-button follow'>
-					<span className='connect-button__content'>Theo dõi </span>
-				</Button>
-			) : (
-				<Button onClick={() => unFolow(item.userIdTwo)} className='connect-button follow'>
-					<span className='connect-button__content'>Hủy theo dõi </span>
-				</Button>
-			)
-		) : item.checkFolow ? (
-			<Button onClick={() => unFolow(item.userIdTwo)} className='connect-button follow'>
-				<span className='connect-button__content'>Hủy theo dõi </span>
-			</Button>
-		) : (
-			<Button onClick={() => addFolow(item.userIdTwo)} className='connect-button follow'>
-				<span className='connect-button__content'>Theo dõi </span>
-			</Button>
-		);
+	const onChangeInputSearch = e => {
+		setInputSearch(e.target.value);
 	};
 
 	useEffect(async () => {
@@ -100,11 +35,17 @@ const ModalFriend = ({ setModalFriend, modalFriend, userInfoDetail }) => {
 			const newArrFriend = friendList.rows.map(item => {
 				return { ...item, checkFolow: false, checkUnfollow: false, checkUnfriend: true };
 			});
-			setGetMyListFriend(newArrFriend);
+			setGetMyListFriend(
+				newArrFriend.filter(
+					x =>
+						x.firstName.toLocaleLowerCase().includes(inputSearch.toLocaleLowerCase()) ||
+						x.lastName.toLocaleLowerCase().includes(inputSearch.toLocaleLowerCase())
+				)
+			);
 		} catch (err) {
 			NotificationError(err);
 		}
-	}, [userInfo, dispatch]);
+	}, [userInfo, dispatch, inputSearch]);
 
 	return (
 		<>
@@ -119,7 +60,11 @@ const ModalFriend = ({ setModalFriend, modalFriend, userInfoDetail }) => {
 						</div>
 					</div>
 					<div className='modalFollowers__search'>
-						<SearchField placeholder='Tìm kiếm trên Wisfeed' />
+						<SearchField
+							placeholder='Tìm kiếm trên Wisfeed'
+							value={inputSearch}
+							handleChange={onChangeInputSearch}
+						/>
 					</div>
 					<div className='modalFollowers__info'>
 						{getMyListFriend.map(item =>
@@ -127,31 +72,28 @@ const ModalFriend = ({ setModalFriend, modalFriend, userInfoDetail }) => {
 								<div key={item.id} className='author-card'>
 									<div className='author-card__left'>
 										<UserAvatar
-											source={item.userTwo.avatarImage}
+											source={item.userTwo?.avatarImage || item.avatarImage}
 											className='author-card__avatar'
 											size={'md'}
+											handleClick={() => {
+												toggleModal(), navigate(`/profile/${item.id}`);
+											}}
 										/>
 										<div className='author-card__info'>
-											<h5>
-												{item.userTwo.firstName} {item.userTwo.lastName}
+											<h5
+												onClick={() => {
+													toggleModal(), navigate(`/profile/${item.id}`);
+												}}
+											>
+												{item.userTwo?.firstName || item.firstName}{' '}
+												{item.userTwo?.lastName || item.lastName}
 											</h5>
 											<p className='author-card__subtitle'>3K follow, 300 bạn bè</p>
 										</div>
 									</div>
 									<div className='author-card__right'>
-										{item.userTwo.id !== userInfo.id && (
-											<div className='connect-buttons row'>
-												{renderButtonFollows(item)}
-												<Button
-													className='connect-button'
-													isOutline={true}
-													name='friend'
-													onClick={() => handleUnFriend(item.userIdTwo)}
-												>
-													<Minus className='connect-button__icon' />
-													<span className='connect-button__content'>Huỷ kết bạn</span>
-												</Button>
-											</div>
+										{(item.userTwo?.id || item.id) !== userInfo.id && (
+											<ConnectButtonsFriends direction='row' item={item} />
 										)}
 									</div>
 								</div>

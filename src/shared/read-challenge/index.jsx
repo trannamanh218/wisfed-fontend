@@ -30,7 +30,7 @@ function ReadChallenge({ modalOpen, setModalOpen }) {
 
 	const handleChangeTarget = async () => {
 		if (inputValue < 1) {
-			toast.error('Thử thách phải lớn hơn 0');
+			toast.error('Mục tiêu phải lớn hơn 0');
 		} else {
 			if (modalOpen) {
 				try {
