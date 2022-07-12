@@ -134,7 +134,8 @@ const Header = () => {
 	};
 
 	const onClickReloadPosts = () => {
-		dispatch(increment());
+		dispatch(increment()); // Tải lại newfeed
+		window.scrollTo(0, 0);
 	};
 
 	return (
