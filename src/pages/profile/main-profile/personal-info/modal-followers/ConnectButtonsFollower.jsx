@@ -2,12 +2,11 @@ import { Add, Minus } from 'components/svg';
 import { useState } from 'react';
 import Button from 'shared/button';
 import PropTypes from 'prop-types';
-import './connect-buttons.scss';
 import { makeFriendRequest, addFollower, unFollower, unFriendRequest } from 'reducers/redux-utils/user';
 import { useDispatch } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
 
-const ConnectButtons = ({ direction, item }) => {
+const ConnectButtonsFollower = ({ direction, item }) => {
 	const dispatch = useDispatch();
 	const [unFriend, setUnFriend] = useState(true);
 	const [toggleUnFollow, setToggleUnFollow] = useState(true);
@@ -17,7 +16,7 @@ const ConnectButtons = ({ direction, item }) => {
 
 	const buttonUnFollow = () => {
 		return (
-			<Button className='connect-button follow' isOutline={true} name='friend' onClick={handleUnFollow}>
+			<Button className='connect-button follow' name='friend' onClick={handleUnFollow}>
 				<span className='connect-button__content follow'>Bỏ theo dõi </span>
 			</Button>
 		);
@@ -25,7 +24,7 @@ const ConnectButtons = ({ direction, item }) => {
 
 	const buttonAddFollow = () => {
 		return (
-			<Button className=' connect-button follow' isOutline={true} name='friend' onClick={handleFollow}>
+			<Button className=' connect-button follow' name='friend' onClick={handleFollow}>
 				<span className='connect-button__content follow'>Theo dõi </span>
 			</Button>
 		);
@@ -33,7 +32,7 @@ const ConnectButtons = ({ direction, item }) => {
 
 	const buttonAddFriend = () => {
 		return (
-			<Button className='connect-button' onClick={handleAddFriend}>
+			<Button className='connect-button' isOutline={true} onClick={handleAddFriend}>
 				<Add className='connect-button__icon' />
 
 				<span className='connect-button__content'>Kết bạn</span>
@@ -43,7 +42,7 @@ const ConnectButtons = ({ direction, item }) => {
 
 	const buttonUnFriend = () => {
 		return (
-			<Button className='connect-button' onClick={handleUnFriend}>
+			<Button className='connect-button' isOutline={true} onClick={handleUnFriend}>
 				<Minus className='connect-button__icon' />
 				<span className='connect-button__content'>Huỷ kết bạn</span>
 			</Button>
@@ -52,7 +51,7 @@ const ConnectButtons = ({ direction, item }) => {
 
 	const buttonPendingFriend = () => {
 		return (
-			<Button className='connect-button'>
+			<Button className='connect-button' isOutline={true}>
 				<Minus className='connect-button__icon' />
 				<span className='connect-button__content'>Đã gửi lời mời</span>
 			</Button>
@@ -62,7 +61,7 @@ const ConnectButtons = ({ direction, item }) => {
 	const handleAddFriend = () => {
 		try {
 			const param = {
-				userId: item.id,
+				userId: item.userIdOne,
 			};
 			dispatch(makeFriendRequest(param)).unwrap();
 			setTogglePendingFriend(false);
@@ -73,7 +72,7 @@ const ConnectButtons = ({ direction, item }) => {
 	const handleUnFriend = () => {
 		// setModalUnfriends(false);
 		try {
-			dispatch(unFriendRequest(item.id)).unwrap();
+			dispatch(unFriendRequest(item.userIdOne)).unwrap();
 			setUnFriend(false);
 		} catch (err) {
 			NotificationError(err);
@@ -83,7 +82,7 @@ const ConnectButtons = ({ direction, item }) => {
 	const handleFollow = () => {
 		try {
 			const param = {
-				data: { userId: item.id },
+				data: { userId: item.userIdOne },
 			};
 			dispatch(addFollower(param)).unwrap();
 			setToggleAddFollow(false);
@@ -94,7 +93,7 @@ const ConnectButtons = ({ direction, item }) => {
 	};
 	const handleUnFollow = () => {
 		try {
-			dispatch(unFollower(item.id)).unwrap();
+			dispatch(unFollower(item.userIdOne)).unwrap();
 			setToggleAddFollow(true);
 			setToggleUnFollow(false);
 		} catch (err) {
@@ -125,15 +124,15 @@ const ConnectButtons = ({ direction, item }) => {
 			{item.relation !== 'isMe' && (
 				<>
 					{' '}
-					{handleRenderButtonFriend()}
 					{handleRenderButtonFollow()}
+					{handleRenderButtonFriend()}
 				</>
 			)}
 		</div>
 	);
 };
 
-ConnectButtons.defaultProps = {
+ConnectButtonsFollower.defaultProps = {
 	data: {
 		isFriend: false,
 		isFollow: false,
@@ -141,7 +140,7 @@ ConnectButtons.defaultProps = {
 	direction: 'column',
 };
 
-ConnectButtons.propTypes = {
+ConnectButtonsFollower.propTypes = {
 	data: PropTypes.shape({
 		isFollow: PropTypes.bool.isRequired,
 		isFriend: PropTypes.bool.isRequired,
@@ -150,4 +149,4 @@ ConnectButtons.propTypes = {
 	direction: PropTypes.oneOf(['row', 'column']),
 };
 
-export default ConnectButtons;
+export default ConnectButtonsFollower;

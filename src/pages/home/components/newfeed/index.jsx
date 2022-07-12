@@ -36,9 +36,7 @@ const NewFeed = () => {
 	useEffect(async () => {
 		window.scrollTo(0, 0);
 		callApiStart.current = 10;
-		// if (!_.isEmpty(userInfo)) {
 		getPostListFirstTime();
-		// }
 	}, [isNewPost, userInfo, reloadCount]);
 
 	const getPostListFirstTime = async () => {

@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 const PostQuotes = ({ postsData, isShare }) => {
 	const { isSharePosts } = useSelector(state => state.post);
-	// console.log(postsData);
+
 	const renderAuthorAndbooksName = () => {
 		if (postsData.book?.name) {
 			return `${postsData.book?.name}`;

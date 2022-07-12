@@ -132,6 +132,9 @@ const authSlice = createSlice({
 		updateUserInfo: (state, action) => {
 			state.userInfo = action.payload;
 		},
+		updateIsNewNotificationUserInfo: (state, action) => {
+			state.userInfoJwt = action.payload;
+		},
 	},
 
 	extraReducers: {
@@ -192,5 +195,6 @@ const authSlice = createSlice({
 });
 
 const auth = authSlice.reducer;
-export const { checkLogin, checkUserLogin, deleteUserInfo, updateUserInfo } = authSlice.actions;
+export const { checkLogin, checkUserLogin, deleteUserInfo, updateUserInfo, updateIsNewNotificationUserInfo } =
+	authSlice.actions;
 export default auth;

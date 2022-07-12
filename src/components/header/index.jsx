@@ -37,7 +37,7 @@ import { updateTargetReading } from 'reducers/redux-utils/chart';
 import defaultAvatar from 'assets/images/avatar.jpeg';
 import * as stream from 'getstream';
 import _ from 'lodash';
-import { patchNewNotification, updateUserInfo } from 'reducers/redux-utils/auth';
+import { patchNewNotification, updateIsNewNotificationUserInfo } from 'reducers/redux-utils/auth';
 import { increment } from 'reducers/redux-utils/reloadPostHomePage';
 import Request from 'helpers/Request';
 
@@ -91,14 +91,14 @@ const Header = () => {
 	}, [realTime]);
 
 	useEffect(() => {
-		if (!_.isEmpty(userInfo)) {
-			if (userInfo.isNewNotification) {
+		if (!_.isEmpty(userInfoJwt)) {
+			if (userInfoJwt.isNewNotification) {
 				setRealTime(true);
 			} else {
 				setRealTime(false);
 			}
 		}
-	}, [userInfo]);
+	}, [userInfoJwt]);
 
 	useEffect(() => {
 		if (Storage.getAccessToken()) {
@@ -172,16 +172,18 @@ const Header = () => {
 		if (!_.isEmpty(userInfoJwt)) {
 			const client = stream.connect('p77uwpux9zwu', null, '1169912');
 			const notificationFeed = client.feed('notification', userInfoJwt.id, userInfoJwt.userToken);
+
 			const callback = data => {
 				setRealTime(true);
 				dispatch(depenRenderNotificaion(true));
 				const params = {
 					isNewNotification: true,
 				};
-				if (!userInfo.isNewNotification) {
+
+				if (!userInfoJwt.isNewNotification && !_.isEmpty(data)) {
 					dispatch(patchNewNotification(params)).unwrap();
-					const dataNewNoti = { ...userInfo, isNewNotification: true };
-					dispatch(updateUserInfo(dataNewNoti));
+					const dataNewNoti = { ...userInfoJwt, isNewNotification: true };
+					dispatch(updateIsNewNotificationUserInfo(dataNewNoti));
 				}
 			};
 			const successCallback = () => {
@@ -195,11 +197,11 @@ const Header = () => {
 	}, [userInfoJwt]);
 
 	const updateNewNotificaionFalse = params => {
-		if (userInfo.isNewNotification) {
+		if (userInfoJwt.isNewNotification) {
 			dispatch(patchNewNotification(params)).unwrap();
-			const dataNewNoti = { ...userInfo, isNewNotification: false };
-			dispatch(updateUserInfo(dataNewNoti));
+			const dataNewNoti = { ...userInfoJwt, isNewNotification: false };
 			dispatch(depenRenderNotificaion(false));
+			dispatch(updateIsNewNotificationUserInfo(dataNewNoti));
 		}
 	};
 

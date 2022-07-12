@@ -530,7 +530,7 @@ function CreatPostModalContent({
 			}
 		}
 	};
-	console.log(postsData);
+
 	useEffect(() => {
 		if (showSubModal) {
 			setShowMainModal(false);

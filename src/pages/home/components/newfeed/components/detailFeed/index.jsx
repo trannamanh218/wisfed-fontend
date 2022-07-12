@@ -25,7 +25,6 @@ const DetailFeed = () => {
 			} else {
 				res = await dispatch(getDetailFeedGroup(params)).unwrap();
 			}
-			console.log(res);
 			setDetailFedd(res);
 		} catch (err) {
 			NotificationError(err);

@@ -128,7 +128,7 @@ function SearchLayout({ dataGroup }) {
 															className='member-item__btn btn-folow'
 															onClick={() => handleUnFollow(item)}
 														>
-															Hủy theo dõi
+															Bỏ theo dõi
 														</button>
 													) : (
 														<button
