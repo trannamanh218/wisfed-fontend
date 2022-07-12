@@ -207,63 +207,62 @@ function Post({ postInformations, className, showModalCreatPost, inReviews = fal
 
 	const infoUser = () => {
 		return (
-			<div className='post__user-status'>
-				<UserAvatar
-					data-testid='post__user-avatar'
-					className='post__user-status__avatar'
-					source={postData?.createdBy?.avatarImage || postData.user?.avatarImage}
-				/>
+			<>
+				<div className='post__user-status'>
+					<UserAvatar
+						data-testid='post__user-avatar'
+						className='post__user-status__avatar'
+						source={postData?.createdBy?.avatarImage || postData.user?.avatarImage}
+					/>
 
-				<div className='post__user-status__name-and-post-time-status'>
-					<div data-testid='post__user-name' className='post__user-status__name'>
-						{/* who posted the post */}
-						{postData?.createdBy?.fullName || postData?.user?.firstName || 'Ẩn danh'}
-
-						{/* tagged people */}
-						{postData.mentionsUsers && postData.mentionsUsers.length !== 0 ? (
-							withFriends(postData.mentionsUsers)
-						) : (
-							<span></span>
-						)}
-						<div className='post__user__container'>
-							<Link
-								to={`/profile/${postData.createdBy?.id || postData.user?.id}`}
-								data-testid='post__user-name'
-								className='post__user-status__name'
-							>
-								{postData?.createdBy?.fullName || postData?.user?.fullName || 'Ẩn danh'}
-							</Link>
-							{(postData.groupInfo || postData.group) && (
-								<img className='post__user-icon' src={Play} alt='' />
-							)}
-
-							<Link
-								to={`/group/${postData.groupInfo?.id || postData.group?.id}`}
-								className='post__name__group'
-							>
-								{postData.groupInfo ? postData.groupInfo?.name : postData.group?.name}
-							</Link>
-						</div>
-
-						<div className='post__user-status__post-time-status'>
-							<span>{calculateDurationTime(postData.time || postData.createdAt)}</span>
-							<>
-								{postData.book && (
-									<div className='post__user-status__subtitle'>
-										<span>Cập nhật tiến độ đọc sách</span>
-										<div className='post__user-status__post-time-status__online-dot'></div>
-										<span>Xếp hạng</span>
-										<ReactRating
-											readonly={true}
-											initialRating={
-												postInformations?.book?.actorRating
-													? postInformations?.book?.actorRating?.star
-													: 0
-											}
-										/>
-									</div>
+					<div className='post__user-status__name-and-post-time-status'>
+						<div data-testid='post__user-name' className='post__user-status__name'>
+							<div className='post__user__container'>
+								<Link
+									to={`/profile/${postData.createdBy?.id || postData.user?.id}`}
+									data-testid='post__user-name'
+									className='post__user-status__name'
+								>
+									{postData?.createdBy?.fullName || postData?.user?.fullName || 'Ẩn danh'}
+								</Link>
+								{/* tagged people */}
+								{postData.mentionsUsers && postData.mentionsUsers.length !== 0 ? (
+									withFriends(postData.mentionsUsers)
+								) : (
+									<span></span>
 								)}
-							</>
+								{(postData.groupInfo || postData.group) && (
+									<img className='post__user-icon' src={Play} alt='' />
+								)}
+
+								<Link
+									to={`/group/${postData.groupInfo?.id || postData.group?.id}`}
+									className='post__name__group'
+								>
+									{postData.groupInfo ? postData.groupInfo?.name : postData.group?.name}
+								</Link>
+							</div>
+
+							<div className='post__user-status__post-time-status'>
+								<span>{calculateDurationTime(postData.time || postData.createdAt)}</span>
+								<>
+									{postData.book && (
+										<div className='post__user-status__subtitle'>
+											<span>Cập nhật tiến độ đọc sách</span>
+											<div className='post__user-status__post-time-status__online-dot'></div>
+											<span>Xếp hạng</span>
+											<ReactRating
+												readonly={true}
+												initialRating={
+													postInformations?.book?.actorRating
+														? postInformations?.book?.actorRating?.star
+														: 0
+												}
+											/>
+										</div>
+									)}
+								</>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -273,7 +272,7 @@ function Post({ postInformations, className, showModalCreatPost, inReviews = fal
 						__html: postData.message || postData.content,
 					}}
 				></div>
-			</div>
+			</>
 		);
 	};
 
