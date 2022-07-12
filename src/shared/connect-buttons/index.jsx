@@ -18,7 +18,7 @@ const ConnectButtons = ({ direction, item }) => {
 	const buttonUnFollow = () => {
 		return (
 			<Button className='connect-button follow' isOutline={true} name='friend' onClick={handleUnFollow}>
-				<span className='connect-button__content follow'>Hủy theo dõi </span>
+				<span className='connect-button__content follow'>Bỏ theo dõi </span>
 			</Button>
 		);
 	};

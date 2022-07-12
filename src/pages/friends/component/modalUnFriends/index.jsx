@@ -20,12 +20,12 @@ const ModalUnFriend = ({ setModalUnfriends, toggleModalUnFriends, handleUnfriend
 				</>
 			);
 		} else {
-			return list.userTwo.fullName ? (
-				list.userTwo.fullName
+			return list.userTwo?.fullName ? (
+				list.userTwo?.fullName
 			) : (
 				<>
-					<span>{list.userTwo.firstName}</span>&nbsp;
-					<span>{list.userTwo.lastName}</span>
+					<span>{list.userTwo?.firstName}</span>&nbsp;
+					<span>{list.userTwo?.lastName}</span>
 				</>
 			);
 		}

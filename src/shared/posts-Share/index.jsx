@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { Feather, Forward } from 'components/svg';
+import { Feather } from 'components/svg';
 import { calculateDurationTime } from 'helpers/Common';
 import _ from 'lodash';
 import './posts-Share.scss';
@@ -12,12 +12,15 @@ import PreviewLink from 'shared/preview-link/PreviewLink';
 import ReactRating from 'shared/react-rating';
 import PostQuotes from 'shared/post-quotes';
 import { Link } from 'react-router-dom';
+import Play from 'assets/images/play.png';
+import { useSelector } from 'react-redux';
 
-const PostsShare = ({ postData, className }) => {
+const PostsShare = ({ postData }) => {
 	const [videoId, setVideoId] = useState('');
 	const directUrl = url => {
 		window.open(url, '_blank');
 	};
+	const { isSharePosts, isShare } = useSelector(state => state.post);
 
 	useEffect(() => {
 		if (
@@ -44,10 +47,17 @@ const PostsShare = ({ postData, className }) => {
 	}, [postData]);
 
 	return (
-		<div className='post__main__container'>
-			<div className={classNames('post__container', { [`${className}`]: className })}>
-				<Link to={`/profile/${postData.sharePost.createdBy?.id}`}>
-					{' '}
+		<div
+			className={classNames('post__main__container', {
+				'post__custom__main__container': isSharePosts,
+			})}
+		>
+			<div
+				className={classNames('post__container', {
+					'post__custom': isSharePosts,
+				})}
+			>
+				<Link to={`/profile/${postData.sharePost?.createdBy.id || postData.createdBy?.id}`}>
 					<div className='post__user-status'>
 						<UserAvatar
 							data-testid='post__user-avatar'
@@ -74,7 +84,8 @@ const PostsShare = ({ postData, className }) => {
 									<>
 										<Link to={`/group/${postData?.group?.id}`}>
 											<span className='img-share__group'>
-												<Forward /> {postData.group?.name}
+												<img className='post__user-icon' src={Play} alt='' />{' '}
+												{postData.group?.name}
 											</span>
 										</Link>
 									</>
@@ -83,22 +94,21 @@ const PostsShare = ({ postData, className }) => {
 							<div className='post__user-status__post-time-status'>
 								<span>{calculateDurationTime(postData.time || postData.createdAt)}</span>
 								<>
-									{postData.book ||
-										(postData.sharePost.book && (
-											<div className='post__user-status__subtitle'>
-												<span>Cập nhật tiến độ đọc sách</span>
-												<div className='post__user-status__post-time-status__online-dot'></div>
-												<span>Xếp hạng</span>
-												<ReactRating
-													readonly={true}
-													initialRating={
-														postData?.book?.actorRating?.star
-															? postData?.book?.actorRating?.star
-															: 0
-													}
-												/>
-											</div>
-										))}
+									{(postData?.book || postData.sharePost?.book) && (
+										<div className='post__user-status__subtitle'>
+											<span>Cập nhật tiến độ đọc sách</span>
+											<div className='post__user-status__post-time-status__online-dot'></div>
+											<span>Xếp hạng</span>
+											<ReactRating
+												readonly={true}
+												initialRating={
+													postData?.book?.actorRating?.star
+														? postData?.book?.actorRating?.star
+														: 0
+												}
+											/>
+										</div>
+									)}
 								</>
 							</div>
 						</div>
@@ -126,7 +136,9 @@ const PostsShare = ({ postData, className }) => {
 					))}
 				</ul>
 				{postData?.isShare && postData?.verb === 'shareQuote' && <PostQuotes postsData={postData} />}
-				{postData?.sharePost?.book && (
+				{/* {postData?.verb === 'shareTopQuoteRanking' && <PostQuotes postsData={postData} />} */}
+
+				{postData.sharePost?.book && (
 					<PostBook
 						data={{
 							...postData.sharePost?.book,
@@ -136,8 +148,8 @@ const PostsShare = ({ postData, className }) => {
 					/>
 				)}
 
-				{postData?.sharePost.image?.length > 0 && (
-					<GridImage images={postData?.sharePost.image} inPost={true} postId={postData?.id} />
+				{postData?.sharePost?.image?.length > 0 && (
+					<GridImage images={postData?.sharePost?.image} inPost={true} postId={postData?.id} />
 				)}
 
 				{postData?.sharePost.image?.length === 0 &&

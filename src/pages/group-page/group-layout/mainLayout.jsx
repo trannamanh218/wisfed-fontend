@@ -65,38 +65,36 @@ const MainLayout = ({ filter }) => {
 							loader={<LoadingIndicator />}
 						>
 							<div className='list-group-container'>
-								{list.map(item => {
+								{list.map((item, index) => {
 									return (
-										<>
-											<Link to={`/group/${item.id}`}>
-												<div className='item-group'>
-													<img
-														src={item.avatar}
-														onError={e => e.target.setAttribute('src', defaultAvatar)}
-														alt=''
-													/>
-													<div className='item-group__text'>
-														<div className='item-group__name'>
-															<span>{item.name}</span>
-														</div>
-														<div className='item-group__description'>
-															<span>
-																{item?.countMember < 10
-																	? `0${item.countMember}`
-																	: item.countMember}{' '}
-																thành viên
-															</span>
-														</div>
-														<div className='item-group__count-post'>
-															<span>{item.countPost} bài viết/ngày</span>
-														</div>
-														<div className='item-group-btn'>
-															<button>Truy cập vào nhóm </button>
-														</div>
+										<Link key={index} to={`/group/${item.id}`}>
+											<div className='item-group'>
+												<img
+													src={item.avatar}
+													onError={e => e.target.setAttribute('src', defaultAvatar)}
+													alt=''
+												/>
+												<div className='item-group__text'>
+													<div className='item-group__name'>
+														<span>{item.name}</span>
+													</div>
+													<div className='item-group__description'>
+														<span>
+															{item?.countMember < 10
+																? `0${item.countMember}`
+																: item.countMember}{' '}
+															thành viên
+														</span>
+													</div>
+													<div className='item-group__count-post'>
+														<span>{item.countPost} bài viết/ngày</span>
+													</div>
+													<div className='item-group-btn'>
+														<button>Truy cập vào nhóm </button>
 													</div>
 												</div>
-											</Link>
-										</>
+											</div>
+										</Link>
 									);
 								})}
 							</div>
@@ -110,7 +108,7 @@ const MainLayout = ({ filter }) => {
 
 MainLayout.propTypes = {
 	listGroup: PropTypes.array,
-	filter: PropTypes.string,
+	filter: PropTypes.bool,
 };
 
 export default MainLayout;

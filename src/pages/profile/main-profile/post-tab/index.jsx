@@ -12,7 +12,6 @@ import PropTypes from 'prop-types';
 function PostTab({ currentTab }) {
 	const [postList, setPostList] = useState([]);
 	const [hasMore, setHasMore] = useState(true);
-	console.log(postList);
 	const { userId } = useParams();
 	const dispatch = useDispatch();
 

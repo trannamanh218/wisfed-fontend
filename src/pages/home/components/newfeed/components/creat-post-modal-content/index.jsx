@@ -1,6 +1,6 @@
 /* eslint-disable max-lines */
 import classNames from 'classnames';
-import { CloseX, Image } from 'components/svg';
+import { CloseX, Image, IconRanks } from 'components/svg';
 import { STATUS_IDLE, STATUS_LOADING, STATUS_SUCCESS } from 'constants';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
@@ -15,7 +15,7 @@ import CreatPostSubModal from './CreatePostSubModal';
 import TaggedList from './TaggedList';
 import UploadImage from './UploadImage';
 import PreviewLink from 'shared/preview-link/PreviewLink';
-import { getPreviewUrl, getSharePostInternal } from 'reducers/redux-utils/post';
+import { getPreviewUrl, getSharePostInternal, getSharePostRanks } from 'reducers/redux-utils/post';
 import { useCallback } from 'react';
 import Circle from 'shared/loading/circle';
 import './style.scss';
@@ -33,6 +33,8 @@ import { creatNewPost } from 'reducers/redux-utils/group';
 import PostQuotes from 'shared/post-quotes';
 import { saveDataShare, checkShare } from 'reducers/redux-utils/post';
 import Post from 'shared/post';
+import AuthorBook from 'shared/author-book';
+import ShareUsers from '../modal-share-users';
 
 function CreatPostModalContent({
 	hideCreatePostModal,
@@ -68,10 +70,9 @@ function CreatPostModalContent({
 	const [checkProgress, setCheckProgress] = useState();
 	const [showImagePopover, setShowImagePopover] = useState(false);
 	const [buttonActive, setButtonActive] = useState(false);
-
 	const location = useLocation();
 	const UpdateImg = useSelector(state => state.chart.updateImgPost);
-	const { resetTaggedData, isShare, postsData, isSharePosts } = useSelector(state => state.post);
+	const { resetTaggedData, isShare, postsData, isSharePosts, isSharePostsAll } = useSelector(state => state.post);
 	const { id } = useParams();
 	const {
 		auth: { userInfo },
@@ -201,7 +202,7 @@ function CreatPostModalContent({
 	};
 
 	const addOptionsToPost = param => {
-		if (isShare || isSharePosts) {
+		if (isShare || isSharePosts || isSharePostsAll.length > 0) {
 			return;
 		} else {
 			if (imagesUpload.length > 0 && param.value === 'addBook') {
@@ -214,7 +215,7 @@ function CreatPostModalContent({
 	};
 
 	const handleOpenUploadImage = () => {
-		if (isShare || isSharePosts) {
+		if (isShare || isSharePosts || isSharePostsAll.length > 0) {
 			return;
 		} else {
 			if (_.isEmpty(taggedData.addBook)) {
@@ -248,7 +249,9 @@ function CreatPostModalContent({
 			const listData = [...taggedData[option.value]];
 			const lastItem = listData[listData.length - 1];
 			if (!listData.length || (!_.isEmpty(lastItem) && lastItem.id !== data.id)) {
-				listData.push(data);
+				if (!listData.includes(data)) {
+					listData.push(data);
+				}
 			}
 			newData[option.value] = listData;
 		} else if (option.value === 'addBook' || data.hasOwnProperty('page')) {
@@ -328,6 +331,7 @@ function CreatPostModalContent({
 			return Promise.all([addToDefaultLibraryRequest, updateProgressRequest]);
 		}
 	};
+
 	const onCreatePost = async () => {
 		const params = await generateData();
 		// book, author , topic is required
@@ -346,36 +350,72 @@ function CreatPostModalContent({
 		}
 
 		try {
-			if (isShare || isSharePosts) {
+			if (isShare || isSharePosts || isSharePostsAll.length > 0) {
 				if (isShare) {
-					const query = {
-						id: postsData.sharePost ? postsData.sharePost.minipostId : postsData.id,
-						type: 'quote',
-						background: postsData.background,
-						...params,
-					};
-					await dispatch(getSharePostInternal(query)).unwrap();
-				} else {
-					let newId;
-					let newType;
-					if (postsData.verb === 'miniPost') {
-						newId = postsData.minipostId;
-						newType = 'post';
+					if (postsData.categoryName !== undefined) {
+						const query = {
+							by: postsData.by,
+							id: postsData.id,
+							type: 'topQuote',
+							categoryId: postsData.categoryId || null,
+							msg: textFieldEdit?.current?.innerHTML,
+						};
+
+						await dispatch(getSharePostRanks(query)).unwrap();
 					} else {
-						if (postsData.sharePost.minipostId) {
-							newId = postsData.sharePost.minipostId;
+						const query = {
+							id: postsData.sharePost ? postsData.sharePost.minipostId : postsData.id,
+							type: 'quote',
+							background: postsData.background,
+							...params,
+						};
+						await dispatch(getSharePostInternal(query)).unwrap();
+					}
+				} else if (isSharePosts) {
+					if (postsData.originId) {
+						const query = {
+							by: postsData.originId.by,
+							id: postsData.info.id,
+							type: postsData.originId.type,
+							categoryId: postsData.originId.categoryId || null,
+							msg: textFieldEdit?.current?.innerHTML,
+							userType: postsData.originId.type === 'topUser' && postsData.originId.userType,
+						};
+
+						await dispatch(getSharePostRanks(query)).unwrap();
+					} else {
+						let newId;
+						let newType;
+						if (postsData.verb === 'miniPost') {
+							newId = postsData.minipostId;
 							newType = 'post';
 						} else {
-							newId = postsData.sharePost.id;
-							newType = 'quote';
+							if (postsData.sharePost.minipostId) {
+								newId = postsData.sharePost.minipostId;
+								newType = 'post';
+							} else {
+								newId = postsData.sharePost.id;
+								newType = 'quote';
+							}
 						}
+						const query = {
+							id: newId,
+							type: newType,
+							...params,
+						};
+						await dispatch(getSharePostInternal(query)).unwrap();
 					}
+				} else {
 					const query = {
-						id: newId,
-						type: newType,
-						...params,
+						by: postsData.by,
+						id: postsData.type === 'topUser' ? postsData.id : postsData.bookId,
+						type: postsData.type,
+						categoryId: postsData.categoryId || null,
+						msg: textFieldEdit?.current?.innerHTML,
+						userType: postsData.type === 'topUser' && postsData.userType,
 					};
-					await dispatch(getSharePostInternal(query)).unwrap();
+
+					await dispatch(getSharePostRanks(query)).unwrap();
 				}
 			} else {
 				if (params.bookId) {
@@ -457,7 +497,7 @@ function CreatPostModalContent({
 					}
 				}
 			}
-		} else if (isShare || isSharePosts) {
+		} else if (isShare || isSharePosts || isSharePostsAll.length > 0) {
 			if (textFieldEdit.current?.innerText) {
 				isActive = true;
 			}
@@ -497,6 +537,19 @@ function CreatPostModalContent({
 		}
 	}, [showSubModal]);
 
+	const handleTime = () => {
+		switch (postsData.by) {
+			case 'week':
+				return 'tuần';
+			case 'month':
+				return 'tháng';
+			case 'year':
+				return 'năm';
+			default:
+				break;
+		}
+	};
+
 	return (
 		<div className='creat-post-modal-content'>
 			<Circle loading={status === STATUS_LOADING} />
@@ -510,7 +563,9 @@ function CreatPostModalContent({
 					<div style={{ visibility: 'hidden' }} className='creat-post-modal-content__main__close'>
 						<CloseX />
 					</div>
-					<h5>Tạo bài viết</h5>
+					<h5>
+						{isShare || isSharePosts || isSharePostsAll.length > 0 ? 'Chia sẻ bài viết' : 'Tạo bài viết'}
+					</h5>
 					<button className='creat-post-modal-content__main__close' onClick={hideCreatePostModal}>
 						<CloseX />
 					</button>
@@ -529,7 +584,10 @@ function CreatPostModalContent({
 							</div>
 							<div className='creat-post-modal-content__main__body__user-info__block-right'>
 								<p>
-									{userInfo.fullName || userInfo.lastName || userInfo.firstName || 'Không xác định'}
+									{userInfo?.fullName ||
+										userInfo?.lastName ||
+										userInfo?.firstName ||
+										'Không xác định'}
 									{taggedData.addFriends.length > 0 && (
 										<>
 											<span className='d-inline-block mx-1'>cùng với</span>
@@ -583,14 +641,46 @@ function CreatPostModalContent({
 								removeTaggedItem={removeTaggedItem}
 								type='addCategory'
 							/>
-							{(isShare || isSharePosts) && (
-								<div className='creat-post-modal-content__main__share-container'>
-									{isShare && <PostQuotes postsData={postsData} />}
+							{postsData.type === 'topQuote' && (
+								<div className='post__title__share__rank'>
+									<span className='number__title__rank'># Top {postsData.rank} quotes </span>{' '}
+									<span className='title__rank'>
+										{postsData.categoryName?.length
+											? `  được like nhiều nhất thuộc ${
+													postsData.categoryName
+											  } theo ${handleTime()} `
+											: `  được like nhiều nhất theo ${handleTime()} `}
+									</span>
+									<IconRanks />
+								</div>
+							)}
+							{postsData.type === 'topBook' && (
+								<div className='post__title__share__rank'>
+									<span className='number__title__rank'># Top {postsData.rank} </span>{' '}
+									<span className='title__rank'>
+										{postsData.categoryName
+											? `  cuốn sách tốt nhất  ${postsData.categoryName} theo ${handleTime()} `
+											: `  cuốn sách tốt nhất theo ${handleTime()} `}
+									</span>
+									<IconRanks />
+								</div>
+							)}
+							{(isShare || isSharePosts || isSharePostsAll === 'shareTopBook') && (
+								<div
+									className={
+										postsData.verb !== 'shareTopBookRanking' &&
+										postsData.verb !== 'shareTopUserRanking' &&
+										'creat-post-modal-content__main__share-container'
+									}
+								>
+									{isShare && <PostQuotes postsData={postsData} isShare={isShare} />}
 									{isSharePosts && (
 										<Post postInformations={postsData} showModalCreatPost={showModalCreatPost} />
 									)}
+									{isSharePostsAll === 'shareTopBook' && <AuthorBook data={postsData} />}
 								</div>
 							)}
+							{isSharePostsAll === 'shareTopUser' && <ShareUsers postsData={postsData} />}
 
 							{!_.isEmpty(taggedData.addBook) || showUpload ? (
 								<>
@@ -639,7 +729,11 @@ function CreatPostModalContent({
 								<span
 									className={classNames('creat-post-modal-content__main__options__item-add-to-post', {
 										'active': imagesUpload.length > 0 && _.isEmpty(taggedData.addBook),
-										'disabled': !_.isEmpty(taggedData.addBook) || isShare,
+										'disabled':
+											!_.isEmpty(taggedData.addBook) ||
+											isShare ||
+											isSharePosts ||
+											isSharePostsAll.length > 0,
 									})}
 									onMouseOver={() => setShowImagePopover(true)}
 									onMouseLeave={() => setShowImagePopover(false)}

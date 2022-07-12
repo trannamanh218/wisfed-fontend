@@ -5,17 +5,19 @@ import PropTypes from 'prop-types';
 import { Modal } from 'react-bootstrap';
 import { useSelector, useDispatch } from 'react-redux';
 import React, { useState, useEffect } from 'react';
-import { getListFollowrs, makeFriendRequest, unFriendRequest } from 'reducers/redux-utils/user';
+import { getListFollowrs } from 'reducers/redux-utils/user';
 import { NotificationError } from 'helpers/Error';
 import UserAvatar from 'shared/user-avatar';
-import Button from 'shared/button';
-import { Add, Minus } from 'components/svg';
-import { buttonReqFriend } from 'helpers/HandleShare';
 import { useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import ConnectButtonsFollower from './ConnectButtonsFollower';
 
 const ModalFollowers = ({ modalFollower, setModalFollower, userInfoDetail }) => {
 	const { userInfo } = useSelector(state => state.auth);
 	const [getMyListFollowing, setGetMyListFollowing] = useState([]);
+	const [inputSearch, setValueSearch] = useState('');
+	const navigate = useNavigate();
+
 	const dispatch = useDispatch();
 	const { userId } = useParams();
 	useEffect(async () => {
@@ -27,85 +29,29 @@ const ModalFollowers = ({ modalFollower, setModalFollower, userInfoDetail }) => 
 			const newArrFriend = followList.rows.map(item => {
 				return { ...item, checkUnfollow: false, isPending: false, isAddFriend: true };
 			});
-			setGetMyListFollowing(newArrFriend);
+			setGetMyListFollowing(
+				newArrFriend.filter(
+					x =>
+						x.userOne.firstName.toLocaleLowerCase().includes(inputSearch.toLocaleLowerCase()) ||
+						x.userOne.lastName.toLocaleLowerCase().includes(inputSearch.toLocaleLowerCase())
+				)
+			);
 		} catch (err) {
 			NotificationError(err);
 		}
-	}, [userInfo, dispatch]);
+	}, [userInfo, dispatch, inputSearch]);
 
 	const toggleModal = () => {
 		setModalFollower(!modalFollower);
 	};
 
-	const handleAddFriend = id => {
-		const param = {
-			userId: id,
-		};
-		try {
-			dispatch(makeFriendRequest(param)).unwrap();
-			const newArrFriend = getMyListFollowing.map(item => {
-				if (id === item.userIdTwo) {
-					return { ...item, isPending: true };
-				}
-				return { ...item };
-			});
-			setGetMyListFollowing(newArrFriend);
-		} catch (err) {
-			NotificationError(err);
-		}
+	const onChangeValueSearch = e => {
+		setValueSearch(e.target.value);
 	};
 
-	const handleUnFriend = id => {
-		try {
-			const newArrFriend = getMyListFollowing.map(item => {
-				if (id === item.userIdTwo) {
-					return { ...item, isAddFriend: false };
-				}
-				return { ...item };
-			});
-			setGetMyListFollowing(newArrFriend);
-			dispatch(unFriendRequest(id)).unwrap();
-		} catch (err) {
-			NotificationError(err);
-		}
-	};
-
-	const buttonAddFriend = item => {
-		return (
-			<Button
-				onClick={() => handleAddFriend(item.userIdTwo)}
-				className='connect-button'
-				isOutline={true}
-				name='friend'
-			>
-				<Add className='connect-button__icon' />
-				<span className='connect-button__content'>Kết bạn</span>
-			</Button>
-		);
-	};
-
-	const buttonUnFriend = item => {
-		return (
-			<Button
-				onClick={() => handleUnFriend(item.userIdTwo)}
-				className='connect-button'
-				isOutline={true}
-				name='friend'
-			>
-				<Minus className='connect-button__icon' />
-				<span className='connect-button__content'>Hủy kết bạn</span>
-			</Button>
-		);
-	};
-
-	const renderButtonFriend = item => {
-		if (item.relation === 'pending') {
-			return buttonReqFriend();
-		} else if (item.relation === 'friend') {
-			return item.isAddFriend ? buttonUnFriend(item) : item.isPending ? buttonReqFriend() : buttonAddFriend(item);
-		} else if (item.relation === 'unknown') {
-			return item.isPending ? buttonReqFriend() : buttonAddFriend(item);
-		}
+	const goToUser = item => {
+		toggleModal();
+		navigate(`/profile/${item.userIdOne}`);
 	};
 
 	return (
@@ -121,12 +67,16 @@ const ModalFollowers = ({ modalFollower, setModalFollower, userInfoDetail }) => 
 						</div>
 					</div>
 					<div className='modalFollowers__search'>
-						<SearchField placeholder='Tìm kiếm trên Wisfeed' />
+						<SearchField
+							placeholder='Tìm kiếm trên Wisfeed'
+							value={inputSearch}
+							handleChange={onChangeValueSearch}
+						/>
 					</div>
 					<div className='modalFollowers__info'>
 						{getMyListFollowing.map(item => (
 							<div key={item.id} className='author-card'>
-								<div className='author-card__left'>
+								<div className='author-card__left' onClick={() => goToUser(item)}>
 									<UserAvatar
 										source={item.userOne.avatarImage}
 										className='author-card__avatar'
@@ -140,14 +90,7 @@ const ModalFollowers = ({ modalFollower, setModalFollower, userInfoDetail }) => 
 									</div>
 								</div>
 								<div className='author-card__right'>
-									{item.relation !== 'isMe' && (
-										<div className='connect-buttons row'>
-											<Button className='connect-button follow'>
-												<span className='connect-button__content'> Theo dõi </span>
-											</Button>
-											{renderButtonFriend(item)}
-										</div>
-									)}
+									<ConnectButtonsFollower direction='row' item={item} />
 								</div>
 							</div>
 						))}

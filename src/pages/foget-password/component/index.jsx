@@ -5,9 +5,18 @@ import ImgForget from 'assets/images/quen-mk 1.png';
 import ForgetpasswordFormComponent from './ForgetPasswordFormComponent';
 import CreateNewPasswordForm from './CreateNewPasswordForm';
 import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
+import Storage from 'helpers/Storage';
+
 function ForgetPassWordComponet() {
 	const key = useSelector(state => state.forgetPasswordSliceReducer.keyChange);
-
+	const navigate = useNavigate();
+	useEffect(() => {
+		if (Storage.getAccessToken()) {
+			navigate('/');
+		}
+	}, []);
 	return (
 		<div className='forget__container'>
 			<div className='login__header'>

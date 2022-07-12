@@ -1,12 +1,31 @@
 import { useEffect, useState, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { LogoIcon, BookFillIcon, BookIcon, CategoryIcon, GroupIcon, HomeIcon, IconGroup } from 'components/svg';
+import {
+	LogoIcon,
+	BookFillIcon,
+	BookIcon,
+	CategoryIcon,
+	GroupIcon,
+	HomeIcon,
+	LogOutIcon,
+	ProfileIcon,
+	ArrowDownIcon,
+	GroupFillIcon,
+	FriendsFillIcon,
+	FriendsIcon,
+	CategoryFillIcon,
+} from 'components/svg';
 import SearchIcon from 'assets/icons/search.svg';
 import classNames from 'classnames';
 import './header.scss';
 import NotificationModal from 'pages/notification/';
 import { useDispatch, useSelector } from 'react-redux';
-import { backgroundToggle } from 'reducers/redux-utils/notificaiton';
+import {
+	backgroundToggle,
+	depenRenderNotificaion,
+	handleListNotification,
+	handleListUnRead,
+} from 'reducers/redux-utils/notificaiton';
 import { checkUserLogin, deleteUserInfo } from 'reducers/redux-utils/auth';
 import { useVisible } from 'shared/hooks';
 import SearchAllModal from 'shared/search-all';
@@ -16,6 +35,11 @@ import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { updateTargetReading } from 'reducers/redux-utils/chart';
 import defaultAvatar from 'assets/images/avatar.jpeg';
+import * as stream from 'getstream';
+import _ from 'lodash';
+import { patchNewNotification, updateIsNewNotificationUserInfo } from 'reducers/redux-utils/auth';
+import { increment } from 'reducers/redux-utils/reloadPostHomePage';
+import Request from 'helpers/Request';
 
 const Header = () => {
 	const { isShowModal } = useSelector(state => state.search);
@@ -24,7 +48,7 @@ const Header = () => {
 	const [activeLink, setActiveLink] = useState('/');
 	const location = useLocation();
 	const { pathname } = location;
-	const { userInfo } = useSelector(state => state.auth);
+	const { userInfo, userInfoJwt } = useSelector(state => state.auth);
 	const dispatch = useDispatch();
 	const [modalNoti, setModalNotti] = useState(false);
 	const buttonModal = useRef(null);
@@ -33,7 +57,7 @@ const Header = () => {
 	const [getSlugResult, setGetSlugResult] = useState('');
 	const [userLogin, setUserLogin] = useState(false);
 	const [activeNotificaiton, setActiveNotification] = useState(false);
-
+	const [realTime, setRealTime] = useState(false);
 	const userOptions = useRef(null);
 
 	useEffect(() => {
@@ -52,11 +76,29 @@ const Header = () => {
 	}, [isShowModal]);
 
 	useEffect(() => {
+		const params = {
+			isNewNotification: false,
+		};
 		if (pathname === '/notification') {
 			setActiveNotification(true);
 			setModalNotti(false);
+			updateNewNotificaionFalse(params);
+			setTimeout(() => setRealTime(false), 1500);
+		} else if (modalNoti && realTime) {
+			updateNewNotificaionFalse(params);
+			setTimeout(() => setRealTime(false), 1500);
 		}
-	}, []);
+	}, [realTime]);
+
+	useEffect(() => {
+		if (!_.isEmpty(userInfoJwt)) {
+			if (userInfoJwt.isNewNotification) {
+				setRealTime(true);
+			} else {
+				setRealTime(false);
+			}
+		}
+	}, [userInfoJwt]);
 
 	useEffect(() => {
 		if (Storage.getAccessToken()) {
@@ -67,10 +109,10 @@ const Header = () => {
 
 		if (userOptions.current) {
 			document.addEventListener('click', closeUserOptions);
-			return () => {
-				document.removeEventListener('click', closeUserOptions);
-			};
 		}
+		return () => {
+			document.removeEventListener('click', closeUserOptions);
+		};
 	}, []);
 
 	const closeUserOptions = e => {
@@ -80,12 +122,19 @@ const Header = () => {
 	};
 
 	const toglleModalNotify = () => {
+		const params = {
+			isNewNotification: false,
+		};
 		if (pathname === '/notification') {
 			setModalNotti(false);
+			setRealTime(false);
+			updateNewNotificaionFalse(params);
 		} else {
 			if (Storage.getAccessToken()) {
 				setModalNotti(!modalNoti);
 				dispatch(backgroundToggle(modalNoti));
+				setRealTime(false);
+				updateNewNotificaionFalse(params);
 			} else {
 				dispatch(checkUserLogin(true));
 			}
@@ -110,16 +159,60 @@ const Header = () => {
 	const handleLogout = () => {
 		localStorage.removeItem('accessToken');
 		localStorage.removeItem('refreshToken');
+		Request.clearToken();
 		dispatch(deleteUserInfo());
 		dispatch(updateTargetReading([]));
 		navigate('/login');
 		toast.success('Đăng xuất thành công');
+		dispatch(handleListUnRead([]));
+		dispatch(handleListNotification([]));
+	};
+
+	useEffect(() => {
+		if (!_.isEmpty(userInfoJwt)) {
+			const client = stream.connect('p77uwpux9zwu', null, '1169912');
+			const notificationFeed = client.feed('notification', userInfoJwt.id, userInfoJwt.userToken);
+
+			const callback = data => {
+				setRealTime(true);
+				dispatch(depenRenderNotificaion(true));
+				const params = {
+					isNewNotification: true,
+				};
+
+				if (!userInfoJwt.isNewNotification && !_.isEmpty(data)) {
+					dispatch(patchNewNotification(params)).unwrap();
+					const dataNewNoti = { ...userInfoJwt, isNewNotification: true };
+					dispatch(updateIsNewNotificationUserInfo(dataNewNoti));
+				}
+			};
+			const successCallback = () => {
+				// console.log('now listening to changes in realtime');
+			};
+			const failCallback = data => {
+				// console.log('something went wrong, check the console logs');
+			};
+			notificationFeed.subscribe(callback).then(successCallback, failCallback);
+		}
+	}, [userInfoJwt]);
+
+	const updateNewNotificaionFalse = params => {
+		if (userInfoJwt.isNewNotification) {
+			dispatch(patchNewNotification(params)).unwrap();
+			const dataNewNoti = { ...userInfoJwt, isNewNotification: false };
+			dispatch(depenRenderNotificaion(false));
+			dispatch(updateIsNewNotificationUserInfo(dataNewNoti));
+		}
+	};
+
+	const onClickReloadPosts = () => {
+		dispatch(increment());
 	};
 
 	return (
 		<div className='header'>
 			<div className='header__left'>
-				<Link to='/'>
+				<Link to='/' onClick={onClickReloadPosts}>
 					<LogoIcon className='header__logo' />
 				</Link>
 				<div className='header__search'>
@@ -130,6 +223,7 @@ const Header = () => {
 						onClick={() => setIsShow(true)}
 						disabled={isShow}
 						value={getSlugResult || ''}
+						onChange={() => {}}
 					/>
 				</div>
 				{isShow ? <SearchAllModal showRef={showRef} setIsShow={setIsShow} /> : ''}
@@ -137,16 +231,8 @@ const Header = () => {
 
 			<ul className='header__nav'>
 				<li className={classNames('header__nav__item', { active: activeLink === '/' })}>
-					<Link className='header__nav__link' to='/'>
+					<Link className='header__nav__link' to='/' onClick={onClickReloadPosts}>
 						<HomeIcon className='header__nav__icon' />
-					</Link>
-				</li>
-				<li
-					onClick={handleUserLogin}
-					className={classNames('header__nav__item', { active: activeLink === '/category' })}
-				>
-					<Link className='header__nav__link' to={userLogin && '/category'}>
-						<CategoryIcon className='header__nav__icon' />
 					</Link>
 				</li>
 				<li
@@ -159,7 +245,16 @@ const Header = () => {
 				</li>
 				<li className={classNames('header__nav__item', { active: activeLink === '/group' })}>
 					<Link className='header__nav__link' to='/group'>
-						<IconGroup className='header__nav__icon' />
+						{activeLink === '/group' ? <GroupFillIcon /> : <GroupIcon />}
+					</Link>
+				</li>
+				<li
+					onClick={handleUserLogin}
+					className={classNames('header__nav__item', { active: activeLink === '/category' })}
+				>
+					<Link className='header__nav__link' to={userLogin && '/category'}>
+						{/* <CategoryIcon className='header__nav__icon' /> */}
+						{activeLink === '/category' ? <CategoryFillIcon /> : <CategoryIcon />}
 					</Link>
 				</li>
 				<li
@@ -167,16 +262,27 @@ const Header = () => {
 					className={classNames('header__nav__item', { active: activeLink === '/friends' })}
 				>
 					<Link className='header__nav__link' to={userLogin && '/friends'}>
-						<GroupIcon className='header__nav__icon' />
+						{activeLink === '/friends' ? <FriendsFillIcon /> : <FriendsIcon />}
 					</Link>
 				</li>
+
 				<div className='notify-icon'>
 					<div
 						ref={buttonModal}
 						onClick={toglleModalNotify}
-						className={classNames('header__notify__icon', { 'active': modalNoti || activeNotificaiton })}
+						className={classNames('header__notify__icon', {
+							'active': modalNoti || activeNotificaiton,
+							'header__notify__icon__active': realTime,
+						})}
 					/>
-					{modalNoti && <NotificationModal setModalNotti={setModalNotti} buttonModal={buttonModal} />}
+
+					{modalNoti && (
+						<NotificationModal
+							setModalNotti={setModalNotti}
+							buttonModal={buttonModal}
+							realTime={realTime}
+						/>
+					)}
 				</div>
 			</ul>
 
@@ -187,13 +293,22 @@ const Header = () => {
 						onError={e => e.target.setAttribute('src', `${defaultAvatar}`)}
 						alt='avatar'
 					/>
+					<span id='arrow-down-icon'>
+						<ArrowDownIcon />
+					</span>
 				</div>
 				{modalInforUser && localStorage.getItem('accessToken') && (
 					<ul className='header__option-info'>
 						<Link to={localStorage.getItem('accessToken') && `/profile/${userInfo.id}`}>
-							<li>Thông tin cá nhân</li>
+							<li>
+								<ProfileIcon />
+								&nbsp;Thông tin cá nhân
+							</li>
 						</Link>
-						<li onClick={() => handleLogout()}>Đăng xuất</li>
+						<li onClick={() => handleLogout()}>
+							<LogOutIcon />
+							&nbsp;Đăng xuất
+						</li>
 					</ul>
 				)}
 			</div>

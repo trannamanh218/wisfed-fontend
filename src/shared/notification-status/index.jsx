@@ -4,14 +4,16 @@ import UserAvatar from 'shared/user-avatar';
 import { renderMessage } from 'helpers/HandleShare';
 import { ReplyFriendRequest, CancelFriendRequest } from 'reducers/redux-utils/user';
 import { readNotification } from 'reducers/redux-utils/notificaiton';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
 import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 
 const NotificationStatus = ({ item, setGetNotifications, getNotifications }) => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
-
+	const [isRead, setIsRead] = useState(false);
+	const { userInfo } = useSelector(state => state.auth);
 	const ReplyFriendReq = async (data, items) => {
 		const parseObject = JSON.parse(data);
 		const params = { id: parseObject.requestId, data: { reply: true } };
@@ -52,18 +54,33 @@ const NotificationStatus = ({ item, setGetNotifications, getNotifications }) => 
 		const params = {
 			notificationId: items.id,
 		};
-		if (items.verb !== 'addfriend') {
-			const newArr = getNotifications.map(item => {
-				if (item.id === items.id) {
-					const data = { ...item, isRead: true };
-					return { ...data };
-				}
-				return { ...item };
-			});
-			setGetNotifications(newArr);
-			if (items.verb === 'likeMiniPost' || items.verb === 'commentMiniPost') {
-				navigate(`/detail-feed/${items.originId.minipostId}`);
-			}
+
+		setIsRead(true);
+		if (
+			items.verb === 'likeMiniPost' ||
+			items.verb === 'commentMiniPost' ||
+			items.verb === 'likeGroupPost' ||
+			items.verb === 'commentGroupPost'
+		) {
+			navigate(
+				`/detail-feed/${items.verb === 'commentMiniPost' ? 'mini-post' : 'group-post'}/${
+					items.originId?.minipostId || items.originId?.groupPostId
+				}`
+			);
+		} else if (items.verb === 'follow' || items.verb === 'addFriend' || items.verb === 'friendAccepted') {
+			navigate(`/profile/${items.createdBy?.id || items.originId.userId}`);
+		} else if (item.verb === 'topUserRanking') {
+			navigate(`/top100`);
+		} else if (item.verb === 'readingGoal') {
+			navigate(`/reading-target/${userInfo.id}`);
+		} else if (item.verb === 'inviteGroup') {
+			navigate(`/Group/${items.originId.groupId}`);
+		} else if (items.verb === 'replyComment' || items.verb === 'shareQuote') {
+			navigate(`/detail-feed/${'mini-post'}/${items.originId.minipostId}`);
+		} else if (items.verb === 'commentQuote') {
+			navigate(`/quotes/detail/${items.originId.quoteId}`);
+		} else if (items.verb === 'mention') {
+			navigate(`/detail-feed/${'mini-post'}/${items.originId.minipostId}`);
 		}
 		dispatch(readNotification(params)).unwrap();
 	};
@@ -71,28 +88,34 @@ const NotificationStatus = ({ item, setGetNotifications, getNotifications }) => 
 	return (
 		<div
 			onClick={() => hanleActiveIsReed(item)}
-			className={item.isRead ? 'notificaiton__tabs__main__all__active' : 'notificaiton__tabs__main__all__seen'}
+			className={
+				isRead || item.isRead ? 'notificaiton__tabs__main__all__active' : 'notificaiton__tabs__main__all__seen'
+			}
 		>
 			<div className='notificaiton__all__main__layout'>
 				<UserAvatar size='mm' source={item.createdBy?.avatarImage} />
 				<div className='notificaiton__all__main__layout__status'>
 					<div className='notificaiton__main__all__infor'>
 						<p dangerouslySetInnerHTML={{ __html: item?.message }}></p>
-						{item.verb !== 'follow' && item.verb !== 'requestGroup' && item.verb !== 'commentGroupPost' && (
-							<>
-								<span>
-									{item.createdBy?.fullName ? (
-										item.createdBy.fullName
-									) : (
-										<>
-											<span> {item.createdBy?.firstName}</span>
-											<span> {item.createdBy?.lastName}</span>
-										</>
-									)}
-								</span>
-								{renderMessage(item)}
-							</>
-						)}
+						{item.verb !== 'follow' &&
+							item.verb !== 'requestGroup' &&
+							item.verb !== 'commentGroupPost' &&
+							item.verb !== 'commentQuote' &&
+							item.verb !== 'mention' && (
+								<>
+									<span>
+										{item.createdBy?.fullName ? (
+											item.createdBy.fullName
+										) : (
+											<>
+												<span> {item.createdBy?.firstName}</span>
+												<span> {item.createdBy?.lastName}</span>
+											</>
+										)}
+									</span>
+									{renderMessage(item)}
+								</>
+							)}
 					</div>
 					<div
 						className={
@@ -108,7 +131,7 @@ const NotificationStatus = ({ item, setGetNotifications, getNotifications }) => 
 					)}
 				</div>
 
-				<div className={item.isRead ? 'notificaiton__all__seen' : 'notificaiton__all__unseen'}></div>
+				<div className={isRead || item.isRead ? 'notificaiton__all__seen' : 'notificaiton__all__unseen'}></div>
 			</div>
 
 			{item.verb === 'addFriend' &&

@@ -9,6 +9,7 @@
 	.form-check-input:checked[type='checkbox'] {
 		background-image: url('../../assets/icons/check-green.svg');
 		background-size: 10px;
+		border: none;
 	}
 }
 .choose-topic__header {
@@ -36,8 +37,15 @@
 	pointer-events: none;
 	opacity: 0.5;
 }
+
 .form-check-label--custom {
-	font-weight: 600 !important;
+	font-weight: 500;
+	font-size: 15px;
+}
+
+.form-check-input:checked + .form-check-label--custom {
+	font-weight: 600;
+	font-size: 18px;
 }
 
 .choose-topic__button {

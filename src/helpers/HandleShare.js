@@ -7,15 +7,17 @@ export const renderMessage = item => {
 	} else if (item.verb === 'likeQuote') {
 		return <> đã thích trích dẫn của bạn</>;
 	} else if (item.verb === 'mention') {
-		return <>Đã nhắc bạn trong một bình luận</>;
+		return <> Đã nhắc bạn trong một bình luận</>;
 	} else if (item.verb === 'replyComment') {
-		return <>đã trả lời vào bài viết của bạn</>;
+		return <> đã trả lời vào bài viết của bạn</>;
 	} else if (item.verb === 'likeMiniPost') {
 		return <> đã thích bài viết của bạn</>;
 	} else if (item.verb === 'likeGroupPost') {
 		return <> đã thích bài viết của bạn</>;
 	} else if (item.verb === 'commentMiniPost') {
 		return <> đã bình luận bài viết của bạn</>;
+	} else if (item.verb === 'likeCommentQuote') {
+		return <> đã like bình luận trong quote của bạn</>;
 	}
 };
 

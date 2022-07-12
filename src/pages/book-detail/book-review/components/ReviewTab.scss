@@ -1,0 +1,45 @@
+.sort-review-modal {
+	&__item {
+		// border: 1px solid red;
+		padding: auto 0;
+		height: 56px;
+		display: flex;
+		align-items: center;
+
+		& .form-check-wrapper {
+			width: 100%;
+		}
+
+		& span {
+			margin-bottom: 0px;
+		}
+
+		& button {
+			width: 100%;
+		}
+	}
+	& .modal-dialog {
+		width: 376px;
+
+		& .modal-content {
+			// height: 1085px;
+			border-radius: 8px;
+			gap: 12px;
+			display: flex;
+			flex-direction: column;
+			align-items: flex-start;
+			padding: 32px;
+
+			& .modal-body {
+				padding: 0px;
+				margin: 0 auto;
+				width: 312px;
+
+				& .form-check-input[type='checkbox'] {
+					background-color: white;
+					border: 2px solid #a0a3bd;
+				}
+			}
+		}
+	}
+}

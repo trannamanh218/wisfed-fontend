@@ -9,6 +9,11 @@ import { NotificationError } from 'helpers/Error';
 import { getQuoteList, getQuotesByFriendsOrFollowers } from 'reducers/redux-utils/quote';
 import LoadingIndicator from 'shared/loading-indicator';
 import PropTypes from 'prop-types';
+import './QuotesTab.scss';
+import { Modal } from 'react-bootstrap';
+import { useModal } from 'shared/hooks';
+import FormCheckGroup from 'shared/form-check-group';
+import Button from 'shared/button';
 
 const QuotesTab = ({ currentTab }) => {
 	const filterOptions = [
@@ -17,10 +22,33 @@ const QuotesTab = ({ currentTab }) => {
 		{ id: 3, title: 'Người theo dõi', value: 'followersQuotes' },
 	];
 
+	const radioOptions = [
+		{
+			value: 'mostLiked',
+			title: 'Quote nhiều like nhất',
+		},
+		{
+			value: 'lastest',
+			title: 'Mới nhất',
+		},
+		{
+			value: 'oldest',
+			title: 'Cũ nhất',
+		},
+	];
+
+	const handleChange = data => {
+		setSortValue(data);
+	};
+
 	const [currentOption, setCurrentOption] = useState(filterOptions[0]);
 
 	const [quoteList, setQuoteList] = useState([]);
 	const [hasMore, setHasMore] = useState(true);
+	const { modalOpen, toggleModal } = useModal(false);
+	const [sortValue, setSortValue] = useState('mostLiked');
+	const [directionSort, setDirectionSort] = useState('DESC');
+	const [propertySort, setPropertySort] = useState('like');
 
 	const callApiStart = useRef(10);
 	const callApiPerPage = useRef(10);
@@ -34,14 +62,14 @@ const QuotesTab = ({ currentTab }) => {
 			callApiStart.current = 10;
 			getQuoteListDataFirstTime();
 		}
-	}, [currentOption, currentTab]);
+	}, [currentOption, currentTab, directionSort, propertySort]);
 
 	const getQuoteListDataFirstTime = async () => {
 		try {
 			let params = {
 				start: 0,
 				limit: callApiPerPage.current,
-				sort: JSON.stringify([{ property: 'createdAt', direction: 'DESC' }]),
+				sort: JSON.stringify([{ property: propertySort, direction: directionSort }]),
 				filter: JSON.stringify([{ operator: 'eq', value: bookId, property: 'bookId' }]),
 			};
 			let quoteListData = [];
@@ -70,7 +98,7 @@ const QuotesTab = ({ currentTab }) => {
 			let params = {
 				start: callApiStart.current,
 				limit: callApiPerPage.current,
-				sort: JSON.stringify([{ property: 'createdAt', direction: 'DESC' }]),
+				sort: JSON.stringify([{ property: propertySort, direction: directionSort }]),
 				filter: JSON.stringify([{ operator: 'eq', value: bookId, property: 'bookId' }]),
 			};
 			let quoteListData = [];
@@ -100,9 +128,28 @@ const QuotesTab = ({ currentTab }) => {
 		setCurrentOption(item);
 	};
 
+	const onBtnConfirmClick = () => {
+		switch (sortValue) {
+			case 'oldest':
+				setPropertySort('createdAt');
+				setDirectionSort('ASC');
+				break;
+			case 'lastest':
+				setPropertySort('createdAt');
+				setDirectionSort('DESC');
+				break;
+			case 'mostLiked':
+				setPropertySort('like');
+				setDirectionSort('DESC');
+				break;
+			default:
+			//
+		}
+	};
+
 	return (
 		<div className='quotes-tab'>
-			<FilterPane title='Quotes'>
+			<FilterPane title='Quotes' handleSortFilter={toggleModal}>
 				<FitlerOptions
 					list={filterOptions}
 					currentOption={currentOption}
@@ -125,6 +172,60 @@ const QuotesTab = ({ currentTab }) => {
 					<h5>Chưa có dữ liệu</h5>
 				)}
 			</FilterPane>
+
+			<Modal className='sort-quotes-modal' show={modalOpen} onHide={toggleModal}>
+				<Modal.Body>
+					<div className='filter-quote-pane__setting__group'>
+						<div className='sort-quotes-modal__item'>
+							<span className='filter-quote-pane__setting__title'>Mặc định</span>
+						</div>
+						<div className='sort-quotes-modal__item'>
+							<FormCheckGroup
+								data={radioOptions[0]}
+								name='custom'
+								type='radio'
+								defaultValue='default'
+								handleChange={handleChange}
+								checked={radioOptions[0].value === sortValue}
+							/>
+						</div>
+						<div className='sort-quotes-modal__item'>
+							<span className='filter-quote-pane__setting__title'>Theo thời gian tạo</span>
+						</div>
+						<div className='sort-quotes-modal__item'>
+							<FormCheckGroup
+								data={radioOptions[1]}
+								name='custom'
+								type='radio'
+								defaultValue='default'
+								handleChange={handleChange}
+								checked={radioOptions[1].value === sortValue}
+							/>
+						</div>
+						<div className='sort-quotes-modal__item'>
+							<FormCheckGroup
+								data={radioOptions[2]}
+								name='custom'
+								type='radio'
+								defaultValue='default'
+								handleChange={handleChange}
+								checked={radioOptions[2].value === sortValue}
+							/>
+						</div>
+						<div className='sort-quotes-modal__item' style={{ marginTop: '10px' }}>
+							<Button
+								className='btn'
+								varient='primary'
+								onClick={() => {
+									onBtnConfirmClick(), toggleModal();
+								}}
+							>
+								Xác nhận
+							</Button>
+						</div>
+					</div>
+				</Modal.Body>
+			</Modal>
 		</div>
 	);
 };

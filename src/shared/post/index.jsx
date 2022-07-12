@@ -21,10 +21,16 @@ import { createCommentReview } from 'reducers/redux-utils/book';
 import Comment from 'shared/comments';
 import PostQuotes from 'shared/post-quotes';
 import PostsShare from 'shared/posts-Share';
+import Play from 'assets/images/play.png';
 import { likeAndUnlikeReview } from 'reducers/redux-utils/book';
 import { POST_TYPE, REVIEW_TYPE } from 'constants';
 import { Modal } from 'react-bootstrap';
 import { Button, ModalBody } from 'reactstrap';
+import { IconRanks } from 'components/svg';
+import AuthorBook from 'shared/author-book';
+import Storage from 'helpers/Storage';
+import { checkUserLogin } from 'reducers/redux-utils/auth';
+import ShareUsers from 'pages/home/components/newfeed/components/modal-share-users';
 
 function Post({ postInformations, className, showModalCreatPost, inReviews = false }) {
 	const [show, setShow] = useState(false);
@@ -121,7 +127,7 @@ function Post({ postInformations, className, showModalCreatPost, inReviews = fal
 			if (!_.isEmpty(res)) {
 				const newComment = { ...res, user: userInfo };
 				const usersComments = [...postData.usersComments, newComment];
-				const newPostData = { ...postData, usersComments, comments: postData.comments + 1 };
+				const newPostData = { ...postData, usersComments, comment: postData.comment + 1 }; // Tự động cập nhật đếm comment
 				setPostData(newPostData);
 			}
 		} catch (err) {
@@ -130,20 +136,24 @@ function Post({ postInformations, className, showModalCreatPost, inReviews = fal
 	};
 
 	const handleLikeAction = async () => {
-		try {
-			if (location.pathname.includes('group')) {
-				await dispatch(updateReactionActivityGroup(postData.id)).unwrap();
-			} else if (inReviews) {
-				await dispatch(likeAndUnlikeReview(postData.id)).unwrap();
-			} else {
-				await dispatch(updateReactionActivity(postData.minipostId || postData.id)).unwrap();
-			}
+		if (!Storage.getAccessToken()) {
+			dispatch(checkUserLogin(true));
+		} else {
+			try {
+				if (location.pathname.includes('group')) {
+					await dispatch(updateReactionActivityGroup(postData.id)).unwrap();
+				} else if (inReviews) {
+					await dispatch(likeAndUnlikeReview(postData.id)).unwrap();
+				} else {
+					await dispatch(updateReactionActivity(postData.minipostId || postData.id)).unwrap();
+				}
 
-			const setLike = !postData.isLike;
-			const numberOfLike = setLike ? postData.like + 1 : postData.like - 1;
-			setPostData(prev => ({ ...prev, isLike: !prev.isLike, like: numberOfLike }));
-		} catch (err) {
-			NotificationError(err);
+				const setLike = !postData.isLike;
+				const numberOfLike = setLike ? postData.like + 1 : postData.like - 1;
+				setPostData(prev => ({ ...prev, isLike: !prev.isLike, like: numberOfLike }));
+			} catch (err) {
+				NotificationError(err);
+			}
 		}
 	};
 
@@ -163,6 +173,38 @@ function Post({ postInformations, className, showModalCreatPost, inReviews = fal
 		setClickReply(!clickReply);
 	};
 
+	const withFriends = paramInfo => {
+		if (paramInfo.length === 1) {
+			return (
+				<span>
+					{' cùng với '}
+					{paramInfo[0].users.fullName || paramInfo[0].users.firstName + ' ' + paramInfo[0].users.lastName}
+					{'.'}
+				</span>
+			);
+		} else if (paramInfo.length === 2) {
+			return (
+				<span>
+					{' cùng với '}
+					{paramInfo[0].users.fullName || paramInfo[0].users.firstName + ' ' + paramInfo[0].users.lastName}
+					{' và '}
+					{paramInfo[1].users.fullName || paramInfo[1].users.firstName + ' ' + paramInfo[1].users.lastName}
+					{'.'}
+				</span>
+			);
+		} else {
+			return (
+				<span>
+					{' cùng với '}
+					{paramInfo[0].users.fullName || paramInfo[0].users.firstName + ' ' + paramInfo[0].users.lastName}
+					{' và '}
+					{paramInfo.length - 1}
+					{' người khác.'}
+				</span>
+			);
+		}
+	};
+
 	const infoUser = () => {
 		return (
 			<>
@@ -170,15 +212,27 @@ function Post({ postInformations, className, showModalCreatPost, inReviews = fal
 					<UserAvatar
 						data-testid='post__user-avatar'
 						className='post__user-status__avatar'
-						source={postData?.createdBy?.avatarImage}
+						source={postData?.createdBy?.avatarImage || postData.user?.avatarImage}
 					/>
 
 					<div className='post__user-status__name-and-post-time-status'>
-						<div>
-							<Link to={`/profile/${postData.createdBy?.id}`}>
-								<div data-testid='post__user-name' className='post__user-status__name'>
-									{postData?.createdBy?.fullName || postData?.user?.fullName || 'Ẩn danh'}
-								</div>
+						<div className='post__user__container'>
+							<Link
+								to={`/profile/${postData.createdBy?.id || postData.user?.id}`}
+								data-testid='post__user-name'
+								className='post__user-status__name'
+							>
+								{postData?.createdBy?.fullName || postData?.user?.fullName || 'Ẩn danh'}
+							</Link>
+							{(postData.groupInfo || postData.group) && (
+								<img className='post__user-icon' src={Play} alt='' />
+							)}
+
+							<Link
+								to={`/group/${postData.groupInfo?.id || postData.group?.id}`}
+								className='post__name__group'
+							>
+								{postData.groupInfo ? postData.groupInfo?.name : postData.group?.name}
 							</Link>
 						</div>
 
@@ -226,9 +280,34 @@ function Post({ postInformations, className, showModalCreatPost, inReviews = fal
 		}
 	};
 
+	const handleTime = () => {
+		if (!_.isEmpty(postData.originId)) {
+			switch (postData.originId.by) {
+				case 'week':
+					return 'tuần';
+				case 'month':
+					return 'tháng';
+				case 'year':
+					return 'năm';
+				default:
+					break;
+			}
+		}
+	};
+
 	return (
-		<div className={classNames('post__container', { [`${className}`]: className })}>
-			{renderInfo()}
+		<div
+			className={classNames('post__container', {
+				'post__custom':
+					isSharePosts && (postData.verb === 'shareQuote' || postData.verb === 'shareTopUserRanking'),
+			})}
+		>
+			{(postData.verb === 'shareTopQuoteRanking' ||
+				postData.verb === 'shareTopBookRanking' ||
+				postData.verb === 'shareTopUserRanking') &&
+			isSharePosts
+				? ''
+				: renderInfo()}
 
 			{!!postData?.mentionsAuthors?.length && (
 				<ul className='tagged'>
@@ -256,13 +335,40 @@ function Post({ postInformations, className, showModalCreatPost, inReviews = fal
 					))}
 				</ul>
 			)}
-
+			{!_.isEmpty(postData.originId) && postData.originId.type === 'topQuote' && (
+				<div className='post__title__share__rank'>
+					<span className='number__title__rank'># Top {postData.originId.rank} quotes </span>
+					<span className='title__rank'>
+						{postData.info.category
+							? `  được like nhiều nhất thuộc ${postData.info.category.name} theo ${handleTime()} `
+							: `  được like nhiều nhất theo ${handleTime()} `}
+					</span>
+					<IconRanks />
+				</div>
+			)}
+			{!_.isEmpty(postData.originId) && postData.originId.type === 'topBook' && (
+				<div className='post__title__share__rank'>
+					<span className='number__title__rank'># Top {postData.originId.rank} </span>
+					<span className='title__rank'>
+						{postData.info.category
+							? `  cuốn sách tốt nhất ${(
+									<p style={{ textDecoration: 'underline' }}>{}</p>
+							  )} theo ${handleTime()} `
+							: `   cuốn sách tốt nhất theo ${handleTime()} `}
+					</span>
+					<IconRanks />
+				</div>
+			)}
 			{postData.isShare && postData.verb === 'shareQuote' && <PostQuotes postsData={postData} />}
+			{postData.verb === 'shareTopQuoteRanking' && <PostQuotes postsData={postData} />}
+			{postData.verb === 'shareTopBookRanking' && <AuthorBook data={postData} />}
+			{postData.verb === 'shareTopUserRanking' && <ShareUsers postsData={postData} />}
 			{postData.book && (
 				<PostBook
 					data={{ ...postData.book, bookLibrary: postData.bookLibrary, actorCreatedPost: postData.actor }}
 				/>
 			)}
+
 			{postData.verb === 'sharePost' && !_.isEmpty(postData.sharePost) && <PostsShare postData={postData} />}
 			{postData.verb === 'shareGroupPost' && !_.isEmpty(postData.sharePost) && <PostsShare postData={postData} />}
 			{postData?.image?.length > 0 && <GridImage images={postData.image} inPost={true} postId={postData.id} />}

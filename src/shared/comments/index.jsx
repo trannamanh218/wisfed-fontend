@@ -53,7 +53,11 @@ const Comment = ({ data, handleReply, postData, commentLv1Id, type }) => {
 
 	return (
 		<div className='comment'>
-			<UserAvatar className='comment__avatar' size='sm' source={data.user?.avatarImage} />
+			<UserAvatar
+				className='comment__avatar'
+				size='sm'
+				source={data.user?.avatarImage ? data.user?.avatarImage : data['user.avatarImage']}
+			/>
 			<div className='comment__wrapper'>
 				<div className='comment__container'>
 					<Link to={`/profile/${postData.usersComments?.id || postData.commentQuotes?.id}`}>

@@ -25,12 +25,13 @@ function PostBook({ data }) {
 				{' '}
 				{data.images.length > 0 && <BookThumbnail source={data?.images[0]} />}
 			</Link>
-
 			<div className='post-book__informations'>
 				<div className='post-book__name-and-author'>
-					<div className='post-book__name' title={data.name}>
-						{data.name}
-					</div>
+					<Link to={`/book/detail/${data.id}`}>
+						<div className='post-book__name' title={data.name}>
+							{data.name}
+						</div>
+					</Link>
 					<div className='post-book__author'>{data.author || 'Tác giả: Chưa xác định'}</div>
 					<div className='post-book__edit'>
 						<LinearProgressBar percent={percenProgress} />

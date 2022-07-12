@@ -15,6 +15,7 @@ import { NotificationError } from 'helpers/Error';
 function ReadChallenge({ modalOpen, setModalOpen }) {
 	const [inputValue, setInputValue] = useState(0);
 	const dispatch = useDispatch();
+	const customId = 'custom-id-yes';
 
 	useEffect(() => {
 		if (inputValue < 0) {
@@ -29,40 +30,46 @@ function ReadChallenge({ modalOpen, setModalOpen }) {
 	}, [inputValue]);
 
 	const handleChangeTarget = async () => {
-		if (modalOpen) {
-			try {
-				const dob = new Date();
-				const year = dob.getFullYear();
-				const query = {
-					numberBook: inputValue,
-				};
-				const params = {
-					year: year,
-					...query,
-				};
-				dispatch(checkRenderTargetReading(true));
-				return await dispatch(updateTargetRead(params)).unwrap();
-			} catch (err) {
-				NotificationError(err);
-			} finally {
-				toast.success('Sửa mục tiêu thành công');
-				setModalOpen(false);
-				dispatch(checkRenderTargetReading(false));
-			}
+		if (inputValue < 1) {
+			toast.error('Mục tiêu phải lớn hơn 0', {
+				toastId: customId,
+			});
 		} else {
-			try {
-				const dob = new Date();
-				const year = dob.getFullYear();
-				const params = {
-					year: year,
-					numberBook: inputValue,
-				};
-				await dispatch(createTargetRead(params)).unwrap();
-				return toast.success('Tạo mục tiêu thành công');
-			} catch (err) {
-				NotificationError(err);
-			} finally {
-				dispatch(renderTargetReadingProgress(true));
+			if (modalOpen) {
+				try {
+					const dob = new Date();
+					const year = dob.getFullYear();
+					const query = {
+						numberBook: inputValue,
+					};
+					const params = {
+						year: year,
+						...query,
+					};
+					dispatch(checkRenderTargetReading(true));
+					return await dispatch(updateTargetRead(params)).unwrap();
+				} catch (err) {
+					NotificationError(err);
+				} finally {
+					toast.success('Sửa mục tiêu thành công');
+					setModalOpen(false);
+					dispatch(checkRenderTargetReading(false));
+				}
+			} else {
+				try {
+					const dob = new Date();
+					const year = dob.getFullYear();
+					const params = {
+						year: year,
+						numberBook: inputValue,
+					};
+					await dispatch(createTargetRead(params)).unwrap();
+					return toast.success('Tạo mục tiêu thành công');
+				} catch (err) {
+					NotificationError(err);
+				} finally {
+					dispatch(renderTargetReadingProgress(true));
+				}
 			}
 		}
 	};

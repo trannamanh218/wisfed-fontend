@@ -99,6 +99,7 @@ export const commentActivityDetailAPI = id => `/api/v1/commentMiniposts/${id}`;
 // notification
 export const nottificationAPI = '/api/v1/getstream/notifications';
 export const postReadNotification = `/api/v1/getstream/readNotification`;
+export const notificationUnRead = `/api/v1/getstream/unreadNotifications`;
 
 // followrs
 export const listFolowrs = id => `/api/v1/users/listFollowers/${id}`;
@@ -146,9 +147,12 @@ export const getSearchAPI = `/api/v1/searchs`;
 
 //share
 export const shareInternalAPI = (id, type) => `/api/v1/getstream/share/${id}?type=${type}`;
-
+// share BXH
+export const shareApiRanks = id => `/api/v1/getstream/shareTop/${id}`;
 //authors
 export const randomAuthorAPI = '/api/v1/users/randomAuthor';
 
 // detail post
 export const detailFeedPost = id => `/api/v1/getstream/feedDetail/${id}`;
+export const detailFeedPostGroup = id => `/api/v1/groups/detailFeed/${id}`;
+export const newNotification = '/api/v1/getstream/notification';

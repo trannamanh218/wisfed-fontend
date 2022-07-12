@@ -35,12 +35,6 @@ const PersonalInfo = ({ currentUserInfo, setCurrentTab }) => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
-	const item = {
-		isFollow: false,
-		isFriend: true,
-		pending: false,
-	};
-
 	useEffect(() => {
 		setModalOpen(false);
 	}, [userInfo]);
@@ -78,6 +72,10 @@ const PersonalInfo = ({ currentUserInfo, setCurrentTab }) => {
 			}
 		}
 	});
+
+	const onMouseEnterEdit = e => {
+		e.target.style.cursor = 'pointer';
+	};
 
 	return (
 		<div className='personal-info'>
@@ -123,9 +121,9 @@ const PersonalInfo = ({ currentUserInfo, setCurrentTab }) => {
 						<div className='personal-info__username'>
 							<h4>{currentUserInfo.fullName}</h4>
 							{currentUserInfo.id === userInfo.id && (
-								<div className='edit-name'>
+								<div className='edit-name' onMouseEnter={onMouseEnterEdit} onClick={toggleModal}>
 									<img className='edit-name__pencil' src={pencil} alt='pencil' />
-									<button onClick={toggleModal}>Chỉnh sửa tên</button>
+									<button>Chỉnh sửa tên</button>
 								</div>
 							)}
 							<div ref={settingsRef} className='setting'>
@@ -177,7 +175,7 @@ const PersonalInfo = ({ currentUserInfo, setCurrentTab }) => {
 
 				<div className='personal-info__detail__connect-buttons-and-introduction'>
 					<div className={currentUserInfo.id !== userInfo.id ? 'personal-info' : 'personal-info-none'}>
-						<ConnectButtons item={item} />
+						<ConnectButtons item={currentUserInfo} />
 					</div>
 					<div className='personal-info__detail__introduction'>
 						<ul className='personal-info__list'>
@@ -252,7 +250,7 @@ const PersonalInfo = ({ currentUserInfo, setCurrentTab }) => {
 						<CloseX />
 					</button>
 				</Modal.Header>
-				<Modal.Body className='personal-info__modal__body'>
+				<Modal.Body>
 					<PersonalInfoForm userData={currentUserInfo} toggleModal={toggleModal} />
 				</Modal.Body>
 			</Modal>

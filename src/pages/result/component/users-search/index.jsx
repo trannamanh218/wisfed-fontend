@@ -3,12 +3,14 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import PropTypes from 'prop-types';
 import ResultNotFound from '../result-not-found';
 import defaultAvatar from 'assets/images/avatar.jpeg';
-import Button from 'shared/button';
+// import Button from 'shared/button';
 // import LoadingIndicator from 'shared/loading-indicator';
 import { getFilterSearch } from 'reducers/redux-utils/search';
 import { NotificationError } from 'helpers/Error';
 import { useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+
+import ConnectButtonsSearch from './ConnectButtonsSearch';
 
 const UsersSearch = ({
 	isFetching,
@@ -83,7 +85,7 @@ const UsersSearch = ({
 								<div>
 									<img
 										className='myfriends__layout__img'
-										src={item.avatarImage ? defaultAvatar : defaultAvatar}
+										src={item.avatarImage ? item.avatarImage : defaultAvatar}
 										alt=''
 									/>
 									<div className='myfriends__star'>
@@ -100,12 +102,7 @@ const UsersSearch = ({
 									</div>
 								</div>
 								<div className='myfriends__button__container'>
-									<Button className='myfriends__button' isOutline={false} name='friend'>
-										<span className='myfriends__button__content'>Kết bạn</span>
-									</Button>
-									<Button className='myfriends__button' isOutline={true} name='friend'>
-										<span className='myfriends__button__content'>Theo dõi</span>
-									</Button>
+									<ConnectButtonsSearch item={item} />
 								</div>
 							</div>
 						))}

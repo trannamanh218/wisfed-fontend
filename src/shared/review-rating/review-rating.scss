@@ -6,8 +6,8 @@
 
 	&__left {
 		height: 50%;
-		margin-right: 6em;
-		margin-bottom: 1.5em;
+		width: 29%;
+		margin: auto;
 		display: flex;
 		flex-direction: column;
 		gap: 1.6em;
@@ -20,5 +20,6 @@
 
 	&__right {
 		flex-grow: 1;
+		padding-right: 50px;
 	}
 }

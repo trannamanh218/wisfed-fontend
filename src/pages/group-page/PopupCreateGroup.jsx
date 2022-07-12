@@ -162,7 +162,8 @@ const PopupCreateGroup = ({ handleClose, showRef }) => {
 	};
 
 	return (
-		<div className='popup-group__container ' ref={showRef}>
+		<>
+			{/* <div className='popup-group__container' ref={showRef}> */}
 			<div className='popup-group__header'>
 				<h3>Tạo nhóm</h3>
 				<button onClick={handleClose}>
@@ -173,7 +174,7 @@ const PopupCreateGroup = ({ handleClose, showRef }) => {
 			<div>
 				<div className='upload-image__wrapper'>
 					{imgUrl ? (
-						<img style={{ width: '700px', height: '266px', objectFit: 'cover' }} src={imgUrl} alt='img' />
+						<img style={{ width: '100%', maxHeight: '266px', objectFit: 'cover' }} src={imgUrl} alt='img' />
 					) : (
 						<Dropzone>
 							{() => (
@@ -302,13 +303,14 @@ const PopupCreateGroup = ({ handleClose, showRef }) => {
 					<button>Tạo nhóm</button>
 				</div>
 			</div>
-		</div>
+			{/* </div> */}
+		</>
 	);
 };
 
 PopupCreateGroup.propTypes = {
 	handleClose: PropTypes.func,
-	showRef: PropTypes.func,
+	showRef: PropTypes.object,
 };
 
 export default PopupCreateGroup;

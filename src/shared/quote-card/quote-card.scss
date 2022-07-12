@@ -43,7 +43,7 @@
 	&__detail {
 		display: flex;
 		flex-direction: column;
-		align-items: center;
+		// align-items: center;
 		justify-content: space-between;
 		&__text {
 			font-size: 13px;
@@ -107,4 +107,12 @@
 	color: $ash-label;
 	letter-spacing: 0.75px;
 	font-weight: 600;
+}
+
+.quote-card__author__avatar:hover {
+	cursor: pointer;
+}
+
+.quote-card__author__detail__name:hover {
+	cursor: pointer;
 }

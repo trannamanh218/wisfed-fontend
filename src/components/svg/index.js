@@ -1,8 +1,13 @@
-import { ReactComponent as HomeIcon } from 'assets/icons/home.svg';
-import { ReactComponent as CategoryIcon } from 'assets/icons/category.svg';
-import { ReactComponent as BookIcon } from 'assets/icons/book.svg';
-import { ReactComponent as BookFillIcon } from 'assets/icons/bookFill.svg';
-import { ReactComponent as GroupIcon } from 'assets/icons/group.svg';
+import { ReactComponent as HomeIcon } from 'assets/icons/HomeIcon.svg';
+import { ReactComponent as CategoryIcon } from 'assets/icons/CategoryIcon.svg';
+import { ReactComponent as CategoryFillIcon } from 'assets/icons/CategoryFillIcon.svg';
+import { ReactComponent as BookIcon } from 'assets/icons/BookIcon.svg';
+import { ReactComponent as BookFillIcon } from 'assets/icons/BookFillIcon.svg';
+import { ReactComponent as GroupIcon } from 'assets/icons/GroupIcon.svg';
+// import { ReactComponent as IconGroup } from 'assets/icons/UsersThree.svg';
+import { ReactComponent as GroupFillIcon } from 'assets/icons/GroupFillIcon.svg';
+import { ReactComponent as FriendsIcon } from 'assets/icons/FriendsIcon.svg';
+import { ReactComponent as FriendsFillIcon } from 'assets/icons/FriendsFillIcon.svg';
 import { ReactComponent as LogoIcon } from 'assets/icons/logo.svg';
 import { ReactComponent as CircleCheckIcon } from 'assets/icons/circleCheck.svg';
 import { ReactComponent as CoffeeCupIcon } from 'assets/icons/coffeeCup.svg';
@@ -65,13 +70,18 @@ import { ReactComponent as DropdownGroup } from 'assets/icons/Arrow Caret Down.s
 import { ReactComponent as IconCheck } from 'assets/icons/circleCheck.svg';
 import { ReactComponent as LogOutGroup } from 'assets/icons/Log Out Square.svg';
 import { ReactComponent as ForwardGroup } from 'assets/icons/ForwardGroup.svg';
-import { ReactComponent as IconGroup } from 'assets/icons/UsersThree.svg';
 import { ReactComponent as StarAuthor } from 'assets/icons/StarAuthor.svg';
 import { ReactComponent as ShareAuthor } from 'assets/icons/shareAuthor.svg';
 import { ReactComponent as Setting } from 'assets/icons/Setting_fill.svg';
 import { ReactComponent as ArrowsDownUp } from 'assets/icons/ArrowsDownUp.svg';
-
+import { ReactComponent as IconRanks } from 'assets/icons/medal.svg';
+import { ReactComponent as LogOutIcon } from 'assets/icons/LogOutIcon.svg';
+import { ReactComponent as ProfileIcon } from 'assets/icons/ProfileIcon.svg';
+import { ReactComponent as ArrowDownIcon } from 'assets/icons/ArrowDownIcon.svg';
+import { ReactComponent as CrowSmall } from 'assets/icons/CrownSmall.svg';
 export {
+	CrowSmall,
+	IconRanks,
 	Setting,
 	ShareAuthor,
 	StarAuthor,
@@ -142,6 +152,12 @@ export {
 	IconCheck,
 	LogOutGroup,
 	ForwardGroup,
-	IconGroup,
 	ArrowsDownUp,
+	LogOutIcon,
+	ProfileIcon,
+	ArrowDownIcon,
+	GroupFillIcon,
+	FriendsIcon,
+	FriendsFillIcon,
+	CategoryFillIcon,
 };

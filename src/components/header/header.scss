@@ -11,6 +11,7 @@
 	width: 100%;
 	z-index: 1000;
 	max-width: 1440px;
+	box-shadow: 0px 4px 28px rgba(0, 0, 0, 0.1);
 }
 
 .header__left {
@@ -107,11 +108,11 @@
 		}
 	}
 
-	svg {
-		width: 27px;
-		height: 27px;
-		margin-bottom: 5px;
-	}
+	// svg {
+	// 	width: 27px;
+	// 	height: 27px;
+	// 	margin-bottom: 5px;
+	// }
 }
 
 .header__nav__link {
@@ -126,9 +127,17 @@
 	display: flex;
 	align-items: center;
 	cursor: pointer;
-	svg {
-		width: 30px;
-		height: 28px;
+	& svg {
+		width: 21px;
+		height: 21px;
+	}
+	#arrow-down-icon {
+		position: relative;
+		top: 8px;
+		left: 5px;
+		& svg {
+			transform: scale(0.8);
+		}
 	}
 }
 
@@ -153,28 +162,33 @@
 	background-size: contain;
 	background-repeat: no-repeat;
 	// background-color: #fff;
+
+	&.active {
+		background-image: url('../../assets/icons/Notification.svg');
+	}
+}
+.header__notify__icon__active {
 	&::after {
 		position: absolute;
 		top: 0;
 		right: 0;
-		transform: translateY(-50%);
+		transform: translateY(-15%) translateX(20%);
 		content: '';
 		display: inline-block;
-		width: 16px;
-		height: 16px;
+		width: 18px;
+		height: 18px;
 		border-radius: 50%;
 		background-color: $primary;
 	}
 	&.active {
-		background-image: url('../../assets/icons/Notification.svg');
 		&::before {
 			position: absolute;
 			top: 0;
 			right: -1px;
-			transform: translateY(-50%);
+			transform: translateY(-15%) translateX(20%);
 			content: '';
 			display: inline-block;
-			width: 18px;
+			width: 19px;
 			height: 19px;
 			border-radius: 50%;
 			background-color: #fff;
@@ -185,11 +199,11 @@
 			position: absolute;
 			top: 0;
 			right: 0;
-			transform: translateY(-50%);
+			transform: translateY(-10%) translateX(21%);
 			content: '';
 			display: inline-block;
-			width: 16px;
-			height: 16px;
+			width: 17px;
+			height: 17px;
 			border-radius: 50%;
 			background-color: $primary;
 			z-index: 1;

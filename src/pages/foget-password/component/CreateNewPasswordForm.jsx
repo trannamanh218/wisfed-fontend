@@ -122,7 +122,7 @@ function CreateNewPasswordForm() {
 	useEffect(() => {
 		if (valueOtp && valuePassword && valuePassword2) {
 			setIsShowBtn(true);
-		} else if (valueOtp === '' || valuePassword === '' || valuePassword2 === '') {
+		} else {
 			setIsShowBtn(false);
 		}
 	}, [valueOtp, valuePassword, valuePassword2]);
@@ -166,7 +166,7 @@ function CreateNewPasswordForm() {
 											placeholder='Nhập mã OTP'
 											{...field}
 											value={field.value}
-											autoComplete='false'
+											// autoComplete='off'
 										/>
 										<div className='error--text'>
 											{meta.touched && meta.error && (
@@ -223,7 +223,7 @@ function CreateNewPasswordForm() {
 											placeholder='Mật khẩu mới'
 											{...field}
 											value={field.value}
-											autoComplete='false'
+											autoComplete='new-password'
 										/>
 										<div className='error--text'>
 											{meta.touched && meta.error && (
@@ -273,7 +273,7 @@ function CreateNewPasswordForm() {
 											placeholder='Xác nhận lại mật khẩu mới'
 											{...field}
 											value={field.value}
-											autoComplete='false'
+											// autoComplete='off'
 										/>
 										{meta.touched && meta.error && (
 											<div className='error--text'>

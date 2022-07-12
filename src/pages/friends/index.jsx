@@ -56,11 +56,20 @@ const Friends = () => {
 		}
 	};
 
-	const debounceSearch = useCallback(_.debounce(updateInputSearch, 1000), []);
+	const debounceSearch = useCallback(_.debounce(updateInputSearch, 0), []);
 
 	const handleSearch = e => {
 		setInputSearch(e.target.value);
-		debounceSearch(e.target.value);
+	};
+
+	const onClickSearchBtn = () => {
+		debounceSearch(inputSearch);
+	};
+
+	const onBtnEnterPress = e => {
+		if (e.key === 'Enter') {
+			debounceSearch(inputSearch);
+		}
 	};
 
 	return (
@@ -68,7 +77,14 @@ const Friends = () => {
 			<div className='friends__container'>
 				<div className='friends__content'>Bạn bè</div>
 				<div className='friends__header'>
-					{toggleSearch && <SearchButton handleChange={handleSearch} value={inputSearch} />}
+					{toggleSearch && (
+						<SearchButton
+							handleClickSearch={onClickSearchBtn}
+							handleChange={handleSearch}
+							value={inputSearch}
+							onKeyDown={onBtnEnterPress}
+						/>
+					)}
 
 					<div className='friend__radio'>
 						<p onClick={() => handleActiveTabs('friend')}>

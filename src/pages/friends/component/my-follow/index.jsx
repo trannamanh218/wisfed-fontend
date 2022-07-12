@@ -57,7 +57,7 @@ const MyFollow = ({ activeTabs }) => {
 			</div>
 			<div className='myfriends__layout__container'>
 				{getListFollowings.map(item => (
-					<FriendsItem key={item.id} list={item} keyTabs={activeTabs} />
+					<FriendsItem key={item.id} list={item} keyTabs={activeTabs} getListFollowings={getListFollowings} />
 				))}
 			</div>
 		</div>

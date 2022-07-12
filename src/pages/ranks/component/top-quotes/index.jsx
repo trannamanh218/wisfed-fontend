@@ -70,7 +70,11 @@ const TopQuotes = ({ rows, listYear }) => {
 					<div key={item.id} className='topbooks__container__main'>
 						<StarRanking index={index} />
 						<div className='topbooks__container__main__layout'>
-							<TopQuotesComponent item={item} />
+							<TopQuotesComponent
+								item={item}
+								valueDate={valueDate}
+								categoryItem={kindOfGroupRef.current}
+							/>
 						</div>
 					</div>
 				))

@@ -6,7 +6,7 @@ import UserAvatar from 'shared/user-avatar';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import { updateCurrentBook } from 'reducers/redux-utils/book';
-import { resetTaggedDataFunc, saveDataShare, sharePosts, checkShare } from 'reducers/redux-utils/post';
+import { resetTaggedDataFunc, saveDataShare, sharePosts, checkShare, sharePostsAll } from 'reducers/redux-utils/post';
 import { useLocation } from 'react-router-dom';
 import { updateImg } from 'reducers/redux-utils/chart';
 
@@ -133,6 +133,7 @@ function CreatePost({ onChangeNewPost }) {
 		dispatch(saveDataShare({}));
 		dispatch(sharePosts(false));
 		dispatch(checkShare(false));
+		dispatch(sharePostsAll(''));
 		dispatch(updateImg([]));
 		dispatch(updateCurrentBook({}));
 		setOption({});
