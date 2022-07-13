@@ -69,7 +69,6 @@ const PopupCreateGroup = ({ handleClose, showRef }) => {
 
 		if (dataRef.current !== '' && dataCheck.length < 1) {
 			const newList = [...listHashtags, dataRef.current];
-			console.log(newList);
 			setListHashtags(newList);
 		}
 	}, [dataRef.current]);
@@ -90,6 +89,8 @@ const PopupCreateGroup = ({ handleClose, showRef }) => {
 			inputNameGroup !== ''
 		) {
 			setIsShowBtn(true);
+		} else {
+			setIsShowBtn(false);
 		}
 	}, [imgUrl, listAuthors, listHashtags, kindOfGroup, inputDiscription, inputNameGroup]);
 
