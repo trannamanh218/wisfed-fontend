@@ -30,7 +30,7 @@ import Storage from 'helpers/Storage';
 import { checkUserLogin } from 'reducers/redux-utils/auth';
 import ShareUsers from 'pages/home/components/newfeed/components/modal-share-users';
 
-function Post({ postInformations, className, showModalCreatPost, inReviews = false }) {
+function Post({ postInformations, showModalCreatPost, inReviews = false }) {
 	const [postData, setPostData] = useState({});
 	const [videoId, setVideoId] = useState('');
 	const { userInfo } = useSelector(state => state.auth);
