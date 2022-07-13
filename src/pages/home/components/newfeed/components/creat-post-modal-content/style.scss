@@ -797,12 +797,51 @@
 	padding: 16px;
 	border-radius: 12px;
 	background-color: #eff0f6;
+	max-height: 210px;
 	.post__container,
 	.post__quotes__container {
 		margin-bottom: 0;
 		// padding: 0;
 		.post__user-status__post-time-status {
 			font-size: 10px;
+		}
+	}
+	> div {
+		.author-book {
+			max-height: 177px;
+			.book-thumbnail {
+				height: 151px;
+				width: 98px;
+			}
+
+			&__title {
+				position: relative;
+				top: 20px;
+				font-size: 16.24px;
+			}
+
+			&__rating {
+				position: relative;
+				top: 16px;
+
+				.star-icon {
+					width: 19.42px;
+					margin-right: 9px;
+				}
+				&__number {
+					font-size: 18px;
+				}
+			}
+
+			&__stats {
+				font-size: 14.61px;
+			}
+
+			.btn {
+				position: relative;
+				right: -20px;
+				transform: scale(0.8);
+			}
 		}
 	}
 }

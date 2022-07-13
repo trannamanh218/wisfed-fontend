@@ -232,7 +232,7 @@ const NotificationModal = ({ setModalNotti, buttonModal, realTime }) => {
 										</Link>
 									</>
 								) : (
-									<span className='no__notificaion'>Bạn không có lời mời kết bạn nào</span>
+									<span className='no__notificaion'>Bạn chưa có lời mời kết bạn nào</span>
 								)}
 							</Tab>
 						</Tabs>

@@ -11,6 +11,7 @@ import { sharePostsAll, saveDataShare } from 'reducers/redux-utils/post';
 import classNames from 'classnames';
 import _ from 'lodash';
 import { useEffect } from 'react';
+import { Row, Col } from 'react-bootstrap';
 
 const AuthorBook = props => {
 	const { data, checkStar, checkshare, setModalShow, topBooksId, valueDate, categoryName } = props;
@@ -52,7 +53,9 @@ const AuthorBook = props => {
 
 	return (
 		!_.isEmpty(data) && (
-			<div className={data.verb === 'shareTopBookRanking' && 'creat-post-modal-content__main__share-container'}>
+			<div
+				className={data.verb === 'shareTopBookRanking' ? 'creat-post-modal-content__main__share-container' : ''}
+			>
 				<div
 					className={classNames('author-book', {
 						'author-book-custom': isSharePostsAll === 'shareTopBook' || data.verb === 'shareTopBookRanking',
@@ -63,22 +66,25 @@ const AuthorBook = props => {
 						handleClick={() => navigate(`/book/detail/${data.id}`)}
 					/>
 					<div className='author-book__info'>
-						<div className='author-book__header'>
-							<Link to={`/book/detail/${data.id}`}>
-								<h4
-									className='author-book__title'
-									title={data.book?.name || data?.name || data.info?.name}
-								>
-									{data.book?.name || data?.name || data.info?.name}
-								</h4>
-							</Link>
-							{checkshare && (
-								<div onClick={handleShare} className='author-book__share'>
-									<ShareRanks />
-								</div>
-							)}
-						</div>
-
+						<Row>
+							<Col xs={10}>
+								<Link to={`/book/detail/${data.id}`}>
+									<h4
+										className='author-book__title'
+										title={data.book?.name || data?.name || data.info?.name}
+									>
+										{data.book?.name || data?.name || data.info?.name}
+									</h4>
+								</Link>
+							</Col>
+							<Col xs={2}>
+								{checkshare && (
+									<div onClick={handleShare} className='author-book__share'>
+										<ShareRanks />
+									</div>
+								)}
+							</Col>
+						</Row>
 						<p className='author-book__writers'>{authorsName && authorsName.join('- ')}</p>
 						<div className='author-book__rating'>
 							<ReactRating
@@ -93,8 +99,8 @@ const AuthorBook = props => {
 						<div className='author-book__bottom'>
 							<span className='author-book__stats'>
 								{data?.countRating
-									? `${data?.countRating || data.info.countRating} (đánh giá)`
-									: '0 (đánh giá)'}
+									? `${data?.countRating || data.info.countRating} đánh giá`
+									: 'Chưa có đánh giá'}
 							</span>
 							<StatusButton
 								bookData={data.info || data.book || data}

@@ -201,7 +201,7 @@ CreatPostSubModal.propTypes = {
 	images: PropTypes.array,
 	deleteImage: PropTypes.func,
 	suggestionData: PropTypes.array,
-	fetchSuggestion: PropTypes.func.isRequired,
+	fetchSuggestion: PropTypes.func,
 	handleAddToPost: PropTypes.func.isRequired,
 	taggedData: PropTypes.object,
 	removeTaggedItem: PropTypes.func,
