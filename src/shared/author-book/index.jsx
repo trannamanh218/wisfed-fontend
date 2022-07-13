@@ -6,7 +6,7 @@ import './author-book.scss';
 import { ShareRanks } from 'components/svg';
 import Storage from 'helpers/Storage';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, Link } from 'react-router-dom';
 import { sharePostsAll, saveDataShare } from 'reducers/redux-utils/post';
 import classNames from 'classnames';
 import _ from 'lodash';
@@ -59,14 +59,19 @@ const AuthorBook = props => {
 					})}
 				>
 					<BookThumbnail
-						// source={data?.info ? data.info?.images[0] : data?.book?.images[0] || data?.images[0]}
 						source={generateBookThumbnailSrc(data)}
+						handleClick={() => navigate(`/book/detail/${data.id}`)}
 					/>
 					<div className='author-book__info'>
 						<div className='author-book__header'>
-							<h4 className='author-book__title' title={data.book?.name || data?.name || data.info?.name}>
-								{data.book?.name || data?.name || data.info?.name}
-							</h4>
+							<Link to={`/book/detail/${data.id}`}>
+								<h4
+									className='author-book__title'
+									title={data.book?.name || data?.name || data.info?.name}
+								>
+									{data.book?.name || data?.name || data.info?.name}
+								</h4>
+							</Link>
 							{checkshare && (
 								<div onClick={handleShare} className='author-book__share'>
 									<ShareRanks />

@@ -51,9 +51,17 @@ function Bookcase({ currentUserInfo, currentTab }) {
 		try {
 			const data = await dispatch(getAllLibraryList({ userId: userId })).unwrap();
 			const readingBooksResponse = data.default.filter(x => x.defaultType === 'reading');
-			setReadingBooks(readingBooksResponse[0].books.reverse().slice(0, 3));
+			if (readingBooksResponse.length === 0) {
+				setReadingBooks([]);
+			} else {
+				setReadingBooks(readingBooksResponse[0].books.reverse().slice(0, 3));
+			}
 			const haveReadResponse = data.default.filter(x => x.defaultType === 'read');
-			setReadBooks(haveReadResponse[0].books);
+			if (haveReadResponse.length === 0) {
+				setReadBooks([]);
+			} else {
+				setReadBooks(haveReadResponse[0].books);
+			}
 		} catch (err) {
 			NotificationError(err);
 		}

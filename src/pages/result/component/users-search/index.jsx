@@ -11,6 +11,7 @@ import { useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import ConnectButtonsSearch from './ConnectButtonsSearch';
+import { Link } from 'react-router-dom';
 
 const UsersSearch = ({
 	isFetching,
@@ -82,7 +83,7 @@ const UsersSearch = ({
 					<div className='myfriends__layout__container'>
 						{listArrayUsers.map(item => (
 							<div key={item.id} className='myfriends__layout'>
-								<div>
+								<Link to={`/profile/${item.id}`}>
 									<img
 										className='myfriends__layout__img'
 										src={item.avatarImage ? item.avatarImage : defaultAvatar}
@@ -100,7 +101,7 @@ const UsersSearch = ({
 											)}
 										</div>
 									</div>
-								</div>
+								</Link>
 								<div className='myfriends__button__container'>
 									<ConnectButtonsSearch item={item} />
 								</div>
