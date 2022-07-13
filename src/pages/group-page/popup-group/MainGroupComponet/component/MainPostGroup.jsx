@@ -9,6 +9,7 @@ import { NotificationError } from 'helpers/Error';
 
 function MainPostGroup() {
 	const [listPost, setListPost] = useState([]);
+	const [isNewPost, setIsNewPost] = useState(false);
 	const dispatch = useDispatch();
 	const { id = '' } = useParams();
 
@@ -27,13 +28,17 @@ function MainPostGroup() {
 		}
 	};
 
+	const onChangeNewPost = () => {
+		setIsNewPost(!isNewPost);
+	};
+
 	useEffect(() => {
 		getDataListPost();
-	}, []);
+	}, [isNewPost]);
 
 	return (
 		<div className='main-content__container'>
-			<CreatePost />
+			<CreatePost onChangeNewPost={onChangeNewPost} />
 			<div className='main-content__post'>
 				{listPost.map(item => {
 					return (
