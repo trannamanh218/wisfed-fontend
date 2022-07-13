@@ -10,6 +10,7 @@ import Frame from 'assets/images/Frame.png';
 const GoalsNotSetYet = ({ userInfo }) => {
 	const [inputValue, setInputValue] = useState(0);
 	const dispatch = useDispatch();
+	const customId = 'custom-Id-yes';
 
 	useEffect(() => {
 		if (inputValue < 0) {
@@ -30,19 +31,25 @@ const GoalsNotSetYet = ({ userInfo }) => {
 	};
 
 	const handleChangeTarget = async () => {
-		try {
-			const dob = new Date();
-			const year = dob.getFullYear();
-			const params = {
-				year: year,
-				numberBook: inputValue,
-			};
-			await dispatch(createTargetRead(params)).unwrap();
-			return toast.success('Tạo mục tiêu thành công');
-		} catch (err) {
-			NotificationError(err);
-		} finally {
-			dispatch(renderTargetReadingProgress(true));
+		if (inputValue < 1) {
+			toast.error('Mục tiêu phải lớn hơn 0', {
+				toastId: customId,
+			});
+		} else {
+			try {
+				const dob = new Date();
+				const year = dob.getFullYear();
+				const params = {
+					year: year,
+					numberBook: inputValue,
+				};
+				await dispatch(createTargetRead(params)).unwrap();
+				return toast.success('Tạo mục tiêu thành công');
+			} catch (err) {
+				NotificationError(err);
+			} finally {
+				dispatch(renderTargetReadingProgress(true));
+			}
 		}
 	};
 	return (

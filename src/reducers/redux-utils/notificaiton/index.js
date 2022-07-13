@@ -76,7 +76,6 @@ const notificationSlice = createSlice({
 		activeKeyTabs: '',
 		listNotifcaiton: [],
 		isRealTime: null,
-		listUnRead: [],
 	},
 	reducers: {
 		backgroundToggle: (state, action) => {
@@ -90,9 +89,6 @@ const notificationSlice = createSlice({
 		},
 		depenRenderNotificaion: (state, action) => {
 			state.isRealTime = action.payload;
-		},
-		handleListUnRead: (state, action) => {
-			state.listUnRead = action.payload;
 		},
 	},
 	extraReducers: {
