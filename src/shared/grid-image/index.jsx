@@ -5,48 +5,20 @@ import './grid-image.scss';
 import classNames from 'classnames';
 import _ from 'lodash';
 import { Modal } from 'react-bootstrap';
-import { Button, ModalBody } from 'reactstrap';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
+import { render } from 'react-dom';
+import Lightbox from 'react-image-lightbox';
+import 'react-image-lightbox/style.css';
 
 const GridImage = ({ images, inPost, postId }) => {
 	const [show, setShow] = React.useState(false);
 
 	const handleClose = () => setShow(false);
 	const handleShow = () => setShow(true);
-	const settingSlider = {
-		dots: true,
-		infinite: false,
-		speed: 300,
-		slidesToShow: 1,
-		slidesToScroll: 1,
-		responsive: [
-			{
-				breakpoint: 1024,
-				settings: {
-					slidesToShow: 3,
-					slidesToScroll: 3,
-					infinite: true,
-					dots: true,
-				},
-			},
-			{
-				breakpoint: 600,
-				settings: {
-					slidesToShow: 2,
-					slidesToScroll: 2,
-				},
-			},
-			{
-				breakpoint: 480,
-				settings: {
-					slidesToShow: 1,
-					slidesToScroll: 1,
-				},
-			},
-		],
-	};
+	const [photoIndex, setPhotoIndex] = React.useState(0);
+	const [isOpent, setIsOpent] = React.useState(false);
 
 	useEffect(() => {
 		if (!_.isEmpty(images)) {
@@ -101,7 +73,7 @@ const GridImage = ({ images, inPost, postId }) => {
 			}
 		}
 	}, [images]);
-
+	console.log(photoIndex);
 	return (
 		<>
 			{!_.isEmpty(images) && (
@@ -116,20 +88,34 @@ const GridImage = ({ images, inPost, postId }) => {
 					{images.length < 6 ? (
 						<>
 							{images.map((image, index) => (
-								<div
-									key={index}
-									className={
-										inPost
-											? `creat-post-modal-content__main__body__image img-${index}-${postId}`
-											: `creat-post-modal-content__main__body__image img-${index}`
-									}
-								>
-									{inPost ? (
-										<img src={image} alt='image' />
-									) : (
-										<img src={URL.createObjectURL(image)} alt='image' />
+								<button key={index} onClick={() => setIsOpent(true)}>
+									<div
+										key={index}
+										className={
+											inPost
+												? `creat-post-modal-content__main__body__image img-${index}-${postId}`
+												: `creat-post-modal-content__main__body__image img-${index}`
+										}
+									>
+										{inPost ? (
+											<img src={image} alt='image' />
+										) : (
+											<img src={URL.createObjectURL(image)} alt='image' />
+										)}
+									</div>
+									{isOpent && (
+										<Lightbox
+											mainSrc={images[photoIndex]}
+											nextSrc={images[(photoIndex + 1) % images.length]}
+											prevSrc={images[(photoIndex + images.length - 1) % images.length]}
+											onCloseRequest={() => setIsOpent(false)}
+											onMovePrevRequest={() =>
+												setPhotoIndex((photoIndex + images.length - 1) % images.length)
+											}
+											onMoveNextRequest={() => setPhotoIndex((photoIndex + 1) % images.length)}
+										/>
 									)}
-								</div>
+								</button>
 							))}
 						</>
 					) : (
@@ -139,20 +125,61 @@ const GridImage = ({ images, inPost, postId }) => {
 									{images.map((image, index) => {
 										if (index < 4) {
 											return (
-												<div
-													key={index}
-													className={
-														inPost
-															? `creat-post-modal-content__main__body__image img-${index}-${postId}`
-															: `creat-post-modal-content__main__body__image img-${index}`
-													}
-												>
-													{inPost ? (
-														<img src={image} alt='image' />
-													) : (
-														<img src={URL.createObjectURL(image)} alt='image' />
+												<button onClick={() => setIsOpent(true)}>
+													<div
+														key={index}
+														className={
+															inPost
+																? `creat-post-modal-content__main__body__image img-${index}-${postId}`
+																: `creat-post-modal-content__main__body__image img-${index}`
+														}
+													>
+														{inPost ? (
+															<img src={image} alt='image' />
+														) : (
+															<img src={URL.createObjectURL(image)} alt='image' />
+														)}
+													</div>
+													{isOpent && (
+														<Lightbox
+															mainSrc={images[photoIndex]}
+															nextSrc={images[(photoIndex + 1) % images.length]}
+															prevSrc={
+																images[(photoIndex + images.length - 1) % images.length]
+															}
+															onCloseRequest={() => setIsOpent(false)}
+															onMovePrevRequest={() =>
+																setPhotoIndex(
+																	(photoIndex + images.length - 1) % images.length
+																)
+															}
+															onMoveNextRequest={() =>
+																setPhotoIndex((photoIndex + 1) % images.length)
+															}
+														/>
 													)}
-												</div>
+												</button>
+											);
+										}
+										{
+											isOpent && (
+												<Lightbox
+													mainSrc={images[photoIndex]}
+													nextSrc={images[(photoIndex + 1) % images.length]}
+													prevSrc={images[(photoIndex + images.length - 1) % images.length]}
+													onCloseRequest={() => setIsOpent(false)}
+													onMovePrevRequest={() =>
+														setPhotoIndex({
+															photoIndex:
+																(photoIndex + images.length - 1) % images.length,
+														})
+													}
+													onMoveNextRequest={() =>
+														setPhotoIndex({
+															photoIndex: (photoIndex + 1) % images.length,
+														})
+													}
+												/>
 											);
 										}
 									})}
@@ -179,7 +206,7 @@ const GridImage = ({ images, inPost, postId }) => {
 				</div>
 			)}
 
-			<Modal style={{ height: '80vh', width: '100%', marginTop: '50px' }} show={show} onHide={handleClose}>
+			{/* <Modal style={{ height: '80vh', width: '100%', marginTop: '50px' }} show={show} onHide={handleClose}>
 				<Modal.Body>
 					<Slider {...settingSlider}>
 						{images.map(item => {
@@ -191,7 +218,34 @@ const GridImage = ({ images, inPost, postId }) => {
 						})}
 					</Slider>
 				</Modal.Body>
-			</Modal>
+			</Modal> */}
+			{/* {images.map(item => {
+				return (
+					<button key={item.id} onClick={() => setIsOpent(true)}>
+						<img src={item} />
+					</button>
+				);
+			})} */}
+			{/* <div>
+				{isOpent && (
+					<Lightbox
+						mainSrc={images[photoIndex]}
+						nextSrc={images[(photoIndex + 1) % images.length]}
+						prevSrc={images[(photoIndex + images.length - 1) % images.length]}
+						onCloseRequest={() => setIsOpent(false)}
+						onMovePrevRequest={() =>
+							setPhotoIndex({
+								photoIndex: (photoIndex + images.length - 1) % images.length,
+							})
+						}
+						onMoveNextRequest={() =>
+							setPhotoIndex({
+								photoIndex: (photoIndex + 1) % images.length,
+							})
+						}
+					/>
+				)}
+			</div> */}
 		</>
 	);
 };
