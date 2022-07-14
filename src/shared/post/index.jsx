@@ -109,7 +109,7 @@ function Post({ postInformations, showModalCreatPost, inReviews = false }) {
 					res = await dispatch(createCommentGroup(params)).unwrap();
 				} else {
 					const params = {
-						minipostId: postData.groupPostId || postData.id,
+						minipostId: postData.minipostId || postData.groupPostId || postData.id,
 						content: content,
 						mediaUrl: [],
 						mentionsUser: [],

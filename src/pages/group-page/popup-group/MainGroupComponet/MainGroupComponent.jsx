@@ -25,6 +25,7 @@ import { useParams } from 'react-router-dom';
 import SearchLayout from './component/SearchLayout';
 import { useVisible } from 'shared/hooks';
 import defaultAvatar from 'assets/images/Rectangle 17435.png';
+import { useRef } from 'react';
 
 function MainGroupComponent({ handleChange, keyChange, data, member }) {
 	const [key, setKey] = useState('intro');
@@ -40,6 +41,7 @@ function MainGroupComponent({ handleChange, keyChange, data, member }) {
 	const { id = '' } = useParams();
 	const keyRedux = useSelector(state => state.group.key);
 	const { ref: showRef, isVisible: isShow, setIsVisible: setIsShow } = useVisible(false);
+	const joinedGroupPopup = useRef(null);
 
 	const enjoyGroup = async () => {
 		setIsFetching(true);
@@ -54,6 +56,21 @@ function MainGroupComponent({ handleChange, keyChange, data, member }) {
 			NotificationError(err);
 		}
 	};
+
+	const handleClickOutside = e => {
+		if (joinedGroupPopup.current && !joinedGroupPopup.current.contains(e.target)) {
+			setShowSelect(false);
+		}
+	};
+
+	useEffect(() => {
+		if (joinedGroupPopup.current) {
+			document.addEventListener('click', handleClickOutside, true);
+		}
+		return () => {
+			document.removeEventListener('click', handleClickOutside, true);
+		};
+	}, []);
 
 	const leaveGroup = async () => {
 		setIsFetching(true);
@@ -163,7 +180,7 @@ function MainGroupComponent({ handleChange, keyChange, data, member }) {
 					<div className='btn-top'>
 						{show ? (
 							<>
-								<div className='group-name__joined-group'>
+								<div ref={joinedGroupPopup} className='group-name__joined-group'>
 									<button onClick={() => setShowSelect(!showSelect)}>
 										<IconCheck />
 										<span>Đã tham gia</span>
