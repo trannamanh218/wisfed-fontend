@@ -38,6 +38,14 @@ const ReviewTab = ({ currentTab }) => {
 			value: 'oldest',
 			title: 'Cũ nhất',
 		},
+		{
+			value: 'mostFollow',
+			title: 'Có nhiều Follow nhất',
+		},
+		{
+			value: 'mostReview',
+			title: 'Có nhiều Review nhất',
+		},
 	];
 	const checkBoxStarOptions = [
 		{
@@ -59,16 +67,6 @@ const ReviewTab = ({ currentTab }) => {
 		{
 			value: 1,
 			title: '1 sao',
-		},
-	];
-	const checkBoxPeopleOptions = [
-		{
-			value: 'mostFollow',
-			title: 'Có nhiều Follow nhất',
-		},
-		{
-			value: 'mostReview',
-			title: 'Có nhiều Review nhất',
 		},
 	];
 
@@ -313,19 +311,24 @@ const ReviewTab = ({ currentTab }) => {
 						<div className='sort-review-modal__item'>
 							<span className='filter-quote-pane__setting__title'>Theo người Review</span>
 						</div>
-						{checkBoxPeopleOptions.map((element, index) => {
-							return (
-								<div key={index} className='sort-review-modal__item'>
-									<FormCheckGroup
-										data={element}
-										name='checkbox-people'
-										type='checkbox'
-										handleChange={handleChangePeople}
-										checked={checkedPeopleArr.includes(element.value)}
-									/>
-								</div>
-							);
-						})}
+						<div className='sort-review-modal__item'>
+							<FormCheckGroup
+								data={radioOptions[3]}
+								name='custom-radio'
+								type='radio'
+								handleChange={handleChange}
+								checked={radioOptions[3].value === sortValue}
+							/>
+						</div>
+						<div className='sort-review-modal__item'>
+							<FormCheckGroup
+								data={radioOptions[4]}
+								name='custom-radio'
+								type='radio'
+								handleChange={handleChange}
+								checked={radioOptions[4].value === sortValue}
+							/>
+						</div>
 						<div className='sort-review-modal__item' style={{ marginTop: '10px' }}>
 							<Button
 								className='btn'
