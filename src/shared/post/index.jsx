@@ -30,6 +30,7 @@ import Storage from 'helpers/Storage';
 import { checkUserLogin } from 'reducers/redux-utils/auth';
 import ShareUsers from 'pages/home/components/newfeed/components/modal-share-users';
 import post from 'reducers/redux-utils/post';
+import { useNavigate } from 'react-router-dom';
 
 function Post({ postInformations, showModalCreatPost, inReviews = false }) {
 	const [postData, setPostData] = useState({});
@@ -42,6 +43,7 @@ function Post({ postInformations, showModalCreatPost, inReviews = false }) {
 	const location = useLocation();
 
 	const dispatch = useDispatch();
+	const navigate = useNavigate();
 	const { bookId } = useParams();
 
 	useEffect(() => {
@@ -207,6 +209,7 @@ function Post({ postInformations, showModalCreatPost, inReviews = false }) {
 						data-testid='post__user-avatar'
 						className='post__user-status__avatar'
 						source={postData?.createdBy?.avatarImage || postData.user?.avatarImage}
+						handleClick={() => navigate(`/profile/${postData.createdBy.id}`)}
 					/>
 
 					<div className='post__user-status__name-and-post-time-status'>

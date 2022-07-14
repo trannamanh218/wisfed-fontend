@@ -67,7 +67,7 @@ const GridImage = ({ images, inPost, postId }) => {
 					document.querySelector(`.img-0-${postId}`).style.inset = '0% 0% 33.335% 0%';
 					document.querySelector(`.img-1-${postId}`).style.inset = '66.67% 66.67% 0% 0%';
 					document.querySelector(`.img-2-${postId}`).style.inset = '66.67% 33.335% 0% 33.335%';
-					document.querySelector(`.img-4-${postId}`).style.inset = '66.67% 0% 0% 66.67%';
+					document.querySelector(`.img-3-${postId}`).style.inset = '66.67% 0% 0% 66.67%';
 				} else if (images.length > 4) {
 					document.querySelector(`.img-0-${postId}`).style.inset = '0% 0% 25% 0%';
 					document.querySelector(`.img-1-${postId}`).style.inset = '75% 75% 0% 0%';
@@ -89,7 +89,7 @@ const GridImage = ({ images, inPost, postId }) => {
 					document.querySelector(`.img-0`).style.inset = '0% 0% 33.335% 0%';
 					document.querySelector(`.img-1`).style.inset = '66.67% 66.67% 0% 0%';
 					document.querySelector(`.img-2`).style.inset = '66.67% 33.335% 0% 33.335%';
-					document.querySelector(`.img-4`).style.inset = '66.67% 0% 0% 66.67%';
+					document.querySelector(`.img-3`).style.inset = '66.67% 0% 0% 66.67%';
 				} else if (images.length > 4) {
 					document.querySelector(`.img-0`).style.inset = '0% 0% 25% 0%';
 					document.querySelector(`.img-1`).style.inset = '75% 75% 0% 0%';

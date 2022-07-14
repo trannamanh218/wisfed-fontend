@@ -11,12 +11,14 @@ import { NotificationError } from 'helpers/Error';
 import { likeAndUnlikeCommentPost } from 'reducers/redux-utils/activity';
 import { POST_TYPE, QUOTE_TYPE, REVIEW_TYPE } from 'constants';
 import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const Comment = ({ data, handleReply, postData, commentLv1Id, type }) => {
 	const [isLiked, setIsLiked] = useState(false);
 	const [isAuthor, setIsAuthor] = useState(false);
 
 	const dispatch = useDispatch();
+	const navigate = useNavigate();
 
 	useEffect(() => {
 		if (type === QUOTE_TYPE) {
@@ -57,6 +59,7 @@ const Comment = ({ data, handleReply, postData, commentLv1Id, type }) => {
 				className='comment__avatar'
 				size='sm'
 				source={data.user?.avatarImage ? data.user?.avatarImage : data['user.avatarImage']}
+				handleClick={() => navigate(`/profile/${data.createdBy}`)}
 			/>
 			<div className='comment__wrapper'>
 				<div className='comment__container'>

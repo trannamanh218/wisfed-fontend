@@ -12,6 +12,7 @@
 	}
 
 	&.user-avatar {
+		cursor: pointer;
 		&-sm {
 			width: $width-avatar-sm;
 			height: $width-avatar-sm;
