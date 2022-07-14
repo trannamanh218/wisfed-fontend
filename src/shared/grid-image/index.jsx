@@ -181,12 +181,8 @@ const GridImage = ({ images, inPost, postId }) => {
 			<Modal style={{ height: '80vh', width: '100%', marginTop: '50px' }} show={show} onHide={handleClose}>
 				<Modal.Body>
 					<Slider {...settingSlider}>
-						{images.map(item => {
-							return (
-								<>
-									<img style={{ width: '100%', objectFit: 'cover' }} src={item} alt='' />
-								</>
-							);
+						{images.map((item, index) => {
+							return <img key={index} style={{ width: '100%', objectFit: 'cover' }} src={item} alt='' />;
 						})}
 					</Slider>
 				</Modal.Body>
@@ -202,7 +198,7 @@ GridImage.defaultProps = {
 GridImage.propTypes = {
 	images: PropTypes.array,
 	inPost: PropTypes.bool,
-	postId: PropTypes.string,
+	postId: PropTypes.any,
 };
 
 export default GridImage;

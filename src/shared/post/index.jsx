@@ -29,6 +29,7 @@ import AuthorBook from 'shared/author-book';
 import Storage from 'helpers/Storage';
 import { checkUserLogin } from 'reducers/redux-utils/auth';
 import ShareUsers from 'pages/home/components/newfeed/components/modal-share-users';
+import post from 'reducers/redux-utils/post';
 
 function Post({ postInformations, showModalCreatPost, inReviews = false }) {
 	const [postData, setPostData] = useState({});
@@ -105,11 +106,10 @@ function Post({ postInformations, showModalCreatPost, inReviews = false }) {
 						mediaUrl: [],
 						replyId: replyId,
 					};
-
 					res = await dispatch(createCommentGroup(params)).unwrap();
 				} else {
 					const params = {
-						minipostId: postData.minipostId || postData.id,
+						minipostId: postData.groupPostId || postData.id,
 						content: content,
 						mediaUrl: [],
 						mentionsUser: [],

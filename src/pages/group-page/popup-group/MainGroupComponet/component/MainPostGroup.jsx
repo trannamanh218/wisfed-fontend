@@ -2,7 +2,7 @@ import CreatePost from 'pages/home/components/newfeed/components/creat-post';
 import Post from 'shared/post';
 import './mainPostGroup.scss';
 import { getListPost } from 'reducers/redux-utils/group';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { NotificationError } from 'helpers/Error';
@@ -40,12 +40,8 @@ function MainPostGroup() {
 		<div className='main-content__container'>
 			<CreatePost onChangeNewPost={onChangeNewPost} />
 			<div className='main-content__post'>
-				{listPost.map(item => {
-					return (
-						<>
-							<Post postInformations={item} className={''} />
-						</>
-					);
+				{listPost.map((item, index) => {
+					return <Post key={index} postInformations={item} />;
 				})}
 			</div>
 		</div>
