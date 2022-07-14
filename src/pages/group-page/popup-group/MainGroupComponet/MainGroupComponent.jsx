@@ -57,21 +57,6 @@ function MainGroupComponent({ handleChange, keyChange, data, member }) {
 		}
 	};
 
-	const handleClickOutside = e => {
-		if (joinedGroupPopup.current && !joinedGroupPopup.current.contains(e.target)) {
-			setShowSelect(false);
-		}
-	};
-
-	useEffect(() => {
-		if (joinedGroupPopup.current) {
-			document.addEventListener('click', handleClickOutside, true);
-		}
-		return () => {
-			document.removeEventListener('click', handleClickOutside, true);
-		};
-	}, []);
-
 	const leaveGroup = async () => {
 		setIsFetching(true);
 		const params = {
@@ -89,7 +74,6 @@ function MainGroupComponent({ handleChange, keyChange, data, member }) {
 			}, 2000);
 		}
 	};
-	useEffect(() => {}, [keyRedux]);
 
 	const handleChangeSearch = e => {
 		setValueGroupSearch(e.target.value);
@@ -148,6 +132,22 @@ function MainGroupComponent({ handleChange, keyChange, data, member }) {
 	useEffect(() => {
 		handleSelect();
 	}, [keyRedux]);
+
+	function useOutsideAlerter(ref) {
+		useEffect(() => {
+			function handleClickOutside(event) {
+				if (ref.current && !ref.current.contains(event.target)) {
+					setShowSelect(false);
+				}
+			}
+			document.addEventListener('mousedown', handleClickOutside);
+			return () => {
+				document.removeEventListener('mousedown', handleClickOutside);
+			};
+		}, [ref]);
+	}
+
+	useOutsideAlerter(joinedGroupPopup);
 
 	return (
 		<div className='group-main-component__container'>
