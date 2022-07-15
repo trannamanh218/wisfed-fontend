@@ -45,7 +45,7 @@ const MainQuoteDetail = ({
 		setReplyingCommentId(cmtLv1Id);
 		setClickReply(!clickReply);
 	};
-
+	console.log(quoteData);
 	return (
 		<div className='main-quote-detail'>
 			<div className='main-quote-detail__header'>
@@ -133,6 +133,9 @@ MainQuoteDetail.propTypes = {
 	quoteData: PropTypes.object,
 	onCreateComment: PropTypes.func,
 	likeUnlikeQuoteFnc: PropTypes.func,
+	userInfo: PropTypes.object,
+	setMentionUsersArr: PropTypes.any,
+	mentionUsersArr: PropTypes.any,
 };
 
 export default MainQuoteDetail;

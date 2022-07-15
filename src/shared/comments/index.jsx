@@ -9,6 +9,7 @@ import './comment.scss';
 import { likeQuoteComment } from 'reducers/redux-utils/quote';
 import { NotificationError } from 'helpers/Error';
 import { likeAndUnlikeCommentPost } from 'reducers/redux-utils/activity';
+import { likeAndUnlikeCommentReview } from 'reducers/redux-utils/book';
 import { POST_TYPE, QUOTE_TYPE, REVIEW_TYPE } from 'constants';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
@@ -30,8 +31,7 @@ const Comment = ({ data, handleReply, postData, commentLv1Id, type }) => {
 				setIsAuthor(true);
 			}
 		}
-
-		if (data.isLike) {
+		if (data.isLike === true || data.like !== 0) {
 			setIsLiked(true);
 		} else {
 			setIsLiked(false);
@@ -44,8 +44,8 @@ const Comment = ({ data, handleReply, postData, commentLv1Id, type }) => {
 				await dispatch(likeAndUnlikeCommentPost(commentId));
 			} else if (type === QUOTE_TYPE) {
 				await dispatch(likeQuoteComment(commentId));
-			} else {
-				console.log('like and unlike review comment');
+			} else if (type === REVIEW_TYPE) {
+				await dispatch(likeAndUnlikeCommentReview(commentId));
 			}
 			setIsLiked(!isLiked);
 		} catch (err) {

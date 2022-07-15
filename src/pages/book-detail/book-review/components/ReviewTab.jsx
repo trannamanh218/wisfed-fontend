@@ -80,6 +80,7 @@ const ReviewTab = ({ currentTab }) => {
 	const [checkedPeopleArr, setCheckedPeopleArr] = useState([]);
 	const [directionSort, setDirectionSort] = useState('DESC');
 	const [propertySort, setPropertySort] = useState('like');
+	const [inputSearch, setInputSearch] = useState('');
 
 	const callApiStart = useRef(10);
 	const callApiPerPage = useRef(10);
@@ -234,7 +235,11 @@ const ReviewTab = ({ currentTab }) => {
 					className='review-tab__filter__options'
 				/>
 				<div className='review-tab__search'>
-					<SearchField placeholder='Tìm kiếm theo Hastag, tên người review ...' />
+					<SearchField
+						value={inputSearch}
+						handleChange={e => setInputSearch(e.target.value)}
+						placeholder='Tìm kiếm theo Hastag, tên người review ...'
+					/>
 				</div>
 				{currentTab === 'reviews' && reviewList.length ? (
 					<InfiniteScroll

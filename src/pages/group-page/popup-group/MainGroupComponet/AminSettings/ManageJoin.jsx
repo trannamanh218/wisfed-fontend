@@ -1,11 +1,12 @@
 import { BackArrow, MoreIcon } from 'components/svg';
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import SearchField from 'shared/search-field';
 import SelectBox from 'shared/select-box';
 import './manage-join.scss';
 import PropTypes from 'prop-types';
 
 function ManageJoin({ handleChange }) {
+	const [inputSearch, setInputSearch] = useState('');
 	const listKindOfJoin = [
 		{ value: '1 day', title: '1 ngày trước' },
 		{ value: 'moment', title: 'Vừa xong' },
@@ -39,7 +40,11 @@ function ManageJoin({ handleChange }) {
 			<hr />
 			<div className='manage-join__content'>
 				<div className='manage-join__content-button'>
-					<SearchField placeholder='Tìm kiếm thành viên' />
+					<SearchField
+						placeholder='Tìm kiếm thành viên'
+						value={inputSearch}
+						handleChange={e => setInputSearch(e.target.value)}
+					/>
 					<div className='manage-join__content-select'>
 						<SelectBox
 							className='select-box-1'

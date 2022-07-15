@@ -193,7 +193,6 @@ const CommentEditor = ({ userInfo, onCreateComment, className, replyId, textarea
 			}
 		}
 	};
-	console.log(userInfo);
 
 	return (
 		<div className={`comment-editor ${className ? className : ''}`}>

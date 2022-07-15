@@ -48,13 +48,12 @@ function CreatPostSubModal(props) {
 	const fetchSuggestion = async (input, option) => {
 		setIsFetchingSuggestions(true);
 		try {
-			if (input.length > 0) {
+			if (option.title === 'tác giả' && input.length > 0) {
 				const params = { q: input, type: 'author' };
 				const data = await dispatch(getFilterSearch(params)).unwrap();
 				setSuggestionData(data.users);
 			} else {
 				const data = await dispatch(getSuggestionForPost({ input, option, userInfo })).unwrap();
-
 				setSuggestionData(data.rows);
 			}
 		} catch (err) {
