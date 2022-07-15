@@ -33,9 +33,9 @@ const MainPostGroupView = () => {
 	return (
 		<div className='main-content__container'>
 			<div className='main-content__post__review'>
-				{listPost.map((item, index) => {
+				{listPost.map(item => {
 					return (
-						<div key={index} style={{ pointerEvents: 'none' }}>
+						<div key={item.id} style={{ pointerEvents: 'none' }}>
 							<Post postInformations={item} className={''} />
 						</div>
 					);

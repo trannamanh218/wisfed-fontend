@@ -11,7 +11,14 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { QUOTE_TYPE } from 'constants';
 
-const MainQuoteDetail = ({ quoteData, onCreateComment, likeUnlikeQuoteFnc, setMentionUsersArr, mentionUsersArr }) => {
+const MainQuoteDetail = ({
+	userInfo,
+	quoteData,
+	onCreateComment,
+	likeUnlikeQuoteFnc,
+	setMentionUsersArr,
+	mentionUsersArr,
+}) => {
 	const [commentLv1IdArray, setCommentLv1IdArray] = useState([]);
 	const [replyingCommentId, setReplyingCommentId] = useState(0);
 	const [clickReply, setClickReply] = useState(false);
@@ -104,12 +111,18 @@ const MainQuoteDetail = ({ quoteData, onCreateComment, likeUnlikeQuoteFnc, setMe
 										replyingCommentId={replyingCommentId}
 										clickReply={clickReply}
 										setMentionUsersArr={setMentionUsersArr}
+										userInfo={userInfo}
 									/>
 								)}
 							</div>
 						</div>
 					))}
-					<CommentEditor replyId={null} onCreateComment={onCreateComment} mentionUsersArr={mentionUsersArr} />
+					<CommentEditor
+						userInfo={userInfo}
+						replyId={null}
+						onCreateComment={onCreateComment}
+						mentionUsersArr={mentionUsersArr}
+					/>
 				</div>
 			)}
 		</div>

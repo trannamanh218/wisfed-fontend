@@ -176,7 +176,6 @@ import { useDispatch } from 'react-redux';
 const CommentEditor = ({ userInfo, onCreateComment, className, replyId, textareaId }) => {
 	const dispatch = useDispatch();
 	const commentArea = useRef(null);
-
 	const onChangeComment = () => {
 		commentArea.current.style.height = 0;
 		commentArea.current.style.height = commentArea.current.scrollHeight + 2 + 'px';
@@ -194,6 +193,7 @@ const CommentEditor = ({ userInfo, onCreateComment, className, replyId, textarea
 			}
 		}
 	};
+	console.log(userInfo);
 
 	return (
 		<div className={`comment-editor ${className ? className : ''}`}>

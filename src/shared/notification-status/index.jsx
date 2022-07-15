@@ -81,6 +81,8 @@ const NotificationStatus = ({ item, setGetNotifications, getNotifications }) => 
 			navigate(`/quotes/detail/${items.originId.quoteId}`);
 		} else if (items.verb === 'mention') {
 			navigate(`/detail-feed/${'mini-post'}/${items.originId.minipostId}`);
+		} else if (items.verb === 'likeQuote') {
+			navigate(`/quotes/detail/${items.originId.quoteId}`);
 		}
 		dispatch(readNotification(params)).unwrap();
 	};

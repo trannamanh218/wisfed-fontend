@@ -11,6 +11,7 @@ import { readNotification } from 'reducers/redux-utils/notificaiton';
 import PropTypes from 'prop-types';
 import { addFollower } from 'reducers/redux-utils/user';
 import { useSelector } from 'react-redux';
+
 const ModalItem = ({ item, setModalNotti, getNotifications, setGetNotifications, selectKey }) => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
@@ -97,6 +98,8 @@ const ModalItem = ({ item, setModalNotti, getNotifications, setGetNotifications,
 			navigate(`/quotes/detail/${items.originId.quoteId}`);
 		} else if (items.verb === 'mention') {
 			navigate(`/detail-feed/${'mini-post'}/${items.originId.minipostId}`);
+		} else if (items.verb === 'likeQuote') {
+			navigate(`/quotes/detail/${items.originId.quoteId}`);
 		}
 		dispatch(backgroundToggle(true));
 		setModalNotti(false);
@@ -105,7 +108,6 @@ const ModalItem = ({ item, setModalNotti, getNotifications, setGetNotifications,
 
 	return (
 		<div
-			key={item.id}
 			className={
 				item.isRead || item.isAccept || item.isRefuse
 					? 'notificaiton__tabs__all__active'

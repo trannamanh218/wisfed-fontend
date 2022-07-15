@@ -79,6 +79,7 @@ const QuoteDetail = () => {
 					likeUnlikeQuoteFnc={likeUnlikeQuoteFnc}
 					setMentionUsersArr={setMentionUsersArr}
 					mentionUsersArr={mentionUsersArr}
+					userInfo={userInfo}
 				/>
 			}
 			right={<SidebarQuote listHashtags={listHashtags} inMyQuote={false} hasCountQuotes={false} />}
