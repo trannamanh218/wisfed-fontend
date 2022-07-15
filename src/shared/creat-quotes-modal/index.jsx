@@ -381,6 +381,7 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 							hasSearchIcon={true}
 						/>
 					</div>
+
 					<div className='creat-quotes-modal__body__option-item'>
 						<div className='creat-quotes-modal__body__option-item__title'>Từ khóa</div>
 						<div className='creat-quotes-modal__body__option-item__search-container'>
@@ -404,6 +405,7 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 								</div>
 							)}
 							<Input
+								className='input-keyword'
 								id='hashtag'
 								isBorder={false}
 								placeholder='Nhập hashtag'
