@@ -29,6 +29,8 @@ import AuthorBook from 'shared/author-book';
 import Storage from 'helpers/Storage';
 import { checkUserLogin } from 'reducers/redux-utils/auth';
 import ShareUsers from 'pages/home/components/newfeed/components/modal-share-users';
+import post from 'reducers/redux-utils/post';
+import { useNavigate } from 'react-router-dom';
 
 const urlRegex =
 	/https?:\/\/www(\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/g;
@@ -46,6 +48,7 @@ function Post({ postInformations, showModalCreatPost, inReviews = false }) {
 	const location = useLocation();
 
 	const dispatch = useDispatch();
+	const navigate = useNavigate();
 	const { bookId } = useParams();
 
 	useEffect(() => {
@@ -112,11 +115,10 @@ function Post({ postInformations, showModalCreatPost, inReviews = false }) {
 						mediaUrl: [],
 						replyId: replyId,
 					};
-
 					res = await dispatch(createCommentGroup(params)).unwrap();
 				} else {
 					const params = {
-						minipostId: postData.minipostId || postData.id,
+						minipostId: postData.minipostId || postData.groupPostId || postData.id,
 						content: content,
 						mediaUrl: [],
 						mentionsUser: newArr,
@@ -220,6 +222,7 @@ function Post({ postInformations, showModalCreatPost, inReviews = false }) {
 						data-testid='post__user-avatar'
 						className='post__user-status__avatar'
 						source={postData?.createdBy?.avatarImage || postData.user?.avatarImage}
+						handleClick={() => navigate(`/profile/${postData.createdBy.id}`)}
 					/>
 
 					<div className='post__user-status__name-and-post-time-status'>

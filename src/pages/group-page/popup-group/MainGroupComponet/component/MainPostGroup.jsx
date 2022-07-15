@@ -2,13 +2,14 @@ import CreatePost from 'pages/home/components/newfeed/components/creat-post';
 import Post from 'shared/post';
 import './mainPostGroup.scss';
 import { getListPost } from 'reducers/redux-utils/group';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { NotificationError } from 'helpers/Error';
 
 function MainPostGroup() {
 	const [listPost, setListPost] = useState([]);
+	const [isNewPost, setIsNewPost] = useState(false);
 	const dispatch = useDispatch();
 	const { id = '' } = useParams();
 
@@ -27,20 +28,22 @@ function MainPostGroup() {
 		}
 	};
 
+	const onChangeNewPost = () => {
+		setIsNewPost(!isNewPost);
+	};
+
 	useEffect(() => {
 		getDataListPost();
-	}, []);
+	}, [isNewPost]);
+
+	console.log(listPost);
 
 	return (
 		<div className='main-content__container'>
-			<CreatePost />
+			<CreatePost onChangeNewPost={onChangeNewPost} />
 			<div className='main-content__post'>
-				{listPost.map(item => {
-					return (
-						<>
-							<Post postInformations={item} className={''} />
-						</>
-					);
+				{listPost.map((item, index) => {
+					return <Post key={index} postInformations={item} />;
 				})}
 			</div>
 		</div>

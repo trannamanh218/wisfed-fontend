@@ -38,7 +38,7 @@ const PostActionBar = ({ postData, handleLikeAction }) => {
 				}}
 			>
 				<CommentSvg />
-				<div className='post-action-bar__title'>{postData.comment || null} Bình luận</div>
+				<div className='post-action-bar__title'>{postData.comment || postData.comments || null} Bình luận</div>
 			</div>
 			<div onClick={handleShare} className='post-action-bar__item'>
 				<Share />

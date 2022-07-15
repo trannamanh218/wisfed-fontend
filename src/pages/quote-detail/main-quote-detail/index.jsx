@@ -11,7 +11,14 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { QUOTE_TYPE } from 'constants';
 
-const MainQuoteDetail = ({ quoteData, onCreateComment, likeUnlikeQuoteFnc, setMentionUsersArr, mentionUsersArr }) => {
+const MainQuoteDetail = ({
+	userInfo,
+	quoteData,
+	onCreateComment,
+	likeUnlikeQuoteFnc,
+	setMentionUsersArr,
+	mentionUsersArr,
+}) => {
 	const [commentLv1IdArray, setCommentLv1IdArray] = useState([]);
 	const [replyingCommentId, setReplyingCommentId] = useState(0);
 	const [clickReply, setClickReply] = useState(false);
@@ -41,7 +48,7 @@ const MainQuoteDetail = ({ quoteData, onCreateComment, likeUnlikeQuoteFnc, setMe
 			setClickReply(false);
 		}, 200);
 	};
-
+	console.log(quoteData);
 	return (
 		<div className='main-quote-detail'>
 			<div className='main-quote-detail__header'>
@@ -128,6 +135,9 @@ MainQuoteDetail.propTypes = {
 	quoteData: PropTypes.object,
 	onCreateComment: PropTypes.func,
 	likeUnlikeQuoteFnc: PropTypes.func,
+	userInfo: PropTypes.object,
+	setMentionUsersArr: PropTypes.any,
+	mentionUsersArr: PropTypes.any,
 };
 
 export default MainQuoteDetail;

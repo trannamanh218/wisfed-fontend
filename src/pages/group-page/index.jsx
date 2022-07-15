@@ -14,6 +14,7 @@ const Group = () => {
 	const dispatch = useDispatch();
 	const { id = '' } = useParams();
 	const [tagGroup, setTagGroup] = useState([]);
+	const [inputSearch, setInputSearch] = useState('');
 	const list = [
 		{ name: '#Shadow', quantity: '30 bài viết' },
 		{ name: '#GaoRanger', quantity: '30 bài viết' },
@@ -44,10 +45,13 @@ const Group = () => {
 			setShow(!show);
 		}
 	};
+	const onChangeInputSearch = e => {
+		setInputSearch(e.target.value);
+	};
 	const SidebarGroup = () => (
 		<div className='group-sibar-right'>
 			<h2>Hashtag</h2>
-			<SearchField placeholder='Tìm kiếm hashtag' />
+			<SearchField placeholder='Tìm kiếm hashtag' value={inputSearch} handleChange={onChangeInputSearch} />
 			<div>
 				{tagGroup.map((item, index) => {
 					return (

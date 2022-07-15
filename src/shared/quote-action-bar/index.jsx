@@ -54,7 +54,7 @@ const QuoteActionBar = ({ data, isDetail, likeUnlikeQuoteFnc, isLiked, likeNumbe
 				{isDetail ? (
 					<div onClick={handleCheckLoginShare}>
 						<Share className='quote-icon' />
-						<span className='quote-action__name'>{data.share} Chia sẻ</span>
+						<span className='quote-action__name'>{data.countShare} Chia sẻ</span>
 					</div>
 				) : (
 					<Link to={`/quotes/detail/${data.id}`}>

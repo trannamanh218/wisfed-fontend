@@ -135,6 +135,7 @@ const NotificationModal = ({ setModalNotti, buttonModal, realTime }) => {
 										item =>
 											!item.isCheck && (
 												<ModalItem
+													key={item.id}
 													item={item}
 													setModalNotti={setModalNotti}
 													selectKey={selectKey}
@@ -150,6 +151,7 @@ const NotificationModal = ({ setModalNotti, buttonModal, realTime }) => {
 										item =>
 											!item.isCheck && (
 												<ModalItem
+													key={item.id}
 													item={item}
 													setModalNotti={setModalNotti}
 													selectKey={selectKey}
@@ -177,7 +179,11 @@ const NotificationModal = ({ setModalNotti, buttonModal, realTime }) => {
 												item =>
 													!item.isRead &&
 													!item.isCheck && (
-														<ModalItem item={item} setModalNotti={setModalNotti} />
+														<ModalItem
+															key={item.id}
+															item={item}
+															setModalNotti={setModalNotti}
+														/>
 													)
 											)}
 										<Link
@@ -203,6 +209,7 @@ const NotificationModal = ({ setModalNotti, buttonModal, realTime }) => {
 												item.verb === 'addFriend' &&
 												!item.isCheck && (
 													<ModalItem
+														key={item.id}
 														item={item}
 														setModalNotti={setModalNotti}
 														selectKey={selectKey}

@@ -5,7 +5,7 @@
 	width: 468px;
 	position: absolute;
 	top: 0;
-	left: 15%;
+	left: 250px;
 	z-index: 1;
 	padding: 20px;
 	.search__all__main__title {
@@ -32,5 +32,18 @@
 	.history__search {
 		text-align: center;
 		margin-top: 20px;
+	}
+
+	.search__all__header {
+		.search-field {
+			height: 63px;
+			width: 380px;
+			margin: -3px auto 3px auto;
+			background-color: #eff0f7;
+
+			.search-field__input::placeholder {
+				// content: 'bruh';
+			}
+		}
 	}
 }

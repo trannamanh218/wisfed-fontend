@@ -4,12 +4,14 @@ import PropTypes from 'prop-types';
 import './grid-image.scss';
 import classNames from 'classnames';
 import _ from 'lodash';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
 import Lightbox from 'react-image-lightbox';
 import 'react-image-lightbox/style.css';
 
 const GridImage = ({ images, inPost, postId }) => {
 	const [photoIndex, setPhotoIndex] = useState(0);
-	const [isOpent, setIsOpent] = useState(false);
+	const [isOpen, setIsOpen] = useState(false);
 
 	useEffect(() => {
 		if (!_.isEmpty(images)) {
@@ -78,7 +80,7 @@ const GridImage = ({ images, inPost, postId }) => {
 					{images.length < 6 ? (
 						<>
 							{images.map((image, index) => (
-								<button key={index} onClick={() => setIsOpent(true)}>
+								<button key={index} onClick={() => setIsOpen(true)}>
 									<div
 										key={index}
 										className={
@@ -93,12 +95,12 @@ const GridImage = ({ images, inPost, postId }) => {
 											<img src={URL.createObjectURL(image)} alt='image' />
 										)}
 									</div>
-									{isOpent && (
+									{isOpen && (
 										<Lightbox
 											mainSrc={images[photoIndex]}
 											nextSrc={images[(photoIndex + 1) % images.length]}
 											prevSrc={images[(photoIndex + images.length - 1) % images.length]}
-											onCloseRequest={() => setIsOpent(false)}
+											onCloseRequest={() => setIsOpen(false)}
 											onMovePrevRequest={() =>
 												setPhotoIndex((photoIndex + images.length - 1) % images.length)
 											}
@@ -115,7 +117,7 @@ const GridImage = ({ images, inPost, postId }) => {
 									{images.map((image, index) => {
 										if (index < 4) {
 											return (
-												<button onClick={() => setIsOpent(true)}>
+												<button onClick={() => setIsOpen(true)}>
 													<div
 														key={index}
 														className={
@@ -130,14 +132,14 @@ const GridImage = ({ images, inPost, postId }) => {
 															<img src={URL.createObjectURL(image)} alt='image' />
 														)}
 													</div>
-													{isOpent && (
+													{isOpen && (
 														<Lightbox
 															mainSrc={images[photoIndex]}
 															nextSrc={images[(photoIndex + 1) % images.length]}
 															prevSrc={
 																images[(photoIndex + images.length - 1) % images.length]
 															}
-															onCloseRequest={() => setIsOpent(false)}
+															onCloseRequest={() => setIsOpen(false)}
 															onMovePrevRequest={() =>
 																setPhotoIndex(
 																	(photoIndex + images.length - 1) % images.length
@@ -152,12 +154,12 @@ const GridImage = ({ images, inPost, postId }) => {
 											);
 										}
 										{
-											isOpent && (
+											isOpen && (
 												<Lightbox
 													mainSrc={images[photoIndex]}
 													nextSrc={images[(photoIndex + 1) % images.length]}
 													prevSrc={images[(photoIndex + images.length - 1) % images.length]}
-													onCloseRequest={() => setIsOpent(false)}
+													onCloseRequest={() => setIsOpen(false)}
 													onMovePrevRequest={() =>
 														setPhotoIndex({
 															photoIndex:
@@ -198,15 +200,12 @@ const GridImage = ({ images, inPost, postId }) => {
 		</>
 	);
 };
-
 GridImage.defaultProps = {
 	images: [],
 };
-
 GridImage.propTypes = {
 	images: PropTypes.array,
 	inPost: PropTypes.bool,
 	postId: PropTypes.string,
 };
-
 export default GridImage;

@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { BackArrow } from 'components/svg';
 import SearchField from 'shared/search-field';
@@ -6,6 +6,7 @@ import SelectBox from 'shared/select-box';
 import './PostWaiting.scss';
 
 function PostWatting({ handleChange }) {
+	const [inputSearch, setInputSearch] = useState('');
 	const ListTime = [
 		{ value: 'book', title: 'Sách' },
 		{ value: 'authors', title: 'Tác giả' },
@@ -31,7 +32,11 @@ function PostWatting({ handleChange }) {
 			<div className='post-wating__content'>
 				<div>
 					<div className='post-wating__action'>
-						<SearchField placeholder='Tìm kiếm' />
+						<SearchField
+							placeholder='Tìm kiếm'
+							value={inputSearch}
+							handleChange={e => setInputSearch(e.target.value)}
+						/>
 						<SelectBox
 							name='timePost'
 							list={ListTime}

@@ -63,12 +63,12 @@ const AuthorBook = props => {
 				>
 					<BookThumbnail
 						source={generateBookThumbnailSrc(data)}
-						handleClick={() => navigate(`/book/detail/${data.id}`)}
+						handleClick={() => navigate(`/book/detail/${data.bookId || data.id}`)}
 					/>
 					<div className='author-book__info'>
 						<Row>
 							<Col xs={10}>
-								<Link to={`/book/detail/${data.id}`}>
+								<Link to={`/book/detail/${data.bookId || data.id}`}>
 									<h4
 										className='author-book__title'
 										title={data.book?.name || data?.name || data.info?.name}

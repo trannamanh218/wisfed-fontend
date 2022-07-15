@@ -50,7 +50,7 @@ const ReviewBookInfo = ({ bookInfo }) => {
 };
 
 ReviewBookInfo.propTypes = {
-	bookInfo: PropTypes.func,
+	bookInfo: PropTypes.object,
 };
 
 export default ReviewBookInfo;
