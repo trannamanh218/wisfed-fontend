@@ -45,7 +45,7 @@ const MainQuoteDetail = ({
 		setReplyingCommentId(cmtLv1Id);
 		setClickReply(!clickReply);
 	};
-	console.log(quoteData);
+
 	return (
 		<div className='main-quote-detail'>
 			<div className='main-quote-detail__header'>

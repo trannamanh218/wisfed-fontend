@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { CircleCheckIcon, CoffeeCupIcon, TargetIcon } from 'components/svg';
+import { CircleCheckIcon, CoffeeCupIcon, TargetIcon, DropdownGroupWhite } from 'components/svg';
 import WrapIcon from 'components/wrap-icon';
 import { STATUS_BOOK } from 'constants';
 import _ from 'lodash';
@@ -194,6 +194,7 @@ const StatusButton = ({ className, bookData, inPostBook = false, hasBookStatus =
 					component={currentStatus ? STATUS_BOOK_OBJ[currentStatus].icon : STATUS_BOOK_OBJ.wantToRead.icon}
 				/>
 				<span>{currentStatus ? STATUS_BOOK_OBJ[currentStatus].name : STATUS_BOOK_OBJ.wantToRead.name}</span>
+				<DropdownGroupWhite />
 			</button>
 			{!_.isEmpty(userInfo) ? (
 				<Modal
