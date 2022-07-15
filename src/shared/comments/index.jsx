@@ -98,6 +98,7 @@ const Comment = ({ data, handleReply, postData, commentLv1Id, type }) => {
 							handleReply(commentLv1Id, {
 								userId: data.user.id,
 								userFullName: data.user.fullName || data.user.firstName + ' ' + data.user.lastName,
+								userAvatar: data.user.avatarImage,
 							})
 						}
 					>
@@ -122,7 +123,6 @@ Comment.propTypes = {
 	postData: PropTypes.object,
 	handleReply: PropTypes.func,
 	commentLv1Id: PropTypes.number,
-	postCommentsLikedArray: PropTypes.array,
 	inQuotes: PropTypes.bool,
 	type: PropTypes.string,
 };

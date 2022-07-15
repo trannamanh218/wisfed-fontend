@@ -1,7 +1,7 @@
 @import 'src/scss/abstracts/_global.scss';
 
 .creat-post-modal-content {
-	width: 700px;
+	width: 600px;
 	background-color: white;
 	border-radius: 16px;
 	position: relative;
@@ -195,6 +195,13 @@
 	padding-right: 6px;
 	&.height-higher {
 		height: 250px !important;
+	}
+	.rich-text-editor {
+		margin-bottom: 16px;
+		a {
+			cursor: text;
+			color: $blue;
+		}
 	}
 }
 
@@ -777,9 +784,6 @@
 	}
 }
 
-.url-color {
-	color: #0576f0;
-}
 .post__title__share__rank {
 	.number__title__rank {
 		color: #eaac30;

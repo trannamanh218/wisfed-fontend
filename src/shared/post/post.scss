@@ -134,18 +134,22 @@
 	margin-bottom: 20px;
 	word-break: break-word;
 	.url-color {
-		max-width: 500px;
-		display: block;
-		width: fit-content;
-		text-overflow: ellipsis;
-		white-space: nowrap;
-		cursor: pointer;
-		overflow: hidden;
-		&:hover {
-			text-decoration: underline;
+		a {
+			max-width: 600px;
+			display: block;
+			width: fit-content;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+			cursor: pointer;
+			overflow: hidden;
+			color: $blue;
+			&:hover {
+				text-decoration: underline;
+			}
 		}
 	}
 }
+
 .post__options {
 	display: flex;
 	align-items: center;

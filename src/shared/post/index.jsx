@@ -30,6 +30,9 @@ import Storage from 'helpers/Storage';
 import { checkUserLogin } from 'reducers/redux-utils/auth';
 import ShareUsers from 'pages/home/components/newfeed/components/modal-share-users';
 
+const urlRegex =
+	/https?:\/\/www(\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/g;
+
 function Post({ postInformations, showModalCreatPost, inReviews = false }) {
 	const [postData, setPostData] = useState({});
 	const [videoId, setVideoId] = useState('');
@@ -37,6 +40,8 @@ function Post({ postInformations, showModalCreatPost, inReviews = false }) {
 	const [commentLv1IdArray, setCommentLv1IdArray] = useState([]);
 	const [replyingCommentId, setReplyingCommentId] = useState(null);
 	const [clickReply, setClickReply] = useState(false);
+	const [mentionUsersArr, setMentionUsersArr] = useState([]);
+
 	const { isSharePosts } = useSelector(state => state.post);
 	const location = useLocation();
 
@@ -73,18 +78,20 @@ function Post({ postInformations, showModalCreatPost, inReviews = false }) {
 		}
 	}, [postData.usersComments]);
 
-	useEffect(() => {
-		const urlAddedArray = document.querySelectorAll('.url-color');
-		if (urlAddedArray.length > 0) {
-			for (let i = 0; i < urlAddedArray.length; i++) {
-				urlAddedArray[i].addEventListener('click', () => {
-					directUrl(urlAddedArray[i].innerText);
-				});
-			}
-		}
-	}, [postData]);
+	// useEffect(() => {
+	// 	const urlAddedArray = document.querySelectorAll('.url-color');
+	// 	if (urlAddedArray.length > 0) {
+	// 		for (let i = 0; i < urlAddedArray.length; i++) {
+	// 			urlAddedArray[i].addEventListener('click', () => {
+	// 				directUrl(urlAddedArray[i].innerText);
+	// 			});
+	// 		}
+	// 	}
+	// }, [postData]);
 
 	const onCreateComment = async (content, replyId) => {
+		const newArr = [];
+		mentionUsersArr.forEach(item => newArr.push(item.userId));
 		try {
 			let res = {};
 			if (bookId) {
@@ -93,7 +100,7 @@ function Post({ postInformations, showModalCreatPost, inReviews = false }) {
 					replyId: replyId,
 					content: content,
 					mediaUrl: [],
-					mentionsUser: [],
+					mentionsUser: newArr,
 				};
 				res = await dispatch(createCommentReview(commentReviewData)).unwrap();
 			} else {
@@ -101,7 +108,7 @@ function Post({ postInformations, showModalCreatPost, inReviews = false }) {
 					const params = {
 						groupPostId: postData.minipostId || postData.id,
 						content: content,
-						mentionsUser: [],
+						mentionsUser: newArr,
 						mediaUrl: [],
 						replyId: replyId,
 					};
@@ -112,7 +119,7 @@ function Post({ postInformations, showModalCreatPost, inReviews = false }) {
 						minipostId: postData.minipostId || postData.id,
 						content: content,
 						mediaUrl: [],
-						mentionsUser: [],
+						mentionsUser: newArr,
 						replyId: replyId,
 					};
 					res = await dispatch(createComment(params)).unwrap();
@@ -162,9 +169,15 @@ function Post({ postInformations, showModalCreatPost, inReviews = false }) {
 		}
 	}, [replyingCommentId, clickReply]);
 
-	const handleReply = cmtLv1Id => {
+	const handleReply = (cmtLv1Id, userData) => {
+		const arr = [];
+		arr.push(userData);
+		setMentionUsersArr(arr);
 		setReplyingCommentId(cmtLv1Id);
-		setClickReply(!clickReply);
+		setClickReply(true);
+		setTimeout(() => {
+			setClickReply(false);
+		}, 200);
 	};
 
 	const withFriends = paramInfo => {
@@ -260,12 +273,14 @@ function Post({ postInformations, showModalCreatPost, inReviews = false }) {
 						</div>
 					</div>
 				</div>
-				<div
-					className='post__description'
-					dangerouslySetInnerHTML={{
-						__html: postData.message || postData.content,
-					}}
-				></div>
+				{(postData.message || postData.content) && (
+					<div
+						className='post__description'
+						dangerouslySetInnerHTML={{
+							__html: createSpanElements(postData.message || postData.content),
+						}}
+					></div>
+				)}
 			</>
 		);
 	};
@@ -294,6 +309,24 @@ function Post({ postInformations, showModalCreatPost, inReviews = false }) {
 				default:
 					break;
 			}
+		}
+	};
+
+	const createSpanElements = data => {
+		if (data.match(urlRegex)) {
+			const subStringArray = data.split(' ');
+			for (let i = 0; i < subStringArray.length; i++) {
+				if (subStringArray[i].match(urlRegex)) {
+					subStringArray[
+						i
+					] = `<span class="url-color"><a href=${subStringArray[i]} target="_blank">${subStringArray[i]}</a></span>`;
+				} else {
+					subStringArray[i] = `<span>${subStringArray[i]}</span>`;
+				}
+			}
+			return subStringArray.join(' ');
+		} else {
+			return data;
 		}
 	};
 
@@ -400,54 +433,56 @@ function Post({ postInformations, showModalCreatPost, inReviews = false }) {
 			{!isSharePosts && (
 				<>
 					<PostActionBar postData={postData} handleLikeAction={handleLikeAction} />
-					{postData.usersComments?.map(comment => (
-						<div key={comment.id}>
-							{comment.replyId === null && (
-								<Comment
-									commentLv1Id={comment.id}
-									data={comment}
-									postData={postData}
-									handleReply={handleReply}
-									postCommentsLikedArray={[]}
-									type={inReviews ? REVIEW_TYPE : POST_TYPE}
-								/>
-							)}
-							<div className='comment-reply-container'>
-								{postData.usersComments.map(commentChild => {
-									if (commentChild.replyId === comment.id) {
-										return (
-											<div key={commentChild.id}>
-												<Comment
-													commentLv1Id={comment.id}
-													data={commentChild}
-													postData={postData}
-													handleReply={handleReply}
-													postCommentsLikedArray={[]}
-													type={inReviews ? REVIEW_TYPE : POST_TYPE}
-												/>
-											</div>
-										);
-									}
-								})}
-								{commentLv1IdArray.includes(comment.id) && (
-									<CommentEditor
-										userInfo={userInfo}
-										onCreateComment={onCreateComment}
-										className={classNames('reply-comment-editor', {
-											'show': comment.id === replyingCommentId,
-										})}
-										replyId={replyingCommentId}
-										textareaId={`textarea-${comment.id}`}
+					{postData.usersComments?.map(comment => {
+						if (comment.replyId === null) {
+							return (
+								<div key={comment.id}>
+									<Comment
+										commentLv1Id={comment.id}
+										data={comment}
+										postData={postData}
+										handleReply={handleReply}
+										type={inReviews ? REVIEW_TYPE : POST_TYPE}
 									/>
-								)}
-							</div>
-						</div>
-					))}
+
+									<div className='comment-reply-container'>
+										{postData.usersComments.map(commentChild => {
+											if (commentChild.replyId === comment.id) {
+												return (
+													<div key={commentChild.id}>
+														<Comment
+															commentLv1Id={comment.id}
+															data={commentChild}
+															postData={postData}
+															handleReply={handleReply}
+															type={inReviews ? REVIEW_TYPE : POST_TYPE}
+														/>
+													</div>
+												);
+											}
+										})}
+										{commentLv1IdArray.includes(comment.id) && (
+											<CommentEditor
+												onCreateComment={onCreateComment}
+												className={classNames('reply-comment-editor', {
+													'show': comment.id === replyingCommentId,
+												})}
+												mentionUsersArr={mentionUsersArr}
+												replyingCommentId={replyingCommentId}
+												clickReply={clickReply}
+												setMentionUsersArr={setMentionUsersArr}
+											/>
+										)}
+									</div>
+								</div>
+							);
+						}
+					})}
 					<CommentEditor
-						userInfo={userInfo}
+						replyingCommentId={null}
 						onCreateComment={onCreateComment}
-						reply={null}
-						indexParent={null}
+						mentionUsersArr={mentionUsersArr}
+						setMentionUsersArr={setMentionUsersArr}
 					/>
 				</>
 			)}
