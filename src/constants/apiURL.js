@@ -141,6 +141,7 @@ export const leaveGroup = id => `/api/v1/groups/leaveGroup/${id}`;
 export const createPostGroup = id => `/api/v1/groups/${id}/createPost`;
 export const listPostGroup = id => `/api/v1/groups/${id}/groupFeed`;
 export const searchGroup = id => `/api/v1/groups/search/${id}`;
+export const updateBackground = id => `/api/v1/groups/${id}`;
 
 // search
 export const getSearchAPI = `/api/v1/searchs`;

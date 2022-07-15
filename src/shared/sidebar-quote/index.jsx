@@ -46,9 +46,7 @@ const SidebarQuote = ({ listHashtags, inMyQuote, hasCountQuotes }) => {
 		setCategorySearchedList(newArray);
 	};
 
-	const filterQuotesByCategory = categoryId => {
-		console.log(categoryId);
-	};
+	const filterQuotesByCategory = categoryId => {};
 
 	return (
 		<div className='sidebar-quote'>

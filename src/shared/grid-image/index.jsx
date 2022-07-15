@@ -73,7 +73,7 @@ const GridImage = ({ images, inPost, postId }) => {
 			}
 		}
 	}, [images]);
-	console.log(photoIndex);
+
 	return (
 		<>
 			{!_.isEmpty(images) && (

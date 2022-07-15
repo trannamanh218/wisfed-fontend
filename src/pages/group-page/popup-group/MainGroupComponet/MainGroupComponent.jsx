@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import SearchField from 'shared/search-field';
-// import classNames from 'classnames';
 import Tabs from 'react-bootstrap/Tabs';
 import Tab from 'react-bootstrap/Tab';
 import IntroGroup from './component/introGroup';
@@ -14,7 +13,7 @@ import ManageJoin from './AminSettings/ManageJoin';
 import PropTypes from 'prop-types';
 import PostWatting from './AminSettings/PostWatting';
 import PopupInviteFriend from '../popupInviteFriend';
-import { getEnjoyGroup, getFillterGroup, leaveGroupUser } from 'reducers/redux-utils/group';
+import { getEnjoyGroup, getupdateBackground, getFillterGroup, leaveGroupUser } from 'reducers/redux-utils/group';
 import { NotificationError } from 'helpers/Error';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
@@ -25,8 +24,12 @@ import { useParams } from 'react-router-dom';
 import SearchLayout from './component/SearchLayout';
 import { useVisible } from 'shared/hooks';
 import defaultAvatar from 'assets/images/Rectangle 17435.png';
+import Dropzone from 'react-dropzone';
+import { useDropzone } from 'react-dropzone';
+import { uploadImage } from 'reducers/redux-utils/common';
+import camera from 'assets/images/camera.png';
 
-function MainGroupComponent({ handleChange, keyChange, data, member }) {
+function MainGroupComponent({ handleChange, keyChange, data, member, handleUpdate }) {
 	const [key, setKey] = useState('intro');
 	const { groupType, description, memberGroups, name } = data;
 	const dispatch = useDispatch();
@@ -40,6 +43,8 @@ function MainGroupComponent({ handleChange, keyChange, data, member }) {
 	const { id = '' } = useParams();
 	const keyRedux = useSelector(state => state.group.key);
 	const { ref: showRef, isVisible: isShow, setIsVisible: setIsShow } = useVisible(false);
+	const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
+	const [imgUrl, setImgUrl] = useState('');
 
 	const enjoyGroup = async () => {
 		setIsFetching(true);
@@ -112,6 +117,36 @@ function MainGroupComponent({ handleChange, keyChange, data, member }) {
 	}, [filter]);
 
 	useEffect(() => {
+		uploadImageFile();
+	}, [acceptedFiles]);
+
+	const uploadImageFile = async () => {
+		const imageUploadedData = await dispatch(uploadImage(acceptedFiles)).unwrap();
+		setImgUrl(imageUploadedData?.streamPath);
+	};
+
+	const handleUpload = async () => {
+		try {
+			const params = {
+				id: id,
+				param: {
+					avatar: imgUrl,
+				},
+			};
+			dispatch(getupdateBackground(params));
+			handleUpdate();
+		} catch (error) {
+			NotificationError(error);
+		}
+	};
+
+	console.log(handleUpdate);
+
+	useEffect(() => {
+		handleUpload();
+	}, [imgUrl]);
+
+	useEffect(() => {
 		const checkItem = data?.memberGroups?.filter(item => item?.user?.id === userInfo?.id);
 		if (checkItem?.length > 0) {
 			setShow(true);
@@ -136,12 +171,23 @@ function MainGroupComponent({ handleChange, keyChange, data, member }) {
 		<div className='group-main-component__container'>
 			<Circle loading={isFetching} />
 			<div className='group__background'>
-				<div>
+				<div style={{ position: 'relative' }}>
 					<img
 						src={data.avatar ? data.avatar : defaultAvatar}
 						onError={e => e.target.setAttribute('src', defaultAvatar)}
 						alt=''
 					/>
+					<Dropzone>
+						{() => (
+							<div {...getRootProps()}>
+								<input {...getInputProps()} />
+								<div className='dropzone upload-image'>
+									<img src={camera} alt='camera' />
+									<span style={{ marginRight: '3px' }}>Chỉnh sửa ảnh bìa</span>
+								</div>
+							</div>
+						)}
+					</Dropzone>
 				</div>
 				<div className='group__title-name'>
 					<span>
