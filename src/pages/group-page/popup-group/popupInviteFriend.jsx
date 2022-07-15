@@ -31,8 +31,7 @@ const PopupInviteFriend = ({ handleClose, showRef }) => {
 	};
 
 	const inViteFriend = async () => {
-		const listId = listFriendSelect?.map(item => item?.userIdTwo);
-
+		const listId = listFriendSelect?.map(item => item.id);
 		const params = {
 			id: id,
 			userIds: listId,
@@ -81,9 +80,9 @@ const PopupInviteFriend = ({ handleClose, showRef }) => {
 					{listFriend?.map(item => {
 						return (
 							<>
-								<div className='friend-item' key={item?.userTwo?.id}>
+								<div className='friend-item' key={item.id}>
 									<img
-										src={item?.userTwo?.avatarImage}
+										src={item.avatarImage}
 										alt=''
 										onError={e =>
 											e.target.setAttribute(
@@ -92,12 +91,8 @@ const PopupInviteFriend = ({ handleClose, showRef }) => {
 											)
 										}
 									/>
-									<label htmlFor='1'>{item?.userTwo?.fullName}</label>
-									<input
-										type='checkbox'
-										id={item?.userTwo.id}
-										onClick={() => handleSelectFriend(item)}
-									/>
+									<label htmlFor='1'>{item.fullName}</label>
+									<input type='checkbox' id={item.id} onClick={() => handleSelectFriend(item)} />
 								</div>
 							</>
 						);
@@ -110,7 +105,7 @@ const PopupInviteFriend = ({ handleClose, showRef }) => {
 							<>
 								<div className='friend-item'>
 									<img
-										src={item?.userTwo?.avatarImage}
+										src={item.avatarImage}
 										alt=''
 										onError={e =>
 											e.target.setAttribute(
@@ -119,7 +114,7 @@ const PopupInviteFriend = ({ handleClose, showRef }) => {
 											)
 										}
 									/>
-									<span>{item?.userTwo?.fullName}</span>
+									<span>{item.fullName}</span>
 									<button>
 										<CloseX onClick={() => handleRemoveFriend(item)} />
 									</button>
