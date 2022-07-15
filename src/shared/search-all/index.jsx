@@ -21,7 +21,7 @@ const SearchAllModal = ({ showRef, setIsShow }) => {
 
 	const updateInputSearch = value => {
 		if (value) {
-			dispatch(handleSaveValueInput(value));
+			// dispatch(handleSaveValueInput(value));
 			const filterValue = value.toLowerCase().trim();
 			setFilter(JSON.stringify(filterValue));
 		} else {
@@ -44,10 +44,11 @@ const SearchAllModal = ({ showRef, setIsShow }) => {
 	}, [filter]);
 
 	const debounceSearch = useCallback(_.debounce(updateInputSearch, 100), []);
+
 	const handleSearch = e => {
-		setValueInputSearch(e.target.value);
 		debounceSearch(e.target.value);
 		setValueInput(e.target.value);
+		setValueInputSearch(e.target.value);
 	};
 
 	const handleKeyDown = e => {

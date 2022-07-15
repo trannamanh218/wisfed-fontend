@@ -61,7 +61,7 @@ const Friends = () => {
 	const handleSearch = e => {
 		setInputSearch(e.target.value);
 		if (e.target.value === '') {
-			debounceSearch(inputSearch);
+			debounceSearch('');
 		}
 	};
 

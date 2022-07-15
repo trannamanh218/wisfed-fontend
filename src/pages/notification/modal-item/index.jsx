@@ -64,7 +64,7 @@ const ModalItem = ({ item, setModalNotti, getNotifications, setGetNotifications,
 			await dispatch(CancelFriendRequest(params)).unwrap();
 			await dispatch(readNotification({ notificationId: items.id })).unwrap();
 		} catch (err) {
-			NotificationError(err);
+			// NotificationError(err);
 		}
 	};
 
@@ -115,7 +115,7 @@ const ModalItem = ({ item, setModalNotti, getNotifications, setGetNotifications,
 			}
 		>
 			<div onClick={() => hanleActiveIsReed(item)} className='notificaiton__all__layout'>
-				<UserAvatar size='mm' source={item.createdBy?.avatarImage} />
+				<UserAvatar size='mm' source={item.createdBy?.avatarImage || userInfo.avatarImage} />
 				<div className='notificaiton__all__layout__status'>
 					<div className='notificaiton__all__infor'>
 						<p dangerouslySetInnerHTML={{ __html: item?.message }}></p>
