@@ -84,7 +84,7 @@ CommentEditor.defaultProps = {
 	className: '',
 	replyingCommentId: null,
 	mentionUsersArr: [],
-	clickReply: () => {},
+	clickReply: false,
 	setMentionUsersArr: () => {},
 };
 
@@ -93,7 +93,7 @@ CommentEditor.propTypes = {
 	className: PropTypes.string,
 	replyingCommentId: PropTypes.number,
 	mentionUsersArr: PropTypes.array,
-	clickReply: PropTypes.func,
+	clickReply: PropTypes.bool,
 	setMentionUsersArr: PropTypes.func,
 };
 

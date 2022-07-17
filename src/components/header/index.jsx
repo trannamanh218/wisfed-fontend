@@ -178,13 +178,7 @@ const Header = () => {
 					dispatch(updateIsNewNotificationUserInfo(dataNewNoti));
 				}
 			};
-			const successCallback = () => {
-				// console.log('now listening to changes in realtime');
-			};
-			const failCallback = data => {
-				// console.log('something went wrong, check the console logs');
-			};
-			notificationFeed.subscribe(callback).then(successCallback, failCallback);
+			notificationFeed.subscribe(callback);
 		}
 	}, [userInfoJwt]);
 

@@ -10,6 +10,7 @@ import createMentionPlugin, { defaultSuggestionsFilter } from '@draft-js-plugins
 import '@draft-js-plugins/mention/lib/plugin.css';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
+import { stateToHTML } from 'draft-js-export-html';
 
 const mentions = [
 	{
@@ -102,12 +103,37 @@ function RichTextEditor({
 	useEffect(() => {
 		const blocks = convertToRaw(editorState.getCurrentContent()).blocks;
 		const textValue = blocks.map(block => (!block.text.trim() && '\n') || block.text).join('\n');
-		setContent(textValue);
 		const urlDetected = extractLinks(textValue);
 		if (urlDetected && urlDetected.length) {
 			detectUrl(urlDetected);
 		}
+		const html = convertContentToHTML();
+		setContent(html);
 	}, [editorState]);
+
+	const convertContentToHTML = () => {
+		const contentState = editorState.getCurrentContent();
+		const options = {
+			entityStyleFn: entity => {
+				const entityType = entity.get('type').toLowerCase();
+				if (entityType === 'mention') {
+					const data = entity.getData();
+					return {
+						element: 'a',
+						attributes: {
+							class: 'mention-class',
+							href: data.mention.link,
+						},
+						style: {
+							color: '#222',
+							fontWeight: 700,
+						},
+					};
+				}
+			},
+		};
+		return stateToHTML(contentState, options);
+	};
 
 	const onChange = data => {
 		setEditorState(data);
@@ -172,7 +198,7 @@ function RichTextEditor({
 						'data': {
 							'mention': {
 								'name': `${mentionUsersArr[0].userFullName}`,
-								'link': ``,
+								'link': `${mentionUsersArr[0].linkProfile}`,
 								'avatar': `${mentionUsersArr[0].userAvatar}`,
 							},
 						},
@@ -219,7 +245,7 @@ RichTextEditor.defaultProps = {
 	handleKeyBind: () => {},
 	handleKeyPress: () => {},
 	className: '',
-	clickReply: () => {},
+	clickReply: false,
 	createCmt: false,
 	mentionUsersArr: [],
 	setMentionUsersArr: () => {},
@@ -234,7 +260,7 @@ RichTextEditor.propTypes = {
 	handleKeyBind: PropTypes.func,
 	handleKeyPress: PropTypes.func,
 	className: PropTypes.string,
-	clickReply: PropTypes.func,
+	clickReply: PropTypes.bool,
 	createCmt: PropTypes.bool,
 	mentionUsersArr: PropTypes.array,
 	setMentionUsersArr: PropTypes.func,

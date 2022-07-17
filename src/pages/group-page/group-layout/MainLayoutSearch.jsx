@@ -58,8 +58,6 @@ const MainLayoutSearch = ({ valueGroupSearch }) => {
 		setValue(valueGroupSearch);
 	}, [valueGroupSearch]);
 
-	console.log(list);
-
 	useEffect(() => {
 		getSearchFirst();
 	}, [value]);

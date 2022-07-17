@@ -36,8 +36,6 @@ function MainPostGroup() {
 		getDataListPost();
 	}, [isNewPost]);
 
-	console.log(listPost);
-
 	return (
 		<div className='main-content__container'>
 			<CreatePost onChangeNewPost={onChangeNewPost} />

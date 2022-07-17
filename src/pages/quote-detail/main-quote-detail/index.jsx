@@ -48,7 +48,7 @@ const MainQuoteDetail = ({
 			setClickReply(false);
 		}, 200);
 	};
-	console.log(quoteData);
+
 	return (
 		<div className='main-quote-detail'>
 			<div className='main-quote-detail__header'>

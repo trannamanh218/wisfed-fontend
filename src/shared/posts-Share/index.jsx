@@ -15,12 +15,17 @@ import { Link } from 'react-router-dom';
 import Play from 'assets/images/play.png';
 import { useSelector } from 'react-redux';
 
+const urlRegex =
+	/https?:\/\/www(\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/g;
+
 const PostsShare = ({ postData }) => {
 	const [videoId, setVideoId] = useState('');
-	const directUrl = url => {
-		window.open(url, '_blank');
-	};
+
 	const { isSharePosts, isShare } = useSelector(state => state.post);
+
+	const directUrl = url => {
+		window.open(url);
+	};
 
 	useEffect(() => {
 		if (
@@ -35,16 +40,18 @@ const PostsShare = ({ postData }) => {
 		}
 	}, [postData]);
 
-	useEffect(() => {
-		const urlAddedArray = document.querySelectorAll('.url-color');
-		if (urlAddedArray.length > 0) {
-			for (let i = 0; i < urlAddedArray.length; i++) {
-				urlAddedArray[i].addEventListener('click', () => {
-					directUrl(urlAddedArray[i].innerText);
-				});
-			}
+	const generateContent = content => {
+		if (content.match(urlRegex)) {
+			const newContent = content.replace(urlRegex, data => {
+				return `<a class="url-class" href=${data} target="_blank">${
+					data.length <= 50 ? data : data.slice(0, 50) + '...'
+				}</a>`;
+			});
+			return newContent;
+		} else {
+			return content;
 		}
-	}, [postData]);
+	};
 
 	return (
 		<div
@@ -57,7 +64,6 @@ const PostsShare = ({ postData }) => {
 					'post__custom': isSharePosts,
 				})}
 			>
-				{/* <Link to={`/profile/${postData.sharePost?.createdBy.id || postData.createdBy?.id}`}> */}
 				<div className='post__user-status'>
 					<UserAvatar
 						data-testid='post__user-avatar'
@@ -112,12 +118,11 @@ const PostsShare = ({ postData }) => {
 						</div>
 					</div>
 				</div>
-				{/* </Link> */}
 
 				<div
 					className='post__description'
 					dangerouslySetInnerHTML={{
-						__html: postData.sharePost?.message || postData.sharePost?.content,
+						__html: generateContent(postData.sharePost?.message || postData.sharePost?.content),
 					}}
 				></div>
 				<ul className='tagged'>

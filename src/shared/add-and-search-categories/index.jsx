@@ -37,7 +37,6 @@ function AddAndSearchCategories({
 			};
 		}
 	}, []);
-	console.log(categorySearchedList);
 
 	return (
 		<div className='add-and-search-categories'>

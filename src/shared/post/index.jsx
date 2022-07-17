@@ -16,7 +16,7 @@ import './post.scss';
 import PreviewLink from 'shared/preview-link/PreviewLink';
 import { NotificationError } from 'helpers/Error';
 import ReactRating from 'shared/react-rating';
-import { useParams, useLocation, Link } from 'react-router-dom';
+import { useParams, useLocation, Link, useNavigate } from 'react-router-dom';
 import { createCommentReview } from 'reducers/redux-utils/book';
 import Comment from 'shared/comments';
 import PostQuotes from 'shared/post-quotes';
@@ -29,8 +29,6 @@ import AuthorBook from 'shared/author-book';
 import Storage from 'helpers/Storage';
 import { checkUserLogin } from 'reducers/redux-utils/auth';
 import ShareUsers from 'pages/home/components/newfeed/components/modal-share-users';
-import post from 'reducers/redux-utils/post';
-import { useNavigate } from 'react-router-dom';
 
 const urlRegex =
 	/https?:\/\/www(\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/g;
@@ -39,7 +37,6 @@ function Post({ postInformations, showModalCreatPost, inReviews = false }) {
 	const [postData, setPostData] = useState({});
 	const [videoId, setVideoId] = useState('');
 	const { userInfo } = useSelector(state => state.auth);
-	const [commentLv1IdArray, setCommentLv1IdArray] = useState([]);
 	const [replyingCommentId, setReplyingCommentId] = useState(null);
 	const [clickReply, setClickReply] = useState(false);
 	const [mentionUsersArr, setMentionUsersArr] = useState([]);
@@ -65,32 +62,6 @@ function Post({ postInformations, showModalCreatPost, inReviews = false }) {
 	const directUrl = url => {
 		window.open(url);
 	};
-
-	useEffect(() => {
-		if (postData.usersComments?.length > 0) {
-			const commentLv1IdTemp = [];
-			for (let i = 0; i < postData.usersComments.length; i++) {
-				if (
-					postData.usersComments[i].replyId === null &&
-					!commentLv1IdTemp.includes(postData.usersComments[i].id)
-				) {
-					commentLv1IdTemp.push(postData.usersComments[i].id);
-				}
-			}
-			setCommentLv1IdArray(commentLv1IdTemp);
-		}
-	}, [postData.usersComments]);
-
-	// useEffect(() => {
-	// 	const urlAddedArray = document.querySelectorAll('.url-color');
-	// 	if (urlAddedArray.length > 0) {
-	// 		for (let i = 0; i < urlAddedArray.length; i++) {
-	// 			urlAddedArray[i].addEventListener('click', () => {
-	// 				directUrl(urlAddedArray[i].innerText);
-	// 			});
-	// 		}
-	// 	}
-	// }, [postData]);
 
 	const onCreateComment = async (content, replyId) => {
 		const newArr = [];
@@ -129,7 +100,21 @@ function Post({ postInformations, showModalCreatPost, inReviews = false }) {
 			}
 			if (!_.isEmpty(res)) {
 				const newComment = { ...res, user: userInfo };
-				const usersComments = [...postData.usersComments, newComment];
+				let usersComments = [];
+				if (replyId) {
+					const cmtReplying = [...postData.usersComments.rows].filter(item => item.id === replyId);
+					const reply = [...cmtReplying[0].reply];
+					reply.push(newComment);
+					const obj = { ...cmtReplying[0], reply };
+					const rows = [...postData.usersComments.rows];
+					const index = rows.findIndex(item => item.id === replyId);
+					rows[index] = obj;
+					usersComments = { ...postData.usersComments, rows };
+				} else {
+					const rows = [...postData.usersComments.rows];
+					rows.splice(0, 0, newComment);
+					usersComments = { ...postData.usersComments, rows };
+				}
 				const newPostData = { ...postData, usersComments, comment: postData.comment + 1 }; // Tự động cập nhật đếm comment
 				setPostData(newPostData);
 			}
@@ -159,17 +144,6 @@ function Post({ postInformations, showModalCreatPost, inReviews = false }) {
 			}
 		}
 	};
-
-	useEffect(() => {
-		const textareaInCommentEdit = document.querySelector(`#textarea-${replyingCommentId}`);
-		if (textareaInCommentEdit) {
-			textareaInCommentEdit.focus();
-			window.scroll({
-				top: textareaInCommentEdit.offsetTop - 400,
-				behavior: 'smooth',
-			});
-		}
-	}, [replyingCommentId, clickReply]);
 
 	const handleReply = (cmtLv1Id, userData) => {
 		const arr = [];
@@ -280,7 +254,7 @@ function Post({ postInformations, showModalCreatPost, inReviews = false }) {
 					<div
 						className='post__description'
 						dangerouslySetInnerHTML={{
-							__html: createSpanElements(postData.message || postData.content),
+							__html: generateContent(postData.message || postData.content),
 						}}
 					></div>
 				)}
@@ -315,21 +289,16 @@ function Post({ postInformations, showModalCreatPost, inReviews = false }) {
 		}
 	};
 
-	const createSpanElements = data => {
-		if (data.match(urlRegex)) {
-			const subStringArray = data.split(' ');
-			for (let i = 0; i < subStringArray.length; i++) {
-				if (subStringArray[i].match(urlRegex)) {
-					subStringArray[
-						i
-					] = `<span class="url-color"><a href=${subStringArray[i]} target="_blank">${subStringArray[i]}</a></span>`;
-				} else {
-					subStringArray[i] = `<span>${subStringArray[i]}</span>`;
-				}
-			}
-			return subStringArray.join(' ');
+	const generateContent = content => {
+		if (content.match(urlRegex)) {
+			const newContent = content.replace(urlRegex, data => {
+				return `<a class="url-class" href=${data} target="_blank">${
+					data.length <= 50 ? data : data.slice(0, 50) + '...'
+				}</a>`;
+			});
+			return newContent;
 		} else {
-			return data;
+			return content;
 		}
 	};
 
@@ -436,9 +405,9 @@ function Post({ postInformations, showModalCreatPost, inReviews = false }) {
 			{!isSharePosts && (
 				<>
 					<PostActionBar postData={postData} handleLikeAction={handleLikeAction} />
-					{postData.usersComments?.map(comment => {
-						if (comment.replyId === null) {
-							return (
+					{postData.usersComments?.rows && !!postData.usersComments?.rows.length && (
+						<>
+							{postData.usersComments.rows.map(comment => (
 								<div key={comment.id}>
 									<Comment
 										commentLv1Id={comment.id}
@@ -447,11 +416,10 @@ function Post({ postInformations, showModalCreatPost, inReviews = false }) {
 										handleReply={handleReply}
 										type={inReviews ? REVIEW_TYPE : POST_TYPE}
 									/>
-
 									<div className='comment-reply-container'>
-										{postData.usersComments.map(commentChild => {
-											if (commentChild.replyId === comment.id) {
-												return (
+										{comment.reply && !!comment.reply.length && (
+											<>
+												{comment.reply.map(commentChild => (
 													<div key={commentChild.id}>
 														<Comment
 															commentLv1Id={comment.id}
@@ -461,26 +429,24 @@ function Post({ postInformations, showModalCreatPost, inReviews = false }) {
 															type={inReviews ? REVIEW_TYPE : POST_TYPE}
 														/>
 													</div>
-												);
-											}
-										})}
-										{commentLv1IdArray.includes(comment.id) && (
-											<CommentEditor
-												onCreateComment={onCreateComment}
-												className={classNames('reply-comment-editor', {
-													'show': comment.id === replyingCommentId,
-												})}
-												mentionUsersArr={mentionUsersArr}
-												replyingCommentId={replyingCommentId}
-												clickReply={clickReply}
-												setMentionUsersArr={setMentionUsersArr}
-											/>
+												))}
+											</>
 										)}
+										<CommentEditor
+											onCreateComment={onCreateComment}
+											className={classNames('reply-comment-editor', {
+												'show': comment.id === replyingCommentId,
+											})}
+											mentionUsersArr={mentionUsersArr}
+											replyingCommentId={replyingCommentId}
+											clickReply={clickReply}
+											setMentionUsersArr={setMentionUsersArr}
+										/>
 									</div>
 								</div>
-							);
-						}
-					})}
+							))}
+						</>
+					)}
 					<CommentEditor
 						replyingCommentId={null}
 						onCreateComment={onCreateComment}

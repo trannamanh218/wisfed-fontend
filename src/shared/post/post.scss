@@ -133,19 +133,13 @@
 	color: #4e4b66;
 	margin-bottom: 20px;
 	word-break: break-word;
-	.url-color {
-		a {
-			max-width: 600px;
-			display: block;
-			width: fit-content;
-			text-overflow: ellipsis;
-			white-space: nowrap;
-			cursor: pointer;
-			overflow: hidden;
+	a {
+		width: fit-content;
+		overflow: hidden;
+		color: $blue;
+		&:hover {
+			text-decoration: underline;
 			color: $blue;
-			&:hover {
-				text-decoration: underline;
-			}
 		}
 	}
 }

@@ -129,7 +129,6 @@ function CreatPostModalContent({
 				const res = await dispatch(getPreviewUrl(data)).unwrap();
 				setUrlPreviewData(res);
 			} catch (err) {
-				NotificationError(err);
 				const obj = { url: url, title: url, images: [] };
 				setUrlPreviewData(obj);
 			} finally {

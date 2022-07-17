@@ -11,8 +11,10 @@ import { NotificationError } from 'helpers/Error';
 import { likeAndUnlikeCommentPost } from 'reducers/redux-utils/activity';
 import { likeAndUnlikeCommentReview } from 'reducers/redux-utils/book';
 import { POST_TYPE, QUOTE_TYPE, REVIEW_TYPE } from 'constants';
-import { Link } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+
+const urlRegex =
+	/https?:\/\/www(\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/g;
 
 const Comment = ({ data, handleReply, postData, commentLv1Id, type }) => {
 	const [isLiked, setIsLiked] = useState(false);
@@ -53,6 +55,19 @@ const Comment = ({ data, handleReply, postData, commentLv1Id, type }) => {
 		}
 	};
 
+	const generateContent = content => {
+		if (content.match(urlRegex)) {
+			const newContent = content.replace(urlRegex, data => {
+				return `<a class="url-class" href=${data} target="_blank">${
+					data.length <= 50 ? data : data.slice(0, 50) + '...'
+				}</a>`;
+			});
+			return newContent;
+		} else {
+			return content;
+		}
+	};
+
 	return (
 		<div className='comment'>
 			<UserAvatar
@@ -63,7 +78,6 @@ const Comment = ({ data, handleReply, postData, commentLv1Id, type }) => {
 			/>
 			<div className='comment__wrapper'>
 				<div className='comment__container'>
-					{/* <Link to={`/profile/${postData.usersComments?.id || postData.commentQuotes?.id}`}> */}
 					<div className='comment__header'>
 						<Link to={`/profile/${data.user.id}`}>
 							<span className='comment__author'>
@@ -81,9 +95,14 @@ const Comment = ({ data, handleReply, postData, commentLv1Id, type }) => {
 							</Badge>
 						)}
 					</div>
-					{/* </Link> */}
-
-					<p className='comment__content'>{data.content}</p>
+					{data?.content && (
+						<p
+							className='comment__content'
+							dangerouslySetInnerHTML={{
+								__html: generateContent(data.content),
+							}}
+						></p>
+					)}
 				</div>
 
 				<ul className='comment__action'>
@@ -102,6 +121,7 @@ const Comment = ({ data, handleReply, postData, commentLv1Id, type }) => {
 								userId: data.user.id,
 								userFullName: data.user.fullName || data.user.firstName + ' ' + data.user.lastName,
 								userAvatar: data.user.avatarImage,
+								linkProfile: `https://wisfeed.tecinus.vn/profile/1b4ade47-d03b-4a7a-98ea-27abd8f15a85`,
 							})
 						}
 					>
@@ -119,6 +139,9 @@ const Comment = ({ data, handleReply, postData, commentLv1Id, type }) => {
 Comment.defaultProps = {
 	data: {},
 	handleReply: () => {},
+	postData: {},
+	commentLv1Id: null,
+	type: POST_TYPE,
 };
 
 Comment.propTypes = {
@@ -126,7 +149,6 @@ Comment.propTypes = {
 	postData: PropTypes.object,
 	handleReply: PropTypes.func,
 	commentLv1Id: PropTypes.number,
-	inQuotes: PropTypes.bool,
 	type: PropTypes.string,
 };
 
