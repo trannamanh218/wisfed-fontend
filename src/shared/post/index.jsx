@@ -65,7 +65,7 @@ function Post({ postInformations, showModalCreatPost, inReviews = false }) {
 
 	const onCreateComment = async (content, replyId) => {
 		const newArr = [];
-		mentionUsersArr.forEach(item => newArr.push(item.userId));
+		mentionUsersArr.forEach(item => newArr.push(item.id));
 		try {
 			let res = {};
 			if (bookId) {
@@ -115,7 +115,7 @@ function Post({ postInformations, showModalCreatPost, inReviews = false }) {
 					rows.splice(0, 0, newComment);
 					usersComments = { ...postData.usersComments, rows };
 				}
-				const newPostData = { ...postData, usersComments, comment: postData.comment + 1 }; // Tự động cập nhật đếm comment
+				const newPostData = { ...postData, usersComments, comment: postData.comment + 1 };
 				setPostData(newPostData);
 			}
 		} catch (err) {
@@ -434,7 +434,7 @@ function Post({ postInformations, showModalCreatPost, inReviews = false }) {
 										)}
 										<CommentEditor
 											onCreateComment={onCreateComment}
-											className={classNames('reply-comment-editor', {
+											className={classNames(`reply-comment-editor reply-comment-${comment.id}`, {
 												'show': comment.id === replyingCommentId,
 											})}
 											mentionUsersArr={mentionUsersArr}

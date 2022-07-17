@@ -38,7 +38,7 @@ export const getListFollowrs = createAsyncThunk('user/getListFollowrs', async (p
 });
 
 export const getFriendList = createAsyncThunk('user/getFriendList', async (params, { rejectWithValue }) => {
-	const { userId, ...query } = params;
+	const { userId, query } = params;
 	try {
 		const response = await Request.makeGet(friendAPI(userId), query);
 		return response.data;

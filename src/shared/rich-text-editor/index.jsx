@@ -6,44 +6,13 @@ import './rich-text-editor.scss';
 import '@draft-js-plugins/linkify/lib/plugin.css';
 import { extractLinks } from '@draft-js-plugins/linkify';
 import 'draft-js/dist/Draft.css';
-import createMentionPlugin, { defaultSuggestionsFilter } from '@draft-js-plugins/mention';
+import createMentionPlugin from '@draft-js-plugins/mention';
 import '@draft-js-plugins/mention/lib/plugin.css';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import { stateToHTML } from 'draft-js-export-html';
-
-const mentions = [
-	{
-		name: 'Matthew Russell',
-		link: 'https://twitter.com/mrussell247',
-		avatar: 'https://pbs.twimg.com/profile_images/517863945/mattsailing_400x400.jpg',
-	},
-	{
-		name: 'Julian Krispel-Samsel',
-		link: 'https://twitter.com/juliandoesstuff',
-		avatar: 'https://avatars2.githubusercontent.com/u/1188186?v=3&s=400',
-	},
-	{
-		name: 'Jyoti Puri',
-		link: 'https://twitter.com/jyopur',
-		avatar: 'https://avatars0.githubusercontent.com/u/2182307?v=3&s=400',
-	},
-	{
-		name: 'Max Stoiber',
-		link: 'https://twitter.com/mxstbr',
-		avatar: 'https://avatars0.githubusercontent.com/u/7525670?s=200&v=4',
-	},
-	{
-		name: 'Nik Graf',
-		link: 'https://twitter.com/nikgraf',
-		avatar: 'https://avatars0.githubusercontent.com/u/223045?v=3&s=400',
-	},
-	{
-		name: 'Pascal Brandt',
-		link: 'https://twitter.com/psbrandt',
-		avatar: 'https://pbs.twimg.com/profile_images/688487813025640448/E6O6I011_400x400.png',
-	},
-];
+import { getFriendList } from 'reducers/redux-utils/user';
+import { useDispatch, useSelector } from 'react-redux';
 
 const generatePlugins = () => {
 	const linkifyPlugin = createLinkifyPlugin({ target: '_blank' });
@@ -72,7 +41,7 @@ function RichTextEditor({
 }) {
 	const [editorState, setEditorState] = useState(EditorState.createEmpty());
 	const [open, setOpen] = useState(false);
-	const [suggestions, setSuggestions] = useState(mentions);
+	const [suggestions, setSuggestions] = useState([]);
 	const [{ plugins, MentionSuggestions }] = useState(() => {
 		const { plugins, MentionSuggestions } = generatePlugins();
 		return {
@@ -81,7 +50,9 @@ function RichTextEditor({
 		};
 	});
 
+	const userInfo = useSelector(state => state.auth.userInfo);
 	const editor = useRef(null);
+	const dispatch = useDispatch();
 
 	useEffect(() => {
 		if (clickReply && mentionUsersArr.length > 0) {
@@ -90,7 +61,7 @@ function RichTextEditor({
 		if (editor.current) {
 			setTimeout(() => {
 				editor.current.focus();
-			}, 500);
+			}, 200);
 		}
 	}, [editor.current, clickReply]);
 
@@ -101,14 +72,17 @@ function RichTextEditor({
 	}, [createCmt]);
 
 	useEffect(() => {
-		const blocks = convertToRaw(editorState.getCurrentContent()).blocks;
-		const textValue = blocks.map(block => (!block.text.trim() && '\n') || block.text).join('\n');
+		const editorStateRaws = convertToRaw(editorState.getCurrentContent());
+		const textValue = editorStateRaws.blocks.map(block => (!block.text.trim() && '\n') || block.text).join('\n');
 		const urlDetected = extractLinks(textValue);
 		if (urlDetected && urlDetected.length) {
 			detectUrl(urlDetected);
 		}
 		const html = convertContentToHTML();
 		setContent(html);
+		const entytiMap = editorStateRaws.entityMap;
+		const newArr = Object.keys(entytiMap).map(key => entytiMap[key].data.mention);
+		setMentionUsersArr(newArr);
 	}, [editorState]);
 
 	const convertContentToHTML = () => {
@@ -150,25 +124,46 @@ function RichTextEditor({
 		[]
 	);
 
-	// const fetchSuggestionMentions = async () => {
-	// 	try {
-	// 	} catch {
-	//
-	// 	}
-	// };
-
 	const onOpenChange = useCallback(_open => {
 		setOpen(_open);
 	}, []);
 
-	const onSearchChange = useCallback(({ value }) => {
-		setSuggestions(defaultSuggestionsFilter(value, mentions));
-	}, []);
+	const onSearchChange = useCallback(
+		({ value }) => {
+			debounceSuggestionMentions(value);
+		},
+		[userInfo]
+	);
 
-	const addMention = data => {
-		const newArr = [...mentionUsersArr];
-		newArr.push(data);
-		setMentionUsersArr(newArr);
+	const debounceSuggestionMentions = useCallback(
+		_.debounce(value => {
+			fetchSuggestionMentions(value);
+		}, 700),
+		[userInfo]
+	);
+
+	const fetchSuggestionMentions = async value => {
+		try {
+			const params = {
+				start: 0,
+				limit: 5,
+				filter: JSON.stringify([{ operator: 'search', value: value, property: 'firstName,lastName' }]),
+			};
+			const suggestionsResponse = await dispatch(getFriendList({ userId: userInfo.id, query: params })).unwrap();
+			let suggestionData = [];
+			suggestionsResponse.rows.forEach(item => {
+				const mentionData = {
+					name: item.fullName || item.firstName + item.lastName,
+					link: `https://wisfeed.tecinus.vn/profile/1b4ade47-d03b-4a7a-98ea-27abd8f15a85`,
+					avatar: item.avatarImage,
+					id: item.id,
+				};
+				suggestionData.push(mentionData);
+			});
+			setSuggestions(suggestionData);
+		} catch {
+			return;
+		}
 	};
 
 	const reply = () => {
@@ -177,14 +172,14 @@ function RichTextEditor({
 				'blocks': [
 					{
 						'key': 'cvdfd',
-						'text': `${mentionUsersArr[0].userFullName} `,
+						'text': `${mentionUsersArr[0].name} `,
 						'type': 'unstyled',
 						'depth': 0,
 						'inlineStyleRanges': [],
 						'entityRanges': [
 							{
 								'offset': 0,
-								'length': mentionUsersArr[0].userFullName.length,
+								'length': mentionUsersArr[0].name.length,
 								'key': 0,
 							},
 						],
@@ -197,9 +192,9 @@ function RichTextEditor({
 						'mutability': 'SEGMENTED',
 						'data': {
 							'mention': {
-								'name': `${mentionUsersArr[0].userFullName}`,
-								'link': `${mentionUsersArr[0].linkProfile}`,
-								'avatar': `${mentionUsersArr[0].userAvatar}`,
+								'name': `${mentionUsersArr[0].name}`,
+								'link': `${mentionUsersArr[0].link}`,
+								'avatar': `${mentionUsersArr[0].avatar}`,
 							},
 						},
 					},
@@ -228,7 +223,6 @@ function RichTextEditor({
 						onOpenChange={onOpenChange}
 						suggestions={suggestions}
 						onSearchChange={onSearchChange}
-						onAddMention={data => addMention(data)}
 					/>
 				)}
 			</div>

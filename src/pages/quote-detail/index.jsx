@@ -36,7 +36,7 @@ const QuoteDetail = () => {
 
 	const onCreateComment = async (content, replyId) => {
 		const newArr = [];
-		mentionUsersArr.forEach(item => newArr.push(item.userId));
+		mentionUsersArr.forEach(item => newArr.push(item.id));
 		const params = {
 			quoteId: Number(id),
 			content: content,
@@ -79,7 +79,6 @@ const QuoteDetail = () => {
 					likeUnlikeQuoteFnc={likeUnlikeQuoteFnc}
 					setMentionUsersArr={setMentionUsersArr}
 					mentionUsersArr={mentionUsersArr}
-					userInfo={userInfo}
 				/>
 			}
 			right={<SidebarQuote listHashtags={listHashtags} inMyQuote={false} hasCountQuotes={false} />}

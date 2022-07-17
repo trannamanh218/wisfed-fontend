@@ -19,7 +19,7 @@ const MyFriends = ({ activeTabs, inputSearch, filter }) => {
 		try {
 			if (!_.isEmpty(userInfo)) {
 				if (inputSearch.length > 0) {
-					const friendList = await dispatch(getFriendList({ userId, ...query })).unwrap();
+					const friendList = await dispatch(getFriendList({ userId, query })).unwrap();
 					setGetMyListFriend(friendList.rows);
 				} else {
 					const friendList = await dispatch(getFriendList({ userId })).unwrap();

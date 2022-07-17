@@ -118,10 +118,10 @@ const Comment = ({ data, handleReply, postData, commentLv1Id, type }) => {
 						className='comment__item'
 						onClick={() =>
 							handleReply(commentLv1Id, {
-								userId: data.user.id,
-								userFullName: data.user.fullName || data.user.firstName + ' ' + data.user.lastName,
-								userAvatar: data.user.avatarImage,
-								linkProfile: `https://wisfeed.tecinus.vn/profile/1b4ade47-d03b-4a7a-98ea-27abd8f15a85`,
+								id: data.user.id,
+								name: data.user.fullName || data.user.firstName + ' ' + data.user.lastName,
+								avatar: data.user.avatarImage,
+								link: `https://wisfeed.tecinus.vn/profile/1b4ade47-d03b-4a7a-98ea-27abd8f15a85`,
 							})
 						}
 					>

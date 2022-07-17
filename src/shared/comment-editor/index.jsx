@@ -23,15 +23,14 @@ const CommentEditor = ({
 	const userInfo = useSelector(state => state.auth.userInfo);
 
 	useEffect(() => {
-		const commentEditField = document.querySelector(`.rich-text-editor-${replyingCommentId}`);
+		const commentEditField = document.querySelector(`.reply-comment-${replyingCommentId}`);
 		if (commentEditField) {
-			// console.log(commentEditField.offsetTop);
 			setTimeout(() => {
 				window.scroll({
 					top: commentEditField.offsetTop - 400,
 					behavior: 'smooth',
 				});
-			}, 100);
+			}, 200);
 		}
 	}, [replyingCommentId, clickReply]);
 
@@ -63,7 +62,7 @@ const CommentEditor = ({
 				</div>
 				<RichTextEditor
 					placeholder='Viết bình luận...'
-					className={`rich-text-editor-${replyingCommentId}`}
+					className={replyingCommentId ? `rich-text-editor-${replyingCommentId}` : ''}
 					content={content}
 					setContent={setContent}
 					handleKeyBind={handleKeyBind}
