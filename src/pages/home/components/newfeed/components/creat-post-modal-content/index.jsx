@@ -24,7 +24,7 @@ import UserAvatar from 'shared/user-avatar';
 import { updateCurrentBook, updateProgressReadingBook, createReviewBook } from 'reducers/redux-utils/book';
 import { STATUS_BOOK } from 'constants';
 import { usePrevious } from 'shared/hooks';
-import { addBookToDefaultLibrary } from 'reducers/redux-utils/library';
+import { addBookToDefaultLibrary, updateMyAllLibraryRedux } from 'reducers/redux-utils/library';
 import { setting } from './settings';
 import { NotificationError } from 'helpers/Error';
 import { uploadMultiFile } from 'reducers/redux-utils/common';
@@ -105,7 +105,11 @@ function CreatPostModalContent({
 			createSpanElements();
 		});
 		return () => {
-			document.removeEventListener('input', handlePlaceholder);
+			document.removeEventListener('input', () => {
+				handlePlaceholder();
+				detectUrl();
+				createSpanElements();
+			});
 		};
 	}, [showTextFieldEditPlaceholder]);
 
@@ -172,17 +176,19 @@ function CreatPostModalContent({
 	};
 
 	const getPreviewUrlFnc = async url => {
-		setFetchingUrlInfo(true);
-		const data = { 'url': url };
-		try {
-			const res = await dispatch(getPreviewUrl(data)).unwrap();
-			setUrlAdded(res);
-		} catch (err) {
-			NotificationError(err);
-			const obj = { url: url, title: url, images: [] };
-			setUrlAdded(obj);
-		} finally {
-			setFetchingUrlInfo(false);
+		if (url) {
+			setFetchingUrlInfo(true);
+			const data = { 'url': url };
+			try {
+				const res = await dispatch(getPreviewUrl(data)).unwrap();
+				setUrlAdded(res);
+			} catch (err) {
+				NotificationError(err);
+				const obj = { url: url, title: url, images: [] };
+				setUrlAdded(obj);
+			} finally {
+				setFetchingUrlInfo(false);
+			}
 		}
 	};
 
@@ -307,28 +313,34 @@ function CreatPostModalContent({
 		return params;
 	};
 
-	const handleUpdateProgress = params => {
+	const handleUpdateProgress = async params => {
 		const { status, progress } = taggedData.addBook;
 		const convertProgress = parseInt(progress) || 0;
 		const progressParams = { id: params.bookId, progress: convertProgress };
 		// read
-		if (status) {
-			if (status === STATUS_BOOK.read || STATUS_BOOK.reading) {
-				return dispatch(updateProgressReadingBook(progressParams)).unwrap();
-			} else if (status === STATUS_BOOK.wantToRead) {
-				return dispatch(updateProgressReadingBook(progressParams)).unwrap();
+		try {
+			if (status) {
+				if (status === STATUS_BOOK.read || STATUS_BOOK.reading) {
+					await dispatch(updateProgressReadingBook(progressParams)).unwrap();
+				} else if (status === STATUS_BOOK.wantToRead) {
+					await dispatch(updateProgressReadingBook(progressParams)).unwrap();
+				}
+			} else {
+				let type = STATUS_BOOK.wantToRead;
+				if (convertProgress > 0 && convertProgress < taggedData.addBook.page) {
+					type = STATUS_BOOK.reading;
+				} else if (convertProgress === taggedData.addBook.page) {
+					type = STATUS_BOOK.read;
+				}
+				const addBookParams = { bookId: params.bookId, type };
+				const addToDefaultLibraryRequest = dispatch(addBookToDefaultLibrary(addBookParams)).unwrap();
+				const updateProgressRequest = dispatch(updateProgressReadingBook(progressParams)).unwrap();
+				await Promise.all([addToDefaultLibraryRequest, updateProgressRequest]);
 			}
-		} else {
-			let type = STATUS_BOOK.wantToRead;
-			if (convertProgress > 0 && convertProgress < taggedData.addBook.page) {
-				type = STATUS_BOOK.reading;
-			} else if (convertProgress === taggedData.addBook.page) {
-				type = STATUS_BOOK.read;
-			}
-			const addBookParams = { bookId: params.bookId, type };
-			const addToDefaultLibraryRequest = dispatch(addBookToDefaultLibrary(addBookParams)).unwrap();
-			const updateProgressRequest = dispatch(updateProgressReadingBook(progressParams)).unwrap();
-			return Promise.all([addToDefaultLibraryRequest, updateProgressRequest]);
+		} catch (error) {
+			NotificationError(error);
+		} finally {
+			dispatch(updateMyAllLibraryRedux());
 		}
 	};
 

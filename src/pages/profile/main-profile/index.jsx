@@ -29,7 +29,7 @@ const MainProfile = ({ currentUserInfo }) => {
 						onSelect={eventKey => setCurrentTab(eventKey)}
 					>
 						<Tab eventKey='bookcase' title='Tủ sách'>
-							<Bookcase userInfo={currentUserInfo} currentTab={currentTab} />
+							<Bookcase currentUserInfo={currentUserInfo} currentTab={currentTab} />
 						</Tab>
 						<Tab eventKey='post' title='Bài viết' className='post-tab-active'>
 							<PostTab currentTab={currentTab} />

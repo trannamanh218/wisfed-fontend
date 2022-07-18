@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import _ from 'lodash';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
+
 const PostQuotes = ({ postsData, isShare }) => {
 	const { isSharePosts } = useSelector(state => state.post);
 

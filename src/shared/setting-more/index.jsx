@@ -22,6 +22,7 @@ import {
 import './setting-more.scss';
 import { NotificationError } from 'helpers/Error';
 import { updateDirectFromProfile } from 'reducers/redux-utils/common';
+import { updateCurrentBook } from 'reducers/redux-utils/book';
 
 const SettingMore = ({ bookData, handleUpdateBookList }) => {
 	const [showLibrariesModal, setShowLibrariesModal] = useState(false);
@@ -29,10 +30,12 @@ const SettingMore = ({ bookData, handleUpdateBookList }) => {
 	const [currentStatus, setCurrentStatus] = useState('');
 	const [isVisible, setIsVisible] = useState(false);
 	const [customLibrariesContainCurrentBookId, setCustomLibrariesContainCurrentBookId] = useState([]);
+	const [updateDefaultLibrary, setUpdateDefaultLibrary] = useState(true);
 
 	const addedArray = useRef([]);
 	const removedArray = useRef([]);
 	const settingMoreContainer = useRef();
+	const oldStatus = useRef('');
 
 	const myCustomLibraries = useSelector(state => state.library.myAllLibrary).custom;
 
@@ -75,6 +78,7 @@ const SettingMore = ({ bookData, handleUpdateBookList }) => {
 			const defaultLibrariesContainCurrentBook = checkLibrariesData.filter(
 				item => item.library.isDefault === true
 			);
+			oldStatus.current = defaultLibrariesContainCurrentBook[0].library.defaultType;
 			setCurrentStatus(defaultLibrariesContainCurrentBook[0].library.defaultType);
 			const customLibrariesContainCurrentBook = checkLibrariesData.filter(
 				item => item.library.isDefault === false
@@ -143,12 +147,14 @@ const SettingMore = ({ bookData, handleUpdateBookList }) => {
 
 	const handleConfirm = async () => {
 		try {
-			await updateStatusBook();
 			await handleAddAndRemoveBook();
+			await updateStatusBook();
 			toast.success('Chuyển giá sách thành công');
 			setTimeout(() => {
 				dispatch(updateMyAllLibraryRedux());
 			}, 150);
+			dispatch(updateCurrentBook({ ...bookData, status: currentStatus }));
+			navigate('/');
 		} catch (err) {
 			NotificationError(err);
 		} finally {

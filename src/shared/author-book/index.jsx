@@ -6,7 +6,7 @@ import './author-book.scss';
 import { ShareRanks } from 'components/svg';
 import Storage from 'helpers/Storage';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { sharePostsAll, saveDataShare } from 'reducers/redux-utils/post';
 import classNames from 'classnames';
 import _ from 'lodash';
@@ -15,6 +15,9 @@ const AuthorBook = props => {
 	const { data, checkStar, checkshare, setModalShow, topBooksId, valueDate, categoryName } = props;
 	const { isSharePostsAll } = useSelector(state => state.post);
 	const authorsName = data.authors?.map(author => author?.authorName);
+
+	const { userId } = useParams();
+	const userInfo = useSelector(state => state.auth.userInfo);
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const handleShare = () => {
@@ -85,6 +88,7 @@ const AuthorBook = props => {
 		)
 	);
 };
+
 AuthorBook.defaultProps = {
 	data: {},
 };

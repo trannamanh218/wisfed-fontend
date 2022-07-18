@@ -10,7 +10,6 @@ import { getGroupList } from 'reducers/redux-utils/group';
 import { NotificationError } from 'helpers/Error';
 import _ from 'lodash';
 import defaultAvatar from 'assets/images/Rectangle 17435.png';
-
 const MainLayout = ({ filter }) => {
 	const [list, setList] = useState([]);
 	const [hasMore, setHasMore] = useState(true);
@@ -38,16 +37,13 @@ const MainLayout = ({ filter }) => {
 			NotificationError(err);
 		}
 	};
-
 	const listGroup = async () => {
 		const actionGetList = await dispatch(getGroupList());
 		setList(actionGetList.payload.rows);
 	};
-
 	useEffect(() => {
 		listGroup();
 	}, []);
-
 	return (
 		<>
 			{list?.length < 1 && !_.isEmpty(filter) ? (
@@ -105,10 +101,8 @@ const MainLayout = ({ filter }) => {
 		</>
 	);
 };
-
 MainLayout.propTypes = {
 	listGroup: PropTypes.array,
 	filter: PropTypes.bool,
 };
-
 export default MainLayout;

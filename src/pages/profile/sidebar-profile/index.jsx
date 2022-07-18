@@ -15,7 +15,7 @@ import PropTypes from 'prop-types';
 import _ from 'lodash';
 import { DEFAULT_TOGGLE_ROWS } from 'constants';
 
-const SidebarProfile = ({ currentUserInfo }) => {
+const SidebarProfile = ({ currentUserInfo, handleViewBookDetail }) => {
 	const { userId } = useParams();
 	const { booksAuthor } = useFetchAuthorBooks(userId);
 	const [bookReading, setBookReading] = useState({});
@@ -39,7 +39,7 @@ const SidebarProfile = ({ currentUserInfo }) => {
 				setBooksSliderTitle('Sách tôi là tác giả');
 			}
 		}
-	}, [userInfo]);
+	}, [userInfo, currentUserInfo]);
 
 	useEffect(() => {
 		if (!_.isEmpty(myAllLibraryRedux)) {
@@ -83,7 +83,12 @@ const SidebarProfile = ({ currentUserInfo }) => {
 				<div className='sidebar-profile'>
 					<ReadingBook bookData={bookReading} />
 					{booksAuthor.length > 0 && (
-						<BookSlider className='book-reference__slider' title={booksSliderTitle} list={booksAuthor} />
+						<BookSlider
+							className='book-reference__slider'
+							title={booksSliderTitle}
+							list={booksAuthor}
+							handleViewBookDetail={handleViewBookDetail}
+						/>
 					)}
 
 					{handleRenderTargetReading()}

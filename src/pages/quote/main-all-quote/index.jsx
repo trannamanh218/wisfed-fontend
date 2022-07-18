@@ -31,6 +31,7 @@ const MainAllQuotes = () => {
 	const callApiPerPage = useRef(10);
 
 	const resetQuoteList = useSelector(state => state.quote.resetQuoteList);
+	const userInfo = useSelector(state => state.auth.userInfo);
 
 	const dispatch = useDispatch();
 
@@ -159,7 +160,7 @@ const MainAllQuotes = () => {
 				/>
 			</div>
 			<FilterQuotePane
-				filterOptions={filterOptions}
+				filterOptions={!_.isEmpty(userInfo) ? filterOptions : []}
 				hasFilters={true}
 				handleSortQuotes={handleSortQuotes}
 				handleChangeOption={handleChangeOption}

@@ -13,15 +13,16 @@ import LoadingIndicator from 'shared/loading-indicator';
 const MainLayoutSearch = ({ valueGroupSearch }) => {
 	const [list, setList] = useState([]);
 	const [hasMore, setHasMore] = useState(true);
-	const callApiStart = useRef(0);
-	const callApiPerPage = useRef(8);
+	const callApiStart = useRef(10);
+	const callApiPerPage = useRef(10);
 	const dispatch = useDispatch();
 	const [show, setShow] = useState(false);
+	const [value, setValue] = useState('');
 
 	const getSearch = async () => {
 		try {
 			const params = {
-				q: valueGroupSearch,
+				q: value,
 				type: 'groups',
 				start: callApiStart.current,
 				limit: callApiPerPage.current,
@@ -34,16 +35,34 @@ const MainLayoutSearch = ({ valueGroupSearch }) => {
 					callApiStart.current += callApiPerPage.current;
 				}
 				setList(list.concat(data.rows));
-			} else {
-				setHasMore(false);
 			}
 		} catch (err) {
 			NotificationError(err);
 		}
 	};
+
+	const getSearchFirst = async () => {
+		try {
+			const params = {
+				q: value,
+				type: 'groups',
+			};
+			const data = await dispatch(getFilterSearch({ ...params })).unwrap();
+			setList(data.rows);
+		} catch (err) {
+			NotificationError(err);
+		}
+	};
+
 	useEffect(() => {
-		getSearch();
+		setValue(valueGroupSearch);
 	}, [valueGroupSearch]);
+
+	console.log(list);
+
+	useEffect(() => {
+		getSearchFirst();
+	}, [value]);
 	useEffect(() => {
 		if (list.length > 0) {
 			setShow(false);
@@ -58,7 +77,7 @@ const MainLayoutSearch = ({ valueGroupSearch }) => {
 		<>
 			{list?.length < 1 ? (
 				<>
-					{show === true ? (
+					{show ? (
 						<div style={{ marginTop: '54px', padding: '24px', transitionDelay: '1s' }}>
 							<ResultNotFound />
 						</div>

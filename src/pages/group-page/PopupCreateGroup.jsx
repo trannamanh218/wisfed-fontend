@@ -7,7 +7,8 @@ import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import './create-group.scss';
 import { getRandomAuthor } from 'reducers/redux-utils/user';
-import { getCreatGroup } from 'reducers/redux-utils/group';
+import { getBookList } from 'reducers/redux-utils/book';
+import { getCreatGroup, getIdCategory } from 'reducers/redux-utils/group';
 import Dropzone from 'react-dropzone';
 import { useDropzone } from 'react-dropzone';
 import { uploadImage } from 'reducers/redux-utils/common';
@@ -19,18 +20,24 @@ const PopupCreateGroup = ({ handleClose, showRef }) => {
 	const [inputNameGroup, setInputNameGroup] = useState('');
 	const [inputDiscription, setInputDiscription] = useState('');
 	const [inputAuthors, setInputAuthors] = useState('');
+	const [inputBook, setInputBook] = useState('');
 	const [userlist, setUserList] = useState([]);
 	const dispatch = useDispatch();
+	const [listBooks, setListBooks] = useState([]);
 	const [listAuthors, setListAuthors] = useState([]);
+	const [listBookAdd, setListBookAdd] = useState([]);
 	const [inputHashtag, setInputHashtag] = useState('');
 	const [listHashtags, setListHashtags] = useState([]);
 	const dataRef = useRef('');
 	const inputRefHashtag = useRef(null);
 	const inputRefAuthor = useRef(null);
+	const inputRefBook = useRef(null);
 	const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
 	const [imgUrl, setImgUrl] = useState('');
 	const [isShowBtn, setIsShowBtn] = useState(false);
 	const [kindOfGroup, setKindOfGroup] = useState('');
+	const [idBook, setIDBook] = useState([]);
+	const [categoryIdBook, setCategoryIdBook] = useState('');
 
 	const getDataAuthor = async () => {
 		const params = {
@@ -45,6 +52,35 @@ const PopupCreateGroup = ({ handleClose, showRef }) => {
 			Notification(err);
 		}
 	};
+
+	const getBookData = async () => {
+		const params = {
+			filter: JSON.stringify([{ 'operator': 'search', 'value': `${inputBook}`, 'property': 'name' }]),
+		};
+		try {
+			const res = await dispatch(getBookList(params)).unwrap();
+			setListBooks(res.rows);
+		} catch (err) {
+			Notification(err);
+		}
+	};
+
+	const bookCategoryId = async () => {
+		try {
+			const res = await dispatch(getIdCategory()).unwrap();
+			setIDBook(res.rows);
+		} catch (err) {
+			Notification(err);
+		}
+	};
+
+	useEffect(() => {
+		if (kindOfGroup.value == 'book') {
+			bookCategoryId();
+		} else {
+			setIDBook([]);
+		}
+	}, [kindOfGroup.value]);
 
 	useEffect(() => {
 		uploadImageFile();
@@ -68,8 +104,13 @@ const PopupCreateGroup = ({ handleClose, showRef }) => {
 		const dataCheck = listHashtags.filter(item => dataRef.current === item);
 
 		if (dataRef.current !== '' && dataCheck.length < 1) {
-			const newList = [...listHashtags, dataRef.current];
-			console.log(newList);
+			const check = dataRef.current
+				.normalize('NFD')
+				.replace(/[\u0300-\u036f]/g, '')
+				.replace(/đ/g, 'd')
+				.replace(/Đ/g, 'D');
+			const newList = [...listHashtags, check];
+
 			setListHashtags(newList);
 		}
 	}, [dataRef.current]);
@@ -79,6 +120,11 @@ const PopupCreateGroup = ({ handleClose, showRef }) => {
 			getDataAuthor();
 		} else setUserList([]);
 	}, [inputAuthors]);
+	useEffect(() => {
+		if (inputBook !== '') {
+			getBookData();
+		} else setListBooks([]);
+	}, [inputBook]);
 
 	useEffect(() => {
 		if (
@@ -96,6 +142,8 @@ const PopupCreateGroup = ({ handleClose, showRef }) => {
 	const creatGroup = async () => {
 		const listIdAuthor = listAuthors.map(item => item.id);
 		const newListHastag = listHashtags.map(item => `#${item}`);
+		const newIdBook = listBookAdd.map(item => item.id);
+		const bookId = idBook.map(item => item.id);
 		const data = {
 			name: inputNameGroup,
 			description: inputDiscription,
@@ -103,8 +151,8 @@ const PopupCreateGroup = ({ handleClose, showRef }) => {
 			groupType: kindOfGroup.value,
 			authorIds: listIdAuthor,
 			tags: newListHastag,
-			categoryIds: [27, 1, 2, 3, 4],
-			bookIds: [13, 44, 212, 435, 124, 2342, 123, 12],
+			categoryIds: [categoryIdBook],
+			bookIds: newIdBook,
 		};
 		try {
 			await dispatch(getCreatGroup(data)).unwrap();
@@ -121,15 +169,22 @@ const PopupCreateGroup = ({ handleClose, showRef }) => {
 		{ value: 'author', title: 'Tác giả' },
 		{ value: 'category', title: ' Chia sẻ' },
 	];
-	// const tranparentRef = useRef({ value: 'public', title: 'Công khai', img: <CheckIcon /> });
+
+	const listIdBook = [
+		{ value: 27, title: 'Yêu đọc sách' },
+		{ value: 30, title: 'Thử thách đọc sách' },
+	];
+
 	const kindOfGroupRef = useRef({ value: 'default', title: 'Tác giả/ Chia sẻ/ Sách' });
+	const categoryBookRef = useRef({ value: 'default', title: 'Chọn chủ đề' });
 	const textArea = useRef(null);
 
-	// const onchangeTransparent = data => {
-	// 	tranparentRef.current = data;
-	// };
 	const onchangeKindOfGroup = data => {
 		setKindOfGroup(data);
+	};
+
+	const onchangeBookCategory = data => {
+		setCategoryIdBook(data.value);
 	};
 
 	useEffect(() => {
@@ -151,9 +206,28 @@ const PopupCreateGroup = ({ handleClose, showRef }) => {
 		}
 	};
 
+	const handleAddBook = e => {
+		try {
+			const checkItem = listBookAdd.filter(item => item.id === e.id);
+			if (checkItem.length < 1) {
+				setListBookAdd([...listBookAdd, e]);
+			}
+		} catch (err) {
+			// console.log(err);
+		} finally {
+			inputRefBook.current.value = '';
+			setListBooks([]);
+		}
+	};
+
 	const handleRemove = e => {
 		const newList = listAuthors.filter(item => item.id !== e.id);
 		setListAuthors(newList);
+	};
+
+	const handleRemoveBook = e => {
+		const newList = listBookAdd.filter(item => item !== e);
+		setListBookAdd(newList);
 	};
 
 	const handleRemoveTag = e => {
@@ -207,12 +281,23 @@ const PopupCreateGroup = ({ handleClose, showRef }) => {
 						onChangeOption={onchangeKindOfGroup}
 					/>
 				</div>
+				{kindOfGroup.value === 'book' && (
+					<div className='form-field-select__kind-of-group'>
+						<label>Chủ đề sách</label>
+						<SelectBox
+							name='categoryBook'
+							list={listIdBook}
+							defaultOption={categoryBookRef.current}
+							onChangeOption={onchangeBookCategory}
+						/>
+					</div>
+				)}
 
 				<div className='form-field-authors'>
 					<label>Tên tác giả</label>
 					<div className='list__author-tags'>
 						{listAuthors.length > 0 ? (
-							<div className='input__authors'>
+							<div className='input__authors '>
 								{listAuthors.map(item => (
 									<>
 										<span>
@@ -239,7 +324,6 @@ const PopupCreateGroup = ({ handleClose, showRef }) => {
 							inputRef={inputRefAuthor}
 						/>
 					</div>
-
 					<div className='author__list'>
 						{userlist?.length > 0
 							? userlist?.map(item => {
@@ -250,7 +334,9 @@ const PopupCreateGroup = ({ handleClose, showRef }) => {
 												className='author__item'
 												onClick={() => handleAddAuthors(item)}
 											>
-												{item?.fullName || `${item?.firstName + ' ' + item?.lastName}`}
+												{item.fullName
+													? item.fullName
+													: `${item.firstName + ' ' + item.lastName}`}
 											</span>
 										</>
 									);
@@ -258,6 +344,60 @@ const PopupCreateGroup = ({ handleClose, showRef }) => {
 							: ''}
 					</div>
 				</div>
+
+				{/*  */}
+				{kindOfGroup.value === 'book' && (
+					<div className='form-field-authors'>
+						<label>Tên sách</label>
+						<div className='list__author-tags'>
+							{listBookAdd.length > 0 ? (
+								<div className=' book-list'>
+									{listBookAdd.map(item => (
+										<span key={item.id} className='item-b'>
+											{item?.name}
+
+											<button
+												className='close__author'
+												onClick={() => {
+													handleRemoveBook(item);
+												}}
+											>
+												<CloseIconX />
+											</button>
+										</span>
+									))}
+								</div>
+							) : (
+								''
+							)}
+							<Input
+								isBorder={false}
+								placeholder='Nhập từ khóa'
+								handleChange={onInputChange(setInputBook)}
+								inputRef={inputRefBook}
+							/>
+						</div>
+						{/* tên sách */}
+
+						<div className='author__list'>
+							{listBooks?.length > 0
+								? listBooks?.map(item => {
+										return (
+											<>
+												<span
+													key={item}
+													className='author__item'
+													onClick={() => handleAddBook(item)}
+												>
+													{item?.name}
+												</span>
+											</>
+										);
+								  })
+								: ''}
+						</div>
+					</div>
+				)}
 
 				<div className='form-field--discription'>
 					<label>Giới thiệu</label>

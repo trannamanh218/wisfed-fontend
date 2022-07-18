@@ -9,9 +9,7 @@ const BookThumbnail = props => {
 		<div
 			className={classNames(`book-thumbnail book-thumbnail-${size}`, { [`${className}`]: className })}
 			onClick={() => {
-				// if (!_.isEmpty(data)) {
 				handleClick(data);
-				// }
 			}}
 			title={name}
 		>

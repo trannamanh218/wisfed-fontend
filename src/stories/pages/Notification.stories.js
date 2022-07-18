@@ -1,4 +1,4 @@
-import Notification from 'pages/notification/compornent-main';
+import Notification from 'pages/notification/component-item-modal/compornent-main';
 
 export default {
 	title: 'Pages/Notification',

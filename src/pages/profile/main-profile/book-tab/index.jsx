@@ -15,7 +15,7 @@ const BookTab = ({ currentTab }) => {
 	const [hasMore, setHasMore] = useState(true);
 	const [isLoading, setIsLoading] = useState(true);
 
-	const callApiStart = useRef(10);
+	const callApiStart = useRef(0);
 	const callApiPerPage = useRef(10);
 
 	const dispatch = useDispatch();
@@ -31,9 +31,9 @@ const BookTab = ({ currentTab }) => {
 			const params = {
 				start: callApiStart.current,
 				limit: callApiPerPage.current,
-				filter: JSON.stringify([{ 'operator': 'search', 'value': `${userId}`, 'property': 'authorId' }]),
+				sort: JSON.stringify([{ property: 'createdAt', direction: 'DESC' }]),
 			};
-			const res = await dispatch(getBookAuthorList(params)).unwrap();
+			const res = await dispatch(getBookAuthorList({ id: userId, params: params })).unwrap();
 			if (res.length) {
 				if (res.length < callApiPerPage.current) {
 					setHasMore(false);

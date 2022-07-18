@@ -7,12 +7,19 @@ import { useDispatch, useSelector } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
 import { useParams } from 'react-router-dom';
 import { checkGetUser } from 'reducers/redux-utils/profile';
+import RouteLink from 'helpers/RouteLink';
+import { getBookDetail } from 'reducers/redux-utils/book';
+import { useNavigate } from 'react-router-dom';
+import Circle from 'shared/loading/circle';
 
 const Profile = () => {
 	const [currentUserInfo, setCurrentUserInfo] = useState({});
+	const [status, setStatus] = useState(false);
+
 	const dispatch = useDispatch();
 	const { userInfo } = useSelector(state => state.auth);
 	const { userId } = useParams();
+	const navigate = useNavigate();
 
 	useEffect(() => {
 		window.scroll(0, 0);
@@ -33,11 +40,28 @@ const Profile = () => {
 		}
 	};
 
+	const handleViewBookDetail = async data => {
+		setStatus(true);
+		try {
+			await dispatch(getBookDetail(data.id)).unwrap();
+			navigate(RouteLink.bookDetail(data.id, data.name));
+		} catch (err) {
+			NotificationError(err);
+			const statusCode = err?.statusCode || 500;
+			setStatus(statusCode);
+		} finally {
+			setStatus(false);
+		}
+	};
+
 	return (
-		<MainContainer
-			main={<MainProfile currentUserInfo={currentUserInfo} />}
-			right={<SidebarProfile currentUserInfo={currentUserInfo} />}
-		/>
+		<>
+			<Circle loading={status} />
+			<MainContainer
+				main={<MainProfile currentUserInfo={currentUserInfo} />}
+				right={<SidebarProfile currentUserInfo={currentUserInfo} handleViewBookDetail={handleViewBookDetail} />}
+			/>
+		</>
 	);
 };
 

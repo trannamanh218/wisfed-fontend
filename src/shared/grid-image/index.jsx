@@ -4,8 +4,6 @@ import PropTypes from 'prop-types';
 import './grid-image.scss';
 import classNames from 'classnames';
 import _ from 'lodash';
-import { Modal } from 'react-bootstrap';
-import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import { render } from 'react-dom';
@@ -14,8 +12,6 @@ import 'react-image-lightbox/style.css';
 
 const GridImage = ({ images, inPost, postId }) => {
 	const [show, setShow] = React.useState(false);
-
-	const handleClose = () => setShow(false);
 	const handleShow = () => setShow(true);
 	const [photoIndex, setPhotoIndex] = React.useState(0);
 	const [isOpent, setIsOpent] = React.useState(false);
@@ -205,47 +201,6 @@ const GridImage = ({ images, inPost, postId }) => {
 					)}
 				</div>
 			)}
-
-			{/* <Modal style={{ height: '80vh', width: '100%', marginTop: '50px' }} show={show} onHide={handleClose}>
-				<Modal.Body>
-					<Slider {...settingSlider}>
-						{images.map(item => {
-							return (
-								<>
-									<img style={{ width: '100%', objectFit: 'cover' }} src={item} alt='' />
-								</>
-							);
-						})}
-					</Slider>
-				</Modal.Body>
-			</Modal> */}
-			{/* {images.map(item => {
-				return (
-					<button key={item.id} onClick={() => setIsOpent(true)}>
-						<img src={item} />
-					</button>
-				);
-			})} */}
-			{/* <div>
-				{isOpent && (
-					<Lightbox
-						mainSrc={images[photoIndex]}
-						nextSrc={images[(photoIndex + 1) % images.length]}
-						prevSrc={images[(photoIndex + images.length - 1) % images.length]}
-						onCloseRequest={() => setIsOpent(false)}
-						onMovePrevRequest={() =>
-							setPhotoIndex({
-								photoIndex: (photoIndex + images.length - 1) % images.length,
-							})
-						}
-						onMoveNextRequest={() =>
-							setPhotoIndex({
-								photoIndex: (photoIndex + 1) % images.length,
-							})
-						}
-					/>
-				)}
-			</div> */}
 		</>
 	);
 };

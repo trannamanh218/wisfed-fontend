@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-
 import SidebarGroupLef from './sidebar-left';
 import './mainGroup.scss';
 import MainGroupComponent from './popup-group/MainGroupComponet/MainGroupComponent';

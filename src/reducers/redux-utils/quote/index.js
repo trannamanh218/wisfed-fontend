@@ -121,11 +121,15 @@ const quoteSlice = createSlice({
 		quotesData: {},
 		error: {},
 		resetQuoteList: false,
+		categoryByQuotesName: '',
 	},
 
 	reducers: {
 		handleAfterCreatQuote: state => {
 			state.resetQuoteList = !state.resetQuoteList;
+		},
+		handleCategoryByQuotesName: (state, action) => {
+			state.categoryByQuotesName = action.payload;
 		},
 	},
 
@@ -146,5 +150,5 @@ const quoteSlice = createSlice({
 	},
 });
 
-export const { handleAfterCreatQuote } = quoteSlice.actions;
+export const { handleAfterCreatQuote, handleCategoryByQuotesName } = quoteSlice.actions;
 export default quoteSlice.reducer;

@@ -133,7 +133,8 @@
 	img {
 		width: 295px;
 		height: 163px;
-		object-fit: contain;
+		object-fit: cover;
+		border-radius: 8px;
 	}
 	.item-group__name {
 		margin-top: 16.4px;

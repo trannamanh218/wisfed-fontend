@@ -24,19 +24,13 @@ import PostsShare from 'shared/posts-Share';
 import Play from 'assets/images/play.png';
 import { likeAndUnlikeReview } from 'reducers/redux-utils/book';
 import { POST_TYPE, REVIEW_TYPE } from 'constants';
-import { Modal } from 'react-bootstrap';
-import { Button, ModalBody } from 'reactstrap';
 import { IconRanks } from 'components/svg';
 import AuthorBook from 'shared/author-book';
 import Storage from 'helpers/Storage';
 import { checkUserLogin } from 'reducers/redux-utils/auth';
 import ShareUsers from 'pages/home/components/newfeed/components/modal-share-users';
 
-function Post({ postInformations, className, showModalCreatPost, inReviews = false }) {
-	const [show, setShow] = useState(false);
-
-	const handleClose = () => setShow(false);
-	const handleShow = () => setShow(true);
+function Post({ postInformations, showModalCreatPost, inReviews = false }) {
 	const [postData, setPostData] = useState({});
 	const [videoId, setVideoId] = useState('');
 	const { userInfo } = useSelector(state => state.auth);
@@ -216,45 +210,53 @@ function Post({ postInformations, className, showModalCreatPost, inReviews = fal
 					/>
 
 					<div className='post__user-status__name-and-post-time-status'>
-						<div className='post__user__container'>
-							<Link
-								to={`/profile/${postData.createdBy?.id || postData.user?.id}`}
-								data-testid='post__user-name'
-								className='post__user-status__name'
-							>
-								{postData?.createdBy?.fullName || postData?.user?.fullName || 'Ẩn danh'}
-							</Link>
-							{(postData.groupInfo || postData.group) && (
-								<img className='post__user-icon' src={Play} alt='' />
-							)}
-
-							<Link
-								to={`/group/${postData.groupInfo?.id || postData.group?.id}`}
-								className='post__name__group'
-							>
-								{postData.groupInfo ? postData.groupInfo?.name : postData.group?.name}
-							</Link>
-						</div>
-
-						<div className='post__user-status__post-time-status'>
-							<span>{calculateDurationTime(postData.time || postData.createdAt)}</span>
-							<>
-								{postData.book && (
-									<div className='post__user-status__subtitle'>
-										<span>Cập nhật tiến độ đọc sách</span>
-										<div className='post__user-status__post-time-status__online-dot'></div>
-										<span>Xếp hạng</span>
-										<ReactRating
-											readonly={true}
-											initialRating={
-												postInformations?.book?.actorRating
-													? postInformations?.book?.actorRating?.star
-													: 0
-											}
-										/>
-									</div>
+						<div data-testid='post__user-name' className='post__user-status__name'>
+							<div className='post__user__container'>
+								<Link
+									to={`/profile/${postData.createdBy?.id || postData.user?.id}`}
+									data-testid='post__user-name'
+									className='post__user-status__name'
+								>
+									{postData?.createdBy?.fullName || postData?.user?.fullName || 'Ẩn danh'}
+								</Link>
+								{/* tagged people */}
+								{postData.mentionsUsers && postData.mentionsUsers.length !== 0 ? (
+									withFriends(postData.mentionsUsers)
+								) : (
+									<span></span>
 								)}
-							</>
+								{(postData.groupInfo || postData.group) && (
+									<img className='post__user-icon' src={Play} alt='' />
+								)}
+
+								<Link
+									to={`/group/${postData.groupInfo?.id || postData.group?.id}`}
+									className='post__name__group'
+								>
+									{postData.groupInfo ? postData.groupInfo?.name : postData.group?.name}
+								</Link>
+							</div>
+
+							<div className='post__user-status__post-time-status'>
+								<span>{calculateDurationTime(postData.time || postData.createdAt)}</span>
+								<>
+									{postData.book && (
+										<div className='post__user-status__subtitle'>
+											<span>Cập nhật tiến độ đọc sách</span>
+											<div className='post__user-status__post-time-status__online-dot'></div>
+											<span>Xếp hạng</span>
+											<ReactRating
+												readonly={true}
+												initialRating={
+													postInformations?.book?.actorRating
+														? postInformations?.book?.actorRating?.star
+														: 0
+												}
+											/>
+										</div>
+									)}
+								</>
+							</div>
 						</div>
 					</div>
 				</div>

@@ -53,7 +53,7 @@ const ModalItem = ({
 				// dispatch(handleListUnRead(newArr));
 			} else {
 				setGetNotifications(newArr);
-				// dispatch(handleListNotification(newArr));
+				dispatch(handleListNotification(newArr));
 			}
 			await dispatch(ReplyFriendRequest(params)).unwrap();
 			await dispatch(readNotification({ notificationId: items.id })).unwrap();
@@ -86,7 +86,7 @@ const ModalItem = ({
 				// dispatch(handleListUnRead(newArr));
 			} else {
 				setGetNotifications(newArr);
-				// dispatch(handleListNotification(newArr));
+				dispatch(handleListNotification(newArr));
 			}
 			await dispatch(CancelFriendRequest(params)).unwrap();
 			await dispatch(readNotification({ notificationId: items.id })).unwrap();
@@ -140,13 +140,8 @@ const ModalItem = ({
 			}
 			return { ...item };
 		});
-		if (selectKey === 'unread') {
-			setGetListUnRead(newArr);
-			// dispatch(handleListUnRead(newArr));
-		} else {
-			setGetNotifications(newArr);
-			// dispatch(handleListNotification(newArr));
-		}
+		setGetNotifications(newArr);
+		dispatch(handleListNotification(newArr));
 		dispatch(backgroundToggle(true));
 		setModalNotti(false);
 		dispatch(readNotification(params)).unwrap();
