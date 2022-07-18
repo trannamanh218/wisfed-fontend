@@ -58,8 +58,7 @@ function RichTextEditor({
 		if (clickReply && mentionUsersArr.length > 0) {
 			reply();
 		}
-		console.log('class', editor.current.classList);
-		if (editor.current) {
+		if (editor.current && clickReply) {
 			setTimeout(() => {
 				editor.current.focus();
 			}, 200);

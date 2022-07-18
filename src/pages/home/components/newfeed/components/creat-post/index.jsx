@@ -178,6 +178,7 @@ function CreatePost({ onChangeNewPost }) {
 						hideCreatePostModal={hideCreatePostModal}
 						showModalCreatPost={showModalCreatPost}
 						option={option}
+						setOption={setOption}
 						onChangeOption={onChangeOption}
 						onChangeNewPost={onChangeNewPost}
 						setShowModalCreatPost={setShowModalCreatPost}

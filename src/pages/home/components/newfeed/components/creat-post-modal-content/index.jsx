@@ -44,6 +44,7 @@ function CreatPostModalContent({
 	setShowModalCreatPost,
 	showModalCreatPost,
 	option,
+	setOption,
 	onChangeOption,
 	onChangeNewPost,
 	showSubModal,
@@ -143,6 +144,7 @@ function CreatPostModalContent({
 
 	const backToMainModal = () => {
 		setShowMainModal(true);
+		setOption({});
 	};
 
 	const addOptionsToPost = param => {
@@ -736,6 +738,7 @@ CreatPostModalContent.propTypes = {
 	hideCreatePostModal: PropTypes.func,
 	showModalCreatPost: PropTypes.bool,
 	option: PropTypes.object,
+	setOption: PropTypes.func,
 	onChangeOption: PropTypes.func,
 	onChangeNewPost: PropTypes.func,
 	renderBookReading: PropTypes.object,
