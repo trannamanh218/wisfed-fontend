@@ -448,6 +448,7 @@ function Post({ postInformations, showModalCreatPost, inReviews = false }) {
 						</>
 					)}
 					<CommentEditor
+						className='comment-editor-last'
 						replyingCommentId={null}
 						onCreateComment={onCreateComment}
 						mentionUsersArr={mentionUsersArr}

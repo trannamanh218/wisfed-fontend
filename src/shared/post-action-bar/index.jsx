@@ -23,6 +23,18 @@ const PostActionBar = ({ postData, handleLikeAction }) => {
 		}
 	};
 
+	const handleCommentPost = () => {
+		const commentEditField = document.querySelector(`.comment-editor-last`);
+		if (commentEditField) {
+			setTimeout(() => {
+				window.scroll({
+					top: commentEditField.offsetTop - 400,
+					behavior: 'smooth',
+				});
+			}, 200);
+		}
+	};
+
 	return (
 		<div className='post-action-bar'>
 			<div data-testid='post__options__like-btn' className='post-action-bar__item' onClick={handleLikeAction}>
@@ -38,7 +50,9 @@ const PostActionBar = ({ postData, handleLikeAction }) => {
 				}}
 			>
 				<CommentSvg />
-				<div className='post-action-bar__title'>{postData.comment || postData.comments || null} Bình luận</div>
+				<div className='post-action-bar__title' onClick={handleCommentPost}>
+					{postData.comment || postData.comments || null} Bình luận
+				</div>
 			</div>
 			<div onClick={handleShare} className='post-action-bar__item'>
 				<Share />
