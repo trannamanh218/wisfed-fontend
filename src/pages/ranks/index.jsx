@@ -8,6 +8,7 @@ import TopBooks from './component/top-Books';
 import TopUser from './component/top-user';
 import TopQuotes from './component/top-quotes';
 import { useFetchViewMoreCategories } from 'api/category.hook';
+import { Row, Col } from 'react-bootstrap';
 const MAX_PER_PAGE = 30;
 
 const Ranks = () => {
@@ -33,9 +34,11 @@ const Ranks = () => {
 						<Tab eventKey='books' title='Sách'>
 							<TopBooks rows={rows} listYear={listYear} />
 						</Tab>
+
 						<Tab eventKey='User' title='Người dùng'>
 							<TopUser rows={rows} listYear={listYear} />
 						</Tab>
+
 						<Tab eventKey='quotes' title='Quotes'>
 							<TopQuotes rows={rows} listYear={listYear} />
 						</Tab>
