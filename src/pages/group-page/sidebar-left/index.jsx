@@ -67,14 +67,15 @@ const SidebarGroupLef = ({ handleChange, data, member }) => {
 			<div className='group-sibar-left__btn'>
 				<button onClick={() => dispatch(updateKey('intro'))}>Xem thêm</button>
 			</div>
+
 			<div>
 				<h3 className='group-sibar-left__title under-title'>Thành viên</h3>
 				<div className='group-sibar-left__people'>
 					<div className='group-sibar-left__people-admin'>
 						<span>Quản trị viên</span>
-						{member?.map(item => {
+						{member?.map((item, index) => {
 							return (
-								<>
+								<div key={index}>
 									{item?.isAdmin && (
 										<div className='people-item'>
 											<img
@@ -97,7 +98,7 @@ const SidebarGroupLef = ({ handleChange, data, member }) => {
 											</div>
 										</div>
 									)}
-								</>
+								</div>
 							);
 						})}
 					</div>
@@ -105,9 +106,9 @@ const SidebarGroupLef = ({ handleChange, data, member }) => {
 						<span>Bạn bè</span>
 						<div style={{ marginTop: '10px' }}>
 							{listFriend.length > 0
-								? listFriend.map(item => {
+								? listFriend.map((item, index) => {
 										return (
-											<>
+											<div key={index}>
 												<div className='people-item'>
 													<img
 														src={item.avatarImage ? item.avatarImage : defaultAvatar}
@@ -130,7 +131,7 @@ const SidebarGroupLef = ({ handleChange, data, member }) => {
 														)}
 													</div>
 												</div>
-											</>
+											</div>
 										);
 								  })
 								: 'Không có dữ liệu'}
@@ -140,32 +141,28 @@ const SidebarGroupLef = ({ handleChange, data, member }) => {
 						<span>Người theo dõi</span>
 						<div style={{ marginTop: '10px' }}>
 							{listFolow.length > 0
-								? listFolow.map(item => {
+								? listFolow.map((item, index) => {
 										return (
-											<>
-												<div className='people-item'>
-													<img
-														src={item.avatarImage ? item.avatarImage : defaultAvatar}
-														onError={e => e.target.setAttribute('src', defaultAvatar)}
-														alt=''
-													/>
-													<div className='people-item__text'>
-														<span>
-															{item.fullName || item.firstName + ' ' + item.lastName}
-														</span>
-														{item.mutualFriend ? (
-															<div>
-																{item.mutualFriend < 10
-																	? `0${item.mutualFriend} `
-																	: `${item.mutualFriend} `}
-																bạn chung
-															</div>
-														) : (
-															''
-														)}
-													</div>
+											<div className='people-item' key={index}>
+												<img
+													src={item.avatarImage ? item.avatarImage : defaultAvatar}
+													onError={e => e.target.setAttribute('src', defaultAvatar)}
+													alt=''
+												/>
+												<div className='people-item__text'>
+													<span>{item.fullName || item.firstName + ' ' + item.lastName}</span>
+													{item.mutualFriend ? (
+														<div>
+															{item.mutualFriend < 10
+																? `0${item.mutualFriend} `
+																: `${item.mutualFriend} `}
+															bạn chung
+														</div>
+													) : (
+														''
+													)}
 												</div>
-											</>
+											</div>
 										);
 								  })
 								: 'Không có dữ liệu'}
@@ -183,7 +180,7 @@ const SidebarGroupLef = ({ handleChange, data, member }) => {
 SidebarGroupLef.propTypes = {
 	handleChange: PropTypes.func,
 	data: PropTypes.object,
-	member: PropTypes.object,
+	member: PropTypes.any,
 };
 
 export default SidebarGroupLef;

@@ -10,6 +10,7 @@
 	box-shadow: 0px 0px 32px rgba(0, 0, 0, 0.04);
 	cursor: default;
 	.notificaiton__container {
+		overflow-y: auto;
 		background: #fcfcfc;
 		font-family: 'Montserrat';
 		border-bottom-left-radius: 12px;

@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState } from 'react';
 import { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import './grid-image.scss';
@@ -6,15 +6,12 @@ import classNames from 'classnames';
 import _ from 'lodash';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import { render } from 'react-dom';
 import Lightbox from 'react-image-lightbox';
 import 'react-image-lightbox/style.css';
 
 const GridImage = ({ images, inPost, postId }) => {
-	const [show, setShow] = React.useState(false);
-	const handleShow = () => setShow(true);
-	const [photoIndex, setPhotoIndex] = React.useState(0);
-	const [isOpent, setIsOpent] = React.useState(false);
+	const [photoIndex, setPhotoIndex] = useState(0);
+	const [isOpen, setIsOpen] = useState(false);
 
 	useEffect(() => {
 		if (!_.isEmpty(images)) {
@@ -36,7 +33,7 @@ const GridImage = ({ images, inPost, postId }) => {
 					document.querySelector(`.img-0-${postId}`).style.inset = '0% 0% 33.335% 0%';
 					document.querySelector(`.img-1-${postId}`).style.inset = '66.67% 66.67% 0% 0%';
 					document.querySelector(`.img-2-${postId}`).style.inset = '66.67% 33.335% 0% 33.335%';
-					document.querySelector(`.img-4-${postId}`).style.inset = '66.67% 0% 0% 66.67%';
+					document.querySelector(`.img-3-${postId}`).style.inset = '66.67% 0% 0% 66.67%';
 				} else if (images.length > 4) {
 					document.querySelector(`.img-0-${postId}`).style.inset = '0% 0% 25% 0%';
 					document.querySelector(`.img-1-${postId}`).style.inset = '75% 75% 0% 0%';
@@ -58,7 +55,7 @@ const GridImage = ({ images, inPost, postId }) => {
 					document.querySelector(`.img-0`).style.inset = '0% 0% 33.335% 0%';
 					document.querySelector(`.img-1`).style.inset = '66.67% 66.67% 0% 0%';
 					document.querySelector(`.img-2`).style.inset = '66.67% 33.335% 0% 33.335%';
-					document.querySelector(`.img-4`).style.inset = '66.67% 0% 0% 66.67%';
+					document.querySelector(`.img-3`).style.inset = '66.67% 0% 0% 66.67%';
 				} else if (images.length > 4) {
 					document.querySelector(`.img-0`).style.inset = '0% 0% 25% 0%';
 					document.querySelector(`.img-1`).style.inset = '75% 75% 0% 0%';
@@ -74,7 +71,6 @@ const GridImage = ({ images, inPost, postId }) => {
 		<>
 			{!_.isEmpty(images) && (
 				<div
-					onClick={handleShow}
 					className={classNames('grid-image', {
 						'one-image': images.length === 1,
 						'more-one-image': images.length > 1,
@@ -84,7 +80,7 @@ const GridImage = ({ images, inPost, postId }) => {
 					{images.length < 6 ? (
 						<>
 							{images.map((image, index) => (
-								<button key={index} onClick={() => setIsOpent(true)}>
+								<button key={index} onClick={() => setIsOpen(true)}>
 									<div
 										key={index}
 										className={
@@ -99,12 +95,15 @@ const GridImage = ({ images, inPost, postId }) => {
 											<img src={URL.createObjectURL(image)} alt='image' />
 										)}
 									</div>
-									{isOpent && (
+									{isOpen && (
 										<Lightbox
 											mainSrc={images[photoIndex]}
 											nextSrc={images[(photoIndex + 1) % images.length]}
 											prevSrc={images[(photoIndex + images.length - 1) % images.length]}
-											onCloseRequest={() => setIsOpent(false)}
+											onCloseRequest={() => {
+												setIsOpen(false);
+												setPhotoIndex(0);
+											}}
 											onMovePrevRequest={() =>
 												setPhotoIndex((photoIndex + images.length - 1) % images.length)
 											}
@@ -121,7 +120,7 @@ const GridImage = ({ images, inPost, postId }) => {
 									{images.map((image, index) => {
 										if (index < 4) {
 											return (
-												<button onClick={() => setIsOpent(true)}>
+												<button onClick={() => setIsOpen(true)}>
 													<div
 														key={index}
 														className={
@@ -136,14 +135,14 @@ const GridImage = ({ images, inPost, postId }) => {
 															<img src={URL.createObjectURL(image)} alt='image' />
 														)}
 													</div>
-													{isOpent && (
+													{isOpen && (
 														<Lightbox
 															mainSrc={images[photoIndex]}
 															nextSrc={images[(photoIndex + 1) % images.length]}
 															prevSrc={
 																images[(photoIndex + images.length - 1) % images.length]
 															}
-															onCloseRequest={() => setIsOpent(false)}
+															onCloseRequest={() => setIsOpen(false)}
 															onMovePrevRequest={() =>
 																setPhotoIndex(
 																	(photoIndex + images.length - 1) % images.length
@@ -158,12 +157,12 @@ const GridImage = ({ images, inPost, postId }) => {
 											);
 										}
 										{
-											isOpent && (
+											isOpen && (
 												<Lightbox
 													mainSrc={images[photoIndex]}
 													nextSrc={images[(photoIndex + 1) % images.length]}
 													prevSrc={images[(photoIndex + images.length - 1) % images.length]}
-													onCloseRequest={() => setIsOpent(false)}
+													onCloseRequest={() => setIsOpen(false)}
 													onMovePrevRequest={() =>
 														setPhotoIndex({
 															photoIndex:
@@ -204,15 +203,12 @@ const GridImage = ({ images, inPost, postId }) => {
 		</>
 	);
 };
-
 GridImage.defaultProps = {
 	images: [],
 };
-
 GridImage.propTypes = {
 	images: PropTypes.array,
 	inPost: PropTypes.bool,
 	postId: PropTypes.string,
 };
-
 export default GridImage;

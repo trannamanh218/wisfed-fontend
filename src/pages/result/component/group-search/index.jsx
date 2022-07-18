@@ -91,7 +91,7 @@ const GroupSearch = ({ value, setIsFetching, searchResultInput, activeKeyDefault
 					{listArrayGroup.map(item => (
 						<div key={item.id} className='group__search__main'>
 							<div className='group__search__left'>
-								<img src={DefaultImageGroup} className='group__search__img' />
+								<img src={item.avatar || DefaultImageGroup} className='group__search__img' />
 								<div className='group__search__content'>
 									<div className='group__search__title'>{item.name}</div>
 									<div className='group__search__info'>

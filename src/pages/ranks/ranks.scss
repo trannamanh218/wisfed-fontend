@@ -26,13 +26,25 @@
 		.nav-tabs {
 			gap: 5rem;
 			padding: 0 40px;
+			justify-content: space-around;
 		}
 		.nav-item {
+			// flex-grow: 1;
+			// padding: 0 50px;
+
+			// button {
+			// 	padding: 25px 50px;
+			// }
 			.nav-link {
 				font-weight: 600;
 				font-size: 20px;
 				line-height: 32px;
 				letter-spacing: 0.75px;
+				// width: 100%;
+			}
+			.active {
+				border-top-left-radius: 16px;
+				border-top-right-radius: 16px;
 			}
 		}
 	}

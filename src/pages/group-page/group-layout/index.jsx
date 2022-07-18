@@ -53,7 +53,7 @@ const LayoutGroup = () => {
 
 	const handleChange = e => {
 		setValueGroupSearch(e.target.value);
-		debounceSearch(e.target.value);
+		debounceSearch(valueGroupSearch);
 	};
 
 	const updateInputSearch = value => {
@@ -64,6 +64,7 @@ const LayoutGroup = () => {
 			setFilter('[]');
 		}
 	};
+
 	const debounceSearch = useCallback(_.debounce(updateInputSearch, 500), []);
 
 	useEffect(() => {

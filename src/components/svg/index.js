@@ -66,7 +66,8 @@ import { ReactComponent as StarRanksActive } from 'assets/icons/StarRanksActive.
 import { ReactComponent as ShareRanks } from 'assets/icons/ShareRanks.svg';
 import { ReactComponent as Crown } from 'assets/icons/Crown.svg';
 import { ReactComponent as TimeIcon } from 'assets/icons/Time.svg';
-import { ReactComponent as DropdownGroup } from 'assets/icons/Arrow Caret Down.svg';
+import { ReactComponent as DropdownGroup } from 'assets/icons/ArrowCaretDown.svg';
+import { ReactComponent as DropdownGroupWhite } from 'assets/icons/ArrowCaretDownWhite.svg';
 import { ReactComponent as IconCheck } from 'assets/icons/circleCheck.svg';
 import { ReactComponent as LogOutGroup } from 'assets/icons/Log Out Square.svg';
 import { ReactComponent as ForwardGroup } from 'assets/icons/ForwardGroup.svg';
@@ -79,6 +80,7 @@ import { ReactComponent as LogOutIcon } from 'assets/icons/LogOutIcon.svg';
 import { ReactComponent as ProfileIcon } from 'assets/icons/ProfileIcon.svg';
 import { ReactComponent as ArrowDownIcon } from 'assets/icons/ArrowDownIcon.svg';
 import { ReactComponent as CrowSmall } from 'assets/icons/CrownSmall.svg';
+
 export {
 	CrowSmall,
 	IconRanks,
@@ -160,4 +162,5 @@ export {
 	FriendsIcon,
 	FriendsFillIcon,
 	CategoryFillIcon,
+	DropdownGroupWhite,
 };

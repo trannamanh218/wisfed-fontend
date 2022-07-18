@@ -16,7 +16,7 @@ import './post.scss';
 import PreviewLink from 'shared/preview-link/PreviewLink';
 import { NotificationError } from 'helpers/Error';
 import ReactRating from 'shared/react-rating';
-import { useParams, useLocation, Link } from 'react-router-dom';
+import { useParams, useLocation, Link, useNavigate } from 'react-router-dom';
 import { createCommentReview } from 'reducers/redux-utils/book';
 import Comment from 'shared/comments';
 import PostQuotes from 'shared/post-quotes';
@@ -30,17 +30,22 @@ import Storage from 'helpers/Storage';
 import { checkUserLogin } from 'reducers/redux-utils/auth';
 import ShareUsers from 'pages/home/components/newfeed/components/modal-share-users';
 
+const urlRegex =
+	/https?:\/\/www(\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/g;
+
 function Post({ postInformations, showModalCreatPost, inReviews = false }) {
 	const [postData, setPostData] = useState({});
 	const [videoId, setVideoId] = useState('');
 	const { userInfo } = useSelector(state => state.auth);
-	const [commentLv1IdArray, setCommentLv1IdArray] = useState([]);
 	const [replyingCommentId, setReplyingCommentId] = useState(null);
 	const [clickReply, setClickReply] = useState(false);
+	const [mentionUsersArr, setMentionUsersArr] = useState([]);
+
 	const { isSharePosts } = useSelector(state => state.post);
 	const location = useLocation();
 
 	const dispatch = useDispatch();
+	const navigate = useNavigate();
 	const { bookId } = useParams();
 
 	useEffect(() => {
@@ -58,33 +63,9 @@ function Post({ postInformations, showModalCreatPost, inReviews = false }) {
 		window.open(url);
 	};
 
-	useEffect(() => {
-		if (postData.usersComments?.length > 0) {
-			const commentLv1IdTemp = [];
-			for (let i = 0; i < postData.usersComments.length; i++) {
-				if (
-					postData.usersComments[i].replyId === null &&
-					!commentLv1IdTemp.includes(postData.usersComments[i].id)
-				) {
-					commentLv1IdTemp.push(postData.usersComments[i].id);
-				}
-			}
-			setCommentLv1IdArray(commentLv1IdTemp);
-		}
-	}, [postData.usersComments]);
-
-	useEffect(() => {
-		const urlAddedArray = document.querySelectorAll('.url-color');
-		if (urlAddedArray.length > 0) {
-			for (let i = 0; i < urlAddedArray.length; i++) {
-				urlAddedArray[i].addEventListener('click', () => {
-					directUrl(urlAddedArray[i].innerText);
-				});
-			}
-		}
-	}, [postData]);
-
 	const onCreateComment = async (content, replyId) => {
+		const newArr = [];
+		mentionUsersArr.forEach(item => newArr.push(item.id));
 		try {
 			let res = {};
 			if (bookId) {
@@ -93,7 +74,7 @@ function Post({ postInformations, showModalCreatPost, inReviews = false }) {
 					replyId: replyId,
 					content: content,
 					mediaUrl: [],
-					mentionsUser: [],
+					mentionsUser: newArr,
 				};
 				res = await dispatch(createCommentReview(commentReviewData)).unwrap();
 			} else {
@@ -101,18 +82,17 @@ function Post({ postInformations, showModalCreatPost, inReviews = false }) {
 					const params = {
 						groupPostId: postData.minipostId || postData.id,
 						content: content,
-						mentionsUser: [],
+						mentionsUser: newArr,
 						mediaUrl: [],
 						replyId: replyId,
 					};
-
 					res = await dispatch(createCommentGroup(params)).unwrap();
 				} else {
 					const params = {
-						minipostId: postData.minipostId || postData.id,
+						minipostId: postData.minipostId || postData.groupPostId || postData.id,
 						content: content,
 						mediaUrl: [],
-						mentionsUser: [],
+						mentionsUser: newArr,
 						replyId: replyId,
 					};
 					res = await dispatch(createComment(params)).unwrap();
@@ -120,8 +100,22 @@ function Post({ postInformations, showModalCreatPost, inReviews = false }) {
 			}
 			if (!_.isEmpty(res)) {
 				const newComment = { ...res, user: userInfo };
-				const usersComments = [...postData.usersComments, newComment];
-				const newPostData = { ...postData, usersComments, comment: postData.comment + 1 }; // Tự động cập nhật đếm comment
+				let usersComments = [];
+				if (replyId) {
+					const cmtReplying = [...postData.usersComments.rows].filter(item => item.id === replyId);
+					const reply = [...cmtReplying[0].reply];
+					reply.push(newComment);
+					const obj = { ...cmtReplying[0], reply };
+					const rows = [...postData.usersComments.rows];
+					const index = rows.findIndex(item => item.id === replyId);
+					rows[index] = obj;
+					usersComments = { ...postData.usersComments, rows };
+				} else {
+					const rows = [...postData.usersComments.rows];
+					rows.splice(0, 0, newComment);
+					usersComments = { ...postData.usersComments, rows };
+				}
+				const newPostData = { ...postData, usersComments, comment: postData.comment + 1 };
 				setPostData(newPostData);
 			}
 		} catch (err) {
@@ -151,20 +145,15 @@ function Post({ postInformations, showModalCreatPost, inReviews = false }) {
 		}
 	};
 
-	useEffect(() => {
-		const textareaInCommentEdit = document.querySelector(`#textarea-${replyingCommentId}`);
-		if (textareaInCommentEdit) {
-			textareaInCommentEdit.focus();
-			window.scroll({
-				top: textareaInCommentEdit.offsetTop - 400,
-				behavior: 'smooth',
-			});
-		}
-	}, [replyingCommentId, clickReply]);
-
-	const handleReply = cmtLv1Id => {
+	const handleReply = (cmtLv1Id, userData) => {
+		const arr = [];
+		arr.push(userData);
+		setMentionUsersArr(arr);
 		setReplyingCommentId(cmtLv1Id);
-		setClickReply(!clickReply);
+		setClickReply(true);
+		setTimeout(() => {
+			setClickReply(false);
+		}, 200);
 	};
 
 	const withFriends = paramInfo => {
@@ -207,6 +196,7 @@ function Post({ postInformations, showModalCreatPost, inReviews = false }) {
 						data-testid='post__user-avatar'
 						className='post__user-status__avatar'
 						source={postData?.createdBy?.avatarImage || postData.user?.avatarImage}
+						handleClick={() => navigate(`/profile/${postData.createdBy.id}`)}
 					/>
 
 					<div className='post__user-status__name-and-post-time-status'>
@@ -260,12 +250,14 @@ function Post({ postInformations, showModalCreatPost, inReviews = false }) {
 						</div>
 					</div>
 				</div>
-				<div
-					className='post__description'
-					dangerouslySetInnerHTML={{
-						__html: postData.message || postData.content,
-					}}
-				></div>
+				{(postData.message || postData.content) && (
+					<div
+						className='post__description'
+						dangerouslySetInnerHTML={{
+							__html: generateContent(postData.message || postData.content),
+						}}
+					></div>
+				)}
 			</>
 		);
 	};
@@ -294,6 +286,19 @@ function Post({ postInformations, showModalCreatPost, inReviews = false }) {
 				default:
 					break;
 			}
+		}
+	};
+
+	const generateContent = content => {
+		if (content.match(urlRegex)) {
+			const newContent = content.replace(urlRegex, data => {
+				return `<a class="url-class" href=${data} target="_blank">${
+					data.length <= 50 ? data : data.slice(0, 50) + '...'
+				}</a>`;
+			});
+			return newContent;
+		} else {
+			return content;
 		}
 	};
 
@@ -400,54 +405,54 @@ function Post({ postInformations, showModalCreatPost, inReviews = false }) {
 			{!isSharePosts && (
 				<>
 					<PostActionBar postData={postData} handleLikeAction={handleLikeAction} />
-					{postData.usersComments?.map(comment => (
-						<div key={comment.id}>
-							{comment.replyId === null && (
-								<Comment
-									commentLv1Id={comment.id}
-									data={comment}
-									postData={postData}
-									handleReply={handleReply}
-									postCommentsLikedArray={[]}
-									type={inReviews ? REVIEW_TYPE : POST_TYPE}
-								/>
-							)}
-							<div className='comment-reply-container'>
-								{postData.usersComments.map(commentChild => {
-									if (commentChild.replyId === comment.id) {
-										return (
-											<div key={commentChild.id}>
-												<Comment
-													commentLv1Id={comment.id}
-													data={commentChild}
-													postData={postData}
-													handleReply={handleReply}
-													postCommentsLikedArray={[]}
-													type={inReviews ? REVIEW_TYPE : POST_TYPE}
-												/>
-											</div>
-										);
-									}
-								})}
-								{commentLv1IdArray.includes(comment.id) && (
-									<CommentEditor
-										userInfo={userInfo}
-										onCreateComment={onCreateComment}
-										className={classNames('reply-comment-editor', {
-											'show': comment.id === replyingCommentId,
-										})}
-										replyId={replyingCommentId}
-										textareaId={`textarea-${comment.id}`}
+					{postData.usersComments?.rows && !!postData.usersComments?.rows.length && (
+						<>
+							{postData.usersComments.rows.map(comment => (
+								<div key={comment.id}>
+									<Comment
+										commentLv1Id={comment.id}
+										data={comment}
+										postData={postData}
+										handleReply={handleReply}
+										type={inReviews ? REVIEW_TYPE : POST_TYPE}
 									/>
-								)}
-							</div>
-						</div>
-					))}
+									<div className='comment-reply-container'>
+										{comment.reply && !!comment.reply.length && (
+											<>
+												{comment.reply.map(commentChild => (
+													<div key={commentChild.id}>
+														<Comment
+															commentLv1Id={comment.id}
+															data={commentChild}
+															postData={postData}
+															handleReply={handleReply}
+															type={inReviews ? REVIEW_TYPE : POST_TYPE}
+														/>
+													</div>
+												))}
+											</>
+										)}
+										<CommentEditor
+											onCreateComment={onCreateComment}
+											className={classNames(`reply-comment-editor reply-comment-${comment.id}`, {
+												'show': comment.id === replyingCommentId,
+											})}
+											mentionUsersArr={mentionUsersArr}
+											replyingCommentId={replyingCommentId}
+											clickReply={clickReply}
+											setMentionUsersArr={setMentionUsersArr}
+										/>
+									</div>
+								</div>
+							))}
+						</>
+					)}
 					<CommentEditor
-						userInfo={userInfo}
+						className='comment-editor-last'
+						replyingCommentId={null}
 						onCreateComment={onCreateComment}
-						reply={null}
-						indexParent={null}
+						mentionUsersArr={mentionUsersArr}
+						setMentionUsersArr={setMentionUsersArr}
 					/>
 				</>
 			)}

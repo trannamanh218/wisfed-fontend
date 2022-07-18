@@ -67,4 +67,19 @@
 			color: $primary;
 		}
 	}
+
+	.mention-class {
+		font-family: inherit;
+		font-size: 14px;
+	}
+
+	.url-class {
+		width: fit-content;
+		overflow: hidden;
+		color: $blue;
+		&:hover {
+			text-decoration: underline;
+			color: $blue;
+		}
+	}
 }

@@ -8,9 +8,7 @@ import { useDispatch } from 'react-redux';
 import {
 	backgroundToggle,
 	activeKeyTabsNotification,
-	handleListNotification,
 	getListNotificationUnRead,
-	handleListUnRead,
 } from 'reducers/redux-utils/notificaiton';
 import { getNotification } from 'reducers/redux-utils/notificaiton';
 import { NotificationError } from 'helpers/Error';
@@ -63,24 +61,19 @@ const NotificationModal = ({ setModalNotti, buttonModal, realTime }) => {
 				setRenderFriend(true);
 			}
 		}
-	}, [getNotifications]);
+	}, []);
 
 	const getMyNotification = async () => {
 		try {
 			setIsLoading(true);
-			if (listNotifcaiton.length > 0 && !realTime) {
-				setGetNotifications(listNotifcaiton);
-			} else {
-				const notificationList = await dispatch(getNotification()).unwrap();
-				const arrNew = notificationList.map(item => item.activities).flat(1);
-				const newArr = arrNew.map(item => {
-					const data = { ...item, isAccept: false, isRefuse: false };
-					return { ...data };
-				});
-				const filterFriend = newArr.filter(item => !item.isCheck);
-				dispatch(handleListNotification(filterFriend));
-				setGetNotifications(filterFriend);
-			}
+			const notificationList = await dispatch(getNotification()).unwrap();
+			const arrNew = notificationList.map(item => item.activities).flat(1);
+			const newArr = arrNew.map(item => {
+				const data = { ...item, isAccept: false, isRefuse: false };
+				return { ...data };
+			});
+			const filterFriend = newArr.filter(item => !item.isCheck);
+			setGetNotifications(filterFriend);
 		} catch (err) {
 			NotificationError(err);
 		} finally {
@@ -141,11 +134,12 @@ const NotificationModal = ({ setModalNotti, buttonModal, realTime }) => {
 										item =>
 											!item.isCheck && (
 												<ModalItem
+													key={item.id}
 													item={item}
 													setModalNotti={setModalNotti}
-													getNotifications={getNotifications}
-													setGetNotifications={setGetNotifications}
 													selectKey={selectKey}
+													setGetNotifications={setGetNotifications}
+													getNotifications={getNotifications}
 												/>
 											)
 									)}
@@ -156,11 +150,12 @@ const NotificationModal = ({ setModalNotti, buttonModal, realTime }) => {
 										item =>
 											!item.isCheck && (
 												<ModalItem
+													key={item.id}
 													item={item}
 													setModalNotti={setModalNotti}
-													getNotifications={getNotifications}
-													setGetNotifications={setGetNotifications}
 													selectKey={selectKey}
+													setGetNotifications={setGetNotifications}
+													getNotifications={getNotifications}
 												/>
 											)
 									)}
@@ -184,11 +179,9 @@ const NotificationModal = ({ setModalNotti, buttonModal, realTime }) => {
 													!item.isRead &&
 													!item.isCheck && (
 														<ModalItem
+															key={item.id}
 															item={item}
 															setModalNotti={setModalNotti}
-															getListUnread={getListUnread}
-															selectKey={selectKey}
-															setGetListUnRead={setGetListUnRead}
 														/>
 													)
 											)}
@@ -215,11 +208,12 @@ const NotificationModal = ({ setModalNotti, buttonModal, realTime }) => {
 												item.verb === 'addFriend' &&
 												!item.isCheck && (
 													<ModalItem
+														key={item.id}
 														item={item}
 														setModalNotti={setModalNotti}
 														selectKey={selectKey}
-														getNotifications={getNotifications}
 														setGetNotifications={setGetNotifications}
+														getNotifications={getNotifications}
 													/>
 												)
 										)}
@@ -232,7 +226,7 @@ const NotificationModal = ({ setModalNotti, buttonModal, realTime }) => {
 										</Link>
 									</>
 								) : (
-									<span className='no__notificaion'>Bạn không có lời mời kết bạn nào</span>
+									<span className='no__notificaion'>Bạn chưa có lời mời kết bạn nào</span>
 								)}
 							</Tab>
 						</Tabs>

@@ -28,6 +28,7 @@ import Dropzone from 'react-dropzone';
 import { useDropzone } from 'react-dropzone';
 import { uploadImage } from 'reducers/redux-utils/common';
 import camera from 'assets/images/camera.png';
+import { useRef } from 'react';
 
 function MainGroupComponent({ handleChange, keyChange, data, member, handleUpdate }) {
 	const [key, setKey] = useState('intro');
@@ -45,6 +46,7 @@ function MainGroupComponent({ handleChange, keyChange, data, member, handleUpdat
 	const { ref: showRef, isVisible: isShow, setIsVisible: setIsShow } = useVisible(false);
 	const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
 	const [imgUrl, setImgUrl] = useState('');
+	const joinedGroupPopup = useRef(null);
 
 	const enjoyGroup = async () => {
 		setIsFetching(true);
@@ -77,7 +79,6 @@ function MainGroupComponent({ handleChange, keyChange, data, member, handleUpdat
 			}, 2000);
 		}
 	};
-	useEffect(() => {}, [keyRedux]);
 
 	const handleChangeSearch = e => {
 		setValueGroupSearch(e.target.value);
@@ -167,6 +168,22 @@ function MainGroupComponent({ handleChange, keyChange, data, member, handleUpdat
 		handleSelect();
 	}, [keyRedux]);
 
+	function useOutsideAlerter(ref) {
+		useEffect(() => {
+			function handleClickOutside(event) {
+				if (ref.current && !ref.current.contains(event.target)) {
+					setShowSelect(false);
+				}
+			}
+			document.addEventListener('mousedown', handleClickOutside);
+			return () => {
+				document.removeEventListener('mousedown', handleClickOutside);
+			};
+		}, [ref]);
+	}
+
+	useOutsideAlerter(joinedGroupPopup);
+
 	return (
 		<div className='group-main-component__container'>
 			<Circle loading={isFetching} />
@@ -209,7 +226,7 @@ function MainGroupComponent({ handleChange, keyChange, data, member, handleUpdat
 					<div className='btn-top'>
 						{show ? (
 							<>
-								<div className='group-name__joined-group'>
+								<div ref={joinedGroupPopup} className='group-name__joined-group'>
 									<button onClick={() => setShowSelect(!showSelect)}>
 										<IconCheck />
 										<span>Đã tham gia</span>

@@ -43,13 +43,11 @@ function IntroGroup({ groupType, description, createdAt, data }) {
 						</span>
 						{data?.authors?.map((item, index) => {
 							return (
-								<>
-									<span>
-										{' '}
-										{item.fullName || item.firstName + ' ' + item.lastName}{' '}
-										{index < data.authors.length - 1 && ','}
-									</span>
-								</>
+								<span key={index}>
+									{' '}
+									{item.fullName || item.firstName + ' ' + item.lastName}{' '}
+									{index < data.authors.length - 1 && ','}
+								</span>
 							);
 						})}
 						{/* {data.active ? <p>(Đã xác nhận)</p> : <p>(Chưa xác nhận)</p>} */}
@@ -83,7 +81,7 @@ function IntroGroup({ groupType, description, createdAt, data }) {
 }
 
 IntroGroup.propTypes = {
-	description: PropTypes.func,
+	description: PropTypes.string,
 	groupType: PropTypes.string,
 	data: PropTypes.object,
 	createdAt: PropTypes.string,

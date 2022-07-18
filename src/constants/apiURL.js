@@ -37,6 +37,7 @@ export const bookElasticSearchAPI = '/api/v1/books/search';
 export const bookCopyrightsAPI = '/api/v1/bookCopyrights';
 export const bookReviewAPI = '/api/v1/reviews';
 export const likeReviewsAPI = reviewId => `/api/v1/reviews/like/${reviewId}`;
+export const likeCommentReviewsAPI = id => `/api/v1/commentReviews/like/${id}`;
 export const commentBookReviewAPI = '/api/v1/commentReviews';
 export const bookFollowReviewAPI = id => `/api/v1/books/${id}/followReviews`;
 export const bookFriendReviewAPI = id => `/api/v1/books/${id}/friendReviews`;

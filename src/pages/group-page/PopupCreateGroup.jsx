@@ -110,7 +110,6 @@ const PopupCreateGroup = ({ handleClose, showRef }) => {
 				.replace(/đ/g, 'd')
 				.replace(/Đ/g, 'D');
 			const newList = [...listHashtags, check];
-
 			setListHashtags(newList);
 		}
 	}, [dataRef.current]);
@@ -136,6 +135,8 @@ const PopupCreateGroup = ({ handleClose, showRef }) => {
 			inputNameGroup !== ''
 		) {
 			setIsShowBtn(true);
+		} else {
+			setIsShowBtn(false);
 		}
 	}, [imgUrl, listAuthors, listHashtags, kindOfGroup, inputDiscription, inputNameGroup]);
 
@@ -299,19 +300,17 @@ const PopupCreateGroup = ({ handleClose, showRef }) => {
 						{listAuthors.length > 0 ? (
 							<div className='input__authors '>
 								{listAuthors.map(item => (
-									<>
-										<span>
-											{item.fullName ? item.fullName : `${item.firstName + ' ' + item.lastName}`}
-											<button
-												className='close__author'
-												onClick={() => {
-													handleRemove(item);
-												}}
-											>
-												<CloseIconX />
-											</button>
-										</span>
-									</>
+									<span key={item.id}>
+										{item.fullName ? item.fullName : `${item.firstName + ' ' + item.lastName}`}
+										<button
+											className='close__author'
+											onClick={() => {
+												handleRemove(item);
+											}}
+										>
+											<CloseIconX />
+										</button>
+									</span>
 								))}
 							</div>
 						) : (

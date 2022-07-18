@@ -15,6 +15,7 @@ const PopupInviteFriend = ({ handleClose, showRef }) => {
 	const dispatch = useDispatch();
 	const { id = '' } = useParams();
 	const { userInfo } = useSelector(state => state.auth);
+	const [inputSearch, setInputSearch] = useState('');
 
 	console.log(showRef);
 
@@ -70,7 +71,7 @@ const PopupInviteFriend = ({ handleClose, showRef }) => {
 			</div>
 			<hr />
 			<div className='search-friend'>
-				<SearchField />
+				<SearchField value={inputSearch} handleChange={e => setInputSearch(e.target.value)} />
 				<button onClick={() => inViteFriend()}>Xong</button>
 			</div>
 

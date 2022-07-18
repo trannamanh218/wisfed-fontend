@@ -38,6 +38,14 @@ const ReviewTab = ({ currentTab }) => {
 			value: 'oldest',
 			title: 'Cũ nhất',
 		},
+		{
+			value: 'mostFollow',
+			title: 'Có nhiều Follow nhất',
+		},
+		{
+			value: 'mostReview',
+			title: 'Có nhiều Review nhất',
+		},
 	];
 	const checkBoxStarOptions = [
 		{
@@ -61,16 +69,6 @@ const ReviewTab = ({ currentTab }) => {
 			title: '1 sao',
 		},
 	];
-	const checkBoxPeopleOptions = [
-		{
-			value: 'mostFollow',
-			title: 'Có nhiều Follow nhất',
-		},
-		{
-			value: 'mostReview',
-			title: 'Có nhiều Review nhất',
-		},
-	];
 
 	const [currentOption, setCurrentOption] = useState(filterOptions[0]);
 	const [reviewList, setReviewList] = useState([]);
@@ -82,6 +80,7 @@ const ReviewTab = ({ currentTab }) => {
 	const [checkedPeopleArr, setCheckedPeopleArr] = useState([]);
 	const [directionSort, setDirectionSort] = useState('DESC');
 	const [propertySort, setPropertySort] = useState('like');
+	const [inputSearch, setInputSearch] = useState('');
 
 	const callApiStart = useRef(10);
 	const callApiPerPage = useRef(10);
@@ -236,7 +235,11 @@ const ReviewTab = ({ currentTab }) => {
 					className='review-tab__filter__options'
 				/>
 				<div className='review-tab__search'>
-					<SearchField placeholder='Tìm kiếm theo Hastag, tên người review ...' />
+					<SearchField
+						value={inputSearch}
+						handleChange={e => setInputSearch(e.target.value)}
+						placeholder='Tìm kiếm theo Hastag, tên người review ...'
+					/>
 				</div>
 				{currentTab === 'reviews' && reviewList.length ? (
 					<InfiniteScroll
@@ -313,19 +316,24 @@ const ReviewTab = ({ currentTab }) => {
 						<div className='sort-review-modal__item'>
 							<span className='filter-quote-pane__setting__title'>Theo người Review</span>
 						</div>
-						{checkBoxPeopleOptions.map((element, index) => {
-							return (
-								<div key={index} className='sort-review-modal__item'>
-									<FormCheckGroup
-										data={element}
-										name='checkbox-people'
-										type='checkbox'
-										handleChange={handleChangePeople}
-										checked={checkedPeopleArr.includes(element.value)}
-									/>
-								</div>
-							);
-						})}
+						<div className='sort-review-modal__item'>
+							<FormCheckGroup
+								data={radioOptions[3]}
+								name='custom-radio'
+								type='radio'
+								handleChange={handleChange}
+								checked={radioOptions[3].value === sortValue}
+							/>
+						</div>
+						<div className='sort-review-modal__item'>
+							<FormCheckGroup
+								data={radioOptions[4]}
+								name='custom-radio'
+								type='radio'
+								handleChange={handleChange}
+								checked={radioOptions[4].value === sortValue}
+							/>
+						</div>
 						<div className='sort-review-modal__item' style={{ marginTop: '10px' }}>
 							<Button
 								className='btn'

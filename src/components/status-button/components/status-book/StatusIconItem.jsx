@@ -26,7 +26,7 @@ const StatusIconItem = ({ item, currentStatus, handleChangeStatus }) => {
 };
 
 StatusIconItem.propTypes = {
-	item: PropTypes.string.isRequired,
+	item: PropTypes.object.isRequired,
 	currentStatus: PropTypes.string.isRequired,
 	handleChangeStatus: PropTypes.func,
 };

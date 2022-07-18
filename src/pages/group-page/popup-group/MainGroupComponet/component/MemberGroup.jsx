@@ -82,9 +82,9 @@ function MemberGroup() {
 		<div className='member-group__container'>
 			<div className='member-group__admin'>
 				<h2>Quản trị viên và người kiểm duyệt</h2>
-				{memberGroups?.map(item => {
+				{memberGroups?.map((item, index) => {
 					return (
-						<>
+						<div key={index}>
 							{item?.isAdmin && (
 								<div className='member-item'>
 									<div className='member-item__info'>
@@ -159,7 +159,7 @@ function MemberGroup() {
 									)}
 								</div>
 							)}
-						</>
+						</div>
 					);
 				})}
 
@@ -169,9 +169,9 @@ function MemberGroup() {
 			<div className='member-group__friends'>
 				<h2>Bạn bè</h2>
 				{listFriend.length > 0
-					? listFriend.map(item => {
+					? listFriend.map((item, index) => {
 							return (
-								<>
+								<div key={index}>
 									<div className='member-item'>
 										<div className='member-item__info'>
 											<img
@@ -243,7 +243,7 @@ function MemberGroup() {
 											</div>
 										)}
 									</div>
-								</>
+								</div>
 							);
 					  })
 					: 'Chưa có bạn bè tham gia'}
@@ -253,9 +253,9 @@ function MemberGroup() {
 			<div className='member-group__folower'>
 				<h2>Người theo dõi</h2>
 				{listFolow.length > 0
-					? listFolow.map(item => {
+					? listFolow.map((item, index) => {
 							return (
-								<>
+								<div key={index}>
 									<div className='member-item'>
 										<div className='member-item__info'>
 											<img
@@ -326,7 +326,7 @@ function MemberGroup() {
 											</div>
 										)}
 									</div>
-								</>
+								</div>
 							);
 					  })
 					: 'Không có dữ liệu'}
@@ -338,82 +338,80 @@ function MemberGroup() {
 
 			<div className='member-group__all-member'>
 				<h2>Tất cả mọi người</h2>
-				{memberGroups.map(item => {
+				{memberGroups.map((item, index) => {
 					return (
-						<>
-							<div className='member-item'>
-								<div className='member-item__info'>
-									<img
-										src={item.avatarImage ? item.avatarImage : defaultAvatar}
-										onError={e => e.target.setAttribute('src', defaultAvatar)}
-										alt=''
-									/>
-									<div className='member-item__text'>
-										<span>{item?.firstName + ' ' + item?.lastName || item.fullName}</span>
-										{item.mutualFriend ? (
-											<p>
-												{item.mutualFriend < 10
-													? `0${item.mutualFriend} `
-													: `${item.mutualFriend} `}
-												bạn chung
-											</p>
-										) : (
-											''
-										)}
-									</div>
+						<div className='member-item' key={index}>
+							<div className='member-item__info'>
+								<img
+									src={item.avatarImage ? item.avatarImage : defaultAvatar}
+									onError={e => e.target.setAttribute('src', defaultAvatar)}
+									alt=''
+								/>
+								<div className='member-item__text'>
+									<span>{item?.firstName + ' ' + item?.lastName || item.fullName}</span>
+									{item.mutualFriend ? (
+										<p>
+											{item.mutualFriend < 10
+												? `0${item.mutualFriend} `
+												: `${item.mutualFriend} `}
+											bạn chung
+										</p>
+									) : (
+										''
+									)}
 								</div>
+							</div>
 
-								{item.relation !== 'isMe' && (
-									<div style={{ display: 'flex' }}>
-										{item.isFollow === true ? (
-											<button
-												className='member-item__btn btn-folow'
-												onClick={() => handleUnFollow(item)}
-											>
-												Bỏ theo dõi
-											</button>
-										) : (
-											<button
-												className='member-item__btn btn-folow'
-												onClick={() => handleFollow(item)}
-											>
-												Theo dõi
-											</button>
-										)}
+							{item.relation !== 'isMe' && (
+								<div style={{ display: 'flex' }}>
+									{item.isFollow === true ? (
+										<button
+											className='member-item__btn btn-folow'
+											onClick={() => handleUnFollow(item)}
+										>
+											Bỏ theo dõi
+										</button>
+									) : (
+										<button
+											className='member-item__btn btn-folow'
+											onClick={() => handleFollow(item)}
+										>
+											Theo dõi
+										</button>
+									)}
 
-										{item.relation === 'friend' && (
-											<button
-												className='member-item__btn bnt-add-friend'
-												onClick={() => handleUnFriend(item)}
-											>
-												- hủy kết bạn
-											</button>
-										)}
-										{item.relation === 'pending' && (
-											<button
-												className='member-item__btn bnt-add-friend'
-												style={{ backgroundColor: '#EFF0F6', opacity: '0.8' }}
-											>
-												Đã gửi lời mời
-											</button>
-										)}
-										{item.relation === 'unknown' && (
-											<button
-												className='member-item__btn bnt-add-friend'
-												onClick={() => handleAddFriend(item)}
-											>
-												+ Thêm bạn
-											</button>
-										)}
-										{/* {item.isAdmin && (x
+									{item.relation === 'friend' && (
+										<button
+											className='member-item__btn bnt-add-friend'
+											onClick={() => handleUnFriend(item)}
+										>
+											- hủy kết bạn
+										</button>
+									)}
+									{item.relation === 'pending' && (
+										<button
+											className='member-item__btn bnt-add-friend'
+											style={{ backgroundColor: '#EFF0F6', opacity: '0.8' }}
+										>
+											Đã gửi lời mời
+										</button>
+									)}
+									{item.relation === 'unknown' && (
+										<button
+											className='member-item__btn bnt-add-friend'
+											onClick={() => handleAddFriend(item)}
+										>
+											+ Thêm bạn
+										</button>
+									)}
+									{/* {item.isAdmin && (x
 													<button className='more-icon-btn-group'>
 														<MoreIcon />
 													</button>
 												)} */}
-									</div>
-								)}
-							</div>
-						</>
+								</div>
+							)}
+						</div>
 					);
 				})}
 			</div>

@@ -48,13 +48,12 @@ function CreatPostSubModal(props) {
 	const fetchSuggestion = async (input, option) => {
 		setIsFetchingSuggestions(true);
 		try {
-			if (input.length > 0) {
+			if (option.title === 'tác giả' && input.length > 0) {
 				const params = { q: input, type: 'author' };
 				const data = await dispatch(getFilterSearch(params)).unwrap();
 				setSuggestionData(data.users);
 			} else {
 				const data = await dispatch(getSuggestionForPost({ input, option, userInfo })).unwrap();
-
 				setSuggestionData(data.rows);
 			}
 		} catch (err) {
@@ -201,7 +200,7 @@ CreatPostSubModal.propTypes = {
 	images: PropTypes.array,
 	deleteImage: PropTypes.func,
 	suggestionData: PropTypes.array,
-	fetchSuggestion: PropTypes.func.isRequired,
+	fetchSuggestion: PropTypes.func,
 	handleAddToPost: PropTypes.func.isRequired,
 	taggedData: PropTypes.object,
 	removeTaggedItem: PropTypes.func,

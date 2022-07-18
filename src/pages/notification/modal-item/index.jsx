@@ -10,17 +10,9 @@ import { renderMessage } from 'helpers/HandleShare';
 import { readNotification } from 'reducers/redux-utils/notificaiton';
 import PropTypes from 'prop-types';
 import { addFollower } from 'reducers/redux-utils/user';
-import { handleListNotification, handleListUnRead } from 'reducers/redux-utils/notificaiton';
 import { useSelector } from 'react-redux';
-const ModalItem = ({
-	item,
-	setModalNotti,
-	getNotifications,
-	setGetNotifications,
-	getListUnread,
-	selectKey,
-	setGetListUnRead,
-}) => {
+
+const ModalItem = ({ item, setModalNotti, getNotifications, setGetNotifications, selectKey }) => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	const { userInfo } = useSelector(state => state.auth);
@@ -35,25 +27,16 @@ const ModalItem = ({
 		try {
 			const parseObject = JSON.parse(data);
 			const params = { id: parseObject.requestId, data: { reply: true } };
-			let newListArr = [];
-			if (selectKey === 'unread') {
-				newListArr = getListUnread;
-			} else {
-				newListArr = getNotifications;
-			}
-			const newArr = newListArr.map(item => {
-				if (items.id === item.id) {
-					const data = { ...item, isAccept: true };
-					return { ...data };
-				}
-				return { ...item };
-			});
-			if (selectKey === 'unread') {
-				setGetListUnRead(newArr);
-				// dispatch(handleListUnRead(newArr));
-			} else {
+
+			if (selectKey !== 'unread') {
+				const newArr = getNotifications.map(item => {
+					if (items.id === item.id) {
+						const data = { ...item, isAccept: true };
+						return { ...data };
+					}
+					return { ...item };
+				});
 				setGetNotifications(newArr);
-				dispatch(handleListNotification(newArr));
 			}
 			await dispatch(ReplyFriendRequest(params)).unwrap();
 			await dispatch(readNotification({ notificationId: items.id })).unwrap();
@@ -67,31 +50,21 @@ const ModalItem = ({
 		try {
 			const parseObject = JSON.parse(data);
 			const params = { id: parseObject.requestId, data: { level: 'normal' } };
-			let newListArr = [];
-			if (selectKey === 'unread') {
-				newListArr = getListUnread;
-			} else {
-				newListArr = getNotifications;
-			}
-			const newArr = newListArr.map(item => {
-				if (items.id === item.id) {
-					const data = { ...item, isRefuse: true };
-					return { ...data };
-				}
-				return { ...item };
-			});
 
-			if (selectKey === 'unread') {
-				setGetListUnRead(newArr);
-				// dispatch(handleListUnRead(newArr));
-			} else {
+			if (selectKey !== 'unread') {
+				const newArr = getNotifications.map(item => {
+					if (items.id === item.id) {
+						const data = { ...item, isRefuse: true };
+						return { ...data };
+					}
+					return { ...item };
+				});
 				setGetNotifications(newArr);
-				dispatch(handleListNotification(newArr));
 			}
 			await dispatch(CancelFriendRequest(params)).unwrap();
 			await dispatch(readNotification({ notificationId: items.id })).unwrap();
 		} catch (err) {
-			NotificationError(err);
+			// NotificationError(err);
 		}
 	};
 
@@ -107,9 +80,9 @@ const ModalItem = ({
 			items.verb === 'commentGroupPost'
 		) {
 			navigate(
-				`/detail-feed/${items.verb === 'commentMiniPost' ? 'mini-post' : 'group-post'}/${
-					items.originId?.minipostId || items.originId?.groupPostId
-				}`
+				`/detail-feed/${
+					items.verb === 'commentMiniPost' || items.verb === 'likeMiniPost' ? 'mini-post' : 'group-post'
+				}/${items.originId?.minipostId || items.originId?.groupPostId}`
 			);
 		} else if (items.verb === 'follow' || items.verb === 'addFriend' || items.verb === 'friendAccepted') {
 			navigate(`/profile/${items.createdBy?.id || items.originId.userId}`);
@@ -120,28 +93,14 @@ const ModalItem = ({
 		} else if (item.verb === 'inviteGroup') {
 			navigate(`/Group/${items.originId.groupId}`);
 		} else if (items.verb === 'replyComment' || items.verb === 'shareQuote') {
-			navigate(`/detail-feed/${'MiniPost'}/${items.originId.minipostId}`);
+			navigate(`/detail-feed/${'mini-post'}/${items.originId.minipostId}`);
 		} else if (items.verb === 'commentQuote') {
 			navigate(`/quotes/detail/${items.originId.quoteId}`);
 		} else if (items.verb === 'mention') {
 			navigate(`/detail-feed/${'mini-post'}/${items.originId.minipostId}`);
+		} else if (items.verb === 'likeQuote') {
+			navigate(`/quotes/detail/${items.originId.quoteId}`);
 		}
-
-		let newListArr = [];
-		if (selectKey === 'unread') {
-			newListArr = getListUnread;
-		} else {
-			newListArr = getNotifications;
-		}
-		const newArr = newListArr.map(item => {
-			if (items.id === item.id) {
-				const data = { ...item, isRead: true };
-				return { ...data };
-			}
-			return { ...item };
-		});
-		setGetNotifications(newArr);
-		dispatch(handleListNotification(newArr));
 		dispatch(backgroundToggle(true));
 		setModalNotti(false);
 		dispatch(readNotification(params)).unwrap();
@@ -149,7 +108,6 @@ const ModalItem = ({
 
 	return (
 		<div
-			key={item.id}
 			className={
 				item.isRead || item.isAccept || item.isRefuse
 					? 'notificaiton__tabs__all__active'
@@ -157,7 +115,7 @@ const ModalItem = ({
 			}
 		>
 			<div onClick={() => hanleActiveIsReed(item)} className='notificaiton__all__layout'>
-				<UserAvatar size='mm' source={item.createdBy?.avatarImage} />
+				<UserAvatar size='mm' source={item.createdBy?.avatarImage || userInfo.avatarImage} />
 				<div className='notificaiton__all__layout__status'>
 					<div className='notificaiton__all__infor'>
 						<p dangerouslySetInnerHTML={{ __html: item?.message }}></p>

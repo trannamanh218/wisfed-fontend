@@ -18,7 +18,7 @@
 
 .status-book-modal {
 	&.modal {
-		overflow-y: hidden;
+		overflow-y: scroll;
 	}
 	.modal-dialog {
 		max-width: 400px;

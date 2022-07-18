@@ -16,7 +16,6 @@ import TaggedList from './TaggedList';
 import UploadImage from './UploadImage';
 import PreviewLink from 'shared/preview-link/PreviewLink';
 import { getPreviewUrl, getSharePostInternal, getSharePostRanks } from 'reducers/redux-utils/post';
-import { useCallback } from 'react';
 import Circle from 'shared/loading/circle';
 import './style.scss';
 import { ratingUser } from 'reducers/redux-utils/book';
@@ -35,6 +34,10 @@ import { saveDataShare, checkShare } from 'reducers/redux-utils/post';
 import Post from 'shared/post';
 import AuthorBook from 'shared/author-book';
 import ShareUsers from '../modal-share-users';
+import RichTextEditor from 'shared/rich-text-editor';
+
+const urlRegex =
+	/https?:\/\/www(\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/g;
 
 function CreatPostModalContent({
 	hideCreatePostModal,
@@ -46,7 +49,6 @@ function CreatPostModalContent({
 	showSubModal,
 }) {
 	// const [shareMode, setShareMode] = useState({ value: 'public', title: 'Mọi người', icon: <WorldNet /> });
-	const [showTextFieldEditPlaceholder, setShowTextFieldEditPlaceholder] = useState(true);
 	const [showMainModal, setShowMainModal] = useState(showModalCreatPost);
 	const [taggedData, setTaggedData] = useState({
 		'addBook': {},
@@ -56,20 +58,22 @@ function CreatPostModalContent({
 	});
 	const [fetchingUrlInfo, setFetchingUrlInfo] = useState(false);
 	const [hasUrl, setHasUrl] = useState(false);
-	const [urlAdded, setUrlAdded] = useState({});
-	const [urlAddedArray, setUrlAddedArray] = useState([]);
-	const [oldUrlAddedArray, setOldUrlAddedArray] = useState([]);
+	const [urlPreviewData, setUrlPreviewData] = useState({});
+	const [urlAdded, setUrlAdded] = useState('');
+	const [oldUrlAdded, setOldUrlAdded] = useState('');
 	const [status, setStatus] = useState(STATUS_IDLE);
 	const [showUpload, setShowUpload] = useState(false);
 	const [imagesUpload, setImagesUpload] = useState([]);
 	const [validationInput, setValidationInput] = useState('');
 	const dispatch = useDispatch();
-	const textFieldEdit = useRef(null);
+
 	const taggedDataPrevious = usePrevious(taggedData);
 	const [valueStar, setValueStar] = useState(0);
 	const [checkProgress, setCheckProgress] = useState();
 	const [showImagePopover, setShowImagePopover] = useState(false);
 	const [buttonActive, setButtonActive] = useState(false);
+	const [content, setContent] = useState('');
+
 	const location = useLocation();
 	const UpdateImg = useSelector(state => state.chart.updateImgPost);
 	const { resetTaggedData, isShare, postsData, isSharePosts, isSharePostsAll } = useSelector(state => state.post);
@@ -81,7 +85,6 @@ function CreatPostModalContent({
 	const { optionList } = setting;
 
 	useEffect(() => {
-		textFieldEdit.current.focus();
 		if (UpdateImg.length > 0) {
 			setShowUpload(true);
 			setImagesUpload(UpdateImg);
@@ -121,59 +124,17 @@ function CreatPostModalContent({
 		}
 	}, [resetTaggedData]);
 
-	const detectUrl = useCallback(
-		_.debounce(() => {
-			const urlRegex =
-				/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g;
-			const url = textFieldEdit.current.innerText.match(urlRegex);
-			if (url !== null) {
-				setUrlAddedArray(url);
-				setHasUrl(true);
-			} else {
-				setUrlAddedArray([]);
-			}
-		}, 1000),
-		[]
-	);
-
 	useEffect(() => {
-		if (!_.isEqual(urlAddedArray, oldUrlAddedArray)) {
-			getPreviewUrlFnc(urlAddedArray[urlAddedArray.length - 1]);
-			setOldUrlAddedArray(urlAddedArray);
-		}
-	}, [urlAddedArray]);
-
-	const createSpanElements = () => {
-		const subStringArray = textFieldEdit.current.innerText.split(' ');
-		textFieldEdit.current.innerText = '';
-		const urlRegex = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g;
-		for (let i = 0; i < subStringArray.length; i++) {
-			if (subStringArray[i].match(urlRegex)) {
-				subStringArray[i] = `<span class="url-color">${subStringArray[i]}</span>`;
-			} else {
-				subStringArray[i] = `<span>${subStringArray[i]}</span>`;
+		if (urlAdded) {
+			if (urlAdded.match(urlRegex) && !_.isEqual(urlAdded, oldUrlAdded)) {
+				setHasUrl(true);
+				getPreviewUrlFnc(urlAdded);
 			}
+		} else {
+			setHasUrl(false);
 		}
-		textFieldEdit.current.innerHTML = subStringArray.join(' ');
-		placeCaretAtEnd(textFieldEdit.current);
-	};
-
-	const placeCaretAtEnd = element => {
-		element.focus();
-		if (typeof window.getSelection != 'undefined' && typeof document.createRange != 'undefined') {
-			const range = document.createRange();
-			range.selectNodeContents(element);
-			range.collapse(false);
-			const selection = window.getSelection();
-			selection.removeAllRanges();
-			selection.addRange(range);
-		} else if (typeof document.body.createTextRange != 'undefined') {
-			const textRange = document.body.createTextRange();
-			textRange.moveToElementText(element);
-			textRange.collapse(false);
-			textRange.select();
-		}
-	};
+		setOldUrlAdded(urlAdded);
+	}, [urlAdded]);
 
 	const getPreviewUrlFnc = async url => {
 		if (url) {
@@ -181,11 +142,10 @@ function CreatPostModalContent({
 			const data = { 'url': url };
 			try {
 				const res = await dispatch(getPreviewUrl(data)).unwrap();
-				setUrlAdded(res);
+				setUrlPreviewData(res);
 			} catch (err) {
-				NotificationError(err);
 				const obj = { url: url, title: url, images: [] };
-				setUrlAdded(obj);
+				setUrlPreviewData(obj);
 			} finally {
 				setFetchingUrlInfo(false);
 			}
@@ -194,13 +154,6 @@ function CreatPostModalContent({
 
 	const removeUrlPreview = () => {
 		setHasUrl(false);
-	};
-	const handlePlaceholder = () => {
-		if (textFieldEdit.current.innerText.length > 0) {
-			setShowTextFieldEditPlaceholder(false);
-		} else {
-			setShowTextFieldEditPlaceholder(true);
-		}
 	};
 
 	const backToMainModal = () => {
@@ -281,12 +234,12 @@ function CreatPostModalContent({
 
 	const generateData = async () => {
 		const params = {
-			msg: textFieldEdit?.current?.innerHTML,
+			msg: content,
 			mentionsUser: [],
 			mentionsAuthor: [],
 			mentionsCategory: [],
 			image: [],
-			preview: urlAdded,
+			preview: urlPreviewData,
 			tags: [],
 		};
 
@@ -370,7 +323,7 @@ function CreatPostModalContent({
 							id: postsData.id,
 							type: 'topQuote',
 							categoryId: postsData.categoryId || null,
-							msg: textFieldEdit?.current?.innerHTML,
+							msg: content,
 						};
 
 						await dispatch(getSharePostRanks(query)).unwrap();
@@ -390,7 +343,7 @@ function CreatPostModalContent({
 							id: postsData.info.id,
 							type: postsData.originId.type,
 							categoryId: postsData.originId.categoryId || null,
-							msg: textFieldEdit?.current?.innerHTML,
+							msg: content,
 							userType: postsData.originId.type === 'topUser' && postsData.originId.userType,
 						};
 
@@ -423,7 +376,7 @@ function CreatPostModalContent({
 						id: postsData.type === 'topUser' ? postsData.id : postsData.bookId,
 						type: postsData.type,
 						categoryId: postsData.categoryId || null,
-						msg: textFieldEdit?.current?.innerHTML,
+						msg: content,
 						userType: postsData.type === 'topUser' && postsData.userType,
 					};
 
@@ -435,7 +388,7 @@ function CreatPostModalContent({
 						const reviewData = {
 							bookId: params.bookId,
 							mediaUrl: [],
-							content: textFieldEdit.current.innerText,
+							content: content,
 							curProgress: taggedData.addBook.status === 'read' ? taggedData.addBook.page : checkProgress,
 						};
 						dispatch(createReviewBook(reviewData));
@@ -477,14 +430,14 @@ function CreatPostModalContent({
 
 	useEffect(() => {
 		checkActive();
-	}, [showMainModal, textFieldEdit?.current?.innerText, taggedData, imagesUpload]);
+	}, [showMainModal, content, taggedData, imagesUpload]);
 
 	const checkActive = () => {
 		let isActive = false;
 		if (!_.isEmpty(taggedData.addBook)) {
 			if (taggedData.addBook.status) {
 				if (taggedData.addBook.status === 'read') {
-					if (textFieldEdit?.current?.innerText) {
+					if (content) {
 						isActive = true;
 					}
 				} else if (taggedData.addBook.status === 'reading') {
@@ -504,20 +457,17 @@ function CreatPostModalContent({
 				if (taggedData.addBook.page !== checkProgress && !validationInput) {
 					isActive = true;
 				} else {
-					if (textFieldEdit.current?.innerText) {
+					if (content) {
 						isActive = true;
 					}
 				}
 			}
 		} else if (isShare || isSharePosts || isSharePostsAll.length > 0) {
-			if (textFieldEdit.current?.innerText) {
+			if (content) {
 				isActive = true;
 			}
 		} else {
-			if (
-				textFieldEdit.current?.innerText &&
-				(taggedData.addAuthor.length || taggedData.addCategory.length || imagesUpload.length)
-			) {
+			if (content && (taggedData.addAuthor.length || taggedData.addCategory.length || imagesUpload.length)) {
 				isActive = true;
 			}
 		}
@@ -565,7 +515,6 @@ function CreatPostModalContent({
 	return (
 		<div className='creat-post-modal-content'>
 			<Circle loading={status === STATUS_LOADING} />
-			{/*main */}
 			<div
 				className={classNames('creat-post-modal-content__main', {
 					'hide': option.value !== 'addImages' && !showMainModal,
@@ -629,19 +578,12 @@ function CreatPostModalContent({
 								'height-higher': showUpload || hasUrl,
 							})}
 						>
-							<div
-								className='creat-post-modal-content__main__body__text-field-edit'
-								contentEditable={true}
-								ref={textFieldEdit}
-							></div>
-							<div
-								className={classNames('creat-post-modal-content__main__body__text-field-placeholder', {
-									'hide': !showTextFieldEditPlaceholder,
-								})}
-							>
-								Hãy chia sẻ cảm nhận của bạn về cuốn sách
-							</div>
-
+							<RichTextEditor
+								placeholder='Hãy chia sẻ cảm nhận của bạn về cuốn sách'
+								setUrlAdded={setUrlAdded}
+								setContent={setContent}
+								hasMentionsUser={false}
+							/>
 							{!_.isEmpty(taggedData.addBook) && (
 								<a href='#' className='tagged-book'>
 									{taggedData.addBook.name}
@@ -719,7 +661,7 @@ function CreatPostModalContent({
 								<>
 									{hasUrl && !showUpload && (
 										<PreviewLink
-											urlData={urlAdded}
+											urlData={urlPreviewData}
 											isFetching={fetchingUrlInfo}
 											removeUrlPreview={removeUrlPreview}
 										/>

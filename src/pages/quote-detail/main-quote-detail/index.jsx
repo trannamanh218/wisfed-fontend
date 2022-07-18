@@ -36,7 +36,10 @@ const MainQuoteDetail = ({ quoteData, onCreateComment, likeUnlikeQuoteFnc, setMe
 		arr.push(userData);
 		setMentionUsersArr(arr);
 		setReplyingCommentId(cmtLv1Id);
-		setClickReply(!clickReply);
+		setClickReply(true);
+		setTimeout(() => {
+			setClickReply(false);
+		}, 200);
 	};
 
 	return (
@@ -64,52 +67,60 @@ const MainQuoteDetail = ({ quoteData, onCreateComment, likeUnlikeQuoteFnc, setMe
 						data={quoteData}
 						likeUnlikeQuoteFnc={likeUnlikeQuoteFnc}
 					/>
-					{quoteData.commentQuotes?.map(comment => (
-						<div key={comment.id}>
-							{comment.replyId === null && (
-								<Comment
-									commentLv1Id={comment.id}
-									data={comment}
-									postData={quoteData}
-									handleReply={handleReply}
-									type={QUOTE_TYPE}
-								/>
-							)}
-
-							<div className='comment-reply-container'>
-								{quoteData.commentQuotes.map(commentChild => {
-									if (commentChild.replyId === comment.id) {
-										return (
-											<div key={commentChild.id}>
-												<Comment
-													commentLv1Id={comment.id}
-													data={commentChild}
-													postData={quoteData}
-													handleReply={handleReply}
-													type={QUOTE_TYPE}
-												/>
-											</div>
-										);
-									}
-								})}
-								{commentLv1IdArray.includes(comment.id) && (
-									<CommentEditor
-										onCreateComment={onCreateComment}
-										className={classNames('reply-comment-editor', {
-											'show': comment.id === replyingCommentId,
-										})}
-										replyId={replyingCommentId}
-										textareaId={`textarea-${comment.id}`}
-										mentionUsersArr={mentionUsersArr}
-										replyingCommentId={replyingCommentId}
-										clickReply={clickReply}
-										setMentionUsersArr={setMentionUsersArr}
+					{quoteData.commentQuotes?.map(comment => {
+						if (comment.replyId === null) {
+							return (
+								<div key={comment.id}>
+									<Comment
+										commentLv1Id={comment.id}
+										data={comment}
+										postData={quoteData}
+										handleReply={handleReply}
+										type={QUOTE_TYPE}
 									/>
-								)}
-							</div>
-						</div>
-					))}
-					<CommentEditor replyId={null} onCreateComment={onCreateComment} mentionUsersArr={mentionUsersArr} />
+
+									<div className='comment-reply-container'>
+										{quoteData.commentQuotes.map(commentChild => {
+											if (commentChild.replyId === comment.id) {
+												return (
+													<div key={commentChild.id}>
+														<Comment
+															commentLv1Id={comment.id}
+															data={commentChild}
+															postData={quoteData}
+															handleReply={handleReply}
+															type={QUOTE_TYPE}
+														/>
+													</div>
+												);
+											}
+										})}
+										{commentLv1IdArray.includes(comment.id) && (
+											<CommentEditor
+												onCreateComment={onCreateComment}
+												className={classNames(
+													`reply-comment-editor reply-comment-${comment.id}`,
+													{
+														'show': comment.id === replyingCommentId,
+													}
+												)}
+												mentionUsersArr={mentionUsersArr}
+												replyingCommentId={replyingCommentId}
+												clickReply={clickReply}
+												setMentionUsersArr={setMentionUsersArr}
+											/>
+										)}
+									</div>
+								</div>
+							);
+						}
+					})}
+					<CommentEditor
+						replyingCommentId={null}
+						onCreateComment={onCreateComment}
+						mentionUsersArr={mentionUsersArr}
+						setMentionUsersArr={setMentionUsersArr}
+					/>
 				</div>
 			)}
 		</div>
@@ -120,6 +131,9 @@ MainQuoteDetail.propTypes = {
 	quoteData: PropTypes.object,
 	onCreateComment: PropTypes.func,
 	likeUnlikeQuoteFnc: PropTypes.func,
+	userInfo: PropTypes.object,
+	setMentionUsersArr: PropTypes.any,
+	mentionUsersArr: PropTypes.any,
 };
 
 export default MainQuoteDetail;
