@@ -53,12 +53,12 @@ const SearchAllModal = ({ showRef, setIsShow }) => {
 
 	const handleKeyDown = e => {
 		if (e.key === 'Enter') {
-			if (saveValueInput) {
-				dispatch(handleResetValue(true));
-				if (valueInput) {
-					navigate(`/result/q=${valueInput}`);
-				}
+			// if (saveValueInput) {
+			// 	dispatch(handleResetValue(true));
+			if (valueInput) {
+				navigate(`/result/q=${valueInput}`);
 			}
+			// }
 		}
 	};
 
