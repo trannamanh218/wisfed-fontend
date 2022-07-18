@@ -5,7 +5,7 @@ import { useState, useCallback, useEffect } from 'react';
 import SearchField from 'shared/search-field';
 import _ from 'lodash';
 import { useNavigate } from 'react-router-dom';
-import { handleSaveValueInput, handleResetValue } from 'reducers/redux-utils/search';
+// import { handleSaveValueInput, handleResetValue } from 'reducers/redux-utils/search';
 import { useDispatch, useSelector } from 'react-redux';
 import { getFilterSearch } from 'reducers/redux-utils/search';
 import { NotificationError } from 'helpers/Error';
@@ -17,7 +17,7 @@ const SearchAllModal = ({ showRef, setIsShow }) => {
 	const [valueInput, setValueInput] = useState('');
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
-	const { saveValueInput } = useSelector(state => state.search);
+	// const { saveValueInput } = useSelector(state => state.search);
 
 	const updateInputSearch = value => {
 		if (value) {
@@ -52,12 +52,12 @@ const SearchAllModal = ({ showRef, setIsShow }) => {
 	};
 
 	const handleKeyDown = e => {
-		if (e.key === 'Enter') {
+		if (e.key === 'Enter' && valueInput) {
 			// if (saveValueInput) {
 			// 	dispatch(handleResetValue(true));
-			if (valueInput) {
-				navigate(`/result/q=${valueInput}`);
-			}
+			// if (valueInput) {
+			navigate(`/result/q=${valueInput}`);
+			// }
 			// }
 		}
 	};
