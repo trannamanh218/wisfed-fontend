@@ -23,7 +23,6 @@ const LayoutGroup = () => {
 	const [filter, setFilter] = useState('[]');
 	const dispatch = useDispatch();
 	const [isShowScreen, setIsShhowScreen] = useState(true);
-	// const [inputValue, setInputValue] = useState('');
 	// const [isFetching, setIsFetching] = useState(true);
 	const [show, setShow] = useState(false);
 	const { ref: showRef, isVisible: isShow, setIsVisible: setIsShow } = useVisible(false);

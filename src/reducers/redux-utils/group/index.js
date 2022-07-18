@@ -14,12 +14,24 @@ import {
 	memberGroup,
 	listTagGroup,
 	searchGroup,
+	updateBackground,
+	bookCategoryAPI,
 } from 'constants/apiURL';
 import Request from 'helpers/Request';
 
 export const getGroupList = createAsyncThunk('group/getGroupList', async (params = {}, { rejectWithValue }) => {
 	try {
 		const res = await Request.makeGet(groupAPI, params);
+		return res.data;
+	} catch (err) {
+		const error = JSON.parse(err.response);
+		return rejectWithValue(error);
+	}
+});
+
+export const getIdCategory = createAsyncThunk('group/getGroupList', async (params = {}, { rejectWithValue }) => {
+	try {
+		const res = await Request.makeGet(bookCategoryAPI, params);
 		return res.data;
 	} catch (err) {
 		const error = JSON.parse(err.response);
@@ -37,6 +49,20 @@ export const getGroupDettail = createAsyncThunk('group/getGroupDettail', async (
 		return rejectWithValue(error);
 	}
 });
+export const getupdateBackground = createAsyncThunk(
+	'group/getupdateBackground',
+	async (params, { rejectWithValue }) => {
+		const { id, param } = params;
+		try {
+			const res = await Request.makePatch(updateBackground(id), param);
+
+			return res;
+		} catch (err) {
+			const error = JSON.parse(err.response);
+			return rejectWithValue(error);
+		}
+	}
+);
 
 export const getTagGroup = createAsyncThunk('group/getTagGroup', async (id = {}, { rejectWithValue }) => {
 	try {

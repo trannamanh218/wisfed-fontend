@@ -24,19 +24,21 @@ const SidebarGroupLef = ({ handleChange, data, member }) => {
 			<div className='group__manager'>
 				<h3 className='group-sibar-left__title'>Quản lý nhóm</h3>
 				<div className='group-sibar-left__description'>
-					<div className='manage-item' onClick={() => handleChange('settingsQuestion')}>
-						<span>
-							<CircleActionsAlertQuestion /> Câu hỏi thành viên
+					<div style={{ display: 'none' }}>
+						<div className='manage-item' onClick={() => handleChange('settingsQuestion')}>
+							<span>
+								<CircleActionsAlertQuestion /> Câu hỏi thành viên
+							</span>
+						</div>
+
+						<span className='manage-item' onClick={() => handleChange('manageJoin')}>
+							<p>99+</p> Yêu cầu làm thành viên
+						</span>
+
+						<span className='manage-item' onClick={() => handleChange('managePost')}>
+							<p>99+</p> Bài viết đang chờ
 						</span>
 					</div>
-
-					<span className='manage-item' onClick={() => handleChange('manageJoin')}>
-						<p>99+</p> Yêu cầu làm thành viên
-					</span>
-
-					<span className='manage-item' onClick={() => handleChange('managePost')}>
-						<p>99+</p> Bài viết đang chờ
-					</span>
 
 					<div className='manage-btn' onClick={() => handleChange('settings')}>
 						<SettingIcon /> Cài đặt

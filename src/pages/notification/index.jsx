@@ -66,7 +66,6 @@ const NotificationModal = ({ setModalNotti, buttonModal, realTime }) => {
 	const getMyNotification = async () => {
 		try {
 			setIsLoading(true);
-
 			const notificationList = await dispatch(getNotification()).unwrap();
 			const arrNew = notificationList.map(item => item.activities).flat(1);
 			const newArr = arrNew.map(item => {

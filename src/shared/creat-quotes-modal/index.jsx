@@ -18,6 +18,7 @@ import Input from 'shared/input';
 function CreatQuotesModal({ hideCreatQuotesModal }) {
 	const dataRef = useRef('');
 	const [inputHashtag, setInputHashtag] = useState('');
+	const [tung, setTung] = useState('');
 	const inputRefHashtag = useRef('');
 	const [showTextFieldEditPlaceholder, setShowTextFieldEditPlaceholder] = useState(true);
 	const [showTextFieldBackgroundSelect, setShowTextFieldBackgroundSelect] = useState(false);
@@ -207,15 +208,14 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 		setInputHashtagValue(e.target.value);
 		setHashTagsAddedArray(hashTags);
 	};
-
+	console.log(hashTagsAddedArray);
 	const creatQuotesFnc = async () => {
 		try {
 			const data = {
 				quote: textFieldEdit.current.innerText,
 				bookId: bookAdded.id,
-				// authorName: authorAdded,
 				categories: categoryAddedIdList,
-				tags: hashTagsAddedArray,
+				tags: listHashtags,
 				background: backgroundColor,
 			};
 			const response = await dispatch(creatQuotes(data)).unwrap();
@@ -386,7 +386,7 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 						<div className='creat-quotes-modal__body__option-item__title'>Từ khóa</div>
 						<div className='creat-quotes-modal__body__option-item__search-container'>
 							{listHashtags.length > 0 && (
-								<div className='input__authors'>
+								<div className='input__tag ' style={{ flexWrap: 'nowrap', gap: '10px' }}>
 									{listHashtags.map(item => (
 										<>
 											<span key={item}>

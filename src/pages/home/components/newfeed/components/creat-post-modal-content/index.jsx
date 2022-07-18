@@ -103,6 +103,21 @@ function CreatPostModalContent({
 	}, [bookForCreatePost]);
 
 	useEffect(() => {
+		textFieldEdit.current.addEventListener('input', () => {
+			handlePlaceholder();
+			detectUrl();
+			createSpanElements();
+		});
+		return () => {
+			document.removeEventListener('input', () => {
+				handlePlaceholder();
+				detectUrl();
+				createSpanElements();
+			});
+		};
+	}, [showTextFieldEditPlaceholder]);
+
+	useEffect(() => {
 		if (resetTaggedData) {
 			setTaggedData({ 'addBook': {}, 'addAuthor': [], 'addFriends': [], 'addCategory': [] });
 			setImagesUpload([]);

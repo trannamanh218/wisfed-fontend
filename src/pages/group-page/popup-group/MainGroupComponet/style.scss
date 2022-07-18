@@ -1,8 +1,23 @@
 .group__background {
+	position: relative;
 	img {
 		border-radius: 12px 12px 0px 0px;
 		height: 266px;
 		width: 100%;
+	}
+	.upload-image {
+		position: absolute;
+		bottom: 20px;
+		right: 18px;
+		display: flex;
+		flex-direction: row;
+		padding: 5px;
+		border-radius: 12px;
+		img {
+			width: 24px;
+			height: 24px;
+			margin-right: 10px;
+		}
 	}
 }
 .group-main-component__container {
