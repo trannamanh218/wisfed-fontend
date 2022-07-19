@@ -220,7 +220,8 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 			};
 			const response = await dispatch(creatQuotes(data)).unwrap();
 			if (response) {
-				toast.success('Tạo quotes thành công');
+				const customId = 'custom-Id-CreatQuotesModal';
+				toast.success('Tạo quotes thành công', { toastId: customId });
 			}
 			hideCreatQuotesModal();
 			dispatch(handleAfterCreatQuote());

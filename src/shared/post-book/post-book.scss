@@ -38,6 +38,10 @@
 	&__button-and-rating {
 		display: flex;
 		gap: 1.25rem;
+
+		button {
+			width: 184px;
+		}
 	}
 
 	&__rating__group {
@@ -56,6 +60,15 @@
 
 	&__edit {
 		margin-top: 1.5rem;
+
+		.linear-progress {
+			height: 12px !important;
+			max-width: 54%;
+
+			.linear-progress-bar {
+				border-radius: 0.5rem;
+			}
+		}
 	}
 
 	&__editor {

@@ -149,7 +149,8 @@ const SettingMore = ({ bookData, handleUpdateBookList }) => {
 		try {
 			await handleAddAndRemoveBook();
 			await updateStatusBook();
-			toast.success('Chuyển giá sách thành công');
+			const customId = 'custom-id-SettingMore';
+			toast.success('Chuyển giá sách thành công', { toastId: customId });
 			setTimeout(() => {
 				dispatch(updateMyAllLibraryRedux());
 			}, 150);
@@ -179,9 +180,11 @@ const SettingMore = ({ bookData, handleUpdateBookList }) => {
 			await dispatch(removeBookInLibraries(params)).unwrap();
 			handleUpdateBookList();
 			dispatch(updateMyAllLibraryRedux());
-			toast.success('Xoá sách thành công');
+			const customId = 'custom-id-SettingMore-success';
+			toast.success('Xoá sách thành công', { toastId: customId });
 		} catch (err) {
-			toast.warn('Lỗi không xóa được sách trong thư viện');
+			const customId = 'custom-id-SettingMore-warn';
+			toast.warn('Lỗi không xóa được sách trong thư viện', { toastId: customId });
 		} finally {
 			setShowDeleteBookModal(false);
 		}

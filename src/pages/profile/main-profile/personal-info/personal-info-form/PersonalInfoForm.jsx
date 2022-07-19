@@ -262,14 +262,17 @@ const PersonalInfoForm = ({ userData, toggleModal }) => {
 			const data = { userId: userData.id, params: params };
 			const userDataChanged = await dispatch(editUserInfo(data)).unwrap();
 			if (!_.isEmpty(userDataChanged)) {
+				const customId = 'custom-id-PersonalInfoForm-editUserProfile-success';
 				toast.success('Chỉnh sửa thành công', {
 					autoClose: 1500,
+					toastId: customId,
 				});
 			}
 			dispatch(updateUserInfo(userDataChanged));
 			toggleModal();
 		} catch {
-			toast.error('Chỉnh sửa thất bại');
+			const customId = 'custom-id-PersonalInfoForm-editUserProfile-error';
+			toast.error('Chỉnh sửa thất bại', { toastId: customId });
 		}
 	};
 

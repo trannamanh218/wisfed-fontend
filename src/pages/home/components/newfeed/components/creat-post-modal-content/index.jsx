@@ -152,7 +152,8 @@ function CreatPostModalContent({
 			return;
 		} else {
 			if (imagesUpload.length > 0 && param.value === 'addBook') {
-				toast.warning('Không thể kết hợp đồng thời thêm ảnh và sách');
+				const customId = 'custom-id-CreatPostModalContent-addOptionsToPost';
+				toast.warning('Không thể kết hợp đồng thời thêm ảnh và sách', { toastId: customId });
 			} else {
 				onChangeOption(param);
 				setShowMainModal(false);
@@ -168,7 +169,8 @@ function CreatPostModalContent({
 				setShowUpload(!showUpload);
 				addOptionsToPost({ value: 'addImages', title: 'chỉnh sửa ảnh', icon: <Image />, message: '' });
 			} else {
-				toast.warning('Không thể kết hợp đồng thời thêm ảnh và sách');
+				const customId = 'custom-id-CreatPostModalContent-handleOpenUploadImage';
+				toast.warning('Không thể kết hợp đồng thời thêm ảnh và sách', { toastId: customId });
 			}
 		}
 	};
@@ -241,7 +243,8 @@ function CreatPostModalContent({
 				});
 				params.image = imagesArray;
 			} catch {
-				toast.error('Đăng ảnh không thành công');
+				const customId = 'custom-id-CreatPostModalContent-generateData';
+				toast.error('Đăng ảnh không thành công', { toastId: customId });
 				params.image = {};
 			}
 		}
@@ -394,14 +397,16 @@ function CreatPostModalContent({
 				}
 			}
 			setStatus(STATUS_SUCCESS);
-			toast.success('Tạo post thành công!');
+			const customId = 'custom-id-CreatPostModalContent-onCreatePost-success';
+			toast.success('Tạo post thành công!', { toastId: customId });
 			onChangeNewPost();
 		} catch (err) {
 			const statusCode = err?.statusCode || 500;
 			if (err.errorCode === 702) {
 				NotificationError(err);
 			} else if (!location.pathname.includes('group')) {
-				toast.error('Tạo post thất bại!');
+				const customId = 'custom-id-CreatPostModalContent-onCreatePost-error';
+				toast.error('Tạo post thất bại!', { toastId: customId });
 			}
 			setStatus(statusCode);
 		} finally {
@@ -570,6 +575,7 @@ function CreatPostModalContent({
 								setUrlAdded={setUrlAdded}
 								setContent={setContent}
 								hasMentionsUser={false}
+								hasUrl={hasUrl}
 							/>
 							{!_.isEmpty(taggedData.addBook) && (
 								<a href='#' className='tagged-book'>

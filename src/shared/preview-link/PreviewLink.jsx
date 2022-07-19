@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react';
 import _ from 'lodash';
 import { CloseX } from 'components/svg';
 import PropTypes from 'prop-types';
-
 function PreviewLink({ urlData, isFetching, removeUrlPreview }) {
 	const [domain, setDomain] = useState('');
 
@@ -31,7 +30,7 @@ function PreviewLink({ urlData, isFetching, removeUrlPreview }) {
 			) : (
 				<div className='preview-link__content'>
 					{urlData.images?.length > 0 && (
-						<div className='preview-link__image'>
+						<div className='preview-link__image' onClick={() => window.open(urlData.url)}>
 							<img src={urlData.images[0]} alt='preview-link-image' />
 						</div>
 					)}

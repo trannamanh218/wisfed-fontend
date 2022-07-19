@@ -33,7 +33,8 @@ function Login() {
 			const infoUserLogin = unwrapResult(actionLogin);
 			if (infoUserLogin) {
 				const actionCheckJwt = await dispatch(getCheckJwt()).unwrap();
-				toast.success('Đăng nhập thành công');
+				const customId = 'custom-id-Login';
+				toast.success('Đăng nhập thành công', { toastId: customId });
 				if (!_.isEmpty(actionCheckJwt?.favoriteCategory)) {
 					navigate('/');
 				} else {

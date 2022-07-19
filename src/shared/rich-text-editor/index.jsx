@@ -24,7 +24,6 @@ const generatePlugins = () => {
 		MentionSuggestions,
 	};
 };
-
 function RichTextEditor({
 	content,
 	setContent,
@@ -38,6 +37,7 @@ function RichTextEditor({
 	createCmt,
 	mentionUsersArr,
 	setMentionUsersArr,
+	hasUrl,
 }) {
 	const [editorState, setEditorState] = useState(EditorState.createEmpty());
 	const [open, setOpen] = useState(false);
@@ -77,6 +77,10 @@ function RichTextEditor({
 		const urlDetected = extractLinks(textValue);
 		if (urlDetected && urlDetected.length) {
 			detectUrl(urlDetected);
+		} else {
+			if (hasUrl === false) {
+				detectUrl('');
+			}
 		}
 		const html = convertContentToHTML();
 		setContent(html);
@@ -120,7 +124,7 @@ function RichTextEditor({
 			} else {
 				setUrlAdded('');
 			}
-		}, 700),
+		}, 300),
 		[]
 	);
 

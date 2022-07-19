@@ -157,7 +157,8 @@ const PopupCreateGroup = ({ handleClose, showRef }) => {
 		};
 		try {
 			await dispatch(getCreatGroup(data)).unwrap();
-			toast.success('Tạo nhóm thành công');
+			const customId = 'custom-id-PopupCreateGroup';
+			toast.success('Tạo nhóm thành công', { toastId: customId });
 		} catch (err) {
 			NotificationError(err);
 		} finally {

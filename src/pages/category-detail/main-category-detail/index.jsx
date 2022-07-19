@@ -118,7 +118,8 @@ const MainCategoryDetail = () => {
 	const handleLikeCategory = async () => {
 		const categoryId = parseInt(id);
 		if (_.isEmpty(userInfo)) {
-			toast.warn('Vui lòng đăng nhập để sử dụng tính năng này');
+			const customId = 'custom-id-MainCategoryDetail';
+			toast.warn('Vui lòng đăng nhập để sử dụng tính năng này', { toastId: customId });
 		} else {
 			let favoriteCategory = [];
 			if (isLike) {

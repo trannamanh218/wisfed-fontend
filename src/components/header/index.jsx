@@ -158,7 +158,8 @@ const Header = () => {
 		dispatch(deleteUserInfo());
 		dispatch(updateTargetReading([]));
 		navigate('/login');
-		toast.success('Đăng xuất thành công');
+		const customId = 'custom-id-Header';
+		toast.success('Đăng xuất thành công', { toastId: customId });
 	};
 
 	useEffect(() => {

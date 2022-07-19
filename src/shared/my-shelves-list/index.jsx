@@ -23,7 +23,8 @@ const MyShelvesList = ({ list }) => {
 			try {
 				await dispatch(createLibrary(params)).unwrap();
 				dispatch(updateMyAllLibraryRedux());
-				toast.success('Tạo thư viện thành công!');
+				const customId = 'custom-Id-MyShelvesList';
+				toast.success('Tạo thư viện thành công!', { toastId: customId });
 			} catch (err) {
 				NotificationError(err);
 			} finally {

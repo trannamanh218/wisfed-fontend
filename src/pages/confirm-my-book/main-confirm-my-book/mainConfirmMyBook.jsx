@@ -78,11 +78,13 @@ function MainConfirmMyBook() {
 			};
 			const creatBookCopyrightsResponse = await dispatch(creatBookCopyrights(dataCopyrights)).unwrap();
 			if (creatBookCopyrightsResponse) {
-				toast.success('Gửi Yêu cầu thành công');
+				const customId = 'custom-id-MainConfirmMyBook-success';
+				toast.success('Gửi Yêu cầu thành công', { toastId: customId });
 				setRefreshPage(!refreshPage);
 			}
 		} catch {
-			toast.error('Gửi yêu cầu không thành công');
+			const customId = 'custom-id-MainConfirmMyBook-error';
+			toast.error('Gửi yêu cầu không thành công', { toastId: customId });
 		}
 	};
 

@@ -65,10 +65,12 @@ const PersonalInfo = ({ currentUserInfo, setCurrentTab }) => {
 				const changeUserImage = await dispatch(editUserInfo(data)).unwrap();
 				dispatch(updateUserInfo(changeUserImage));
 				if (!_.isEmpty(changeUserImage)) {
-					toast.success('Cập nhật ảnh thành công', { autoClose: 1500 });
+					const customId = 'custom-id-PersonalInfo-handleDrop-success';
+					toast.success('Cập nhật ảnh thành công', { toastId: customId, autoClose: 1500 });
 				}
 			} catch {
-				toast.error('Cập nhật ảnh thất bại');
+				const customId = 'custom-id-PersonalInfo-handleDrop-error';
+				toast.error('Cập nhật ảnh thất bại', { toastId: customId });
 			}
 		}
 	});
