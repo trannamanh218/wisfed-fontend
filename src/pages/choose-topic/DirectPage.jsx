@@ -22,7 +22,8 @@ export default function Direct() {
 				navigate('/creat-newpassword-admin');
 			}
 		} catch {
-			toast.error('Đường dẫn đã hết hạn hoặc không đúng. Vui lòng thử lại');
+			const customId = 'custom-id-Direct';
+			toast.error('Đường dẫn đã hết hạn hoặc không đúng. Vui lòng thử lại', { toastId: customId });
 			navigate('/forget-password-admin');
 		}
 	};

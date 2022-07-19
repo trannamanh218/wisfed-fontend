@@ -15,7 +15,6 @@ import { NotificationError } from 'helpers/Error';
 function ReadChallenge({ modalOpen, setModalOpen }) {
 	const [inputValue, setInputValue] = useState(0);
 	const dispatch = useDispatch();
-	const customId = 'custom-id-yes';
 
 	useEffect(() => {
 		if (inputValue < 0) {
@@ -31,9 +30,8 @@ function ReadChallenge({ modalOpen, setModalOpen }) {
 
 	const handleChangeTarget = async () => {
 		if (inputValue < 1) {
-			toast.error('Mục tiêu phải lớn hơn 0', {
-				toastId: customId,
-			});
+			const customId = 'custom-id-ReadChallenge';
+			toast.error('Mục tiêu phải lớn hơn 0', { toastId: customId });
 		} else {
 			if (modalOpen) {
 				try {
@@ -51,7 +49,8 @@ function ReadChallenge({ modalOpen, setModalOpen }) {
 				} catch (err) {
 					NotificationError(err);
 				} finally {
-					toast.success('Sửa mục tiêu thành công');
+					const customId = 'custom-id-ReadChallenge-handleChangeTarget';
+					toast.success('Sửa mục tiêu thành công', { toastId: customId });
 					setModalOpen(false);
 					dispatch(checkRenderTargetReading(false));
 				}
@@ -64,7 +63,8 @@ function ReadChallenge({ modalOpen, setModalOpen }) {
 						numberBook: inputValue,
 					};
 					await dispatch(createTargetRead(params)).unwrap();
-					return toast.success('Tạo mục tiêu thành công');
+					const customId = 'custom-id-ReadChallenge-handleChangeTarget-success';
+					return toast.success('Tạo mục tiêu thành công', { toastId: customId });
 				} catch (err) {
 					NotificationError(err);
 				} finally {

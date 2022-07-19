@@ -69,7 +69,8 @@ const GroupSearch = ({ value, setIsFetching, searchResultInput, activeKeyDefault
 		try {
 			if (Storage.getAccessToken()) {
 				await dispatch(getEnjoyGroup(id)).unwrap();
-				toast.success('Tham gia nhóm thành công');
+				const customId = 'custom-Id-GroupSearch';
+				toast.success('Tham gia nhóm thành công', { toastId: customId });
 				dispatch(checkUserLogin(false));
 			} else {
 				dispatch(checkUserLogin(true));

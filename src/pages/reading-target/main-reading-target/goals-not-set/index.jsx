@@ -10,7 +10,6 @@ import Frame from 'assets/images/Frame.png';
 const GoalsNotSetYet = ({ userInfo }) => {
 	const [inputValue, setInputValue] = useState(0);
 	const dispatch = useDispatch();
-	const customId = 'custom-Id-yes';
 
 	useEffect(() => {
 		if (inputValue < 0) {
@@ -32,9 +31,8 @@ const GoalsNotSetYet = ({ userInfo }) => {
 
 	const handleChangeTarget = async () => {
 		if (inputValue < 1) {
-			toast.error('Mục tiêu phải lớn hơn 0', {
-				toastId: customId,
-			});
+			const customId = 'custom-Id-GoalsNotSetYet';
+			toast.error('Mục tiêu phải lớn hơn 0', { toastId: customId });
 		} else {
 			try {
 				const dob = new Date();
@@ -44,7 +42,8 @@ const GoalsNotSetYet = ({ userInfo }) => {
 					numberBook: inputValue,
 				};
 				await dispatch(createTargetRead(params)).unwrap();
-				return toast.success('Tạo mục tiêu thành công');
+				const customId = 'custom-Id-GoalsNotSetYet-handleChangeTarget';
+				return toast.success('Tạo mục tiêu thành công', { toastId: customId });
 			} catch (err) {
 				NotificationError(err);
 			} finally {

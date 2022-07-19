@@ -206,6 +206,7 @@ export const NotificationError = err => {
 			errCode = err;
 		}
 		const statusCodeError = errCode?.errorCode;
-		return toast.error(errVN[statusCodeError].vi);
+		const customId = 'custom-id-errVN';
+		return toast.error(errVN[statusCodeError].vi, { toastId: customId });
 	}
 };
