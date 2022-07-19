@@ -568,6 +568,7 @@ function CreatPostModalContent({
 								setUrlAdded={setUrlAdded}
 								setContent={setContent}
 								hasMentionsUser={false}
+								hasUrl={hasUrl}
 							/>
 							{!_.isEmpty(taggedData.addBook) && (
 								<a href='#' className='tagged-book'>

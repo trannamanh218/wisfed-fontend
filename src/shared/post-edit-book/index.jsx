@@ -48,6 +48,7 @@ const PostEditBook = props => {
 		}
 	}, [data]);
 
+	const blockInvalidChar = e => ['e', 'E', '+', '-'].includes(e.key) && e.preventDefault();
 	const handleChange = e => {
 		const { value } = e.target;
 		if (value) {
@@ -84,6 +85,7 @@ const PostEditBook = props => {
 								<input
 									ref={inputRef}
 									className='post-edit-book__input'
+									onKeyDown={blockInvalidChar}
 									onChange={handleChange}
 									value={data.progress}
 									autoFocus
