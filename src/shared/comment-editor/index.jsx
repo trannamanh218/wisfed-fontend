@@ -5,7 +5,6 @@ import './comment-editor.scss';
 import { useSelector, useDispatch } from 'react-redux';
 import { checkUserLogin } from 'reducers/redux-utils/auth';
 import RichTextEditor from 'shared/rich-text-editor';
-import { getDefaultKeyBinding } from 'draft-js';
 import Storage from 'helpers/Storage';
 
 const CommentEditor = ({
@@ -43,7 +42,6 @@ const CommentEditor = ({
 			} else if (e.keyCode === 13 && e.shiftKey) {
 				return 'split-block';
 			}
-			return getDefaultKeyBinding(e);
 		}
 	};
 

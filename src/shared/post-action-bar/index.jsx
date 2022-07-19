@@ -24,7 +24,7 @@ const PostActionBar = ({ postData, handleLikeAction }) => {
 	};
 
 	const handleCommentPost = () => {
-		const commentEditField = document.querySelector(`.comment-editor-last`);
+		const commentEditField = document.querySelector(`.comment-editor-last-${postData.id}`);
 		if (commentEditField) {
 			setTimeout(() => {
 				window.scroll({

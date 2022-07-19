@@ -195,6 +195,7 @@ function RichTextEditor({
 								'name': `${mentionUsersArr[0].name}`,
 								'link': `${mentionUsersArr[0].link}`,
 								'avatar': `${mentionUsersArr[0].avatar}`,
+								'id': `${mentionUsersArr[0].id}`,
 							},
 						},
 					},

@@ -101,18 +101,19 @@ function Post({ postInformations, showModalCreatPost, inReviews = false }) {
 			if (!_.isEmpty(res)) {
 				const newComment = { ...res, user: userInfo };
 				let usersComments = [];
-				if (replyId) {
-					const cmtReplying = [...postData.usersComments.rows].filter(item => item.id === replyId);
+				if (res.replyId) {
+					const cmtReplying = [...postData.usersComments.rows].filter(item => item.id === res.replyId);
 					const reply = [...cmtReplying[0].reply];
 					reply.push(newComment);
 					const obj = { ...cmtReplying[0], reply };
 					const rows = [...postData.usersComments.rows];
-					const index = rows.findIndex(item => item.id === replyId);
+					const index = rows.findIndex(item => item.id === res.replyId);
 					rows[index] = obj;
 					usersComments = { ...postData.usersComments, rows };
 				} else {
 					const rows = [...postData.usersComments.rows];
-					rows.splice(0, 0, newComment);
+					newComment.reply = [];
+					rows.push(newComment);
 					usersComments = { ...postData.usersComments, rows };
 				}
 				const newPostData = { ...postData, usersComments, comment: postData.comment + 1 };
@@ -146,9 +147,11 @@ function Post({ postInformations, showModalCreatPost, inReviews = false }) {
 	};
 
 	const handleReply = (cmtLv1Id, userData) => {
-		const arr = [];
-		arr.push(userData);
-		setMentionUsersArr(arr);
+		if (userData.id !== userInfo.id) {
+			const arr = [];
+			arr.push(userData);
+			setMentionUsersArr(arr);
+		}
 		setReplyingCommentId(cmtLv1Id);
 		setClickReply(true);
 		setTimeout(() => {
