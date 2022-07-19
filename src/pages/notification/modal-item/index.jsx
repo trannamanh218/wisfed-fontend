@@ -49,7 +49,7 @@ const ModalItem = ({ item, setModalNotti, getNotifications, setGetNotifications,
 	const cancelFriend = async (data, items) => {
 		try {
 			const parseObject = JSON.parse(data);
-			const params = { id: parseObject.requestId, data: { level: 'normal' } };
+			const params = { id: parseObject.requestId, data: { reply: false } };
 
 			if (selectKey !== 'unread') {
 				const newArr = getNotifications.map(item => {
@@ -61,7 +61,7 @@ const ModalItem = ({ item, setModalNotti, getNotifications, setGetNotifications,
 				});
 				setGetNotifications(newArr);
 			}
-			await dispatch(CancelFriendRequest(params)).unwrap();
+			await dispatch(ReplyFriendRequest(params)).unwrap();
 			await dispatch(readNotification({ notificationId: items.id })).unwrap();
 		} catch (err) {
 			// NotificationError(err);
