@@ -6,6 +6,8 @@ import './connect-buttons.scss';
 import { makeFriendRequest, addFollower, unFollower, unFriendRequest } from 'reducers/redux-utils/user';
 import { useDispatch } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
+import ModalItem from 'pages/notification/modal-item';
+import { ReplyFriendRequest, CancelFriendRequest } from 'reducers/redux-utils/user';
 
 const ConnectButtons = ({ direction, item }) => {
 	const dispatch = useDispatch();
@@ -13,7 +15,7 @@ const ConnectButtons = ({ direction, item }) => {
 	const [toggleUnFollow, setToggleUnFollow] = useState(true);
 	const [toggleAddFollow, setToggleAddFollow] = useState(true);
 	const [togglePendingFriend, setTogglePendingFriend] = useState(true);
-	// const [toggleModalUnFriends, setModalUnfriends] = useState(false);
+	const [toggleAcces, setToggleAcces] = useState(true);
 
 	const buttonUnFollow = () => {
 		return (
@@ -37,6 +39,14 @@ const ConnectButtons = ({ direction, item }) => {
 				<Add className='connect-button__icon' />
 
 				<span className='connect-button__content'>Kết bạn</span>
+			</Button>
+		);
+	};
+
+	const buttonAcces = () => {
+		return (
+			<Button className='connect-button' onClick={handleAcces}>
+				<span className='connect-button__content'>Chấp nhận</span>
 			</Button>
 		);
 	};
@@ -80,6 +90,12 @@ const ConnectButtons = ({ direction, item }) => {
 		}
 	};
 
+	const handleAcces = () => {
+		const params = { id: item.friendRequest.id, data: { reply: true } };
+		setToggleAcces(false);
+		dispatch(ReplyFriendRequest(params)).unwrap();
+	};
+
 	const handleFollow = () => {
 		try {
 			const param = {
@@ -115,8 +131,10 @@ const ConnectButtons = ({ direction, item }) => {
 			return unFriend ? buttonUnFriend() : togglePendingFriend ? buttonAddFriend() : buttonPendingFriend();
 		} else if (item.relation === 'pending') {
 			return buttonPendingFriend();
-		} else if (item.relation === 'unknown') {
+		} else if (item.relation === 'unknown' && !item.friendRequest) {
 			return togglePendingFriend ? buttonAddFriend() : buttonPendingFriend();
+		} else if (item.friendRequest.type === 'requestToMe') {
+			return toggleAcces ? buttonAcces() : buttonUnFriend();
 		}
 	};
 
