@@ -14,7 +14,7 @@ import LoadingIndicator from 'shared/loading-indicator';
 const NewFeed = () => {
 	const [isNewPost, setIsNewPost] = useState(false);
 	const { userInfo } = useSelector(state => state.auth);
-	const { reloadCount } = useSelector(state => state.task);
+	const { refreshNewfeed } = useSelector(state => state.activity);
 	const [hasMore, setHasMore] = useState(true);
 	const [postList, setPostList] = useState([]);
 	const [isLoading, setIsLoading] = useState(true);
@@ -31,7 +31,7 @@ const NewFeed = () => {
 	useEffect(async () => {
 		callApiStart.current = 10;
 		getPostListFirstTime();
-	}, [isNewPost, userInfo, reloadCount]);
+	}, [isNewPost, userInfo, refreshNewfeed]);
 
 	const getPostListFirstTime = async () => {
 		setIsLoading(true);

@@ -35,7 +35,7 @@ function CreatPostSubModal(props) {
 	const dispatch = useDispatch();
 
 	useEffect(() => {
-		if (images.length === 0) {
+		if (option.value === 'addImages' && images.length === 0) {
 			backToMainModal();
 		}
 	}, [images]);
@@ -93,6 +93,8 @@ function CreatPostSubModal(props) {
 		backToMainModal();
 		inputRef.current.value = '';
 	};
+
+	console.log(option);
 
 	return (
 		<>

@@ -17,7 +17,6 @@ import common from './common';
 import ranks from './ranks';
 import search from './search';
 import shelves from './shelves';
-import task from './reloadPostHomePage';
 
 const rootReducer = {
 	auth,
@@ -39,7 +38,6 @@ const rootReducer = {
 	ranks,
 	search,
 	shelves,
-	task,
 };
 
 export default rootReducer;

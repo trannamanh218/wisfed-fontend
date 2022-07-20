@@ -20,7 +20,7 @@ import classNames from 'classnames';
 import './header.scss';
 import NotificationModal from 'pages/notification/';
 import { useDispatch, useSelector } from 'react-redux';
-import { backgroundToggle, depenRenderNotificaion, handleListUnRead } from 'reducers/redux-utils/notificaiton';
+import { backgroundToggle, depenRenderNotificaion } from 'reducers/redux-utils/notificaiton';
 import { checkUserLogin, deleteUserInfo } from 'reducers/redux-utils/auth';
 import { useVisible } from 'shared/hooks';
 import SearchAllModal from 'shared/search-all';
@@ -33,7 +33,7 @@ import defaultAvatar from 'assets/images/avatar.jpeg';
 import * as stream from 'getstream';
 import _ from 'lodash';
 import { patchNewNotification, updateIsNewNotificationUserInfo } from 'reducers/redux-utils/auth';
-import { increment } from 'reducers/redux-utils/reloadPostHomePage';
+import { handleRefreshNewfeed } from 'reducers/redux-utils/activity';
 import Request from 'helpers/Request';
 
 const Header = () => {
@@ -193,7 +193,7 @@ const Header = () => {
 	};
 
 	const onClickReloadPosts = () => {
-		dispatch(increment()); // Tải lại newfeed
+		dispatch(handleRefreshNewfeed()); // Tải lại newfeed
 		window.scrollTo(0, 0);
 	};
 
@@ -214,7 +214,7 @@ const Header = () => {
 						onChange={() => {}}
 					/>
 				</div>
-				{isShow ? <SearchAllModal showRef={showRef} setIsShow={setIsShow} /> : ''}
+				{isShow && <SearchAllModal showRef={showRef} setIsShow={setIsShow} />}
 			</div>
 
 			<ul className='header__nav'>

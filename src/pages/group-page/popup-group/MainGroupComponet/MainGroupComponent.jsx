@@ -141,8 +141,6 @@ function MainGroupComponent({ handleChange, keyChange, data, member, handleUpdat
 		}
 	};
 
-	console.log(handleUpdate);
-
 	useEffect(() => {
 		handleUpload();
 	}, [imgUrl]);

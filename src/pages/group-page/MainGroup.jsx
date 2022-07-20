@@ -31,7 +31,6 @@ const MainGroup = () => {
 			// NotificationError(err);
 		}
 	};
-	console.log(update);
 
 	const handleUpdate = () => {
 		setUpdate(!update);

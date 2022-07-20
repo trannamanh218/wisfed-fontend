@@ -137,6 +137,12 @@ const activitySlice = createSlice({
 		isFetching: false,
 		activityData: [],
 		error: {},
+		refreshNewfeed: true,
+	},
+	reducers: {
+		handleRefreshNewfeed: state => {
+			state.refreshNewfeed = !state.refreshNewfeed;
+		},
 	},
 	extraReducers: {
 		[getActivityList.pending]: state => {
@@ -155,5 +161,8 @@ const activitySlice = createSlice({
 	},
 });
 
+export const { handleRefreshNewfeed } = activitySlice.actions;
+
 const activity = activitySlice.reducer;
+
 export default activity;

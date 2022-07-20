@@ -18,14 +18,12 @@ import Input from 'shared/input';
 function CreatQuotesModal({ hideCreatQuotesModal }) {
 	const dataRef = useRef('');
 	const [inputHashtag, setInputHashtag] = useState('');
-	const [tung, setTung] = useState('');
 	const inputRefHashtag = useRef('');
 	const [showTextFieldEditPlaceholder, setShowTextFieldEditPlaceholder] = useState(true);
 	const [showTextFieldBackgroundSelect, setShowTextFieldBackgroundSelect] = useState(false);
 	const [backgroundColor, setBackgroundColor] = useState('');
 	const [inputBookValue, setInputBookValue] = useState('');
 	const [inputCategoryValue, setInputCategoryValue] = useState('');
-	const [inputHashtagValue, setInputHashtagValue] = useState('');
 	const [colorActiveIndex, setColorActiveIndex] = useState(-1);
 	const [bookSearchedList, setBookSearchedList] = useState([]);
 	const [bookAdded, setBookAdded] = useState({});
@@ -33,7 +31,6 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 	const [categoryAddedList, setCategoryAddedList] = useState([]);
 	const [getDataFinish, setGetDataFinish] = useState(false);
 	const [categoryAddedIdList, setCategoryAddedIdList] = useState([]);
-	const [hashTagsAddedArray, setHashTagsAddedArray] = useState([]);
 	const textFieldEdit = useRef(null);
 	const categoryInputContainer = useRef(null);
 	const categoryInputWrapper = useRef(null);
@@ -202,13 +199,6 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 		return <div className='creat-quotes-modal__no-search-result'>Không có kết quả phù hợp</div>;
 	};
 
-	const updateHashTagsInputValue = e => {
-		const hashtagRegex = /\B(\#[a-zA-Z]+\b)(?!;)/g;
-		const hashTags = e.target.value.match(hashtagRegex);
-		setInputHashtagValue(e.target.value);
-		setHashTagsAddedArray(hashTags);
-	};
-	console.log(hashTagsAddedArray);
 	const creatQuotesFnc = async () => {
 		try {
 			const data = {

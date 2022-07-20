@@ -1,11 +1,8 @@
-import { useState } from 'react';
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import './grid-image.scss';
 import classNames from 'classnames';
 import _ from 'lodash';
-import 'slick-carousel/slick/slick.css';
-import 'slick-carousel/slick/slick-theme.css';
 import Lightbox from 'react-image-lightbox';
 import 'react-image-lightbox/style.css';
 
@@ -203,12 +200,15 @@ const GridImage = ({ images, inPost, postId }) => {
 		</>
 	);
 };
+
 GridImage.defaultProps = {
 	images: [],
 };
+
 GridImage.propTypes = {
 	images: PropTypes.array,
 	inPost: PropTypes.bool,
 	postId: PropTypes.string,
 };
+
 export default GridImage;

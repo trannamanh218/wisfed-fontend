@@ -108,13 +108,8 @@ const notificationSlice = createSlice({
 	},
 });
 
-export const {
-	backgroundToggle,
-	activeKeyTabsNotification,
-	handleListNotification,
-	depenRenderNotificaion,
-	handleListUnRead,
-} = notificationSlice.actions;
+export const { backgroundToggle, activeKeyTabsNotification, handleListNotification, depenRenderNotificaion } =
+	notificationSlice.actions;
 
 const notificationReducer = notificationSlice.reducer;
 export default notificationReducer;

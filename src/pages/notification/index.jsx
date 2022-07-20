@@ -91,7 +91,6 @@ const NotificationModal = ({ setModalNotti, buttonModal, realTime }) => {
 				const data = { ...item, isAccept: false, isRefuse: false };
 				return { ...data };
 			});
-			// dispatch(handleListUnRead(newArr));
 			setGetListUnRead(newArr);
 		} catch (err) {
 			NotificationError(err);
