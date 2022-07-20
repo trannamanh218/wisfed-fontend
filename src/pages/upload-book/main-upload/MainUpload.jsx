@@ -2,20 +2,24 @@ import Dropzone from 'react-dropzone';
 import { useDropzone } from 'react-dropzone';
 import { useNavigate } from 'react-router-dom';
 import { Image } from 'react-bootstrap';
-import { CameraIcon, CloseIconX, BackArrow } from 'components/svg';
+import { CameraIcon, CloseIconX, BackArrow, Calendar } from 'components/svg';
 import './MainUpload.scss';
-import { useRef, useState } from 'react';
+import { useState, useRef } from 'react';
 import Input from 'shared/input';
 import { Row, Col } from 'react-bootstrap';
 import Button from 'shared/button';
 import SelectBox from 'shared/select-box';
 import ArrowChevronForward from 'assets/images/ArrowChevronForward.png';
+import Datepicker from 'react-datepicker';
 
 export default function MainUpload() {
+	const [textareaValue, setTextareaValue] = useState('');
+	const [releaseDate, setReleaseDate] = useState(new Date());
+	const inpCalendar = useRef();
+
 	const [imgUrl, setImgUrl] = useState('');
 	const [inputNameGroup, setInputNameBook] = useState('');
 	const [languages, setLanguages] = useState('');
-	const [textareaValue, setTextareaValue] = useState('');
 
 	const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
 
@@ -25,6 +29,7 @@ export default function MainUpload() {
 		{ value: 'EN', title: 'Anh' },
 	];
 	const languagesRef = useRef({ value: 'default', title: 'Ngôn ngữ' });
+
 	const onchangeLanguages = data => {
 		setLanguages(data);
 	};
@@ -139,11 +144,22 @@ export default function MainUpload() {
 				</div>
 				<div className='inp-book'>
 					<label>Ngày phát hành</label>
-					<Input
-						isBorder={false}
-						placeholder='Ngày phát hành'
-						handleChange={onInputChange(setInputNameBook)}
-					/>
+					<label className='inp-date'>
+						<Datepicker
+							ref={inpCalendar}
+							isClearable
+							placeholderText='dd/m/yyyy'
+							dateFormat='dd/M/yyyy'
+							selected={releaseDate}
+							onChange={date => setReleaseDate(date)}
+							showYearDropdown
+							showMonthDropdown
+							dropdownMode='select'
+						/>
+						<div className='icon-calendar'>
+							<Calendar />
+						</div>
+					</label>
 				</div>
 				<div className='inp-book'>
 					<label>Mô tả</label>

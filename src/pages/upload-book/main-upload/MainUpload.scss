@@ -40,6 +40,43 @@
 			}
 		}
 
+		.inp-date {
+			width: 100%;
+			border-radius: 12px;
+			padding-right: 18px;
+			background-color: #f7f7fc;
+			border: none;
+			display: flex;
+			align-items: center;
+
+			.react-datepicker {
+				font-family: inherit;
+				&__input-container {
+					input {
+						width: 100%;
+						border-radius: 12px;
+						font-weight: 500;
+						font-size: 15px;
+						line-height: 24px;
+						padding: 16px 24px;
+						background-color: transparent;
+						outline: none;
+						border: none;
+
+						&::placeholder {
+							font-weight: 500;
+							font-size: 15px;
+							line-height: 24px;
+						}
+					}
+				}
+			}
+
+			.icon-calendar {
+				cursor: pointer;
+			}
+		}
+
 		.txtarea {
 			textarea {
 				width: 100%;
@@ -67,4 +104,11 @@
 	.btnMainUpload {
 		width: 100%;
 	}
+}
+
+.react-datepicker-popper[data-placement^='top'] .react-datepicker__triangle {
+	display: none;
+}
+.react-datepicker-popper[data-placement^='bottom'] .react-datepicker__triangle {
+	display: none;
 }

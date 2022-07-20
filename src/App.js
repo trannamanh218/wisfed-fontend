@@ -44,6 +44,7 @@ import ReadingSummaryChartAuthor from 'pages/reading-summary-author';
 import DetailFeed from 'pages/home/components/newfeed/components/detailFeed';
 import QuotesByCategory from 'pages/quotes-by-category';
 import UploadBook from 'pages/upload-book/UploadBook';
+import 'react-datepicker/dist/react-datepicker.css';
 
 function App({ children }) {
 	const dispatch = useDispatch();
