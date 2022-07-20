@@ -4,7 +4,6 @@ import { ReactComponent as CategoryFillIcon } from 'assets/icons/CategoryFillIco
 import { ReactComponent as BookIcon } from 'assets/icons/BookIcon.svg';
 import { ReactComponent as BookFillIcon } from 'assets/icons/BookFillIcon.svg';
 import { ReactComponent as GroupIcon } from 'assets/icons/GroupIcon.svg';
-// import { ReactComponent as IconGroup } from 'assets/icons/UsersThree.svg';
 import { ReactComponent as GroupFillIcon } from 'assets/icons/GroupFillIcon.svg';
 import { ReactComponent as FriendsIcon } from 'assets/icons/FriendsIcon.svg';
 import { ReactComponent as FriendsFillIcon } from 'assets/icons/FriendsFillIcon.svg';

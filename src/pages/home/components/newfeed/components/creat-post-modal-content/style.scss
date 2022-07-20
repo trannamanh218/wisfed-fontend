@@ -678,7 +678,7 @@
 
 // sub-modifyImages
 .creat-post-modal-content__substitute__body__modifyImages-container {
-	padding: 16px 4px 16px 16px;
+	padding: 15px 6px 16px 22px;
 	border-top: #f1f1f5 1px solid;
 	border-bottom: #f1f1f5 1px solid;
 }
@@ -688,7 +688,7 @@
 	grid-gap: 4px;
 	max-height: 400px;
 	overflow-y: scroll;
-	padding-right: 4px;
+	padding-right: 8px;
 	&.one-or-two-images {
 		grid-template-columns: 1fr;
 	}

@@ -1,0 +1,70 @@
+@import 'src/scss/abstracts/_variables.scss';
+
+.group-btn-back {
+	margin-left: 30px;
+	margin-bottom: 60px;
+}
+
+.upload-book-form {
+	padding: 38px 30px;
+	gap: 39px;
+
+	background: #ffffff;
+	border-radius: 16px;
+
+	.upload-image {
+		border-radius: 12px;
+	}
+
+	.inp-book {
+		width: 100%;
+		margin-top: 38px;
+		label {
+			margin-bottom: 23px;
+			font-weight: 600;
+			font-size: 18px;
+			line-height: 24px;
+		}
+
+		.input {
+			border-radius: 12px;
+			font-weight: 500;
+			font-size: 15px;
+			line-height: 24px;
+			padding: 16px 24px;
+
+			&::placeholder {
+				font-weight: 500;
+				font-size: 15px;
+				line-height: 24px;
+			}
+		}
+
+		.txtarea {
+			textarea {
+				width: 100%;
+				padding: 0.75rem 1rem;
+				background-color: inherit;
+				resize: none;
+				outline: none;
+				border: none;
+				border-radius: 12px;
+				background-color: #f7f7fc;
+				font-weight: 500;
+				font-size: 15px;
+				line-height: 24px;
+				&::-webkit-scrollbar {
+					display: none;
+				}
+			}
+		}
+	}
+
+	.select-box {
+		line-height: 1;
+	}
+
+	.btnMainUpload {
+		width: 100%;
+	}
+}

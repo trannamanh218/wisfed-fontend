@@ -100,22 +100,22 @@ function Post({ postInformations, showModalCreatPost, inReviews = false }) {
 			}
 			if (!_.isEmpty(res)) {
 				const newComment = { ...res, user: userInfo };
-				let usersComments = [];
+				let userComments = [];
 				if (replyId) {
-					const cmtReplying = [...postData.usersComments.rows].filter(item => item.id === replyId);
+					const cmtReplying = [...postData.userComments.rows].filter(item => item.id === replyId);
 					const reply = [...cmtReplying[0].reply];
 					reply.push(newComment);
 					const obj = { ...cmtReplying[0], reply };
-					const rows = [...postData.usersComments.rows];
+					const rows = [...postData.userComments.rows];
 					const index = rows.findIndex(item => item.id === replyId);
 					rows[index] = obj;
-					usersComments = { ...postData.usersComments, rows };
+					userComments = { ...postData.userComments, rows };
 				} else {
-					const rows = [...postData.usersComments.rows];
+					const rows = [...postData.userComments.rows];
 					rows.splice(0, 0, newComment);
-					usersComments = { ...postData.usersComments, rows };
+					userComments = { ...postData.userComments, rows };
 				}
-				const newPostData = { ...postData, usersComments, comment: postData.comment + 1 };
+				const newPostData = { ...postData, userComments, comment: postData.comment + 1 };
 				setPostData(newPostData);
 			}
 		} catch (err) {
@@ -405,9 +405,9 @@ function Post({ postInformations, showModalCreatPost, inReviews = false }) {
 			{!isSharePosts && (
 				<>
 					<PostActionBar postData={postData} handleLikeAction={handleLikeAction} />
-					{postData.usersComments?.rows && !!postData.usersComments?.rows.length && (
+					{postData.userComments && !!postData.userComments?.length && (
 						<>
-							{postData.usersComments.rows.map(comment => (
+							{postData.userComments.map(comment => (
 								<div key={comment.id}>
 									<Comment
 										commentLv1Id={comment.id}
