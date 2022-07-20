@@ -21,7 +21,7 @@ const Profile = () => {
 	const { isreload } = useSelector(state => state.user);
 	const { userId } = useParams();
 	const navigate = useNavigate();
-	console.log(isreload);
+
 	useEffect(() => {
 		window.scroll(0, 0);
 		getUserDetailData();
