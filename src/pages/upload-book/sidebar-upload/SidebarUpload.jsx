@@ -1,70 +1,95 @@
-import { useFetchViewMoreCategories } from 'api/category.hook';
 import { useEffect, useState } from 'react';
-import StatisticList from 'shared/statistic-list';
-import TopicColumn from 'shared/topic-column';
 import PropTypes from 'prop-types';
-import Circle from 'shared/loading/circle';
-import { STATUS_LOADING } from 'constants';
 import './sidebar-upload.scss';
 import { useDispatch } from 'react-redux';
-import { getFavoriteCategories } from 'reducers/redux-utils/category';
+import _ from 'lodash';
+import { useFetchAuthorBooks } from 'api/book.hooks';
+import { useFetchQuotes } from 'api/quote.hooks';
+import BookSlider from 'shared/book-slider';
+import QuotesLinks from 'shared/quote-links';
+import { useParams } from 'react-router-dom';
+import AuthorSlider from 'shared/author-slider';
+import { getRandomAuthor } from 'reducers/redux-utils/user';
 import { NotificationError } from 'helpers/Error';
+import GroupLinks from 'shared/group-links';
+import { useFetchGroups } from 'api/group.hooks';
 
-const SidebarUpload = ({ status, viewCategoryDetail }) => {
-	const [favoriteCategories, setFavorriteCategories] = useState([]);
-
+const SidebarUpload = ({ userInfo, currentUserInfo, handleViewBookDetail, shelveGroupName }) => {
+	const { userId } = useParams();
 	const dispatch = useDispatch();
+	const { booksAuthor } = useFetchAuthorBooks(userInfo.id);
+	const [booksSliderTitle, setBooksSliderTitle] = useState('');
+	const [authorList, setAuthorList] = useState([]);
+
+	const { quoteData } = useFetchQuotes(
+		0,
+		3,
+		JSON.stringify([{ operator: 'eq', value: userInfo.id, property: 'createdBy' }])
+	);
 
 	const {
-		categoryData: { rows = [] },
-	} = useFetchViewMoreCategories(0, 30, '[]');
+		groups: { rows: groupList = [] },
+	} = useFetchGroups(0, 3, '[]');
 
-	useEffect(() => {
-		getFavoriteCategoriesData();
-	}, []);
-
-	const getFavoriteCategoriesData = async () => {
+	const getAuthorList = async () => {
 		try {
-			const params = {
-				start: 0,
-				limit: 20,
-			};
-			const res = await dispatch(getFavoriteCategories(params)).unwrap();
-			setFavorriteCategories(res.rows);
+			const params = { limit: 10 };
+			const res = await dispatch(getRandomAuthor(params)).unwrap();
+			if (res.length) {
+				setAuthorList(res);
+			}
 		} catch (err) {
 			NotificationError(err);
 		}
 	};
 
-	return (
-		<div className='sidebar-category'>
-			<Circle loading={status === STATUS_LOADING} />
-			{!!favoriteCategories.length && (
-				<StatisticList
-					title='Chủ đề yêu thích'
-					background='light'
-					className='sidebar-category__list'
-					isBackground={true}
-					list={favoriteCategories}
-					pageText={false}
-					inCategory={true}
-				/>
-			)}
+	useEffect(() => {
+		if (!_.isEmpty(userInfo)) {
+			if (window.location.pathname.includes('profile')) {
+				if (userInfo.id === userId) {
+					setBooksSliderTitle('Sách tôi là tác giả');
+				} else {
+					setBooksSliderTitle(`Sách của ${currentUserInfo.fullName}`);
+				}
+			} else {
+				setBooksSliderTitle('Sách tôi là tác giả');
+			}
+		}
+	}, [userInfo, currentUserInfo]);
 
-			<TopicColumn
-				className='sidebar-category__topics'
-				topics={rows}
-				title='Tất cả chủ đề'
-				viewCategoryDetail={viewCategoryDetail}
-				inCategory={true}
-			/>
+	useEffect(() => {
+		getAuthorList();
+	}, []);
+
+	return (
+		<div className='sidebar-upload'>
+			{!_.isEmpty(userInfo) && (
+				<div className='sidebar-profile'>
+					{booksAuthor.length > 0 && (
+						<BookSlider
+							className='book-reference__slider'
+							title={booksSliderTitle}
+							list={booksAuthor}
+							handleViewBookDetail={handleViewBookDetail}
+						/>
+					)}
+				</div>
+			)}
+			<AuthorSlider title='Tác giả nổi bật' list={authorList} size='lg' />
+			<div className='sibar-pop-authors'>
+				{!!quoteData.length && <QuotesLinks list={quoteData} title={`Quotes của ${shelveGroupName}`} />}
+			</div>
+			<GroupLinks list={groupList.slice(0, 3)} title='Group' />
 		</div>
 	);
 };
 
 SidebarUpload.propTypes = {
-	status: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+	currentUserInfo: PropTypes.object,
 	viewCategoryDetail: PropTypes.func,
+	handleViewBookDetail: PropTypes.any,
+	shelveGroupName: PropTypes.string,
+	userInfo: PropTypes.object,
 };
 
 export default SidebarUpload;
