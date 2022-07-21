@@ -43,8 +43,8 @@
 	line-height: 32px;
 	letter-spacing: 0.75px;
 	margin-left: 20px;
-	margin-top: 23px;
-	margin-bottom: 17px;
+	margin-top: 40px !important;
+	margin-bottom: 35px !important;
 }
 .notificaiton__title {
 	font-size: 20px;
@@ -125,7 +125,7 @@
 	font-size: 18px;
 	line-height: 32px;
 	letter-spacing: 0.75px;
-	margin: 10px 20px;
+	margin: 11px 20px;
 }
 .notificaiton__all__infor {
 	font-weight: 500;
@@ -196,7 +196,7 @@
 }
 .notificaiton__tabs__button {
 	text-align: center;
-	margin: 12px 20px;
+	margin: 12px 20px !important;
 	color: #0576f0;
 	font-weight: 600;
 	font-size: 15px;

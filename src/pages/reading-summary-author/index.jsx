@@ -102,7 +102,6 @@ const ReadingSummaryChartAuthor = () => {
 	}, [getAreaPng]);
 
 	const renderHoverColumn = payload => {
-		console.log(payload);
 		switch (sortValueKey) {
 			case 'read':
 				return ` Lượt đọc ${payload || ''}`;
