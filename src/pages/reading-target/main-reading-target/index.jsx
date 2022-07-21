@@ -9,7 +9,7 @@ import './main-reading-target.scss';
 import BookThumbnail from 'shared/book-thumbnail';
 import ModalReadTarget from '../modal-reading-target';
 import { useModal } from 'shared/hooks';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { useFetchUserParams } from 'api/user.hook';
 import { useFetchTargetReading } from 'api/readingTarget.hooks';
@@ -84,11 +84,13 @@ const MainReadingTarget = () => {
 					<tr className='book-row' key={item.id}>
 						<td className='hightlight-column'></td>
 						<td>
-							<BookThumbnail size='sm' source={item.book?.images[0]} />
+							<Link to={`/book/detail/${item.id}`}>
+								<BookThumbnail size='sm' source={item.book?.images[0]} />
+							</Link>
 						</td>
 						<td>
 							<span className='book-name' title={item.book.name}>
-								{item.book.name}
+								<Link to={`/book/detail/${item.id}`}>{item.book.name}</Link>
 							</span>
 						</td>
 						<td>{!_.isEmpty(item.authors) ? item.authors[0].name : 'Chưa cập nhật'}</td>
