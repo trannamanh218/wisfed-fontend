@@ -2,20 +2,23 @@ import Dropzone from 'react-dropzone';
 import { useDropzone } from 'react-dropzone';
 import { useNavigate } from 'react-router-dom';
 import { Image } from 'react-bootstrap';
-import { CameraIcon, CloseIconX, BackArrow, Calendar } from 'components/svg';
+import { CameraIcon, BackArrow, Calendar } from 'components/svg';
 import './MainUpload.scss';
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import Input from 'shared/input';
 import { Row, Col } from 'react-bootstrap';
 import Button from 'shared/button';
 import SelectBox from 'shared/select-box';
 import ArrowChevronForward from 'assets/images/ArrowChevronForward.png';
 import Datepicker from 'react-datepicker';
+import { useDispatch } from 'react-redux';
+import { uploadImage } from 'reducers/redux-utils/common';
 
 export default function MainUpload() {
 	const [textareaValue, setTextareaValue] = useState('');
 	const [releaseDate, setReleaseDate] = useState(new Date());
 	const inpCalendar = useRef();
+	const dispatch = useDispatch();
 
 	const [imgUrl, setImgUrl] = useState('');
 	const [inputNameGroup, setInputNameBook] = useState('');
@@ -53,6 +56,15 @@ export default function MainUpload() {
 
 	const updateTxtAreaValue = e => {
 		setTextareaValue(e.target.value);
+	};
+
+	useEffect(() => {
+		uploadImageFile();
+	}, [acceptedFiles]);
+
+	const uploadImageFile = async () => {
+		const imageUploadedData = await dispatch(uploadImage(acceptedFiles)).unwrap();
+		setImgUrl(imageUploadedData?.streamPath);
 	};
 
 	return (
