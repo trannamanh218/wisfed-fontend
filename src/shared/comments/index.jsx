@@ -12,6 +12,7 @@ import { likeAndUnlikeCommentPost } from 'reducers/redux-utils/activity';
 import { likeAndUnlikeCommentReview } from 'reducers/redux-utils/book';
 import { POST_TYPE, QUOTE_TYPE, REVIEW_TYPE } from 'constants';
 import { Link, useNavigate } from 'react-router-dom';
+import { Like } from 'components/svg';
 
 const urlRegex =
 	/https?:\/\/www(\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/g;
@@ -22,23 +23,6 @@ const Comment = ({ data, handleReply, postData, commentLv1Id, type }) => {
 
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
-
-	useEffect(() => {
-		if (type === QUOTE_TYPE) {
-			if (data.createdBy === postData.createdBy) {
-				setIsAuthor(true);
-			}
-		} else {
-			if (data.createdBy === postData.actor) {
-				setIsAuthor(true);
-			}
-		}
-		if (data.isLike === true || data.like !== 0) {
-			setIsLiked(true);
-		} else {
-			setIsLiked(false);
-		}
-	}, []);
 
 	const handleLikeUnlikeCmt = async commentId => {
 		try {
@@ -67,6 +51,23 @@ const Comment = ({ data, handleReply, postData, commentLv1Id, type }) => {
 			return content;
 		}
 	};
+
+	useEffect(() => {
+		if (type === QUOTE_TYPE) {
+			if (data.createdBy === postData.createdBy) {
+				setIsAuthor(true);
+			}
+		} else {
+			if (data.createdBy === postData.actor) {
+				setIsAuthor(true);
+			}
+		}
+		if (data.isLike === true) {
+			setIsLiked(true);
+		} else {
+			setIsLiked(false);
+		}
+	}, [data]);
 
 	return (
 		<div className='comment'>
@@ -103,6 +104,14 @@ const Comment = ({ data, handleReply, postData, commentLv1Id, type }) => {
 							}}
 						></p>
 					)}
+					{data.like !== 0 ? (
+						<div className='cmt-like-number'>
+							<div className='icon-like'>
+								<Like />
+							</div>
+							{data.like}
+						</div>
+					) : null}
 				</div>
 
 				<ul className='comment__action'>

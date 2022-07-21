@@ -5,6 +5,7 @@
 	width: fit-content;
 	margin-bottom: 1.25rem;
 	&__container {
+		position: relative;
 		max-width: 41.5rem;
 		margin-bottom: 0.3em;
 		padding: 1em;
@@ -80,6 +81,20 @@
 		&:hover {
 			text-decoration: underline;
 			color: $blue;
+		}
+	}
+	.cmt-like-number {
+		position: absolute;
+		right: -30px;
+		bottom: 10px;
+		display: flex;
+		align-items: center;
+		background-color: white;
+		border-radius: 6px;
+		box-shadow: 0px 0px 5px 5px #e7e4e4;
+		padding-right: 4px;
+		.icon-like {
+			transform: scale(0.5);
 		}
 	}
 }
