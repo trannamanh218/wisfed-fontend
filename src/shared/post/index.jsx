@@ -3,7 +3,7 @@ import { Feather } from 'components/svg';
 import { calculateDurationTime } from 'helpers/Common';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateReactionActivity, updateReactionActivityGroup } from 'reducers/redux-utils/activity';
 import { createComment, createCommentGroup } from 'reducers/redux-utils/comment';
@@ -49,9 +49,14 @@ function Post({ postInformations, showModalCreatPost, inReviews = false }) {
 	const { bookId } = useParams();
 
 	useEffect(() => {
-		const commentsReverse = [...postInformations.usersComments];
-		commentsReverse.reverse();
-		setPostData({ ...postInformations, usersComments: commentsReverse });
+		if (!_.isEmpty(postInformations) && postInformations.usersComments.length) {
+			const commentsReverse = [...postInformations.usersComments];
+			commentsReverse.reverse();
+			setPostData({ ...postInformations, usersComments: commentsReverse });
+		} else {
+			setPostData(postInformations);
+		}
+
 		if (!_.isEmpty(postInformations.preview) && postInformations.preview.url.includes('https://www.youtube.com/')) {
 			const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
 			const match = postInformations.preview.url.match(regExp);
@@ -102,7 +107,7 @@ function Post({ postInformations, showModalCreatPost, inReviews = false }) {
 			}
 			if (!_.isEmpty(res)) {
 				const newComment = { ...res, user: userInfo };
-				let usersComments = [...postData.usersComments];
+				const usersComments = [...postData.usersComments];
 				if (res.replyId) {
 					const cmtReplying = usersComments.filter(item => item.id === res.replyId);
 					const reply = [...cmtReplying[0].reply];
