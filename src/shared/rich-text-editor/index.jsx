@@ -262,6 +262,7 @@ RichTextEditor.propTypes = {
 	createCmt: PropTypes.bool,
 	mentionUsersArr: PropTypes.array,
 	setMentionUsersArr: PropTypes.func,
+	hasUrl: PropTypes.bool,
 };
 
 export default RichTextEditor;

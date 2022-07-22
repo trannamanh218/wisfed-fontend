@@ -65,7 +65,6 @@ function CreatPostModalContent({
 	const [showUpload, setShowUpload] = useState(false);
 	const [imagesUpload, setImagesUpload] = useState([]);
 	const [validationInput, setValidationInput] = useState('');
-	const [toastDisplayedYet, setToastDisplayedYet] = useState(false);
 
 	const dispatch = useDispatch();
 
@@ -224,14 +223,6 @@ function CreatPostModalContent({
 			}
 			newData[option.value] = listData;
 		} else if (option.value === 'addBook' || data.hasOwnProperty('page')) {
-			if (taggedData.addBook.id && toastDisplayedYet === false) {
-				setToastDisplayedYet(true);
-				const customId = 'custom-id-handleAddToPost-addBook';
-				toast.warning('Chỉ được gắn 1 cuốn sách trong 1 lần tạo bài viết', {
-					toastId: customId,
-					autoClose: false,
-				});
-			}
 			newData['addBook'] = data;
 		} else if (option.value === 'addImages') {
 			newData[option.value] = data;
