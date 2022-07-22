@@ -21,7 +21,7 @@ const ReactRating = ({ initialRating, stop = 5, handleChange, readonly, fraction
 };
 
 ReactRating.propTypes = {
-	initialRating: PropTypes.number,
+	initialRating: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 	stop: PropTypes.number,
 	fractions: PropTypes.number,
 	handleChange: PropTypes.func,

@@ -36,7 +36,7 @@ const MainPostGroupView = () => {
 				{listPost.map(item => {
 					return (
 						<div key={item.id}>
-							<Post postInformations={item} className={''} />
+							<Post postInformations={item} />
 						</div>
 					);
 				})}

@@ -94,8 +94,6 @@ function CreatPostSubModal(props) {
 		inputRef.current.value = '';
 	};
 
-	console.log(option);
-
 	return (
 		<>
 			<div className='creat-post-modal-content__substitute__header'>
