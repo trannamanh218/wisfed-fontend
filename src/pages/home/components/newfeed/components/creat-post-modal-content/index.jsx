@@ -4,7 +4,7 @@ import { CloseX, Image, IconRanks } from 'components/svg';
 import { STATUS_IDLE, STATUS_LOADING, STATUS_SUCCESS } from 'constants';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
-import { useEffect, useRef, useState } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { createActivity } from 'reducers/redux-utils/activity';
@@ -66,6 +66,8 @@ function CreatPostModalContent({
 	const [showUpload, setShowUpload] = useState(false);
 	const [imagesUpload, setImagesUpload] = useState([]);
 	const [validationInput, setValidationInput] = useState('');
+	const [toastDisplayedYet, setToastDisplayedYet] = useState(false);
+
 	const dispatch = useDispatch();
 
 	const taggedDataPrevious = usePrevious(taggedData);
@@ -190,6 +192,17 @@ function CreatPostModalContent({
 		setShowUpload(false);
 	};
 
+	const limitedOption = () => {
+		switch (option.value) {
+			case 'addAuthor':
+				return 'tác giả';
+			case 'addCategory':
+				return 'chủ đề';
+			default:
+				return '';
+		}
+	};
+	const limitedValue = 5;
 	const handleAddToPost = data => {
 		const newData = { ...taggedData };
 		setCheckProgress(Number(data.progress));
@@ -198,11 +211,29 @@ function CreatPostModalContent({
 			const lastItem = listData[listData.length - 1];
 			if (!listData.length || (!_.isEmpty(lastItem) && lastItem.id !== data.id)) {
 				if (!listData.includes(data)) {
-					listData.push(data);
+					if (option.value === 'addFriends' || listData.length < limitedValue) {
+						listData.push(data);
+					} else {
+						const customId = 'custom-id-handleAddToPost-addAuthor';
+						toast.warning(
+							`Chỉ được chọn tối đa ${limitedValue} ${limitedOption()} trong 1 lần tạo bài viết`,
+							{
+								toastId: customId,
+							}
+						);
+					}
 				}
 			}
 			newData[option.value] = listData;
 		} else if (option.value === 'addBook' || data.hasOwnProperty('page')) {
+			if (taggedData.addBook.id && toastDisplayedYet === false) {
+				setToastDisplayedYet(true);
+				const customId = 'custom-id-handleAddToPost-addBook';
+				toast.warning('Chỉ được gắn 1 cuốn sách trong 1 lần tạo bài viết', {
+					toastId: customId,
+					autoClose: false,
+				});
+			}
 			newData['addBook'] = data;
 		} else if (option.value === 'addImages') {
 			newData[option.value] = data;
@@ -547,15 +578,15 @@ function CreatPostModalContent({
 										<>
 											<span className='d-inline-block mx-1'>cùng với</span>
 											{taggedData.addFriends.map((item, index) => (
-												<>
+												<Fragment key={item.id}>
 													{index !== 0 && <span>{' và '}</span>}
-													<span key={item.id}>
+													<span>
 														{item.fullName ||
 															item.lastName ||
 															item.firstName ||
 															'Không xác định'}
 													</span>
-												</>
+												</Fragment>
 											))}
 										</>
 									)}
@@ -649,6 +680,8 @@ function CreatPostModalContent({
 											images={imagesUpload}
 											setImages={setImagesUpload}
 											removeAllImages={removeAllImages}
+											maxFiles={100}
+											maxSize={104857600}
 										/>
 									)}
 								</>

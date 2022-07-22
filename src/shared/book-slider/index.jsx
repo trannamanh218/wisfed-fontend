@@ -137,6 +137,8 @@ BookSlider.propTypes = {
 	className: PropTypes.string,
 	size: PropTypes.oneOf(['sm', 'md', 'lg']),
 	handleViewBookDetail: PropTypes.func,
+	inCategory: PropTypes.bool,
+	inCategoryDetail: PropTypes.bool,
 };
 
 SlideNextBtn.propTypes = {
