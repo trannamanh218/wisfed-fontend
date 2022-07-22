@@ -4,9 +4,13 @@ import { Link } from 'react-router-dom';
 import './quote-links.scss';
 import { useNavigate, useParams } from 'react-router-dom';
 import { memo } from 'react';
+import { useState } from 'react';
+import { useEffect } from 'react';
+import { useSelector } from 'react-redux';
 
 const QuotesLinks = ({ title, list, className }) => {
 	const { userId } = useParams();
+	const { userInfo } = useSelector(state => state.auth);
 	const navigate = useNavigate();
 	const goToQuote = item => {
 		navigate(`/quotes/detail/${item.id}`);
@@ -14,6 +18,16 @@ const QuotesLinks = ({ title, list, className }) => {
 	const goToBook = item => {
 		navigate(`/book/detail/${item.bookId}`);
 	};
+	const [IdUser, setIdUser] = useState('');
+
+	useEffect(() => {
+		if (userId === undefined) {
+			setIdUser(userInfo.id);
+		} else {
+			setIdUser(userId);
+		}
+	}, []);
+
 	return (
 		<>
 			{!!list.length && (
@@ -35,7 +49,7 @@ const QuotesLinks = ({ title, list, className }) => {
 							</div>
 						))}
 					</div>
-					<Link className='view-all-link' to={`/quotes/${userId}`}>
+					<Link className='view-all-link' to={`/quotes/${IdUser}`}>
 						Xem tất cả
 					</Link>
 				</div>
