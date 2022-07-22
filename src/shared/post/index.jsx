@@ -415,7 +415,7 @@ function Post({ postInformations, showModalCreatPost, inReviews = false }) {
 								<div key={comment.id}>
 									<Comment
 										commentLv1Id={comment.id}
-										data={comment}
+										dataProp={comment}
 										postData={postData}
 										handleReply={handleReply}
 										type={inReviews ? REVIEW_TYPE : POST_TYPE}
@@ -427,7 +427,7 @@ function Post({ postInformations, showModalCreatPost, inReviews = false }) {
 													<div key={commentChild.id}>
 														<Comment
 															commentLv1Id={comment.id}
-															data={commentChild}
+															dataProp={commentChild}
 															postData={postData}
 															handleReply={handleReply}
 															type={inReviews ? REVIEW_TYPE : POST_TYPE}

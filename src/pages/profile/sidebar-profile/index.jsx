@@ -133,6 +133,7 @@ const SidebarProfile = ({ currentUserInfo, handleViewBookDetail }) => {
 
 SidebarProfile.propTypes = {
 	currentUserInfo: PropTypes.object,
+	handleViewBookDetail: PropTypes.any,
 };
 
 export default SidebarProfile;

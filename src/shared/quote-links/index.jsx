@@ -6,7 +6,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { memo } from 'react';
 
 const QuotesLinks = ({ title, list, className }) => {
-	const { id } = useParams();
+	const { userId } = useParams();
 	const navigate = useNavigate();
 	const goToQuote = item => {
 		navigate(`/quotes/detail/${item.id}`);
@@ -35,7 +35,7 @@ const QuotesLinks = ({ title, list, className }) => {
 							</div>
 						))}
 					</div>
-					<Link className='view-all-link' to={`/quotes/category/${id}`}>
+					<Link className='view-all-link' to={`/quotes/${userId}`}>
 						Xem tất cả
 					</Link>
 				</div>
