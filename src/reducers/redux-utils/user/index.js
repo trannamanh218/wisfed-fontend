@@ -175,6 +175,12 @@ const userSlice = createSlice({
 		userDetail: {},
 		categoriesData: {},
 		error: {},
+		isreload: false,
+	},
+	reducers: {
+		handleSaveUpdate: (state, action) => {
+			state.isreload = action.payload;
+		},
 	},
 
 	extraReducers: {
@@ -196,3 +202,4 @@ const userSlice = createSlice({
 
 const user = userSlice.reducer;
 export default user;
+export const { handleSaveUpdate } = userSlice.actions;

@@ -12,6 +12,7 @@ const MyFollow = ({ activeTabs }) => {
 	const changeFollow = useSelector(state => state.friends.toggle);
 	const [getListFollower, setGetListFollower] = useState([]);
 	const [getListFollowings, setGetListFollowings] = useState([]);
+	const { isreload } = useSelector(state => state.user);
 	const dispatch = useDispatch();
 
 	useEffect(async () => {
@@ -23,13 +24,14 @@ const MyFollow = ({ activeTabs }) => {
 		try {
 			const following = await dispatch(getListFollowing(param)).unwrap();
 			const follower = await dispatch(getListFollowrs(param)).unwrap();
+
 			setGetListFollowings(following.rows);
 			setGetListFollower(follower.rows);
 			dispatch(changeToggleFollows(''));
 		} catch (err) {
 			NotificationError(err);
 		}
-	}, [userInfo, dispatch, changeFollow]);
+	}, [userInfo, dispatch, changeFollow, isreload]);
 
 	return (
 		<div className='myfriends__container'>

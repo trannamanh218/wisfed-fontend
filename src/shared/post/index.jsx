@@ -3,7 +3,7 @@ import { Feather } from 'components/svg';
 import { calculateDurationTime } from 'helpers/Common';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateReactionActivity, updateReactionActivityGroup } from 'reducers/redux-utils/activity';
 import { createComment, createCommentGroup } from 'reducers/redux-utils/comment';
@@ -126,21 +126,24 @@ function Post({ postInformations, showModalCreatPost, inReviews = false }) {
 		if (!Storage.getAccessToken()) {
 			dispatch(checkUserLogin(true));
 		} else {
-			try {
-				if (location.pathname.includes('group')) {
-					await dispatch(updateReactionActivityGroup(postData.id)).unwrap();
-				} else if (inReviews) {
-					await dispatch(likeAndUnlikeReview(postData.id)).unwrap();
-				} else {
-					await dispatch(updateReactionActivity(postData.minipostId || postData.id)).unwrap();
-				}
+			const setLike = !postData.isLike;
+			const numberOfLike = setLike ? postData.like + 1 : postData.like - 1;
+			setPostData(prev => ({ ...prev, isLike: !prev.isLike, like: numberOfLike }));
+			handleCallLikeUnlikeApi();
+		}
+	};
 
-				const setLike = !postData.isLike;
-				const numberOfLike = setLike ? postData.like + 1 : postData.like - 1;
-				setPostData(prev => ({ ...prev, isLike: !prev.isLike, like: numberOfLike }));
-			} catch (err) {
-				NotificationError(err);
+	const handleCallLikeUnlikeApi = async () => {
+		try {
+			if (location.pathname.includes('group')) {
+				await dispatch(updateReactionActivityGroup(postData.id)).unwrap();
+			} else if (inReviews) {
+				await dispatch(likeAndUnlikeReview(postData.id)).unwrap();
+			} else {
+				await dispatch(updateReactionActivity(postData.minipostId || postData.id)).unwrap();
 			}
+		} catch (err) {
+			NotificationError(err);
 		}
 	};
 

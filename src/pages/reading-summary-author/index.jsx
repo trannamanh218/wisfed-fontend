@@ -104,17 +104,17 @@ const ReadingSummaryChartAuthor = () => {
 	const renderHoverColumn = payload => {
 		switch (sortValueKey) {
 			case 'read':
-				return ` Lượt đọc ${payload}`;
+				return ` Lượt đọc ${payload || ''}`;
 			case 'addToLibrary':
-				return ` Lượt thêm vào thư viện ${payload}`;
+				return ` Lượt thêm vào thư viện ${payload || ''}`;
 			case 'likeBook':
-				return ` Lượt like ${payload}`;
+				return ` Lượt like ${payload || ''}`;
 			case 'rate':
-				return ` Lượt Đánh giá ${payload}`;
+				return ` Lượt Đánh giá ${payload || ''}`;
 			case 'eeview':
-				return ` Lượt Review ${payload}`;
+				return ` Lượt Review ${payload || ''}`;
 			case 'quote':
-				return ` Lượt Quote ${payload}`;
+				return ` Lượt Quote ${payload || ''}`;
 			default:
 				return;
 		}
@@ -206,6 +206,7 @@ const ReadingSummaryChartAuthor = () => {
 
 	function CustomizedAxisXTick(props) {
 		const { x, y, payload } = props;
+
 		return (
 			<g transform={`translate(${x},${y})`}>
 				<text x={0} y={15} textAnchor='middle'>
@@ -278,7 +279,7 @@ const ReadingSummaryChartAuthor = () => {
 									))}
 								</div>
 							) : (
-								<div className='chart__history__title'>Không có tìm kiếm nào gần đây</div>
+								<div className='chart__history__titles'>Không có tìm kiếm nào gần đây</div>
 							)}
 						</div>
 					</div>
@@ -319,9 +320,10 @@ const ReadingSummaryChartAuthor = () => {
 								></XAxis>
 								<YAxis
 									label={{
-										value: sortValueKey.charAt(0).toUpperCase() + sortValueKey.slice(1),
+										// value: sortValueKey.charAt(0).toUpperCase() + sortValueKey.slice(1),
 										position: 'top',
 										offset: 30,
+										value: renderHoverColumn(),
 									}}
 									tickCount={10}
 									domain={['dataMin', `dataMax + 9`]}
