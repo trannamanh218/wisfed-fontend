@@ -34,13 +34,14 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 			newCloneData.like += 1;
 			setData(newCloneData);
 		}
+
 		try {
 			if (type === POST_TYPE) {
-				dispatch(likeAndUnlikeCommentPost(data.id));
+				await dispatch(likeAndUnlikeCommentPost(data.id));
 			} else if (type === QUOTE_TYPE) {
-				dispatch(likeQuoteComment(data.id));
+				await dispatch(likeQuoteComment(data.id));
 			} else if (type === REVIEW_TYPE) {
-				dispatch(likeAndUnlikeCommentReview(data.id));
+				await dispatch(likeAndUnlikeCommentReview(data.id));
 			}
 			setIsLiked(!isLiked);
 		} catch (err) {
@@ -76,7 +77,7 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 		} else {
 			setIsLiked(false);
 		}
-	}, [dataProp]);
+	}, [data]);
 
 	return (
 		<div className='comment'>

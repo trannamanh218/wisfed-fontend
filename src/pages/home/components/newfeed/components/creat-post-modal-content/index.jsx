@@ -4,7 +4,7 @@ import { CloseX, Image, IconRanks } from 'components/svg';
 import { STATUS_IDLE, STATUS_LOADING, STATUS_SUCCESS } from 'constants';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
-import { useEffect, useRef, useState } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { createActivity } from 'reducers/redux-utils/activity';
@@ -190,6 +190,17 @@ function CreatPostModalContent({
 		setShowUpload(false);
 	};
 
+	const limitedOption = () => {
+		switch (option.value) {
+			case 'addAuthor':
+				return 'tác giả';
+			case 'addCategory':
+				return 'chủ đề';
+			default:
+				return '';
+		}
+	};
+	const limitedValue = 5;
 	const handleAddToPost = data => {
 		const newData = { ...taggedData };
 		setCheckProgress(Number(data.progress));
@@ -198,11 +209,16 @@ function CreatPostModalContent({
 			const lastItem = listData[listData.length - 1];
 			if (!listData.length || (!_.isEmpty(lastItem) && lastItem.id !== data.id)) {
 				if (!listData.includes(data)) {
-					if (listData.length < 6) {
+					if (option.value === 'addFriends' || listData.length < limitedValue) {
 						listData.push(data);
 					} else {
 						const customId = 'custom-id-handleAddToPost-addAuthor';
-						toast.warning('Chỉ được chọn tối đa 5 tác giả trong 1 lần tạo bài viết', { toastId: customId });
+						toast.warning(
+							`Chỉ được chọn tối đa ${limitedValue} ${limitedOption()} trong 1 lần tạo bài viết`,
+							{
+								toastId: customId,
+							}
+						);
 					}
 				}
 			}
@@ -558,15 +574,15 @@ function CreatPostModalContent({
 										<>
 											<span className='d-inline-block mx-1'>cùng với</span>
 											{taggedData.addFriends.map((item, index) => (
-												<>
+												<Fragment key={item.id}>
 													{index !== 0 && <span>{' và '}</span>}
-													<span key={item.id}>
+													<span>
 														{item.fullName ||
 															item.lastName ||
 															item.firstName ||
 															'Không xác định'}
 													</span>
-												</>
+												</Fragment>
 											))}
 										</>
 									)}
