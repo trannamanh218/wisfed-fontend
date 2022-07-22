@@ -62,6 +62,7 @@
 .post__custom__main__container {
 	background-color: white !important;
 	margin-bottom: 0 !important;
+	padding: 0 !important;
 	.grid-image {
 		margin: 0;
 	}
@@ -87,7 +88,7 @@
 	font-weight: 600;
 	font-size: 0.94rem;
 	line-height: 1.5rem;
-	letter-spacing: 0.75px;
+	letter-spacing: 0.1px;
 }
 
 .post__user-status__post-time-status {
@@ -119,7 +120,7 @@
 	}
 
 	svg {
-		width: 16px;
+		width: 12px;
 	}
 
 	.react-rating-container {

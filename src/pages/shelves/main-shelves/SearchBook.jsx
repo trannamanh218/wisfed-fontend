@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import Shelf from 'shared/shelf';
-import lookupBackground from 'assets/images/lookup-bg.png';
+import lookupBackground from 'assets/images/lookup-bg1.png';
 import './main-shelves.scss';
 
 const SearchBook = props => {

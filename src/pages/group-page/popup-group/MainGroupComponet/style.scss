@@ -4,6 +4,7 @@
 		border-radius: 12px 12px 0px 0px;
 		height: 266px;
 		width: 100%;
+		object-fit: cover;
 	}
 	.upload-image {
 		position: absolute;
@@ -11,7 +12,7 @@
 		right: 18px;
 		display: flex;
 		flex-direction: row;
-		padding: 5px;
+		padding: 10px;
 		border-radius: 12px;
 		img {
 			width: 24px;

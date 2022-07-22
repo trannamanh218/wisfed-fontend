@@ -50,11 +50,11 @@ function PostBook({ data }) {
 						postActor={data.actorCreatedPost}
 					/>
 					<div className='post-book__rating__group'>
-						<ReactRating initialRating={data.avgRating} readonly={true} fractions={2} />
+						<ReactRating initialRating={data.avgRating?.toFixed(1)} readonly={true} fractions={2} />
 						<div className='post-book__rating__number'>
 							{data.avgRating !== 0 ? (
 								<div>
-									( {data.avgRating || 0} sao ) ( {data.countRating} đánh giá )
+									( {data.avgRating?.toFixed(1) || 0} sao ) ( {data.countRating} đánh giá )
 								</div>
 							) : (
 								<div>(Chưa có đánh giá)</div>
