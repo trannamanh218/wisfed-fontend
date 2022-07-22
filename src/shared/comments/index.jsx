@@ -17,21 +17,31 @@ import { Like } from 'components/svg';
 const urlRegex =
 	/https?:\/\/www(\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/g;
 
-const Comment = ({ data, handleReply, postData, commentLv1Id, type }) => {
+const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 	const [isLiked, setIsLiked] = useState(false);
 	const [isAuthor, setIsAuthor] = useState(false);
+	const [data, setData] = useState(dataProp);
 
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
-	const handleLikeUnlikeCmt = async commentId => {
+	const handleLikeUnlikeCmt = async paramData => {
+		const newCloneData = paramData;
+		if (isLiked) {
+			newCloneData.like -= 1;
+			setData(newCloneData);
+		} else {
+			newCloneData.like += 1;
+			setData(newCloneData);
+		}
+
 		try {
 			if (type === POST_TYPE) {
-				await dispatch(likeAndUnlikeCommentPost(commentId));
+				dispatch(likeAndUnlikeCommentPost(paramData.id));
 			} else if (type === QUOTE_TYPE) {
-				await dispatch(likeQuoteComment(commentId));
+				dispatch(likeQuoteComment(paramData.id));
 			} else if (type === REVIEW_TYPE) {
-				await dispatch(likeAndUnlikeCommentReview(commentId));
+				dispatch(likeAndUnlikeCommentReview(paramData.id));
 			}
 			setIsLiked(!isLiked);
 		} catch (err) {
@@ -119,7 +129,7 @@ const Comment = ({ data, handleReply, postData, commentLv1Id, type }) => {
 						className={classNames('comment__item', {
 							'liked': isLiked,
 						})}
-						onClick={() => handleLikeUnlikeCmt(data.id)}
+						onClick={() => handleLikeUnlikeCmt(data)}
 					>
 						Thích
 					</li>
@@ -146,7 +156,7 @@ const Comment = ({ data, handleReply, postData, commentLv1Id, type }) => {
 };
 
 Comment.defaultProps = {
-	data: {},
+	dataProp: {},
 	handleReply: () => {},
 	postData: {},
 	commentLv1Id: null,
@@ -154,7 +164,7 @@ Comment.defaultProps = {
 };
 
 Comment.propTypes = {
-	data: PropTypes.object,
+	dataProp: PropTypes.object,
 	postData: PropTypes.object,
 	handleReply: PropTypes.func,
 	commentLv1Id: PropTypes.number,
