@@ -73,7 +73,7 @@ function RichTextEditor({
 
 	useEffect(() => {
 		const editorStateRaws = convertToRaw(editorState.getCurrentContent());
-		const textValue = editorStateRaws.blocks.map(block => (!block.text.trim() && '\n') || block.text).join('\n');
+		const textValue = editorStateRaws.blocks[0].text;
 		const urlDetected = extractLinks(textValue);
 		if (urlDetected && urlDetected.length) {
 			detectUrl(urlDetected);
@@ -82,8 +82,10 @@ function RichTextEditor({
 				detectUrl('');
 			}
 		}
-		const html = convertContentToHTML();
-		setContent(html);
+		if (textValue.length) {
+			const html = convertContentToHTML();
+			setContent(html);
+		}
 		const entytiMap = editorStateRaws.entityMap;
 		const newArr = Object.keys(entytiMap).map(key => entytiMap[key].data.mention);
 		setMentionUsersArr(newArr);

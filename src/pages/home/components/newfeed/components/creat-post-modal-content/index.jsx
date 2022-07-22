@@ -4,7 +4,7 @@ import { CloseX, Image, IconRanks } from 'components/svg';
 import { STATUS_IDLE, STATUS_LOADING, STATUS_SUCCESS } from 'constants';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
-import { Fragment, useEffect, useRef, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { createActivity } from 'reducers/redux-utils/activity';
@@ -150,30 +150,14 @@ function CreatPostModalContent({
 	};
 
 	const addOptionsToPost = param => {
-		if (isShare || isSharePosts || isSharePostsAll.length > 0) {
-			return;
-		} else {
-			if (imagesUpload.length > 0 && param.value === 'addBook') {
-				const customId = 'custom-id-CreatPostModalContent-addOptionsToPost';
-				toast.warning('Không thể kết hợp đồng thời thêm ảnh và sách', { toastId: customId });
-			} else {
-				onChangeOption(param);
-				setShowMainModal(false);
-			}
-		}
+		onChangeOption(param);
+		setShowMainModal(false);
 	};
 
 	const handleOpenUploadImage = () => {
-		if (isShare || isSharePosts || isSharePostsAll.length > 0) {
-			return;
-		} else {
-			if (_.isEmpty(taggedData.addBook)) {
-				setShowUpload(!showUpload);
-				addOptionsToPost({ value: 'addImages', title: 'chỉnh sửa ảnh', icon: <Image />, message: '' });
-			} else {
-				const customId = 'custom-id-CreatPostModalContent-handleOpenUploadImage';
-				toast.warning('Không thể kết hợp đồng thời thêm ảnh và sách', { toastId: customId });
-			}
+		if (!imagesUpload.length) {
+			setShowUpload(true);
+			addOptionsToPost({ value: 'addImages', title: 'chỉnh sửa ảnh', icon: <Image />, message: '' });
 		}
 	};
 
