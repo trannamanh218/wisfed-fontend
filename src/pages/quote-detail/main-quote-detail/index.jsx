@@ -73,7 +73,7 @@ const MainQuoteDetail = ({ quoteData, onCreateComment, likeUnlikeQuoteFnc, setMe
 								<div key={comment.id}>
 									<Comment
 										commentLv1Id={comment.id}
-										data={comment}
+										dataProp={comment}
 										postData={quoteData}
 										handleReply={handleReply}
 										type={QUOTE_TYPE}
@@ -86,7 +86,7 @@ const MainQuoteDetail = ({ quoteData, onCreateComment, likeUnlikeQuoteFnc, setMe
 													<div key={commentChild.id}>
 														<Comment
 															commentLv1Id={comment.id}
-															data={commentChild}
+															dataProp={commentChild}
 															postData={quoteData}
 															handleReply={handleReply}
 															type={QUOTE_TYPE}

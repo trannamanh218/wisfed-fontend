@@ -190,6 +190,14 @@ const FriendsItem = ({ list, keyTabs, getListFollower, getMyListFriendReq, getLi
 		);
 	};
 
+	const buttonAcces = () => {
+		return (
+			<Button className='myfriends__button'>
+				<span className='myfriends__button__content'>Chấp nhận</span>
+			</Button>
+		);
+	};
+
 	const renderButtonFriends = () => {
 		if (keyTabs === 'friend') {
 			return buttonUnFriend();

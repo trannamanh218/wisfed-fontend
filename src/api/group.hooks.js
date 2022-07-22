@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 import { getGroupList } from 'reducers/redux-utils/group';
 import { NotificationError } from 'helpers/Error';
 
-export const useFetchGroups = (current = 1, perPage = 10, filter = '[]') => {
+export const useFetchGroups = (current = 0, perPage = 10, filter = '[]') => {
 	const [status, setStatus] = useState(STATUS_IDLE);
 	const [groups, setGroups] = useState({ rows: [], count: 0 });
 	const [retry, setRetry] = useState(false);

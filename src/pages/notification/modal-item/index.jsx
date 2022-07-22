@@ -11,11 +11,12 @@ import { readNotification } from 'reducers/redux-utils/notificaiton';
 import PropTypes from 'prop-types';
 import { addFollower } from 'reducers/redux-utils/user';
 import { useSelector } from 'react-redux';
-
+import { handleSaveUpdate } from 'reducers/redux-utils/user';
 const ModalItem = ({ item, setModalNotti, getNotifications, setGetNotifications, selectKey }) => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	const { userInfo } = useSelector(state => state.auth);
+	const { isreload } = useSelector(state => state.user);
 	const addFollow = items => {
 		const param = {
 			data: { userId: items.actor },
@@ -40,6 +41,7 @@ const ModalItem = ({ item, setModalNotti, getNotifications, setGetNotifications,
 			}
 			await dispatch(ReplyFriendRequest(params)).unwrap();
 			await dispatch(readNotification({ notificationId: items.id })).unwrap();
+			await dispatch(handleSaveUpdate(!isreload));
 			addFollow(items);
 		} catch (err) {
 			NotificationError(err);
@@ -49,7 +51,7 @@ const ModalItem = ({ item, setModalNotti, getNotifications, setGetNotifications,
 	const cancelFriend = async (data, items) => {
 		try {
 			const parseObject = JSON.parse(data);
-			const params = { id: parseObject.requestId, data: { level: 'normal' } };
+			const params = { id: parseObject.requestId, data: { reply: false } };
 
 			if (selectKey !== 'unread') {
 				const newArr = getNotifications.map(item => {
@@ -61,8 +63,9 @@ const ModalItem = ({ item, setModalNotti, getNotifications, setGetNotifications,
 				});
 				setGetNotifications(newArr);
 			}
-			await dispatch(CancelFriendRequest(params)).unwrap();
+			await dispatch(ReplyFriendRequest(params)).unwrap();
 			await dispatch(readNotification({ notificationId: items.id })).unwrap();
+			await dispatch(handleSaveUpdate(!isreload));
 		} catch (err) {
 			// NotificationError(err);
 		}

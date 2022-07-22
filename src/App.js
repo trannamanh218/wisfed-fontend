@@ -43,6 +43,8 @@ import BooksAuthor from 'pages/books-author';
 import ReadingSummaryChartAuthor from 'pages/reading-summary-author';
 import DetailFeed from 'pages/home/components/newfeed/components/detailFeed';
 import QuotesByCategory from 'pages/quotes-by-category';
+import UploadBook from 'pages/upload-book/UploadBook';
+import 'react-datepicker/dist/react-datepicker.css';
 
 function App({ children }) {
 	const dispatch = useDispatch();
@@ -89,6 +91,7 @@ function App({ children }) {
 			/>
 			<ModalCheckLogin routerLogin={routerLogin} />
 			<Routes>
+				<Route path='/upload-book/:userId' element={<UploadBook />} />
 				<Route path='/top100' element={<Ranks />} />
 				<Route path='/detail-feed/:type/:idPost' element={<DetailFeed />} />
 				<Route path='/books-author/:userId' element={<BooksAuthor />} />

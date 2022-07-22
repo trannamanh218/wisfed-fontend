@@ -42,6 +42,7 @@ const PostActionBar = ({ postData, handleLikeAction }) => {
 				{postData.isLike ? <LikeFill /> : <Like />}
 				<div className='post-action-bar__title'>{postData.like || null} Thích</div>
 			</div>
+
 			<div
 				className='post-action-bar__item'
 				onClick={() => {

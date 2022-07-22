@@ -79,6 +79,7 @@ import { ReactComponent as LogOutIcon } from 'assets/icons/LogOutIcon.svg';
 import { ReactComponent as ProfileIcon } from 'assets/icons/ProfileIcon.svg';
 import { ReactComponent as ArrowDownIcon } from 'assets/icons/ArrowDownIcon.svg';
 import { ReactComponent as CrowSmall } from 'assets/icons/CrownSmall.svg';
+import { ReactComponent as Calendar } from 'assets/icons/calendar.svg';
 
 export {
 	CrowSmall,
@@ -162,4 +163,5 @@ export {
 	FriendsFillIcon,
 	CategoryFillIcon,
 	DropdownGroupWhite,
+	Calendar,
 };

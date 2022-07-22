@@ -10,7 +10,6 @@
 	box-shadow: 0px 0px 32px rgba(0, 0, 0, 0.04);
 	cursor: default;
 	.notificaiton__container {
-		overflow-y: auto;
 		background: #fcfcfc;
 		font-family: 'Montserrat';
 		border-bottom-left-radius: 12px;
@@ -34,6 +33,18 @@
 }
 .notificaiton__loading__container {
 	cursor: context-menu;
+	height: 594px;
+}
+.notification-title {
+	font-family: 'Montserrat';
+	font-style: normal;
+	font-weight: 600;
+	font-size: 18px;
+	line-height: 32px;
+	letter-spacing: 0.75px;
+	margin-left: 20px;
+	margin-top: 40px !important;
+	margin-bottom: 35px !important;
 }
 .notificaiton__title {
 	font-size: 20px;
@@ -114,7 +125,7 @@
 	font-size: 18px;
 	line-height: 32px;
 	letter-spacing: 0.75px;
-	margin: 20px 20px;
+	margin: 11px 20px;
 }
 .notificaiton__all__infor {
 	font-weight: 500;
@@ -185,7 +196,7 @@
 }
 .notificaiton__tabs__button {
 	text-align: center;
-	margin: 12px 20px;
+	margin: 12px 20px !important;
 	color: #0576f0;
 	font-weight: 600;
 	font-size: 15px;

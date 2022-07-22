@@ -9,10 +9,19 @@ const Input = ({
 	className = '',
 	inputRef,
 	readOnly,
+	type,
 	...rest
 }) => {
+	const blockInvalidChar = e => {
+		if (type === 'number') {
+			return ['e', 'E', '+', '-'].includes(e.key) && e.preventDefault();
+		}
+	};
+
 	return (
 		<input
+			type={type}
+			onKeyDown={blockInvalidChar}
 			className={classNames(
 				'input',
 				{ 'input--non-border': !isBorder },
@@ -28,6 +37,10 @@ const Input = ({
 	);
 };
 
+Input.defaultProps = {
+	type: 'text',
+};
+
 Input.propTypes = {
 	placeholder: PropTypes.string,
 	handleChange: PropTypes.func,
@@ -35,6 +48,7 @@ Input.propTypes = {
 	className: PropTypes.string,
 	inputRef: PropTypes.object,
 	readOnly: PropTypes.bool,
+	type: PropTypes.string,
 };
 
 export default Input;

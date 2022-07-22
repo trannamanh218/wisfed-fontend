@@ -3,7 +3,7 @@ import { Feather } from 'components/svg';
 import { calculateDurationTime } from 'helpers/Common';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateReactionActivity, updateReactionActivityGroup } from 'reducers/redux-utils/activity';
 import { createComment, createCommentGroup } from 'reducers/redux-utils/comment';
@@ -49,7 +49,9 @@ function Post({ postInformations, showModalCreatPost, inReviews = false }) {
 	const { bookId } = useParams();
 
 	useEffect(() => {
-		setPostData({ ...postInformations });
+		const commentsReverse = [...postInformations.usersComments];
+		commentsReverse.reverse();
+		setPostData({ ...postInformations, usersComments: commentsReverse });
 		if (!_.isEmpty(postInformations.preview) && postInformations.preview.url.includes('https://www.youtube.com/')) {
 			const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
 			const match = postInformations.preview.url.match(regExp);
@@ -100,21 +102,17 @@ function Post({ postInformations, showModalCreatPost, inReviews = false }) {
 			}
 			if (!_.isEmpty(res)) {
 				const newComment = { ...res, user: userInfo };
-				let usersComments = [];
+				let usersComments = [...postData.usersComments];
 				if (res.replyId) {
-					const cmtReplying = [...postData.usersComments.rows].filter(item => item.id === res.replyId);
+					const cmtReplying = usersComments.filter(item => item.id === res.replyId);
 					const reply = [...cmtReplying[0].reply];
 					reply.push(newComment);
 					const obj = { ...cmtReplying[0], reply };
-					const rows = [...postData.usersComments.rows];
-					const index = rows.findIndex(item => item.id === res.replyId);
-					rows[index] = obj;
-					usersComments = { ...postData.usersComments, rows };
+					const index = usersComments.findIndex(item => item.id === res.replyId);
+					usersComments[index] = obj;
 				} else {
-					const rows = [...postData.usersComments.rows];
 					newComment.reply = [];
-					rows.push(newComment);
-					usersComments = { ...postData.usersComments, rows };
+					usersComments.push(newComment);
 				}
 				const newPostData = { ...postData, usersComments, comment: postData.comment + 1 };
 				setPostData(newPostData);
@@ -128,21 +126,24 @@ function Post({ postInformations, showModalCreatPost, inReviews = false }) {
 		if (!Storage.getAccessToken()) {
 			dispatch(checkUserLogin(true));
 		} else {
-			try {
-				if (location.pathname.includes('group')) {
-					await dispatch(updateReactionActivityGroup(postData.id)).unwrap();
-				} else if (inReviews) {
-					await dispatch(likeAndUnlikeReview(postData.id)).unwrap();
-				} else {
-					await dispatch(updateReactionActivity(postData.minipostId || postData.id)).unwrap();
-				}
+			const setLike = !postData.isLike;
+			const numberOfLike = setLike ? postData.like + 1 : postData.like - 1;
+			setPostData(prev => ({ ...prev, isLike: !prev.isLike, like: numberOfLike }));
+			handleCallLikeUnlikeApi();
+		}
+	};
 
-				const setLike = !postData.isLike;
-				const numberOfLike = setLike ? postData.like + 1 : postData.like - 1;
-				setPostData(prev => ({ ...prev, isLike: !prev.isLike, like: numberOfLike }));
-			} catch (err) {
-				NotificationError(err);
+	const handleCallLikeUnlikeApi = async () => {
+		try {
+			if (location.pathname.includes('group')) {
+				await dispatch(updateReactionActivityGroup(postData.id)).unwrap();
+			} else if (inReviews) {
+				await dispatch(likeAndUnlikeReview(postData.id)).unwrap();
+			} else {
+				await dispatch(updateReactionActivity(postData.minipostId || postData.id)).unwrap();
 			}
+		} catch (err) {
+			NotificationError(err);
 		}
 	};
 
@@ -408,13 +409,13 @@ function Post({ postInformations, showModalCreatPost, inReviews = false }) {
 			{!isSharePosts && (
 				<>
 					<PostActionBar postData={postData} handleLikeAction={handleLikeAction} />
-					{postData.usersComments?.rows && !!postData.usersComments?.rows.length && (
+					{postData.usersComments && !!postData.usersComments?.length && (
 						<>
-							{postData.usersComments.rows.map(comment => (
+							{postData.usersComments.map(comment => (
 								<div key={comment.id}>
 									<Comment
 										commentLv1Id={comment.id}
-										data={comment}
+										dataProp={comment}
 										postData={postData}
 										handleReply={handleReply}
 										type={inReviews ? REVIEW_TYPE : POST_TYPE}
@@ -426,7 +427,7 @@ function Post({ postInformations, showModalCreatPost, inReviews = false }) {
 													<div key={commentChild.id}>
 														<Comment
 															commentLv1Id={comment.id}
-															data={commentChild}
+															dataProp={commentChild}
 															postData={postData}
 															handleReply={handleReply}
 															type={inReviews ? REVIEW_TYPE : POST_TYPE}
@@ -451,7 +452,7 @@ function Post({ postInformations, showModalCreatPost, inReviews = false }) {
 						</>
 					)}
 					<CommentEditor
-						className='comment-editor-last'
+						className={`comment-editor-last-${postInformations.id}`}
 						replyingCommentId={null}
 						onCreateComment={onCreateComment}
 						mentionUsersArr={mentionUsersArr}

@@ -170,9 +170,9 @@ const NotificationModal = ({ setModalNotti, buttonModal, realTime }) => {
 							<Tab eventKey='unread' title='Chưa đọc'>
 								{getListUnread.length > 0 ? (
 									<>
-										<div className='notificaiton__all__title'>Thông báo chưa đọc</div>
+										<div className='  notification-title'>Thông báo chưa đọc</div>
 										{getListUnread
-											.slice(0, 6)
+											.slice(0, 5)
 											.map(
 												item =>
 													!item.isRead &&

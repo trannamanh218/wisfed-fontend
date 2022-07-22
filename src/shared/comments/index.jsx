@@ -12,42 +12,36 @@ import { likeAndUnlikeCommentPost } from 'reducers/redux-utils/activity';
 import { likeAndUnlikeCommentReview } from 'reducers/redux-utils/book';
 import { POST_TYPE, QUOTE_TYPE, REVIEW_TYPE } from 'constants';
 import { Link, useNavigate } from 'react-router-dom';
+import { Like } from 'components/svg';
 
 const urlRegex =
 	/https?:\/\/www(\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/g;
 
-const Comment = ({ data, handleReply, postData, commentLv1Id, type }) => {
+const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 	const [isLiked, setIsLiked] = useState(false);
 	const [isAuthor, setIsAuthor] = useState(false);
+	const [data, setData] = useState(dataProp);
 
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
-	useEffect(() => {
-		if (type === QUOTE_TYPE) {
-			if (data.createdBy === postData.createdBy) {
-				setIsAuthor(true);
-			}
+	const handleLikeUnlikeCmt = async paramData => {
+		const newCloneData = paramData;
+		if (isLiked) {
+			newCloneData.like -= 1;
+			setData(newCloneData);
 		} else {
-			if (data.createdBy === postData.actor) {
-				setIsAuthor(true);
-			}
+			newCloneData.like += 1;
+			setData(newCloneData);
 		}
-		if (data.isLike === true || data.like !== 0) {
-			setIsLiked(true);
-		} else {
-			setIsLiked(false);
-		}
-	}, []);
 
-	const handleLikeUnlikeCmt = async commentId => {
 		try {
 			if (type === POST_TYPE) {
-				await dispatch(likeAndUnlikeCommentPost(commentId));
+				dispatch(likeAndUnlikeCommentPost(paramData.id));
 			} else if (type === QUOTE_TYPE) {
-				await dispatch(likeQuoteComment(commentId));
+				dispatch(likeQuoteComment(paramData.id));
 			} else if (type === REVIEW_TYPE) {
-				await dispatch(likeAndUnlikeCommentReview(commentId));
+				dispatch(likeAndUnlikeCommentReview(paramData.id));
 			}
 			setIsLiked(!isLiked);
 		} catch (err) {
@@ -67,6 +61,23 @@ const Comment = ({ data, handleReply, postData, commentLv1Id, type }) => {
 			return content;
 		}
 	};
+
+	useEffect(() => {
+		if (type === QUOTE_TYPE) {
+			if (data.createdBy === postData.createdBy) {
+				setIsAuthor(true);
+			}
+		} else {
+			if (data.createdBy === postData.actor) {
+				setIsAuthor(true);
+			}
+		}
+		if (data.isLike === true) {
+			setIsLiked(true);
+		} else {
+			setIsLiked(false);
+		}
+	}, [data]);
 
 	return (
 		<div className='comment'>
@@ -103,6 +114,14 @@ const Comment = ({ data, handleReply, postData, commentLv1Id, type }) => {
 							}}
 						></p>
 					)}
+					{data.like !== 0 ? (
+						<div className='cmt-like-number'>
+							<div className='icon-like'>
+								<Like />
+							</div>
+							{data.like}
+						</div>
+					) : null}
 				</div>
 
 				<ul className='comment__action'>
@@ -110,7 +129,7 @@ const Comment = ({ data, handleReply, postData, commentLv1Id, type }) => {
 						className={classNames('comment__item', {
 							'liked': isLiked,
 						})}
-						onClick={() => handleLikeUnlikeCmt(data.id)}
+						onClick={() => handleLikeUnlikeCmt(data)}
 					>
 						Thích
 					</li>
@@ -137,7 +156,7 @@ const Comment = ({ data, handleReply, postData, commentLv1Id, type }) => {
 };
 
 Comment.defaultProps = {
-	data: {},
+	dataProp: {},
 	handleReply: () => {},
 	postData: {},
 	commentLv1Id: null,
@@ -145,7 +164,7 @@ Comment.defaultProps = {
 };
 
 Comment.propTypes = {
-	data: PropTypes.object,
+	dataProp: PropTypes.object,
 	postData: PropTypes.object,
 	handleReply: PropTypes.func,
 	commentLv1Id: PropTypes.number,

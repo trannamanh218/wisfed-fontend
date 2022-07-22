@@ -18,13 +18,14 @@ const Profile = () => {
 
 	const dispatch = useDispatch();
 	const { userInfo } = useSelector(state => state.auth);
+	const { isreload } = useSelector(state => state.user);
 	const { userId } = useParams();
 	const navigate = useNavigate();
 
 	useEffect(() => {
 		window.scroll(0, 0);
 		getUserDetailData();
-	}, [userId, userInfo]);
+	}, [userId, userInfo, isreload]);
 
 	const getUserDetailData = async () => {
 		try {

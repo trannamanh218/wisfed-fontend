@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react';
 import { useVisible } from 'shared/hooks';
 import './select-box.scss';
 
-const SelectBox = ({ defaultOption, list, onChangeOption, name, className }) => {
+const SelectBox = ({ defaultOption, list, onChangeOption, name, className, imgDropDown }) => {
 	const { ref, isVisible, setIsVisible } = useVisible(false);
 	const [activeItem, setActiveItem] = useState(defaultOption);
 
@@ -42,7 +42,7 @@ const SelectBox = ({ defaultOption, list, onChangeOption, name, className }) => 
 					{activeItem.img ? activeItem.img : ''}
 					{activeItem.title || activeItem.name}
 				</span>
-				<img className='select-box__icon' src={dropdownIcon} alt='dropdown' />
+				<img className='select-box__icon' src={imgDropDown} alt='dropdown' />
 			</div>
 			{isVisible && !_.isEmpty(list) && (
 				<ul className='select-box__list'>
@@ -72,6 +72,10 @@ const SelectBox = ({ defaultOption, list, onChangeOption, name, className }) => 
 	);
 };
 
+SelectBox.defaultProps = {
+	imgDropDown: dropdownIcon,
+};
+
 SelectBox.propTypes = {
 	defaultOption: PropTypes.shape({
 		value: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
@@ -89,6 +93,7 @@ SelectBox.propTypes = {
 	onChangeOption: PropTypes.func,
 	name: PropTypes.string.isRequired,
 	className: PropTypes.string,
+	imgDropDown: PropTypes.string,
 };
 
 export default SelectBox;

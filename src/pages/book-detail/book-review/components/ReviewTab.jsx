@@ -17,6 +17,7 @@ import { Modal } from 'react-bootstrap';
 import { useModal } from 'shared/hooks';
 import FormCheckGroup from 'shared/form-check-group';
 import Button from 'shared/button';
+import { Follow } from 'stories/modules/friendsItem.stories';
 
 const ReviewTab = ({ currentTab }) => {
 	const filterOptions = [
@@ -39,33 +40,33 @@ const ReviewTab = ({ currentTab }) => {
 			title: 'Cũ nhất',
 		},
 		{
-			value: 'mostFollow',
+			value: 'follow',
 			title: 'Có nhiều Follow nhất',
 		},
 		{
-			value: 'mostReview',
+			value: 'review',
 			title: 'Có nhiều Review nhất',
 		},
 	];
 	const checkBoxStarOptions = [
 		{
-			value: 5,
+			value: '5',
 			title: '5 sao',
 		},
 		{
-			value: 4,
+			value: '4',
 			title: '4 sao',
 		},
 		{
-			value: 3,
+			value: '3',
 			title: '3 sao',
 		},
 		{
-			value: 2,
+			value: '2',
 			title: '2 sao',
 		},
 		{
-			value: 1,
+			value: '1',
 			title: '1 sao',
 		},
 	];
@@ -81,6 +82,7 @@ const ReviewTab = ({ currentTab }) => {
 	const [directionSort, setDirectionSort] = useState('DESC');
 	const [propertySort, setPropertySort] = useState('like');
 	const [inputSearch, setInputSearch] = useState('');
+	// const [topUser, setTopUser] = useState('');
 
 	const callApiStart = useRef(10);
 	const callApiPerPage = useRef(10);
@@ -96,10 +98,17 @@ const ReviewTab = ({ currentTab }) => {
 			callApiStart.current = 10;
 			getReviewListFirstTime();
 		}
-	}, [currentOption, currentTab, directionSort, propertySort]);
+	}, [currentOption, currentTab, directionSort, propertySort, inputSearch]);
 
 	const getReviewListFirstTime = async () => {
 		try {
+			let newarr;
+			if (checkedStarArr.length > 0) {
+				newarr = checkedStarArr;
+			} else {
+				newarr = ['1', '2', '3', '4', '5'];
+			}
+
 			const params = {
 				start: 0,
 				limit: callApiPerPage.current,
@@ -107,9 +116,12 @@ const ReviewTab = ({ currentTab }) => {
 				filter: JSON.stringify([
 					{ operator: 'eq', value: bookId, property: 'bookId' },
 					{ operator: 'eq', value: bookInfo.page, property: 'curProgress' },
+					{ operator: 'in', value: newarr, property: 'rate' },
 				]),
+				topUser: sortValue,
+				searchUser: inputSearch,
 			};
-
+			console.log(inputSearch);
 			let response;
 			if (currentOption.value === 'allReviews') {
 				response = await dispatch(getReviewsBook(params)).unwrap();
@@ -130,7 +142,9 @@ const ReviewTab = ({ currentTab }) => {
 			NotificationError(err);
 		}
 	};
-
+	const ChangeSearch = e => {
+		setInputSearch(e.target.value);
+	};
 	const getReviewList = async () => {
 		try {
 			const params = {
@@ -169,6 +183,7 @@ const ReviewTab = ({ currentTab }) => {
 	};
 
 	const onBtnConfirmClick = () => {
+		getReviewListFirstTime();
 		switch (sortValue) {
 			case 'oldest':
 				setPropertySort('createdAt');
@@ -202,6 +217,7 @@ const ReviewTab = ({ currentTab }) => {
 				newArr.splice(newArr.indexOf(data), 1);
 			}
 		}
+		sortValue;
 		setCheckedStarArr(newArr);
 	};
 
@@ -237,7 +253,7 @@ const ReviewTab = ({ currentTab }) => {
 				<div className='review-tab__search'>
 					<SearchField
 						value={inputSearch}
-						handleChange={e => setInputSearch(e.target.value)}
+						handleChange={ChangeSearch}
 						placeholder='Tìm kiếm theo Hastag, tên người review ...'
 					/>
 				</div>

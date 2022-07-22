@@ -380,12 +380,14 @@ function CreatPostModalContent({
 							mediaUrl: [],
 							content: content,
 							curProgress: taggedData.addBook.status === 'read' ? taggedData.addBook.page : checkProgress,
+							rate: taggedData.addBook.status === 'read' ? valueStar : '',
 						};
 						dispatch(createReviewBook(reviewData));
 					}
 					if (valueStar > 0) {
 						userRating();
 					}
+
 					handleUpdateProgress(params);
 				}
 

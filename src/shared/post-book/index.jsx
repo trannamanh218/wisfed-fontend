@@ -4,21 +4,9 @@ import ReactRating from 'shared/react-rating';
 import PropTypes from 'prop-types';
 import BookThumbnail from 'shared/book-thumbnail';
 import LinearProgressBar from 'shared/linear-progress-bar';
-import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 function PostBook({ data }) {
-	const [percenProgress, setPercenProgress] = useState();
-
-	useEffect(() => {
-		if (data.status === 'wantToRead') {
-			setPercenProgress(0);
-		} else {
-			const newPropgress = ((data.progress / data.page) * 100).toFixed();
-			setPercenProgress(newPropgress);
-		}
-	}, []);
-
 	return (
 		<div className='post-book'>
 			<Link to={`/book/detail/${data.id}`}>
@@ -33,7 +21,7 @@ function PostBook({ data }) {
 					</Link>
 					<div className='post-book__author'>{data.author || 'Tác giả: Chưa xác định'}</div>
 					<div className='post-book__edit'>
-						<LinearProgressBar percent={percenProgress} />
+						<LinearProgressBar percent={((data.progress / data.page) * 100).toFixed()} />
 						<div className='post-book__editor'>
 							<span className='post-book__ratio'>
 								{data.status === 'wantToRead' ? data.progress : data.progress}/{data.page}
