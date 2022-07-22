@@ -39,7 +39,6 @@ const PostsShare = ({ postData }) => {
 			}
 		}
 	}, [postData]);
-
 	const generateContent = content => {
 		if (content.match(urlRegex)) {
 			const newContent = content.replace(urlRegex, data => {

@@ -17,7 +17,7 @@
 			height: 1.5 * $width-book-sm;
 		}
 		&-md {
-			width: $width-book-md;
+			width: calc(#{$width-book-md} - 16px);
 			height: 1.5 * $width-book-md;
 		}
 		&-lg {

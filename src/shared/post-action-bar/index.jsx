@@ -11,6 +11,7 @@ const PostActionBar = ({ postData, handleLikeAction }) => {
 	const dispatch = useDispatch();
 	const location = useLocation();
 	const navigate = useNavigate();
+
 	const handleShare = () => {
 		if (!Storage.getAccessToken()) {
 			dispatch(checkUserLogin(true));
