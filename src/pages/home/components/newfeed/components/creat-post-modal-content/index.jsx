@@ -65,6 +65,8 @@ function CreatPostModalContent({
 	const [showUpload, setShowUpload] = useState(false);
 	const [imagesUpload, setImagesUpload] = useState([]);
 	const [validationInput, setValidationInput] = useState('');
+	const [toastDisplayedYet, setToastDisplayedYet] = useState(false);
+
 	const dispatch = useDispatch();
 
 	const taggedDataPrevious = usePrevious(taggedData);
@@ -196,11 +198,24 @@ function CreatPostModalContent({
 			const lastItem = listData[listData.length - 1];
 			if (!listData.length || (!_.isEmpty(lastItem) && lastItem.id !== data.id)) {
 				if (!listData.includes(data)) {
-					listData.push(data);
+					if (listData.length < 6) {
+						listData.push(data);
+					} else {
+						const customId = 'custom-id-handleAddToPost-addAuthor';
+						toast.warning('Chỉ được chọn tối đa 5 tác giả trong 1 lần tạo bài viết', { toastId: customId });
+					}
 				}
 			}
 			newData[option.value] = listData;
 		} else if (option.value === 'addBook' || data.hasOwnProperty('page')) {
+			if (taggedData.addBook.id && toastDisplayedYet === false) {
+				setToastDisplayedYet(true);
+				const customId = 'custom-id-handleAddToPost-addBook';
+				toast.warning('Chỉ được gắn 1 cuốn sách trong 1 lần tạo bài viết', {
+					toastId: customId,
+					autoClose: false,
+				});
+			}
 			newData['addBook'] = data;
 		} else if (option.value === 'addImages') {
 			newData[option.value] = data;
@@ -645,6 +660,8 @@ function CreatPostModalContent({
 											images={imagesUpload}
 											setImages={setImagesUpload}
 											removeAllImages={removeAllImages}
+											maxFiles={100}
+											maxSize={104857600}
 										/>
 									)}
 								</>

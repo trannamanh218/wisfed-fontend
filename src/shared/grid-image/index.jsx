@@ -82,7 +82,6 @@ const GridImage = ({ images, inPost, postId }) => {
 							{images.map((image, index) => (
 								<button key={index} onClick={() => setIsOpen(true)}>
 									<div
-										key={index}
 										className={
 											inPost
 												? `creat-post-modal-content__main__body__image img-${index}-${postId}`
@@ -120,9 +119,8 @@ const GridImage = ({ images, inPost, postId }) => {
 									{images.map((image, index) => {
 										if (index < 4) {
 											return (
-												<button onClick={() => setIsOpen(true)}>
+												<button key={index} onClick={() => setIsOpen(true)}>
 													<div
-														key={index}
 														className={
 															inPost
 																? `creat-post-modal-content__main__body__image img-${index}-${postId}`
