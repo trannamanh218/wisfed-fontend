@@ -38,6 +38,7 @@ const MainReadingTarget = () => {
 
 	const handleEditTarget = () => {
 		setModalOpen(true);
+		setDeleteModal(false);
 	};
 
 	const handleDeleteTarget = () => {

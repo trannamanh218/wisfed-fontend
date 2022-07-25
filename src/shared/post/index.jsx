@@ -49,9 +49,13 @@ function Post({ postInformations, showModalCreatPost, inReviews = false }) {
 	const { bookId } = useParams();
 
 	useEffect(() => {
-		const commentsReverse = [...postInformations.usersComments];
-		commentsReverse.reverse();
-		setPostData({ ...postInformations, usersComments: commentsReverse });
+		if (!_.isEmpty(postInformations) && postInformations.usersComments.length) {
+			const commentsReverse = [...postInformations.usersComments];
+			commentsReverse.reverse();
+			setPostData({ ...postInformations, usersComments: commentsReverse });
+		} else {
+			setPostData(postInformations);
+		}
 		if (!_.isEmpty(postInformations.preview) && postInformations.preview.url.includes('https://www.youtube.com/')) {
 			const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
 			const match = postInformations.preview.url.match(regExp);

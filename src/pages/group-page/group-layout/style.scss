@@ -67,6 +67,7 @@
 }
 .item-list-group {
 	display: flex;
+	align-items: center;
 	margin-top: 14px;
 	img {
 		width: 60px;
@@ -78,7 +79,7 @@
 }
 .item-infor {
 	.item-infor__name {
-		height: 40px;
+		height: 43px;
 		font-family: 'Montserrat';
 		font-style: normal;
 		font-weight: 600;
