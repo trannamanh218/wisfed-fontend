@@ -29,7 +29,6 @@ function Bookcase({ currentUserInfo, currentTab }) {
 	const { userInfo } = useSelector(state => state.auth);
 
 	useEffect(() => {
-		// console.log('userId: ' + userId);
 		// if (!_.isEmpty(userInfo)) {
 		// 	if (userId === userInfo.id) {
 		// 		if (!_.isEmpty(myAllLibraryDefault)) {
@@ -43,7 +42,6 @@ function Bookcase({ currentUserInfo, currentTab }) {
 		// 			}
 		// 		}
 		// 	} else {
-		// console.log(readingBooks, /n/, readBooks);
 		getBooksInCurrentLibrary();
 		// }
 		// }
