@@ -35,6 +35,7 @@ import Post from 'shared/post';
 import AuthorBook from 'shared/author-book';
 import ShareUsers from '../modal-share-users';
 import RichTextEditor from 'shared/rich-text-editor';
+import ShareTarget from 'shared/share-target';
 
 const urlRegex =
 	/https?:\/\/www(\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/g;
@@ -77,7 +78,9 @@ function CreatPostModalContent({
 
 	const location = useLocation();
 	const UpdateImg = useSelector(state => state.chart.updateImgPost);
-	const { resetTaggedData, isShare, postsData, isSharePosts, isSharePostsAll } = useSelector(state => state.post);
+	const { resetTaggedData, isShare, postsData, isSharePosts, isSharePostsAll, isShareTarget } = useSelector(
+		state => state.post
+	);
 	const { id } = useParams();
 	const {
 		auth: { userInfo },
@@ -621,9 +624,11 @@ function CreatPostModalContent({
 										<Post postInformations={postsData} showModalCreatPost={showModalCreatPost} />
 									)}
 									{isSharePostsAll === 'shareTopBook' && <AuthorBook data={postsData} />}
+									{isShareTarget && <ShareTarget />}
 								</div>
 							)}
 							{isSharePostsAll === 'shareTopUser' && <ShareUsers postsData={postsData} />}
+							{}
 
 							{!_.isEmpty(taggedData.addBook) || showUpload ? (
 								<>

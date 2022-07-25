@@ -18,6 +18,7 @@ import ranks from './ranks';
 import search from './search';
 import shelves from './shelves';
 import task from './reloadPostHomePage';
+import target from './target';
 
 const rootReducer = {
 	auth,
@@ -40,6 +41,7 @@ const rootReducer = {
 	search,
 	shelves,
 	task,
+	target,
 };
 
 export default rootReducer;

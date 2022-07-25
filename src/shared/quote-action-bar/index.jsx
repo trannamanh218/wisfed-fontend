@@ -23,6 +23,8 @@ const QuoteActionBar = ({ data, isDetail, likeUnlikeQuoteFnc, isLiked, likeNumbe
 		}
 	};
 
+	console.log(data);
+
 	const handleCheckLoginLike = () => {
 		if (!Storage.getAccessToken()) {
 			setModalShow(true);

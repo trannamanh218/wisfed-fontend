@@ -83,6 +83,7 @@ const postSlice = createSlice({
 		isShare: false,
 		isSharePosts: false,
 		isSharePostsAll: '',
+		isShareTarget: false,
 	},
 	reducers: {
 		resetTaggedDataFunc: (state, action) => {
@@ -100,6 +101,9 @@ const postSlice = createSlice({
 		sharePostsAll: (state, action) => {
 			state.isSharePostsAll = action.payload;
 		},
+		shareTarget: (state, action) => {
+			state.isShareTarget = action.payload;
+		},
 	},
 	extraReducers: {
 		[getPostDetail.pending]: state => {
@@ -116,6 +120,7 @@ const postSlice = createSlice({
 		},
 	},
 });
-export const { resetTaggedDataFunc, saveDataShare, checkShare, sharePosts, sharePostsAll } = postSlice.actions;
+export const { resetTaggedDataFunc, saveDataShare, checkShare, sharePosts, sharePostsAll, shareTarget } =
+	postSlice.actions;
 const post = postSlice.reducer;
 export default post;
