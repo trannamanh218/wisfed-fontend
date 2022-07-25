@@ -11,7 +11,7 @@ import { NotificationError } from 'helpers/Error';
 import ModalCheckLogin from 'shared/modal-check-login';
 import LoadingIndicator from 'shared/loading-indicator';
 
-const TopBooks = ({ rows, listYear }) => {
+const TopBooks = ({ rows, listYear, tabSelected }) => {
 	const kindOfGroupRef = useRef({ value: 'default', title: 'Chủ đề' });
 	const listYearRef = useRef({ value: 'default', title: 'Tuần' });
 	const { isAuth } = useSelector(state => state.auth);
@@ -49,8 +49,10 @@ const TopBooks = ({ rows, listYear }) => {
 	};
 
 	useEffect(() => {
-		getTopBooksData();
-	}, [topBooksId, valueDate, isAuth]);
+		if (tabSelected === 'books') {
+			getTopBooksData();
+		}
+	}, [topBooksId, valueDate, isAuth, tabSelected]);
 
 	const onchangeKindOfDate = data => {
 		window.scrollTo(0, 0);
@@ -114,5 +116,6 @@ const TopBooks = ({ rows, listYear }) => {
 TopBooks.propTypes = {
 	rows: PropTypes.array,
 	listYear: PropTypes.array,
+	tabSelected: PropTypes.string,
 };
 export default TopBooks;
