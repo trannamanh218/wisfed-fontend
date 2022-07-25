@@ -1,14 +1,11 @@
 @import 'src/scss/abstracts/_variables.scss';
 
-.group-btn-back {
-	margin-left: 30px;
-	margin-bottom: 60px;
+.upload-icon-goback {
+	margin-left: 53px;
 }
 
 .upload-book-form {
 	padding: 38px 30px;
-	gap: 39px;
-
 	background: #ffffff;
 	border-radius: 16px;
 
@@ -18,7 +15,7 @@
 
 	.inp-book {
 		width: 100%;
-		margin-top: 38px;
+		margin-bottom: 38px;
 		label {
 			margin-bottom: 23px;
 			font-weight: 600;
@@ -31,7 +28,7 @@
 			font-weight: 500;
 			font-size: 15px;
 			line-height: 24px;
-			padding: 16px 24px;
+			padding: 16px 22.78px;
 
 			&::placeholder {
 				font-weight: 500;
@@ -43,7 +40,7 @@
 		.inp-date {
 			width: 100%;
 			border-radius: 12px;
-			padding-right: 18px;
+			padding: 0px 18px;
 			background-color: #f7f7fc;
 			border: none;
 			display: flex;
@@ -58,7 +55,7 @@
 						font-weight: 500;
 						font-size: 15px;
 						line-height: 24px;
-						padding: 16px 24px;
+						padding: 16px 15px;
 						background-color: transparent;
 						outline: none;
 						border: none;
@@ -95,6 +92,11 @@
 				}
 			}
 		}
+	}
+
+	.upload-image__description {
+		text-align: center;
+		font-weight: 600;
 	}
 
 	.select-box {

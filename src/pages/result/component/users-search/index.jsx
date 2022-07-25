@@ -64,6 +64,10 @@ const UsersSearch = ({
 			} else {
 				setHasMore(false);
 			}
+			// Nếu kết quả tìm kiếm nhỏ hơn limit thì disable gọi api khi scroll
+			if (result.rows.length < params.limit) {
+				setHasMore(false);
+			}
 		} catch (err) {
 			NotificationError(err);
 		} finally {

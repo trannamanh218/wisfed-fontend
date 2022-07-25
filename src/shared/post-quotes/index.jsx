@@ -40,12 +40,9 @@ const PostQuotes = ({ postsData, isShare }) => {
 
 	return (
 		!_.isEmpty(postsData) && (
-			<div className={!isShare && !isSharePosts && 'creat-post-modal-content__main__share-container'}>
-				{/* <Link
-					to={`/quotes/detail/${
-						postsData.info?.id ? postsData.info?.id : postsData.sharePost?.id || postsData.id
-					}`}
-				> */}
+			// Sửa lỗi đặt className là true hoặc false
+			// <div className={!isShare && !isSharePosts && 'creat-post-modal-content__main__share-container'}>
+			<div className='creat-post-modal-content__main__share-container'>
 				<div className='post__quotes__container'>
 					<div className='quote-card' style={generateBackgroundColorQuotes()}>
 						<div className='quote-card__quote-content'>
@@ -83,7 +80,6 @@ const PostQuotes = ({ postsData, isShare }) => {
 						</div>
 					</div>
 				</div>
-				{/* </Link> */}
 			</div>
 		)
 	);
