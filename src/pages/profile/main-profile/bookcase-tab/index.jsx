@@ -29,22 +29,23 @@ function Bookcase({ currentUserInfo, currentTab }) {
 	const { userInfo } = useSelector(state => state.auth);
 
 	useEffect(() => {
-		// if (!_.isEmpty(userInfo)) {
-		// 	if (userId === userInfo.id) {
-		// 		if (!_.isEmpty(myAllLibraryDefault)) {
-		// 			const filterReadbooks = myAllLibraryDefault.filter(item => item.defaultType === 'read');
-		// 			const filterReadingbooks = myAllLibraryDefault.filter(item => item.defaultType === 'reading');
-		// 			if (filterReadbooks.length) {
-		// 				setReadBooks([...filterReadbooks[0].books].reverse());
-		// 			}
-		// 			if (filterReadingbooks.length) {
-		// 				setReadingBooks([...filterReadingbooks[0].books].reverse().slice(0, 3));
-		// 			}
-		// 		}
-		// 	} else {
-		getBooksInCurrentLibrary();
-		// }
-		// }
+		// Sửa lại phần tủ sách trang cá nhân
+		if (!_.isEmpty(userInfo) && userId === userInfo.id && !_.isEmpty(myAllLibraryDefault)) {
+			const filterReadbooks = myAllLibraryDefault.filter(item => item.defaultType === 'read');
+			const filterReadingbooks = myAllLibraryDefault.filter(item => item.defaultType === 'reading');
+			if (filterReadbooks.length) {
+				setReadBooks([...filterReadbooks[0].books].reverse());
+			} else {
+				setReadBooks([]);
+			}
+			if (filterReadingbooks.length) {
+				setReadingBooks([...filterReadingbooks[0].books].reverse().slice(0, 3));
+			} else {
+				setReadingBooks([]);
+			}
+		} else {
+			getBooksInCurrentLibrary();
+		}
 	}, [userInfo, userId, myAllLibraryDefault]);
 
 	const getBooksInCurrentLibrary = async () => {
