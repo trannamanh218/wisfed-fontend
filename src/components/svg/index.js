@@ -7,7 +7,8 @@ import { ReactComponent as GroupIcon } from 'assets/icons/GroupIcon.svg';
 import { ReactComponent as GroupFillIcon } from 'assets/icons/GroupFillIcon.svg';
 import { ReactComponent as FriendsIcon } from 'assets/icons/FriendsIcon.svg';
 import { ReactComponent as FriendsFillIcon } from 'assets/icons/FriendsFillIcon.svg';
-import { ReactComponent as LogoIcon } from 'assets/icons/logo.svg';
+import { ReactComponent as LogoWithText } from 'assets/icons/LogoWithText.svg';
+import { ReactComponent as Logo } from 'assets/icons/Logo.svg';
 import { ReactComponent as CircleCheckIcon } from 'assets/icons/circleCheck.svg';
 import { ReactComponent as CoffeeCupIcon } from 'assets/icons/coffeeCup.svg';
 import { ReactComponent as TargetIcon } from 'assets/icons/target.svg';
@@ -99,7 +100,8 @@ export {
 	BookFillIcon,
 	BookIcon,
 	GroupIcon,
-	LogoIcon,
+	LogoWithText,
+	Logo,
 	CircleCheckIcon,
 	CoffeeCupIcon,
 	TargetIcon,

@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
-	LogoIcon,
+	LogoWithText,
 	BookFillIcon,
 	BookIcon,
 	CategoryIcon,
@@ -14,6 +14,7 @@ import {
 	FriendsFillIcon,
 	FriendsIcon,
 	CategoryFillIcon,
+	Logo,
 } from 'components/svg';
 import SearchIcon from 'assets/icons/search.svg';
 import classNames from 'classnames';
@@ -200,9 +201,16 @@ const Header = () => {
 	return (
 		<div className='header'>
 			<div className='header__left'>
-				<Link to='/' onClick={onClickReloadPosts}>
-					<LogoIcon className='header__logo' />
-				</Link>
+				<div className='header-logo-big'>
+					<Link to='/' onClick={onClickReloadPosts}>
+						<LogoWithText className='header__logo' />
+					</Link>
+				</div>
+				<div className='header-logo-small'>
+					<Link to='/' onClick={onClickReloadPosts}>
+						<Logo className='header__logo' />
+					</Link>
+				</div>
 				<div className='header__search'>
 					<img className='header__search__icon' src={SearchIcon} alt='search-icon' />
 					<input
@@ -213,6 +221,9 @@ const Header = () => {
 						value={getSlugResult || ''}
 						onChange={() => {}}
 					/>
+				</div>
+				<div className='header-search-small' onClick={() => setIsShow(true)}>
+					<img className='header__search__icon' src={SearchIcon} alt='search-icon' />
 				</div>
 				{isShow ? <SearchAllModal showRef={showRef} setIsShow={setIsShow} /> : ''}
 			</div>
