@@ -3,7 +3,7 @@ import SlideSettings from './wants-to-read-slide-settings';
 import PropTypes from 'prop-types';
 import { useNavigate, Link } from 'react-router-dom';
 import { Row, Col } from 'react-bootstrap';
-
+import bookImage from 'assets/images/default-book.png';
 function TheBooksWantsToRead(props) {
 	const { list } = props;
 	const navigate = useNavigate();
@@ -30,7 +30,7 @@ function TheBooksWantsToRead(props) {
 									onMouseEnter={onMouseEnterImgBook}
 									onClick={() => onClickImgBook(item)}
 								>
-									<img src={item.images[0]} alt='' />
+									<img src={item.images[0] || bookImage} alt='' />
 								</div>
 							))}
 						</Slider>
@@ -40,7 +40,7 @@ function TheBooksWantsToRead(props) {
 								<Col md={6} sm={12} key={index}>
 									<Link to={`/book/detail/${item.id}`}>
 										<div className='wants-to-read__thumbnail'>
-											<img src={item.images[0]} alt='' />
+											<img src={item.images[0] || bookImage} alt='' />
 										</div>
 									</Link>
 								</Col>

@@ -8,87 +8,102 @@
 	padding: 38px 30px;
 	background: #ffffff;
 	border-radius: 16px;
+	display: flex;
+	gap: 37px;
 
 	.upload-image {
 		border-radius: 12px;
 	}
 
-	.inp-book {
-		width: 100%;
-		margin-bottom: 38px;
-		label {
-			margin-bottom: 23px;
-			font-weight: 600;
-			font-size: 18px;
-			line-height: 24px;
+	.upload-image__wrapper {
+		width: 218px;
+		height: 252px;
+		.dropzone.upload-image {
+			width: 218px;
+			height: 252px;
 		}
+	}
 
-		.input {
-			border-radius: 12px;
-			font-weight: 500;
-			font-size: 15px;
-			line-height: 24px;
-			padding: 16px 22.78px;
+	.upload-info-form {
+		width: 100%;
 
-			&::placeholder {
+		.inp-book {
+			width: 100%;
+			margin-bottom: 38px;
+			label {
+				margin-bottom: 23px;
+				font-weight: 600;
+				font-size: 18px;
+				line-height: 24px;
+			}
+
+			.input {
+				border-radius: 12px;
 				font-weight: 500;
 				font-size: 15px;
 				line-height: 24px;
-			}
-		}
+				padding: 16px 22.78px;
 
-		.inp-date {
-			width: 100%;
-			border-radius: 12px;
-			padding: 0px 18px;
-			background-color: #f7f7fc;
-			border: none;
-			display: flex;
-			align-items: center;
-
-			.react-datepicker {
-				font-family: inherit;
-				&__input-container {
-					input {
-						width: 100%;
-						border-radius: 12px;
-						font-weight: 500;
-						font-size: 15px;
-						line-height: 24px;
-						padding: 16px 15px;
-						background-color: transparent;
-						outline: none;
-						border: none;
-
-						&::placeholder {
-							font-weight: 500;
-							font-size: 15px;
-							line-height: 24px;
-						}
-					}
+				&::placeholder {
+					font-weight: 500;
+					font-size: 15px;
+					line-height: 24px;
 				}
 			}
 
-			.icon-calendar {
-				cursor: pointer;
-			}
-		}
-
-		.txtarea {
-			textarea {
+			.inp-date {
 				width: 100%;
-				padding: 0.75rem 1rem;
-				background-color: inherit;
-				resize: none;
-				outline: none;
-				border: none;
 				border-radius: 12px;
+				padding: 0px 18px;
 				background-color: #f7f7fc;
-				font-weight: 500;
-				font-size: 15px;
-				line-height: 24px;
-				&::-webkit-scrollbar {
-					display: none;
+				border: none;
+				display: flex;
+				align-items: center;
+
+				.react-datepicker {
+					font-family: inherit;
+					&__input-container {
+						input {
+							width: 100%;
+							border-radius: 12px;
+							font-weight: 500;
+							font-size: 15px;
+							line-height: 24px;
+							padding: 16px 15px;
+							background-color: transparent;
+							outline: none;
+							border: none;
+
+							&::placeholder {
+								font-weight: 500;
+								font-size: 15px;
+								line-height: 24px;
+							}
+						}
+					}
+				}
+
+				.icon-calendar {
+					cursor: pointer;
+				}
+			}
+
+			.txtarea {
+				textarea {
+					width: 100%;
+					padding: 0.75rem 1rem;
+					background-color: inherit;
+					resize: none;
+					outline: none;
+					border: none;
+					border-radius: 12px;
+					background-color: #f7f7fc;
+					font-weight: 500;
+					font-size: 15px;
+					line-height: 24px;
+					&::-webkit-scrollbar {
+						display: none;
+					}
 				}
 			}
 		}

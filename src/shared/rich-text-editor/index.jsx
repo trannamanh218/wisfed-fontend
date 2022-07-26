@@ -124,7 +124,7 @@ function RichTextEditor({
 			} else {
 				setUrlAdded('');
 			}
-		}, 300),
+		}, 200),
 		[]
 	);
 
