@@ -359,11 +359,13 @@ const PersonalInfoForm = ({ userData, toggleModal }) => {
 									value={userFirstName}
 									handleChange={e => updateInputValue(e, 'edit-first-name')}
 									inputRef={userFirstNameRef}
+									placeholder='Họ'
 								/>
 								<Input
 									isBorder={true}
 									value={userLastName}
 									handleChange={e => updateInputValue(e, 'edit-last-name')}
+									placeholder='Tên'
 								/>
 							</div>
 						) : (

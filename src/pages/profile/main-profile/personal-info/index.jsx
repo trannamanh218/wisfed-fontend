@@ -69,8 +69,13 @@ const PersonalInfo = ({ currentUserInfo, setCurrentTab }) => {
 					toast.success('Cập nhật ảnh thành công', { toastId: customId, autoClose: 1500 });
 				}
 			} catch (err) {
-				const customId = 'custom-id-PersonalInfo-handleDrop-error';
-				toast.error('Cập nhật ảnh thất bại', { toastId: customId });
+				if (err.statusCode === 413) {
+					const customId = 'custom-id-PersonalInfo-handleDrop-warning';
+					toast.warning('Không cập nhật được ảnh quá 1Mb', { toastId: customId });
+				} else {
+					const customId = 'custom-id-PersonalInfo-handleDrop-error';
+					toast.error('Cập nhật ảnh thất bại', { toastId: customId });
+				}
 			}
 		}
 	});
