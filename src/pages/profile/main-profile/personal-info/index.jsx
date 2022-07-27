@@ -68,7 +68,7 @@ const PersonalInfo = ({ currentUserInfo, setCurrentTab }) => {
 					const customId = 'custom-id-PersonalInfo-handleDrop-success';
 					toast.success('Cập nhật ảnh thành công', { toastId: customId, autoClose: 1500 });
 				}
-			} catch {
+			} catch (err) {
 				const customId = 'custom-id-PersonalInfo-handleDrop-error';
 				toast.error('Cập nhật ảnh thất bại', { toastId: customId });
 			}
