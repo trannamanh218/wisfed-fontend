@@ -193,7 +193,9 @@ const StatusButton = ({ className, bookData, inPostBook = false, hasBookStatus =
 					className='btn-status__icon'
 					component={currentStatus ? STATUS_BOOK_OBJ[currentStatus].icon : STATUS_BOOK_OBJ.wantToRead.icon}
 				/>
-				<span>{currentStatus ? STATUS_BOOK_OBJ[currentStatus].name : STATUS_BOOK_OBJ.wantToRead.name}</span>
+				<span className='text-status'>
+					{currentStatus ? STATUS_BOOK_OBJ[currentStatus].name : STATUS_BOOK_OBJ.wantToRead.name}
+				</span>
 				<DropdownGroupWhite />
 			</button>
 			{!_.isEmpty(userInfo) ? (

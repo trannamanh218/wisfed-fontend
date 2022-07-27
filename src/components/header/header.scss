@@ -71,10 +71,22 @@
 		padding-left: 20px;
 		background-color: #eff0f7;
 		border-radius: 50%;
+		cursor: pointer;
 		img {
 			width: 20px;
 			height: 20px;
 		}
+	}
+	.header-hamburger-small {
+		display: none;
+		height: 63px;
+		width: 63px;
+		align-items: center;
+		justify-content: center;
+		background-color: #eff0f7;
+		border-radius: 50%;
+		margin-left: 15px;
+		cursor: pointer;
 	}
 
 	&__nav {
@@ -316,6 +328,7 @@
 		&__left {
 			.header-logo-small {
 				display: block;
+				width: 70px;
 			}
 			.header-logo-big {
 				display: none;
@@ -323,13 +336,16 @@
 
 			.header-search-small {
 				display: flex;
-				cursor: pointer;
+			}
+			.header-hamburger-small {
+				display: flex;
 			}
 		}
 		&__search {
 			display: none;
 		}
 		&__nav {
+			margin-left: 30px;
 			width: 300px;
 			&__item {
 				svg {

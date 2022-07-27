@@ -82,6 +82,7 @@ import { ReactComponent as ArrowDownIcon } from 'assets/icons/ArrowDownIcon.svg'
 import { ReactComponent as CrowSmall } from 'assets/icons/CrownSmall.svg';
 import { ReactComponent as Calendar } from 'assets/icons/calendar.svg';
 import { ReactComponent as LikeComment } from 'assets/icons/LikeComment.svg';
+import { ReactComponent as Hamburger } from 'assets/icons/Hamburger.svg';
 
 export {
 	CrowSmall,
@@ -168,4 +169,5 @@ export {
 	DropdownGroupWhite,
 	Calendar,
 	LikeComment,
+	Hamburger,
 };

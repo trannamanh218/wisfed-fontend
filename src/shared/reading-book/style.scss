@@ -12,21 +12,21 @@
 .reading-book__box {
 	display: flex;
 	justify-content: space-between;
+	gap: 1px;
 }
 
 .reading-book__thumbnail {
 	height: 162px;
-	max-width: 108px;
 	img {
-		width: 100%;
 		height: 100%;
+		max-width: 108px;
 		object-fit: cover;
 		border-radius: 8px;
 	}
 }
 
 .reading-book__information {
-	width: 53%;
+	width: 50%;
 	padding-top: 8px;
 	font-size: 13px;
 	display: flex;
@@ -78,3 +78,51 @@
 	font-weight: 600;
 	color: #b38c64;
 }
+
+// Giữ cho đoạn 'Cập nhật tiến độ' luôn chỉ nằm trên 1 dòng
+@media only screen and (max-width: 1398px) {
+	.reading-book__update-progress {
+		font-size: 12px;
+	}
+}
+
+@media only screen and (max-width: 1312px) {
+	.reading-book__update-progress {
+		font-size: 11px;
+	}
+}
+
+@media only screen and (max-width: 1246px) {
+	.reading-book__update-progress {
+		padding: 4px;
+		font-size: 10px;
+	}
+}
+
+@media only screen and (max-width: 1164px) {
+	.reading-book__update-progress {
+		font-size: 9px;
+	}
+}
+
+@media only screen and (max-width: 1121px) {
+	.reading-book__update-progress {
+		padding: 2px;
+		font-size: 9px;
+	}
+}
+
+@media only screen and (max-width: 1101px) {
+	.reading-book__update-progress {
+		padding: 1px;
+		font-size: 8px;
+	}
+}
+
+@media only screen and (max-width: 1081px) {
+	.reading-book__update-progress {
+		padding: 8px;
+		font-size: inherit;
+	}
+}
+// End Giữ cho đoạn 'Cập nhật tiến độ' luôn chỉ nằm trên 1 dòng

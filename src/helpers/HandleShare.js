@@ -7,7 +7,7 @@ export const renderMessage = item => {
 	} else if (item.verb === 'likeQuote') {
 		return <> đã thích trích dẫn của bạn</>;
 	} else if (item.verb === 'mention') {
-		return <> Đã nhắc bạn trong một bình luận</>;
+		return <> đã nhắc đến bạn trong một bình luận</>;
 	} else if (item.verb === 'replyComment') {
 		return <> đã trả lời vào bài viết của bạn</>;
 	} else if (item.verb === 'likeMiniPost') {

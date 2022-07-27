@@ -109,7 +109,7 @@ const ModalItem = ({ item, setModalNotti, getNotifications, setGetNotifications,
 		setModalNotti(false);
 		dispatch(readNotification(params)).unwrap();
 	};
-
+	console.log(item);
 	return (
 		<div
 			className={

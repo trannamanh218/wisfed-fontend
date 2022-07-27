@@ -15,13 +15,14 @@ import {
 	FriendsIcon,
 	CategoryFillIcon,
 	Logo,
+	Hamburger,
 } from 'components/svg';
 import SearchIcon from 'assets/icons/search.svg';
 import classNames from 'classnames';
 import './header.scss';
 import NotificationModal from 'pages/notification/';
 import { useDispatch, useSelector } from 'react-redux';
-import { backgroundToggle, depenRenderNotificaion, handleListUnRead } from 'reducers/redux-utils/notificaiton';
+import { backgroundToggle, depenRenderNotificaion } from 'reducers/redux-utils/notificaiton';
 import { checkUserLogin, deleteUserInfo } from 'reducers/redux-utils/auth';
 import { useVisible } from 'shared/hooks';
 import SearchAllModal from 'shared/search-all';
@@ -225,6 +226,12 @@ const Header = () => {
 				<div className='header-search-small' onClick={() => setIsShow(true)}>
 					<img className='header__search__icon' src={SearchIcon} alt='search-icon' />
 				</div>
+				<div className='header-hamburger-small'>
+					<div className='header-search-small__hamburger'>
+						<Hamburger />
+					</div>
+				</div>
+
 				{isShow ? <SearchAllModal showRef={showRef} setIsShow={setIsShow} /> : ''}
 			</div>
 
@@ -252,7 +259,6 @@ const Header = () => {
 					className={classNames('header__nav__item', { active: activeLink === '/category' })}
 				>
 					<Link className='header__nav__link' to={userLogin && '/category'}>
-						{/* <CategoryIcon className='header__nav__icon' /> */}
 						{activeLink === '/category' ? <CategoryFillIcon /> : <CategoryIcon />}
 					</Link>
 				</li>

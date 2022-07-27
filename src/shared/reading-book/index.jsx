@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { updateCurrentBook } from 'reducers/redux-utils/book';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { Row, Col } from 'react-bootstrap';
 import _ from 'lodash';
 
 function ReadingBook({ bookData }) {
@@ -49,6 +50,7 @@ function ReadingBook({ bookData }) {
 								alt=''
 							/>
 						</div>
+
 						<div className='reading-book__information'>
 							<div>
 								<div className='reading-book__information__book-name'>{bookData.name}</div>
