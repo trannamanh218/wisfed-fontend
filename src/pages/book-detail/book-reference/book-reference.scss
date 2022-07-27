@@ -33,3 +33,24 @@
 		}
 	}
 }
+@media only screen and (max-width: 1024px) {
+	.book-reference {
+		&__slider {
+			margin-bottom: 1.5rem;
+		}
+	}
+	.statistic-title {
+		margin-top: -27px;
+	}
+}
+@media only screen and (max-width: 820px) {
+	.book-reference__slider {
+		display: none;
+	}
+	.book-reference__highlight__post {
+		display: none;
+	}
+	.dualColumn {
+		display: none;
+	}
+}

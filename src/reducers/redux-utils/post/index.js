@@ -89,6 +89,7 @@ const postSlice = createSlice({
 		resetTaggedDataFunc: (state, action) => {
 			state.resetTaggedData = action.payload;
 		},
+		//
 		saveDataShare: (state, action) => {
 			state.postsData = action.payload;
 		},

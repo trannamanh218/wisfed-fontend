@@ -255,7 +255,7 @@ function CreatPostModalContent({
 
 		return params;
 	};
-
+	console.log(postsData);
 	const handleUpdateProgress = async params => {
 		const { status, progress } = taggedData.addBook;
 		const convertProgress = parseInt(progress) || 0;
@@ -503,6 +503,7 @@ function CreatPostModalContent({
 				break;
 		}
 	};
+	console.log(postsData);
 
 	return (
 		<div className='creat-post-modal-content'>
@@ -624,11 +625,10 @@ function CreatPostModalContent({
 										<Post postInformations={postsData} showModalCreatPost={showModalCreatPost} />
 									)}
 									{isSharePostsAll === 'shareTopBook' && <AuthorBook data={postsData} />}
-									{isShareTarget && <ShareTarget />}
 								</div>
 							)}
 							{isSharePostsAll === 'shareTopUser' && <ShareUsers postsData={postsData} />}
-							{}
+							{postsData.booksReadCount > 0 && <ShareTarget postsData={postsData} />}
 
 							{!_.isEmpty(taggedData.addBook) || showUpload ? (
 								<>

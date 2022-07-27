@@ -93,3 +93,21 @@
 		width: fit-content;
 	}
 }
+
+@media only screen and (max-width: 820px) {
+	.book-intro {
+		margin-left: 5px;
+	}
+}
+
+@media only screen and(max-width:768px) {
+	.book-intro {
+		margin-left: -25px;
+	}
+}
+
+@media only screen and (max-width: 1024px) {
+	.book-intro__action {
+		margin-top: 17px;
+	}
+}

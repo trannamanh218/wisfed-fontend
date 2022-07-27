@@ -39,3 +39,23 @@
 		}
 	}
 }
+@media only screen and (max-width: 1024px) {
+	.modal-content {
+		padding: 0 32px 32px 32px !important;
+	}
+	.filter-quote-pane__setting__title {
+		margin-top: 60px !important;
+	}
+	.form-check {
+		margin-top: 15px !important;
+	}
+	.form-check-wrapper {
+		margin-top: 20px !important;
+	}
+}
+
+@media only screen and (max-width: 1280px) {
+	.filter-quote-pane__setting__group {
+		margin-top: -25px;
+	}
+}

@@ -4,16 +4,14 @@ import { useSelector } from 'react-redux';
 import LinearProgressBar from 'shared/linear-progress-bar';
 import UserAvatar from 'shared/user-avatar';
 
-function ShareTarget() {
+function ShareTarget({ postsData }) {
 	const { userInfo } = useSelector(state => state.auth);
-	const { target } = useSelector(state => state.target);
 
-	console.log(target);
 	const renderContentTop = () => {
 		return (
 			<div className='reading-target__content__top'>
 				<p>
-					Bạn đã đọc được {target?.booksReadCount} trên {target?.numberBook} cuốn
+					Bạn đã đọc được {postsData?.booksReadCount} trên {postsData?.numberBook} cuốn
 				</p>
 			</div>
 		);

@@ -26,6 +26,7 @@ const BookIntro = () => {
 	const dispatch = useDispatch();
 	const [lisRatingStar, setLisRatingStar] = useState({});
 	const [urlShare, seturlShare] = useState('');
+	const [textLength, setTextLength] = useState(450);
 
 	const handleClick = () => {
 		if (location.pathname !== '/' || location.pathname !== '/home') {
@@ -44,6 +45,9 @@ const BookIntro = () => {
 
 	useEffect(() => {
 		fetchData();
+		if (window.innerWidth <= 1024) {
+			setTextLength(300);
+		}
 	}, []);
 
 	const handleShareFaceBook = () => {
@@ -80,7 +84,10 @@ const BookIntro = () => {
 				</div>
 
 				<div className='book-intro__description'>
-					<ReadMore text={convertToPlainString(bookInfo.description) || 'Chưa cập nhật'} />
+					<ReadMore
+						text={convertToPlainString(bookInfo.description) || 'Chưa cập nhật'}
+						length={textLength}
+					/>
 				</div>
 				<FacebookShareButton url={urlShare} quote='Phải chăng ta đã yêu' hashtag=''>
 					<div onClick={handleShareFaceBook} className='book-intro__action'>

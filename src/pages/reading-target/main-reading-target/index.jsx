@@ -20,10 +20,11 @@ import { useCurrentPng } from 'recharts-to-png';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { getChartsByid, updateImg } from 'reducers/redux-utils/chart';
-import { saveDataShare, checkShare, shareTarget } from 'reducers/redux-utils/post';
+import { saveDataShare, shareTarget } from 'reducers/redux-utils/post';
 import { handleShareTarget } from 'reducers/redux-utils/target';
 import { useVisible } from 'shared/hooks';
 import Storage from 'helpers/Storage';
+import ShareTarget from 'shared/share-target';
 
 const MainReadingTarget = () => {
 	const dispatch = useDispatch();
@@ -125,9 +126,12 @@ const MainReadingTarget = () => {
 		if (!Storage.getAccessToken()) {
 			return;
 		} else {
-			dispatch(saveDataShare());
-			dispatch(shareTarget(true));
-			dispatch(checkShare(true));
+			const target = {
+				numberBook: 1,
+				booksReadCount: 55,
+			};
+			dispatch(saveDataShare(target));
+			setShowShare(true);
 			navigate('/');
 		}
 	};
@@ -135,6 +139,11 @@ const MainReadingTarget = () => {
 	return (
 		<div className='reading-target'>
 			<Circle loading={status === STATUS_LOADING} />
+			{showShare && (
+				<div ref={shareRef} style={{ position: 'fixed', top: '30%', left: '30%' }}>
+					<ShareTarget />
+				</div>
+			)}
 			<div className='reading-target__header'>
 				<h4>Mục tiêu đọc sách năm {booksReadYear[0]?.year || year}</h4>
 				<SearchField
