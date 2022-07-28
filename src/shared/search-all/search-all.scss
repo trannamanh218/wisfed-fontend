@@ -7,7 +7,7 @@
 	top: 0;
 	left: 250px;
 	z-index: 1;
-	padding: 20px;
+	padding: 18px 20px 20px;
 	.search__all__main__title {
 		display: flex;
 		justify-content: space-between;
@@ -40,10 +40,6 @@
 			width: 380px;
 			margin: -3px auto 3px auto;
 			background-color: #eff0f7;
-
-			.search-field__input::placeholder {
-				// content: 'bruh';
-			}
 		}
 	}
 }

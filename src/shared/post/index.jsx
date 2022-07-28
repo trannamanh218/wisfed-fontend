@@ -3,7 +3,7 @@ import { Feather } from 'components/svg';
 import { calculateDurationTime } from 'helpers/Common';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateReactionActivity, updateReactionActivityGroup } from 'reducers/redux-utils/activity';
 import { createComment, createCommentGroup } from 'reducers/redux-utils/comment';
@@ -29,6 +29,7 @@ import AuthorBook from 'shared/author-book';
 import Storage from 'helpers/Storage';
 import { checkUserLogin } from 'reducers/redux-utils/auth';
 import ShareUsers from 'pages/home/components/newfeed/components/modal-share-users';
+import { handleCheckReplyToMe } from 'reducers/redux-utils/comment';
 
 const urlRegex =
 	/https?:\/\/www(\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/g;
@@ -37,9 +38,12 @@ function Post({ postInformations, showModalCreatPost, inReviews = false }) {
 	const [postData, setPostData] = useState({});
 	const [videoId, setVideoId] = useState('');
 	const { userInfo } = useSelector(state => state.auth);
-	const [replyingCommentId, setReplyingCommentId] = useState(null);
-	const [clickReply, setClickReply] = useState(false);
+	const [replyingCommentId, setReplyingCommentId] = useState(-1);
 	const [mentionUsersArr, setMentionUsersArr] = useState([]);
+
+	const clickReply = useRef(null);
+	const doneGetPostData = useRef(false);
+	const isLikeTemp = useRef(postInformations.isLike);
 
 	const { isSharePosts } = useSelector(state => state.post);
 	const location = useLocation();
@@ -63,6 +67,10 @@ function Post({ postInformations, showModalCreatPost, inReviews = false }) {
 			if (match && match[2].length === 11) {
 				setVideoId(match[2]);
 			}
+		}
+
+		if (!_.isEmpty(postInformations)) {
+			doneGetPostData.current = true;
 		}
 	}, [postInformations]);
 
@@ -134,35 +142,41 @@ function Post({ postInformations, showModalCreatPost, inReviews = false }) {
 			const setLike = !postData.isLike;
 			const numberOfLike = setLike ? postData.like + 1 : postData.like - 1;
 			setPostData(prev => ({ ...prev, isLike: !prev.isLike, like: numberOfLike }));
-			handleCallLikeUnlikeApi();
+			handleCallLikeUnlikeApi(setLike);
 		}
 	};
 
-	const handleCallLikeUnlikeApi = async () => {
-		try {
-			if (location.pathname.includes('group')) {
-				await dispatch(updateReactionActivityGroup(postData.id)).unwrap();
-			} else if (inReviews) {
-				await dispatch(likeAndUnlikeReview(postData.id)).unwrap();
-			} else {
-				await dispatch(updateReactionActivity(postData.minipostId || postData.id)).unwrap();
+	const handleCallLikeUnlikeApi = useCallback(
+		_.debounce(async isLike => {
+			if (isLike !== isLikeTemp.current) {
+				isLikeTemp.current = isLike;
+				try {
+					if (location.pathname.includes('group')) {
+						await dispatch(updateReactionActivityGroup(postData.id)).unwrap();
+					} else if (inReviews) {
+						await dispatch(likeAndUnlikeReview(postData.id)).unwrap();
+					} else {
+						await dispatch(updateReactionActivity(postData.minipostId || postData.id)).unwrap();
+					}
+				} catch (err) {
+					NotificationError(err);
+				}
 			}
-		} catch (err) {
-			NotificationError(err);
-		}
-	};
+		}, 3000),
+		[doneGetPostData.current]
+	);
 
 	const handleReply = (cmtLv1Id, userData) => {
+		const arr = [];
 		if (userData.id !== userInfo.id) {
-			const arr = [];
 			arr.push(userData);
-			setMentionUsersArr(arr);
+			dispatch(handleCheckReplyToMe(false));
+		} else {
+			dispatch(handleCheckReplyToMe(true));
 		}
+		setMentionUsersArr(arr);
 		setReplyingCommentId(cmtLv1Id);
-		setClickReply(true);
-		setTimeout(() => {
-			setClickReply(false);
-		}, 200);
+		clickReply.current = !clickReply.current;
 	};
 
 	const withFriends = paramInfo => {
@@ -385,7 +399,9 @@ function Post({ postInformations, showModalCreatPost, inReviews = false }) {
 				/>
 			)}
 
-			{postData.verb === 'sharePost' && !_.isEmpty(postData.sharePost) && <PostsShare postData={postData} />}
+			{(postData.verb === 'sharePost' || postData.shareType === 'post') && !_.isEmpty(postData.sharePost) && (
+				<PostsShare postData={postData} />
+			)}
 			{postData.verb === 'shareGroupPost' && !_.isEmpty(postData.sharePost) && <PostsShare postData={postData} />}
 			{postData?.image?.length > 0 && <GridImage images={postData.image} inPost={true} postId={postData.id} />}
 
@@ -447,8 +463,9 @@ function Post({ postInformations, showModalCreatPost, inReviews = false }) {
 												'show': comment.id === replyingCommentId,
 											})}
 											mentionUsersArr={mentionUsersArr}
+											commentLv1Id={comment.id}
 											replyingCommentId={replyingCommentId}
-											clickReply={clickReply}
+											clickReply={clickReply.current}
 											setMentionUsersArr={setMentionUsersArr}
 										/>
 									</div>
@@ -458,7 +475,7 @@ function Post({ postInformations, showModalCreatPost, inReviews = false }) {
 					)}
 					<CommentEditor
 						className={`comment-editor-last-${postInformations.id}`}
-						replyingCommentId={null}
+						commentLv1Id={null}
 						onCreateComment={onCreateComment}
 						mentionUsersArr={mentionUsersArr}
 						setMentionUsersArr={setMentionUsersArr}

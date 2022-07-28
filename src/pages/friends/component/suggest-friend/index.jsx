@@ -38,7 +38,7 @@ const SuggestFriend = () => {
 			</div>
 			<div className='myfriends__layout__container'>
 				{list.map(item => (
-					<FriendsItem key={item.id} list={item} />
+					<FriendsItem key={item.id} data={item} />
 				))}
 			</div>
 			<div className='myfriends__line'></div>
@@ -50,7 +50,7 @@ const SuggestFriend = () => {
 			</div>
 			<div className='myfriends__layout__container'>
 				{list.map(item => (
-					<FriendsItem key={item.id} list={item} />
+					<FriendsItem key={item.id} data={item} />
 				))}
 			</div>
 		</div>

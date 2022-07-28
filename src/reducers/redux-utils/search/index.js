@@ -14,21 +14,16 @@ export const getFilterSearch = createAsyncThunk('search/getSearch', async (param
 const searchSlice = createSlice({
 	name: 'search',
 	initialState: {
-		saveValueInput: '',
 		isShowModal: false,
 	},
 	reducers: {
-		handleSaveValueInput: (state, action) => {
-			state.saveValueInput = action.payload;
-		},
 		handleResetValue: (state, action) => {
 			state.isShowModal = action.payload;
 		},
 	},
-	extraReducers: {},
 });
 
-export const { handleSaveValueInput, handleResetValue } = searchSlice.actions;
+export const { handleResetValue } = searchSlice.actions;
 
 const search = searchSlice.reducer;
 export default search;

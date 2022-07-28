@@ -84,19 +84,15 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 			<UserAvatar
 				className='comment__avatar'
 				size='sm'
-				source={data.user?.avatarImage ? data.user?.avatarImage : data['user.avatarImage']}
+				source={data.user?.avatarImage}
 				handleClick={() => navigate(`/profile/${data.createdBy}`)}
 			/>
 			<div className='comment__wrapper'>
 				<div className='comment__container'>
 					<div className='comment__header'>
-						<Link to={`/profile/${data.user.id}`}>
+						<Link to={`/profile/${data.user?.id}`}>
 							<span className='comment__author'>
-								{data.user.name ||
-									data.user.fullName ||
-									data.user.lastName ||
-									data.user.firstName ||
-									'Không xác định'}
+								{data.user?.fullName || data.user?.lastName || data.user?.firstName || 'Không xác định'}
 							</span>
 						</Link>
 

@@ -1,11 +1,22 @@
 .friends__unFriends__container {
 	font-family: 'Montserrat';
 	font-style: normal;
+	padding: 0 !important;
+	display: flex !important;
+	justify-content: center;
+	align-items: center;
+	.modal-content {
+		border: none;
+		padding: 20px;
+		border-radius: 10px;
+	}
 }
 
 .friends__unFriend__close {
 	text-align: right;
+	cursor: pointer;
 }
+
 .friends__unFriend__content {
 	font-weight: 700;
 	font-size: 24px;
@@ -15,6 +26,7 @@
 	margin-bottom: 12px;
 	text-align: center;
 }
+
 .friends__unFriend__cancel {
 	font-weight: 600;
 	font-size: 15px;
@@ -40,12 +52,4 @@
 }
 .friends__unFriend__button {
 	width: 330px;
-}
-@media (min-width: 576px) {
-	.friends__unFriends__container {
-		.modal-dialog {
-			max-width: 500px;
-			margin: 9rem auto;
-		}
-	}
 }

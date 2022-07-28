@@ -12,17 +12,12 @@ import PropTypes from 'prop-types';
 import { addFollower } from 'reducers/redux-utils/user';
 import { useSelector } from 'react-redux';
 import { handleSaveUpdate } from 'reducers/redux-utils/user';
+
 const ModalItem = ({ item, setModalNotti, getNotifications, setGetNotifications, selectKey }) => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	const { userInfo } = useSelector(state => state.auth);
 	const { isreload } = useSelector(state => state.user);
-	const addFollow = items => {
-		const param = {
-			data: { userId: items.actor },
-		};
-		dispatch(addFollower(param)).unwrap();
-	};
 
 	const ReplyFriendReq = async (data, items) => {
 		try {
@@ -42,7 +37,7 @@ const ModalItem = ({ item, setModalNotti, getNotifications, setGetNotifications,
 			await dispatch(ReplyFriendRequest(params)).unwrap();
 			await dispatch(readNotification({ notificationId: items.id })).unwrap();
 			await dispatch(handleSaveUpdate(!isreload));
-			addFollow(items);
+			dispatch(addFollower({ userId: items.actor }));
 		} catch (err) {
 			NotificationError(err);
 		}

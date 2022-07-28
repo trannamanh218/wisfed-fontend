@@ -81,10 +81,7 @@ const ConnectButtonsFriends = ({ direction, item }) => {
 
 	const handleFollow = () => {
 		try {
-			const param = {
-				data: { userId: item.id },
-			};
-			dispatch(addFollower(param)).unwrap();
+			dispatch(addFollower({ userId: item.id }));
 			setToggleAddFollow(false);
 			setToggleUnFollow(true);
 		} catch (err) {

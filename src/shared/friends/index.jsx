@@ -12,12 +12,12 @@ import {
 } from 'reducers/redux-utils/user';
 import { NotificationError } from 'helpers/Error';
 import { useDispatch } from 'react-redux';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { changeToggleFollows } from 'reducers/redux-utils/friends';
 import ModalUnFriend from 'pages/friends/component/modalUnFriends';
 import { Link } from 'react-router-dom';
 
-const FriendsItem = ({ list, keyTabs, getListFollower, getMyListFriendReq, getListFollowings }) => {
+const FriendsItem = ({ data, keyTabs, getListFollower, getMyListFriendReq, getListFollowings }) => {
 	const dispatch = useDispatch();
 	// const suggestions = location.pathname === '/friends/suggestions';
 	const invitation = location.pathname === '/friends/invitation';
@@ -29,24 +29,24 @@ const FriendsItem = ({ list, keyTabs, getListFollower, getMyListFriendReq, getLi
 	const [toggleAddFriend, setToggleAddFriend] = useState(true);
 	const [togglePendingFriend, setTogglePendingFriend] = useState(true);
 	const [toggleAcceptButton, setToggleAcceptButton] = useState(true);
-	const [toggleModalUnFriends, setModalUnfriends] = useState(false);
+	const [showModalUnfriends, setShowModalUnfriends] = useState(false);
 
 	const handleModalUnFriend = () => {
-		setModalUnfriends(true);
+		setShowModalUnfriends(true);
 	};
 
 	const handleUnfriend = () => {
-		setModalUnfriends(false);
+		setShowModalUnfriends(false);
 		try {
 			if (getListFollower) {
-				dispatch(unFriendRequest(list.userOne.id)).unwrap();
-				dispatch(changeToggleFollows(list.userTwo.id));
+				dispatch(unFriendRequest(data.userOne.id));
+				dispatch(changeToggleFollows(data.userTwo.id));
 			} else if (getMyListFriendReq || getListFollowings) {
-				dispatch(unFriendRequest(list.userTwo.id)).unwrap();
-				dispatch(changeToggleFollows(list.userTwo.id));
+				dispatch(unFriendRequest(data.userTwo.id));
+				dispatch(changeToggleFollows(data.userTwo.id));
 			} else {
-				dispatch(unFriendRequest(list.id)).unwrap();
-				dispatch(changeToggleFollows(list.id));
+				dispatch(unFriendRequest(data.id));
+				dispatch(changeToggleFollows(data.id));
 			}
 			setUnFriend(false);
 			setToggleAddFriend(false);
@@ -58,14 +58,14 @@ const FriendsItem = ({ list, keyTabs, getListFollower, getMyListFriendReq, getLi
 	const handleUnFollow = () => {
 		try {
 			if (getListFollower) {
-				dispatch(unFollower(list.userOne.id)).unwrap();
-				dispatch(changeToggleFollows(list.userOne.id));
+				dispatch(unFollower(data.userOne.id)).unwrap();
+				dispatch(changeToggleFollows(data.userOne.id));
 			} else if (getMyListFriendReq || getListFollowings) {
-				dispatch(unFollower(list.userTwo.id)).unwrap();
-				dispatch(changeToggleFollows(list.userTwo.id));
+				dispatch(unFollower(data.userTwo.id)).unwrap();
+				dispatch(changeToggleFollows(data.userTwo.id));
 			} else {
-				dispatch(unFollower(list.id)).unwrap();
-				dispatch(changeToggleFollows(list.id));
+				dispatch(unFollower(data.id)).unwrap();
+				dispatch(changeToggleFollows(data.id));
 			}
 			setToggleAddFollow(true);
 			setToggleUnFollow(false);
@@ -77,23 +77,14 @@ const FriendsItem = ({ list, keyTabs, getListFollower, getMyListFriendReq, getLi
 	const handleAddFollow = () => {
 		try {
 			if (getListFollower) {
-				const param = {
-					data: { userId: list.userOne.id },
-				};
-				dispatch(addFollower(param)).unwrap();
-				dispatch(changeToggleFollows(list.userOne.id));
+				dispatch(addFollower({ userId: data.userOne.id }));
+				dispatch(changeToggleFollows(data.userOne.id));
 			} else if (getMyListFriendReq || getListFollowings) {
-				const param = {
-					data: { userId: list.id },
-				};
-				dispatch(addFollower(param)).unwrap();
-				dispatch(changeToggleFollows(list.userTwo.id));
+				dispatch(addFollower({ userId: data.id })).unwrap();
+				dispatch(changeToggleFollows(data.userTwo.id));
 			} else {
-				const param = {
-					data: { userId: list.id },
-				};
-				dispatch(addFollower(param)).unwrap();
-				dispatch(changeToggleFollows(list.id));
+				dispatch(addFollower({ userId: data.id }));
+				dispatch(changeToggleFollows(data.id));
 			}
 			setToggleAddFollow(false);
 			setToggleUnFollow(true);
@@ -106,22 +97,22 @@ const FriendsItem = ({ list, keyTabs, getListFollower, getMyListFriendReq, getLi
 		try {
 			if (getListFollower || getListFollowings) {
 				const param = {
-					userId: list.userOne.id,
+					userId: data.userOne.id,
 				};
 				dispatch(makeFriendRequest(param)).unwrap();
-				dispatch(changeToggleFollows(list.userTwo.id));
+				dispatch(changeToggleFollows(data.userTwo.id));
 			} else if (getMyListFriendReq || getListFollowings) {
 				const param = {
-					userId: list.id,
+					userId: data.id,
 				};
 				dispatch(makeFriendRequest(param)).unwrap();
-				dispatch(changeToggleFollows(list.userTwo.id));
+				dispatch(changeToggleFollows(data.userTwo.id));
 			} else {
 				const param = {
-					userId: list.id,
+					userId: data.id,
 				};
 				dispatch(makeFriendRequest(param)).unwrap();
-				dispatch(changeToggleFollows(list.id));
+				dispatch(changeToggleFollows(data.id));
 			}
 			setTogglePendingFriend(false);
 			handleAddFollow();
@@ -131,7 +122,7 @@ const FriendsItem = ({ list, keyTabs, getListFollower, getMyListFriendReq, getLi
 	};
 
 	const handleReplyFriendReq = () => {
-		const params = { id: list.id, data: { reply: true } };
+		const params = { id: data.id, data: { reply: true } };
 		try {
 			setToggleAcceptButton(false);
 			dispatch(ReplyFriendRequest(params)).unwrap();
@@ -190,21 +181,21 @@ const FriendsItem = ({ list, keyTabs, getListFollower, getMyListFriendReq, getLi
 		);
 	};
 
-	const buttonAcces = () => {
-		return (
-			<Button className='myfriends__button'>
-				<span className='myfriends__button__content'>Chấp nhận</span>
-			</Button>
-		);
-	};
+	// const buttonAcces = () => {
+	// 	return (
+	// 		<Button className='myfriends__button'>
+	// 			<span className='myfriends__button__content'>Chấp nhận</span>
+	// 		</Button>
+	// 	);
+	// };
 
 	const renderButtonFriends = () => {
 		if (keyTabs === 'friend') {
 			return buttonUnFriend();
 		} else if (keyTabs === 'follow' || following || follower) {
-			if (list.relation === 'friend') {
+			if (data.relation === 'friend') {
 				return toggleAddFriend ? buttonUnFriend() : togglePendingFriend ? buttonAddFriend() : buttonPending();
-			} else if (list.relation === 'unknown') {
+			} else if (data.relation === 'unknown') {
 				return togglePendingFriend ? buttonAddFriend() : buttonPending();
 			} else {
 				return buttonPending();
@@ -218,13 +209,13 @@ const FriendsItem = ({ list, keyTabs, getListFollower, getMyListFriendReq, getLi
 
 	const renderButtonFollow = () => {
 		if (keyTabs === 'friend') {
-			if (list.isFollow) {
+			if (data.isFollow) {
 				return toggleUnFollow ? buttonUnfollow() : buttonFollow();
 			} else {
 				return toggleAddFollow ? buttonFollow() : buttonUnfollow();
 			}
 		} else if (keyTabs === 'follow' || following || follower) {
-			if (list.isFollow) {
+			if (data.isFollow) {
 				return toggleUnFollow ? buttonUnfollow() : buttonFollow();
 			} else {
 				if ((toggleAddFollow && getListFollower) || follower) {
@@ -243,25 +234,25 @@ const FriendsItem = ({ list, keyTabs, getListFollower, getMyListFriendReq, getLi
 	const renderDisplay = () => {
 		return (
 			<div className='myfriends__layout'>
-				<Link to={`/profile/${list.userTwo?.id}`}>
+				<Link to={`/profile/${data.userTwo?.id}`}>
 					<img
 						className='myfriends__layout__img'
-						src={list.userTwo?.avatarImage ? list.userTwo.avatarImage : defaultAvatar}
+						src={data.userTwo?.avatarImage ? data.userTwo.avatarImage : defaultAvatar}
 						alt=''
 						onError={e => e.target.setAttribute('src', `${defaultAvatar}`)}
 					/>
 					<div className='myfriends__star'>
 						<div className='myfriends__star__name'>
-							{list.userTwo?.fullName ? (
-								list.userTwo?.fullName
+							{data.userTwo?.fullName ? (
+								data.userTwo?.fullName
 							) : (
 								<>
-									<span>{list.userTwo?.firstName}</span>&nbsp;
-									<span>{list.userTwo?.lastName}</span>
+									<span>{data.userTwo?.firstName}</span>&nbsp;
+									<span>{data.userTwo?.lastName}</span>
 								</>
 							)}
 						</div>
-						{list.isStar && <Subtract />}
+						{data.isStar && <Subtract />}
 					</div>
 				</Link>
 
@@ -276,25 +267,25 @@ const FriendsItem = ({ list, keyTabs, getListFollower, getMyListFriendReq, getLi
 	const renderFollowerDisplay = () => {
 		return (
 			<div className='myfriends__layout'>
-				<Link to={`/profile/${list.userOne.id}`}>
+				<Link to={`/profile/${data.userOne.id}`}>
 					<img
 						className='myfriends__layout__img'
-						src={list.userOne.avatarImage ? list.userOne.avatarImage : defaultAvatar}
+						src={data.userOne.avatarImage ? data.userOne.avatarImage : defaultAvatar}
 						alt=''
 						onError={e => e.target.setAttribute('src', `${defaultAvatar}`)}
 					/>
 					<div className='myfriends__star'>
 						<div className='myfriends__star__name'>
-							{list.userOne.fullName ? (
-								list.userOne.fullName
+							{data.userOne.fullName ? (
+								data.userOne.fullName
 							) : (
 								<>
-									<span>{list.userOne.firstName}</span>&nbsp;
-									<span>{list.userOne.lastName}</span>
+									<span>{data.userOne.firstName}</span>&nbsp;
+									<span>{data.userOne.lastName}</span>
 								</>
 							)}
 						</div>
-						{list.isStar && <Subtract />}
+						{data.isStar && <Subtract />}
 					</div>
 				</Link>
 				<div className='myfriends__button__container'>
@@ -308,25 +299,25 @@ const FriendsItem = ({ list, keyTabs, getListFollower, getMyListFriendReq, getLi
 	const renderFriend = () => {
 		return (
 			<div className='myfriends__layout'>
-				<Link to={`/profile/${list.id}`}>
+				<Link to={`/profile/${data.id}`}>
 					<img
 						className='myfriends__layout__img'
-						src={list.avatarImage ? list.avatarImage : defaultAvatar}
+						src={data.avatarImage ? data.avatarImage : defaultAvatar}
 						alt=''
 						onError={e => e.target.setAttribute('src', `${defaultAvatar}`)}
 					/>
 					<div className='myfriends__star'>
 						<div className='myfriends__star__name'>
-							{list.fullName ? (
-								list.fullName
+							{data.fullName ? (
+								data.fullName
 							) : (
 								<>
-									<span>{list.firstName}</span>&nbsp;
-									<span>{list.lastName}</span>
+									<span>{data.firstName}</span>&nbsp;
+									<span>{data.lastName}</span>
 								</>
 							)}
 						</div>
-						{list.isStar && <Subtract />}
+						{data.isStar && <Subtract />}
 					</div>
 				</Link>
 				<div className='myfriends__button__container'>
@@ -355,24 +346,25 @@ const FriendsItem = ({ list, keyTabs, getListFollower, getMyListFriendReq, getLi
 		}
 	};
 
+	const toggleModal = () => {
+		setShowModalUnfriends(!showModalUnfriends);
+	};
+
 	return (
 		<>
-			{toggleModalUnFriends && (
-				<ModalUnFriend
-					setModalUnfriends={setModalUnfriends}
-					toggleModalUnFriends={toggleModalUnFriends}
-					handleUnfriend={handleUnfriend}
-					list={list}
-					getListFollower={getListFollower}
-				/>
-			)}
+			<ModalUnFriend
+				showModalUnfriends={showModalUnfriends}
+				toggleModal={toggleModal}
+				handleUnfriend={handleUnfriend}
+				data={data}
+			/>
 			{handleRenderDisplay()}
 		</>
 	);
 };
 
 FriendsItem.propTypes = {
-	list: PropTypes.object,
+	data: PropTypes.object,
 	keyTabs: PropTypes.string,
 	getListFollower: PropTypes.array,
 	getMyListFriendReq: PropTypes.array,

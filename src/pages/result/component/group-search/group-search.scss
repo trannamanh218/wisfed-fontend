@@ -13,9 +13,10 @@
 			align-items: center;
 			gap: 40px;
 			.group__search__img {
-				max-width: 150px;
+				width: 150px;
 				border-radius: 8px;
 				height: 150px;
+				object-fit: cover;
 			}
 		}
 		.group__search__content {

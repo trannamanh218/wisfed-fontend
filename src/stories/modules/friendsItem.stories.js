@@ -11,7 +11,7 @@ const Template = args => <FriendsItem {...args} />;
 
 export const MyFriend = Template.bind({});
 MyFriend.args = {
-	list: {
+	data: {
 		createdAt: '2022-04-01T09:34:48.487Z',
 		id: 34,
 		isFriends: true,
@@ -39,7 +39,7 @@ MyFriend.args = {
 
 export const Follow = Template.bind({});
 Follow.args = {
-	list: {
+	data: {
 		createdAt: '2022-04-01T09:34:48.487Z',
 		id: 34,
 		isFollow: true,
@@ -69,7 +69,7 @@ Follow.args = {
 
 export const Pending = Template.bind({});
 Pending.args = {
-	list: {
+	data: {
 		createdAt: '2022-04-01T09:34:48.487Z',
 		id: 34,
 		isPending: true,
@@ -99,7 +99,7 @@ Pending.args = {
 
 export const FollowAndFriend = Template.bind({});
 FollowAndFriend.args = {
-	list: {
+	data: {
 		createdAt: '2022-04-01T09:34:48.487Z',
 		id: 34,
 		isFriends: true,

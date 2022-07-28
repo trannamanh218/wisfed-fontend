@@ -46,7 +46,7 @@ const MyFriends = ({ activeTabs, inputSearch, filter }) => {
 			</div>
 			<div className='myfriends__layout__container'>
 				{getMyListFriend?.map(item => (
-					<FriendsItem key={item.id} list={item} keyTabs={activeTabs} />
+					<FriendsItem key={item.id} data={item} keyTabs={activeTabs} />
 				))}
 			</div>
 		</div>

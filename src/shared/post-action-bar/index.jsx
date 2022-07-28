@@ -34,6 +34,10 @@ const PostActionBar = ({ postData, handleLikeAction }) => {
 				});
 			}, 200);
 		}
+		const editorChild = commentEditField.querySelector('.public-DraftEditor-content');
+		if (editorChild) {
+			editorChild.focus();
+		}
 	};
 
 	return (

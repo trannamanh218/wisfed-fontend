@@ -87,6 +87,14 @@ function CreatPostModalContent({
 	const { optionList } = setting;
 
 	useEffect(() => {
+		const textFieldEdit = document.querySelector('.creat-post-modal-content__main__body__text-field-edit-wrapper');
+		const editor = textFieldEdit.querySelector('.public-DraftEditor-content');
+		if (editor) {
+			setTimeout(() => {
+				editor.focus();
+			}, 200);
+		}
+
 		if (UpdateImg.length > 0) {
 			setShowUpload(true);
 			setImagesUpload(UpdateImg);

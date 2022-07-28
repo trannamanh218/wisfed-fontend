@@ -1,124 +1,110 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import Button from 'shared/button';
 import PropTypes from 'prop-types';
 import { makeFriendRequest, addFollower, unFollower, unFriendRequest } from 'reducers/redux-utils/user';
 import { useDispatch } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
+import _ from 'lodash';
+import ModalUnFriend from 'pages/friends/component/modalUnFriends';
 
 const ConnectButtonsSearch = ({ direction, item }) => {
+	const [showModalUnfriends, setShowModalUnfriends] = useState(false);
+	const [friendStatusBtn, setFriendStatusBtn] = useState(item.relation);
+	const [followStatusBtn, setFollowStatusBtn] = useState(item.isFollow);
+
 	const dispatch = useDispatch();
-	const [unFriend, setUnFriend] = useState(true);
-	const [toggleUnFollow, setToggleUnFollow] = useState(true);
-	const [toggleAddFollow, setToggleAddFollow] = useState(true);
-	const [togglePendingFriend, setTogglePendingFriend] = useState(true);
 
-	const buttonUnFollow = () => {
-		return (
-			<Button className='myfriends__button' isOutline={true} name='friend' onClick={handleUnFollow}>
-				<span className='myfriends__button__content'>Bỏ theo dõi </span>
-			</Button>
-		);
-	};
-
-	const buttonAddFollow = () => {
-		return (
-			<Button className=' myfriends__button' isOutline={true} name='friend' onClick={handleFollow}>
-				<span className='myfriends__button__content'>Theo dõi </span>
-			</Button>
-		);
-	};
-
-	const buttonAddFriend = () => {
-		return (
-			<Button className='myfriends__button' onClick={handleAddFriend}>
-				<span className='myfriends__button__content'>Kết bạn</span>
-			</Button>
-		);
-	};
-
-	const buttonUnFriend = () => {
-		return (
-			<Button className='myfriends__button' onClick={handleUnFriend}>
-				<span className='myfriends__button__content'>Huỷ kết bạn</span>
-			</Button>
-		);
-	};
-
-	const buttonPendingFriend = () => {
-		return (
-			<Button className='myfriends__button'>
-				<span className='myfriends__button__content'>Đã gửi lời mời</span>
-			</Button>
-		);
-	};
-
-	const handleAddFriend = () => {
+	const handleAddFriend = async () => {
 		try {
 			const param = {
 				userId: item.id,
 			};
-			dispatch(makeFriendRequest(param)).unwrap();
-			setTogglePendingFriend(false);
-		} catch (err) {
-			NotificationError(err);
-		}
-	};
-	const handleUnFriend = () => {
-		try {
-			dispatch(unFriendRequest(item.id)).unwrap();
-			setUnFriend(false);
+			await dispatch(makeFriendRequest(param));
+			setFriendStatusBtn('pending');
 		} catch (err) {
 			NotificationError(err);
 		}
 	};
 
-	const handleFollow = () => {
+	const handleUnfriend = async () => {
 		try {
-			const param = {
-				data: { userId: item.id },
-			};
-			dispatch(addFollower(param)).unwrap();
-			setToggleAddFollow(false);
-			setToggleUnFollow(true);
+			await dispatch(unFriendRequest(item.id));
+			setFriendStatusBtn('unknown');
+			setShowModalUnfriends(false);
 		} catch (err) {
 			NotificationError(err);
 		}
 	};
-	const handleUnFollow = () => {
-		try {
-			dispatch(unFollower(item.id)).unwrap();
-			setToggleAddFollow(true);
-			setToggleUnFollow(false);
-		} catch (err) {
-			NotificationError(err);
+
+	const handleFriendBtn = () => {
+		if (friendStatusBtn === 'friend') {
+			setShowModalUnfriends(true);
+		} else if (friendStatusBtn === 'unknown') {
+			handleAddFriend();
 		}
+	};
+
+	const handleFollowAndUnfollow = () => {
+		setFollowStatusBtn(!followStatusBtn);
+		handleCallFollowAndUnfollowApi(!followStatusBtn);
+	};
+
+	const handleCallFollowAndUnfollowApi = useCallback(
+		_.debounce(currentStatus => {
+			try {
+				if (currentStatus) {
+					dispatch(addFollower({ userId: item.id }));
+				} else {
+					dispatch(unFollower(item.id)).unwrap();
+				}
+			} catch (err) {
+				NotificationError(err);
+			}
+		}, 3000),
+		[]
+	);
+
+	const handleRenderButtonFriend = () => {
+		let contentBtn = '';
+		if (friendStatusBtn === 'friend') {
+			contentBtn = 'Hủy kết bạn';
+		} else if (friendStatusBtn === 'unknown') {
+			contentBtn = 'Kết bạn';
+		} else {
+			contentBtn = 'Đã gửi lời mời';
+		}
+
+		return (
+			<Button className='myfriends__button' onClick={handleFriendBtn}>
+				<span className='myfriends__button__content'>{contentBtn}</span>
+			</Button>
+		);
 	};
 
 	const handleRenderButtonFollow = () => {
-		if (item.isFollow) {
-			return toggleUnFollow ? buttonUnFollow() : buttonAddFollow();
-		} else {
-			return toggleAddFollow ? buttonAddFollow() : buttonUnFollow();
-		}
+		return (
+			<Button className='myfriends__button' isOutline={true} name='friend' onClick={handleFollowAndUnfollow}>
+				<span className='myfriends__button__content'>{followStatusBtn ? 'Bỏ theo dõi' : 'Theo dõi'} </span>
+			</Button>
+		);
 	};
 
-	const handleRenderButtonFriend = () => {
-		if (item.relation === 'friend') {
-			return unFriend ? buttonUnFriend() : togglePendingFriend ? buttonAddFriend() : buttonPendingFriend();
-		} else if (item.relation === 'pending') {
-			return buttonPendingFriend();
-		} else if (item.relation === 'unknown') {
-			return togglePendingFriend ? buttonAddFriend() : buttonPendingFriend();
-		}
+	const toggleModal = () => {
+		setShowModalUnfriends(!showModalUnfriends);
 	};
 
 	return (
 		<div className={`myfriends__buttons ${direction}`}>
 			{item.relation !== 'isMe' && (
 				<>
-					{' '}
 					{handleRenderButtonFriend()}
 					{handleRenderButtonFollow()}
+					<ModalUnFriend
+						showModalUnfriends={showModalUnfriends}
+						toggleModal={toggleModal}
+						data={item}
+						handleUnfriend={handleUnfriend}
+					/>
 				</>
 			)}
 		</div>
@@ -126,18 +112,11 @@ const ConnectButtonsSearch = ({ direction, item }) => {
 };
 
 ConnectButtonsSearch.defaultProps = {
-	data: {
-		isFriend: false,
-		isFollow: false,
-	},
+	item: {},
 	direction: 'column',
 };
 
 ConnectButtonsSearch.propTypes = {
-	data: PropTypes.shape({
-		isFollow: PropTypes.bool.isRequired,
-		isFriend: PropTypes.bool.isRequired,
-	}),
 	item: PropTypes.object,
 	direction: PropTypes.oneOf(['row', 'column']),
 };

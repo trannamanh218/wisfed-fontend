@@ -1,18 +1,19 @@
 import MainContainer from 'components/layout/main-container';
 import SidebarQuote from 'shared/sidebar-quote';
-import { useState, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import MainQuoteDetail from './main-quote-detail';
 import { getQuoteDetail, creatQuotesComment } from 'reducers/redux-utils/quote';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
 import _ from 'lodash';
-import { likeUnlikeQuote } from 'reducers/redux-utils/quote';
 
 const QuoteDetail = () => {
 	const [quoteData, setQuoteData] = useState({});
 	const [listHashtags, setListHashtags] = useState([]);
 	const [mentionUsersArr, setMentionUsersArr] = useState([]);
+
+	const isLikeTemp = useRef(false);
 
 	const { id } = useParams();
 	const dispatch = useDispatch();
@@ -29,6 +30,7 @@ const QuoteDetail = () => {
 			const response = await dispatch(getQuoteDetail(id)).unwrap();
 			setQuoteData(response);
 			setListHashtags(response.tags);
+			isLikeTemp.current = response.isLike;
 		} catch (err) {
 			NotificationError(err);
 		}
@@ -48,23 +50,21 @@ const QuoteDetail = () => {
 			const res = await dispatch(creatQuotesComment(params)).unwrap();
 			if (!_.isEmpty(res)) {
 				const newComment = { ...res, user: userInfo };
-				const commentQuotes = [...quoteData.commentQuotes, newComment];
-				const newQuoteData = { ...quoteData, commentQuotes, comments: quoteData.comments + 1 };
+				const usersComments = [...quoteData.usersComments];
+				if (res.replyId) {
+					const cmtReplying = usersComments.filter(item => item.id === res.replyId);
+					const reply = [...cmtReplying[0].reply];
+					reply.push(newComment);
+					const obj = { ...cmtReplying[0], reply };
+					const index = usersComments.findIndex(item => item.id === res.replyId);
+					usersComments[index] = obj;
+				} else {
+					newComment.reply = [];
+					usersComments.push(newComment);
+				}
+				const newQuoteData = { ...quoteData, usersComments, comments: quoteData.comments + 1 };
 				setQuoteData(newQuoteData);
 			}
-		} catch {
-			err => {
-				return err;
-			};
-		}
-	};
-
-	const likeUnlikeQuoteFnc = async id => {
-		try {
-			await dispatch(likeUnlikeQuote(id)).unwrap();
-			const setLike = !quoteData.isLike;
-			const numberOfLike = setLike ? quoteData.like + 1 : quoteData.like - 1;
-			setQuoteData({ ...quoteData, isLike: setLike, like: numberOfLike });
 		} catch (err) {
 			NotificationError(err);
 		}
@@ -76,7 +76,6 @@ const QuoteDetail = () => {
 				<MainQuoteDetail
 					quoteData={quoteData}
 					onCreateComment={onCreateComment}
-					likeUnlikeQuoteFnc={likeUnlikeQuoteFnc}
 					setMentionUsersArr={setMentionUsersArr}
 					mentionUsersArr={mentionUsersArr}
 				/>

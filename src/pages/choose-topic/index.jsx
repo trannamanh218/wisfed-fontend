@@ -8,7 +8,6 @@ import { editUserInfo } from 'reducers/redux-utils/user';
 // import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import SearchIcon from 'assets/icons/search.svg';
-import classNames from 'classnames';
 import SearchCategoryChooseTopic from './searchCateChooseTopic';
 import { NotificationError } from 'helpers/Error';
 
@@ -82,7 +81,7 @@ function ChooseTopic() {
 					</span>
 				</div>
 				<div className='choose-topic__search'>
-					<div className={classNames('search-field')}>
+					<div className='search-field'>
 						<img className='search-field__icon' src={SearchIcon} alt='search-icon' />
 						<input
 							className='search-field__input'

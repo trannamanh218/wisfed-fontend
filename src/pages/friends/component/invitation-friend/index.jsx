@@ -69,7 +69,7 @@ const InvitationFriend = ({ activeTabs }) => {
 						{getMyListFriendReq.map(item => (
 							<FriendsItem
 								key={item.id}
-								list={item}
+								data={item}
 								keyTabs={activeTabs}
 								getMyListFriendReq={getMyListFriendReq}
 							/>
@@ -89,7 +89,7 @@ const InvitationFriend = ({ activeTabs }) => {
 			</div>
 			<div className='myfriends__layout__container'>
 				{newData.map(item => (
-					<FriendsItem key={item.id} list={item} />
+					<FriendsItem key={item.id} data={item} />
 				))}
 			</div>
 		</div>

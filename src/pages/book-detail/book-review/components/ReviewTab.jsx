@@ -17,7 +17,6 @@ import { Modal } from 'react-bootstrap';
 import { useModal } from 'shared/hooks';
 import FormCheckGroup from 'shared/form-check-group';
 import Button from 'shared/button';
-import { Follow } from 'stories/modules/friendsItem.stories';
 
 const ReviewTab = ({ currentTab }) => {
 	const filterOptions = [
@@ -121,7 +120,7 @@ const ReviewTab = ({ currentTab }) => {
 				topUser: sortValue,
 				searchUser: inputSearch,
 			};
-			console.log(inputSearch);
+
 			let response;
 			if (currentOption.value === 'allReviews') {
 				response = await dispatch(getReviewsBook(params)).unwrap();

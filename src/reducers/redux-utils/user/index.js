@@ -96,9 +96,8 @@ export const ReplyFriendRequest = createAsyncThunk('user/makeFriendRequest', asy
 });
 
 export const addFollower = createAsyncThunk('user/addfollowRequest', async (params, { rejectWithValue }) => {
-	const { data } = params;
 	try {
-		const response = await Request.makePost(addfollow, data);
+		const response = await Request.makePost(addfollow, params);
 		return response.data;
 	} catch (err) {
 		const error = JSON.parse(err.response);

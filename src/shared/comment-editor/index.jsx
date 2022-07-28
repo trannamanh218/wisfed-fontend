@@ -11,6 +11,7 @@ const CommentEditor = ({
 	onCreateComment,
 	className,
 	mentionUsersArr,
+	commentLv1Id,
 	replyingCommentId,
 	clickReply,
 	setMentionUsersArr,
@@ -22,16 +23,18 @@ const CommentEditor = ({
 	const userInfo = useSelector(state => state.auth.userInfo);
 
 	useEffect(() => {
-		const commentEditField = document.querySelector(`.reply-comment-${replyingCommentId}`);
-		if (commentEditField) {
-			setTimeout(() => {
-				window.scroll({
-					top: commentEditField.offsetTop - 400,
-					behavior: 'smooth',
-				});
-			}, 200);
+		if (replyingCommentId === commentLv1Id) {
+			const commentEditField = document.querySelector(`.reply-comment-${commentLv1Id}`);
+			if (commentEditField) {
+				setTimeout(() => {
+					window.scroll({
+						top: commentEditField.offsetTop - 400,
+						behavior: 'smooth',
+					});
+				}, 200);
+			}
 		}
-	}, [replyingCommentId, clickReply]);
+	}, [clickReply]);
 
 	const handleKeyBind = e => {
 		if (!Storage.getAccessToken()) {
@@ -47,7 +50,7 @@ const CommentEditor = ({
 
 	const handleKeyPress = command => {
 		if (command === 'send-message') {
-			onCreateComment(content, replyingCommentId);
+			onCreateComment(content, commentLv1Id);
 			setCreateCmt(!createCmt);
 		}
 	};
@@ -60,16 +63,18 @@ const CommentEditor = ({
 				</div>
 				<RichTextEditor
 					placeholder='Viết bình luận...'
-					className={replyingCommentId ? `rich-text-editor-${replyingCommentId}` : ''}
+					className={commentLv1Id ? `rich-text-editor-${commentLv1Id}` : ''}
 					content={content}
 					setContent={setContent}
 					handleKeyBind={handleKeyBind}
 					handleKeyPress={handleKeyPress}
-					clickReply={clickReply}
 					createCmt={createCmt}
 					mentionUsersArr={mentionUsersArr}
 					hasMentionsUser={true}
 					setMentionUsersArr={setMentionUsersArr}
+					commentLv1Id={commentLv1Id}
+					replyingCommentId={replyingCommentId}
+					clickReply={clickReply}
 				/>
 			</div>
 		</>
@@ -79,7 +84,8 @@ const CommentEditor = ({
 CommentEditor.defaultProps = {
 	onCreateComment: () => {},
 	className: '',
-	replyingCommentId: null,
+	commentLv1Id: null,
+	replyingCommentId: -1,
 	mentionUsersArr: [],
 	clickReply: false,
 	setMentionUsersArr: () => {},
@@ -88,6 +94,7 @@ CommentEditor.defaultProps = {
 CommentEditor.propTypes = {
 	onCreateComment: PropTypes.func,
 	className: PropTypes.string,
+	commentLv1Id: PropTypes.number,
 	replyingCommentId: PropTypes.number,
 	mentionUsersArr: PropTypes.array,
 	clickReply: PropTypes.bool,

@@ -1,5 +1,5 @@
 import { Forward } from 'components/svg';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import BackButton from 'shared/back-button';
 import Comment from 'shared/comments';
 import QuoteCard from 'shared/quote-card';
@@ -10,31 +10,20 @@ import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { QUOTE_TYPE } from 'constants';
+import { useSelector } from 'react-redux';
 
-const MainQuoteDetail = ({ quoteData, onCreateComment, likeUnlikeQuoteFnc, setMentionUsersArr, mentionUsersArr }) => {
-	const [commentLv1IdArray, setCommentLv1IdArray] = useState([]);
+const MainQuoteDetail = ({ quoteData, onCreateComment, setMentionUsersArr, mentionUsersArr }) => {
 	const [replyingCommentId, setReplyingCommentId] = useState(0);
 	const [clickReply, setClickReply] = useState(false);
 
-	useEffect(() => {
-		if (quoteData?.commentQuotes?.length > 0) {
-			const commentLv1IdTemp = [];
-			for (let i = 0; i < quoteData.commentQuotes.length; i++) {
-				if (
-					quoteData.commentQuotes[i].replyId === null &&
-					!commentLv1IdTemp.includes(quoteData.commentQuotes[i].id)
-				) {
-					commentLv1IdTemp.push(quoteData.commentQuotes[i].id);
-				}
-			}
-			setCommentLv1IdArray(commentLv1IdTemp);
-		}
-	}, [quoteData.commentQuotes]);
+	const userInfo = useSelector(state => state.auth.userInfo);
 
 	const handleReply = (cmtLv1Id, userData) => {
-		const arr = [];
-		arr.push(userData);
-		setMentionUsersArr(arr);
+		if (userData.id !== userInfo.id) {
+			const arr = [];
+			arr.push(userData);
+			setMentionUsersArr(arr);
+		}
 		setReplyingCommentId(cmtLv1Id);
 		setClickReply(true);
 		setTimeout(() => {
@@ -61,15 +50,10 @@ const MainQuoteDetail = ({ quoteData, onCreateComment, likeUnlikeQuoteFnc, setMe
 			</div>
 			{!_.isEmpty(quoteData) && (
 				<div className='main-quote-detail__pane'>
-					<QuoteCard
-						className='mx-auto'
-						isDetail={true}
-						data={quoteData}
-						likeUnlikeQuoteFnc={likeUnlikeQuoteFnc}
-					/>
-					{quoteData.commentQuotes?.map(comment => {
-						if (comment.replyId === null) {
-							return (
+					<QuoteCard isDetail={true} data={quoteData} />
+					{quoteData.usersComments && !!quoteData.usersComments?.length && (
+						<>
+							{quoteData.usersComments.map(comment => (
 								<div key={comment.id}>
 									<Comment
 										commentLv1Id={comment.id}
@@ -78,11 +62,10 @@ const MainQuoteDetail = ({ quoteData, onCreateComment, likeUnlikeQuoteFnc, setMe
 										handleReply={handleReply}
 										type={QUOTE_TYPE}
 									/>
-
 									<div className='comment-reply-container'>
-										{quoteData.commentQuotes.map(commentChild => {
-											if (commentChild.replyId === comment.id) {
-												return (
+										{comment.reply && !!comment.reply.length && (
+											<>
+												{comment.reply.map(commentChild => (
 													<div key={commentChild.id}>
 														<Comment
 															commentLv1Id={comment.id}
@@ -92,31 +75,27 @@ const MainQuoteDetail = ({ quoteData, onCreateComment, likeUnlikeQuoteFnc, setMe
 															type={QUOTE_TYPE}
 														/>
 													</div>
-												);
-											}
-										})}
-										{commentLv1IdArray.includes(comment.id) && (
-											<CommentEditor
-												onCreateComment={onCreateComment}
-												className={classNames(
-													`reply-comment-editor reply-comment-${comment.id}`,
-													{
-														'show': comment.id === replyingCommentId,
-													}
-												)}
-												mentionUsersArr={mentionUsersArr}
-												replyingCommentId={replyingCommentId}
-												clickReply={clickReply}
-												setMentionUsersArr={setMentionUsersArr}
-											/>
+												))}
+											</>
 										)}
+										<CommentEditor
+											onCreateComment={onCreateComment}
+											className={classNames(`reply-comment-editor reply-comment-${comment.id}`, {
+												'show': comment.id === replyingCommentId,
+											})}
+											mentionUsersArr={mentionUsersArr}
+											commentLv1Id={comment.id}
+											replyingCommentId={replyingCommentId}
+											clickReply={clickReply}
+											setMentionUsersArr={setMentionUsersArr}
+										/>
 									</div>
 								</div>
-							);
-						}
-					})}
+							))}
+						</>
+					)}
 					<CommentEditor
-						replyingCommentId={null}
+						commentLv1Id={null}
 						onCreateComment={onCreateComment}
 						mentionUsersArr={mentionUsersArr}
 						setMentionUsersArr={setMentionUsersArr}
@@ -130,8 +109,6 @@ const MainQuoteDetail = ({ quoteData, onCreateComment, likeUnlikeQuoteFnc, setMe
 MainQuoteDetail.propTypes = {
 	quoteData: PropTypes.object,
 	onCreateComment: PropTypes.func,
-	likeUnlikeQuoteFnc: PropTypes.func,
-	userInfo: PropTypes.object,
 	setMentionUsersArr: PropTypes.any,
 	mentionUsersArr: PropTypes.any,
 };

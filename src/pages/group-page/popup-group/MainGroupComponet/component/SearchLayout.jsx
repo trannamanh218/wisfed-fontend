@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import defaultAvatar from 'assets/images/avatar.jpeg';
 import { useDispatch } from 'react-redux';
 import { makeFriendRequest, addFollower, unFollower, unFriendRequest } from 'reducers/redux-utils/user';
@@ -59,10 +59,7 @@ function SearchLayout({ dataGroup }) {
 	};
 	const handleFollow = item => {
 		try {
-			const param = {
-				data: { userId: item.id },
-			};
-			dispatch(addFollower(param)).unwrap();
+			dispatch(addFollower({ userId: item.id }));
 			setIsCallApi(!isCallApi);
 		} catch (err) {
 			NotificationError(err);
@@ -162,11 +159,11 @@ function SearchLayout({ dataGroup }) {
 															+ Thêm bạn
 														</button>
 													)}
-													{/* {item.isAdmin && (x
-							<button className='more-icon-btn-group'>
-								<MoreIcon />
-							</button>
-						)} */}
+													{/* {item.isAdmin && (
+														<button className='more-icon-btn-group'>
+															<MoreIcon />
+														</button>
+													)} */}
 												</div>
 											)}
 										</div>

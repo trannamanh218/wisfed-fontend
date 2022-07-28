@@ -8,14 +8,15 @@ import Storage from 'helpers/Storage';
 import { useDispatch } from 'react-redux';
 import { saveDataShare, checkShare } from 'reducers/redux-utils/post';
 import { useNavigate } from 'react-router-dom';
+import { checkUserLogin } from 'reducers/redux-utils/auth';
 
-const QuoteActionBar = ({ data, isDetail, likeUnlikeQuoteFnc, isLiked, likeNumber, setModalShow }) => {
+const QuoteActionBar = ({ data, isDetail, likeUnlikeQuoteFnc }) => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
 	const handleCheckLoginShare = async () => {
 		if (!Storage.getAccessToken()) {
-			setModalShow(true);
+			dispatch(checkUserLogin(true));
 		} else {
 			dispatch(saveDataShare(data));
 			dispatch(checkShare(true));
@@ -25,7 +26,7 @@ const QuoteActionBar = ({ data, isDetail, likeUnlikeQuoteFnc, isLiked, likeNumbe
 
 	const handleCheckLoginLike = () => {
 		if (!Storage.getAccessToken()) {
-			setModalShow(true);
+			dispatch(checkUserLogin(true));
 		} else {
 			likeUnlikeQuoteFnc(data.id);
 		}
@@ -34,8 +35,8 @@ const QuoteActionBar = ({ data, isDetail, likeUnlikeQuoteFnc, isLiked, likeNumbe
 	return (
 		<ul className='quote-action-bar'>
 			<li className='quote-action__item' onClick={handleCheckLoginLike}>
-				{isLiked ? <LikeFill /> : <Like />}
-				<span className='quote-action__name'>{likeNumber} Thích</span>
+				{data.isLike ? <LikeFill /> : <Like />}
+				<span className='quote-action__name'>{data.like} Thích</span>
 			</li>
 			<li className='quote-action__item'>
 				{isDetail ? (
@@ -46,7 +47,7 @@ const QuoteActionBar = ({ data, isDetail, likeUnlikeQuoteFnc, isLiked, likeNumbe
 				) : (
 					<div onClick={handleCheckLoginShare}>
 						<Share className={classNames('quote-icon', { 'active': data.isShare })} />
-						<span className='quote-action__name'>{data.countShare} Chia sẻ</span>
+						<span className='quote-action__name'>{data.share} Chia sẻ</span>
 					</div>
 				)}
 			</li>
@@ -54,7 +55,7 @@ const QuoteActionBar = ({ data, isDetail, likeUnlikeQuoteFnc, isLiked, likeNumbe
 				{isDetail ? (
 					<div onClick={handleCheckLoginShare}>
 						<Share className='quote-icon' />
-						<span className='quote-action__name'>{data.countShare} Chia sẻ</span>
+						<span className='quote-action__name'>{data.share} Chia sẻ</span>
 					</div>
 				) : (
 					<Link to={`/quotes/detail/${data.id}`}>
@@ -76,17 +77,13 @@ QuoteActionBar.defaultProps = {
 		isLike: false,
 	},
 	isDetail: false,
-	handleLikeQuote: () => {},
+	likeUnlikeQuoteFnc: () => {},
 };
 
 QuoteActionBar.propTypes = {
 	data: PropTypes.object,
 	isDetail: PropTypes.bool,
-	handleLikeQuote: PropTypes.func,
-	isLiked: PropTypes.bool,
-	likeNumber: PropTypes.number,
 	likeUnlikeQuoteFnc: PropTypes.func,
-	setModalShow: PropTypes.func,
 };
 
 export default QuoteActionBar;
