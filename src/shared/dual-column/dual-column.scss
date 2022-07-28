@@ -61,4 +61,15 @@
 		padding: 0;
 		margin-bottom: 15px;
 	}
+	.dualColumn-item__number {
+		display: none !important;
+	}
+	.dualColumn-item__title {
+		width: 160px;
+	}
+}
+@media only screen and (max-width: 1280px) {
+	.dualColumn-item__title {
+		width: 170px;
+	}
 }
