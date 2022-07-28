@@ -25,7 +25,7 @@ const PopupInviteFriend = ({ handleClose, showRef, groupMembers }) => {
 			const actionGetList = await dispatch(getFriendList(params)).unwrap();
 			const friendList = actionGetList.rows;
 
-			// Lọc danh sách
+			// Lọc ra danh sách bạn bè không có trong group
 			const newArr = friendList;
 			for (let i = 0; i < newArr.length; i++) {
 				for (let y = 0; y < groupMembers.length; y++) {
@@ -34,7 +34,15 @@ const PopupInviteFriend = ({ handleClose, showRef, groupMembers }) => {
 					}
 				}
 			}
-			setListFriendsNotInGroup(newArr);
+
+			// Lọc danh sách bạn bè theo ô search
+			setListFriendsNotInGroup(
+				newArr.filter(
+					x =>
+						x.firstName.toLocaleLowerCase().includes(inputSearch.toLocaleLowerCase()) ||
+						x.lastName.toLocaleLowerCase().includes(inputSearch.toLocaleLowerCase())
+				)
+			);
 		} catch (error) {
 			NotificationError(error);
 		}
@@ -57,7 +65,7 @@ const PopupInviteFriend = ({ handleClose, showRef, groupMembers }) => {
 
 	useEffect(() => {
 		getListFriend();
-	}, [userInfo]);
+	}, [userInfo, inputSearch]);
 
 	const handleSelectFriend = e => {
 		setListFriendSelect([...listFriendSelect, e]);
