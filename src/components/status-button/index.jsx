@@ -60,16 +60,8 @@ const StatusButton = ({ className, bookData, inPostBook = false, hasBookStatus =
 
 	useEffect(async () => {
 		if (Storage.getAccessToken()) {
-			if (hasBookStatus) {
-				if (inPostBook) {
-					if (userInfo.id === postActor) {
-						setCurrentStatus(bookData.status);
-					} else {
-						checkBookInDefaultLibrary();
-					}
-				} else {
-					setCurrentStatus(bookData.status);
-				}
+			if (hasBookStatus && inPostBook) {
+				setCurrentStatus(bookData.status);
 			} else {
 				checkBookInDefaultLibrary();
 			}

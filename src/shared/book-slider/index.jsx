@@ -20,7 +20,7 @@ const BookSlider = ({
 	const settingSlider = settings(inCategory, inCategoryDetail);
 
 	return (
-		<>
+		<div className='main'>
 			{!!list.length && (
 				<div className={classNames('book-slider', { [`${className}`]: className })}>
 					<h4 className='book-slider__title'>{title}</h4>
@@ -42,7 +42,7 @@ const BookSlider = ({
 					</div>
 				</div>
 			)}
-		</>
+		</div>
 	);
 };
 
@@ -81,15 +81,15 @@ function settings(inCategory, inCategoryDetail) {
 			{
 				breakpoint: 1025,
 				settings: {
-					slidesToShow: 3,
-					slidesToScroll: 3,
+					slidesToShow: 1,
+					slidesToScroll: 1,
 				},
 			},
 			{
 				breakpoint: 992,
 				settings: {
-					slidesToShow: 2,
-					slidesToScroll: 2,
+					slidesToShow: 1,
+					slidesToScroll: 1,
 				},
 			},
 			{

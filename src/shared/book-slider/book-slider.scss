@@ -18,7 +18,7 @@
 	}
 
 	.slick-next {
-		right: 4% !important;
+		right: 4%;
 	}
 
 	.slick-arrow {
@@ -27,8 +27,8 @@
 		border-radius: 50%;
 		background-color: rgba(20, 20, 43, 0.4) !important;
 		z-index: 500;
-		width: 32px !important;
-		height: 32px !important;
+		width: 32px;
+		height: 32px;
 		padding: 0.3rem !important;
 		&:before {
 			display: none;
@@ -36,5 +36,24 @@
 		&:hover {
 			background-color: rgba(20, 20, 43, 0.7) !important;
 		}
+	}
+}
+
+@media only screen and (max-width: 992px) {
+	.book-slider__title {
+		font-size: 1.1rem;
+	}
+}
+@media only screen and (max-width: 1024px) {
+	.slick-arrow {
+		width: 25px !important;
+		height: 25px !important;
+	}
+	.book-review__tabs.nav-tabs .nav-link.active {
+		font-size: 2rem !important;
+	}
+
+	.dualColumn-item__title {
+		margin-top: 4px;
 	}
 }

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import SearchField from 'shared/search-field';
 import UserAvatar from 'shared/user-avatar';
 import LinearProgressBar from 'shared/linear-progress-bar';
@@ -16,8 +16,21 @@ import { useFetchTargetReading } from 'api/readingTarget.hooks';
 import GoalsNotSetYet from './goals-not-set';
 import Circle from 'shared/loading/circle';
 import { STATUS_LOADING } from 'constants';
+import { useCurrentPng } from 'recharts-to-png';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { getChartsByid, updateImg } from 'reducers/redux-utils/chart';
+import { saveDataShare, shareTarget } from 'reducers/redux-utils/post';
+import { handleShareTarget } from 'reducers/redux-utils/target';
+import { useVisible } from 'shared/hooks';
+import Storage from 'helpers/Storage';
+import ShareTarget from 'shared/share-target';
 
 const MainReadingTarget = () => {
+	const dispatch = useDispatch();
+	const navigate = useNavigate();
+	const [loalding, setLoalding] = useState(false);
+	const [getAreaPng, { ref: areaRef }] = useCurrentPng();
 	const { userId } = useParams();
 	const { userInfo } = useSelector(state => state.auth);
 	const { userData } = useFetchUserParams(userId);
@@ -26,6 +39,9 @@ const MainReadingTarget = () => {
 	const [inputSearch, setInputSearch] = useState('');
 	const [newArrSearch, setNewArrSearch] = useState([]);
 	const { booksReadYear, year, status } = useFetchTargetReading(userId, modalOpen, deleteModal);
+	const [modalShow, setModalShow] = useState(false);
+	const { ref: shareRef, isVisible: showShare, setIsVisible: setShowShare } = useVisible(false);
+
 	const renderLinearProgressBar = item => {
 		let percent = 0;
 		if (item.booksReadCount > item.numberBook) {
@@ -38,6 +54,7 @@ const MainReadingTarget = () => {
 
 	const handleEditTarget = () => {
 		setModalOpen(true);
+		// setDeleteModal(false);
 	};
 
 	const handleDeleteTarget = () => {
@@ -107,10 +124,28 @@ const MainReadingTarget = () => {
 			</tr>
 		);
 	};
+	const handleCheckLoginShare = async () => {
+		if (!Storage.getAccessToken()) {
+			return;
+		} else {
+			const target = {
+				numberBook: 1,
+				booksReadCount: 55,
+			};
+			dispatch(saveDataShare(target));
+			setShowShare(true);
+			navigate('/');
+		}
+	};
 
 	return (
 		<div className='reading-target'>
 			<Circle loading={status === STATUS_LOADING} />
+			{showShare && (
+				<div ref={shareRef} style={{ position: 'fixed', top: '30%', left: '30%' }}>
+					<ShareTarget />
+				</div>
+			)}
 			<div className='reading-target__header'>
 				<h4>Mục tiêu đọc sách năm {booksReadYear[0]?.year || year}</h4>
 				<SearchField
@@ -134,7 +169,12 @@ const MainReadingTarget = () => {
 									<div className='reading-target__content__bottom'>
 										{renderLinearProgressBar(item)}
 										{userInfo.id === userId && (
-											<button className='btn btn-share btn-primary-light'>Chia sẻ</button>
+											<button
+												className='btn btn-share btn-primary-light'
+												onClick={handleCheckLoginShare}
+											>
+												Chia sẻ
+											</button>
 										)}
 									</div>
 								</div>
