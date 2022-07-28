@@ -207,6 +207,6 @@ GridImage.defaultProps = {
 GridImage.propTypes = {
 	images: PropTypes.array,
 	inPost: PropTypes.bool,
-	postId: PropTypes.string,
+	postId: PropTypes.any,
 };
 export default GridImage;

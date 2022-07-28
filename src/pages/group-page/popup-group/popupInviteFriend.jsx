@@ -6,11 +6,11 @@ import './style.scss';
 import { getFriendList } from 'reducers/redux-utils/user';
 import { useDispatch, useSelector } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
-import { getInviteFriend } from 'reducers/redux-utils/group';
+import group, { getInviteFriend } from 'reducers/redux-utils/group';
 import { useParams } from 'react-router-dom';
 
-const PopupInviteFriend = ({ handleClose, showRef }) => {
-	const [listFriend, setListFriend] = useState([]);
+const PopupInviteFriend = ({ handleClose, showRef, groupMembers }) => {
+	const [listFriendsNotInGroup, setListFriendsNotInGroup] = useState([]);
 	const [listFriendSelect, setListFriendSelect] = useState([]);
 	const dispatch = useDispatch();
 	const { id = '' } = useParams();
@@ -23,7 +23,18 @@ const PopupInviteFriend = ({ handleClose, showRef }) => {
 		};
 		try {
 			const actionGetList = await dispatch(getFriendList(params)).unwrap();
-			setListFriend(actionGetList.rows);
+			const friendList = actionGetList.rows;
+
+			// Lọc danh sách
+			const newArr = friendList;
+			for (let i = 0; i < newArr.length; i++) {
+				for (let y = 0; y < groupMembers.length; y++) {
+					if (newArr[i].id === groupMembers[y].id) {
+						newArr.splice(i, 1);
+					}
+				}
+			}
+			setListFriendsNotInGroup(newArr);
 		} catch (error) {
 			NotificationError(error);
 		}
@@ -50,11 +61,11 @@ const PopupInviteFriend = ({ handleClose, showRef }) => {
 
 	const handleSelectFriend = e => {
 		setListFriendSelect([...listFriendSelect, e]);
-		const checkItem = listFriend.filter(item => item !== e);
-		setListFriend(checkItem);
+		const checkItem = listFriendsNotInGroup.filter(item => item !== e);
+		setListFriendsNotInGroup(checkItem);
 	};
 	const handleRemoveFriend = e => {
-		setListFriend([...listFriend, e]);
+		setListFriendsNotInGroup([...listFriendsNotInGroup, e]);
 		const checkItem = listFriendSelect.filter(item => item !== e);
 		setListFriendSelect(checkItem);
 	};
@@ -76,49 +87,45 @@ const PopupInviteFriend = ({ handleClose, showRef }) => {
 			<div className='main-action'>
 				<div className='list-friend'>
 					<h4>Danh sách bạn bè</h4>
-					{listFriend?.map(item => {
+					{listFriendsNotInGroup?.map(item => {
 						return (
-							<>
-								<div className='friend-item' key={item.id}>
-									<img
-										src={item.avatarImage}
-										alt=''
-										onError={e =>
-											e.target.setAttribute(
-												'src',
-												'https://play-lh.googleusercontent.com/NIUu0OgXQO4nU-ugWTv6yNy92u9wQFFfwvlWOsCIG-tPYBagOZdpyrJCxfHULI_eeGI'
-											)
-										}
-									/>
-									<label htmlFor='1'>{item.fullName}</label>
-									<input type='checkbox' id={item.id} onClick={() => handleSelectFriend(item)} />
-								</div>
-							</>
+							<div className='friend-item' key={item.id}>
+								<img
+									src={item.avatarImage}
+									alt=''
+									onError={e =>
+										e.target.setAttribute(
+											'src',
+											'https://play-lh.googleusercontent.com/NIUu0OgXQO4nU-ugWTv6yNy92u9wQFFfwvlWOsCIG-tPYBagOZdpyrJCxfHULI_eeGI'
+										)
+									}
+								/>
+								<label htmlFor='1'>{item.fullName}</label>
+								<input type='checkbox' id={item.id} onClick={() => handleSelectFriend(item)} />
+							</div>
 						);
 					})}
 				</div>
 				<div className='list-friend-select'>
 					<h4>Danh sách đã chọn</h4>
-					{listFriendSelect.map(item => {
+					{listFriendSelect.map((item, index) => {
 						return (
-							<>
-								<div className='friend-item'>
-									<img
-										src={item.avatarImage}
-										alt=''
-										onError={e =>
-											e.target.setAttribute(
-												'src',
-												'https://play-lh.googleusercontent.com/NIUu0OgXQO4nU-ugWTv6yNy92u9wQFFfwvlWOsCIG-tPYBagOZdpyrJCxfHULI_eeGI'
-											)
-										}
-									/>
-									<span>{item.fullName}</span>
-									<button>
-										<CloseX onClick={() => handleRemoveFriend(item)} />
-									</button>
-								</div>
-							</>
+							<div className='friend-item' key={index}>
+								<img
+									src={item.avatarImage}
+									alt=''
+									onError={e =>
+										e.target.setAttribute(
+											'src',
+											'https://play-lh.googleusercontent.com/NIUu0OgXQO4nU-ugWTv6yNy92u9wQFFfwvlWOsCIG-tPYBagOZdpyrJCxfHULI_eeGI'
+										)
+									}
+								/>
+								<span>{item.fullName}</span>
+								<button>
+									<CloseX onClick={() => handleRemoveFriend(item)} />
+								</button>
+							</div>
 						);
 					})}
 				</div>
@@ -129,7 +136,8 @@ const PopupInviteFriend = ({ handleClose, showRef }) => {
 
 PopupInviteFriend.propTypes = {
 	handleClose: PropTypes.func,
-	showRef: PropTypes.func,
+	showRef: PropTypes.any,
+	groupMembers: PropTypes.array,
 };
 
 export default PopupInviteFriend;
