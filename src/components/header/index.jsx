@@ -37,6 +37,7 @@ import _ from 'lodash';
 import { patchNewNotification, updateIsNewNotificationUserInfo } from 'reducers/redux-utils/auth';
 import { handleRefreshNewfeed } from 'reducers/redux-utils/activity';
 import Request from 'helpers/Request';
+import HamburgerModal from './hamburger-modal/HamburgerModal';
 
 const Header = () => {
 	const { isShowModal } = useSelector(state => state.search);
@@ -48,7 +49,7 @@ const Header = () => {
 	const { userInfo, userInfoJwt } = useSelector(state => state.auth);
 	const dispatch = useDispatch();
 	const [modalNoti, setModalNotti] = useState(false);
-	const buttonModal = useRef(null);
+	const { buttonModal } = useRef(null);
 	const [modalInforUser, setModalInforUser] = useState(false);
 	const { value } = useParams();
 	const [getSlugResult, setGetSlugResult] = useState('');
@@ -56,6 +57,7 @@ const Header = () => {
 	const [activeNotificaiton, setActiveNotification] = useState(false);
 	const [realTime, setRealTime] = useState(false);
 	const userOptions = useRef(null);
+	const [isHamburgerShow, setIsHamburgerShow] = useState(false);
 
 	useEffect(() => {
 		setActiveLink(pathname);
@@ -223,7 +225,32 @@ const Header = () => {
 						onChange={() => {}}
 					/>
 				</div>
-				{isShow && <SearchAllModal showRef={showRef} setIsShow={setIsShow} />}
+				<div className='header-search-small' onClick={() => setIsShow(true)}>
+					<img className='header__search__icon' src={SearchIcon} alt='search-icon' />
+				</div>
+
+				{/* Modal menu hamburger */}
+
+				<HamburgerModal
+					isHamburgerShow={isHamburgerShow}
+					setIsHamburgerShow={setIsHamburgerShow}
+					userInfo={userInfo}
+				/>
+
+				<HamburgerModal
+					isHamburgerShow={isHamburgerShow}
+					setIsHamburgerShow={setIsHamburgerShow}
+					userInfo={userInfo}
+				/>
+
+				<div className='header-hamburger-small' onClick={() => setIsHamburgerShow(!isHamburgerShow)}>
+					<div className='header-search-small__hamburger'>
+						<Hamburger />
+					</div>
+				</div>
+
+				{/* Modal tìm kiếm */}
+				{isShow ? <SearchAllModal showRef={showRef} setIsShow={setIsShow} /> : ''}
 			</div>
 
 			<ul className='header__nav'>

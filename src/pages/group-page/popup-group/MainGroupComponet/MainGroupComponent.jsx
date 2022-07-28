@@ -268,7 +268,11 @@ function MainGroupComponent({ handleChange, keyChange, data, member, handleUpdat
 					<div style={{ position: 'fixed', left: '33%', top: '20%', zIndex: '2000' }}>
 						{isShow ? (
 							<div className='popup-container'>
-								<PopupInviteFriend handleClose={() => setIsShow(!isShow)} showRef={showRef} />
+								<PopupInviteFriend
+									groupMembers={member}
+									handleClose={() => setIsShow(!isShow)}
+									showRef={showRef}
+								/>
 							</div>
 						) : (
 							''
