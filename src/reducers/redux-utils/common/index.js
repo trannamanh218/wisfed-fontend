@@ -7,7 +7,7 @@ export const uploadImage = createAsyncThunk('common/uploadImage', async (dataUpl
 		const response = await Request.makeUpload(uploadImageAPI, dataUpload);
 		return response.data;
 	} catch (err) {
-		const error = JSON.stringify(err.response);
+		const error = JSON.parse(err.response);
 		throw rejectWithValue(error);
 	}
 });
@@ -18,7 +18,7 @@ export const uploadMultiFile = createAsyncThunk('common/uploadMultiFile', async 
 		const data = res.data;
 		return data;
 	} catch (err) {
-		const error = JSON.stringify(err.response);
+		const error = JSON.parse(err.response);
 		return rejectWithValue(error);
 	}
 });

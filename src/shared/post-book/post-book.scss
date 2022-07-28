@@ -37,7 +37,7 @@
 
 	&__button-and-rating {
 		display: flex;
-		gap: 0.1rem;
+		gap: 3rem;
 
 		button {
 			width: fit-content;
@@ -95,5 +95,12 @@
 		font-size: 0.875rem;
 		font-weight: 600;
 		color: $red;
+	}
+}
+
+.newfeed__creat-post__modal {
+	.post-book__button-and-rating {
+		justify-content: space-between;
+		gap: 0;
 	}
 }

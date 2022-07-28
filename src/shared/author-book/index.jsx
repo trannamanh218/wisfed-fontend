@@ -88,11 +88,15 @@ const AuthorBook = props => {
 						<div className='author-book__rating'>
 							<ReactRating
 								readonly={true}
-								initialRating={data.avgRating || data.info?.countRating}
+								initialRating={data.avgRating.toFixed(1) || data.info?.countRating.toFixed(1)}
 								checkStar={checkStar}
 							/>
 							<span className='author-book__rating__number'>
-								{data?.avgRating || data?.rateAvg || data.info?.avgRating || 0} sao
+								{data?.avgRating.toFixed(1) ||
+									data?.rateAvg.toFixed(1) ||
+									data.info?.avgRating.toFixed(1) ||
+									0}{' '}
+								sao
 							</span>
 						</div>
 						<div className='author-book__bottom'>

@@ -192,24 +192,24 @@ function MainGroupComponent({ handleChange, keyChange, data, member, handleUpdat
 		<div className='group-main-component__container'>
 			<Circle loading={isFetching} />
 			<div className='group__background'>
-				<div style={{ position: 'relative' }}>
-					<img
-						src={data.avatar ? data.avatar : defaultAvatar}
-						onError={e => e.target.setAttribute('src', defaultAvatar)}
-						alt=''
-					/>
-					<Dropzone>
-						{() => (
-							<div {...getRootProps()}>
-								<input {...getInputProps()} />
-								<div className='dropzone upload-image'>
+				<img
+					src={data.avatar ? data.avatar : defaultAvatar}
+					onError={e => e.target.setAttribute('src', defaultAvatar)}
+					alt=''
+				/>
+				<Dropzone>
+					{() => (
+						<div {...getRootProps()}>
+							<input {...getInputProps()} />
+							<div className='dropzone upload-image'>
+								<div className=''>
 									<img src={camera} alt='camera' />
-									<span style={{ marginRight: '3px' }}>Chỉnh sửa ảnh bìa</span>
 								</div>
+								<span style={{ marginRight: '3px' }}>Chỉnh sửa ảnh bìa</span>
 							</div>
-						)}
-					</Dropzone>
-				</div>
+						</div>
+					)}
+				</Dropzone>
 				<div className='group__title-name'>
 					<span>
 						Nhóm của{' '}

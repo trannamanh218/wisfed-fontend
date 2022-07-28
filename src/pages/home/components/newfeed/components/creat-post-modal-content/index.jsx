@@ -397,7 +397,10 @@ function CreatPostModalContent({
 							mediaUrl: [],
 							content: content,
 							curProgress: taggedData.addBook.status === 'read' ? taggedData.addBook.page : checkProgress,
-							rate: taggedData.addBook.status === 'read' ? valueStar : '',
+							rate:
+								taggedData.addBook.status === 'read' || checkProgress === taggedData.addBook.page
+									? valueStar
+									: 0,
 						};
 						dispatch(createReviewBook(reviewData));
 					}

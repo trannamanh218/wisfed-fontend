@@ -60,7 +60,6 @@ function Post({ postInformations, showModalCreatPost, inReviews = false }) {
 		} else {
 			setPostData(postInformations);
 		}
-
 		if (!_.isEmpty(postInformations.preview) && postInformations.preview.url.includes('https://www.youtube.com/')) {
 			const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
 			const match = postInformations.preview.url.match(regExp);
@@ -389,7 +388,7 @@ function Post({ postInformations, showModalCreatPost, inReviews = false }) {
 					<IconRanks />
 				</div>
 			)}
-			{postData.isShare && postData.verb === 'shareQuote' && <PostQuotes postsData={postData} />}
+			{postData.verb === 'shareQuote' && <PostQuotes postsData={postData} />}
 			{postData.verb === 'shareTopQuoteRanking' && <PostQuotes postsData={postData} />}
 			{postData.verb === 'shareTopBookRanking' && <AuthorBook data={postData} />}
 			{postData.verb === 'shareTopUserRanking' && <ShareUsers postsData={postData} />}
@@ -402,7 +401,8 @@ function Post({ postInformations, showModalCreatPost, inReviews = false }) {
 			{(postData.verb === 'sharePost' || postData.shareType === 'post') && !_.isEmpty(postData.sharePost) && (
 				<PostsShare postData={postData} />
 			)}
-			{postData.verb === 'shareGroupPost' && !_.isEmpty(postData.sharePost) && <PostsShare postData={postData} />}
+			{(postData.verb === 'shareGroupPost' || postData.shareType === 'groupPost') &&
+				!_.isEmpty(postData.sharePost) && <PostsShare postData={postData} />}
 			{postData?.image?.length > 0 && <GridImage images={postData.image} inPost={true} postId={postData.id} />}
 
 			{(postData?.image?.length === 0 &&

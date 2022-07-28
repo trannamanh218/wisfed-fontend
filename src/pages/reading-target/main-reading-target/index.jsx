@@ -29,8 +29,6 @@ import ShareTarget from 'shared/share-target';
 const MainReadingTarget = () => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
-	const [loalding, setLoalding] = useState(false);
-	const [getAreaPng, { ref: areaRef }] = useCurrentPng();
 	const { userId } = useParams();
 	const { userInfo } = useSelector(state => state.auth);
 	const { userData } = useFetchUserParams(userId);
@@ -39,7 +37,6 @@ const MainReadingTarget = () => {
 	const [inputSearch, setInputSearch] = useState('');
 	const [newArrSearch, setNewArrSearch] = useState([]);
 	const { booksReadYear, year, status } = useFetchTargetReading(userId, modalOpen, deleteModal);
-	const [modalShow, setModalShow] = useState(false);
 	const { ref: shareRef, isVisible: showShare, setIsVisible: setShowShare } = useVisible(false);
 
 	const renderLinearProgressBar = item => {
@@ -54,7 +51,7 @@ const MainReadingTarget = () => {
 
 	const handleEditTarget = () => {
 		setModalOpen(true);
-		// setDeleteModal(false);
+		setDeleteModal(false);
 	};
 
 	const handleDeleteTarget = () => {
