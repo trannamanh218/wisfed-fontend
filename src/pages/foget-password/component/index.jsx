@@ -16,6 +16,7 @@ function ForgetPassWordComponet() {
 			navigate('/');
 		}
 	}, []);
+
 	return (
 		<div className='forget__container'>
 			<div className='login__header'>
