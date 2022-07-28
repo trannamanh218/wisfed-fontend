@@ -18,10 +18,11 @@ const BookSlider = ({
 	handleViewBookDetail,
 	inCategory = false,
 	inCategoryDetail = false,
+	numberSlide,
 	...rest
 }) => {
 	const settingSlider = settings(inCategory, inCategoryDetail);
-
+	console.log(numberSlide);
 	return (
 		<div className='main'>
 			{!!list.length && (
@@ -98,14 +99,14 @@ function settings(inCategory, inCategoryDetail) {
 			{
 				breakpoint: 1025,
 				settings: {
-					slidesToShow: 1,
+					slidesToShow: inCategory ? 3 : 1,
 					slidesToScroll: 1,
 				},
 			},
 			{
 				breakpoint: 992,
 				settings: {
-					slidesToShow: 1,
+					slidesToShow: 2,
 					slidesToScroll: 1,
 				},
 			},
