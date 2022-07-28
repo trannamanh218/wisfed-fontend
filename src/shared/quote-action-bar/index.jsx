@@ -24,8 +24,6 @@ const QuoteActionBar = ({ data, isDetail, likeUnlikeQuoteFnc }) => {
 		}
 	};
 
-	console.log(data);
-
 	const handleCheckLoginLike = () => {
 		if (!Storage.getAccessToken()) {
 			dispatch(checkUserLogin(true));

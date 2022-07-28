@@ -247,7 +247,7 @@ function CreatPostModalContent({
 			image: [],
 			preview: urlPreviewData,
 			tags: [],
-			progress: checkProgress,
+			progress: checkProgress ? checkProgress : null,
 		};
 
 		params.mentionsUser = taggedData.addFriends.length ? taggedData.addFriends.map(item => item.id) : [];
@@ -273,7 +273,7 @@ function CreatPostModalContent({
 
 		return params;
 	};
-	console.log(postsData);
+
 	const handleUpdateProgress = async params => {
 		const { status, progress } = taggedData.addBook;
 		const convertProgress = parseInt(progress) || 0;
@@ -526,7 +526,6 @@ function CreatPostModalContent({
 				break;
 		}
 	};
-	console.log(postsData);
 
 	return (
 		<div className='creat-post-modal-content'>
