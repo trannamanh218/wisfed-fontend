@@ -133,7 +133,7 @@ const ConnectButtons = ({ direction, item }) => {
 			return buttonPendingFriend();
 		} else if (item.relation === 'unknown' && !item.friendRequest) {
 			return togglePendingFriend ? buttonAddFriend() : buttonPendingFriend();
-		} else if (item.friendRequest.type === 'requestToMe') {
+		} else if (item.friendRequest?.type === 'requestToMe') {
 			return toggleAcces ? buttonAcces() : buttonUnFriend();
 		}
 	};

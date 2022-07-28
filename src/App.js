@@ -12,7 +12,7 @@ import ConfirmMyBook from 'pages/confirm-my-book';
 import Notification from 'pages/notification/compornent-main';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import { checkLogin } from 'reducers/redux-utils/auth';
 import { ToastContainer } from 'react-toastify';
 import Login from 'pages/login';
@@ -45,11 +45,14 @@ import DetailFeed from 'pages/home/components/newfeed/components/detailFeed';
 import QuotesByCategory from 'pages/quotes-by-category';
 import UploadBook from 'pages/upload-book/UploadBook';
 import 'react-datepicker/dist/react-datepicker.css';
+import { changeKey } from 'reducers/redux-utils/forget-password';
 
 function App({ children }) {
 	const dispatch = useDispatch();
 	const updateMyLibrary = useSelector(state => state.library.updateMyLibrary);
 	const { routerLogin, userInfo } = useSelector(state => state.auth);
+
+	const location = useLocation();
 
 	useEffect(async () => {
 		const accsetToken = Storage.getAccessToken();
@@ -75,6 +78,12 @@ function App({ children }) {
 			NotificationError(err);
 		}
 	};
+
+	useEffect(() => {
+		if (location.pathname !== '/forget-password') {
+			dispatch(changeKey(false));
+		}
+	}, [location.pathname]);
 
 	return (
 		<div>
