@@ -90,11 +90,11 @@ const PopupCreateGroup = ({ handleClose, showRef }) => {
 		const imageUploadedData = await dispatch(uploadImage(acceptedFiles)).unwrap();
 		setImgUrl(imageUploadedData?.streamPath);
 	};
-
+	console.log(inputHashtag);
 	useEffect(() => {
 		document.getElementById('hashtag').addEventListener('keydown', e => {
-			if (e.keyCode === 32) {
-				dataRef.current = inputHashtag.trim();
+			if (e.keyCode === 32 && inputHashtag.includes('#')) {
+				dataRef.current = inputHashtag;
 				inputRefHashtag.current.value = '';
 			}
 		});
@@ -192,6 +192,7 @@ const PopupCreateGroup = ({ handleClose, showRef }) => {
 	useEffect(() => {
 		setKindOfGroup(kindOfGroupRef.current);
 	}, [kindOfGroupRef.current]);
+
 	const onInputChange = f => e => f(e.target.value);
 
 	const handleAddAuthors = e => {
@@ -271,11 +272,13 @@ const PopupCreateGroup = ({ handleClose, showRef }) => {
 			<div className='form-field-wrapper'>
 				<div className='form-field-name'>
 					<label>Tên nhóm</label>
+					<span style={{ color: 'red', marginLeft: '4px' }}>*</span>
 					<Input isBorder={false} placeholder='Tên nhóm' handleChange={onInputChange(setInputNameGroup)} />
 				</div>
 
 				<div className='form-field-select__kind-of-group'>
 					<label>Kiểu nội dung</label>
+					<span style={{ color: 'red', marginLeft: '4px' }}>*</span>
 					<SelectBox
 						name='kindofgroup'
 						list={listKindOfGroup}
@@ -286,6 +289,7 @@ const PopupCreateGroup = ({ handleClose, showRef }) => {
 				{kindOfGroup.value === 'book' && (
 					<div className='form-field-select__kind-of-group'>
 						<label>Chủ đề sách</label>
+						<span style={{ color: 'red', marginLeft: '4px' }}>*</span>
 						<SelectBox
 							name='categoryBook'
 							list={listIdBook}
@@ -297,6 +301,7 @@ const PopupCreateGroup = ({ handleClose, showRef }) => {
 
 				<div className='form-field-authors'>
 					<label>Tên tác giả</label>
+					<span style={{ color: 'red', marginLeft: '4px' }}>*</span>
 					<div className='list__author-tags'>
 						{listAuthors.length > 0 ? (
 							<div className='input__authors '>
@@ -349,6 +354,7 @@ const PopupCreateGroup = ({ handleClose, showRef }) => {
 				{kindOfGroup.value === 'book' && (
 					<div className='form-field-authors'>
 						<label>Tên sách</label>
+						<span style={{ color: 'red', marginLeft: '4px' }}>*</span>
 						<div className='list__author-tags'>
 							{listBookAdd.length > 0 ? (
 								<div className=' book-list'>
@@ -401,6 +407,7 @@ const PopupCreateGroup = ({ handleClose, showRef }) => {
 
 				<div className='form-field--discription'>
 					<label>Giới thiệu</label>
+					<span style={{ color: 'red', marginLeft: '4px' }}>*</span>
 					<textarea
 						ref={textArea}
 						className='form-field-textarea'
@@ -410,6 +417,7 @@ const PopupCreateGroup = ({ handleClose, showRef }) => {
 				</div>
 				<div className='form-field--hastag'>
 					<label>Hastag</label>
+					<span style={{ color: 'red', marginLeft: '4px' }}>*</span>
 					<div className='list__author-tags'>
 						{listHashtags.length > 0 && (
 							<div className='input__authors'>

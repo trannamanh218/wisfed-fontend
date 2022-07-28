@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import { useRef } from 'react';
 import SearchIcon from 'assets/icons/search.svg';
 import PropTypes from 'prop-types';
 import './search-field.scss';

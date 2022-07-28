@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
-	LogoIcon,
+	LogoFull,
 	BookFillIcon,
 	BookIcon,
 	CategoryIcon,
@@ -14,6 +14,8 @@ import {
 	FriendsFillIcon,
 	FriendsIcon,
 	CategoryFillIcon,
+	LogoNonText,
+	Hamburger,
 } from 'components/svg';
 import SearchIcon from 'assets/icons/search.svg';
 import classNames from 'classnames';
@@ -200,9 +202,16 @@ const Header = () => {
 	return (
 		<div className='header'>
 			<div className='header__left'>
-				<Link to='/' onClick={onClickReloadPosts}>
-					<LogoIcon className='header__logo' />
-				</Link>
+				<div className='header-logo-big'>
+					<Link to='/' onClick={onClickReloadPosts}>
+						<LogoFull className='header__logo' />
+					</Link>
+				</div>
+				<div className='header-logo-small'>
+					<Link to='/' onClick={onClickReloadPosts}>
+						<LogoNonText className='header__logo' />
+					</Link>
+				</div>
 				<div className='header__search'>
 					<img className='header__search__icon' src={SearchIcon} alt='search-icon' />
 					<input
@@ -241,7 +250,6 @@ const Header = () => {
 					className={classNames('header__nav__item', { active: activeLink === '/category' })}
 				>
 					<Link className='header__nav__link' to={userLogin && '/category'}>
-						{/* <CategoryIcon className='header__nav__icon' /> */}
 						{activeLink === '/category' ? <CategoryFillIcon /> : <CategoryIcon />}
 					</Link>
 				</li>

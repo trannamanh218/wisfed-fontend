@@ -1,44 +1,21 @@
 import { CloseX } from 'components/svg';
 import PropTypes from 'prop-types';
-import React from 'react';
 import { Modal } from 'react-bootstrap';
 import './modalUnfriend.scss';
 import Button from 'shared/button';
 
-const ModalUnFriend = ({ setModalUnfriends, toggleModalUnFriends, handleUnfriend, list, getListFollower }) => {
-	const toggleModal = () => {
-		setModalUnfriends(!toggleModalUnFriends);
-	};
-	const renderName = () => {
-		if (getListFollower) {
-			return list.userOne.fullName ? (
-				list.userOne.fullName
-			) : (
-				<>
-					<span>{list.userOne.firstName}</span>&nbsp;
-					<span>{list.userOne.lastName}</span>
-				</>
-			);
-		} else {
-			return list.userTwo?.fullName ? (
-				list.userTwo?.fullName
-			) : (
-				<>
-					<span>{list.userTwo?.firstName}</span>&nbsp;
-					<span>{list.userTwo?.lastName}</span>
-				</>
-			);
-		}
-	};
+const ModalUnFriend = ({ showModalUnfriends, toggleModal, handleUnfriend, data }) => {
 	return (
-		<Modal className='friends__unFriends__container' show={true} onHide={toggleModal}>
+		<Modal className='friends__unFriends__container' show={showModalUnfriends} onHide={toggleModal}>
 			<Modal.Body>
 				<div className='friends__unFriend__close'>
 					<CloseX onClick={toggleModal} />
 				</div>
 				<div className='friends__unFriend__content'>Xác nhận hủy kết bạn</div>
 				<div className='friends__unFriend__title'>
-					Bạn có chắc chắn muốn xóa {renderName()} khỏi danh sách bạn bè không?
+					Bạn có chắc chắn muốn xóa{' '}
+					<span style={{ fontWeight: '700' }}>{data.fullName || data.firstName + ' ' + data.lastName}</span>{' '}
+					khỏi danh sách bạn bè không?
 				</div>
 				<div className='friends__unFriend__main'>
 					<Button
@@ -62,7 +39,7 @@ ModalUnFriend.propTypes = {
 	setModalUnfriends: PropTypes.func,
 	toggleModalUnFriends: PropTypes.bool,
 	handleUnfriend: PropTypes.func,
-	list: PropTypes.object,
-	getListFollower: PropTypes.array,
+	data: PropTypes.object,
 };
+
 export default ModalUnFriend;

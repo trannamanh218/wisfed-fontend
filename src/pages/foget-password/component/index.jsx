@@ -1,4 +1,3 @@
-import React from 'react';
 import Logo from 'assets/images/Logo 2.png';
 import '../forget-password.scss';
 import ImgForget from 'assets/images/quen-mk 1.png';

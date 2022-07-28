@@ -19,6 +19,7 @@ function CreatePost({ onChangeNewPost }) {
 	const location = useLocation();
 	const { postsData } = useSelector(state => state.post);
 	const { updateImgPost } = useSelector(state => state.chart);
+
 	const {
 		auth: { userInfo },
 		book: { bookForCreatePost },

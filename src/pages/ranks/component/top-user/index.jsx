@@ -15,7 +15,7 @@ import Storage from 'helpers/Storage';
 import { saveDataShare, sharePostsAll } from 'reducers/redux-utils/post';
 import { useNavigate } from 'react-router-dom';
 
-const TopUser = ({ rows, listYear }) => {
+const TopUser = ({ rows, listYear, tabSelected }) => {
 	const kindOfGroupRef = useRef({ value: 'default', name: 'Văn Học' });
 	const listYearRef = useRef({ value: 'default', title: 'Tuần' });
 	const listRead = useRef({ value: 'default', title: 'Đọc nhiều nhất' });
@@ -66,8 +66,10 @@ const TopUser = ({ rows, listYear }) => {
 	};
 
 	useEffect(() => {
-		getTopUserData();
-	}, [topUserFilter, valueDate, valueDataSort, isAuth]);
+		if (tabSelected === 'User') {
+			getTopUserData();
+		}
+	}, [topUserFilter, valueDate, valueDataSort, isAuth, tabSelected]);
 
 	const onchangeKindOfGroup = data => {
 		kindOfGroupRef.current = data;
@@ -165,6 +167,7 @@ const TopUser = ({ rows, listYear }) => {
 TopUser.propTypes = {
 	rows: PropTypes.array,
 	listYear: PropTypes.array,
+	tabSelected: PropTypes.string,
 };
 
 export default TopUser;

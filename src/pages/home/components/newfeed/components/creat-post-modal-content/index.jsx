@@ -4,7 +4,7 @@ import { CloseX, Image, IconRanks } from 'components/svg';
 import { STATUS_IDLE, STATUS_LOADING, STATUS_SUCCESS } from 'constants';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
-import { useEffect, useRef, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { createActivity } from 'reducers/redux-utils/activity';
@@ -35,6 +35,7 @@ import Post from 'shared/post';
 import AuthorBook from 'shared/author-book';
 import ShareUsers from '../modal-share-users';
 import RichTextEditor from 'shared/rich-text-editor';
+import ShareTarget from 'shared/share-target';
 
 const urlRegex =
 	/https?:\/\/www(\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/g;
@@ -66,6 +67,7 @@ function CreatPostModalContent({
 	const [showUpload, setShowUpload] = useState(false);
 	const [imagesUpload, setImagesUpload] = useState([]);
 	const [validationInput, setValidationInput] = useState('');
+
 	const dispatch = useDispatch();
 
 	const taggedDataPrevious = usePrevious(taggedData);
@@ -77,7 +79,9 @@ function CreatPostModalContent({
 
 	const location = useLocation();
 	const UpdateImg = useSelector(state => state.chart.updateImgPost);
-	const { resetTaggedData, isShare, postsData, isSharePosts, isSharePostsAll } = useSelector(state => state.post);
+	const { resetTaggedData, isShare, postsData, isSharePosts, isSharePostsAll, isShareTarget } = useSelector(
+		state => state.post
+	);
 	const { id } = useParams();
 	const {
 		auth: { userInfo },
@@ -86,6 +90,14 @@ function CreatPostModalContent({
 	const { optionList } = setting;
 
 	useEffect(() => {
+		const textFieldEdit = document.querySelector('.creat-post-modal-content__main__body__text-field-edit-wrapper');
+		const editor = textFieldEdit.querySelector('.public-DraftEditor-content');
+		if (editor) {
+			setTimeout(() => {
+				editor.focus();
+			}, 200);
+		}
+
 		if (UpdateImg.length > 0) {
 			setShowUpload(true);
 			setImagesUpload(UpdateImg);
@@ -148,30 +160,14 @@ function CreatPostModalContent({
 	};
 
 	const addOptionsToPost = param => {
-		if (isShare || isSharePosts || isSharePostsAll.length > 0) {
-			return;
-		} else {
-			if (imagesUpload.length > 0 && param.value === 'addBook') {
-				const customId = 'custom-id-CreatPostModalContent-addOptionsToPost';
-				toast.warning('Không thể kết hợp đồng thời thêm ảnh và sách', { toastId: customId });
-			} else {
-				onChangeOption(param);
-				setShowMainModal(false);
-			}
-		}
+		onChangeOption(param);
+		setShowMainModal(false);
 	};
 
 	const handleOpenUploadImage = () => {
-		if (isShare || isSharePosts || isSharePostsAll.length > 0) {
-			return;
-		} else {
-			if (_.isEmpty(taggedData.addBook)) {
-				setShowUpload(!showUpload);
-				addOptionsToPost({ value: 'addImages', title: 'chỉnh sửa ảnh', icon: <Image />, message: '' });
-			} else {
-				const customId = 'custom-id-CreatPostModalContent-handleOpenUploadImage';
-				toast.warning('Không thể kết hợp đồng thời thêm ảnh và sách', { toastId: customId });
-			}
+		if (!imagesUpload.length) {
+			setShowUpload(true);
+			addOptionsToPost({ value: 'addImages', title: 'chỉnh sửa ảnh', icon: <Image />, message: '' });
 		}
 	};
 
@@ -190,6 +186,17 @@ function CreatPostModalContent({
 		setShowUpload(false);
 	};
 
+	const limitedOption = () => {
+		switch (option.value) {
+			case 'addAuthor':
+				return 'tác giả';
+			case 'addCategory':
+				return 'chủ đề';
+			default:
+				return '';
+		}
+	};
+	const limitedValue = 5;
 	const handleAddToPost = data => {
 		const newData = { ...taggedData };
 		setCheckProgress(Number(data.progress));
@@ -198,7 +205,17 @@ function CreatPostModalContent({
 			const lastItem = listData[listData.length - 1];
 			if (!listData.length || (!_.isEmpty(lastItem) && lastItem.id !== data.id)) {
 				if (!listData.includes(data)) {
-					listData.push(data);
+					if (option.value === 'addFriends' || listData.length < limitedValue) {
+						listData.push(data);
+					} else {
+						const customId = 'custom-id-handleAddToPost-addAuthor';
+						toast.warning(
+							`Chỉ được chọn tối đa ${limitedValue} ${limitedOption()} trong 1 lần tạo bài viết`,
+							{
+								toastId: customId,
+							}
+						);
+					}
 				}
 			}
 			newData[option.value] = listData;
@@ -230,6 +247,7 @@ function CreatPostModalContent({
 			image: [],
 			preview: urlPreviewData,
 			tags: [],
+			progress: checkProgress ? checkProgress : null,
 		};
 
 		params.mentionsUser = taggedData.addFriends.length ? taggedData.addFriends.map(item => item.id) : [];
@@ -550,15 +568,15 @@ function CreatPostModalContent({
 										<>
 											<span className='d-inline-block mx-1'>cùng với</span>
 											{taggedData.addFriends.map((item, index) => (
-												<>
+												<Fragment key={item.id}>
 													{index !== 0 && <span>{' và '}</span>}
-													<span key={item.id}>
+													<span>
 														{item.fullName ||
 															item.lastName ||
 															item.firstName ||
 															'Không xác định'}
 													</span>
-												</>
+												</Fragment>
 											))}
 										</>
 									)}
@@ -633,6 +651,7 @@ function CreatPostModalContent({
 								</div>
 							)}
 							{isSharePostsAll === 'shareTopUser' && <ShareUsers postsData={postsData} />}
+							{postsData.booksReadCount > 0 && <ShareTarget postsData={postsData} />}
 
 							{!_.isEmpty(taggedData.addBook) || showUpload ? (
 								<>
@@ -652,6 +671,8 @@ function CreatPostModalContent({
 											images={imagesUpload}
 											setImages={setImagesUpload}
 											removeAllImages={removeAllImages}
+											maxFiles={100}
+											maxSize={104857600}
 										/>
 									)}
 								</>

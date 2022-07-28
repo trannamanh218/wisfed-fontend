@@ -7,7 +7,6 @@ import SearchCategory from './SearchCategory';
 import { STATUS_LOADING } from 'constants';
 import Circle from 'shared/loading/circle';
 import SearchIcon from 'assets/icons/search.svg';
-import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import './main-category.scss';
 import { getCategoryList } from 'reducers/redux-utils/category';
@@ -85,7 +84,7 @@ const MainCategory = ({ status, handleViewBookDetail, viewCategoryDetail }) => {
 			<Circle loading={status === STATUS_LOADING} />
 			<h4>Tất cả chủ đề</h4>
 			<div className='main-category__container'>
-				<div className={classNames('search-field')}>
+				<div className='search-field'>
 					<img className='search-field__icon' src={SearchIcon} alt='search-icon' />
 					<input className='search-field__input' placeholder='Tìm kiếm chủ đề' onChange={updateInputSearch} />
 				</div>

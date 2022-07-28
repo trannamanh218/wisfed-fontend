@@ -1,10 +1,11 @@
 .myfriends__container {
 	background: #ffffff;
 	border-radius: 16px;
-	min-height: 100vh;
+	height: fit-content;
 	font-family: 'Montserrat';
 	font-style: normal;
-	padding-top: 22px;
+	padding: 24px;
+	margin-bottom: 32px;
 	.myfriends__container__content {
 		display: flex;
 		align-items: center;

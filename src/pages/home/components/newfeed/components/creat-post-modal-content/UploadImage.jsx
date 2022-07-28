@@ -5,16 +5,37 @@ import { CloseX, Image, Pencil } from 'components/svg';
 import _ from 'lodash';
 import './style.scss';
 import GridImage from 'shared/grid-image';
+import { toast } from 'react-toastify';
 
 const UploadImage = props => {
-	const { addOptionsToPost, images, setImages, removeAllImages } = props;
+	const { addOptionsToPost, images, setImages, removeAllImages, maxFiles, maxSize } = props;
 
 	const onDrop = useCallback(acceptedFiles => {
 		if (!_.isEmpty(acceptedFiles)) {
 			const newArrayFile = [...images, ...acceptedFiles];
-			setImages(newArrayFile);
+			// Get files size
+			let imagesSize = 0;
+			for (let i = 0; i < newArrayFile.length; i++) {
+				imagesSize += newArrayFile[i].size;
+			}
+			// Cảnh báo nếu đăng quá nhiều ảnh
+			if (newArrayFile.length > maxFiles || imagesSize > maxSize) {
+				warningLimited();
+			} else {
+				setImages(newArrayFile);
+			}
 		}
 	});
+
+	const warningLimited = () => {
+		const customId = 'custom-id-UploadImage';
+		toast.warning(
+			`Chỉ được đăng tối đa ${maxFiles} ảnh hoặc tổng dung lượng không quá ${Math.floor(maxSize / 1048576)} MB`,
+			{
+				toastId: customId,
+			}
+		);
+	};
 
 	const { getRootProps, getInputProps } = useDropzone({
 		accept: 'image/*',
@@ -81,6 +102,11 @@ const UploadImage = props => {
 	);
 };
 
+UploadImage.defaultProps = {
+	maxFiles: Infinity,
+	maxSize: Infinity,
+};
+
 UploadImage.propTypes = {
 	taggedData: PropTypes.object,
 	handleAddToPost: PropTypes.func,
@@ -88,6 +114,8 @@ UploadImage.propTypes = {
 	setImages: PropTypes.func,
 	images: PropTypes.array,
 	removeAllImages: PropTypes.func,
+	maxFiles: PropTypes.number,
+	maxSize: PropTypes.number,
 };
 
 export default UploadImage;

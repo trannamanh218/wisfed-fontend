@@ -166,9 +166,10 @@
 	margin-right: 20px;
 }
 .wants-to-read__thumbnail img {
-	// max-width: 108px;
-	max-width: 162px;
-	max-height: 162px;
+	width: 108px;
+	height: 162px;
+	object-fit: cover;
+	border-radius: 8px;
 }
 .sidebar__block__content {
 	.slick-arrow {

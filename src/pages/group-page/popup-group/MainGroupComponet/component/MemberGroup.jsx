@@ -1,5 +1,5 @@
 // import { MoreIcon } from 'components/svg';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import './memmber-group.scss';
 import PropTypes from 'prop-types';
 import { makeFriendRequest, addFollower, unFollower, unFriendRequest } from 'reducers/redux-utils/user';
@@ -13,7 +13,7 @@ function MemberGroup() {
 	const [listFriend, setListFriend] = useState([]);
 	const [listFolow, setListFolow] = useState([]);
 	const dispatch = useDispatch();
-	const { id = '' } = useParams();
+	const { id } = useParams();
 	const [memberGroups, setMemberGroups] = useState([]);
 	const [isCallApi, setIsCallApi] = useState(false);
 
@@ -22,7 +22,7 @@ function MemberGroup() {
 			const actionGetList = await dispatch(getMember(id)).unwrap();
 			setMemberGroups(actionGetList);
 		} catch (err) {
-			// NotificationError(err);
+			NotificationError(err);
 		}
 	};
 
@@ -60,10 +60,7 @@ function MemberGroup() {
 
 	const handleFollow = item => {
 		try {
-			const param = {
-				data: { userId: item.id },
-			};
-			dispatch(addFollower(param)).unwrap();
+			dispatch(addFollower({ userId: item.id }));
 			setIsCallApi(!isCallApi);
 		} catch (err) {
 			NotificationError(err);

@@ -12,7 +12,7 @@ import { likeAndUnlikeCommentPost } from 'reducers/redux-utils/activity';
 import { likeAndUnlikeCommentReview } from 'reducers/redux-utils/book';
 import { POST_TYPE, QUOTE_TYPE, REVIEW_TYPE } from 'constants';
 import { Link, useNavigate } from 'react-router-dom';
-import { Like } from 'components/svg';
+import { LikeComment } from 'components/svg';
 
 const urlRegex =
 	/https?:\/\/www(\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/g;
@@ -25,8 +25,8 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
-	const handleLikeUnlikeCmt = async paramData => {
-		const newCloneData = paramData;
+	const handleLikeUnlikeCmt = async () => {
+		const newCloneData = { ...data };
 		if (isLiked) {
 			newCloneData.like -= 1;
 			setData(newCloneData);
@@ -37,11 +37,11 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 
 		try {
 			if (type === POST_TYPE) {
-				dispatch(likeAndUnlikeCommentPost(paramData.id));
+				await dispatch(likeAndUnlikeCommentPost(data.id));
 			} else if (type === QUOTE_TYPE) {
-				dispatch(likeQuoteComment(paramData.id));
+				await dispatch(likeQuoteComment(data.id));
 			} else if (type === REVIEW_TYPE) {
-				dispatch(likeAndUnlikeCommentReview(paramData.id));
+				await dispatch(likeAndUnlikeCommentReview(data.id));
 			}
 			setIsLiked(!isLiked);
 		} catch (err) {
@@ -84,19 +84,15 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 			<UserAvatar
 				className='comment__avatar'
 				size='sm'
-				source={data.user?.avatarImage ? data.user?.avatarImage : data['user.avatarImage']}
+				source={data.user?.avatarImage}
 				handleClick={() => navigate(`/profile/${data.createdBy}`)}
 			/>
 			<div className='comment__wrapper'>
 				<div className='comment__container'>
 					<div className='comment__header'>
-						<Link to={`/profile/${data.user.id}`}>
+						<Link to={`/profile/${data.user?.id}`}>
 							<span className='comment__author'>
-								{data.user.name ||
-									data.user.fullName ||
-									data.user.lastName ||
-									data.user.firstName ||
-									'Không xác định'}
+								{data.user?.fullName || data.user?.lastName || data.user?.firstName || 'Không xác định'}
 							</span>
 						</Link>
 
@@ -116,9 +112,8 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 					)}
 					{data.like !== 0 ? (
 						<div className='cmt-like-number'>
-							<div className='icon-like'>
-								<Like />
-							</div>
+							<LikeComment />
+
 							{data.like}
 						</div>
 					) : null}
@@ -129,7 +124,7 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 						className={classNames('comment__item', {
 							'liked': isLiked,
 						})}
-						onClick={() => handleLikeUnlikeCmt(data)}
+						onClick={() => handleLikeUnlikeCmt()}
 					>
 						Thích
 					</li>

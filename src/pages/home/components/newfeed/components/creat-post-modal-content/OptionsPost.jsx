@@ -3,6 +3,7 @@ import classNames from 'classnames';
 import _ from 'lodash';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
+
 const OptionsPost = ({ list, addOptionsToPost, taggedData, images }) => {
 	const { isShare } = useSelector(state => state.post);
 	const [itemOnMouseHover, setItemOnMouseHover] = useState(null);
@@ -17,9 +18,6 @@ const OptionsPost = ({ list, addOptionsToPost, taggedData, images }) => {
 		} else {
 			if (item.value === 'addBook') {
 				isActive = _.isEmpty(taggedData[item.value]) === true ? false : true;
-				if (images.length > 0) {
-					isDisabled = true;
-				}
 			} else {
 				isActive = taggedData[item.value].length > 0 ? true : false;
 			}

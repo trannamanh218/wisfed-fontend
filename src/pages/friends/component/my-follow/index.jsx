@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import FriendsItem from 'shared/friends';
 import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
@@ -45,7 +45,7 @@ const MyFollow = ({ activeTabs }) => {
 			</div>
 			<div className='myfriends__layout__container'>
 				{getListFollower.map(item => (
-					<FriendsItem key={item.id} list={item} keyTabs={activeTabs} getListFollower={getListFollower} />
+					<FriendsItem key={item.id} data={item} keyTabs={activeTabs} getListFollower={getListFollower} />
 				))}
 			</div>
 			<div className='myfriends__line'></div>
@@ -59,13 +59,15 @@ const MyFollow = ({ activeTabs }) => {
 			</div>
 			<div className='myfriends__layout__container'>
 				{getListFollowings.map(item => (
-					<FriendsItem key={item.id} list={item} keyTabs={activeTabs} getListFollowings={getListFollowings} />
+					<FriendsItem key={item.id} data={item} keyTabs={activeTabs} getListFollowings={getListFollowings} />
 				))}
 			</div>
 		</div>
 	);
 };
+
 MyFollow.propTypes = {
 	activeTabs: PropTypes.string,
 };
+
 export default MyFollow;

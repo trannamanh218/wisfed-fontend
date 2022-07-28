@@ -100,7 +100,7 @@ function App({ children }) {
 			/>
 			<ModalCheckLogin routerLogin={routerLogin} />
 			<Routes>
-				<Route path='/upload-book/:userId' element={<UploadBook />} />
+				<Route path='/upload-book/' element={<UploadBook />} />
 				<Route path='/top100' element={<Ranks />} />
 				<Route path='/detail-feed/:type/:idPost' element={<DetailFeed />} />
 				<Route path='/books-author/:userId' element={<BooksAuthor />} />

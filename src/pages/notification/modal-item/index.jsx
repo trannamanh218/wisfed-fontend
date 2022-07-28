@@ -12,17 +12,12 @@ import PropTypes from 'prop-types';
 import { addFollower } from 'reducers/redux-utils/user';
 import { useSelector } from 'react-redux';
 import { handleSaveUpdate } from 'reducers/redux-utils/user';
+
 const ModalItem = ({ item, setModalNotti, getNotifications, setGetNotifications, selectKey }) => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	const { userInfo } = useSelector(state => state.auth);
 	const { isreload } = useSelector(state => state.user);
-	const addFollow = items => {
-		const param = {
-			data: { userId: items.actor },
-		};
-		dispatch(addFollower(param)).unwrap();
-	};
 
 	const ReplyFriendReq = async (data, items) => {
 		try {
@@ -42,7 +37,7 @@ const ModalItem = ({ item, setModalNotti, getNotifications, setGetNotifications,
 			await dispatch(ReplyFriendRequest(params)).unwrap();
 			await dispatch(readNotification({ notificationId: items.id })).unwrap();
 			await dispatch(handleSaveUpdate(!isreload));
-			addFollow(items);
+			dispatch(addFollower({ userId: items.actor }));
 		} catch (err) {
 			NotificationError(err);
 		}
@@ -103,6 +98,10 @@ const ModalItem = ({ item, setModalNotti, getNotifications, setGetNotifications,
 			navigate(`/detail-feed/${'mini-post'}/${items.originId.minipostId}`);
 		} else if (items.verb === 'likeQuote') {
 			navigate(`/quotes/detail/${items.originId.quoteId}`);
+		} else if (item.verb === 'likeCommentReview') {
+			navigate(`/detail-feed/${'mini-post'}/${items.originId.minipostId}`);
+		} else if (item.verb === 'requestGroup') {
+			navigate(`/group/${items.originId.groupId}`);
 		}
 		dispatch(backgroundToggle(true));
 		setModalNotti(false);
@@ -126,6 +125,7 @@ const ModalItem = ({ item, setModalNotti, getNotifications, setGetNotifications,
 							item.verb !== 'requestGroup' &&
 							item.verb !== 'commentGroupPost' &&
 							item.verb !== 'commentQuote' &&
+							item.verb !== 'inviteGroup' &&
 							item.verb !== 'mention' && (
 								<>
 									<span>

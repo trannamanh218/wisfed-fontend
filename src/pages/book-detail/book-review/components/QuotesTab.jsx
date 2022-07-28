@@ -142,8 +142,6 @@ const QuotesTab = ({ currentTab }) => {
 				setPropertySort('like');
 				setDirectionSort('DESC');
 				break;
-			default:
-			//
 		}
 	};
 

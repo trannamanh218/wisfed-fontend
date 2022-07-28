@@ -3,29 +3,20 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import PropTypes from 'prop-types';
 import ResultNotFound from '../result-not-found';
 import defaultAvatar from 'assets/images/avatar.jpeg';
-// import Button from 'shared/button';
-// import LoadingIndicator from 'shared/loading-indicator';
 import { getFilterSearch } from 'reducers/redux-utils/search';
 import { NotificationError } from 'helpers/Error';
 import { useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-
 import ConnectButtonsSearch from './ConnectButtonsSearch';
 import { Link } from 'react-router-dom';
 
-const UsersSearch = ({
-	isFetching,
-	value,
-
-	setIsFetching,
-	searchResultInput,
-	activeKeyDefault,
-	updateBooks,
-}) => {
+const UsersSearch = ({ isFetching, value, setIsFetching, searchResultInput, activeKeyDefault, updateBooks }) => {
 	const [listArrayUsers, setListArrayUsers] = useState([]);
 	const { isShowModal } = useSelector(state => state.search);
 	const [hasMore, setHasMore] = useState(true);
+
 	const dispatch = useDispatch();
+
 	const callApiStart = useRef(0);
 	const callApiPerPage = useRef(10);
 
@@ -64,6 +55,10 @@ const UsersSearch = ({
 			} else {
 				setHasMore(false);
 			}
+			// Nếu kết quả tìm kiếm nhỏ hơn limit thì disable gọi api khi scroll
+			if (result.rows.length < params.limit) {
+				setHasMore(false);
+			}
 		} catch (err) {
 			NotificationError(err);
 		} finally {
@@ -74,47 +69,45 @@ const UsersSearch = ({
 	return (
 		<div className='user__search__container'>
 			{listArrayUsers?.length > 0 && activeKeyDefault === 'users' ? (
-				<InfiniteScroll
-					next={handleGetUserSearch}
-					dataLength={listArrayUsers.length}
-					hasMore={hasMore}
-					// loader={<LoadingIndicator />}
-				>
-					<div className='myfriends__layout__container'>
-						{listArrayUsers.map(item => (
-							<div key={item.id} className='myfriends__layout'>
-								<Link to={`/profile/${item.id}`}>
-									<img
-										className='myfriends__layout__img'
-										src={item.avatarImage ? item.avatarImage : defaultAvatar}
-										alt=''
-									/>
-									<div className='myfriends__star'>
-										<div className='myfriends__star__name'>
-											{item.fullName ? (
-												item.fullName
-											) : (
-												<>
-													<span>{item.firstName}</span>&nbsp;
-													<span>{item.lastName}</span>
-												</>
-											)}
+				<>
+					<InfiniteScroll next={handleGetUserSearch} dataLength={listArrayUsers.length} hasMore={hasMore}>
+						<div className='myfriends__layout__container'>
+							{listArrayUsers.map(item => (
+								<div key={item.id} className='myfriends__layout'>
+									<Link to={`/profile/${item.id}`}>
+										<img
+											className='myfriends__layout__img'
+											src={item.avatarImage ? item.avatarImage : defaultAvatar}
+											alt=''
+										/>
+										<div className='myfriends__star'>
+											<div className='myfriends__star__name'>
+												{item.fullName ? (
+													item.fullName
+												) : (
+													<>
+														<span>{item.firstName}</span>&nbsp;
+														<span>{item.lastName}</span>
+													</>
+												)}
+											</div>
 										</div>
+									</Link>
+									<div className='myfriends__button__container'>
+										<ConnectButtonsSearch item={item} />
 									</div>
-								</Link>
-								<div className='myfriends__button__container'>
-									<ConnectButtonsSearch item={item} />
 								</div>
-							</div>
-						))}
-					</div>
-				</InfiniteScroll>
+							))}
+						</div>
+					</InfiniteScroll>
+				</>
 			) : (
 				isFetching === false && <ResultNotFound />
 			)}
 		</div>
 	);
 };
+
 UsersSearch.propTypes = {
 	setIsFetching: PropTypes.func,
 	activeKeyDefault: PropTypes.string,
@@ -123,4 +116,5 @@ UsersSearch.propTypes = {
 	updateBooks: PropTypes.bool,
 	isFetching: PropTypes.bool,
 };
+
 export default UsersSearch;

@@ -61,6 +61,7 @@ const Sidebar = () => {
 			{!_.isEmpty(userInfo) && <RenderProgress userIdParams={userInfo?.id} />}
 
 			{wantToReadList.length > 0 && !_.isEmpty(userInfo) && <TheBooksWantsToRead list={wantToReadList} />}
+
 			<div className='sidebar__block'>
 				<h4 className='sidebar__block__title'>Quotes</h4>
 				{!_.isEmpty(quoteRandom) ? (

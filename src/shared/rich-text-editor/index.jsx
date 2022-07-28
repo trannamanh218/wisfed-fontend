@@ -24,6 +24,7 @@ const generatePlugins = () => {
 		MentionSuggestions,
 	};
 };
+
 function RichTextEditor({
 	content,
 	setContent,
@@ -33,11 +34,13 @@ function RichTextEditor({
 	handleKeyBind,
 	handleKeyPress,
 	className,
-	clickReply,
 	createCmt,
 	mentionUsersArr,
 	setMentionUsersArr,
 	hasUrl,
+	commentLv1Id,
+	replyingCommentId,
+	clickReply,
 }) {
 	const [editorState, setEditorState] = useState(EditorState.createEmpty());
 	const [open, setOpen] = useState(false);
@@ -50,20 +53,21 @@ function RichTextEditor({
 		};
 	});
 
-	const userInfo = useSelector(state => state.auth.userInfo);
 	const editor = useRef(null);
+
+	const userInfo = useSelector(state => state.auth.userInfo);
+	const checkReplyToMe = useSelector(state => state.comment.checkReplyToMe);
+
 	const dispatch = useDispatch();
 
 	useEffect(() => {
-		if (clickReply && mentionUsersArr.length > 0) {
+		if (replyingCommentId === commentLv1Id) {
 			reply();
-		}
-		if (editor.current && clickReply) {
 			setTimeout(() => {
 				editor.current.focus();
 			}, 200);
 		}
-	}, [editor.current, clickReply]);
+	}, [clickReply]);
 
 	useEffect(() => {
 		if (content && hasMentionsUser) {
@@ -73,7 +77,7 @@ function RichTextEditor({
 
 	useEffect(() => {
 		const editorStateRaws = convertToRaw(editorState.getCurrentContent());
-		const textValue = editorStateRaws.blocks.map(block => (!block.text.trim() && '\n') || block.text).join('\n');
+		const textValue = editorStateRaws.blocks[0].text;
 		const urlDetected = extractLinks(textValue);
 		if (urlDetected && urlDetected.length) {
 			detectUrl(urlDetected);
@@ -82,11 +86,20 @@ function RichTextEditor({
 				detectUrl('');
 			}
 		}
-		const html = convertContentToHTML();
-		setContent(html);
-		const entytiMap = editorStateRaws.entityMap;
-		const newArr = Object.keys(entytiMap).map(key => entytiMap[key].data.mention);
-		setMentionUsersArr(newArr);
+		if (textValue.length) {
+			const html = convertContentToHTML();
+			setContent(html);
+		}
+
+		// tags mention user khi nhan @
+		if (!checkReplyToMe) {
+			const editorStateRaws = convertToRaw(editorState.getCurrentContent());
+			const entytiMap = editorStateRaws.entityMap;
+			const newArr = Object.keys(entytiMap).map(key => entytiMap[key].data.mention);
+			setMentionUsersArr(newArr);
+		} else {
+			setMentionUsersArr([]);
+		}
 	}, [editorState]);
 
 	const convertContentToHTML = () => {
@@ -124,7 +137,7 @@ function RichTextEditor({
 			} else {
 				setUrlAdded('');
 			}
-		}, 300),
+		}, 200),
 		[]
 	);
 
@@ -171,11 +184,11 @@ function RichTextEditor({
 	};
 
 	const reply = () => {
-		if (mentionUsersArr.length > 0) {
-			const data = {
+		let data = {};
+		if (mentionUsersArr.length) {
+			data = {
 				'blocks': [
 					{
-						'key': 'cvdfd',
 						'text': `${mentionUsersArr[0].name} `,
 						'type': 'unstyled',
 						'depth': 0,
@@ -205,9 +218,23 @@ function RichTextEditor({
 					},
 				},
 			};
-			const contentState = convertFromRaw(data);
-			setEditorState(EditorState.createWithContent(contentState));
+		} else {
+			data = {
+				'blocks': [
+					{
+						'text': '',
+						'type': 'unstyled',
+						'depth': 0,
+						'inlineStyleRanges': [],
+						'entityRanges': [],
+						'data': {},
+					},
+				],
+				'entityMap': {},
+			};
 		}
+		const contentState = convertFromRaw(data);
+		setEditorState(EditorState.createWithContent(contentState));
 	};
 
 	return (
@@ -248,6 +275,8 @@ RichTextEditor.defaultProps = {
 	createCmt: false,
 	mentionUsersArr: [],
 	setMentionUsersArr: () => {},
+	commentLv1Id: null,
+	replyingCommentId: -1,
 };
 
 RichTextEditor.propTypes = {
@@ -260,9 +289,12 @@ RichTextEditor.propTypes = {
 	handleKeyPress: PropTypes.func,
 	className: PropTypes.string,
 	clickReply: PropTypes.bool,
+	commentLv1Id: PropTypes.number,
+	replyingCommentId: PropTypes.number,
 	createCmt: PropTypes.bool,
 	mentionUsersArr: PropTypes.array,
 	setMentionUsersArr: PropTypes.func,
+	hasUrl: PropTypes.bool,
 };
 
 export default RichTextEditor;

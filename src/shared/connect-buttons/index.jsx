@@ -6,8 +6,7 @@ import './connect-buttons.scss';
 import { makeFriendRequest, addFollower, unFollower, unFriendRequest } from 'reducers/redux-utils/user';
 import { useDispatch } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
-import ModalItem from 'pages/notification/modal-item';
-import { ReplyFriendRequest, CancelFriendRequest } from 'reducers/redux-utils/user';
+import { ReplyFriendRequest } from 'reducers/redux-utils/user';
 
 const ConnectButtons = ({ direction, item }) => {
 	const dispatch = useDispatch();
@@ -98,10 +97,7 @@ const ConnectButtons = ({ direction, item }) => {
 
 	const handleFollow = () => {
 		try {
-			const param = {
-				data: { userId: item.id },
-			};
-			dispatch(addFollower(param)).unwrap();
+			dispatch(addFollower({ userId: item.id }));
 			setToggleAddFollow(false);
 			setToggleUnFollow(true);
 		} catch (err) {

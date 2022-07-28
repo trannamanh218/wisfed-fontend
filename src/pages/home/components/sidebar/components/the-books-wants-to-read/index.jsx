@@ -1,8 +1,9 @@
 import Slider from 'react-slick';
 import SlideSettings from './wants-to-read-slide-settings';
 import PropTypes from 'prop-types';
-import { useNavigate } from 'react-router-dom';
-
+import { useNavigate, Link } from 'react-router-dom';
+import { Row, Col } from 'react-bootstrap';
+import bookImage from 'assets/images/default-book.png';
 function TheBooksWantsToRead(props) {
 	const { list } = props;
 	const navigate = useNavigate();
@@ -20,18 +21,32 @@ function TheBooksWantsToRead(props) {
 			<div className='sidebar__block'>
 				<h4 className='sidebar__block__title'>Sách muốn đọc</h4>
 				<div className='sidebar__block__content'>
-					<Slider {...SlideSettings}>
-						{list.map((item, index) => (
-							<div
-								key={index}
-								className='wants-to-read__thumbnail'
-								onMouseEnter={onMouseEnterImgBook}
-								onClick={() => onClickImgBook(item)}
-							>
-								<img src={item.images[0]} alt='' />
-							</div>
-						))}
-					</Slider>
+					{list.length > 2 ? (
+						<Slider {...SlideSettings}>
+							{list.map((item, index) => (
+								<div
+									key={index}
+									className='wants-to-read__thumbnail'
+									onMouseEnter={onMouseEnterImgBook}
+									onClick={() => onClickImgBook(item)}
+								>
+									<img src={item.images[0] || bookImage} alt='' />
+								</div>
+							))}
+						</Slider>
+					) : (
+						<Row>
+							{list.map((item, index) => (
+								<Col lg={6} md={12} key={index}>
+									<Link to={`/book/detail/${item.id}`}>
+										<div className='wants-to-read__thumbnail'>
+											<img src={item.images[0] || bookImage} alt='' />
+										</div>
+									</Link>
+								</Col>
+							))}
+						</Row>
+					)}
 				</div>
 			</div>
 		)

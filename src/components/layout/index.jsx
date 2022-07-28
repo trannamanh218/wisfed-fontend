@@ -1,5 +1,4 @@
 import Header from 'components/header';
-import React from 'react';
 import PropTypes from 'prop-types';
 import './layout.scss';
 import { useSelector } from 'react-redux';

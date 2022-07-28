@@ -63,9 +63,9 @@ const NotificationStatus = ({ item, setGetNotifications, getNotifications }) => 
 			items.verb === 'commentGroupPost'
 		) {
 			navigate(
-				`/detail-feed/${items.verb === 'commentMiniPost' ? 'mini-post' : 'group-post'}/${
-					items.originId?.minipostId || items.originId?.groupPostId
-				}`
+				`/detail-feed/${
+					items.verb === 'commentMiniPost' || items.verb === 'likeMiniPost' ? 'mini-post' : 'group-post'
+				}/${items.originId?.minipostId || items.originId?.groupPostId}`
 			);
 		} else if (items.verb === 'follow' || items.verb === 'addFriend' || items.verb === 'friendAccepted') {
 			navigate(`/profile/${items.createdBy?.id || items.originId.userId}`);
@@ -83,6 +83,10 @@ const NotificationStatus = ({ item, setGetNotifications, getNotifications }) => 
 			navigate(`/detail-feed/${'mini-post'}/${items.originId.minipostId}`);
 		} else if (items.verb === 'likeQuote') {
 			navigate(`/quotes/detail/${items.originId.quoteId}`);
+		} else if (item.verb === 'likeCommentReview') {
+			navigate(`/detail-feed/${'mini-post'}/${items.originId.minipostId}`);
+		} else if (item.verb === 'requestGroup') {
+			navigate(`/group/${items.originId.groupId}`);
 		}
 		dispatch(readNotification(params)).unwrap();
 	};
@@ -103,6 +107,7 @@ const NotificationStatus = ({ item, setGetNotifications, getNotifications }) => 
 							item.verb !== 'requestGroup' &&
 							item.verb !== 'commentGroupPost' &&
 							item.verb !== 'commentQuote' &&
+							item.verb !== 'inviteGroup' &&
 							item.verb !== 'mention' && (
 								<>
 									<span>
@@ -162,6 +167,6 @@ const NotificationStatus = ({ item, setGetNotifications, getNotifications }) => 
 NotificationStatus.propTypes = {
 	item: PropTypes.object,
 	setGetNotifications: PropTypes.func,
-	getNotifications: PropTypes.object,
+	getNotifications: PropTypes.array,
 };
 export default NotificationStatus;

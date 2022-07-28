@@ -2,12 +2,20 @@ import QuoteActionBar from 'shared/quote-action-bar';
 import UserAvatar from 'shared/user-avatar';
 import './top-quotes.scss';
 import PropTypes from 'prop-types';
-import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useState, useRef, useCallback, useEffect } from 'react';
+import { NotificationError } from 'helpers/Error';
+import { useDispatch } from 'react-redux';
+import { likeUnlikeQuote } from 'reducers/redux-utils/quote';
+import _ from 'lodash';
 
 const TopQuotesComponent = ({ item, valueDate, categoryItem }) => {
-	const [newData, setNewData] = useState({});
+	const [quoteData, setQuoteData] = useState({});
 	const navigate = useNavigate();
+
+	const isLikeTemp = useRef(item.isLike);
+
+	const dispatch = useDispatch();
 
 	useEffect(() => {
 		const data = {
@@ -17,13 +25,35 @@ const TopQuotesComponent = ({ item, valueDate, categoryItem }) => {
 			type: 'topQuote',
 			...item,
 		};
-		setNewData(data);
+		setQuoteData(data);
 	}, []);
 
 	const onClickRedirectToAuthor = data => {
 		const id = data.createdBy || data.user.id;
 		navigate(`/profile/${id}`);
 	};
+
+	const likeUnlikeQuoteFnc = id => {
+		const setLike = !quoteData.isLike;
+		const numberOfLike = setLike ? quoteData.like + 1 : quoteData.like - 1;
+		setQuoteData({ ...quoteData, isLike: setLike, like: numberOfLike });
+		handleCallLikeUnlikeQuoteApi(id, setLike);
+	};
+
+	const handleCallLikeUnlikeQuoteApi = useCallback(
+		_.debounce(async (quoteId, isLike) => {
+			if (isLike !== isLikeTemp.current) {
+				isLikeTemp.current = isLike;
+				try {
+					await dispatch(likeUnlikeQuote(quoteId)).unwrap();
+				} catch (err) {
+					NotificationError(err);
+				}
+			}
+		}, 500),
+		[]
+	);
+
 	return (
 		<div className='top__quotes__container'>
 			<div className='top__quotes__description'>{item.quote}</div>
@@ -40,11 +70,12 @@ const TopQuotesComponent = ({ item, valueDate, categoryItem }) => {
 						</p>
 					</div>
 				</div>
-				<QuoteActionBar data={newData} />
+				<QuoteActionBar data={quoteData} likeUnlikeQuoteFnc={likeUnlikeQuoteFnc} />
 			</div>
 		</div>
 	);
 };
+
 TopQuotesComponent.propTypes = {
 	item: PropTypes.any,
 	valueDate: PropTypes.string,

@@ -139,11 +139,12 @@ const DetailFriend = () => {
 
 	const renderListMap = () => {
 		if (following || follower || invitation) {
-			return getListFollowings.length > 0
-				? getListFollowings.map(item => (
-						<FriendsItem key={item.id} list={item} getMyListFriendReq={getListFollowings} />
-				  ))
-				: '';
+			return (
+				getListFollowings.length > 0 &&
+				getListFollowings.map(item => (
+					<FriendsItem key={item.id} data={item} getMyListFriendReq={getListFollowings} />
+				))
+			);
 		}
 	};
 

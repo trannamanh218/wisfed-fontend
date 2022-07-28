@@ -29,6 +29,7 @@ import { useDropzone } from 'react-dropzone';
 import { uploadImage } from 'reducers/redux-utils/common';
 import camera from 'assets/images/camera.png';
 import { useRef } from 'react';
+import { toast } from 'react-toastify';
 
 function MainGroupComponent({ handleChange, keyChange, data, member, handleUpdate }) {
 	const [key, setKey] = useState('intro');
@@ -98,6 +99,7 @@ function MainGroupComponent({ handleChange, keyChange, data, member, handleUpdat
 			setFilter('[]');
 		}
 	};
+
 	const debounceSearch = useCallback(_.debounce(updateInputSearch, 500), []);
 
 	useEffect(async () => {
@@ -136,6 +138,10 @@ function MainGroupComponent({ handleChange, keyChange, data, member, handleUpdat
 			};
 			dispatch(getupdateBackground(params));
 			handleUpdate();
+			const customId = 'custom-id-handleUpdateGroupBackgroundImg';
+			toast.success('Cập nhật ảnh bìa thành công', {
+				toastId: customId,
+			});
 		} catch (error) {
 			NotificationError(error);
 		}

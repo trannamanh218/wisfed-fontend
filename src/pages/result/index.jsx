@@ -57,7 +57,7 @@ const Result = () => {
 			<Circle loading={isFetching} />
 			<div className='result__container'>
 				<div className='result__header'>
-					<div className='result__header__content'>Kết quả tìm kiếm cho {value}</div>
+					<div className='result__header__content'>Kết quả tìm kiếm cho "{value}"</div>
 				</div>
 				<div className='result__search'>
 					<div className='friends__header'>

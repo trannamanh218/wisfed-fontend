@@ -10,7 +10,6 @@ import { useNavigate, useParams, Link } from 'react-router-dom';
 import { sharePostsAll, saveDataShare } from 'reducers/redux-utils/post';
 import classNames from 'classnames';
 import _ from 'lodash';
-import { useEffect } from 'react';
 import { Row, Col } from 'react-bootstrap';
 
 const AuthorBook = props => {
@@ -106,10 +105,11 @@ const AuthorBook = props => {
 									? `${data?.countRating || data.info.countRating} đánh giá`
 									: 'Chưa có đánh giá'}
 							</span>
-							<StatusButton
-								bookData={data.info || data.book || data}
-								status={data.status ? data.status : data.info.status}
-							/>
+							{!_.isEmpty(userInfo) && userInfo.role === 'author' && userId === userInfo.id ? (
+								<></>
+							) : (
+								<StatusButton bookData={data} />
+							)}
 						</div>
 					</div>
 				</div>
