@@ -4,7 +4,8 @@
 	border-radius: 0px 0px 12px 12px;
 	width: 468px;
 	position: absolute;
-	top: 0;
+	top: -1px;
+	// top: 90px;
 	left: 250px;
 	z-index: 1;
 	padding: 18px 20px 20px;
@@ -40,6 +41,31 @@
 			width: 380px;
 			margin: -3px auto 3px auto;
 			background-color: #eff0f7;
+		}
+	}
+}
+
+@media only screen and (max-width: 1025px) {
+	.search__all__container {
+		width: 400px;
+		left: 217px;
+		.search__all__header {
+			.search-field {
+				width: 330px;
+			}
+		}
+	}
+}
+
+@media only screen and (max-width: 768px) {
+	.search__all__container {
+		width: 400px;
+		left: 76px;
+		.search__all__header {
+			.search-field {
+				padding: 0 20px;
+				width: 330px;
+			}
 		}
 	}
 }

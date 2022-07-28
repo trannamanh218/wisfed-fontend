@@ -98,12 +98,16 @@ const ModalItem = ({ item, setModalNotti, getNotifications, setGetNotifications,
 			navigate(`/detail-feed/${'mini-post'}/${items.originId.minipostId}`);
 		} else if (items.verb === 'likeQuote') {
 			navigate(`/quotes/detail/${items.originId.quoteId}`);
+		} else if (item.verb === 'likeCommentReview') {
+			navigate(`/detail-feed/${'mini-post'}/${items.originId.minipostId}`);
+		} else if (item.verb === 'requestGroup') {
+			navigate(`/group/${items.originId.groupId}`);
 		}
 		dispatch(backgroundToggle(true));
 		setModalNotti(false);
 		dispatch(readNotification(params)).unwrap();
 	};
-
+	console.log(item);
 	return (
 		<div
 			className={
@@ -121,6 +125,7 @@ const ModalItem = ({ item, setModalNotti, getNotifications, setGetNotifications,
 							item.verb !== 'requestGroup' &&
 							item.verb !== 'commentGroupPost' &&
 							item.verb !== 'commentQuote' &&
+							item.verb !== 'inviteGroup' &&
 							item.verb !== 'mention' && (
 								<>
 									<span>

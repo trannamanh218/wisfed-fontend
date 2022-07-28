@@ -9,6 +9,7 @@ import RouteLink from 'helpers/RouteLink';
 import { NotificationError } from 'helpers/Error';
 import Storage from 'helpers/Storage';
 import { handleShelvesGroup } from 'api/shelvesGroup.hooks';
+import './UploadBook.scss';
 
 export default function UploadBook() {
 	const { userId } = useParams();
@@ -36,7 +37,7 @@ export default function UploadBook() {
 	};
 
 	return (
-		<>
+		<div className='upload-main-container'>
 			<MainContainer
 				main={<MainUpload />}
 				right={
@@ -48,6 +49,6 @@ export default function UploadBook() {
 					/>
 				}
 			/>
-		</>
+		</div>
 	);
 }

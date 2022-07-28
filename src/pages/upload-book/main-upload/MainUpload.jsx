@@ -16,7 +16,7 @@ import { uploadImage } from 'reducers/redux-utils/common';
 
 export default function MainUpload() {
 	const [textareaValue, setTextareaValue] = useState('');
-	const [releaseDate, setReleaseDate] = useState(new Date());
+	const [releaseDate, setReleaseDate] = useState(null);
 	const inpCalendar = useRef();
 	const dispatch = useDispatch();
 
@@ -69,7 +69,7 @@ export default function MainUpload() {
 
 	return (
 		<>
-			<div>{GoBack()}</div>
+			<div className='upload-icon-goback'>{GoBack()}</div>
 			<div className='upload-book-form'>
 				<div className='upload-image__wrapper'>
 					{imgUrl ? (
@@ -82,7 +82,7 @@ export default function MainUpload() {
 									<div className='dropzone upload-image'>
 										<CameraIcon />
 										<Image className='upload-image__icon' />
-										<p className='upload-image__description'>Thêm ảnh từ thiết bị</p>
+										<p className='upload-image__description'>Thêm ảnh bìa từ thiết bị</p>
 										<span>hoặc kéo thả</span>
 									</div>
 								</div>
@@ -90,96 +90,111 @@ export default function MainUpload() {
 						</Dropzone>
 					)}
 				</div>
-
-				<div className='inp-book'>
-					<label>Tên sách</label>
-					<Input isBorder={false} placeholder='Tên sách' handleChange={onInputChange(setInputNameBook)} />
-				</div>
-				<div className='inp-book'>
-					<label>Tiêu đề phụ</label>
-					<Input isBorder={false} placeholder='Tiêu đề phụ' handleChange={onInputChange(setInputNameBook)} />
-				</div>
-				<div className='inp-book'>
-					<label>Tên sách gốc</label>
-					<Input isBorder={false} placeholder='Tiêu đề phụ' handleChange={onInputChange(setInputNameBook)} />
-				</div>
-				<div className='inp-book'>
-					<label>Tác giả</label>
-					<Input isBorder={false} placeholder='Tác giả' handleChange={onInputChange(setInputNameBook)} />
-				</div>
-				<div className='inp-book'>
-					<label>Dịch giả</label>
-					<Input isBorder={false} placeholder='Dịch giả' handleChange={onInputChange(setInputNameBook)} />
-				</div>
-				<div className='inp-book'>
-					<label>Nhà xuất bản</label>
-					<Input isBorder={false} placeholder='Nhà xuất bản' handleChange={onInputChange(setInputNameBook)} />
-				</div>
-				<div className='inp-book'>
-					<Row>
-						<Col xs={6}>
-							<label>ISBN</label>
-							<Input isBorder={false} placeholder='ISBN' handleChange={onInputChange(setInputNameBook)} />
-						</Col>
-						<Col xs={6}>
-							<label>Sê-ri sách</label>
-							<Input
-								isBorder={false}
-								placeholder='Sê-ri sách'
-								handleChange={onInputChange(setInputNameBook)}
-							/>
-						</Col>
-					</Row>
-				</div>
-				<div className='inp-book'>
-					<Row>
-						<Col>
-							<label>Số trang</label>
-							<Input
-								type='number'
-								isBorder={false}
-								placeholder='Số trang'
-								handleChange={onInputChange(setInputNameBook)}
-							/>
-						</Col>
-						<Col>
-							<label>Ngôn ngữ</label>
-							<SelectBox
-								name='languages'
-								list={listLanguages}
-								defaultOption={languagesRef.current}
-								onChangeOption={onchangeLanguages}
-								imgDropDown={ArrowChevronForward}
-							/>
-						</Col>
-					</Row>
-				</div>
-				<div className='inp-book'>
-					<label>Ngày phát hành</label>
-					<label className='inp-date'>
-						<Datepicker
-							ref={inpCalendar}
-							isClearable
-							placeholderText='dd/m/yyyy'
-							dateFormat='dd/M/yyyy'
-							selected={releaseDate}
-							onChange={date => setReleaseDate(date)}
-							showYearDropdown
-							showMonthDropdown
-							dropdownMode='select'
-						/>
-						<div className='icon-calendar'>
-							<Calendar />
-						</div>
-					</label>
-				</div>
-				<div className='inp-book'>
-					<label>Mô tả</label>
-					<div className='txtarea'>
-						<textarea placeholder='' rows={9} value={textareaValue} onChange={updateTxtAreaValue} />
+				<div className='upload-info-form'>
+					<div className='inp-book'>
+						<label>Tên sách</label>
+						<Input isBorder={false} placeholder='Tên sách' handleChange={onInputChange(setInputNameBook)} />
 					</div>
-				</div>
-				<div className='inp-book'>
+					<div className='inp-book'>
+						<label>Tiêu đề phụ</label>
+						<Input
+							isBorder={false}
+							placeholder='Tiêu đề phụ'
+							handleChange={onInputChange(setInputNameBook)}
+						/>
+					</div>
+					<div className='inp-book'>
+						<label>Tên sách gốc</label>
+						<Input
+							isBorder={false}
+							placeholder='Tiêu đề phụ'
+							handleChange={onInputChange(setInputNameBook)}
+						/>
+					</div>
+					<div className='inp-book'>
+						<label>Tác giả</label>
+						<Input isBorder={false} placeholder='Tác giả' handleChange={onInputChange(setInputNameBook)} />
+					</div>
+					<div className='inp-book'>
+						<label>Dịch giả</label>
+						<Input isBorder={false} placeholder='Dịch giả' handleChange={onInputChange(setInputNameBook)} />
+					</div>
+					<div className='inp-book'>
+						<label>Nhà xuất bản</label>
+						<Input
+							isBorder={false}
+							placeholder='Nhà xuất bản'
+							handleChange={onInputChange(setInputNameBook)}
+						/>
+					</div>
+					<div className='inp-book'>
+						<Row>
+							<Col xs={6}>
+								<label>ISBN</label>
+								<Input
+									isBorder={false}
+									placeholder='ISBN'
+									handleChange={onInputChange(setInputNameBook)}
+								/>
+							</Col>
+							<Col xs={6}>
+								<label>Sê-ri sách</label>
+								<Input
+									isBorder={false}
+									placeholder='Sê-ri sách'
+									handleChange={onInputChange(setInputNameBook)}
+								/>
+							</Col>
+						</Row>
+					</div>
+					<div className='inp-book'>
+						<Row>
+							<Col>
+								<label>Số trang</label>
+								<Input
+									type='number'
+									isBorder={false}
+									placeholder='Số trang'
+									handleChange={onInputChange(setInputNameBook)}
+								/>
+							</Col>
+							<Col>
+								<label>Ngôn ngữ</label>
+								<SelectBox
+									name='languages'
+									list={listLanguages}
+									defaultOption={languagesRef.current}
+									onChangeOption={onchangeLanguages}
+									imgDropDown={ArrowChevronForward}
+								/>
+							</Col>
+						</Row>
+					</div>
+					<div className='inp-book'>
+						<label>Ngày phát hành</label>
+						<label className='inp-date'>
+							<div className='icon-calendar'>
+								<Calendar />
+							</div>
+							<Datepicker
+								ref={inpCalendar}
+								isClearable
+								placeholderText='dd/m/yyyy'
+								dateFormat='dd/M/yyyy'
+								selected={releaseDate}
+								onChange={date => setReleaseDate(date)}
+								showYearDropdown
+								showMonthDropdown
+								dropdownMode='select'
+							/>
+						</label>
+					</div>
+					<div className='inp-book'>
+						<label>Mô tả</label>
+						<div className='txtarea'>
+							<textarea placeholder='' rows={9} value={textareaValue} onChange={updateTxtAreaValue} />
+						</div>
+					</div>
 					<Row>
 						<Col>
 							<Button onClick={() => console.log('Xóa tất cả')} className='btn btnMainUpload' isOutline>
@@ -193,6 +208,7 @@ export default function MainUpload() {
 						</Col>
 					</Row>
 				</div>
+				{/* </div> */}
 			</div>
 		</>
 	);

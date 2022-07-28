@@ -183,7 +183,10 @@ function Post({ postInformations, showModalCreatPost, inReviews = false }) {
 			return (
 				<span>
 					{' cùng với '}
-					{paramInfo[0].users.fullName || paramInfo[0].users.firstName + ' ' + paramInfo[0].users.lastName}
+					<Link to={`/profile/${paramInfo[0].userId}`}>
+						{paramInfo[0].users.fullName ||
+							paramInfo[0].users.firstName + ' ' + paramInfo[0].users.lastName}
+					</Link>
 					{'.'}
 				</span>
 			);
@@ -191,9 +194,15 @@ function Post({ postInformations, showModalCreatPost, inReviews = false }) {
 			return (
 				<span>
 					{' cùng với '}
-					{paramInfo[0].users.fullName || paramInfo[0].users.firstName + ' ' + paramInfo[0].users.lastName}
+					<Link to={`/profile/${paramInfo[0].userId}`}>
+						{paramInfo[0].users.fullName ||
+							paramInfo[0].users.firstName + ' ' + paramInfo[0].users.lastName}
+					</Link>
 					{' và '}
-					{paramInfo[1].users.fullName || paramInfo[1].users.firstName + ' ' + paramInfo[1].users.lastName}
+					<Link to={`/profile/${paramInfo[1].userId}`}>
+						{paramInfo[1].users.fullName ||
+							paramInfo[1].users.firstName + ' ' + paramInfo[1].users.lastName}
+					</Link>
 					{'.'}
 				</span>
 			);
@@ -201,7 +210,10 @@ function Post({ postInformations, showModalCreatPost, inReviews = false }) {
 			return (
 				<span>
 					{' cùng với '}
-					{paramInfo[0].users.fullName || paramInfo[0].users.firstName + ' ' + paramInfo[0].users.lastName}
+					<Link to={`/profile/${paramInfo[0].users.id}`}>
+						{paramInfo[0].users.fullName ||
+							paramInfo[0].users.firstName + ' ' + paramInfo[0].users.lastName}
+					</Link>
 					{' và '}
 					{paramInfo.length - 1}
 					{' người khác.'}

@@ -241,6 +241,7 @@ const FriendsItem = ({ data, keyTabs, getListFollower, getMyListFriendReq, getLi
 						alt=''
 						onError={e => e.target.setAttribute('src', `${defaultAvatar}`)}
 					/>
+
 					<div className='myfriends__star'>
 						<div className='myfriends__star__name'>
 							{data.userTwo?.fullName ? (

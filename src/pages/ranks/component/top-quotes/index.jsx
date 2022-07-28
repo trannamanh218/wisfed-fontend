@@ -7,7 +7,7 @@ import { useDispatch } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
 import PropTypes from 'prop-types';
 
-const TopQuotes = ({ rows, listYear }) => {
+const TopQuotes = ({ rows, listYear, tabSelected }) => {
 	const [topQuotesId, setTopQuotesId] = useState();
 	const [valueDate, setValueData] = useState('week');
 	const [getListTopQuotes, setGetListTopQuotes] = useState([]);
@@ -29,8 +29,10 @@ const TopQuotes = ({ rows, listYear }) => {
 	};
 
 	useEffect(() => {
-		getTopQuotesData();
-	}, [topQuotesId, valueDate]);
+		if (tabSelected === 'quotes') {
+			getTopQuotesData();
+		}
+	}, [topQuotesId, valueDate, tabSelected]);
 
 	const onchangeKindOfGroup = data => {
 		kindOfGroupRef.current = data;
@@ -87,5 +89,6 @@ const TopQuotes = ({ rows, listYear }) => {
 TopQuotes.propTypes = {
 	rows: PropTypes.array,
 	listYear: PropTypes.array,
+	tabSelected: PropTypes.string,
 };
 export default TopQuotes;

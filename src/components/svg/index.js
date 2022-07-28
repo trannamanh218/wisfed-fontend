@@ -7,7 +7,8 @@ import { ReactComponent as GroupIcon } from 'assets/icons/GroupIcon.svg';
 import { ReactComponent as GroupFillIcon } from 'assets/icons/GroupFillIcon.svg';
 import { ReactComponent as FriendsIcon } from 'assets/icons/FriendsIcon.svg';
 import { ReactComponent as FriendsFillIcon } from 'assets/icons/FriendsFillIcon.svg';
-import { ReactComponent as LogoIcon } from 'assets/icons/logo.svg';
+import { ReactComponent as LogoNonText } from 'assets/icons/logoNonText.svg';
+import { ReactComponent as LogoFull } from 'assets/icons/logo.svg';
 import { ReactComponent as CircleCheckIcon } from 'assets/icons/circleCheck.svg';
 import { ReactComponent as CoffeeCupIcon } from 'assets/icons/coffeeCup.svg';
 import { ReactComponent as TargetIcon } from 'assets/icons/target.svg';
@@ -81,6 +82,7 @@ import { ReactComponent as ArrowDownIcon } from 'assets/icons/ArrowDownIcon.svg'
 import { ReactComponent as CrowSmall } from 'assets/icons/CrownSmall.svg';
 import { ReactComponent as Calendar } from 'assets/icons/calendar.svg';
 import { ReactComponent as LikeComment } from 'assets/icons/LikeComment.svg';
+import { ReactComponent as Hamburger } from 'assets/icons/Hamburger.svg';
 
 export {
 	CrowSmall,
@@ -99,7 +101,8 @@ export {
 	BookFillIcon,
 	BookIcon,
 	GroupIcon,
-	LogoIcon,
+	LogoFull,
+	LogoNonText,
 	CircleCheckIcon,
 	CoffeeCupIcon,
 	TargetIcon,
@@ -166,4 +169,5 @@ export {
 	DropdownGroupWhite,
 	Calendar,
 	LikeComment,
+	Hamburger,
 };
