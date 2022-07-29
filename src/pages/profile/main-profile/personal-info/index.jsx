@@ -267,6 +267,7 @@ const PersonalInfo = ({ currentUserInfo, setCurrentTab }) => {
 
 PersonalInfo.propTypes = {
 	currentUserInfo: PropTypes.object,
+	setCurrentTab: PropTypes.func,
 };
 
 export default PersonalInfo;
