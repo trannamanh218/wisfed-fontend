@@ -90,7 +90,7 @@ const NotificationStatus = ({ item, setGetNotifications, getNotifications }) => 
 		}
 		dispatch(readNotification(params)).unwrap();
 	};
-	console.log(item);
+
 	return (
 		<div
 			onClick={() => hanleActiveIsReed(item)}

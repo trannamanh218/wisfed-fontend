@@ -7,7 +7,6 @@ import './book-slider.scss';
 import classNames from 'classnames';
 import { memo } from 'react';
 import { Row, Col } from 'react-bootstrap';
-import bookImage from 'assets/images/default-book.png';
 
 const BookSlider = ({
 	list,
@@ -17,18 +16,16 @@ const BookSlider = ({
 	handleViewBookDetail,
 	inCategory = false,
 	inCategoryDetail = false,
-	numberSlide,
 	...rest
 }) => {
 	const settingSlider = settings(inCategory, inCategoryDetail);
-	console.log(numberSlide);
 	return (
 		<div className='main'>
 			{!!list.length && (
 				<div className={classNames('book-slider', { [`${className}`]: className })}>
 					<h4 className='book-slider__title'>{title}</h4>
 					<div className='book-slider__content'>
-						{list.length > 2 ? (
+						{list?.length > 2 ? (
 							<Slider {...settingSlider}>
 								{list.map((item, index) => (
 									<BookThumbnail
