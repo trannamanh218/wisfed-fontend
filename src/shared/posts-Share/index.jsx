@@ -51,7 +51,7 @@ const PostsShare = ({ postData }) => {
 			return content;
 		}
 	};
-
+	console.log(postData);
 	return (
 		<div
 			className={classNames('post__main__container', {
@@ -124,6 +124,7 @@ const PostsShare = ({ postData }) => {
 						__html: generateContent(postData.sharePost?.message || postData.sharePost?.content),
 					}}
 				></div>
+				<span>{postData.bookId}</span>
 				<ul className='tagged'>
 					{postData.sharePost?.mentionsAuthors?.map(item => (
 						<li key={item.id} className={classNames('badge bg-primary-light')}>
@@ -140,7 +141,6 @@ const PostsShare = ({ postData }) => {
 				</ul>
 				{postData?.isShare && postData?.verb === 'shareQuote' && <PostQuotes postsData={postData} />}
 				{/* {postData?.verb === 'shareTopQuoteRanking' && <PostQuotes postsData={postData} />} */}
-
 				{postData.sharePost?.book && (
 					<PostBook
 						data={{

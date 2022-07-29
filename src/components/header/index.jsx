@@ -233,13 +233,6 @@ const Header = () => {
 				</div>
 
 				{/* Modal menu hamburger */}
-
-				<HamburgerModal
-					isHamburgerShow={isHamburgerShow}
-					setIsHamburgerShow={setIsHamburgerShow}
-					userInfo={userInfo}
-				/>
-
 				<HamburgerModal
 					isHamburgerShow={isHamburgerShow}
 					setIsHamburgerShow={setIsHamburgerShow}
