@@ -404,6 +404,7 @@ function Post({ postInformations, showModalCreatPost, inReviews = false }) {
 			{postData.verb === 'shareTopQuoteRanking' && <PostQuotes postsData={postData} />}
 			{postData.verb === 'shareTopBookRanking' && <AuthorBook data={postData} />}
 			{postData.verb === 'shareTopUserRanking' && <ShareUsers postsData={postData} />}
+			{postData.verb === 'groupPost' && <span>test group post</span>}
 			{postData.book && (
 				<PostBook
 					data={{ ...postData.book, bookLibrary: postData.bookLibrary, actorCreatedPost: postData.actor }}
