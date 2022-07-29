@@ -51,7 +51,7 @@ const PostsShare = ({ postData }) => {
 			return content;
 		}
 	};
-	console.log(postData);
+
 	return (
 		<div
 			className={classNames('post__main__container', {

@@ -31,7 +31,6 @@ const NotificationModal = ({ setModalNotti, buttonModal, realTime }) => {
 	const dispatch = useDispatch();
 
 	const handleClickOutside = e => {
-		console.log(notifymodal);
 		if (notifymodal.current && !notifymodal.current.contains(e.target) && !buttonModal.current.contains(e.target)) {
 			setModalNotti(false);
 			dispatch(backgroundToggle(true));

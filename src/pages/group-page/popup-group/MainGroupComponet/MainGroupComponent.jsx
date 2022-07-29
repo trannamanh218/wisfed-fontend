@@ -197,19 +197,22 @@ function MainGroupComponent({ handleChange, keyChange, data, member, handleUpdat
 					onError={e => e.target.setAttribute('src', defaultAvatar)}
 					alt=''
 				/>
-				<Dropzone>
-					{() => (
-						<div {...getRootProps()}>
-							<input {...getInputProps()} />
-							<div className='dropzone upload-image'>
-								<div className=''>
-									<img src={camera} alt='camera' />
+				{data?.createdBy?.id === userInfo.id ? (
+					<Dropzone>
+						{() => (
+							<div {...getRootProps()}>
+								<input {...getInputProps()} />
+								<div className='dropzone upload-image'>
+									<div className=''>
+										<img src={camera} alt='camera' />
+									</div>
+									<span style={{ marginRight: '3px' }}>Chỉnh sửa ảnh bìa</span>
 								</div>
-								<span style={{ marginRight: '3px' }}>Chỉnh sửa ảnh bìa</span>
 							</div>
-						</div>
-					)}
-				</Dropzone>
+						)}
+					</Dropzone>
+				) : null}
+
 				<div className='group__title-name'>
 					<span>
 						Nhóm của{' '}
