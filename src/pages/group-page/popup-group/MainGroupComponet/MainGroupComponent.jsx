@@ -128,28 +128,34 @@ function MainGroupComponent({ handleChange, keyChange, data, member, handleUpdat
 		setImgUrl(imageUploadedData?.streamPath);
 	};
 
-	const handleUpload = async () => {
-		try {
-			const params = {
-				id: id,
-				param: {
-					avatar: imgUrl,
-				},
-			};
-			dispatch(getupdateBackground(params));
-			handleUpdate();
-			const customId = 'custom-id-handleUpdateGroupBackgroundImg';
-			toast.success('Cập nhật ảnh bìa thành công', {
-				toastId: customId,
-			});
-		} catch (error) {
-			NotificationError(error);
+	const handleUpload = useCallback(async acceptedFiles => {
+		if (!_.isEmpty(acceptedFiles)) {
+			try {
+				const imageUploadedData = await dispatch(uploadImage(acceptedFiles)).unwrap();
+				const params = {
+					id: id,
+					param: {
+						avatar: imageUploadedData.streamPath,
+					},
+				};
+				dispatch(getupdateBackground(params));
+				handleUpdate();
+				const customId = 'custom-id-handleUpdateGroupBackgroundImg';
+				toast.success('Cập nhật ảnh bìa thành công', {
+					toastId: customId,
+				});
+			} catch (error) {
+				if (error.statusCode === 413) {
+					const customId = 'custom-id-PersonalInfo-handleDrop-warning';
+					toast.warning('Không cập nhật được ảnh quá 1Mb', { toastId: customId });
+				} else {
+					const customId = 'custom-id-PersonalInfo-handleDrop-error';
+					toast.error('Cập nhật ảnh thất bại', { toastId: customId });
+				}
+				// NotificationError(error);
+			}
 		}
-	};
-
-	useEffect(() => {
-		handleUpload();
-	}, [imgUrl]);
+	});
 
 	useEffect(() => {
 		const checkItem = data?.memberGroups?.filter(item => item?.user?.id === userInfo?.id);
@@ -197,8 +203,8 @@ function MainGroupComponent({ handleChange, keyChange, data, member, handleUpdat
 					onError={e => e.target.setAttribute('src', defaultAvatar)}
 					alt=''
 				/>
-				<Dropzone>
-					{() => (
+				<Dropzone onDrop={acceptedFiles => handleUpload(acceptedFiles)}>
+					{({ getRootProps, getInputProps }) => (
 						<div {...getRootProps()}>
 							<input {...getInputProps()} />
 							<div className='dropzone upload-image'>

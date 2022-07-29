@@ -22,7 +22,6 @@ const BookSlider = ({
 	...rest
 }) => {
 	const settingSlider = settings(inCategory, inCategoryDetail);
-	console.log(numberSlide);
 	return (
 		<div className='main'>
 			{!!list.length && (
