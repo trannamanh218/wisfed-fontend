@@ -35,10 +35,12 @@ const MainGroup = () => {
 	const handleUpdate = () => {
 		setUpdate(!update);
 	};
+
 	useEffect(() => {
 		fetchData();
 		getListMember();
 	}, []);
+
 	useEffect(() => {
 		fetchData();
 	}, [update]);

@@ -49,13 +49,13 @@ export const getGroupDettail = createAsyncThunk('group/getGroupDettail', async (
 		return rejectWithValue(error);
 	}
 });
+
 export const getupdateBackground = createAsyncThunk(
 	'group/getupdateBackground',
 	async (params, { rejectWithValue }) => {
 		const { id, param } = params;
 		try {
 			const res = await Request.makePatch(updateBackground(id), param);
-
 			return res;
 		} catch (err) {
 			const error = JSON.parse(err.response);
