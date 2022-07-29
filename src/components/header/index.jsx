@@ -49,7 +49,7 @@ const Header = () => {
 	const { userInfo, userInfoJwt } = useSelector(state => state.auth);
 	const dispatch = useDispatch();
 	const [modalNoti, setModalNotti] = useState(false);
-	const { buttonModal } = useRef(null);
+	const buttonModal = useRef(null);
 	const [modalInforUser, setModalInforUser] = useState(false);
 	const { value } = useParams();
 	const [getSlugResult, setGetSlugResult] = useState('');
