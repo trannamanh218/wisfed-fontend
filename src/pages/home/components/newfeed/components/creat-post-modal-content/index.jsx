@@ -247,7 +247,7 @@ function CreatPostModalContent({
 			image: [],
 			preview: urlPreviewData,
 			tags: [],
-			progress: checkProgress ? checkProgress : null,
+			progress: checkProgress ? checkProgress : 0,
 		};
 
 		params.mentionsUser = taggedData.addFriends.length ? taggedData.addFriends.map(item => item.id) : [];

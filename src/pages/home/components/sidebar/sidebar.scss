@@ -44,11 +44,9 @@
 	overflow: hidden;
 	&.view-more {
 		max-height: 799px;
-		transition: all 0.5s ease-out;
 	}
 	&.view-less {
 		max-height: 212px;
-		transition: all 0.5s ease-in;
 	}
 }
 
@@ -95,7 +93,7 @@
 .group-short-cut__view-more__icon {
 	margin-right: 15px;
 	color: #2d2c42;
-	transition: all 0.55s linear;
+	transition: all 0.2s linear;
 	&.view-more {
 		transform: rotate(180deg);
 	}

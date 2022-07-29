@@ -21,11 +21,18 @@
 	&__content {
 		display: flex;
 		flex-direction: column;
-		justify-content: flex-end;
+		justify-content: space-between;
+		.book-intro__content__infomations {
+			flex-grow: 1;
+			display: flex;
+			flex-direction: column;
+			justify-content: space-between;
+		}
 	}
 
 	&__name {
 		font-size: 1.5rem;
+		line-height: 1.5;
 		font-weight: 700;
 		color: $ash;
 		display: -webkit-box;
@@ -63,23 +70,31 @@
 		}
 	}
 
-	&__description {
-		margin-bottom: 1.5rem;
-	}
-
 	&__action {
-		display: flex;
-		gap: 1.875rem;
-		margin-top: auto;
+		height: 56px;
+		margin-top: 24px;
 		background: $white;
-		padding: 0.875rem 1.25rem;
 		max-width: 200px;
 		border-radius: 12px;
+		overflow: hidden;
+		.react-share__ShareButton {
+			width: 100% !important;
+			height: 100%;
+			display: flex;
+			gap: 1.875rem;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			padding: 0 1.25rem !important;
+		}
 	}
 
 	&__share {
 		display: flex;
 		align-items: center;
+		img {
+			max-height: 24px;
+		}
 		&__text {
 			margin-left: 1rem;
 			display: inline-block;
@@ -103,11 +118,5 @@
 @media only screen and(max-width:768px) {
 	.book-intro {
 		margin-left: -25px;
-	}
-}
-
-@media only screen and (max-width: 1024px) {
-	.book-intro__action {
-		margin-top: 17px;
 	}
 }

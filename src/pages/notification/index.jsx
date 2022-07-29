@@ -12,12 +12,8 @@ import {
 } from 'reducers/redux-utils/notificaiton';
 import { getNotification } from 'reducers/redux-utils/notificaiton';
 import { NotificationError } from 'helpers/Error';
-import { useSelector } from 'react-redux';
 import LoadingTimeLine from './loading-timeline';
 import ModalItem from './modal-item';
-import { renderMessage } from 'helpers/HandleShare';
-import LoadingIndicator from 'shared/loading-indicator';
-import { readNotification } from 'reducers/redux-utils/notificaiton';
 
 const NotificationModal = ({ setModalNotti, buttonModal, realTime }) => {
 	const notifymodal = useRef(null);
@@ -26,7 +22,6 @@ const NotificationModal = ({ setModalNotti, buttonModal, realTime }) => {
 	const [renderFriend, setRenderFriend] = useState(false);
 	const [getNotifications, setGetNotifications] = useState([]);
 	const [getListUnread, setGetListUnRead] = useState([]);
-	const { listNotifcaiton, listUnRead } = useSelector(state => state.notificationReducer);
 
 	const dispatch = useDispatch();
 
@@ -111,8 +106,8 @@ const NotificationModal = ({ setModalNotti, buttonModal, realTime }) => {
 	};
 
 	return (
-		<div className='notificaiton'>
-			<div ref={notifymodal} className='notificaiton__container'>
+		<div className='notificaiton' ref={notifymodal}>
+			<div className='notificaiton__container'>
 				<div className='notificaiton__title'>Thông báo</div>
 				{isLoading ? (
 					<div className='notificaiton__loading__container'>

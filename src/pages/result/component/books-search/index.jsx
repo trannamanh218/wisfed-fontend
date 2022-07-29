@@ -1,20 +1,20 @@
 import './books-search.scss';
 import AuthorBook from 'shared/author-book';
-import { CHECK_STAR, CHECK_SHARE } from 'constants';
+import { CHECK_STAR } from 'constants';
 import ResultNotFound from '../result-not-found';
 import PropTypes from 'prop-types';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import LoadingIndicator from 'shared/loading-indicator';
 import { getFilterSearch } from 'reducers/redux-utils/search';
 import { NotificationError } from 'helpers/Error';
-
 import { useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import _ from 'lodash';
 
 const BookSearch = ({ isFetching, value, setIsFetching, searchResultInput, activeKeyDefault, updateBooks }) => {
 	const [listArrayBooks, setListArrayBooks] = useState([]);
 	const { isShowModal } = useSelector(state => state.search);
-	const [count, setCount] = useState(0);
+	const [resultInformations, setResultInformations] = useState({ count: 0, time: 0 });
 	const [hasMore, setHasMore] = useState(true);
 	const dispatch = useDispatch();
 	const callApiStartBooks = useRef(0);
@@ -48,9 +48,11 @@ const BookSearch = ({ isFetching, value, setIsFetching, searchResultInput, activ
 				start: callApiStartBooks.current,
 				limit: callApiPerPage.current,
 			};
-
+			const startTime = Date.now();
 			const result = await dispatch(getFilterSearch(params)).unwrap();
-			setCount(result.count);
+			const doneTime = Date.now();
+			const resultInfo = { count: result.count, time: ((doneTime - startTime) / 1000).toFixed(2) };
+			setResultInformations(resultInfo);
 			if (result.rows.length > 0) {
 				callApiStartBooks.current += callApiPerPage.current;
 				setListArrayBooks(listArrayBooks.concat(result.rows));
@@ -66,9 +68,11 @@ const BookSearch = ({ isFetching, value, setIsFetching, searchResultInput, activ
 
 	return (
 		<div className='bookSearch__container'>
-			<div className='bookSearch__title'>
-				{count > 0 && `Trang 1 trong số khoảng ${count} kết quả (0,05 giây)`}
-			</div>
+			{!_.isEmpty(resultInformations) && (
+				<div className='bookSearch__title'>
+					Có khoảng {resultInformations.count} kết quả ({resultInformations.time} giây)
+				</div>
+			)}
 
 			<>
 				{listArrayBooks.length && activeKeyDefault === 'books' ? (

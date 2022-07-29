@@ -25,18 +25,22 @@ const PostActionBar = ({ postData, handleLikeAction }) => {
 	};
 
 	const handleCommentPost = () => {
-		const commentEditField = document.querySelector(`.comment-editor-last-${postData.id}`);
-		if (commentEditField) {
-			setTimeout(() => {
-				window.scroll({
-					top: commentEditField.offsetTop - 400,
-					behavior: 'smooth',
-				});
-			}, 200);
-		}
-		const editorChild = commentEditField.querySelector('.public-DraftEditor-content');
-		if (editorChild) {
-			editorChild.focus();
+		if (!Storage.getAccessToken()) {
+			dispatch(checkUserLogin(true));
+		} else {
+			const commentEditField = document.querySelector(`.comment-editor-last-${postData.id}`);
+			if (commentEditField) {
+				setTimeout(() => {
+					window.scroll({
+						top: commentEditField.offsetTop - 400,
+						behavior: 'smooth',
+					});
+				}, 200);
+			}
+			const editorChild = commentEditField.querySelector('.public-DraftEditor-content');
+			if (editorChild) {
+				editorChild.focus();
+			}
 		}
 	};
 
@@ -47,18 +51,9 @@ const PostActionBar = ({ postData, handleLikeAction }) => {
 				<div className='post-action-bar__title'>{postData.like || null} Thích</div>
 			</div>
 
-			<div
-				className='post-action-bar__item'
-				onClick={() => {
-					if (!Storage.getAccessToken()) {
-						dispatch(checkUserLogin(true));
-					}
-				}}
-			>
+			<div className='post-action-bar__item' onClick={handleCommentPost}>
 				<CommentSvg />
-				<div className='post-action-bar__title' onClick={handleCommentPost}>
-					{postData.comment || postData.comments || null} Bình luận
-				</div>
+				<div className='post-action-bar__title'>{postData.comment || postData.comments || null} Bình luận</div>
 			</div>
 			<div onClick={handleShare} className='post-action-bar__item'>
 				<Share />
