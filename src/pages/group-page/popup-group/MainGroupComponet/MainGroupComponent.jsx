@@ -269,7 +269,11 @@ function MainGroupComponent({ handleChange, keyChange, data, member, handleUpdat
 					<div style={{ position: 'fixed', left: '33%', top: '20%', zIndex: '2000' }}>
 						{isShow ? (
 							<div className='popup-container'>
-								<PopupInviteFriend handleClose={() => setIsShow(!isShow)} showRef={showRef} />
+								<PopupInviteFriend
+									handleClose={() => setIsShow(!isShow)}
+									showRef={showRef}
+									groupMembers={member}
+								/>
 							</div>
 						) : (
 							''
@@ -330,6 +334,7 @@ MainGroupComponent.propTypes = {
 	data: PropTypes.object,
 	backgroundImage: PropTypes.string,
 	member: PropTypes.array,
+	handleUpdate: PropTypes.func,
 };
 
 export default MainGroupComponent;

@@ -6,7 +6,7 @@ import './style.scss';
 import { getFriendList } from 'reducers/redux-utils/user';
 import { useDispatch, useSelector } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
-import group, { getInviteFriend } from 'reducers/redux-utils/group';
+import { getInviteFriend } from 'reducers/redux-utils/group';
 import { useParams } from 'react-router-dom';
 
 const PopupInviteFriend = ({ handleClose, showRef, groupMembers }) => {
@@ -77,7 +77,7 @@ const PopupInviteFriend = ({ handleClose, showRef, groupMembers }) => {
 		const checkItem = listFriendSelect.filter(item => item !== e);
 		setListFriendSelect(checkItem);
 	};
-
+	console.log(listFriendsNotInGroup);
 	return (
 		<div className='popup-invite-friend-container' ref={showRef}>
 			<div className='title-popup'>
@@ -95,7 +95,7 @@ const PopupInviteFriend = ({ handleClose, showRef, groupMembers }) => {
 			<div className='main-action'>
 				<div className='list-friend'>
 					<h4>Danh sách bạn bè</h4>
-					{listFriendsNotInGroup?.map(item => {
+					{listFriendsNotInGroup.map(item => {
 						return (
 							<div className='friend-item' key={item.id}>
 								<img
