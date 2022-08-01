@@ -1,4 +1,3 @@
-import React from 'react';
 import PropTypes from 'prop-types';
 import { SuccessIcon, WrongIcon, CloseButtonIcon } from 'components/svg';
 import './modalLogin.scss';

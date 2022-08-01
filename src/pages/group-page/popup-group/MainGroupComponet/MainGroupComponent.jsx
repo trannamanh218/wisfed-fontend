@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import SearchField from 'shared/search-field';
 import Tabs from 'react-bootstrap/Tabs';
 import Tab from 'react-bootstrap/Tab';
@@ -42,11 +42,10 @@ function MainGroupComponent({ handleChange, keyChange, data, member, handleUpdat
 	const [valueGroupSearch, setValueGroupSearch] = useState('');
 	const [filter, setFilter] = useState('[]');
 	const [getData, setGetData] = useState([]);
-	const { id = '' } = useParams();
+	const { id } = useParams();
 	const keyRedux = useSelector(state => state.group.key);
 	const { ref: showRef, isVisible: isShow, setIsVisible: setIsShow } = useVisible(false);
-	const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
-	const [imgUrl, setImgUrl] = useState('');
+	const { acceptedFiles } = useDropzone();
 	const joinedGroupPopup = useRef(null);
 
 	const enjoyGroup = async () => {
@@ -69,7 +68,7 @@ function MainGroupComponent({ handleChange, keyChange, data, member, handleUpdat
 			id: data?.id,
 		};
 		try {
-			await dispatch(leaveGroupUser(params));
+			await dispatch(leaveGroupUser(params)).unwrap();
 			setShow(false);
 			setShowSelect(false);
 		} catch (err) {
@@ -119,15 +118,6 @@ function MainGroupComponent({ handleChange, keyChange, data, member, handleUpdat
 		}
 	}, [filter]);
 
-	useEffect(() => {
-		uploadImageFile();
-	}, [acceptedFiles]);
-
-	const uploadImageFile = async () => {
-		const imageUploadedData = await dispatch(uploadImage(acceptedFiles)).unwrap();
-		setImgUrl(imageUploadedData?.streamPath);
-	};
-
 	const handleUpload = useCallback(async acceptedFiles => {
 		if (!_.isEmpty(acceptedFiles)) {
 			try {
@@ -152,7 +142,6 @@ function MainGroupComponent({ handleChange, keyChange, data, member, handleUpdat
 					const customId = 'custom-id-PersonalInfo-handleDrop-error';
 					toast.error('Cập nhật ảnh thất bại', { toastId: customId });
 				}
-				// NotificationError(error);
 			}
 		}
 	});

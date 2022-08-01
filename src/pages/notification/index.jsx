@@ -26,7 +26,6 @@ const NotificationModal = ({ setModalNotti, buttonModal, realTime }) => {
 	const dispatch = useDispatch();
 
 	const handleClickOutside = e => {
-		console.log(notifymodal);
 		if (notifymodal.current && !notifymodal.current.contains(e.target) && !buttonModal.current.contains(e.target)) {
 			setModalNotti(false);
 			dispatch(backgroundToggle(true));
@@ -122,45 +121,47 @@ const NotificationModal = ({ setModalNotti, buttonModal, realTime }) => {
 							activeKey={selectKey}
 						>
 							<Tab eventKey='all' title='Tất cả'>
-								<div className='notificaiton__all__title'>Mới nhất</div>
-								{getNotifications
-									.slice(0, 1)
-									.map(
-										item =>
-											!item.isCheck && (
-												<ModalItem
-													key={item.id}
-													item={item}
-													setModalNotti={setModalNotti}
-													selectKey={selectKey}
-													setGetNotifications={setGetNotifications}
-													getNotifications={getNotifications}
-												/>
-											)
-									)}
-								<div className='notificaiton__all__title'>Gần đây</div>
-								{getNotifications
-									.slice(1, 5)
-									.map(
-										item =>
-											!item.isCheck && (
-												<ModalItem
-													key={item.id}
-													item={item}
-													setModalNotti={setModalNotti}
-													selectKey={selectKey}
-													setGetNotifications={setGetNotifications}
-													getNotifications={getNotifications}
-												/>
-											)
-									)}
-								<Link
-									to={`/notification`}
-									onClick={handleNotificaiton}
-									className='notificaiton__tabs__button'
-								>
-									Xem tất cả
-								</Link>
+								<div className='notificaiton__all-wrapper'>
+									<div className='notificaiton__all__title'>Mới nhất</div>
+									{getNotifications
+										.slice(0, 1)
+										.map(
+											item =>
+												!item.isCheck && (
+													<ModalItem
+														key={item.id}
+														item={item}
+														setModalNotti={setModalNotti}
+														selectKey={selectKey}
+														setGetNotifications={setGetNotifications}
+														getNotifications={getNotifications}
+													/>
+												)
+										)}
+									<div className='notificaiton__all__title'>Gần đây</div>
+									{getNotifications
+										.slice(1, 6)
+										.map(
+											item =>
+												!item.isCheck && (
+													<ModalItem
+														key={item.id}
+														item={item}
+														setModalNotti={setModalNotti}
+														selectKey={selectKey}
+														setGetNotifications={setGetNotifications}
+														getNotifications={getNotifications}
+													/>
+												)
+										)}
+									<Link
+										to={`/notification`}
+										onClick={handleNotificaiton}
+										className='notificaiton__tabs__button'
+									>
+										Xem tất cả
+									</Link>
+								</div>
 							</Tab>
 
 							<Tab eventKey='unread' title='Chưa đọc'>
@@ -168,7 +169,7 @@ const NotificationModal = ({ setModalNotti, buttonModal, realTime }) => {
 									<>
 										<div className='  notification-title'>Thông báo chưa đọc</div>
 										{getListUnread
-											.slice(0, 5)
+											.slice(0, 4)
 											.map(
 												item =>
 													!item.isRead &&

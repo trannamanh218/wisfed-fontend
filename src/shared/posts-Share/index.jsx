@@ -39,6 +39,7 @@ const PostsShare = ({ postData }) => {
 			}
 		}
 	}, [postData]);
+
 	const generateContent = content => {
 		if (content.match(urlRegex)) {
 			const newContent = content.replace(urlRegex, data => {
@@ -51,7 +52,7 @@ const PostsShare = ({ postData }) => {
 			return content;
 		}
 	};
-	console.log(postData);
+
 	return (
 		<div
 			className={classNames('post__main__container', {

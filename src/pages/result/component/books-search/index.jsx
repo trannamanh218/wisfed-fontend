@@ -9,7 +9,6 @@ import { getFilterSearch } from 'reducers/redux-utils/search';
 import { NotificationError } from 'helpers/Error';
 import { useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import _ from 'lodash';
 
 const BookSearch = ({ isFetching, value, setIsFetching, searchResultInput, activeKeyDefault, updateBooks }) => {
 	const [listArrayBooks, setListArrayBooks] = useState([]);
@@ -68,7 +67,7 @@ const BookSearch = ({ isFetching, value, setIsFetching, searchResultInput, activ
 
 	return (
 		<div className='bookSearch__container'>
-			{!_.isEmpty(resultInformations) && (
+			{!!resultInformations.count && (
 				<div className='bookSearch__title'>
 					Có khoảng {resultInformations.count} kết quả ({resultInformations.time} giây)
 				</div>

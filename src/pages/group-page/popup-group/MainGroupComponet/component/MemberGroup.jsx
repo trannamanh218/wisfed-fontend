@@ -16,6 +16,7 @@ function MemberGroup() {
 	const { id } = useParams();
 	const [memberGroups, setMemberGroups] = useState([]);
 	const [isCallApi, setIsCallApi] = useState(false);
+	const [sliceEndIndex, setSliceEndIndex] = useState(6);
 
 	const getListMember = async () => {
 		try {
@@ -66,6 +67,7 @@ function MemberGroup() {
 			NotificationError(err);
 		}
 	};
+
 	const handleUnFollow = item => {
 		try {
 			dispatch(unFollower(item.id)).unwrap();
@@ -250,7 +252,7 @@ function MemberGroup() {
 			<div className='member-group__folower'>
 				<h2>Người theo dõi</h2>
 				{listFolow.length > 0
-					? listFolow.map((item, index) => {
+					? listFolow.slice(0, sliceEndIndex).map((item, index) => {
 							return (
 								<div key={index}>
 									<div className='member-item'>
@@ -327,9 +329,17 @@ function MemberGroup() {
 							);
 					  })
 					: 'Không có dữ liệu'}
-				<div className='view-member-all'>
-					<button>Xem tất cả</button>
-				</div>
+				{sliceEndIndex < listFolow.length && (
+					<button
+						className='view-member-all'
+						onClick={() => {
+							let newIndex = sliceEndIndex;
+							setSliceEndIndex((newIndex += 6));
+						}}
+					>
+						Xem tất cả
+					</button>
+				)}
 				<hr />
 			</div>
 

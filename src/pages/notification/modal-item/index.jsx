@@ -60,7 +60,7 @@ const ModalItem = ({ item, setModalNotti, getNotifications, setGetNotifications,
 			}
 			await dispatch(ReplyFriendRequest(params)).unwrap();
 			await dispatch(readNotification({ notificationId: items.id })).unwrap();
-			await dispatch(handleSaveUpdate(!isreload));
+			await dispatch(handleSaveUpdate(!isreload)).unwrap();
 		} catch (err) {
 			// NotificationError(err);
 		}
@@ -163,19 +163,16 @@ const ModalItem = ({ item, setModalNotti, getNotifications, setGetNotifications,
 					}
 				></div>
 			</div>
-			{item.verb === 'addFriend' &&
-				(item.isAccept || item.isRefuse ? (
-					''
-				) : (
-					<div className='notificaiton__all__friend'>
-						<div onClick={() => ReplyFriendReq(item.object, item)} className='notificaiton__all__accept'>
-							Chấp nhận
-						</div>
-						<div onClick={() => cancelFriend(item.object, item)} className='notificaiton__all__refuse'>
-							Từ chối
-						</div>
+			{item.verb === 'addFriend' && (item.isAccept || item.isRefuse) && (
+				<div className='notificaiton__all__friend'>
+					<div onClick={() => ReplyFriendReq(item.object, item)} className='notificaiton__all__accept'>
+						Chấp nhận
 					</div>
-				))}
+					<div onClick={() => cancelFriend(item.object, item)} className='notificaiton__all__refuse'>
+						Từ chối
+					</div>
+				</div>
+			)}
 		</div>
 	);
 };
