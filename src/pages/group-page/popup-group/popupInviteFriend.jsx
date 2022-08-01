@@ -26,14 +26,7 @@ const PopupInviteFriend = ({ handleClose, showRef, groupMembers }) => {
 			const friendList = actionGetList.rows;
 
 			// Lọc ra danh sách bạn bè không có trong group
-			const newArr = friendList;
-			for (let i = 0; i < newArr.length; i++) {
-				for (let y = 0; y < groupMembers.length; y++) {
-					if (newArr[i].id === groupMembers[y].id) {
-						newArr.splice(i, 1);
-					}
-				}
-			}
+			const newArr = friendList.filter(({ id: id1 }) => !groupMembers.some(({ id: id2 }) => id2 === id1));
 
 			// Lọc danh sách bạn bè theo ô search
 			setListFriendsNotInGroup(
@@ -77,7 +70,7 @@ const PopupInviteFriend = ({ handleClose, showRef, groupMembers }) => {
 		const checkItem = listFriendSelect.filter(item => item !== e);
 		setListFriendSelect(checkItem);
 	};
-	console.log(listFriendsNotInGroup);
+
 	return (
 		<div className='popup-invite-friend-container' ref={showRef}>
 			<div className='title-popup'>
