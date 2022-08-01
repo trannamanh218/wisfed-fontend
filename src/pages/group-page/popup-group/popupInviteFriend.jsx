@@ -25,7 +25,7 @@ const PopupInviteFriend = ({ handleClose, showRef, groupMembers }) => {
 			const actionGetList = await dispatch(getFriendList(params)).unwrap();
 			const friendList = actionGetList.rows;
 
-			// Lọc ra danh sách bạn bè không có trong group
+			// Lọc ra danh sách bạn bè không có trong group (lấy code trên mạng chứ hiểu quái gì đâu)
 			const newArr = friendList.filter(({ id: id1 }) => !groupMembers.some(({ id: id2 }) => id2 === id1));
 
 			// Lọc danh sách bạn bè theo ô search
