@@ -22,6 +22,10 @@ const BookThumbnail = props => {
 	);
 };
 
+BookThumbnail.defaultProps = {
+	handleClick: () => {},
+};
+
 BookThumbnail.propTypes = {
 	source: PropTypes.string,
 	images: PropTypes.array,
