@@ -266,7 +266,7 @@ function MainGroupComponent({ handleChange, keyChange, data, member, handleUpdat
 						</div>
 					</div>
 
-					<div style={{ position: 'fixed', left: '33%', top: '20%', zIndex: '2000' }}>
+					<div className='modal-popup-container'>
 						{isShow ? (
 							<div className='popup-container'>
 								<PopupInviteFriend
