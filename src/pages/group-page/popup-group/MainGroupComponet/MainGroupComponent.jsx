@@ -45,7 +45,6 @@ function MainGroupComponent({ handleChange, keyChange, data, member, handleUpdat
 	const { id } = useParams();
 	const keyRedux = useSelector(state => state.group.key);
 	const { ref: showRef, isVisible: isShow, setIsVisible: setIsShow } = useVisible(false);
-	const { acceptedFiles } = useDropzone();
 	const joinedGroupPopup = useRef(null);
 
 	const enjoyGroup = async () => {
@@ -181,6 +180,7 @@ function MainGroupComponent({ handleChange, keyChange, data, member, handleUpdat
 		}, [ref]);
 	}
 
+	// Click outside
 	useOutsideAlerter(joinedGroupPopup);
 
 	return (
@@ -192,19 +192,24 @@ function MainGroupComponent({ handleChange, keyChange, data, member, handleUpdat
 					onError={e => e.target.setAttribute('src', defaultAvatar)}
 					alt=''
 				/>
-				<Dropzone onDrop={acceptedFiles => handleUpload(acceptedFiles)}>
-					{({ getRootProps, getInputProps }) => (
-						<div {...getRootProps()}>
-							<input {...getInputProps()} />
-							<div className='dropzone upload-image'>
-								<div className=''>
-									<img src={camera} alt='camera' />
+
+				{/* Chỉ quản trị viên mới có thể thay đổi ảnh bìa */}
+				{data.createdBy?.id === userInfo.id ? (
+					<Dropzone onDrop={acceptedFiles => handleUpload(acceptedFiles)}>
+						{({ getRootProps, getInputProps }) => (
+							<div {...getRootProps()}>
+								<input {...getInputProps()} />
+								<div className='dropzone upload-image'>
+									<div className=''>
+										<img src={camera} alt='camera' />
+									</div>
+									<span style={{ marginRight: '3px' }}>Chỉnh sửa ảnh bìa</span>
 								</div>
-								<span style={{ marginRight: '3px' }}>Chỉnh sửa ảnh bìa</span>
 							</div>
-						</div>
-					)}
-				</Dropzone>
+						)}
+					</Dropzone>
+				) : null}
+
 				<div className='group__title-name'>
 					<span>
 						Nhóm của{' '}
@@ -263,11 +268,7 @@ function MainGroupComponent({ handleChange, keyChange, data, member, handleUpdat
 					<div style={{ position: 'fixed', left: '33%', top: '20%', zIndex: '2000' }}>
 						{isShow ? (
 							<div className='popup-container'>
-								<PopupInviteFriend
-									groupMembers={member}
-									handleClose={() => setIsShow(!isShow)}
-									showRef={showRef}
-								/>
+								<PopupInviteFriend handleClose={() => setIsShow(!isShow)} showRef={showRef} />
 							</div>
 						) : (
 							''

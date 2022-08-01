@@ -564,6 +564,7 @@ function CreatPostModalContent({
 										userInfo?.lastName ||
 										userInfo?.firstName ||
 										'Không xác định'}
+
 									{taggedData.addFriends.length > 0 && (
 										<>
 											<span className='d-inline-block mx-1'>cùng với</span>
