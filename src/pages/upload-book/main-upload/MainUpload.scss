@@ -56,6 +56,7 @@
 			.inp-date {
 				width: 100%;
 				border-radius: 12px;
+				height: 50px;
 				padding: 0px 18px;
 				background-color: #f7f7fc;
 				border: none;
@@ -118,6 +119,9 @@
 
 	.select-box {
 		line-height: 1;
+		&__btn {
+			height: 50px;
+		}
 	}
 
 	.btnMainUpload {
