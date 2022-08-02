@@ -123,7 +123,7 @@ export default function MainUpload() {
 			<div className='upload-book-form'>
 				<div className='upload-image__wrapper'>
 					{imgUrl ? (
-						<img style={{ width: '100%', maxHeight: '266px', objectFit: 'cover' }} src={imgUrl} alt='img' />
+						<img src={imgUrl} alt='img' />
 					) : (
 						<Dropzone>
 							{() => (

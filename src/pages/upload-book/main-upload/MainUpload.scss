@@ -16,6 +16,11 @@
 		&__wrapper {
 			width: 199px;
 			height: 223px;
+			img {
+				width: 199px;
+				object-fit: cover;
+				border-radius: 16px;
+			}
 			.dropzone.upload-image {
 				width: 199px;
 			}
