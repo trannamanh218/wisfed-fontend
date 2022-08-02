@@ -120,7 +120,7 @@ export default function MainUpload() {
 						<label>Tên sách gốc</label>
 						<Input
 							isBorder={false}
-							placeholder='Tiêu đề phụ'
+							placeholder='Tên sách gốc'
 							handleChange={onInputChange(setInputNameBook)}
 						/>
 					</div>

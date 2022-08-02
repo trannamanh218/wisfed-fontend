@@ -57,6 +57,17 @@
 	}
 }
 
+@media only screen and (max-width: 912px) {
+	.search__all__container {
+		width: 350px;
+		.search__all__header {
+			.search-field {
+				width: 280px;
+			}
+		}
+	}
+}
+
 @media only screen and (max-width: 768px) {
 	.search__all__container {
 		width: 400px;
