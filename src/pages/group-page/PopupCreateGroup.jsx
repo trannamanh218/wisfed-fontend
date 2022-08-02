@@ -205,7 +205,7 @@ const PopupCreateGroup = ({ handleClose, showRef }) => {
 			getBookData();
 		} else setListBooks([]);
 	}, [inputBook]);
-
+	console.log(lastTag);
 	useEffect(() => {
 		if (
 			kindOfGroup.value !== 'default' &&

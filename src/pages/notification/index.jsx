@@ -57,11 +57,12 @@ const NotificationModal = ({ setModalNotti, buttonModal, realTime }) => {
 	useEffect(() => {
 		if (getNotifications.length > 0) {
 			const filterFriend = getNotifications.filter(item => item.verb === 'addFriend' && !item.isCheck);
+			console.log(filterFriend);
 			if (filterFriend.length > 0) {
 				setRenderFriend(true);
 			}
 		}
-	}, []);
+	}, [selectKey]);
 
 	const getMyNotification = async () => {
 		try {

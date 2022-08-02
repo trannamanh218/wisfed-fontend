@@ -52,10 +52,10 @@
 }
 
 @media only screen and (max-width: 768px) {
-	.tab-content {
-		margin-left: -20px;
-	}
 	.nav-tabs {
-		margin-left: -20px;
+		width: 624px;
+	}
+	.tab-content {
+		width: 624px;
 	}
 }

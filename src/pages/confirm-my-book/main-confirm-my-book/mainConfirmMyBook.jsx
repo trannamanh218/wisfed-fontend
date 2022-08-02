@@ -118,7 +118,9 @@ function MainConfirmMyBook() {
 						</div>
 						<div className='main-confirm-my-book__book-info-content'>
 							<div className='main-confirm-my-book__hash-tags'>
-								<div className='main-confirm-my-book__hash-tag-item'>#{bookInfo.category.name}</div>
+								<div className='main-confirm-my-book__hash-tag-item'>
+									#{bookInfo.categories[0].category.name}
+								</div>
 							</div>
 							<div className='main-confirm-my-book__book-name'>{bookInfo.name}</div>
 							<div className='main-confirm-my-book__author-name'>

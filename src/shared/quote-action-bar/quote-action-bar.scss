@@ -60,3 +60,19 @@
 		gap: 28px;
 	}
 }
+@media only screen and (max-width: 1024px) {
+	.quote-action__name {
+		width: 50px;
+	}
+
+	.quote-action__item {
+		& span {
+			width: 61px;
+		}
+	}
+	.quote-action__item a {
+		.quote-action__right-arrow {
+			margin-left: 0px;
+		}
+	}
+}
