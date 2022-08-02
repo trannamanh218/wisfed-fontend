@@ -1,11 +1,10 @@
 import Dropzone from 'react-dropzone';
 import { useDropzone } from 'react-dropzone';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Image } from 'react-bootstrap';
 import { CameraIcon, BackArrow, Calendar } from 'components/svg';
 import './MainUpload.scss';
 import { useState, useRef, useEffect } from 'react';
-import Input from 'shared/input';
 import { Row, Col } from 'react-bootstrap';
 import Button from 'shared/button';
 import SelectBox from 'shared/select-box';
@@ -16,18 +15,47 @@ import { uploadImage } from 'reducers/redux-utils/common';
 import ModalSeries from 'shared/modal-series/ModalSeries';
 
 export default function MainUpload() {
-	const [textareaValue, setTextareaValue] = useState('');
 	const [releaseDate, setReleaseDate] = useState(null);
 	const inpCalendar = useRef();
 	const dispatch = useDispatch();
 
-	const [imgUrl, setImgUrl] = useState('');
-	const [inputNameGroup, setInputNameBook] = useState('');
-	const [languages, setLanguages] = useState('');
+	const [imgUrl, setImgUrl] = useState(undefined);
+	const [language, setLanguage] = useState('');
+
+	const initialState = {
+		title: '',
+		subTitle: '',
+		originalTitle: '',
+		author: '',
+		translator: '',
+		theme: '',
+		publisher: '',
+		isbn: '',
+		totalPages: '',
+		description: '',
+	};
+
+	const [
+		{ title, subTitle, originalTitle, author, translator, theme, publisher, isbn, totalPages, description },
+		setState,
+	] = useState(initialState);
+
+	const onChange = e => {
+		const { name, value } = e.target;
+		setState(prevState => ({ ...prevState, [name]: value }));
+	};
+
+	const clearState = () => {
+		setImgUrl('');
+		setReleaseDate(null);
+		setLanguage('');
+		setState({ ...initialState });
+	};
 
 	const [showModalSeries, setShowModalSeries] = useState(false);
 	const handleCloseModalSeries = () => setShowModalSeries(false);
 	const handleShowModalSeries = () => setShowModalSeries(true);
+
 	const APIListSeries = [
 		{ id: '1', title: 'Ươm mầm tỉ phú nhí' },
 		{ id: '2', title: 'Ươm mầm tỉ phú nhí' },
@@ -44,28 +72,31 @@ export default function MainUpload() {
 	const languagesRef = useRef({ value: 'default', title: 'Ngôn ngữ' });
 
 	const onchangeLanguages = data => {
-		setLanguages(data);
+		setLanguage(data.value);
 	};
 
-	const navigate = useNavigate();
-	const handleClick = () => {
-		navigate('/');
-	};
-	const onInputChange = f => e => f(e.target.value);
-
-	const GoBack = () => {
-		return (
-			<div className='group-btn-back'>
-				<button onClick={() => handleClick()}>
-					<BackArrow />
-				</button>{' '}
-				<span>Thêm sách</span>
-			</div>
-		);
-	};
-
-	const updateTxtAreaValue = e => {
-		setTextareaValue(e.target.value);
+	const onBtnSaveClick = () => {
+		// B1: Thu thập dữ liệu
+		const bookInfo = {
+			imgUrl: imgUrl,
+			title: title,
+			subTitle: subTitle,
+			originalTitle: originalTitle,
+			author: author,
+			translator: translator,
+			theme: theme,
+			publisher: publisher,
+			isbn: isbn,
+			releaseDate: releaseDate,
+			totalPages: totalPages,
+			language: language,
+			series: '',
+			description: description,
+		};
+		console.log(bookInfo);
+		// B2: Kiểm tra dữ liệu
+		// B3: Gọi api
+		// B4: Xử lý hiển thị kết quả
 	};
 
 	useEffect(() => {
@@ -79,7 +110,16 @@ export default function MainUpload() {
 
 	return (
 		<>
-			<div className='upload-icon-goback'>{GoBack()}</div>
+			<div className='group-btn-back'>
+				<Link to='/'>
+					<button style={{ width: '48px', height: '48px' }}>
+						<BackArrow />
+					</button>
+				</Link>
+				<span style={{ fontWeight: '700', fontSize: '24px', lineHeight: '32px', letterSpacing: '1px' }}>
+					Thêm sách
+				</span>
+			</div>
 			<div className='upload-book-form'>
 				<div className='upload-image__wrapper'>
 					{imgUrl ? (
@@ -106,49 +146,79 @@ export default function MainUpload() {
 						<label>
 							Tên sách<span className='upload-text-danger'>*</span>
 						</label>
-						<Input isBorder={false} placeholder='Tên sách' handleChange={onInputChange(setInputNameBook)} />
+						<input
+							className='input input--non-border'
+							placeholder='Tên sách'
+							value={title}
+							name='title'
+							onChange={onChange}
+						></input>
 					</div>
 					<div className='inp-book'>
 						<label>Tiêu đề phụ</label>
-						<Input
-							isBorder={false}
+						<input
+							className='input input--non-border'
 							placeholder='Tiêu đề phụ'
-							handleChange={onInputChange(setInputNameBook)}
-						/>
+							value={subTitle}
+							name='subTitle'
+							onChange={onChange}
+						></input>
 					</div>
 					<div className='inp-book'>
 						<label>Tên sách gốc</label>
-						<Input
-							isBorder={false}
+						<input
+							className='input input--non-border'
 							placeholder='Tên sách gốc'
-							handleChange={onInputChange(setInputNameBook)}
-						/>
+							value={originalTitle}
+							name='originalTitle'
+							onChange={onChange}
+						></input>
 					</div>
 					<div className='inp-book'>
 						<label>
 							Tác giả<span className='upload-text-danger'>*</span>
 						</label>
-						<Input isBorder={false} placeholder='Tác giả' handleChange={onInputChange(setInputNameBook)} />
+						<input
+							className='input input--non-border'
+							placeholder='Tác giả'
+							value={author}
+							name='author'
+							onChange={onChange}
+						></input>
 					</div>
 					<div className='inp-book'>
 						<label>Dịch giả</label>
-						<Input isBorder={false} placeholder='Dịch giả' handleChange={onInputChange(setInputNameBook)} />
+						<input
+							className='input input--non-border'
+							placeholder='Dịch giả'
+							value={translator}
+							name='translator'
+							onChange={onChange}
+						></input>
 					</div>
 					<div className='inp-book'>
 						<label>
 							Chủ đề<span className='upload-text-danger'>*</span>
 						</label>
-						<Input isBorder={false} placeholder='Tên sách' handleChange={onInputChange(setInputNameBook)} />
+						<input
+							className='input input--non-border'
+							placeholder='Chủ đề'
+							value={theme}
+							name='theme'
+							onChange={onChange}
+						></input>
 					</div>
 					<div className='inp-book'>
 						<label>
 							Nhà xuất bản<span className='upload-text-danger'>*</span>
 						</label>
-						<Input
-							isBorder={false}
+						<input
+							className='input input--non-border'
 							placeholder='Nhà xuất bản'
-							handleChange={onInputChange(setInputNameBook)}
-						/>
+							value={publisher}
+							name='publisher'
+							onChange={onChange}
+						></input>
 					</div>
 					<div className='inp-book'>
 						<Row>
@@ -156,11 +226,13 @@ export default function MainUpload() {
 								<label>
 									ISBN<span className='upload-text-danger'>*</span>
 								</label>
-								<Input
-									isBorder={false}
+								<input
+									className='input input--non-border'
 									placeholder='ISBN'
-									handleChange={onInputChange(setInputNameBook)}
-								/>
+									value={isbn}
+									name='isbn'
+									onChange={onChange}
+								></input>
 							</Col>
 							<Col xs={6}>
 								<label>Ngày phát hành</label>
@@ -189,19 +261,20 @@ export default function MainUpload() {
 								<label>
 									Số trang<span className='upload-text-danger'>*</span>
 								</label>
-								<Input
-									type='number'
-									isBorder={false}
+								<input
+									className='input input--non-border'
 									placeholder='Số trang'
-									handleChange={onInputChange(setInputNameBook)}
-								/>
+									value={totalPages}
+									name='totalPages'
+									onChange={onChange}
+								></input>
 							</Col>
 							<Col>
 								<label>
 									Ngôn ngữ<span className='upload-text-danger'>*</span>
 								</label>
 								<SelectBox
-									name='languages'
+									name='language'
 									list={listLanguages}
 									defaultOption={languagesRef.current}
 									onChangeOption={onchangeLanguages}
@@ -230,23 +303,22 @@ export default function MainUpload() {
 							Mô tả<span className='upload-text-danger'>*</span>
 						</label>
 						<div className='txtarea'>
-							<textarea placeholder='' rows={9} value={textareaValue} onChange={updateTxtAreaValue} />
+							<textarea rows={9} value={description} name='description' onChange={onChange} />
 						</div>
 					</div>
 					<Row>
 						<Col>
-							<Button onClick={() => console.log('Xóa tất cả')} className='btn btnMainUpload' isOutline>
+							<Button onClick={clearState} className='btn btnMainUpload' isOutline>
 								Xóa tất cả
 							</Button>
 						</Col>
 						<Col>
-							<Button onClick={() => console.log('Lưu')} className='btn btnMainUpload'>
+							<Button onClick={onBtnSaveClick} className='btn btnMainUpload'>
 								Lưu
 							</Button>
 						</Col>
 					</Row>
 				</div>
-				{/* </div> */}
 			</div>
 		</>
 	);

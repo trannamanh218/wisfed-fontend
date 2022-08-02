@@ -2,20 +2,37 @@ import { Modal, Row, Col } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import SearchField from 'shared/search-field';
 import './ModalSeries.scss';
-import Add from 'assets/icons/add.svg';
 import { useState } from 'react';
+import AddSeriesForm from './addSeriesForm/AddSeriesForm';
 
 const ModalSeries = ({ showModalSeries, handleCloseModalSeries, APIListSeries }) => {
+	const [series, setSeries] = useState('');
 	const [inputSearch, setInputSearch] = useState('');
+
 	const handleSearch = e => {
 		setInputSearch(e.target.value);
 	};
+
+	const onItemChange = item => {
+		setSeries(item.title);
+	};
+
+	const handleClose = () => {
+		handleCloseModalSeries();
+		setSeries('');
+	};
+
 	return (
-		<Modal className='modal-series' show={showModalSeries} onHide={handleCloseModalSeries}>
+		<Modal className='modal-series' show={showModalSeries} onHide={handleClose}>
 			<Modal.Body>
 				<div className='modal-series__header'>
 					<label>Sê-ri</label>
-					<input className='input input--non-border' placeholder='Sê-ri bộ sách'></input>
+					<input
+						className='input input--non-border'
+						placeholder='Sê-ri bộ sách'
+						disabled
+						value={series}
+					></input>
 				</div>
 
 				<div className='modal-series__body'>
@@ -34,7 +51,12 @@ const ModalSeries = ({ showModalSeries, handleCloseModalSeries, APIListSeries })
 									</Col>
 									<Col xs={2} className='series-options-checkbox'>
 										<label className='series-options-container'>
-											<input type='radio' id={item.id} name='series' value={item.id} />
+											<input
+												type='radio'
+												id={item.id}
+												name={item.title}
+												onChange={() => onItemChange(item)}
+											/>
 											<div className='series-options-checkmark'></div>
 										</label>
 									</Col>
@@ -42,12 +64,9 @@ const ModalSeries = ({ showModalSeries, handleCloseModalSeries, APIListSeries })
 							);
 						})}
 					</div>
-
-					<input className='input input--non-border' placeholder='Nhập để thêm tên sê-ri'></input>
-					<div className='modal-series__body__button' onClick={() => console.log('thêm sê-ri')}>
-						<img src={Add} />
-						<span>Thêm tên sê-ri</span>
-					</div>
+					<AddSeriesForm
+					// updateBookShelve={updateBookShelve}
+					/>
 				</div>
 				<div className='modal-series__footer'>
 					<button onClick={() => console.log('xác nhận')}>
