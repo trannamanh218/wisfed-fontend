@@ -204,6 +204,14 @@ const Header = () => {
 		window.scrollTo(0, 0);
 	};
 
+	const handlePopup = () => {
+		if (userLogin) {
+			setIsShow(true);
+		} else {
+			handleUserLogin();
+		}
+	};
+
 	return (
 		<div className='header'>
 			<div className='header__left'>
@@ -222,7 +230,7 @@ const Header = () => {
 					<input
 						className='header__search__input'
 						placeholder='Tìm kiếm trên Wisfeed'
-						onClick={() => setIsShow(true)}
+						onClick={handlePopup}
 						disabled={isShow}
 						value={getSlugResult || ''}
 						onChange={() => {}}
@@ -263,8 +271,11 @@ const Header = () => {
 						{activeLink === `/shelves/${userInfo.id}` ? <BookFillIcon /> : <BookIcon />}
 					</Link>
 				</li>
-				<li className={classNames('header__nav__item', { active: activeLink === '/group' })}>
-					<Link className='header__nav__link' to='/group'>
+				<li
+					onClick={handleUserLogin}
+					className={classNames('header__nav__item', { active: activeLink === '/group' })}
+				>
+					<Link className='header__nav__link' to={userLogin && '/group'}>
 						{activeLink === '/group' ? <GroupFillIcon /> : <GroupIcon />}
 					</Link>
 				</li>

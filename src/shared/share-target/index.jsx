@@ -3,10 +3,10 @@ import { useSelector } from 'react-redux';
 
 import LinearProgressBar from 'shared/linear-progress-bar';
 import UserAvatar from 'shared/user-avatar';
+import './index.scss';
 
 function ShareTarget({ postsData }) {
 	const { userInfo } = useSelector(state => state.auth);
-
 	const renderContentTop = () => {
 		return (
 			<div className='reading-target__content__top'>
@@ -18,13 +18,13 @@ function ShareTarget({ postsData }) {
 	};
 
 	return (
-		<div>
+		<div className='creat-post-modal-content__main__share-container'>
 			<div className='reading-target__process'>
 				<UserAvatar className='reading-target__user' source={userInfo?.avatarImage} size='lg' />
 				<div className='reading-target__content'>
 					{renderContentTop()}
 					<div className='reading-target__content__bottom'>
-						<LinearProgressBar percent={20} />
+						<LinearProgressBar percent={postsData?.percent} label={`${postsData?.percent} %`} />
 					</div>
 				</div>
 			</div>
