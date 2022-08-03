@@ -14,8 +14,6 @@ const ShareUsers = ({ postsData }) => {
 				return 'Like nhiều nhất';
 			case 'topFollow':
 				return 'Follow nhiều nhất';
-			default:
-				break;
 		}
 	};
 

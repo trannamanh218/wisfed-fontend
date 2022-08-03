@@ -56,7 +56,7 @@ const NotificationModal = ({ setModalNotti, buttonModal, realTime }) => {
 				setRenderFriend(true);
 			}
 		}
-	}, []);
+	}, [getNotifications]);
 
 	const getMyNotification = async () => {
 		try {
@@ -197,7 +197,6 @@ const NotificationModal = ({ setModalNotti, buttonModal, realTime }) => {
 							<Tab eventKey='friendrequest' title='Lời mời kết bạn'>
 								{renderFriend ? (
 									<>
-										{' '}
 										<div className='notificaiton__all__title'>{lengthAddFriend()} lời kết bạn</div>
 										{getNotifications.map(
 											item =>

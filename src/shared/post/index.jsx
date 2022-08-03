@@ -53,7 +53,7 @@ function Post({ postInformations, showModalCreatPost, inReviews = false }) {
 	const { bookId } = useParams();
 
 	useEffect(() => {
-		if (!_.isEmpty(postInformations) && postInformations.usersComments.length) {
+		if (!_.isEmpty(postInformations) && postInformations.usersComments?.length) {
 			const commentsReverse = [...postInformations.usersComments];
 			commentsReverse.reverse();
 			setPostData({ ...postInformations, usersComments: commentsReverse });
@@ -317,8 +317,6 @@ function Post({ postInformations, showModalCreatPost, inReviews = false }) {
 					return 'tháng';
 				case 'year':
 					return 'năm';
-				default:
-					break;
 			}
 		}
 	};

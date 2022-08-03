@@ -67,15 +67,14 @@ function CreatPostModalContent({
 	const [showUpload, setShowUpload] = useState(false);
 	const [imagesUpload, setImagesUpload] = useState([]);
 	const [validationInput, setValidationInput] = useState('');
-
-	const dispatch = useDispatch();
-
 	const taggedDataPrevious = usePrevious(taggedData);
 	const [valueStar, setValueStar] = useState(0);
 	const [checkProgress, setCheckProgress] = useState();
 	const [showImagePopover, setShowImagePopover] = useState(false);
 	const [buttonActive, setButtonActive] = useState(false);
 	const [content, setContent] = useState('');
+
+	const dispatch = useDispatch();
 
 	const location = useLocation();
 	const UpdateImg = useSelector(state => state.chart.updateImgPost);
@@ -644,7 +643,7 @@ function CreatPostModalContent({
 										'creat-post-modal-content__main__share-container'
 									}
 								>
-									{isShare && <PostQuotes postsData={postsData} isShare={isShare} />}
+									{isShare && <PostQuotes postsData={postsData} />}
 									{isSharePosts && (
 										<Post postInformations={postsData} showModalCreatPost={showModalCreatPost} />
 									)}

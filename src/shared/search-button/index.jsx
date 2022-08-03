@@ -18,10 +18,12 @@ const SearchButton = ({ handleChange, value, handleClickSearch, onKeyDown }) => 
 		</div>
 	);
 };
+
 SearchButton.propTypes = {
 	handleChange: PropTypes.func,
 	value: PropTypes.string,
 	handleClickSearch: PropTypes.func,
 	onKeyDown: PropTypes.func,
 };
+
 export default SearchButton;

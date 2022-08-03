@@ -237,7 +237,7 @@ const ReviewTab = ({ currentTab }) => {
 					<SearchField
 						value={inputSearch}
 						handleChange={ChangeSearch}
-						placeholder='Tìm kiếm theo Hastag, tên người review ...'
+						placeholder='Tìm kiếm theo Hashtag, tên người review ...'
 					/>
 				</div>
 				{currentTab === 'reviews' && reviewList.length ? (

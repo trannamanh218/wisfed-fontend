@@ -1,6 +1,4 @@
-import React from 'react';
 import { useSelector } from 'react-redux';
-
 import LinearProgressBar from 'shared/linear-progress-bar';
 import UserAvatar from 'shared/user-avatar';
 
