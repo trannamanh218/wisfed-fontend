@@ -526,8 +526,6 @@ function CreatPostModalContent({
 		}
 	};
 
-	console.log(postsData);
-
 	return (
 		<div className='creat-post-modal-content'>
 			<Circle loading={status === STATUS_LOADING} />
@@ -637,6 +635,7 @@ function CreatPostModalContent({
 									<IconRanks />
 								</div>
 							)}
+
 							{(isShare || isSharePosts || isSharePostsAll === 'shareTopBook') && (
 								<div
 									className={
@@ -646,17 +645,14 @@ function CreatPostModalContent({
 									}
 								>
 									{isShare && <PostQuotes postsData={postsData} isShare={isShare} />}
-									{isSharePosts && postsData.verb !== 'shareTargetRead' && (
+									{isSharePosts && (
 										<Post postInformations={postsData} showModalCreatPost={showModalCreatPost} />
 									)}
 									{isSharePostsAll === 'shareTopBook' && <AuthorBook data={postsData} />}
-									{postsData.booksReadCount > 0 && postsData.verb === 'shareTargetRead' && (
-										<ShareTarget postsData={postsData} />
-									)}
-									{postsData.verb === 'shareTargetRead' && <Post postInformations={postsData} />}
 								</div>
 							)}
 							{isSharePostsAll === 'shareTopUser' && <ShareUsers postsData={postsData} />}
+							{postsData.booksReadCount > 0 && <ShareTarget postsData={postsData} />}
 
 							{!_.isEmpty(taggedData.addBook) || showUpload ? (
 								<>

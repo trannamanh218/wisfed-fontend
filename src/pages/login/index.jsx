@@ -114,7 +114,8 @@ function Login() {
 					<FaceBookIcon className='login__fbIcon' /> <button>Đăng nhập bằng Facebook</button>
 				</div>
 				<div className='login-gmail'>
-					<GmailIcon className='GmailIcon' /> <button>Đăng nhập bằng Gmail</button>
+					<GmailIcon className='GmailIcon' />
+					<button>Đăng nhập bằng Gmail</button>
 				</div>
 				<hr style={{ opacity: '0.05' }} />
 				<div>

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import './style.scss';
 import { Link } from 'react-router-dom';
@@ -10,13 +10,35 @@ import { getGroupList } from 'reducers/redux-utils/group';
 import { NotificationError } from 'helpers/Error';
 import _ from 'lodash';
 import defaultAvatar from 'assets/images/Rectangle 17435.png';
+import { useSelector } from 'react-redux';
+
 const MainLayout = ({ filter }) => {
 	const [list, setList] = useState([]);
 	const [hasMore, setHasMore] = useState(true);
+
 	const callApiStart = useRef(9);
 	const callApiPerPage = useRef(9);
 	const dispatch = useDispatch();
-	const groupList = async () => {
+
+	const resetGroupList = useSelector(state => state.group.resetGroupList);
+
+	const getGroupListFirstTime = async () => {
+		try {
+			const params = {
+				start: 0,
+				limit: callApiPerPage.current,
+			};
+			const data = await dispatch(getGroupList(params)).unwrap();
+			if (!data.rows.length || data.rows.length < callApiPerPage.current) {
+				setHasMore(false);
+			}
+			setList(data.rows);
+		} catch (err) {
+			NotificationError(err);
+		}
+	};
+
+	const getGroupListNextTimes = async () => {
 		try {
 			const params = {
 				start: callApiStart.current,
@@ -24,7 +46,7 @@ const MainLayout = ({ filter }) => {
 			};
 			const data = await dispatch(getGroupList(params)).unwrap();
 			if (data.rows.length) {
-				if (data.length < callApiPerPage.current) {
+				if (data.rows.length < callApiPerPage.current) {
 					setHasMore(false);
 				} else {
 					callApiStart.current += callApiPerPage.current;
@@ -37,26 +59,26 @@ const MainLayout = ({ filter }) => {
 			NotificationError(err);
 		}
 	};
-	const listGroup = async () => {
-		const actionGetList = await dispatch(getGroupList());
-		setList(actionGetList.payload.rows);
-	};
+
 	useEffect(() => {
-		listGroup();
-	}, []);
+		setHasMore(true);
+		callApiStart.current = 9;
+		getGroupListFirstTime();
+	}, [resetGroupList]);
+
 	return (
 		<>
-			{list?.length < 1 && !_.isEmpty(filter) ? (
+			{!list?.length && !_.isEmpty(filter) ? (
 				<div style={{ marginTop: '54px', padding: '24px' }}>
 					<ResultNotFound />
 				</div>
 			) : (
 				<>
-					{!filter ? '' : <h2 className='main__title'>Gợi ý nhóm</h2>}
+					{filter && <h2 className='main__title'>Gợi ý nhóm</h2>}
 					{
 						<InfiniteScroll
 							dataLength={list.length}
-							next={groupList}
+							next={getGroupListNextTimes}
 							hasMore={hasMore}
 							loader={<LoadingIndicator />}
 						>
@@ -101,8 +123,10 @@ const MainLayout = ({ filter }) => {
 		</>
 	);
 };
+
 MainLayout.propTypes = {
 	listGroup: PropTypes.array,
 	filter: PropTypes.bool,
 };
+
 export default MainLayout;

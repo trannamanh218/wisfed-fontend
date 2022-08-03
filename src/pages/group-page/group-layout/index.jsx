@@ -1,5 +1,5 @@
 import { BackArrow } from 'components/svg';
-import React, { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MainLayout from './mainLayout';
 import SidebarLeft from './sidebarLeft';
@@ -11,7 +11,6 @@ import MainContainerLeft from 'components/layout/main-container-left';
 import SearchField from 'shared/search-field';
 import _ from 'lodash';
 import { NotificationError } from 'helpers/Error';
-// import Circle from 'shared/loading/circle';
 import { useVisible } from 'shared/hooks';
 import MainLayoutSearch from './MainLayoutSearch';
 import { Modal } from 'react-bootstrap';
@@ -23,24 +22,22 @@ const LayoutGroup = () => {
 	const [filter, setFilter] = useState('[]');
 	const dispatch = useDispatch();
 	const [isShowScreen, setIsShhowScreen] = useState(true);
-	// const [isFetching, setIsFetching] = useState(true);
 	const [show, setShow] = useState(false);
-	const { ref: showRef, isVisible: isShow, setIsVisible: setIsShow } = useVisible(false);
+	const { ref: showRef } = useVisible(false);
 
 	const listMyGroup = async () => {
 		try {
 			const actionListMyGroup = await dispatch(getMyGroup());
 			setMyGroup(actionListMyGroup.payload.data);
-			// setIsFetching(false);
 		} catch (error) {
 			NotificationError(error);
 		}
 	};
+
 	const listAdminMyGroup = async () => {
 		try {
 			const actionlistAdminMyGroup = await dispatch(getMyAdminGroup());
 			setAdminGroup(actionlistAdminMyGroup.payload.data);
-			// setIsFetching(false);
 		} catch (error) {
 			NotificationError(error);
 		}
@@ -104,7 +101,6 @@ const LayoutGroup = () => {
 	return (
 		<>
 			<div style={{ position: 'relative' }}>
-				{/* <Circle loading={isFetching} /> */}
 				<>
 					{isShowScreen ? (
 						<MainContainerLeft

@@ -5,6 +5,7 @@ import './index.scss';
 
 function ShareTarget({ postsData }) {
 	const { userInfo } = useSelector(state => state.auth);
+
 	const renderContentTop = () => {
 		return (
 			<div className='reading-target__content__top'>
