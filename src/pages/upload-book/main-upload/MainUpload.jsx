@@ -22,6 +22,8 @@ export default function MainUpload() {
 	const [imgUrl, setImgUrl] = useState(undefined);
 	const [language, setLanguage] = useState('');
 	const [series, setSeries] = useState({});
+	const [seriesName, setSeriesName] = useState('');
+	const [resetSelect, setResetSelect] = useState(false);
 
 	const initialState = {
 		name: '',
@@ -46,10 +48,15 @@ export default function MainUpload() {
 		setState(prevState => ({ ...prevState, [name]: value }));
 	};
 
+	const languagesRef = useRef({ value: 'default', name: 'Ngôn ngữ' });
+
 	const clearState = () => {
 		setImgUrl('');
 		setReleaseDate(null);
 		setLanguage('');
+		setResetSelect(!resetSelect);
+		setSeries({});
+		setSeriesName('');
 		setState({ ...initialState });
 	};
 
@@ -63,8 +70,6 @@ export default function MainUpload() {
 		{ value: 'VN', name: 'Việt Nam' },
 		{ value: 'EN', name: 'Anh' },
 	];
-
-	const languagesRef = useRef({ value: 'default', name: 'Ngôn ngữ' });
 
 	const onchangeLanguages = data => {
 		setLanguage(data.value);
@@ -102,6 +107,10 @@ export default function MainUpload() {
 		const imageUploadedData = await dispatch(uploadImage(acceptedFiles)).unwrap();
 		setImgUrl(imageUploadedData?.streamPath);
 	};
+
+	useEffect(() => {
+		setSeriesName(series.name);
+	}, [series]);
 
 	return (
 		<>
@@ -274,6 +283,7 @@ export default function MainUpload() {
 									defaultOption={languagesRef.current}
 									onChangeOption={onchangeLanguages}
 									imgDropDown={ArrowChevronForward}
+									resetSelect={resetSelect}
 								/>
 							</Col>
 						</Row>
@@ -284,7 +294,8 @@ export default function MainUpload() {
 							className='input input--non-border'
 							onClick={handleShowModalSeries}
 							placeholder='Sê-ri bộ sách'
-							value={series.name}
+							value={seriesName}
+							readOnly
 						></input>
 						<div className='modal-series'>
 							<ModalSeries
