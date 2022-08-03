@@ -12,14 +12,16 @@
 	gap: 37px;
 
 	.upload-image {
-		border-radius: 12px;
+		border-radius: 6px;
 		&__wrapper {
 			width: 199px;
 			height: 223px;
+			border-radius: 6px;
 			img {
-				width: 199px;
+				max-width: 199px;
+				height: 100%;
 				object-fit: cover;
-				border-radius: 16px;
+				border-radius: 6px;
 			}
 			.dropzone.upload-image {
 				width: 199px;
