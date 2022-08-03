@@ -26,6 +26,7 @@ function Login() {
 	const [isPublic, setIsPublic] = useState(false);
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
+	const [registerEmailFill, setRegisterEmailFill] = useState('');
 
 	const handleSubmit = async data => {
 		try {
@@ -57,6 +58,10 @@ function Login() {
 	useEffect(() => {
 		if (Storage.getAccessToken()) {
 			navigate('/');
+		}
+		const registerEmailFillLocalStorage = localStorage.getItem('registerEmailFill');
+		if (registerEmailFillLocalStorage) {
+			setRegisterEmailFill(registerEmailFillLocalStorage);
 		}
 	}, []);
 
@@ -135,7 +140,7 @@ function Login() {
 												type='email'
 												placeholder='Email'
 												{...field}
-												value={field.value}
+												value={registerEmailFill || field.value}
 												autoComplete='false'
 												style={meta.error ? { width: '93%' } : { width: '100%' }}
 											/>
