@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import Add from 'assets/icons/add.svg';
 
-const AddSeriesForm = ({ updateBookShelve }) => {
+const AddSeriesForm = ({ updateSeries }) => {
 	const [showInput, setShowInput] = useState(false);
 
 	const addSeries = () => {
@@ -14,10 +14,8 @@ const AddSeriesForm = ({ updateBookShelve }) => {
 	};
 
 	const handleSubmit = values => {
-		const name = values.name.trim();
-		if (name) {
-			const params = { name };
-			updateBookShelve(params);
+		if (values) {
+			updateSeries(values);
 		}
 		setShowInput(false);
 	};
@@ -72,6 +70,7 @@ AddSeriesForm.propTypes = {
 	setShowInput: PropTypes.func,
 	showInput: PropTypes.bool,
 	addSeries: PropTypes.func,
+	updateSeries: PropTypes.func,
 };
 
 export default AddSeriesForm;

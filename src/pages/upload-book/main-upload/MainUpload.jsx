@@ -10,7 +10,7 @@ import Button from 'shared/button';
 import SelectBox from 'shared/select-box';
 import ArrowChevronForward from 'assets/images/ArrowChevronForward.png';
 import Datepicker from 'react-datepicker';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { uploadImage } from 'reducers/redux-utils/common';
 import ModalSeries from 'shared/modal-series/ModalSeries';
 
@@ -21,9 +21,10 @@ export default function MainUpload() {
 
 	const [imgUrl, setImgUrl] = useState(undefined);
 	const [language, setLanguage] = useState('');
+	const [series, setSeries] = useState({});
 
 	const initialState = {
-		title: '',
+		name: '',
 		subTitle: '',
 		originalTitle: '',
 		author: '',
@@ -36,7 +37,7 @@ export default function MainUpload() {
 	};
 
 	const [
-		{ title, subTitle, originalTitle, author, translator, theme, publisher, isbn, totalPages, description },
+		{ name, subTitle, originalTitle, author, translator, theme, publisher, isbn, totalPages, description },
 		setState,
 	] = useState(initialState);
 
@@ -56,20 +57,14 @@ export default function MainUpload() {
 	const handleCloseModalSeries = () => setShowModalSeries(false);
 	const handleShowModalSeries = () => setShowModalSeries(true);
 
-	const APIListSeries = [
-		{ id: '1', title: 'Ươm mầm tỉ phú nhí' },
-		{ id: '2', title: 'Ươm mầm tỉ phú nhí' },
-		{ id: '3', title: 'Ươm mầm tỉ phú nhí' },
-	];
-
 	const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
 
 	const listLanguages = [
-		{ value: 'VN', title: 'Việt Nam' },
-		{ value: 'EN', title: 'Anh' },
+		{ value: 'VN', name: 'Việt Nam' },
+		{ value: 'EN', name: 'Anh' },
 	];
 
-	const languagesRef = useRef({ value: 'default', title: 'Ngôn ngữ' });
+	const languagesRef = useRef({ value: 'default', name: 'Ngôn ngữ' });
 
 	const onchangeLanguages = data => {
 		setLanguage(data.value);
@@ -79,7 +74,7 @@ export default function MainUpload() {
 		// B1: Thu thập dữ liệu
 		const bookInfo = {
 			imgUrl: imgUrl,
-			title: title,
+			name: name,
 			subTitle: subTitle,
 			originalTitle: originalTitle,
 			author: author,
@@ -90,7 +85,7 @@ export default function MainUpload() {
 			releaseDate: releaseDate,
 			totalPages: totalPages,
 			language: language,
-			series: '',
+			series: series,
 			description: description,
 		};
 		console.log(bookInfo);
@@ -149,8 +144,8 @@ export default function MainUpload() {
 						<input
 							className='input input--non-border'
 							placeholder='Tên sách'
-							value={title}
-							name='title'
+							value={name}
+							name='name'
 							onChange={onChange}
 						></input>
 					</div>
@@ -294,7 +289,8 @@ export default function MainUpload() {
 							<ModalSeries
 								showModalSeries={showModalSeries}
 								handleCloseModalSeries={handleCloseModalSeries}
-								APIListSeries={APIListSeries}
+								series={series}
+								setSeries={setSeries}
 							/>
 						</div>
 					</div>

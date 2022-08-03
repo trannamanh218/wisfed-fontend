@@ -13,6 +13,10 @@
 		align-items: stretch;
 		padding: 33px 29px;
 		gap: 16px;
+
+		.error-message {
+			margin-left: 0px;
+		}
 	}
 
 	&__header {

@@ -159,3 +159,9 @@ export const randomAuthorAPI = '/api/v1/users/randomAuthor';
 export const detailFeedPost = id => `/api/v1/getstream/feedDetail/${id}`;
 export const detailFeedPostGroup = id => `/api/v1/groups/detailFeed/${id}`;
 export const newNotification = '/api/v1/getstream/notification';
+
+// series
+export const getMySeriesAPI = `api/v1/series/mySeries`;
+export const getListBookBySeriesAPI = id => `/api/v1/series/listBook/${id}`;
+export const getSeriesDetailAPI = id => `/api/v1/series/${id}`;
+export const postMoreSeriesAPI = `/api/v1/series/`;

@@ -4,9 +4,17 @@ import SearchField from 'shared/search-field';
 import './ModalSeries.scss';
 import { useState } from 'react';
 import AddSeriesForm from './addSeriesForm/AddSeriesForm';
+import { useDispatch } from 'react-redux';
+import { NotificationError } from 'helpers/Error';
+import { getMySeries, getListBookBySeries, getSeriesDetail, postMoreSeries } from 'reducers/redux-utils/series';
+import { useEffect } from 'react';
+import _ from 'lodash';
 
-const ModalSeries = ({ showModalSeries, handleCloseModalSeries, APIListSeries }) => {
-	const [series, setSeries] = useState('');
+const ModalSeries = ({ showModalSeries, handleCloseModalSeries, series, setSeries }) => {
+	const [APIListSeries, setAPIListSeries] = useState([]);
+
+	const dispatch = useDispatch();
+
 	const [inputSearch, setInputSearch] = useState('');
 
 	const handleSearch = e => {
@@ -14,13 +22,45 @@ const ModalSeries = ({ showModalSeries, handleCloseModalSeries, APIListSeries })
 	};
 
 	const onItemChange = item => {
-		setSeries(item.title);
+		setSeries(item);
 	};
 
 	const handleClose = () => {
 		handleCloseModalSeries();
 		setSeries('');
 	};
+
+	const handlePostMoreSeries = async params => {
+		try {
+			await dispatch(postMoreSeries(params)).unwrap();
+		} catch (err) {
+			NotificationError(err);
+		}
+	};
+
+	const updateSeries = params => {
+		handlePostMoreSeries(params);
+	};
+
+	const handleConfirm = () => {
+		handleCloseModalSeries();
+	};
+
+	const handleGetSeriesList = async () => {
+		try {
+			const res = await dispatch(getMySeries()).unwrap();
+			const newArr = res.filter(item => item.name.toLowerCase().includes(inputSearch.toLowerCase()));
+			setTimeout(function () {
+				setAPIListSeries(newArr);
+			}, 1000);
+		} catch (err) {
+			NotificationError(err);
+		}
+	};
+
+	useEffect(() => {
+		handleGetSeriesList();
+	}, [APIListSeries]);
 
 	return (
 		<Modal className='modal-series' show={showModalSeries} onHide={handleClose}>
@@ -31,7 +71,7 @@ const ModalSeries = ({ showModalSeries, handleCloseModalSeries, APIListSeries })
 						className='input input--non-border'
 						placeholder='Sê-ri bộ sách'
 						disabled
-						value={series}
+						value={series.name || ''}
 					></input>
 				</div>
 
@@ -43,18 +83,18 @@ const ModalSeries = ({ showModalSeries, handleCloseModalSeries, APIListSeries })
 						value={inputSearch}
 					/>
 					<div className='modal-series__body__options'>
-						{APIListSeries.map(item => {
+						{APIListSeries.map((item, index) => {
 							return (
-								<Row key={item.id}>
+								<Row key={index}>
 									<Col xs={10}>
-										<div className='series-options-title'>{item.title}</div>
+										<div className='series-options-title'>{item.name}</div>
 									</Col>
 									<Col xs={2} className='series-options-checkbox'>
 										<label className='series-options-container'>
 											<input
 												type='radio'
 												id={item.id}
-												name={item.title}
+												name='title'
 												onChange={() => onItemChange(item)}
 											/>
 											<div className='series-options-checkmark'></div>
@@ -64,12 +104,10 @@ const ModalSeries = ({ showModalSeries, handleCloseModalSeries, APIListSeries })
 							);
 						})}
 					</div>
-					<AddSeriesForm
-					// updateBookShelve={updateBookShelve}
-					/>
+					<AddSeriesForm updateSeries={updateSeries} />
 				</div>
 				<div className='modal-series__footer'>
-					<button onClick={() => console.log('xác nhận')}>
+					<button onClick={handleConfirm}>
 						<span>Xác nhận</span>
 					</button>
 				</div>
@@ -81,16 +119,20 @@ const ModalSeries = ({ showModalSeries, handleCloseModalSeries, APIListSeries })
 ModalSeries.defaultProps = {
 	showModalSeries: false,
 	APIListSeries: [
-		{ id: '1', title: 'Ươm mầm tỉ phú nhí' },
-		{ id: '2', title: 'Ươm mầm tỉ phú nhí' },
-		{ id: '3', title: 'Ươm mầm tỉ phú nhí' },
+		{ id: '1', name: 'Ươm mầm tỉ phú nhí' },
+		{ id: '2', name: 'Ươm mầm tỉ phú nhí' },
+		{ id: '3', name: 'Ươm mầm tỉ phú nhí' },
+		{ id: '4', name: 'Ươm mầm tỉ phú nhí' },
 	],
 };
 
 ModalSeries.propTypes = {
 	showModalSeries: PropTypes.bool,
 	handleCloseModalSeries: PropTypes.func,
-	APIListSeries: PropTypes.array,
+	APIListSeries: PropTypes.array.isRequired,
+	updateSeries: PropTypes.func,
+	series: PropTypes.any,
+	setSeries: PropTypes.func,
 };
 
 export default ModalSeries;
