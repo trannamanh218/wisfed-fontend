@@ -81,6 +81,8 @@ function MainGroupComponent({ handleChange, keyChange, data, member, handleUpdat
 		}
 	};
 
+	const unFollowGroup = async () => {};
+
 	const handleChangeSearch = e => {
 		setValueGroupSearch(e.target.value);
 		debounceSearch(e.target.value);
@@ -251,7 +253,7 @@ function MainGroupComponent({ handleChange, keyChange, data, member, handleUpdat
 									</button>
 									<div className='list__dropdown' style={!showSelect ? { display: 'none' } : {}}>
 										<ul>
-											<li>
+											<li onClick={() => unFollowGroup()}>
 												<CloseIconX /> Bỏ theo dõi
 											</li>
 											<li onClick={() => leaveGroup()}>
