@@ -118,13 +118,15 @@ const MainReadingTarget = () => {
 		);
 	};
 
-	const handleCheckLoginShare = async () => {
+	const handleShareTargetReading = async () => {
 		if (!Storage.getAccessToken()) {
 			return;
 		} else {
+			const percentTemp = ((booksReadYear[0].booksReadCount / booksReadYear[0].numberBook) * 100).toFixed();
 			const target = {
-				numberBook: 1,
-				booksReadCount: 55,
+				numberBook: booksReadYear[0].numberBook,
+				booksReadCount: booksReadYear[0].booksReadCount,
+				percent: percentTemp > 100 ? 100 : percentTemp,
 			};
 			dispatch(saveDataShare(target));
 			setShowShare(true);
@@ -165,7 +167,7 @@ const MainReadingTarget = () => {
 										{userInfo.id === userId && (
 											<button
 												className='btn btn-share btn-primary-light'
-												onClick={handleCheckLoginShare}
+												onClick={handleShareTargetReading}
 											>
 												Chia sẻ
 											</button>
