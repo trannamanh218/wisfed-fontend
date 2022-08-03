@@ -284,6 +284,7 @@ export default function MainUpload() {
 							className='input input--non-border'
 							onClick={handleShowModalSeries}
 							placeholder='Sê-ri bộ sách'
+							value={series.name}
 						></input>
 						<div className='modal-series'>
 							<ModalSeries

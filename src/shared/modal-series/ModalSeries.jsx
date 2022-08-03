@@ -52,7 +52,7 @@ const ModalSeries = ({ showModalSeries, handleCloseModalSeries, series, setSerie
 			const newArr = res.filter(item => item.name.toLowerCase().includes(inputSearch.toLowerCase()));
 			setTimeout(function () {
 				setAPIListSeries(newArr);
-			}, 1000);
+			}, 500);
 		} catch (err) {
 			NotificationError(err);
 		}
