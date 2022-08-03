@@ -44,12 +44,12 @@ const PostActionBar = ({ postData, handleLikeAction }) => {
 			}
 		}
 	};
-	console.log(postData);
+	console.log(postData.usersLikePost);
 	return (
 		<div className='post-action-bar'>
 			<div data-testid='post__options__like-btn' className='post-action-bar__item' onClick={handleLikeAction}>
-				{postData.isLike ||
-				postData.usersLikePost?.includes(postData.usersLikePost.find(x => x.id === userInfo.id)) ? (
+				{postData.isLike ? (
+					// postData.usersLikePost?.includes(postData.usersLikePost.find(x => x.id === userInfo.id))
 					<LikeFill />
 				) : (
 					<Like />
