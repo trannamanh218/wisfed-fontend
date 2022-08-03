@@ -548,7 +548,7 @@ const PopupCreateGroup = ({ handleClose, showRef }) => {
 					/>
 				</div>
 				<div className='form-field--hastag'>
-					<label>Hastag</label>
+					<label>Hashtags</label>
 					<span style={{ color: 'red', marginLeft: '4px' }}>*</span>
 					<div className='list__author-tags'>
 						{listHashtags.length > 0 && (

@@ -288,7 +288,7 @@ const MainCategoryDetail = () => {
 		}
 		setShowModal(false);
 	};
-
+	console.log(bookList);
 	return (
 		<div className='main-category-detail'>
 			<Circle loading={isFetchingBookDetail || status === STATUS_LOADING} />
