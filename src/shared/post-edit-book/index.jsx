@@ -101,12 +101,18 @@ const PostEditBook = props => {
 				{(data.status === STATUS_BOOK.read || data.progress == data.page) && (
 					<div className='post-edit-book__action'>
 						<div className='post-edit-book__ratings'>
-							<ReactRating initialRating={valueStar} fractions={1} handleChange={handleChangeStar} />
+							<ReactRating
+								initialRating={valueStar?.toFixed(1)}
+								fractions={1}
+								handleChange={handleChangeStar}
+							/>
 							<div className='post-edit-book__rating__number'>
 								{!_.isEmpty(listRatingStar) &&
 								listRatingStar.count > 0 &&
 								listRatingStar.avg !== null ? (
-									<div>{`(${listRatingStar.avg}) (${listRatingStar.count} đánh giá)`}</div>
+									<div>{`(${listRatingStar.avg?.toFixed(1)}) (${
+										listRatingStar.count
+									} đánh giá)`}</div>
 								) : (
 									<div>(chưa có đánh giá)</div>
 								)}
