@@ -53,10 +53,15 @@ export default function MainUpload() {
 	const clearState = () => {
 		setImgUrl('');
 		setReleaseDate(null);
+
+		// reset ô select
 		setLanguage('');
 		setResetSelect(!resetSelect);
+
+		// reset ô series
 		setSeries({});
 		setSeriesName('');
+
 		setState({ ...initialState });
 	};
 
@@ -294,7 +299,7 @@ export default function MainUpload() {
 							className='input input--non-border'
 							onClick={handleShowModalSeries}
 							placeholder='Sê-ri bộ sách'
-							value={seriesName}
+							value={seriesName || ''}
 							readOnly
 						></input>
 						<div className='modal-series'>
