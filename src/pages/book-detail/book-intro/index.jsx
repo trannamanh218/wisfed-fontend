@@ -45,10 +45,10 @@ const BookIntro = () => {
 
 	useEffect(() => {
 		fetchData();
-		if (window.innerWidth === 1024) {
+		if (window.innerWidth <= 1024 && window.innerWidth > 820) {
 			setTextLength(300);
 		} else if (window.innerWidth <= 820) {
-			setTextLength(330);
+			setTextLength(280);
 		}
 	}, []);
 

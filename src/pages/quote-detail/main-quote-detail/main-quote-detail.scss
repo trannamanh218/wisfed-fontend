@@ -67,3 +67,18 @@
 		}
 	}
 }
+@media only screen and (max-width: 1024px) {
+	.quote-action__item {
+		gap: 5px;
+		& > div {
+			gap: 5px;
+			margin-right: 10px;
+		}
+		& a {
+			width: 95px;
+		}
+	}
+	.quote-action-bar {
+		gap: 15px;
+	}
+}

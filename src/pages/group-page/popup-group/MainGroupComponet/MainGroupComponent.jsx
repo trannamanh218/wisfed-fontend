@@ -30,6 +30,8 @@ import { uploadImage } from 'reducers/redux-utils/common';
 import camera from 'assets/images/camera.png';
 import { useRef } from 'react';
 import { toast } from 'react-toastify';
+import vector from 'assets/images/Vector.png';
+import pani from 'assets/images/pani.png';
 
 function MainGroupComponent({ handleChange, keyChange, data, member, handleUpdate }) {
 	const [key, setKey] = useState('intro');
@@ -221,6 +223,17 @@ function MainGroupComponent({ handleChange, keyChange, data, member, handleUpdat
 				<div className='group-name__content'>
 					<h2>{name}</h2>
 					<div className='group-name__member'>
+						{data.isPublic && (
+							<div className='groupPublic'>
+								<img src={vector} />
+
+								<span>Nhóm công khai</span>
+								<div className='imgPani'>
+									<img src={pani} />
+								</div>
+							</div>
+						)}
+
 						<span>
 							{memberGroups?.length < 10 ? `0${memberGroups?.length}` : memberGroups?.length} thành viên
 						</span>

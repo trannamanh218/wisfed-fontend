@@ -57,12 +57,10 @@
 }
 
 @media only screen and (max-width: 768px) {
-	.book-review {
-		.tab-content {
-			margin-left: -20px;
-		}
-		.nav-tabs {
-			margin-left: -20px;
-		}
+	.nav-tabs {
+		width: 624px;
+	}
+	.tab-content {
+		width: 624px;
 	}
 }

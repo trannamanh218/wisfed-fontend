@@ -63,3 +63,14 @@
 		}
 	}
 }
+
+@media only screen and (max-width: 1024px) {
+	.infor-tab__heading {
+		font-size: 18px;
+	}
+	.my-quotes {
+		& h4 {
+			font-size: 18px !important;
+		}
+	}
+}

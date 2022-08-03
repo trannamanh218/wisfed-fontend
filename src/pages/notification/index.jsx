@@ -56,7 +56,7 @@ const NotificationModal = ({ setModalNotti, buttonModal, realTime }) => {
 				setRenderFriend(true);
 			}
 		}
-	}, [getNotifications]);
+	}, [selectKey]);
 
 	const getMyNotification = async () => {
 		try {

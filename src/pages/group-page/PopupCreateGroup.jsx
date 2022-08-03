@@ -18,7 +18,7 @@ import { toast } from 'react-toastify';
 import AddAndSearchCategories from 'shared/add-and-search-categories';
 import { getSuggestionForPost } from 'reducers/redux-utils/activity';
 
-const PopupCreateGroup = ({ handleClose, showRef }) => {
+const PopupCreateGroup = ({ handleClose }) => {
 	const [inputNameGroup, setInputNameGroup] = useState('');
 	const [inputDiscription, setInputDiscription] = useState('');
 	const [inputAuthors, setInputAuthors] = useState('');
