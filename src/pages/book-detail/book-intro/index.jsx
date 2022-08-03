@@ -55,7 +55,9 @@ const BookIntro = () => {
 	const handleShareFaceBook = () => {
 		if (Storage.getAccessToken()) {
 			dispatch(checkUserLogin(false));
-			seturlShare('https://peing.net/ja/');
+			seturlShare(
+				'https://wisfeed.tecinus.vn/book/detail/102/sword-art-online-20-ban-dac-biet-tang-kem-bookmark-pvc-huy-hieu-nhan-vat-thiet-ke-in-an-doc-dao-tem-doc-quyen-cua-kadokawa'
+			);
 		} else {
 			dispatch(checkUserLogin(true));
 		}
@@ -74,35 +76,38 @@ const BookIntro = () => {
 				/>
 			</div>
 			<div className='book-intro__content'>
-				<h1 className='book-intro__name'>{bookInfo.name}</h1>
-				<div className='book-intro__author'>
-					<span>Bởi {!_.isEmpty(bookInfo.authors) ? bookInfo.authors[0].authorName : 'Chưa cập nhật'} </span>
-					<CircleCheckIcon className='book-intro__check' />
-				</div>
-				<div className='book-intro__stars'>
-					<ReactRating readonly={true} initialRating={lisRatingStar?.avg} />
-					<span>({lisRatingStar?.count} đánh giá)</span>
-					<span>({reviewsNumber} review)</span>
-				</div>
+				<div className='book-intro__content__infomations'>
+					<h1 className='book-intro__name'>{bookInfo.name}</h1>
+					<div className='book-intro__author'>
+						<span>
+							Bởi {!_.isEmpty(bookInfo.authors) ? bookInfo.authors[0].authorName : 'Chưa cập nhật'}{' '}
+						</span>
+						<CircleCheckIcon className='book-intro__check' />
+					</div>
+					<div className='book-intro__stars'>
+						<ReactRating readonly={true} initialRating={lisRatingStar?.avg} />
+						<span>({lisRatingStar?.count} đánh giá)</span>
+						<span>({reviewsNumber} review)</span>
+					</div>
 
-				<div className='book-intro__description'>
-					<ReadMore
-						text={convertToPlainString(bookInfo.description) || 'Chưa cập nhật'}
-						length={textLength}
-					/>
+					<div className='book-intro__description'>
+						<ReadMore
+							text={convertToPlainString(bookInfo.description) || 'Chưa cập nhật'}
+							length={textLength}
+						/>
+					</div>
 				</div>
-				<FacebookShareButton url={urlShare} quote='Phải chăng ta đã yêu' hashtag=''>
-					<div onClick={handleShareFaceBook} className='book-intro__action'>
+				<div onClick={handleShareFaceBook} className='book-intro__action'>
+					<FacebookShareButton url={urlShare}>
 						<div className='book-intro__share'>
 							<img src={shareImg} alt='share' />
 							<span className='book-intro__share__text'>Chia sẻ</span>
 						</div>
-
 						<div className='book-intro__share'>
 							<img src={facebookImg} alt='facebook' />
 						</div>
-					</div>
-				</FacebookShareButton>
+					</FacebookShareButton>
+				</div>
 			</div>
 		</div>
 	);

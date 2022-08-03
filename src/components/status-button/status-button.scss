@@ -88,16 +88,23 @@
 }
 
 @media only screen and (max-width: 931px) {
-	.btn-status.btn {
-		width: 100px;
+	.post-book__button-and-rating {
+		.btn-status.btn {
+			width: 100px;
+			.text-status {
+				display: none;
+			}
+		}
 	}
 }
 
 @media only screen and (max-width: 768px) {
-	.btn-status.btn {
-		width: inherit;
-		.text-status {
-			display: inherit;
+	.post-book__button-and-rating {
+		.btn-status.btn {
+			width: inherit;
+			.text-status {
+				display: inherit;
+			}
 		}
 	}
 }

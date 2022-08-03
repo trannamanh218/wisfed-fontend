@@ -39,6 +39,7 @@ const PostsShare = ({ postData }) => {
 			}
 		}
 	}, [postData]);
+
 	const generateContent = content => {
 		if (content.match(urlRegex)) {
 			const newContent = content.replace(urlRegex, data => {
@@ -124,6 +125,7 @@ const PostsShare = ({ postData }) => {
 						__html: generateContent(postData.sharePost?.message || postData.sharePost?.content),
 					}}
 				></div>
+				<span>{postData.bookId}</span>
 				<ul className='tagged'>
 					{postData.sharePost?.mentionsAuthors?.map(item => (
 						<li key={item.id} className={classNames('badge bg-primary-light')}>
@@ -140,7 +142,6 @@ const PostsShare = ({ postData }) => {
 				</ul>
 				{postData?.isShare && postData?.verb === 'shareQuote' && <PostQuotes postsData={postData} />}
 				{/* {postData?.verb === 'shareTopQuoteRanking' && <PostQuotes postsData={postData} />} */}
-
 				{postData.sharePost?.book && (
 					<PostBook
 						data={{

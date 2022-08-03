@@ -26,7 +26,9 @@
 
 	.upload-info-form {
 		width: 100%;
-
+		.upload-text-danger {
+			color: red;
+		}
 		.inp-book {
 			width: 100%;
 			margin-bottom: 38px;

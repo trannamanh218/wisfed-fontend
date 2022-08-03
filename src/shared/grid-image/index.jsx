@@ -186,7 +186,7 @@ const GridImage = ({ images, inPost, postId }) => {
 											<img src={URL.createObjectURL(images[4])} alt='image' />
 										)}
 										<div className='creat-post-modal-content__main__body__image-over'>
-											+{images.length - 5}
+											+{images.length - 4}
 										</div>
 									</div>
 								</>
@@ -206,7 +206,7 @@ GridImage.defaultProps = {
 GridImage.propTypes = {
 	images: PropTypes.array,
 	inPost: PropTypes.bool,
-	postId: PropTypes.string,
+	postId: PropTypes.any,
 };
 
 export default GridImage;

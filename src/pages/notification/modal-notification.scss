@@ -3,17 +3,15 @@
 	width: 400px;
 	top: 100%;
 	right: -170%;
-	padding-right: 4px;
 	background: #fcfcfc;
-	border-bottom-left-radius: 12px;
-	border-bottom-right-radius: 12px;
+	border-bottom-left-radius: 10px;
+	border-bottom-right-radius: 10px;
+	overflow: hidden;
 	box-shadow: 0px 0px 32px rgba(0, 0, 0, 0.04);
 	cursor: default;
 	.notificaiton__container {
 		background: #fcfcfc;
 		font-family: 'Montserrat';
-		border-bottom-left-radius: 12px;
-		border-bottom-right-radius: 12px;
 		width: 400px;
 
 		&::-webkit-scrollbar {
@@ -32,10 +30,12 @@
 		}
 	}
 }
+
 .notificaiton__loading__container {
-	cursor: context-menu;
-	height: 646px;
+	margin-top: 12px;
+	height: 650px;
 }
+
 .notification-title {
 	font-family: 'Montserrat';
 	font-style: normal;
@@ -47,6 +47,7 @@
 	margin-top: 20px !important;
 	margin-bottom: 15px !important;
 }
+
 .notificaiton__title {
 	font-size: 20px;
 	line-height: 32px;
@@ -54,32 +55,34 @@
 	margin-top: 10px;
 	margin-left: 20px;
 }
+
 .notificaiton__tabs {
 	margin-top: 12px;
 	background: #fcfcfc;
 	border-bottom-left-radius: 12px;
 	border-bottom-right-radius: 12px;
-	.nav-tabs,
+	.nav-tabs {
+		display: flex;
+		gap: 2rem;
+		background: #fcfcfc !important;
+		padding: 0 20px;
+	}
+
 	.tab-content {
 		background: #fcfcfc !important;
 	}
+
 	.nav-item .nav-link {
 		font-weight: 600;
 		font-size: 15px;
 		line-height: 24px;
 		padding: 0 0 10px 0 !important;
 	}
-	.nav-item:first-child {
-		margin-left: 20px;
-	}
-	.nav-item {
-		margin-left: 32px;
-	}
+
 	.tab-content {
-		border-bottom-left-radius: 12px;
-		border-bottom-right-radius: 12px;
 		padding-bottom: 0;
 	}
+
 	.no__notificaion {
 		font-size: 1.25rem;
 		display: flex;
@@ -88,9 +91,11 @@
 		margin: 50px 0;
 	}
 }
+
 .notificaiton__tabs__all__active {
 	opacity: 0.8;
 }
+
 .notificaiton__tabs__all,
 .notificaiton__tabs__all__seen,
 .notificaiton__tabs__all__active {
@@ -100,7 +105,6 @@
 	.notificaiton__all__layout {
 		display: flex;
 		gap: 15px;
-		// margin-top: 10px;
 		align-items: center;
 		padding: 10px;
 		border-radius: 8px;
@@ -112,13 +116,38 @@
 		}
 	}
 }
+
 .notificaiton__tabs__all__seen:hover,
 .notificaiton__tabs__all__active:hover {
 	background-color: #e2e4e5;
 }
+
 .notificaiton__all__accept:hover .notificaiton__tabs__all__active {
 	background-color: #fcfcfc !important;
 }
+
+.notificaiton__all-wrapper {
+	max-height: 607px;
+	overflow-y: scroll;
+	margin-right: 2px;
+	&::-webkit-scrollbar {
+		width: 7px;
+	}
+
+	&::-webkit-scrollbar-track {
+		background: white;
+		border-radius: 8px;
+	}
+
+	&::-webkit-scrollbar-thumb {
+		background: rgba(#606060, 0.3);
+		border-radius: 8px;
+		&:hover {
+			background: rgba(#606060, 0.2);
+		}
+	}
+}
+
 .notificaiton__all__title {
 	font-family: 'Montserrat';
 	font-style: normal;
@@ -126,19 +155,20 @@
 	font-size: 18px;
 	line-height: 32px;
 	letter-spacing: 0.75px;
-	margin: 8.2px 20px;
+	margin: 8px 20px;
 }
+
 .notificaiton__all__infor {
 	font-weight: 500;
 	font-size: 13px;
 	line-height: 16px;
 	letter-spacing: 0.75px;
-	// min-width: 258px;
 	flex: 1;
 	span {
 		font-weight: 600;
 	}
 }
+
 .notificaiton__all__status {
 	text-align: left;
 	color: #0576f0;
@@ -147,6 +177,7 @@
 	line-height: 22px;
 	flex: 1;
 }
+
 .notificaiton__all__unseen {
 	text-align: left;
 	min-height: 16px;
@@ -154,13 +185,16 @@
 	border-radius: 50%;
 	background: #e0af7e;
 }
+
 .notificaiton__all__seen {
 	background: #fcfcfc;
 }
+
 .notificaiton__tabs__all__seen {
 	margin: 0 10px !important;
 	text-align: left;
 }
+
 .notificaiton__all__status__seen {
 	font-weight: 500;
 	font-size: 13px;
@@ -169,14 +203,15 @@
 	color: #4e4b66;
 	text-align: left;
 }
+
 .notificaiton__all__friend {
 	display: flex;
 	padding: 0 15px 15px 10px;
 	justify-content: space-between;
-	min-width: 360px;
 	.notificaiton__all__accept,
 	.notificaiton__all__refuse {
-		padding: 11px 55px;
+		width: 49%;
+		padding: 11px 0;
 		border-radius: 12px;
 		font-weight: 600;
 		font-size: 13px;
@@ -195,9 +230,10 @@
 		color: #6e7191;
 	}
 }
+
 .notificaiton__tabs__button {
 	text-align: center;
-	margin: 12px 20px !important;
+	padding: 12px 20px !important;
 	color: #0576f0;
 	font-weight: 600;
 	font-size: 15px;

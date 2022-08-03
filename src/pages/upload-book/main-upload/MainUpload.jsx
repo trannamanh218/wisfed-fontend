@@ -27,11 +27,19 @@ export default function MainUpload() {
 	const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
 
 	const listLanguages = [
-		{ value: 'default', title: 'Ngôn ngữ' },
 		{ value: 'VN', title: 'Việt Nam' },
 		{ value: 'EN', title: 'Anh' },
 	];
+
 	const languagesRef = useRef({ value: 'default', title: 'Ngôn ngữ' });
+
+	const listSeries = [
+		{ value: 'default', title: 'Sê-ri bộ sách' },
+		{ value: 'VN', title: 'test 1' },
+		{ value: 'EN', title: 'test 2' },
+	];
+
+	const SeriesRef = useRef({ value: 'default', title: 'Sê-ri bộ sách' });
 
 	const onchangeLanguages = data => {
 		setLanguages(data);
@@ -83,7 +91,8 @@ export default function MainUpload() {
 										<CameraIcon />
 										<Image className='upload-image__icon' />
 										<p className='upload-image__description'>Thêm ảnh bìa từ thiết bị</p>
-										<span>hoặc kéo thả</span>
+										<br />
+										<span style={{ fontWeight: 500 }}>hoặc kéo thả</span>
 									</div>
 								</div>
 							)}
@@ -92,7 +101,9 @@ export default function MainUpload() {
 				</div>
 				<div className='upload-info-form'>
 					<div className='inp-book'>
-						<label>Tên sách</label>
+						<label>
+							Tên sách<span className='upload-text-danger'>*</span>
+						</label>
 						<Input isBorder={false} placeholder='Tên sách' handleChange={onInputChange(setInputNameBook)} />
 					</div>
 					<div className='inp-book'>
@@ -112,7 +123,9 @@ export default function MainUpload() {
 						/>
 					</div>
 					<div className='inp-book'>
-						<label>Tác giả</label>
+						<label>
+							Tác giả<span className='upload-text-danger'>*</span>
+						</label>
 						<Input isBorder={false} placeholder='Tác giả' handleChange={onInputChange(setInputNameBook)} />
 					</div>
 					<div className='inp-book'>
@@ -120,7 +133,15 @@ export default function MainUpload() {
 						<Input isBorder={false} placeholder='Dịch giả' handleChange={onInputChange(setInputNameBook)} />
 					</div>
 					<div className='inp-book'>
-						<label>Nhà xuất bản</label>
+						<label>
+							Chủ đề<span className='upload-text-danger'>*</span>
+						</label>
+						<Input isBorder={false} placeholder='Tên sách' handleChange={onInputChange(setInputNameBook)} />
+					</div>
+					<div className='inp-book'>
+						<label>
+							Nhà xuất bản<span className='upload-text-danger'>*</span>
+						</label>
 						<Input
 							isBorder={false}
 							placeholder='Nhà xuất bản'
@@ -130,7 +151,9 @@ export default function MainUpload() {
 					<div className='inp-book'>
 						<Row>
 							<Col xs={6}>
-								<label>ISBN</label>
+								<label>
+									ISBN<span className='upload-text-danger'>*</span>
+								</label>
 								<Input
 									isBorder={false}
 									placeholder='ISBN'
@@ -138,19 +161,34 @@ export default function MainUpload() {
 								/>
 							</Col>
 							<Col xs={6}>
-								<label>Sê-ri sách</label>
-								<Input
-									isBorder={false}
-									placeholder='Sê-ri sách'
-									handleChange={onInputChange(setInputNameBook)}
-								/>
+								{/* <div className='inp-book'> */}
+								<label>Ngày phát hành</label>
+								<label className='inp-date'>
+									<div className='icon-calendar'>
+										<Calendar />
+									</div>
+									<Datepicker
+										ref={inpCalendar}
+										isClearable
+										placeholderText='dd/m/yyyy'
+										dateFormat='dd/M/yyyy'
+										selected={releaseDate}
+										onChange={date => setReleaseDate(date)}
+										showYearDropdown
+										showMonthDropdown
+										dropdownMode='select'
+									/>
+								</label>
+								{/* </div> */}
 							</Col>
 						</Row>
 					</div>
 					<div className='inp-book'>
 						<Row>
 							<Col>
-								<label>Số trang</label>
+								<label>
+									Số trang<span className='upload-text-danger'>*</span>
+								</label>
 								<Input
 									type='number'
 									isBorder={false}
@@ -159,7 +197,9 @@ export default function MainUpload() {
 								/>
 							</Col>
 							<Col>
-								<label>Ngôn ngữ</label>
+								<label>
+									Ngôn ngữ<span className='upload-text-danger'>*</span>
+								</label>
 								<SelectBox
 									name='languages'
 									list={listLanguages}
@@ -171,26 +211,21 @@ export default function MainUpload() {
 						</Row>
 					</div>
 					<div className='inp-book'>
-						<label>Ngày phát hành</label>
-						<label className='inp-date'>
-							<div className='icon-calendar'>
-								<Calendar />
-							</div>
-							<Datepicker
-								ref={inpCalendar}
-								isClearable
-								placeholderText='dd/m/yyyy'
-								dateFormat='dd/M/yyyy'
-								selected={releaseDate}
-								onChange={date => setReleaseDate(date)}
-								showYearDropdown
-								showMonthDropdown
-								dropdownMode='select'
-							/>
+						<label>
+							Sê-ri sách<span className='upload-text-danger'>*</span>
 						</label>
+						<SelectBox
+							name='series'
+							list={listSeries}
+							defaultOption={SeriesRef.current}
+							onChangeOption={onchangeLanguages}
+							imgDropDown={ArrowChevronForward}
+						/>
 					</div>
 					<div className='inp-book'>
-						<label>Mô tả</label>
+						<label>
+							Mô tả<span className='upload-text-danger'>*</span>
+						</label>
 						<div className='txtarea'>
 							<textarea placeholder='' rows={9} value={textareaValue} onChange={updateTxtAreaValue} />
 						</div>

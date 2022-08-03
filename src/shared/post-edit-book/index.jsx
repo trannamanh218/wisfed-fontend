@@ -106,7 +106,9 @@ const PostEditBook = props => {
 								{!_.isEmpty(listRatingStar) &&
 								listRatingStar.count > 0 &&
 								listRatingStar.avg !== null ? (
-									<div>{`(${listRatingStar.avg}) (${listRatingStar.count} đánh giá)`}</div>
+									<div>{`(${listRatingStar.avg?.toFixed(1)}) (${
+										listRatingStar.count
+									} đánh giá)`}</div>
 								) : (
 									<div>(chưa có đánh giá)</div>
 								)}

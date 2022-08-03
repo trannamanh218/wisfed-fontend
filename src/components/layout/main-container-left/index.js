@@ -31,7 +31,7 @@ const MainContainerLeft = ({ main, right, sub }) => {
 
 MainContainerLeft.propTypes = {
 	main: PropTypes.any.isRequired,
-	right: PropTypes.any.isRequired,
+	right: PropTypes.any,
 	sub: PropTypes.any,
 };
 

@@ -247,7 +247,7 @@ function CreatPostModalContent({
 			image: [],
 			preview: urlPreviewData,
 			tags: [],
-			progress: checkProgress ? checkProgress : null,
+			progress: checkProgress ? checkProgress : 0,
 		};
 
 		params.mentionsUser = taggedData.addFriends.length ? taggedData.addFriends.map(item => item.id) : [];
@@ -527,6 +527,8 @@ function CreatPostModalContent({
 		}
 	};
 
+	console.log(postsData);
+
 	return (
 		<div className='creat-post-modal-content'>
 			<Circle loading={status === STATUS_LOADING} />
@@ -564,6 +566,7 @@ function CreatPostModalContent({
 										userInfo?.lastName ||
 										userInfo?.firstName ||
 										'Không xác định'}
+
 									{taggedData.addFriends.length > 0 && (
 										<>
 											<span className='d-inline-block mx-1'>cùng với</span>
@@ -644,14 +647,17 @@ function CreatPostModalContent({
 									}
 								>
 									{isShare && <PostQuotes postsData={postsData} isShare={isShare} />}
-									{isSharePosts && (
+									{isSharePosts && postsData.verb !== 'shareTargetRead' && (
 										<Post postInformations={postsData} showModalCreatPost={showModalCreatPost} />
 									)}
 									{isSharePostsAll === 'shareTopBook' && <AuthorBook data={postsData} />}
+									{postsData.booksReadCount > 0 && postsData.verb === 'shareTargetRead' && (
+										<ShareTarget postsData={postsData} />
+									)}
+									{postsData.verb === 'shareTargetRead' && <Post postInformations={postsData} />}
 								</div>
 							)}
 							{isSharePostsAll === 'shareTopUser' && <ShareUsers postsData={postsData} />}
-							{postsData.booksReadCount > 0 && <ShareTarget postsData={postsData} />}
 
 							{!_.isEmpty(taggedData.addBook) || showUpload ? (
 								<>

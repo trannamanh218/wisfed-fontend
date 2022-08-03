@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import SidebarGroupLef from './sidebar-left';
 import './mainGroup.scss';
 import MainGroupComponent from './popup-group/MainGroupComponet/MainGroupComponent';
@@ -9,7 +9,7 @@ import { useParams } from 'react-router-dom';
 
 const MainGroup = () => {
 	const [update, setUpdate] = useState(false);
-	const { id = '' } = useParams();
+	const { id } = useParams();
 	const [detailGroup, setDetailGroup] = useState({});
 	const [listMember, setListMember] = useState([]);
 	const dispatch = useDispatch();
@@ -36,10 +36,12 @@ const MainGroup = () => {
 	const handleUpdate = () => {
 		setUpdate(!update);
 	};
+
 	useEffect(() => {
 		fetchData();
 		getListMember();
 	}, []);
+
 	useEffect(() => {
 		fetchData();
 	}, [update]);

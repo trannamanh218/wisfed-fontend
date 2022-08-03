@@ -6,9 +6,7 @@ import arrowPrev from 'assets/images/arrow-chevron-back.png';
 import './book-slider.scss';
 import classNames from 'classnames';
 import { memo } from 'react';
-import { Link } from 'react-router-dom';
 import { Row, Col } from 'react-bootstrap';
-import bookImage from 'assets/images/default-book.png';
 
 const BookSlider = ({
 	list,
@@ -18,18 +16,16 @@ const BookSlider = ({
 	handleViewBookDetail,
 	inCategory = false,
 	inCategoryDetail = false,
-	numberSlide,
 	...rest
 }) => {
 	const settingSlider = settings(inCategory, inCategoryDetail);
-	console.log(numberSlide);
 	return (
 		<div className='main'>
 			{!!list.length && (
 				<div className={classNames('book-slider', { [`${className}`]: className })}>
 					<h4 className='book-slider__title'>{title}</h4>
 					<div className='book-slider__content'>
-						{list.length > 2 ? (
+						{list?.length > 2 ? (
 							<Slider {...settingSlider}>
 								{list.map((item, index) => (
 									<BookThumbnail
@@ -48,11 +44,16 @@ const BookSlider = ({
 							<Row>
 								{list.map((item, index) => (
 									<Col md={6} sm={12} key={index}>
-										<Link to={`/book/detail/${item.id}`}>
-											<div className='wants-to-read__thumbnail'>
-												<img src={item.images[0] || bookImage} alt='' />
-											</div>
-										</Link>
+										<BookThumbnail
+											key={index}
+											{...item}
+											data={item}
+											source={item.source}
+											name={item.name}
+											size={size}
+											{...rest}
+											handleClick={handleViewBookDetail}
+										/>
 									</Col>
 								))}
 							</Row>

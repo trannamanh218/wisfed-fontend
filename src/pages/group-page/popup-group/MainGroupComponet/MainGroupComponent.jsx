@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import SearchField from 'shared/search-field';
 import Tabs from 'react-bootstrap/Tabs';
 import Tab from 'react-bootstrap/Tab';
@@ -44,11 +44,9 @@ function MainGroupComponent({ handleChange, keyChange, data, member, handleUpdat
 	const [valueGroupSearch, setValueGroupSearch] = useState('');
 	const [filter, setFilter] = useState('[]');
 	const [getData, setGetData] = useState([]);
-	const { id = '' } = useParams();
+	const { id } = useParams();
 	const keyRedux = useSelector(state => state.group.key);
 	const { ref: showRef, isVisible: isShow, setIsVisible: setIsShow } = useVisible(false);
-	const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
-	const [imgUrl, setImgUrl] = useState('');
 	const joinedGroupPopup = useRef(null);
 
 	const enjoyGroup = async () => {
@@ -71,7 +69,7 @@ function MainGroupComponent({ handleChange, keyChange, data, member, handleUpdat
 			id: data?.id,
 		};
 		try {
-			await dispatch(leaveGroupUser(params));
+			await dispatch(leaveGroupUser(params)).unwrap();
 			setShow(false);
 			setShowSelect(false);
 		} catch (err) {
@@ -121,37 +119,33 @@ function MainGroupComponent({ handleChange, keyChange, data, member, handleUpdat
 		}
 	}, [filter]);
 
-	useEffect(() => {
-		uploadImageFile();
-	}, [acceptedFiles]);
-
-	const uploadImageFile = async () => {
-		const imageUploadedData = await dispatch(uploadImage(acceptedFiles)).unwrap();
-		setImgUrl(imageUploadedData?.streamPath);
-	};
-
-	const handleUpload = async () => {
-		try {
-			const params = {
-				id: id,
-				param: {
-					avatar: imgUrl,
-				},
-			};
-			dispatch(getupdateBackground(params));
-			handleUpdate();
-			const customId = 'custom-id-handleUpdateGroupBackgroundImg';
-			toast.success('Cập nhật ảnh bìa thành công', {
-				toastId: customId,
-			});
-		} catch (error) {
-			NotificationError(error);
+	const handleUpload = useCallback(async acceptedFiles => {
+		if (!_.isEmpty(acceptedFiles)) {
+			try {
+				const imageUploadedData = await dispatch(uploadImage(acceptedFiles)).unwrap();
+				const params = {
+					id: id,
+					param: {
+						avatar: imageUploadedData.streamPath,
+					},
+				};
+				dispatch(getupdateBackground(params));
+				handleUpdate();
+				const customId = 'custom-id-handleUpdateGroupBackgroundImg';
+				toast.success('Cập nhật ảnh bìa thành công', {
+					toastId: customId,
+				});
+			} catch (error) {
+				if (error.statusCode === 413) {
+					const customId = 'custom-id-PersonalInfo-handleDrop-warning';
+					toast.warning('Không cập nhật được ảnh quá 1Mb', { toastId: customId });
+				} else {
+					const customId = 'custom-id-PersonalInfo-handleDrop-error';
+					toast.error('Cập nhật ảnh thất bại', { toastId: customId });
+				}
+			}
 		}
-	};
-
-	useEffect(() => {
-		handleUpload();
-	}, [imgUrl]);
+	});
 
 	useEffect(() => {
 		const checkItem = data?.memberGroups?.filter(item => item?.user?.id === userInfo?.id);
@@ -188,6 +182,7 @@ function MainGroupComponent({ handleChange, keyChange, data, member, handleUpdat
 		}, [ref]);
 	}
 
+	// Click outside
 	useOutsideAlerter(joinedGroupPopup);
 
 	return (
@@ -199,19 +194,24 @@ function MainGroupComponent({ handleChange, keyChange, data, member, handleUpdat
 					onError={e => e.target.setAttribute('src', defaultAvatar)}
 					alt=''
 				/>
-				<Dropzone>
-					{() => (
-						<div {...getRootProps()}>
-							<input {...getInputProps()} />
-							<div className='dropzone upload-image'>
-								<div className=''>
-									<img src={camera} alt='camera' />
+
+				{/* Chỉ quản trị viên mới có thể thay đổi ảnh bìa */}
+				{data.createdBy?.id === userInfo.id ? (
+					<Dropzone onDrop={acceptedFiles => handleUpload(acceptedFiles)}>
+						{({ getRootProps, getInputProps }) => (
+							<div {...getRootProps()}>
+								<input {...getInputProps()} />
+								<div className='dropzone upload-image'>
+									<div className=''>
+										<img src={camera} alt='camera' />
+									</div>
+									<span style={{ marginRight: '3px' }}>Chỉnh sửa ảnh bìa</span>
 								</div>
-								<span style={{ marginRight: '3px' }}>Chỉnh sửa ảnh bìa</span>
 							</div>
-						</div>
-					)}
-				</Dropzone>
+						)}
+					</Dropzone>
+				) : null}
+
 				<div className='group__title-name'>
 					<span>
 						Nhóm của{' '}
