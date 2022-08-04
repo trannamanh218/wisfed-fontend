@@ -28,8 +28,8 @@ export default function MainUpload() {
 
 	const initialState = {
 		name: '',
-		subTitle: '',
-		originalTitle: '',
+		subName: '',
+		originalName: '',
 		author: '',
 		translator: '',
 		theme: '',
@@ -39,7 +39,7 @@ export default function MainUpload() {
 		description: '',
 	};
 
-	const [{ name, subTitle, originalTitle, author, translator, theme, publisher, isbn, page, description }, setState] =
+	const [{ name, subName, originalName, author, translator, theme, publisher, isbn, page, description }, setState] =
 		useState(initialState);
 
 	const onChange = e => {
@@ -82,10 +82,10 @@ export default function MainUpload() {
 	const onBtnSaveClick = () => {
 		// B1: Thu thập dữ liệu
 		const bookInfo = {
-			imgUrl: imgUrl,
+			images: imgUrl,
 			name: name,
-			subTitle: subTitle,
-			originalTitle: originalTitle,
+			subName: subName,
+			originalName: originalName,
 			author: author,
 			translator: translator,
 			theme: theme,
@@ -167,8 +167,8 @@ export default function MainUpload() {
 						<input
 							className='input input--non-border'
 							placeholder='Tiêu đề phụ'
-							value={subTitle}
-							name='subTitle'
+							value={subName}
+							name='subName'
 							onChange={onChange}
 						></input>
 					</div>
@@ -177,8 +177,8 @@ export default function MainUpload() {
 						<input
 							className='input input--non-border'
 							placeholder='Tên sách gốc'
-							value={originalTitle}
-							name='originalTitle'
+							value={originalName}
+							name='originalName'
 							onChange={onChange}
 						></input>
 					</div>

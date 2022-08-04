@@ -14,6 +14,8 @@ import { getCategoryList, getListBookByCategory } from 'reducers/redux-utils/cat
 import caretIcon from 'assets/images/caret.png';
 import { Link } from 'react-router-dom';
 import { useFetchAuthorBooks } from 'api/book.hooks';
+import { Row, Col } from 'react-bootstrap';
+import bookImage from 'assets/images/default-book.png';
 
 const BookReference = () => {
 	const [status, setStatus] = useState(STATUS_IDLE);
@@ -21,6 +23,7 @@ const BookReference = () => {
 	const [isExpand, setIsExpand] = useState(false);
 	const [rows, setRows] = useState(3);
 	const [relatedBooks, setRelateBooks] = useState([]);
+	const [series, setSeries] = useState([]);
 
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
@@ -32,6 +35,7 @@ const BookReference = () => {
 	useEffect(() => {
 		getBooksByCategory();
 		getAllCategories();
+		// setSeries();
 	}, []);
 
 	const getAllCategories = async () => {
@@ -91,7 +95,7 @@ const BookReference = () => {
 	return (
 		<div className='book-reference'>
 			<Circle loading={status === STATUS_LOADING} />
-			{/* sách của tac gia */}
+			{/* sách của tác giả */}
 			{!!bookInfo.authors.length && (
 				<BookSlider
 					className='book-reference__slider'
@@ -102,6 +106,27 @@ const BookReference = () => {
 			)}
 
 			{/* series sách đó */}
+			{series.length > 2 ? (
+				<BookSlider
+					className='book-reference__slider'
+					title={`Series ${series.name}`}
+					list={series}
+					handleViewBookDetail={handleViewBookDetail}
+				/>
+			) : series.length > 0 ? (
+				<Row>
+					{series.map((item, index) => (
+						<Col lg={6} md={12} key={index}>
+							<Link to={`/book/detail/${item.id}`}>
+								<div className='wants-to-read__thumbnail'>
+									<img src={item.images[0] || bookImage} alt='' />
+								</div>
+							</Link>
+						</Col>
+					))}
+				</Row>
+			) : null}
+
 			{/* <BookSlider className='book-reference__slider' title='Seris dạy con làm giàu' list={bookList} /> */}
 			{relatedBooks.length > 0 && (
 				<BookSlider
