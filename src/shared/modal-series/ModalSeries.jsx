@@ -12,6 +12,7 @@ import _ from 'lodash';
 
 const ModalSeries = ({ showModalSeries, handleCloseModalSeries, series, setSeries }) => {
 	const [APIListSeries, setAPIListSeries] = useState([]);
+	const [updateListSeries, setUpdateListSeries] = useState(false);
 
 	const dispatch = useDispatch();
 
@@ -33,6 +34,7 @@ const ModalSeries = ({ showModalSeries, handleCloseModalSeries, series, setSerie
 	const handlePostMoreSeries = async params => {
 		try {
 			await dispatch(postMoreSeries(params)).unwrap();
+			setUpdateListSeries(!updateListSeries);
 		} catch (err) {
 			NotificationError(err);
 		}
@@ -60,7 +62,7 @@ const ModalSeries = ({ showModalSeries, handleCloseModalSeries, series, setSerie
 
 	useEffect(() => {
 		handleGetSeriesList();
-	}, [APIListSeries]);
+	}, [updateListSeries, inputSearch]);
 
 	return (
 		<Modal className='modal-series' show={showModalSeries} onHide={handleClose}>

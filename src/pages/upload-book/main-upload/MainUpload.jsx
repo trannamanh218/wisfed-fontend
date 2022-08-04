@@ -10,7 +10,7 @@ import Button from 'shared/button';
 import SelectBox from 'shared/select-box';
 import ArrowChevronForward from 'assets/images/ArrowChevronForward.png';
 import Datepicker from 'react-datepicker';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { uploadImage } from 'reducers/redux-utils/common';
 import ModalSeries from 'shared/modal-series/ModalSeries';
 
