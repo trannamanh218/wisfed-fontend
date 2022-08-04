@@ -30,6 +30,7 @@ import Storage from 'helpers/Storage';
 import { checkUserLogin } from 'reducers/redux-utils/auth';
 import ShareUsers from 'pages/home/components/newfeed/components/modal-share-users';
 import { handleCheckReplyToMe } from 'reducers/redux-utils/comment';
+import ShareTarget from 'shared/share-target';
 
 const urlRegex =
 	/https?:\/\/www(\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/g;
@@ -410,6 +411,7 @@ function Post({ postInformations, showModalCreatPost, inReviews = false }) {
 					data={{ ...postData.book, bookLibrary: postData.bookLibrary, actorCreatedPost: postData.actor }}
 				/>
 			)}
+			{postData.verb === 'shareTargetRead' && <ShareTarget postsData={postData} inPost={true} />}
 
 			{(postData.verb === 'sharePost' || postData.shareType === 'post') && !_.isEmpty(postData.sharePost) && (
 				<PostsShare postData={postData} />

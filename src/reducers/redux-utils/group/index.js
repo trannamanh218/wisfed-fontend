@@ -16,6 +16,7 @@ import {
 	searchGroup,
 	updateBackground,
 	bookCategoryAPI,
+	unFollowGroup,
 } from 'constants/apiURL';
 import Request from 'helpers/Request';
 
@@ -178,6 +179,16 @@ export const leaveGroupUser = createAsyncThunk('group/leaveGroupUser', async (pa
 
 	try {
 		const res = await Request.makeDelete(leaveGroup(id));
+		return res;
+	} catch (err) {
+		const error = JSON.parse(err.response);
+		return rejectWithValue(error);
+	}
+});
+
+export const unFollowGroupUser = createAsyncThunk('group/unFollowGroupUser', async (id, { rejectWithValue }) => {
+	try {
+		const res = await Request.makePost(unFollowGroup(id));
 		return res;
 	} catch (err) {
 		const error = JSON.parse(err.response);
