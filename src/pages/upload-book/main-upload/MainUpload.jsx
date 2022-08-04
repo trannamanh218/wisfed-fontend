@@ -10,7 +10,7 @@ import Button from 'shared/button';
 import SelectBox from 'shared/select-box';
 import ArrowChevronForward from 'assets/images/ArrowChevronForward.png';
 import Datepicker from 'react-datepicker';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { uploadImage } from 'reducers/redux-utils/common';
 import ModalSeries from 'shared/modal-series/ModalSeries';
 
@@ -18,6 +18,7 @@ export default function MainUpload() {
 	const [releaseDate, setReleaseDate] = useState(null);
 	const inpCalendar = useRef();
 	const dispatch = useDispatch();
+	const { userInfoJwt } = useSelector(state => state.auth);
 
 	const [imgUrl, setImgUrl] = useState(undefined);
 	const [language, setLanguage] = useState('');
@@ -34,14 +35,12 @@ export default function MainUpload() {
 		theme: '',
 		publisher: '',
 		isbn: '',
-		totalPages: '',
+		page: '',
 		description: '',
 	};
 
-	const [
-		{ name, subTitle, originalTitle, author, translator, theme, publisher, isbn, totalPages, description },
-		setState,
-	] = useState(initialState);
+	const [{ name, subTitle, originalTitle, author, translator, theme, publisher, isbn, page, description }, setState] =
+		useState(initialState);
 
 	const onChange = e => {
 		const { name, value } = e.target;
@@ -93,7 +92,7 @@ export default function MainUpload() {
 			publisher: publisher,
 			isbn: isbn,
 			releaseDate: releaseDate,
-			totalPages: totalPages,
+			page: page,
 			language: language,
 			series: series,
 			description: description,
@@ -273,8 +272,8 @@ export default function MainUpload() {
 								<input
 									className='input input--non-border'
 									placeholder='Số trang'
-									value={totalPages}
-									name='totalPages'
+									value={page}
+									name='page'
 									onChange={onChange}
 								></input>
 							</Col>
@@ -293,24 +292,27 @@ export default function MainUpload() {
 							</Col>
 						</Row>
 					</div>
-					<div className='inp-book'>
-						<label>Sê-ri</label>
-						<input
-							className='input input--non-border'
-							onClick={handleShowModalSeries}
-							placeholder='Sê-ri bộ sách'
-							value={seriesName || ''}
-							readOnly
-						></input>
-						<div className='modal-series'>
-							<ModalSeries
-								showModalSeries={showModalSeries}
-								handleCloseModalSeries={handleCloseModalSeries}
-								series={series}
-								setSeries={setSeries}
-							/>
+					{userInfoJwt?.role === ('tecinus' || 'author') ? (
+						<div className='inp-book'>
+							<label>Sê-ri</label>
+							<input
+								className='input input--non-border'
+								onClick={handleShowModalSeries}
+								placeholder='Sê-ri bộ sách'
+								value={seriesName || ''}
+								readOnly
+							></input>
+							<div className='modal-series'>
+								<ModalSeries
+									showModalSeries={showModalSeries}
+									handleCloseModalSeries={handleCloseModalSeries}
+									series={series}
+									setSeries={setSeries}
+								/>
+							</div>
 						</div>
-					</div>
+					) : null}
+
 					<div className='inp-book'>
 						<label>
 							Mô tả<span className='upload-text-danger'>*</span>
