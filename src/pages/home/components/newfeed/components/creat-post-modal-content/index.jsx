@@ -582,11 +582,6 @@ function CreatPostModalContent({
 										</>
 									)}
 								</p>
-								{/* <ShareModeComponent
-									list={shareModeList}
-									shareMode={shareMode}
-									setShareMode={setShareMode}
-								/> */}
 							</div>
 						</div>
 						<div

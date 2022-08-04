@@ -13,18 +13,25 @@ import Datepicker from 'react-datepicker';
 import { useDispatch, useSelector } from 'react-redux';
 import { uploadImage } from 'reducers/redux-utils/common';
 import ModalSeries from 'shared/modal-series/ModalSeries';
+import AddAndSearchCategoriesUploadBook from './AddAndSearchCategoriesUploadBook/AddAndSearchCategoriesUploadBook';
 
 export default function MainUpload() {
-	const [releaseDate, setReleaseDate] = useState(null);
+	const [publishDate, setPublishDate] = useState(null);
 	const inpCalendar = useRef();
 	const dispatch = useDispatch();
 	const { userInfoJwt } = useSelector(state => state.auth);
 
-	const [imgUrl, setImgUrl] = useState(undefined);
+	const [frontBookCover, setFrontBookCover] = useState(undefined);
+	const [categoryAddedList, setCategoryAddedList] = useState([]);
 	const [language, setLanguage] = useState('');
 	const [series, setSeries] = useState({});
 	const [seriesName, setSeriesName] = useState('');
+
 	const [resetSelect, setResetSelect] = useState(false);
+
+	const blockInvalidChar = e => {
+		return ['e', 'E', '+', '-'].includes(e.key) && e.preventDefault();
+	};
 
 	const initialState = {
 		name: '',
@@ -32,14 +39,13 @@ export default function MainUpload() {
 		originalName: '',
 		author: '',
 		translator: '',
-		theme: '',
 		publisher: '',
 		isbn: '',
 		page: '',
 		description: '',
 	};
 
-	const [{ name, subName, originalName, author, translator, theme, publisher, isbn, page, description }, setState] =
+	const [{ name, subName, originalName, author, translator, publisher, isbn, page, description }, setState] =
 		useState(initialState);
 
 	const onChange = e => {
@@ -50,8 +56,8 @@ export default function MainUpload() {
 	const languagesRef = useRef({ value: 'default', name: 'Ngôn ngữ' });
 
 	const clearState = () => {
-		setImgUrl('');
-		setReleaseDate(null);
+		setFrontBookCover('');
+		setPublishDate(null);
 
 		// reset ô select
 		setLanguage('');
@@ -60,6 +66,8 @@ export default function MainUpload() {
 		// reset ô series
 		setSeries({});
 		setSeriesName('');
+
+		setCategoryAddedList([]);
 
 		setState({ ...initialState });
 	};
@@ -82,20 +90,20 @@ export default function MainUpload() {
 	const onBtnSaveClick = () => {
 		// B1: Thu thập dữ liệu
 		const bookInfo = {
-			images: imgUrl,
+			frontBookCover: frontBookCover,
 			name: name,
 			subName: subName,
 			originalName: originalName,
 			author: author,
 			translator: translator,
-			theme: theme,
 			publisher: publisher,
 			isbn: isbn,
-			releaseDate: releaseDate,
+			publishDate: publishDate,
 			page: page,
 			language: language,
 			series: series,
 			description: description,
+			categoryIds: categoryAddedList,
 		};
 		console.log(bookInfo);
 		// B2: Kiểm tra dữ liệu
@@ -109,7 +117,7 @@ export default function MainUpload() {
 
 	const uploadImageFile = async () => {
 		const imageUploadedData = await dispatch(uploadImage(acceptedFiles)).unwrap();
-		setImgUrl(imageUploadedData?.streamPath);
+		setFrontBookCover(imageUploadedData?.streamPath);
 	};
 
 	useEffect(() => {
@@ -130,8 +138,8 @@ export default function MainUpload() {
 			</div>
 			<div className='upload-book-form'>
 				<div className='upload-image__wrapper'>
-					{imgUrl ? (
-						<img src={imgUrl} alt='img' />
+					{frontBookCover ? (
+						<img src={frontBookCover} alt='img' />
 					) : (
 						<Dropzone>
 							{() => (
@@ -205,16 +213,10 @@ export default function MainUpload() {
 						></input>
 					</div>
 					<div className='inp-book'>
-						<label>
-							Chủ đề<span className='upload-text-danger'>*</span>
-						</label>
-						<input
-							className='input input--non-border'
-							placeholder='Chủ đề'
-							value={theme}
-							name='theme'
-							onChange={onChange}
-						></input>
+						<AddAndSearchCategoriesUploadBook
+							categoryAddedList={categoryAddedList}
+							setCategoryAddedList={setCategoryAddedList}
+						/>
 					</div>
 					<div className='inp-book'>
 						<label>
@@ -253,8 +255,8 @@ export default function MainUpload() {
 										isClearable
 										placeholderText='dd/m/yyyy'
 										dateFormat='dd/M/yyyy'
-										selected={releaseDate}
-										onChange={date => setReleaseDate(date)}
+										selected={publishDate}
+										onChange={date => setPublishDate(date)}
 										showYearDropdown
 										showMonthDropdown
 										dropdownMode='select'
@@ -270,6 +272,8 @@ export default function MainUpload() {
 									Số trang<span className='upload-text-danger'>*</span>
 								</label>
 								<input
+									type='number'
+									onKeyDown={blockInvalidChar}
 									className='input input--non-border'
 									placeholder='Số trang'
 									value={page}

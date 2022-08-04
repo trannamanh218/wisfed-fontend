@@ -6,9 +6,8 @@ import { useState } from 'react';
 import AddSeriesForm from './addSeriesForm/AddSeriesForm';
 import { useDispatch } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
-import { getMySeries, getListBookBySeries, getSeriesDetail, postMoreSeries } from 'reducers/redux-utils/series';
+import { getMySeries, postMoreSeries } from 'reducers/redux-utils/series';
 import { useEffect } from 'react';
-import _ from 'lodash';
 
 const ModalSeries = ({ showModalSeries, handleCloseModalSeries, series, setSeries }) => {
 	const [APIListSeries, setAPIListSeries] = useState([]);
@@ -120,19 +119,11 @@ const ModalSeries = ({ showModalSeries, handleCloseModalSeries, series, setSerie
 
 ModalSeries.defaultProps = {
 	showModalSeries: false,
-	APIListSeries: [
-		{ id: '1', name: 'Ươm mầm tỉ phú nhí' },
-		{ id: '2', name: 'Ươm mầm tỉ phú nhí' },
-		{ id: '3', name: 'Ươm mầm tỉ phú nhí' },
-		{ id: '4', name: 'Ươm mầm tỉ phú nhí' },
-	],
 };
 
 ModalSeries.propTypes = {
 	showModalSeries: PropTypes.bool,
 	handleCloseModalSeries: PropTypes.func,
-	APIListSeries: PropTypes.array.isRequired,
-	updateSeries: PropTypes.func,
 	series: PropTypes.any,
 	setSeries: PropTypes.func,
 };

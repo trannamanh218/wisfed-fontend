@@ -128,7 +128,7 @@ function MemberGroup() {
 													className='member-item__btn bnt-add-friend'
 													onClick={() => handleUnFriend(item)}
 												>
-													Hủy kết bạn
+													- Hủy kết bạn
 												</button>
 											)}
 											{item.relation === 'pending' && (
@@ -213,7 +213,7 @@ function MemberGroup() {
 														className='member-item__btn bnt-add-friend'
 														onClick={() => handleUnFriend(item)}
 													>
-														Hủy kết bạn
+														- Hủy kết bạn
 													</button>
 												)}
 												{item.relation === 'pending' && (
@@ -296,7 +296,7 @@ function MemberGroup() {
 														className='member-item__btn bnt-add-friend'
 														onClick={() => handleUnFriend(item)}
 													>
-														Hủy kết bạn
+														- Hủy kết bạn
 													</button>
 												)}
 												{item.relation === 'pending' && (
@@ -382,7 +382,7 @@ function MemberGroup() {
 											className='member-item__btn bnt-add-friend'
 											onClick={() => handleUnFriend(item)}
 										>
-											Hủy kết bạn
+											- Hủy kết bạn
 										</button>
 									)}
 									{item.relation === 'pending' && (

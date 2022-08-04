@@ -105,7 +105,6 @@ const BookReference = () => {
 				/>
 			)}
 
-			{/* series sách đó */}
 			{series.length > 2 ? (
 				<BookSlider
 					className='book-reference__slider'
@@ -127,7 +126,6 @@ const BookReference = () => {
 				</Row>
 			) : null}
 
-			{/* <BookSlider className='book-reference__slider' title='Seris dạy con làm giàu' list={bookList} /> */}
 			{relatedBooks.length > 0 && (
 				<BookSlider
 					className='book-reference__slider'
