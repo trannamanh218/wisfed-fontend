@@ -46,7 +46,7 @@ function ForgetpasswordAdminFormComponent() {
 		return (
 			<div className='forget__form__email'>
 				<Circle loading={isFetching} />
-				{isShow === true && dataModal && (
+				{isShow && dataModal && (
 					<div className='forgot__modal__container'>
 						<ModalLogin data={dataModal} handleChange={handleChangeModal} />
 					</div>

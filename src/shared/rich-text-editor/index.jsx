@@ -13,6 +13,8 @@ import _ from 'lodash';
 import { stateToHTML } from 'draft-js-export-html';
 import { getFriendList } from 'reducers/redux-utils/user';
 import { useDispatch, useSelector } from 'react-redux';
+import defaultAvatar from 'assets/images/avatar.jpeg';
+import { NotificationError } from 'helpers/Error';
 
 const generatePlugins = () => {
 	const linkifyPlugin = createLinkifyPlugin({ target: '_blank' });
@@ -172,14 +174,14 @@ function RichTextEditor({
 				const mentionData = {
 					name: item.fullName || item.firstName + item.lastName,
 					link: `https://wisfeed.tecinus.vn/profile/1b4ade47-d03b-4a7a-98ea-27abd8f15a85`,
-					avatar: item.avatarImage,
+					avatar: item.avatarImage || defaultAvatar,
 					id: item.id,
 				};
 				suggestionData.push(mentionData);
 			});
 			setSuggestions(suggestionData);
-		} catch {
-			return;
+		} catch (err) {
+			NotificationError(err);
 		}
 	};
 

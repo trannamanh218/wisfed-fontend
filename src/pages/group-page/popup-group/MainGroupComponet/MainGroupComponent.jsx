@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import SearchField from 'shared/search-field';
 import Tabs from 'react-bootstrap/Tabs';
 import Tab from 'react-bootstrap/Tab';
@@ -36,6 +36,8 @@ import { uploadImage } from 'reducers/redux-utils/common';
 import camera from 'assets/images/camera.png';
 import { useRef } from 'react';
 import { toast } from 'react-toastify';
+import vector from 'assets/images/Vector.png';
+import pani from 'assets/images/pani.png';
 
 function MainGroupComponent({ handleChange, keyChange, data, member, handleUpdate }) {
 	const [key, setKey] = useState('intro');
@@ -48,11 +50,9 @@ function MainGroupComponent({ handleChange, keyChange, data, member, handleUpdat
 	const [valueGroupSearch, setValueGroupSearch] = useState('');
 	const [filter, setFilter] = useState('[]');
 	const [getData, setGetData] = useState([]);
-	const { id = '' } = useParams();
+	const { id } = useParams();
 	const keyRedux = useSelector(state => state.group.key);
 	const { ref: showRef, isVisible: isShow, setIsVisible: setIsShow } = useVisible(false);
-	const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
-	const [imgUrl, setImgUrl] = useState('');
 	const joinedGroupPopup = useRef(null);
 	const [toggleFollowGroup, setToggleFollowGroup] = useState(false);
 
@@ -76,7 +76,7 @@ function MainGroupComponent({ handleChange, keyChange, data, member, handleUpdat
 			id: data?.id,
 		};
 		try {
-			await dispatch(leaveGroupUser(params));
+			await dispatch(leaveGroupUser(params)).unwrap();
 			setShow(false);
 			setShowSelect(false);
 		} catch (err) {
@@ -140,15 +140,6 @@ function MainGroupComponent({ handleChange, keyChange, data, member, handleUpdat
 		}
 	}, [filter]);
 
-	useEffect(() => {
-		uploadImageFile();
-	}, [acceptedFiles]);
-
-	const uploadImageFile = async () => {
-		const imageUploadedData = await dispatch(uploadImage(acceptedFiles)).unwrap();
-		setImgUrl(imageUploadedData?.streamPath);
-	};
-
 	const handleUpload = useCallback(async acceptedFiles => {
 		if (!_.isEmpty(acceptedFiles)) {
 			try {
@@ -173,7 +164,6 @@ function MainGroupComponent({ handleChange, keyChange, data, member, handleUpdat
 					const customId = 'custom-id-PersonalInfo-handleDrop-error';
 					toast.error('Cập nhật ảnh thất bại', { toastId: customId });
 				}
-				// NotificationError(error);
 			}
 		}
 	});
@@ -213,6 +203,7 @@ function MainGroupComponent({ handleChange, keyChange, data, member, handleUpdat
 		}, [ref]);
 	}
 
+	// Click outside
 	useOutsideAlerter(joinedGroupPopup);
 
 	return (
@@ -224,19 +215,24 @@ function MainGroupComponent({ handleChange, keyChange, data, member, handleUpdat
 					onError={e => e.target.setAttribute('src', defaultAvatar)}
 					alt=''
 				/>
-				<Dropzone onDrop={acceptedFiles => handleUpload(acceptedFiles)}>
-					{({ getRootProps, getInputProps }) => (
-						<div {...getRootProps()}>
-							<input {...getInputProps()} />
-							<div className='dropzone upload-image'>
-								<div className=''>
-									<img src={camera} alt='camera' />
+
+				{/* Chỉ quản trị viên mới có thể thay đổi ảnh bìa */}
+				{data.createdBy?.id === userInfo.id ? (
+					<Dropzone onDrop={acceptedFiles => handleUpload(acceptedFiles)}>
+						{({ getRootProps, getInputProps }) => (
+							<div {...getRootProps()}>
+								<input {...getInputProps()} />
+								<div className='dropzone upload-image'>
+									<div className=''>
+										<img src={camera} alt='camera' />
+									</div>
+									<span style={{ marginRight: '3px' }}>Chỉnh sửa ảnh bìa</span>
 								</div>
-								<span style={{ marginRight: '3px' }}>Chỉnh sửa ảnh bìa</span>
 							</div>
-						</div>
-					)}
-				</Dropzone>
+						)}
+					</Dropzone>
+				) : null}
+
 				<div className='group__title-name'>
 					<span>
 						Nhóm của{' '}
@@ -248,6 +244,17 @@ function MainGroupComponent({ handleChange, keyChange, data, member, handleUpdat
 				<div className='group-name__content'>
 					<h2>{name}</h2>
 					<div className='group-name__member'>
+						{data.isPublic && (
+							<div className='groupPublic'>
+								<img src={vector} />
+
+								<span>Nhóm công khai</span>
+								<div className='imgPani'>
+									<img src={pani} />
+								</div>
+							</div>
+						)}
+
 						<span>
 							{memberGroups?.length < 10 ? `0${memberGroups?.length}` : memberGroups?.length} thành viên
 						</span>
@@ -298,13 +305,13 @@ function MainGroupComponent({ handleChange, keyChange, data, member, handleUpdat
 						</div>
 					</div>
 
-					<div style={{ position: 'fixed', left: '33%', top: '20%', zIndex: '2000' }}>
+					<div className='modal-popup-container'>
 						{isShow ? (
 							<div className='popup-container'>
 								<PopupInviteFriend
-									groupMembers={member}
 									handleClose={() => setIsShow(!isShow)}
 									showRef={showRef}
+									groupMembers={member}
 								/>
 							</div>
 						) : (
@@ -366,6 +373,7 @@ MainGroupComponent.propTypes = {
 	data: PropTypes.object,
 	backgroundImage: PropTypes.string,
 	member: PropTypes.array,
+	handleUpdate: PropTypes.func,
 };
 
 export default MainGroupComponent;

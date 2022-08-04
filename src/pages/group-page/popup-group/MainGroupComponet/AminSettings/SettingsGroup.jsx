@@ -70,8 +70,8 @@ function SettingsGroup({ handleChange }) {
 						<label>Giới thiệu</label>
 						<textarea ref={textArea} className='form-field-textarea' rows={10} />
 					</div>
-					<div className='form-field--hastag'>
-						<label>Hastag</label>
+					<div className='form-field--hashtag'>
+						<label>Hashtag</label>
 						<Input isBorder={false} placeholder='' />
 					</div>
 

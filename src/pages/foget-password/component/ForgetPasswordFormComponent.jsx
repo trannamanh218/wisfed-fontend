@@ -30,26 +30,22 @@ function ForgetpasswordFormComponent() {
 			localStorage.setItem('emailForgot', JSON.stringify(data.email));
 			await dispatch(forgotPassword(data)).unwrap();
 			setCheckUser(true);
-			if (!isFetching) {
-				setTimeout(() => {
-					setIsShow(true);
-				}, 500);
-				setDatamodal({
-					title: 'Đã gửi mã',
-					title2: 'Xác Nhận',
-					isShowIcon: true,
-					scribe: 'Vui lòng kiểm tra hòm thư ',
-					scribe2: `${data.email}`,
-				});
-			}
+			setIsShow(true);
+			setDatamodal({
+				title: 'Đã gửi mã',
+				title2: 'Xác Nhận',
+				isShowIcon: true,
+				scribe: 'Vui lòng kiểm tra hòm thư ',
+				scribe2: `${data.email}`,
+			});
 		} catch (err) {
 			setIsShow(true);
 			setDatamodal({
 				title: 'Lấy lại mật khẩu',
 				title2: 'thất bại',
 				isShowIcon: false,
-				scribe: 'Tài khoản của bạn chưa tồn tại.',
-				scribe2: `Vui lòng đăng kí tài khoản`,
+				scribe: `${err.errorCode === 303 ? 'Tài khoản của bạn chưa tồn tại.' : ''}`,
+				scribe2: `${err.errorCode === 303 ? 'Vui lòng đăng kí tài khoản' : ''}`,
 			});
 		}
 	};
@@ -57,7 +53,7 @@ function ForgetpasswordFormComponent() {
 	return (
 		<div className='forget__form__email'>
 			<Circle loading={isFetching} />
-			{isShow === true && dataModal && (
+			{isShow && dataModal && (
 				<div className='forgot__modal__container'>
 					<ModalLogin data={dataModal} handleChange={handleChangeModal} />
 				</div>

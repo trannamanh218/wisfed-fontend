@@ -77,11 +77,9 @@ const ReviewTab = ({ currentTab }) => {
 	const { modalOpen, toggleModal } = useModal(false);
 	const [sortValue, setSortValue] = useState('mostLiked');
 	const [checkedStarArr, setCheckedStarArr] = useState([]);
-	const [checkedPeopleArr, setCheckedPeopleArr] = useState([]);
 	const [directionSort, setDirectionSort] = useState('DESC');
 	const [propertySort, setPropertySort] = useState('like');
 	const [inputSearch, setInputSearch] = useState('');
-	// const [topUser, setTopUser] = useState('');
 
 	const callApiStart = useRef(10);
 	const callApiPerPage = useRef(10);
@@ -220,20 +218,6 @@ const ReviewTab = ({ currentTab }) => {
 		setCheckedStarArr(newArr);
 	};
 
-	const handleChangePeople = data => {
-		const newArr = [...checkedPeopleArr];
-		if (!newArr.length) {
-			newArr.push(data);
-		} else {
-			if (!newArr.includes(data)) {
-				newArr.push(data);
-			} else {
-				newArr.splice(newArr.indexOf(data), 1);
-			}
-		}
-		setCheckedPeopleArr(newArr);
-	};
-
 	return (
 		<div className='review-tab'>
 			<FilterPane
@@ -253,7 +237,7 @@ const ReviewTab = ({ currentTab }) => {
 					<SearchField
 						value={inputSearch}
 						handleChange={ChangeSearch}
-						placeholder='Tìm kiếm theo Hastag, tên người review ...'
+						placeholder='Tìm kiếm theo Hashtag, tên người review ...'
 					/>
 				</div>
 				{currentTab === 'reviews' && reviewList.length ? (

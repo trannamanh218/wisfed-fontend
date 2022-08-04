@@ -4,38 +4,21 @@
 	top: 100%;
 	right: -170%;
 	background: #fcfcfc;
-	border-bottom-left-radius: 12px;
-	border-bottom-right-radius: 12px;
+	border-bottom-left-radius: 10px;
+	border-bottom-right-radius: 10px;
+	overflow: hidden;
 	box-shadow: 0px 0px 32px rgba(0, 0, 0, 0.04);
 	cursor: default;
 	.notificaiton__container {
 		background: #fcfcfc;
 		font-family: 'Montserrat';
-		border-bottom-left-radius: 12px;
-		border-bottom-right-radius: 12px;
-		overflow: hidden;
 		width: 400px;
-
-		&::-webkit-scrollbar {
-			width: 8px;
-			background-color: #f5f5f5;
-		}
-
-		&::-webkit-scrollbar-track {
-			background-color: rgb(255, 255, 255);
-			-webkit-border-radius: 12px;
-			border-radius: 12px;
-		}
-		&::-webkit-scrollbar-thumb {
-			border-radius: 12px;
-			background-color: #cfcfcf;
-		}
 	}
 }
 
 .notificaiton__loading__container {
 	margin-top: 12px;
-	height: 575px;
+	height: 650px;
 }
 
 .notification-title {
@@ -60,7 +43,6 @@
 
 .notificaiton__tabs {
 	margin-top: 12px;
-	height: 575px;
 	background: #fcfcfc;
 	border-bottom-left-radius: 12px;
 	border-bottom-right-radius: 12px;
@@ -129,6 +111,28 @@
 	background-color: #fcfcfc !important;
 }
 
+.notificaiton__all-wrapper {
+	max-height: 607px;
+	overflow-y: scroll;
+	margin-right: 2px;
+	&::-webkit-scrollbar {
+		width: 4px;
+	}
+
+	&::-webkit-scrollbar-track {
+		background: white;
+		border-radius: 8px;
+	}
+
+	&::-webkit-scrollbar-thumb {
+		background: rgba(#606060, 0.3);
+		border-radius: 8px;
+		&:hover {
+			background: rgba(#606060, 0.2);
+		}
+	}
+}
+
 .notificaiton__all__title {
 	font-family: 'Montserrat';
 	font-style: normal;
@@ -136,7 +140,7 @@
 	font-size: 18px;
 	line-height: 32px;
 	letter-spacing: 0.75px;
-	margin: 8.2px 20px;
+	margin: 8px 20px;
 }
 
 .notificaiton__all__infor {
@@ -189,10 +193,10 @@
 	display: flex;
 	padding: 0 15px 15px 10px;
 	justify-content: space-between;
-	min-width: 360px;
 	.notificaiton__all__accept,
 	.notificaiton__all__refuse {
-		padding: 11px 55px;
+		width: 49%;
+		padding: 11px 0;
 		border-radius: 12px;
 		font-weight: 600;
 		font-size: 13px;

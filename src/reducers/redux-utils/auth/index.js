@@ -64,7 +64,8 @@ export const forgotPassword = createAsyncThunk('auth/forgotPassword', async (par
 		const response = await Request.makePost(forgotPasswordAPI, params);
 		return response;
 	} catch (err) {
-		return rejectWithValue(err.response);
+		const error = JSON.parse(err.response);
+		return rejectWithValue(error);
 	}
 });
 

@@ -86,21 +86,3 @@
 	color: $red;
 	font-size: 12px;
 }
-
-@media only screen and (max-width: 931px) {
-	.btn-status.btn {
-		width: 100px;
-		.text-status {
-			display: none;
-		}
-	}
-}
-
-@media only screen and (max-width: 768px) {
-	.btn-status.btn {
-		width: inherit;
-		.text-status {
-			display: inherit;
-		}
-	}
-}

@@ -42,3 +42,9 @@
 	color: #2d2c42;
 	margin-bottom: 24px;
 }
+
+@media only screen and (max-width: 1024px) {
+	.progress__circle__title {
+		font-size: 18px;
+	}
+}

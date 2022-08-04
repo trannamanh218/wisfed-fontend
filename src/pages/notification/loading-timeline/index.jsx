@@ -3,7 +3,7 @@ import './loading-timeline.scss';
 const LoadingTimeLine = () => {
 	return (
 		<div className='timeline-wrapper'>
-			{[...Array(7)].map((_, index) => (
+			{[...Array(8)].map((_, index) => (
 				<div key={index} className='timeline-item'>
 					<div className='animated-background avatar'></div>
 					<div className='content__container'>

@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 import SearchField from 'shared/search-field';
 import UserAvatar from 'shared/user-avatar';
 import LinearProgressBar from 'shared/linear-progress-bar';
@@ -9,19 +9,15 @@ import './main-reading-target.scss';
 import BookThumbnail from 'shared/book-thumbnail';
 import ModalReadTarget from '../modal-reading-target';
 import { useModal } from 'shared/hooks';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { useFetchUserParams } from 'api/user.hook';
 import { useFetchTargetReading } from 'api/readingTarget.hooks';
 import GoalsNotSetYet from './goals-not-set';
 import Circle from 'shared/loading/circle';
 import { STATUS_LOADING } from 'constants';
-import { useCurrentPng } from 'recharts-to-png';
-import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { getChartsByid, updateImg } from 'reducers/redux-utils/chart';
-import { saveDataShare, shareTarget } from 'reducers/redux-utils/post';
-import { handleShareTarget } from 'reducers/redux-utils/target';
+import { saveDataShare } from 'reducers/redux-utils/post';
 import { useVisible } from 'shared/hooks';
 import Storage from 'helpers/Storage';
 import ShareTarget from 'shared/share-target';
@@ -121,6 +117,7 @@ const MainReadingTarget = () => {
 			</tr>
 		);
 	};
+
 	const handleShareTargetReading = async () => {
 		if (!Storage.getAccessToken()) {
 			return;

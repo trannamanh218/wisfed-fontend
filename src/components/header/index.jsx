@@ -145,9 +145,7 @@ const Header = () => {
 
 	const tollgleModaleInfoUser = () => {
 		setModalInforUser(!modalInforUser);
-		if (Storage.getAccessToken()) {
-			return;
-		} else {
+		if (!Storage.getAccessToken()) {
 			navigate(`/login`);
 		}
 	};

@@ -13,6 +13,7 @@ import ArrowChevronForward from 'assets/images/ArrowChevronForward.png';
 import Datepicker from 'react-datepicker';
 import { useDispatch } from 'react-redux';
 import { uploadImage } from 'reducers/redux-utils/common';
+import ModalSeries from 'shared/modal-series/ModalSeries';
 
 export default function MainUpload() {
 	const [textareaValue, setTextareaValue] = useState('');
@@ -24,6 +25,15 @@ export default function MainUpload() {
 	const [inputNameGroup, setInputNameBook] = useState('');
 	const [languages, setLanguages] = useState('');
 
+	const [showModalSeries, setShowModalSeries] = useState(false);
+	const handleCloseModalSeries = () => setShowModalSeries(false);
+	const handleShowModalSeries = () => setShowModalSeries(true);
+	const APIListSeries = [
+		{ id: '1', title: 'Ươm mầm tỉ phú nhí' },
+		{ id: '2', title: 'Ươm mầm tỉ phú nhí' },
+		{ id: '3', title: 'Ươm mầm tỉ phú nhí' },
+	];
+
 	const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
 
 	const listLanguages = [
@@ -32,14 +42,6 @@ export default function MainUpload() {
 	];
 
 	const languagesRef = useRef({ value: 'default', title: 'Ngôn ngữ' });
-
-	const listSeries = [
-		{ value: 'default', title: 'Sê-ri bộ sách' },
-		{ value: 'VN', title: 'test 1' },
-		{ value: 'EN', title: 'test 2' },
-	];
-
-	const SeriesRef = useRef({ value: 'default', title: 'Sê-ri bộ sách' });
 
 	const onchangeLanguages = data => {
 		setLanguages(data);
@@ -118,7 +120,7 @@ export default function MainUpload() {
 						<label>Tên sách gốc</label>
 						<Input
 							isBorder={false}
-							placeholder='Tiêu đề phụ'
+							placeholder='Tên sách gốc'
 							handleChange={onInputChange(setInputNameBook)}
 						/>
 					</div>
@@ -161,7 +163,6 @@ export default function MainUpload() {
 								/>
 							</Col>
 							<Col xs={6}>
-								{/* <div className='inp-book'> */}
 								<label>Ngày phát hành</label>
 								<label className='inp-date'>
 									<div className='icon-calendar'>
@@ -179,7 +180,6 @@ export default function MainUpload() {
 										dropdownMode='select'
 									/>
 								</label>
-								{/* </div> */}
 							</Col>
 						</Row>
 					</div>
@@ -211,16 +211,19 @@ export default function MainUpload() {
 						</Row>
 					</div>
 					<div className='inp-book'>
-						<label>
-							Sê-ri sách<span className='upload-text-danger'>*</span>
-						</label>
-						<SelectBox
-							name='series'
-							list={listSeries}
-							defaultOption={SeriesRef.current}
-							onChangeOption={onchangeLanguages}
-							imgDropDown={ArrowChevronForward}
-						/>
+						<label>Sê-ri</label>
+						<input
+							className='input input--non-border'
+							onClick={handleShowModalSeries}
+							placeholder='Sê-ri bộ sách'
+						></input>
+						<div className='modal-series'>
+							<ModalSeries
+								showModalSeries={showModalSeries}
+								handleCloseModalSeries={handleCloseModalSeries}
+								APIListSeries={APIListSeries}
+							/>
+						</div>
 					</div>
 					<div className='inp-book'>
 						<label>

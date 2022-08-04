@@ -61,8 +61,8 @@
 	}
 }
 .group-name__member {
+	display: flex;
 	span {
-		margin-top: 20px;
 		font-family: 'Montserrat';
 		font-style: normal;
 		font-weight: 500;
@@ -244,4 +244,26 @@
 	margin-bottom: 0px !important;
 	padding-left: 5px;
 	padding-top: 5px;
+}
+.groupPublic {
+	display: flex;
+	& img {
+		width: 18px;
+		height: 18px;
+		margin-top: 3px;
+	}
+	& span {
+		margin-left: 5px;
+		margin-top: 0;
+		align-items: flex-start;
+	}
+}
+.imgPani {
+	& img {
+		width: 4px;
+		height: 4px;
+		margin-top: 6px;
+		margin-left: 8px;
+		margin-right: 8px;
+	}
 }

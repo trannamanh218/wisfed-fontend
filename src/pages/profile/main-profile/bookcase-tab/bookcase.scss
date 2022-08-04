@@ -143,3 +143,12 @@
 		}
 	}
 }
+
+@media only screen and (max-width: 1024px) {
+	.bookcase__item__book-info {
+		margin-left: 20px;
+	}
+	.bookcase__item-name {
+		font-size: 18px;
+	}
+}

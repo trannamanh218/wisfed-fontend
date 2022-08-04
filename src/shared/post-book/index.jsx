@@ -54,6 +54,7 @@ function PostBook({ data }) {
 		</div>
 	);
 }
+
 PostBook.propTypes = {
 	data: PropTypes.object.isRequired,
 };
