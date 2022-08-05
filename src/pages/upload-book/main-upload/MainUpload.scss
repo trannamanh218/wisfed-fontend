@@ -117,8 +117,18 @@
 				}
 			}
 
-			.add-and-search-categories__categories-added__item {
-				height: 43px;
+			.add-and-search-categories__categories-added {
+				width: 100%;
+				display: flex;
+				gap: 4px;
+				flex-wrap: wrap;
+
+				&__item {
+					height: 43px;
+				}
+			}
+			.add-and-search-categories__main-content.added-categories {
+				padding: 4px 15px;
 			}
 		}
 	}

@@ -134,12 +134,14 @@ export default function MainUpload() {
 
 	const handleCreateBook = async params => {
 		try {
-			const res = await dispatch(createBook(params)).unwrap();
-			// B4: Xử lý hiển thị kết quả
-			toast.success('Đăng tải sách thành công');
+			await dispatch(createBook(params)).unwrap();
 		} catch (err) {
 			NotificationError(err);
 		}
+	};
+
+	const handleAddBookToSeries = async params => {
+		console.log(params);
 	};
 
 	const onBtnSaveClick = () => {
@@ -179,7 +181,14 @@ export default function MainUpload() {
 
 		if (validate) {
 			// B3: Gọi api
+
+			// Tạo sách
 			handleCreateBook(bookInfo);
+			// Nếu sách có trường series thì cập nhật series đó
+			handleAddBookToSeries();
+
+			// B4: Xử lý hiển thị kết quả
+			toast.success('Đăng tải sách thành công');
 		}
 	};
 

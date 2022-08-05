@@ -112,6 +112,21 @@
 	z-index: 1000;
 }
 
+@media only screen and (width: 912px) {
+	.newfeed {
+		.post__container {
+			.post__user-status {
+				&__subtitle {
+					.react-rating-container {
+						padding-right: 10px;
+						width: 72px;
+					}
+				}
+			}
+		}
+	}
+}
+
 @media only screen and (width: 820px) {
 	.newfeed {
 		.post__container {
@@ -129,6 +144,10 @@
 				&__name-and-post-time-status {
 					width: 85%;
 				}
+			}
+
+			.post-book__edit .linear-progress {
+				max-width: 70%;
 			}
 		}
 	}
