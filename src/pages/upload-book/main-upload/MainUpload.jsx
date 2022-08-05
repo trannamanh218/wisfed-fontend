@@ -160,8 +160,7 @@ export default function MainUpload() {
 
 	const handleAddBookToSeries = async params => {
 		try {
-			const res = await dispatch(addBookToSeries(params)).unwrap();
-			console.log(res);
+			await dispatch(addBookToSeries(params)).unwrap();
 		} catch (err) {
 			NotificationError(err);
 		}
