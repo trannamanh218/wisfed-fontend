@@ -14,6 +14,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { uploadImage } from 'reducers/redux-utils/common';
 import ModalSeries from 'shared/modal-series/ModalSeries';
 import AddAndSearchCategoriesUploadBook from './AddAndSearchCategoriesUploadBook/AddAndSearchCategoriesUploadBook';
+import { toast } from 'react-toastify';
+import { createBook } from 'reducers/redux-utils/book';
+import { NotificationError } from 'helpers/Error';
 
 export default function MainUpload() {
 	const [publishDate, setPublishDate] = useState(null);
@@ -21,11 +24,10 @@ export default function MainUpload() {
 	const dispatch = useDispatch();
 	const { userInfoJwt } = useSelector(state => state.auth);
 
-	const [frontBookCover, setFrontBookCover] = useState(undefined);
+	const [image, setFrontBookCover] = useState('');
 	const [categoryAddedList, setCategoryAddedList] = useState([]);
 	const [language, setLanguage] = useState('');
 	const [series, setSeries] = useState({});
-	const [seriesName, setSeriesName] = useState('');
 
 	const [resetSelect, setResetSelect] = useState(false);
 
@@ -63,9 +65,7 @@ export default function MainUpload() {
 		setLanguage('');
 		setResetSelect(!resetSelect);
 
-		// reset ô series
 		setSeries({});
-		setSeriesName('');
 
 		setCategoryAddedList([]);
 
@@ -76,39 +76,111 @@ export default function MainUpload() {
 	const handleCloseModalSeries = () => setShowModalSeries(false);
 	const handleShowModalSeries = () => setShowModalSeries(true);
 
-	const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
+	const { acceptedFiles, getRootProps, getInputProps, open } = useDropzone();
 
 	const listLanguages = [
-		{ value: 'VN', name: 'Việt Nam' },
-		{ value: 'EN', name: 'Anh' },
+		{ value: 'vn', name: 'Việt Nam' },
+		{ value: 'en', name: 'Anh' },
 	];
 
 	const onchangeLanguages = data => {
 		setLanguage(data.value);
 	};
 
+	const toastWarning = () => {
+		const customId = 'custom-id-upload';
+		toast.warning('Vui lòng điền đầy đủ thông tin', { toastId: customId });
+	};
+
+	const validateInput = param => {
+		if (!param.images) {
+			toastWarning();
+			return false;
+		}
+		if (!param.name) {
+			toastWarning();
+			return false;
+		}
+		if (!param.authors[0].authorName) {
+			toastWarning();
+			return false;
+		}
+		if (param.categoryIds.length === 0) {
+			toastWarning();
+			return false;
+		}
+		if (!param.publisher) {
+			toastWarning();
+			return false;
+		}
+		if (!param.isbn) {
+			toastWarning();
+			return false;
+		}
+		if (!param.page) {
+			toastWarning();
+			return false;
+		}
+		if (!param.language) {
+			toastWarning();
+			return false;
+		}
+		if (!param.description) {
+			toastWarning();
+			return false;
+		}
+		return true;
+	};
+
+	const handleCreateBook = async params => {
+		try {
+			const res = await dispatch(createBook(params)).unwrap();
+			// B4: Xử lý hiển thị kết quả
+			toast.success('Đăng tải sách thành công');
+		} catch (err) {
+			NotificationError(err);
+		}
+	};
+
 	const onBtnSaveClick = () => {
 		// B1: Thu thập dữ liệu
+
+		// Lấy danh sách categoryIds
+		const categoryIds = [];
+		for (let i = 0; i < categoryAddedList.length; i++) {
+			categoryIds.push(categoryAddedList[i].id);
+		}
+
 		const bookInfo = {
-			frontBookCover: frontBookCover,
+			frontBookCover: image,
+			images: [image],
 			name: name,
 			subName: subName,
 			originalName: originalName,
-			author: author,
+			authors: [
+				{
+					isUser: false,
+					authorName: author,
+				},
+			],
 			translator: translator,
 			publisher: publisher,
 			isbn: isbn,
 			publishDate: publishDate,
-			page: page,
+			page: Number(page),
 			language: language,
-			series: series,
 			description: description,
-			categoryIds: categoryAddedList,
+			categoryIds: categoryIds,
+			tags: [],
 		};
-		console.log(bookInfo);
+
 		// B2: Kiểm tra dữ liệu
-		// B3: Gọi api
-		// B4: Xử lý hiển thị kết quả
+		const validate = validateInput(bookInfo);
+
+		if (validate) {
+			// B3: Gọi api
+			handleCreateBook(bookInfo);
+		}
 	};
 
 	useEffect(() => {
@@ -119,10 +191,6 @@ export default function MainUpload() {
 		const imageUploadedData = await dispatch(uploadImage(acceptedFiles)).unwrap();
 		setFrontBookCover(imageUploadedData?.streamPath);
 	};
-
-	useEffect(() => {
-		setSeriesName(series.name);
-	}, [series]);
 
 	return (
 		<>
@@ -138,8 +206,13 @@ export default function MainUpload() {
 			</div>
 			<div className='upload-book-form'>
 				<div className='upload-image__wrapper'>
-					{frontBookCover ? (
-						<img src={frontBookCover} alt='img' />
+					{image ? (
+						<img
+							src={image}
+							alt='img'
+							onClick={open}
+							onMouseEnter={e => (e.target.style.cursor = 'pointer')}
+						/>
 					) : (
 						<Dropzone>
 							{() => (
@@ -273,6 +346,7 @@ export default function MainUpload() {
 								</label>
 								<input
 									type='number'
+									onWheel={e => e.target.blur()}
 									onKeyDown={blockInvalidChar}
 									className='input input--non-border'
 									placeholder='Số trang'
@@ -303,7 +377,7 @@ export default function MainUpload() {
 								className='input input--non-border'
 								onClick={handleShowModalSeries}
 								placeholder='Sê-ri bộ sách'
-								value={seriesName || ''}
+								value={series.name || ''}
 								readOnly
 							></input>
 							<div className='modal-series'>
