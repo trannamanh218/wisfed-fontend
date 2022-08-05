@@ -111,3 +111,25 @@
 	justify-content: center;
 	z-index: 1000;
 }
+
+@media only screen and (width: 820px) {
+	.newfeed {
+		.post__container {
+			.post-book__button-and-rating {
+				gap: 1rem;
+			}
+
+			.post__user-status {
+				&__subtitle {
+					.react-rating-container {
+						width: 75px;
+					}
+				}
+
+				&__name-and-post-time-status {
+					width: 85%;
+				}
+			}
+		}
+	}
+}
