@@ -16,6 +16,7 @@ import ModalSeries from 'shared/modal-series/ModalSeries';
 import AddAndSearchCategoriesUploadBook from './AddAndSearchCategoriesUploadBook/AddAndSearchCategoriesUploadBook';
 import { toast } from 'react-toastify';
 import { createBook } from 'reducers/redux-utils/book';
+import { addBookToSeries } from 'reducers/redux-utils/series';
 import { NotificationError } from 'helpers/Error';
 
 export default function MainUpload() {
@@ -134,14 +135,36 @@ export default function MainUpload() {
 
 	const handleCreateBook = async params => {
 		try {
-			await dispatch(createBook(params)).unwrap();
+			// Tạo sách mới
+			const res = await dispatch(createBook(params)).unwrap();
+
+			// Nếu sách có trường series thì cập nhật series đó
+			if (series) {
+				// Lấy id của sách vừa được tạo
+				const bookCreatedId = res.id;
+
+				const paramsForAddBookToSeries = {
+					seriesId: series.id,
+					body: { bookIds: [Number(bookCreatedId)] },
+				};
+
+				handleAddBookToSeries(paramsForAddBookToSeries);
+			}
+
+			// B4: Xử lý hiển thị kết quả
+			toast.success('Đăng tải sách thành công');
 		} catch (err) {
 			NotificationError(err);
 		}
 	};
 
 	const handleAddBookToSeries = async params => {
-		console.log(params);
+		try {
+			const res = await dispatch(addBookToSeries(params)).unwrap();
+			console.log(res);
+		} catch (err) {
+			NotificationError(err);
+		}
 	};
 
 	const onBtnSaveClick = () => {
@@ -184,11 +207,6 @@ export default function MainUpload() {
 
 			// Tạo sách
 			handleCreateBook(bookInfo);
-			// Nếu sách có trường series thì cập nhật series đó
-			handleAddBookToSeries();
-
-			// B4: Xử lý hiển thị kết quả
-			toast.success('Đăng tải sách thành công');
 		}
 	};
 

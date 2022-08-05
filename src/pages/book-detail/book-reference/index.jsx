@@ -23,7 +23,7 @@ const BookReference = () => {
 	const [isExpand, setIsExpand] = useState(false);
 	const [rows, setRows] = useState(3);
 	const [relatedBooks, setRelateBooks] = useState([]);
-	const [series, setSeries] = useState([]);
+	// const [series, setSeries] = useState([]);
 
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
@@ -105,7 +105,7 @@ const BookReference = () => {
 				/>
 			)}
 
-			{series.length > 2 ? (
+			{/* {series.length > 2 ? (
 				<BookSlider
 					className='book-reference__slider'
 					title={`Series ${series.name}`}
@@ -124,7 +124,7 @@ const BookReference = () => {
 						</Col>
 					))}
 				</Row>
-			) : null}
+			) : null} */}
 
 			{relatedBooks.length > 0 && (
 				<BookSlider

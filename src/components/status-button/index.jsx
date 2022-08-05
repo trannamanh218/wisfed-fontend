@@ -43,7 +43,7 @@ const STATUS_BOOK_OBJ = {
 	},
 };
 
-const StatusButton = ({ className, bookData, inPostBook = false, hasBookStatus = false, postActor }) => {
+const StatusButton = ({ className, bookData, inPostBook = false, hasBookStatus = false }) => {
 	const [modalShow, setModalShow] = useState(false);
 	const [currentStatus, setCurrentStatus] = useState('');
 	const [fetchStatus, setFetchStatus] = useState(STATUS_IDLE);
@@ -230,7 +230,6 @@ StatusButton.propTypes = {
 	bookData: PropTypes.object,
 	inPostBook: PropTypes.bool,
 	hasBookStatus: PropTypes.bool,
-	postActor: PropTypes.string,
 };
 
 export default StatusButton;
