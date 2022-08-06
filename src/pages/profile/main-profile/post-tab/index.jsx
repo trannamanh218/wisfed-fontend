@@ -8,6 +8,7 @@ import { NotificationError } from 'helpers/Error';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import LoadingIndicator from 'shared/loading-indicator';
 import PropTypes from 'prop-types';
+import { POST_TYPE } from 'constants';
 
 function PostTab({ currentTab }) {
 	const [postList, setPostList] = useState([]);
@@ -53,7 +54,7 @@ function PostTab({ currentTab }) {
 					loader={<LoadingIndicator />}
 				>
 					{postList.map(item => (
-						<Post key={item.id} postInformations={item} />
+						<Post key={item.id} postInformations={item} type={POST_TYPE} />
 					))}
 				</InfiniteScroll>
 			)}

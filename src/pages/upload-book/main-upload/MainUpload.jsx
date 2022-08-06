@@ -58,7 +58,7 @@ export default function MainUpload() {
 			<div className='group-btn-back'>
 				<button onClick={() => handleClick()}>
 					<BackArrow />
-				</button>{' '}
+				</button>
 				<span>Thêm sách</span>
 			</div>
 		);
@@ -246,7 +246,6 @@ export default function MainUpload() {
 						</Col>
 					</Row>
 				</div>
-				{/* </div> */}
 			</div>
 		</>
 	);

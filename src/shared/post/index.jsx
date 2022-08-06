@@ -16,7 +16,7 @@ import './post.scss';
 import PreviewLink from 'shared/preview-link/PreviewLink';
 import { NotificationError } from 'helpers/Error';
 import ReactRating from 'shared/react-rating';
-import { useParams, useLocation, Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { createCommentReview } from 'reducers/redux-utils/book';
 import Comment from 'shared/comments';
 import PostQuotes from 'shared/post-quotes';
@@ -34,7 +34,7 @@ import { handleCheckReplyToMe } from 'reducers/redux-utils/comment';
 const urlRegex =
 	/https?:\/\/www(\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/g;
 
-function Post({ postInformations, showModalCreatPost, inReviews = false }) {
+function Post({ postInformations, showModalCreatPost, type = POST_TYPE }) {
 	const [postData, setPostData] = useState({});
 	const [videoId, setVideoId] = useState('');
 	const { userInfo } = useSelector(state => state.auth);
@@ -46,11 +46,9 @@ function Post({ postInformations, showModalCreatPost, inReviews = false }) {
 	const isLikeTemp = useRef(postInformations.isLike);
 
 	const { isSharePosts } = useSelector(state => state.post);
-	const location = useLocation();
 
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
-	const { bookId } = useParams();
 
 	useEffect(() => {
 		if (!_.isEmpty(postInformations) && postInformations.usersComments?.length) {
@@ -82,7 +80,7 @@ function Post({ postInformations, showModalCreatPost, inReviews = false }) {
 		mentionUsersArr.forEach(item => newArr.push(item.id));
 		try {
 			let res = {};
-			if (bookId) {
+			if (type === REVIEW_TYPE) {
 				const commentReviewData = {
 					reviewId: postData.id,
 					replyId: replyId,
@@ -91,26 +89,24 @@ function Post({ postInformations, showModalCreatPost, inReviews = false }) {
 					mentionsUser: newArr,
 				};
 				res = await dispatch(createCommentReview(commentReviewData)).unwrap();
+			} else if (type === POST_TYPE) {
+				const params = {
+					minipostId: postData.minipostId,
+					content: content,
+					mediaUrl: [],
+					mentionsUser: newArr,
+					replyId: replyId,
+				};
+				res = await dispatch(createComment(params)).unwrap();
 			} else {
-				if (location.pathname.includes('group')) {
-					const params = {
-						groupPostId: postData.minipostId || postData.id,
-						content: content,
-						mentionsUser: newArr,
-						mediaUrl: [],
-						replyId: replyId,
-					};
-					res = await dispatch(createCommentGroup(params)).unwrap();
-				} else {
-					const params = {
-						minipostId: postData.minipostId || postData.groupPostId || postData.id,
-						content: content,
-						mediaUrl: [],
-						mentionsUser: newArr,
-						replyId: replyId,
-					};
-					res = await dispatch(createComment(params)).unwrap();
-				}
+				const params = {
+					groupPostId: postData.groupPostId || postData.id,
+					content: content,
+					mentionsUser: newArr,
+					mediaUrl: [],
+					replyId: replyId,
+				};
+				res = await dispatch(createCommentGroup(params)).unwrap();
 			}
 			if (!_.isEmpty(res)) {
 				const newComment = { ...res, user: userInfo };
@@ -150,18 +146,22 @@ function Post({ postInformations, showModalCreatPost, inReviews = false }) {
 			if (isLike !== isLikeTemp.current) {
 				isLikeTemp.current = isLike;
 				try {
-					if (location.pathname.includes('group')) {
-						await dispatch(updateReactionActivityGroup(postData.id)).unwrap();
-					} else if (inReviews) {
-						await dispatch(likeAndUnlikeReview(postData.id)).unwrap();
-					} else {
-						await dispatch(updateReactionActivity(postData.minipostId || postData.id)).unwrap();
+					switch (type) {
+						case POST_TYPE:
+							await dispatch(updateReactionActivity(postData.minipostId)).unwrap();
+							break;
+						case REVIEW_TYPE:
+							await dispatch(likeAndUnlikeReview(postData.id)).unwrap();
+							break;
+						default:
+							await dispatch(updateReactionActivityGroup(postData.groupPostId)).unwrap();
+							break;
 					}
 				} catch (err) {
 					NotificationError(err);
 				}
 			}
-		}, 3000),
+		}, 1500),
 		[doneGetPostData.current]
 	);
 
@@ -244,11 +244,9 @@ function Post({ postInformations, showModalCreatPost, inReviews = false }) {
 									{postData?.createdBy?.fullName || postData?.user?.fullName || 'Ẩn danh'}
 								</Link>
 								{/* tagged people */}
-								{postData.mentionsUsers && postData.mentionsUsers.length !== 0 ? (
-									withFriends(postData.mentionsUsers)
-								) : (
-									<span></span>
-								)}
+								{postData.mentionsUsers &&
+									!!postData.mentionsUsers.length &&
+									withFriends(postData.mentionsUsers)}
 								{(postData.groupInfo || postData.group) && (
 									<img className='post__user-icon' src={Play} alt='' />
 								)}
@@ -449,7 +447,7 @@ function Post({ postInformations, showModalCreatPost, inReviews = false }) {
 										dataProp={comment}
 										postData={postData}
 										handleReply={handleReply}
-										type={inReviews ? REVIEW_TYPE : POST_TYPE}
+										type={type}
 									/>
 									<div className='comment-reply-container'>
 										{comment.reply && !!comment.reply.length && (
@@ -461,7 +459,7 @@ function Post({ postInformations, showModalCreatPost, inReviews = false }) {
 															dataProp={commentChild}
 															postData={postData}
 															handleReply={handleReply}
-															type={inReviews ? REVIEW_TYPE : POST_TYPE}
+															type={type}
 														/>
 													</div>
 												))}
@@ -501,7 +499,7 @@ Post.propTypes = {
 	likeAction: PropTypes.func,
 	className: PropTypes.string,
 	showModalCreatPost: PropTypes.bool,
-	inReviews: PropTypes.bool,
+	type: PropTypes.string,
 };
 
 export default Post;

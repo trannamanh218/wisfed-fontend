@@ -36,6 +36,7 @@ import AuthorBook from 'shared/author-book';
 import ShareUsers from '../modal-share-users';
 import RichTextEditor from 'shared/rich-text-editor';
 import ShareTarget from 'shared/share-target';
+import { POST_TYPE } from 'constants';
 
 const urlRegex =
 	/https?:\/\/www(\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/g;
@@ -646,7 +647,11 @@ function CreatPostModalContent({
 								>
 									{isShare && <PostQuotes postsData={postsData} isShare={isShare} />}
 									{isSharePosts && (
-										<Post postInformations={postsData} showModalCreatPost={showModalCreatPost} />
+										<Post
+											postInformations={postsData}
+											showModalCreatPost={showModalCreatPost}
+											type={POST_TYPE}
+										/>
 									)}
 									{isSharePostsAll === 'shareTopBook' && <AuthorBook data={postsData} />}
 								</div>

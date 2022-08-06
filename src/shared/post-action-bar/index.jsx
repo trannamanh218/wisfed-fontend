@@ -5,13 +5,12 @@ import { sharePosts, saveDataShare } from 'reducers/redux-utils/post';
 import Storage from 'helpers/Storage';
 import { checkUserLogin } from 'reducers/redux-utils/auth';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 const PostActionBar = ({ postData, handleLikeAction }) => {
 	const dispatch = useDispatch();
 	const location = useLocation();
 	const navigate = useNavigate();
-	const { userInfo } = useSelector(state => state.auth);
 
 	const handleShare = () => {
 		if (!Storage.getAccessToken()) {
@@ -48,12 +47,7 @@ const PostActionBar = ({ postData, handleLikeAction }) => {
 	return (
 		<div className='post-action-bar'>
 			<div data-testid='post__options__like-btn' className='post-action-bar__item' onClick={handleLikeAction}>
-				{postData.isLike ||
-				postData.usersLikePost?.includes(postData.usersLikePost.find(x => x.id === userInfo.id)) ? (
-					<LikeFill />
-				) : (
-					<Like />
-				)}
+				{postData.isLike ? <LikeFill /> : <Like />}
 				<div className='post-action-bar__title'>{postData.like || null} Thích</div>
 			</div>
 

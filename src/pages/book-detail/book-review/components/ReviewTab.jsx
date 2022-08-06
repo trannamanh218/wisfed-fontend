@@ -17,6 +17,7 @@ import { Modal } from 'react-bootstrap';
 import { useModal } from 'shared/hooks';
 import FormCheckGroup from 'shared/form-check-group';
 import Button from 'shared/button';
+import { REVIEW_TYPE } from 'constants';
 
 const ReviewTab = ({ currentTab }) => {
 	const filterOptions = [
@@ -250,7 +251,7 @@ const ReviewTab = ({ currentTab }) => {
 					>
 						{reviewList.map(item => (
 							<Fragment key={`post-${item.id}`}>
-								<Post className='post-container--review' postInformations={item} inReviews={true} />
+								<Post className='post-container--review' postInformations={item} type={REVIEW_TYPE} />
 								<hr />
 							</Fragment>
 						))}

@@ -10,6 +10,7 @@ import { getActivityList } from 'reducers/redux-utils/activity';
 import { useDispatch, useSelector } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
 import LoadingIndicator from 'shared/loading-indicator';
+import { POST_TYPE, GROUP_TYPE } from 'constants';
 
 const NewFeed = () => {
 	const [isNewPost, setIsNewPost] = useState(false);
@@ -89,7 +90,11 @@ const NewFeed = () => {
 							loader={<LoadingIndicator />}
 						>
 							{postList.map(item => (
-								<Post key={item.id} postInformations={item} />
+								<Post
+									key={item.id}
+									postInformations={item}
+									type={item.verb === 'groupPost' ? GROUP_TYPE : POST_TYPE}
+								/>
 							))}
 						</InfiniteScroll>
 					)}

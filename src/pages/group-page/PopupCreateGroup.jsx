@@ -8,7 +8,7 @@ import { useDispatch } from 'react-redux';
 import './create-group.scss';
 import { getRandomAuthor } from 'reducers/redux-utils/user';
 import { getBookList } from 'reducers/redux-utils/book';
-import { getCreatGroup, getIdCategory } from 'reducers/redux-utils/group';
+import { getCreatGroup } from 'reducers/redux-utils/group';
 import Dropzone from 'react-dropzone';
 import { useDropzone } from 'react-dropzone';
 import { uploadImage } from 'reducers/redux-utils/common';
@@ -131,15 +131,6 @@ const PopupCreateGroup = ({ handleClose }) => {
 		}
 	};
 
-	// const bookCategoryId = async () => {
-	// 	try {
-	// 		const res = await dispatch(getIdCategory()).unwrap();
-	// 		// setIDBook(res.rows);
-	// 	} catch (err) {
-	// 		NotificationError(err);
-	// 	}
-	// };
-
 	useEffect(() => {
 		const categoryIdArr = [];
 		for (let i = 0; i < categoryAddedList.length; i++) {
@@ -147,14 +138,6 @@ const PopupCreateGroup = ({ handleClose }) => {
 		}
 		setCategoryIdBook(categoryIdArr);
 	}, [categoryAddedList]);
-
-	// useEffect(() => {
-	// 	if (kindOfGroup.value == 'book') {
-	// 		bookCategoryId();
-	// 	} else {
-	// 		// setIDBook([]);
-	// 	}
-	// }, [kindOfGroup.value]);
 
 	useEffect(() => {
 		uploadImageFile();
@@ -203,6 +186,7 @@ const PopupCreateGroup = ({ handleClose }) => {
 			getDataAuthor();
 		} else setUserList([]);
 	}, [inputAuthors]);
+
 	useEffect(() => {
 		if (inputBook !== '') {
 			getBookData();

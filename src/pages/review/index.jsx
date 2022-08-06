@@ -12,6 +12,7 @@ import { NotificationError } from 'helpers/Error';
 import { getBookDetail } from 'reducers/redux-utils/book';
 import { getUserDetail } from 'reducers/redux-utils/user';
 import Post from 'shared/post';
+import { REVIEW_TYPE } from 'constants';
 
 const Review = () => {
 	const [listReview, setListReview] = useState([]);
@@ -51,7 +52,7 @@ const Review = () => {
 				]),
 			};
 			const response = await dispatch(getReviewsBook(params)).unwrap();
-			setListReview(response.rows);
+			setListReview(response);
 		} catch (err) {
 			NotificationError(err);
 		}
@@ -96,7 +97,7 @@ const Review = () => {
 							{listReview.length > 0 ? (
 								listReview.map((item, index) => (
 									<div clas key={item.id}>
-										<Post postInformations={item} inReviews={true} />
+										<Post postInformations={item} type={REVIEW_TYPE} />
 										{listReview.length > 1 && index < listReview.length - 1 && <hr />}
 									</div>
 								))
