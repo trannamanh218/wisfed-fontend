@@ -57,12 +57,14 @@
 }
 
 @media only screen and (max-width: 768px) {
+	.mainContainer__main {
+		& .nav-tabs {
+			width: 624px;
+		}
+	}
 	.book-review {
 		.tab-content {
-			margin-left: -20px;
-		}
-		.nav-tabs {
-			margin-left: -20px;
+			width: 624px;
 		}
 	}
 }
