@@ -9,7 +9,7 @@ import {
 	HomeIcon,
 	LogOutIcon,
 	ProfileIcon,
-	ArrowDownIcon,
+	// ArrowDownIcon,
 	GroupFillIcon,
 	FriendsFillIcon,
 	FriendsIcon,
@@ -321,9 +321,9 @@ const Header = () => {
 						onError={e => e.target.setAttribute('src', `${defaultAvatar}`)}
 						alt='avatar'
 					/>
-					<span id='arrow-down-icon'>
+					{/* <span id='arrow-down-icon'>
 						<ArrowDownIcon />
-					</span>
+					</span> */}
 				</div>
 				{modalInforUser && localStorage.getItem('accessToken') && (
 					<ul className='header__option-info'>

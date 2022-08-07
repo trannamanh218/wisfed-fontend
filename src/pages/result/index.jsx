@@ -13,14 +13,13 @@ import { useEffect, useState } from 'react';
 import Circle from 'shared/loading/circle';
 import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-// import LoadingIndicator from 'shared/loading-indicator';
 
 const Result = () => {
 	const { value } = useParams();
 	const [activeKeyDefault, setActiveKeyDefault] = useState('books');
 	const [searchResultInput, setSearchResultInput] = useState('');
 	const [updateBooks, setUpdateBooks] = useState(false);
-	const [isFetching, setIsFetching] = useState(null);
+	const [isFetching, setIsFetching] = useState(false);
 	const navigate = useNavigate();
 
 	const handleChange = e => {

@@ -8,7 +8,7 @@ const SearchCategory = ({
 	fetchFilterData,
 	hasMoreFilterData,
 	handleViewBookDetail,
-	viewCategoryDetail,
+	handleViewCategoryDetail,
 	inputValue,
 }) => {
 	if (searchCategories.length) {
@@ -30,7 +30,7 @@ const SearchCategory = ({
 									title={category.name}
 									data={category}
 									handleViewBookDetail={handleViewBookDetail}
-									viewCategoryDetail={viewCategoryDetail}
+									handleViewCategoryDetail={handleViewCategoryDetail}
 								/>
 							);
 						}
@@ -46,7 +46,7 @@ SearchCategory.defaultProps = {
 	fetchFilterData: () => {},
 	handleViewBookDetail: () => {},
 	hasMoreFilterData: true,
-	viewCategoryDetail: () => {},
+	handleViewCategoryDetail: () => {},
 	inputSearch: '',
 };
 SearchCategory.propTypes = {
@@ -54,7 +54,7 @@ SearchCategory.propTypes = {
 	fetchFilterData: PropTypes.func,
 	handleViewBookDetail: PropTypes.func,
 	hasMoreFilterData: PropTypes.bool,
-	viewCategoryDetail: PropTypes.func,
+	handleViewCategoryDetail: PropTypes.func,
 	inputSearch: PropTypes.string,
 };
 export default SearchCategory;

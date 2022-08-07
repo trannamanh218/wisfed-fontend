@@ -4,13 +4,12 @@ import StatisticList from 'shared/statistic-list';
 import TopicColumn from 'shared/topic-column';
 import PropTypes from 'prop-types';
 import Circle from 'shared/loading/circle';
-import { STATUS_LOADING } from 'constants';
 import './sidebar-category.scss';
 import { useDispatch } from 'react-redux';
 import { getFavoriteCategories } from 'reducers/redux-utils/category';
 import { NotificationError } from 'helpers/Error';
 
-const SidebarCategory = ({ status, viewCategoryDetail }) => {
+const SidebarCategory = ({ isFetching, handleViewCategoryDetail }) => {
 	const [favoriteCategories, setFavorriteCategories] = useState([]);
 
 	const dispatch = useDispatch();
@@ -38,7 +37,7 @@ const SidebarCategory = ({ status, viewCategoryDetail }) => {
 
 	return (
 		<div className='sidebar-category'>
-			<Circle loading={status === STATUS_LOADING} />
+			<Circle loading={isFetching} />
 			{!!favoriteCategories.length && (
 				<StatisticList
 					title='Chủ đề yêu thích'
@@ -55,7 +54,7 @@ const SidebarCategory = ({ status, viewCategoryDetail }) => {
 				className='sidebar-category__topics'
 				topics={rows}
 				title='Tất cả chủ đề'
-				viewCategoryDetail={viewCategoryDetail}
+				handleViewCategoryDetail={handleViewCategoryDetail}
 				inCategory={true}
 			/>
 		</div>
@@ -64,7 +63,7 @@ const SidebarCategory = ({ status, viewCategoryDetail }) => {
 
 SidebarCategory.propTypes = {
 	status: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-	viewCategoryDetail: PropTypes.func,
+	handleViewCategoryDetail: PropTypes.func,
 };
 
 export default SidebarCategory;

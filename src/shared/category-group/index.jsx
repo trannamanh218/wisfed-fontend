@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import './category-group.scss';
 import BookThumbnail from 'shared/book-thumbnail';
 
-const CategoryGroup = ({ data, list, title, handleViewBookDetail, viewCategoryDetail, inCategoryDetail }) => {
+const CategoryGroup = ({ data, list, title, handleViewBookDetail, handleViewCategoryDetail, inCategoryDetail }) => {
 	return (
 		<>
 			{!!list.length && (
@@ -37,7 +37,12 @@ const CategoryGroup = ({ data, list, title, handleViewBookDetail, viewCategoryDe
 									inCategory={true}
 									inCategoryDetail={inCategoryDetail}
 								/>
-								<button className='category-group__link' onClick={() => viewCategoryDetail(data)}>
+								<button
+									className='category-group__link'
+									onClick={() => {
+										handleViewCategoryDetail(data);
+									}}
+								>
 									Xem tất cả
 								</button>
 							</>
@@ -54,7 +59,7 @@ CategoryGroup.propTypes = {
 	list: PropTypes.array,
 	title: PropTypes.string,
 	handleViewBookDetail: PropTypes.func,
-	viewCategoryDetail: PropTypes.func,
+	handleViewCategoryDetail: PropTypes.func,
 	inCategory: PropTypes.bool,
 };
 

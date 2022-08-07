@@ -91,7 +91,7 @@ function Post({ postInformations, showModalCreatPost, type = POST_TYPE }) {
 				res = await dispatch(createCommentReview(commentReviewData)).unwrap();
 			} else if (type === POST_TYPE) {
 				const params = {
-					minipostId: postData.minipostId,
+					minipostId: postData.minipostId || postData.id,
 					content: content,
 					mediaUrl: [],
 					mentionsUser: newArr,
@@ -148,13 +148,13 @@ function Post({ postInformations, showModalCreatPost, type = POST_TYPE }) {
 				try {
 					switch (type) {
 						case POST_TYPE:
-							await dispatch(updateReactionActivity(postData.minipostId)).unwrap();
+							await dispatch(updateReactionActivity(postData.minipostId || postData.id)).unwrap();
 							break;
 						case REVIEW_TYPE:
 							await dispatch(likeAndUnlikeReview(postData.id)).unwrap();
 							break;
 						default:
-							await dispatch(updateReactionActivityGroup(postData.groupPostId)).unwrap();
+							await dispatch(updateReactionActivityGroup(postData.groupPostId || postData.id)).unwrap();
 							break;
 					}
 				} catch (err) {
