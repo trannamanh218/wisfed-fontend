@@ -13,7 +13,13 @@ import ManageJoin from './AminSettings/ManageJoin';
 import PropTypes from 'prop-types';
 import PostWatting from './AminSettings/PostWatting';
 import PopupInviteFriend from '../popupInviteFriend';
-import { getEnjoyGroup, getupdateBackground, getFillterGroup, leaveGroupUser } from 'reducers/redux-utils/group';
+import {
+	getEnjoyGroup,
+	getupdateBackground,
+	getFillterGroup,
+	leaveGroupUser,
+	unFollowGroupUser,
+} from 'reducers/redux-utils/group';
 import { NotificationError } from 'helpers/Error';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
@@ -48,6 +54,7 @@ function MainGroupComponent({ handleChange, keyChange, data, member, handleUpdat
 	const keyRedux = useSelector(state => state.group.key);
 	const { ref: showRef, isVisible: isShow, setIsVisible: setIsShow } = useVisible(false);
 	const joinedGroupPopup = useRef(null);
+	const [toggleFollowGroup, setToggleFollowGroup] = useState(false);
 
 	const enjoyGroup = async () => {
 		setIsFetching(true);
@@ -81,7 +88,19 @@ function MainGroupComponent({ handleChange, keyChange, data, member, handleUpdat
 		}
 	};
 
-	const unFollowGroup = async () => {};
+	const unFollowGroup = async () => {
+		setToggleFollowGroup(true);
+		try {
+			await dispatch(unFollowGroupUser(data?.id)).unwrap();
+			setShowSelect(false);
+		} catch (err) {
+			NotificationError(err);
+		}
+	};
+
+	const handleFollowGroup = async () => {
+		setToggleFollowGroup(false);
+	};
 
 	const handleChangeSearch = e => {
 		setValueGroupSearch(e.target.value);
@@ -253,9 +272,15 @@ function MainGroupComponent({ handleChange, keyChange, data, member, handleUpdat
 									</button>
 									<div className='list__dropdown' style={!showSelect ? { display: 'none' } : {}}>
 										<ul>
-											<li onClick={() => unFollowGroup()}>
-												<CloseIconX /> Bỏ theo dõi
-											</li>
+											{toggleFollowGroup ? (
+												<li onClick={() => handleFollowGroup()}>
+													<CloseIconX /> Theo dõi
+												</li>
+											) : (
+												<li onClick={() => unFollowGroup()}>
+													<CloseIconX /> Bỏ theo dõi
+												</li>
+											)}
 											<li onClick={() => leaveGroup()}>
 												<LogOutGroup /> Rời khỏi nhóm
 											</li>

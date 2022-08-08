@@ -37,6 +37,7 @@ import ShareUsers from '../modal-share-users';
 import RichTextEditor from 'shared/rich-text-editor';
 import ShareTarget from 'shared/share-target';
 import { POST_TYPE } from 'constants';
+import { shareTargetReadings } from 'reducers/redux-utils/target';
 
 const urlRegex =
 	/https?:\/\/www(\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/g;
@@ -196,6 +197,7 @@ function CreatPostModalContent({
 				return '';
 		}
 	};
+
 	const limitedValue = 5;
 	const handleAddToPost = data => {
 		const newData = { ...taggedData };
@@ -323,7 +325,7 @@ function CreatPostModalContent({
 		}
 
 		try {
-			if (isShare || isSharePosts || isSharePostsAll.length > 0) {
+			if (isShare || isSharePosts || isSharePostsAll.length > 0 || postsData.booksReadCount > 0) {
 				if (isShare) {
 					if (postsData.categoryName !== undefined) {
 						const query = {
@@ -378,6 +380,12 @@ function CreatPostModalContent({
 						};
 						await dispatch(getSharePostInternal(query)).unwrap();
 					}
+				} else if (postsData.booksReadCount > 0) {
+					const data = {
+						current: postsData.booksReadCount,
+						...params,
+					};
+					await dispatch(shareTargetReadings(data)).unwrap();
 				} else {
 					const query = {
 						by: postsData.by,

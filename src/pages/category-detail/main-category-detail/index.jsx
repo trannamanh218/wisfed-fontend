@@ -77,7 +77,7 @@ const MainCategoryDetail = () => {
 	];
 
 	useEffect(() => {
-		if (!_.isEmpty(categoryInfoRedux) && categoryInfoRedux.id !== id) {
+		if (!_.isEmpty(categoryInfoRedux) && categoryInfoRedux.id === Number(id)) {
 			setCategoryInfo(categoryInfoRedux);
 		} else {
 			getCategoryInfoFnc();
