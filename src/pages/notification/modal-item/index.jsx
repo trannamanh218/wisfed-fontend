@@ -112,7 +112,7 @@ const ModalItem = ({ item, setModalNotti, getNotifications, setGetNotifications,
 			}
 		>
 			<div onClick={() => hanleActiveIsReed(item)} className='notificaiton__all__layout'>
-				<UserAvatar size='mm' source={item.createdBy?.avatarImage || userInfo.avatarImage} />
+				<UserAvatar size='mm' source={item.createdBy?.avatarImage} />
 				<div className='notificaiton__all__layout__status'>
 					<div className='notificaiton__all__infor'>
 						<p dangerouslySetInnerHTML={{ __html: item?.message }}></p>

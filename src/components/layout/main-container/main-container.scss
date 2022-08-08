@@ -48,3 +48,14 @@
 		margin-top: 22px;
 	}
 }
+
+@media only screen and (max-width: 1366px) {
+	.mainContainer__main {
+		margin-right: 20px;
+	}
+}
+@media only screen and (max-width: 1280px) {
+	.mainContainer__main {
+		margin-right: 0;
+	}
+}

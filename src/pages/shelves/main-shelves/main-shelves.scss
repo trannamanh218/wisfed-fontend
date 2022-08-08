@@ -116,3 +116,14 @@
 		font-weight: 600;
 	}
 }
+
+@media only screen and (max-width: 1280px) {
+	.main-shelves__header {
+		& .main-shelves__search {
+			margin-right: 31px;
+		}
+	}
+	.main-shelves__pane {
+		margin-right: 30px;
+	}
+}

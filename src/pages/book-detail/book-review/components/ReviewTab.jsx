@@ -28,7 +28,6 @@ const ReviewTab = ({ currentTab }) => {
 
 	const radioOptions = [
 		{
-			value: 'mostLiked',
 			title: 'Review nhiều like nhất',
 		},
 		{
@@ -76,7 +75,7 @@ const ReviewTab = ({ currentTab }) => {
 	const [reviewCount, setReviewCount] = useState(0);
 	const [hasMore, setHasMore] = useState(true);
 	const { modalOpen, toggleModal } = useModal(false);
-	const [sortValue, setSortValue] = useState('mostLiked');
+	const [sortValue, setSortValue] = useState(null);
 	const [checkedStarArr, setCheckedStarArr] = useState([]);
 	const [directionSort, setDirectionSort] = useState('DESC');
 	const [propertySort, setPropertySort] = useState('like');
@@ -117,7 +116,6 @@ const ReviewTab = ({ currentTab }) => {
 					{ operator: 'in', value: newarr, property: 'rate' },
 				]),
 				topUser: sortValue,
-				searchUser: inputSearch,
 			};
 
 			let response;
@@ -131,8 +129,8 @@ const ReviewTab = ({ currentTab }) => {
 			} else {
 				response = await dispatch(getReviewsBookByFollowers({ bookId, params })).unwrap();
 			}
-			setReviewList(response.rows);
-			setReviewCount(response.count);
+			setReviewList(response);
+			setReviewCount(response.length);
 			if (!response.rows.length || response.rows.length < callApiPerPage.current) {
 				setHasMore(false);
 			}
@@ -241,9 +239,9 @@ const ReviewTab = ({ currentTab }) => {
 						placeholder='Tìm kiếm theo Hashtag, tên người review ...'
 					/>
 				</div>
-				{currentTab === 'reviews' && reviewList.length ? (
+				{currentTab === 'reviews' && reviewList?.length ? (
 					<InfiniteScroll
-						dataLength={reviewList.length}
+						dataLength={reviewList?.length}
 						next={getReviewList}
 						hasMore={hasMore}
 						loader={<LoadingIndicator />}
