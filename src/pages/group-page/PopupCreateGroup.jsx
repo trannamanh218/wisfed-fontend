@@ -239,7 +239,7 @@ const PopupCreateGroup = ({ handleClose, showRef }) => {
 	};
 
 	return (
-		<>
+		<div className='modal-create-group'>
 			{/* <div className='popup-group__container' ref={showRef}> */}
 			<div className='popup-group__header'>
 				<h3>Tạo nhóm</h3>
@@ -452,7 +452,7 @@ const PopupCreateGroup = ({ handleClose, showRef }) => {
 				</div>
 			</div>
 			{/* </div> */}
-		</>
+		</div>
 	);
 };
 

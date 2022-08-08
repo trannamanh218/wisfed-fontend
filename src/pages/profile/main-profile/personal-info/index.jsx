@@ -235,7 +235,12 @@ const PersonalInfo = ({ currentUserInfo, setCurrentTab }) => {
 								className='personal-info__item'
 							>
 								<span className='number'>{currentUserInfo.friends}</span>
-								<span>Bạn bè ({currentUserInfo.mutualFriends})</span>
+								<span>
+									Bạn bè
+									{currentUserInfo.id !== userInfo.id ? (
+										<span> ({currentUserInfo.mutualFriends})</span>
+									) : null}
+								</span>
 							</li>
 							{modalFriend && (
 								<ModalFriend
