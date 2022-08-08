@@ -1,5 +1,4 @@
 import { Fragment, useCallback, useEffect, useState, useRef } from 'react';
-import { useFetchCategoryDetail } from 'api/category.hook';
 import classNames from 'classnames';
 import { Heart } from 'components/svg';
 import _ from 'lodash';
@@ -29,11 +28,15 @@ import { STATUS_LOADING } from 'constants';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import FormCheckGroup from 'shared/form-check-group';
 import { getFavoriteCategories } from 'reducers/redux-utils/category';
+import { POST_TYPE } from 'constants';
+import { getCategoryDetail } from 'reducers/redux-utils/category';
 
 const MainCategoryDetail = () => {
 	const { id } = useParams();
-	const { categoryInfo, status } = useFetchCategoryDetail(id);
+	const { userInfo } = useSelector(state => state.auth);
+	const categoryInfoRedux = useSelector(state => state.category.categoryInfo);
 
+	const [categoryInfo, setCategoryInfo] = useState({});
 	const [bookList, setBookList] = useState([]);
 	const [isLike, setIsLike] = useState(false);
 	const [inputSearch, setInputSearch] = useState('');
@@ -47,15 +50,15 @@ const MainCategoryDetail = () => {
 	const [sortValue, setSortValue] = useState('like');
 	const [sortDirection, setSortDirection] = useState('DESC');
 	const [sortValueTemp, setSortValueTemp] = useState('default');
-	const [favoriteCategories, setFavorriteCategories] = useState([]);
 
 	const callApiStart = useRef(16);
 	const callApiPerPage = useRef(16);
 	const callApiStartGetPosts = useRef(10);
 	const callApiPerPageGetPosts = useRef(10);
+	const favoriteCategories = useRef([]);
+	const isLikeTemp = useRef(false);
 
 	const navigate = useNavigate();
-	const { userInfo } = useSelector(state => state.auth);
 	const dispatch = useDispatch();
 
 	const radioOptions = [
@@ -74,15 +77,27 @@ const MainCategoryDetail = () => {
 	];
 
 	useEffect(() => {
+		if (!_.isEmpty(categoryInfoRedux) && categoryInfoRedux.id === Number(id)) {
+			setCategoryInfo(categoryInfoRedux);
+		} else {
+			getCategoryInfoFnc();
+		}
+		setFilter('[]');
 		checkFavoriteCategoriesData();
 	}, [id]);
 
 	useEffect(() => {
+		if (!_.isEmpty(categoryInfo)) {
+			setIsLike(categoryInfo.isFavorite);
+			isLikeTemp.current = categoryInfo.isFavorite;
+		}
+	}, [categoryInfo]);
+
+	useEffect(() => {
 		setHasMore(true);
 		callApiStart.current = 16;
-		setFilter('[]');
 		getBooksByCategoryFirstTime();
-	}, [userInfo, id]);
+	}, [filter, id]);
 
 	useEffect(() => {
 		setHasMorePost(true);
@@ -90,60 +105,62 @@ const MainCategoryDetail = () => {
 		handleGetPostsByCategoryFirstTime();
 	}, [userInfo, id, sortDirection, sortValue]);
 
-	useEffect(() => {
-		setHasMore(true);
-		callApiStart.current = 16;
-		getBooksByCategoryFirstTime();
-	}, [filter]);
-
-	const checkFavoriteCategoriesData = async () => {
+	const getCategoryInfoFnc = async () => {
 		try {
-			const res = await dispatch(getFavoriteCategories()).unwrap();
-			if (res.rows.length) {
-				const index = res.rows.findIndex(item => item.categoryId === parseInt(id));
-				if (index !== -1) {
-					setIsLike(true);
-				} else {
-					setIsLike(false);
-				}
-				setFavorriteCategories(res.rows);
-			} else {
-				setIsLike(false);
-			}
+			const res = await dispatch(getCategoryDetail(id)).unwrap();
+			setCategoryInfo(res);
 		} catch (err) {
 			NotificationError(err);
 		}
 	};
 
-	const handleLikeCategory = async () => {
-		const categoryId = parseInt(id);
+	const checkFavoriteCategoriesData = async () => {
+		try {
+			const res = await dispatch(getFavoriteCategories()).unwrap();
+			favoriteCategories.current = res.rows;
+		} catch (err) {
+			NotificationError(err);
+		}
+	};
+
+	const handleLikeCategory = () => {
 		if (_.isEmpty(userInfo)) {
 			const customId = 'custom-id-MainCategoryDetail';
 			toast.warn('Vui lòng đăng nhập để sử dụng tính năng này', { toastId: customId });
 		} else {
-			let favoriteCategory = [];
-			if (isLike) {
-				favoriteCategories.forEach(item => {
-					if (item.categoryId !== categoryId) {
-						favoriteCategory.push(item.categoryId);
-					}
-				});
-			} else {
-				favoriteCategory = favoriteCategories.map(item => item.categoryId);
-				favoriteCategory.push(categoryId);
-			}
-
-			try {
-				const params = {
-					favoriteCategory: favoriteCategory,
-				};
-				await dispatch(editUserInfo({ userId: userInfo.id, params: params }));
-				setIsLike(!isLike);
-			} catch (err) {
-				NotificationError(err);
-			}
+			setIsLike(!isLike);
+			handleCallLikeAndUnlikeCategoryApi(!isLike);
 		}
 	};
+
+	const handleCallLikeAndUnlikeCategoryApi = useCallback(
+		_.debounce(async isLikeData => {
+			const categoryId = parseInt(id);
+			if (isLikeData !== isLikeTemp.current) {
+				isLikeTemp.current = isLikeData;
+				let favoriteCategoryList = [];
+				if (!isLikeData) {
+					favoriteCategories.current.forEach(item => {
+						if (item.categoryId !== categoryId) {
+							favoriteCategoryList.push(item.categoryId);
+						}
+					});
+				} else {
+					favoriteCategoryList = favoriteCategories.current.map(item => item.categoryId);
+					favoriteCategoryList.push(categoryId);
+				}
+				try {
+					const params = {
+						favoriteCategory: favoriteCategoryList,
+					};
+					await dispatch(editUserInfo({ userId: userInfo.id, params: params })).unwrap();
+				} catch (err) {
+					NotificationError(err);
+				}
+			}
+		}, 1500),
+		[favoriteCategories.current, userInfo]
+	);
 
 	const getBooksByCategoryFirstTime = async () => {
 		setIsFetchingBookList(true);
@@ -200,7 +217,6 @@ const MainCategoryDetail = () => {
 	const updateInputSearch = value => {
 		if (value) {
 			const filterValue = [{ 'operator': 'search', 'value': value.trim(), 'property': 'name' }];
-			callApiStart.current = 16;
 			setBookList([]);
 			setFilter(JSON.stringify(filterValue));
 			setHasMore(true);
@@ -399,6 +415,7 @@ const MainCategoryDetail = () => {
 													<Post
 														className='post__container--category'
 														postInformations={item}
+														type={POST_TYPE}
 													/>
 												</Fragment>
 											))}

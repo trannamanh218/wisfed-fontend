@@ -1,7 +1,7 @@
 import MainContainer from 'components/layout/main-container';
 import SearchField from 'shared/search-field';
 import MainGroup from './MainGroup';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ForwardGroup } from 'components/svg';
 import { getTagGroup } from 'reducers/redux-utils/group';
 import { useDispatch } from 'react-redux';
@@ -15,6 +15,7 @@ const Group = () => {
 	const { id = '' } = useParams();
 	const [tagGroup, setTagGroup] = useState([]);
 	const [inputSearch, setInputSearch] = useState('');
+
 	const list = [
 		{ name: '#Shadow', quantity: '30 bài viết' },
 		{ name: '#GaoRanger', quantity: '30 bài viết' },
@@ -45,9 +46,11 @@ const Group = () => {
 			setShow(!show);
 		}
 	};
+
 	const onChangeInputSearch = e => {
 		setInputSearch(e.target.value);
 	};
+
 	const SidebarGroup = () => (
 		<div className='group-sibar-right'>
 			<h2>Hashtag</h2>

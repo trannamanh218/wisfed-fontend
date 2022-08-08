@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { NotificationError } from 'helpers/Error';
+import { GROUP_TYPE } from 'constants';
 
 function MainPostGroup() {
 	const [listPost, setListPost] = useState([]);
@@ -41,7 +42,7 @@ function MainPostGroup() {
 			<CreatePost onChangeNewPost={onChangeNewPost} />
 			<div className='main-content__post'>
 				{listPost.map((item, index) => {
-					return <Post key={index} postInformations={item} />;
+					return <Post key={index} postInformations={item} type={GROUP_TYPE} />;
 				})}
 			</div>
 		</div>

@@ -47,3 +47,4 @@ export const CHECK_SHARE = true;
 export const POST_TYPE = 'post';
 export const QUOTE_TYPE = 'quote';
 export const REVIEW_TYPE = 'review';
+export const GROUP_TYPE = 'group';

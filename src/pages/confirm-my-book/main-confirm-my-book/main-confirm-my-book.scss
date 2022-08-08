@@ -202,3 +202,41 @@
 	background-color: $success-dark;
 	margin-top: 40px;
 }
+@media only screen and (max-width: 1024px) {
+	.main-confirm-my-book__book-info {
+		.main-confirm-my-book__check {
+			margin-top: 0;
+			width: 180px;
+		}
+	}
+
+	.main-confirm-my-book__confirm__block-right {
+		& img {
+			width: 300px;
+			height: 300px;
+		}
+	}
+	.main-confirm-my-book__confirm {
+		padding: 0 15px;
+	}
+}
+@media only screen and (max-width: 820px) {
+	.main-confirm-my-book__book-info {
+		gap: 25px !important;
+		margin-top: 10px;
+		& .main-confirm-my-book__check {
+			margin-left: 19px;
+			margin-top: 10px;
+		}
+		& .main-confirm-my-book__book-info-content {
+			margin-top: 25px;
+		}
+	}
+}
+@media only screen and (max-width: 1024px) {
+	.main-confirm-my-book {
+		& .main-confirm-my-book__book-info {
+			gap: 10px;
+		}
+	}
+}

@@ -42,7 +42,7 @@ function PostBook({ data }) {
 						<div className='post-book__rating__number'>
 							{data.avgRating !== 0 ? (
 								<div style={{ textAlign: 'center' }}>
-									( {data.avgRating || 0} sao ) ( {data.countRating || 0} đánh giá )
+									( {data.avgRating?.toFixed(1) || 0} sao ) ( {data.countRating} đánh giá )
 								</div>
 							) : (
 								<div>(Chưa có đánh giá)</div>
@@ -54,6 +54,7 @@ function PostBook({ data }) {
 		</div>
 	);
 }
+
 PostBook.propTypes = {
 	data: PropTypes.object.isRequired,
 };

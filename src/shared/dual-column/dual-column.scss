@@ -61,11 +61,20 @@
 		padding: 0;
 		margin-bottom: 15px;
 	}
-	.dualColumn-item__number {
-		display: none !important;
+	.mainContainer__right {
+		.dualColumn-item__number {
+			display: none;
+		}
 	}
+
 	.dualColumn-item__title {
 		width: 160px;
+	}
+
+	.sidebar-shelves {
+		.dualColumn-item__number {
+			display: block;
+		}
 	}
 }
 @media only screen and (max-width: 1280px) {

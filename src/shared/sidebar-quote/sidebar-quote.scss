@@ -14,6 +14,9 @@
 	.topic-column__container {
 		grid-template-columns: 1fr;
 	}
+	.topic-column__item {
+		font-weight: 700;
+	}
 
 	.sidebar-quote__category-list {
 		p {

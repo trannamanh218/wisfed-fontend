@@ -133,25 +133,18 @@
 .view-member-all {
 	margin-top: 32px;
 	background-color: #e0af7e;
-	display: flex;
-	justify-content: center;
-	align-items: center;
 	height: 56px;
 	border-radius: 16px;
 	margin-bottom: 20px;
-	button {
-		color: #fcfcfc;
-		font-family: 'Montserrat';
-		font-style: normal;
-		font-weight: 600;
-		font-size: 15px;
-		line-height: 24px;
-		display: flex;
-		align-items: center;
-		text-align: center;
-		letter-spacing: 0.75px;
-	}
+	color: #fcfcfc;
+	font-family: 'Montserrat';
+	font-weight: 600;
+	font-size: 15px;
+	line-height: 24px;
+	letter-spacing: 0.75px;
+	width: 100%;
 }
+
 .member-group__all-member {
 	margin-top: 53px;
 }

@@ -39,6 +39,7 @@ const PostsShare = ({ postData }) => {
 			}
 		}
 	}, [postData]);
+
 	const generateContent = content => {
 		if (content.match(urlRegex)) {
 			const newContent = content.replace(urlRegex, data => {
@@ -117,13 +118,18 @@ const PostsShare = ({ postData }) => {
 						</div>
 					</div>
 				</div>
-
-				<div
-					className='post__description'
-					dangerouslySetInnerHTML={{
-						__html: generateContent(postData.sharePost?.message || postData.sharePost?.content),
-					}}
-				></div>
+				{(postData.message || postData.content) && (
+					<div
+						className='post__description'
+						dangerouslySetInnerHTML={{
+							__html: generateContent(
+								postData.sharePost?.message !== undefined
+									? postData.sharePost?.message
+									: postData.sharePost?.content
+							),
+						}}
+					></div>
+				)}
 				<span>{postData.bookId}</span>
 				<ul className='tagged'>
 					{postData.sharePost?.mentionsAuthors?.map(item => (

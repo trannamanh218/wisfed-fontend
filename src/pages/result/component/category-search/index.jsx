@@ -13,14 +13,16 @@ import LoadingIndicator from 'shared/loading-indicator';
 import { getCategoryDetail } from 'reducers/redux-utils/category';
 import ResultNotFound from '../result-not-found';
 
-const CategorySearch = ({ value, reload, setIsFetching, searchResultInput, activeKeyDefault, updateBooks }) => {
-	const dispatch = useDispatch();
-	const navigate = useNavigate();
+const CategorySearch = ({ value, isFetching, setIsFetching, searchResultInput, activeKeyDefault, updateBooks }) => {
 	const [listArrayCategory, setListArrayCategory] = useState([]);
 	const { isShowModal } = useSelector(state => state.search);
 	const [hasMore, setHasMore] = useState(true);
+
 	const callApiStartCategory = useRef(0);
-	const callApiPerPage = useRef(10);
+	const callApiPerPage = useRef(3);
+
+	const dispatch = useDispatch();
+	const navigate = useNavigate();
 
 	useEffect(() => {
 		if (activeKeyDefault === 'categories') {
@@ -28,7 +30,7 @@ const CategorySearch = ({ value, reload, setIsFetching, searchResultInput, activ
 			callApiStartCategory.current = 0;
 			setHasMore(true);
 		}
-	}, [reload, updateBooks, isShowModal, activeKeyDefault]);
+	}, [updateBooks, isShowModal, activeKeyDefault]);
 
 	useEffect(() => {
 		if (
@@ -51,12 +53,12 @@ const CategorySearch = ({ value, reload, setIsFetching, searchResultInput, activ
 				limit: callApiPerPage.current,
 			};
 			const result = await dispatch(getFilterSearch(params)).unwrap();
-			if (result.rows.length > 0) {
-				callApiStartCategory.current += callApiPerPage.current;
-				setListArrayCategory(listArrayCategory.concat(result.rows));
-			} else {
+			if (!result.rows.length || result.rows.length < callApiPerPage.current) {
 				setHasMore(false);
+			} else {
+				callApiStartCategory.current += callApiPerPage.current;
 			}
+			setListArrayCategory(listArrayCategory.concat(result.rows));
 		} catch (err) {
 			NotificationError(err);
 		} finally {
@@ -75,11 +77,12 @@ const CategorySearch = ({ value, reload, setIsFetching, searchResultInput, activ
 		}
 	}, []);
 
-	const viewCategoryDetail = async data => {
+	const handleViewCategoryDetail = async data => {
+		setIsFetching(true);
 		try {
 			await dispatch(getCategoryDetail(data.id)).unwrap();
-
 			navigate(RouteLink.categoryDetail(data.id, data.name));
+			setIsFetching(false);
 		} catch (err) {
 			NotificationError(err);
 		}
@@ -87,34 +90,35 @@ const CategorySearch = ({ value, reload, setIsFetching, searchResultInput, activ
 
 	return (
 		<div className='category__search__container'>
-			{listArrayCategory.length && activeKeyDefault === 'categories' ? (
-				<InfiniteScroll
-					dataLength={listArrayCategory.length}
-					next={handleGetGroupSearch}
-					hasMore={hasMore}
-					loader={<LoadingIndicator />}
-				>
-					{listArrayCategory.map(category =>
-						category.books.length > 0 ? (
-							<CategoryGroup
-								key={`category-group-${category.id}`}
-								list={category.books}
-								title={category.name}
-								data={category}
-								handleViewBookDetail={handleViewBookDetail}
-								handleClick={viewCategoryDetail}
-							/>
-						) : (
-							<ResultNotFound />
-						)
+			{!isFetching && (
+				<>
+					{listArrayCategory.length && activeKeyDefault === 'categories' ? (
+						<InfiniteScroll
+							dataLength={listArrayCategory.length}
+							next={handleGetGroupSearch}
+							hasMore={hasMore}
+							loader={<LoadingIndicator />}
+						>
+							{listArrayCategory.map(category => (
+								<CategoryGroup
+									key={`category-group-${category.id}`}
+									list={category.books}
+									title={category.name}
+									data={category}
+									handleViewBookDetail={handleViewBookDetail}
+									handleViewCategoryDetail={handleViewCategoryDetail}
+								/>
+							))}
+						</InfiniteScroll>
+					) : (
+						<ResultNotFound />
 					)}
-				</InfiniteScroll>
-			) : (
-				<ResultNotFound />
+				</>
 			)}
 		</div>
 	);
 };
+
 CategorySearch.propTypes = {
 	reload: PropTypes.bool,
 	setIsFetching: PropTypes.func,
@@ -123,4 +127,5 @@ CategorySearch.propTypes = {
 	value: PropTypes.string,
 	updateBooks: PropTypes.bool,
 };
+
 export default CategorySearch;

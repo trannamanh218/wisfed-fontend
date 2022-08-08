@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import './style.scss';
 import { Link } from 'react-router-dom';
@@ -16,20 +16,20 @@ const MainLayoutSearch = ({ valueGroupSearch }) => {
 	const callApiStart = useRef(10);
 	const callApiPerPage = useRef(10);
 	const dispatch = useDispatch();
-	const [show, setShow] = useState(false);
-	const [value, setValue] = useState('');
+	const [isFetching, setIsFetching] = useState(false);
 
 	const getSearch = async () => {
+		setIsFetching(true);
 		try {
 			const params = {
-				q: value,
+				q: valueGroupSearch,
 				type: 'groups',
 				start: callApiStart.current,
 				limit: callApiPerPage.current,
 			};
 			const data = await dispatch(getFilterSearch({ ...params })).unwrap();
 			if (data.rows.length) {
-				if (data.length < callApiPerPage.current) {
+				if (data.rows.length < callApiPerPage.current) {
 					setHasMore(false);
 				} else {
 					callApiStart.current += callApiPerPage.current;
@@ -38,54 +38,47 @@ const MainLayoutSearch = ({ valueGroupSearch }) => {
 			}
 		} catch (err) {
 			NotificationError(err);
+		} finally {
+			setIsFetching(false);
 		}
 	};
 
-	const getSearchFirst = async () => {
+	const getGroupsFirstTime = async () => {
+		setIsFetching(true);
 		try {
 			const params = {
-				q: value,
+				q: valueGroupSearch,
 				type: 'groups',
+				start: 0,
+				limit: callApiPerPage.current,
 			};
-			const data = await dispatch(getFilterSearch({ ...params })).unwrap();
+			const data = await dispatch(getFilterSearch(params)).unwrap();
 			setList(data.rows);
+			if (!data.rows.length || data.rows.length < callApiPerPage.current) {
+				setHasMore(false);
+			}
 		} catch (err) {
 			NotificationError(err);
+		} finally {
+			setIsFetching(false);
 		}
 	};
 
 	useEffect(() => {
-		setValue(valueGroupSearch);
+		getGroupsFirstTime();
 	}, [valueGroupSearch]);
-
-	useEffect(() => {
-		getSearchFirst();
-	}, [value]);
-	useEffect(() => {
-		if (list.length > 0) {
-			setShow(false);
-		} else {
-			setTimeout(() => {
-				setShow(true);
-			}, 1000);
-		}
-	}, [list]);
 
 	return (
 		<>
-			{list?.length < 1 ? (
+			{isFetching ? (
+				<LoadingIndicator />
+			) : (
 				<>
-					{show ? (
-						<div style={{ marginTop: '54px', padding: '24px', transitionDelay: '1s' }}>
+					{!list.length ? (
+						<div style={{ marginTop: '54px', padding: '24px' }}>
 							<ResultNotFound />
 						</div>
 					) : (
-						<LoadingIndicator />
-					)}
-				</>
-			) : (
-				<>
-					{
 						<InfiniteScroll dataLength={list.length} next={getSearch} hasMore={hasMore}>
 							<div className='list-group-container'>
 								{list.map(item => {
@@ -122,7 +115,7 @@ const MainLayoutSearch = ({ valueGroupSearch }) => {
 								})}
 							</div>
 						</InfiniteScroll>
-					}
+					)}
 				</>
 			)}
 		</>
@@ -130,7 +123,6 @@ const MainLayoutSearch = ({ valueGroupSearch }) => {
 };
 
 MainLayoutSearch.propTypes = {
-	listGroup: PropTypes.array,
 	valueGroupSearch: PropTypes.string,
 };
 

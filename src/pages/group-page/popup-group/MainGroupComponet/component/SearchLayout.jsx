@@ -10,6 +10,7 @@ import './search-group.scss';
 import _ from 'lodash';
 import ResultNotFound from 'pages/result/component/result-not-found';
 import LoadingIndicator from 'shared/loading-indicator';
+import { GROUP_TYPE } from 'constants';
 
 function SearchLayout({ dataGroup }) {
 	const [isCallApi, setIsCallApi] = useState(false);
@@ -49,7 +50,6 @@ function SearchLayout({ dataGroup }) {
 		}
 	};
 	const handleUnFriend = item => {
-		// setModalUnfriends(false);
 		try {
 			dispatch(unFriendRequest(item.id)).unwrap();
 			setIsCallApi(!isCallApi);
@@ -91,96 +91,80 @@ function SearchLayout({ dataGroup }) {
 					<Circle loading={isFetching} />
 					{!_.isEmpty(dataGroup?.usersData) && (
 						<div className='searh-group__member'>
-							{listMember?.map(item => {
+							{listMember?.map((item, index) => {
 								return (
-									<>
-										{' '}
-										<div className='member-item'>
-											<div className='member-item__info'>
-												<img
-													src={item.avatarImage ? item.avatarImage : defaultAvatar}
-													onError={e => e.target.setAttribute('src', defaultAvatar)}
-													alt=''
-												/>
-												<div className='member-item__text'>
-													<span>
-														{item?.firstName + ' ' + item?.lastName || item.fullName}
-													</span>
-													{item.mutualFriend ? (
-														<p>
-															{item.mutualFriend < 10
-																? `0${item.mutualFriend} `
-																: `${item.mutualFriend} `}
-															bạn chung
-														</p>
-													) : (
-														''
-													)}
-												</div>
+									<div className='member-item' key={index}>
+										<div className='member-item__info'>
+											<img
+												src={item.avatarImage ? item.avatarImage : defaultAvatar}
+												onError={e => e.target.setAttribute('src', defaultAvatar)}
+												alt=''
+											/>
+											<div className='member-item__text'>
+												<span>{item?.firstName + ' ' + item?.lastName || item.fullName}</span>
+												{item.mutualFriend ? (
+													<p>
+														{item.mutualFriend < 10
+															? `0${item.mutualFriend} `
+															: `${item.mutualFriend} `}
+														bạn chung
+													</p>
+												) : (
+													''
+												)}
 											</div>
-											{item.relation !== 'isMe' && (
-												<div style={{ display: 'flex' }}>
-													{item.isFollow === true ? (
-														<button
-															className='member-item__btn btn-folow'
-															onClick={() => handleUnFollow(item)}
-														>
-															Bỏ theo dõi
-														</button>
-													) : (
-														<button
-															className='member-item__btn btn-folow'
-															onClick={() => handleFollow(item)}
-														>
-															Theo dõi
-														</button>
-													)}
-													{item.relation === 'friend' && (
-														<button
-															className='member-item__btn bnt-add-friend'
-															onClick={() => handleUnFriend(item)}
-														>
-															- Hủy kết bạn
-														</button>
-													)}
-													{item.relation === 'pending' && (
-														<button
-															className='member-item__btn bnt-add-friend'
-															style={{ backgroundColor: '#EFF0F6', opacity: '0.8' }}
-														>
-															Đã gửi lời mời
-														</button>
-													)}
-													{item.relation === 'unknown' && (
-														<button
-															className='member-item__btn bnt-add-friend'
-															onClick={() => handleAddFriend(item)}
-														>
-															+ Thêm bạn
-														</button>
-													)}
-													{/* {item.isAdmin && (
-														<button className='more-icon-btn-group'>
-															<MoreIcon />
-														</button>
-													)} */}
-												</div>
-											)}
 										</div>
-									</>
+										{item.relation !== 'isMe' && (
+											<div style={{ display: 'flex' }}>
+												{item.isFollow === true ? (
+													<button
+														className='member-item__btn btn-folow'
+														onClick={() => handleUnFollow(item)}
+													>
+														Bỏ theo dõi
+													</button>
+												) : (
+													<button
+														className='member-item__btn btn-folow'
+														onClick={() => handleFollow(item)}
+													>
+														Theo dõi
+													</button>
+												)}
+												{item.relation === 'friend' && (
+													<button
+														className='member-item__btn bnt-add-friend'
+														onClick={() => handleUnFriend(item)}
+													>
+														- Hủy kết bạn
+													</button>
+												)}
+												{item.relation === 'pending' && (
+													<button
+														className='member-item__btn bnt-add-friend'
+														style={{ backgroundColor: '#EFF0F6', opacity: '0.8' }}
+													>
+														Đã gửi lời mời
+													</button>
+												)}
+												{item.relation === 'unknown' && (
+													<button
+														className='member-item__btn bnt-add-friend'
+														onClick={() => handleAddFriend(item)}
+													>
+														+ Thêm bạn
+													</button>
+												)}
+											</div>
+										)}
+									</div>
 								);
 							})}
 						</div>
 					)}
-
-					<div></div>
 					<div>
-						{listPost?.map(item => {
-							return (
-								<>
-									<Post postInformations={item} />
-								</>
-							);
+						{listPost?.map((item, index) => {
+							return <Post key={index} postInformations={item} type={GROUP_TYPE} />;
 						})}
 					</div>
 				</div>

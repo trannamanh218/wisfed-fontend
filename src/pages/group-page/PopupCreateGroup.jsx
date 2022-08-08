@@ -1,5 +1,5 @@
 import { CameraIcon, CloseIconX } from 'components/svg';
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import { Image } from 'react-bootstrap';
 import Input from 'shared/input';
 import SelectBox from 'shared/select-box';
@@ -8,15 +8,18 @@ import { useDispatch } from 'react-redux';
 import './create-group.scss';
 import { getRandomAuthor } from 'reducers/redux-utils/user';
 import { getBookList } from 'reducers/redux-utils/book';
-import { getCreatGroup, getIdCategory } from 'reducers/redux-utils/group';
+import { getCreatGroup } from 'reducers/redux-utils/group';
 import Dropzone from 'react-dropzone';
 import { useDropzone } from 'react-dropzone';
 import { uploadImage } from 'reducers/redux-utils/common';
 import { NotificationError } from 'helpers/Error';
 import _ from 'lodash';
 import { toast } from 'react-toastify';
+import AddAndSearchCategories from 'shared/add-and-search-categories';
+import { getSuggestionForPost } from 'reducers/redux-utils/activity';
+import { handleResetGroupList } from 'reducers/redux-utils/group';
 
-const PopupCreateGroup = ({ handleClose, showRef }) => {
+const PopupCreateGroup = ({ handleClose }) => {
 	const [inputNameGroup, setInputNameGroup] = useState('');
 	const [inputDiscription, setInputDiscription] = useState('');
 	const [inputAuthors, setInputAuthors] = useState('');
@@ -36,8 +39,71 @@ const PopupCreateGroup = ({ handleClose, showRef }) => {
 	const [imgUrl, setImgUrl] = useState('');
 	const [isShowBtn, setIsShowBtn] = useState(false);
 	const [kindOfGroup, setKindOfGroup] = useState('');
-	const [idBook, setIDBook] = useState([]);
-	const [categoryIdBook, setCategoryIdBook] = useState('');
+	const [categoryIdBook, setCategoryIdBook] = useState([]);
+	const [lastTag, setLastTag] = useState('');
+
+	const [inputCategoryValue, setInputCategoryValue] = useState('');
+	const categoryInputContainer = useRef(null);
+	const categoryInputWrapper = useRef(null);
+	const categoryInput = useRef(null);
+
+	const [categoryAddedList, setCategoryAddedList] = useState([]);
+	const [categorySearchedList, setCategorySearchedList] = useState([]);
+	const [getDataFinish, setGetDataFinish] = useState(false);
+
+	const getSuggestionForCreatQuotes = async (input, option) => {
+		try {
+			const data = await dispatch(getSuggestionForPost({ input, option })).unwrap();
+			if (option.value === 'addBook') {
+				// setBookSearchedList(data.rows.slice(0, 3));
+			} else if (option.value === 'addCategory') {
+				setCategorySearchedList(data.rows);
+			}
+		} catch (err) {
+			NotificationError(err);
+		} finally {
+			setGetDataFinish(true);
+		}
+	};
+
+	const debounceSearch = useCallback(
+		_.debounce((inputValue, option) => getSuggestionForCreatQuotes(inputValue, option), 700),
+		[]
+	);
+
+	const addCategory = category => {
+		if (categoryAddedList.filter(categoryAdded => categoryAdded.id === category.id).length > 0) {
+			removeCategory(category.id);
+		} else {
+			const categoryArrayTemp = [...categoryAddedList];
+			categoryArrayTemp.push(category);
+			setCategoryAddedList(categoryArrayTemp);
+			setInputCategoryValue('');
+			setCategorySearchedList([]);
+			if (categoryInputWrapper.current) {
+				categoryInputWrapper.current.style.width = '0.5ch';
+			}
+		}
+	};
+
+	const removeCategory = categoryId => {
+		const categoryArr = [...categoryAddedList];
+		const index = categoryArr.findIndex(item => item.id === categoryId);
+		categoryArr.splice(index, 1);
+		if (categoryAddedList.length <= 5) {
+			setCategoryAddedList(categoryArr);
+		}
+	};
+
+	const searchCategory = e => {
+		setGetDataFinish(false);
+		setCategorySearchedList([]);
+		setInputCategoryValue(e.target.value);
+		debounceSearch(e.target.value, { value: 'addCategory' });
+		if (categoryInputWrapper.current) {
+			categoryInputWrapper.current.style.width = categoryInput.current.value.length + 0.5 + 'ch';
+		}
+	};
 
 	const getDataAuthor = async () => {
 		const params = {
@@ -49,7 +115,7 @@ const PopupCreateGroup = ({ handleClose, showRef }) => {
 			const res = await dispatch(getRandomAuthor(params)).unwrap();
 			setUserList(res);
 		} catch (err) {
-			Notification(err);
+			NotificationError(err);
 		}
 	};
 
@@ -61,36 +127,37 @@ const PopupCreateGroup = ({ handleClose, showRef }) => {
 			const res = await dispatch(getBookList(params)).unwrap();
 			setListBooks(res.rows);
 		} catch (err) {
-			Notification(err);
-		}
-	};
-
-	const bookCategoryId = async () => {
-		try {
-			const res = await dispatch(getIdCategory()).unwrap();
-			setIDBook(res.rows);
-		} catch (err) {
-			Notification(err);
+			NotificationError(err);
 		}
 	};
 
 	useEffect(() => {
-		if (kindOfGroup.value == 'book') {
-			bookCategoryId();
-		} else {
-			setIDBook([]);
+		const categoryIdArr = [];
+		for (let i = 0; i < categoryAddedList.length; i++) {
+			categoryIdArr.push(categoryAddedList[i].id);
 		}
-	}, [kindOfGroup.value]);
+		setCategoryIdBook(categoryIdArr);
+	}, [categoryAddedList]);
 
 	useEffect(() => {
 		uploadImageFile();
 	}, [acceptedFiles]);
 
+	useEffect(() => {
+		setLastTag(
+			inputHashtag
+				.normalize('NFD')
+				.replace(/[\u0300-\u036f]/g, '')
+				.replace(/đ/g, 'd')
+				.replace(/Đ/g, 'D')
+		);
+	}, [inputHashtag]);
+
 	const uploadImageFile = async () => {
 		const imageUploadedData = await dispatch(uploadImage(acceptedFiles)).unwrap();
 		setImgUrl(imageUploadedData?.streamPath);
 	};
-	console.log(inputHashtag);
+
 	useEffect(() => {
 		document.getElementById('hashtag').addEventListener('keydown', e => {
 			if (e.keyCode === 32 && inputHashtag.includes('#')) {
@@ -119,6 +186,7 @@ const PopupCreateGroup = ({ handleClose, showRef }) => {
 			getDataAuthor();
 		} else setUserList([]);
 	}, [inputAuthors]);
+
 	useEffect(() => {
 		if (inputBook !== '') {
 			getBookData();
@@ -130,7 +198,7 @@ const PopupCreateGroup = ({ handleClose, showRef }) => {
 			kindOfGroup.value !== 'default' &&
 			imgUrl !== undefined &&
 			!_.isEmpty(listAuthors) &&
-			!_.isEmpty(listHashtags) &&
+			(lastTag.includes('#') || !_.isEmpty(listHashtags)) &&
 			inputDiscription !== '' &&
 			inputNameGroup !== ''
 		) {
@@ -138,27 +206,34 @@ const PopupCreateGroup = ({ handleClose, showRef }) => {
 		} else {
 			setIsShowBtn(false);
 		}
-	}, [imgUrl, listAuthors, listHashtags, kindOfGroup, inputDiscription, inputNameGroup]);
+	}, [imgUrl, listAuthors, lastTag, kindOfGroup, inputDiscription, inputNameGroup, listHashtags]);
 
 	const creatGroup = async () => {
 		const listIdAuthor = listAuthors.map(item => item.id);
-		const newListHastag = listHashtags.map(item => `#${item}`);
+		const newListHastag = listHashtags.map(item => `${item}`);
+		let newList;
+		if (lastTag.includes('#')) {
+			newList = [...newListHastag, lastTag];
+		} else {
+			newList = newListHastag;
+		}
 		const newIdBook = listBookAdd.map(item => item.id);
-		const bookId = idBook.map(item => item.id);
 		const data = {
 			name: inputNameGroup,
 			description: inputDiscription,
 			avatar: imgUrl,
 			groupType: kindOfGroup.value,
 			authorIds: listIdAuthor,
-			tags: newListHastag,
-			categoryIds: [categoryIdBook],
+			tags: newList,
+			categoryIds: categoryIdBook,
 			bookIds: newIdBook,
 		};
+
 		try {
 			await dispatch(getCreatGroup(data)).unwrap();
 			const customId = 'custom-id-PopupCreateGroup';
 			toast.success('Tạo nhóm thành công', { toastId: customId });
+			dispatch(handleResetGroupList());
 		} catch (err) {
 			NotificationError(err);
 		} finally {
@@ -186,7 +261,7 @@ const PopupCreateGroup = ({ handleClose, showRef }) => {
 	};
 
 	const onchangeBookCategory = data => {
-		setCategoryIdBook(data.value);
+		setCategoryIdBook([data.value]);
 	};
 
 	useEffect(() => {
@@ -239,8 +314,7 @@ const PopupCreateGroup = ({ handleClose, showRef }) => {
 	};
 
 	return (
-		<div className='modal-create-group'>
-			{/* <div className='popup-group__container' ref={showRef}> */}
+		<>
 			<div className='popup-group__header'>
 				<h3>Tạo nhóm</h3>
 				<button onClick={handleClose}>
@@ -262,6 +336,7 @@ const PopupCreateGroup = ({ handleClose, showRef }) => {
 										<Image className='upload-image__icon' />
 										<p className='upload-image__description'>Thêm ảnh từ thiết bị</p>
 										<span>hoặc kéo thả</span>
+										<span style={{ color: 'red', paddingTop: '5px' }}>(bắt buộc)</span>
 									</div>
 								</div>
 							)}
@@ -295,6 +370,46 @@ const PopupCreateGroup = ({ handleClose, showRef }) => {
 							list={listIdBook}
 							defaultOption={categoryBookRef.current}
 							onChangeOption={onchangeBookCategory}
+						/>
+					</div>
+				)}
+
+				{kindOfGroup.value == 'author' && (
+					<div className='form-field-select__kind-of-group'>
+						<label>Chủ đề </label>
+						<span style={{ color: 'red', marginLeft: '4px' }}>*</span>
+						<AddAndSearchCategories
+							categoryAddedList={categoryAddedList}
+							categorySearchedList={categorySearchedList}
+							addCategory={addCategory}
+							removeCategory={removeCategory}
+							getDataFinish={getDataFinish}
+							searchCategory={searchCategory}
+							inputCategoryValue={inputCategoryValue}
+							categoryInputContainer={categoryInputContainer}
+							categoryInputWrapper={categoryInputWrapper}
+							categoryInput={categoryInput}
+							hasSearchIcon={true}
+						/>
+					</div>
+				)}
+
+				{kindOfGroup.value == 'category' && (
+					<div className='form-field-select__kind-of-group'>
+						<label>Chủ đề </label>
+						<span style={{ color: 'red', marginLeft: '4px' }}>*</span>
+						<AddAndSearchCategories
+							categoryAddedList={categoryAddedList}
+							categorySearchedList={categorySearchedList}
+							addCategory={addCategory}
+							removeCategory={removeCategory}
+							getDataFinish={getDataFinish}
+							searchCategory={searchCategory}
+							inputCategoryValue={inputCategoryValue}
+							categoryInputContainer={categoryInputContainer}
+							categoryInputWrapper={categoryInputWrapper}
+							categoryInput={categoryInput}
+							hasSearchIcon={true}
 						/>
 					</div>
 				)}
@@ -350,7 +465,6 @@ const PopupCreateGroup = ({ handleClose, showRef }) => {
 					</div>
 				</div>
 
-				{/*  */}
 				{kindOfGroup.value === 'book' && (
 					<div className='form-field-authors'>
 						<label>Tên sách</label>
@@ -415,8 +529,8 @@ const PopupCreateGroup = ({ handleClose, showRef }) => {
 						onChange={onInputChange(setInputDiscription)}
 					/>
 				</div>
-				<div className='form-field--hastag'>
-					<label>Hastag</label>
+				<div className='form-field--hashtag'>
+					<label>Hashtags</label>
 					<span style={{ color: 'red', marginLeft: '4px' }}>*</span>
 					<div className='list__author-tags'>
 						{listHashtags.length > 0 && (
@@ -451,8 +565,7 @@ const PopupCreateGroup = ({ handleClose, showRef }) => {
 					<button>Tạo nhóm</button>
 				</div>
 			</div>
-			{/* </div> */}
-		</div>
+		</>
 	);
 };
 

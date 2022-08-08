@@ -1,17 +1,12 @@
-import { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { backgroundToggle } from 'reducers/redux-utils/notificaiton';
+import { backgroundToggle, readNotification } from 'reducers/redux-utils/notificaiton';
 import UserAvatar from 'shared/user-avatar';
 import { calculateDurationTime } from 'helpers/Common';
 import { useNavigate } from 'react-router-dom';
-import { ReplyFriendRequest, CancelFriendRequest } from 'reducers/redux-utils/user';
+import { ReplyFriendRequest, handleSaveUpdate, addFollower } from 'reducers/redux-utils/user';
 import { NotificationError } from 'helpers/Error';
 import { renderMessage } from 'helpers/HandleShare';
-import { readNotification } from 'reducers/redux-utils/notificaiton';
 import PropTypes from 'prop-types';
-import { addFollower } from 'reducers/redux-utils/user';
-import { useSelector } from 'react-redux';
-import { handleSaveUpdate } from 'reducers/redux-utils/user';
+import { useSelector, useDispatch } from 'react-redux';
 
 const ModalItem = ({ item, setModalNotti, getNotifications, setGetNotifications, selectKey }) => {
 	const navigate = useNavigate();
@@ -36,8 +31,8 @@ const ModalItem = ({ item, setModalNotti, getNotifications, setGetNotifications,
 			}
 			await dispatch(ReplyFriendRequest(params)).unwrap();
 			await dispatch(readNotification({ notificationId: items.id })).unwrap();
-			await dispatch(handleSaveUpdate(!isreload));
-			dispatch(addFollower({ userId: items.actor }));
+			await dispatch(addFollower({ userId: items.actor })).unwrap();
+			// dispatch(handleSaveUpdate(!isreload));
 		} catch (err) {
 			NotificationError(err);
 		}
@@ -60,7 +55,7 @@ const ModalItem = ({ item, setModalNotti, getNotifications, setGetNotifications,
 			}
 			await dispatch(ReplyFriendRequest(params)).unwrap();
 			await dispatch(readNotification({ notificationId: items.id })).unwrap();
-			await dispatch(handleSaveUpdate(!isreload));
+			// dispatch(handleSaveUpdate(!isreload));
 		} catch (err) {
 			// NotificationError(err);
 		}
@@ -111,13 +106,13 @@ const ModalItem = ({ item, setModalNotti, getNotifications, setGetNotifications,
 	return (
 		<div
 			className={
-				item.isRead || item.isAccept || item.isRefuse
+				(item.isRead || item.isAccept || item.isRefuse) && item.verb !== 'addFriend'
 					? 'notificaiton__tabs__all__active'
 					: 'notificaiton__tabs__all__seen'
 			}
 		>
 			<div onClick={() => hanleActiveIsReed(item)} className='notificaiton__all__layout'>
-				<UserAvatar size='mm' source={item.createdBy?.avatarImage || userInfo.avatarImage} />
+				<UserAvatar size='mm' source={item.createdBy?.avatarImage} />
 				<div className='notificaiton__all__layout__status'>
 					<div className='notificaiton__all__infor'>
 						<p dangerouslySetInnerHTML={{ __html: item?.message }}></p>
@@ -163,19 +158,16 @@ const ModalItem = ({ item, setModalNotti, getNotifications, setGetNotifications,
 					}
 				></div>
 			</div>
-			{item.verb === 'addFriend' &&
-				(item.isAccept || item.isRefuse ? (
-					''
-				) : (
-					<div className='notificaiton__all__friend'>
-						<div onClick={() => ReplyFriendReq(item.object, item)} className='notificaiton__all__accept'>
-							Chấp nhận
-						</div>
-						<div onClick={() => cancelFriend(item.object, item)} className='notificaiton__all__refuse'>
-							Từ chối
-						</div>
+			{item.verb === 'addFriend' && (!item.isAccept || !item.isRefuse) && (
+				<div className='notificaiton__all__friend'>
+					<div onClick={() => ReplyFriendReq(item.object, item)} className='notificaiton__all__accept'>
+						Chấp nhận
 					</div>
-				))}
+					<div onClick={() => cancelFriend(item.object, item)} className='notificaiton__all__refuse'>
+						Từ chối
+					</div>
+				</div>
+			)}
 		</div>
 	);
 };

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import SearchField from 'shared/search-field';
 import Tabs from 'react-bootstrap/Tabs';
 import Tab from 'react-bootstrap/Tab';
@@ -13,7 +13,13 @@ import ManageJoin from './AminSettings/ManageJoin';
 import PropTypes from 'prop-types';
 import PostWatting from './AminSettings/PostWatting';
 import PopupInviteFriend from '../popupInviteFriend';
-import { getEnjoyGroup, getupdateBackground, getFillterGroup, leaveGroupUser } from 'reducers/redux-utils/group';
+import {
+	getEnjoyGroup,
+	getupdateBackground,
+	getFillterGroup,
+	leaveGroupUser,
+	unFollowGroupUser,
+} from 'reducers/redux-utils/group';
 import { NotificationError } from 'helpers/Error';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
@@ -30,6 +36,8 @@ import { uploadImage } from 'reducers/redux-utils/common';
 import camera from 'assets/images/camera.png';
 import { useRef } from 'react';
 import { toast } from 'react-toastify';
+import vector from 'assets/images/Vector.png';
+import pani from 'assets/images/pani.png';
 
 function MainGroupComponent({ handleChange, keyChange, data, member, handleUpdate }) {
 	const [key, setKey] = useState('intro');
@@ -42,10 +50,11 @@ function MainGroupComponent({ handleChange, keyChange, data, member, handleUpdat
 	const [valueGroupSearch, setValueGroupSearch] = useState('');
 	const [filter, setFilter] = useState('[]');
 	const [getData, setGetData] = useState([]);
-	const { id = '' } = useParams();
+	const { id } = useParams();
 	const keyRedux = useSelector(state => state.group.key);
 	const { ref: showRef, isVisible: isShow, setIsVisible: setIsShow } = useVisible(false);
 	const joinedGroupPopup = useRef(null);
+	const [toggleFollowGroup, setToggleFollowGroup] = useState(false);
 
 	const enjoyGroup = async () => {
 		setIsFetching(true);
@@ -67,7 +76,7 @@ function MainGroupComponent({ handleChange, keyChange, data, member, handleUpdat
 			id: data?.id,
 		};
 		try {
-			await dispatch(leaveGroupUser(params));
+			await dispatch(leaveGroupUser(params)).unwrap();
 			setShow(false);
 			setShowSelect(false);
 		} catch (err) {
@@ -77,6 +86,20 @@ function MainGroupComponent({ handleChange, keyChange, data, member, handleUpdat
 				setIsFetching(false);
 			}, 2000);
 		}
+	};
+
+	const unFollowGroup = async () => {
+		setToggleFollowGroup(true);
+		try {
+			await dispatch(unFollowGroupUser(data?.id)).unwrap();
+			setShowSelect(false);
+		} catch (err) {
+			NotificationError(err);
+		}
+	};
+
+	const handleFollowGroup = async () => {
+		setToggleFollowGroup(false);
 	};
 
 	const handleChangeSearch = e => {
@@ -141,7 +164,6 @@ function MainGroupComponent({ handleChange, keyChange, data, member, handleUpdat
 					const customId = 'custom-id-PersonalInfo-handleDrop-error';
 					toast.error('Cập nhật ảnh thất bại', { toastId: customId });
 				}
-				// NotificationError(error);
 			}
 		}
 	});
@@ -222,6 +244,17 @@ function MainGroupComponent({ handleChange, keyChange, data, member, handleUpdat
 				<div className='group-name__content'>
 					<h2>{name}</h2>
 					<div className='group-name__member'>
+						{data.isPublic && (
+							<div className='groupPublic'>
+								<img src={vector} />
+
+								<span>Nhóm công khai</span>
+								<div className='imgPani'>
+									<img src={pani} />
+								</div>
+							</div>
+						)}
+
 						<span>
 							{memberGroups?.length < 10 ? `0${memberGroups?.length}` : memberGroups?.length} thành viên
 						</span>
@@ -239,9 +272,15 @@ function MainGroupComponent({ handleChange, keyChange, data, member, handleUpdat
 									</button>
 									<div className='list__dropdown' style={!showSelect ? { display: 'none' } : {}}>
 										<ul>
-											<li>
-												<CloseIconX /> Bỏ theo dõi
-											</li>
+											{toggleFollowGroup ? (
+												<li onClick={() => handleFollowGroup()}>
+													<CloseIconX /> Theo dõi
+												</li>
+											) : (
+												<li onClick={() => unFollowGroup()}>
+													<CloseIconX /> Bỏ theo dõi
+												</li>
+											)}
 											<li onClick={() => leaveGroup()}>
 												<LogOutGroup /> Rời khỏi nhóm
 											</li>

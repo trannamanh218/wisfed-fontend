@@ -36,6 +36,8 @@ import AuthorBook from 'shared/author-book';
 import ShareUsers from '../modal-share-users';
 import RichTextEditor from 'shared/rich-text-editor';
 import ShareTarget from 'shared/share-target';
+import { POST_TYPE } from 'constants';
+import { shareTargetReadings } from 'reducers/redux-utils/target';
 
 const urlRegex =
 	/https?:\/\/www(\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/g;
@@ -67,15 +69,14 @@ function CreatPostModalContent({
 	const [showUpload, setShowUpload] = useState(false);
 	const [imagesUpload, setImagesUpload] = useState([]);
 	const [validationInput, setValidationInput] = useState('');
-
-	const dispatch = useDispatch();
-
 	const taggedDataPrevious = usePrevious(taggedData);
 	const [valueStar, setValueStar] = useState(0);
 	const [checkProgress, setCheckProgress] = useState();
 	const [showImagePopover, setShowImagePopover] = useState(false);
 	const [buttonActive, setButtonActive] = useState(false);
 	const [content, setContent] = useState('');
+
+	const dispatch = useDispatch();
 
 	const location = useLocation();
 	const UpdateImg = useSelector(state => state.chart.updateImgPost);
@@ -196,6 +197,7 @@ function CreatPostModalContent({
 				return '';
 		}
 	};
+
 	const limitedValue = 5;
 	const handleAddToPost = data => {
 		const newData = { ...taggedData };
@@ -247,7 +249,7 @@ function CreatPostModalContent({
 			image: [],
 			preview: urlPreviewData,
 			tags: [],
-			progress: checkProgress ? checkProgress : null,
+			progress: checkProgress ? checkProgress : 0,
 		};
 
 		params.mentionsUser = taggedData.addFriends.length ? taggedData.addFriends.map(item => item.id) : [];
@@ -323,7 +325,7 @@ function CreatPostModalContent({
 		}
 
 		try {
-			if (isShare || isSharePosts || isSharePostsAll.length > 0) {
+			if (isShare || isSharePosts || isSharePostsAll.length > 0 || postsData.booksReadCount > 0) {
 				if (isShare) {
 					if (postsData.categoryName !== undefined) {
 						const query = {
@@ -378,6 +380,12 @@ function CreatPostModalContent({
 						};
 						await dispatch(getSharePostInternal(query)).unwrap();
 					}
+				} else if (postsData.booksReadCount > 0) {
+					const data = {
+						current: postsData.booksReadCount,
+						...params,
+					};
+					await dispatch(shareTargetReadings(data)).unwrap();
 				} else {
 					const query = {
 						by: postsData.by,
@@ -631,6 +639,7 @@ function CreatPostModalContent({
 									<IconRanks />
 								</div>
 							)}
+
 							{(isShare || isSharePosts || isSharePostsAll === 'shareTopBook') && (
 								<div
 									className={
@@ -641,7 +650,11 @@ function CreatPostModalContent({
 								>
 									{isShare && <PostQuotes postsData={postsData} isShare={isShare} />}
 									{isSharePosts && (
-										<Post postInformations={postsData} showModalCreatPost={showModalCreatPost} />
+										<Post
+											postInformations={postsData}
+											showModalCreatPost={showModalCreatPost}
+											type={POST_TYPE}
+										/>
 									)}
 									{isSharePostsAll === 'shareTopBook' && <AuthorBook data={postsData} />}
 								</div>

@@ -26,8 +26,8 @@
 @media only screen and (max-width: 820px) {
 	.review-rating {
 		margin-left: 100px;
-	}
-	.review-rating__right {
-		padding-right: 180px;
+		&__right {
+			padding-right: 0;
+		}
 	}
 }
