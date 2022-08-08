@@ -80,9 +80,7 @@ function CreatPostModalContent({
 
 	const location = useLocation();
 	const UpdateImg = useSelector(state => state.chart.updateImgPost);
-	const { resetTaggedData, isShare, postsData, isSharePosts, isSharePostsAll, isShareTarget } = useSelector(
-		state => state.post
-	);
+	const { resetTaggedData, isShare, postsData, isSharePosts, isSharePostsAll } = useSelector(state => state.post);
 	const { id } = useParams();
 	const {
 		auth: { userInfo },
@@ -206,7 +204,7 @@ function CreatPostModalContent({
 			const listData = [...taggedData[option.value]];
 			const lastItem = listData[listData.length - 1];
 			if (!listData.length || (!_.isEmpty(lastItem) && lastItem.id !== data.id)) {
-				if (!listData.includes(data)) {
+				if (!listData.find(item => item.id === data.id)) {
 					if (option.value === 'addFriends' || listData.length < limitedValue) {
 						listData.push(data);
 					} else {
