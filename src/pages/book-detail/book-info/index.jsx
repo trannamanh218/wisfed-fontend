@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import BookIntro from 'pages/book-detail/book-intro';
 import BookReview from 'pages/book-detail/book-review';
 import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { getRatingBook } from 'reducers/redux-utils/book';
 import { NotificationError } from 'helpers/Error';
 

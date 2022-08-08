@@ -15,6 +15,8 @@ import { getCategoryList, getListBookByCategory } from 'reducers/redux-utils/cat
 import caretIcon from 'assets/images/caret.png';
 import { Link } from 'react-router-dom';
 import { useFetchAuthorBooks } from 'api/book.hooks';
+import { Row, Col } from 'react-bootstrap';
+import bookImage from 'assets/images/default-book.png';
 
 const BookReference = ({ bookInfo }) => {
 	const [status, setStatus] = useState(STATUS_IDLE);
@@ -27,12 +29,11 @@ const BookReference = ({ bookInfo }) => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
-	const { booksAuthor } = useFetchAuthorBooks(Number(bookInfo?.authors[0]?.authorId));
+	const { booksAuthor } = useFetchAuthorBooks(Number(bookInfo.authors[0]?.authorId));
 
 	useEffect(() => {
 		getBooksByCategory();
 		getAllCategories();
-		// setSeries();
 	}, []);
 
 	const getAllCategories = async () => {

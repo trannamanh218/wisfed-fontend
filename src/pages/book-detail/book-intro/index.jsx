@@ -32,7 +32,6 @@ const BookIntro = ({ bookInfo, listRatingStar }) => {
 	};
 
 	useEffect(() => {
-		fetchData();
 		if (window.innerWidth <= 1024 && window.innerWidth > 820) {
 			setTextLength(300);
 		} else if (window.innerWidth <= 820) {
@@ -73,8 +72,8 @@ const BookIntro = ({ bookInfo, listRatingStar }) => {
 						<CircleCheckIcon className='book-intro__check' />
 					</div>
 					<div className='book-intro__stars'>
-						<ReactRating readonly={true} initialRating={lisRatingStar?.avg} />
-						<span>({lisRatingStar?.count} đánh giá)</span>
+						<ReactRating readonly={true} initialRating={listRatingStar?.avg} />
+						<span>({listRatingStar?.count} đánh giá)</span>
 						<span>({reviewsNumber} review)</span>
 					</div>
 

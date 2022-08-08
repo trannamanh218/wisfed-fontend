@@ -1,4 +1,3 @@
-import { useFetchBookDetail } from 'api/book.hooks';
 import MainContainer from 'components/layout/main-container';
 import NormalContainer from 'components/layout/normal-container';
 import _ from 'lodash';
@@ -8,19 +7,27 @@ import BookReference from './book-reference';
 import Circle from 'shared/loading/circle';
 import { STATUS_LOADING } from 'constants';
 import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { getBookDetail } from 'reducers/redux-utils/book';
+import { NotificationError } from 'helpers/Error';
 
 function BookDetail() {
+	const dispatch = useDispatch();
 	const [bookInformation, setBookInformation] = useState({});
-	const [bookStatus, setBookStatus] = useState('');
+	const [bookStatus, setBookStatus] = useState('LOADING');
+
+	const { bookId } = useParams();
 
 	const bookInfo = useSelector(state => state.book);
 
-	const useFetchGetBookDetail = async () => {
-		const { bookId } = useParams();
-		const { bookInfo, status } = useFetchBookDetail(bookId);
-		setBookInformation(bookInfo);
-		setBookStatus(status);
+	const handleGetBookDetail = async () => {
+		try {
+			const res = await dispatch(getBookDetail(bookId)).unwrap();
+			setBookInformation(res);
+			setBookStatus('SUCCESS');
+		} catch (err) {
+			NotificationError(err);
+		}
 	};
 
 	useEffect(() => {
@@ -28,14 +35,15 @@ function BookDetail() {
 			window.scroll(0, 0);
 		}, 300);
 
-		if (bookInfo) {
-			setBookInformation(bookInfo);
-			setBookStatus('SUCCESS');
+		if (_.isEmpty(bookInfo.bookInfo)) {
+			// Gọi api
+			handleGetBookDetail();
 		} else {
-			useFetchGetBookDetail();
+			// Dùng redux
+			setBookInformation(bookInfo.bookInfo);
+			setBookStatus('SUCCESS');
 		}
 	}, []);
-
 	return (
 		<>
 			{bookStatus === STATUS_LOADING ? (
