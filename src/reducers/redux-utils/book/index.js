@@ -26,6 +26,16 @@ export const getBookList = createAsyncThunk('book/getBookList', async (params, {
 	}
 });
 
+export const createBook = createAsyncThunk('book/getBookList', async (params, { rejectWithValue }) => {
+	try {
+		const response = await Request.makePost(bookAPI, params);
+		return response.data;
+	} catch (err) {
+		const error = JSON.parse(err.response);
+		throw rejectWithValue(error);
+	}
+});
+
 export const getBookAuthorList = createAsyncThunk('book/getBookAuthorList', async (data, { rejectWithValue }) => {
 	const { id, params } = data;
 	try {

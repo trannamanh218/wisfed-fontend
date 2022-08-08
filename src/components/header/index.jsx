@@ -15,7 +15,6 @@ import {
 	FriendsIcon,
 	CategoryFillIcon,
 	LogoNonText,
-	Hamburger,
 } from 'components/svg';
 import SearchIcon from 'assets/icons/search.svg';
 import classNames from 'classnames';
@@ -37,7 +36,6 @@ import _ from 'lodash';
 import { patchNewNotification, updateIsNewNotificationUserInfo } from 'reducers/redux-utils/auth';
 import { handleRefreshNewfeed } from 'reducers/redux-utils/activity';
 import Request from 'helpers/Request';
-import HamburgerModal from './hamburger-modal/HamburgerModal';
 
 const Header = () => {
 	const { ref: showRef, isVisible: isShow, setIsVisible: setIsShow } = useVisible(false);
@@ -48,7 +46,6 @@ const Header = () => {
 	const [userLogin, setUserLogin] = useState(false);
 	const [activeNotificaiton, setActiveNotification] = useState(false);
 	const [realTime, setRealTime] = useState(false);
-	const [isHamburgerShow, setIsHamburgerShow] = useState(false);
 
 	const buttonModal = useRef(null);
 	const userOptions = useRef(null);
@@ -236,19 +233,6 @@ const Header = () => {
 				</div>
 				<div className='header-search-small' onClick={() => setIsShow(true)}>
 					<img className='header__search__icon' src={SearchIcon} alt='search-icon' />
-				</div>
-
-				{/* Modal menu hamburger */}
-				<HamburgerModal
-					isHamburgerShow={isHamburgerShow}
-					setIsHamburgerShow={setIsHamburgerShow}
-					userInfo={userInfo}
-				/>
-
-				<div className='header-hamburger-small' onClick={() => setIsHamburgerShow(!isHamburgerShow)}>
-					<div className='header-search-small__hamburger'>
-						<Hamburger />
-					</div>
 				</div>
 
 				{/* Modal tìm kiếm */}

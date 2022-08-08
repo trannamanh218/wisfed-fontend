@@ -12,15 +12,20 @@
 	gap: 37px;
 
 	.upload-image {
-		border-radius: 12px;
-	}
-
-	.upload-image__wrapper {
-		width: 218px;
-		height: 252px;
-		.dropzone.upload-image {
-			width: 218px;
-			height: 252px;
+		border-radius: 6px;
+		&__wrapper {
+			width: 199px;
+			height: 223px;
+			border-radius: 6px;
+			img {
+				max-width: 199px;
+				height: 100%;
+				object-fit: cover;
+				border-radius: 6px;
+			}
+			.dropzone.upload-image {
+				width: 199px;
+			}
 		}
 	}
 
@@ -31,15 +36,17 @@
 		}
 		.inp-book {
 			width: 100%;
-			margin-bottom: 38px;
+			margin-bottom: 20px;
 			label {
-				margin-bottom: 23px;
+				margin-bottom: 15px;
 				font-weight: 600;
-				font-size: 18px;
-				line-height: 24px;
+				font-size: 15.5px;
+				line-height: 21px;
+				letter-spacing: 0.648188px;
 			}
 
 			.input {
+				height: 50px;
 				border-radius: 12px;
 				font-weight: 500;
 				font-size: 15px;
@@ -56,6 +63,7 @@
 			.inp-date {
 				width: 100%;
 				border-radius: 12px;
+				height: 50px;
 				padding: 0px 18px;
 				background-color: #f7f7fc;
 				border: none;
@@ -108,6 +116,20 @@
 					}
 				}
 			}
+
+			.add-and-search-categories__categories-added {
+				width: 100%;
+				display: flex;
+				gap: 4px;
+				flex-wrap: wrap;
+
+				&__item {
+					height: 43px;
+				}
+			}
+			.add-and-search-categories__main-content.added-categories {
+				padding: 4px 15px;
+			}
 		}
 	}
 
@@ -118,6 +140,9 @@
 
 	.select-box {
 		line-height: 1;
+		&__btn {
+			height: 50px;
+		}
 	}
 
 	.btnMainUpload {

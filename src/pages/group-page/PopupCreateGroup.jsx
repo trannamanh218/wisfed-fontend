@@ -465,7 +465,6 @@ const PopupCreateGroup = ({ handleClose }) => {
 					</div>
 				</div>
 
-				{/*  */}
 				{kindOfGroup.value === 'book' && (
 					<div className='form-field-authors'>
 						<label>Tên sách</label>
@@ -566,7 +565,6 @@ const PopupCreateGroup = ({ handleClose }) => {
 					<button>Tạo nhóm</button>
 				</div>
 			</div>
-			{/* </div> */}
 		</>
 	);
 };

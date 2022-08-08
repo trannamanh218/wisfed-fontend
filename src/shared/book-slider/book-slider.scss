@@ -39,6 +39,11 @@
 	}
 }
 
+.book-show {
+	display: flex;
+	gap: 10px;
+}
+
 @media only screen and (max-width: 992px) {
 	.book-slider__title {
 		font-size: 1.1rem;
