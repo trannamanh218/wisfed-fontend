@@ -7,26 +7,46 @@ import BookInfo from './book-info';
 import BookReference from './book-reference';
 import Circle from 'shared/loading/circle';
 import { STATUS_LOADING } from 'constants';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 
 function BookDetail() {
-	const { bookId } = useParams();
-	const { bookInfo, status } = useFetchBookDetail(bookId);
+	const [bookInformation, setBookInformation] = useState({});
+	const [bookStatus, setBookStatus] = useState('');
+
+	const bookInfo = useSelector(state => state.book);
+
+	const useFetchGetBookDetail = async () => {
+		const { bookId } = useParams();
+		const { bookInfo, status } = useFetchBookDetail(bookId);
+		setBookInformation(bookInfo);
+		setBookStatus(status);
+	};
 
 	useEffect(() => {
 		setTimeout(() => {
 			window.scroll(0, 0);
 		}, 300);
+
+		if (bookInfo) {
+			setBookInformation(bookInfo);
+			setBookStatus('SUCCESS');
+		} else {
+			useFetchGetBookDetail();
+		}
 	}, []);
 
 	return (
 		<>
-			{status === STATUS_LOADING ? (
+			{bookStatus === STATUS_LOADING ? (
 				<Circle loading={true} />
 			) : (
 				<>
-					{!_.isEmpty(bookInfo) ? (
-						<MainContainer main={<BookInfo />} right={<BookReference />} />
+					{!_.isEmpty(bookInformation) ? (
+						<MainContainer
+							main={<BookInfo bookInfo={bookInformation} />}
+							right={<BookReference bookInfo={bookInformation} />}
+						/>
 					) : (
 						<NormalContainer>
 							<h4 className='blank-content text-center mt-5 fs-4'>Không có dữ liệu</h4>
