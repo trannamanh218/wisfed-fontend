@@ -14,8 +14,8 @@ import { getCategoryList, getListBookByCategory } from 'reducers/redux-utils/cat
 import caretIcon from 'assets/images/caret.png';
 import { Link } from 'react-router-dom';
 import { useFetchAuthorBooks } from 'api/book.hooks';
-import { Row, Col } from 'react-bootstrap';
-import bookImage from 'assets/images/default-book.png';
+// import { Row, Col } from 'react-bootstrap';
+// import bookImage from 'assets/images/default-book.png';
 
 const BookReference = () => {
 	const [status, setStatus] = useState(STATUS_IDLE);
@@ -30,7 +30,7 @@ const BookReference = () => {
 
 	const { bookInfo } = useSelector(state => state.book);
 
-	const { booksAuthor } = useFetchAuthorBooks(Number(bookInfo.authors[0]?.authorId));
+	const { booksAuthor } = useFetchAuthorBooks(bookInfo.authors[0]?.authorId);
 
 	useEffect(() => {
 		getBooksByCategory();

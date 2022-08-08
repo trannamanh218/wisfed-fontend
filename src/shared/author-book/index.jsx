@@ -28,6 +28,7 @@ const AuthorBook = props => {
 			type: 'topBook',
 			categoryId: topBooksId || null,
 			categoryName: categoryName || null,
+			...data,
 		};
 		if (Storage.getAccessToken()) {
 			navigate('/');

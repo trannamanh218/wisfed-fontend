@@ -53,7 +53,7 @@ const TopQuotesComponent = ({ item, valueDate, categoryItem }) => {
 		}, 500),
 		[]
 	);
-	console.log(item);
+
 	return (
 		<div className='top__quotes__container'>
 			<div className='top__quotes__description'>{item.quote}</div>
