@@ -205,8 +205,21 @@
 		height: 350px;
 	}
 }
-@media only screen and (max-width: 913px) {
+
+@media only screen and (width: 912px) {
 	.post__user-status__post-time-status {
 		gap: 0px;
+	}
+}
+
+@media only screen and (width: 820px) {
+	.newfeed {
+		.post__container {
+			.post__user-status__subtitle {
+				.react-rating-container {
+					width: 99px;
+				}
+			}
+		}
 	}
 }

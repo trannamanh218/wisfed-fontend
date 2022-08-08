@@ -29,7 +29,7 @@ const BookReference = ({ bookInfo }) => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
-	const { booksAuthor } = useFetchAuthorBooks(Number(bookInfo.authors[0]?.authorId));
+	const { booksAuthor } = useFetchAuthorBooks(bookInfo.authors[0]?.authorId);
 
 	useEffect(() => {
 		getBooksByCategory();

@@ -95,12 +95,13 @@
 	pointer-events: none;
 }
 
-.upload-image__wrapper {
-	padding: 0;
-}
-
-.form-field-wrapper {
-	padding: 25px;
+.create-group-modal {
+	.upload-image__wrapper {
+		padding: 0;
+	}
+	.form-field-wrapper {
+		padding: 25px;
+	}
 }
 
 .form-field-name {
@@ -188,4 +189,3 @@
 		color: #fcfcfc;
 	}
 }
-// }

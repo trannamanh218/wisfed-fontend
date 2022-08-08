@@ -194,7 +194,6 @@ const ReviewTab = ({ currentTab }) => {
 				setDirectionSort('DESC');
 				break;
 			default:
-			//
 		}
 	};
 
