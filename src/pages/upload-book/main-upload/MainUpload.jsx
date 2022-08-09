@@ -202,16 +202,16 @@ export default function MainUpload() {
 			categoryIds: categoryIds,
 			tags: [],
 		};
-		console.log(bookInfo);
+
 		// B2: Kiểm tra dữ liệu
-		// const validate = validateInput(bookInfo);
+		const validate = validateInput(bookInfo);
 
-		// if (validate) {
-		// 	// B3: Gọi api
+		if (validate) {
+			// B3: Gọi api
 
-		// 	// Tạo sách
-		// 	handleCreateBook(bookInfo);
-		// }
+			// Tạo sách
+			handleCreateBook(bookInfo);
+		}
 	};
 
 	useEffect(() => {
@@ -295,16 +295,6 @@ export default function MainUpload() {
 						></input>
 					</div>
 					<div className='inp-book'>
-						{/* <label>
-							Tác giả<span className='upload-text-danger'>*</span>
-						</label> */}
-						{/* <input
-							className='input input--non-border'
-							placeholder='Tác giả'
-							value={authors}
-							name='authors'
-							onChange={onChange}
-						></input> */}
 						<AddAndSearchAuthorUploadBook authors={authors} setAuthors={setAuthors} />
 					</div>
 					<div className='inp-book'>
