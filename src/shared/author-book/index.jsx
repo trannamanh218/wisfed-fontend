@@ -128,7 +128,7 @@ AuthorBook.propTypes = {
 	checkshare: PropTypes.bool,
 	setModalShow: PropTypes.func,
 	valueDate: PropTypes.string,
-	topBooksId: PropTypes.number,
+	topBooksId: PropTypes.any,
 	categoryName: PropTypes.string,
 };
 

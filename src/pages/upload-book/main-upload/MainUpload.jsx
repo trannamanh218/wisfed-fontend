@@ -35,6 +35,7 @@ export default function MainUpload() {
 
 	const [resetSelect, setResetSelect] = useState(false);
 	const [buttonActive, setButtonActive] = useState(false);
+	const [temporarySeries, setTemporarySeries] = useState({});
 
 	const blockInvalidChar = e => {
 		return ['e', 'E', '+', '-'].includes(e.key) && e.preventDefault();
@@ -64,6 +65,7 @@ export default function MainUpload() {
 	const clearState = () => {
 		setFrontBookCover('');
 		setPublishDate(null);
+		setTemporarySeries({});
 
 		// reset ô select
 		setLanguage('');
@@ -376,6 +378,8 @@ export default function MainUpload() {
 									handleCloseModalSeries={handleCloseModalSeries}
 									series={series}
 									setSeries={setSeries}
+									temporarySeries={temporarySeries}
+									setTemporarySeries={setTemporarySeries}
 								/>
 							</div>
 						</div>

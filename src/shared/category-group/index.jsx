@@ -2,6 +2,7 @@ import BookSlider from 'shared/book-slider';
 import PropTypes from 'prop-types';
 import './category-group.scss';
 import BookThumbnail from 'shared/book-thumbnail';
+import { Fragment } from 'react';
 
 const CategoryGroup = ({ data, list, title, handleViewBookDetail, handleViewCategoryDetail, inCategoryDetail }) => {
 	return (
@@ -14,15 +15,16 @@ const CategoryGroup = ({ data, list, title, handleViewBookDetail, handleViewCate
 								<h4>{title}</h4>
 								<div className='category-group__none-slider'>
 									{list.map(item => (
-										<BookThumbnail
-											key={item.id}
-											{...item}
-											data={item}
-											source={item.source}
-											name={item.name}
-											size='lg'
-											handleClick={handleViewBookDetail}
-										/>
+										<Fragment key={item.id}>
+											<BookThumbnail
+												{...item}
+												data={item}
+												source={item.source}
+												name={item.name}
+												size='lg'
+												handleClick={handleViewBookDetail}
+											/>
+										</Fragment>
 									))}
 								</div>
 							</>
@@ -37,16 +39,16 @@ const CategoryGroup = ({ data, list, title, handleViewBookDetail, handleViewCate
 									inCategory={true}
 									inCategoryDetail={inCategoryDetail}
 								/>
-								<button
-									className='category-group__link'
-									onClick={() => {
-										handleViewCategoryDetail(data);
-									}}
-								>
-									Xem tất cả
-								</button>
 							</>
 						)}
+						<button
+							className='category-group__link'
+							onClick={() => {
+								handleViewCategoryDetail(data);
+							}}
+						>
+							Xem tất cả
+						</button>
 					</>
 				</div>
 			)}
@@ -61,6 +63,7 @@ CategoryGroup.propTypes = {
 	handleViewBookDetail: PropTypes.func,
 	handleViewCategoryDetail: PropTypes.func,
 	inCategory: PropTypes.bool,
+	inCategoryDetail: PropTypes.bool,
 };
 
 export default CategoryGroup;

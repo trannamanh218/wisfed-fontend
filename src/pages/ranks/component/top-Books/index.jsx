@@ -13,6 +13,7 @@ import LoadingIndicator from 'shared/loading-indicator';
 
 const TopBooks = ({ rows, listYear, tabSelected }) => {
 	const kindOfGroupRef = useRef({ value: 'default', title: 'Chủ đề' });
+	const [categoryOption, setCategoryOption] = useState({});
 	const listYearRef = useRef({ value: 'default', title: 'Tuần' });
 	const { isAuth } = useSelector(state => state.auth);
 	const [topBooksId, setTopQuotesId] = useState();
@@ -48,6 +49,39 @@ const TopBooks = ({ rows, listYear, tabSelected }) => {
 		}
 	};
 
+	const getTopBooksDataWhenAccessFromCategory = async paramsLocalStorage => {
+		setLoadingState(true);
+		const params = {
+			categoryId: paramsLocalStorage.value,
+			by: valueDate,
+		};
+		try {
+			if (isAuth === false) {
+				const topBooks = await dispatch(getTopBooks(params)).unwrap();
+				setGetListTopBooks(topBooks);
+			} else if (isAuth === true) {
+				const topBooks = await dispatch(getTopBooksAuth(params)).unwrap();
+				setGetListTopBooks(topBooks);
+			}
+		} catch (err) {
+			NotificationError(err);
+		} finally {
+			setLoadingState(false);
+		}
+	};
+
+	useEffect(() => {
+		const category = JSON.parse(localStorage.getItem('category'));
+		if (category) {
+			setCategoryOption(category);
+			setTopQuotesId(category.value);
+			getTopBooksDataWhenAccessFromCategory(category);
+			localStorage.removeItem('categoryId');
+		} else {
+			setCategoryOption(kindOfGroupRef.current);
+		}
+	}, []);
+
 	useEffect(() => {
 		if (tabSelected === 'books') {
 			getTopBooksData();
@@ -69,7 +103,7 @@ const TopBooks = ({ rows, listYear, tabSelected }) => {
 					<SelectBox
 						name='themeGroup'
 						list={rows}
-						defaultOption={kindOfGroupRef.current}
+						defaultOption={categoryOption}
 						onChangeOption={onchangeKindOfGroup}
 					/>
 				</div>

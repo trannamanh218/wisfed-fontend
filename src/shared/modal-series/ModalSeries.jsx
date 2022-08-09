@@ -1,4 +1,4 @@
-import { Modal, Row, Col } from 'react-bootstrap';
+import { Modal, Col } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import SearchField from 'shared/search-field';
 import './ModalSeries.scss';
@@ -9,10 +9,16 @@ import { NotificationError } from 'helpers/Error';
 import { getMySeries, postMoreSeries } from 'reducers/redux-utils/series';
 import { useEffect } from 'react';
 
-const ModalSeries = ({ showModalSeries, handleCloseModalSeries, series, setSeries }) => {
+const ModalSeries = ({
+	showModalSeries,
+	handleCloseModalSeries,
+	series,
+	setSeries,
+	temporarySeries,
+	setTemporarySeries,
+}) => {
 	const [APIListSeries, setAPIListSeries] = useState([]);
 	const [updateListSeries, setUpdateListSeries] = useState(false);
-	const [temporarySeries, setTemporarySeries] = useState(series);
 
 	const dispatch = useDispatch();
 
@@ -28,7 +34,6 @@ const ModalSeries = ({ showModalSeries, handleCloseModalSeries, series, setSerie
 
 	const handleClose = () => {
 		handleCloseModalSeries();
-		setTemporarySeries(series);
 	};
 
 	const handlePostMoreSeries = async params => {
@@ -65,6 +70,10 @@ const ModalSeries = ({ showModalSeries, handleCloseModalSeries, series, setSerie
 		handleGetSeriesList();
 	}, [updateListSeries, inputSearch]);
 
+	useEffect(() => {
+		setTemporarySeries(series);
+	}, [showModalSeries]);
+
 	return (
 		<Modal className='modal-series' show={showModalSeries} onHide={handleClose}>
 			<Modal.Body>
@@ -94,12 +103,7 @@ const ModalSeries = ({ showModalSeries, handleCloseModalSeries, series, setSerie
 									</Col>
 									<Col xs={2} className='series-options-checkbox'>
 										<div className='series-options-container'>
-											<input
-												type='radio'
-												id={item.id}
-												name='title'
-												onChange={() => onItemChange(item)}
-											/>
+											<input type='radio' name='title' onChange={() => onItemChange(item)} />
 											<div className='series-options-checkmark'></div>
 										</div>
 									</Col>
@@ -126,8 +130,10 @@ ModalSeries.defaultProps = {
 ModalSeries.propTypes = {
 	showModalSeries: PropTypes.bool,
 	handleCloseModalSeries: PropTypes.func,
-	series: PropTypes.any,
+	series: PropTypes.object,
 	setSeries: PropTypes.func,
+	temporarySeries: PropTypes.object,
+	setTemporarySeries: PropTypes.func,
 };
 
 export default ModalSeries;

@@ -9,6 +9,8 @@ import { getFilterSearch } from 'reducers/redux-utils/search';
 import { NotificationError } from 'helpers/Error';
 import { useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import Button from 'shared/button';
+import { Link } from 'react-router-dom';
 
 const BookSearch = ({ isFetching, value, setIsFetching, searchResultInput, activeKeyDefault, updateBooks }) => {
 	const [listArrayBooks, setListArrayBooks] = useState([]);
@@ -18,6 +20,8 @@ const BookSearch = ({ isFetching, value, setIsFetching, searchResultInput, activ
 	const dispatch = useDispatch();
 	const callApiStartBooks = useRef(0);
 	const callApiPerPage = useRef(10);
+
+	const { userInfoJwt } = useSelector(state => state.auth);
 
 	useEffect(() => {
 		if (activeKeyDefault === 'books') {
@@ -88,7 +92,18 @@ const BookSearch = ({ isFetching, value, setIsFetching, searchResultInput, activ
 						))}
 					</InfiniteScroll>
 				) : (
-					isFetching === false && <ResultNotFound />
+					isFetching === false && (
+						<div>
+							<ResultNotFound />
+							{userInfoJwt?.role === ('tecinus' || 'authors') ? (
+								<div className='btn-goTo-upload-book'>
+									<Link to='/upload-book'>
+										<Button>Tạo sách mới</Button>
+									</Link>
+								</div>
+							) : null}
+						</div>
+					)
 				)}
 			</>
 		</div>
