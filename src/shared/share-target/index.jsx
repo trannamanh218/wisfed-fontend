@@ -10,7 +10,6 @@ function ShareTarget({ postsData, inPost = false }) {
 	const { userInfo } = useSelector(state => state.auth);
 
 	const percent = useRef(0);
-
 	useEffect(() => {
 		if (inPost && !_.isEmpty(postsData)) {
 			percent.current = ((postsData.currentRead / postsData.totalTarget) * 100).toFixed();
@@ -21,8 +20,8 @@ function ShareTarget({ postsData, inPost = false }) {
 		return (
 			<div className='reading-target__content__top'>
 				<p>
-					Bạn đã đọc được {inPost ? postsData.currentRead : postsData?.booksReadCount} trên{' '}
-					{inPost ? postsData.totalTarget : postsData?.numberBook} cuốn
+					Bạn đã đọc được {inPost ? postsData?.currentRead : postsData?.booksReadCount} trên{' '}
+					{inPost ? postsData?.totalTarget : postsData?.numberBook} cuốn
 				</p>
 			</div>
 		);

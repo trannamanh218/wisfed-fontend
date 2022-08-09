@@ -17,6 +17,7 @@ function ForgetpasswordFormComponent() {
 	const [dataModal, setDatamodal] = useState({});
 	const [showImagePopover, setShowImagePopover] = useState(false);
 	const [checkUser, setCheckUser] = useState(false);
+	const [isLoading, setIsLoading] = useState(false);
 
 	const handleChangeModal = () => {
 		setIsShow(false);
@@ -26,11 +27,13 @@ function ForgetpasswordFormComponent() {
 	};
 
 	const handleSubmit = async data => {
+		setIsLoading(true);
 		try {
 			localStorage.setItem('emailForgot', JSON.stringify(data.email));
 			await dispatch(forgotPassword(data)).unwrap();
 			setCheckUser(true);
 			setIsShow(true);
+			setIsLoading(false);
 			setDatamodal({
 				title: 'Đã gửi mã',
 				title2: 'Xác Nhận',
@@ -52,7 +55,7 @@ function ForgetpasswordFormComponent() {
 
 	return (
 		<div className='forget__form__email'>
-			<Circle loading={isFetching} />
+			<Circle loading={isLoading} />
 			{isShow && dataModal && (
 				<div className='forgot__modal__container'>
 					<ModalLogin data={dataModal} handleChange={handleChangeModal} />
