@@ -26,15 +26,11 @@ const ReviewTab = ({ currentTab }) => {
 	];
 
 	const radioOptions = [
+		{ title: 'Review nhiều like nhất' },
 		{
-			title: 'Review nhiều like nhất',
-		},
-		{
-			value: 'lastest',
 			title: 'Mới nhất',
 		},
 		{
-			value: 'oldest',
 			title: 'Cũ nhất',
 		},
 		{
@@ -74,7 +70,7 @@ const ReviewTab = ({ currentTab }) => {
 	const [reviewCount, setReviewCount] = useState(0);
 	const [hasMore, setHasMore] = useState(true);
 	const { modalOpen, toggleModal } = useModal(false);
-	const [sortValue, setSortValue] = useState(null);
+	const [sortValue, setSortValue] = useState('');
 	const [checkedStarArr, setCheckedStarArr] = useState([]);
 	const [directionSort, setDirectionSort] = useState('DESC');
 	const [propertySort, setPropertySort] = useState('like');
@@ -90,7 +86,6 @@ const ReviewTab = ({ currentTab }) => {
 
 	useEffect(() => {
 		if (currentTab === 'reviews') {
-			setHasMore(true);
 			callApiStart.current = 10;
 			getReviewListFirstTime();
 		}
@@ -192,6 +187,7 @@ const ReviewTab = ({ currentTab }) => {
 				setPropertySort('like');
 				setDirectionSort('DESC');
 				break;
+
 			default:
 			//
 		}
@@ -200,6 +196,7 @@ const ReviewTab = ({ currentTab }) => {
 	const handleChange = data => {
 		setSortValue(data);
 	};
+	console.log(sortValue);
 
 	const handleChangeStar = data => {
 		const newArr = [...checkedStarArr];

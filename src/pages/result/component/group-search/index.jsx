@@ -92,9 +92,19 @@ const GroupSearch = ({ value, setIsFetching, searchResultInput, activeKeyDefault
 					{listArrayGroup.map(item => (
 						<div key={item.id} className='group__search__main'>
 							<div className='group__search__left'>
-								<img src={item.avatar || DefaultImageGroup} className='group__search__img' />
+								<Link to={`/group/${item.id}`}>
+									<button>
+										<img src={item.avatar || DefaultImageGroup} className='group__search__img' />
+									</button>
+								</Link>
+
 								<div className='group__search__content'>
-									<div className='group__search__title'>{item.name}</div>
+									<Link to={`/group/${item.id}`}>
+										<button>
+											<div className='group__search__title'>{item.name}</div>
+										</button>
+									</Link>
+
 									<div className='group__search__info'>
 										Nhóm công khai. {item.countMember} thành viên <br />
 										{item.countPost} bài viết/tháng

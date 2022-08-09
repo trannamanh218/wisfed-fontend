@@ -200,4 +200,10 @@
 		color: #fcfcfc;
 	}
 }
-// }
+@media only screen and (min-width: 780px) and (max-width: 1280px) {
+	.main-shelves {
+		.select-box__btn {
+			margin-left: 10px;
+		}
+	}
+}
