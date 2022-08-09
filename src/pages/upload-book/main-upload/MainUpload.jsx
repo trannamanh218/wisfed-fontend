@@ -33,6 +33,7 @@ export default function MainUpload() {
 	const [series, setSeries] = useState({});
 
 	const [resetSelect, setResetSelect] = useState(false);
+	const [disableButton, setDisableButton] = useState(true);
 
 	const blockInvalidChar = e => {
 		return ['e', 'E', '+', '-'].includes(e.key) && e.preventDefault();
@@ -89,51 +90,6 @@ export default function MainUpload() {
 		setLanguage(data.value);
 	};
 
-	const toastWarning = () => {
-		const customId = 'custom-id-upload';
-		toast.warning('Vui lòng điền đầy đủ thông tin', { toastId: customId });
-	};
-
-	const validateInput = param => {
-		if (!param.images) {
-			toastWarning();
-			return false;
-		}
-		if (!param.name) {
-			toastWarning();
-			return false;
-		}
-		if (!param.authors[0].authorName) {
-			toastWarning();
-			return false;
-		}
-		if (param.categoryIds.length === 0) {
-			toastWarning();
-			return false;
-		}
-		if (!param.publisher) {
-			toastWarning();
-			return false;
-		}
-		if (!param.isbn) {
-			toastWarning();
-			return false;
-		}
-		if (!param.page) {
-			toastWarning();
-			return false;
-		}
-		if (!param.language) {
-			toastWarning();
-			return false;
-		}
-		if (!param.description) {
-			toastWarning();
-			return false;
-		}
-		return true;
-	};
-
 	const handleCreateBook = async params => {
 		try {
 			// Tạo sách mới
@@ -168,7 +124,7 @@ export default function MainUpload() {
 	};
 
 	const onBtnSaveClick = () => {
-		// B1: Thu thập dữ liệu
+		// Thu thập dữ liệu
 
 		// Lấy danh sách categoryIds
 		const categoryIds = [];
@@ -203,20 +159,30 @@ export default function MainUpload() {
 			tags: [],
 		};
 
-		// B2: Kiểm tra dữ liệu
-		const validate = validateInput(bookInfo);
-
-		if (validate) {
-			// B3: Gọi api
-
-			// Tạo sách
-			handleCreateBook(bookInfo);
-		}
+		handleCreateBook(bookInfo);
 	};
 
 	useEffect(() => {
 		uploadImageFile();
 	}, [acceptedFiles]);
+
+	useEffect(() => {
+		if (
+			!image ||
+			!name ||
+			authors.length === 0 ||
+			categoryAddedList.length === 0 ||
+			!publisher ||
+			!isbn ||
+			!page ||
+			!language ||
+			!description
+		) {
+			setDisableButton(true);
+		} else {
+			setDisableButton(false);
+		}
+	}, [image, name, authors, categoryAddedList, publisher, isbn, page, language, description]);
 
 	const uploadImageFile = async () => {
 		const imageUploadedData = await dispatch(uploadImage(acceptedFiles)).unwrap();
@@ -428,7 +394,11 @@ export default function MainUpload() {
 							</Button>
 						</Col>
 						<Col>
-							<Button onClick={onBtnSaveClick} className='btn btnMainUpload'>
+							<Button
+								onClick={onBtnSaveClick}
+								className='btn btnMainUpload'
+								disabled={disableButton ? true : false}
+							>
 								Lưu
 							</Button>
 						</Col>

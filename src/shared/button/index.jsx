@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import './button.scss';
 import classNames from 'classnames';
 
-const Button = ({ children, onClick, size, varient, isOutline, className }) => {
+const Button = ({ children, onClick, size, varient, isOutline, className, ...rest }) => {
 	const classNameButton = classNames({
 		'btn': size === 'md',
 		[`btn btn-${size}`]: size !== 'md',
@@ -12,7 +12,7 @@ const Button = ({ children, onClick, size, varient, isOutline, className }) => {
 	});
 
 	return (
-		<button className={classNameButton} onClick={onClick}>
+		<button className={classNameButton} onClick={onClick} {...rest}>
 			{children}
 		</button>
 	);
