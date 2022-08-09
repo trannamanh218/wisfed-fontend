@@ -12,6 +12,7 @@ import { useEffect } from 'react';
 const ModalSeries = ({ showModalSeries, handleCloseModalSeries, series, setSeries }) => {
 	const [APIListSeries, setAPIListSeries] = useState([]);
 	const [updateListSeries, setUpdateListSeries] = useState(false);
+	const [temporarySeries, setTemporarySeries] = useState(series);
 
 	const dispatch = useDispatch();
 
@@ -22,12 +23,12 @@ const ModalSeries = ({ showModalSeries, handleCloseModalSeries, series, setSerie
 	};
 
 	const onItemChange = item => {
-		setSeries(item);
+		setTemporarySeries(item);
 	};
 
 	const handleClose = () => {
 		handleCloseModalSeries();
-		setSeries('');
+		setTemporarySeries(series);
 	};
 
 	const handlePostMoreSeries = async params => {
@@ -44,6 +45,7 @@ const ModalSeries = ({ showModalSeries, handleCloseModalSeries, series, setSerie
 	};
 
 	const handleConfirm = () => {
+		setSeries(temporarySeries);
 		handleCloseModalSeries();
 	};
 
@@ -72,7 +74,7 @@ const ModalSeries = ({ showModalSeries, handleCloseModalSeries, series, setSerie
 						className='input input--non-border'
 						placeholder='Sê-ri bộ sách'
 						disabled
-						value={series.name || ''}
+						value={temporarySeries.name}
 					></input>
 				</div>
 
@@ -86,12 +88,12 @@ const ModalSeries = ({ showModalSeries, handleCloseModalSeries, series, setSerie
 					<div className='modal-series__body__options'>
 						{APIListSeries.map((item, index) => {
 							return (
-								<Row key={index}>
+								<label key={index} className='row-options'>
 									<Col xs={10}>
 										<div className='series-options-title'>{item.name}</div>
 									</Col>
 									<Col xs={2} className='series-options-checkbox'>
-										<label className='series-options-container'>
+										<div className='series-options-container'>
 											<input
 												type='radio'
 												id={item.id}
@@ -99,9 +101,9 @@ const ModalSeries = ({ showModalSeries, handleCloseModalSeries, series, setSerie
 												onChange={() => onItemChange(item)}
 											/>
 											<div className='series-options-checkmark'></div>
-										</label>
+										</div>
 									</Col>
-								</Row>
+								</label>
 							);
 						})}
 					</div>

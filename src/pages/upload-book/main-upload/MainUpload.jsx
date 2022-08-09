@@ -19,6 +19,7 @@ import { toast } from 'react-toastify';
 import { createBook } from 'reducers/redux-utils/book';
 import { addBookToSeries } from 'reducers/redux-utils/series';
 import { NotificationError } from 'helpers/Error';
+import classNames from 'classnames';
 
 export default function MainUpload() {
 	const [publishDate, setPublishDate] = useState(null);
@@ -33,7 +34,7 @@ export default function MainUpload() {
 	const [series, setSeries] = useState({});
 
 	const [resetSelect, setResetSelect] = useState(false);
-	const [disableButton, setDisableButton] = useState(true);
+	const [buttonActive, setButtonActive] = useState(false);
 
 	const blockInvalidChar = e => {
 		return ['e', 'E', '+', '-'].includes(e.key) && e.preventDefault();
@@ -158,8 +159,9 @@ export default function MainUpload() {
 			categoryIds: categoryIds,
 			tags: [],
 		};
-
-		handleCreateBook(bookInfo);
+		if (buttonActive) {
+			handleCreateBook(bookInfo);
+		}
 	};
 
 	useEffect(() => {
@@ -178,9 +180,9 @@ export default function MainUpload() {
 			!language ||
 			!description
 		) {
-			setDisableButton(true);
+			setButtonActive(false);
 		} else {
-			setDisableButton(false);
+			setButtonActive(true);
 		}
 	}, [image, name, authors, categoryAddedList, publisher, isbn, page, language, description]);
 
@@ -394,13 +396,14 @@ export default function MainUpload() {
 							</Button>
 						</Col>
 						<Col>
-							<Button
+							<button
 								onClick={onBtnSaveClick}
-								className='btn btnMainUpload'
-								disabled={disableButton ? true : false}
+								className={classNames('creat-post-modal-content__main__submit', 'btn-upload', {
+									'active': buttonActive,
+								})}
 							>
 								Lưu
-							</Button>
+							</button>
 						</Col>
 					</Row>
 				</div>
