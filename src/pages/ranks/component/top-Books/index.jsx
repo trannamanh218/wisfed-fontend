@@ -71,20 +71,17 @@ const TopBooks = ({ rows, listYear, tabSelected }) => {
 	};
 
 	useEffect(() => {
-		const category = JSON.parse(localStorage.getItem('category'));
-		if (category) {
-			setCategoryOption(category);
-			setTopQuotesId(category.value);
-			getTopBooksDataWhenAccessFromCategory(category);
-			localStorage.removeItem('categoryId');
-		} else {
-			setCategoryOption(kindOfGroupRef.current);
-		}
-	}, []);
-
-	useEffect(() => {
 		if (tabSelected === 'books') {
-			getTopBooksData();
+			const category = JSON.parse(localStorage.getItem('category'));
+			if (category) {
+				setCategoryOption(category);
+				setTopQuotesId(category.value);
+				getTopBooksDataWhenAccessFromCategory(category);
+				localStorage.removeItem('category');
+			} else {
+				setCategoryOption(kindOfGroupRef.current);
+				getTopBooksData();
+			}
 		}
 	}, [topBooksId, valueDate, isAuth, tabSelected]);
 
