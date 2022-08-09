@@ -95,10 +95,6 @@
 	pointer-events: none;
 }
 
-.upload-image__wrapper {
-	padding: 0;
-}
-
 .form-field-wrapper {
 	padding: 25px;
 }
@@ -138,6 +134,7 @@
 		font-size: 0.75rem;
 	}
 }
+
 .close__author {
 	align-items: center;
 	margin-left: 5px;
@@ -146,6 +143,7 @@
 		height: 16px;
 	}
 }
+
 .form-field-select__transparent,
 .form-field--hashtag,
 .form-field-authors,
@@ -156,8 +154,8 @@
 		margin-bottom: 23px;
 	}
 }
+
 .select-box {
-	// width: 100%;
 	// ai sửa thì cho vào class chứa select k thì chỗ khác sẽ ăn chung css
 	.select-box__btn {
 		justify-content: space-between;
@@ -171,11 +169,13 @@
 		margin: 0 !important;
 	}
 }
+
 .form-field--discription {
 	textarea {
 		background-color: #eff0f7;
 	}
 }
+
 .form-button {
 	margin-top: 57px;
 	display: flex;
@@ -188,4 +188,3 @@
 		color: #fcfcfc;
 	}
 }
-// }

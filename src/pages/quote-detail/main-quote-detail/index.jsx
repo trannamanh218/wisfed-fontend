@@ -10,25 +10,29 @@ import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { QUOTE_TYPE } from 'constants';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { handleCheckReplyToMe } from 'reducers/redux-utils/comment';
+import { useRef } from 'react';
 
 const MainQuoteDetail = ({ quoteData, onCreateComment, setMentionUsersArr, mentionUsersArr }) => {
 	const [replyingCommentId, setReplyingCommentId] = useState(0);
-	const [clickReply, setClickReply] = useState(false);
+
+	const clickReply = useRef(null);
 
 	const userInfo = useSelector(state => state.auth.userInfo);
+	const dispatch = useDispatch();
 
 	const handleReply = (cmtLv1Id, userData) => {
+		const arr = [];
 		if (userData.id !== userInfo.id) {
-			const arr = [];
 			arr.push(userData);
-			setMentionUsersArr(arr);
+			dispatch(handleCheckReplyToMe(false));
+		} else {
+			dispatch(handleCheckReplyToMe(true));
 		}
+		setMentionUsersArr(arr);
 		setReplyingCommentId(cmtLv1Id);
-		setClickReply(true);
-		setTimeout(() => {
-			setClickReply(false);
-		}, 200);
+		clickReply.current = !clickReply.current;
 	};
 
 	return (
@@ -86,7 +90,7 @@ const MainQuoteDetail = ({ quoteData, onCreateComment, setMentionUsersArr, menti
 											mentionUsersArr={mentionUsersArr}
 											commentLv1Id={comment.id}
 											replyingCommentId={replyingCommentId}
-											clickReply={clickReply}
+											clickReply={clickReply.current}
 											setMentionUsersArr={setMentionUsersArr}
 										/>
 									</div>

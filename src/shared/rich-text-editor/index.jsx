@@ -173,7 +173,7 @@ function RichTextEditor({
 			suggestionsResponse.rows.forEach(item => {
 				const mentionData = {
 					name: item.fullName || item.firstName + item.lastName,
-					link: `https://wisfeed.tecinus.vn/profile/1b4ade47-d03b-4a7a-98ea-27abd8f15a85`,
+					link: `${window.location.hostname}/profile/${item.id}`,
 					avatar: item.avatarImage || defaultAvatar,
 					id: item.id,
 				};
