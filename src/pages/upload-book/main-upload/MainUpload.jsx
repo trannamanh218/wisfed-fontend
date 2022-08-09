@@ -14,6 +14,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { uploadImage } from 'reducers/redux-utils/common';
 import ModalSeries from 'shared/modal-series/ModalSeries';
 import AddAndSearchCategoriesUploadBook from './AddAndSearchCategoriesUploadBook/AddAndSearchCategoriesUploadBook';
+import AddAndSearchAuthorUploadBook from './AddAndSearchAuthorUploadBook/AddAndSearchAuthorUploadBook';
 import { toast } from 'react-toastify';
 import { createBook } from 'reducers/redux-utils/book';
 import { addBookToSeries } from 'reducers/redux-utils/series';
@@ -27,6 +28,7 @@ export default function MainUpload() {
 
 	const [image, setFrontBookCover] = useState('');
 	const [categoryAddedList, setCategoryAddedList] = useState([]);
+	const [authors, setAuthors] = useState([]);
 	const [language, setLanguage] = useState('');
 	const [series, setSeries] = useState({});
 
@@ -40,7 +42,6 @@ export default function MainUpload() {
 		name: '',
 		subName: '',
 		originalName: '',
-		author: '',
 		translator: '',
 		publisher: '',
 		isbn: '',
@@ -48,7 +49,7 @@ export default function MainUpload() {
 		description: '',
 	};
 
-	const [{ name, subName, originalName, author, translator, publisher, isbn, page, description }, setState] =
+	const [{ name, subName, originalName, translator, publisher, isbn, page, description }, setState] =
 		useState(initialState);
 
 	const onChange = e => {
@@ -175,18 +176,22 @@ export default function MainUpload() {
 			categoryIds.push(categoryAddedList[i].id);
 		}
 
+		// Tạo danh sách tác giả
+		const authorsArr = [];
+		for (let i = 0; i < authors.length; i++) {
+			authorsArr.push({
+				'isUser': true,
+				'authorId': authors[i].id,
+			});
+		}
+
 		const bookInfo = {
 			frontBookCover: image,
 			images: [image],
 			name: name,
 			subName: subName,
 			originalName: originalName,
-			authors: [
-				{
-					isUser: false,
-					authorName: author,
-				},
-			],
+			authors: authorsArr,
 			translator: translator,
 			publisher: publisher,
 			isbn: isbn,
@@ -197,16 +202,16 @@ export default function MainUpload() {
 			categoryIds: categoryIds,
 			tags: [],
 		};
-
+		console.log(bookInfo);
 		// B2: Kiểm tra dữ liệu
-		const validate = validateInput(bookInfo);
+		// const validate = validateInput(bookInfo);
 
-		if (validate) {
-			// B3: Gọi api
+		// if (validate) {
+		// 	// B3: Gọi api
 
-			// Tạo sách
-			handleCreateBook(bookInfo);
-		}
+		// 	// Tạo sách
+		// 	handleCreateBook(bookInfo);
+		// }
 	};
 
 	useEffect(() => {
@@ -290,16 +295,17 @@ export default function MainUpload() {
 						></input>
 					</div>
 					<div className='inp-book'>
-						<label>
+						{/* <label>
 							Tác giả<span className='upload-text-danger'>*</span>
-						</label>
-						<input
+						</label> */}
+						{/* <input
 							className='input input--non-border'
 							placeholder='Tác giả'
-							value={author}
-							name='author'
+							value={authors}
+							name='authors'
 							onChange={onChange}
-						></input>
+						></input> */}
+						<AddAndSearchAuthorUploadBook authors={authors} setAuthors={setAuthors} />
 					</div>
 					<div className='inp-book'>
 						<label>Dịch giả</label>
@@ -396,7 +402,7 @@ export default function MainUpload() {
 							</Col>
 						</Row>
 					</div>
-					{userInfoJwt?.role === ('tecinus' || 'author') ? (
+					{userInfoJwt?.role === ('tecinus' || 'authors') ? (
 						<div className='inp-book'>
 							<label>Sê-ri</label>
 							<input
