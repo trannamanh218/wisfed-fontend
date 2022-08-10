@@ -73,7 +73,7 @@ const ReviewTab = ({ currentTab }) => {
 	const [inputSearch, setInputSearch] = useState('');
 	const [topUser, setTopUser] = useState('');
 	const [reviewBook, setReviewBook] = useState('');
-	const [tung, setTung] = useState(false);
+	const [reviewTurn, setReviewTurn] = useState(false);
 
 	const callApiStart = useRef(10);
 	const callApiPerPage = useRef(10);
@@ -88,7 +88,7 @@ const ReviewTab = ({ currentTab }) => {
 			callApiStart.current = 10;
 			getReviewListFirstTime();
 		}
-	}, [currentOption, currentTab, directionSort, propertySort, inputSearch, tung]);
+	}, [currentOption, currentTab, directionSort, propertySort, inputSearch, reviewTurn]);
 
 	const getReviewListFirstTime = async () => {
 		try {
@@ -220,7 +220,7 @@ const ReviewTab = ({ currentTab }) => {
 	};
 	const handleKeyPress = e => {
 		if (e.key === 'Enter') {
-			setTung(!tung);
+			setReviewTurn(!reviewTurn);
 			postReviewList();
 			setReviewBook('');
 		}
