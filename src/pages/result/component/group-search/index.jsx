@@ -55,7 +55,9 @@ const GroupSearch = ({ value, setIsFetching, searchResultInput, activeKeyDefault
 				callApiStart.current += callApiPerPage.current;
 				setListArrayGroup(listArrayGroup.concat(result.rows));
 				setIsFetching(true);
-			} else {
+			}
+			// Nếu kết quả tìm kiếm nhỏ hơn limit thì disable gọi api khi scroll
+			if (!result.rows.length || result.rows.length < callApiPerPage.current) {
 				setHasMore(false);
 			}
 		} catch (err) {

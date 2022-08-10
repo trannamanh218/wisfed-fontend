@@ -2,7 +2,6 @@ import BookSlider from 'shared/book-slider';
 import PropTypes from 'prop-types';
 import './category-group.scss';
 import BookThumbnail from 'shared/book-thumbnail';
-import { Fragment } from 'react';
 
 const CategoryGroup = ({ data, list, title, handleViewBookDetail, handleViewCategoryDetail, inCategoryDetail }) => {
 	return (
@@ -15,16 +14,15 @@ const CategoryGroup = ({ data, list, title, handleViewBookDetail, handleViewCate
 								<h4>{title}</h4>
 								<div className='category-group__none-slider'>
 									{list.map(item => (
-										<Fragment key={item.id}>
-											<BookThumbnail
-												{...item}
-												data={item}
-												source={item.source}
-												name={item.name}
-												size='lg'
-												handleClick={handleViewBookDetail}
-											/>
-										</Fragment>
+										<BookThumbnail
+											key={item.id}
+											{...item}
+											data={item}
+											source={item.source}
+											name={item.name}
+											size='lg'
+											handleClick={handleViewBookDetail}
+										/>
 									))}
 								</div>
 							</>

@@ -71,11 +71,10 @@ const TopBooks = ({ rows, listYear, tabSelected }) => {
 	};
 
 	useEffect(() => {
+		const category = JSON.parse(localStorage.getItem('category'));
 		if (tabSelected === 'books') {
-			const category = JSON.parse(localStorage.getItem('category'));
 			if (category) {
 				setCategoryOption(category);
-				setTopQuotesId(category.value);
 				getTopBooksDataWhenAccessFromCategory(category);
 				localStorage.removeItem('category');
 			} else {
