@@ -145,8 +145,8 @@ export const searchGroup = id => `/api/v1/groups/search/${id}`;
 export const updateBackground = id => `/api/v1/groups/${id}`;
 export const bookCategoryAPI = `/api/v1/categories?filter=[{"operator":"in","value":["thach-thuc-doc-sach", "yeu-doc-sach"],"property":"slug"}]`;
 
-export const unFollowGroup = id => `/api/v1/groups/unFollow/${id}`;
-
+export const unFollowGroupAPI = id => `/api/v1/groups/unFollow/${id}`;
+export const followGroupAPI = id => `/api/v1/groups/follow/${id}`;
 // search
 export const getSearchAPI = `/api/v1/searchs`;
 

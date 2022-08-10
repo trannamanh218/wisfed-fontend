@@ -58,17 +58,18 @@ const PostQuotes = ({ postsData }) => {
 									avatarImage={
 										postsData.info
 											? postsData.info.createdBy.avatarImage
-											: postsData?.user?.avatarImage || postsData.createdBy?.avatarImage
+											: postsData?.user?.avatarImage ||
+											  postsData?.sharePost.createdBy?.avatarImage
 									}
 								/>
 							</div>
 							<div className='quote-card__author__detail'>
 								<p className='quote-card__author__detail__text'>Quotes này tạo bởi</p>
-								<Link to={`/profile/${postsData.createdBy?.id}`}>
+								<Link to={`/profile/${postsData?.sharePost.createdBy?.id}`}>
 									<p className='quote-card__author__detail__name'>
 										{postsData.info
 											? postsData.info.createdBy.fullName
-											: postsData?.user?.fullName || postsData.createdBy?.fullName}
+											: postsData?.user?.fullName || postsData?.sharePost.createdBy?.fullName}
 									</p>
 								</Link>
 							</div>

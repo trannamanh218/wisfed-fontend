@@ -16,7 +16,8 @@ import {
 	searchGroup,
 	updateBackground,
 	bookCategoryAPI,
-	unFollowGroup,
+	unFollowGroupAPI,
+	followGroupAPI,
 } from 'constants/apiURL';
 import Request from 'helpers/Request';
 
@@ -188,7 +189,17 @@ export const leaveGroupUser = createAsyncThunk('group/leaveGroupUser', async (pa
 
 export const unFollowGroupUser = createAsyncThunk('group/unFollowGroupUser', async (id, { rejectWithValue }) => {
 	try {
-		const res = await Request.makePost(unFollowGroup(id));
+		const res = await Request.makePost(unFollowGroupAPI(id));
+		return res;
+	} catch (err) {
+		const error = JSON.parse(err.response);
+		return rejectWithValue(error);
+	}
+});
+
+export const followGroupUser = createAsyncThunk('group/followGroupUser', async (id, { rejectWithValue }) => {
+	try {
+		const res = await Request.makePost(followGroupAPI(id));
 		return res;
 	} catch (err) {
 		const error = JSON.parse(err.response);
