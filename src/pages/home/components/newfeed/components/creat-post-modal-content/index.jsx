@@ -527,8 +527,6 @@ function CreatPostModalContent({
 		}
 	};
 
-	console.log(postsData);
-
 	return (
 		<div className='creat-post-modal-content'>
 			<Circle loading={status === STATUS_LOADING} />
