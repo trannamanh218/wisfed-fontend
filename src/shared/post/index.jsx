@@ -188,7 +188,7 @@ function Post({ postInformations, showModalCreatPost, type = POST_TYPE }) {
 						{paramInfo[0].users.fullName ||
 							paramInfo[0].users.firstName + ' ' + paramInfo[0].users.lastName}
 					</Link>
-					{'.'}
+					<span style={{ fontWeight: '500' }}>.</span>
 				</span>
 			);
 		} else if (paramInfo.length === 2) {
@@ -204,7 +204,7 @@ function Post({ postInformations, showModalCreatPost, type = POST_TYPE }) {
 						{paramInfo[1].users.fullName ||
 							paramInfo[1].users.firstName + ' ' + paramInfo[1].users.lastName}
 					</Link>
-					{'.'}
+					<span style={{ fontWeight: '500' }}>.</span>
 				</span>
 			);
 		} else {
@@ -248,6 +248,7 @@ function Post({ postInformations, showModalCreatPost, type = POST_TYPE }) {
 								{postData.mentionsUsers &&
 									!!postData.mentionsUsers.length &&
 									withFriends(postData.mentionsUsers)}
+
 								{(postData.groupInfo || postData.group) && (
 									<img className='post__user-icon' src={Play} alt='' />
 								)}

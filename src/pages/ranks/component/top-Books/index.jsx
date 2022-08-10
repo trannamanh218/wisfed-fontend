@@ -16,16 +16,18 @@ const TopBooks = ({ rows, listYear, tabSelected }) => {
 	const [categoryOption, setCategoryOption] = useState({});
 	const listYearRef = useRef({ value: 'default', title: 'Tuần' });
 	const { isAuth } = useSelector(state => state.auth);
-	const [topBooksId, setTopQuotesId] = useState();
+	const [topBooksId, setTopBooksId] = useState();
 	const [valueDate, setValueData] = useState('week');
 	const [getListTopBooks, setGetListTopBooks] = useState([]);
 	const [modalShow, setModalShow] = useState(false);
 	const [loadingState, setLoadingState] = useState(false);
 	const dispatch = useDispatch();
 
+	const category = JSON.parse(localStorage.getItem('category'));
+
 	const onchangeKindOfGroup = data => {
 		kindOfGroupRef.current = data;
-		setTopQuotesId(data.id);
+		setTopBooksId(data.id);
 	};
 
 	const getTopBooksData = async () => {
@@ -71,16 +73,19 @@ const TopBooks = ({ rows, listYear, tabSelected }) => {
 	};
 
 	useEffect(() => {
-		const category = JSON.parse(localStorage.getItem('category'));
-		if (tabSelected === 'books') {
-			if (category) {
-				setCategoryOption(category);
-				getTopBooksDataWhenAccessFromCategory(category);
-				localStorage.removeItem('category');
-			} else {
-				setCategoryOption(kindOfGroupRef.current);
-				getTopBooksData();
-			}
+		if (category) {
+			setCategoryOption(category);
+			setTopBooksId(category.value);
+			getTopBooksDataWhenAccessFromCategory(category);
+			localStorage.removeItem('category');
+		} else {
+			setCategoryOption(kindOfGroupRef.current);
+		}
+	}, []);
+
+	useEffect(() => {
+		if (tabSelected === 'books' && !category) {
+			getTopBooksData();
 		}
 	}, [topBooksId, valueDate, isAuth, tabSelected]);
 

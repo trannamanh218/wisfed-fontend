@@ -21,10 +21,54 @@ const urlRegex =
 const PostsShare = ({ postData }) => {
 	const [videoId, setVideoId] = useState('');
 
-	const { isSharePosts, isShare } = useSelector(state => state.post);
+	const { isSharePosts } = useSelector(state => state.post);
 
 	const directUrl = url => {
 		window.open(url);
+	};
+
+	const withFriends = paramInfo => {
+		if (paramInfo.length === 1) {
+			return (
+				<span>
+					<span style={{ fontWeight: '500' }}> cùng với </span>
+					<Link to={`/profile/${paramInfo[0].userId}`}>
+						{paramInfo[0].users.fullName ||
+							paramInfo[0].users.firstName + ' ' + paramInfo[0].users.lastName}
+					</Link>
+					<span style={{ fontWeight: '500' }}>.</span>
+				</span>
+			);
+		} else if (paramInfo.length === 2) {
+			return (
+				<span>
+					<span style={{ fontWeight: '500' }}> cùng với </span>
+					<Link to={`/profile/${paramInfo[0].userId}`}>
+						{paramInfo[0].users.fullName ||
+							paramInfo[0].users.firstName + ' ' + paramInfo[0].users.lastName}
+					</Link>
+					<span style={{ fontWeight: '500' }}> và </span>
+					<Link to={`/profile/${paramInfo[1].userId}`}>
+						{paramInfo[1].users.fullName ||
+							paramInfo[1].users.firstName + ' ' + paramInfo[1].users.lastName}
+					</Link>
+					<span style={{ fontWeight: '500' }}>.</span>
+				</span>
+			);
+		} else {
+			return (
+				<span>
+					<span style={{ fontWeight: '500' }}> cùng với </span>
+					<Link to={`/profile/${paramInfo[0].users.id}`}>
+						{paramInfo[0].users.fullName ||
+							paramInfo[0].users.firstName + ' ' + paramInfo[0].users.lastName}
+					</Link>
+					<span style={{ fontWeight: '500' }}> và </span>
+					{paramInfo.length - 1}
+					<span style={{ fontWeight: '500' }}> người khác.</span>
+				</span>
+			);
+		}
 	};
 
 	useEffect(() => {
@@ -77,14 +121,36 @@ const PostsShare = ({ postData }) => {
 
 					<div className='post__user-status__name-and-post-time-status'>
 						<div data-testid='post__user-name' className='post__user-status__name'>
-							{postData.sharePost
-								? postData.sharePost.createdBy.fullName || (
-										<>
-											{postData.sharePost.createdBy.firstName}{' '}
-											{postData.sharePost.createdBy.lastName}
-										</>
-								  )
-								: postData?.createdBy?.fullName || postData?.user?.fullName || 'Ẩn danh'}
+							{postData.sharePost ? (
+								(
+									<Link
+										to={`/profile/${
+											postData.sharePost.createdBy?.id || postData.sharePost.user?.id
+										}`}
+									>
+										{postData.sharePost.createdBy.fullName}
+									</Link>
+								) || (
+									<Link
+										to={`/profile/${
+											postData.sharePost.createdBy?.id || postData.sharePost.user?.id
+										}`}
+									>
+										{postData.sharePost.createdBy.firstName} {postData.sharePost.createdBy.lastName}
+									</Link>
+								)
+							) : (
+								<Link
+									to={`/profile/${postData.sharePost.createdBy?.id || postData.sharePost.user?.id}`}
+								>
+									{postData?.createdBy?.fullName || postData?.user?.fullName || 'Ẩn danh'}
+								</Link>
+							)}
+
+							{/* tagged people */}
+							{postData.sharePost.mentionsUsers &&
+								!!postData.sharePost.mentionsUsers.length &&
+								withFriends(postData.sharePost.mentionsUsers)}
 
 							{postData?.group && (
 								<>
