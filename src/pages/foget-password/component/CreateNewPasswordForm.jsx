@@ -49,6 +49,7 @@ function CreateNewPasswordForm() {
 			});
 		} catch (err) {
 			setIsShow(true);
+			setIsFetching(false);
 			setDataModal({
 				title: 'Tạo mật khẩu',
 				title2: ' mới thất bại',

@@ -43,6 +43,7 @@ function ForgetpasswordFormComponent() {
 			});
 		} catch (err) {
 			setIsShow(true);
+			setIsLoading(false);
 			setDatamodal({
 				title: 'Lấy lại mật khẩu',
 				title2: 'thất bại',
