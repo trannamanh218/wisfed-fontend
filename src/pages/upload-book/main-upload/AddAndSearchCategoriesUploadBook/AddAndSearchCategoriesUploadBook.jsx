@@ -7,10 +7,14 @@ import { getSuggestionForPost } from 'reducers/redux-utils/activity';
 import { NotificationError } from 'helpers/Error';
 import PropTypes from 'prop-types';
 
-function AddAndSearchCategoriesUploadBook({ categoryAddedList, setCategoryAddedList }) {
+function AddAndSearchCategoriesUploadBook({
+	inputCategoryValue,
+	setInputCategoryValue,
+	categoryAddedList,
+	setCategoryAddedList,
+}) {
 	const [categorySearchedList, setCategorySearchedList] = useState([]);
 	const [getDataFinish, setGetDataFinish] = useState(false);
-	const [inputCategoryValue, setInputCategoryValue] = useState('');
 
 	const categoryInputContainer = useRef(null);
 	const categoryInputWrapper = useRef(null);
@@ -91,6 +95,8 @@ function AddAndSearchCategoriesUploadBook({ categoryAddedList, setCategoryAddedL
 AddAndSearchCategoriesUploadBook.propTypes = {
 	categoryAddedList: PropTypes.array,
 	setCategoryAddedList: PropTypes.func,
+	inputCategoryValue: PropTypes.string,
+	setInputCategoryValue: PropTypes.func,
 };
 
 export default AddAndSearchCategoriesUploadBook;

@@ -7,10 +7,9 @@ import { getSuggestionForPost } from 'reducers/redux-utils/activity';
 import { NotificationError } from 'helpers/Error';
 import PropTypes from 'prop-types';
 
-function AddAndSearchPublisherUploadBook({ publisher, setPublisher }) {
+function AddAndSearchPublisherUploadBook({ inputPublisherValue, setInputPublisherValue, publisher, setPublisher }) {
 	const [categorySearchedList, setCategorySearchedList] = useState([]);
 	const [getDataFinish, setGetDataFinish] = useState(false);
-	const [inputCategoryValue, setInputCategoryValue] = useState('');
 
 	const categoryInputContainer = useRef(null);
 	const categoryInputWrapper = useRef(null);
@@ -25,7 +24,7 @@ function AddAndSearchPublisherUploadBook({ publisher, setPublisher }) {
 			const categoryArrayTemp = [...publisher];
 			categoryArrayTemp.push(category);
 			setPublisher(categoryArrayTemp);
-			setInputCategoryValue('');
+			setInputPublisherValue('');
 			setCategorySearchedList([]);
 			if (categoryInputWrapper.current) {
 				categoryInputWrapper.current.style.width = '0.5ch';
@@ -59,7 +58,7 @@ function AddAndSearchPublisherUploadBook({ publisher, setPublisher }) {
 	const searchCategory = e => {
 		setGetDataFinish(false);
 		setCategorySearchedList([]);
-		setInputCategoryValue(e.target.value);
+		setInputPublisherValue(e.target.value);
 		debounceSearch(e.target.value, { value: 'addCategory' });
 		if (categoryInputWrapper.current) {
 			categoryInputWrapper.current.style.width = categoryInput.current.value?.length + 0.5 + 'ch';
@@ -78,7 +77,7 @@ function AddAndSearchPublisherUploadBook({ publisher, setPublisher }) {
 				removeCategory={removeCategory}
 				getDataFinish={getDataFinish}
 				searchCategory={searchCategory}
-				inputCategoryValue={inputCategoryValue}
+				inputCategoryValue={inputPublisherValue}
 				categoryInputContainer={categoryInputContainer}
 				categoryInputWrapper={categoryInputWrapper}
 				categoryInput={categoryInput}
@@ -93,6 +92,8 @@ function AddAndSearchPublisherUploadBook({ publisher, setPublisher }) {
 AddAndSearchPublisherUploadBook.propTypes = {
 	publisher: PropTypes.array,
 	setPublisher: PropTypes.func,
+	inputPublisherValue: PropTypes.string,
+	setInputPublisherValue: PropTypes.func,
 };
 
 export default AddAndSearchPublisherUploadBook;

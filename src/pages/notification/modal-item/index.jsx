@@ -12,7 +12,7 @@ const ModalItem = ({ item, setModalNotti, getNotifications, setGetNotifications,
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	const { userInfo } = useSelector(state => state.auth);
-	const { isreload } = useSelector(state => state.user);
+	// const { isreload } = useSelector(state => state.user);
 
 	const ReplyFriendReq = async (data, items) => {
 		try {
@@ -97,6 +97,8 @@ const ModalItem = ({ item, setModalNotti, getNotifications, setGetNotifications,
 			navigate(`/detail-feed/${'mini-post'}/${items.originId.minipostId}`);
 		} else if (item.verb === 'requestGroup') {
 			navigate(`/group/${items.originId.groupId}`);
+		} else if (item.verb === 'likeReview') {
+			navigate(`/review/${items.originId.bookId}/${userInfo.id}`);
 		}
 		dispatch(backgroundToggle(true));
 		setModalNotti(false);

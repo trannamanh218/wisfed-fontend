@@ -87,6 +87,8 @@ const NotificationStatus = ({ item, setGetNotifications, getNotifications }) => 
 			navigate(`/detail-feed/${'mini-post'}/${items.originId.minipostId}`);
 		} else if (item.verb === 'requestGroup') {
 			navigate(`/group/${items.originId.groupId}`);
+		} else if (item.verb === 'likeReview') {
+			navigate(`/review/${items.originId.bookId}/${userInfo.id}`);
 		}
 		dispatch(readNotification(params)).unwrap();
 	};

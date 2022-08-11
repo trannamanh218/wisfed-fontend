@@ -41,6 +41,11 @@ export default function MainUpload() {
 	const [buttonActive, setButtonActive] = useState(false);
 	const [temporarySeries, setTemporarySeries] = useState({});
 
+	const [inputAuthorValue, setInputAuthorValue] = useState('');
+	const [inputTranslatorValue, setInputTranslatorValue] = useState('');
+	const [inputCategoryValue, setInputCategoryValue] = useState('');
+	const [inputPublisherValue, setInputPublisherValue] = useState('');
+
 	const blockInvalidChar = e => {
 		return ['e', 'E', '+', '-'].includes(e.key) && e.preventDefault();
 	};
@@ -67,16 +72,17 @@ export default function MainUpload() {
 		setFrontBookCover('');
 		setPublishDate(null);
 		setTemporarySeries({});
+		setInputAuthorValue('');
 		setAuthors([]);
+		setInputTranslatorValue('');
 		setTranslators([]);
+		setInputPublisherValue('');
 		setPublisher([]);
+		setInputCategoryValue('');
 		setCategoryAddedList([]);
 		setSeries({});
-
-		// reset ô chọn ngôn ngữ
 		setLanguage('');
 		setResetSelect(!resetSelect);
-
 		setState({ ...initialState });
 	};
 
@@ -114,7 +120,7 @@ export default function MainUpload() {
 			}
 
 			// B4: Xử lý hiển thị kết quả
-			toast.success('Đăng tải sách thành công');
+			toast.success('Đang chờ xét duyệt sách. Chúng tôi sẽ thông báo cho bạn sau.');
 		} catch (err) {
 			NotificationError(err);
 		}
@@ -129,8 +135,6 @@ export default function MainUpload() {
 	};
 
 	const onBtnSaveClick = () => {
-		// Thu thập dữ liệu
-
 		// Lấy danh sách categoryIds
 		const categoryIds = [];
 		for (let i = 0; i < categoryAddedList.length; i++) {
@@ -143,6 +147,7 @@ export default function MainUpload() {
 			authorsArr.push({
 				'isUser': true,
 				'authorId': authors[i].id,
+				'authorName': authors[i].name,
 			});
 		}
 
@@ -154,7 +159,7 @@ export default function MainUpload() {
 			originalName: originalName,
 			authors: authorsArr,
 			translators: translators,
-			publisher: publisher,
+			publisher: publisher[0],
 			isbn: isbn,
 			publishDate: publishDate,
 			page: Number(page),
@@ -164,7 +169,8 @@ export default function MainUpload() {
 			tags: [],
 		};
 		if (buttonActive) {
-			handleCreateBook(bookInfo);
+			console.log(bookInfo);
+			// handleCreateBook(bookInfo);
 		}
 	};
 
@@ -267,19 +273,36 @@ export default function MainUpload() {
 						></input>
 					</div>
 					<div className='inp-book'>
-						<AddAndSearchAuthorUploadBook authors={authors} setAuthors={setAuthors} />
+						<AddAndSearchAuthorUploadBook
+							inputAuthorValue={inputAuthorValue}
+							setInputAuthorValue={setInputAuthorValue}
+							authors={authors}
+							setAuthors={setAuthors}
+						/>
 					</div>
 					<div className='inp-book'>
-						<AddAndSearchTranslatorsUploadBook translators={translators} setTranslators={setTranslators} />
+						<AddAndSearchTranslatorsUploadBook
+							inputTranslatorValue={inputTranslatorValue}
+							setInputTranslatorValue={setInputTranslatorValue}
+							translators={translators}
+							setTranslators={setTranslators}
+						/>
 					</div>
 					<div className='inp-book'>
 						<AddAndSearchCategoriesUploadBook
+							inputCategoryValue={inputCategoryValue}
+							setInputCategoryValue={setInputCategoryValue}
 							categoryAddedList={categoryAddedList}
 							setCategoryAddedList={setCategoryAddedList}
 						/>
 					</div>
 					<div className='inp-book'>
-						<AddAndSearchPublisherUploadBook publisher={publisher} setPublisher={setPublisher} />
+						<AddAndSearchPublisherUploadBook
+							inputPublisherValue={inputPublisherValue}
+							setInputPublisherValue={setInputPublisherValue}
+							publisher={publisher}
+							setPublisher={setPublisher}
+						/>
 					</div>
 					<div className='inp-book'>
 						<Row>
