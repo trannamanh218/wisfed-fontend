@@ -13,13 +13,15 @@ import Datepicker from 'react-datepicker';
 import { useDispatch, useSelector } from 'react-redux';
 import { uploadImage } from 'reducers/redux-utils/common';
 import ModalSeries from 'shared/modal-series/ModalSeries';
-import AddAndSearchCategoriesUploadBook from './AddAndSearchCategoriesUploadBook/AddAndSearchCategoriesUploadBook';
-import AddAndSearchAuthorUploadBook from './AddAndSearchAuthorUploadBook/AddAndSearchAuthorUploadBook';
 import { toast } from 'react-toastify';
 import { createBook } from 'reducers/redux-utils/book';
 import { addBookToSeries } from 'reducers/redux-utils/series';
 import { NotificationError } from 'helpers/Error';
 import classNames from 'classnames';
+import AddAndSearchAuthorUploadBook from './AddAndSearchAuthorUploadBook/AddAndSearchAuthorUploadBook';
+import AddAndSearchCategoriesUploadBook from './AddAndSearchCategoriesUploadBook/AddAndSearchCategoriesUploadBook';
+import AddAndSearchPublisherUploadBook from './AddAndSearchPublisherUploadBook/AddAndSearchPublisherUploadBook';
+import AddAndSearchTranslatorsUploadBook from './AddAndSearchTranslatorsUploadBook/AddAndSearchTranslatorsUploadBook';
 
 export default function MainUpload() {
 	const [publishDate, setPublishDate] = useState(null);
@@ -30,6 +32,8 @@ export default function MainUpload() {
 	const [image, setFrontBookCover] = useState('');
 	const [categoryAddedList, setCategoryAddedList] = useState([]);
 	const [authors, setAuthors] = useState([]);
+	const [translators, setTranslators] = useState([]);
+	const [publisher, setPublisher] = useState([]);
 	const [language, setLanguage] = useState('');
 	const [series, setSeries] = useState({});
 
@@ -45,15 +49,12 @@ export default function MainUpload() {
 		name: '',
 		subName: '',
 		originalName: '',
-		translator: '',
-		publisher: '',
 		isbn: '',
 		page: '',
 		description: '',
 	};
 
-	const [{ name, subName, originalName, translator, publisher, isbn, page, description }, setState] =
-		useState(initialState);
+	const [{ name, subName, originalName, isbn, page, description }, setState] = useState(initialState);
 
 	const onChange = e => {
 		const { name, value } = e.target;
@@ -66,14 +67,15 @@ export default function MainUpload() {
 		setFrontBookCover('');
 		setPublishDate(null);
 		setTemporarySeries({});
-
-		// reset ô select
-		setLanguage('');
-		setResetSelect(!resetSelect);
-
+		setAuthors([]);
+		setTranslators([]);
+		setPublisher([]);
+		setCategoryAddedList([]);
 		setSeries({});
 
-		setCategoryAddedList([]);
+		// reset ô chọn ngôn ngữ
+		setLanguage('');
+		setResetSelect(!resetSelect);
 
 		setState({ ...initialState });
 	};
@@ -151,7 +153,7 @@ export default function MainUpload() {
 			subName: subName,
 			originalName: originalName,
 			authors: authorsArr,
-			translator: translator,
+			translators: translators,
 			publisher: publisher,
 			isbn: isbn,
 			publishDate: publishDate,
@@ -268,14 +270,7 @@ export default function MainUpload() {
 						<AddAndSearchAuthorUploadBook authors={authors} setAuthors={setAuthors} />
 					</div>
 					<div className='inp-book'>
-						<label>Dịch giả</label>
-						<input
-							className='input input--non-border'
-							placeholder='Dịch giả'
-							value={translator}
-							name='translator'
-							onChange={onChange}
-						></input>
+						<AddAndSearchTranslatorsUploadBook translators={translators} setTranslators={setTranslators} />
 					</div>
 					<div className='inp-book'>
 						<AddAndSearchCategoriesUploadBook
@@ -284,16 +279,7 @@ export default function MainUpload() {
 						/>
 					</div>
 					<div className='inp-book'>
-						<label>
-							Nhà xuất bản<span className='upload-text-danger'>*</span>
-						</label>
-						<input
-							className='input input--non-border'
-							placeholder='Nhà xuất bản'
-							value={publisher}
-							name='publisher'
-							onChange={onChange}
-						></input>
+						<AddAndSearchPublisherUploadBook publisher={publisher} setPublisher={setPublisher} />
 					</div>
 					<div className='inp-book'>
 						<Row>
