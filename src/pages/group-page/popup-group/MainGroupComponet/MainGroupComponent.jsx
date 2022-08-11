@@ -19,6 +19,7 @@ import {
 	getFillterGroup,
 	leaveGroupUser,
 	unFollowGroupUser,
+	followGroupUser,
 } from 'reducers/redux-utils/group';
 import { NotificationError } from 'helpers/Error';
 import { useDispatch } from 'react-redux';
@@ -100,6 +101,12 @@ function MainGroupComponent({ handleChange, keyChange, data, member, handleUpdat
 
 	const handleFollowGroup = async () => {
 		setToggleFollowGroup(false);
+		try {
+			await dispatch(followGroupUser(data?.id)).unwrap();
+			setShowSelect(false);
+		} catch (err) {
+			NotificationError(err);
+		}
 	};
 
 	const handleChangeSearch = e => {
