@@ -6,7 +6,6 @@ import arrowPrev from 'assets/images/arrow-chevron-back.png';
 import './book-slider.scss';
 import classNames from 'classnames';
 import { memo } from 'react';
-import { Row, Col } from 'react-bootstrap';
 
 const BookSlider = ({
 	list,
@@ -41,9 +40,9 @@ const BookSlider = ({
 								))}
 							</Slider>
 						) : (
-							<Row>
+							<div className='book-show'>
 								{list.map((item, index) => (
-									<Col md={6} sm={12} key={index}>
+									<div key={index}>
 										<BookThumbnail
 											key={index}
 											{...item}
@@ -54,9 +53,9 @@ const BookSlider = ({
 											{...rest}
 											handleClick={handleViewBookDetail}
 										/>
-									</Col>
+									</div>
 								))}
-							</Row>
+							</div>
 						)}
 					</div>
 				</div>

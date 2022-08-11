@@ -21,13 +21,13 @@ const AuthorBook = props => {
 	const userInfo = useSelector(state => state.auth.userInfo);
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
+
 	const handleShare = () => {
 		const newData = {
 			by: valueDate,
 			type: 'topBook',
 			categoryId: topBooksId || null,
 			categoryName: categoryName || null,
-			...data,
 		};
 		if (Storage.getAccessToken()) {
 			navigate('/');

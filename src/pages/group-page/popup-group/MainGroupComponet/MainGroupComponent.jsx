@@ -13,7 +13,13 @@ import ManageJoin from './AminSettings/ManageJoin';
 import PropTypes from 'prop-types';
 import PostWatting from './AminSettings/PostWatting';
 import PopupInviteFriend from '../popupInviteFriend';
-import { getEnjoyGroup, getupdateBackground, getFillterGroup, leaveGroupUser } from 'reducers/redux-utils/group';
+import {
+	getEnjoyGroup,
+	getupdateBackground,
+	getFillterGroup,
+	leaveGroupUser,
+	unFollowGroupUser,
+} from 'reducers/redux-utils/group';
 import { NotificationError } from 'helpers/Error';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
@@ -48,6 +54,7 @@ function MainGroupComponent({ handleChange, keyChange, data, member, handleUpdat
 	const keyRedux = useSelector(state => state.group.key);
 	const { ref: showRef, isVisible: isShow, setIsVisible: setIsShow } = useVisible(false);
 	const joinedGroupPopup = useRef(null);
+	const [toggleFollowGroup, setToggleFollowGroup] = useState(false);
 
 	const enjoyGroup = async () => {
 		setIsFetching(true);
@@ -79,6 +86,20 @@ function MainGroupComponent({ handleChange, keyChange, data, member, handleUpdat
 				setIsFetching(false);
 			}, 2000);
 		}
+	};
+
+	const unFollowGroup = async () => {
+		setToggleFollowGroup(true);
+		try {
+			await dispatch(unFollowGroupUser(data?.id)).unwrap();
+			setShowSelect(false);
+		} catch (err) {
+			NotificationError(err);
+		}
+	};
+
+	const handleFollowGroup = async () => {
+		setToggleFollowGroup(false);
 	};
 
 	const handleChangeSearch = e => {
@@ -251,9 +272,15 @@ function MainGroupComponent({ handleChange, keyChange, data, member, handleUpdat
 									</button>
 									<div className='list__dropdown' style={!showSelect ? { display: 'none' } : {}}>
 										<ul>
-											<li>
-												<CloseIconX /> Bỏ theo dõi
-											</li>
+											{toggleFollowGroup ? (
+												<li onClick={() => handleFollowGroup()}>
+													<CloseIconX /> Theo dõi
+												</li>
+											) : (
+												<li onClick={() => unFollowGroup()}>
+													<CloseIconX /> Bỏ theo dõi
+												</li>
+											)}
 											<li onClick={() => leaveGroup()}>
 												<LogOutGroup /> Rời khỏi nhóm
 											</li>
@@ -278,10 +305,14 @@ function MainGroupComponent({ handleChange, keyChange, data, member, handleUpdat
 						</div>
 					</div>
 
-					<div style={{ position: 'fixed', left: '33%', top: '20%', zIndex: '2000' }}>
+					<div className='modal-popup-container'>
 						{isShow ? (
 							<div className='popup-container'>
-								<PopupInviteFriend handleClose={() => setIsShow(!isShow)} showRef={showRef} />
+								<PopupInviteFriend
+									handleClose={() => setIsShow(!isShow)}
+									showRef={showRef}
+									groupMembers={member}
+								/>
 							</div>
 						) : (
 							''
@@ -342,6 +373,7 @@ MainGroupComponent.propTypes = {
 	data: PropTypes.object,
 	backgroundImage: PropTypes.string,
 	member: PropTypes.array,
+	handleUpdate: PropTypes.func,
 };
 
 export default MainGroupComponent;

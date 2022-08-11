@@ -22,7 +22,6 @@ const MainGroup = () => {
 			NotificationError(err);
 		}
 	};
-	console.log(detailGroup);
 
 	const getListMember = async () => {
 		try {

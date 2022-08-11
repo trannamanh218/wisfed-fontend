@@ -52,7 +52,6 @@ const NotificationModal = ({ setModalNotti, buttonModal, realTime }) => {
 	useEffect(() => {
 		if (getNotifications.length > 0) {
 			const filterFriend = getNotifications.filter(item => item.verb === 'addFriend' && !item.isCheck);
-			console.log(filterFriend);
 			if (filterFriend.length > 0) {
 				setRenderFriend(true);
 			}
@@ -198,7 +197,6 @@ const NotificationModal = ({ setModalNotti, buttonModal, realTime }) => {
 							<Tab eventKey='friendrequest' title='Lời mời kết bạn'>
 								{renderFriend ? (
 									<>
-										{' '}
 										<div className='notificaiton__all__title'>{lengthAddFriend()} lời kết bạn</div>
 										{getNotifications.map(
 											item =>

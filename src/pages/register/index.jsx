@@ -48,6 +48,7 @@ function Register() {
 					setIsLoading(false);
 					setDataModal(newdata);
 					setIsShow(true);
+					localStorage.setItem('registerEmailFill', newData.email);
 				}
 			} catch {
 				setIsLoading(false);

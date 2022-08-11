@@ -145,9 +145,9 @@
 	}
 
 	&__userInfo {
+		margin-left: 5.5rem;
 		display: flex;
 		align-items: center;
-		width: 10%;
 		cursor: pointer;
 		& svg {
 			width: 21px;
@@ -323,6 +323,21 @@
 	}
 }
 
+@media only screen and (max-width: 912px) {
+	.header__search {
+		width: 280px;
+	}
+}
+
+@media only screen and (max-width: 821px) {
+	.header__nav {
+		margin-left: 20px;
+		.notify-icon {
+			padding: 37px 0px;
+		}
+	}
+}
+
 @media only screen and (max-width: 768px) {
 	.header {
 		&__left {
@@ -353,6 +368,9 @@
 					height: 24px;
 				}
 			}
+			.notify-icon {
+				padding: 32px 0;
+			}
 		}
 		&__logo {
 			margin-right: 50px;
@@ -379,47 +397,3 @@
 		}
 	}
 }
-
-// @media only screen and (max-width: 992px) {
-// 	.header {
-// 		flex-wrap: wrap;
-// 	}
-
-// 	.header__left {
-// 		width: 100%;
-// 		margin: 20px 0;
-// 	}
-// }
-
-// @media only screen and (max-width: 420px) {
-// 	.header {
-// 		padding: 0 10px 0;
-// 	}
-
-// 	.header__logo {
-// 		margin-right: 16px;
-// 		margin-bottom: 18px;
-// 	}
-
-// 	.header__search {
-// 		&__input {
-// 			font-size: 12px;
-// 		}
-
-// 		&__icon {
-// 			margin-right: 10px;
-// 		}
-// 	}
-
-// 	.header__nav {
-// 		margin-right: 24px;
-// 	}
-
-// 	.header__nav__item {
-// 		padding: 10px;
-// 	}
-
-// 	.header__avatar {
-// 		display: none;
-// 	}
-// }

@@ -15,7 +15,7 @@ import { getRandomAuthor } from 'reducers/redux-utils/user';
 import { NotificationError } from 'helpers/Error';
 import { useDispatch } from 'react-redux';
 
-const SidebarCategoryDetail = ({ viewCategoryDetail }) => {
+const SidebarCategoryDetail = ({ handleViewCategoryDetail }) => {
 	const { categoryInfo } = useSelector(state => state.category);
 	const [name, setName] = useState();
 	const [authorList, setAuthorList] = useState([]);
@@ -67,7 +67,7 @@ const SidebarCategoryDetail = ({ viewCategoryDetail }) => {
 						className='sidebar-category__topics'
 						title='Chủ đề khác'
 						topics={categoriesList}
-						viewCategoryDetail={viewCategoryDetail}
+						handleViewCategoryDetail={handleViewCategoryDetail}
 						inCategory={true}
 					/>
 					<AuthorSlider title='Tác giả nổi bật' list={authorList} size='lg' />
@@ -83,7 +83,7 @@ const SidebarCategoryDetail = ({ viewCategoryDetail }) => {
 };
 
 SidebarCategoryDetail.propTypes = {
-	viewCategoryDetail: PropTypes.func,
+	handleViewCategoryDetail: PropTypes.func,
 };
 
 export default SidebarCategoryDetail;

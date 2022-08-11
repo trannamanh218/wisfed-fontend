@@ -18,6 +18,7 @@
 		align-items: center;
 	}
 }
+
 .book-list {
 	flex-wrap: wrap;
 	display: flex;
@@ -94,20 +95,6 @@
 	pointer-events: none;
 }
 
-// .popup-group__container {
-// 	width: 100%;
-// 	position: absolute;
-// 	z-index: 1000;
-// 	top: 20px;
-// 	// left: 30%;
-// 	box-shadow: 0px 0px 32px rgba(0, 0, 0, 0.14);
-// 	border-radius: 24px;
-// 	background-color: #fcfcfc;
-// 	max-width: 700px;
-// 	left: 0;
-// 	right: 0;
-// 	margin-left: auto;
-// 	margin-right: auto;
 .upload-image__wrapper {
 	padding: 0;
 }
@@ -115,6 +102,7 @@
 .form-field-wrapper {
 	padding: 25px;
 }
+
 .form-field-name {
 	margin-top: 14px;
 	label {
@@ -159,7 +147,7 @@
 	}
 }
 .form-field-select__transparent,
-.form-field--hastag,
+.form-field--hashtag,
 .form-field-authors,
 .form-field--discription,
 .form-field-select__kind-of-group {

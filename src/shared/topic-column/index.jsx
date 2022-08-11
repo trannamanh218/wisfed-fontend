@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import caretIcon from 'assets/images/caret.png';
 import './topic-column.scss';
 
-const TopicColumn = ({ topics, className, title, viewCategoryDetail, inCategory = false }) => {
+const TopicColumn = ({ topics, className, title, handleViewCategoryDetail, inCategory = false }) => {
 	const [isExpand, setIsExpand] = useState(false);
 
 	let defaultItems;
@@ -45,7 +45,7 @@ const TopicColumn = ({ topics, className, title, viewCategoryDetail, inCategory 
 								className='topic-column__item'
 								key={index}
 								title={topic.name}
-								onClick={() => viewCategoryDetail(topic)}
+								onClick={() => handleViewCategoryDetail(topic)}
 							>
 								<span>{topic.name || topic.tag?.name}</span>
 							</div>
@@ -71,14 +71,14 @@ TopicColumn.defaultProps = {
 	topics: [],
 	className: '',
 	title: 'Chủ đề khác',
-	viewCategoryDetail: () => {},
+	handleViewCategoryDetail: () => {},
 };
 
 TopicColumn.propTypes = {
 	topics: PropTypes.array.isRequired,
 	className: PropTypes.string,
 	title: PropTypes.string,
-	viewCategoryDetail: PropTypes.func,
+	handleViewCategoryDetail: PropTypes.func,
 	inCategory: PropTypes.bool,
 };
 

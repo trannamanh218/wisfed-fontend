@@ -36,6 +36,8 @@ import AuthorBook from 'shared/author-book';
 import ShareUsers from '../modal-share-users';
 import RichTextEditor from 'shared/rich-text-editor';
 import ShareTarget from 'shared/share-target';
+import { POST_TYPE } from 'constants';
+import { shareTargetReadings } from 'reducers/redux-utils/target';
 
 const urlRegex =
 	/https?:\/\/www(\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/g;
@@ -67,15 +69,14 @@ function CreatPostModalContent({
 	const [showUpload, setShowUpload] = useState(false);
 	const [imagesUpload, setImagesUpload] = useState([]);
 	const [validationInput, setValidationInput] = useState('');
-
-	const dispatch = useDispatch();
-
 	const taggedDataPrevious = usePrevious(taggedData);
 	const [valueStar, setValueStar] = useState(0);
 	const [checkProgress, setCheckProgress] = useState();
 	const [showImagePopover, setShowImagePopover] = useState(false);
 	const [buttonActive, setButtonActive] = useState(false);
 	const [content, setContent] = useState('');
+
+	const dispatch = useDispatch();
 
 	const location = useLocation();
 	const UpdateImg = useSelector(state => state.chart.updateImgPost);
@@ -103,6 +104,8 @@ function CreatPostModalContent({
 			setImagesUpload(UpdateImg);
 		}
 	}, []);
+
+	console.log(isShareTarget);
 
 	useEffect(() => {
 		if (!_.isEmpty(bookForCreatePost)) {
@@ -196,6 +199,7 @@ function CreatPostModalContent({
 				return '';
 		}
 	};
+
 	const limitedValue = 5;
 	const handleAddToPost = data => {
 		const newData = { ...taggedData };
@@ -323,7 +327,7 @@ function CreatPostModalContent({
 		}
 
 		try {
-			if (isShare || isSharePosts || isSharePostsAll.length > 0) {
+			if (isShare || isSharePosts || isSharePostsAll.length > 0 || postsData.booksReadCount > 0) {
 				if (isShare) {
 					if (postsData.categoryName !== undefined) {
 						const query = {
@@ -378,6 +382,12 @@ function CreatPostModalContent({
 						};
 						await dispatch(getSharePostInternal(query)).unwrap();
 					}
+				} else if (postsData.booksReadCount > 0) {
+					const data = {
+						current: postsData.booksReadCount,
+						...params,
+					};
+					await dispatch(shareTargetReadings(data)).unwrap();
 				} else {
 					const query = {
 						by: postsData.by,
@@ -540,7 +550,9 @@ function CreatPostModalContent({
 						<CloseX />
 					</div>
 					<h5>
-						{isShare || isSharePosts || isSharePostsAll.length > 0 ? 'Chia sẻ bài viết' : 'Tạo bài viết'}
+						{isShare || isSharePosts || isSharePostsAll.length || postsData?.booksReadCount
+							? 'Chia sẻ bài viết'
+							: 'Tạo bài viết'}
 					</h5>
 					<button className='creat-post-modal-content__main__close' onClick={hideCreatePostModal}>
 						<CloseX />
@@ -582,11 +594,6 @@ function CreatPostModalContent({
 										</>
 									)}
 								</p>
-								{/* <ShareModeComponent
-									list={shareModeList}
-									shareMode={shareMode}
-									setShareMode={setShareMode}
-								/> */}
 							</div>
 						</div>
 						<div
@@ -612,6 +619,7 @@ function CreatPostModalContent({
 								removeTaggedItem={removeTaggedItem}
 								type='addCategory'
 							/>
+
 							{postsData.type === 'topQuote' && (
 								<div className='post__title__share__rank'>
 									<span className='number__title__rank'># Top {postsData.rank} quotes </span>{' '}
@@ -636,6 +644,7 @@ function CreatPostModalContent({
 									<IconRanks />
 								</div>
 							)}
+
 							{(isShare || isSharePosts || isSharePostsAll === 'shareTopBook') && (
 								<div
 									className={
@@ -645,17 +654,18 @@ function CreatPostModalContent({
 									}
 								>
 									{isShare && <PostQuotes postsData={postsData} isShare={isShare} />}
-									{isSharePosts && postsData.verb !== 'shareTargetRead' && (
-										<Post postInformations={postsData} showModalCreatPost={showModalCreatPost} />
+									{isSharePosts && (
+										<Post
+											postInformations={postsData}
+											showModalCreatPost={showModalCreatPost}
+											type={POST_TYPE}
+										/>
 									)}
 									{isSharePostsAll === 'shareTopBook' && <AuthorBook data={postsData} />}
-									{postsData.booksReadCount > 0 && postsData.verb === 'shareTargetRead' && (
-										<ShareTarget postsData={postsData} />
-									)}
-									{postsData.verb === 'shareTargetRead' && <Post postInformations={postsData} />}
 								</div>
 							)}
 							{isSharePostsAll === 'shareTopUser' && <ShareUsers postsData={postsData} />}
+							{postsData.booksReadCount > 0 && <ShareTarget postsData={postsData} />}
 
 							{!_.isEmpty(taggedData.addBook) || showUpload ? (
 								<>

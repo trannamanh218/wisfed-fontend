@@ -1,0 +1,50 @@
+.reading-container {
+	border-radius: 10px;
+	height: 125px;
+	background-color: #fbf7f2;
+	position: relative;
+	.linear-progress {
+		width: 390px;
+		height: 10px !important;
+		margin-bottom: 10px;
+	}
+
+	& img {
+		width: 100%;
+		height: 100%;
+	}
+}
+.reading-target__process__popup {
+	position: absolute;
+	margin-top: 25px;
+	margin-left: 20px;
+	top: 5px;
+	left: 0;
+	display: flex;
+	.medal {
+		width: 30px;
+		height: 30px;
+		margin-left: 160px;
+		margin-top: 20px;
+	}
+	.reading-target__user__img {
+		width: 70px;
+		height: 70px;
+	}
+	.reading-target__content__bottom__popup {
+		height: 10px;
+		width: 225px;
+	}
+	.reading-target__content__popup {
+		margin-left: 15px;
+		margin-top: 5px;
+	}
+	.modal-pecent {
+		color: #a5a5a5;
+	}
+}
+.reading-target__content__top__popup {
+	font-size: 15px;
+	font-weight: 600;
+	margin-bottom: 10px;
+}

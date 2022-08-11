@@ -23,6 +23,7 @@ import { useModal } from 'shared/hooks';
 import FormCheckGroup from 'shared/form-check-group';
 import Button from 'shared/button';
 import searchreview from 'assets/images/search-review.png';
+import { REVIEW_TYPE } from 'constants';
 
 const ReviewTab = ({ currentTab }) => {
 	const filterOptions = [
@@ -307,7 +308,7 @@ const ReviewTab = ({ currentTab }) => {
 					<SearchField
 						value={inputSearch}
 						handleChange={ChangeSearch}
-						placeholder='Tìm kiếm theo Hastag, tên người review ...'
+						placeholder='Tìm kiếm theo Hashtag, tên người review ...'
 					/>
 				</div>
 				{currentTab === 'reviews' && reviewList?.length ? (
@@ -320,7 +321,7 @@ const ReviewTab = ({ currentTab }) => {
 					>
 						{reviewList.map(item => (
 							<Fragment key={`post-${item.id}`}>
-								<Post className='post-container--review' postInformations={item} inReviews={true} />
+								<Post className='post-container--review' postInformations={item} type={REVIEW_TYPE} />
 								<hr />
 							</Fragment>
 						))}

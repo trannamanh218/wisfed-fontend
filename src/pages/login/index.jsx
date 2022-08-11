@@ -26,6 +26,7 @@ function Login() {
 	const [isPublic, setIsPublic] = useState(false);
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
+	const [registerEmailFill, setRegisterEmailFill] = useState('');
 
 	const handleSubmit = async data => {
 		try {
@@ -57,6 +58,10 @@ function Login() {
 	useEffect(() => {
 		if (Storage.getAccessToken()) {
 			navigate('/');
+		}
+		const registerEmailFillLocalStorage = localStorage.getItem('registerEmailFill');
+		if (registerEmailFillLocalStorage) {
+			setRegisterEmailFill(registerEmailFillLocalStorage);
 		}
 	}, []);
 
@@ -105,12 +110,18 @@ function Login() {
 				<div>
 					<span className='login__login-box__title'>Đăng nhập và Khám phá</span>
 				</div>
-				<div className='login-facebook'>
-					<FaceBookIcon className='login__fbIcon' /> <button>Đăng nhập bằng Facebook</button>
-				</div>
-				<div className='login-gmail'>
-					<GmailIcon className='GmailIcon' /> <button>Đăng nhập bằng Gmail</button>
-				</div>
+				<a href='https://wisfeed.tecinus.vn/api/v1/auth/facebook'>
+					<div className='login-facebook'>
+						<FaceBookIcon className='login__fbIcon' />
+						<button>Đăng nhập bằng Facebook</button>
+					</div>
+				</a>
+				<a href='https://wisfeed.tecinus.vn/api/v1/auth/google'>
+					<div className='login-gmail'>
+						<GmailIcon className='GmailIcon' />
+						<button>Đăng nhập bằng Gmail</button>
+					</div>
+				</a>
 				<hr style={{ opacity: '0.05' }} />
 				<div>
 					<div>
@@ -135,7 +146,7 @@ function Login() {
 												type='email'
 												placeholder='Email'
 												{...field}
-												value={field.value}
+												value={registerEmailFill || field.value}
 												autoComplete='false'
 												style={meta.error ? { width: '93%' } : { width: '100%' }}
 											/>

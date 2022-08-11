@@ -6,7 +6,7 @@ import './style.scss';
 import { getFriendList } from 'reducers/redux-utils/user';
 import { useDispatch, useSelector } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
-import group, { getInviteFriend } from 'reducers/redux-utils/group';
+import { getInviteFriend } from 'reducers/redux-utils/group';
 import { useParams } from 'react-router-dom';
 
 const PopupInviteFriend = ({ handleClose, showRef, groupMembers }) => {
@@ -25,15 +25,8 @@ const PopupInviteFriend = ({ handleClose, showRef, groupMembers }) => {
 			const actionGetList = await dispatch(getFriendList(params)).unwrap();
 			const friendList = actionGetList.rows;
 
-			// Lọc ra danh sách bạn bè không có trong group
-			const newArr = friendList;
-			for (let i = 0; i < newArr.length; i++) {
-				for (let y = 0; y < groupMembers.length; y++) {
-					if (newArr[i].id === groupMembers[y].id) {
-						newArr.splice(i, 1);
-					}
-				}
-			}
+			// Lọc ra danh sách bạn bè không có trong group (lấy code trên mạng chứ hiểu quái gì đâu)
+			const newArr = friendList.filter(({ id: id1 }) => !groupMembers.some(({ id: id2 }) => id2 === id1));
 
 			// Lọc danh sách bạn bè theo ô search
 			setListFriendsNotInGroup(
@@ -95,7 +88,7 @@ const PopupInviteFriend = ({ handleClose, showRef, groupMembers }) => {
 			<div className='main-action'>
 				<div className='list-friend'>
 					<h4>Danh sách bạn bè</h4>
-					{listFriendsNotInGroup?.map(item => {
+					{listFriendsNotInGroup.map(item => {
 						return (
 							<div className='friend-item' key={item.id}>
 								<img

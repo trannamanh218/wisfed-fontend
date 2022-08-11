@@ -86,7 +86,7 @@ const SidebarUpload = ({ userInfo, currentUserInfo, handleViewBookDetail, shelve
 
 SidebarUpload.propTypes = {
 	currentUserInfo: PropTypes.object,
-	viewCategoryDetail: PropTypes.func,
+	handleViewCategoryDetail: PropTypes.func,
 	handleViewBookDetail: PropTypes.any,
 	shelveGroupName: PropTypes.string,
 	userInfo: PropTypes.object,

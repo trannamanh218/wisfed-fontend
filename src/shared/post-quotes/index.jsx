@@ -2,12 +2,9 @@ import './post-quotes.scss';
 import UserAvatar from 'shared/user-avatar';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
-import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-const PostQuotes = ({ postsData, isShare }) => {
-	const { isSharePosts } = useSelector(state => state.post);
-
+const PostQuotes = ({ postsData }) => {
 	const renderAuthorAndbooksName = () => {
 		if (postsData.book?.name) {
 			return `${postsData.book?.name}`;
@@ -40,8 +37,6 @@ const PostQuotes = ({ postsData, isShare }) => {
 
 	return (
 		!_.isEmpty(postsData) && (
-			// Sửa lỗi đặt className là true hoặc false
-			// <div className={!isShare && !isSharePosts && 'creat-post-modal-content__main__share-container'}>
 			<div className='creat-post-modal-content__main__share-container'>
 				<div className='post__quotes__container'>
 					<div className='quote-card' style={generateBackgroundColorQuotes()}>

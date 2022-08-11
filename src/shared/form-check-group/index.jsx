@@ -15,7 +15,6 @@ const FormCheckGroup = ({ type, handleChange, checked, ...rest }) => {
 					name={name}
 					value={data.value}
 					onChange={() => handleChange(data.value)}
-					// defaultChecked={data.value === defaultValue}
 					checked={checked}
 				/>
 				<Form.Check.Label className='form-check-label--custom'>{data.title}</Form.Check.Label>

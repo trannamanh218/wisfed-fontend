@@ -32,10 +32,39 @@
 		color: #0576f0;
 	}
 }
+
+.modal-popup-container {
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	z-index: 2000;
+}
+
 .main-action {
 	margin-top: 40px;
 	display: flex;
 	justify-content: space-around;
+	max-height: 50vh;
+	overflow-y: auto;
+	&::-webkit-scrollbar {
+		width: 8px;
+	}
+
+	/* Track */
+	&::-webkit-scrollbar-track {
+		background: #f1f1f1;
+		border-radius: 8px;
+	}
+
+	/* Handle */
+	&::-webkit-scrollbar-thumb {
+		background: rgba(#606060, 0.3);
+		border-radius: 8px;
+		&:hover {
+			background: rgba(#606060, 0.2);
+		}
+	}
 }
 
 .friend-item {

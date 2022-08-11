@@ -9,13 +9,12 @@ import {
 	HomeIcon,
 	LogOutIcon,
 	ProfileIcon,
-	ArrowDownIcon,
+	// ArrowDownIcon,
 	GroupFillIcon,
 	FriendsFillIcon,
 	FriendsIcon,
 	CategoryFillIcon,
 	LogoNonText,
-	Hamburger,
 } from 'components/svg';
 import SearchIcon from 'assets/icons/search.svg';
 import classNames from 'classnames';
@@ -37,7 +36,6 @@ import _ from 'lodash';
 import { patchNewNotification, updateIsNewNotificationUserInfo } from 'reducers/redux-utils/auth';
 import { handleRefreshNewfeed } from 'reducers/redux-utils/activity';
 import Request from 'helpers/Request';
-import HamburgerModal from './hamburger-modal/HamburgerModal';
 
 const Header = () => {
 	const { ref: showRef, isVisible: isShow, setIsVisible: setIsShow } = useVisible(false);
@@ -48,7 +46,6 @@ const Header = () => {
 	const [userLogin, setUserLogin] = useState(false);
 	const [activeNotificaiton, setActiveNotification] = useState(false);
 	const [realTime, setRealTime] = useState(false);
-	const [isHamburgerShow, setIsHamburgerShow] = useState(false);
 
 	const buttonModal = useRef(null);
 	const userOptions = useRef(null);
@@ -145,9 +142,7 @@ const Header = () => {
 
 	const tollgleModaleInfoUser = () => {
 		setModalInforUser(!modalInforUser);
-		if (Storage.getAccessToken()) {
-			return;
-		} else {
+		if (!Storage.getAccessToken()) {
 			navigate(`/login`);
 		}
 	};
@@ -204,6 +199,14 @@ const Header = () => {
 		window.scrollTo(0, 0);
 	};
 
+	const handlePopup = () => {
+		if (userLogin) {
+			setIsShow(true);
+		} else {
+			handleUserLogin();
+		}
+	};
+
 	return (
 		<div className='header'>
 			<div className='header__left'>
@@ -222,7 +225,7 @@ const Header = () => {
 					<input
 						className='header__search__input'
 						placeholder='Tìm kiếm trên Wisfeed'
-						onClick={() => setIsShow(true)}
+						onClick={handlePopup}
 						disabled={isShow}
 						value={getSlugResult || ''}
 						onChange={() => {}}
@@ -230,19 +233,6 @@ const Header = () => {
 				</div>
 				<div className='header-search-small' onClick={() => setIsShow(true)}>
 					<img className='header__search__icon' src={SearchIcon} alt='search-icon' />
-				</div>
-
-				{/* Modal menu hamburger */}
-				<HamburgerModal
-					isHamburgerShow={isHamburgerShow}
-					setIsHamburgerShow={setIsHamburgerShow}
-					userInfo={userInfo}
-				/>
-
-				<div className='header-hamburger-small' onClick={() => setIsHamburgerShow(!isHamburgerShow)}>
-					<div className='header-search-small__hamburger'>
-						<Hamburger />
-					</div>
 				</div>
 
 				{/* Modal tìm kiếm */}
@@ -263,8 +253,11 @@ const Header = () => {
 						{activeLink === `/shelves/${userInfo.id}` ? <BookFillIcon /> : <BookIcon />}
 					</Link>
 				</li>
-				<li className={classNames('header__nav__item', { active: activeLink === '/group' })}>
-					<Link className='header__nav__link' to='/group'>
+				<li
+					onClick={handleUserLogin}
+					className={classNames('header__nav__item', { active: activeLink === '/group' })}
+				>
+					<Link className='header__nav__link' to={userLogin && '/group'}>
 						{activeLink === '/group' ? <GroupFillIcon /> : <GroupIcon />}
 					</Link>
 				</li>
@@ -312,9 +305,9 @@ const Header = () => {
 						onError={e => e.target.setAttribute('src', `${defaultAvatar}`)}
 						alt='avatar'
 					/>
-					<span id='arrow-down-icon'>
+					{/* <span id='arrow-down-icon'>
 						<ArrowDownIcon />
-					</span>
+					</span> */}
 				</div>
 				{modalInforUser && localStorage.getItem('accessToken') && (
 					<ul className='header__option-info'>
