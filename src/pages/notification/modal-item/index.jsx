@@ -115,27 +115,32 @@ const ModalItem = ({ item, setModalNotti, getNotifications, setGetNotifications,
 				<UserAvatar size='mm' source={item.createdBy?.avatarImage} />
 				<div className='notificaiton__all__layout__status'>
 					<div className='notificaiton__all__infor'>
-						<p dangerouslySetInnerHTML={{ __html: item?.message }}></p>
-						{item.verb !== 'follow' &&
-							item.verb !== 'requestGroup' &&
-							item.verb !== 'commentGroupPost' &&
-							item.verb !== 'commentQuote' &&
-							item.verb !== 'inviteGroup' &&
-							item.verb !== 'mention' && (
-								<>
-									<span>
-										{item.createdBy?.fullName ? (
-											item.createdBy.fullName
-										) : (
-											<>
-												<span> {item.createdBy?.firstName}</span>
-												<span> {item.createdBy?.lastName}</span>
-											</>
-										)}
-									</span>{' '}
-									{renderMessage(item)}
-								</>
-							)}
+						{item.message ? (
+							<p dangerouslySetInnerHTML={{ __html: item?.message }}></p>
+						) : (
+							<>
+								{item.verb !== 'follow' &&
+									item.verb !== 'requestGroup' &&
+									item.verb !== 'commentGroupPost' &&
+									item.verb !== 'commentQuote' &&
+									item.verb !== 'inviteGroup' &&
+									item.verb !== 'mention' && (
+										<>
+											<span>
+												{item.createdBy?.fullName ? (
+													item.createdBy.fullName
+												) : (
+													<>
+														<span> {item.createdBy?.firstName}</span>
+														<span> {item.createdBy?.lastName}</span>
+													</>
+												)}
+											</span>{' '}
+											{renderMessage(item)}
+										</>
+									)}
+							</>
+						)}
 					</div>
 					<div
 						className={
