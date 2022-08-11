@@ -3,7 +3,12 @@ import FilterPane from 'shared/filter-pane';
 import SearchField from 'shared/search-field';
 import Post from 'shared/post';
 import FitlerOptions from 'shared/filter-options';
-import { getReviewsBook, getReviewsBookByFollowers, getReviewsBookByFriends } from 'reducers/redux-utils/book';
+import {
+	getReviewsBook,
+	getReviewsBookByFollowers,
+	getReviewsBookByFriends,
+	createReviewBook,
+} from 'reducers/redux-utils/book';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
@@ -18,6 +23,7 @@ import { useModal } from 'shared/hooks';
 import FormCheckGroup from 'shared/form-check-group';
 import Button from 'shared/button';
 import { REVIEW_TYPE } from 'constants';
+import searchreview from 'assets/images/search-review.png';
 
 const ReviewTab = ({ currentTab }) => {
 	const filterOptions = [
@@ -27,25 +33,11 @@ const ReviewTab = ({ currentTab }) => {
 	];
 
 	const radioOptions = [
-		{
-			title: 'Review nhiều like nhất',
-		},
-		{
-			value: 'lastest',
-			title: 'Mới nhất',
-		},
-		{
-			value: 'oldest',
-			title: 'Cũ nhất',
-		},
-		{
-			value: 'follow',
-			title: 'Có nhiều Follow nhất',
-		},
-		{
-			value: 'review',
-			title: 'Có nhiều Review nhất',
-		},
+		{ value: 'mostLiked', title: 'Review nhiều like nhất' },
+		{ value: 'lastest', title: 'Mới nhất' },
+		{ value: 'oldest', title: 'Cũ nhất' },
+		{ value: 'follow', title: 'Có nhiều Follow nhất' },
+		{ value: 'review', title: 'Có nhiều Review nhất' },
 	];
 	const checkBoxStarOptions = [
 		{
@@ -73,13 +65,16 @@ const ReviewTab = ({ currentTab }) => {
 	const [currentOption, setCurrentOption] = useState(filterOptions[0]);
 	const [reviewList, setReviewList] = useState([]);
 	const [reviewCount, setReviewCount] = useState(0);
-	const [hasMore, setHasMore] = useState(true);
+	const [hasMore, setHasMore] = useState(false);
 	const { modalOpen, toggleModal } = useModal(false);
-	const [sortValue, setSortValue] = useState(null);
+	const [sortValue, setSortValue] = useState('mostLiked');
 	const [checkedStarArr, setCheckedStarArr] = useState([]);
 	const [directionSort, setDirectionSort] = useState('DESC');
 	const [propertySort, setPropertySort] = useState('like');
 	const [inputSearch, setInputSearch] = useState('');
+	const [topUser, setTopUser] = useState('');
+	const [reviewBook, setReviewBook] = useState('');
+	const [reviewTurn, setReviewTurn] = useState(false);
 
 	const callApiStart = useRef(10);
 	const callApiPerPage = useRef(10);
@@ -91,32 +86,40 @@ const ReviewTab = ({ currentTab }) => {
 
 	useEffect(() => {
 		if (currentTab === 'reviews') {
-			setHasMore(true);
 			callApiStart.current = 10;
 			getReviewListFirstTime();
 		}
-	}, [currentOption, currentTab, directionSort, propertySort, inputSearch]);
+	}, [currentOption, currentTab, directionSort, propertySort, inputSearch, reviewTurn]);
 
 	const getReviewListFirstTime = async () => {
 		try {
-			let newarr;
-			if (checkedStarArr.length > 0) {
-				newarr = checkedStarArr;
+			let params;
+			if (sortValue === 'rate') {
+				params = {
+					start: 0,
+					limit: callApiPerPage.current,
+					sort: JSON.stringify([{ direction: directionSort, property: propertySort }]),
+					filter: JSON.stringify([
+						{ operator: 'eq', value: bookId, property: 'bookId' },
+						// { operator: 'eq', value: bookInfo.page, property: 'curProgress' },
+						{ operator: 'in', value: checkedStarArr, property: 'rate' },
+					]),
+					// topUser: topUser,
+					searchUser: inputSearch,
+				};
 			} else {
-				newarr = ['1', '2', '3', '4', '5'];
+				params = {
+					start: 0,
+					limit: callApiPerPage.current,
+					sort: JSON.stringify([{ direction: directionSort, property: propertySort }]),
+					filter: JSON.stringify([
+						{ operator: 'eq', value: bookId, property: 'bookId' },
+						// { operator: 'eq', value: bookInfo.page, property: 'curProgress' },
+					]),
+					// topUser: topUser,
+					searchUser: inputSearch,
+				};
 			}
-
-			const params = {
-				start: 0,
-				limit: callApiPerPage.current,
-				sort: JSON.stringify([{ direction: directionSort, property: propertySort }]),
-				filter: JSON.stringify([
-					{ operator: 'eq', value: bookId, property: 'bookId' },
-					{ operator: 'eq', value: bookInfo.page, property: 'curProgress' },
-					{ operator: 'in', value: newarr, property: 'rate' },
-				]),
-				topUser: sortValue,
-			};
 
 			let response;
 			if (currentOption.value === 'allReviews') {
@@ -138,20 +141,59 @@ const ReviewTab = ({ currentTab }) => {
 			NotificationError(err);
 		}
 	};
+
 	const ChangeSearch = e => {
 		setInputSearch(e.target.value);
 	};
+
+	const postReviewList = async () => {
+		const params = {
+			bookId: parseInt(bookId),
+
+			content: reviewBook,
+		};
+
+		try {
+			await dispatch(createReviewBook(params));
+		} catch (err) {
+			NotificationError(err);
+		}
+	};
+
 	const getReviewList = async () => {
 		try {
-			const params = {
-				start: callApiStart.current,
-				limit: callApiPerPage.current,
-				sort: JSON.stringify([{ direction: directionSort, property: propertySort }]),
-				filter: JSON.stringify([
-					{ operator: 'eq', value: bookId, property: 'bookId' },
-					{ operator: 'eq', value: bookInfo.page, property: 'curProgress' },
-				]),
-			};
+			let params = {};
+			if (
+				sortValue === 'oldest' ||
+				sortValue === 'lastest' ||
+				sortValue === 'mostLiked' ||
+				sortValue === 'rate'
+			) {
+				params = {
+					start: 0,
+					limit: callApiPerPage.current,
+					sort: JSON.stringify([{ direction: directionSort, property: propertySort }]),
+					filter: JSON.stringify([
+						{ operator: 'eq', value: bookId, property: 'bookId' },
+						// { operator: 'eq', value: bookInfo.page, property: 'curProgress' },
+						{ operator: 'in', value: checkedStarArr, property: 'rate' },
+					]),
+					searchUser: inputSearch,
+				};
+			} else {
+				params = {
+					start: 0,
+					limit: callApiPerPage.current,
+					sort: JSON.stringify([{ direction: directionSort, property: propertySort }]),
+					filter: JSON.stringify([
+						{ operator: 'eq', value: bookId, property: 'bookId' },
+						// { operator: 'eq', value: bookInfo.page, property: 'curProgress' },
+						{ operator: 'in', value: ['1', '2', '3', '4', '5'], property: 'rate' },
+					]),
+					topUser: topUser,
+					searchUser: inputSearch,
+				};
+			}
 
 			let response;
 			if (currentOption.value === 'allReviews') {
@@ -177,9 +219,15 @@ const ReviewTab = ({ currentTab }) => {
 		callApiStart.current = 0;
 		setCurrentOption(item);
 	};
+	const handleKeyPress = e => {
+		if (e.key === 'Enter') {
+			setReviewTurn(!reviewTurn);
+			postReviewList();
+			setReviewBook('');
+		}
+	};
 
 	const onBtnConfirmClick = () => {
-		getReviewListFirstTime();
 		switch (sortValue) {
 			case 'oldest':
 				setPropertySort('createdAt');
@@ -193,32 +241,56 @@ const ReviewTab = ({ currentTab }) => {
 				setPropertySort('like');
 				setDirectionSort('DESC');
 				break;
+			case 'follow':
+				setTopUser('follow');
+				break;
+			case 'review':
+				setTopUser('review');
+				break;
+			case 'rate':
+				getReviewListFirstTime();
+				break;
 			default:
 			//
 		}
 	};
+	useEffect(() => {
+		getReviewList();
+	}, [topUser]);
 
 	const handleChange = data => {
 		setSortValue(data);
 	};
 
+	const changeReview = e => {
+		setReviewBook(e.target.value);
+	};
+
 	const handleChangeStar = data => {
-		const newArr = [...checkedStarArr];
-		if (!newArr.length) {
-			newArr.push(data);
-		} else {
-			if (!newArr.includes(data)) {
-				newArr.push(data);
-			} else {
-				newArr.splice(newArr.indexOf(data), 1);
-			}
+		if (checkedStarArr.length < 1) {
+			setCheckedStarArr([...checkedStarArr, data]);
+		} else if (!checkedStarArr.includes(data)) {
+			setCheckedStarArr([...checkedStarArr, data]);
+		} else if (checkedStarArr.includes(data)) {
+			const newArr = checkedStarArr.filter(item => item !== data);
+			setCheckedStarArr(newArr);
 		}
-		sortValue;
-		setCheckedStarArr(newArr);
+		setSortValue('rate');
 	};
 
 	return (
 		<div className='review-tab'>
+			<div className='search-review'>
+				<img className='search-review__icon' src={searchreview} />
+				<input
+					className='search-review__input'
+					placeholder='Bạn review cuốn sách này thế nào'
+					autoFocus
+					onChange={changeReview}
+					value={reviewBook}
+					onKeyPress={handleKeyPress}
+				/>
+			</div>
 			<FilterPane
 				title='Bài review'
 				subtitle={`(${reviewCount} đánh giá)`}

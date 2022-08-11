@@ -191,9 +191,34 @@ div[contenteditable='true'] {
 	.sidebar-category {
 		width: 210px;
 	}
+	.mainContainer__main {
+		.main-confirm-my-book {
+			margin-right: 50px;
+		}
+	}
 }
 @media only screen and (max-width: 1024px) {
 	.sidebar-category {
 		width: 155px;
+	}
+	.mainContainer__main {
+		.main-confirm-my-book__book-info-content {
+			width: 420px;
+		}
+		.main-confirm-my-book {
+			margin-right: 20px;
+		}
+	}
+	.mainContainer__right {
+		.dualColumn {
+			width: 200px;
+		}
+	}
+}
+@media only screen and (max-width: 820px) {
+	.mainContainer__main {
+		.main-confirm-my-book {
+			margin-right: 0px;
+		}
 	}
 }
