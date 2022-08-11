@@ -376,11 +376,9 @@ function Post({ postInformations, type }) {
 				<div className='post__title__share__rank'>
 					<span className='number__title__rank'># Top {postData.originId.rank} </span>
 					<span className='title__rank'>
-						{postData.info.category
-							? `  cuốn sách tốt nhất ${(
-									<p style={{ textDecoration: 'underline' }}>{}</p>
-							  )} theo ${handleTime()} `
-							: `   cuốn sách tốt nhất theo ${handleTime()} `}
+						{`  cuốn sách tốt nhất ${
+							postData.info.category ? ` thuộc ${postData.info.category.name}` : ''
+						} theo ${handleTime()} `}
 					</span>
 					<IconRanks />
 				</div>

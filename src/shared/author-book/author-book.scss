@@ -18,8 +18,14 @@
 		display: flex;
 		flex-direction: column;
 		justify-content: space-between;
+		overflow: hidden;
 		&__book-name-and-authors {
 			.author-book__info__book-name {
+				a {
+					white-space: nowrap;
+					overflow: hidden;
+					text-overflow: ellipsis;
+				}
 				display: flex;
 				justify-content: space-between;
 				align-items: flex-end;

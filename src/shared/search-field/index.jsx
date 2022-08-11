@@ -22,6 +22,7 @@ const SearchField = ({
 				onChange={handleChange}
 				value={value}
 				onKeyDown={onKeyDown}
+				autoFocus
 			/>
 		</div>
 	);

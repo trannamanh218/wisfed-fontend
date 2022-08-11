@@ -7,7 +7,6 @@ import SidebarUpload from './sidebar-upload/SidebarUpload';
 import { getBookDetail } from 'reducers/redux-utils/book';
 import RouteLink from 'helpers/RouteLink';
 import { NotificationError } from 'helpers/Error';
-import Storage from 'helpers/Storage';
 import { handleShelvesGroup } from 'api/shelvesGroup.hooks';
 import './UploadBook.scss';
 
@@ -19,9 +18,6 @@ export default function UploadBook() {
 	const { shelveGroupName } = handleShelvesGroup(userInfo.id);
 
 	useEffect(() => {
-		if (!Storage.getAccessToken()) {
-			navigate('/');
-		}
 		window.scroll(0, 0);
 		setCurrentUserInfo(userInfo);
 	}, [userInfo]);
