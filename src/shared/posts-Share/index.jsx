@@ -10,7 +10,6 @@ import PostBook from 'shared/post-book';
 import UserAvatar from 'shared/user-avatar';
 import PreviewLink from 'shared/preview-link/PreviewLink';
 import ReactRating from 'shared/react-rating';
-import PostQuotes from 'shared/post-quotes';
 import { Link } from 'react-router-dom';
 import Play from 'assets/images/play.png';
 import { useSelector } from 'react-redux';
@@ -18,13 +17,55 @@ import { useSelector } from 'react-redux';
 const urlRegex =
 	/https?:\/\/www(\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/g;
 
-const PostsShare = ({ postData }) => {
+const PostShare = ({ postData, inCreatePost = false }) => {
 	const [videoId, setVideoId] = useState('');
-
-	const { isSharePosts, isShare } = useSelector(state => state.post);
 
 	const directUrl = url => {
 		window.open(url);
+	};
+
+	const withFriends = paramInfo => {
+		if (paramInfo.length === 1) {
+			return (
+				<span>
+					<span style={{ fontWeight: '500' }}> cùng với </span>
+					<Link to={`/profile/${paramInfo[0].userId}`}>
+						{paramInfo[0].users.fullName ||
+							paramInfo[0].users.firstName + ' ' + paramInfo[0].users.lastName}
+					</Link>
+					<span style={{ fontWeight: '500' }}>.</span>
+				</span>
+			);
+		} else if (paramInfo.length === 2) {
+			return (
+				<span>
+					<span style={{ fontWeight: '500' }}> cùng với </span>
+					<Link to={`/profile/${paramInfo[0].userId}`}>
+						{paramInfo[0].users.fullName ||
+							paramInfo[0].users.firstName + ' ' + paramInfo[0].users.lastName}
+					</Link>
+					<span style={{ fontWeight: '500' }}> và </span>
+					<Link to={`/profile/${paramInfo[1].userId}`}>
+						{paramInfo[1].users.fullName ||
+							paramInfo[1].users.firstName + ' ' + paramInfo[1].users.lastName}
+					</Link>
+					<span style={{ fontWeight: '500' }}>.</span>
+				</span>
+			);
+		} else {
+			return (
+				<span>
+					<span style={{ fontWeight: '500' }}> cùng với </span>
+					<Link to={`/profile/${paramInfo[0].users.id}`}>
+						{paramInfo[0].users.fullName ||
+							paramInfo[0].users.firstName + ' ' + paramInfo[0].users.lastName}
+					</Link>
+					<span style={{ fontWeight: '500' }}> và </span>
+					{paramInfo.length - 1}
+					<span style={{ fontWeight: '500' }}> người khác.</span>
+				</span>
+			);
+		}
 	};
 
 	useEffect(() => {
@@ -54,138 +95,114 @@ const PostsShare = ({ postData }) => {
 	};
 
 	return (
-		<div
-			className={classNames('post__main__container', {
-				'post__custom__main__container': isSharePosts,
-			})}
-		>
-			<div
-				className={classNames('post__container', {
-					'post__custom': isSharePosts,
-				})}
-			>
-				<div className='post__user-status'>
-					<UserAvatar
-						data-testid='post__user-avatar'
-						className='post__user-status__avatar'
-						source={
-							postData.sharePost
-								? postData.sharePost.createdBy.avatarImage
-								: postData?.createdBy?.avatarImage
-						}
-					/>
-
-					<div className='post__user-status__name-and-post-time-status'>
-						<div data-testid='post__user-name' className='post__user-status__name'>
-							{postData.sharePost
-								? postData.sharePost.createdBy.fullName || (
-										<>
-											{postData.sharePost.createdBy.firstName}{' '}
-											{postData.sharePost.createdBy.lastName}
-										</>
-								  )
-								: postData?.createdBy?.fullName || postData?.user?.fullName || 'Ẩn danh'}
-
-							{postData?.group && (
-								<>
-									<Link to={`/group/${postData?.group?.id}`}>
-										<span className='img-share__group'>
-											<img className='post__user-icon' src={Play} alt='' /> {postData.group?.name}
-										</span>
-									</Link>
-								</>
-							)}
-						</div>
-						<div className='post__user-status__post-time-status'>
-							<span>{calculateDurationTime(postData.time || postData.createdAt)}</span>
-							<>
-								{(postData?.book || postData.sharePost?.book) && (
-									<div className='post__user-status__subtitle'>
-										<span>Cập nhật tiến độ đọc sách</span>
-										<div className='post__user-status__post-time-status__online-dot'></div>
-										<span>Xếp hạng</span>
-										<ReactRating
-											readonly={true}
-											initialRating={
-												postData?.book?.actorRating?.star
-													? postData?.book?.actorRating?.star
-													: 0
-											}
-										/>
-									</div>
-								)}
-							</>
-						</div>
+		<div className='post__container'>
+			<div className='post__user-status'>
+				<UserAvatar
+					data-testid='post__user-avatar'
+					className='post__user-status__avatar'
+					source={postData.sharePost?.createdBy?.avatarImage}
+				/>
+				<div className='post__user-status__name-and-post-time-status'>
+					<div data-testid='post__user-name' className='post__user-status__name'>
+						{postData.sharePost.createdBy.fullName ||
+							postData.sharePost.createdBy.firstName + ' ' + postData.sharePost.createdBy.lastName ||
+							'Ẩn danh'}
+						{postData?.group && (
+							<Link to={`/group/${postData.group.id}`}>
+								<span className='img-share__group'>
+									<img className='post__user-icon' src={Play} alt='' /> {postData.group.name}
+								</span>
+							</Link>
+						)}
 					</div>
-				</div>
-				{(postData.message || postData.content) && (
-					<div
-						className='post__description'
-						dangerouslySetInnerHTML={{
-							__html: generateContent(
-								postData.sharePost?.message !== undefined
-									? postData.sharePost?.message
-									: postData.sharePost?.content
-							),
-						}}
-					></div>
-				)}
-				<span>{postData.bookId}</span>
-				<ul className='tagged'>
-					{postData.sharePost?.mentionsAuthors?.map(item => (
-						<li key={item.id} className={classNames('badge bg-primary-light')}>
-							<Feather />
-							<span>
-								{item.authors.name ||
-									item.authors?.fullName ||
-									item.authors?.lastName ||
-									item.authors?.firstName ||
-									'Không xác định'}
-							</span>
-						</li>
-					))}
-				</ul>
-				{postData?.isShare && postData?.verb === 'shareQuote' && <PostQuotes postsData={postData} />}
-				{/* {postData?.verb === 'shareTopQuoteRanking' && <PostQuotes postsData={postData} />} */}
-				{postData.sharePost?.book && (
-					<PostBook
-						data={{
-							...postData.sharePost?.book,
-							bookLibrary: postData?.bookLibrary,
-							actorCreatedPost: postData?.actor,
-						}}
-					/>
-				)}
-
-				{postData?.sharePost?.image?.length > 0 && (
-					<GridImage images={postData?.sharePost?.image} inPost={true} postId={postData?.id} />
-				)}
-
-				{postData?.sharePost.image?.length === 0 &&
-					!_.isEmpty(postData.sharePost?.preview) &&
-					_.isEmpty(postData.sharePost?.book) && (
+					<div className='post__user-status__post-time-status'>
+						<span>
+							{calculateDurationTime(postData.time || postData.createdAt || postData.sharePost.createdAt)}
+						</span>
 						<>
-							{videoId ? (
-								<iframe
-									className='post__video-youtube'
-									src={`//www.youtube.com/embed/${videoId}`}
-									frameBorder={0}
-									allowFullScreen={true}
-								></iframe>
-							) : (
-								<div onClick={() => directUrl(postData?.sharePost.url)}>
-									<PreviewLink isFetching={false} urlData={postData?.sharePost.preview} />
+							{postData.sharePost.book && (
+								<div className='post__user-status__subtitle'>
+									<span>Cập nhật tiến độ đọc sách</span>
+									<div className='post__user-status__post-time-status__online-dot'></div>
+									<span>Xếp hạng</span>
+									<ReactRating
+										readonly={true}
+										initialRating={
+											postData.sharePost.book.actorRating?.star
+												? postData.sharePost.book.actorRating?.star
+												: 0
+										}
+									/>
 								</div>
 							)}
 						</>
-					)}
+					</div>
+				</div>
 			</div>
+			{postData.sharePost.message && (
+				<div
+					className='post__description'
+					dangerouslySetInnerHTML={{
+						__html: generateContent(postData.sharePost.message),
+					}}
+				></div>
+			)}
+			<ul className='tagged'>
+				{postData.sharePost.mentionsAuthors?.map(item => (
+					<li key={item.id} className={classNames('badge bg-primary-light')}>
+						<Feather />
+						<span>
+							{item.authors.name ||
+								item.authors?.fullName ||
+								item.authors?.lastName ||
+								item.authors?.firstName ||
+								'Không xác định'}
+						</span>
+					</li>
+				))}
+			</ul>
+			{postData.sharePost.book && (
+				<PostBook
+					data={{
+						...postData.sharePost.book,
+						bookLibrary: postData?.bookLibrary,
+						actorCreatedPost: postData?.actor,
+					}}
+					inCreatePost={inCreatePost}
+				/>
+			)}
+
+			{postData.sharePost.image?.length > 0 && (
+				<GridImage images={postData.sharePost.image} inPost={true} postId={postData?.id} />
+			)}
+
+			{postData.sharePost.image?.length === 0 &&
+				!_.isEmpty(postData.sharePost.preview) &&
+				_.isEmpty(postData.sharePost.book) && (
+					<>
+						{videoId ? (
+							<iframe
+								className='post__video-youtube'
+								src={`//www.youtube.com/embed/${videoId}`}
+								frameBorder={0}
+								allowFullScreen={true}
+							></iframe>
+						) : (
+							<div onClick={() => directUrl(postData.sharePost.url)}>
+								<PreviewLink isFetching={false} urlData={postData.sharePost.preview} />
+							</div>
+						)}
+					</>
+				)}
 		</div>
 	);
 };
-PostsShare.propTypes = {
+
+PostShare.propTypes = {
 	postData: PropTypes.object,
 	likeAction: PropTypes.func,
 	className: PropTypes.string,
+	inCreatePost: PropTypes.bool,
 };
-export default PostsShare;
+
+export default PostShare;

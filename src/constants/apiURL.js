@@ -26,10 +26,6 @@ export const postDetailAPI = id => `/api/v1/posts/${id}`;
 export const previewLink = '/api/v1/preview/demo';
 export const likeCommentPostAPI = id => `/api/v1/commentMiniposts/like/${id}`;
 
-// group
-export const groupAPI = '/api/v1/groups';
-export const groupDetailAPI = id => `/api/v1/groups/${id}`;
-
 // books
 export const bookAPI = '/api/v1/books';
 export const bookDetailAPI = id => `/api/v1/books/${id}`;
@@ -118,6 +114,7 @@ export const getAPIchartsByid = (id, count, by) => `/api/v1/report/reportBooksBy
 export const getReadingTargetAPI = '/api/v1/books/readingGoal';
 export const updateTargetReadAPI = year => `/api/v1/books/readingGoal/${year}`;
 export const getReadingTargetIdAPI = id => `/api/v1/books/readingGoalById/${id}`;
+
 // ranks
 export const getTopQuotesAPI = `/api/v1/report/reportTopQuotes`;
 export const getTopBooksAPI = `/api/v1/report/reportTopBooks`;
@@ -127,23 +124,21 @@ export const getFilterTopUserApiAuth = `/api/v1/report/reportTopUsers`;
 export const getBooksChartsData = id => `/api/v1/report/growthChartBook/${id}`;
 
 // group
-export const detailGroup = id => `api/v1/groups/${id}`;
-export const creatGroup = '/api/v1/groups';
+export const groupDetailAPI = id => `/api/v1/groups/${id}`;
+export const groupAPI = '/api/v1/groups';
 export const myGroup = '/api/v1/groups/myGroup';
 export const adminGroup = '/api/v1/groups/myGroup?type=admin';
 export const memberGroup = id => `/api/v1/groups/memberGroup/${id}`;
 export const listTagGroup = id => `/api/v1/groups/groupTag/${id}`;
 export const commentGroup = '/api/v1/groupPosts/commentGroupPost';
 export const likeGroupPost = id => `/api/v1/groupPosts/like/${id}`;
-export const likeCommentGroup = id => `/api/v1/groupPosts/likeComment/${id}`;
+export const likeCommentGroupAPI = id => `/api/v1/groupPosts/likeComment/${id}`;
 export const inviteFriend = id => `api/v1/groups/inviteMemberToGroup/${id}`;
 export const enjoyGroup = id => `/api/v1/groups/requestGroup/${id}`;
 export const leaveGroup = id => `/api/v1/groups/leaveGroup/${id}`;
 export const createPostGroup = id => `/api/v1/groups/${id}/createPost`;
 export const listPostGroup = id => `/api/v1/groups/${id}/groupFeed`;
 export const searchGroup = id => `/api/v1/groups/search/${id}`;
-export const updateBackground = id => `/api/v1/groups/${id}`;
-export const bookCategoryAPI = `/api/v1/categories?filter=[{"operator":"in","value":["thach-thuc-doc-sach", "yeu-doc-sach"],"property":"slug"}]`;
 
 export const unFollowGroupAPI = id => `/api/v1/groups/unFollow/${id}`;
 export const followGroupAPI = id => `/api/v1/groups/follow/${id}`;
@@ -162,3 +157,10 @@ export const randomAuthorAPI = '/api/v1/users/randomAuthor';
 export const detailFeedPost = id => `/api/v1/getstream/feedDetail/${id}`;
 export const detailFeedPostGroup = id => `/api/v1/groups/detailFeed/${id}`;
 export const newNotification = '/api/v1/getstream/notification';
+
+// series
+export const getMySeriesAPI = `api/v1/series/mySeries`;
+export const getListBookBySeriesAPI = id => `/api/v1/series/listBook/${id}`;
+export const getSeriesDetailAPI = id => `/api/v1/series/${id}`;
+export const postMoreSeriesAPI = `/api/v1/series/`;
+export const addBookToSeriesAPI = id => `/api/v1/series/addBook/${id}`;

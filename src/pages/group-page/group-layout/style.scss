@@ -2,6 +2,7 @@
 	margin: 0px 5.625rem 11px 5.625rem;
 	padding-top: 54px;
 }
+
 .group-btn-back {
 	display: flex;
 	margin-bottom: 32px;
@@ -27,6 +28,7 @@
 		color: #2d2c42;
 	}
 }
+
 .search {
 	display: flex;
 	.search-field {
@@ -51,6 +53,7 @@
 		color: #fcfcfc;
 	}
 }
+
 .list-group__container {
 	padding: 8px 17px 8px 17px;
 	h3 {
@@ -65,6 +68,7 @@
 		color: #2d2c42;
 	}
 }
+
 .item-list-group {
 	display: flex;
 	align-items: center;
@@ -77,6 +81,7 @@
 		object-fit: cover;
 	}
 }
+
 .item-infor {
 	.item-infor__name {
 		height: 43px;
@@ -119,6 +124,7 @@
 	grid-template-columns: repeat(3, 1fr);
 	gap: 20px;
 }
+
 .result-search {
 	.list-group-container {
 		display: grid;
@@ -126,17 +132,18 @@
 		gap: 20px;
 	}
 }
+
 .item-group {
-	max-width: 295px;
 	border-radius: 12px;
 	background-color: #fff;
+	overflow: hidden;
 
 	img {
-		width: 295px;
+		width: 100%;
 		height: 163px;
 		object-fit: cover;
-		border-radius: 8px;
 	}
+
 	.item-group__name {
 		margin-top: 16.4px;
 		display: flex;
@@ -246,6 +253,7 @@
 		text-align: center;
 		flex-grow: 1;
 	}
+
 	.modal-body {
 		padding: 0px;
 	}
@@ -259,5 +267,15 @@
 			width: 18px;
 			height: 18px;
 		}
+	}
+
+	.form-field-wrapper {
+		padding: 40px 24px 24px;
+	}
+
+	.upload-image__wrapper {
+		padding: 0;
+		border: none;
+		border-radius: 0;
 	}
 }

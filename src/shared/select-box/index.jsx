@@ -7,13 +7,13 @@ import { useEffect, useState } from 'react';
 import { useVisible } from 'shared/hooks';
 import './select-box.scss';
 
-const SelectBox = ({ defaultOption, list, onChangeOption, name, className, imgDropDown }) => {
+const SelectBox = ({ defaultOption, list, onChangeOption, name, className, imgDropDown, resetSelect }) => {
 	const { ref, isVisible, setIsVisible } = useVisible(false);
 	const [activeItem, setActiveItem] = useState(defaultOption);
 
 	useEffect(() => {
 		setActiveItem(defaultOption);
-	}, [defaultOption]);
+	}, [defaultOption, resetSelect]);
 
 	const handleSelect = item => {
 		if (
@@ -74,6 +74,7 @@ const SelectBox = ({ defaultOption, list, onChangeOption, name, className, imgDr
 
 SelectBox.defaultProps = {
 	imgDropDown: dropdownIcon,
+	resetSelect: false,
 };
 
 SelectBox.propTypes = {
@@ -94,6 +95,7 @@ SelectBox.propTypes = {
 	name: PropTypes.string.isRequired,
 	className: PropTypes.string,
 	imgDropDown: PropTypes.string,
+	resetSelect: PropTypes.bool,
 };
 
 export default SelectBox;

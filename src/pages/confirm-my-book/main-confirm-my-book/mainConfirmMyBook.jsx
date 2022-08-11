@@ -23,6 +23,17 @@ function MainConfirmMyBook() {
 	const { bookId } = useParams();
 	const { bookInfo } = useFetchBookDetail(bookId);
 	const userInfo = useSelector(state => state.auth.userInfo);
+	const [textLength, setTextLength] = useState(450);
+
+	useEffect(() => {
+		if (window.innerWidth <= 1024 && window.innerWidth > 800) {
+			setTextLength(150);
+		} else if (window.innerWidth < 770) {
+			setTextLength(150);
+		} else if (window.innerWidth <= 1280) {
+			setTextLength(300);
+		}
+	}, []);
 
 	useEffect(() => {
 		if (!_.isEmpty(userInfo)) {
@@ -132,7 +143,7 @@ function MainConfirmMyBook() {
 								)}
 							</div>
 							<div className='main-confirm-my-book__description'>
-								<ReadMore text={bookInfo.description} />
+								<ReadMore text={bookInfo.description} length={textLength} />
 							</div>
 						</div>
 					</div>

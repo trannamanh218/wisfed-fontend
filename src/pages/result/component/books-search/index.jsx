@@ -1,6 +1,5 @@
 import './books-search.scss';
 import AuthorBook from 'shared/author-book';
-import { CHECK_STAR } from 'constants';
 import ResultNotFound from '../result-not-found';
 import PropTypes from 'prop-types';
 import InfiniteScroll from 'react-infinite-scroll-component';
@@ -9,6 +8,8 @@ import { getFilterSearch } from 'reducers/redux-utils/search';
 import { NotificationError } from 'helpers/Error';
 import { useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import Button from 'shared/button';
+import { Link } from 'react-router-dom';
 
 const BookSearch = ({ isFetching, value, setIsFetching, searchResultInput, activeKeyDefault, updateBooks }) => {
 	const [listArrayBooks, setListArrayBooks] = useState([]);
@@ -18,6 +19,8 @@ const BookSearch = ({ isFetching, value, setIsFetching, searchResultInput, activ
 	const dispatch = useDispatch();
 	const callApiStartBooks = useRef(0);
 	const callApiPerPage = useRef(10);
+
+	const { userInfoJwt } = useSelector(state => state.auth);
 
 	useEffect(() => {
 		if (activeKeyDefault === 'books') {
@@ -58,6 +61,10 @@ const BookSearch = ({ isFetching, value, setIsFetching, searchResultInput, activ
 			} else {
 				setHasMore(false);
 			}
+			// Nếu kết quả tìm kiếm nhỏ hơn limit thì disable gọi api khi scroll
+			if (result.rows.length < params.limit) {
+				setHasMore(false);
+			}
 		} catch (err) {
 			NotificationError(err);
 		} finally {
@@ -83,12 +90,23 @@ const BookSearch = ({ isFetching, value, setIsFetching, searchResultInput, activ
 					>
 						{listArrayBooks.map(item => (
 							<div key={item.id} className='bookSearch__main'>
-								<AuthorBook data={item} checkStar={CHECK_STAR} />
+								<AuthorBook data={item} checkStar={true} position='bookSearch' />
 							</div>
 						))}
 					</InfiniteScroll>
 				) : (
-					isFetching === false && <ResultNotFound />
+					isFetching === false && (
+						<div>
+							<ResultNotFound />
+							{userInfoJwt?.role === ('tecinus' || 'authors') ? (
+								<div className='btn-goTo-upload-book'>
+									<Link to='/upload-book'>
+										<Button>Tạo sách mới</Button>
+									</Link>
+								</div>
+							) : null}
+						</div>
+					)
 				)}
 			</>
 		</div>

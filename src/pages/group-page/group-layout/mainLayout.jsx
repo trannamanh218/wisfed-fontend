@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react';
-import PropTypes from 'prop-types';
 import './style.scss';
 import { Link } from 'react-router-dom';
 import ResultNotFound from 'pages/result/component/result-not-found';
@@ -8,11 +7,10 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import { useDispatch } from 'react-redux';
 import { getGroupList } from 'reducers/redux-utils/group';
 import { NotificationError } from 'helpers/Error';
-import _ from 'lodash';
 import defaultAvatar from 'assets/images/Rectangle 17435.png';
 import { useSelector } from 'react-redux';
 
-const MainLayout = ({ filter }) => {
+const MainLayout = () => {
 	const [list, setList] = useState([]);
 	const [hasMore, setHasMore] = useState(true);
 
@@ -68,13 +66,13 @@ const MainLayout = ({ filter }) => {
 
 	return (
 		<>
-			{!list?.length && !_.isEmpty(filter) ? (
+			{!list.length ? (
 				<div style={{ marginTop: '54px', padding: '24px' }}>
 					<ResultNotFound />
 				</div>
 			) : (
 				<>
-					{filter && <h2 className='main__title'>Gợi ý nhóm</h2>}
+					<h2 className='main__title'>Gợi ý nhóm</h2>
 					{
 						<InfiniteScroll
 							dataLength={list.length}
@@ -122,11 +120,6 @@ const MainLayout = ({ filter }) => {
 			)}
 		</>
 	);
-};
-
-MainLayout.propTypes = {
-	listGroup: PropTypes.array,
-	filter: PropTypes.bool,
 };
 
 export default MainLayout;

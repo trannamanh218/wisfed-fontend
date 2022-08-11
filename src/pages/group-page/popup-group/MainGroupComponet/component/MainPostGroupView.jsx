@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { NotificationError } from 'helpers/Error';
+import { GROUP_TYPE } from 'constants';
 
 const MainPostGroupView = () => {
 	const [listPost, setListPost] = useState([]);
@@ -36,7 +37,7 @@ const MainPostGroupView = () => {
 				{listPost.map(item => {
 					return (
 						<div key={item.id}>
-							<Post postInformations={item} />
+							<Post postInformations={item} type={GROUP_TYPE} />
 						</div>
 					);
 				})}

@@ -18,6 +18,7 @@
 		align-items: center;
 	}
 }
+
 .book-list {
 	flex-wrap: wrap;
 	display: flex;
@@ -94,27 +95,10 @@
 	pointer-events: none;
 }
 
-// .popup-group__container {
-// 	width: 100%;
-// 	position: absolute;
-// 	z-index: 1000;
-// 	top: 20px;
-// 	// left: 30%;
-// 	box-shadow: 0px 0px 32px rgba(0, 0, 0, 0.14);
-// 	border-radius: 24px;
-// 	background-color: #fcfcfc;
-// 	max-width: 700px;
-// 	left: 0;
-// 	right: 0;
-// 	margin-left: auto;
-// 	margin-right: auto;
-.upload-image__wrapper {
-	padding: 0;
-}
-
 .form-field-wrapper {
 	padding: 25px;
 }
+
 .form-field-name {
 	margin-top: 14px;
 	label {
@@ -150,6 +134,7 @@
 		font-size: 0.75rem;
 	}
 }
+
 .close__author {
 	align-items: center;
 	margin-left: 5px;
@@ -158,6 +143,7 @@
 		height: 16px;
 	}
 }
+
 .form-field-select__transparent,
 .form-field--hashtag,
 .form-field-authors,
@@ -168,8 +154,8 @@
 		margin-bottom: 23px;
 	}
 }
+
 .select-box {
-	// width: 100%;
 	// ai sửa thì cho vào class chứa select k thì chỗ khác sẽ ăn chung css
 	.select-box__btn {
 		justify-content: space-between;
@@ -183,11 +169,13 @@
 		margin: 0 !important;
 	}
 }
+
 .form-field--discription {
 	textarea {
 		background-color: #eff0f7;
 	}
 }
+
 .form-button {
 	margin-top: 57px;
 	display: flex;
@@ -200,4 +188,3 @@
 		color: #fcfcfc;
 	}
 }
-// }

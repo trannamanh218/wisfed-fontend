@@ -1,9 +1,10 @@
+import PropTypes from 'prop-types';
 import { STATUS_SUCCESS } from 'constants';
 import { STATUS_LOADING } from 'constants';
 import { STATUS_IDLE } from 'constants';
 import RouteLink from 'helpers/RouteLink';
 import { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { getBookDetail } from 'reducers/redux-utils/book';
 import BookSlider from 'shared/book-slider';
@@ -14,20 +15,21 @@ import { getCategoryList, getListBookByCategory } from 'reducers/redux-utils/cat
 import caretIcon from 'assets/images/caret.png';
 import { Link } from 'react-router-dom';
 import { useFetchAuthorBooks } from 'api/book.hooks';
+import { Row, Col } from 'react-bootstrap';
+import bookImage from 'assets/images/default-book.png';
 
-const BookReference = () => {
+const BookReference = ({ bookInfo }) => {
 	const [status, setStatus] = useState(STATUS_IDLE);
 	const [allCategories, setAllCategories] = useState([]);
 	const [isExpand, setIsExpand] = useState(false);
 	const [rows, setRows] = useState(3);
 	const [relatedBooks, setRelateBooks] = useState([]);
+	// const [series, setSeries] = useState([]);
 
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
-	const { bookInfo } = useSelector(state => state.book);
-
-	const { booksAuthor } = useFetchAuthorBooks(Number(bookInfo.authors[0]?.authorId));
+	const { booksAuthor } = useFetchAuthorBooks(bookInfo.authors[0]?.authorId);
 
 	useEffect(() => {
 		getBooksByCategory();
@@ -91,7 +93,7 @@ const BookReference = () => {
 	return (
 		<div className='book-reference'>
 			<Circle loading={status === STATUS_LOADING} />
-			{/* sách của tac gia */}
+			{/* sách của tác giả */}
 			{!!bookInfo.authors.length && (
 				<BookSlider
 					className='book-reference__slider'
@@ -101,8 +103,27 @@ const BookReference = () => {
 				/>
 			)}
 
-			{/* series sách đó */}
-			{/* <BookSlider className='book-reference__slider' title='Seris dạy con làm giàu' list={bookList} /> */}
+			{/* {series.length > 2 ? (
+				<BookSlider
+					className='book-reference__slider'
+					title={`Series ${series.name}`}
+					list={series}
+					handleViewBookDetail={handleViewBookDetail}
+				/>
+			) : series.length > 0 ? (
+				<Row>
+					{series.map((item, index) => (
+						<Col lg={6} md={12} key={index}>
+							<Link to={`/book/detail/${item.id}`}>
+								<div className='wants-to-read__thumbnail'>
+									<img src={item.images[0] || bookImage} alt='' />
+								</div>
+							</Link>
+						</Col>
+					))}
+				</Row>
+			) : null} */}
+
 			{relatedBooks.length > 0 && (
 				<BookSlider
 					className='book-reference__slider'
@@ -166,3 +187,7 @@ const BookReference = () => {
 };
 
 export default BookReference;
+
+BookReference.propTypes = {
+	bookInfo: PropTypes.object,
+};

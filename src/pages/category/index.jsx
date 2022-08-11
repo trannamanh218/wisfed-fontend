@@ -5,13 +5,12 @@ import SidebarCategory from './sidebar-category';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { getCategoryDetail } from 'reducers/redux-utils/category';
-import { STATUS_SUCCESS, STATUS_IDLE, STATUS_LOADING } from 'constants';
 import RouteLink from 'helpers/RouteLink';
 import { getBookDetail } from 'reducers/redux-utils/book';
 import { NotificationError } from 'helpers/Error';
 
 const Category = () => {
-	const [status, setStatus] = useState(STATUS_IDLE);
+	const [isFetching, setIsFetching] = useState(false);
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
@@ -19,27 +18,25 @@ const Category = () => {
 		window.scroll(0, 0);
 	}, []);
 
-	const viewCategoryDetail = async data => {
-		setStatus(STATUS_LOADING);
+	const handleViewCategoryDetail = async data => {
+		setIsFetching(true);
 		try {
 			await dispatch(getCategoryDetail(data.id)).unwrap();
-			setStatus(STATUS_SUCCESS);
 			navigate(RouteLink.categoryDetail(data.id, data.name));
+			setIsFetching(false);
 		} catch (err) {
 			NotificationError(err);
 		}
 	};
 
 	const handleViewBookDetail = async data => {
-		setStatus(STATUS_LOADING);
+		setIsFetching(true);
 		try {
 			await dispatch(getBookDetail(data.id)).unwrap();
-			setStatus(STATUS_SUCCESS);
+			setIsFetching(false);
 			navigate(RouteLink.bookDetail(data.id, data.name));
 		} catch (err) {
 			NotificationError(err);
-			const statusCode = err?.statusCode || 500;
-			setStatus(statusCode);
 		}
 	};
 
@@ -47,12 +44,12 @@ const Category = () => {
 		<MainContainer
 			main={
 				<MainCategory
-					status={status}
-					viewCategoryDetail={viewCategoryDetail}
+					isFetching={isFetching}
+					handleViewCategoryDetail={handleViewCategoryDetail}
 					handleViewBookDetail={handleViewBookDetail}
 				/>
 			}
-			right={<SidebarCategory status={status} viewCategoryDetail={viewCategoryDetail} />}
+			right={<SidebarCategory isFetching={isFetching} handleViewCategoryDetail={handleViewCategoryDetail} />}
 		/>
 	);
 };

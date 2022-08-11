@@ -1,5 +1,4 @@
 import MainContainer from 'components/layout/main-container';
-import { STATUS_SUCCESS, STATUS_IDLE, STATUS_LOADING } from 'constants';
 import RouteLink from 'helpers/RouteLink';
 import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
@@ -8,9 +7,10 @@ import { getCategoryDetail } from 'reducers/redux-utils/category';
 import MainCategoryDetail from './main-category-detail';
 import SidebarCategoryDetail from './sidebar-category-detail';
 import { NotificationError } from 'helpers/Error';
+import Circle from 'shared/loading/circle';
 
 const CategoryDetail = () => {
-	const [status, setStatus] = useState(STATUS_IDLE);
+	const [isFetching, setIsFetching] = useState(false);
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
@@ -18,22 +18,25 @@ const CategoryDetail = () => {
 		window.scroll(0, 0);
 	}, []);
 
-	const viewCategoryDetail = async data => {
-		setStatus(STATUS_LOADING);
+	const handleViewCategoryDetail = async data => {
+		setIsFetching(true);
 		try {
 			await dispatch(getCategoryDetail(data.id)).unwrap();
-			setStatus(STATUS_SUCCESS);
 			navigate(RouteLink.categoryDetail(data.id, data.name));
+			setIsFetching(false);
 		} catch (err) {
 			NotificationError(err);
 		}
 	};
 
 	return (
-		<MainContainer
-			main={<MainCategoryDetail />}
-			right={<SidebarCategoryDetail status={status} viewCategoryDetail={viewCategoryDetail} />}
-		/>
+		<>
+			<Circle loading={isFetching} />
+			<MainContainer
+				main={<MainCategoryDetail />}
+				right={<SidebarCategoryDetail handleViewCategoryDetail={handleViewCategoryDetail} />}
+			/>
+		</>
 	);
 };
 

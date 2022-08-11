@@ -1,7 +1,7 @@
 import MainContainer from 'components/layout/main-container';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import MainUpload from './main-upload/MainUpload';
 import SidebarUpload from './sidebar-upload/SidebarUpload';
 import { getBookDetail } from 'reducers/redux-utils/book';
@@ -12,12 +12,11 @@ import { handleShelvesGroup } from 'api/shelvesGroup.hooks';
 import './UploadBook.scss';
 
 export default function UploadBook() {
-	const { userId } = useParams();
 	const [currentUserInfo, setCurrentUserInfo] = useState({});
 	const dispatch = useDispatch();
 	const { userInfo } = useSelector(state => state.auth);
 	const navigate = useNavigate();
-	const { shelveGroupName } = handleShelvesGroup(userId);
+	const { shelveGroupName } = handleShelvesGroup(userInfo.id);
 
 	useEffect(() => {
 		if (!Storage.getAccessToken()) {

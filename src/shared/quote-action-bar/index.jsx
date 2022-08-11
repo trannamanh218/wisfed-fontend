@@ -6,20 +6,33 @@ import { RightArrow } from 'components/svg';
 import { Link } from 'react-router-dom';
 import Storage from 'helpers/Storage';
 import { useDispatch } from 'react-redux';
-import { saveDataShare, checkShare } from 'reducers/redux-utils/post';
+import { saveDataShare } from 'reducers/redux-utils/post';
 import { useNavigate } from 'react-router-dom';
 import { checkUserLogin } from 'reducers/redux-utils/auth';
+import { QUOTE_VERB_SHARE, TOP_QUOTE_VERB_SHARE } from 'constants';
 
 const QuoteActionBar = ({ data, isDetail, likeUnlikeQuoteFnc }) => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
-	const handleCheckLoginShare = async () => {
+	const handleShareQuote = async () => {
 		if (!Storage.getAccessToken()) {
 			dispatch(checkUserLogin(true));
 		} else {
-			dispatch(saveDataShare(data));
-			dispatch(checkShare(true));
+			let dataToShare;
+			if (data.type === 'topQuote') {
+				dataToShare = {
+					verb: TOP_QUOTE_VERB_SHARE,
+					...data,
+				};
+			} else {
+				dataToShare = {
+					type: 'quote',
+					verb: QUOTE_VERB_SHARE,
+					...data,
+				};
+			}
+			dispatch(saveDataShare(dataToShare));
 			navigate('/');
 		}
 	};
@@ -45,7 +58,7 @@ const QuoteActionBar = ({ data, isDetail, likeUnlikeQuoteFnc }) => {
 						<span className='quote-action__name'>{data.comments} Bình luận</span>
 					</>
 				) : (
-					<div onClick={handleCheckLoginShare}>
+					<div onClick={handleShareQuote}>
 						<Share className={classNames('quote-icon', { 'active': data.isShare })} />
 						<span className='quote-action__name'>{data.share} Chia sẻ</span>
 					</div>
@@ -53,7 +66,7 @@ const QuoteActionBar = ({ data, isDetail, likeUnlikeQuoteFnc }) => {
 			</li>
 			<li className='quote-action__item'>
 				{isDetail ? (
-					<div onClick={handleCheckLoginShare}>
+					<div onClick={handleShareQuote}>
 						<Share className='quote-icon' />
 						<span className='quote-action__name'>{data.share} Chia sẻ</span>
 					</div>

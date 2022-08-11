@@ -52,11 +52,9 @@ const UsersSearch = ({ isFetching, value, setIsFetching, searchResultInput, acti
 			if (result.rows.length > 0) {
 				callApiStart.current += callApiPerPage.current;
 				setListArrayUsers(listArrayUsers.concat(result.rows));
-			} else {
-				setHasMore(false);
 			}
 			// Nếu kết quả tìm kiếm nhỏ hơn limit thì disable gọi api khi scroll
-			if (result.rows.length < params.limit) {
+			if (!result.rows.length || result.rows.length < callApiPerPage.current) {
 				setHasMore(false);
 			}
 		} catch (err) {

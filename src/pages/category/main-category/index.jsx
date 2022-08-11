@@ -4,7 +4,7 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import CategoryGroup from 'shared/category-group';
 import LoadingIndicator from 'shared/loading-indicator';
 import SearchCategory from './SearchCategory';
-import { STATUS_LOADING } from 'constants';
+// import { STATUS_LOADING } from 'constants';
 import Circle from 'shared/loading/circle';
 import SearchIcon from 'assets/icons/search.svg';
 import PropTypes from 'prop-types';
@@ -13,7 +13,7 @@ import { getCategoryList } from 'reducers/redux-utils/category';
 import { useDispatch } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
 
-const MainCategory = ({ status, handleViewBookDetail, viewCategoryDetail }) => {
+const MainCategory = ({ isFetching, handleViewBookDetail, handleViewCategoryDetail }) => {
 	const [inputValue, setInputValue] = useState('');
 	const [filter, setFilter] = useState('[]');
 
@@ -81,7 +81,7 @@ const MainCategory = ({ status, handleViewBookDetail, viewCategoryDetail }) => {
 
 	return (
 		<div className='main-category'>
-			<Circle loading={status === STATUS_LOADING} />
+			<Circle loading={isFetching} />
 			<h4>Tất cả chủ đề</h4>
 			<div className='main-category__container'>
 				<div className='search-field'>
@@ -102,7 +102,7 @@ const MainCategory = ({ status, handleViewBookDetail, viewCategoryDetail }) => {
 								title={category.name}
 								data={category}
 								handleViewBookDetail={handleViewBookDetail}
-								viewCategoryDetail={viewCategoryDetail}
+								handleViewCategoryDetail={handleViewCategoryDetail}
 							/>
 						))}
 					</InfiniteScroll>
@@ -112,7 +112,7 @@ const MainCategory = ({ status, handleViewBookDetail, viewCategoryDetail }) => {
 						fetchFilterData={getCategoryListData}
 						hasMoreFilterData={hasMore}
 						handleViewBookDetail={handleViewBookDetail}
-						viewCategoryDetail={viewCategoryDetail}
+						handleViewCategoryDetail={handleViewCategoryDetail}
 						inputValue={inputValue}
 					/>
 				)}
@@ -122,8 +122,8 @@ const MainCategory = ({ status, handleViewBookDetail, viewCategoryDetail }) => {
 };
 
 MainCategory.propTypes = {
-	status: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-	viewCategoryDetail: PropTypes.func,
+	isFetching: PropTypes.bool,
+	handleViewCategoryDetail: PropTypes.func,
 	handleViewBookDetail: PropTypes.func,
 };
 

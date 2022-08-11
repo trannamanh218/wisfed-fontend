@@ -21,7 +21,14 @@
 			max-width: 248px;
 		}
 	}
+
 	.topbooks__container__main {
+		.author-book {
+			.book-thumbnail {
+				max-width: 136px;
+				max-height: 204px;
+			}
+		}
 		.author-book__share {
 			width: 42px;
 			height: 42px;
@@ -30,10 +37,11 @@
 			display: flex;
 			align-items: center;
 			justify-content: center;
-			margin-top: -20px;
 			cursor: pointer;
+			margin-bottom: 8px;
 		}
 	}
+
 	.top__user__ranks {
 		display: flex;
 		margin: 30px auto 40px auto;

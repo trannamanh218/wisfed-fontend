@@ -14,7 +14,7 @@ import { NotificationError } from 'helpers/Error';
 import GroupLinks from 'shared/group-links';
 import { useFetchGroups } from 'api/group.hooks';
 
-const SidebarUpload = ({ userInfo, currentUserInfo, handleViewBookDetail, shelveGroupName }) => {
+const SidebarUpload = ({ userInfo, currentUserInfo, handleViewBookDetail }) => {
 	const { userId } = useParams();
 	const dispatch = useDispatch();
 	const { booksAuthor } = useFetchAuthorBooks(userInfo.id);
@@ -86,9 +86,8 @@ const SidebarUpload = ({ userInfo, currentUserInfo, handleViewBookDetail, shelve
 
 SidebarUpload.propTypes = {
 	currentUserInfo: PropTypes.object,
-	viewCategoryDetail: PropTypes.func,
+	handleViewCategoryDetail: PropTypes.func,
 	handleViewBookDetail: PropTypes.any,
-	shelveGroupName: PropTypes.string,
 	userInfo: PropTypes.object,
 };
 

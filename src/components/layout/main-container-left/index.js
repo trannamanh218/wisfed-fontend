@@ -3,7 +3,7 @@ import '../main-container/main-container.scss';
 import Layout from '..';
 import { ErrorBoundary } from 'react-error-boundary';
 
-const MainContainerLeft = ({ main, right, sub }) => {
+const GroupPageLayout = ({ main, right, sub }) => {
 	const ErrorFallback = () => {
 		return (
 			<div>
@@ -29,10 +29,10 @@ const MainContainerLeft = ({ main, right, sub }) => {
 	);
 };
 
-MainContainerLeft.propTypes = {
+GroupPageLayout.propTypes = {
 	main: PropTypes.any.isRequired,
 	right: PropTypes.any,
 	sub: PropTypes.any,
 };
 
-export default MainContainerLeft;
+export default GroupPageLayout;

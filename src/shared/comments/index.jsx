@@ -13,6 +13,7 @@ import { likeAndUnlikeCommentReview } from 'reducers/redux-utils/book';
 import { POST_TYPE, QUOTE_TYPE, REVIEW_TYPE } from 'constants';
 import { Link, useNavigate } from 'react-router-dom';
 import { LikeComment } from 'components/svg';
+import { likeAndUnlikeGroupComment } from 'reducers/redux-utils/group';
 
 const urlRegex =
 	/https?:\/\/www(\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/g;
@@ -37,11 +38,13 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 
 		try {
 			if (type === POST_TYPE) {
-				await dispatch(likeAndUnlikeCommentPost(data.id));
+				await dispatch(likeAndUnlikeCommentPost(data.id)).unwrap();
 			} else if (type === QUOTE_TYPE) {
-				await dispatch(likeQuoteComment(data.id));
+				await dispatch(likeQuoteComment(data.id)).unwrap();
 			} else if (type === REVIEW_TYPE) {
-				await dispatch(likeAndUnlikeCommentReview(data.id));
+				await dispatch(likeAndUnlikeCommentReview(data.id)).unwrap();
+			} else {
+				await dispatch(likeAndUnlikeGroupComment(data.id)).unwrap();
 			}
 			setIsLiked(!isLiked);
 		} catch (err) {
@@ -72,11 +75,7 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 				setIsAuthor(true);
 			}
 		}
-		if (data.isLike === true) {
-			setIsLiked(true);
-		} else {
-			setIsLiked(false);
-		}
+		setIsLiked(data.isLike);
 	}, [data]);
 
 	return (
@@ -135,7 +134,7 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 								id: data.user.id,
 								name: data.user.fullName || data.user.firstName + ' ' + data.user.lastName,
 								avatar: data.user.avatarImage,
-								link: `https://wisfeed.tecinus.vn/profile/1b4ade47-d03b-4a7a-98ea-27abd8f15a85`,
+								link: `${window.location.hostname}/profile/${data.user.id}`,
 							})
 						}
 					>

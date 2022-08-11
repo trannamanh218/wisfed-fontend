@@ -4,7 +4,7 @@ import _ from 'lodash';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
 
-const OptionsPost = ({ list, addOptionsToPost, taggedData, images }) => {
+const OptionsPost = ({ list, addOptionsToPost, taggedData }) => {
 	const { isShare } = useSelector(state => state.post);
 	const [itemOnMouseHover, setItemOnMouseHover] = useState(null);
 
@@ -52,7 +52,6 @@ const OptionsPost = ({ list, addOptionsToPost, taggedData, images }) => {
 OptionsPost.propTypes = {
 	taggedData: PropTypes.object.isRequired,
 	list: PropTypes.array,
-	images: PropTypes.array,
 	addOptionsToPost: PropTypes.func,
 };
 

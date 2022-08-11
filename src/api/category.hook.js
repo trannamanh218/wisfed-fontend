@@ -1,8 +1,8 @@
-import { STATUS_SUCCESS, STATUS_IDLE, STATUS_LOADING } from 'constants';
+import { STATUS_SUCCESS, STATUS_IDLE } from 'constants';
 import _ from 'lodash';
 import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { getCategoryDetail, getCategoryList } from 'reducers/redux-utils/category';
+import { useDispatch } from 'react-redux';
+import { getCategoryList } from 'reducers/redux-utils/category';
 import { NotificationError } from 'helpers/Error';
 
 export const useFetchViewMoreCategories = (current = 0, perPage = 10, filter = '[]') => {
@@ -42,38 +42,6 @@ export const useFetchViewMoreCategories = (current = 0, perPage = 10, filter = '
 	};
 
 	return { categoryData, status };
-};
-
-export const useFetchCategoryDetail = id => {
-	const { categoryInfo } = useSelector(state => state.category);
-	const [status, setStatus] = useState(STATUS_IDLE);
-	const dispatch = useDispatch();
-
-	useEffect(() => {
-		let isMount = true;
-		if (categoryInfo.id !== id || _.isEmpty(categoryInfo)) {
-			setStatus(STATUS_LOADING);
-			const fetchCategoryDetail = async () => {
-				try {
-					await dispatch(getCategoryDetail(id)).unwrap();
-					setStatus(STATUS_SUCCESS);
-				} catch (err) {
-					NotificationError(err);
-					const statusCode = err?.statusCode || 500;
-					setStatus(statusCode);
-				}
-			};
-
-			if (isMount) {
-				fetchCategoryDetail();
-			}
-		}
-		return () => {
-			isMount = false;
-		};
-	}, [id]);
-
-	return { categoryInfo, status };
 };
 
 export const useFetchOtherCategories = (current, perPage, name) => {
