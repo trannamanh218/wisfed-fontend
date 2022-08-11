@@ -30,6 +30,8 @@ function MainConfirmMyBook() {
 			setTextLength(150);
 		} else if (window.innerWidth < 770) {
 			setTextLength(150);
+		} else if (window.innerWidth <= 1280) {
+			setTextLength(300);
 		}
 	}, []);
 

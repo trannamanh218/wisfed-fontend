@@ -20,8 +20,8 @@ const TopQuotesComponent = ({ item, valueDate, categoryItem }) => {
 	useEffect(() => {
 		const data = {
 			by: valueDate,
-			categoryName: categoryItem.name || '',
-			categoryId: categoryItem.id || '',
+			categoryName: categoryItem.name || null,
+			categoryId: categoryItem.id || null,
 			type: 'topQuote',
 			...item,
 		};
@@ -53,7 +53,7 @@ const TopQuotesComponent = ({ item, valueDate, categoryItem }) => {
 		}, 500),
 		[]
 	);
-	console.log(item);
+
 	return (
 		<div className='top__quotes__container'>
 			<div className='top__quotes__description'>{item.quote}</div>

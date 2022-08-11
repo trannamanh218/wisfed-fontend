@@ -14,9 +14,11 @@ const MAX_PER_PAGE = 30;
 
 const Ranks = () => {
 	const [tabSelected, setTabSelected] = useState('books');
+
 	const {
 		categoryData: { rows = [] },
-	} = useFetchViewMoreCategories(1, MAX_PER_PAGE, '[]');
+	} = useFetchViewMoreCategories(0, MAX_PER_PAGE, '[]');
+
 	const listYear = [
 		{ value: 'week', title: 'Tuần' },
 		{ value: 'month', title: 'Tháng' },
@@ -26,6 +28,7 @@ const Ranks = () => {
 	const onTabChange = key => {
 		setTabSelected(key);
 	};
+
 	return (
 		<NormalContainer>
 			<div className='ranks__container'>

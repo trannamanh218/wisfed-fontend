@@ -140,8 +140,8 @@ export const createPostGroup = id => `/api/v1/groups/${id}/createPost`;
 export const listPostGroup = id => `/api/v1/groups/${id}/groupFeed`;
 export const searchGroup = id => `/api/v1/groups/search/${id}`;
 
-export const unFollowGroup = id => `/api/v1/groups/unFollow/${id}`;
-
+export const unFollowGroupAPI = id => `/api/v1/groups/unFollow/${id}`;
+export const followGroupAPI = id => `/api/v1/groups/follow/${id}`;
 // search
 export const getSearchAPI = `/api/v1/searchs`;
 

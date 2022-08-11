@@ -137,17 +137,18 @@
 	}
 	.book-intro {
 		gap: 10px;
-		& .book-intro__btn {
+		.book-intro__btn {
 			width: 180px;
 			margin-top: 0;
+			margin-left: 0;
 		}
-		& .text-status {
+		.text-status {
 			font-size: 14px;
 		}
-		& .book-intro__content__infomations {
+		.book-intro__content__infomations {
 			flex-grow: 0;
 		}
-		& .book-intro__content__infomations {
+		.book-intro__content__infomations {
 			width: 430px;
 		}
 	}
@@ -157,6 +158,20 @@
 		gap: 25px;
 		& .book-intro__action {
 			margin-top: 18px;
+		}
+	}
+	.main-shelves {
+		.book-thumbnail {
+			& img {
+				margin: 0;
+			}
+		}
+	}
+	.mainContainer {
+		.book-thumbnail {
+			& img {
+				margin-left: 0;
+			}
 		}
 	}
 }
@@ -177,11 +192,24 @@
 			margin-left: 10px;
 		}
 	}
+	.main-profile {
+		.nav-tabs {
+			margin-right: 0;
+		}
+		.tab-content {
+			margin-right: 0;
+		}
+	}
 }
-@media only screen and (max-width: 768px) {
+@media only screen and (max-width: 820px) {
 	.mainContainer__main {
 		& .book-intro__content__infomations {
 			width: 395px;
+		}
+	}
+	.main-profile {
+		.tab-content {
+			margin-right: 0;
 		}
 	}
 }

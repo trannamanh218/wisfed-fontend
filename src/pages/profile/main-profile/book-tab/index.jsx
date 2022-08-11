@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import AuthorBook from 'shared/author-book';
-import { CHECK_STAR } from 'constants';
 import { useParams } from 'react-router-dom';
 import { useState, useEffect, useRef } from 'react';
 import { useDispatch } from 'react-redux';
@@ -65,7 +64,7 @@ const BookTab = ({ currentTab }) => {
 							loader={<LoadingIndicator />}
 						>
 							{booksOfAuthor.map(book => (
-								<AuthorBook key={book.id} data={book} checkStar={CHECK_STAR} />
+								<AuthorBook key={book.id} data={book} checkStar={true} position='profile' />
 							))}
 						</InfiniteScroll>
 					) : (

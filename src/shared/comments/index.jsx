@@ -134,7 +134,7 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 								id: data.user.id,
 								name: data.user.fullName || data.user.firstName + ' ' + data.user.lastName,
 								avatar: data.user.avatarImage,
-								link: `https://wisfeed.tecinus.vn/profile/1b4ade47-d03b-4a7a-98ea-27abd8f15a85`,
+								link: `${window.location.hostname}/profile/${data.user.id}`,
 							})
 						}
 					>
