@@ -94,7 +94,7 @@ const ResultSearch = ({ valueInputSearch, resultSearch, setIsShow }) => {
 			return <div className='history__search'>Không có tìm kiếm nào gần đây</div>;
 		}
 	};
-
+	console.log(resultSearch);
 	return (
 		<>
 			<div className='result__search__container'>
