@@ -29,15 +29,23 @@ import { NotificationError } from 'helpers/Error';
 import { uploadMultiFile } from 'reducers/redux-utils/common';
 import { useLocation, useParams } from 'react-router-dom';
 import { creatNewPost } from 'reducers/redux-utils/group';
-import PostQuotes from 'shared/post-quotes';
-import { saveDataShare, checkShare } from 'reducers/redux-utils/post';
-import Post from 'shared/post';
+import QuoteCard from 'shared/quote-card';
+import { saveDataShare } from 'reducers/redux-utils/post';
 import AuthorBook from 'shared/author-book';
 import ShareUsers from '../modal-share-users';
 import RichTextEditor from 'shared/rich-text-editor';
 import ShareTarget from 'shared/share-target';
-import { POST_TYPE } from 'constants';
+import PostShare from 'shared/posts-Share';
 import { shareTargetReadings } from 'reducers/redux-utils/target';
+import {
+	POST_VERB_SHARE,
+	QUOTE_VERB_SHARE,
+	GROUP_POST_VERB_SHARE,
+	READ_TARGET_VERB_SHARE,
+	TOP_USER_VERB_SHARE,
+	TOP_BOOK_VERB_SHARE,
+	TOP_QUOTE_VERB_SHARE,
+} from 'constants';
 
 const urlRegex =
 	/https?:\/\/www(\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/g;
@@ -77,17 +85,17 @@ function CreatPostModalContent({
 	const [content, setContent] = useState('');
 
 	const dispatch = useDispatch();
-
 	const location = useLocation();
+
 	const UpdateImg = useSelector(state => state.chart.updateImgPost);
-	const { resetTaggedData, isShare, postsData, isSharePosts, isSharePostsAll, isShareTarget } = useSelector(
-		state => state.post
-	);
-	const { id } = useParams();
+	const { resetTaggedData, postDataShare } = useSelector(state => state.post);
 	const {
 		auth: { userInfo },
 		book: { bookForCreatePost, bookInfo },
 	} = useSelector(state => state);
+
+	const { id } = useParams();
+
 	const { optionList } = setting;
 
 	useEffect(() => {
@@ -272,7 +280,6 @@ function CreatPostModalContent({
 		if (!_.isEmpty(taggedData.addBook)) {
 			params.bookId = taggedData.addBook.id;
 		}
-
 		return params;
 	};
 
@@ -312,90 +319,66 @@ function CreatPostModalContent({
 		// book, author , topic is required
 		setStatus(STATUS_LOADING);
 		try {
-			if (location.pathname.includes('group') && (isShare || isSharePosts)) {
-				const query = {
-					id: postsData.id,
-					type: 'groupPost',
-					...params,
-				};
-				await dispatch(getSharePostInternal(query)).unwrap();
-			}
-		} catch (error) {
-			NotificationError(error);
-		}
-
-		try {
-			if (isShare || isSharePosts || isSharePostsAll.length > 0 || postsData.booksReadCount > 0) {
-				if (isShare) {
-					if (postsData.categoryName !== undefined) {
-						const query = {
-							by: postsData.by,
-							id: postsData.id,
-							type: 'topQuote',
-							categoryId: postsData.categoryId || null,
-							msg: content,
-						};
-
-						await dispatch(getSharePostRanks(query)).unwrap();
-					} else {
-						const query = {
-							id: postsData.sharePost ? postsData.sharePost.minipostId : postsData.id,
-							type: 'quote',
-							background: postsData.background,
-							...params,
-						};
-						await dispatch(getSharePostInternal(query)).unwrap();
-					}
-				} else if (isSharePosts) {
-					if (postsData.originId) {
-						const query = {
-							by: postsData.originId.by,
-							id: postsData.info.id,
-							type: postsData.originId.type,
-							categoryId: postsData.originId.categoryId || null,
-							msg: content,
-							userType: postsData.originId.type === 'topUser' && postsData.originId.userType,
-						};
-
-						await dispatch(getSharePostRanks(query)).unwrap();
-					} else {
-						let newId;
-						let newType;
-						if (postsData.verb === 'miniPost') {
-							newId = postsData.minipostId;
-							newType = 'post';
-						} else {
-							if (postsData.sharePost.minipostId) {
-								newId = postsData.sharePost.minipostId;
-								newType = 'post';
-							} else {
-								newId = postsData.sharePost.id;
-								newType = 'quote';
-							}
-						}
-						const query = {
-							id: newId,
-							type: newType,
-							...params,
-						};
-						await dispatch(getSharePostInternal(query)).unwrap();
-					}
-				} else if (postsData.booksReadCount > 0) {
-					const data = {
-						current: postsData.booksReadCount,
+			if (postDataShare && !_.isEmpty(postDataShare)) {
+				if (postDataShare.verb === POST_VERB_SHARE) {
+					const query = {
+						id: postDataShare.type === 'post' ? postDataShare.minipostId : Number(postDataShare.shareId),
+						type: 'post',
 						...params,
 					};
-					await dispatch(shareTargetReadings(data)).unwrap();
-				} else {
+					await dispatch(getSharePostInternal(query)).unwrap();
+				} else if (postDataShare.verb === QUOTE_VERB_SHARE) {
 					const query = {
-						by: postsData.by,
-						id: postsData.type === 'topUser' ? postsData.id : postsData.bookId,
-						type: postsData.type,
-						categoryId: postsData.categoryId || null,
-						msg: content,
-						userType: postsData.type === 'topUser' && postsData.userType,
+						id: postDataShare.sharePost ? Number(postDataShare.shareId) : postDataShare.id,
+						type: 'quote',
+						background: postDataShare.background,
+						...params,
 					};
-
+					await dispatch(getSharePostInternal(query)).unwrap();
+				} else if (postDataShare.verb === GROUP_POST_VERB_SHARE) {
+					const query = {
+						id: postDataShare.shareId ? Number(postDataShare.shareId) : postDataShare.sharePost.id,
+						type: 'groupPost',
+						...params,
+					};
+					await dispatch(getSharePostInternal(query)).unwrap();
+				} else if (postDataShare.verb === READ_TARGET_VERB_SHARE) {
+					const data = {
+						msg: content,
+						current: postDataShare.booksReadCount,
+						mentionsUser: params.mentionsUser,
+					};
+					await dispatch(shareTargetReadings(data)).unwrap();
+				} else if (postDataShare.verb === TOP_USER_VERB_SHARE) {
+					const query = {
+						msg: content,
+						by: postDataShare.by,
+						type: postDataShare.type,
+						categoryId: postDataShare.categoryId || null,
+						userType: postDataShare.userType,
+						id: postDataShare.id,
+						mentionsUser: params.mentionsUser,
+					};
+					await dispatch(getSharePostRanks(query)).unwrap();
+				} else if (postDataShare.verb === TOP_BOOK_VERB_SHARE) {
+					const query = {
+						msg: content,
+						by: postDataShare.by,
+						type: postDataShare.type,
+						categoryId: postDataShare.categoryId || null,
+						id: postDataShare.id,
+						mentionsUser: params.mentionsUser,
+					};
+					await dispatch(getSharePostRanks(query)).unwrap();
+				} else if (postDataShare.verb === TOP_QUOTE_VERB_SHARE) {
+					const query = {
+						msg: content,
+						by: postDataShare.by,
+						type: postDataShare.type,
+						categoryId: postDataShare.categoryId || null,
+						id: postDataShare.id,
+						mentionsUser: params.mentionsUser,
+					};
 					await dispatch(getSharePostRanks(query)).unwrap();
 				}
 			} else {
@@ -416,15 +399,14 @@ function CreatPostModalContent({
 					if (valueStar > 0) {
 						userRating();
 					}
-
 					handleUpdateProgress(params);
 				}
 
 				if (location.pathname.includes('group')) {
 					const newParams = { data: params, id: id };
-					await dispatch(creatNewPost(newParams));
+					await dispatch(creatNewPost(newParams)).unwrap();
 				} else {
-					await dispatch(createActivity(params));
+					await dispatch(createActivity(params)).unwrap();
 				}
 			}
 			setStatus(STATUS_SUCCESS);
@@ -443,7 +425,6 @@ function CreatPostModalContent({
 		} finally {
 			dispatch(updateCurrentBook({}));
 			dispatch(saveDataShare({}));
-			dispatch(checkShare(false));
 			setStatus(STATUS_IDLE);
 			hideCreatePostModal();
 			onChangeOption({});
@@ -485,10 +466,8 @@ function CreatPostModalContent({
 					}
 				}
 			}
-		} else if (isShare || isSharePosts || isSharePostsAll.length > 0) {
-			if (content) {
-				isActive = true;
-			}
+		} else if (postDataShare && content) {
+			isActive = true;
 		} else {
 			if (content && (taggedData.addAuthor.length || taggedData.addCategory.length || imagesUpload.length)) {
 				isActive = true;
@@ -509,7 +488,7 @@ function CreatPostModalContent({
 		const params = { star: valueStar, id: bookInfo.id || taggedData.addBook.id };
 		if (valueStar) {
 			try {
-				await dispatch(ratingUser(params));
+				await dispatch(ratingUser(params)).unwrap();
 			} catch (err) {
 				NotificationError(err);
 			}
@@ -523,7 +502,7 @@ function CreatPostModalContent({
 	}, [showSubModal]);
 
 	const handleTime = () => {
-		switch (postsData.by) {
+		switch (postDataShare.by) {
 			case 'week':
 				return 'tuần';
 			case 'month':
@@ -547,9 +526,7 @@ function CreatPostModalContent({
 					<div style={{ visibility: 'hidden' }} className='creat-post-modal-content__main__close'>
 						<CloseX />
 					</div>
-					<h5>
-						{isShare || isSharePosts || isSharePostsAll.length > 0 ? 'Chia sẻ bài viết' : 'Tạo bài viết'}
-					</h5>
+					<h5>{postDataShare && !_.isEmpty(postDataShare) ? 'Chia sẻ bài viết' : 'Tạo bài viết'}</h5>
 					<button className='creat-post-modal-content__main__close' onClick={hideCreatePostModal}>
 						<CloseX />
 					</button>
@@ -615,52 +592,65 @@ function CreatPostModalContent({
 								removeTaggedItem={removeTaggedItem}
 								type='addCategory'
 							/>
-							{postsData.type === 'topQuote' && (
+							{postDataShare.type === 'topQuote' && (
 								<div className='post__title__share__rank'>
-									<span className='number__title__rank'># Top {postsData.rank} quotes </span>{' '}
+									<span className='number__title__rank'># Top {postDataShare.rank} quotes </span>{' '}
 									<span className='title__rank'>
-										{postsData.categoryName?.length
+										{postDataShare.categoryName?.length
 											? `  được like nhiều nhất thuộc ${
-													postsData.categoryName
+													postDataShare.categoryName
 											  } theo ${handleTime()} `
 											: `  được like nhiều nhất theo ${handleTime()} `}
 									</span>
 									<IconRanks />
 								</div>
 							)}
-							{postsData.type === 'topBook' && (
+							{postDataShare.type === 'topBook' && (
 								<div className='post__title__share__rank'>
-									<span className='number__title__rank'># Top {postsData.rank} </span>{' '}
+									<span className='number__title__rank'># Top {postDataShare.rank}</span>
 									<span className='title__rank'>
-										{postsData.categoryName
-											? `  cuốn sách tốt nhất  ${postsData.categoryName} theo ${handleTime()} `
+										{postDataShare.categoryName
+											? `  cuốn sách tốt nhất  ${
+													postDataShare.categoryName
+											  } theo ${handleTime()} `
 											: `  cuốn sách tốt nhất theo ${handleTime()} `}
 									</span>
 									<IconRanks />
 								</div>
 							)}
 
-							{(isShare || isSharePosts || isSharePostsAll === 'shareTopBook') && (
+							{!_.isEmpty(postDataShare) && (
 								<div
 									className={
-										postsData.verb !== 'shareTopBookRanking' &&
-										postsData.verb !== 'shareTopUserRanking' &&
-										'creat-post-modal-content__main__share-container'
+										postDataShare.verb !== TOP_USER_VERB_SHARE
+											? 'creat-post-modal-content__main__share-container'
+											: ''
 									}
 								>
-									{isShare && <PostQuotes postsData={postsData} isShare={isShare} />}
-									{isSharePosts && (
-										<Post
-											postInformations={postsData}
-											showModalCreatPost={showModalCreatPost}
-											type={POST_TYPE}
+									{postDataShare.verb === POST_VERB_SHARE && (
+										<PostShare postData={postDataShare} inCreatePost={true} />
+									)}
+									{(postDataShare.verb === QUOTE_VERB_SHARE ||
+										postDataShare.verb === TOP_QUOTE_VERB_SHARE) && (
+										<QuoteCard data={postDataShare} isShare={true} />
+									)}
+									{postDataShare.verb === GROUP_POST_VERB_SHARE && (
+										<PostShare postData={postDataShare} inCreatePost={true} />
+									)}
+									{postDataShare.verb === READ_TARGET_VERB_SHARE && (
+										<ShareTarget postData={postDataShare} />
+									)}
+									{postDataShare.verb === TOP_BOOK_VERB_SHARE && (
+										<AuthorBook
+											data={postDataShare}
+											checkStar={true}
+											inCreatePost={true}
+											position='createPostModal'
 										/>
 									)}
-									{isSharePostsAll === 'shareTopBook' && <AuthorBook data={postsData} />}
 								</div>
 							)}
-							{isSharePostsAll === 'shareTopUser' && <ShareUsers postsData={postsData} />}
-							{postsData.booksReadCount > 0 && <ShareTarget postsData={postsData} />}
+							{postDataShare.verb === TOP_USER_VERB_SHARE && <ShareUsers postData={postDataShare} />}
 
 							{!_.isEmpty(taggedData.addBook) || showUpload ? (
 								<>

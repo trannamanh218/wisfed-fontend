@@ -2,7 +2,6 @@ import './top-books.scss';
 import SelectBox from 'shared/select-box';
 import React, { useRef, useEffect, useState } from 'react';
 import AuthorBook from 'shared/author-book';
-import { CHECK_STAR, CHECK_SHARE } from 'constants';
 import StarRanking from 'shared/starRanks';
 import PropTypes from 'prop-types';
 import { getTopBooks, getTopBooksAuth } from 'reducers/redux-utils/ranks';
@@ -15,7 +14,7 @@ const TopBooks = ({ rows, listYear, tabSelected }) => {
 	const kindOfGroupRef = useRef({ value: 'default', title: 'Chủ đề' });
 	const listYearRef = useRef({ value: 'default', title: 'Tuần' });
 	const { isAuth } = useSelector(state => state.auth);
-	const [topBooksId, setTopQuotesId] = useState();
+	const [topBooksId, setTopQuotesId] = useState(null);
 	const [valueDate, setValueData] = useState('week');
 	const [getListTopBooks, setGetListTopBooks] = useState([]);
 	const [modalShow, setModalShow] = useState(false);
@@ -95,12 +94,13 @@ const TopBooks = ({ rows, listYear, tabSelected }) => {
 								<div className='topbooks__container__main__layout'>
 									<AuthorBook
 										data={item}
-										checkStar={CHECK_STAR}
-										checkshare={CHECK_SHARE}
+										checkStar={true}
+										showShareBtn={true}
 										setModalShow={setModalShow}
 										valueDate={valueDate}
 										topBooksId={topBooksId}
 										categoryName={kindOfGroupRef.current.name}
+										position='topBook'
 									/>
 								</div>
 							</div>

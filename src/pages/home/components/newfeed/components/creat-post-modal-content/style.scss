@@ -789,6 +789,7 @@
 }
 
 .post__title__share__rank {
+	margin-bottom: 12px;
 	.number__title__rank {
 		color: #eaac30;
 		font-weight: 600;
@@ -801,6 +802,7 @@
 		line-height: 32px;
 	}
 }
+
 .creat-post-modal-content__main__share-container {
 	padding: 16px;
 	border-radius: 12px;
@@ -826,42 +828,50 @@
 				font-size: 10px;
 			}
 		}
-		> div {
-			.author-book {
-				max-height: 177px;
-				.book-thumbnail {
-					height: 151px;
-					width: 98px;
-				}
 
-				&__title {
-					position: relative;
-					top: 20px;
-					font-size: 16.24px;
-				}
+		.author-book {
+			max-height: 177px;
+			margin-bottom: 0;
+			padding: 12px 16px;
+			.book-thumbnail {
+				height: 151px;
+				width: 98px;
+			}
 
-				&__rating {
-					position: relative;
-					top: 16px;
+			.author-book__authors {
+				margin-top: 0;
+			}
 
-					.star-icon {
-						width: 19.42px;
-						margin-right: 9px;
-					}
-					&__number {
-						font-size: 18px;
-					}
-				}
+			&__title {
+				font-size: 1rem;
+				line-height: 32px;
+			}
 
-				&__stats {
-					font-size: 14.61px;
+			&__rating {
+				.star-icon {
+					width: 19.42px;
+					margin-right: 9px;
 				}
+				&__number {
+					font-size: 18px;
+				}
+			}
 
-				.btn {
-					position: relative;
-					right: -20px;
-					transform: scale(0.8);
-				}
+			&__stats {
+				font-size: 14.61px;
+			}
+
+			.btn {
+				height: 48px;
+				padding: 12px;
+			}
+		}
+
+		.quote-card {
+			padding: 20px 16px;
+			margin-bottom: 0;
+			.quote-card__quote-content p:first-child {
+				max-width: 90%;
 			}
 		}
 	}

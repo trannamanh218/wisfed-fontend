@@ -1,5 +1,5 @@
 import SelectBox from 'shared/select-box';
-import React, { useRef, useEffect, useState } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import AuthorCard from 'shared/author-card';
 import StarRanking from 'shared/starRanks';
 import './top-user.scss';
@@ -12,11 +12,12 @@ import { getTopUser, getTopUserAuth } from 'reducers/redux-utils/ranks';
 import dropdownIcon from 'assets/images/dropdown.png';
 import ModalCheckLogin from 'shared/modal-check-login';
 import Storage from 'helpers/Storage';
-import { saveDataShare, sharePostsAll } from 'reducers/redux-utils/post';
+import { saveDataShare } from 'reducers/redux-utils/post';
 import { useNavigate } from 'react-router-dom';
+import { TOP_USER_VERB_SHARE } from 'constants';
 
 const TopUser = ({ rows, listYear, tabSelected }) => {
-	const kindOfGroupRef = useRef({ value: 'default', name: 'Văn Học' });
+	const kindOfGroupRef = useRef({ value: 'default', name: 'Văn học' });
 	const listYearRef = useRef({ value: 'default', title: 'Tuần' });
 	const listRead = useRef({ value: 'default', title: 'Đọc nhiều nhất' });
 	const { isAuth } = useSelector(state => state.auth);
@@ -89,15 +90,16 @@ const TopUser = ({ rows, listYear, tabSelected }) => {
 	const handleShare = data => {
 		const newData = {
 			by: valueDate,
-			categoryId: topUserFilter || null,
-			categoryName: kindOfGroupRef.current.name,
-			type: 'topUser',
+			categoryId: valueDataSort !== 'topFollow' ? topUserFilter : null,
+			categoryName: valueDataSort !== 'topFollow' ? kindOfGroupRef.current.name : null,
 			userType: valueDataSort,
+			type: 'topUser',
+			id: data.id,
+			verb: TOP_USER_VERB_SHARE,
 			...data,
 		};
 		if (Storage.getAccessToken()) {
 			dispatch(saveDataShare(newData));
-			dispatch(sharePostsAll('shareTopUser'));
 			navigate('/');
 		} else {
 			setModalShow(true);

@@ -6,7 +6,7 @@ import BookThumbnail from 'shared/book-thumbnail';
 import LinearProgressBar from 'shared/linear-progress-bar';
 import { Link } from 'react-router-dom';
 
-function PostBook({ data }) {
+function PostBook({ data, inCreatePost }) {
 	return (
 		<div className='post-book'>
 			<Link to={`/book/detail/${data.id}`}>
@@ -33,9 +33,9 @@ function PostBook({ data }) {
 				<div className='post-book__button-and-rating'>
 					<StatusButton
 						bookData={data}
-						inPostBook={true}
 						hasBookStatus={true}
 						postActor={data.actorCreatedPost}
+						inCreatePost={inCreatePost}
 					/>
 					<div className='post-book__rating__group'>
 						<ReactRating initialRating={data.avgRating?.toFixed(1)} readonly={true} fractions={2} />
@@ -57,6 +57,7 @@ function PostBook({ data }) {
 
 PostBook.propTypes = {
 	data: PropTypes.object.isRequired,
+	inCreatePost: PropTypes.bool,
 };
 
 export default PostBook;

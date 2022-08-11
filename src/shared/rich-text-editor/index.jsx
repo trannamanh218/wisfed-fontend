@@ -91,6 +91,8 @@ function RichTextEditor({
 		if (textValue.length) {
 			const html = convertContentToHTML();
 			setContent(html);
+		} else {
+			setContent('');
 		}
 
 		// tags mention user khi nhan @

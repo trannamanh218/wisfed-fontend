@@ -43,7 +43,7 @@ const STATUS_BOOK_OBJ = {
 	},
 };
 
-const StatusButton = ({ className, bookData, inPostBook = false, hasBookStatus = false }) => {
+const StatusButton = ({ className, bookData, inCreatePost = false, hasBookStatus = false }) => {
 	const [modalShow, setModalShow] = useState(false);
 	const [currentStatus, setCurrentStatus] = useState('');
 	const [fetchStatus, setFetchStatus] = useState(STATUS_IDLE);
@@ -60,54 +60,56 @@ const StatusButton = ({ className, bookData, inPostBook = false, hasBookStatus =
 
 	useEffect(async () => {
 		if (Storage.getAccessToken()) {
-			if (hasBookStatus && inPostBook) {
+			if (hasBookStatus) {
 				setCurrentStatus(bookData.status);
 			} else {
-				checkBookInDefaultLibrary();
+				// checkBookInDefaultLibrary();
+				setCurrentStatus(STATUS_BOOK.wantToRead);
 			}
 		} else {
 			setCurrentStatus(STATUS_BOOK.wantToRead);
 		}
 	}, []);
 
-	const checkBookInDefaultLibrary = async () => {
-		try {
-			const res = await dispatch(checkBookInLibraries(bookData.id || bookData.bookId)).unwrap();
-			const defaultLibraryContainCurrentBook = res.filter(item => item.library.isDefault === true);
-			if (!!res.length && !!defaultLibraryContainCurrentBook.length) {
-				setCurrentStatus(defaultLibraryContainCurrentBook[0].library.defaultType);
-			} else {
-				setCurrentStatus(STATUS_BOOK.wantToRead);
-			}
-		} catch (err) {
-			NotificationError(err);
-		}
-	};
+	// const checkBookInDefaultLibrary = async () => {
+	// 	try {
+	// 		const res = await dispatch(checkBookInLibraries(bookData.id || bookData.bookId)).unwrap();
+	// 		const defaultLibraryContainCurrentBook = res.filter(item => item.library.isDefault === true);
+	// 		if (!!res.length && !!defaultLibraryContainCurrentBook.length) {
+	// 			setCurrentStatus(defaultLibraryContainCurrentBook[0].library.defaultType);
+	// 		} else {
+	// 			setCurrentStatus(STATUS_BOOK.wantToRead);
+	// 		}
+	// 	} catch (err) {
+	// 		NotificationError(err);
+	// 	}
+	// };
 
 	const handleClose = () => {
 		setModalShow(false);
 	};
 
 	const handleShow = async e => {
-		e.stopPropagation();
-		//check duoc trang thai co trong thu vien
-		try {
-			const checkLibrariesData = await dispatch(checkBookInLibraries(bookData.id || bookData.bookId)).unwrap();
-			const customLibrariesContainCurrentBook = checkLibrariesData.filter(
-				item => item.library.isDefault === false
-			);
-			if (customLibrariesContainCurrentBook.length) {
-				const arrId = [];
-				customLibrariesContainCurrentBook.forEach(item => arrId.push(item.libraryId));
-				setCustomLibrariesContainCurrentBookId(arrId);
-			} else {
-				setCustomLibrariesContainCurrentBookId([]);
-			}
-		} catch (err) {
-			NotificationError(err);
-		} finally {
-			setModalShow(true);
-		}
+		// e.stopPropagation();
+		// //check duoc trang thai co trong thu vien
+		// try {
+		// 	const checkLibrariesData = await dispatch(checkBookInLibraries(bookData.id || bookData.bookId)).unwrap();
+		// 	const customLibrariesContainCurrentBook = checkLibrariesData.filter(
+		// 		item => item.library.isDefault === false
+		// 	);
+		// 	if (customLibrariesContainCurrentBook.length) {
+		// 		const arrId = [];
+		// 		customLibrariesContainCurrentBook.forEach(item => arrId.push(item.libraryId));
+		// 		setCustomLibrariesContainCurrentBookId(arrId);
+		// 	} else {
+		// 		setCustomLibrariesContainCurrentBookId([]);
+		// 	}
+		// } catch (err) {
+		// 	NotificationError(err);
+		// } finally {
+		// 	setModalShow(true);
+		// }
+		setModalShow(true);
 	};
 
 	const updateBookShelve = async params => {
@@ -138,18 +140,20 @@ const StatusButton = ({ className, bookData, inPostBook = false, hasBookStatus =
 	};
 
 	const handleConfirm = async () => {
-		setFetchStatus(STATUS_LOADING);
-		try {
-			await updateStatusBook();
-			await handleAddAndRemoveBook();
-			setModalShow(false);
-			setFetchStatus(STATUS_SUCCESS);
-			dispatch(updateCurrentBook({ ...bookData, status: currentStatus }));
-			navigate('/');
-		} catch (err) {
-			NotificationError(err);
-			setModalShow(false);
-			setFetchStatus(STATUS_IDLE);
+		if (!inCreatePost) {
+			setFetchStatus(STATUS_LOADING);
+			try {
+				await updateStatusBook().unwrap();
+				await handleAddAndRemoveBook().unwrap();
+				setModalShow(false);
+				setFetchStatus(STATUS_SUCCESS);
+				dispatch(updateCurrentBook({ ...bookData, status: currentStatus }));
+				navigate('/');
+			} catch (err) {
+				NotificationError(err);
+				setModalShow(false);
+				setFetchStatus(STATUS_IDLE);
+			}
 		}
 	};
 
@@ -177,7 +181,10 @@ const StatusButton = ({ className, bookData, inPostBook = false, hasBookStatus =
 		<>
 			<Circle loading={fetchStatus === STATUS_LOADING} />
 			<button
-				className={classNames('btn btn-status btn-primary', { [`${className}`]: className })}
+				className={classNames('btn btn-status btn-primary', {
+					[`${className}`]: className,
+					'disable': inCreatePost,
+				})}
 				data-testid='btn-modal'
 				onClick={handleShow}
 			>
@@ -191,26 +198,30 @@ const StatusButton = ({ className, bookData, inPostBook = false, hasBookStatus =
 				<DropdownGroupWhite />
 			</button>
 			{!_.isEmpty(userInfo) ? (
-				<Modal
-					id='status-book-modal'
-					className='status-book-modal'
-					show={modalShow}
-					onHide={handleClose}
-					keyboard={false}
-					centered
-				>
-					<Modal.Body>
-						<StatusModalContainer
-							currentStatus={currentStatus}
-							handleChangeStatus={handleChangeStatus}
-							bookShelves={myCustomLibraries}
-							updateBookShelve={updateBookShelve}
-							handleConfirm={handleConfirm}
-							onChangeShelves={onChangeShelves}
-							customLibrariesContainCurrentBookId={customLibrariesContainCurrentBookId}
-						/>
-					</Modal.Body>
-				</Modal>
+				<>
+					{!inCreatePost && (
+						<Modal
+							id='status-book-modal'
+							className='status-book-modal'
+							show={modalShow}
+							onHide={handleClose}
+							keyboard={false}
+							centered
+						>
+							<Modal.Body>
+								<StatusModalContainer
+									currentStatus={currentStatus}
+									handleChangeStatus={handleChangeStatus}
+									bookShelves={myCustomLibraries}
+									updateBookShelve={updateBookShelve}
+									handleConfirm={handleConfirm}
+									onChangeShelves={onChangeShelves}
+									customLibrariesContainCurrentBookId={customLibrariesContainCurrentBookId}
+								/>
+							</Modal.Body>
+						</Modal>
+					)}
+				</>
 			) : (
 				<ModalCheckLogin modalShow={modalShow} setModalShow={setModalShow} />
 			)}
@@ -228,7 +239,7 @@ StatusButton.defaultProps = {
 StatusButton.propTypes = {
 	className: PropTypes.string,
 	bookData: PropTypes.object,
-	inPostBook: PropTypes.bool,
+	inCreatePost: PropTypes.bool,
 	hasBookStatus: PropTypes.bool,
 };
 

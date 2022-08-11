@@ -1,6 +1,5 @@
 import './books-search.scss';
 import AuthorBook from 'shared/author-book';
-import { CHECK_STAR } from 'constants';
 import ResultNotFound from '../result-not-found';
 import PropTypes from 'prop-types';
 import InfiniteScroll from 'react-infinite-scroll-component';
@@ -83,7 +82,7 @@ const BookSearch = ({ isFetching, value, setIsFetching, searchResultInput, activ
 					>
 						{listArrayBooks.map(item => (
 							<div key={item.id} className='bookSearch__main'>
-								<AuthorBook data={item} checkStar={CHECK_STAR} />
+								<AuthorBook data={item} checkStar={true} position='bookSearch' />
 							</div>
 						))}
 					</InfiniteScroll>
