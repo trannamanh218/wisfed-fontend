@@ -10,6 +10,7 @@ import PropTypes from 'prop-types';
 
 const ReviewBookInfo = ({ bookInfo }) => {
 	const [listRatingStar, setListRatingStar] = useState({});
+	const [textLength, setTextLength] = useState(460);
 
 	const dispatch = useDispatch();
 
@@ -24,6 +25,14 @@ const ReviewBookInfo = ({ bookInfo }) => {
 
 	useEffect(() => {
 		getRatingData();
+	}, []);
+
+	useEffect(() => {
+		if (window.innerWidth <= 1024 && window.innerWidth > 820) {
+			setTextLength(300);
+		} else if (window.innerWidth <= 820) {
+			setTextLength(250);
+		}
 	}, []);
 
 	return (
@@ -42,7 +51,7 @@ const ReviewBookInfo = ({ bookInfo }) => {
 				</div>
 
 				<div className='review-book-info__description'>
-					<ReadMore text={bookInfo.description} />
+					<ReadMore text={bookInfo.description} length={textLength} />
 				</div>
 			</div>
 		</div>
