@@ -554,12 +554,12 @@
 
 	.badge-book {
 		margin-bottom: 1.5rem;
-		max-width: 480px;
-		display: -webkit-box;
-		overflow: hidden;
-		-webkit-box-orient: vertical;
-		-webkit-line-clamp: 1;
-		text-overflow: ellipsis;
+		max-width: 100%;
+		> span {
+			max-width: 95%;
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
 	}
 }
 

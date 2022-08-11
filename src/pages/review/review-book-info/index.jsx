@@ -9,14 +9,14 @@ import { NotificationError } from 'helpers/Error';
 import PropTypes from 'prop-types';
 
 const ReviewBookInfo = ({ bookInfo }) => {
-	const [lisRatingStar, setLisRatingStar] = useState({});
+	const [listRatingStar, setListRatingStar] = useState({});
 
 	const dispatch = useDispatch();
 
 	const getRatingData = async () => {
 		try {
 			const res = await dispatch(getRatingBook(bookInfo?.id)).unwrap();
-			setLisRatingStar(res.data);
+			setListRatingStar(res.data);
 		} catch (err) {
 			NotificationError(err);
 		}
@@ -37,8 +37,8 @@ const ReviewBookInfo = ({ bookInfo }) => {
 					)}
 				</div>
 				<div className='review-book-info__stars'>
-					<ReactRating readonly={true} initialRating={lisRatingStar?.avg} />
-					<span>(Trung bình {lisRatingStar?.avg} sao)</span>
+					<ReactRating readonly={true} initialRating={listRatingStar?.avg} />
+					<span>(Trung bình {listRatingStar?.avg} sao)</span>
 				</div>
 
 				<div className='review-book-info__description'>

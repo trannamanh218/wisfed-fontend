@@ -24,6 +24,50 @@ const PostShare = ({ postData, inCreatePost = false }) => {
 		window.open(url);
 	};
 
+	const withFriends = paramInfo => {
+		if (paramInfo.length === 1) {
+			return (
+				<span>
+					<span style={{ fontWeight: '500' }}> cùng với </span>
+					<Link to={`/profile/${paramInfo[0].userId}`}>
+						{paramInfo[0].users.fullName ||
+							paramInfo[0].users.firstName + ' ' + paramInfo[0].users.lastName}
+					</Link>
+					<span style={{ fontWeight: '500' }}>.</span>
+				</span>
+			);
+		} else if (paramInfo.length === 2) {
+			return (
+				<span>
+					<span style={{ fontWeight: '500' }}> cùng với </span>
+					<Link to={`/profile/${paramInfo[0].userId}`}>
+						{paramInfo[0].users.fullName ||
+							paramInfo[0].users.firstName + ' ' + paramInfo[0].users.lastName}
+					</Link>
+					<span style={{ fontWeight: '500' }}> và </span>
+					<Link to={`/profile/${paramInfo[1].userId}`}>
+						{paramInfo[1].users.fullName ||
+							paramInfo[1].users.firstName + ' ' + paramInfo[1].users.lastName}
+					</Link>
+					<span style={{ fontWeight: '500' }}>.</span>
+				</span>
+			);
+		} else {
+			return (
+				<span>
+					<span style={{ fontWeight: '500' }}> cùng với </span>
+					<Link to={`/profile/${paramInfo[0].users.id}`}>
+						{paramInfo[0].users.fullName ||
+							paramInfo[0].users.firstName + ' ' + paramInfo[0].users.lastName}
+					</Link>
+					<span style={{ fontWeight: '500' }}> và </span>
+					{paramInfo.length - 1}
+					<span style={{ fontWeight: '500' }}> người khác.</span>
+				</span>
+			);
+		}
+	};
+
 	useEffect(() => {
 		if (
 			!_.isEmpty(postData.sharePost.preview) &&

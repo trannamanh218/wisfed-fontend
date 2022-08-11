@@ -29,6 +29,7 @@ const MainContainer = ({ main, right, sub }) => {
 MainContainer.propTypes = {
 	main: PropTypes.any.isRequired,
 	right: PropTypes.any.isRequired,
+	sub: PropTypes.any,
 };
 
 export default MainContainer;

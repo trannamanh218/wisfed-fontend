@@ -16,6 +16,7 @@ function AddAndSearchCategories({
 	categoryInputWrapper,
 	categoryInput,
 	hasSearchIcon,
+	placeholder,
 }) {
 	const focusCategoryInput = () => {
 		if (categoryInput.current) {
@@ -50,7 +51,7 @@ function AddAndSearchCategories({
 					<div className='add-and-search-categories__categories-added'>
 						{categoryAddedList.map(item => (
 							<div key={item.id} className='add-and-search-categories__categories-added__item'>
-								<div>{item.name}</div>
+								<div>{item.name || item.fullName}</div>
 								<button onClick={() => removeCategory(item.id)}>
 									<CloseX />
 								</button>
@@ -72,11 +73,7 @@ function AddAndSearchCategories({
 				) : (
 					<>
 						{hasSearchIcon && <Search className='add-and-search-categories__search-icon' />}
-						<input
-							placeholder='Tìm kiếm và thêm chủ đề'
-							value={inputCategoryValue}
-							onChange={searchCategory}
-						/>
+						<input placeholder={placeholder} value={inputCategoryValue} onChange={searchCategory} />
 					</>
 				)}
 			</div>
@@ -90,7 +87,7 @@ function AddAndSearchCategories({
 									key={item.id}
 									onClick={() => addCategory(item)}
 								>
-									<span>{item.name}</span>
+									<span>{item.name || item.fullName}</span>
 									<>
 										{categoryAddedList.filter(categoryAdded => categoryAdded.id === item.id)
 											.length > 0 && (
@@ -112,6 +109,10 @@ function AddAndSearchCategories({
 	);
 }
 
+AddAndSearchCategories.defaultProps = {
+	placeholder: 'Tìm kiếm và thêm chủ đề',
+};
+
 AddAndSearchCategories.propTypes = {
 	categoryAddedList: PropTypes.array,
 	categorySearchedList: PropTypes.array,
@@ -124,6 +125,7 @@ AddAndSearchCategories.propTypes = {
 	categoryInputWrapper: PropTypes.object,
 	categoryInput: PropTypes.object,
 	hasSearchIcon: PropTypes.bool,
+	placeholder: PropTypes.string,
 };
 
 export default AddAndSearchCategories;

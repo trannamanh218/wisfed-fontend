@@ -1,6 +1,6 @@
 import './top-books.scss';
 import SelectBox from 'shared/select-box';
-import React, { useRef, useEffect, useState } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import AuthorBook from 'shared/author-book';
 import StarRanking from 'shared/starRanks';
 import PropTypes from 'prop-types';
@@ -12,18 +12,21 @@ import LoadingIndicator from 'shared/loading-indicator';
 
 const TopBooks = ({ rows, listYear, tabSelected }) => {
 	const kindOfGroupRef = useRef({ value: 'default', title: 'Chủ đề' });
+	const [categoryOption, setCategoryOption] = useState({});
 	const listYearRef = useRef({ value: 'default', title: 'Tuần' });
 	const { isAuth } = useSelector(state => state.auth);
-	const [topBooksId, setTopQuotesId] = useState(null);
+	const [topBooksId, setTopBooksId] = useState(null);
 	const [valueDate, setValueData] = useState('week');
 	const [getListTopBooks, setGetListTopBooks] = useState([]);
 	const [modalShow, setModalShow] = useState(false);
 	const [loadingState, setLoadingState] = useState(false);
 	const dispatch = useDispatch();
 
+	const category = JSON.parse(localStorage.getItem('category'));
+
 	const onchangeKindOfGroup = data => {
 		kindOfGroupRef.current = data;
-		setTopQuotesId(data.id);
+		setTopBooksId(data.id);
 	};
 
 	const getTopBooksData = async () => {
@@ -47,8 +50,40 @@ const TopBooks = ({ rows, listYear, tabSelected }) => {
 		}
 	};
 
+	const getTopBooksDataWhenAccessFromCategory = async paramsLocalStorage => {
+		setLoadingState(true);
+		const params = {
+			categoryId: paramsLocalStorage.value,
+			by: valueDate,
+		};
+		try {
+			if (isAuth === false) {
+				const topBooks = await dispatch(getTopBooks(params)).unwrap();
+				setGetListTopBooks(topBooks);
+			} else if (isAuth === true) {
+				const topBooks = await dispatch(getTopBooksAuth(params)).unwrap();
+				setGetListTopBooks(topBooks);
+			}
+		} catch (err) {
+			NotificationError(err);
+		} finally {
+			setLoadingState(false);
+		}
+	};
+
 	useEffect(() => {
-		if (tabSelected === 'books') {
+		if (category) {
+			setCategoryOption(category);
+			setTopBooksId(category.value);
+			getTopBooksDataWhenAccessFromCategory(category);
+			localStorage.removeItem('category');
+		} else {
+			setCategoryOption(kindOfGroupRef.current);
+		}
+	}, []);
+
+	useEffect(() => {
+		if (tabSelected === 'books' && !category) {
 			getTopBooksData();
 		}
 	}, [topBooksId, valueDate, isAuth, tabSelected]);
@@ -68,7 +103,7 @@ const TopBooks = ({ rows, listYear, tabSelected }) => {
 					<SelectBox
 						name='themeGroup'
 						list={rows}
-						defaultOption={kindOfGroupRef.current}
+						defaultOption={categoryOption}
 						onChangeOption={onchangeKindOfGroup}
 					/>
 				</div>

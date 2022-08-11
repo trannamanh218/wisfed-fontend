@@ -112,7 +112,21 @@
 	z-index: 1000;
 }
 
-@media only screen and (width: 912px) {
+@media only screen and (max-width: 1025px) {
+	.newfeed {
+		.post__container {
+			.post__user-status {
+				&__subtitle {
+					.react-rating-container {
+						margin-left: 10px;
+					}
+				}
+			}
+		}
+	}
+}
+
+@media only screen and (width: 913px) {
 	.newfeed {
 		.post__container {
 			.post__user-status {

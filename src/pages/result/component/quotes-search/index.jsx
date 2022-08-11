@@ -49,7 +49,9 @@ const QuoteSearch = ({ isFetching, value, setIsFetching, searchResultInput, acti
 			if (result.rows.length > 0) {
 				callApiStartQuotes.current += callApiPerPage.current;
 				setListArrayQuotes(listArrayQuotes.concat(result.rows));
-			} else {
+			}
+			// Nếu kết quả tìm kiếm nhỏ hơn limit thì disable gọi api khi scroll
+			if (!result.rows.length || result.rows.length < callApiPerPage.current) {
 				setHasMore(false);
 			}
 		} catch (err) {

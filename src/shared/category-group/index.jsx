@@ -37,16 +37,16 @@ const CategoryGroup = ({ data, list, title, handleViewBookDetail, handleViewCate
 									inCategory={true}
 									inCategoryDetail={inCategoryDetail}
 								/>
-								<button
-									className='category-group__link'
-									onClick={() => {
-										handleViewCategoryDetail(data);
-									}}
-								>
-									Xem tất cả
-								</button>
 							</>
 						)}
+						<button
+							className='category-group__link'
+							onClick={() => {
+								handleViewCategoryDetail(data);
+							}}
+						>
+							Xem tất cả
+						</button>
 					</>
 				</div>
 			)}
@@ -61,6 +61,7 @@ CategoryGroup.propTypes = {
 	handleViewBookDetail: PropTypes.func,
 	handleViewCategoryDetail: PropTypes.func,
 	inCategory: PropTypes.bool,
+	inCategoryDetail: PropTypes.bool,
 };
 
 export default CategoryGroup;

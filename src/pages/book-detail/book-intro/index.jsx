@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import { useState, useEffect } from 'react';
 import shareImg from 'assets/images/alert-circle-fill.png';
 import facebookImg from 'assets/images/facebook.png';
@@ -11,20 +12,16 @@ import { useSelector } from 'react-redux';
 import _ from 'lodash';
 import { convertToPlainString } from 'helpers/Common';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { getRatingBook } from 'reducers/redux-utils/book';
 import { useDispatch } from 'react-redux';
-import { NotificationError } from 'helpers/Error';
 import { FacebookShareButton } from 'react-share';
 import Storage from 'helpers/Storage';
 import { checkUserLogin } from 'reducers/redux-utils/auth';
 
-const BookIntro = () => {
-	const { bookInfo } = useSelector(state => state.book);
+const BookIntro = ({ bookInfo, listRatingStar }) => {
 	const reviewsNumber = useSelector(state => state.book.currentBookReviewsNumber);
 	const location = useLocation();
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
-	const [lisRatingStar, setLisRatingStar] = useState({});
 	const [urlShare, seturlShare] = useState('');
 	const [textLength, setTextLength] = useState(450);
 
@@ -34,17 +31,7 @@ const BookIntro = () => {
 		}
 	};
 
-	const fetchData = async () => {
-		try {
-			const res = await dispatch(getRatingBook(bookInfo?.id)).unwrap();
-			setLisRatingStar(res.data);
-		} catch (err) {
-			NotificationError(err);
-		}
-	};
-
 	useEffect(() => {
-		fetchData();
 		if (window.innerWidth <= 1024 && window.innerWidth > 820) {
 			setTextLength(300);
 		} else if (window.innerWidth <= 820) {
@@ -85,8 +72,8 @@ const BookIntro = () => {
 						<CircleCheckIcon className='book-intro__check' />
 					</div>
 					<div className='book-intro__stars'>
-						<ReactRating readonly={true} initialRating={lisRatingStar?.avg} />
-						<span>({lisRatingStar?.count} đánh giá)</span>
+						<ReactRating readonly={true} initialRating={listRatingStar?.avg} />
+						<span>({listRatingStar?.count} đánh giá)</span>
 						<span>({reviewsNumber} review)</span>
 					</div>
 
@@ -114,3 +101,8 @@ const BookIntro = () => {
 };
 
 export default BookIntro;
+
+BookIntro.propTypes = {
+	bookInfo: PropTypes.object,
+	listRatingStar: PropTypes.object,
+};

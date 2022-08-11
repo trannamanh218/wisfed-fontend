@@ -178,7 +178,7 @@ AuthorBook.propTypes = {
 	showShareBtn: PropTypes.bool,
 	setModalShow: PropTypes.func,
 	valueDate: PropTypes.string,
-	topBooksId: PropTypes.number,
+	topBooksId: PropTypes.any,
 	categoryName: PropTypes.string,
 	inCreatePost: PropTypes.bool,
 	position: PropTypes.string,

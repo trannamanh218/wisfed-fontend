@@ -207,7 +207,7 @@ function Post({ postInformations, type }) {
 						{paramInfo[0].users.fullName ||
 							paramInfo[0].users.firstName + ' ' + paramInfo[0].users.lastName}
 					</Link>
-					{'.'}
+					<span style={{ fontWeight: '500' }}>.</span>
 				</span>
 			);
 		} else if (paramInfo.length === 2) {
@@ -223,7 +223,7 @@ function Post({ postInformations, type }) {
 						{paramInfo[1].users.fullName ||
 							paramInfo[1].users.firstName + ' ' + paramInfo[1].users.lastName}
 					</Link>
-					{'.'}
+					<span style={{ fontWeight: '500' }}>.</span>
 				</span>
 			);
 		} else {

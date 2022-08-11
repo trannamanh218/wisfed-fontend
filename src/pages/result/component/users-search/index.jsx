@@ -49,13 +49,14 @@ const UsersSearch = ({ isFetching, value, setIsFetching, searchResultInput, acti
 				limit: callApiPerPage.current,
 			};
 			const result = await dispatch(getFilterSearch(params)).unwrap();
+			if (result.rows.length > 0) {
+				callApiStart.current += callApiPerPage.current;
+				setListArrayUsers(listArrayUsers.concat(result.rows));
+			}
 			// Nếu kết quả tìm kiếm nhỏ hơn limit thì disable gọi api khi scroll
 			if (!result.rows.length || result.rows.length < callApiPerPage.current) {
 				setHasMore(false);
-			} else {
-				callApiStart.current += callApiPerPage.current;
 			}
-			setListArrayUsers(listArrayUsers.concat(result.rows));
 		} catch (err) {
 			NotificationError(err);
 		} finally {

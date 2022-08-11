@@ -251,7 +251,6 @@ const ReviewTab = ({ currentTab }) => {
 				getReviewListFirstTime();
 				break;
 			default:
-			//
 		}
 	};
 	useEffect(() => {

@@ -53,12 +53,14 @@ const CategorySearch = ({ value, isFetching, setIsFetching, searchResultInput, a
 				limit: callApiPerPage.current,
 			};
 			const result = await dispatch(getFilterSearch(params)).unwrap();
+			if (result.rows.length > 0) {
+				callApiStartCategory.current += callApiPerPage.current;
+				setListArrayCategory(listArrayCategory.concat(result.rows));
+			}
+			// Nếu kết quả tìm kiếm nhỏ hơn limit thì disable gọi api khi scroll
 			if (!result.rows.length || result.rows.length < callApiPerPage.current) {
 				setHasMore(false);
-			} else {
-				callApiStartCategory.current += callApiPerPage.current;
 			}
-			setListArrayCategory(listArrayCategory.concat(result.rows));
 		} catch (err) {
 			NotificationError(err);
 		} finally {
@@ -126,6 +128,7 @@ CategorySearch.propTypes = {
 	searchResultInput: PropTypes.string,
 	value: PropTypes.string,
 	updateBooks: PropTypes.bool,
+	isFetching: PropTypes.bool,
 };
 
 export default CategorySearch;
