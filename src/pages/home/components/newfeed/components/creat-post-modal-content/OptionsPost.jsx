@@ -3,10 +3,12 @@ import classNames from 'classnames';
 import _ from 'lodash';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
+import UploadImage from './UploadImage';
 
 const OptionsPost = ({ list, addOptionsToPost, taggedData, images }) => {
-	const { isShare } = useSelector(state => state.post);
 	const [itemOnMouseHover, setItemOnMouseHover] = useState(null);
+	const { resetTaggedData, isShare, postsData, isSharePosts, isSharePostsAll, isShareTarget, UpdateImg } =
+		useSelector(state => state.post);
 
 	return list.map((item, index) => {
 		let isActive = false;
@@ -22,11 +24,25 @@ const OptionsPost = ({ list, addOptionsToPost, taggedData, images }) => {
 				isActive = taggedData[item.value].length > 0 ? true : false;
 			}
 		}
+		let check;
+		if (
+			!_.isEmpty(taggedData.addBook) ||
+			isShare ||
+			isSharePosts ||
+			isSharePostsAll.length > 0 ||
+			postsData.verd === 'shareTarget' ||
+			images.length > 0
+
+			// postsData.UpdateImg.verd === 'tart'
+		) {
+			check = true;
+		}
+		console.log(postsData);
 		return (
 			<span
 				className={classNames('creat-post-modal-content__main__options__item-add-to-post', {
 					'active': isActive,
-					'disabled': isDisabled,
+					'disabled': check && item.value !== 'addFriends',
 				})}
 				onClick={e => {
 					e.stopPropagation();

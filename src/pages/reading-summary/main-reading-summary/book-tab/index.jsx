@@ -76,7 +76,9 @@ const BookTab = () => {
 				}
 
 				const imageUploadedData = new File([u8arr], 'charts.png', { type: mime });
+
 				const imgUploadder = [imageUploadedData];
+
 				if (imageUploadedData) {
 					setLoading(false);
 					navigate('/');

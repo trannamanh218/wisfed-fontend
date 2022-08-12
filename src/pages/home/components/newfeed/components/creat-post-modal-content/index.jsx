@@ -104,8 +104,7 @@ function CreatPostModalContent({
 			setImagesUpload(UpdateImg);
 		}
 	}, []);
-
-	console.log(isShareTarget);
+	console.log(UpdateImg);
 
 	useEffect(() => {
 		if (!_.isEmpty(bookForCreatePost)) {
@@ -536,7 +535,7 @@ function CreatPostModalContent({
 				break;
 		}
 	};
-
+	console.log(postsData);
 	return (
 		<div className='creat-post-modal-content'>
 			<Circle loading={status === STATUS_LOADING} />
@@ -703,6 +702,7 @@ function CreatPostModalContent({
 							)}
 						</div>
 					</div>
+					{/*  */}
 					<div className='creat-post-modal-content__main__options-and-submit'>
 						<div className='creat-post-modal-content__main__options'>
 							<span>Thêm vào bài viết</span>
@@ -720,7 +720,9 @@ function CreatPostModalContent({
 											!_.isEmpty(taggedData.addBook) ||
 											isShare ||
 											isSharePosts ||
-											isSharePostsAll.length > 0,
+											isSharePostsAll.length > 0 ||
+											postsData.verd === 'shareTarget' ||
+											imagesUpload.length > 0,
 									})}
 									onMouseOver={() => setShowImagePopover(true)}
 									onMouseLeave={() => setShowImagePopover(false)}

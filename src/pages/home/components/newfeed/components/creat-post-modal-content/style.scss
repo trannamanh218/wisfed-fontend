@@ -416,6 +416,7 @@
 	&.disabled {
 		background-color: #d9dbe9;
 		cursor: no-drop;
+		pointer-events: none;
 	}
 }
 

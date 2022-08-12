@@ -127,7 +127,7 @@ const MainReadingTarget = () => {
 				numberBook: booksReadYear[0].numberBook,
 				booksReadCount: booksReadYear[0].booksReadCount,
 				percent: percentTemp > 100 ? 100 : percentTemp,
-				verd: 'shareTopUserRanking',
+				verd: 'shareTarget',
 			};
 			dispatch(saveDataShare(target));
 			setShowShare(true);
