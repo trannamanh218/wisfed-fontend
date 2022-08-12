@@ -99,6 +99,8 @@ const ModalItem = ({ item, setModalNotti, getNotifications, setGetNotifications,
 			navigate(`/group/${items.originId.groupId}`);
 		} else if (item.verb === 'likeReview') {
 			navigate(`/review/${items.originId.bookId}/${userInfo.id}`);
+		} else if (item.verb === 'likeCommentMiniPost') {
+			navigate(`/detail-feed/mini-post/${items.originId.minipostId}`);
 		}
 		dispatch(backgroundToggle(true));
 		setModalNotti(false);
