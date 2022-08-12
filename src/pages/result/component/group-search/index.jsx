@@ -43,6 +43,7 @@ const GroupSearch = ({ value, setIsFetching, searchResultInput, activeKeyDefault
 	}, [callApiStart.current, value, isShowModal, listArrayGroup]);
 
 	const handleGetGroupSearch = async () => {
+		setIsFetching(true);
 		try {
 			const params = {
 				q: searchResultInput,

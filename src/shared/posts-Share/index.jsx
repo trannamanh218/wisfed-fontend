@@ -107,6 +107,13 @@ const PostShare = ({ postData, inCreatePost = false }) => {
 						{postData.sharePost.createdBy.fullName ||
 							postData.sharePost.createdBy.firstName + ' ' + postData.sharePost.createdBy.lastName ||
 							'Ẩn danh'}
+						{/* tagged people */}
+						{postData.sharePost?.mentionsUsers &&
+							!!postData.sharePost.mentionsUsers.length &&
+							withFriends(postData.sharePost.mentionsUsers)}
+						{(postData.groupInfo || postData.group) && (
+							<img className='post__user-icon' src={Play} alt='' />
+						)}
 						{postData?.group && (
 							<Link to={`/group/${postData.group.id}`}>
 								<span className='img-share__group'>
