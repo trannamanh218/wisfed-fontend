@@ -309,16 +309,20 @@ function Post({ postInformations, type }) {
 								{postData.book && (
 									<div className='post__user-status__subtitle'>
 										<span>Cập nhật tiến độ đọc sách</span>
-										<div className='post__user-status__post-time-status__online-dot'></div>
-										<span>Xếp hạng</span>
-										<ReactRating
-											readonly={true}
-											initialRating={
-												postInformations?.book?.actorRating
-													? postInformations?.book?.actorRating?.star
-													: 0
-											}
-										/>
+										{postInformations?.book?.actorRating !== null ? (
+											<>
+												<div className='post__user-status__post-time-status__online-dot'></div>
+												<span>Xếp hạng</span>
+												<ReactRating
+													readonly={true}
+													initialRating={
+														postInformations?.book?.actorRating
+															? postInformations?.book?.actorRating?.star
+															: 0
+													}
+												/>
+											</>
+										) : null}
 									</div>
 								)}
 							</>
