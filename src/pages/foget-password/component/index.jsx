@@ -7,6 +7,7 @@ import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import Storage from 'helpers/Storage';
+import { Link } from 'react-router-dom';
 
 function ForgetPassWordComponet() {
 	const key = useSelector(state => state.forgetPasswordSliceReducer.keyChange);
@@ -19,9 +20,12 @@ function ForgetPassWordComponet() {
 
 	return (
 		<div className='forget__container'>
-			<div className='login__header'>
-				<img src={Logo} alt='logo' />
-			</div>
+			<Link to='/login'>
+				<div className='login__header'>
+					<img src={Logo} alt='logo' />
+				</div>
+			</Link>
+
 			<div className='forget__body'>
 				<div className='forget__form__img'>
 					<img src={ImgForget} alt='' />
