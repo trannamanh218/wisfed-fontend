@@ -94,7 +94,7 @@ const Review = () => {
 						<ReviewBookInfo bookInfo={bookInfo} />
 						<div className='review__items'>
 							<h4>Bài Review</h4>
-							{listReview.length > 0 ? (
+							{listReview?.length > 0 ? (
 								listReview.map((item, index) => (
 									<div clas key={item.id}>
 										<Post postInformations={item} type={REVIEW_TYPE} />

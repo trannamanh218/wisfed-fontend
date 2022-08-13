@@ -10,9 +10,8 @@ import { useDispatch } from 'react-redux';
 import ModalLogin from 'pages/login/element/ModalLogin';
 import { register } from 'reducers/redux-utils/auth';
 import Circle from 'shared/loading/circle';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Storage from 'helpers/Storage';
-import { Link } from 'react-router-dom';
 
 function Register() {
 	const dispatch = useDispatch();
@@ -77,12 +76,11 @@ function Register() {
 	return (
 		<div className='register__container'>
 			<Circle loading={isLoading} />
-			<Link to='/login'>
+			<Link to='/'>
 				<div className='register__header'>
 					<img src={Logo} alt='logo' />
 				</div>
 			</Link>
-
 			{isShow ? (
 				<div className='register__container-modal'>
 					<ModalLogin data={dataModal} handleClose={handleClose} />

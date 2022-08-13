@@ -80,7 +80,7 @@ const QuoteCard = ({ data, isDetail = false, isShare = false }) => {
 				<div className='quote-card__author__avatar' onClick={() => onClickRedirectToAuthor(quoteData)}>
 					<UserAvatar
 						size='sm'
-						avatarImage={isShare ? quoteData?.createdBy?.avatarImage : quoteData?.user?.avatarImage}
+						avatarImage={quoteData?.createdBy?.avatarImage || quoteData?.user?.avatarImage}
 					/>
 				</div>
 				<div className='quote-card__author__detail'>
