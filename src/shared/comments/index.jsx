@@ -134,7 +134,7 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 								id: data.user.id,
 								name: data.user.fullName || data.user.firstName + ' ' + data.user.lastName,
 								avatar: data.user.avatarImage,
-								link: `${window.location.hostname}/profile/${data.user.id}`,
+								link: `/profile/${data.user.id}`,
 							})
 						}
 					>

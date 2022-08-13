@@ -58,7 +58,7 @@ function App({ children }) {
 		const accsetToken = Storage.getAccessToken();
 		if (accsetToken) {
 			dispatch(checkLogin(true));
-			await dispatch(getCheckJwt());
+			await dispatch(getCheckJwt()).unwrap();
 		} else {
 			dispatch(checkLogin(false));
 		}

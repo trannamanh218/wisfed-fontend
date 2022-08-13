@@ -4,11 +4,11 @@ import './modalLogin.scss';
 import { useLocation } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 
-export default function ModalLogin({ data, handleChange }) {
+export default function ModalLogin({ data, handleClose }) {
 	const location = useLocation();
 	return (
 		<div className='modal__container'>
-			<div className='modal__closeButton' onClick={() => handleChange()}>
+			<div className='modal__closeButton' onClick={() => handleClose()}>
 				{data.pathname && data.isShowIcon === true ? (
 					<Link to={data.pathname}>
 						<button>
@@ -41,10 +41,10 @@ export default function ModalLogin({ data, handleChange }) {
 				<div className='modal__button-acept'>
 					{data.pathname && data.isShowIcon === true ? (
 						<Link to={data.pathname}>
-							<button onClick={() => handleChange()}>Xác nhận</button>
+							<button onClick={() => handleClose()}>Xác nhận</button>
 						</Link>
 					) : (
-						<button onClick={() => handleChange()}>Xác nhận</button>
+						<button onClick={() => handleClose()}>Xác nhận</button>
 					)}
 				</div>
 			</div>
@@ -54,5 +54,5 @@ export default function ModalLogin({ data, handleChange }) {
 
 ModalLogin.propTypes = {
 	data: PropTypes.object,
-	handleChange: PropTypes.func,
+	handleClose: PropTypes.func,
 };

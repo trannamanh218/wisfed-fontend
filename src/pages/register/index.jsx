@@ -6,7 +6,6 @@ import ImgRegister from 'assets/images/anh-1 1.png';
 import { Formik, Field, Form } from 'formik';
 import classNames from 'classnames';
 import { registerValidate } from 'helpers/Validation';
-import { unwrapResult } from '@reduxjs/toolkit';
 import { useDispatch } from 'react-redux';
 import ModalLogin from 'pages/login/element/ModalLogin';
 import { register } from 'reducers/redux-utils/auth';
@@ -34,8 +33,7 @@ function Register() {
 		if (newData) {
 			try {
 				setIsLoading(true);
-				const actionRegister = await dispatch(register(newData));
-				const infoUser = unwrapResult(actionRegister);
+				const infoUser = await dispatch(register(newData)).unwrap();
 				if (infoUser) {
 					const newdata = {
 						title: 'Tạo tài khoản',
@@ -48,7 +46,6 @@ function Register() {
 					setIsLoading(false);
 					setDataModal(newdata);
 					setIsShow(true);
-					localStorage.setItem('registerEmailFill', newData.email);
 				}
 			} catch {
 				setIsLoading(false);
@@ -65,7 +62,7 @@ function Register() {
 		}
 	};
 
-	const handleChange = () => {
+	const handleClose = () => {
 		setIsShow(false);
 	};
 
@@ -83,7 +80,7 @@ function Register() {
 			</div>
 			{isShow ? (
 				<div className='register__container-modal'>
-					<ModalLogin data={dataModal} handleChange={handleChange} />
+					<ModalLogin data={dataModal} handleClose={handleClose} />
 				</div>
 			) : (
 				''

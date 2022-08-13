@@ -175,7 +175,7 @@ function RichTextEditor({
 			suggestionsResponse.rows.forEach(item => {
 				const mentionData = {
 					name: item.fullName || item.firstName + item.lastName,
-					link: `${window.location.hostname}/profile/${item.id}`,
+					link: `/profile/${item.id}`,
 					avatar: item.avatarImage || defaultAvatar,
 					id: item.id,
 				};

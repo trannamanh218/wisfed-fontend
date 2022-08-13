@@ -136,7 +136,7 @@ function CreateNewPasswordForm() {
 			<Circle loading={isFetching} />
 			{isShow && (
 				<div>
-					<ModalLogin data={dataModal} handleChange={handleChangeModal} />
+					<ModalLogin data={dataModal} handleClose={handleChangeModal} />
 				</div>
 			)}
 			<Formik
