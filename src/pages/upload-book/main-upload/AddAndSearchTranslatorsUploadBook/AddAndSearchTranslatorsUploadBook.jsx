@@ -7,11 +7,11 @@ import { getSuggestionForPost } from 'reducers/redux-utils/activity';
 import { NotificationError } from 'helpers/Error';
 import PropTypes from 'prop-types';
 
-function AddAndSearchCategoriesUploadBook({
-	inputCategoryValue,
-	setInputCategoryValue,
-	categoryAddedList,
-	setCategoryAddedList,
+function AddAndSearchTranslatorsUploadBook({
+	inputTranslatorValue,
+	setInputTranslatorValue,
+	translators,
+	setTranslators,
 }) {
 	const [categorySearchedList, setCategorySearchedList] = useState([]);
 	const [getDataFinish, setGetDataFinish] = useState(false);
@@ -23,13 +23,13 @@ function AddAndSearchCategoriesUploadBook({
 	const dispatch = useDispatch();
 
 	const addCategory = category => {
-		if (categoryAddedList.filter(categoryAdded => categoryAdded.id === category.id).length > 0) {
+		if (translators.filter(categoryAdded => categoryAdded.id === category.id).length > 0) {
 			removeCategory(category.id);
 		} else {
-			const categoryArrayTemp = [...categoryAddedList];
+			const categoryArrayTemp = [...translators];
 			categoryArrayTemp.push(category);
-			setCategoryAddedList(categoryArrayTemp);
-			setInputCategoryValue('');
+			setTranslators(categoryArrayTemp);
+			setInputTranslatorValue('');
 			setCategorySearchedList([]);
 			if (categoryInputWrapper.current) {
 				categoryInputWrapper.current.style.width = '0.5ch';
@@ -38,10 +38,10 @@ function AddAndSearchCategoriesUploadBook({
 	};
 
 	const removeCategory = categoryId => {
-		const categoryArr = [...categoryAddedList];
+		const categoryArr = [...translators];
 		const index = categoryArr.findIndex(item => item.id === categoryId);
 		categoryArr.splice(index, 1);
-		setCategoryAddedList(categoryArr);
+		setTranslators(categoryArr);
 	};
 
 	const getSuggestionForCreatQuotes = async (input, option) => {
@@ -63,7 +63,7 @@ function AddAndSearchCategoriesUploadBook({
 	const searchCategory = e => {
 		setGetDataFinish(false);
 		setCategorySearchedList([]);
-		setInputCategoryValue(e.target.value);
+		setInputTranslatorValue(e.target.value);
 		debounceSearch(e.target.value, { value: 'addCategory' });
 		if (categoryInputWrapper.current) {
 			categoryInputWrapper.current.style.width = categoryInput.current.value?.length + 0.5 + 'ch';
@@ -72,31 +72,30 @@ function AddAndSearchCategoriesUploadBook({
 
 	return (
 		<div className='form-field-group'>
-			<label className='form-field-label'>
-				Chủ đề<span className='upload-text-danger'>*</span>
-			</label>
+			<label className='form-field-label'>Dịch giả</label>
 			<AddAndSearchCategories
-				categoryAddedList={categoryAddedList}
+				categoryAddedList={translators}
 				categorySearchedList={categorySearchedList}
 				addCategory={addCategory}
 				removeCategory={removeCategory}
 				getDataFinish={getDataFinish}
 				searchCategory={searchCategory}
-				inputCategoryValue={inputCategoryValue}
+				inputCategoryValue={inputTranslatorValue}
 				categoryInputContainer={categoryInputContainer}
 				categoryInputWrapper={categoryInputWrapper}
 				categoryInput={categoryInput}
 				hasSearchIcon={true}
+				placeholder={'Tìm kiếm và thêm dịch giả'}
 			/>
 		</div>
 	);
 }
 
-AddAndSearchCategoriesUploadBook.propTypes = {
-	categoryAddedList: PropTypes.array,
-	setCategoryAddedList: PropTypes.func,
-	inputCategoryValue: PropTypes.string,
-	setInputCategoryValue: PropTypes.func,
+AddAndSearchTranslatorsUploadBook.propTypes = {
+	translators: PropTypes.array,
+	setTranslators: PropTypes.func,
+	inputTranslatorValue: PropTypes.string,
+	setInputTranslatorValue: PropTypes.func,
 };
 
-export default AddAndSearchCategoriesUploadBook;
+export default AddAndSearchTranslatorsUploadBook;

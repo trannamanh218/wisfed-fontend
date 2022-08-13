@@ -13,13 +13,15 @@ import Datepicker from 'react-datepicker';
 import { useDispatch, useSelector } from 'react-redux';
 import { uploadImage } from 'reducers/redux-utils/common';
 import ModalSeries from 'shared/modal-series/ModalSeries';
-import AddAndSearchCategoriesUploadBook from './AddAndSearchCategoriesUploadBook/AddAndSearchCategoriesUploadBook';
-import AddAndSearchAuthorUploadBook from './AddAndSearchAuthorUploadBook/AddAndSearchAuthorUploadBook';
 import { toast } from 'react-toastify';
 import { createBook } from 'reducers/redux-utils/book';
 import { addBookToSeries } from 'reducers/redux-utils/series';
 import { NotificationError } from 'helpers/Error';
 import classNames from 'classnames';
+import AddAndSearchAuthorUploadBook from './AddAndSearchAuthorUploadBook/AddAndSearchAuthorUploadBook';
+import AddAndSearchCategoriesUploadBook from './AddAndSearchCategoriesUploadBook/AddAndSearchCategoriesUploadBook';
+import AddAndSearchPublisherUploadBook from './AddAndSearchPublisherUploadBook/AddAndSearchPublisherUploadBook';
+import AddAndSearchTranslatorsUploadBook from './AddAndSearchTranslatorsUploadBook/AddAndSearchTranslatorsUploadBook';
 
 export default function MainUpload() {
 	const [publishDate, setPublishDate] = useState(null);
@@ -30,12 +32,19 @@ export default function MainUpload() {
 	const [image, setFrontBookCover] = useState('');
 	const [categoryAddedList, setCategoryAddedList] = useState([]);
 	const [authors, setAuthors] = useState([]);
+	const [translators, setTranslators] = useState([]);
+	const [publisher, setPublisher] = useState([]);
 	const [language, setLanguage] = useState('');
 	const [series, setSeries] = useState({});
 
 	const [resetSelect, setResetSelect] = useState(false);
 	const [buttonActive, setButtonActive] = useState(false);
 	const [temporarySeries, setTemporarySeries] = useState({});
+
+	const [inputAuthorValue, setInputAuthorValue] = useState('');
+	const [inputTranslatorValue, setInputTranslatorValue] = useState('');
+	const [inputCategoryValue, setInputCategoryValue] = useState('');
+	const [inputPublisherValue, setInputPublisherValue] = useState('');
 
 	const blockInvalidChar = e => {
 		return ['e', 'E', '+', '-'].includes(e.key) && e.preventDefault();
@@ -45,15 +54,12 @@ export default function MainUpload() {
 		name: '',
 		subName: '',
 		originalName: '',
-		translator: '',
-		publisher: '',
 		isbn: '',
 		page: '',
 		description: '',
 	};
 
-	const [{ name, subName, originalName, translator, publisher, isbn, page, description }, setState] =
-		useState(initialState);
+	const [{ name, subName, originalName, isbn, page, description }, setState] = useState(initialState);
 
 	const onChange = e => {
 		const { name, value } = e.target;
@@ -66,15 +72,17 @@ export default function MainUpload() {
 		setFrontBookCover('');
 		setPublishDate(null);
 		setTemporarySeries({});
-
-		// reset ô select
+		setInputAuthorValue('');
+		setAuthors([]);
+		setInputTranslatorValue('');
+		setTranslators([]);
+		setInputPublisherValue('');
+		setPublisher([]);
+		setInputCategoryValue('');
+		setCategoryAddedList([]);
+		setSeries({});
 		setLanguage('');
 		setResetSelect(!resetSelect);
-
-		setSeries({});
-
-		setCategoryAddedList([]);
-
 		setState({ ...initialState });
 	};
 
@@ -112,7 +120,7 @@ export default function MainUpload() {
 			}
 
 			// B4: Xử lý hiển thị kết quả
-			toast.success('Đăng tải sách thành công');
+			toast.success('Đang chờ xét duyệt sách. Chúng tôi sẽ thông báo cho bạn sau.');
 		} catch (err) {
 			NotificationError(err);
 		}
@@ -127,8 +135,6 @@ export default function MainUpload() {
 	};
 
 	const onBtnSaveClick = () => {
-		// Thu thập dữ liệu
-
 		// Lấy danh sách categoryIds
 		const categoryIds = [];
 		for (let i = 0; i < categoryAddedList.length; i++) {
@@ -141,6 +147,7 @@ export default function MainUpload() {
 			authorsArr.push({
 				'isUser': true,
 				'authorId': authors[i].id,
+				'authorName': authors[i].name,
 			});
 		}
 
@@ -151,8 +158,8 @@ export default function MainUpload() {
 			subName: subName,
 			originalName: originalName,
 			authors: authorsArr,
-			translator: translator,
-			publisher: publisher,
+			translators: translators,
+			publisher: publisher[0],
 			isbn: isbn,
 			publishDate: publishDate,
 			page: Number(page),
@@ -162,7 +169,8 @@ export default function MainUpload() {
 			tags: [],
 		};
 		if (buttonActive) {
-			handleCreateBook(bookInfo);
+			console.log(bookInfo);
+			// handleCreateBook(bookInfo);
 		}
 	};
 
@@ -265,35 +273,36 @@ export default function MainUpload() {
 						></input>
 					</div>
 					<div className='inp-book'>
-						<AddAndSearchAuthorUploadBook authors={authors} setAuthors={setAuthors} />
+						<AddAndSearchAuthorUploadBook
+							inputAuthorValue={inputAuthorValue}
+							setInputAuthorValue={setInputAuthorValue}
+							authors={authors}
+							setAuthors={setAuthors}
+						/>
 					</div>
 					<div className='inp-book'>
-						<label>Dịch giả</label>
-						<input
-							className='input input--non-border'
-							placeholder='Dịch giả'
-							value={translator}
-							name='translator'
-							onChange={onChange}
-						></input>
+						<AddAndSearchTranslatorsUploadBook
+							inputTranslatorValue={inputTranslatorValue}
+							setInputTranslatorValue={setInputTranslatorValue}
+							translators={translators}
+							setTranslators={setTranslators}
+						/>
 					</div>
 					<div className='inp-book'>
 						<AddAndSearchCategoriesUploadBook
+							inputCategoryValue={inputCategoryValue}
+							setInputCategoryValue={setInputCategoryValue}
 							categoryAddedList={categoryAddedList}
 							setCategoryAddedList={setCategoryAddedList}
 						/>
 					</div>
 					<div className='inp-book'>
-						<label>
-							Nhà xuất bản<span className='upload-text-danger'>*</span>
-						</label>
-						<input
-							className='input input--non-border'
-							placeholder='Nhà xuất bản'
-							value={publisher}
-							name='publisher'
-							onChange={onChange}
-						></input>
+						<AddAndSearchPublisherUploadBook
+							inputPublisherValue={inputPublisherValue}
+							setInputPublisherValue={setInputPublisherValue}
+							publisher={publisher}
+							setPublisher={setPublisher}
+						/>
 					</div>
 					<div className='inp-book'>
 						<Row>

@@ -32,7 +32,6 @@ import SearchLayout from './component/SearchLayout';
 import { useVisible } from 'shared/hooks';
 import defaultAvatar from 'assets/images/Rectangle 17435.png';
 import Dropzone from 'react-dropzone';
-import { useDropzone } from 'react-dropzone';
 import { uploadImage } from 'reducers/redux-utils/common';
 import camera from 'assets/images/camera.png';
 import { useRef } from 'react';

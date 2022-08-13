@@ -44,7 +44,7 @@ const SearchAllModal = ({ showRef, setIsShow }) => {
 
 	const handleSearch = e => {
 		debounceSearch(e.target.value);
-		setValueInput(e.target.value);
+		setValueInput(e.target.value.trim());
 		setValueInputSearch(e.target.value);
 	};
 

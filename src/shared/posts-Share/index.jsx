@@ -12,7 +12,6 @@ import PreviewLink from 'shared/preview-link/PreviewLink';
 import ReactRating from 'shared/react-rating';
 import { Link } from 'react-router-dom';
 import Play from 'assets/images/play.png';
-import { useSelector } from 'react-redux';
 
 const urlRegex =
 	/https?:\/\/www(\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/g;
@@ -97,16 +96,27 @@ const PostShare = ({ postData, inCreatePost = false }) => {
 	return (
 		<div className='post__container'>
 			<div className='post__user-status'>
-				<UserAvatar
-					data-testid='post__user-avatar'
-					className='post__user-status__avatar'
-					source={postData.sharePost?.createdBy?.avatarImage}
-				/>
+				<Link to={`/profile/${postData.sharePost.createdBy.id}`}>
+					<UserAvatar
+						data-testid='post__user-avatar'
+						className='post__user-status__avatar'
+						source={postData.sharePost?.createdBy?.avatarImage}
+					/>
+				</Link>
 				<div className='post__user-status__name-and-post-time-status'>
 					<div data-testid='post__user-name' className='post__user-status__name'>
-						{postData.sharePost.createdBy.fullName ||
-							postData.sharePost.createdBy.firstName + ' ' + postData.sharePost.createdBy.lastName ||
-							'Ẩn danh'}
+						<Link to={`/profile/${postData.sharePost.createdBy.id}`}>
+							{postData.sharePost.createdBy.fullName ||
+								postData.sharePost.createdBy.firstName + ' ' + postData.sharePost.createdBy.lastName ||
+								'Ẩn danh'}
+						</Link>
+						{/* tagged people */}
+						{postData.sharePost?.mentionsUsers &&
+							!!postData.sharePost.mentionsUsers.length &&
+							withFriends(postData.sharePost.mentionsUsers)}
+						{(postData.groupInfo || postData.group) && (
+							<img className='post__user-icon' src={Play} alt='' />
+						)}
 						{postData?.group && (
 							<Link to={`/group/${postData.group.id}`}>
 								<span className='img-share__group'>

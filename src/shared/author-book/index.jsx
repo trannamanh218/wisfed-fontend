@@ -67,7 +67,7 @@ const AuthorBook = ({
 	};
 
 	const generateCountRatingAndAuthorsName = () => {
-		let bookDataTemp = { ...bookData };
+		const bookDataTemp = { ...bookData };
 		if (position === 'createPostModal') {
 			if (data.authors && data.authors.length) {
 				bookDataTemp.authors = data.authors?.map(author => author?.authorName);
@@ -113,12 +113,12 @@ const AuthorBook = ({
 			>
 				<BookThumbnail
 					source={generateBookThumbnailSrc(data)}
-					handleClick={() => navigate(`/book/detail/${data.bookId || data.id}`)}
+					handleClick={() => navigate(`/book/detail/${data.info?.id || data.bookId || data.id}`)}
 				/>
 				<div className='author-book__info'>
 					<div className='author-book__info__book-name-and-authors'>
 						<div className='author-book__info__book-name'>
-							<Link to={`/book/detail/${data.bookId || data.id}`}>
+							<Link to={`/book/detail/${data.info?.id || data.bookId || data.id}`}>
 								<h4
 									className='author-book__title'
 									title={data.book?.name || data?.name || data.info?.name}

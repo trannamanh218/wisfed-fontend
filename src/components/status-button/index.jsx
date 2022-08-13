@@ -17,10 +17,8 @@ import {
 import './status-button.scss';
 import StatusModalContainer from 'shared/status-modal/StatusModalContainer';
 import Circle from 'shared/loading/circle';
-import { STATUS_LOADING, STATUS_IDLE } from 'constants';
 import { updateCurrentBook } from 'reducers/redux-utils/book';
 import { useNavigate } from 'react-router-dom';
-import { STATUS_SUCCESS } from 'constants';
 import { NotificationError } from 'helpers/Error';
 import Storage from 'helpers/Storage';
 import ModalCheckLogin from 'shared/modal-check-login';
@@ -46,7 +44,7 @@ const STATUS_BOOK_OBJ = {
 const StatusButton = ({ className, bookData, inCreatePost = false, hasBookStatus = false }) => {
 	const [modalShow, setModalShow] = useState(false);
 	const [currentStatus, setCurrentStatus] = useState('');
-	const [fetchStatus, setFetchStatus] = useState(STATUS_IDLE);
+	const [fetchStatus, setFetchStatus] = useState(false);
 	const [customLibrariesContainCurrentBookId, setCustomLibrariesContainCurrentBookId] = useState([]);
 	const { userInfo } = useSelector(state => state.auth);
 	const addedArray = useRef([]);
@@ -121,38 +119,37 @@ const StatusButton = ({ className, bookData, inCreatePost = false, hasBookStatus
 		}
 	};
 
-	const updateStatusBook = () => {
+	const updateStatusBook = async () => {
 		if (!_.isEmpty(bookData)) {
 			const params = { bookId: bookData.id || bookData.bookId, type: currentStatus };
-			dispatch(addBookToDefaultLibrary(params));
+			await dispatch(addBookToDefaultLibrary(params)).unwrap();
 		}
 	};
 
-	const handleAddAndRemoveBook = () => {
+	const handleAddAndRemoveBook = async () => {
 		if (!_.isEmpty(addedArray.current) || !_.isEmpty(removedArray.current)) {
-			dispatch(
+			await dispatch(
 				addRemoveBookInLibraries({
 					id: bookData.id || bookData.bookId,
 					data: { add: addedArray.current, remove: removedArray.current },
 				})
-			);
+			).unwrap();
 		}
 	};
 
-	const handleConfirm = async () => {
+	const handleConfirm = () => {
 		if (!inCreatePost) {
-			setFetchStatus(STATUS_LOADING);
+			setFetchStatus(true);
 			try {
-				await updateStatusBook().unwrap();
-				await handleAddAndRemoveBook().unwrap();
-				setModalShow(false);
-				setFetchStatus(STATUS_SUCCESS);
+				updateStatusBook();
+				handleAddAndRemoveBook();
 				dispatch(updateCurrentBook({ ...bookData, status: currentStatus }));
 				navigate('/');
 			} catch (err) {
 				NotificationError(err);
+			} finally {
 				setModalShow(false);
-				setFetchStatus(STATUS_IDLE);
+				setFetchStatus(false);
 			}
 		}
 	};
@@ -179,7 +176,7 @@ const StatusButton = ({ className, bookData, inCreatePost = false, hasBookStatus
 
 	return (
 		<>
-			<Circle loading={fetchStatus === STATUS_LOADING} />
+			<Circle loading={fetchStatus} />
 			<button
 				className={classNames('btn btn-status btn-primary', {
 					[`${className}`]: className,

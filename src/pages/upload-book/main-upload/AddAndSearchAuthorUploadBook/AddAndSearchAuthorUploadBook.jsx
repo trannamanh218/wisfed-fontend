@@ -6,10 +6,9 @@ import { NotificationError } from 'helpers/Error';
 import PropTypes from 'prop-types';
 import { getFilterSearch } from 'reducers/redux-utils/search';
 
-function AddAndSearchAuthorUploadBook({ authors, setAuthors }) {
+function AddAndSearchAuthorUploadBook({ inputAuthorValue, setInputAuthorValue, authors, setAuthors }) {
 	const [categorySearchedList, setCategorySearchedList] = useState([]);
 	const [getDataFinish, setGetDataFinish] = useState(false);
-	const [inputCategoryValue, setInputCategoryValue] = useState('');
 
 	const categoryInputContainer = useRef(null);
 	const categoryInputWrapper = useRef(null);
@@ -24,7 +23,7 @@ function AddAndSearchAuthorUploadBook({ authors, setAuthors }) {
 			const categoryArrayTemp = [...authors];
 			categoryArrayTemp.push(category);
 			setAuthors(categoryArrayTemp);
-			setInputCategoryValue('');
+			setInputAuthorValue('');
 			setCategorySearchedList([]);
 			if (categoryInputWrapper.current) {
 				categoryInputWrapper.current.style.width = '0.5ch';
@@ -56,7 +55,7 @@ function AddAndSearchAuthorUploadBook({ authors, setAuthors }) {
 	const searchCategory = e => {
 		setGetDataFinish(false);
 		setCategorySearchedList([]);
-		setInputCategoryValue(e.target.value);
+		setInputAuthorValue(e.target.value);
 		debounceSearch(e.target.value, 'addAuthor');
 		if (categoryInputWrapper.current) {
 			categoryInputWrapper.current.style.width = categoryInput.current.value?.length + 0.5 + 'ch';
@@ -75,7 +74,7 @@ function AddAndSearchAuthorUploadBook({ authors, setAuthors }) {
 				removeCategory={removeCategory}
 				getDataFinish={getDataFinish}
 				searchCategory={searchCategory}
-				inputCategoryValue={inputCategoryValue}
+				inputCategoryValue={inputAuthorValue}
 				categoryInputContainer={categoryInputContainer}
 				categoryInputWrapper={categoryInputWrapper}
 				categoryInput={categoryInput}
@@ -89,6 +88,8 @@ function AddAndSearchAuthorUploadBook({ authors, setAuthors }) {
 AddAndSearchAuthorUploadBook.propTypes = {
 	authors: PropTypes.array,
 	setAuthors: PropTypes.func,
+	inputAuthorValue: PropTypes.string,
+	setInputAuthorValue: PropTypes.func,
 };
 
 export default AddAndSearchAuthorUploadBook;

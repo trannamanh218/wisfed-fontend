@@ -12,7 +12,7 @@ const ModalItem = ({ item, setModalNotti, getNotifications, setGetNotifications,
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	const { userInfo } = useSelector(state => state.auth);
-	const { isreload } = useSelector(state => state.user);
+	// const { isreload } = useSelector(state => state.user);
 
 	const ReplyFriendReq = async (data, items) => {
 		try {
@@ -97,6 +97,10 @@ const ModalItem = ({ item, setModalNotti, getNotifications, setGetNotifications,
 			navigate(`/detail-feed/${'mini-post'}/${items.originId.minipostId}`);
 		} else if (item.verb === 'requestGroup') {
 			navigate(`/group/${items.originId.groupId}`);
+		} else if (item.verb === 'likeReview') {
+			navigate(`/review/${items.originId.bookId}/${userInfo.id}`);
+		} else if (item.verb === 'likeCommentMiniPost') {
+			navigate(`/detail-feed/mini-post/${items.originId.minipostId}`);
 		}
 		dispatch(backgroundToggle(true));
 		setModalNotti(false);
@@ -115,27 +119,32 @@ const ModalItem = ({ item, setModalNotti, getNotifications, setGetNotifications,
 				<UserAvatar size='mm' source={item.createdBy?.avatarImage} />
 				<div className='notificaiton__all__layout__status'>
 					<div className='notificaiton__all__infor'>
-						<p dangerouslySetInnerHTML={{ __html: item?.message }}></p>
-						{item.verb !== 'follow' &&
-							item.verb !== 'requestGroup' &&
-							item.verb !== 'commentGroupPost' &&
-							item.verb !== 'commentQuote' &&
-							item.verb !== 'inviteGroup' &&
-							item.verb !== 'mention' && (
-								<>
-									<span>
-										{item.createdBy?.fullName ? (
-											item.createdBy.fullName
-										) : (
-											<>
-												<span> {item.createdBy?.firstName}</span>
-												<span> {item.createdBy?.lastName}</span>
-											</>
-										)}
-									</span>{' '}
-									{renderMessage(item)}
-								</>
-							)}
+						{item.message ? (
+							<p dangerouslySetInnerHTML={{ __html: item?.message }}></p>
+						) : (
+							<>
+								{item.verb !== 'follow' &&
+									item.verb !== 'requestGroup' &&
+									item.verb !== 'commentGroupPost' &&
+									item.verb !== 'commentQuote' &&
+									item.verb !== 'inviteGroup' &&
+									item.verb !== 'mention' && (
+										<>
+											<span>
+												{item.createdBy?.fullName ? (
+													item.createdBy.fullName
+												) : (
+													<>
+														<span> {item.createdBy?.firstName}</span>
+														<span> {item.createdBy?.lastName}</span>
+													</>
+												)}
+											</span>{' '}
+											{renderMessage(item)}
+										</>
+									)}
+							</>
+						)}
 					</div>
 					<div
 						className={
