@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
+import './share-target.scss';
 import LinearProgressBar from 'shared/linear-progress-bar';
 import UserAvatar from 'shared/user-avatar';
-import './index.scss';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
+import { IconRanks } from 'components/svg';
 
 function ShareTarget({ postData, inPost = false }) {
 	const [percent, setPercent] = useState(0);
@@ -24,7 +25,7 @@ function ShareTarget({ postData, inPost = false }) {
 
 	const renderContentTop = () => {
 		return (
-			<div className='reading-target__content__top'>
+			<div className='share-target__content__top'>
 				<p>
 					Bạn đã đọc được {inPost ? postData.currentRead : postData?.booksReadCount} trên{' '}
 					{inPost ? postData.totalTarget : postData?.numberBook} cuốn
@@ -34,17 +35,16 @@ function ShareTarget({ postData, inPost = false }) {
 	};
 
 	return (
-		<div className='reading-target__process'>
-			<UserAvatar className='reading-target__user' source={userInfo?.avatarImage} size='lg' />
-			<div className='reading-target__content'>
+		<div className='share-target'>
+			<UserAvatar className='share-target__user' source={userInfo?.avatarImage} size='lg' />
+			<div className='share-target__progress'>
 				{renderContentTop()}
-				<div className='reading-target__content__bottom'>
-					<LinearProgressBar
-						percent={inPost ? percent : postData?.percent}
-						label={`${inPost ? percent : postData?.percent} %`}
-					/>
-				</div>
+				<LinearProgressBar percent={inPost ? percent : postData?.percent} variant='share-target-gradient' />
+				<div className='share-target__progress__percent-number'>{`${
+					inPost ? percent : postData.percent
+				}%`}</div>
 			</div>
+			<IconRanks />
 		</div>
 	);
 }

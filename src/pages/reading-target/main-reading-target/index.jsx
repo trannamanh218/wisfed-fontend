@@ -18,7 +18,6 @@ import Circle from 'shared/loading/circle';
 import { STATUS_LOADING } from 'constants';
 import { useDispatch } from 'react-redux';
 import { saveDataShare } from 'reducers/redux-utils/post';
-import { useVisible } from 'shared/hooks';
 import Storage from 'helpers/Storage';
 import { READ_TARGET_VERB_SHARE } from 'constants';
 

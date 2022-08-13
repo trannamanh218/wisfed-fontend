@@ -51,7 +51,6 @@ const verbShareArray = [
 	POST_VERB_SHARE,
 	QUOTE_VERB_SHARE,
 	GROUP_POST_VERB_SHARE,
-	READ_TARGET_VERB_SHARE,
 	TOP_BOOK_VERB_SHARE,
 	TOP_QUOTE_VERB_SHARE,
 ];
@@ -391,21 +390,18 @@ function Post({ postInformations, type }) {
 					{postData.verb === POST_VERB_SHARE && <PostShare postData={postData} />}
 					{postData.verb === QUOTE_VERB_SHARE && <QuoteCard data={postData.sharePost} isShare={true} />}
 					{postData.verb === GROUP_POST_VERB_SHARE && <PostShare postData={postData} />}
-					{postData.verb === READ_TARGET_VERB_SHARE && <ShareTarget postData={postData} inPost={true} />}
 					{postData.verb === TOP_BOOK_VERB_SHARE && <AuthorBook data={postData} position='post' />}
 					{postData.verb === TOP_QUOTE_VERB_SHARE && <QuoteCard data={postData.info} isShare={true} />}
 				</div>
 			)}
 			{postData.verb === TOP_USER_VERB_SHARE && <ShareUsers postData={postData} />}
-
 			{postData.book && (
 				<PostBook
 					data={{ ...postData.book, bookLibrary: postData.bookLibrary, actorCreatedPost: postData.actor }}
 				/>
 			)}
-
+			{postData.verb === READ_TARGET_VERB_SHARE && <ShareTarget postData={postData} inPost={true} />}
 			{postData?.image?.length > 0 && <GridImage images={postData.image} inPost={true} postId={postData.id} />}
-
 			{(postData?.image?.length === 0 &&
 				!_.isEmpty(postData.sharePost?.preview) &&
 				_.isEmpty(postData.sharePost?.book)) ||

@@ -319,13 +319,10 @@
 				}
 			}
 		}
-		&__userInfo {
-			margin-left: 2rem;
-		}
 	}
 }
 
-@media only screen and (max-width: 913px) {
+@media only screen and (max-width: 912px) {
 	.header__search {
 		width: 280px;
 	}
@@ -338,12 +335,9 @@
 			padding: 37px 0px;
 		}
 	}
-	.header__userInfo {
-		margin-left: 1rem;
-	}
 }
 
-@media only screen and (max-width: 769px) {
+@media only screen and (max-width: 768px) {
 	.header {
 		&__left {
 			.header-logo-small {

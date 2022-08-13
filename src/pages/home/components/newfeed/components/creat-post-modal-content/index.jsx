@@ -622,7 +622,8 @@ function CreatPostModalContent({
 							{!_.isEmpty(postDataShare) && (
 								<div
 									className={
-										postDataShare.verb !== TOP_USER_VERB_SHARE
+										postDataShare.verb !== TOP_USER_VERB_SHARE &&
+										postDataShare.verb !== READ_TARGET_VERB_SHARE
 											? 'creat-post-modal-content__main__share-container'
 											: ''
 									}
@@ -637,9 +638,6 @@ function CreatPostModalContent({
 									{postDataShare.verb === GROUP_POST_VERB_SHARE && (
 										<PostShare postData={postDataShare} inCreatePost={true} />
 									)}
-									{postDataShare.verb === READ_TARGET_VERB_SHARE && (
-										<ShareTarget postData={postDataShare} />
-									)}
 									{postDataShare.verb === TOP_BOOK_VERB_SHARE && (
 										<AuthorBook
 											data={postDataShare}
@@ -650,6 +648,7 @@ function CreatPostModalContent({
 									)}
 								</div>
 							)}
+							{postDataShare.verb === READ_TARGET_VERB_SHARE && <ShareTarget postData={postDataShare} />}
 							{postDataShare.verb === TOP_USER_VERB_SHARE && <ShareUsers postData={postDataShare} />}
 
 							{!_.isEmpty(taggedData.addBook) || showUpload ? (
@@ -688,6 +687,7 @@ function CreatPostModalContent({
 							)}
 						</div>
 					</div>
+					{/*  */}
 					<div className='creat-post-modal-content__main__options-and-submit'>
 						<div className='creat-post-modal-content__main__options'>
 							<span>Thêm vào bài viết</span>

@@ -84,8 +84,21 @@ const MainCategoryDetail = () => {
 			getCategoryInfoFnc();
 		}
 		setFilter('[]');
+		if (!_.isEmpty(categoryInfoRedux) && categoryInfoRedux.id === Number(id)) {
+			setCategoryInfo(categoryInfoRedux);
+		} else {
+			getCategoryInfoFnc();
+		}
+		setFilter('[]');
 		checkFavoriteCategoriesData();
 	}, [id]);
+
+	useEffect(() => {
+		if (!_.isEmpty(categoryInfo)) {
+			setIsLike(categoryInfo.isFavorite);
+			isLikeTemp.current = categoryInfo.isFavorite;
+		}
+	}, [categoryInfo]);
 
 	useEffect(() => {
 		if (!_.isEmpty(categoryInfo)) {

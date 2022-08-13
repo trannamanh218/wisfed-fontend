@@ -2,26 +2,22 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import _ from 'lodash';
 import { useState } from 'react';
-import { useSelector } from 'react-redux';
 
-const OptionsPost = ({ list, addOptionsToPost, taggedData }) => {
-	const { isShare } = useSelector(state => state.post);
+const OptionsPost = ({ list, addOptionsToPost, taggedData, images }) => {
 	const [itemOnMouseHover, setItemOnMouseHover] = useState(null);
 
 	return list.map((item, index) => {
 		let isActive = false;
 		let isDisabled = false;
-		if (isShare) {
-			if (index !== 3) {
+		if (item.value === 'addBook') {
+			isActive = _.isEmpty(taggedData[item.value]) === true ? false : true;
+			if (images.length > 0) {
 				isDisabled = true;
 			}
 		} else {
-			if (item.value === 'addBook') {
-				isActive = _.isEmpty(taggedData[item.value]) === true ? false : true;
-			} else {
-				isActive = taggedData[item.value].length > 0 ? true : false;
-			}
+			isActive = taggedData[item.value].length > 0 ? true : false;
 		}
+
 		return (
 			<span
 				className={classNames('creat-post-modal-content__main__options__item-add-to-post', {
@@ -52,6 +48,7 @@ const OptionsPost = ({ list, addOptionsToPost, taggedData }) => {
 OptionsPost.propTypes = {
 	taggedData: PropTypes.object.isRequired,
 	list: PropTypes.array,
+	images: PropTypes.array,
 	addOptionsToPost: PropTypes.func,
 };
 

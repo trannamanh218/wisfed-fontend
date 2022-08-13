@@ -12,6 +12,7 @@ import { register } from 'reducers/redux-utils/auth';
 import Circle from 'shared/loading/circle';
 import { useNavigate } from 'react-router-dom';
 import Storage from 'helpers/Storage';
+import { Link } from 'react-router-dom';
 
 function Register() {
 	const dispatch = useDispatch();
@@ -46,6 +47,7 @@ function Register() {
 					setIsLoading(false);
 					setDataModal(newdata);
 					setIsShow(true);
+					localStorage.setItem('registerEmailFill', newData.email);
 				}
 			} catch {
 				setIsLoading(false);
@@ -75,9 +77,12 @@ function Register() {
 	return (
 		<div className='register__container'>
 			<Circle loading={isLoading} />
-			<div className='register__header'>
-				<img src={Logo} alt='logo' />
-			</div>
+			<Link to='/login'>
+				<div className='register__header'>
+					<img src={Logo} alt='logo' />
+				</div>
+			</Link>
+
 			{isShow ? (
 				<div className='register__container-modal'>
 					<ModalLogin data={dataModal} handleClose={handleClose} />
