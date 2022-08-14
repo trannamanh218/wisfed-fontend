@@ -47,8 +47,17 @@ import {
 	TOP_QUOTE_VERB_SHARE,
 } from 'constants';
 
+const verbShareArray = [
+	POST_VERB_SHARE,
+	QUOTE_VERB_SHARE,
+	GROUP_POST_VERB_SHARE,
+	READ_TARGET_VERB_SHARE,
+	TOP_BOOK_VERB_SHARE,
+	TOP_QUOTE_VERB_SHARE,
+];
+
 const urlRegex =
-	/https?:\/\/www(\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/g;
+	/(https?:\/\/)?(www(\.))?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/g;
 
 function CreatPostModalContent({
 	hideCreatePostModal,
@@ -134,6 +143,7 @@ function CreatPostModalContent({
 	useEffect(() => {
 		if (urlAdded) {
 			if (urlAdded.match(urlRegex) && !_.isEqual(urlAdded, oldUrlAdded)) {
+				console.log('run', urlAdded);
 				setHasUrl(true);
 				getPreviewUrlFnc(urlAdded);
 			}
@@ -337,7 +347,11 @@ function CreatPostModalContent({
 					await dispatch(getSharePostInternal(query)).unwrap();
 				} else if (postDataShare.verb === GROUP_POST_VERB_SHARE) {
 					const query = {
-						id: postDataShare.shareId ? Number(postDataShare.shareId) : postDataShare.sharePost.id,
+						id: postDataShare.shareId
+							? Number(postDataShare.shareId)
+							: postDataShare.sharePost.groupPostId
+							? postDataShare.sharePost.groupPostId
+							: postDataShare.sharePost.id,
 						type: 'groupPost',
 						...params,
 					};
@@ -687,7 +701,6 @@ function CreatPostModalContent({
 							)}
 						</div>
 					</div>
-					{/*  */}
 					<div className='creat-post-modal-content__main__options-and-submit'>
 						<div className='creat-post-modal-content__main__options'>
 							<span>Thêm vào bài viết</span>
@@ -696,11 +709,14 @@ function CreatPostModalContent({
 									list={optionList}
 									addOptionsToPost={addOptionsToPost}
 									taggedData={taggedData}
-									images={imagesUpload}
+									postDataShare={postDataShare}
 								/>
 								<span
 									className={classNames('creat-post-modal-content__main__options__item-add-to-post', {
 										'active': imagesUpload.length > 0 && _.isEmpty(taggedData.addBook),
+										'disabled':
+											!_.isEmpty(postDataShare) &&
+											verbShareArray.indexOf(postDataShare.verb) !== -1,
 									})}
 									onMouseOver={() => setShowImagePopover(true)}
 									onMouseLeave={() => setShowImagePopover(false)}

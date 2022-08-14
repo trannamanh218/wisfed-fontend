@@ -61,52 +61,51 @@ const StatusButton = ({ className, bookData, inCreatePost = false, hasBookStatus
 			if (hasBookStatus) {
 				setCurrentStatus(bookData.status);
 			} else {
-				// checkBookInDefaultLibrary();
-				setCurrentStatus(STATUS_BOOK.wantToRead);
+				checkBookInDefaultLibrary();
 			}
 		} else {
 			setCurrentStatus(STATUS_BOOK.wantToRead);
 		}
 	}, []);
 
-	// const checkBookInDefaultLibrary = async () => {
-	// 	try {
-	// 		const res = await dispatch(checkBookInLibraries(bookData.id || bookData.bookId)).unwrap();
-	// 		const defaultLibraryContainCurrentBook = res.filter(item => item.library.isDefault === true);
-	// 		if (!!res.length && !!defaultLibraryContainCurrentBook.length) {
-	// 			setCurrentStatus(defaultLibraryContainCurrentBook[0].library.defaultType);
-	// 		} else {
-	// 			setCurrentStatus(STATUS_BOOK.wantToRead);
-	// 		}
-	// 	} catch (err) {
-	// 		NotificationError(err);
-	// 	}
-	// };
+	const checkBookInDefaultLibrary = async () => {
+		try {
+			const res = await dispatch(checkBookInLibraries(bookData.id || bookData.bookId)).unwrap();
+			const defaultLibraryContainCurrentBook = res.filter(item => item.library.isDefault === true);
+			if (!!res.length && !!defaultLibraryContainCurrentBook.length) {
+				setCurrentStatus(defaultLibraryContainCurrentBook[0].library.defaultType);
+			} else {
+				setCurrentStatus(STATUS_BOOK.wantToRead);
+			}
+		} catch (err) {
+			NotificationError(err);
+		}
+	};
 
 	const handleClose = () => {
 		setModalShow(false);
 	};
 
 	const handleShow = async e => {
-		// e.stopPropagation();
-		// //check duoc trang thai co trong thu vien
-		// try {
-		// 	const checkLibrariesData = await dispatch(checkBookInLibraries(bookData.id || bookData.bookId)).unwrap();
-		// 	const customLibrariesContainCurrentBook = checkLibrariesData.filter(
-		// 		item => item.library.isDefault === false
-		// 	);
-		// 	if (customLibrariesContainCurrentBook.length) {
-		// 		const arrId = [];
-		// 		customLibrariesContainCurrentBook.forEach(item => arrId.push(item.libraryId));
-		// 		setCustomLibrariesContainCurrentBookId(arrId);
-		// 	} else {
-		// 		setCustomLibrariesContainCurrentBookId([]);
-		// 	}
-		// } catch (err) {
-		// 	NotificationError(err);
-		// } finally {
-		// 	setModalShow(true);
-		// }
+		e.stopPropagation();
+		//check duoc trang thai co trong thu vien
+		try {
+			const checkLibrariesData = await dispatch(checkBookInLibraries(bookData.id || bookData.bookId)).unwrap();
+			const customLibrariesContainCurrentBook = checkLibrariesData.filter(
+				item => item.library.isDefault === false
+			);
+			if (customLibrariesContainCurrentBook.length) {
+				const arrId = [];
+				customLibrariesContainCurrentBook.forEach(item => arrId.push(item.libraryId));
+				setCustomLibrariesContainCurrentBookId(arrId);
+			} else {
+				setCustomLibrariesContainCurrentBookId([]);
+			}
+		} catch (err) {
+			NotificationError(err);
+		} finally {
+			setModalShow(true);
+		}
 		setModalShow(true);
 	};
 

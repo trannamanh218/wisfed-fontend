@@ -28,6 +28,7 @@ import {
 	REVIEW_TYPE,
 	POST_VERB_SHARE,
 	QUOTE_VERB_SHARE,
+	GROUP_POST_VERB,
 	GROUP_POST_VERB_SHARE,
 	READ_TARGET_VERB_SHARE,
 	TOP_BOOK_VERB_SHARE,
@@ -43,11 +44,9 @@ import { handleCheckReplyToMe } from 'reducers/redux-utils/comment';
 import ShareTarget from 'shared/share-target';
 
 const urlRegex =
-	/https?:\/\/www(\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/g;
+	/(https?:\/\/)?(www(\.))?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/g;
 
 const verbShareArray = [
-	POST_TYPE,
-	REVIEW_TYPE,
 	POST_VERB_SHARE,
 	QUOTE_VERB_SHARE,
 	GROUP_POST_VERB_SHARE,
@@ -256,11 +255,20 @@ function Post({ postInformations, type }) {
 
 	const generateContent = content => {
 		if (content.match(urlRegex)) {
-			const newContent = content.replace(urlRegex, data => {
-				return `<a class="url-class" href=${data} target="_blank">${
-					data.length <= 50 ? data : data.slice(0, 50) + '...'
-				}</a>`;
-			});
+			let newContent;
+			if (content.includes('https://')) {
+				newContent = content.replace(urlRegex, data => {
+					return `<a class="url-class" href=${data} target="_blank">${
+						data.length <= 50 ? data : data.slice(0, 50) + '...'
+					}</a>`;
+				});
+			} else {
+				newContent = content.replace(urlRegex, data => {
+					return `<a class="url-class" href=https://${data} target="_blank">${
+						data.length <= 50 ? data : data.slice(0, 50) + '...'
+					}</a>`;
+				});
+			}
 			return newContent;
 		} else {
 			return content;
@@ -290,16 +298,14 @@ function Post({ postInformations, type }) {
 							{postData.mentionsUsers &&
 								!!postData.mentionsUsers.length &&
 								withFriends(postData.mentionsUsers)}
-							{(postData.groupInfo || postData.group) && (
-								<img className='post__user-icon' src={Play} alt='' />
+							{postData.verb === GROUP_POST_VERB && (
+								<>
+									<img className='post__user-icon' src={Play} alt='arrow' />
+									<Link to={`/group/${postData.group?.id}`} className='post__name__group'>
+										{postData.group?.name}
+									</Link>
+								</>
 							)}
-
-							<Link
-								to={`/group/${postData.groupInfo?.id || postData.group?.id}`}
-								className='post__name__group'
-							>
-								{postData.groupInfo ? postData.groupInfo?.name : postData.group?.name}
-							</Link>
 						</div>
 
 						<div className='post__user-status__post-time-status'>

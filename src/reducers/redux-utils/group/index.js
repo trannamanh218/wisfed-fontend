@@ -28,10 +28,10 @@ export const getGroupList = createAsyncThunk('group/getGroupList', async (params
 	}
 });
 
-export const getGroupDettail = createAsyncThunk('group/getGroupDettail', async (id = {}, { rejectWithValue }) => {
+export const getGroupDettail = createAsyncThunk('group/getGroupDettail', async (id, { rejectWithValue }) => {
 	try {
 		const res = await Request.makeGet(groupDetailAPI(id));
-		return res;
+		return res.data;
 	} catch (err) {
 		const error = JSON.parse(err.response);
 		return rejectWithValue(error);
@@ -211,7 +211,7 @@ const groupSlice = createSlice({
 	name: 'group',
 	initialState: {
 		isFetching: false,
-		groupsData: {},
+		currentGroupArrived: {},
 		error: {},
 		key: 'intro',
 		resetGroupList: true,
@@ -225,23 +225,12 @@ const groupSlice = createSlice({
 		},
 	},
 	extraReducers: {
-		[getGroupList.pending]: state => {
-			state.isFetching = true;
-		},
-		[getGroupList.fulfilled]: (state, action) => {
-			state.isFetching = false;
-			state.groupsData = action.payload;
-		},
-		[getGroupList.rejected]: (state, action) => {
-			state.isFetching = false;
-			state.error = action.payload;
-		},
 		[getGroupDettail.pending]: state => {
 			state.isFetching = true;
 		},
 		[getGroupDettail.fulfilled]: (state, action) => {
 			state.isFetching = false;
-			state.groupsData = action.payload;
+			state.currentGroupArrived = action.payload;
 		},
 		[getGroupDettail.rejected]: (state, action) => {
 			state.isFetching = false;

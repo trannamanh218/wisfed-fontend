@@ -157,7 +157,11 @@ const AuthorBook = ({
 						{!_.isEmpty(userInfo) && userInfo.role === 'author' && userId === userInfo.id ? (
 							<></>
 						) : (
-							<StatusButton bookData={inCreatePost ? data : data.info} inCreatePost={inCreatePost} />
+							<StatusButton
+								bookData={inCreatePost ? data : data.info}
+								inCreatePost={inCreatePost}
+								hasBookStatus={true}
+							/>
 						)}
 					</div>
 				</div>

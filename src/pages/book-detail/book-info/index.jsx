@@ -22,6 +22,7 @@ const BookInfo = ({ bookInfo }) => {
 	useEffect(() => {
 		fetchData();
 	}, []);
+
 	return (
 		<>
 			<BookIntro bookInfo={bookInfo} listRatingStar={listRatingStar} />

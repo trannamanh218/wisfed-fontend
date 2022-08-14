@@ -35,24 +35,24 @@ function CreatePost({ onChangeNewPost }) {
 		optionList = [
 			{
 				value: 'addBook',
-				title: 'sách',
+				title: 'Sách',
 				icon: <BookIcon className='newfeed__creat-post__options__item__logo--book' />,
 				message: 'Không tìm thấy cuốn sách nào',
 			},
 			{
 				value: 'addAuthor',
-				title: 'tác giả',
+				title: 'Tác giả',
 				icon: <Feather className='item-add-to-post-svg' />,
 				message: 'Không tìm thấy tác giả',
 			},
 			{
 				value: 'addCategory',
-				title: 'chủ đề',
+				title: 'Chủ đề',
 				icon: <CategoryIcon className='newfeed__creat-post__options__item__logo--category' />,
 				message: 'Không tìm thấy chủ đề',
 			},
 			{
-				value: 'hashtag',
+				value: location.pathname.includes('group') ? 'hashtag' : 'addFriends',
 				title: 'Hashtag',
 				icon: <Hashtag className='newfeed__creat-post__options__item__logo--friend' />,
 				message: 'Không tìm thấy hashtag',
@@ -62,25 +62,25 @@ function CreatePost({ onChangeNewPost }) {
 		optionList = [
 			{
 				value: 'addBook',
-				title: 'sách',
+				title: 'Sách',
 				icon: <BookIcon className='newfeed__creat-post__options__item__logo--book' />,
 				message: 'Không tìm thấy cuốn sách nào',
 			},
 			{
 				value: 'addAuthor',
-				title: 'tác giả',
+				title: 'Tác giả',
 				icon: <Feather className='item-add-to-post-svg' />,
 				message: 'Không tìm thấy tác giả',
 			},
 			{
 				value: 'addCategory',
-				title: 'chủ đề',
+				title: 'Chủ đề',
 				icon: <CategoryIcon className='newfeed__creat-post__options__item__logo--category' />,
 				message: 'Không tìm thấy chủ đề',
 			},
 			{
 				value: 'addFriends',
-				title: 'bạn bè',
+				title: 'Bạn bè',
 				icon: <GroupIcon className='newfeed__creat-post__options__item__logo--friend' />,
 				message: 'Không tìm thấy bạn bè',
 			},

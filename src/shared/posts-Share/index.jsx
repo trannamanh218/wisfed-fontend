@@ -12,9 +12,10 @@ import PreviewLink from 'shared/preview-link/PreviewLink';
 import ReactRating from 'shared/react-rating';
 import { Link } from 'react-router-dom';
 import Play from 'assets/images/play.png';
+import { GROUP_POST_VERB_SHARE } from 'constants';
 
 const urlRegex =
-	/https?:\/\/www(\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/g;
+	/(https?:\/\/)?(www(\.))?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/g;
 
 const PostShare = ({ postData, inCreatePost = false }) => {
 	const [videoId, setVideoId] = useState('');
@@ -82,11 +83,20 @@ const PostShare = ({ postData, inCreatePost = false }) => {
 
 	const generateContent = content => {
 		if (content.match(urlRegex)) {
-			const newContent = content.replace(urlRegex, data => {
-				return `<a class="url-class" href=${data} target="_blank">${
-					data.length <= 50 ? data : data.slice(0, 50) + '...'
-				}</a>`;
-			});
+			let newContent;
+			if (content.includes('https://')) {
+				newContent = content.replace(urlRegex, data => {
+					return `<a class="url-class" href=${data} target="_blank">${
+						data.length <= 50 ? data : data.slice(0, 50) + '...'
+					}</a>`;
+				});
+			} else {
+				newContent = content.replace(urlRegex, data => {
+					return `<a class="url-class" href=https://${data} target="_blank">${
+						data.length <= 50 ? data : data.slice(0, 50) + '...'
+					}</a>`;
+				});
+			}
 			return newContent;
 		} else {
 			return content;
@@ -114,20 +124,25 @@ const PostShare = ({ postData, inCreatePost = false }) => {
 						{postData.sharePost?.mentionsUsers &&
 							!!postData.sharePost.mentionsUsers.length &&
 							withFriends(postData.sharePost.mentionsUsers)}
-						{(postData.groupInfo || postData.group) && (
-							<img className='post__user-icon' src={Play} alt='' />
-						)}
-						{postData?.group && (
-							<Link to={`/group/${postData.group.id}`}>
-								<span className='img-share__group'>
-									<img className='post__user-icon' src={Play} alt='' /> {postData.group.name}
-								</span>
-							</Link>
+						{postData.verb === GROUP_POST_VERB_SHARE && (
+							<>
+								<img className='post__user-icon' src={Play} alt='arrow' />
+								{inCreatePost ? (
+									<span>{postData.group.name}</span>
+								) : (
+									<Link to={`/group/${postData.group.id}`}>{postData.group.name}</Link>
+								)}
+							</>
 						)}
 					</div>
 					<div className='post__user-status__post-time-status'>
 						<span>
-							{calculateDurationTime(postData.time || postData.createdAt || postData.sharePost.createdAt)}
+							{calculateDurationTime(
+								postData.time ||
+									postData.createdAt ||
+									postData.sharePost.time ||
+									postData.sharePost.createdAt
+							)}
 						</span>
 						<>
 							{postData.sharePost.book && (

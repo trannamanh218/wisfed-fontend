@@ -50,6 +50,7 @@ export const GROUP_TYPE = 'group';
 export const POST_VERB = 'miniPost';
 export const POST_VERB_SHARE = 'sharePost';
 export const QUOTE_VERB_SHARE = 'shareQuote';
+export const GROUP_POST_VERB = 'groupPost';
 export const GROUP_POST_VERB_SHARE = 'shareGroupPost';
 export const READ_TARGET_VERB_SHARE = 'shareTargetRead';
 export const TOP_BOOK_VERB_SHARE = 'shareTopBookRanking';

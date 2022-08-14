@@ -420,6 +420,17 @@
 		background-color: #d9dbe9;
 		cursor: no-drop;
 		pointer-events: none;
+		svg {
+			path {
+				fill: $ash-placeholder;
+			}
+		}
+		.item-add-to-post-svg {
+			path {
+				fill: none;
+				stroke: $ash-placeholder;
+			}
+		}
 	}
 }
 

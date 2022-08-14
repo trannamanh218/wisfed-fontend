@@ -25,31 +25,32 @@ const PopupCreateGroup = ({ handleClose }) => {
 	const [inputAuthors, setInputAuthors] = useState('');
 	const [inputBook, setInputBook] = useState('');
 	const [userlist, setUserList] = useState([]);
-	const dispatch = useDispatch();
 	const [listBooks, setListBooks] = useState([]);
 	const [listAuthors, setListAuthors] = useState([]);
 	const [listBookAdd, setListBookAdd] = useState([]);
 	const [inputHashtag, setInputHashtag] = useState('');
 	const [listHashtags, setListHashtags] = useState([]);
-	const dataRef = useRef('');
-	const inputRefHashtag = useRef(null);
-	const inputRefAuthor = useRef(null);
-	const inputRefBook = useRef(null);
-	const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
 	const [imgUrl, setImgUrl] = useState('');
 	const [isShowBtn, setIsShowBtn] = useState(false);
 	const [kindOfGroup, setKindOfGroup] = useState('');
 	const [categoryIdBook, setCategoryIdBook] = useState([]);
 	const [lastTag, setLastTag] = useState('');
-
 	const [inputCategoryValue, setInputCategoryValue] = useState('');
+	const [categoryAddedList, setCategoryAddedList] = useState([]);
+	const [categorySearchedList, setCategorySearchedList] = useState([]);
+	const [getDataFinish, setGetDataFinish] = useState(false);
+
+	const dataRef = useRef('');
+	const inputRefHashtag = useRef(null);
+	const inputRefAuthor = useRef(null);
+	const inputRefBook = useRef(null);
 	const categoryInputContainer = useRef(null);
 	const categoryInputWrapper = useRef(null);
 	const categoryInput = useRef(null);
 
-	const [categoryAddedList, setCategoryAddedList] = useState([]);
-	const [categorySearchedList, setCategorySearchedList] = useState([]);
-	const [getDataFinish, setGetDataFinish] = useState(false);
+	const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
+
+	const dispatch = useDispatch();
 
 	const getSuggestionForCreatQuotes = async (input, option) => {
 		try {
@@ -500,26 +501,25 @@ const PopupCreateGroup = ({ handleClose }) => {
 						{/* tên sách */}
 
 						<div className='author__list'>
-							{listBooks?.length > 0
-								? listBooks?.map(item => {
-										return (
-											<>
-												<span
-													key={item}
-													className='author__item'
-													onClick={() => handleAddBook(item)}
-												>
-													{item?.name}
-												</span>
-											</>
-										);
-								  })
-								: ''}
+							{!!listBooks?.length &&
+								listBooks?.map(item => {
+									return (
+										<>
+											<span
+												key={item}
+												className='author__item'
+												onClick={() => handleAddBook(item)}
+											>
+												{item?.name}
+											</span>
+										</>
+									);
+								})}
 						</div>
 					</div>
 				)}
 
-				<div className='form-field--discription'>
+				<div className='form-field-discription'>
 					<label>Giới thiệu</label>
 					<span style={{ color: 'red', marginLeft: '4px' }}>*</span>
 					<textarea
@@ -529,7 +529,7 @@ const PopupCreateGroup = ({ handleClose }) => {
 						onChange={onInputChange(setInputDiscription)}
 					/>
 				</div>
-				<div className='form-field--hashtag'>
+				<div className='form-field-hashtag'>
 					<label>Hashtags</label>
 					<span style={{ color: 'red', marginLeft: '4px' }}>*</span>
 					<div className='list__author-tags'>

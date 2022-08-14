@@ -5,11 +5,12 @@ import { saveDataShare } from 'reducers/redux-utils/post';
 import Storage from 'helpers/Storage';
 import { checkUserLogin } from 'reducers/redux-utils/auth';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import {
 	POST_VERB,
 	POST_VERB_SHARE,
 	QUOTE_VERB_SHARE,
+	GROUP_POST_VERB,
 	GROUP_POST_VERB_SHARE,
 	READ_TARGET_VERB_SHARE,
 	TOP_BOOK_VERB_SHARE,
@@ -21,6 +22,8 @@ const PostActionBar = ({ postData, handleLikeAction }) => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const location = useLocation();
+
+	const currentGroupArrived = useSelector(state => state.group.currentGroupArrived);
 
 	const handleShare = () => {
 		if (!Storage.getAccessToken()) {
@@ -48,15 +51,26 @@ const PostActionBar = ({ postData, handleLikeAction }) => {
 					...postData.sharePost,
 					verb: QUOTE_VERB_SHARE,
 				};
-			} else if (location.pathname.includes('group') || postData.verb === GROUP_POST_VERB_SHARE) {
+			} else if (
+				location.pathname.includes('group') ||
+				postData.verb === GROUP_POST_VERB ||
+				postData.verb === GROUP_POST_VERB_SHARE
+			) {
 				if (postData.verb === GROUP_POST_VERB_SHARE) {
 					dataToShare = {
 						verb: GROUP_POST_VERB_SHARE,
 						...postData,
 					};
+				} else if (postData.verb === GROUP_POST_VERB) {
+					dataToShare = {
+						verb: GROUP_POST_VERB_SHARE,
+						group: postData.group,
+						sharePost: { ...postData },
+					};
 				} else {
 					dataToShare = {
 						verb: GROUP_POST_VERB_SHARE,
+						group: currentGroupArrived,
 						sharePost: { ...postData },
 					};
 				}

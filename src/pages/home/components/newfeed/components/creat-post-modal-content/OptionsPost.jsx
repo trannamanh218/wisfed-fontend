@@ -2,21 +2,39 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import _ from 'lodash';
 import { useState } from 'react';
+import {
+	POST_VERB_SHARE,
+	QUOTE_VERB_SHARE,
+	GROUP_POST_VERB_SHARE,
+	READ_TARGET_VERB_SHARE,
+	TOP_BOOK_VERB_SHARE,
+	TOP_QUOTE_VERB_SHARE,
+} from 'constants';
 
-const OptionsPost = ({ list, addOptionsToPost, taggedData, images }) => {
+const verbShareArray = [
+	POST_VERB_SHARE,
+	QUOTE_VERB_SHARE,
+	GROUP_POST_VERB_SHARE,
+	READ_TARGET_VERB_SHARE,
+	TOP_BOOK_VERB_SHARE,
+	TOP_QUOTE_VERB_SHARE,
+];
+
+const OptionsPost = ({ list, addOptionsToPost, taggedData, postDataShare }) => {
 	const [itemOnMouseHover, setItemOnMouseHover] = useState(null);
 
 	return list.map((item, index) => {
 		let isActive = false;
 		let isDisabled = false;
-		if (item.value === 'addBook') {
-			isActive = _.isEmpty(taggedData[item.value]) === true ? false : true;
-			if (images.length > 0) {
-				isDisabled = true;
-			}
-		} else {
-			isActive = taggedData[item.value].length > 0 ? true : false;
+
+		if (
+			!_.isEmpty(postDataShare) &&
+			verbShareArray.indexOf(postDataShare.verb) !== -1 &&
+			item.value !== 'addFriends'
+		) {
+			isDisabled = true;
 		}
+		isActive = taggedData[item.value].length > 0 ? true : false;
 
 		return (
 			<span
@@ -45,10 +63,17 @@ const OptionsPost = ({ list, addOptionsToPost, taggedData, images }) => {
 	});
 };
 
+OptionsPost.defaultProps = {
+	taggedData: {},
+	list: [],
+	addOptionsToPost: () => {},
+	postDataShare: {},
+};
+
 OptionsPost.propTypes = {
 	taggedData: PropTypes.object.isRequired,
 	list: PropTypes.array,
-	images: PropTypes.array,
+	postDataShare: PropTypes.array,
 	addOptionsToPost: PropTypes.func,
 };
 

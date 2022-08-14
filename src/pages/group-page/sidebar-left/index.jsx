@@ -1,5 +1,5 @@
 import { CircleActionsAlertQuestion, SettingIcon } from 'components/svg';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import './group-sibar.scss';
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';

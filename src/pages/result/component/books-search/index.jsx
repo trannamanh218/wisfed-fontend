@@ -20,8 +20,6 @@ const BookSearch = ({ isFetching, value, setIsFetching, searchResultInput, activ
 	const callApiStartBooks = useRef(0);
 	const callApiPerPage = useRef(10);
 
-	const { userInfoJwt } = useSelector(state => state.auth);
-
 	useEffect(() => {
 		if (activeKeyDefault === 'books') {
 			setListArrayBooks([]);
@@ -58,11 +56,9 @@ const BookSearch = ({ isFetching, value, setIsFetching, searchResultInput, activ
 			if (result.rows.length > 0) {
 				callApiStartBooks.current += callApiPerPage.current;
 				setListArrayBooks(listArrayBooks.concat(result.rows));
-			} else {
-				setHasMore(false);
 			}
 			// Nếu kết quả tìm kiếm nhỏ hơn limit thì disable gọi api khi scroll
-			if (result.rows.length < params.limit) {
+			if (!result.rows.length || result.rows.length < params.limit) {
 				setHasMore(false);
 			}
 		} catch (err) {
@@ -79,7 +75,6 @@ const BookSearch = ({ isFetching, value, setIsFetching, searchResultInput, activ
 					Có khoảng {resultInformations.count} kết quả ({resultInformations.time} giây)
 				</div>
 			)}
-
 			<>
 				{listArrayBooks.length && activeKeyDefault === 'books' ? (
 					<InfiniteScroll
@@ -96,16 +91,14 @@ const BookSearch = ({ isFetching, value, setIsFetching, searchResultInput, activ
 					</InfiniteScroll>
 				) : (
 					isFetching === false && (
-						<div>
+						<>
 							<ResultNotFound />
-							{userInfoJwt?.role === ('tecinus' || 'authors') ? (
-								<div className='btn-goTo-upload-book'>
-									<Link to='/upload-book'>
-										<Button>Tạo sách mới</Button>
-									</Link>
-								</div>
-							) : null}
-						</div>
+							<div className='btn-goTo-upload-book'>
+								<Link to='/upload-book'>
+									<Button>Tạo sách mới</Button>
+								</Link>
+							</div>
+						</>
 					)
 				)}
 			</>
