@@ -5,38 +5,14 @@ import { useDispatch } from 'react-redux';
 import { makeFriendRequest, addFollower, unFollower, unFriendRequest } from 'reducers/redux-utils/user';
 import { NotificationError } from 'helpers/Error';
 import Post from 'shared/post';
-import Circle from 'shared/loading/circle';
 import './search-group.scss';
 import _ from 'lodash';
 import ResultNotFound from 'pages/result/component/result-not-found';
-import LoadingIndicator from 'shared/loading-indicator';
 import { GROUP_TYPE } from 'constants';
 
 function SearchLayout({ dataGroup }) {
 	const [isCallApi, setIsCallApi] = useState(false);
 	const dispatch = useDispatch();
-	const [listPost, setListPost] = useState([]);
-	const [listMember, setListMember] = useState([]);
-	const [isFetching, setIsFetching] = useState(true);
-	const [show, setShow] = useState(false);
-
-	useEffect(() => {
-		setListMember(dataGroup?.usersData);
-		setListPost(dataGroup?.postData);
-		setTimeout(() => {
-			setIsFetching(false);
-		}, 1000);
-	}, [dataGroup, isFetching]);
-
-	useEffect(() => {
-		if (dataGroup.length > 0) {
-			setShow(false);
-		} else {
-			setTimeout(() => {
-				setShow(true);
-			}, 1000);
-		}
-	}, [dataGroup]);
 
 	const handleAddFriend = item => {
 		try {
@@ -49,6 +25,7 @@ function SearchLayout({ dataGroup }) {
 			NotificationError(err);
 		}
 	};
+
 	const handleUnFriend = item => {
 		try {
 			dispatch(unFriendRequest(item.id)).unwrap();
@@ -57,6 +34,7 @@ function SearchLayout({ dataGroup }) {
 			NotificationError(err);
 		}
 	};
+
 	const handleFollow = item => {
 		try {
 			dispatch(addFollower({ userId: item.id }));
@@ -65,6 +43,7 @@ function SearchLayout({ dataGroup }) {
 			NotificationError(err);
 		}
 	};
+
 	const handleUnFollow = item => {
 		try {
 			dispatch(unFollower(item.id)).unwrap();
@@ -76,22 +55,15 @@ function SearchLayout({ dataGroup }) {
 
 	return (
 		<>
-			{_.isEmpty(listMember) && _.isEmpty(listPost) ? (
-				<>
-					{show === true ? (
-						<div style={{ marginTop: '54px', padding: '24px', transitionDelay: '1s' }}>
-							<ResultNotFound />
-						</div>
-					) : (
-						<LoadingIndicator />
-					)}
-				</>
+			{_.isEmpty(dataGroup?.usersData) && _.isEmpty(dataGroup?.postData) ? (
+				<div style={{ marginTop: '54px', padding: '24px' }}>
+					<ResultNotFound />
+				</div>
 			) : (
 				<div className='search-group__container'>
-					<Circle loading={isFetching} />
 					{!_.isEmpty(dataGroup?.usersData) && (
 						<div className='searh-group__member'>
-							{listMember?.map((item, index) => {
+							{dataGroup?.usersData?.map((item, index) => {
 								return (
 									<div className='member-item' key={index}>
 										<div className='member-item__info'>
@@ -163,7 +135,7 @@ function SearchLayout({ dataGroup }) {
 						</div>
 					)}
 					<div>
-						{listPost?.map((item, index) => {
+						{dataGroup?.postData?.map((item, index) => {
 							return <Post key={index} postInformations={item} type={GROUP_TYPE} />;
 						})}
 					</div>

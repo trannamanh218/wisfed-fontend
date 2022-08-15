@@ -1,18 +1,12 @@
 import AddAndSearchCategories from 'shared/add-and-search-categories';
 import { useState, useRef, useCallback } from 'react';
-// import ShareModeDropdown from 'shared/share-mode-dropdown';
 import _ from 'lodash';
 import { useDispatch } from 'react-redux';
-import { getSuggestionForPost } from 'reducers/redux-utils/activity';
 import { NotificationError } from 'helpers/Error';
 import PropTypes from 'prop-types';
+import { getFilterSearch } from 'reducers/redux-utils/search';
 
-function AddAndSearchCategoriesUploadBook({
-	inputCategoryValue,
-	setInputCategoryValue,
-	categoryAddedList,
-	setCategoryAddedList,
-}) {
+function AddAndSearchAuthorUploadBook({ inputAuthorValue, setInputAuthorValue, authors, setAuthors }) {
 	const [categorySearchedList, setCategorySearchedList] = useState([]);
 	const [getDataFinish, setGetDataFinish] = useState(false);
 
@@ -23,13 +17,13 @@ function AddAndSearchCategoriesUploadBook({
 	const dispatch = useDispatch();
 
 	const addCategory = category => {
-		if (categoryAddedList.filter(categoryAdded => categoryAdded.id === category.id).length > 0) {
+		if (authors.filter(categoryAdded => categoryAdded.id === category.id).length > 0) {
 			removeCategory(category.id);
 		} else {
-			const categoryArrayTemp = [...categoryAddedList];
+			const categoryArrayTemp = [...authors];
 			categoryArrayTemp.push(category);
-			setCategoryAddedList(categoryArrayTemp);
-			setInputCategoryValue('');
+			setAuthors(categoryArrayTemp);
+			setInputAuthorValue('');
 			setCategorySearchedList([]);
 			if (categoryInputWrapper.current) {
 				categoryInputWrapper.current.style.width = '0.5ch';
@@ -38,15 +32,16 @@ function AddAndSearchCategoriesUploadBook({
 	};
 
 	const removeCategory = categoryId => {
-		const categoryArr = [...categoryAddedList];
+		const categoryArr = [...authors];
 		const index = categoryArr.findIndex(item => item.id === categoryId);
 		categoryArr.splice(index, 1);
-		setCategoryAddedList(categoryArr);
+		setAuthors(categoryArr);
 	};
 
-	const getSuggestionForCreatQuotes = async (input, option) => {
+	const fetchSuggestion = async input => {
+		const params = { q: input, type: 'authors' };
 		try {
-			const data = await dispatch(getSuggestionForPost({ input, option })).unwrap();
+			const data = await dispatch(getFilterSearch(params)).unwrap();
 			setCategorySearchedList(data.rows);
 		} catch (err) {
 			NotificationError(err);
@@ -55,16 +50,13 @@ function AddAndSearchCategoriesUploadBook({
 		}
 	};
 
-	const debounceSearch = useCallback(
-		_.debounce((inputValue, option) => getSuggestionForCreatQuotes(inputValue, option), 700),
-		[]
-	);
+	const debounceSearch = useCallback(_.debounce(fetchSuggestion, 1000), []);
 
 	const searchCategory = e => {
 		setGetDataFinish(false);
 		setCategorySearchedList([]);
-		setInputCategoryValue(e.target.value);
-		debounceSearch(e.target.value, { value: 'addCategory' });
+		setInputAuthorValue(e.target.value);
+		debounceSearch(e.target.value, 'addAuthor');
 		if (categoryInputWrapper.current) {
 			categoryInputWrapper.current.style.width = categoryInput.current.value?.length + 0.5 + 'ch';
 		}
@@ -73,30 +65,31 @@ function AddAndSearchCategoriesUploadBook({
 	return (
 		<div className='form-field-group'>
 			<label className='form-field-label'>
-				Chủ đề<span className='upload-text-danger'>*</span>
+				Tác giả<span className='upload-text-danger'>*</span>
 			</label>
 			<AddAndSearchCategories
-				categoryAddedList={categoryAddedList}
+				categoryAddedList={authors}
 				categorySearchedList={categorySearchedList}
 				addCategory={addCategory}
 				removeCategory={removeCategory}
 				getDataFinish={getDataFinish}
 				searchCategory={searchCategory}
-				inputCategoryValue={inputCategoryValue}
+				inputCategoryValue={inputAuthorValue}
 				categoryInputContainer={categoryInputContainer}
 				categoryInputWrapper={categoryInputWrapper}
 				categoryInput={categoryInput}
 				hasSearchIcon={true}
+				placeholder={'Tìm kiếm và thêm tác giả'}
 			/>
 		</div>
 	);
 }
 
-AddAndSearchCategoriesUploadBook.propTypes = {
-	categoryAddedList: PropTypes.array,
-	setCategoryAddedList: PropTypes.func,
-	inputCategoryValue: PropTypes.string,
-	setInputCategoryValue: PropTypes.func,
+AddAndSearchAuthorUploadBook.propTypes = {
+	authors: PropTypes.array,
+	setAuthors: PropTypes.func,
+	inputAuthorValue: PropTypes.string,
+	setInputAuthorValue: PropTypes.func,
 };
 
-export default AddAndSearchCategoriesUploadBook;
+export default AddAndSearchAuthorUploadBook;

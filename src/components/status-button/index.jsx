@@ -17,10 +17,8 @@ import {
 import './status-button.scss';
 import StatusModalContainer from 'shared/status-modal/StatusModalContainer';
 import Circle from 'shared/loading/circle';
-import { STATUS_LOADING, STATUS_IDLE } from 'constants';
 import { updateCurrentBook } from 'reducers/redux-utils/book';
 import { useNavigate } from 'react-router-dom';
-import { STATUS_SUCCESS } from 'constants';
 import { NotificationError } from 'helpers/Error';
 import Storage from 'helpers/Storage';
 import ModalCheckLogin from 'shared/modal-check-login';
@@ -43,10 +41,10 @@ const STATUS_BOOK_OBJ = {
 	},
 };
 
-const StatusButton = ({ className, bookData, inPostBook = false, hasBookStatus = false }) => {
+const StatusButton = ({ className, bookData, inCreatePost = false, hasBookStatus = false }) => {
 	const [modalShow, setModalShow] = useState(false);
 	const [currentStatus, setCurrentStatus] = useState('');
-	const [fetchStatus, setFetchStatus] = useState(STATUS_IDLE);
+	const [fetchStatus, setFetchStatus] = useState(false);
 	const [customLibrariesContainCurrentBookId, setCustomLibrariesContainCurrentBookId] = useState([]);
 	const { userInfo } = useSelector(state => state.auth);
 	const addedArray = useRef([]);
@@ -60,7 +58,7 @@ const StatusButton = ({ className, bookData, inPostBook = false, hasBookStatus =
 
 	useEffect(async () => {
 		if (Storage.getAccessToken()) {
-			if (hasBookStatus && inPostBook) {
+			if (hasBookStatus) {
 				setCurrentStatus(bookData.status);
 			} else {
 				checkBookInDefaultLibrary();
@@ -108,6 +106,7 @@ const StatusButton = ({ className, bookData, inPostBook = false, hasBookStatus =
 		} finally {
 			setModalShow(true);
 		}
+		setModalShow(true);
 	};
 
 	const updateBookShelve = async params => {
@@ -119,37 +118,38 @@ const StatusButton = ({ className, bookData, inPostBook = false, hasBookStatus =
 		}
 	};
 
-	const updateStatusBook = () => {
+	const updateStatusBook = async () => {
 		if (!_.isEmpty(bookData)) {
 			const params = { bookId: bookData.id || bookData.bookId, type: currentStatus };
-			dispatch(addBookToDefaultLibrary(params));
+			await dispatch(addBookToDefaultLibrary(params)).unwrap();
 		}
 	};
 
-	const handleAddAndRemoveBook = () => {
+	const handleAddAndRemoveBook = async () => {
 		if (!_.isEmpty(addedArray.current) || !_.isEmpty(removedArray.current)) {
-			dispatch(
+			await dispatch(
 				addRemoveBookInLibraries({
 					id: bookData.id || bookData.bookId,
 					data: { add: addedArray.current, remove: removedArray.current },
 				})
-			);
+			).unwrap();
 		}
 	};
 
-	const handleConfirm = async () => {
-		setFetchStatus(STATUS_LOADING);
-		try {
-			await updateStatusBook();
-			await handleAddAndRemoveBook();
-			setModalShow(false);
-			setFetchStatus(STATUS_SUCCESS);
-			dispatch(updateCurrentBook({ ...bookData, status: currentStatus }));
-			navigate('/');
-		} catch (err) {
-			NotificationError(err);
-			setModalShow(false);
-			setFetchStatus(STATUS_IDLE);
+	const handleConfirm = () => {
+		if (!inCreatePost) {
+			setFetchStatus(true);
+			try {
+				updateStatusBook();
+				handleAddAndRemoveBook();
+				dispatch(updateCurrentBook({ ...bookData, status: currentStatus }));
+				navigate('/');
+			} catch (err) {
+				NotificationError(err);
+			} finally {
+				setModalShow(false);
+				setFetchStatus(false);
+			}
 		}
 	};
 
@@ -175,9 +175,12 @@ const StatusButton = ({ className, bookData, inPostBook = false, hasBookStatus =
 
 	return (
 		<>
-			<Circle loading={fetchStatus === STATUS_LOADING} />
+			<Circle loading={fetchStatus} />
 			<button
-				className={classNames('btn btn-status btn-primary', { [`${className}`]: className })}
+				className={classNames('btn btn-status btn-primary', {
+					[`${className}`]: className,
+					'disable': inCreatePost,
+				})}
 				data-testid='btn-modal'
 				onClick={handleShow}
 			>
@@ -191,26 +194,30 @@ const StatusButton = ({ className, bookData, inPostBook = false, hasBookStatus =
 				<DropdownGroupWhite />
 			</button>
 			{!_.isEmpty(userInfo) ? (
-				<Modal
-					id='status-book-modal'
-					className='status-book-modal'
-					show={modalShow}
-					onHide={handleClose}
-					keyboard={false}
-					centered
-				>
-					<Modal.Body>
-						<StatusModalContainer
-							currentStatus={currentStatus}
-							handleChangeStatus={handleChangeStatus}
-							bookShelves={myCustomLibraries}
-							updateBookShelve={updateBookShelve}
-							handleConfirm={handleConfirm}
-							onChangeShelves={onChangeShelves}
-							customLibrariesContainCurrentBookId={customLibrariesContainCurrentBookId}
-						/>
-					</Modal.Body>
-				</Modal>
+				<>
+					{!inCreatePost && (
+						<Modal
+							id='status-book-modal'
+							className='status-book-modal'
+							show={modalShow}
+							onHide={handleClose}
+							keyboard={false}
+							centered
+						>
+							<Modal.Body>
+								<StatusModalContainer
+									currentStatus={currentStatus}
+									handleChangeStatus={handleChangeStatus}
+									bookShelves={myCustomLibraries}
+									updateBookShelve={updateBookShelve}
+									handleConfirm={handleConfirm}
+									onChangeShelves={onChangeShelves}
+									customLibrariesContainCurrentBookId={customLibrariesContainCurrentBookId}
+								/>
+							</Modal.Body>
+						</Modal>
+					)}
+				</>
 			) : (
 				<ModalCheckLogin modalShow={modalShow} setModalShow={setModalShow} />
 			)}
@@ -228,7 +235,7 @@ StatusButton.defaultProps = {
 StatusButton.propTypes = {
 	className: PropTypes.string,
 	bookData: PropTypes.object,
-	inPostBook: PropTypes.bool,
+	inCreatePost: PropTypes.bool,
 	hasBookStatus: PropTypes.bool,
 };
 

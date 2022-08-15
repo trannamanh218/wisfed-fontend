@@ -1,4 +1,4 @@
-import { Modal, Row, Col } from 'react-bootstrap';
+import { Modal, Col } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import SearchField from 'shared/search-field';
 import './ModalSeries.scss';
@@ -9,7 +9,14 @@ import { NotificationError } from 'helpers/Error';
 import { getMySeries, postMoreSeries } from 'reducers/redux-utils/series';
 import { useEffect } from 'react';
 
-const ModalSeries = ({ showModalSeries, handleCloseModalSeries, series, setSeries }) => {
+const ModalSeries = ({
+	showModalSeries,
+	handleCloseModalSeries,
+	series,
+	setSeries,
+	temporarySeries,
+	setTemporarySeries,
+}) => {
 	const [APIListSeries, setAPIListSeries] = useState([]);
 	const [updateListSeries, setUpdateListSeries] = useState(false);
 
@@ -22,12 +29,11 @@ const ModalSeries = ({ showModalSeries, handleCloseModalSeries, series, setSerie
 	};
 
 	const onItemChange = item => {
-		setSeries(item);
+		setTemporarySeries(item);
 	};
 
 	const handleClose = () => {
 		handleCloseModalSeries();
-		setSeries('');
 	};
 
 	const handlePostMoreSeries = async params => {
@@ -44,6 +50,7 @@ const ModalSeries = ({ showModalSeries, handleCloseModalSeries, series, setSerie
 	};
 
 	const handleConfirm = () => {
+		setSeries(temporarySeries);
 		handleCloseModalSeries();
 	};
 
@@ -63,6 +70,10 @@ const ModalSeries = ({ showModalSeries, handleCloseModalSeries, series, setSerie
 		handleGetSeriesList();
 	}, [updateListSeries, inputSearch]);
 
+	useEffect(() => {
+		setTemporarySeries(series);
+	}, [showModalSeries]);
+
 	return (
 		<Modal className='modal-series' show={showModalSeries} onHide={handleClose}>
 			<Modal.Body>
@@ -72,7 +83,7 @@ const ModalSeries = ({ showModalSeries, handleCloseModalSeries, series, setSerie
 						className='input input--non-border'
 						placeholder='Sê-ri bộ sách'
 						disabled
-						value={series.name || ''}
+						value={temporarySeries.name}
 					></input>
 				</div>
 
@@ -86,22 +97,17 @@ const ModalSeries = ({ showModalSeries, handleCloseModalSeries, series, setSerie
 					<div className='modal-series__body__options'>
 						{APIListSeries.map((item, index) => {
 							return (
-								<Row key={index}>
+								<label key={index} className='row-options'>
 									<Col xs={10}>
 										<div className='series-options-title'>{item.name}</div>
 									</Col>
 									<Col xs={2} className='series-options-checkbox'>
-										<label className='series-options-container'>
-											<input
-												type='radio'
-												id={item.id}
-												name='title'
-												onChange={() => onItemChange(item)}
-											/>
+										<div className='series-options-container'>
+											<input type='radio' name='title' onChange={() => onItemChange(item)} />
 											<div className='series-options-checkmark'></div>
-										</label>
+										</div>
 									</Col>
-								</Row>
+								</label>
 							);
 						})}
 					</div>
@@ -124,8 +130,10 @@ ModalSeries.defaultProps = {
 ModalSeries.propTypes = {
 	showModalSeries: PropTypes.bool,
 	handleCloseModalSeries: PropTypes.func,
-	series: PropTypes.any,
+	series: PropTypes.object,
 	setSeries: PropTypes.func,
+	temporarySeries: PropTypes.object,
+	setTemporarySeries: PropTypes.func,
 };
 
 export default ModalSeries;

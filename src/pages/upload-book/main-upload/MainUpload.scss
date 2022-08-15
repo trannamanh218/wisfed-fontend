@@ -13,10 +13,12 @@
 
 	.upload-image {
 		border-radius: 6px;
+		font-size: 15px;
 		&__wrapper {
 			width: 199px;
 			height: 223px;
 			border-radius: 6px;
+			padding: 0px;
 			img {
 				max-width: 199px;
 				height: 100%;
@@ -47,6 +49,7 @@
 
 			.input {
 				height: 50px;
+				height: 50px;
 				border-radius: 12px;
 				font-weight: 500;
 				font-size: 15px;
@@ -63,6 +66,7 @@
 			.inp-date {
 				width: 100%;
 				border-radius: 12px;
+				height: 50px;
 				height: 50px;
 				padding: 0px 18px;
 				background-color: #f7f7fc;
@@ -130,6 +134,20 @@
 			.add-and-search-categories__main-content.added-categories {
 				padding: 4px 15px;
 			}
+
+			.add-and-search-categories__categories-added {
+				width: 100%;
+				display: flex;
+				gap: 4px;
+				flex-wrap: wrap;
+
+				&__item {
+					height: 43px;
+				}
+			}
+			.add-and-search-categories__main-content.added-categories {
+				padding: 4px 15px;
+			}
 		}
 	}
 
@@ -143,10 +161,17 @@
 		&__btn {
 			height: 50px;
 		}
+		&__btn {
+			height: 50px;
+		}
 	}
 
 	.btnMainUpload {
 		width: 100%;
+	}
+
+	.btn-upload {
+		margin-top: 0px;
 	}
 }
 

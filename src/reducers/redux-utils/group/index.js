@@ -1,5 +1,4 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-
 import {
 	groupAPI,
 	inviteFriend,
@@ -14,7 +13,8 @@ import {
 	searchGroup,
 	groupDetailAPI,
 	likeCommentGroupAPI,
-	unFollowGroup,
+	unFollowGroupAPI,
+	followGroupAPI,
 } from 'constants/apiURL';
 import Request from 'helpers/Request';
 
@@ -28,10 +28,10 @@ export const getGroupList = createAsyncThunk('group/getGroupList', async (params
 	}
 });
 
-export const getGroupDettail = createAsyncThunk('group/getGroupDettail', async (id = {}, { rejectWithValue }) => {
+export const getGroupDettail = createAsyncThunk('group/getGroupDettail', async (id, { rejectWithValue }) => {
 	try {
 		const res = await Request.makeGet(groupDetailAPI(id));
-		return res;
+		return res.data;
 	} catch (err) {
 		const error = JSON.parse(err.response);
 		return rejectWithValue(error);
@@ -189,7 +189,17 @@ export const leaveGroupUser = createAsyncThunk('group/leaveGroupUser', async (pa
 
 export const unFollowGroupUser = createAsyncThunk('group/unFollowGroupUser', async (id, { rejectWithValue }) => {
 	try {
-		const res = await Request.makePost(unFollowGroup(id));
+		const res = await Request.makePost(unFollowGroupAPI(id));
+		return res;
+	} catch (err) {
+		const error = JSON.parse(err.response);
+		return rejectWithValue(error);
+	}
+});
+
+export const followGroupUser = createAsyncThunk('group/followGroupUser', async (id, { rejectWithValue }) => {
+	try {
+		const res = await Request.makePost(followGroupAPI(id));
 		return res;
 	} catch (err) {
 		const error = JSON.parse(err.response);
@@ -201,7 +211,7 @@ const groupSlice = createSlice({
 	name: 'group',
 	initialState: {
 		isFetching: false,
-		groupsData: {},
+		currentGroupArrived: {},
 		error: {},
 		key: 'intro',
 		resetGroupList: true,
@@ -215,23 +225,12 @@ const groupSlice = createSlice({
 		},
 	},
 	extraReducers: {
-		[getGroupList.pending]: state => {
-			state.isFetching = true;
-		},
-		[getGroupList.fulfilled]: (state, action) => {
-			state.isFetching = false;
-			state.groupsData = action.payload;
-		},
-		[getGroupList.rejected]: (state, action) => {
-			state.isFetching = false;
-			state.error = action.payload;
-		},
 		[getGroupDettail.pending]: state => {
 			state.isFetching = true;
 		},
 		[getGroupDettail.fulfilled]: (state, action) => {
 			state.isFetching = false;
-			state.groupsData = action.payload;
+			state.currentGroupArrived = action.payload;
 		},
 		[getGroupDettail.rejected]: (state, action) => {
 			state.isFetching = false;

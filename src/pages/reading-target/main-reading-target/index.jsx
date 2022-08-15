@@ -18,9 +18,8 @@ import Circle from 'shared/loading/circle';
 import { STATUS_LOADING } from 'constants';
 import { useDispatch } from 'react-redux';
 import { saveDataShare } from 'reducers/redux-utils/post';
-import { useVisible } from 'shared/hooks';
 import Storage from 'helpers/Storage';
-import ShareTarget from 'shared/share-target';
+import { READ_TARGET_VERB_SHARE } from 'constants';
 
 const MainReadingTarget = () => {
 	const dispatch = useDispatch();
@@ -33,7 +32,6 @@ const MainReadingTarget = () => {
 	const [inputSearch, setInputSearch] = useState('');
 	const [newArrSearch, setNewArrSearch] = useState([]);
 	const { booksReadYear, year, status } = useFetchTargetReading(userId, modalOpen, deleteModal);
-	const { ref: shareRef, isVisible: showShare, setIsVisible: setShowShare } = useVisible(false);
 
 	const renderLinearProgressBar = item => {
 		let percent = 0;
@@ -127,10 +125,9 @@ const MainReadingTarget = () => {
 				numberBook: booksReadYear[0].numberBook,
 				booksReadCount: booksReadYear[0].booksReadCount,
 				percent: percentTemp > 100 ? 100 : percentTemp,
-				verd: 'shareTarget',
+				verb: READ_TARGET_VERB_SHARE,
 			};
 			dispatch(saveDataShare(target));
-			setShowShare(true);
 			navigate('/');
 		}
 	};
@@ -138,11 +135,6 @@ const MainReadingTarget = () => {
 	return (
 		<div className='reading-target'>
 			<Circle loading={status === STATUS_LOADING} />
-			{showShare && (
-				<div ref={shareRef} style={{ position: 'fixed', top: '30%', left: '30%' }}>
-					<ShareTarget />
-				</div>
-			)}
 			<div className='reading-target__header'>
 				<h4>Mục tiêu đọc sách năm {booksReadYear[0]?.year || year}</h4>
 				<SearchField

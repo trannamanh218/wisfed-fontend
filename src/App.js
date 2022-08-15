@@ -58,7 +58,7 @@ function App({ children }) {
 		const accsetToken = Storage.getAccessToken();
 		if (accsetToken) {
 			dispatch(checkLogin(true));
-			await dispatch(getCheckJwt());
+			await dispatch(getCheckJwt()).unwrap();
 		} else {
 			dispatch(checkLogin(false));
 		}
@@ -100,7 +100,7 @@ function App({ children }) {
 			/>
 			<ModalCheckLogin routerLogin={routerLogin} />
 			<Routes>
-				<Route path='/upload-book/' element={<UploadBook />} />
+				<Route path='/upload-book' element={<UploadBook />} />
 				<Route path='/top100' element={<Ranks />} />
 				<Route path='/detail-feed/:type/:idPost' element={<DetailFeed />} />
 				<Route path='/books-author/:userId' element={<BooksAuthor />} />

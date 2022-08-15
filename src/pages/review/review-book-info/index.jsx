@@ -3,27 +3,17 @@ import ReactRating from 'shared/react-rating';
 import ReadMore from 'shared/read-more';
 import './review-book-info.scss';
 import { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
-import { getRatingBook } from 'reducers/redux-utils/book';
-import { NotificationError } from 'helpers/Error';
 import PropTypes from 'prop-types';
 
 const ReviewBookInfo = ({ bookInfo }) => {
-	const [lisRatingStar, setLisRatingStar] = useState({});
-
-	const dispatch = useDispatch();
-
-	const getRatingData = async () => {
-		try {
-			const res = await dispatch(getRatingBook(bookInfo?.id)).unwrap();
-			setLisRatingStar(res.data);
-		} catch (err) {
-			NotificationError(err);
-		}
-	};
+	const [textLength, setTextLength] = useState(460);
 
 	useEffect(() => {
-		getRatingData();
+		if (window.innerWidth <= 1024 && window.innerWidth > 820) {
+			setTextLength(300);
+		} else if (window.innerWidth <= 820) {
+			setTextLength(250);
+		}
 	}, []);
 
 	return (
@@ -37,12 +27,12 @@ const ReviewBookInfo = ({ bookInfo }) => {
 					)}
 				</div>
 				<div className='review-book-info__stars'>
-					<ReactRating readonly={true} initialRating={lisRatingStar?.avg} />
-					<span>(Trung bình {lisRatingStar?.avg} sao)</span>
+					<ReactRating readonly={true} initialRating={bookInfo.avgRating.toFixed(1)} />
+					<span>(Trung bình {bookInfo.avgRating.toFixed(1)} sao)</span>
 				</div>
 
 				<div className='review-book-info__description'>
-					<ReadMore text={bookInfo.description} />
+					<ReadMore text={bookInfo.description} length={textLength} />
 				</div>
 			</div>
 		</div>

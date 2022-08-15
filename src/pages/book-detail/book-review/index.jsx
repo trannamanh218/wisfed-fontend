@@ -1,17 +1,12 @@
-import { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
+import { useState } from 'react';
 import { Tab, Tabs } from 'react-bootstrap';
 import ReviewRating from 'shared/review-rating';
 import QuotesTab from './components/QuotesTab';
 import ReviewTab from './components/ReviewTab';
 import './book-review.scss';
-import { getRatingBook } from 'reducers/redux-utils/book';
-import { useDispatch, useSelector } from 'react-redux';
-import { NotificationError } from 'helpers/Error';
 
-const BookReview = () => {
-	const bookInfor = useSelector(state => state.book.bookInfo);
-	const dispatch = useDispatch();
-	const [listRatingStar, setListRatingStar] = useState({});
+const BookReview = ({ listRatingStar }) => {
 	const [currentTab, setCurrentTab] = useState('reviews');
 
 	const listRating = [
@@ -56,18 +51,6 @@ const BookReview = () => {
 			total: listRatingStar.rate_1_star,
 		},
 	];
-	const fetchData = async () => {
-		try {
-			const res = await dispatch(getRatingBook(bookInfor?.id)).unwrap();
-			setListRatingStar(res.data);
-		} catch (err) {
-			NotificationError(err);
-		}
-	};
-
-	useEffect(() => {
-		fetchData();
-	}, []);
 
 	return (
 		<div className='book-review'>
@@ -90,3 +73,8 @@ const BookReview = () => {
 };
 
 export default BookReview;
+
+BookReview.propTypes = {
+	bookInfo: PropTypes.object,
+	listRatingStar: PropTypes.object,
+};

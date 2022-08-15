@@ -19,6 +19,7 @@ import {
 	getFillterGroup,
 	leaveGroupUser,
 	unFollowGroupUser,
+	followGroupUser,
 } from 'reducers/redux-utils/group';
 import { NotificationError } from 'helpers/Error';
 import { useDispatch } from 'react-redux';
@@ -31,38 +32,51 @@ import SearchLayout from './component/SearchLayout';
 import { useVisible } from 'shared/hooks';
 import defaultAvatar from 'assets/images/Rectangle 17435.png';
 import Dropzone from 'react-dropzone';
-import { useDropzone } from 'react-dropzone';
 import { uploadImage } from 'reducers/redux-utils/common';
 import camera from 'assets/images/camera.png';
 import { useRef } from 'react';
 import { toast } from 'react-toastify';
 import vector from 'assets/images/Vector.png';
 import pani from 'assets/images/pani.png';
+import LoadingIndicator from 'shared/loading-indicator';
 
 function MainGroupComponent({ handleChange, keyChange, data, member, handleUpdate }) {
 	const [key, setKey] = useState('intro');
-	const { groupType, description, memberGroups, name } = data;
-	const dispatch = useDispatch();
-	const [show, setShow] = useState(false);
-	const { userInfo } = useSelector(state => state.auth);
-	const [showSelect, setShowSelect] = useState(false);
-	const [isFetching, setIsFetching] = useState(true);
 	const [valueGroupSearch, setValueGroupSearch] = useState('');
 	const [filter, setFilter] = useState('[]');
-	const [getData, setGetData] = useState([]);
+	const [getData, setGetData] = useState({});
+	const [toggleFollowGroup, setToggleFollowGroup] = useState(false);
+	const [showSelect, setShowSelect] = useState(false);
+	const [isFetching, setIsFetching] = useState(true);
+	const [isFetchingSearchInFroup, setIsFetchingSearchInGroup] = useState(false);
+	const [show, setShow] = useState(false);
+
 	const { id } = useParams();
+	const dispatch = useDispatch();
+
+	const joinedGroupPopup = useRef(null);
+
+	const { groupType, description, memberGroups, name } = data;
+	const { userInfo } = useSelector(state => state.auth);
 	const keyRedux = useSelector(state => state.group.key);
 	const { ref: showRef, isVisible: isShow, setIsVisible: setIsShow } = useVisible(false);
-	const joinedGroupPopup = useRef(null);
-	const [toggleFollowGroup, setToggleFollowGroup] = useState(false);
+
+	useEffect(() => {
+		function handleClickOutside(event) {
+			if (joinedGroupPopup.current && !joinedGroupPopup.current.contains(event.target)) {
+				setShowSelect(false);
+			}
+		}
+		document.addEventListener('mousedown', handleClickOutside);
+		return () => {
+			document.removeEventListener('mousedown', handleClickOutside);
+		};
+	}, []);
 
 	const enjoyGroup = async () => {
 		setIsFetching(true);
 		try {
-			await dispatch(getEnjoyGroup(data?.id));
-			setTimeout(() => {
-				setIsFetching(false);
-			}, 2000);
+			await dispatch(getEnjoyGroup(data?.id)).unwrap();
 			setShow(true);
 			setIsFetching(false);
 		} catch (err) {
@@ -79,12 +93,9 @@ function MainGroupComponent({ handleChange, keyChange, data, member, handleUpdat
 			await dispatch(leaveGroupUser(params)).unwrap();
 			setShow(false);
 			setShowSelect(false);
+			setIsFetching(false);
 		} catch (err) {
 			NotificationError(err);
-		} finally {
-			setTimeout(() => {
-				setIsFetching(false);
-			}, 2000);
 		}
 	};
 
@@ -100,6 +111,12 @@ function MainGroupComponent({ handleChange, keyChange, data, member, handleUpdat
 
 	const handleFollowGroup = async () => {
 		setToggleFollowGroup(false);
+		try {
+			await dispatch(followGroupUser(data?.id)).unwrap();
+			setShowSelect(false);
+		} catch (err) {
+			NotificationError(err);
+		}
 	};
 
 	const handleChangeSearch = e => {
@@ -117,6 +134,7 @@ function MainGroupComponent({ handleChange, keyChange, data, member, handleUpdat
 			const filterValue = value.toLowerCase().trim();
 			setFilter(filterValue);
 		} else {
+			setGetData({});
 			setFilter('[]');
 		}
 	};
@@ -124,6 +142,7 @@ function MainGroupComponent({ handleChange, keyChange, data, member, handleUpdat
 	const debounceSearch = useCallback(_.debounce(updateInputSearch, 500), []);
 
 	useEffect(async () => {
+		setIsFetchingSearchInGroup(true);
 		const params = {
 			q: filter,
 			id: id,
@@ -134,9 +153,10 @@ function MainGroupComponent({ handleChange, keyChange, data, member, handleUpdat
 				const result = await dispatch(getFillterGroup({ ...params })).unwrap();
 				setGetData(result);
 			}
-			keyChange = 'search';
 		} catch (err) {
 			NotificationError(err);
+		} finally {
+			setIsFetchingSearchInGroup(false);
 		}
 	}, [filter]);
 
@@ -169,42 +189,22 @@ function MainGroupComponent({ handleChange, keyChange, data, member, handleUpdat
 	});
 
 	useEffect(() => {
-		const checkItem = data?.memberGroups?.filter(item => item?.user?.id === userInfo?.id);
-		if (checkItem?.length > 0) {
-			setShow(true);
-			setTimeout(() => {
-				setIsFetching(false);
-			}, 2000);
-		} else {
-			setTimeout(() => {
-				setIsFetching(false);
-			}, 2000);
+		if (!_.isEmpty(data) && !_.isEmpty(userInfo)) {
+			const checkItem = data?.memberGroups?.filter(item => item?.userId === userInfo?.id);
+			if (checkItem?.length > 0) {
+				setShow(true);
+			}
+			setIsFetching(false);
 		}
 	}, [data, userInfo]);
 
 	const handleSelect = () => {
 		setKey(keyRedux);
 	};
+
 	useEffect(() => {
 		handleSelect();
 	}, [keyRedux]);
-
-	function useOutsideAlerter(ref) {
-		useEffect(() => {
-			function handleClickOutside(event) {
-				if (ref.current && !ref.current.contains(event.target)) {
-					setShowSelect(false);
-				}
-			}
-			document.addEventListener('mousedown', handleClickOutside);
-			return () => {
-				document.removeEventListener('mousedown', handleClickOutside);
-			};
-		}, [ref]);
-	}
-
-	// Click outside
-	useOutsideAlerter(joinedGroupPopup);
 
 	return (
 		<div className='group-main-component__container'>
@@ -247,7 +247,6 @@ function MainGroupComponent({ handleChange, keyChange, data, member, handleUpdat
 						{data.isPublic && (
 							<div className='groupPublic'>
 								<img src={vector} />
-
 								<span>Nhóm công khai</span>
 								<div className='imgPani'>
 									<img src={pani} />
@@ -296,7 +295,6 @@ function MainGroupComponent({ handleChange, keyChange, data, member, handleUpdat
 								</button>
 							</div>
 						)}
-
 						<div className='group-name__invite-group' onClick={() => setIsShow(!isShow)}>
 							<button>
 								<ActionPlusGroup />
@@ -354,14 +352,20 @@ function MainGroupComponent({ handleChange, keyChange, data, member, handleUpdat
 			{keyChange === 'settingsQuestion' && <SettingsQuestions handleChange={handleChange} />}
 			{keyChange === 'manageJoin' && <ManageJoin handleChange={handleChange} />}
 			{keyChange === 'managePost' && <PostWatting handleChange={handleChange} />}
-			{keyChange === 'search' && getData && (
-				<SearchLayout
-					dataGroup={getData}
-					filter={filter}
-					valueGroupSearch={valueGroupSearch}
-					show={show}
-					id={id}
-				/>
+			{keyChange === 'search' && (
+				<>
+					{!isFetchingSearchInFroup && !_.isEmpty(getData) ? (
+						<SearchLayout
+							dataGroup={getData}
+							filter={filter}
+							valueGroupSearch={valueGroupSearch}
+							show={show}
+							id={id}
+						/>
+					) : (
+						<LoadingIndicator />
+					)}
+				</>
 			)}
 		</div>
 	);

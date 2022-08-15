@@ -12,7 +12,8 @@ import { NotificationError } from 'helpers/Error';
 import Subtract from 'assets/images/Subtract.png';
 
 function CreateNewPasswordForm() {
-	const isFetching = useSelector(state => state.auth.isFetching);
+	// const isFetching = useSelector(state => state.auth.isFetching);
+	const [isFetching, setIsFetching] = useState(false);
 	const dispatch = useDispatch();
 	const [isShow, setIsShow] = useState(false);
 	const [dataModal, setDataModal] = useState({});
@@ -28,6 +29,7 @@ function CreateNewPasswordForm() {
 	const [showImagePopover2, setShowImagePopover2] = useState(false);
 
 	const handleSubmit = async data => {
+		setIsFetching(true);
 		try {
 			const newData = {
 				email: newEmail,
@@ -36,6 +38,7 @@ function CreateNewPasswordForm() {
 			await dispatch(resetPassword(newData)).unwrap();
 
 			setIsShow(true);
+			setIsFetching(false);
 			setDataModal({
 				title: 'Tạo mật khẩu',
 				title2: 'mới thành công',
@@ -46,6 +49,7 @@ function CreateNewPasswordForm() {
 			});
 		} catch (err) {
 			setIsShow(true);
+			setIsFetching(false);
 			setDataModal({
 				title: 'Tạo mật khẩu',
 				title2: ' mới thất bại',
@@ -132,7 +136,7 @@ function CreateNewPasswordForm() {
 			<Circle loading={isFetching} />
 			{isShow && (
 				<div>
-					<ModalLogin data={dataModal} handleChange={handleChangeModal} />
+					<ModalLogin data={dataModal} handleClose={handleChangeModal} />
 				</div>
 			)}
 			<Formik
@@ -161,6 +165,7 @@ function CreateNewPasswordForm() {
 										})}
 									>
 										<input
+											maxLength={8}
 											className='forgetPassword__form__input'
 											type='text'
 											placeholder='Nhập mã OTP'

@@ -56,5 +56,6 @@ SearchCategory.propTypes = {
 	hasMoreFilterData: PropTypes.bool,
 	handleViewCategoryDetail: PropTypes.func,
 	inputSearch: PropTypes.string,
+	inputValue: PropTypes.string,
 };
 export default SearchCategory;

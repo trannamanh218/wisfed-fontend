@@ -8,16 +8,18 @@ import { getGroupDettail, getMember } from 'reducers/redux-utils/group';
 import { useParams } from 'react-router-dom';
 
 const MainGroup = () => {
+	const [keyChange, setKeyChange] = useState('tabs');
 	const [update, setUpdate] = useState(false);
-	const { id } = useParams();
 	const [detailGroup, setDetailGroup] = useState({});
 	const [listMember, setListMember] = useState([]);
+
+	const { id } = useParams();
 	const dispatch = useDispatch();
 
 	const fetchData = async () => {
 		try {
 			const res = await dispatch(getGroupDettail(id)).unwrap();
-			setDetailGroup(res.data);
+			setDetailGroup(res);
 		} catch (err) {
 			NotificationError(err);
 		}
@@ -28,7 +30,7 @@ const MainGroup = () => {
 			const actionGetList = await dispatch(getMember(id)).unwrap();
 			setListMember(actionGetList);
 		} catch (err) {
-			// NotificationError(err);
+			NotificationError(err);
 		}
 	};
 
@@ -44,8 +46,6 @@ const MainGroup = () => {
 	useEffect(() => {
 		fetchData();
 	}, [update]);
-
-	const [keyChange, setKeyChange] = useState('tabs');
 
 	const handleChange = e => {
 		setKeyChange(e);

@@ -30,6 +30,7 @@ import FormCheckGroup from 'shared/form-check-group';
 import { getFavoriteCategories } from 'reducers/redux-utils/category';
 import { POST_TYPE } from 'constants';
 import { getCategoryDetail } from 'reducers/redux-utils/category';
+// import { getTopBooks } from 'reducers/redux-utils/ranks';
 
 const MainCategoryDetail = () => {
 	const { id } = useParams();
@@ -83,8 +84,21 @@ const MainCategoryDetail = () => {
 			getCategoryInfoFnc();
 		}
 		setFilter('[]');
+		if (!_.isEmpty(categoryInfoRedux) && categoryInfoRedux.id === Number(id)) {
+			setCategoryInfo(categoryInfoRedux);
+		} else {
+			getCategoryInfoFnc();
+		}
+		setFilter('[]');
 		checkFavoriteCategoriesData();
 	}, [id]);
+
+	useEffect(() => {
+		if (!_.isEmpty(categoryInfo)) {
+			setIsLike(categoryInfo.isFavorite);
+			isLikeTemp.current = categoryInfo.isFavorite;
+		}
+	}, [categoryInfo]);
 
 	useEffect(() => {
 		if (!_.isEmpty(categoryInfo)) {
@@ -305,6 +319,11 @@ const MainCategoryDetail = () => {
 		setShowModal(false);
 	};
 
+	const handleViewTopBooksOfWeek = () => {
+		localStorage.setItem('category', JSON.stringify({ value: categoryInfo.id, title: categoryInfo.name }));
+		navigate('/top100');
+	};
+
 	return (
 		<div className='main-category-detail'>
 			<Circle loading={isFetchingBookDetail || status === STATUS_LOADING} />
@@ -362,6 +381,7 @@ const MainCategoryDetail = () => {
 													list={categoryInfo.topBookReads}
 													title='Đọc nhiều nhất tuần này'
 													handleViewBookDetail={handleViewBookDetail}
+													handleViewCategoryDetail={handleViewTopBooksOfWeek}
 													inCategoryDetail={true}
 												/>
 											)}

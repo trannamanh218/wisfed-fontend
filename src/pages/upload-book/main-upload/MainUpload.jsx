@@ -13,11 +13,15 @@ import Datepicker from 'react-datepicker';
 import { useDispatch, useSelector } from 'react-redux';
 import { uploadImage } from 'reducers/redux-utils/common';
 import ModalSeries from 'shared/modal-series/ModalSeries';
-import AddAndSearchCategoriesUploadBook from './AddAndSearchCategoriesUploadBook/AddAndSearchCategoriesUploadBook';
 import { toast } from 'react-toastify';
 import { createBook } from 'reducers/redux-utils/book';
 import { addBookToSeries } from 'reducers/redux-utils/series';
 import { NotificationError } from 'helpers/Error';
+import classNames from 'classnames';
+import AddAndSearchAuthorUploadBook from './AddAndSearchAuthorUploadBook/AddAndSearchAuthorUploadBook';
+import AddAndSearchCategoriesUploadBook from './AddAndSearchCategoriesUploadBook/AddAndSearchCategoriesUploadBook';
+import AddAndSearchPublisherUploadBook from './AddAndSearchPublisherUploadBook/AddAndSearchPublisherUploadBook';
+import AddAndSearchTranslatorsUploadBook from './AddAndSearchTranslatorsUploadBook/AddAndSearchTranslatorsUploadBook';
 
 export default function MainUpload() {
 	const [publishDate, setPublishDate] = useState(null);
@@ -27,10 +31,20 @@ export default function MainUpload() {
 
 	const [image, setFrontBookCover] = useState('');
 	const [categoryAddedList, setCategoryAddedList] = useState([]);
+	const [authors, setAuthors] = useState([]);
+	const [translators, setTranslators] = useState([]);
+	const [publisher, setPublisher] = useState([]);
 	const [language, setLanguage] = useState('');
 	const [series, setSeries] = useState({});
 
 	const [resetSelect, setResetSelect] = useState(false);
+	const [buttonActive, setButtonActive] = useState(false);
+	const [temporarySeries, setTemporarySeries] = useState({});
+
+	const [inputAuthorValue, setInputAuthorValue] = useState('');
+	const [inputTranslatorValue, setInputTranslatorValue] = useState('');
+	const [inputCategoryValue, setInputCategoryValue] = useState('');
+	const [inputPublisherValue, setInputPublisherValue] = useState('');
 
 	const blockInvalidChar = e => {
 		return ['e', 'E', '+', '-'].includes(e.key) && e.preventDefault();
@@ -40,16 +54,12 @@ export default function MainUpload() {
 		name: '',
 		subName: '',
 		originalName: '',
-		author: '',
-		translator: '',
-		publisher: '',
 		isbn: '',
 		page: '',
 		description: '',
 	};
 
-	const [{ name, subName, originalName, author, translator, publisher, isbn, page, description }, setState] =
-		useState(initialState);
+	const [{ name, subName, originalName, isbn, page, description }, setState] = useState(initialState);
 
 	const onChange = e => {
 		const { name, value } = e.target;
@@ -61,15 +71,18 @@ export default function MainUpload() {
 	const clearState = () => {
 		setFrontBookCover('');
 		setPublishDate(null);
-
-		// reset ô select
+		setTemporarySeries({});
+		setInputAuthorValue('');
+		setAuthors([]);
+		setInputTranslatorValue('');
+		setTranslators([]);
+		setInputPublisherValue('');
+		setPublisher([]);
+		setInputCategoryValue('');
+		setCategoryAddedList([]);
+		setSeries({});
 		setLanguage('');
 		setResetSelect(!resetSelect);
-
-		setSeries({});
-
-		setCategoryAddedList([]);
-
 		setState({ ...initialState });
 	};
 
@@ -86,51 +99,6 @@ export default function MainUpload() {
 
 	const onchangeLanguages = data => {
 		setLanguage(data.value);
-	};
-
-	const toastWarning = () => {
-		const customId = 'custom-id-upload';
-		toast.warning('Vui lòng điền đầy đủ thông tin', { toastId: customId });
-	};
-
-	const validateInput = param => {
-		if (!param.images) {
-			toastWarning();
-			return false;
-		}
-		if (!param.name) {
-			toastWarning();
-			return false;
-		}
-		if (!param.authors[0].authorName) {
-			toastWarning();
-			return false;
-		}
-		if (param.categoryIds.length === 0) {
-			toastWarning();
-			return false;
-		}
-		if (!param.publisher) {
-			toastWarning();
-			return false;
-		}
-		if (!param.isbn) {
-			toastWarning();
-			return false;
-		}
-		if (!param.page) {
-			toastWarning();
-			return false;
-		}
-		if (!param.language) {
-			toastWarning();
-			return false;
-		}
-		if (!param.description) {
-			toastWarning();
-			return false;
-		}
-		return true;
 	};
 
 	const handleCreateBook = async params => {
@@ -152,7 +120,7 @@ export default function MainUpload() {
 			}
 
 			// B4: Xử lý hiển thị kết quả
-			toast.success('Đăng tải sách thành công');
+			toast.success('Đang chờ xét duyệt sách. Chúng tôi sẽ thông báo cho bạn sau.');
 		} catch (err) {
 			NotificationError(err);
 		}
@@ -167,12 +135,20 @@ export default function MainUpload() {
 	};
 
 	const onBtnSaveClick = () => {
-		// B1: Thu thập dữ liệu
-
 		// Lấy danh sách categoryIds
 		const categoryIds = [];
 		for (let i = 0; i < categoryAddedList.length; i++) {
 			categoryIds.push(categoryAddedList[i].id);
+		}
+
+		// Tạo danh sách tác giả
+		const authorsArr = [];
+		for (let i = 0; i < authors.length; i++) {
+			authorsArr.push({
+				'isUser': true,
+				'authorId': authors[i].id,
+				'authorName': authors[i].name,
+			});
 		}
 
 		const bookInfo = {
@@ -181,14 +157,9 @@ export default function MainUpload() {
 			name: name,
 			subName: subName,
 			originalName: originalName,
-			authors: [
-				{
-					isUser: false,
-					authorName: author,
-				},
-			],
-			translator: translator,
-			publisher: publisher,
+			authors: authorsArr,
+			translators: translators,
+			publisher: publisher[0],
 			isbn: isbn,
 			publishDate: publishDate,
 			page: Number(page),
@@ -197,21 +168,33 @@ export default function MainUpload() {
 			categoryIds: categoryIds,
 			tags: [],
 		};
-
-		// B2: Kiểm tra dữ liệu
-		const validate = validateInput(bookInfo);
-
-		if (validate) {
-			// B3: Gọi api
-
-			// Tạo sách
-			handleCreateBook(bookInfo);
+		if (buttonActive) {
+			console.log(bookInfo);
+			// handleCreateBook(bookInfo);
 		}
 	};
 
 	useEffect(() => {
 		uploadImageFile();
 	}, [acceptedFiles]);
+
+	useEffect(() => {
+		if (
+			!image ||
+			!name ||
+			authors.length === 0 ||
+			categoryAddedList.length === 0 ||
+			!publisher ||
+			!isbn ||
+			!page ||
+			!language ||
+			!description
+		) {
+			setButtonActive(false);
+		} else {
+			setButtonActive(true);
+		}
+	}, [image, name, authors, categoryAddedList, publisher, isbn, page, language, description]);
 
 	const uploadImageFile = async () => {
 		const imageUploadedData = await dispatch(uploadImage(acceptedFiles)).unwrap();
@@ -290,44 +273,36 @@ export default function MainUpload() {
 						></input>
 					</div>
 					<div className='inp-book'>
-						<label>
-							Tác giả<span className='upload-text-danger'>*</span>
-						</label>
-						<input
-							className='input input--non-border'
-							placeholder='Tác giả'
-							value={author}
-							name='author'
-							onChange={onChange}
-						></input>
+						<AddAndSearchAuthorUploadBook
+							inputAuthorValue={inputAuthorValue}
+							setInputAuthorValue={setInputAuthorValue}
+							authors={authors}
+							setAuthors={setAuthors}
+						/>
 					</div>
 					<div className='inp-book'>
-						<label>Dịch giả</label>
-						<input
-							className='input input--non-border'
-							placeholder='Dịch giả'
-							value={translator}
-							name='translator'
-							onChange={onChange}
-						></input>
+						<AddAndSearchTranslatorsUploadBook
+							inputTranslatorValue={inputTranslatorValue}
+							setInputTranslatorValue={setInputTranslatorValue}
+							translators={translators}
+							setTranslators={setTranslators}
+						/>
 					</div>
 					<div className='inp-book'>
 						<AddAndSearchCategoriesUploadBook
+							inputCategoryValue={inputCategoryValue}
+							setInputCategoryValue={setInputCategoryValue}
 							categoryAddedList={categoryAddedList}
 							setCategoryAddedList={setCategoryAddedList}
 						/>
 					</div>
 					<div className='inp-book'>
-						<label>
-							Nhà xuất bản<span className='upload-text-danger'>*</span>
-						</label>
-						<input
-							className='input input--non-border'
-							placeholder='Nhà xuất bản'
-							value={publisher}
-							name='publisher'
-							onChange={onChange}
-						></input>
+						<AddAndSearchPublisherUploadBook
+							inputPublisherValue={inputPublisherValue}
+							setInputPublisherValue={setInputPublisherValue}
+							publisher={publisher}
+							setPublisher={setPublisher}
+						/>
 					</div>
 					<div className='inp-book'>
 						<Row>
@@ -396,7 +371,7 @@ export default function MainUpload() {
 							</Col>
 						</Row>
 					</div>
-					{userInfoJwt?.role === ('tecinus' || 'author') ? (
+					{userInfoJwt?.role === ('tecinus' || 'authors') ? (
 						<div className='inp-book'>
 							<label>Sê-ri</label>
 							<input
@@ -412,6 +387,8 @@ export default function MainUpload() {
 									handleCloseModalSeries={handleCloseModalSeries}
 									series={series}
 									setSeries={setSeries}
+									temporarySeries={temporarySeries}
+									setTemporarySeries={setTemporarySeries}
 								/>
 							</div>
 						</div>
@@ -432,9 +409,14 @@ export default function MainUpload() {
 							</Button>
 						</Col>
 						<Col>
-							<Button onClick={onBtnSaveClick} className='btn btnMainUpload'>
+							<button
+								onClick={onBtnSaveClick}
+								className={classNames('creat-post-modal-content__main__submit', 'btn-upload', {
+									'active': buttonActive,
+								})}
+							>
 								Lưu
-							</Button>
+							</button>
 						</Col>
 					</Row>
 				</div>

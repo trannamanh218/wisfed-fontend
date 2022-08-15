@@ -36,3 +36,31 @@
 		padding: 40px 0;
 	}
 }
+
+@media only screen and (max-width: 1025px) {
+	.review {
+		padding: 2.5rem;
+	}
+}
+
+@media only screen and (max-width: 768px) {
+	.review {
+		.review__header {
+			h4 {
+				display: -webkit-box;
+				-webkit-box-orient: vertical;
+				-webkit-line-clamp: 3;
+				text-overflow: ellipsis;
+				overflow: hidden;
+			}
+		}
+		.review-book-info {
+			.review-book-info__name {
+				font-size: 1.3rem;
+			}
+			.read-more {
+				font-size: 0.9rem;
+			}
+		}
+	}
+}

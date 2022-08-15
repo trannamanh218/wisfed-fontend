@@ -129,7 +129,7 @@
 	}
 }
 
-@media only screen and (max-width: 1024px) {
+@media only screen and (max-width: 1025px) {
 	.mainContainer__right {
 		& .dualColumn-item__number {
 			display: none;
@@ -150,31 +150,6 @@
 		}
 		.book-intro__content__infomations {
 			width: 430px;
-		}
-	}
-
-	.mainContainer {
-		.book-thumbnail {
-			& img {
-				width: 90%;
-				height: 90%;
-			}
-		}
-	}
-	.main-shelves {
-		.book-thumbnail {
-			& img {
-				width: 100%;
-				height: 100%;
-			}
-		}
-	}
-	.category-group {
-		.book-thumbnail {
-			& img {
-				width: 100%;
-				height: 100%;
-			}
 		}
 	}
 }

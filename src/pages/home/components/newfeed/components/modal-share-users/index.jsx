@@ -3,9 +3,10 @@ import UserAvatar from 'shared/user-avatar';
 import { Crown } from 'components/svg';
 import PropTypes from 'prop-types';
 import { CrowSmall } from 'components/svg';
-const ShareUsers = ({ postsData }) => {
+
+const ShareUsers = ({ postData }) => {
 	const handleRenderTitle = () => {
-		switch (postsData?.userType || postsData.originId?.userType) {
+		switch (postData?.userType || postData.originId?.userType) {
 			case 'topRead':
 				return 'Đọc nhiều nhất';
 			case 'topReview':
@@ -18,7 +19,7 @@ const ShareUsers = ({ postsData }) => {
 	};
 
 	const handleRenderTime = () => {
-		switch (postsData?.by || postsData.originId?.by) {
+		switch (postData?.by || postData.originId?.by) {
 			case 'week':
 				return 'Tuần';
 			case 'month':
@@ -40,25 +41,26 @@ const ShareUsers = ({ postsData }) => {
 					<UserAvatar
 						className='author-card__avatar'
 						size='lg'
-						source={postsData?.avatarImage || postsData.info?.avatarImage}
-					/>{' '}
+						source={postData?.avatarImage || postData.info?.avatarImage}
+					/>
 				</div>
 			</div>
-			<div className='share__users__ranks__title'>{postsData?.fullName || postsData.info?.fullName}</div>
+			<div className='share__users__ranks__title'>{postData?.fullName || postData.info?.fullName}</div>
 			<div className='title__ranks'>
 				<CrowSmall />
 				<div className='share__users__ranks__title__rank'>
-					Top {postsData?.rank || postsData.originId?.rank} {handleRenderTitle()}{' '}
-					{(postsData?.categoryName || postsData.info?.category) &&
-						`Thuộc ${postsData?.categoryName || postsData.info.category?.name}`}{' '}
+					Top {postData?.rank || postData.originId?.rank} {handleRenderTitle()}{' '}
+					{(postData?.categoryName || postData.info?.category) &&
+						`Thuộc ${postData?.categoryName || postData.info.category?.name}`}{' '}
 					theo {handleRenderTime()}
 				</div>
 			</div>
 		</div>
 	);
 };
+
 ShareUsers.propTypes = {
-	postsData: PropTypes.object,
+	postData: PropTypes.object,
 };
 
 export default ShareUsers;

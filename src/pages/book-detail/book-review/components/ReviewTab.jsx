@@ -22,8 +22,8 @@ import { Modal } from 'react-bootstrap';
 import { useModal } from 'shared/hooks';
 import FormCheckGroup from 'shared/form-check-group';
 import Button from 'shared/button';
-import searchreview from 'assets/images/search-review.png';
 import { REVIEW_TYPE } from 'constants';
+import searchreview from 'assets/images/search-review.png';
 
 const ReviewTab = ({ currentTab }) => {
 	const filterOptions = [
@@ -251,7 +251,6 @@ const ReviewTab = ({ currentTab }) => {
 				getReviewListFirstTime();
 				break;
 			default:
-			//
 		}
 	};
 	useEffect(() => {

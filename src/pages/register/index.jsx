@@ -6,14 +6,12 @@ import ImgRegister from 'assets/images/anh-1 1.png';
 import { Formik, Field, Form } from 'formik';
 import classNames from 'classnames';
 import { registerValidate } from 'helpers/Validation';
-import { unwrapResult } from '@reduxjs/toolkit';
 import { useDispatch } from 'react-redux';
 import ModalLogin from 'pages/login/element/ModalLogin';
 import { register } from 'reducers/redux-utils/auth';
 import Circle from 'shared/loading/circle';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Storage from 'helpers/Storage';
-import { Link } from 'react-router-dom';
 
 function Register() {
 	const dispatch = useDispatch();
@@ -35,8 +33,7 @@ function Register() {
 		if (newData) {
 			try {
 				setIsLoading(true);
-				const actionRegister = await dispatch(register(newData));
-				const infoUser = unwrapResult(actionRegister);
+				const infoUser = await dispatch(register(newData)).unwrap();
 				if (infoUser) {
 					const newdata = {
 						title: 'Tạo tài khoản',
@@ -66,7 +63,7 @@ function Register() {
 		}
 	};
 
-	const handleChange = () => {
+	const handleClose = () => {
 		setIsShow(false);
 	};
 
@@ -79,15 +76,14 @@ function Register() {
 	return (
 		<div className='register__container'>
 			<Circle loading={isLoading} />
-			<Link to='/login'>
+			<Link to='/'>
 				<div className='register__header'>
 					<img src={Logo} alt='logo' />
 				</div>
 			</Link>
-
 			{isShow ? (
 				<div className='register__container-modal'>
-					<ModalLogin data={dataModal} handleChange={handleChange} />
+					<ModalLogin data={dataModal} handleClose={handleClose} />
 				</div>
 			) : (
 				''

@@ -14,10 +14,11 @@
 	position: absolute;
 	top: 115%;
 	right: -130%;
-	display: none;
 	z-index: 1000;
+	opacity: 0;
 	&.show {
-		display: block;
+		opacity: 1;
+		transition: opacity 0.4s ease-in;
 	}
 }
 

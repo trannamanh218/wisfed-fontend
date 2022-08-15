@@ -28,19 +28,7 @@ LinearProgressBar.defaultProps = {
 
 LinearProgressBar.propTypes = {
 	percent: PropTypes.any.isRequired,
-	variant: PropTypes.oneOf([
-		'primary',
-		'primary-light',
-		'primary-dark',
-		'secondary',
-		'success',
-		'success-light',
-		'success-dark',
-		'warning',
-		'info',
-		'light',
-		'dark',
-	]),
+	variant: PropTypes.string,
 	height: PropTypes.number,
 	label: PropTypes.string,
 };

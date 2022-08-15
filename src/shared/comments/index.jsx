@@ -16,7 +16,7 @@ import { LikeComment } from 'components/svg';
 import { likeAndUnlikeGroupComment } from 'reducers/redux-utils/group';
 
 const urlRegex =
-	/https?:\/\/www(\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/g;
+	/(https?:\/\/)?(www(\.))?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/g;
 
 const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 	const [isLiked, setIsLiked] = useState(false);
@@ -54,11 +54,20 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 
 	const generateContent = content => {
 		if (content.match(urlRegex)) {
-			const newContent = content.replace(urlRegex, data => {
-				return `<a class="url-class" href=${data} target="_blank">${
-					data.length <= 50 ? data : data.slice(0, 50) + '...'
-				}</a>`;
-			});
+			let newContent;
+			if (content.includes('https://')) {
+				newContent = content.replace(urlRegex, data => {
+					return `<a class="url-class" href=${data} target="_blank">${
+						data.length <= 50 ? data : data.slice(0, 50) + '...'
+					}</a>`;
+				});
+			} else {
+				newContent = content.replace(urlRegex, data => {
+					return `<a class="url-class" href=https://${data} target="_blank">${
+						data.length <= 50 ? data : data.slice(0, 50) + '...'
+					}</a>`;
+				});
+			}
 			return newContent;
 		} else {
 			return content;
@@ -134,7 +143,7 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 								id: data.user.id,
 								name: data.user.fullName || data.user.firstName + ' ' + data.user.lastName,
 								avatar: data.user.avatarImage,
-								link: `https://wisfeed.tecinus.vn/profile/1b4ade47-d03b-4a7a-98ea-27abd8f15a85`,
+								link: `/profile/${data.user.id}`,
 							})
 						}
 					>

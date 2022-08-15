@@ -1,9 +1,10 @@
+import PropTypes from 'prop-types';
 import { STATUS_SUCCESS } from 'constants';
 import { STATUS_LOADING } from 'constants';
 import { STATUS_IDLE } from 'constants';
 import RouteLink from 'helpers/RouteLink';
 import { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { getBookDetail } from 'reducers/redux-utils/book';
 import BookSlider from 'shared/book-slider';
@@ -17,7 +18,7 @@ import { useFetchAuthorBooks } from 'api/book.hooks';
 import { Row, Col } from 'react-bootstrap';
 import bookImage from 'assets/images/default-book.png';
 
-const BookReference = () => {
+const BookReference = ({ bookInfo }) => {
 	const [status, setStatus] = useState(STATUS_IDLE);
 	const [allCategories, setAllCategories] = useState([]);
 	const [isExpand, setIsExpand] = useState(false);
@@ -28,9 +29,7 @@ const BookReference = () => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
-	const { bookInfo } = useSelector(state => state.book);
-
-	const { booksAuthor } = useFetchAuthorBooks(Number(bookInfo.authors[0]?.authorId));
+	const { booksAuthor } = useFetchAuthorBooks(bookInfo.authors[0]?.authorId);
 
 	useEffect(() => {
 		getBooksByCategory();
@@ -189,3 +188,7 @@ const BookReference = () => {
 };
 
 export default BookReference;
+
+BookReference.propTypes = {
+	bookInfo: PropTypes.object,
+};

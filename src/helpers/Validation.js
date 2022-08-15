@@ -87,6 +87,7 @@ class Validation {
 }
 
 export default new Validation();
+
 export const progressReadingSchema = status => {
 	const currentStatus = status || 'default';
 	const progressSchema = {

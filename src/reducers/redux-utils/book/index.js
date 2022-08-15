@@ -86,7 +86,6 @@ export const ratingUser = createAsyncThunk('book/ratingBookUser', async (params,
 export const getRatingBook = createAsyncThunk('book/getRatingBook', async (id, { rejectWithValue }) => {
 	try {
 		const res = await Request.makeGet(bookRating(id));
-		// const data = JSON.parse(res.data).data;
 		return res;
 	} catch (err) {
 		const error = JSON.parse(err.response);
@@ -227,19 +226,6 @@ const bookSlice = createSlice({
 		[getBookDetail.rejected]: (state, action) => {
 			state.isFetching = false;
 			state.bookInfo = {};
-			state.error = action.payload;
-		},
-		[getRatingBook.pending]: state => {
-			state.isFetching = true;
-		},
-		[getRatingBook.fulfilled]: (state, action) => {
-			state.isFetching = false;
-			state.ratingBookStart = action.payload;
-			state.error = {};
-		},
-		[getRatingBook.rejected]: (state, action) => {
-			state.isFetching = false;
-			state.ratingBookStart = {};
 			state.error = action.payload;
 		},
 	},

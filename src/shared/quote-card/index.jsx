@@ -10,7 +10,7 @@ import { useDispatch } from 'react-redux';
 import { likeUnlikeQuote } from 'reducers/redux-utils/quote';
 import _ from 'lodash';
 
-const QuoteCard = ({ data, isDetail = false }) => {
+const QuoteCard = ({ data, isDetail = false, isShare = false }) => {
 	const [quoteData, setQuoteData] = useState(data);
 
 	const isLikeTemp = useRef(data.isLike);
@@ -78,39 +78,54 @@ const QuoteCard = ({ data, isDetail = false }) => {
 
 			<div className='quote-card__author'>
 				<div className='quote-card__author__avatar' onClick={() => onClickRedirectToAuthor(quoteData)}>
-					<UserAvatar size='sm' avatarImage={quoteData?.user?.avatarImage} />
+					<UserAvatar
+						size='sm'
+						avatarImage={quoteData?.createdBy?.avatarImage || quoteData?.user?.avatarImage}
+					/>
 				</div>
 				<div className='quote-card__author__detail'>
 					<p className='quote-card__author__detail__text'>Quotes này tạo bởi</p>
 					<p className='quote-card__author__detail__name' onClick={() => onClickRedirectToAuthor(quoteData)}>
-						{quoteData?.user?.fullName || quoteData?.user?.firstName + ' ' + quoteData?.user?.lastName}
+						{quoteData.user
+							? quoteData.user.fullName || quoteData.user.firstName + ' ' + quoteData.user.lastName
+							: quoteData.createdBy.fullName ||
+							  quoteData.createdBy.firstName + ' ' + quoteData.createdBy.lastName}
 					</p>
 				</div>
 			</div>
-			{isDetail && (
-				<div className='quote-card__categories-in-detail'>
-					<BadgeList list={quoteData?.categories} className='quote-card__categories-badge' />
-				</div>
+
+			{!isShare && (
+				<>
+					{isDetail && (
+						<div className='quote-card__categories-in-detail'>
+							<BadgeList list={quoteData?.categories} className='quote-card__categories-badge' />
+						</div>
+					)}
+					<div className='quote-footer'>
+						{isDetail ? (
+							<div className='quote-footer__left'>
+								{quoteData.tags.length > 0 &&
+									quoteData.tags.map((tag, index) => (
+										<span className='quote-card__hashtag' key={index}>
+											{tag.tag.name}
+										</span>
+									))}
+							</div>
+						) : (
+							<div className='quote-footer__left'>
+								<BadgeList list={quoteData?.categories?.slice(0, 2)} className='quote-footer__badge' />
+							</div>
+						)}
+						<div className='quote-footer__right'>
+							<QuoteActionBar
+								data={quoteData}
+								isDetail={isDetail}
+								likeUnlikeQuoteFnc={likeUnlikeQuoteFnc}
+							/>
+						</div>
+					</div>
+				</>
 			)}
-			<div className='quote-footer'>
-				{isDetail ? (
-					<div className='quote-footer__left'>
-						{quoteData.tags.length > 0 &&
-							quoteData.tags.map((tag, index) => (
-								<span className='quote-card__hashtag' key={index}>
-									{tag.tag.name}
-								</span>
-							))}
-					</div>
-				) : (
-					<div className='quote-footer__left'>
-						<BadgeList list={quoteData?.categories?.slice(0, 2)} className='quote-footer__badge' />
-					</div>
-				)}
-				<div className='quote-footer__right'>
-					<QuoteActionBar data={quoteData} isDetail={isDetail} likeUnlikeQuoteFnc={likeUnlikeQuoteFnc} />
-				</div>
-			</div>
 		</div>
 	);
 };

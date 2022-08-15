@@ -48,7 +48,7 @@ function ForgetpasswordAdminFormComponent() {
 				<Circle loading={isFetching} />
 				{isShow && dataModal && (
 					<div className='forgot__modal__container'>
-						<ModalLogin data={dataModal} handleChange={handleChangeModal} />
+						<ModalLogin data={dataModal} handleClose={handleChangeModal} />
 					</div>
 				)}
 				<Formik initialValues={{ email: '' }} onSubmit={handleSubmit} validationSchemae={emailAdminValidation}>

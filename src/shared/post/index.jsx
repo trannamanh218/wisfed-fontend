@@ -19,11 +19,22 @@ import ReactRating from 'shared/react-rating';
 import { Link, useNavigate } from 'react-router-dom';
 import { createCommentReview } from 'reducers/redux-utils/book';
 import Comment from 'shared/comments';
-import PostQuotes from 'shared/post-quotes';
-import PostsShare from 'shared/posts-Share';
+import QuoteCard from 'shared/quote-card';
+import PostShare from 'shared/posts-Share';
 import Play from 'assets/images/play.png';
 import { likeAndUnlikeReview } from 'reducers/redux-utils/book';
-import { POST_TYPE, REVIEW_TYPE } from 'constants';
+import {
+	POST_TYPE,
+	REVIEW_TYPE,
+	POST_VERB_SHARE,
+	QUOTE_VERB_SHARE,
+	GROUP_POST_VERB,
+	GROUP_POST_VERB_SHARE,
+	READ_TARGET_VERB_SHARE,
+	TOP_BOOK_VERB_SHARE,
+	TOP_QUOTE_VERB_SHARE,
+	TOP_USER_VERB_SHARE,
+} from 'constants';
 import { IconRanks } from 'components/svg';
 import AuthorBook from 'shared/author-book';
 import Storage from 'helpers/Storage';
@@ -33,9 +44,17 @@ import { handleCheckReplyToMe } from 'reducers/redux-utils/comment';
 import ShareTarget from 'shared/share-target';
 
 const urlRegex =
-	/https?:\/\/www(\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/g;
+	/(https?:\/\/)?(www(\.))?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/g;
 
-function Post({ postInformations, showModalCreatPost, type = POST_TYPE }) {
+const verbShareArray = [
+	POST_VERB_SHARE,
+	QUOTE_VERB_SHARE,
+	GROUP_POST_VERB_SHARE,
+	TOP_BOOK_VERB_SHARE,
+	TOP_QUOTE_VERB_SHARE,
+];
+
+function Post({ postInformations, type }) {
 	const [postData, setPostData] = useState({});
 	const [videoId, setVideoId] = useState('');
 	const { userInfo } = useSelector(state => state.auth);
@@ -45,8 +64,6 @@ function Post({ postInformations, showModalCreatPost, type = POST_TYPE }) {
 	const clickReply = useRef(null);
 	const doneGetPostData = useRef(false);
 	const isLikeTemp = useRef(postInformations.isLike);
-
-	const { isSharePosts } = useSelector(state => state.post);
 
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
@@ -188,7 +205,7 @@ function Post({ postInformations, showModalCreatPost, type = POST_TYPE }) {
 						{paramInfo[0].users.fullName ||
 							paramInfo[0].users.firstName + ' ' + paramInfo[0].users.lastName}
 					</Link>
-					{'.'}
+					<span style={{ fontWeight: '500' }}>.</span>
 				</span>
 			);
 		} else if (paramInfo.length === 2) {
@@ -204,7 +221,7 @@ function Post({ postInformations, showModalCreatPost, type = POST_TYPE }) {
 						{paramInfo[1].users.fullName ||
 							paramInfo[1].users.firstName + ' ' + paramInfo[1].users.lastName}
 					</Link>
-					{'.'}
+					<span style={{ fontWeight: '500' }}>.</span>
 				</span>
 			);
 		} else {
@@ -223,90 +240,6 @@ function Post({ postInformations, showModalCreatPost, type = POST_TYPE }) {
 		}
 	};
 
-	const infoUser = () => {
-		return (
-			<>
-				<div className='post__user-status'>
-					<UserAvatar
-						data-testid='post__user-avatar'
-						className='post__user-status__avatar'
-						source={postData?.createdBy?.avatarImage || postData.user?.avatarImage}
-						handleClick={() => navigate(`/profile/${postData.createdBy.id}`)}
-					/>
-
-					<div className='post__user-status__name-and-post-time-status'>
-						<div data-testid='post__user-name' className='post__user-status__name'>
-							<div className='post__user__container'>
-								<Link
-									to={`/profile/${postData.createdBy?.id || postData.user?.id}`}
-									data-testid='post__user-name'
-									className='post__user-status__name'
-								>
-									{postData?.createdBy?.fullName || postData?.user?.fullName || 'Ẩn danh'}
-								</Link>
-								{/* tagged people */}
-								{postData.mentionsUsers &&
-									!!postData.mentionsUsers.length &&
-									withFriends(postData.mentionsUsers)}
-								{(postData.groupInfo || postData.group) && (
-									<img className='post__user-icon' src={Play} alt='' />
-								)}
-
-								<Link
-									to={`/group/${postData.groupInfo?.id || postData.group?.id}`}
-									className='post__name__group'
-								>
-									{postData.groupInfo ? postData.groupInfo?.name : postData.group?.name}
-								</Link>
-							</div>
-
-							<div className='post__user-status__post-time-status'>
-								<span>{calculateDurationTime(postData.time || postData.createdAt)}</span>
-								<>
-									{postData.book && (
-										<div className='post__user-status__subtitle'>
-											<span>Cập nhật tiến độ đọc sách</span>
-											<div className='post__user-status__post-time-status__online-dot'></div>
-											<span>Xếp hạng</span>
-											<ReactRating
-												readonly={true}
-												initialRating={
-													postInformations?.book?.actorRating
-														? postInformations?.book?.actorRating?.star
-														: 0
-												}
-											/>
-										</div>
-									)}
-								</>
-							</div>
-						</div>
-					</div>
-				</div>
-				{(postData.message || postData.content) && (
-					<div
-						className='post__description'
-						dangerouslySetInnerHTML={{
-							__html: generateContent(postData.message || postData.content),
-						}}
-					></div>
-				)}
-			</>
-		);
-	};
-
-	const renderInfo = () => {
-		if (showModalCreatPost) {
-			if (postData.sharePost) {
-				return;
-			} else {
-				return infoUser();
-			}
-		} else {
-			return infoUser();
-		}
-	};
-
 	const handleTime = () => {
 		if (!_.isEmpty(postData.originId)) {
 			switch (postData.originId.by) {
@@ -322,11 +255,20 @@ function Post({ postInformations, showModalCreatPost, type = POST_TYPE }) {
 
 	const generateContent = content => {
 		if (content.match(urlRegex)) {
-			const newContent = content.replace(urlRegex, data => {
-				return `<a class="url-class" href=${data} target="_blank">${
-					data.length <= 50 ? data : data.slice(0, 50) + '...'
-				}</a>`;
-			});
+			let newContent;
+			if (content.includes('https://')) {
+				newContent = content.replace(urlRegex, data => {
+					return `<a class="url-class" href=${data} target="_blank">${
+						data.length <= 50 ? data : data.slice(0, 50) + '...'
+					}</a>`;
+				});
+			} else {
+				newContent = content.replace(urlRegex, data => {
+					return `<a class="url-class" href=https://${data} target="_blank">${
+						data.length <= 50 ? data : data.slice(0, 50) + '...'
+					}</a>`;
+				});
+			}
 			return newContent;
 		} else {
 			return content;
@@ -334,18 +276,73 @@ function Post({ postInformations, showModalCreatPost, type = POST_TYPE }) {
 	};
 
 	return (
-		<div
-			className={classNames('post__container', {
-				'post__custom':
-					isSharePosts && (postData.verb === 'shareQuote' || postData.verb === 'shareTopUserRanking'),
-			})}
-		>
-			{(postData.verb === 'shareTopQuoteRanking' ||
-				postData.verb === 'shareTopBookRanking' ||
-				postData.verb === 'shareTopUserRanking') &&
-			isSharePosts
-				? ''
-				: renderInfo()}
+		<div className='post__container'>
+			<div className='post__user-status'>
+				<UserAvatar
+					data-testid='post__user-avatar'
+					className='post__user-status__avatar'
+					source={postData?.createdBy?.avatarImage || postData.user?.avatarImage}
+					handleClick={() => navigate(`/profile/${postData.createdBy.id}`)}
+				/>
+				<div className='post__user-status__name-and-post-time-status'>
+					<div data-testid='post__user-name' className='post__user-status__name'>
+						<div className='post__user__container'>
+							<Link
+								to={`/profile/${postData.createdBy?.id || postData.user?.id}`}
+								data-testid='post__user-name'
+								className='post__user-status__name'
+							>
+								{postData?.createdBy?.fullName || postData?.user?.fullName || 'Ẩn danh'}
+							</Link>
+							{/* tagged people */}
+							{postData.mentionsUsers &&
+								!!postData.mentionsUsers.length &&
+								withFriends(postData.mentionsUsers)}
+							{postData.verb === GROUP_POST_VERB && (
+								<>
+									<img className='post__user-icon' src={Play} alt='arrow' />
+									<Link to={`/group/${postData.group?.id}`} className='post__name__group'>
+										{postData.group?.name}
+									</Link>
+								</>
+							)}
+						</div>
+
+						<div className='post__user-status__post-time-status'>
+							<span>{calculateDurationTime(postData.time || postData.createdAt)}</span>
+							<>
+								{postData.book && (
+									<div className='post__user-status__subtitle'>
+										<span>Cập nhật tiến độ đọc sách</span>
+										{postInformations?.book?.actorRating !== null ? (
+											<>
+												<div className='post__user-status__post-time-status__online-dot'></div>
+												<span>Xếp hạng</span>
+												<ReactRating
+													readonly={true}
+													initialRating={
+														postInformations?.book?.actorRating
+															? postInformations?.book?.actorRating?.star
+															: 0
+													}
+												/>
+											</>
+										) : null}
+									</div>
+								)}
+							</>
+						</div>
+					</div>
+				</div>
+			</div>
+			{(postData.message || postData.content) && (
+				<div
+					className='post__description'
+					dangerouslySetInnerHTML={{
+						__html: generateContent(postData.message || postData.content),
+					}}
+				></div>
+			)}
 
 			{!!postData?.mentionsAuthors?.length && (
 				<ul className='tagged'>
@@ -388,33 +385,31 @@ function Post({ postInformations, showModalCreatPost, type = POST_TYPE }) {
 				<div className='post__title__share__rank'>
 					<span className='number__title__rank'># Top {postData.originId.rank} </span>
 					<span className='title__rank'>
-						{postData.info.category
-							? `  cuốn sách tốt nhất ${(
-									<p style={{ textDecoration: 'underline' }}>{}</p>
-							  )} theo ${handleTime()} `
-							: `   cuốn sách tốt nhất theo ${handleTime()} `}
+						{`  cuốn sách tốt nhất ${
+							postData.info.category ? ` thuộc ${postData.info.category.name}` : ''
+						} theo ${handleTime()} `}
 					</span>
 					<IconRanks />
 				</div>
 			)}
-			{postData.verb === 'shareQuote' && <PostQuotes postsData={postData} />}
-			{postData.verb === 'shareTopQuoteRanking' && <PostQuotes postsData={postData} />}
-			{postData.verb === 'shareTopBookRanking' && <AuthorBook data={postData} />}
-			{postData.verb === 'shareTopUserRanking' && <ShareUsers postsData={postData} />}
+
+			{verbShareArray.indexOf(postData.verb) !== -1 && (
+				<div className='creat-post-modal-content__main__share-container'>
+					{postData.verb === POST_VERB_SHARE && <PostShare postData={postData} />}
+					{postData.verb === QUOTE_VERB_SHARE && <QuoteCard data={postData.sharePost} isShare={true} />}
+					{postData.verb === GROUP_POST_VERB_SHARE && <PostShare postData={postData} />}
+					{postData.verb === TOP_BOOK_VERB_SHARE && <AuthorBook data={postData} position='post' />}
+					{postData.verb === TOP_QUOTE_VERB_SHARE && <QuoteCard data={postData.info} isShare={true} />}
+				</div>
+			)}
+			{postData.verb === TOP_USER_VERB_SHARE && <ShareUsers postData={postData} />}
 			{postData.book && (
 				<PostBook
 					data={{ ...postData.book, bookLibrary: postData.bookLibrary, actorCreatedPost: postData.actor }}
 				/>
 			)}
-			{postData.verb === 'shareTargetRead' && <ShareTarget postsData={postData} inPost={true} />}
-
-			{(postData.verb === 'sharePost' || postData.shareType === 'post') && !_.isEmpty(postData.sharePost) && (
-				<PostsShare postData={postData} />
-			)}
-			{(postData.verb === 'shareGroupPost' || postData.shareType === 'groupPost') &&
-				!_.isEmpty(postData.sharePost) && <PostsShare postData={postData} />}
+			{postData.verb === READ_TARGET_VERB_SHARE && <ShareTarget postData={postData} inPost={true} />}
 			{postData?.image?.length > 0 && <GridImage images={postData.image} inPost={true} postId={postData.id} />}
-
 			{(postData?.image?.length === 0 &&
 				!_.isEmpty(postData.sharePost?.preview) &&
 				_.isEmpty(postData.sharePost?.book)) ||
@@ -437,70 +432,68 @@ function Post({ postInformations, showModalCreatPost, type = POST_TYPE }) {
 						)}
 					</>
 				))}
-			{!isSharePosts && (
+			<PostActionBar postData={postData} handleLikeAction={handleLikeAction} />
+			{postData.usersComments && !!postData.usersComments?.length && (
 				<>
-					<PostActionBar postData={postData} handleLikeAction={handleLikeAction} />
-					{postData.usersComments && !!postData.usersComments?.length && (
-						<>
-							{postData.usersComments.map(comment => (
-								<div key={comment.id}>
-									<Comment
-										commentLv1Id={comment.id}
-										dataProp={comment}
-										postData={postData}
-										handleReply={handleReply}
-										type={type}
-									/>
-									<div className='comment-reply-container'>
-										{comment.reply && !!comment.reply.length && (
-											<>
-												{comment.reply.map(commentChild => (
-													<div key={commentChild.id}>
-														<Comment
-															commentLv1Id={comment.id}
-															dataProp={commentChild}
-															postData={postData}
-															handleReply={handleReply}
-															type={type}
-														/>
-													</div>
-												))}
-											</>
-										)}
-										<CommentEditor
-											onCreateComment={onCreateComment}
-											className={classNames(`reply-comment-editor reply-comment-${comment.id}`, {
-												'show': comment.id === replyingCommentId,
-											})}
-											mentionUsersArr={mentionUsersArr}
-											commentLv1Id={comment.id}
-											replyingCommentId={replyingCommentId}
-											clickReply={clickReply.current}
-											setMentionUsersArr={setMentionUsersArr}
-										/>
-									</div>
-								</div>
-							))}
-						</>
-					)}
-					<CommentEditor
-						className={`comment-editor-last-${postInformations.id}`}
-						commentLv1Id={null}
-						onCreateComment={onCreateComment}
-						mentionUsersArr={mentionUsersArr}
-						setMentionUsersArr={setMentionUsersArr}
-					/>
+					{postData.usersComments.map(comment => (
+						<div key={comment.id}>
+							<Comment
+								commentLv1Id={comment.id}
+								dataProp={comment}
+								postData={postData}
+								handleReply={handleReply}
+								type={type}
+							/>
+							<div className='comment-reply-container'>
+								{comment.reply && !!comment.reply.length && (
+									<>
+										{comment.reply.map(commentChild => (
+											<div key={commentChild.id}>
+												<Comment
+													commentLv1Id={comment.id}
+													dataProp={commentChild}
+													postData={postData}
+													handleReply={handleReply}
+													type={type}
+												/>
+											</div>
+										))}
+									</>
+								)}
+								<CommentEditor
+									onCreateComment={onCreateComment}
+									className={classNames(`reply-comment-editor reply-comment-${comment.id}`, {
+										'show': comment.id === replyingCommentId,
+									})}
+									mentionUsersArr={mentionUsersArr}
+									commentLv1Id={comment.id}
+									replyingCommentId={replyingCommentId}
+									clickReply={clickReply.current}
+									setMentionUsersArr={setMentionUsersArr}
+								/>
+							</div>
+						</div>
+					))}
 				</>
 			)}
+			<CommentEditor
+				className={`comment-editor-last-${postInformations.id}`}
+				commentLv1Id={null}
+				onCreateComment={onCreateComment}
+				mentionUsersArr={mentionUsersArr}
+				setMentionUsersArr={setMentionUsersArr}
+			/>
 		</div>
 	);
 }
 
+Post.defaultProps = {
+	postInformations: {},
+	type: POST_TYPE,
+};
+
 Post.propTypes = {
 	postInformations: PropTypes.object,
-	likeAction: PropTypes.func,
-	className: PropTypes.string,
-	showModalCreatPost: PropTypes.bool,
 	type: PropTypes.string,
 };
 

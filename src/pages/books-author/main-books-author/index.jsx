@@ -12,6 +12,7 @@ import PropTypes from 'prop-types';
 import { getFilterSearch } from 'reducers/redux-utils/search';
 import _ from 'lodash';
 import { Link } from 'react-router-dom';
+import bookImage from 'assets/images/default-book.png';
 const MainBooksAuthor = ({ shelveGroupName }) => {
 	const [booksByAuthor, setBooksByAuthor] = useState([]);
 	const [hasMore, setHasMore] = useState(true);
@@ -141,7 +142,11 @@ const MainBooksAuthor = ({ shelveGroupName }) => {
 						{booksByAuthor?.map(item => (
 							<div key={item.id} className='main-reading-author__books__item'>
 								<div className='main-reading-author__books__item__column book-image'>
-									<img src={item.images[1]} alt='book-image' />
+									<img
+										src={item.images[1] || bookImage}
+										alt='book-image'
+										onError={e => e.target.setAttribute('src', `${bookImage}`)}
+									/>
 								</div>
 								<div className='main-reading-author__books__item__column book-name'>
 									<span>{item.name}</span>
@@ -174,7 +179,12 @@ const MainBooksAuthor = ({ shelveGroupName }) => {
 									<div className='main-reading-author__books__item__top'>
 										<span>{item.countAddBook}</span>
 									</div>
-									<div className='main-reading-author__books__item__under'></div>
+									<Link
+										to={`/book-author-charts/${item.id}`}
+										className='main-reading-author__books__item__under'
+									>
+										Biểu đồ
+									</Link>
 								</div>
 								<div className='main-reading-author__books__item__column'>
 									<div className='main-reading-author__books__item__top'>
@@ -195,7 +205,6 @@ const MainBooksAuthor = ({ shelveGroupName }) => {
 					</InfiniteScroll>
 				</div>
 			</div>
-			<button className='main-reading-author__share-btn btn'>Chia sẻ</button>
 		</div>
 	);
 };

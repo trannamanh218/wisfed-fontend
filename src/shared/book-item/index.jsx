@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useRef } from 'react';
 import BookThumbnail from 'shared/book-thumbnail';
 import ReactRating from 'shared/react-rating';
 import PropTypes from 'prop-types';
@@ -7,15 +7,10 @@ import SettingMore from 'shared/setting-more';
 import StatusButton from 'components/status-button';
 import './book-item.scss';
 import _ from 'lodash';
-import { getRatingBook } from 'reducers/redux-utils/book';
-import { useDispatch } from 'react-redux';
-import { NotificationError } from 'helpers/Error';
 import classNames from 'classnames';
 
 const BookItem = ({ data, handleViewBookDetail, isMyShelve, handleUpdateBookList }) => {
 	// const [isPublic, setIsPublic] = useState(data.isPublic);
-	const dispatch = useDispatch();
-	const [listRatingStar, setListRatingStar] = useState({});
 
 	const bookOverlay = useRef(null);
 	const bookItemContainer = useRef(null);
@@ -23,19 +18,6 @@ const BookItem = ({ data, handleViewBookDetail, isMyShelve, handleUpdateBookList
 	// const handlePublic = () => {
 	// 	setIsPublic(prev => !prev);
 	// };
-
-	const fetchData = async () => {
-		try {
-			const res = await dispatch(getRatingBook(data?.id)).unwrap();
-			setListRatingStar(res.data);
-		} catch (err) {
-			NotificationError(err);
-		}
-	};
-
-	useEffect(() => {
-		fetchData();
-	}, [data?.id]);
 
 	const renderOverlay = () => {
 		if (isMyShelve) {
@@ -73,9 +55,11 @@ const BookItem = ({ data, handleViewBookDetail, isMyShelve, handleUpdateBookList
 			<span className='book-item__author'>
 				{!_.isEmpty(data.authors) ? data?.authors[0]?.authorName : <br />}
 			</span>
-			<ReactRating initialRating={listRatingStar?.avg?.toFixed(1)} readonly={true} />
+			<ReactRating initialRating={data.avgRating?.toFixed(1)} readonly={true} />
 			<span className='book-item__text'>
-				{listRatingStar.avg !== 0 ? `(Trung bình ${listRatingStar?.avg?.toFixed(1)} sao)` : 'chưa có đánh giá'}
+				{data.avgRating && data.avgRating > 0
+					? `(Trung bình ${data.avgRating.toFixed(1)} sao)`
+					: 'chưa có đánh giá'}
 			</span>
 		</div>
 	);

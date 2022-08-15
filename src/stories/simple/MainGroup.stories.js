@@ -11,6 +11,7 @@ const Template = args => (
 		<MainGroupStories {...args} />
 	</div>
 );
+
 const HeaderGroup = args => (
 	<div style={{ width: 720 }}>
 		<MainGroupComponent {...args} />

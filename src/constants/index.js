@@ -39,12 +39,20 @@ export const STATUS_SUCCESS = 'SUCCESS';
 
 //library
 export const LIBRARY_LIMIT = 20;
-// BXH
-export const CHECK_STAR = true;
-export const CHECK_SHARE = true;
 
 //type
 export const POST_TYPE = 'post';
 export const QUOTE_TYPE = 'quote';
 export const REVIEW_TYPE = 'review';
 export const GROUP_TYPE = 'group';
+
+// share verb
+export const POST_VERB = 'miniPost';
+export const POST_VERB_SHARE = 'sharePost';
+export const QUOTE_VERB_SHARE = 'shareQuote';
+export const GROUP_POST_VERB = 'groupPost';
+export const GROUP_POST_VERB_SHARE = 'shareGroupPost';
+export const READ_TARGET_VERB_SHARE = 'shareTargetRead';
+export const TOP_BOOK_VERB_SHARE = 'shareTopBookRanking';
+export const TOP_QUOTE_VERB_SHARE = 'shareTopQuoteRanking';
+export const TOP_USER_VERB_SHARE = 'shareTopUserRanking';

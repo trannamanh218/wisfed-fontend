@@ -1,42 +1,57 @@
-import React from 'react';
+import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import './index.scss';
+import './share-target.scss';
 import LinearProgressBar from 'shared/linear-progress-bar';
 import UserAvatar from 'shared/user-avatar';
-import popoup from '../../assets/images/popup.png';
-import medal from '../../assets/images/medal.png';
+import _ from 'lodash';
+import PropTypes from 'prop-types';
+import { IconRanks } from 'components/svg';
 
-function ShareTarget({ postsData }) {
+function ShareTarget({ postData, inPost = false }) {
+	const [percent, setPercent] = useState(0);
+
 	const { userInfo } = useSelector(state => state.auth);
+
+	useEffect(() => {
+		if (inPost && !_.isEmpty(postData)) {
+			const percentTemp = ((postData.currentRead / postData.totalTarget) * 100).toFixed();
+			if (percentTemp > 100) {
+				setPercent(100);
+			} else {
+				setPercent(percentTemp);
+			}
+		}
+	}, []);
 
 	const renderContentTop = () => {
 		return (
-			<div className='reading-target__content__top__popup'>
+			<div className='share-target__content__top'>
 				<p>
-					Bạn đã đọc được {postsData?.booksReadCount} trên {postsData?.numberBook} cuốn
+					Bạn đã đọc được {inPost ? postData.currentRead : postData?.booksReadCount} trên{' '}
+					{inPost ? postData.totalTarget : postData?.numberBook} cuốn
 				</p>
 			</div>
 		);
 	};
 
 	return (
-		<div className='reading-container'>
-			<img src={popoup} />
-			<div className='reading-target__process__popup'>
-				<UserAvatar className='reading-target__user__img' source={userInfo?.avatarImage} size='lg' />
-				<div className='reading-target__content__popup'>
-					{renderContentTop()}
-					<div className='reading-target__content__bottom__popup'>
-						<LinearProgressBar percent={postsData.percent} />
-						<div className='modal-pecent'>{`${postsData.percent}%`}</div>
-					</div>
-				</div>
-				<div>
-					<img className='medal' src={medal} />
-				</div>
+		<div className='share-target'>
+			<UserAvatar className='share-target__user' source={userInfo?.avatarImage} size='lg' />
+			<div className='share-target__progress'>
+				{renderContentTop()}
+				<LinearProgressBar percent={inPost ? percent : postData?.percent} variant='share-target-gradient' />
+				<div className='share-target__progress__percent-number'>{`${
+					inPost ? percent : postData.percent
+				}%`}</div>
 			</div>
+			<IconRanks />
 		</div>
 	);
 }
+
+ShareTarget.propTypes = {
+	postData: PropTypes.object,
+	inPost: PropTypes.bool,
+};
 
 export default ShareTarget;

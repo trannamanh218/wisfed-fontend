@@ -92,7 +92,6 @@
 	&__nav {
 		display: flex;
 		justify-content: space-around;
-		margin-right: 20px;
 		background-color: #eff0f7;
 		height: 63px;
 		margin-top: 15px;
@@ -289,7 +288,7 @@
 			}
 		}
 		&__nav {
-			width: 300px;
+			// width: 300px;
 			&__item {
 				svg {
 					width: 24px;

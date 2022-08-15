@@ -6,7 +6,7 @@ import UserAvatar from 'shared/user-avatar';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import { updateCurrentBook } from 'reducers/redux-utils/book';
-import { resetTaggedDataFunc, saveDataShare, sharePosts, checkShare, sharePostsAll } from 'reducers/redux-utils/post';
+import { resetTaggedDataFunc, saveDataShare } from 'reducers/redux-utils/post';
 import { useLocation } from 'react-router-dom';
 import { updateImg } from 'reducers/redux-utils/chart';
 
@@ -17,7 +17,7 @@ function CreatePost({ onChangeNewPost }) {
 	const creatPostModalContainer = useRef(null);
 	const scrollBlocked = useRef(false);
 	const location = useLocation();
-	const { postsData } = useSelector(state => state.post);
+	const { postDataShare } = useSelector(state => state.post);
 	const { updateImgPost } = useSelector(state => state.chart);
 
 	const {
@@ -35,24 +35,24 @@ function CreatePost({ onChangeNewPost }) {
 		optionList = [
 			{
 				value: 'addBook',
-				title: 'sách',
+				title: 'Sách',
 				icon: <BookIcon className='newfeed__creat-post__options__item__logo--book' />,
 				message: 'Không tìm thấy cuốn sách nào',
 			},
 			{
 				value: 'addAuthor',
-				title: 'tác giả',
+				title: 'Tác giả',
 				icon: <Feather className='item-add-to-post-svg' />,
 				message: 'Không tìm thấy tác giả',
 			},
 			{
 				value: 'addCategory',
-				title: 'chủ đề',
+				title: 'Chủ đề',
 				icon: <CategoryIcon className='newfeed__creat-post__options__item__logo--category' />,
 				message: 'Không tìm thấy chủ đề',
 			},
 			{
-				value: 'hashtag',
+				value: location.pathname.includes('group') ? 'hashtag' : 'addFriends',
 				title: 'Hashtag',
 				icon: <Hashtag className='newfeed__creat-post__options__item__logo--friend' />,
 				message: 'Không tìm thấy hashtag',
@@ -62,25 +62,25 @@ function CreatePost({ onChangeNewPost }) {
 		optionList = [
 			{
 				value: 'addBook',
-				title: 'sách',
+				title: 'Sách',
 				icon: <BookIcon className='newfeed__creat-post__options__item__logo--book' />,
 				message: 'Không tìm thấy cuốn sách nào',
 			},
 			{
 				value: 'addAuthor',
-				title: 'tác giả',
+				title: 'Tác giả',
 				icon: <Feather className='item-add-to-post-svg' />,
 				message: 'Không tìm thấy tác giả',
 			},
 			{
 				value: 'addCategory',
-				title: 'chủ đề',
+				title: 'Chủ đề',
 				icon: <CategoryIcon className='newfeed__creat-post__options__item__logo--category' />,
 				message: 'Không tìm thấy chủ đề',
 			},
 			{
 				value: 'addFriends',
-				title: 'bạn bè',
+				title: 'Bạn bè',
 				icon: <GroupIcon className='newfeed__creat-post__options__item__logo--friend' />,
 				message: 'Không tìm thấy bạn bè',
 			},
@@ -88,11 +88,11 @@ function CreatePost({ onChangeNewPost }) {
 	}
 
 	useEffect(() => {
-		if (!_.isEmpty(bookForCreatePost) || !_.isEmpty(postsData) || !_.isEmpty(updateImgPost)) {
+		if (!_.isEmpty(bookForCreatePost) || !_.isEmpty(postDataShare) || !_.isEmpty(updateImgPost)) {
 			setShowModalCreatPost(true);
 			dispatch(resetTaggedDataFunc(false));
 		}
-	}, [bookForCreatePost, postsData, updateImgPost]);
+	}, [bookForCreatePost, postDataShare, updateImgPost]);
 
 	useEffect(() => {
 		if (showModalCreatPost) {
@@ -130,9 +130,6 @@ function CreatePost({ onChangeNewPost }) {
 	const hideCreatePostModal = () => {
 		dispatch(resetTaggedDataFunc(true));
 		dispatch(saveDataShare({}));
-		dispatch(sharePosts(false));
-		dispatch(checkShare(false));
-		dispatch(sharePostsAll(''));
 		dispatch(updateImg([]));
 		dispatch(updateCurrentBook({}));
 		setOption({});

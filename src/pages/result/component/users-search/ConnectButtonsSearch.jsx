@@ -19,7 +19,7 @@ const ConnectButtonsSearch = ({ direction, item }) => {
 			const param = {
 				userId: item.id,
 			};
-			await dispatch(makeFriendRequest(param));
+			await dispatch(makeFriendRequest(param)).unwrap();
 			setFriendStatusBtn('pending');
 		} catch (err) {
 			NotificationError(err);

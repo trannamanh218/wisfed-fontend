@@ -10,7 +10,6 @@ import { FaceBookIcon, GmailIcon } from 'components/svg';
 import { toast } from 'react-toastify';
 import { login, getCheckJwt } from 'reducers/redux-utils/auth';
 import { useDispatch } from 'react-redux';
-import { unwrapResult } from '@reduxjs/toolkit';
 import ModalLogin from './element/ModalLogin';
 import { useNavigate } from 'react-router-dom';
 import EyeIcon from 'shared/eye-icon';
@@ -24,14 +23,14 @@ function Login() {
 	const [isShow, setIsShow] = useState(false);
 	const [dataModal, setDataModal] = useState({});
 	const [isPublic, setIsPublic] = useState(false);
+
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const [registerEmailFill, setRegisterEmailFill] = useState('');
 
 	const handleSubmit = async data => {
 		try {
-			const actionLogin = await dispatch(login(data));
-			const infoUserLogin = unwrapResult(actionLogin);
+			const infoUserLogin = await dispatch(login(data)).unwrap();
 			if (infoUserLogin) {
 				const actionCheckJwt = await dispatch(getCheckJwt()).unwrap();
 				const customId = 'custom-id-Login';
@@ -69,7 +68,7 @@ function Login() {
 		setIsPublic(!isPublic);
 	};
 
-	const handleChange = () => {
+	const handleClose = () => {
 		setIsShow(false);
 	};
 
@@ -77,7 +76,7 @@ function Login() {
 		<div className='login__container'>
 			{isShow && dataModal && (
 				<div className='login__container-modal'>
-					<ModalLogin data={dataModal} handleChange={handleChange} />
+					<ModalLogin data={dataModal} handleClose={handleClose} />
 				</div>
 			)}
 			<div>

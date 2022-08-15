@@ -1,5 +1,5 @@
 import SelectBox from 'shared/select-box';
-import React, { useRef, useEffect, useState } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import StarRanking from 'shared/starRanks';
 import TopQuotesComponent from 'shared/top-quotes';
 import { getTopQuotes } from 'reducers/redux-utils/ranks';
@@ -8,11 +8,13 @@ import { NotificationError } from 'helpers/Error';
 import PropTypes from 'prop-types';
 
 const TopQuotes = ({ rows, listYear, tabSelected }) => {
-	const [topQuotesId, setTopQuotesId] = useState();
+	const [topQuotesId, setTopQuotesId] = useState(null);
 	const [valueDate, setValueData] = useState('week');
 	const [getListTopQuotes, setGetListTopQuotes] = useState([]);
+
 	const kindOfGroupRef = useRef({ value: 'default', title: 'Chủ đề' });
 	const listYearRef = useRef({ value: 'default', title: 'Tuần' });
+
 	const dispatch = useDispatch();
 
 	const getTopQuotesData = async () => {

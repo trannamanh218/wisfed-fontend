@@ -137,6 +137,7 @@
 	border-radius: 12px;
 	background-color: #fff;
 	overflow: hidden;
+	overflow: hidden;
 
 	img {
 		width: 100%;
@@ -271,5 +272,11 @@
 
 	.form-field-wrapper {
 		padding: 40px 24px 24px;
+	}
+
+	.upload-image__wrapper {
+		padding: 0;
+		border: none;
+		border-radius: 0;
 	}
 }

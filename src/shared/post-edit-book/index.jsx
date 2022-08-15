@@ -10,12 +10,19 @@ import { getRatingBook } from 'reducers/redux-utils/book';
 import { NotificationError } from 'helpers/Error';
 import _ from 'lodash';
 
-const PostEditBook = props => {
-	const { data, handleValidationInput, validationInput, handleAddToPost, handleChangeStar, valueStar } = props;
+const PostEditBook = ({
+	data,
+	handleValidationInput,
+	validationInput,
+	handleAddToPost,
+	handleChangeStar,
+	valueStar,
+}) => {
 	const [listRatingStar, setListRatingStar] = useState(null);
 	const [showText, setShowText] = useState(true);
 	const inputRef = useRef(null);
 	const dispatch = useDispatch();
+
 	const fetchData = async () => {
 		try {
 			const res = await dispatch(getRatingBook(data?.id)).unwrap();
@@ -64,6 +71,7 @@ const PostEditBook = props => {
 		}
 		handleValidationInput(message);
 	};
+
 	return (
 		<div className='post-edit-book'>
 			<BookThumbnail {...data} />
