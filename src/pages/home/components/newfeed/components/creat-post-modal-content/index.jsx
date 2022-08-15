@@ -10,7 +10,6 @@ import { toast } from 'react-toastify';
 import { createActivity } from 'reducers/redux-utils/activity';
 import PostEditBook from 'shared/post-edit-book';
 import OptionsPost from './OptionsPost';
-// import ShareModeComponent from './ShareModeComponent';
 import CreatPostSubModal from './CreatePostSubModal';
 import TaggedList from './TaggedList';
 import UploadImage from './UploadImage';
@@ -121,7 +120,7 @@ function CreatPostModalContent({
 			setImagesUpload(UpdateImg);
 		}
 	}, []);
-
+	console.log(UpdateImg);
 	useEffect(() => {
 		if (!_.isEmpty(bookForCreatePost)) {
 			const newData = { ...taggedData };

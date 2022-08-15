@@ -188,7 +188,7 @@ const ReviewTab = ({ currentTab }) => {
 					filter: JSON.stringify([
 						{ operator: 'eq', value: bookId, property: 'bookId' },
 						// { operator: 'eq', value: bookInfo.page, property: 'curProgress' },
-						{ operator: 'in', value: ['1', '2', '3', '4', '5'], property: 'rate' },
+						// { operator: 'in', value: ['1', '2', '3', '4', '5'], property: 'rate' },
 					]),
 					topUser: topUser,
 					searchUser: inputSearch,
