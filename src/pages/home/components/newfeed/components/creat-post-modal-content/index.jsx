@@ -623,7 +623,7 @@ function CreatPostModalContent({
 									<span className='number__title__rank'># Top {postDataShare.rank}</span>
 									<span className='title__rank'>
 										{postDataShare.categoryName
-											? `  cuốn sách tốt nhất  ${
+											? `  cuốn sách tốt nhất thuộc  ${
 													postDataShare.categoryName
 											  } theo ${handleTime()} `
 											: `  cuốn sách tốt nhất theo ${handleTime()} `}

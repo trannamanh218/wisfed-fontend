@@ -161,7 +161,7 @@ const PopupCreateGroup = ({ handleClose }) => {
 
 	useEffect(() => {
 		document.getElementById('hashtag').addEventListener('keydown', e => {
-			if (e.keyCode === 32 && inputHashtag.includes('#')) {
+			if (e.key === 32 && inputHashtag.includes('#')) {
 				dataRef.current = inputHashtag;
 				inputRefHashtag.current.value = '';
 			}
@@ -314,6 +314,14 @@ const PopupCreateGroup = ({ handleClose }) => {
 		setListHashtags(newList);
 	};
 
+	const focusInputRefAuthor = () => {
+		inputRefAuthor.current.focus();
+	};
+
+	const focusInputRefHashtags = () => {
+		inputRefHashtag.current.focus();
+	};
+
 	return (
 		<>
 			<div className='popup-group__header'>
@@ -418,7 +426,8 @@ const PopupCreateGroup = ({ handleClose }) => {
 				<div className='form-field-authors'>
 					<label>Tên tác giả</label>
 					<span style={{ color: 'red', marginLeft: '4px' }}>*</span>
-					<div className='list__author-tags'>
+
+					<div className='list__author-tags' onClick={focusInputRefAuthor}>
 						{listAuthors.length > 0 ? (
 							<div className='input__authors '>
 								{listAuthors.map(item => (
@@ -532,7 +541,7 @@ const PopupCreateGroup = ({ handleClose }) => {
 				<div className='form-field-hashtag'>
 					<label>Hashtags</label>
 					<span style={{ color: 'red', marginLeft: '4px' }}>*</span>
-					<div className='list__author-tags'>
+					<div className='list__author-tags' onClick={focusInputRefHashtags}>
 						{listHashtags.length > 0 && (
 							<div className='input__authors'>
 								{listHashtags.map(item => (
