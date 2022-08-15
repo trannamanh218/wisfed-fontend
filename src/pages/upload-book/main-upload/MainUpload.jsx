@@ -18,6 +18,7 @@ import { createBook } from 'reducers/redux-utils/book';
 import { addBookToSeries } from 'reducers/redux-utils/series';
 import { NotificationError } from 'helpers/Error';
 import classNames from 'classnames';
+import _ from 'lodash';
 import AddAndSearchAuthorUploadBook from './AddAndSearchAuthorUploadBook/AddAndSearchAuthorUploadBook';
 import AddAndSearchCategoriesUploadBook from './AddAndSearchCategoriesUploadBook/AddAndSearchCategoriesUploadBook';
 import AddAndSearchPublisherUploadBook from './AddAndSearchPublisherUploadBook/AddAndSearchPublisherUploadBook';
@@ -107,7 +108,7 @@ export default function MainUpload() {
 			const res = await dispatch(createBook(params)).unwrap();
 
 			// Nếu sách có trường series thì cập nhật series đó
-			if (series) {
+			if (!_.isEmpty(series)) {
 				// Lấy id của sách vừa được tạo
 				const bookCreatedId = res.id;
 
@@ -119,7 +120,7 @@ export default function MainUpload() {
 				handleAddBookToSeries(paramsForAddBookToSeries);
 			}
 
-			// B4: Xử lý hiển thị kết quả
+			// Xử lý hiển thị kết quả
 			toast.success('Đang chờ xét duyệt sách. Chúng tôi sẽ thông báo cho bạn sau.');
 		} catch (err) {
 			NotificationError(err);
