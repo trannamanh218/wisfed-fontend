@@ -11,8 +11,13 @@ import LoadingIndicator from 'shared/loading-indicator';
 import PropTypes from 'prop-types';
 import { getFilterSearch } from 'reducers/redux-utils/search';
 import _ from 'lodash';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import bookImage from 'assets/images/default-book.png';
+import { TOP_BOOK_VERB_SHARE } from 'constants';
+import { saveDataShare } from 'reducers/redux-utils/post';
+import Storage from 'helpers/Storage';
+import { MY_BOOK_VERB_SHARE } from 'constants';
+
 const MainBooksAuthor = ({ shelveGroupName }) => {
 	const [booksByAuthor, setBooksByAuthor] = useState([]);
 	const [hasMore, setHasMore] = useState(true);
@@ -21,6 +26,7 @@ const MainBooksAuthor = ({ shelveGroupName }) => {
 	const { userId } = useParams();
 
 	const dispatch = useDispatch();
+	const navigate = useNavigate();
 
 	const callApiStart = useRef(10);
 	const callApiPerPage = useRef(10);
@@ -109,6 +115,19 @@ const MainBooksAuthor = ({ shelveGroupName }) => {
 	};
 	const debounceSearch = useCallback(_.debounce(updateFilter, 1000), []);
 
+	const handleShare = data => {
+		const newData = {
+			type: 'topBookAuthor',
+			verb: MY_BOOK_VERB_SHARE,
+			...data,
+		};
+
+		if (Storage.getAccessToken()) {
+			navigate('/');
+			dispatch(saveDataShare(newData));
+		}
+	};
+
 	return (
 		<div className='main-reading-author__container'>
 			<div className='main-reading-author__header'>
@@ -153,7 +172,7 @@ const MainBooksAuthor = ({ shelveGroupName }) => {
 								</div>
 								<div className='main-reading-author__books__item__column'>
 									<div className='main-reading-author__books__item__top'>
-										<span>{item.countRating}</span>
+										<span>{item.avgRating}</span>
 										<StarAuthor />
 									</div>
 									<div className='main-reading-author__books__item__under'></div>
@@ -197,7 +216,10 @@ const MainBooksAuthor = ({ shelveGroupName }) => {
 										{item.newQuote} lượt quote mới
 									</Link>
 								</div>
-								<div className='main-reading-author__books__item__column'>
+								<div
+									className='main-reading-author__books__item__column'
+									onClick={() => handleShare(item)}
+								>
 									<ShareAuthor />
 								</div>
 							</div>

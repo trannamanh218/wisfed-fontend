@@ -17,6 +17,7 @@ import {
 	TOP_USER_VERB_SHARE,
 	TOP_QUOTE_VERB_SHARE,
 } from 'constants';
+import { MY_BOOK_VERB_SHARE } from 'constants';
 
 const PostActionBar = ({ postData, handleLikeAction }) => {
 	const dispatch = useDispatch();
@@ -111,6 +112,13 @@ const PostActionBar = ({ postData, handleLikeAction }) => {
 					type: postData.originId.type,
 					id: postData.info.id,
 					verb: TOP_QUOTE_VERB_SHARE,
+					...postData.info,
+				};
+			} else if (postData.verb === MY_BOOK_VERB_SHARE) {
+				dataToShare = {
+					id: postData.info.id,
+					verb: MY_BOOK_VERB_SHARE,
+					type: postData.originId.type,
 					...postData.info,
 				};
 			}

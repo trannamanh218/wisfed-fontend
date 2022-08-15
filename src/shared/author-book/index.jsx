@@ -139,7 +139,7 @@ const AuthorBook = ({
 					<div className='author-book__rating'>
 						<ReactRating
 							readonly={true}
-							initialRating={data.avgRating?.toFixed(1) || data.info?.countRating?.toFixed(1)}
+							initialRating={data.avgRating?.toFixed(1) || data.info?.avgRating?.toFixed(1)}
 							checkStar={checkStar}
 						/>
 						<span className='author-book__rating__number'>
