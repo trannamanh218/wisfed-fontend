@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import { makeFriendRequest, addFollower, unFollower, unFriendRequest } from 'reducers/redux-utils/user';
 import { useDispatch } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
+import ModalUnFriend from 'pages/friends/component/modalUnFriends';
 
 const ConnectButtonsFriends = ({ direction, item }) => {
 	const dispatch = useDispatch();
@@ -12,7 +13,7 @@ const ConnectButtonsFriends = ({ direction, item }) => {
 	const [toggleUnFollow, setToggleUnFollow] = useState(true);
 	const [toggleAddFollow, setToggleAddFollow] = useState(true);
 	const [togglePendingFriend, setTogglePendingFriend] = useState(true);
-	// const [toggleModalUnFriends, setModalUnfriends] = useState(false);
+	const [showModalUnfriends, setShowModalUnfriends] = useState(false);
 
 	const buttonUnFollow = () => {
 		return (
@@ -40,11 +41,15 @@ const ConnectButtonsFriends = ({ direction, item }) => {
 		);
 	};
 
+	const handleModalUnFriend = () => {
+		setShowModalUnfriends(true);
+	};
+
 	const buttonUnFriend = () => {
 		return (
-			<Button className='connect-button' onClick={handleUnFriend}>
+			<Button className='connect-button' onClick={handleModalUnFriend}>
 				<Minus className='connect-button__icon' />
-				<span className='connect-button__content'>Huỷ kết bạn</span>
+				<span className='connect-button__content'>Hủy kết bạn</span>
 			</Button>
 		);
 	};
@@ -69,11 +74,12 @@ const ConnectButtonsFriends = ({ direction, item }) => {
 			NotificationError(err);
 		}
 	};
-	const handleUnFriend = () => {
-		// setModalUnfriends(false);
+	const handleUnfriend = () => {
+		setShowModalUnfriends(false);
 		try {
 			dispatch(unFriendRequest(item.id)).unwrap();
 			setUnFriend(false);
+			handleUnFollow();
 		} catch (err) {
 			NotificationError(err);
 		}
@@ -110,12 +116,22 @@ const ConnectButtonsFriends = ({ direction, item }) => {
 		return unFriend ? buttonUnFriend() : togglePendingFriend ? buttonAddFriend() : buttonPendingFriend();
 	};
 
+	const toggleModal = () => {
+		setShowModalUnfriends(!showModalUnfriends);
+	};
+
 	return (
 		<div className={`connect-buttons ${direction}`}>
 			<>
 				{' '}
 				{handleRenderButtonFriend()}
 				{handleRenderButtonFollow()}
+				<ModalUnFriend
+					showModalUnfriends={showModalUnfriends}
+					toggleModal={toggleModal}
+					handleUnfriend={handleUnfriend}
+					data={item}
+				/>
 			</>
 		</div>
 	);

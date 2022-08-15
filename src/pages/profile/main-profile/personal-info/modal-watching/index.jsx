@@ -99,6 +99,10 @@ const ModalWatching = ({ setModalFollowing, modalFollowing, userInfoDetail }) =>
 		setModalFollowing(!modalFollowing);
 	};
 
+	const toggleModalUnfriend = () => {
+		setModalFollowing(!showModalUnfriends);
+	};
+
 	const buttonAddFriend = item => {
 		return (
 			<Button
@@ -214,7 +218,7 @@ const ModalWatching = ({ setModalFollowing, modalFollowing, userInfoDetail }) =>
 			</Modal>
 			<ModalUnFriend
 				showModalUnfriends={showModalUnfriends}
-				toggleModal={toggleModal}
+				toggleModal={toggleModalUnfriend}
 				handleUnfriend={handleUnfriend}
 				data={userFriendRequest}
 			/>

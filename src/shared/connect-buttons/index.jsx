@@ -56,7 +56,7 @@ const ConnectButtons = ({ direction, item }) => {
 		return (
 			<Button className='connect-button' onClick={handleModalUnFriend}>
 				<Minus className='connect-button__icon' />
-				<span className='connect-button__content'>Huỷ kết bạn</span>
+				<span className='connect-button__content'>Hủy kết bạn</span>
 			</Button>
 		);
 	};
