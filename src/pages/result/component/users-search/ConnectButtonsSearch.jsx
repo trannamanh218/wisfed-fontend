@@ -31,6 +31,7 @@ const ConnectButtonsSearch = ({ direction, item }) => {
 			await dispatch(unFriendRequest(item.id)).unwrap();
 			setFriendStatusBtn('unknown');
 			setShowModalUnfriends(false);
+			dispatch(unFollower(item.id)).unwrap();
 		} catch (err) {
 			NotificationError(err);
 		}

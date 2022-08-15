@@ -197,7 +197,9 @@ const NotificationModal = ({ setModalNotti, buttonModal, realTime }) => {
 							<Tab eventKey='friendrequest' title='Lời mời kết bạn'>
 								{renderFriend ? (
 									<>
-										<div className='notificaiton__all__title'>{lengthAddFriend()} lời kết bạn</div>
+										<div className='notificaiton__all__title'>
+											{lengthAddFriend()} lời mời kết bạn
+										</div>
 										{getNotifications.map(
 											item =>
 												item.verb === 'addFriend' &&

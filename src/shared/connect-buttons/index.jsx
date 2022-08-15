@@ -7,6 +7,7 @@ import { makeFriendRequest, addFollower, unFollower, unFriendRequest } from 'red
 import { useDispatch } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
 import { ReplyFriendRequest } from 'reducers/redux-utils/user';
+import ModalUnFriend from 'pages/friends/component/modalUnFriends';
 
 const ConnectButtons = ({ direction, item }) => {
 	const dispatch = useDispatch();
@@ -15,6 +16,7 @@ const ConnectButtons = ({ direction, item }) => {
 	const [toggleAddFollow, setToggleAddFollow] = useState(true);
 	const [togglePendingFriend, setTogglePendingFriend] = useState(true);
 	const [toggleAcces, setToggleAcces] = useState(true);
+	const [showModalUnfriends, setShowModalUnfriends] = useState(false);
 
 	const buttonUnFollow = () => {
 		return (
@@ -52,7 +54,7 @@ const ConnectButtons = ({ direction, item }) => {
 
 	const buttonUnFriend = () => {
 		return (
-			<Button className='connect-button' onClick={handleUnFriend}>
+			<Button className='connect-button' onClick={handleModalUnFriend}>
 				<Minus className='connect-button__icon' />
 				<span className='connect-button__content'>Huỷ kết bạn</span>
 			</Button>
@@ -79,11 +81,16 @@ const ConnectButtons = ({ direction, item }) => {
 			NotificationError(err);
 		}
 	};
-	const handleUnFriend = () => {
-		// setModalUnfriends(false);
+	const handleModalUnFriend = () => {
+		setShowModalUnfriends(true);
+	};
+
+	const handleUnfriend = () => {
+		setShowModalUnfriends(false);
 		try {
 			dispatch(unFriendRequest(item.id)).unwrap();
 			setUnFriend(false);
+			handleUnFollow();
 		} catch (err) {
 			NotificationError(err);
 		}
@@ -134,6 +141,10 @@ const ConnectButtons = ({ direction, item }) => {
 		}
 	};
 
+	const toggleModal = () => {
+		setShowModalUnfriends(!showModalUnfriends);
+	};
+
 	return (
 		<div className={`connect-buttons ${direction}`}>
 			{item.relation !== 'isMe' && (
@@ -141,6 +152,12 @@ const ConnectButtons = ({ direction, item }) => {
 					{' '}
 					{handleRenderButtonFriend()}
 					{handleRenderButtonFollow()}
+					<ModalUnFriend
+						showModalUnfriends={showModalUnfriends}
+						toggleModal={toggleModal}
+						handleUnfriend={handleUnfriend}
+						data={item}
+					/>
 				</>
 			)}
 		</div>

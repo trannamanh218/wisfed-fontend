@@ -12,12 +12,16 @@ import { unFollower, makeFriendRequest, unFriendRequest } from 'reducers/redux-u
 import { NotificationError } from 'helpers/Error';
 import { buttonReqFriend } from 'helpers/HandleShare';
 import { useParams, useNavigate } from 'react-router-dom';
+import ModalUnFriend from 'pages/friends/component/modalUnFriends';
 
 const ModalWatching = ({ setModalFollowing, modalFollowing, userInfoDetail }) => {
 	const navigate = useNavigate();
 	const { userInfo } = useSelector(state => state.auth);
 	const [getListFollow, setGetListFollow] = useState([]);
 	const [inputSearch, setInputSearch] = useState('');
+	const [showModalUnfriends, setShowModalUnfriends] = useState(false);
+	const [userFriendRequest, setUserFriendRequest] = useState({});
+
 	const dispatch = useDispatch();
 	const { userId } = useParams();
 	useEffect(async () => {
@@ -74,16 +78,18 @@ const ModalWatching = ({ setModalFollowing, modalFollowing, userInfoDetail }) =>
 		}
 	};
 
-	const handleUnFriend = id => {
+	const handleUnfriend = async () => {
+		setShowModalUnfriends(false);
 		try {
 			const newArrFriend = getListFollow.map(item => {
-				if (id === item.userIdTwo) {
+				if (userFriendRequest.id === item.userIdTwo) {
 					return { ...item, isAddFriend: false };
 				}
 				return { ...item };
 			});
 			setGetListFollow(newArrFriend);
-			dispatch(unFriendRequest(id)).unwrap();
+			dispatch(unFriendRequest(userFriendRequest.id)).unwrap();
+			unFolow(userFriendRequest.id);
 		} catch (err) {
 			NotificationError(err);
 		}
@@ -109,16 +115,16 @@ const ModalWatching = ({ setModalFollowing, modalFollowing, userInfoDetail }) =>
 
 	const buttonUnFriend = item => {
 		return (
-			<Button
-				onClick={() => handleUnFriend(item.userIdTwo)}
-				className='connect-button'
-				isOutline={true}
-				name='friend'
-			>
+			<Button onClick={() => handleModalUnFriend(item)} className='connect-button' isOutline={true} name='friend'>
 				<Minus className='connect-button__icon' />
 				<span className='connect-button__content'>Hủy kết bạn</span>
 			</Button>
 		);
+	};
+
+	const handleModalUnFriend = item => {
+		setShowModalUnfriends(true);
+		setUserFriendRequest(item);
 	};
 
 	const renderButtonFriend = item => {
@@ -206,6 +212,12 @@ const ModalWatching = ({ setModalFollowing, modalFollowing, userInfoDetail }) =>
 					</div>
 				</Modal.Body>
 			</Modal>
+			<ModalUnFriend
+				showModalUnfriends={showModalUnfriends}
+				toggleModal={toggleModal}
+				handleUnfriend={handleUnfriend}
+				data={userFriendRequest}
+			/>
 		</>
 	);
 };
