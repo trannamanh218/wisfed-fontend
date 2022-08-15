@@ -34,7 +34,7 @@ const OptionsPost = ({ list, addOptionsToPost, taggedData, postDataShare }) => {
 		) {
 			isDisabled = true;
 		}
-		isActive = taggedData[item.value].length > 0 ? true : false;
+		isActive = taggedData[item.value].length > 0 || !_.isEmpty(taggedData[item.value]) ? true : false;
 
 		return (
 			<span
