@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useEffect } from 'react';
 import SearchIcon from 'assets/icons/search.svg';
 import PropTypes from 'prop-types';
 import './search-field.scss';
@@ -10,8 +10,10 @@ const SearchField = ({
 	className,
 	value = '',
 	onKeyDown,
+	autoFocus = true,
 }) => {
 	const inputRef = useRef();
+
 	return (
 		<div className={classNames('search-field', { [`${className}`]: className })}>
 			<img className='search-field__icon' src={SearchIcon} alt='search-icon' />
@@ -22,6 +24,7 @@ const SearchField = ({
 				onChange={handleChange}
 				value={value}
 				onKeyDown={onKeyDown}
+				autoFocus={autoFocus}
 			/>
 		</div>
 	);

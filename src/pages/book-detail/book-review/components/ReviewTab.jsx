@@ -285,10 +285,10 @@ const ReviewTab = ({ currentTab }) => {
 				<input
 					className='search-review__input'
 					placeholder='Bạn review cuốn sách này thế nào'
-					autoFocus
 					onChange={changeReview}
 					value={reviewBook}
 					onKeyPress={handleKeyPress}
+					autoFocus
 				/>
 			</div>
 			<FilterPane
@@ -309,6 +309,7 @@ const ReviewTab = ({ currentTab }) => {
 						value={inputSearch}
 						handleChange={ChangeSearch}
 						placeholder='Tìm kiếm theo Hashtag, tên người review ...'
+						autoFocus={false}
 					/>
 				</div>
 				{currentTab === 'reviews' && reviewList?.length ? (
