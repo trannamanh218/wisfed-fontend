@@ -143,7 +143,6 @@ function CreatPostModalContent({
 	useEffect(() => {
 		if (urlAdded) {
 			if (urlAdded.match(urlRegex) && !_.isEqual(urlAdded, oldUrlAdded)) {
-				console.log('run', urlAdded);
 				setHasUrl(true);
 				getPreviewUrlFnc(urlAdded);
 			}

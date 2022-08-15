@@ -53,8 +53,6 @@ function SearchLayout({ dataGroup }) {
 		}
 	};
 
-	console.log('data group', dataGroup);
-
 	return (
 		<>
 			{_.isEmpty(dataGroup?.usersData) && _.isEmpty(dataGroup?.postData) ? (
