@@ -80,7 +80,9 @@ const AuthorBook = ({
 				bookDataTemp.countRating = data.book.countRating;
 			}
 		} else if (position === 'profile') {
-			console.log('author book in profile');
+			if (data.authors && data.authors.length) {
+				bookDataTemp.authors = data.authors?.map(author => author?.authorName);
+			}
 		} else if (position === 'topBook') {
 			if (data.book.authors && data.book.authors.length) {
 				bookDataTemp.authors = data.book.authors?.map(author => author?.authorName);
@@ -100,6 +102,8 @@ const AuthorBook = ({
 			if (data.info.countRating) {
 				bookDataTemp.countRating = data.info.countRating;
 			}
+		} else if (position === 'topBookAuthor') {
+			console.log('mybook');
 		}
 		setBookdata(bookDataTemp);
 	};
