@@ -211,21 +211,18 @@ const ReviewTab = ({ currentTab }) => {
 		setCurrentOption(item);
 	};
 	const handleKeyPress = async e => {
-		if (e.key === 'Enter') {
-			// setReviewTurn(!reviewTurn);
+		if (e.key === 'Enter' && !_.isEmpty(reviewBook)) {
 			const rs = await postReviewList();
 			setReviewBook('');
 			const newPayload = JSON.parse(JSON.stringify(rs.payload));
-			console.log(1);
+
 			newPayload['user'] = userInfo;
-			console.log(newPayload); // aa
+
 			let newPost = [newPayload, ...reviewList];
-			// setSortValue('lastest');
+
 			setReviewList(newPost);
 		}
 	};
-
-	console.log(reviewList);
 
 	const onBtnConfirmClick = () => {
 		switch (sortValue) {
