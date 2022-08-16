@@ -64,7 +64,7 @@ const BookTab = ({ currentTab }) => {
 							loader={<LoadingIndicator />}
 						>
 							{booksOfAuthor.map(book => (
-								<AuthorBook key={book.id} data={book} checkStar={true} position='profile' />
+								<AuthorBook key={book.id} data={book} checkStar={true} />
 							))}
 						</InfiniteScroll>
 					) : (

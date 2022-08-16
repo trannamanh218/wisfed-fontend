@@ -31,12 +31,7 @@ function PostBook({ data, inCreatePost }) {
 					</div>
 				</div>
 				<div className='post-book__button-and-rating'>
-					<StatusButton
-						bookData={data}
-						hasBookStatus={true}
-						postActor={data.actorCreatedPost}
-						inCreatePost={inCreatePost}
-					/>
+					<StatusButton bookData={data} inCreatePost={inCreatePost} bookStatus={data.status} />
 					<div className='post-book__rating__group'>
 						<ReactRating initialRating={data.avgRating?.toFixed(1)} readonly={true} fractions={2} />
 						<div className='post-book__rating__number'>

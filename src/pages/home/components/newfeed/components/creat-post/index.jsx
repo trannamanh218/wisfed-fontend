@@ -51,12 +51,6 @@ function CreatePost({ onChangeNewPost }) {
 				icon: <CategoryIcon className='newfeed__creat-post__options__item__logo--category' />,
 				message: 'Không tìm thấy chủ đề',
 			},
-			{
-				value: location.pathname.includes('group') ? 'hashtag' : 'addFriends',
-				title: 'Hashtag',
-				icon: <Hashtag className='newfeed__creat-post__options__item__logo--friend' />,
-				message: 'Không tìm thấy hashtag',
-			},
 		];
 	} else {
 		optionList = [

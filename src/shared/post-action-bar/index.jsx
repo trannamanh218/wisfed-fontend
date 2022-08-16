@@ -16,7 +16,7 @@ import {
 	TOP_BOOK_VERB_SHARE,
 	TOP_USER_VERB_SHARE,
 	TOP_QUOTE_VERB_SHARE,
-} from 'constants';
+} from 'constants/index';
 
 const PostActionBar = ({ postData, handleLikeAction }) => {
 	const dispatch = useDispatch();

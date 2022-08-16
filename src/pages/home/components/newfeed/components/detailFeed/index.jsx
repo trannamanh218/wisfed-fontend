@@ -7,7 +7,7 @@ import { useParams } from 'react-router-dom';
 import { NotificationError } from 'helpers/Error';
 import './detail-feed.scss';
 import Circle from 'shared/loading/circle';
-import { POST_TYPE, GROUP_TYPE } from 'constants';
+import { POST_TYPE, GROUP_TYPE } from 'constants/index';
 
 const DetailFeed = () => {
 	const dispatch = useDispatch();

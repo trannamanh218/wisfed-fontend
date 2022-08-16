@@ -9,7 +9,7 @@ import { useDispatch } from 'react-redux';
 import { saveDataShare } from 'reducers/redux-utils/post';
 import { useNavigate } from 'react-router-dom';
 import { checkUserLogin } from 'reducers/redux-utils/auth';
-import { QUOTE_VERB_SHARE, TOP_QUOTE_VERB_SHARE } from 'constants';
+import { QUOTE_VERB_SHARE, TOP_QUOTE_VERB_SHARE } from 'constants/index';
 
 const QuoteActionBar = ({ data, isDetail, likeUnlikeQuoteFnc }) => {
 	const dispatch = useDispatch();

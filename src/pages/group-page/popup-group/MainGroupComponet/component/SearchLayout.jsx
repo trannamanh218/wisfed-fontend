@@ -8,7 +8,7 @@ import Post from 'shared/post';
 import './search-group.scss';
 import _ from 'lodash';
 import ResultNotFound from 'pages/result/component/result-not-found';
-import { GROUP_TYPE } from 'constants';
+import { GROUP_TYPE } from 'constants/index';
 
 function SearchLayout({ dataGroup }) {
 	const [isCallApi, setIsCallApi] = useState(false);

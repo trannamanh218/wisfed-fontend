@@ -34,7 +34,7 @@ import {
 	TOP_BOOK_VERB_SHARE,
 	TOP_QUOTE_VERB_SHARE,
 	TOP_USER_VERB_SHARE,
-} from 'constants';
+} from 'constants/index';
 import { IconRanks } from 'components/svg';
 import AuthorBook from 'shared/author-book';
 import Storage from 'helpers/Storage';
@@ -398,7 +398,7 @@ function Post({ postInformations, type }) {
 					{postData.verb === POST_VERB_SHARE && <PostShare postData={postData} />}
 					{postData.verb === QUOTE_VERB_SHARE && <QuoteCard data={postData.sharePost} isShare={true} />}
 					{postData.verb === GROUP_POST_VERB_SHARE && <PostShare postData={postData} />}
-					{postData.verb === TOP_BOOK_VERB_SHARE && <AuthorBook data={postData} position='post' />}
+					{postData.verb === TOP_BOOK_VERB_SHARE && <AuthorBook data={postData} inPost={true} />}
 					{postData.verb === TOP_QUOTE_VERB_SHARE && <QuoteCard data={postData.info} isShare={true} />}
 				</div>
 			)}

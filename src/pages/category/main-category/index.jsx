@@ -4,7 +4,6 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import CategoryGroup from 'shared/category-group';
 import LoadingIndicator from 'shared/loading-indicator';
 import SearchCategory from './SearchCategory';
-// import { STATUS_LOADING } from 'constants';
 import Circle from 'shared/loading/circle';
 import SearchIcon from 'assets/icons/search.svg';
 import PropTypes from 'prop-types';

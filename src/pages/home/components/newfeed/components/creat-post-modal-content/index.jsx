@@ -1,7 +1,7 @@
 /* eslint-disable max-lines */
 import classNames from 'classnames';
 import { CloseX, Image, IconRanks } from 'components/svg';
-import { STATUS_IDLE, STATUS_LOADING, STATUS_SUCCESS } from 'constants';
+import { STATUS_IDLE, STATUS_LOADING, STATUS_SUCCESS } from 'constants/index';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { Fragment, useEffect, useState } from 'react';
@@ -21,7 +21,7 @@ import './style.scss';
 import { ratingUser } from 'reducers/redux-utils/book';
 import UserAvatar from 'shared/user-avatar';
 import { updateCurrentBook, updateProgressReadingBook, createReviewBook } from 'reducers/redux-utils/book';
-import { STATUS_BOOK } from 'constants';
+import { STATUS_BOOK } from 'constants/index';
 import { usePrevious } from 'shared/hooks';
 import { addBookToDefaultLibrary, updateMyAllLibraryRedux } from 'reducers/redux-utils/library';
 import { setting } from './settings';
@@ -45,7 +45,7 @@ import {
 	TOP_USER_VERB_SHARE,
 	TOP_BOOK_VERB_SHARE,
 	TOP_QUOTE_VERB_SHARE,
-} from 'constants';
+} from 'constants/index';
 
 const verbShareArray = [
 	POST_VERB_SHARE,
@@ -124,6 +124,7 @@ function CreatPostModalContent({
 
 	useEffect(() => {
 		if (!_.isEmpty(bookForCreatePost)) {
+			console.log('book for create post', bookForCreatePost);
 			const newData = { ...taggedData };
 			const pages = { read: bookForCreatePost.page, reading: '', wantToRead: '' };
 			newData.addBook = { ...bookForCreatePost, progress: pages[bookForCreatePost.status] };
@@ -652,12 +653,7 @@ function CreatPostModalContent({
 										<PostShare postData={postDataShare} inCreatePost={true} />
 									)}
 									{postDataShare.verb === TOP_BOOK_VERB_SHARE && (
-										<AuthorBook
-											data={postDataShare}
-											checkStar={true}
-											inCreatePost={true}
-											position='createPostModal'
-										/>
+										<AuthorBook data={postDataShare} checkStar={true} inCreatePost={true} />
 									)}
 								</div>
 							)}

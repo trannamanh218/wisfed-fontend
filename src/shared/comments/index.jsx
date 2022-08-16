@@ -10,7 +10,7 @@ import { likeQuoteComment } from 'reducers/redux-utils/quote';
 import { NotificationError } from 'helpers/Error';
 import { likeAndUnlikeCommentPost } from 'reducers/redux-utils/activity';
 import { likeAndUnlikeCommentReview } from 'reducers/redux-utils/book';
-import { POST_TYPE, QUOTE_TYPE, REVIEW_TYPE } from 'constants';
+import { POST_TYPE, QUOTE_TYPE, REVIEW_TYPE } from 'constants/index';
 import { Link, useNavigate } from 'react-router-dom';
 import { LikeComment } from 'components/svg';
 import { likeAndUnlikeGroupComment } from 'reducers/redux-utils/group';

@@ -1,4 +1,4 @@
-import { STATUS_BOOK } from 'constants';
+import { STATUS_BOOK } from 'constants/index';
 import PropTypes from 'prop-types';
 import { useEffect, useRef, useState } from 'react';
 import BookThumbnail from 'shared/book-thumbnail';
@@ -72,6 +72,15 @@ const PostEditBook = ({
 		handleValidationInput(message);
 	};
 
+	const generateAuthorName = authorsInfo => {
+		if (authorsInfo.length) {
+			const authorNameArr = authorsInfo.map(item => item.authorName);
+			return authorNameArr.join(' - ');
+		} else {
+			return 'Tác giả: Chưa xác định';
+		}
+	};
+
 	return (
 		<div className='post-edit-book'>
 			<BookThumbnail {...data} />
@@ -80,7 +89,7 @@ const PostEditBook = ({
 					<div data-testid='post-edit-book__name' className='post-edit-book__name' title={data.name}>
 						{data.name}
 					</div>
-					<div className='post-edit-book__author'>{data.author || 'Tác giả: Chưa xác định'}</div>
+					<div className='post-edit-book__author'>{generateAuthorName(data.authors)}</div>
 					<div className='post-edit-book__edit'>
 						<LinearProgressBar percent={(data.progress / data.page) * 100} />
 						<div className='post-edit-book__editor'>

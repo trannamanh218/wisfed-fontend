@@ -9,7 +9,7 @@ import CommentEditor from 'shared/comment-editor';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { QUOTE_TYPE } from 'constants';
+import { QUOTE_TYPE } from 'constants/index';
 import { useSelector, useDispatch } from 'react-redux';
 import { handleCheckReplyToMe } from 'reducers/redux-utils/comment';
 import { useRef } from 'react';

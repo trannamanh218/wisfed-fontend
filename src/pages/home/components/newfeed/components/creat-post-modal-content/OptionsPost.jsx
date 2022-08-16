@@ -9,7 +9,7 @@ import {
 	READ_TARGET_VERB_SHARE,
 	TOP_BOOK_VERB_SHARE,
 	TOP_QUOTE_VERB_SHARE,
-} from 'constants';
+} from 'constants/index';
 
 const verbShareArray = [
 	POST_VERB_SHARE,

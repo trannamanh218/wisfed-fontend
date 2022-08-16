@@ -5,7 +5,7 @@ import BookThumbnail from 'shared/book-thumbnail';
 import { BoldCenterCircle, RightArrow } from 'components/svg';
 import { useEffect, useState, memo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { STATUS_SUCCESS, STATUS_IDLE, STATUS_LOADING } from 'constants';
+import { STATUS_SUCCESS, STATUS_IDLE, STATUS_LOADING } from 'constants/index';
 import { getBookDetail } from 'reducers/redux-utils/book';
 import { NotificationError } from 'helpers/Error';
 import { useDispatch, useSelector } from 'react-redux';

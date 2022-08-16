@@ -2,7 +2,7 @@ import { act, fireEvent, render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import StatusModalContainer from 'shared/status-modal/StatusModalContainer';
 import { CoffeeCupIcon, TargetIcon } from 'components/svg';
-import { STATUS_BOOK } from 'constants';
+import { STATUS_BOOK } from 'constants/index';
 
 describe('Status book list', () => {
 	it('hiển thị đủ 3 trạng thái cuốn sách và chỉ 1 trạng thái được active', () => {
