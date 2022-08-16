@@ -407,7 +407,7 @@ function Post({ postInformations, type }) {
 					{postData.verb === QUOTE_VERB_SHARE && <QuoteCard data={postData.sharePost} isShare={true} />}
 					{postData.verb === GROUP_POST_VERB_SHARE && <PostShare postData={postData} />}
 					{(postData.verb === TOP_BOOK_VERB_SHARE || postData.verb === MY_BOOK_VERB_SHARE) && (
-						<AuthorBook data={postData} position='post' />
+						<AuthorBook data={postData} inPost={true} />
 					)}
 					{postData.verb === TOP_QUOTE_VERB_SHARE && <QuoteCard data={postData.info} isShare={true} />}
 				</div>

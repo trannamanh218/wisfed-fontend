@@ -150,7 +150,7 @@ AuthorBook.propTypes = {
 	topBooksId: PropTypes.any,
 	categoryName: PropTypes.string,
 	inCreatePost: PropTypes.bool,
-	inPost: PropTypes.string,
+	inPost: PropTypes.bool,
 };
 
 export default AuthorBook;

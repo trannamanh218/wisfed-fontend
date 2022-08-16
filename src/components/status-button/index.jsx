@@ -71,7 +71,6 @@ const StatusButton = ({ className, bookData, inCreatePost, bookStatus }) => {
 	};
 
 	const handleShow = async e => {
-		console.log('btn Status', bookData);
 		e.stopPropagation();
 		//check duoc trang thai co trong thu vien
 		try {

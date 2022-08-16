@@ -122,10 +122,9 @@ function CreatPostModalContent({
 			setImagesUpload(UpdateImg);
 		}
 	}, []);
-	console.log(UpdateImg);
+
 	useEffect(() => {
 		if (!_.isEmpty(bookForCreatePost)) {
-			console.log('book for create post', bookForCreatePost);
 			const newData = { ...taggedData };
 			const pages = { read: bookForCreatePost.page, reading: '', wantToRead: '' };
 			newData.addBook = { ...bookForCreatePost, progress: pages[bookForCreatePost.status] };
@@ -668,12 +667,7 @@ function CreatPostModalContent({
 									)}
 									{(postDataShare.verb === TOP_BOOK_VERB_SHARE ||
 										postDataShare.verb === MY_BOOK_VERB_SHARE) && (
-										<AuthorBook
-											data={postDataShare}
-											checkStar={true}
-											inCreatePost={true}
-											position='createPostModal'
-										/>
+										<AuthorBook data={postDataShare} checkStar={true} inCreatePost={true} />
 									)}
 								</div>
 							)}
