@@ -64,7 +64,9 @@ const BookIntro = ({ bookInfo, listRatingStar }) => {
 					<h1 className='book-intro__name'>{bookInfo.name}</h1>
 					<div className='book-intro__author'>
 						<span>
-							Bởi {!_.isEmpty(bookInfo.authors) ? bookInfo.authors[0].authorName : 'Chưa cập nhật'}{' '}
+							{!_.isEmpty(bookInfo.authors)
+								? 'Bởi' + bookInfo.authors[0].authorName
+								: 'Chưa cập nhật tác giả'}{' '}
 						</span>
 						<CircleCheckIcon className='book-intro__check' />
 					</div>

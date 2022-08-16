@@ -4,7 +4,7 @@ import { STATUS_LOADING } from 'constants/index';
 import { STATUS_IDLE } from 'constants/index';
 import RouteLink from 'helpers/RouteLink';
 import { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { getBookDetail } from 'reducers/redux-utils/book';
 import BookSlider from 'shared/book-slider';
@@ -15,8 +15,7 @@ import { getCategoryList, getListBookByCategory } from 'reducers/redux-utils/cat
 import caretIcon from 'assets/images/caret.png';
 import { Link } from 'react-router-dom';
 import { useFetchAuthorBooks } from 'api/book.hooks';
-import { Row, Col } from 'react-bootstrap';
-import bookImage from 'assets/images/default-book.png';
+import ModalSeries from 'shared/modal-series/ModalSeries';
 
 const BookReference = ({ bookInfo }) => {
 	const [status, setStatus] = useState(STATUS_IDLE);
@@ -24,12 +23,18 @@ const BookReference = ({ bookInfo }) => {
 	const [isExpand, setIsExpand] = useState(false);
 	const [rows, setRows] = useState(3);
 	const [relatedBooks, setRelateBooks] = useState([]);
-	// const [series, setSeries] = useState([]);
+	const [series, setSeries] = useState({});
+	const [temporarySeries, setTemporarySeries] = useState({});
 
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
+	const { userInfo } = useSelector(state => state.auth);
 
 	const { booksAuthor } = useFetchAuthorBooks(bookInfo.authors[0]?.authorId);
+
+	const [showModalSeries, setShowModalSeries] = useState(false);
+	const handleCloseModalSeries = () => setShowModalSeries(false);
+	const handleShowModalSeries = () => setShowModalSeries(true);
 
 	useEffect(() => {
 		getBooksByCategory();
@@ -133,6 +138,25 @@ const BookReference = ({ bookInfo }) => {
 					handleViewBookDetail={handleViewBookDetail}
 				/>
 			)}
+
+			{userInfo.role === ('tecinus' || 'author') ? (
+				<div className='book-reference__add-to-series'>
+					<span>Series</span>
+					<button className='sidebar__view-more-btn--blue' onClick={handleShowModalSeries}>
+						Thêm sê-ri
+					</button>
+				</div>
+			) : null}
+			{/* Modal thêm series */}
+			<ModalSeries
+				showModalSeries={showModalSeries}
+				handleCloseModalSeries={handleCloseModalSeries}
+				series={series}
+				setSeries={setSeries}
+				temporarySeries={temporarySeries}
+				setTemporarySeries={setTemporarySeries}
+			/>
+
 			<div className='book-reference__highlight__post'>
 				<h4>Bài viết nổi bật</h4>
 				<div className='card card-link'>

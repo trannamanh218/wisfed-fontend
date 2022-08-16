@@ -18,10 +18,11 @@ import { createBook } from 'reducers/redux-utils/book';
 import { addBookToSeries } from 'reducers/redux-utils/series';
 import { NotificationError } from 'helpers/Error';
 import classNames from 'classnames';
+import _ from 'lodash';
 import AddAndSearchAuthorUploadBook from './AddAndSearchAuthorUploadBook/AddAndSearchAuthorUploadBook';
 import AddAndSearchCategoriesUploadBook from './AddAndSearchCategoriesUploadBook/AddAndSearchCategoriesUploadBook';
-import AddAndSearchPublisherUploadBook from './AddAndSearchPublisherUploadBook/AddAndSearchPublisherUploadBook';
-import AddAndSearchTranslatorsUploadBook from './AddAndSearchTranslatorsUploadBook/AddAndSearchTranslatorsUploadBook';
+// import AddAndSearchPublisherUploadBook from './AddAndSearchPublisherUploadBook/AddAndSearchPublisherUploadBook';
+// import AddAndSearchTranslatorsUploadBook from './AddAndSearchTranslatorsUploadBook/AddAndSearchTranslatorsUploadBook';
 
 export default function MainUpload() {
 	const [publishDate, setPublishDate] = useState(null);
@@ -32,8 +33,10 @@ export default function MainUpload() {
 	const [image, setFrontBookCover] = useState('');
 	const [categoryAddedList, setCategoryAddedList] = useState([]);
 	const [authors, setAuthors] = useState([]);
-	const [translators, setTranslators] = useState([]);
-	const [publisher, setPublisher] = useState([]);
+	// const [translators, setTranslators] = useState([]);
+	const [translators, setTranslators] = useState('');
+	// const [publisher, setPublisher] = useState([]);
+	const [publisher, setPublisher] = useState('');
 	const [language, setLanguage] = useState('');
 	const [series, setSeries] = useState({});
 
@@ -44,7 +47,7 @@ export default function MainUpload() {
 	const [inputAuthorValue, setInputAuthorValue] = useState('');
 	const [inputTranslatorValue, setInputTranslatorValue] = useState('');
 	const [inputCategoryValue, setInputCategoryValue] = useState('');
-	const [inputPublisherValue, setInputPublisherValue] = useState('');
+	// const [inputPublisherValue, setInputPublisherValue] = useState('');
 
 	const blockInvalidChar = e => {
 		return ['e', 'E', '+', '-'].includes(e.key) && e.preventDefault();
@@ -75,9 +78,12 @@ export default function MainUpload() {
 		setInputAuthorValue('');
 		setAuthors([]);
 		setInputTranslatorValue('');
-		setTranslators([]);
-		setInputPublisherValue('');
-		setPublisher([]);
+		// setTranslators([]);
+		setTranslators('');
+		// setInputPublisherValue('');
+		// setPublisher([]);
+		setPublisher('');
+
 		setInputCategoryValue('');
 		setCategoryAddedList([]);
 		setSeries({});
@@ -107,7 +113,7 @@ export default function MainUpload() {
 			const res = await dispatch(createBook(params)).unwrap();
 
 			// Nếu sách có trường series thì cập nhật series đó
-			if (series) {
+			if (!_.isEmpty(series)) {
 				// Lấy id của sách vừa được tạo
 				const bookCreatedId = res.id;
 
@@ -119,7 +125,7 @@ export default function MainUpload() {
 				handleAddBookToSeries(paramsForAddBookToSeries);
 			}
 
-			// B4: Xử lý hiển thị kết quả
+			// Xử lý hiển thị kết quả
 			toast.success('Đang chờ xét duyệt sách. Chúng tôi sẽ thông báo cho bạn sau.');
 		} catch (err) {
 			NotificationError(err);
@@ -159,7 +165,8 @@ export default function MainUpload() {
 			originalName: originalName,
 			authors: authorsArr,
 			translators: translators,
-			publisher: publisher[0],
+			// publisher: publisher[0],
+			publisher: publisher,
 			isbn: isbn,
 			publishDate: publishDate,
 			page: Number(page),
@@ -167,6 +174,7 @@ export default function MainUpload() {
 			description: description,
 			categoryIds: categoryIds,
 			tags: [],
+			series: series,
 		};
 		if (buttonActive) {
 			handleCreateBook(bookInfo);
@@ -230,8 +238,10 @@ export default function MainUpload() {
 										<CameraIcon />
 										<Image className='upload-image__icon' />
 										<p className='upload-image__description'>Thêm ảnh bìa từ thiết bị</p>
-										<br />
-										<span style={{ fontWeight: 500 }}>hoặc kéo thả</span>
+										<span style={{ fontWeight: 500, marginTop: '5px' }}>hoặc kéo thả</span>
+										<span style={{ fontWeight: 500, color: 'red', marginTop: '10px' }}>
+											(Bắt buộc*)
+										</span>
 									</div>
 								</div>
 							)}
@@ -280,12 +290,19 @@ export default function MainUpload() {
 						/>
 					</div>
 					<div className='inp-book'>
-						<AddAndSearchTranslatorsUploadBook
+						{/* <AddAndSearchTranslatorsUploadBook
 							inputTranslatorValue={inputTranslatorValue}
 							setInputTranslatorValue={setInputTranslatorValue}
 							translators={translators}
 							setTranslators={setTranslators}
-						/>
+						/> */}
+						<label>Dịch giả</label>
+						<input
+							className='input input--non-border'
+							placeholder='Dịch giả'
+							value={translators}
+							onChange={e => setTranslators(e.target.value)}
+						></input>
 					</div>
 					<div className='inp-book'>
 						<AddAndSearchCategoriesUploadBook
@@ -296,12 +313,19 @@ export default function MainUpload() {
 						/>
 					</div>
 					<div className='inp-book'>
-						<AddAndSearchPublisherUploadBook
+						{/* <AddAndSearchPublisherUploadBook
 							inputPublisherValue={inputPublisherValue}
 							setInputPublisherValue={setInputPublisherValue}
 							publisher={publisher}
 							setPublisher={setPublisher}
-						/>
+						/> */}
+						<label>Nhà xuất bản</label>
+						<input
+							className='input input--non-border'
+							placeholder='Nhà xuất bản'
+							value={publisher}
+							onChange={e => setPublisher(e.target.value)}
+						></input>
 					</div>
 					<div className='inp-book'>
 						<Row>
@@ -326,8 +350,8 @@ export default function MainUpload() {
 									<Datepicker
 										ref={inpCalendar}
 										isClearable
-										placeholderText='dd/m/yyyy'
-										dateFormat='dd/M/yyyy'
+										placeholderText='dd/mm/yyyy'
+										dateFormat='dd/MM/yyyy'
 										selected={publishDate}
 										onChange={date => setPublishDate(date)}
 										showYearDropdown
@@ -380,7 +404,7 @@ export default function MainUpload() {
 								value={series.name || ''}
 								readOnly
 							></input>
-							<div className='modal-series'>
+							<div className='upload-modal-series'>
 								<ModalSeries
 									showModalSeries={showModalSeries}
 									handleCloseModalSeries={handleCloseModalSeries}

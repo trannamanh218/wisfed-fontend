@@ -19,7 +19,6 @@ import { Link } from 'react-router-dom';
 
 const FriendsItem = ({ data, keyTabs, getListFollower, getMyListFriendReq, getListFollowings }) => {
 	const dispatch = useDispatch();
-	// const suggestions = location.pathname === '/friends/suggestions';
 	const invitation = location.pathname === '/friends/invitation';
 	const following = location.pathname === '/friends/following';
 	const follower = location.pathname === '/friends/follower';

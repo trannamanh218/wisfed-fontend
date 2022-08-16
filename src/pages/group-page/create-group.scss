@@ -106,6 +106,9 @@
 }
 
 .list__author-tags {
+	&:hover {
+		cursor: text;
+	}
 	display: flex;
 	flex-wrap: wrap;
 	background-color: #f7f7fc;
