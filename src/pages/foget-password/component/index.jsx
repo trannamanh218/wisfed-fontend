@@ -19,7 +19,7 @@ function ForgetPassWordComponet() {
 
 	return (
 		<div className='forget__container'>
-			<Link to='/'>
+			<Link to='/login'>
 				<div className='login__header'>
 					<img src={Logo} alt='logo' />
 				</div>

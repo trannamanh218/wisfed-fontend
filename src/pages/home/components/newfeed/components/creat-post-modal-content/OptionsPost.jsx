@@ -11,6 +11,8 @@ import {
 	TOP_QUOTE_VERB_SHARE,
 } from 'constants/index';
 
+import { useSelector } from 'react-redux';
+
 const verbShareArray = [
 	POST_VERB_SHARE,
 	QUOTE_VERB_SHARE,
@@ -23,13 +25,15 @@ const verbShareArray = [
 const OptionsPost = ({ list, addOptionsToPost, taggedData, postDataShare }) => {
 	const [itemOnMouseHover, setItemOnMouseHover] = useState(null);
 
+	const chartImgShare = useSelector(state => state.chart.updateImgPost);
+
 	return list.map((item, index) => {
 		let isActive = false;
 		let isDisabled = false;
 
 		if (
-			!_.isEmpty(postDataShare) &&
-			verbShareArray.indexOf(postDataShare.verb) !== -1 &&
+			((!_.isEmpty(postDataShare) && verbShareArray.indexOf(postDataShare.verb) !== -1) ||
+				chartImgShare.length) &&
 			item.value !== 'addFriends'
 		) {
 			isDisabled = true;

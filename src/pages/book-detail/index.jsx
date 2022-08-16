@@ -43,7 +43,7 @@ function BookDetail() {
 			setBookInformation(bookInfo.bookInfo);
 			setBookStatus('SUCCESS');
 		}
-	}, []);
+	}, [bookId]);
 	return (
 		<>
 			{bookStatus === STATUS_LOADING ? (

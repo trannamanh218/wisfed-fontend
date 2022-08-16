@@ -1,20 +1,23 @@
 import MainContainer from 'components/layout/main-container';
 import SearchField from 'shared/search-field';
 import MainGroup from './MainGroup';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { ForwardGroup } from 'components/svg';
 import { getTagGroup } from 'reducers/redux-utils/group';
 import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { NotificationError } from 'helpers/Error';
+import './index.scss';
 
 const Group = () => {
+	const [tung, setTung] = useState('');
 	const [numberIndex, setNumberIndex] = useState(4);
 	const [show, setShow] = useState(false);
 	const dispatch = useDispatch();
 	const { id = '' } = useParams();
 	const [tagGroup, setTagGroup] = useState([]);
 	const [inputSearch, setInputSearch] = useState('');
+	const inputEl = useRef('');
 
 	const list = [
 		{ name: '#Shadow', quantity: '30 bài viết' },
@@ -50,11 +53,13 @@ const Group = () => {
 	const onChangeInputSearch = e => {
 		setInputSearch(e.target.value);
 	};
-
+	console.log(inputSearch);
 	const SidebarGroup = () => (
 		<div className='group-sibar-right'>
 			<h2>Hashtag</h2>
 			<SearchField placeholder='Tìm kiếm hashtag' value={inputSearch} handleChange={onChangeInputSearch} />
+			{/* <input value={inputSearch} onChange={onChangeInputSearch} placeholder='abc' /> */}
+
 			<div>
 				{tagGroup.map((item, index) => {
 					return (
