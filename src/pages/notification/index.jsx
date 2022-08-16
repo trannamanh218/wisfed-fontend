@@ -22,6 +22,7 @@ const NotificationModal = ({ setModalNotti, buttonModal, realTime }) => {
 	const [renderFriend, setRenderFriend] = useState(false);
 	const [getNotifications, setGetNotifications] = useState([]);
 	const [getListUnread, setGetListUnRead] = useState([]);
+	const [firstTimeOpenModal, setFirstTimeOpenModal] = useState(false);
 
 	const dispatch = useDispatch();
 
@@ -60,7 +61,9 @@ const NotificationModal = ({ setModalNotti, buttonModal, realTime }) => {
 
 	const getMyNotification = async () => {
 		try {
-			setIsLoading(true);
+			if (firstTimeOpenModal === false) {
+				setIsLoading(true);
+			}
 			const notificationList = await dispatch(getNotification()).unwrap();
 			const arrNew = notificationList.map(item => item.activities).flat(1);
 			const newArr = arrNew.map(item => {
@@ -73,6 +76,7 @@ const NotificationModal = ({ setModalNotti, buttonModal, realTime }) => {
 			NotificationError(err);
 		} finally {
 			setIsLoading(false);
+			setFirstTimeOpenModal(true);
 		}
 	};
 

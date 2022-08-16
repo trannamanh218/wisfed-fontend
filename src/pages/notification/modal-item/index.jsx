@@ -7,6 +7,7 @@ import { NotificationError } from 'helpers/Error';
 import { renderMessage } from 'helpers/HandleShare';
 import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
+import { useState } from 'react';
 
 const ModalItem = ({ item, setModalNotti, getNotifications, setGetNotifications, selectKey }) => {
 	const navigate = useNavigate();
@@ -14,11 +15,14 @@ const ModalItem = ({ item, setModalNotti, getNotifications, setGetNotifications,
 	const { userInfo } = useSelector(state => state.auth);
 	// const { isreload } = useSelector(state => state.user);
 
-	const ReplyFriendReq = async (data, items) => {
-		try {
-			const parseObject = JSON.parse(data);
-			const params = { id: parseObject.requestId, data: { reply: true } };
+	const [buttonNotClicked, setButtonNotClicked] = useState(true);
 
+	const ReplyFriendReq = async (data, items) => {
+		setButtonNotClicked(false);
+		const parseObject = JSON.parse(data);
+		const params = { id: parseObject.requestId, data: { reply: true } };
+		try {
+			await dispatch(ReplyFriendRequest(params)).unwrap();
 			if (selectKey !== 'unread') {
 				const newArr = getNotifications.map(item => {
 					if (items.id === item.id) {
@@ -29,7 +33,6 @@ const ModalItem = ({ item, setModalNotti, getNotifications, setGetNotifications,
 				});
 				setGetNotifications(newArr);
 			}
-			await dispatch(ReplyFriendRequest(params)).unwrap();
 			await dispatch(readNotification({ notificationId: items.id })).unwrap();
 			await dispatch(addFollower({ userId: items.actor })).unwrap();
 			// dispatch(handleSaveUpdate(!isreload));
@@ -39,10 +42,10 @@ const ModalItem = ({ item, setModalNotti, getNotifications, setGetNotifications,
 	};
 
 	const cancelFriend = async (data, items) => {
+		const parseObject = JSON.parse(data);
+		const params = { id: parseObject.requestId, data: { reply: false } };
 		try {
-			const parseObject = JSON.parse(data);
-			const params = { id: parseObject.requestId, data: { reply: false } };
-
+			await dispatch(ReplyFriendRequest(params)).unwrap();
 			if (selectKey !== 'unread') {
 				const newArr = getNotifications.map(item => {
 					if (items.id === item.id) {
@@ -53,7 +56,6 @@ const ModalItem = ({ item, setModalNotti, getNotifications, setGetNotifications,
 				});
 				setGetNotifications(newArr);
 			}
-			await dispatch(ReplyFriendRequest(params)).unwrap();
 			await dispatch(readNotification({ notificationId: items.id })).unwrap();
 			// dispatch(handleSaveUpdate(!isreload));
 		} catch (err) {
@@ -167,15 +169,24 @@ const ModalItem = ({ item, setModalNotti, getNotifications, setGetNotifications,
 					}
 				></div>
 			</div>
-			{item.verb === 'addFriend' && (!item.isAccept || !item.isRefuse) && (
-				<div className='notificaiton__all__friend'>
-					<div onClick={() => ReplyFriendReq(item.object, item)} className='notificaiton__all__accept'>
-						Chấp nhận
-					</div>
-					<div onClick={() => cancelFriend(item.object, item)} className='notificaiton__all__refuse'>
-						Từ chối
-					</div>
-				</div>
+			{buttonNotClicked ? (
+				<>
+					{item.verb === 'addFriend' && (!item.isAccept || !item.isRefuse) && (
+						<div className='notificaiton__all__friend'>
+							<div
+								onClick={() => ReplyFriendReq(item.object, item)}
+								className='notificaiton__all__accept'
+							>
+								Chấp nhận
+							</div>
+							<div onClick={() => cancelFriend(item.object, item)} className='notificaiton__all__refuse'>
+								Từ chối
+							</div>
+						</div>
+					)}
+				</>
+			) : (
+				''
 			)}
 		</div>
 	);

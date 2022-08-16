@@ -20,7 +20,7 @@ const SidebarLeft = ({ listMyGroup, listAdminMyGroup }) => {
 								<div className='item-infor'>
 									<span className='item-infor__name'>{item.name}</span>
 									<div className='item-update'>
-										<span> {item.countPost} Bài viết mới</span> <span>-</span>{' '}
+										<span>{item.countPost} Bài viết mới</span>
 										<span>1 ngày trước</span>
 									</div>
 								</div>
@@ -43,7 +43,7 @@ const SidebarLeft = ({ listMyGroup, listAdminMyGroup }) => {
 								<div className='item-infor'>
 									<span className='item-infor__name'>{item.name}</span>
 									<div className='item-update'>
-										<span> {item.countPost} Bài viết mới</span> <span>-</span>{' '}
+										<span>{item.countPost} Bài viết mới</span>
 										<span>1 ngày trước</span>
 									</div>
 								</div>
