@@ -14,7 +14,7 @@ import CreatPostSubModal from './CreatePostSubModal';
 import TaggedList from './TaggedList';
 import UploadImage from './UploadImage';
 import PreviewLink from 'shared/preview-link/PreviewLink';
-import { getPreviewUrl, getSharePostInternal, getSharePostRanks } from 'reducers/redux-utils/post';
+import { getPreviewUrl, getSharePostInternal, getSharePostRanks, shareMyBook } from 'reducers/redux-utils/post';
 import Circle from 'shared/loading/circle';
 import './style.scss';
 import { ratingUser } from 'reducers/redux-utils/book';
@@ -44,7 +44,8 @@ import {
 	TOP_USER_VERB_SHARE,
 	TOP_BOOK_VERB_SHARE,
 	TOP_QUOTE_VERB_SHARE,
-} from 'constants/index';
+	MY_BOOK_VERB_SHARE,
+} from 'constants';
 
 const verbShareArray = [
 	POST_VERB_SHARE,
@@ -384,6 +385,14 @@ function CreatPostModalContent({
 						mentionsUser: params.mentionsUser,
 					};
 					await dispatch(getSharePostRanks(query)).unwrap();
+				} else if (postDataShare.verb === MY_BOOK_VERB_SHARE) {
+					const query = {
+						id: postDataShare.id,
+						msg: content,
+						type: postDataShare.type,
+						mentionsUser: params.mentionsUser,
+					};
+					await dispatch(shareMyBook(query)).unwrap();
 				} else if (postDataShare.verb === TOP_QUOTE_VERB_SHARE) {
 					const query = {
 						msg: content,
@@ -632,6 +641,11 @@ function CreatPostModalContent({
 									<IconRanks />
 								</div>
 							)}
+							{postDataShare.type === 'topBookAuthor' && (
+								<div className='post__title__share__rank'>
+									<span className='number__title__rank'># Sách của tôi làm tác giả</span>
+								</div>
+							)}
 
 							{!_.isEmpty(postDataShare) && (
 								<div
@@ -652,8 +666,14 @@ function CreatPostModalContent({
 									{postDataShare.verb === GROUP_POST_VERB_SHARE && (
 										<PostShare postData={postDataShare} inCreatePost={true} />
 									)}
-									{postDataShare.verb === TOP_BOOK_VERB_SHARE && (
-										<AuthorBook data={postDataShare} checkStar={true} inCreatePost={true} />
+									{(postDataShare.verb === TOP_BOOK_VERB_SHARE ||
+										postDataShare.verb === MY_BOOK_VERB_SHARE) && (
+										<AuthorBook
+											data={postDataShare}
+											checkStar={true}
+											inCreatePost={true}
+											position='createPostModal'
+										/>
 									)}
 								</div>
 							)}

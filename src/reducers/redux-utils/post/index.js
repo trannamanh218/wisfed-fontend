@@ -6,6 +6,8 @@ import {
 	previewLink,
 	getPostsByUserAPI,
 	shareInternalAPI,
+	shareApiAuthorBook,
+	shareApiMyBook,
 } from 'constants/apiURL';
 import Request from 'helpers/Request';
 
@@ -45,6 +47,17 @@ export const getSharePostRanks = createAsyncThunk('post/getPostRanks', async (qu
 	const { id, ...params } = query;
 	try {
 		const response = await Request.makePost(shareApiRanks(id), params);
+		return response.data;
+	} catch (err) {
+		const error = JSON.parse(err.response);
+		return rejectWithValue(error);
+	}
+});
+
+export const shareMyBook = createAsyncThunk('post/shareMyBook', async (query, { rejectWithValue }) => {
+	const { id, ...params } = query;
+	try {
+		const response = await Request.makePost(shareApiMyBook(id), params);
 		return response.data;
 	} catch (err) {
 		const error = JSON.parse(err.response);
