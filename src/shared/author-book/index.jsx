@@ -60,7 +60,7 @@ const AuthorBook = ({
 	};
 
 	const generateAuthorName = authorsInfo => {
-		if (authorsInfo.length) {
+		if (authorsInfo && authorsInfo.length) {
 			const authorNameArr = authorsInfo.map(item => item.authorName);
 			return authorNameArr.join(' - ');
 		} else {
