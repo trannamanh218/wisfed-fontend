@@ -73,8 +73,11 @@ const ReviewTab = ({ currentTab }) => {
 	const [propertySort, setPropertySort] = useState('like');
 	const [inputSearch, setInputSearch] = useState('');
 	const [topUser, setTopUser] = useState('');
+	const [filterRate, setFilterRate] = useState(false);
 	const [reviewBook, setReviewBook] = useState('');
 	const [reviewTurn, setReviewTurn] = useState(false);
+	const [filterInput, setFilterInput] = useState([]);
+	const { userInfo } = useSelector(state => state.auth);
 
 	const callApiStart = useRef(10);
 	const callApiPerPage = useRef(10);
@@ -94,7 +97,7 @@ const ReviewTab = ({ currentTab }) => {
 	const getReviewListFirstTime = async () => {
 		try {
 			let params;
-			if (sortValue === 'rate') {
+			if (filterRate) {
 				params = {
 					start: 0,
 					limit: callApiPerPage.current,
@@ -112,11 +115,7 @@ const ReviewTab = ({ currentTab }) => {
 					start: 0,
 					limit: callApiPerPage.current,
 					sort: JSON.stringify([{ direction: directionSort, property: propertySort }]),
-					filter: JSON.stringify([
-						{ operator: 'eq', value: bookId, property: 'bookId' },
-
-						{ operator: 'in', value: checkedStarArr, property: 'rate' },
-					]),
+					filter: JSON.stringify([{ operator: 'eq', value: bookId, property: 'bookId' }]),
 
 					searchUser: inputSearch,
 				};
@@ -155,7 +154,7 @@ const ReviewTab = ({ currentTab }) => {
 		};
 
 		try {
-			await dispatch(createReviewBook(params));
+			return dispatch(createReviewBook(params));
 		} catch (err) {
 			NotificationError(err);
 		}
@@ -164,18 +163,14 @@ const ReviewTab = ({ currentTab }) => {
 	const getReviewList = async () => {
 		try {
 			let params = {};
-			if (
-				sortValue === 'oldest' ||
-				sortValue === 'lastest' ||
-				sortValue === 'mostLiked' ||
-				sortValue === 'rate'
-			) {
+			if (sortValue === 'oldest' || sortValue === 'lastest' || sortValue === 'mostLiked' || filterRate === true) {
 				params = {
 					start: 0,
 					limit: callApiPerPage.current,
 					sort: JSON.stringify([{ direction: directionSort, property: propertySort }]),
 					filter: JSON.stringify([
 						{ operator: 'eq', value: bookId, property: 'bookId' },
+
 						{ operator: 'in', value: checkedStarArr, property: 'rate' },
 					]),
 					searchUser: inputSearch,
@@ -185,10 +180,7 @@ const ReviewTab = ({ currentTab }) => {
 					start: 0,
 					limit: callApiPerPage.current,
 					sort: JSON.stringify([{ direction: directionSort, property: propertySort }]),
-					filter: JSON.stringify([
-						{ operator: 'eq', value: bookId, property: 'bookId' },
-						{ operator: 'in', value: checkedStarArr, property: 'rate' },
-					]),
+					filter: JSON.stringify([{ operator: 'eq', value: bookId, property: 'bookId' }]),
 					topUser: topUser,
 					searchUser: inputSearch,
 				};
@@ -218,13 +210,22 @@ const ReviewTab = ({ currentTab }) => {
 		callApiStart.current = 0;
 		setCurrentOption(item);
 	};
-	const handleKeyPress = e => {
+	const handleKeyPress = async e => {
 		if (e.key === 'Enter') {
-			setReviewTurn(!reviewTurn);
-			postReviewList();
+			// setReviewTurn(!reviewTurn);
+			const rs = await postReviewList();
 			setReviewBook('');
+			const newPayload = JSON.parse(JSON.stringify(rs.payload));
+			console.log(1);
+			newPayload['user'] = userInfo;
+			console.log(newPayload); // aa
+			let newPost = [newPayload, ...reviewList];
+			// setSortValue('lastest');
+			setReviewList(newPost);
 		}
 	};
+
+	console.log(reviewList);
 
 	const onBtnConfirmClick = () => {
 		switch (sortValue) {
@@ -273,9 +274,9 @@ const ReviewTab = ({ currentTab }) => {
 			const newArr = checkedStarArr.filter(item => item !== data);
 			setCheckedStarArr(newArr);
 		}
-		setSortValue('rate');
+		if (checkedStarArr.length == 0) setFilterRate(false);
+		else setFilterRate(true);
 	};
-
 	return (
 		<div className='review-tab'>
 			<div className='search-review'>
