@@ -91,6 +91,7 @@ function CreatPostModalContent({
 	const [showImagePopover, setShowImagePopover] = useState(false);
 	const [buttonActive, setButtonActive] = useState(false);
 	const [content, setContent] = useState('');
+	const chartImgShare = useSelector(state => state.chart.updateImgPost);
 
 	const dispatch = useDispatch();
 	const location = useLocation();
@@ -713,8 +714,9 @@ function CreatPostModalContent({
 									className={classNames('creat-post-modal-content__main__options__item-add-to-post', {
 										'active': imagesUpload.length > 0 && _.isEmpty(taggedData.addBook),
 										'disabled':
-											!_.isEmpty(postDataShare) &&
-											verbShareArray.indexOf(postDataShare.verb) !== -1,
+											(!_.isEmpty(postDataShare) &&
+												verbShareArray.indexOf(postDataShare.verb) !== -1) ||
+											chartImgShare.length,
 									})}
 									onMouseOver={() => setShowImagePopover(true)}
 									onMouseLeave={() => setShowImagePopover(false)}

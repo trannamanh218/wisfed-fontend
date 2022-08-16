@@ -101,10 +101,10 @@ const ReviewTab = ({ currentTab }) => {
 					sort: JSON.stringify([{ direction: directionSort, property: propertySort }]),
 					filter: JSON.stringify([
 						{ operator: 'eq', value: bookId, property: 'bookId' },
-						// { operator: 'eq', value: bookInfo.page, property: 'curProgress' },
+
 						{ operator: 'in', value: checkedStarArr, property: 'rate' },
 					]),
-					// topUser: topUser,
+
 					searchUser: inputSearch,
 				};
 			} else {
@@ -114,9 +114,10 @@ const ReviewTab = ({ currentTab }) => {
 					sort: JSON.stringify([{ direction: directionSort, property: propertySort }]),
 					filter: JSON.stringify([
 						{ operator: 'eq', value: bookId, property: 'bookId' },
-						// { operator: 'eq', value: bookInfo.page, property: 'curProgress' },
+
+						{ operator: 'in', value: checkedStarArr, property: 'rate' },
 					]),
-					// topUser: topUser,
+
 					searchUser: inputSearch,
 				};
 			}
@@ -175,7 +176,6 @@ const ReviewTab = ({ currentTab }) => {
 					sort: JSON.stringify([{ direction: directionSort, property: propertySort }]),
 					filter: JSON.stringify([
 						{ operator: 'eq', value: bookId, property: 'bookId' },
-						// { operator: 'eq', value: bookInfo.page, property: 'curProgress' },
 						{ operator: 'in', value: checkedStarArr, property: 'rate' },
 					]),
 					searchUser: inputSearch,
@@ -187,8 +187,7 @@ const ReviewTab = ({ currentTab }) => {
 					sort: JSON.stringify([{ direction: directionSort, property: propertySort }]),
 					filter: JSON.stringify([
 						{ operator: 'eq', value: bookId, property: 'bookId' },
-						// { operator: 'eq', value: bookInfo.page, property: 'curProgress' },
-						// { operator: 'in', value: ['1', '2', '3', '4', '5'], property: 'rate' },
+						{ operator: 'in', value: checkedStarArr, property: 'rate' },
 					]),
 					topUser: topUser,
 					searchUser: inputSearch,
