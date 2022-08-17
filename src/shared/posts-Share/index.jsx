@@ -102,7 +102,7 @@ const PostShare = ({ postData, inCreatePost = false }) => {
 			return content;
 		}
 	};
-	console.log(1, postData);
+
 	return (
 		<div className='post__container'>
 			<div className='post__user-status'>
