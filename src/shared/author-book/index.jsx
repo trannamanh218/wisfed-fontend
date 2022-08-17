@@ -68,6 +68,14 @@ const AuthorBook = ({
 		}
 	};
 
+	const generateCountRating = countRating => {
+		if (countRating) {
+			return `${countRating} đánh giá`;
+		} else {
+			return 'Chưa có đánh giá';
+		}
+	};
+
 	return (
 		!_.isEmpty(data) && (
 			<div
@@ -116,8 +124,11 @@ const AuthorBook = ({
 					</div>
 					<div className='author-book__bottom'>
 						<span className='author-book__stats'>
-							{/* {`${data.countRating || data.info.countRating || 'Chưa có'}` + ' đánh giá'} */}
+							{inPost
+								? generateCountRating(data.info?.countRating)
+								: generateCountRating(data.countRating)}
 						</span>
+
 						{!_.isEmpty(userInfo) && userInfo.role === 'author' && userId === userInfo.id ? (
 							<></>
 						) : (
