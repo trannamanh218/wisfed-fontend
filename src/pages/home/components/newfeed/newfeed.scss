@@ -112,6 +112,19 @@
 	z-index: 1000;
 }
 
+.newfeed {
+	.post__user-status__subtitle {
+		.react-rating-container {
+			min-width: 70px;
+		}
+	}
+	.post-book__button-and-rating {
+		.post-book__rating__group {
+			min-width: 135px;
+		}
+	}
+}
+
 @media only screen and (max-width: 1025px) {
 	.newfeed {
 		.post__container {
@@ -126,7 +139,7 @@
 	}
 }
 
-@media only screen and (width: 913px) {
+@media only screen and (max-width: 913px) {
 	.newfeed {
 		.post__container {
 			.post__user-status {
@@ -137,6 +150,9 @@
 					}
 				}
 			}
+		}
+		.post-book__button-and-rating {
+			gap: 2rem;
 		}
 	}
 }
