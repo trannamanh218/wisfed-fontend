@@ -91,6 +91,7 @@ const PostActionBar = ({ postData, handleLikeAction }) => {
 					categoryName: postData.info?.category?.name,
 					type: postData.originId.type,
 					id: postData.info.id,
+					trueRank: postData.originId.rank,
 					verb: TOP_USER_VERB_SHARE,
 					...postData.info,
 				};

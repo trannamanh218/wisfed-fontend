@@ -49,7 +49,7 @@ const ShareUsers = ({ postData }) => {
 			<div className='title__ranks'>
 				<CrowSmall />
 				<div className='share__users__ranks__title__rank'>
-					Top {postData?.rank || postData.originId?.rank} {handleRenderTitle()}{' '}
+					Top {postData?.trueRank || postData.originId?.rank} {handleRenderTitle()}{' '}
 					{(postData?.categoryName || postData.info?.category) &&
 						`Thuộc ${postData?.categoryName || postData.info.category?.name}`}{' '}
 					theo {handleRenderTime()}
