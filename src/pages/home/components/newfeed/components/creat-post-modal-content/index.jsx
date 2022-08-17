@@ -218,7 +218,7 @@ function CreatPostModalContent({
 	const limitedValue = 5;
 	const handleAddToPost = data => {
 		const newData = { ...taggedData };
-		setCheckProgress(Number(data.progress));
+		setCheckProgress(parseInt(newData.addBook.progress));
 		if (option.value === 'addAuthor' || option.value === 'addFriends' || option.value === 'addCategory') {
 			const listData = [...taggedData[option.value]];
 			const lastItem = listData[listData.length - 1];
