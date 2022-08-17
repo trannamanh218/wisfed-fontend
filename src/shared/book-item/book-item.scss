@@ -8,15 +8,6 @@
 	align-items: center;
 	&__container {
 		position: relative;
-		&:hover {
-			.setting-more {
-				display: inline-block;
-			}
-
-			.book-item__icon {
-				display: flex;
-			}
-		}
 	}
 
 	&__name {
@@ -60,7 +51,6 @@
 		border-radius: 50%;
 		background-color: rgba($white-off, 1);
 		border: 2px solid $ash-line;
-		// display: none;
 		display: flex;
 		align-items: center;
 		justify-content: space-around;
@@ -86,13 +76,6 @@
 			color: $white;
 			margin-top: auto;
 			transition: all 0.2s ease-in-out;
-		}
-
-		&:hover {
-			.btn-status {
-				visibility: visible;
-				display: inline-block;
-			}
 		}
 
 		.setting-more {

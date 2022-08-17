@@ -9,7 +9,7 @@ import {
 	READ_TARGET_VERB_SHARE,
 	TOP_BOOK_VERB_SHARE,
 	TOP_QUOTE_VERB_SHARE,
-} from 'constants';
+} from 'constants/index';
 
 import { useSelector } from 'react-redux';
 
@@ -38,7 +38,7 @@ const OptionsPost = ({ list, addOptionsToPost, taggedData, postDataShare }) => {
 		) {
 			isDisabled = true;
 		}
-		isActive = taggedData[item.value].length > 0 ? true : false;
+		isActive = taggedData[item.value].length > 0 || !_.isEmpty(taggedData[item.value]) ? true : false;
 
 		return (
 			<span

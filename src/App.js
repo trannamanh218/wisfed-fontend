@@ -13,7 +13,7 @@ import Notification from 'pages/notification/compornent-main';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Routes, Route, useLocation } from 'react-router-dom';
-import { checkLogin } from 'reducers/redux-utils/auth';
+import { checkLogin, updateLoginExternal } from 'reducers/redux-utils/auth';
 import { ToastContainer } from 'react-toastify';
 import Login from 'pages/login';
 import Register from 'pages/register';
@@ -51,16 +51,23 @@ function App({ children }) {
 	const dispatch = useDispatch();
 	const updateMyLibrary = useSelector(state => state.library.updateMyLibrary);
 	const { routerLogin, userInfo } = useSelector(state => state.auth);
+	const isLoginExternal = useSelector(state => state.auth.isLoginExternal);
 
 	const location = useLocation();
 
 	useEffect(async () => {
 		const accsetToken = Storage.getAccessToken();
-		if (accsetToken) {
-			dispatch(checkLogin(true));
-			await dispatch(getCheckJwt()).unwrap();
+		console.log('isLoginEx', isLoginExternal);
+		if (!isLoginExternal) {
+			if (accsetToken) {
+				console.log('app');
+				dispatch(checkLogin(true));
+				await dispatch(getCheckJwt()).unwrap();
+			} else {
+				dispatch(checkLogin(false));
+			}
 		} else {
-			dispatch(checkLogin(false));
+			dispatch(updateLoginExternal(false));
 		}
 	}, []);
 
@@ -128,7 +135,6 @@ function App({ children }) {
 				<Route path='/forget-password-admin' element={<ForgetPassWordAdminComponet />} />
 				<Route path='/creat-newpassword-admin' element={<AdminCreatNewPassword />} />
 				<Route path='/choose-topic' element={<ChooseTopic />} />
-				<Route path='/direct' element={<Direct />} />
 				<Route path='direct/login' element={<Direct />} />
 				<Route path='/reading-summary/:userId' element={<ReadingSummary />} />
 				<Route path='/reading-target/:userId' element={<ReadingTarget />} />

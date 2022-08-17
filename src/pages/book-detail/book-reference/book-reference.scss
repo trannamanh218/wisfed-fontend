@@ -1,7 +1,17 @@
 .book-reference {
 	padding-bottom: 150px;
 	&__slider {
-		margin-bottom: 3.75rem;
+		margin-bottom: 48px;
+	}
+
+	&__add-to-series {
+		display: flex;
+		align-items: center;
+		margin-bottom: 33px;
+		> span {
+			font-weight: 600;
+			font-size: 20px;
+		}
 	}
 
 	&__highlight__post {

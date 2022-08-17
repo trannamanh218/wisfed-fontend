@@ -53,7 +53,7 @@ const Group = () => {
 	const onChangeInputSearch = e => {
 		setInputSearch(e.target.value);
 	};
-	console.log(inputSearch);
+
 	const SidebarGroup = () => (
 		<div className='group-sibar-right'>
 			<h2>Hashtag</h2>

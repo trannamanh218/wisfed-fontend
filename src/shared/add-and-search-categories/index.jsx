@@ -39,7 +39,7 @@ function AddAndSearchCategories({
 			};
 		}
 	}, []);
-	console.log(categoryInputContainer);
+
 	return (
 		<div className='add-and-search-categories'>
 			<div

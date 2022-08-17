@@ -8,7 +8,7 @@ import { NotificationError } from 'helpers/Error';
 import { useParams } from 'react-router-dom';
 import { getMember } from 'reducers/redux-utils/group';
 import defaultAvatar from 'assets/images/avatar.jpeg';
-
+import ModalUnFriend from 'pages/friends/component/modalUnFriends';
 function MemberGroup() {
 	const [listFriend, setListFriend] = useState([]);
 	const [listFolow, setListFolow] = useState([]);
@@ -17,6 +17,8 @@ function MemberGroup() {
 	const [memberGroups, setMemberGroups] = useState([]);
 	const [isCallApi, setIsCallApi] = useState(false);
 	const [sliceEndIndex, setSliceEndIndex] = useState(6);
+	const [showModalUnfriends, setShowModalUnfriends] = useState(false);
+	const [userFriendRequest, setUserFriendRequest] = useState({});
 
 	const getListMember = async () => {
 		try {
@@ -49,10 +51,21 @@ function MemberGroup() {
 			NotificationError(err);
 		}
 	};
-	const handleUnFriend = item => {
-		// setModalUnfriends(false);
+
+	const handleModalUnFriend = item => {
+		setShowModalUnfriends(true);
+		setUserFriendRequest(item);
+	};
+
+	const toggleModal = () => {
+		setShowModalUnfriends(!showModalUnfriends);
+	};
+
+	const handleUnfriend = async () => {
+		setShowModalUnfriends(false);
 		try {
-			dispatch(unFriendRequest(item.id)).unwrap();
+			await dispatch(unFriendRequest(userFriendRequest.id)).unwrap();
+			handleUnFollow(userFriendRequest);
 			setIsCallApi(!isCallApi);
 		} catch (err) {
 			NotificationError(err);
@@ -128,7 +141,7 @@ function MemberGroup() {
 											{item.relation === 'friend' && (
 												<button
 													className='member-item__btn bnt-add-friend'
-													onClick={() => handleUnFriend(item)}
+													onClick={() => handleModalUnFriend(item)}
 												>
 													- Hủy kết bạn
 												</button>
@@ -213,7 +226,7 @@ function MemberGroup() {
 												{item.relation === 'friend' && (
 													<button
 														className='member-item__btn bnt-add-friend'
-														onClick={() => handleUnFriend(item)}
+														onClick={() => handleModalUnFriend(item)}
 													>
 														- Hủy kết bạn
 													</button>
@@ -296,7 +309,7 @@ function MemberGroup() {
 												{item.relation === 'friend' && (
 													<button
 														className='member-item__btn bnt-add-friend'
-														onClick={() => handleUnFriend(item)}
+														onClick={() => handleModalUnFriend(item)}
 													>
 														- Hủy kết bạn
 													</button>
@@ -390,7 +403,7 @@ function MemberGroup() {
 									{item.relation === 'friend' && (
 										<button
 											className='member-item__btn bnt-add-friend'
-											onClick={() => handleUnFriend(item)}
+											onClick={() => handleModalUnFriend(item)}
 										>
 											- Hủy kết bạn
 										</button>
@@ -422,6 +435,12 @@ function MemberGroup() {
 					);
 				})}
 			</div>
+			<ModalUnFriend
+				showModalUnfriends={showModalUnfriends}
+				toggleModal={toggleModal}
+				handleUnfriend={handleUnfriend}
+				data={userFriendRequest}
+			/>
 		</div>
 	);
 }

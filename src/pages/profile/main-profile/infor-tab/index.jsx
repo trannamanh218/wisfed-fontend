@@ -3,7 +3,7 @@ import Input from 'shared/input';
 import './infor-tab.scss';
 import PropTypes from 'prop-types';
 import { useState, useEffect, memo } from 'react';
-import { YEAR_LIMIT } from 'constants';
+import { YEAR_LIMIT } from 'constants/index';
 
 const InforTab = ({ userInfo, currentTab }) => {
 	const [date, setDate] = useState(1);

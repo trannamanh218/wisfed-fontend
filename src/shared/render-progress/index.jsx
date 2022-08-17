@@ -3,7 +3,7 @@ import ReadChallenge from 'shared/read-challenge';
 import PropTypes from 'prop-types';
 import { memo } from 'react';
 import { useFetchTargetReading } from 'api/readingTarget.hooks';
-import { STATUS_SUCCESS } from 'constants';
+import { STATUS_SUCCESS } from 'constants/index';
 
 const RenderProgress = ({ userIdParams }) => {
 	const { booksReadYear, status } = useFetchTargetReading(userIdParams);

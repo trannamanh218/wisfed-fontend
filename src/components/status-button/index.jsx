@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import { CircleCheckIcon, CoffeeCupIcon, TargetIcon, DropdownGroupWhite } from 'components/svg';
 import WrapIcon from 'components/wrap-icon';
-import { STATUS_BOOK } from 'constants';
+import { STATUS_BOOK } from 'constants/index';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { useEffect, useState, useRef } from 'react';
@@ -41,46 +41,30 @@ const STATUS_BOOK_OBJ = {
 	},
 };
 
-const StatusButton = ({ className, bookData, inCreatePost = false, hasBookStatus = false }) => {
+const StatusButton = ({ className, bookData, inCreatePost, bookStatus }) => {
 	const [modalShow, setModalShow] = useState(false);
 	const [currentStatus, setCurrentStatus] = useState('');
+	const [initalStatus, setInitialStatus] = useState('');
 	const [fetchStatus, setFetchStatus] = useState(false);
 	const [customLibrariesContainCurrentBookId, setCustomLibrariesContainCurrentBookId] = useState([]);
-	const { userInfo } = useSelector(state => state.auth);
+
 	const addedArray = useRef([]);
 	const removedArray = useRef([]);
 
 	const navigate = useNavigate();
-
+	const { userInfo } = useSelector(state => state.auth);
 	const myCustomLibraries = useSelector(state => state.library.myAllLibrary).custom;
 
 	const dispatch = useDispatch();
 
 	useEffect(async () => {
 		if (Storage.getAccessToken()) {
-			if (hasBookStatus) {
-				setCurrentStatus(bookData.status);
-			} else {
-				checkBookInDefaultLibrary();
-			}
+			setCurrentStatus(bookStatus);
+			setInitialStatus(bookStatus);
 		} else {
 			setCurrentStatus(STATUS_BOOK.wantToRead);
 		}
-	}, []);
-
-	const checkBookInDefaultLibrary = async () => {
-		try {
-			const res = await dispatch(checkBookInLibraries(bookData.id || bookData.bookId)).unwrap();
-			const defaultLibraryContainCurrentBook = res.filter(item => item.library.isDefault === true);
-			if (!!res.length && !!defaultLibraryContainCurrentBook.length) {
-				setCurrentStatus(defaultLibraryContainCurrentBook[0].library.defaultType);
-			} else {
-				setCurrentStatus(STATUS_BOOK.wantToRead);
-			}
-		} catch (err) {
-			NotificationError(err);
-		}
-	};
+	}, [bookStatus]);
 
 	const handleClose = () => {
 		setModalShow(false);
@@ -140,7 +124,10 @@ const StatusButton = ({ className, bookData, inCreatePost = false, hasBookStatus
 		if (!inCreatePost) {
 			setFetchStatus(true);
 			try {
-				updateStatusBook();
+				if (currentStatus !== initalStatus) {
+					updateStatusBook();
+					setInitialStatus(currentStatus);
+				}
 				handleAddAndRemoveBook();
 				dispatch(updateCurrentBook({ ...bookData, status: currentStatus }));
 				navigate('/');
@@ -227,16 +214,16 @@ const StatusButton = ({ className, bookData, inCreatePost = false, hasBookStatus
 
 StatusButton.defaultProps = {
 	className: '',
-	status: STATUS_BOOK.wantToRead,
-	handleClick: () => {},
 	bookData: {},
+	inCreatePost: false,
+	bookStatus: '',
 };
 
 StatusButton.propTypes = {
 	className: PropTypes.string,
 	bookData: PropTypes.object,
 	inCreatePost: PropTypes.bool,
-	hasBookStatus: PropTypes.bool,
+	bookStatus: PropTypes.string,
 };
 
 export default StatusButton;

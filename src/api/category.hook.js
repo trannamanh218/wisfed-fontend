@@ -1,4 +1,4 @@
-import { STATUS_SUCCESS, STATUS_IDLE } from 'constants';
+import { STATUS_SUCCESS, STATUS_IDLE } from 'constants/index';
 import _ from 'lodash';
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';

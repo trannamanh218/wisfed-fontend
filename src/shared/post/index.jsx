@@ -34,6 +34,7 @@ import {
 	TOP_BOOK_VERB_SHARE,
 	TOP_QUOTE_VERB_SHARE,
 	TOP_USER_VERB_SHARE,
+	MY_BOOK_VERB_SHARE,
 } from 'constants';
 import { IconRanks } from 'components/svg';
 import AuthorBook from 'shared/author-book';
@@ -52,6 +53,7 @@ const verbShareArray = [
 	GROUP_POST_VERB_SHARE,
 	TOP_BOOK_VERB_SHARE,
 	TOP_QUOTE_VERB_SHARE,
+	MY_BOOK_VERB_SHARE,
 ];
 
 function Post({ postInformations, type }) {
@@ -393,12 +395,20 @@ function Post({ postInformations, type }) {
 				</div>
 			)}
 
+			{!_.isEmpty(postData.verb) && postData.verb === 'shareMyBook' && (
+				<div className='post__title__share__rank'>
+					<span className='number__title__rank'># Sách của tôi làm tác giả</span>
+				</div>
+			)}
+
 			{verbShareArray.indexOf(postData.verb) !== -1 && (
 				<div className='creat-post-modal-content__main__share-container'>
 					{postData.verb === POST_VERB_SHARE && <PostShare postData={postData} />}
 					{postData.verb === QUOTE_VERB_SHARE && <QuoteCard data={postData.sharePost} isShare={true} />}
 					{postData.verb === GROUP_POST_VERB_SHARE && <PostShare postData={postData} />}
-					{postData.verb === TOP_BOOK_VERB_SHARE && <AuthorBook data={postData} position='post' />}
+					{(postData.verb === TOP_BOOK_VERB_SHARE || postData.verb === MY_BOOK_VERB_SHARE) && (
+						<AuthorBook data={postData} inPost={true} />
+					)}
 					{postData.verb === TOP_QUOTE_VERB_SHARE && <QuoteCard data={postData.info} isShare={true} />}
 				</div>
 			)}

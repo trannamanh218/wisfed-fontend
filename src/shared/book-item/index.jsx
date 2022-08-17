@@ -30,7 +30,7 @@ const BookItem = ({ data, handleViewBookDetail, isMyShelve, handleUpdateBookList
 				</>
 			);
 		} else {
-			return <StatusButton bookData={data} />;
+			return <StatusButton bookData={data} bookStatus={data.status} />;
 		}
 	};
 

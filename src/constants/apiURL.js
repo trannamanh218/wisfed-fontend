@@ -150,6 +150,8 @@ export const shareInternalAPI = (id, type) => `/api/v1/getstream/share/${id}?typ
 export const shareTargetReadingAPI = '/api/v1/getstream/shareTargetRead';
 // share BXH
 export const shareApiRanks = id => `/api/v1/getstream/shareTop/${id}`;
+// share sach cua toi lam tac gia
+export const shareApiMyBook = id => `/api/v1/getstream/shareMyBook/${id}`;
 //authors
 export const randomAuthorAPI = '/api/v1/users/randomAuthor';
 

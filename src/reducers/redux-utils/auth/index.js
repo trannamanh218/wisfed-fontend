@@ -119,6 +119,7 @@ const authSlice = createSlice({
 		infoForgot: {},
 		routerLogin: false,
 		userInfoJwt: {},
+		isLoginExternal: false,
 	},
 	reducers: {
 		checkLogin: (state, action) => {
@@ -135,6 +136,9 @@ const authSlice = createSlice({
 		},
 		updateIsNewNotificationUserInfo: (state, action) => {
 			state.userInfoJwt = action.payload;
+		},
+		updateLoginExternal: (state, action) => {
+			state.isLoginExternal = action.payload;
 		},
 	},
 
@@ -196,6 +200,14 @@ const authSlice = createSlice({
 });
 
 const auth = authSlice.reducer;
-export const { checkLogin, checkUserLogin, deleteUserInfo, updateUserInfo, updateIsNewNotificationUserInfo } =
-	authSlice.actions;
+
+export const {
+	checkLogin,
+	checkUserLogin,
+	deleteUserInfo,
+	updateUserInfo,
+	updateIsNewNotificationUserInfo,
+	updateLoginExternal,
+} = authSlice.actions;
+
 export default auth;

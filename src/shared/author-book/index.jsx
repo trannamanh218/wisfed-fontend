@@ -10,8 +10,7 @@ import { useNavigate, useParams, Link } from 'react-router-dom';
 import { saveDataShare } from 'reducers/redux-utils/post';
 import classNames from 'classnames';
 import _ from 'lodash';
-import { TOP_BOOK_VERB_SHARE } from 'constants';
-import { useState, useEffect } from 'react';
+import { TOP_BOOK_VERB_SHARE } from 'constants/index';
 
 const AuthorBook = ({
 	data,
@@ -22,18 +21,12 @@ const AuthorBook = ({
 	valueDate,
 	categoryName,
 	inCreatePost,
-	position,
+	inPost,
 }) => {
-	const [bookData, setBookdata] = useState({ authors: [], countRating: null });
-
 	const { userId } = useParams();
 	const userInfo = useSelector(state => state.auth.userInfo);
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
-
-	useEffect(() => {
-		generateCountRatingAndAuthorsName();
-	}, []);
 
 	const handleShare = data => {
 		const newData = {
@@ -66,42 +59,13 @@ const AuthorBook = ({
 		}
 	};
 
-	const generateCountRatingAndAuthorsName = () => {
-		const bookDataTemp = { ...bookData };
-		if (position === 'createPostModal') {
-			if (data.authors && data.authors.length) {
-				bookDataTemp.authors = data.authors?.map(author => author?.authorName);
-			} else if (data.book && data.book.authors && data.book.authors.length) {
-				bookDataTemp.authors = data.book.authors?.map(author => author?.authorName);
-			}
-			if (data.countRating) {
-				bookDataTemp.countRating = data.countRating;
-			} else if (data.book && data.book.countRating) {
-				bookDataTemp.countRating = data.book.countRating;
-			}
-		} else if (position === 'profile') {
-			console.log('author book in profile');
-		} else if (position === 'topBook') {
-			if (data.book.authors && data.book.authors.length) {
-				bookDataTemp.authors = data.book.authors?.map(author => author?.authorName);
-			}
-			if (data.book.countRating) {
-				bookDataTemp.countRating = data.book.countRating;
-			}
-		} else if (position === 'bookSearch') {
-			if (data.authors && data.authors.length) {
-				bookDataTemp.authors = data.authors?.map(author => author?.authorName);
-			}
-			bookDataTemp.countRating = data.countRating;
-		} else if (position === 'post') {
-			if (data.info.authors && data.info.authors.length) {
-				bookDataTemp.authors = data.info.authors?.map(author => author?.authorName);
-			}
-			if (data.info.countRating) {
-				bookDataTemp.countRating = data.info.countRating;
-			}
+	const generateAuthorName = authorsInfo => {
+		if (authorsInfo && authorsInfo.length) {
+			const authorNameArr = authorsInfo.map(item => item.authorName);
+			return authorNameArr.join(' - ');
+		} else {
+			return 'Ẩn Danh';
 		}
-		setBookdata(bookDataTemp);
 	};
 
 	return (
@@ -133,13 +97,13 @@ const AuthorBook = ({
 							)}
 						</div>
 						<p className='author-book__authors'>
-							{bookData.authors.length ? bookData.authors.join('- ') : 'Ẩn danh'}
+							{inPost ? generateAuthorName(data.info?.authors) : generateAuthorName(data.authors)}
 						</p>
 					</div>
 					<div className='author-book__rating'>
 						<ReactRating
 							readonly={true}
-							initialRating={data.avgRating?.toFixed(1) || data.info?.countRating?.toFixed(1)}
+							initialRating={data.avgRating?.toFixed(1) || data.info?.avgRating?.toFixed(1)}
 							checkStar={checkStar}
 						/>
 						<span className='author-book__rating__number'>
@@ -152,15 +116,15 @@ const AuthorBook = ({
 					</div>
 					<div className='author-book__bottom'>
 						<span className='author-book__stats'>
-							{`${bookData.countRating ? bookData.countRating : 'Chưa có'}` + ' đánh giá'}
+							{/* {`${data.countRating || data.info.countRating || 'Chưa có'}` + ' đánh giá'} */}
 						</span>
 						{!_.isEmpty(userInfo) && userInfo.role === 'author' && userId === userInfo.id ? (
 							<></>
 						) : (
 							<StatusButton
-								bookData={inCreatePost ? data : data.info}
+								bookData={inPost ? data.info : data}
 								inCreatePost={inCreatePost}
-								hasBookStatus={true}
+								bookStatus={data.status}
 							/>
 						)}
 					</div>
@@ -174,6 +138,7 @@ AuthorBook.defaultProps = {
 	data: {},
 	showShareBtn: false,
 	inCreatePost: false,
+	inPost: false,
 };
 
 AuthorBook.propTypes = {
@@ -185,7 +150,7 @@ AuthorBook.propTypes = {
 	topBooksId: PropTypes.any,
 	categoryName: PropTypes.string,
 	inCreatePost: PropTypes.bool,
-	position: PropTypes.string,
+	inPost: PropTypes.bool,
 };
 
 export default AuthorBook;

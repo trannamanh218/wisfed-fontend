@@ -14,6 +14,7 @@ const NotificationStatus = ({ item, setGetNotifications, getNotifications }) => 
 	const navigate = useNavigate();
 	const [isRead, setIsRead] = useState(false);
 	const { userInfo } = useSelector(state => state.auth);
+
 	const ReplyFriendReq = async (data, items) => {
 		const parseObject = JSON.parse(data);
 		const params = { id: parseObject.requestId, data: { reply: true } };
@@ -106,27 +107,32 @@ const NotificationStatus = ({ item, setGetNotifications, getNotifications }) => 
 				<UserAvatar size='mm' source={item.createdBy?.avatarImage} />
 				<div className='notificaiton__all__main__layout__status'>
 					<div className='notificaiton__main__all__infor'>
-						<p dangerouslySetInnerHTML={{ __html: item?.message }}></p>
-						{item.verb !== 'follow' &&
-							item.verb !== 'requestGroup' &&
-							item.verb !== 'commentGroupPost' &&
-							item.verb !== 'commentQuote' &&
-							item.verb !== 'inviteGroup' &&
-							item.verb !== 'mention' && (
-								<>
-									<span>
-										{item.createdBy?.fullName ? (
-											item.createdBy.fullName
-										) : (
-											<>
-												<span> {item.createdBy?.firstName}</span>
-												<span> {item.createdBy?.lastName}</span>
-											</>
-										)}
-									</span>
-									{renderMessage(item)}
-								</>
-							)}
+						{item.message ? (
+							<p dangerouslySetInnerHTML={{ __html: item?.message }}></p>
+						) : (
+							<>
+								{item.verb !== 'follow' &&
+									item.verb !== 'requestGroup' &&
+									item.verb !== 'commentGroupPost' &&
+									item.verb !== 'commentQuote' &&
+									item.verb !== 'inviteGroup' &&
+									item.verb !== 'mention' && (
+										<>
+											<span>
+												{item.createdBy?.fullName ? (
+													item.createdBy.fullName
+												) : (
+													<>
+														<span> {item.createdBy?.firstName}</span>
+														<span> {item.createdBy?.lastName}</span>
+													</>
+												)}
+											</span>{' '}
+											{renderMessage(item)}
+										</>
+									)}
+							</>
+						)}
 					</div>
 					<div
 						className={

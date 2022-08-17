@@ -2,7 +2,7 @@ import { CircleCheckIcon, CoffeeCupIcon, TargetIcon } from 'components/svg';
 import StatusIconItem from './StatusIconItem';
 import PropTypes from 'prop-types';
 import './style.scss';
-import { STATUS_BOOK } from 'constants';
+import { STATUS_BOOK } from 'constants/index';
 
 const StatusBookList = ({ currentStatus, handleChangeStatus }) => {
 	const list = [

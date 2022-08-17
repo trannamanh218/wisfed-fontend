@@ -22,7 +22,7 @@ import { Modal } from 'react-bootstrap';
 import { useModal } from 'shared/hooks';
 import FormCheckGroup from 'shared/form-check-group';
 import Button from 'shared/button';
-import { REVIEW_TYPE } from 'constants';
+import { REVIEW_TYPE } from 'constants/index';
 import searchreview from 'assets/images/search-review.png';
 
 const ReviewTab = ({ currentTab }) => {
