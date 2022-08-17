@@ -17,7 +17,7 @@ import { useNavigate } from 'react-router-dom';
 import { TOP_USER_VERB_SHARE } from 'constants';
 
 const TopUser = ({ rows, listYear, tabSelected }) => {
-	const kindOfGroupRef = useRef({ value: 'default', name: 'Văn học' });
+	const kindOfGroupRef = useRef({ value: 'default', name: 'Chủ đề' });
 	const listYearRef = useRef({ value: 'default', title: 'Tuần' });
 	const listRead = useRef({ value: 'default', title: 'Đọc nhiều nhất' });
 	const { isAuth } = useSelector(state => state.auth);
