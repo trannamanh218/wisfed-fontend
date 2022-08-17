@@ -410,11 +410,8 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 			</div>
 			<div className='creat-quotes-modal__footer'>
 				<button
-					className={
-						!showTextFieldEditPlaceholder && !_.isEmpty(bookAdded) && !_.isEmpty(listHashtags)
-							? 'active'
-							: ''
-					}
+					className={!showTextFieldEditPlaceholder && !_.isEmpty(bookAdded) ? 'active' : ''}
+					disabled={!showTextFieldEditPlaceholder && !_.isEmpty(bookAdded) ? false : true}
 					onClick={creatQuotesFnc}
 				>
 					Tạo Quotes
