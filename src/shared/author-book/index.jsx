@@ -102,8 +102,6 @@ const AuthorBook = ({
 			if (data.info.countRating) {
 				bookDataTemp.countRating = data.info.countRating;
 			}
-		} else if (position === 'topBookAuthor') {
-			console.log('mybook');
 		}
 		setBookdata(bookDataTemp);
 	};
