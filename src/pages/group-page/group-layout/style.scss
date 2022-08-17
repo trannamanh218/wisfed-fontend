@@ -67,6 +67,12 @@
 		letter-spacing: 0.676339px;
 		color: #2d2c42;
 	}
+	.item-update {
+		flex-direction: column;
+	}
+	.item-infor__name {
+		height: fit-content !important;
+	}
 }
 
 .item-list-group {

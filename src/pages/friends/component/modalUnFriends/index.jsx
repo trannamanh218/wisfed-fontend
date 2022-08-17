@@ -40,6 +40,8 @@ ModalUnFriend.propTypes = {
 	toggleModalUnFriends: PropTypes.bool,
 	handleUnfriend: PropTypes.func,
 	data: PropTypes.object,
+	toggleModal: PropTypes.func,
+	showModalUnfriends: PropTypes.bool,
 };
 
 export default ModalUnFriend;

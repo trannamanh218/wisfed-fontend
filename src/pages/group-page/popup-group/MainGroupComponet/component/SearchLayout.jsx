@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import defaultAvatar from 'assets/images/avatar.jpeg';
 import { useDispatch } from 'react-redux';
 import { makeFriendRequest, addFollower, unFollower, unFriendRequest } from 'reducers/redux-utils/user';
@@ -9,10 +9,12 @@ import './search-group.scss';
 import _ from 'lodash';
 import ResultNotFound from 'pages/result/component/result-not-found';
 import { GROUP_TYPE } from 'constants';
-
+import ModalUnFriend from 'pages/friends/component/modalUnFriends';
 function SearchLayout({ dataGroup }) {
 	const [isCallApi, setIsCallApi] = useState(false);
 	const dispatch = useDispatch();
+	const [showModalUnfriends, setShowModalUnfriends] = useState(false);
+	const [userFriendRequest, setUserFriendRequest] = useState({});
 
 	const handleAddFriend = item => {
 		try {
@@ -26,10 +28,11 @@ function SearchLayout({ dataGroup }) {
 		}
 	};
 
-	const handleUnFriend = item => {
+	const handleUnfriend = async () => {
 		try {
-			dispatch(unFriendRequest(item.id)).unwrap();
+			dispatch(unFriendRequest(userFriendRequest.id)).unwrap();
 			setIsCallApi(!isCallApi);
+			handleUnFollow(userFriendRequest);
 		} catch (err) {
 			NotificationError(err);
 		}
@@ -51,6 +54,15 @@ function SearchLayout({ dataGroup }) {
 		} catch (err) {
 			NotificationError(err);
 		}
+	};
+
+	const handleModalUnFriend = item => {
+		setShowModalUnfriends(true);
+		setUserFriendRequest(item);
+	};
+
+	const toggleModal = () => {
+		setShowModalUnfriends(!showModalUnfriends);
 	};
 
 	return (
@@ -106,7 +118,7 @@ function SearchLayout({ dataGroup }) {
 												{item.relation === 'friend' && (
 													<button
 														className='member-item__btn bnt-add-friend'
-														onClick={() => handleUnFriend(item)}
+														onClick={() => handleModalUnFriend(item)}
 													>
 														- Hủy kết bạn
 													</button>
@@ -141,6 +153,12 @@ function SearchLayout({ dataGroup }) {
 					</div>
 				</div>
 			)}
+			<ModalUnFriend
+				showModalUnfriends={showModalUnfriends}
+				toggleModal={toggleModal}
+				handleUnfriend={handleUnfriend}
+				data={userFriendRequest}
+			/>
 		</>
 	);
 }

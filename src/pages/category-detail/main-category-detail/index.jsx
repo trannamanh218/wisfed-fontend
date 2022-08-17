@@ -24,11 +24,11 @@ import { getBookDetail } from 'reducers/redux-utils/book';
 import RouteLink from 'helpers/RouteLink';
 import Circle from 'shared/loading/circle';
 import LoadingIndicator from 'shared/loading-indicator';
-import { STATUS_LOADING } from 'constants';
+import { STATUS_LOADING } from 'constants/index';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import FormCheckGroup from 'shared/form-check-group';
 import { getFavoriteCategories } from 'reducers/redux-utils/category';
-import { POST_TYPE } from 'constants';
+import { POST_TYPE } from 'constants/index';
 import { getCategoryDetail } from 'reducers/redux-utils/category';
 // import { getTopBooks } from 'reducers/redux-utils/ranks';
 

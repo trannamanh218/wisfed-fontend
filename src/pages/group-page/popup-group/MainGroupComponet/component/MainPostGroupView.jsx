@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { NotificationError } from 'helpers/Error';
-import { GROUP_TYPE } from 'constants';
+import { GROUP_TYPE } from 'constants/index';
 
 const MainPostGroupView = () => {
 	const [listPost, setListPost] = useState([]);

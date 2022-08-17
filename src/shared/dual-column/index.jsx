@@ -2,7 +2,7 @@ import { useState, memo } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import caretIcon from 'assets/images/caret.png';
-import { DEFAULT_TOGGLE_ROWS, NUMBER_ROWS } from 'constants';
+import { DEFAULT_TOGGLE_ROWS, NUMBER_ROWS } from 'constants/index';
 import './dual-column.scss';
 import { useNavigate } from 'react-router-dom';
 import RouteLink from 'helpers/RouteLink';

@@ -42,9 +42,7 @@ const BookIntro = ({ bookInfo, listRatingStar }) => {
 	const handleShareFaceBook = () => {
 		if (Storage.getAccessToken()) {
 			dispatch(checkUserLogin(false));
-			seturlShare(
-				'https://wisfeed.tecinus.vn/book/detail/102/sword-art-online-20-ban-dac-biet-tang-kem-bookmark-pvc-huy-hieu-nhan-vat-thiet-ke-in-an-doc-dao-tem-doc-quyen-cua-kadokawa'
-			);
+			seturlShare(`${window.location.hostname + location.pathname}`);
 		} else {
 			dispatch(checkUserLogin(true));
 		}
@@ -58,8 +56,7 @@ const BookIntro = ({ bookInfo, listRatingStar }) => {
 					className='book-intro__btn'
 					handleClick={handleClick}
 					bookData={bookInfo}
-					status={bookInfo.status}
-					hasBookStatus={false}
+					bookStatus={bookInfo.status}
 				/>
 			</div>
 			<div className='book-intro__content'>
@@ -67,7 +64,9 @@ const BookIntro = ({ bookInfo, listRatingStar }) => {
 					<h1 className='book-intro__name'>{bookInfo.name}</h1>
 					<div className='book-intro__author'>
 						<span>
-							Bởi {!_.isEmpty(bookInfo.authors) ? bookInfo.authors[0].authorName : 'Chưa cập nhật'}{' '}
+							{!_.isEmpty(bookInfo.authors)
+								? 'Bởi' + bookInfo.authors[0].authorName
+								: 'Chưa cập nhật tác giả'}{' '}
 						</span>
 						<CircleCheckIcon className='book-intro__check' />
 					</div>

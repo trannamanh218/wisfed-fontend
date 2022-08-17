@@ -3,7 +3,6 @@ import { Formik, Field, Form } from 'formik';
 import classNames from 'classnames';
 import { resetPassword, forgotPassword } from 'reducers/redux-utils/auth';
 import { useDispatch } from 'react-redux';
-import { useSelector } from 'react-redux';
 import ModalLogin from 'pages/login/element/ModalLogin';
 import { resetPasswordValidate } from 'helpers/Validation';
 import Circle from 'shared/loading/circle';

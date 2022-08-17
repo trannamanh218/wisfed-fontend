@@ -14,7 +14,7 @@ import ModalCheckLogin from 'shared/modal-check-login';
 import Storage from 'helpers/Storage';
 import { saveDataShare } from 'reducers/redux-utils/post';
 import { useNavigate } from 'react-router-dom';
-import { TOP_USER_VERB_SHARE } from 'constants';
+import { TOP_USER_VERB_SHARE } from 'constants/index';
 
 const TopUser = ({ rows, listYear, tabSelected }) => {
 	const kindOfGroupRef = useRef({ value: 'default', name: 'Văn học' });

@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import { makeFriendRequest, addFollower, unFollower, unFriendRequest } from 'reducers/redux-utils/user';
 import { useDispatch } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
+import ModalUnFriend from 'pages/friends/component/modalUnFriends';
 
 const ConnectButtonsFollower = ({ direction, item }) => {
 	const dispatch = useDispatch();
@@ -12,7 +13,7 @@ const ConnectButtonsFollower = ({ direction, item }) => {
 	const [toggleUnFollow, setToggleUnFollow] = useState(true);
 	const [toggleAddFollow, setToggleAddFollow] = useState(true);
 	const [togglePendingFriend, setTogglePendingFriend] = useState(true);
-	// const [toggleModalUnFriends, setModalUnfriends] = useState(false);
+	const [showModalUnfriends, setShowModalUnfriends] = useState(false);
 
 	const buttonUnFollow = () => {
 		return (
@@ -40,11 +41,15 @@ const ConnectButtonsFollower = ({ direction, item }) => {
 		);
 	};
 
+	const handleModalUnFriend = () => {
+		setShowModalUnfriends(true);
+	};
+
 	const buttonUnFriend = () => {
 		return (
-			<Button className='connect-button' isOutline={true} onClick={handleUnFriend}>
+			<Button className='connect-button' isOutline={true} onClick={handleModalUnFriend}>
 				<Minus className='connect-button__icon' />
-				<span className='connect-button__content'>Huỷ kết bạn</span>
+				<span className='connect-button__content'>Hủy kết bạn</span>
 			</Button>
 		);
 	};
@@ -69,8 +74,9 @@ const ConnectButtonsFollower = ({ direction, item }) => {
 			NotificationError(err);
 		}
 	};
-	const handleUnFriend = () => {
-		// setModalUnfriends(false);
+
+	const handleUnfriend = () => {
+		setShowModalUnfriends(false);
 		try {
 			dispatch(unFriendRequest(item.userIdOne)).unwrap();
 			setUnFriend(false);
@@ -116,6 +122,10 @@ const ConnectButtonsFollower = ({ direction, item }) => {
 		}
 	};
 
+	const toggleModal = () => {
+		setShowModalUnfriends(!showModalUnfriends);
+	};
+
 	return (
 		<div className={`connect-buttons ${direction}`}>
 			{item.relation !== 'isMe' && (
@@ -123,6 +133,12 @@ const ConnectButtonsFollower = ({ direction, item }) => {
 					{' '}
 					{handleRenderButtonFollow()}
 					{handleRenderButtonFriend()}
+					<ModalUnFriend
+						showModalUnfriends={showModalUnfriends}
+						toggleModal={toggleModal}
+						handleUnfriend={handleUnfriend}
+						data={item}
+					/>
 				</>
 			)}
 		</div>

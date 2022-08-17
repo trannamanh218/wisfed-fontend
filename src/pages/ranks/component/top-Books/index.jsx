@@ -128,14 +128,14 @@ const TopBooks = ({ rows, listYear, tabSelected }) => {
 								<StarRanking index={index} />
 								<div className='topbooks__container__main__layout'>
 									<AuthorBook
-										data={item}
+										data={{ ...item.book, status: item.status }}
 										checkStar={true}
 										showShareBtn={true}
 										setModalShow={setModalShow}
 										valueDate={valueDate}
 										topBooksId={topBooksId}
 										categoryName={kindOfGroupRef.current.name}
-										position='topBook'
+										trueRank={index + 1}
 									/>
 								</div>
 							</div>

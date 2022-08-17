@@ -22,7 +22,7 @@ import { Modal } from 'react-bootstrap';
 import { useModal } from 'shared/hooks';
 import FormCheckGroup from 'shared/form-check-group';
 import Button from 'shared/button';
-import { REVIEW_TYPE } from 'constants';
+import { REVIEW_TYPE } from 'constants/index';
 import searchreview from 'assets/images/search-review.png';
 
 const ReviewTab = ({ currentTab }) => {
@@ -101,10 +101,10 @@ const ReviewTab = ({ currentTab }) => {
 					sort: JSON.stringify([{ direction: directionSort, property: propertySort }]),
 					filter: JSON.stringify([
 						{ operator: 'eq', value: bookId, property: 'bookId' },
-						// { operator: 'eq', value: bookInfo.page, property: 'curProgress' },
+
 						{ operator: 'in', value: checkedStarArr, property: 'rate' },
 					]),
-					// topUser: topUser,
+
 					searchUser: inputSearch,
 				};
 			} else {
@@ -114,9 +114,10 @@ const ReviewTab = ({ currentTab }) => {
 					sort: JSON.stringify([{ direction: directionSort, property: propertySort }]),
 					filter: JSON.stringify([
 						{ operator: 'eq', value: bookId, property: 'bookId' },
-						// { operator: 'eq', value: bookInfo.page, property: 'curProgress' },
+
+						{ operator: 'in', value: checkedStarArr, property: 'rate' },
 					]),
-					// topUser: topUser,
+
 					searchUser: inputSearch,
 				};
 			}
@@ -175,7 +176,6 @@ const ReviewTab = ({ currentTab }) => {
 					sort: JSON.stringify([{ direction: directionSort, property: propertySort }]),
 					filter: JSON.stringify([
 						{ operator: 'eq', value: bookId, property: 'bookId' },
-						// { operator: 'eq', value: bookInfo.page, property: 'curProgress' },
 						{ operator: 'in', value: checkedStarArr, property: 'rate' },
 					]),
 					searchUser: inputSearch,
@@ -187,8 +187,7 @@ const ReviewTab = ({ currentTab }) => {
 					sort: JSON.stringify([{ direction: directionSort, property: propertySort }]),
 					filter: JSON.stringify([
 						{ operator: 'eq', value: bookId, property: 'bookId' },
-						// { operator: 'eq', value: bookInfo.page, property: 'curProgress' },
-						{ operator: 'in', value: ['1', '2', '3', '4', '5'], property: 'rate' },
+						{ operator: 'in', value: checkedStarArr, property: 'rate' },
 					]),
 					topUser: topUser,
 					searchUser: inputSearch,
@@ -284,10 +283,10 @@ const ReviewTab = ({ currentTab }) => {
 				<input
 					className='search-review__input'
 					placeholder='Bạn review cuốn sách này thế nào'
-					autoFocus
 					onChange={changeReview}
 					value={reviewBook}
 					onKeyPress={handleKeyPress}
+					autoFocus
 				/>
 			</div>
 			<FilterPane
@@ -308,6 +307,7 @@ const ReviewTab = ({ currentTab }) => {
 						value={inputSearch}
 						handleChange={ChangeSearch}
 						placeholder='Tìm kiếm theo Hashtag, tên người review ...'
+						autoFocus={false}
 					/>
 				</div>
 				{currentTab === 'reviews' && reviewList?.length ? (

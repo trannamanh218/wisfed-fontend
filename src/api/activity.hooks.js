@@ -1,6 +1,6 @@
-import { STATUS_SUCCESS } from 'constants';
-import { STATUS_LOADING } from 'constants';
-import { STATUS_IDLE } from 'constants';
+import { STATUS_SUCCESS } from 'constants/index';
+import { STATUS_LOADING } from 'constants/index';
+import { STATUS_IDLE } from 'constants/index';
 import { generateQuery } from 'helpers/Common';
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';

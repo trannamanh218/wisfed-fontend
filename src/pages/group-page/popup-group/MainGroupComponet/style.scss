@@ -25,7 +25,11 @@
 .group-main-component__container {
 	width: 710px;
 	margin-left: 60px;
+	.newfeed__creat-post__options {
+		padding: 0 28px;
+	}
 }
+
 .group__title-name {
 	background-color: #e0af7e;
 	height: 39px;

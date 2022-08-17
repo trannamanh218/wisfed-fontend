@@ -76,7 +76,7 @@ function Register() {
 	return (
 		<div className='register__container'>
 			<Circle loading={isLoading} />
-			<Link to='/'>
+			<Link to='/login'>
 				<div className='register__header'>
 					<img src={Logo} alt='logo' />
 				</div>

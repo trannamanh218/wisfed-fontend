@@ -20,6 +20,7 @@ import {
 	leaveGroupUser,
 	unFollowGroupUser,
 	followGroupUser,
+	updateKey,
 } from 'reducers/redux-utils/group';
 import { NotificationError } from 'helpers/Error';
 import { useDispatch } from 'react-redux';
@@ -328,7 +329,15 @@ function MainGroupComponent({ handleChange, keyChange, data, member, handleUpdat
 			</div>
 			{keyChange === 'tabs' && (
 				<div className='group-tabs'>
-					<Tabs id='controlled-tab' activeKey={key} onSelect={k => setKey(k)} className='mb-3'>
+					<Tabs
+						id='controlled-tab'
+						activeKey={key}
+						onSelect={k => {
+							setKey(k);
+							dispatch(updateKey(k));
+						}}
+						className='mb-3'
+					>
 						<Tab eventKey='intro' title='Giới thiệu'>
 							<IntroGroup
 								data={data}

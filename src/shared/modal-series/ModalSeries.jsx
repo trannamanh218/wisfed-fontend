@@ -8,6 +8,8 @@ import { useDispatch } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
 import { getMySeries, postMoreSeries } from 'reducers/redux-utils/series';
 import { useEffect } from 'react';
+import { CloseIconX } from 'components/svg';
+import _ from 'lodash';
 
 const ModalSeries = ({
 	showModalSeries,
@@ -17,6 +19,8 @@ const ModalSeries = ({
 	temporarySeries,
 	setTemporarySeries,
 }) => {
+	const [buttonDisable, setButtonDisable] = useState(false);
+
 	const [APIListSeries, setAPIListSeries] = useState([]);
 	const [updateListSeries, setUpdateListSeries] = useState(false);
 
@@ -74,11 +78,30 @@ const ModalSeries = ({
 		setTemporarySeries(series);
 	}, [showModalSeries]);
 
+	useEffect(() => {
+		if (_.isEmpty(temporarySeries)) {
+			setButtonDisable(true);
+		} else {
+			setButtonDisable(false);
+		}
+	}, [temporarySeries]);
+
 	return (
 		<Modal className='modal-series' show={showModalSeries} onHide={handleClose}>
 			<Modal.Body>
 				<div className='modal-series__header'>
-					<label>Sê-ri</label>
+					<div
+						style={{
+							display: 'flex',
+							flexDirection: 'row',
+							alignItems: 'center',
+							justifyContent: 'space-between',
+							marginBottom: '5px',
+						}}
+					>
+						<span style={{ marginLeft: '5px' }}>Sê-ri</span>
+						<CloseIconX onClick={handleClose} onMouseEnter={e => (e.target.style.cursor = 'pointer')} />
+					</div>
 					<input
 						className='input input--non-border'
 						placeholder='Sê-ri bộ sách'
@@ -114,7 +137,11 @@ const ModalSeries = ({
 					<AddSeriesForm updateSeries={updateSeries} />
 				</div>
 				<div className='modal-series__footer'>
-					<button onClick={handleConfirm}>
+					<button
+						onClick={handleConfirm}
+						style={buttonDisable ? { cursor: 'not-allowed', backgroundColor: '#d9dbe9' } : null}
+						disabled={buttonDisable ? true : false}
+					>
 						<span>Xác nhận</span>
 					</button>
 				</div>

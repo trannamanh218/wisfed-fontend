@@ -1,4 +1,4 @@
-import { REVIEW_TYPE } from 'constants';
+import { REVIEW_TYPE } from 'constants/index';
 import PropTypes from 'prop-types';
 import Post from 'shared/post';
 import './post-list.scss';

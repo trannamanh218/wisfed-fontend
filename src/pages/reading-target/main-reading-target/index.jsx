@@ -15,11 +15,11 @@ import { useFetchUserParams } from 'api/user.hook';
 import { useFetchTargetReading } from 'api/readingTarget.hooks';
 import GoalsNotSetYet from './goals-not-set';
 import Circle from 'shared/loading/circle';
-import { STATUS_LOADING } from 'constants';
+import { STATUS_LOADING } from 'constants/index';
 import { useDispatch } from 'react-redux';
 import { saveDataShare } from 'reducers/redux-utils/post';
 import Storage from 'helpers/Storage';
-import { READ_TARGET_VERB_SHARE } from 'constants';
+import { READ_TARGET_VERB_SHARE } from 'constants/index';
 
 const MainReadingTarget = () => {
 	const dispatch = useDispatch();

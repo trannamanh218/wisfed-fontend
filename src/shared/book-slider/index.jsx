@@ -6,6 +6,7 @@ import arrowPrev from 'assets/images/arrow-chevron-back.png';
 import './book-slider.scss';
 import classNames from 'classnames';
 import { memo } from 'react';
+import { Link } from 'react-router-dom';
 
 const BookSlider = ({
 	list,
@@ -18,25 +19,29 @@ const BookSlider = ({
 	...rest
 }) => {
 	const settingSlider = settings(inCategory, inCategoryDetail);
+
 	return (
 		<div className='main'>
 			{!!list.length && (
 				<div className={classNames('book-slider', { [`${className}`]: className })}>
 					<h4 className='book-slider__title'>{title}</h4>
+
 					<div className='book-slider__content'>
 						{list?.length > 2 ? (
 							<Slider {...settingSlider}>
 								{list.map((item, index) => (
-									<BookThumbnail
-										key={index}
-										{...item}
-										data={item}
-										source={item.source}
-										name={item.name}
-										size={size}
-										{...rest}
-										handleClick={handleViewBookDetail}
-									/>
+									<Link to={`/book/detail/${item.id}/${item.name}`} key={index}>
+										<BookThumbnail
+											key={index}
+											{...item}
+											data={item}
+											source={item.source}
+											name={item.name}
+											size={size}
+											{...rest}
+											handleClick={handleViewBookDetail}
+										/>
+									</Link>
 								))}
 							</Slider>
 						) : (
