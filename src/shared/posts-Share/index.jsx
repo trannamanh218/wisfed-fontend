@@ -102,7 +102,7 @@ const PostShare = ({ postData, inCreatePost = false }) => {
 			return content;
 		}
 	};
-
+	console.log(1, postData);
 	return (
 		<div className='post__container'>
 			<div className='post__user-status'>
@@ -113,6 +113,7 @@ const PostShare = ({ postData, inCreatePost = false }) => {
 						source={postData.sharePost?.createdBy?.avatarImage}
 					/>
 				</Link>
+				{/*  */}
 				<div className='post__user-status__name-and-post-time-status'>
 					<div data-testid='post__user-name' className='post__user-status__name'>
 						<Link to={`/profile/${postData.sharePost.createdBy.id}`}>
@@ -181,6 +182,21 @@ const PostShare = ({ postData, inCreatePost = false }) => {
 								item.authors?.fullName ||
 								item.authors?.lastName ||
 								item.authors?.firstName ||
+								'Không xác định'}
+						</span>
+					</li>
+				))}
+			</ul>
+
+			<ul className='tagged'>
+				{postData.sharePost.mentionsCategories?.map(item => (
+					<li key={item.id} className={classNames('badge bg-primary-light')}>
+						<Feather />
+						<span>
+							{item.category.name ||
+								item.category?.fullName ||
+								item.category?.lastName ||
+								item.category?.firstName ||
 								'Không xác định'}
 						</span>
 					</li>
