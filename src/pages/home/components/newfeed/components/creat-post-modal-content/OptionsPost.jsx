@@ -9,9 +9,8 @@ import {
 	READ_TARGET_VERB_SHARE,
 	TOP_BOOK_VERB_SHARE,
 	TOP_QUOTE_VERB_SHARE,
-} from 'constants/index';
-
-import { useSelector } from 'react-redux';
+	TOP_USER_VERB_SHARE,
+} from 'constants';
 
 const verbShareArray = [
 	POST_VERB_SHARE,
@@ -20,6 +19,7 @@ const verbShareArray = [
 	READ_TARGET_VERB_SHARE,
 	TOP_BOOK_VERB_SHARE,
 	TOP_QUOTE_VERB_SHARE,
+	TOP_USER_VERB_SHARE,
 ];
 
 const OptionsPost = ({ list, addOptionsToPost, taggedData, postDataShare }) => {
