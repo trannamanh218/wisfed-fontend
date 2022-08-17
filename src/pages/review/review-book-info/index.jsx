@@ -27,8 +27,8 @@ const ReviewBookInfo = ({ bookInfo }) => {
 					)}
 				</div>
 				<div className='review-book-info__stars'>
-					<ReactRating readonly={true} initialRating={bookInfo.avgRating.toFixed(1)} />
-					<span>(Trung bình {bookInfo.avgRating.toFixed(1)} sao)</span>
+					<ReactRating readonly={true} initialRating={bookInfo.avgRating} />
+					<span>(Trung bình {bookInfo.avgRating} sao)</span>
 				</div>
 
 				<div className='review-book-info__description'>
