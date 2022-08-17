@@ -8,7 +8,7 @@ import { NotificationError } from 'helpers/Error';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import LoadingIndicator from 'shared/loading-indicator';
 import PropTypes from 'prop-types';
-import { POST_TYPE } from 'constants';
+import { POST_TYPE } from 'constants/index';
 
 function PostTab({ currentTab }) {
 	const [postList, setPostList] = useState([]);

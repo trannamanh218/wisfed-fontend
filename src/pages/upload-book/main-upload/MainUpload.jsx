@@ -41,7 +41,7 @@ export default function MainUpload() {
 	const [series, setSeries] = useState({});
 
 	const [resetSelect, setResetSelect] = useState(false);
-	const [buttonActive, setButtonActive] = useState(false);
+	const [buttonActive, setButtonActive] = useState(true);
 	const [temporarySeries, setTemporarySeries] = useState({});
 
 	const [inputAuthorValue, setInputAuthorValue] = useState('');
@@ -177,7 +177,6 @@ export default function MainUpload() {
 			series: series,
 		};
 		if (buttonActive) {
-			// console.log(bookInfo);
 			handleCreateBook(bookInfo);
 		}
 	};
@@ -198,7 +197,7 @@ export default function MainUpload() {
 			!language ||
 			!description
 		) {
-			setButtonActive(false);
+			setButtonActive(true);
 		} else {
 			setButtonActive(true);
 		}

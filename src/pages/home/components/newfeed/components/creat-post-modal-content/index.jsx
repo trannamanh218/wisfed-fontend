@@ -1,7 +1,7 @@
 /* eslint-disable max-lines */
 import classNames from 'classnames';
 import { CloseX, Image, IconRanks } from 'components/svg';
-import { STATUS_IDLE, STATUS_LOADING, STATUS_SUCCESS } from 'constants';
+import { STATUS_IDLE, STATUS_LOADING, STATUS_SUCCESS } from 'constants/index';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { Fragment, useEffect, useState } from 'react';
@@ -10,18 +10,17 @@ import { toast } from 'react-toastify';
 import { createActivity } from 'reducers/redux-utils/activity';
 import PostEditBook from 'shared/post-edit-book';
 import OptionsPost from './OptionsPost';
-// import ShareModeComponent from './ShareModeComponent';
 import CreatPostSubModal from './CreatePostSubModal';
 import TaggedList from './TaggedList';
 import UploadImage from './UploadImage';
 import PreviewLink from 'shared/preview-link/PreviewLink';
-import { getPreviewUrl, getSharePostInternal, getSharePostRanks } from 'reducers/redux-utils/post';
+import { getPreviewUrl, getSharePostInternal, getSharePostRanks, shareMyBook } from 'reducers/redux-utils/post';
 import Circle from 'shared/loading/circle';
 import './style.scss';
 import { ratingUser } from 'reducers/redux-utils/book';
 import UserAvatar from 'shared/user-avatar';
 import { updateCurrentBook, updateProgressReadingBook, createReviewBook } from 'reducers/redux-utils/book';
-import { STATUS_BOOK } from 'constants';
+import { STATUS_BOOK } from 'constants/index';
 import { usePrevious } from 'shared/hooks';
 import { addBookToDefaultLibrary, updateMyAllLibraryRedux } from 'reducers/redux-utils/library';
 import { setting } from './settings';
@@ -45,6 +44,7 @@ import {
 	TOP_USER_VERB_SHARE,
 	TOP_BOOK_VERB_SHARE,
 	TOP_QUOTE_VERB_SHARE,
+	MY_BOOK_VERB_SHARE,
 } from 'constants';
 
 const verbShareArray = [
@@ -92,6 +92,7 @@ function CreatPostModalContent({
 	const [showImagePopover, setShowImagePopover] = useState(false);
 	const [buttonActive, setButtonActive] = useState(false);
 	const [content, setContent] = useState('');
+	const chartImgShare = useSelector(state => state.chart.updateImgPost);
 
 	const dispatch = useDispatch();
 	const location = useLocation();
@@ -383,6 +384,14 @@ function CreatPostModalContent({
 						mentionsUser: params.mentionsUser,
 					};
 					await dispatch(getSharePostRanks(query)).unwrap();
+				} else if (postDataShare.verb === MY_BOOK_VERB_SHARE) {
+					const query = {
+						id: postDataShare.id,
+						msg: content,
+						type: postDataShare.type,
+						mentionsUser: params.mentionsUser,
+					};
+					await dispatch(shareMyBook(query)).unwrap();
 				} else if (postDataShare.verb === TOP_QUOTE_VERB_SHARE) {
 					const query = {
 						msg: content,
@@ -631,6 +640,11 @@ function CreatPostModalContent({
 									<IconRanks />
 								</div>
 							)}
+							{postDataShare.type === 'topBookAuthor' && (
+								<div className='post__title__share__rank'>
+									<span className='number__title__rank'># Sách của tôi làm tác giả</span>
+								</div>
+							)}
 
 							{!_.isEmpty(postDataShare) && (
 								<div
@@ -651,13 +665,9 @@ function CreatPostModalContent({
 									{postDataShare.verb === GROUP_POST_VERB_SHARE && (
 										<PostShare postData={postDataShare} inCreatePost={true} />
 									)}
-									{postDataShare.verb === TOP_BOOK_VERB_SHARE && (
-										<AuthorBook
-											data={postDataShare}
-											checkStar={true}
-											inCreatePost={true}
-											position='createPostModal'
-										/>
+									{(postDataShare.verb === TOP_BOOK_VERB_SHARE ||
+										postDataShare.verb === MY_BOOK_VERB_SHARE) && (
+										<AuthorBook data={postDataShare} checkStar={true} inCreatePost={true} />
 									)}
 								</div>
 							)}
@@ -714,8 +724,9 @@ function CreatPostModalContent({
 									className={classNames('creat-post-modal-content__main__options__item-add-to-post', {
 										'active': imagesUpload.length > 0 && _.isEmpty(taggedData.addBook),
 										'disabled':
-											!_.isEmpty(postDataShare) &&
-											verbShareArray.indexOf(postDataShare.verb) !== -1,
+											(!_.isEmpty(postDataShare) &&
+												verbShareArray.indexOf(postDataShare.verb) !== -1) ||
+											chartImgShare.length,
 									})}
 									onMouseOver={() => setShowImagePopover(true)}
 									onMouseLeave={() => setShowImagePopover(false)}

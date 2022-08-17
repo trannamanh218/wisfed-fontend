@@ -13,7 +13,7 @@ import ProgressBarCircle from 'shared/progress-circle';
 import RenderProgress from 'shared/render-progress';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
-import { DEFAULT_TOGGLE_ROWS } from 'constants';
+import { DEFAULT_TOGGLE_ROWS } from 'constants/index';
 
 const SidebarProfile = ({ currentUserInfo, handleViewBookDetail }) => {
 	const { userId } = useParams();

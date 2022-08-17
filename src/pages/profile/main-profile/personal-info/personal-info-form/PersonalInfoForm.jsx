@@ -1,5 +1,5 @@
 import { Pencil } from 'components/svg';
-import { YEAR_LIMIT } from 'constants';
+import { YEAR_LIMIT } from 'constants/index';
 import { useEffect, useState, useRef } from 'react';
 import Input from 'shared/input';
 import '../personal-info.scss';

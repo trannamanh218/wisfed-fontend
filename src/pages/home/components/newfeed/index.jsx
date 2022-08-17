@@ -10,7 +10,7 @@ import { getActivityList } from 'reducers/redux-utils/activity';
 import { useDispatch, useSelector } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
 import LoadingIndicator from 'shared/loading-indicator';
-import { POST_TYPE, GROUP_TYPE } from 'constants';
+import { POST_TYPE, GROUP_TYPE } from 'constants/index';
 
 const NewFeed = () => {
 	const [isNewPost, setIsNewPost] = useState(false);

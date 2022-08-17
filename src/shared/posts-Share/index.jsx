@@ -12,7 +12,7 @@ import PreviewLink from 'shared/preview-link/PreviewLink';
 import ReactRating from 'shared/react-rating';
 import { Link } from 'react-router-dom';
 import Play from 'assets/images/play.png';
-import { GROUP_POST_VERB_SHARE } from 'constants';
+import { GROUP_POST_VERB_SHARE } from 'constants/index';
 
 const urlRegex =
 	/(https?:\/\/)?(www(\.))?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/g;

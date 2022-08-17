@@ -20,6 +20,7 @@ import { getSuggestionForPost } from 'reducers/redux-utils/activity';
 import { handleResetGroupList } from 'reducers/redux-utils/group';
 
 const PopupCreateGroup = ({ handleClose }) => {
+	const tungref = useRef('');
 	const [inputNameGroup, setInputNameGroup] = useState('');
 	const [inputDiscription, setInputDiscription] = useState('');
 	const [inputAuthors, setInputAuthors] = useState('');
@@ -313,7 +314,21 @@ const PopupCreateGroup = ({ handleClose }) => {
 		const newList = listHashtags.filter(item => item !== e);
 		setListHashtags(newList);
 	};
+	useEffect(() => {
+		if (inputRefAuthor.current) {
+			inputRefAuthor.current.focus();
+		}
+	}, [listAuthors]);
 
+	useEffect(() => {
+		if (inputRefBook.current) {
+			inputRefBook.current.focus();
+		}
+	}, [listBookAdd]);
+
+	useEffect(() => {
+		tungref.current.focus();
+	}, []);
 	return (
 		<>
 			<div className='popup-group__header'>
@@ -349,7 +364,12 @@ const PopupCreateGroup = ({ handleClose }) => {
 				<div className='form-field-name'>
 					<label>Tên nhóm</label>
 					<span style={{ color: 'red', marginLeft: '4px' }}>*</span>
-					<Input isBorder={false} placeholder='Tên nhóm' handleChange={onInputChange(setInputNameGroup)} />
+					<Input
+						inputRef={tungref}
+						isBorder={false}
+						placeholder='Tên nhóm'
+						handleChange={onInputChange(setInputNameGroup)}
+					/>
 				</div>
 
 				<div className='form-field-select__kind-of-group'>

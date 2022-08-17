@@ -1,4 +1,4 @@
-import { STATUS_IDLE, STATUS_LOADING, STATUS_SUCCESS } from 'constants';
+import { STATUS_IDLE, STATUS_LOADING, STATUS_SUCCESS } from 'constants/index';
 import { generateQuery } from 'helpers/Common';
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';

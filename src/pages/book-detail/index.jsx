@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom';
 import BookInfo from './book-info';
 import BookReference from './book-reference';
 import Circle from 'shared/loading/circle';
-import { STATUS_LOADING } from 'constants';
+import { STATUS_LOADING } from 'constants/index';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getBookDetail } from 'reducers/redux-utils/book';
@@ -42,7 +42,7 @@ function BookDetail() {
 			setBookInformation(bookInfo.bookInfo);
 			setBookStatus('SUCCESS');
 		}
-	}, []);
+	}, [bookId]);
 	return (
 		<>
 			{bookStatus === STATUS_LOADING ? (

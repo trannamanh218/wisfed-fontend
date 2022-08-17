@@ -1,4 +1,4 @@
-import { STATUS_IDLE, STATUS_LOADING, STATUS_SUCCESS } from 'constants';
+import { STATUS_IDLE, STATUS_LOADING, STATUS_SUCCESS } from 'constants/index';
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { getListBooksTargetReading, updateTargetReading } from 'reducers/redux-utils/chart';
