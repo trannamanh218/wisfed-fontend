@@ -5,7 +5,6 @@ import { useEffect, useState } from 'react';
 import { updateCurrentBook } from 'reducers/redux-utils/book';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { Row, Col } from 'react-bootstrap';
 import _ from 'lodash';
 
 function ReadingBook({ bookData }) {
@@ -47,7 +46,7 @@ function ReadingBook({ bookData }) {
 							<img
 								data-testid='reading-book__book-img'
 								src={bookData?.images?.length > 0 ? bookData.images[0] : ''}
-								alt=''
+								alt='image'
 							/>
 						</div>
 
