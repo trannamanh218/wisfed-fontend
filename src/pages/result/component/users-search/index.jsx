@@ -63,7 +63,7 @@ const UsersSearch = ({ isFetching, value, setIsFetching, searchResultInput, acti
 			setIsFetching(false);
 		}
 	};
-
+	console.log(listArrayUsers);
 	return (
 		<div className='user__search__container'>
 			{listArrayUsers?.length > 0 && activeKeyDefault === 'users' ? (

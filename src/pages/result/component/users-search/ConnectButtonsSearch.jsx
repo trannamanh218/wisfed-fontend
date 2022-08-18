@@ -6,6 +6,7 @@ import { useDispatch } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
 import _ from 'lodash';
 import ModalUnFriend from 'pages/friends/component/modalUnFriends';
+import { ReplyFriendRequest } from 'reducers/redux-utils/user';
 
 const ConnectButtonsSearch = ({ direction, item }) => {
 	const [showModalUnfriends, setShowModalUnfriends] = useState(false);
@@ -20,7 +21,7 @@ const ConnectButtonsSearch = ({ direction, item }) => {
 				userId: item.id,
 			};
 			await dispatch(makeFriendRequest(param)).unwrap();
-			setFriendStatusBtn('pending');
+			setFriendStatusBtn((item.friendRequest.type = 'sentRequest'));
 		} catch (err) {
 			NotificationError(err);
 		}
@@ -36,12 +37,24 @@ const ConnectButtonsSearch = ({ direction, item }) => {
 			NotificationError(err);
 		}
 	};
+	const handleAcces = async () => {
+		try {
+			const params = { id: item.friendRequest.id, data: { reply: true } };
+			setFriendStatusBtn('friend');
+
+			dispatch(ReplyFriendRequest(params)).unwrap();
+		} catch (err) {
+			NotificationError(err);
+		}
+	};
 
 	const handleFriendBtn = () => {
 		if (friendStatusBtn === 'friend') {
 			setShowModalUnfriends(true);
 		} else if (friendStatusBtn === 'unknown') {
 			handleAddFriend();
+		} else if (item.friendRequest?.type === 'requestToMe') {
+			handleAcces();
 		}
 	};
 
@@ -71,7 +84,9 @@ const ConnectButtonsSearch = ({ direction, item }) => {
 			contentBtn = 'Hủy kết bạn';
 		} else if (friendStatusBtn === 'unknown') {
 			contentBtn = 'Kết bạn';
-		} else {
+		} else if (item.friendRequest?.type === 'requestToMe') {
+			contentBtn = 'Chấp nhận';
+		} else if (item.friendRequest?.type === 'sentRequest') {
 			contentBtn = 'Đã gửi lời mời';
 		}
 
