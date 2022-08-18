@@ -322,9 +322,21 @@
 	}
 }
 
+@media only screen and (min-width: 913px) and (max-width: 1024px) {
+	.header__userInfo {
+		margin-left: 3rem;
+	}
+}
+
 @media only screen and (max-width: 912px) {
 	.header__search {
 		width: 280px;
+	}
+	.header__nav {
+		margin-left: 2rem;
+	}
+	.header__userInfo {
+		margin-left: 1rem;
 	}
 }
 

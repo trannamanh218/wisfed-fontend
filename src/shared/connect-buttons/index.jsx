@@ -132,7 +132,7 @@ const ConnectButtons = ({ direction, item }) => {
 	const handleRenderButtonFriend = () => {
 		if (item.relation === 'friend') {
 			return unFriend ? buttonUnFriend() : togglePendingFriend ? buttonAddFriend() : buttonPendingFriend();
-		} else if (item.relation === 'pending') {
+		} else if (item.relation === 'pending' && item.friendRequest?.type !== 'requestToMe') {
 			return buttonPendingFriend();
 		} else if (item.relation === 'unknown' && !item.friendRequest) {
 			return togglePendingFriend ? buttonAddFriend() : buttonPendingFriend();

@@ -70,26 +70,6 @@ function CreatPostSubModal(props) {
 	};
 
 	const handleComplete = () => {
-		if (!_.isEmpty(taggedData.addBook)) {
-			if (!taggedData.addBook.hasOwnProperty('status')) {
-				if (taggedDataPrevious.addBook.id !== taggedData.addBook.id) {
-					dispatch(checkBookInLibraries(taggedData.addBook.id))
-						.unwrap()
-						.then(res => {
-							const { rows } = res;
-							const library = rows.find(item => item.library.isDefault);
-							const status = library ? library.library.defaultType : null;
-							const pages = { read: taggedData.addBook.page, reading: '', wantToRead: '' };
-
-							handleAddToPost({ ...taggedData.addBook, status, progress: pages[status] || '' });
-							handleValidationInput('');
-						})
-						.catch(() => {
-							return;
-						});
-				}
-			}
-		}
 		backToMainModal();
 		inputRef.current.value = '';
 	};

@@ -54,6 +54,7 @@ const PostEditBook = ({
 	}, [data]);
 
 	const blockInvalidChar = e => ['e', 'E', '+', '-'].includes(e.key) && e.preventDefault();
+
 	const handleChange = e => {
 		const { value } = e.target;
 		if (value) {

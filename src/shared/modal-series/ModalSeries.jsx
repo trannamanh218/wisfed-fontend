@@ -22,6 +22,7 @@ const ModalSeries = ({
 	const [buttonDisable, setButtonDisable] = useState(false);
 
 	const [APIListSeries, setAPIListSeries] = useState([]);
+	const [listSeries, setListSeries] = useState([]);
 	const [updateListSeries, setUpdateListSeries] = useState(false);
 
 	const dispatch = useDispatch();
@@ -30,6 +31,8 @@ const ModalSeries = ({
 
 	const handleSearch = e => {
 		setInputSearch(e.target.value);
+		const inpSearch = e.target.value;
+		setListSeries(APIListSeries.filter(item => item.name.toLowerCase().includes(inpSearch.toLowerCase())));
 	};
 
 	const onItemChange = item => {
@@ -61,10 +64,8 @@ const ModalSeries = ({
 	const handleGetSeriesList = async () => {
 		try {
 			const res = await dispatch(getMySeries()).unwrap();
-			const newArr = res.filter(item => item.name.toLowerCase().includes(inputSearch.toLowerCase()));
-			setTimeout(function () {
-				setAPIListSeries(newArr);
-			}, 500);
+			setAPIListSeries(res);
+			setListSeries(res);
 		} catch (err) {
 			NotificationError(err);
 		}
@@ -72,7 +73,7 @@ const ModalSeries = ({
 
 	useEffect(() => {
 		handleGetSeriesList();
-	}, [updateListSeries, inputSearch]);
+	}, [updateListSeries]);
 
 	useEffect(() => {
 		setTemporarySeries(series);
@@ -118,7 +119,7 @@ const ModalSeries = ({
 						value={inputSearch}
 					/>
 					<div className='modal-series__body__options'>
-						{APIListSeries.map((item, index) => {
+						{listSeries.map((item, index) => {
 							return (
 								<label key={index} className='row-options'>
 									<Col xs={10}>
@@ -126,7 +127,12 @@ const ModalSeries = ({
 									</Col>
 									<Col xs={2} className='series-options-checkbox'>
 										<div className='series-options-container'>
-											<input type='radio' name='title' onChange={() => onItemChange(item)} />
+											<input
+												type='radio'
+												name='title'
+												checked={temporarySeries.name === item.name}
+												onChange={() => onItemChange(item)}
+											/>
 											<div className='series-options-checkmark'></div>
 										</div>
 									</Col>

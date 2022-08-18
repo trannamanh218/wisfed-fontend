@@ -45,7 +45,7 @@ export default function MainUpload() {
 	const [temporarySeries, setTemporarySeries] = useState({});
 
 	const [inputAuthorValue, setInputAuthorValue] = useState('');
-	const [inputTranslatorValue, setInputTranslatorValue] = useState('');
+	// const [inputTranslatorValue, setInputTranslatorValue] = useState('');
 	const [inputCategoryValue, setInputCategoryValue] = useState('');
 	// const [inputPublisherValue, setInputPublisherValue] = useState('');
 
@@ -77,7 +77,7 @@ export default function MainUpload() {
 		setTemporarySeries({});
 		setInputAuthorValue('');
 		setAuthors([]);
-		setInputTranslatorValue('');
+		// setInputTranslatorValue('');
 		// setTranslators([]);
 		setTranslators('');
 		// setInputPublisherValue('');
@@ -394,7 +394,7 @@ export default function MainUpload() {
 							</Col>
 						</Row>
 					</div>
-					{userInfoJwt?.role === ('tecinus' || 'authors') ? (
+					{userInfoJwt?.role === 'tecinus' || userInfoJwt?.role === 'author' ? (
 						<div className='inp-book'>
 							<label>Sê-ri</label>
 							<input

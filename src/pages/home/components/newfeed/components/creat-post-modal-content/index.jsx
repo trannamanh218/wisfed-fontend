@@ -220,7 +220,6 @@ function CreatPostModalContent({
 	const limitedValue = 5;
 	const handleAddToPost = data => {
 		const newData = { ...taggedData };
-		setCheckProgress(Number(data.progress));
 		if (option.value === 'addAuthor' || option.value === 'addFriends' || option.value === 'addCategory') {
 			const listData = [...taggedData[option.value]];
 			const lastItem = listData[listData.length - 1];
@@ -457,6 +456,13 @@ function CreatPostModalContent({
 
 	useEffect(() => {
 		checkActive();
+		if (!_.isEmpty(taggedData.addBook)) {
+			if (taggedData.addBook.status === 'read') {
+				setCheckProgress(taggedData.addBook.page);
+			} else {
+				setCheckProgress(parseInt(taggedData.addBook.progress));
+			}
+		}
 	}, [showMainModal, content, taggedData, imagesUpload]);
 
 	const checkActive = () => {
