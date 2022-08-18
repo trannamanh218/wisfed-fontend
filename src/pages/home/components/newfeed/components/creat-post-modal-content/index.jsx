@@ -46,6 +46,7 @@ import {
 	TOP_QUOTE_VERB_SHARE,
 	MY_BOOK_VERB_SHARE,
 } from 'constants';
+import { number } from 'yup/lib/locale';
 
 const verbShareArray = [
 	POST_VERB_SHARE,
@@ -219,7 +220,6 @@ function CreatPostModalContent({
 	const limitedValue = 5;
 	const handleAddToPost = data => {
 		const newData = { ...taggedData };
-		setCheckProgress(parseInt(newData.addBook.progress));
 		if (option.value === 'addAuthor' || option.value === 'addFriends' || option.value === 'addCategory') {
 			const listData = [...taggedData[option.value]];
 			const lastItem = listData[listData.length - 1];
@@ -257,7 +257,7 @@ function CreatPostModalContent({
 			setTaggedData(prev => ({ ...prev, [type]: {} }));
 		}
 	};
-
+	// console.log(checkProgress);
 	const generateData = async () => {
 		const params = {
 			msg: content,
@@ -456,7 +456,16 @@ function CreatPostModalContent({
 
 	useEffect(() => {
 		checkActive();
+		if (!_.isEmpty(taggedData.addBook)) {
+			if (taggedData.addBook.status === 'read') {
+				setCheckProgress(taggedData.addBook.page);
+			} else {
+				setCheckProgress(parseInt(taggedData.addBook.progress));
+			}
+		}
 	}, [showMainModal, content, taggedData, imagesUpload]);
+
+	console.log(taggedData);
 
 	const checkActive = () => {
 		let isActive = false;
