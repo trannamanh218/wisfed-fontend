@@ -135,6 +135,7 @@ const TopBooks = ({ rows, listYear, tabSelected }) => {
 										valueDate={valueDate}
 										topBooksId={topBooksId}
 										categoryName={kindOfGroupRef.current.name}
+										trueRank={index + 1}
 									/>
 								</div>
 							</div>

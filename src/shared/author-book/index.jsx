@@ -22,6 +22,7 @@ const AuthorBook = ({
 	categoryName,
 	inCreatePost,
 	inPost,
+	trueRank,
 }) => {
 	const { userId } = useParams();
 	const userInfo = useSelector(state => state.auth.userInfo);
@@ -36,6 +37,7 @@ const AuthorBook = ({
 			type: 'topBook',
 			id: data.bookId,
 			verb: TOP_BOOK_VERB_SHARE,
+			trueRank: trueRank,
 			...data,
 		};
 
@@ -150,6 +152,7 @@ AuthorBook.defaultProps = {
 	showShareBtn: false,
 	inCreatePost: false,
 	inPost: false,
+	trueRank: null,
 };
 
 AuthorBook.propTypes = {
@@ -162,6 +165,7 @@ AuthorBook.propTypes = {
 	categoryName: PropTypes.string,
 	inCreatePost: PropTypes.bool,
 	inPost: PropTypes.bool,
+	trueRank: PropTypes.number,
 };
 
 export default AuthorBook;
