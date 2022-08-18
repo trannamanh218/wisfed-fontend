@@ -394,7 +394,8 @@ export default function MainUpload() {
 							</Col>
 						</Row>
 					</div>
-					{userInfoJwt?.role === ('tecinus' || 'authors') ? (
+
+					{userInfoJwt?.role === 'tecinus' || userInfoJwt?.role === 'author' ? (
 						<div className='inp-book'>
 							<label>Sê-ri</label>
 							<input
