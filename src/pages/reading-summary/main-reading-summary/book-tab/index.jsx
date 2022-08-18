@@ -15,6 +15,8 @@ const BookTab = () => {
 	const [currentOption, setCurrentOption] = useState({ value: 'month', title: 'Theo tháng' });
 	const [chartsData, setChartsData] = useState({});
 	const [loading, setLoading] = useState(false);
+	const [width, setWidth] = useState(880);
+
 	const dispatch = useDispatch();
 	const options = [
 		{ value: 'month', title: 'Theo tháng' },
@@ -27,6 +29,24 @@ const BookTab = () => {
 	useEffect(() => {
 		fetchData();
 	}, [currentOption]);
+
+	useEffect(() => {
+		const handleResize = () => {
+			if (window.innerWidth < 1366 && window.innerWidth > 1280) {
+				setWidth(730);
+			} else if (window.innerWidth < 1280 && window.innerWidth > 1024) {
+				setWidth(540);
+			} else if (window.innerWidth < 1024 && window.innerWidth > 915) {
+				setWidth(700);
+			} else if (window.innerWidth < 915) {
+				setWidth(560);
+			} else {
+				setWidth(880);
+			}
+		};
+		window.addEventListener('resize', handleResize);
+		return () => window.removeEventListener('resize', handleResize);
+	}, []);
 
 	const fetchData = async () => {
 		try {
@@ -155,7 +175,7 @@ const BookTab = () => {
 				<>
 					<div className='reading-summary-book-tab__chart-wrapper'>
 						<BarChart
-							width={880}
+							width={width}
 							height={500}
 							data={chartsData}
 							ref={areaRef}

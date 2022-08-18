@@ -16,6 +16,8 @@ const PageTab = () => {
 	const [loading, setLoading] = useState(false);
 	const { userId } = useParams();
 	const [chartsData, setChartsData] = useState([]);
+	const [width, setWidth] = useState(880);
+
 	const dispatch = useDispatch();
 	const [getAreaPng, { ref: areaRef }] = useCurrentPng();
 	const navigate = useNavigate();
@@ -27,6 +29,24 @@ const PageTab = () => {
 	useEffect(() => {
 		fetchData();
 	}, [currentOption]);
+
+	useEffect(() => {
+		const handleResize = () => {
+			if (window.innerWidth < 1366 && window.innerWidth > 1280) {
+				setWidth(730);
+			} else if (window.innerWidth < 1280 && window.innerWidth > 1024) {
+				setWidth(540);
+			} else if (window.innerWidth < 1024 && window.innerWidth > 915) {
+				setWidth(700);
+			} else if (window.innerWidth < 915) {
+				setWidth(560);
+			} else {
+				setWidth(880);
+			}
+		};
+		window.addEventListener('resize', handleResize);
+		return () => window.removeEventListener('resize', handleResize);
+	}, []);
 
 	const fetchData = async () => {
 		try {
@@ -144,7 +164,7 @@ const PageTab = () => {
 				<>
 					<div className='reading-summary-page-tab__chart-wrapper'>
 						<BarChart
-							width={880}
+							width={width}
 							height={500}
 							data={chartsData}
 							ref={areaRef}
