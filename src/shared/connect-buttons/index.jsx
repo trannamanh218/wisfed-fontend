@@ -1,5 +1,5 @@
 import { Add, Minus } from 'components/svg';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Button from 'shared/button';
 import PropTypes from 'prop-types';
 import './connect-buttons.scss';
@@ -132,11 +132,9 @@ const ConnectButtons = ({ direction, item }) => {
 	const handleRenderButtonFriend = () => {
 		if (item.relation === 'friend') {
 			return unFriend ? buttonUnFriend() : togglePendingFriend ? buttonAddFriend() : buttonPendingFriend();
-		} else if (item.relation === 'pending') {
-			return buttonPendingFriend();
 		} else if (item.relation === 'unknown' && !item.friendRequest) {
 			return togglePendingFriend ? buttonAddFriend() : buttonPendingFriend();
-		} else if (item.friendRequest?.type === 'requestToMe') {
+		} else if (item.friendRequest.type === 'requestToMe') {
 			return toggleAcces ? buttonAcces() : buttonUnFriend();
 		}
 	};

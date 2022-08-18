@@ -8,12 +8,13 @@ import { renderMessage } from 'helpers/HandleShare';
 import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
 import { useState } from 'react';
+import { updateUser } from 'reducers/redux-utils/user';
 
 const ModalItem = ({ item, setModalNotti, getNotifications, setGetNotifications, selectKey }) => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	const { userInfo } = useSelector(state => state.auth);
-	// const { isreload } = useSelector(state => state.user);
+	const { isReload } = useSelector(state => state.user);
 
 	const [buttonNotClicked, setButtonNotClicked] = useState(true);
 
@@ -35,7 +36,7 @@ const ModalItem = ({ item, setModalNotti, getNotifications, setGetNotifications,
 			}
 			await dispatch(readNotification({ notificationId: items.id })).unwrap();
 			await dispatch(addFollower({ userId: items.actor })).unwrap();
-			// dispatch(handleSaveUpdate(!isreload));
+			dispatch(updateUser(!isReload));
 		} catch (err) {
 			NotificationError(err);
 		}
