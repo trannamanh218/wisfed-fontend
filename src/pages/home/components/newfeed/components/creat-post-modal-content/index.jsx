@@ -257,7 +257,7 @@ function CreatPostModalContent({
 			setTaggedData(prev => ({ ...prev, [type]: {} }));
 		}
 	};
-	// console.log(checkProgress);
+
 	const generateData = async () => {
 		const params = {
 			msg: content,
@@ -464,8 +464,6 @@ function CreatPostModalContent({
 			}
 		}
 	}, [showMainModal, content, taggedData, imagesUpload]);
-
-	console.log(taggedData);
 
 	const checkActive = () => {
 		let isActive = false;

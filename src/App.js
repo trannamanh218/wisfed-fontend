@@ -57,10 +57,9 @@ function App({ children }) {
 
 	useEffect(async () => {
 		const accsetToken = Storage.getAccessToken();
-		console.log('isLoginEx', isLoginExternal);
+
 		if (!isLoginExternal) {
 			if (accsetToken) {
-				console.log('app');
 				dispatch(checkLogin(true));
 				await dispatch(getCheckJwt()).unwrap();
 			} else {

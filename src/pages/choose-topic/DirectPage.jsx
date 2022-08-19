@@ -20,7 +20,7 @@ export default function Direct() {
 			// 	headers: { Authorization: `Bearer ${newToken}` },
 			// });
 			// dispatch(updateUserInfo(jwtData));
-			console.log('driect');
+
 			await dispatch(getCheckJwt()).unwrap();
 			navigate('/');
 		} catch (err) {
@@ -33,7 +33,6 @@ export default function Direct() {
 			localStorage.setItem('accessToken', newToken);
 			const accessToken = localStorage.getItem('accessToken');
 			if (accessToken) {
-				console.log('accessToken', accessToken);
 				dispatch(updateLoginExternal(true));
 				getJwt();
 			}
