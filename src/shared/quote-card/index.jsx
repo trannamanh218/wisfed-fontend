@@ -32,7 +32,7 @@ const QuoteCard = ({ data, isDetail = false, isShare = false }) => {
 
 	const navigate = useNavigate();
 	const onClickRedirectToAuthor = data => {
-		const id = data.createdBy || data.user.id;
+		const id = data.createdBy.id || data.user.id;
 		navigate(`/profile/${id}`);
 	};
 	const onClickRedirectToBook = data => {

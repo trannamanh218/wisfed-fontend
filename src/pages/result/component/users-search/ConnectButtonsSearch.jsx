@@ -12,6 +12,7 @@ const ConnectButtonsSearch = ({ direction, item }) => {
 	const [showModalUnfriends, setShowModalUnfriends] = useState(false);
 	const [friendStatusBtn, setFriendStatusBtn] = useState(item.relation);
 	const [followStatusBtn, setFollowStatusBtn] = useState(item.isFollow);
+	const [tung, setTung] = useState(item.friendRequest?.type);
 
 	const dispatch = useDispatch();
 
@@ -21,7 +22,9 @@ const ConnectButtonsSearch = ({ direction, item }) => {
 				userId: item.id,
 			};
 			await dispatch(makeFriendRequest(param)).unwrap();
-			setFriendStatusBtn((item.friendRequest.type = 'sentRequest'));
+
+			setFriendStatusBtn('sentRequest');
+			setTung('sentRequest');
 		} catch (err) {
 			NotificationError(err);
 		}
@@ -77,16 +80,17 @@ const ConnectButtonsSearch = ({ direction, item }) => {
 		}, 1500),
 		[]
 	);
-
+	console.log(item.friendRequest?.type);
 	const handleRenderButtonFriend = () => {
 		let contentBtn = '';
+		console.log(friendStatusBtn);
 		if (friendStatusBtn === 'friend') {
 			contentBtn = 'Hủy kết bạn';
 		} else if (friendStatusBtn === 'unknown') {
 			contentBtn = 'Kết bạn';
-		} else if (item.friendRequest?.type === 'requestToMe') {
+		} else if (tung === 'requestToMe') {
 			contentBtn = 'Chấp nhận';
-		} else if (item.friendRequest?.type === 'sentRequest') {
+		} else if (tung === 'sentRequest' || friendStatusBtn === 'sentRequest') {
 			contentBtn = 'Đã gửi lời mời';
 		}
 

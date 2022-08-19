@@ -9,7 +9,7 @@ import { useDispatch } from 'react-redux';
 import { likeUnlikeQuote } from 'reducers/redux-utils/quote';
 import _ from 'lodash';
 
-const TopQuotesComponent = ({ item, valueDate, categoryItem }) => {
+const TopQuotesComponent = ({ item, valueDate, categoryItem, trueRank }) => {
 	const [quoteData, setQuoteData] = useState({});
 	const navigate = useNavigate();
 
@@ -70,7 +70,7 @@ const TopQuotesComponent = ({ item, valueDate, categoryItem }) => {
 						</p>
 					</div>
 				</div>
-				<QuoteActionBar data={quoteData} likeUnlikeQuoteFnc={likeUnlikeQuoteFnc} />
+				<QuoteActionBar trueRank={trueRank} data={quoteData} likeUnlikeQuoteFnc={likeUnlikeQuoteFnc} />
 			</div>
 		</div>
 	);

@@ -43,6 +43,7 @@ const ModalItem = ({ item, setModalNotti, getNotifications, setGetNotifications,
 	};
 
 	const cancelFriend = async (data, items) => {
+		setButtonNotClicked(false);
 		const parseObject = JSON.parse(data);
 		const params = { id: parseObject.requestId, data: { reply: false } };
 		try {

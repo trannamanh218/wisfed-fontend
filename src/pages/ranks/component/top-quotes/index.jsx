@@ -78,6 +78,7 @@ const TopQuotes = ({ rows, listYear, tabSelected }) => {
 								item={item}
 								valueDate={valueDate}
 								categoryItem={kindOfGroupRef.current}
+								trueRank={index + 1}
 							/>
 						</div>
 					</div>

@@ -60,7 +60,7 @@ const BookTab = () => {
 	};
 
 	const handleAreaDownload = useCallback(async () => {
-		// setLoading(true);
+		setLoading(true);
 		const png = await getAreaPng();
 
 		if (png) {

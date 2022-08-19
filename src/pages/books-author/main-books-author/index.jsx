@@ -13,7 +13,6 @@ import { getFilterSearch } from 'reducers/redux-utils/search';
 import _ from 'lodash';
 import { Link, useNavigate } from 'react-router-dom';
 import bookImage from 'assets/images/default-book.png';
-import { TOP_BOOK_VERB_SHARE } from 'constants';
 import { saveDataShare } from 'reducers/redux-utils/post';
 import Storage from 'helpers/Storage';
 import { MY_BOOK_VERB_SHARE } from 'constants';

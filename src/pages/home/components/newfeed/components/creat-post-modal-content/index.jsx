@@ -46,7 +46,6 @@ import {
 	TOP_QUOTE_VERB_SHARE,
 	MY_BOOK_VERB_SHARE,
 } from 'constants';
-import { number } from 'yup/lib/locale';
 
 const verbShareArray = [
 	POST_VERB_SHARE,
@@ -55,6 +54,7 @@ const verbShareArray = [
 	READ_TARGET_VERB_SHARE,
 	TOP_BOOK_VERB_SHARE,
 	TOP_QUOTE_VERB_SHARE,
+	TOP_USER_VERB_SHARE,
 ];
 
 const urlRegex =
@@ -623,7 +623,7 @@ function CreatPostModalContent({
 							/>
 							{postDataShare.type === 'topQuote' && (
 								<div className='post__title__share__rank'>
-									<span className='number__title__rank'># Top {postDataShare.rank} quotes </span>{' '}
+									<span className='number__title__rank'># Top {postDataShare.trueRank} quotes </span>{' '}
 									<span className='title__rank'>
 										{postDataShare.categoryName?.length
 											? `  được like nhiều nhất thuộc ${
@@ -636,7 +636,7 @@ function CreatPostModalContent({
 							)}
 							{postDataShare.type === 'topBook' && (
 								<div className='post__title__share__rank'>
-									<span className='number__title__rank'># Top {postDataShare.rank}</span>
+									<span className='number__title__rank'># Top {postDataShare.trueRank}</span>
 									<span className='title__rank'>
 										{postDataShare.categoryName
 											? `  cuốn sách tốt nhất thuộc  ${

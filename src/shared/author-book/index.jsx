@@ -22,6 +22,7 @@ const AuthorBook = ({
 	categoryName,
 	inCreatePost,
 	inPost,
+	trueRank,
 }) => {
 	const { userId } = useParams();
 	const userInfo = useSelector(state => state.auth.userInfo);
@@ -36,6 +37,7 @@ const AuthorBook = ({
 			type: 'topBook',
 			id: data.bookId,
 			verb: TOP_BOOK_VERB_SHARE,
+			trueRank: trueRank,
 			...data,
 		};
 
@@ -65,6 +67,14 @@ const AuthorBook = ({
 			return authorNameArr.join(' - ');
 		} else {
 			return 'Ẩn Danh';
+		}
+	};
+
+	const generateCountRating = countRating => {
+		if (countRating) {
+			return `${countRating} đánh giá`;
+		} else {
+			return 'Chưa có đánh giá';
 		}
 	};
 
@@ -116,8 +126,11 @@ const AuthorBook = ({
 					</div>
 					<div className='author-book__bottom'>
 						<span className='author-book__stats'>
-							{/* {`${data.countRating || data.info.countRating || 'Chưa có'}` + ' đánh giá'} */}
+							{inPost
+								? generateCountRating(data.info?.countRating)
+								: generateCountRating(data.countRating)}
 						</span>
+
 						{!_.isEmpty(userInfo) && userInfo.role === 'author' && userId === userInfo.id ? (
 							<></>
 						) : (
@@ -139,6 +152,7 @@ AuthorBook.defaultProps = {
 	showShareBtn: false,
 	inCreatePost: false,
 	inPost: false,
+	trueRank: null,
 };
 
 AuthorBook.propTypes = {
@@ -151,6 +165,7 @@ AuthorBook.propTypes = {
 	categoryName: PropTypes.string,
 	inCreatePost: PropTypes.bool,
 	inPost: PropTypes.bool,
+	trueRank: PropTypes.number,
 };
 
 export default AuthorBook;

@@ -2,11 +2,9 @@ import PropTypes from 'prop-types';
 import noSearchResult from 'assets/images/no-search-result.png';
 import BookSlider from 'shared/book-slider';
 import UserAvatar from 'shared/user-avatar';
-// import { useSelector } from 'react-redux';
 
 const SuggestSection = props => {
 	const { option, list, handleAddToPost } = props;
-	// const { userInfo } = useSelector(state => state.auth);
 
 	if (list.length > 0) {
 		switch (option.value) {
@@ -51,7 +49,6 @@ const SuggestSection = props => {
 				return (
 					<div className='creat-post-modal-content__substitute__suggest-author-container'>
 						{list.map(item => {
-							// const friendInfo = userInfo?.id === item?.userOne?.id ? item?.userTwo : item?.userOne;
 							const friendInfo = item;
 							return (
 								<div

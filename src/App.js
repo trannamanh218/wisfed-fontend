@@ -13,7 +13,7 @@ import Notification from 'pages/notification/compornent-main';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Routes, Route, useLocation } from 'react-router-dom';
-import { checkLogin, updateLoginExternal } from 'reducers/redux-utils/auth';
+import { checkLogin } from 'reducers/redux-utils/auth';
 import { ToastContainer } from 'react-toastify';
 import Login from 'pages/login';
 import Register from 'pages/register';
@@ -51,22 +51,16 @@ function App({ children }) {
 	const dispatch = useDispatch();
 	const updateMyLibrary = useSelector(state => state.library.updateMyLibrary);
 	const { routerLogin, userInfo } = useSelector(state => state.auth);
-	const isLoginExternal = useSelector(state => state.auth.isLoginExternal);
 
 	const location = useLocation();
 
 	useEffect(async () => {
 		const accsetToken = Storage.getAccessToken();
-
-		if (!isLoginExternal) {
-			if (accsetToken) {
-				dispatch(checkLogin(true));
-				await dispatch(getCheckJwt()).unwrap();
-			} else {
-				dispatch(checkLogin(false));
-			}
+		if (accsetToken) {
+			dispatch(checkLogin(true));
+			await dispatch(getCheckJwt()).unwrap();
 		} else {
-			dispatch(updateLoginExternal(false));
+			dispatch(checkLogin(false));
 		}
 	}, []);
 

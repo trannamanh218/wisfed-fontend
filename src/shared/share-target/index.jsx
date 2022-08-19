@@ -36,7 +36,11 @@ function ShareTarget({ postData, inPost = false }) {
 
 	return (
 		<div className='share-target'>
-			<UserAvatar className='share-target__user' source={userInfo?.avatarImage} size='lg' />
+			<UserAvatar
+				className='share-target__user'
+				source={postData?.createdBy?.avatarImage || userInfo?.avatarImage}
+				size='lg'
+			/>
 			<div className='share-target__progress'>
 				{renderContentTop()}
 				<LinearProgressBar percent={inPost ? percent : postData?.percent} variant='share-target-gradient' />

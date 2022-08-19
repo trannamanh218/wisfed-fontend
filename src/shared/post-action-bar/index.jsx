@@ -91,6 +91,7 @@ const PostActionBar = ({ postData, handleLikeAction }) => {
 					categoryName: postData.info?.category?.name,
 					type: postData.originId.type,
 					id: postData.info.id,
+					trueRank: postData.originId.rank,
 					verb: TOP_USER_VERB_SHARE,
 					...postData.info,
 				};
@@ -102,6 +103,7 @@ const PostActionBar = ({ postData, handleLikeAction }) => {
 					type: postData.originId.type,
 					id: postData.info.id,
 					verb: TOP_BOOK_VERB_SHARE,
+					trueRank: postData.originId.rank,
 					...postData.info,
 				};
 			} else if (postData.verb === TOP_QUOTE_VERB_SHARE) {
@@ -112,6 +114,7 @@ const PostActionBar = ({ postData, handleLikeAction }) => {
 					type: postData.originId.type,
 					id: postData.info.id,
 					verb: TOP_QUOTE_VERB_SHARE,
+					trueRank: postData.originId.rank,
 					...postData.info,
 				};
 			} else if (postData.verb === MY_BOOK_VERB_SHARE) {
