@@ -41,7 +41,7 @@ export default function MainUpload() {
 	const [series, setSeries] = useState({});
 
 	const [resetSelect, setResetSelect] = useState(false);
-	const [buttonActive, setButtonActive] = useState(true);
+	const [buttonActive, setButtonActive] = useState(false);
 	const [temporarySeries, setTemporarySeries] = useState({});
 
 	const [inputAuthorValue, setInputAuthorValue] = useState('');
@@ -176,9 +176,10 @@ export default function MainUpload() {
 			tags: [],
 			series: series,
 		};
-		if (buttonActive) {
-			handleCreateBook(bookInfo);
-		}
+		console.log(bookInfo);
+		// if (buttonActive) {
+		// 	handleCreateBook(bookInfo);
+		// }
 	};
 
 	useEffect(() => {
@@ -197,7 +198,7 @@ export default function MainUpload() {
 			!language ||
 			!description
 		) {
-			setButtonActive(true);
+			setButtonActive(false);
 		} else {
 			setButtonActive(true);
 		}
@@ -319,7 +320,9 @@ export default function MainUpload() {
 							publisher={publisher}
 							setPublisher={setPublisher}
 						/> */}
-						<label>Nhà xuất bản</label>
+						<label>
+							Nhà xuất bản<span className='upload-text-danger'>*</span>
+						</label>
 						<input
 							className='input input--non-border'
 							placeholder='Nhà xuất bản'
@@ -438,6 +441,7 @@ export default function MainUpload() {
 								className={classNames('creat-post-modal-content__main__submit', 'btn-upload', {
 									'active': buttonActive,
 								})}
+								disabled={buttonActive ? false : true}
 							>
 								Lưu
 							</button>

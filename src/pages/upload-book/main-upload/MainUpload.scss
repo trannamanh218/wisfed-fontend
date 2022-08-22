@@ -171,7 +171,12 @@
 	}
 
 	.btn-upload {
+		cursor: not-allowed;
+		background-color: #eff0f7;
 		margin-top: 0px;
+		&.active {
+			background-color: #e0af7e;
+		}
 	}
 }
 
