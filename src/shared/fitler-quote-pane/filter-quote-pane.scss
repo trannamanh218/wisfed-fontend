@@ -116,3 +116,21 @@
 		}
 	}
 }
+
+@media only screen and (min-width: 820px) and (max-width: 929px) {
+	.main-quote {
+		.search-field__input {
+			&::placeholder {
+				font-size: smaller;
+			}
+		}
+	}
+}
+
+@media only screen and (min-width: 820px) and (max-width: 860px) {
+	.filter-quote-pane {
+		.filter-options.filter-quote-pane__options {
+			width: 78% !important;
+		}
+	}
+}

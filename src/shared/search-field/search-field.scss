@@ -18,12 +18,16 @@
 
 	&__input {
 		flex-grow: 1;
+		max-width: 100%;
 		background-color: inherit;
 		border: none;
 		outline: none;
 		font-size: 16px;
 		&:focus {
 			border: none;
+		}
+		&:placeholder-shown {
+			text-overflow: ellipsis;
 		}
 	}
 }

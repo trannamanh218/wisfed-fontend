@@ -3,7 +3,16 @@ import PropTypes from 'prop-types';
 import './category-group.scss';
 import BookThumbnail from 'shared/book-thumbnail';
 
-const CategoryGroup = ({ data, list, title, handleViewBookDetail, handleViewCategoryDetail, inCategoryDetail }) => {
+const CategoryGroup = ({
+	data,
+	list,
+	title,
+	handleViewBookDetail,
+	handleViewCategoryDetail,
+	inCategory = false,
+	inCategoryDetail = false,
+	inResult = false,
+}) => {
 	return (
 		<>
 			{!!list.length && (
@@ -34,8 +43,9 @@ const CategoryGroup = ({ data, list, title, handleViewBookDetail, handleViewCate
 									list={list}
 									size='lg'
 									handleViewBookDetail={handleViewBookDetail}
-									inCategory={true}
+									inCategory={inCategory}
 									inCategoryDetail={inCategoryDetail}
+									inResult={inResult}
 								/>
 							</>
 						)}
@@ -62,6 +72,7 @@ CategoryGroup.propTypes = {
 	handleViewCategoryDetail: PropTypes.func,
 	inCategory: PropTypes.bool,
 	inCategoryDetail: PropTypes.bool,
+	inResult: PropTypes.bool,
 };
 
 export default CategoryGroup;

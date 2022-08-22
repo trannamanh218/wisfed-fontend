@@ -14,10 +14,11 @@ const BookSlider = ({
 	size = 'sm',
 	handleViewBookDetail,
 	inCategory = false,
+	inResult = false,
 	inCategoryDetail = false,
 	...rest
 }) => {
-	const settingSlider = settings(inCategory, inCategoryDetail);
+	const settingSlider = settings(inCategory, inCategoryDetail, inResult);
 
 	return (
 		<div className='main'>
@@ -82,18 +83,18 @@ function SlidePrevBtn({ className, style, onClick }) {
 	);
 }
 
-function settings(inCategory, inCategoryDetail) {
+function settings(inCategory, inCategoryDetail, inResult) {
 	return {
 		dots: false,
 		speed: 600,
-		slidesToShow: inCategory ? 4 : 1,
+		slidesToShow: inCategory || inResult ? 4 : 1,
 		slidesToScroll: 2,
 		initialSlide: 0,
 		infinite: inCategoryDetail ? false : true,
 		lazyLoad: false,
 		autoplay: false,
 		swipeToSlide: true,
-		variableWidth: inCategory ? false : true,
+		variableWidth: inCategory || inResult ? false : true,
 		touchMove: true,
 		nextArrow: <SlideNextBtn />,
 		prevArrow: <SlidePrevBtn />,
@@ -101,21 +102,28 @@ function settings(inCategory, inCategoryDetail) {
 			{
 				breakpoint: 1025,
 				settings: {
-					slidesToShow: inCategory ? 3 : 1,
+					slidesToShow: inCategory ? 3 : inResult ? 4 : 1,
 					slidesToScroll: 1,
 				},
 			},
 			{
 				breakpoint: 992,
 				settings: {
-					slidesToShow: 2,
+					slidesToShow: inResult ? 4 : 2,
+					slidesToScroll: 1,
+				},
+			},
+			{
+				breakpoint: 821,
+				settings: {
+					slidesToShow: inResult ? 3 : 2,
 					slidesToScroll: 1,
 				},
 			},
 			{
 				breakpoint: 769,
 				settings: {
-					slidesToShow: 2,
+					slidesToShow: inResult ? 3 : 2,
 					slidesToScroll: 2,
 				},
 			},
@@ -159,6 +167,7 @@ BookSlider.propTypes = {
 	handleViewBookDetail: PropTypes.func,
 	inCategory: PropTypes.bool,
 	inCategoryDetail: PropTypes.bool,
+	inResult: PropTypes.bool,
 };
 
 SlideNextBtn.propTypes = {

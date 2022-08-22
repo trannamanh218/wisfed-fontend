@@ -102,6 +102,7 @@ const MainCategory = ({ isFetching, handleViewBookDetail, handleViewCategoryDeta
 								data={category}
 								handleViewBookDetail={handleViewBookDetail}
 								handleViewCategoryDetail={handleViewCategoryDetail}
+								inCategory={true}
 							/>
 						))}
 					</InfiniteScroll>

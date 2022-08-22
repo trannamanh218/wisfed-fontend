@@ -15,8 +15,9 @@
 	.result__main {
 		margin-top: 24px;
 		.nav-tabs {
-			padding: 0 40px;
-			gap: 30px;
+			display: flex;
+			flex-wrap: wrap;
+			justify-content: space-evenly;
 		}
 		.nav-item {
 			.nav-link {
@@ -34,6 +35,27 @@
 		}
 		.tab-content {
 			padding-bottom: 0;
+		}
+	}
+
+	.author-book__title {
+		max-width: 100%;
+	}
+}
+
+@media only screen and (max-width: 900px) {
+	.result__container {
+		margin: auto 25px;
+	}
+}
+
+@media only screen and (max-width: 786px) {
+	.result__main {
+		.quote-footer__badge.badge {
+			max-width: 153px !important;
+		}
+		.quote-footer {
+			gap: 5px;
 		}
 	}
 }

@@ -109,6 +109,7 @@ const CategorySearch = ({ value, isFetching, setIsFetching, searchResultInput, a
 									data={category}
 									handleViewBookDetail={handleViewBookDetail}
 									handleViewCategoryDetail={handleViewCategoryDetail}
+									inResult={true}
 								/>
 							))}
 						</InfiniteScroll>
