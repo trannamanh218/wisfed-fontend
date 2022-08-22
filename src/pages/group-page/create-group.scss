@@ -156,19 +156,20 @@
 		margin-bottom: 23px;
 	}
 }
-
-.select-box {
-	// ai sửa thì cho vào class chứa select k thì chỗ khác sẽ ăn chung css
-	.select-box__btn {
-		justify-content: space-between;
-	}
-	.select-box__list {
-		max-width: 100% !important;
-		width: 100% !important;
-	}
-	.select-box__item {
-		width: 100%;
-		margin: 0 !important;
+.form-field-select__kind-of-group {
+	.select-box {
+		// ai sửa thì cho vào class chứa select k thì chỗ khác sẽ ăn chung css
+		.select-box__btn {
+			justify-content: space-between;
+		}
+		.select-box__list {
+			max-width: 100% !important;
+			width: 100% !important;
+		}
+		.select-box__item {
+			width: 100%;
+			margin: 0 !important;
+		}
 	}
 }
 
