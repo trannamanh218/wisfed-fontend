@@ -10,6 +10,7 @@ import { getMySeries, postMoreSeries } from 'reducers/redux-utils/series';
 import { useEffect } from 'react';
 import { CloseIconX } from 'components/svg';
 import _ from 'lodash';
+import { addBookToSeries } from 'reducers/redux-utils/series';
 
 const ModalSeries = ({
 	showModalSeries,
@@ -18,12 +19,15 @@ const ModalSeries = ({
 	setSeries,
 	temporarySeries,
 	setTemporarySeries,
+	addToSeriesImmediately,
+	bookId,
 }) => {
 	const [buttonDisable, setButtonDisable] = useState(false);
 
 	const [APIListSeries, setAPIListSeries] = useState([]);
 	const [listSeries, setListSeries] = useState([]);
 	const [updateListSeries, setUpdateListSeries] = useState(false);
+	const [temporarySeriesName, setTemporarySeriesName] = useState('');
 
 	const dispatch = useDispatch();
 
@@ -37,6 +41,7 @@ const ModalSeries = ({
 
 	const onItemChange = item => {
 		setTemporarySeries(item);
+		setTemporarySeriesName(item.name);
 	};
 
 	const handleClose = () => {
@@ -59,6 +64,29 @@ const ModalSeries = ({
 	const handleConfirm = () => {
 		setSeries(temporarySeries);
 		handleCloseModalSeries();
+
+		if (addToSeriesImmediately === true) {
+			const paramsForAddBookToSeries = {
+				seriesId: temporarySeries.id,
+				body: { bookIds: [Number(bookId)] },
+			};
+			handleAddBookToSeries(paramsForAddBookToSeries);
+		}
+	};
+
+	const handleAddBookToSeries = async params => {
+		try {
+			await dispatch(addBookToSeries(params)).unwrap();
+		} catch (err) {
+			NotificationError(err);
+		}
+	};
+
+	const handleCancel = () => {
+		setButtonDisable(true);
+		setSeries({});
+		setTemporarySeries({});
+		setTemporarySeriesName('');
 	};
 
 	const handleGetSeriesList = async () => {
@@ -77,6 +105,7 @@ const ModalSeries = ({
 
 	useEffect(() => {
 		setTemporarySeries(series);
+		setTemporarySeriesName(series.name);
 	}, [showModalSeries]);
 
 	useEffect(() => {
@@ -107,7 +136,7 @@ const ModalSeries = ({
 						className='input input--non-border'
 						placeholder='Sê-ri bộ sách'
 						disabled
-						value={temporarySeries.name}
+						value={temporarySeriesName}
 					></input>
 				</div>
 
@@ -130,7 +159,7 @@ const ModalSeries = ({
 											<input
 												type='radio'
 												name='title'
-												checked={temporarySeries.name === item.name}
+												checked={temporarySeries.id === item.id}
 												onChange={() => onItemChange(item)}
 											/>
 											<div className='series-options-checkmark'></div>
@@ -143,12 +172,15 @@ const ModalSeries = ({
 					<AddSeriesForm updateSeries={updateSeries} />
 				</div>
 				<div className='modal-series__footer'>
+					<button className='btn-upload-cancel' onClick={handleCancel}>
+						Hủy bỏ
+					</button>
 					<button
 						onClick={handleConfirm}
 						style={buttonDisable ? { cursor: 'not-allowed', backgroundColor: '#d9dbe9' } : null}
 						disabled={buttonDisable ? true : false}
 					>
-						<span>Xác nhận</span>
+						<span>{addToSeriesImmediately ? 'Thêm vào series' : 'Xác nhận'}</span>
 					</button>
 				</div>
 			</Modal.Body>
@@ -158,6 +190,7 @@ const ModalSeries = ({
 
 ModalSeries.defaultProps = {
 	showModalSeries: false,
+	addToSeriesImmediately: false,
 };
 
 ModalSeries.propTypes = {
@@ -167,6 +200,8 @@ ModalSeries.propTypes = {
 	setSeries: PropTypes.func,
 	temporarySeries: PropTypes.object,
 	setTemporarySeries: PropTypes.func,
+	addToSeriesImmediately: PropTypes.bool,
+	bookId: PropTypes.number,
 };
 
 export default ModalSeries;

@@ -115,6 +115,9 @@
 	}
 
 	&__footer {
+		display: flex;
+		flex-direction: row;
+		gap: 1rem;
 		button {
 			background: #e0af7e;
 			border-radius: 12px;
@@ -126,6 +129,10 @@
 				line-height: 22px;
 				color: white;
 			}
+		}
+		.btn-upload-cancel {
+			background-color: transparent;
+			border: 2px solid #e0af7e;
 		}
 	}
 }
