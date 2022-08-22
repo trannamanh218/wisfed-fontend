@@ -6,10 +6,9 @@
 		justify-content: space-between;
 		align-items: center;
 		margin-top: 14px;
-		gap: 2px;
 		.result__search__main__left {
 			display: flex;
-			gap: 14px;
+			gap: 16px;
 			align-items: center;
 			flex: 1;
 			cursor: pointer;
@@ -25,13 +24,6 @@
 				font-size: 15px;
 				line-height: 24px;
 				color: #000000;
-				max-width: 320px;
-			}
-			.result__search__main__avatar {
-				width: 42px;
-				.result__search__main__img {
-					margin-left: 3px;
-				}
 			}
 		}
 
@@ -43,6 +35,7 @@
 			}
 		}
 	}
+
 	.result__search__value {
 		display: flex;
 		align-items: center;
@@ -54,7 +47,9 @@
 			height: 44px;
 			border-radius: 50%;
 			background: #e0af7e;
-			padding: 11px;
+			display: flex;
+			justify-content: center;
+			align-items: center;
 			svg {
 				path {
 					stroke: #f7f7fc;

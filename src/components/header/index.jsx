@@ -36,9 +36,15 @@ import _ from 'lodash';
 import { patchNewNotification, updateIsNewNotificationUserInfo } from 'reducers/redux-utils/auth';
 import { handleRefreshNewfeed } from 'reducers/redux-utils/activity';
 import Request from 'helpers/Request';
+import HeaderSearchMobile from './header-search-mobile';
 
 const Header = () => {
 	const { ref: showRef, isVisible: isShow, setIsVisible: setIsShow } = useVisible(false);
+	const {
+		ref: searchMobileWrapper,
+		isVisible: isShowSearchMobile,
+		setIsVisible: setIsShowSearchMobile,
+	} = useVisible(false);
 	const [activeLink, setActiveLink] = useState('/');
 	const [modalNoti, setModalNotti] = useState(false);
 	const [modalInforUser, setModalInforUser] = useState(false);
@@ -221,25 +227,31 @@ const Header = () => {
 					</Link>
 				</div>
 				<div className='header__search'>
-					<img className='header__search__icon' src={SearchIcon} alt='search-icon' />
-					<input
-						className='header__search__input'
-						placeholder='Tìm kiếm trên Wisfeed'
-						onClick={handlePopup}
-						disabled={isShow}
-						value={getSlugResult || ''}
-						onChange={() => {}}
-					/>
+					{/* Modal tìm kiếm */}
+					{isShow ? (
+						<SearchAllModal showRef={showRef} setIsShow={setIsShow} />
+					) : (
+						<>
+							<img className='header__search__icon' src={SearchIcon} alt='search-icon' />
+							<input
+								className='header__search__input'
+								placeholder='Tìm kiếm trên Wisfeed'
+								onClick={handlePopup}
+								disabled={isShow}
+								value={getSlugResult}
+								onChange={() => {}}
+							/>
+						</>
+					)}
 				</div>
-				<div className='header-search-small' onClick={() => setIsShow(true)}>
-					<img className='header__search__icon' src={SearchIcon} alt='search-icon' />
-				</div>
-
-				{/* Modal tìm kiếm */}
-				{isShow ? <SearchAllModal showRef={showRef} setIsShow={setIsShow} /> : ''}
+				<HeaderSearchMobile
+					searchRef={searchMobileWrapper}
+					isShowSearchMobile={isShowSearchMobile}
+					setIsShowSearchMobile={setIsShowSearchMobile}
+				/>
 			</div>
 
-			<ul className='header__nav'>
+			<ul className={classNames('header__nav', { 'hidden': isShow || isShowSearchMobile })}>
 				<li className={classNames('header__nav__item', { active: activeLink === '/' })}>
 					<Link className='header__nav__link' to='/' onClick={onClickReloadPosts}>
 						<HomeIcon className='header__nav__icon' />

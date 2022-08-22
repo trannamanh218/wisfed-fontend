@@ -12,8 +12,7 @@ import { NotificationError } from 'helpers/Error';
 const SearchAllModal = ({ showRef, setIsShow }) => {
 	const [valueInputSearch, setValueInputSearch] = useState('');
 	const [resultSearch, setResultSearch] = useState([]);
-	const [filter, setFilter] = useState('[]');
-	const [valueInput, setValueInput] = useState('');
+	const [filter, setFilter] = useState('');
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 
@@ -22,7 +21,7 @@ const SearchAllModal = ({ showRef, setIsShow }) => {
 			const filterValue = value.toLowerCase().trim();
 			setFilter(JSON.stringify(filterValue));
 		} else {
-			setFilter('[]');
+			setFilter('');
 		}
 	};
 
@@ -44,13 +43,12 @@ const SearchAllModal = ({ showRef, setIsShow }) => {
 
 	const handleSearch = e => {
 		debounceSearch(e.target.value);
-		setValueInput(e.target.value.trim());
 		setValueInputSearch(e.target.value);
 	};
 
 	const handleKeyDown = e => {
-		if (e.key === 'Enter' && valueInput) {
-			navigate(`/result/q=${valueInput}`);
+		if (e.key === 'Enter' && valueInputSearch) {
+			navigate(`/result/q=${valueInputSearch}`);
 		}
 	};
 
@@ -58,7 +56,7 @@ const SearchAllModal = ({ showRef, setIsShow }) => {
 		<div ref={showRef} className='search__all__container'>
 			<div className='search__all__header'>
 				<SearchField
-					placeholder='Tìm kiếm wisfeed'
+					placeholder='Tìm kiếm trên Wisfeed'
 					handleChange={handleSearch}
 					value={valueInputSearch}
 					onKeyDown={handleKeyDown}
