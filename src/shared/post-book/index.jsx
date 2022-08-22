@@ -7,6 +7,15 @@ import LinearProgressBar from 'shared/linear-progress-bar';
 import { Link } from 'react-router-dom';
 
 function PostBook({ data, inCreatePost }) {
+	const generateAuthorName = authors => {
+		if (authors && authors.length) {
+			const authorNameArr = authors.map(item => item.authorName);
+			return authorNameArr.join(' - ');
+		} else {
+			return 'Tác giả: Chưa xác định';
+		}
+	};
+
 	return (
 		<div className='post-book'>
 			<Link to={`/book/detail/${data.id}`}>
@@ -19,7 +28,7 @@ function PostBook({ data, inCreatePost }) {
 							{data.name}
 						</div>
 					</Link>
-					<div className='post-book__author'>{data.author || 'Tác giả: Chưa xác định'}</div>
+					<div className='post-book__author'>{generateAuthorName(data?.authors)}</div>
 					<div className='post-book__edit'>
 						<LinearProgressBar percent={((data.progress / data.page) * 100).toFixed()} />
 						<div className='post-book__editor'>
