@@ -32,6 +32,14 @@ function ReadingBook({ bookData }) {
 		navigate(`/book/detail/${bookData.id}`);
 	};
 
+	const generateAuthorName = authors => {
+		if (authors && authors.length) {
+			const authorNameArr = authors.map(item => item.authorName);
+			return authorNameArr.join(' - ');
+		} else {
+			return 'Ẩn Danh';
+		}
+	};
 	return (
 		!_.isEmpty(bookData) && (
 			<div className='reading-book'>
@@ -53,7 +61,9 @@ function ReadingBook({ bookData }) {
 						<div className='reading-book__information'>
 							<div>
 								<div className='reading-book__information__book-name'>{bookData.name}</div>
-								<div className='reading-book__information__author'>{bookData?.author}</div>
+								<div className='reading-book__information__author'>
+									{generateAuthorName(bookData?.authors)}
+								</div>
 							</div>
 							<div className='reading-book__information__current-progress'>
 								<ProgressBar now={percent} />
