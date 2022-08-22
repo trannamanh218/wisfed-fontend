@@ -81,10 +81,9 @@
 		height: 64px;
 		border-radius: 12px;
 		padding: 0px 20px;
-		margin-left: 60px;
+		margin-left: auto;
 		max-width: 600px;
-		transition: all 0.4s ease;
-		overflow: hidden;
+		transition: all 0.5s ease;
 
 		.notify-icon {
 			width: 15%;
@@ -236,8 +235,7 @@
 		}
 
 		&__nav {
-			margin-left: 40px;
-			gap: 20px;
+			gap: 24px;
 			&__item {
 				svg {
 					width: 28px;
@@ -285,6 +283,10 @@
 				max-width: 0;
 				padding: 0;
 				margin-left: 0;
+				overflow: hidden;
+			}
+			&.show {
+				overflow: unset;
 			}
 			&__item {
 				svg {

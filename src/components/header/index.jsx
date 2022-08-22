@@ -46,12 +46,13 @@ const Header = () => {
 		setIsVisible: setIsShowSearchMobile,
 	} = useVisible(false);
 	const [activeLink, setActiveLink] = useState('/');
-	const [modalNoti, setModalNotti] = useState(false);
+	const [modalNoti, setModalNoti] = useState(false);
 	const [modalInforUser, setModalInforUser] = useState(false);
 	const [getSlugResult, setGetSlugResult] = useState('');
 	const [userLogin, setUserLogin] = useState(false);
 	const [activeNotificaiton, setActiveNotification] = useState(false);
 	const [realTime, setRealTime] = useState(false);
+	const [showNavIcon, setShowNavIcon] = useState(false);
 
 	const buttonModal = useRef(null);
 	const userOptions = useRef(null);
@@ -81,12 +82,28 @@ const Header = () => {
 	}, [isShowModal]);
 
 	useEffect(() => {
+		let timeout;
+		if (!isShowSearchMobile) {
+			timeout = setTimeout(() => {
+				setShowNavIcon(true);
+			}, 100);
+		} else {
+			timeout = setTimeout(() => {
+				setShowNavIcon(false);
+			}, 150);
+		}
+		return () => {
+			clearTimeout(timeout);
+		};
+	}, [isShowSearchMobile]);
+
+	useEffect(() => {
 		const params = {
 			isNewNotification: false,
 		};
 		if (pathname === '/notification') {
 			setActiveNotification(true);
-			setModalNotti(false);
+			setModalNoti(false);
 			updateNewNotificaionFalse(params);
 			setTimeout(() => setRealTime(false), 1500);
 		} else if (modalNoti && realTime) {
@@ -131,12 +148,12 @@ const Header = () => {
 			isNewNotification: false,
 		};
 		if (pathname === '/notification') {
-			setModalNotti(false);
+			setModalNoti(false);
 			setRealTime(false);
 			updateNewNotificaionFalse(params);
 		} else {
 			if (Storage.getAccessToken()) {
-				setModalNotti(!modalNoti);
+				setModalNoti(!modalNoti);
 				dispatch(backgroundToggle(modalNoti));
 				setRealTime(false);
 				updateNewNotificaionFalse(params);
@@ -251,63 +268,73 @@ const Header = () => {
 				/>
 			</div>
 
-			<ul className={classNames('header__nav', { 'hidden': isShow || isShowSearchMobile })}>
-				<li className={classNames('header__nav__item', { active: activeLink === '/' })}>
-					<Link className='header__nav__link' to='/' onClick={onClickReloadPosts}>
-						<HomeIcon className='header__nav__icon' />
-					</Link>
-				</li>
-				<li
-					onClick={handleUserLogin}
-					className={classNames('header__nav__item', { active: activeLink === `/shelves/${userInfo.id}` })}
-				>
-					<Link className='header__nav__link' to={userLogin && `/shelves/${userInfo.id}`}>
-						{activeLink === `/shelves/${userInfo.id}` ? <BookFillIcon /> : <BookIcon />}
-					</Link>
-				</li>
-				<li
-					onClick={handleUserLogin}
-					className={classNames('header__nav__item', { active: activeLink === '/group' })}
-				>
-					<Link className='header__nav__link' to={userLogin && '/group'}>
-						{activeLink === '/group' ? <GroupFillIcon /> : <GroupIcon />}
-					</Link>
-				</li>
-				<li
-					onClick={handleUserLogin}
-					className={classNames('header__nav__item', { active: activeLink === '/category' })}
-				>
-					<Link className='header__nav__link' to={userLogin && '/category'}>
-						{activeLink === '/category' ? <CategoryFillIcon /> : <CategoryIcon />}
-					</Link>
-				</li>
-				<li
-					onClick={handleUserLogin}
-					className={classNames('header__nav__item', { active: activeLink === '/friends' })}
-				>
-					<Link className='header__nav__link' to={userLogin && '/friends'}>
-						{activeLink === '/friends' ? <FriendsFillIcon /> : <FriendsIcon />}
-					</Link>
-				</li>
+			<ul
+				className={classNames('header__nav', {
+					'hidden': isShowSearchMobile,
+				})}
+			>
+				{showNavIcon && (
+					<>
+						<li className={classNames('header__nav__item', { active: activeLink === '/' })}>
+							<Link className='header__nav__link' to='/' onClick={onClickReloadPosts}>
+								<HomeIcon className='header__nav__icon' />
+							</Link>
+						</li>
+						<li
+							onClick={handleUserLogin}
+							className={classNames('header__nav__item', {
+								active: activeLink === `/shelves/${userInfo.id}`,
+							})}
+						>
+							<Link className='header__nav__link' to={userLogin && `/shelves/${userInfo.id}`}>
+								{activeLink === `/shelves/${userInfo.id}` ? <BookFillIcon /> : <BookIcon />}
+							</Link>
+						</li>
+						<li
+							onClick={handleUserLogin}
+							className={classNames('header__nav__item', { active: activeLink === '/group' })}
+						>
+							<Link className='header__nav__link' to={userLogin && '/group'}>
+								{activeLink === '/group' ? <GroupFillIcon /> : <GroupIcon />}
+							</Link>
+						</li>
+						<li
+							onClick={handleUserLogin}
+							className={classNames('header__nav__item', { active: activeLink === '/category' })}
+						>
+							<Link className='header__nav__link' to={userLogin && '/category'}>
+								{activeLink === '/category' ? <CategoryFillIcon /> : <CategoryIcon />}
+							</Link>
+						</li>
+						<li
+							onClick={handleUserLogin}
+							className={classNames('header__nav__item', { active: activeLink === '/friends' })}
+						>
+							<Link className='header__nav__link' to={userLogin && '/friends'}>
+								{activeLink === '/friends' ? <FriendsFillIcon /> : <FriendsIcon />}
+							</Link>
+						</li>
 
-				<div className='notify-icon'>
-					<div
-						ref={buttonModal}
-						onClick={toglleModalNotify}
-						className={classNames('header__notify__icon', {
-							'active': modalNoti || activeNotificaiton,
-							'header__notify__icon__active': realTime,
-						})}
-					/>
+						<div className='notify-icon'>
+							<div
+								ref={buttonModal}
+								onClick={toglleModalNotify}
+								className={classNames('header__notify__icon', {
+									'active': modalNoti || activeNotificaiton,
+									'header__notify__icon__active': realTime,
+								})}
+							/>
 
-					{modalNoti && (
-						<NotificationModal
-							setModalNotti={setModalNotti}
-							buttonModal={buttonModal}
-							realTime={realTime}
-						/>
-					)}
-				</div>
+							{modalNoti && (
+								<NotificationModal
+									setModalNoti={setModalNoti}
+									buttonModal={buttonModal}
+									realTime={realTime}
+								/>
+							)}
+						</div>
+					</>
+				)}
 			</ul>
 
 			<div className='header__userInfo' onClick={() => tollgleModaleInfoUser()} ref={userOptions}>

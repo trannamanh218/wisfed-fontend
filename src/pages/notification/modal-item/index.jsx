@@ -10,7 +10,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useState } from 'react';
 import { updateUser } from 'reducers/redux-utils/user';
 
-const ModalItem = ({ item, setModalNotti, getNotifications, setGetNotifications, selectKey }) => {
+const ModalItem = ({ item, setModalNoti, getNotifications, setGetNotifications, selectKey }) => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	const { userInfo } = useSelector(state => state.auth);
@@ -107,7 +107,7 @@ const ModalItem = ({ item, setModalNotti, getNotifications, setGetNotifications,
 			navigate(`/detail-feed/mini-post/${items.originId.minipostId}`);
 		}
 		dispatch(backgroundToggle(true));
-		setModalNotti(false);
+		setModalNoti(false);
 		dispatch(readNotification(params)).unwrap();
 	};
 
@@ -196,7 +196,7 @@ const ModalItem = ({ item, setModalNotti, getNotifications, setGetNotifications,
 
 ModalItem.propTypes = {
 	item: PropTypes.object,
-	setModalNotti: PropTypes.func,
+	setModalNoti: PropTypes.func,
 	getNotifications: PropTypes.array,
 	setGetNotifications: PropTypes.func,
 	getListUnread: PropTypes.array,
