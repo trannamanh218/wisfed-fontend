@@ -1,5 +1,5 @@
 import { Add, Minus } from 'components/svg';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Button from 'shared/button';
 import PropTypes from 'prop-types';
 import './connect-buttons.scss';

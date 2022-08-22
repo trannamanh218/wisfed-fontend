@@ -116,7 +116,7 @@ function Bookcase({ currentUserInfo, currentTab }) {
 		dispatch(updateCurrentBook(newBook));
 		navigate('/');
 	};
-
+	console.log(readingBooks);
 	return (
 		<div className='bookcase'>
 			{currentTab === 'bookcase' && (

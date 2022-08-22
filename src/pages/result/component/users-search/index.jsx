@@ -71,7 +71,7 @@ const UsersSearch = ({ isFetching, value, setIsFetching, searchResultInput, acti
 					<InfiniteScroll next={handleGetUserSearch} dataLength={listArrayUsers.length} hasMore={hasMore}>
 						<div className='myfriends__layout__container'>
 							{listArrayUsers.map(item => {
-								if (item.relation != 'isMe') {
+								if (item.relation !== 'isMe') {
 									return (
 										<div key={item.id} className='myfriends__layout'>
 											<Link to={`/profile/${item.id}`}>
