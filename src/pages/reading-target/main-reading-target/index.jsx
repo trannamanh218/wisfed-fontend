@@ -92,13 +92,13 @@ const MainReadingTarget = () => {
 					<tr className='book-row' key={item.id}>
 						<td className='hightlight-column'></td>
 						<td>
-							<Link to={`/book/detail/${item.id}`}>
+							<Link to={`/book/detail/${item.book.id}`}>
 								<BookThumbnail size='sm' source={item.book?.images[0]} />
 							</Link>
 						</td>
 						<td>
 							<span className='book-name' title={item.book.name}>
-								<Link to={`/book/detail/${item.id}`}>{item.book.name}</Link>
+								<Link to={`/book/detail/${item.book.id}`}>{item.book.name}</Link>
 							</span>
 						</td>
 						<td>{!_.isEmpty(item.authors) ? item.authors[0].name : 'Chưa cập nhật'}</td>
