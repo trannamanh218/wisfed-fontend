@@ -286,3 +286,46 @@
 		border-radius: 0;
 	}
 }
+@media only screen and (max-width: 1280px) {
+	.modal-content {
+		width: 80% !important;
+		margin-left: 75px;
+	}
+	.list-group__container {
+		h3 {
+			font-size: 17px;
+		}
+	}
+	.search-group-container {
+		.group-btn-back {
+			margin-bottom: 25px;
+		}
+	}
+	.create-group-modal {
+		.form-field-wrapper {
+			padding: 20px 24px 24px;
+		}
+	}
+}
+@media only screen and (max-width: 1024px) {
+	.mainContainer__right-left {
+		.list-group__container {
+			h3 {
+				font-size: 15px;
+			}
+		}
+	}
+	.search-group-container {
+		.group-btn-back {
+			& span {
+				font-size: 18px;
+			}
+			& button {
+				& svg {
+					width: 20px;
+					height: 20px;
+				}
+			}
+		}
+	}
+}

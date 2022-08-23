@@ -46,3 +46,19 @@
 		}
 	}
 }
+@media only screen and (max-width: 1024px) {
+	.mainContainer__main {
+		.book-thumbnail-lg {
+			margin-bottom: 10px;
+			width: 180px;
+			height: 250px;
+			& img {
+				width: 180px;
+				height: 250px;
+			}
+		}
+		.book-intro__name {
+			font-size: 20px;
+		}
+	}
+}

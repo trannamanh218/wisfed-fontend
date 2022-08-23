@@ -190,3 +190,11 @@
 		color: #fcfcfc;
 	}
 }
+
+@media only screen and (max-width: 1024px) {
+	.form-field-select__kind-of-group {
+		label {
+			margin-top: 30px;
+		}
+	}
+}

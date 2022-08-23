@@ -32,7 +32,7 @@ const NewFeed = () => {
 	useEffect(async () => {
 		callApiStart.current = 10;
 		getPostListFirstTime();
-	}, [isNewPost, userInfo, refreshNewfeed]); //[isNewPost, userInfo, refreshNewfeed]
+	}, [isNewPost, refreshNewfeed]); //[isNewPost, userInfo, refreshNewfeed]
 
 	const getPostListFirstTime = async () => {
 		setIsLoading(true);

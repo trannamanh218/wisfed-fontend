@@ -33,9 +33,11 @@ const BookIntro = ({ bookInfo, listRatingStar }) => {
 
 	useEffect(() => {
 		if (window.innerWidth <= 1024 && window.innerWidth > 820) {
-			setTextLength(300);
+			setTextLength(200);
 		} else if (window.innerWidth <= 820) {
-			setTextLength(280);
+			setTextLength(150);
+		} else if (window.innerWidth <= 1280) {
+			setTextLength(400);
 		}
 	}, []);
 
