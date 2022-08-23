@@ -6,11 +6,13 @@ import { useDispatch } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
 import _ from 'lodash';
 import ModalUnFriend from 'pages/friends/component/modalUnFriends';
+import { ReplyFriendRequest } from 'reducers/redux-utils/user';
 
 const ConnectButtonsSearch = ({ direction, item }) => {
 	const [showModalUnfriends, setShowModalUnfriends] = useState(false);
 	const [friendStatusBtn, setFriendStatusBtn] = useState(item.relation);
 	const [followStatusBtn, setFollowStatusBtn] = useState(item.isFollow);
+	const [tung, setTung] = useState(item.friendRequest?.type);
 
 	const dispatch = useDispatch();
 
@@ -20,7 +22,9 @@ const ConnectButtonsSearch = ({ direction, item }) => {
 				userId: item.id,
 			};
 			await dispatch(makeFriendRequest(param)).unwrap();
-			setFriendStatusBtn('pending');
+
+			setFriendStatusBtn('sentRequest');
+			setTung('sentRequest');
 		} catch (err) {
 			NotificationError(err);
 		}
@@ -36,12 +40,24 @@ const ConnectButtonsSearch = ({ direction, item }) => {
 			NotificationError(err);
 		}
 	};
+	const handleAcces = async () => {
+		try {
+			const params = { id: item.friendRequest.id, data: { reply: true } };
+			setFriendStatusBtn('friend');
+
+			dispatch(ReplyFriendRequest(params)).unwrap();
+		} catch (err) {
+			NotificationError(err);
+		}
+	};
 
 	const handleFriendBtn = () => {
 		if (friendStatusBtn === 'friend') {
 			setShowModalUnfriends(true);
 		} else if (friendStatusBtn === 'unknown') {
 			handleAddFriend();
+		} else if (item.friendRequest?.type === 'requestToMe') {
+			handleAcces();
 		}
 	};
 
@@ -64,14 +80,17 @@ const ConnectButtonsSearch = ({ direction, item }) => {
 		}, 1500),
 		[]
 	);
-
+	console.log(item.friendRequest?.type);
 	const handleRenderButtonFriend = () => {
 		let contentBtn = '';
+		console.log(friendStatusBtn);
 		if (friendStatusBtn === 'friend') {
 			contentBtn = 'Hủy kết bạn';
 		} else if (friendStatusBtn === 'unknown') {
 			contentBtn = 'Kết bạn';
-		} else {
+		} else if (tung === 'requestToMe') {
+			contentBtn = 'Chấp nhận';
+		} else if (tung === 'sentRequest' || friendStatusBtn === 'sentRequest') {
 			contentBtn = 'Đã gửi lời mời';
 		}
 

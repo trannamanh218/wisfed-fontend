@@ -28,8 +28,12 @@ function Login() {
 	const navigate = useNavigate();
 
 	const handleSubmit = async data => {
+		const dataSend = {
+			email: data.email.toLowerCase(),
+			password: data.password,
+		};
 		try {
-			const infoUserLogin = await dispatch(login(data)).unwrap();
+			const infoUserLogin = await dispatch(login(dataSend)).unwrap();
 			if (infoUserLogin) {
 				const actionCheckJwt = await dispatch(getCheckJwt()).unwrap();
 				const customId = 'custom-id-Login';

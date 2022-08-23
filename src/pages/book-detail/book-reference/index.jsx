@@ -147,6 +147,7 @@ const BookReference = ({ bookInfo }) => {
 					</button>
 				</div>
 			) : null}
+
 			{/* Modal thêm series */}
 			<ModalSeries
 				showModalSeries={showModalSeries}
@@ -155,6 +156,8 @@ const BookReference = ({ bookInfo }) => {
 				setSeries={setSeries}
 				temporarySeries={temporarySeries}
 				setTemporarySeries={setTemporarySeries}
+				addToSeriesImmediately={true}
+				bookId={bookInfo.id}
 			/>
 
 			<div className='book-reference__highlight__post'>
