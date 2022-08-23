@@ -40,6 +40,7 @@ const PopupCreateGroup = ({ handleClose }) => {
 	const [categoryAddedList, setCategoryAddedList] = useState([]);
 	const [categorySearchedList, setCategorySearchedList] = useState([]);
 	const [getDataFinish, setGetDataFinish] = useState(false);
+	const [show, setShow] = useState(false);
 
 	const dataRef = useRef('');
 	const inputRefHashtag = useRef(null);
@@ -48,6 +49,8 @@ const PopupCreateGroup = ({ handleClose }) => {
 	const categoryInputContainer = useRef(null);
 	const categoryInputWrapper = useRef(null);
 	const categoryInput = useRef(null);
+
+	const hastagRegex = /(#[a-z0-9][a-z0-9\-_]*)/gi;
 
 	const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
 
@@ -161,12 +164,16 @@ const PopupCreateGroup = ({ handleClose }) => {
 	};
 
 	useEffect(() => {
-		document.getElementById('hashtag').addEventListener('keydown', e => {
-			if (e.key === 32 && inputHashtag.includes('#')) {
-				dataRef.current = inputHashtag;
+		const hashTagElement = document.getElementById('hashtag');
+		const handleHashTag = e => {
+			if (e.keyCode === 32 && hastagRegex.test(inputHashtag)) {
+				dataRef.current = inputHashtag.trim();
 				inputRefHashtag.current.value = '';
 			}
-		});
+		};
+		hashTagElement.addEventListener('keydown', handleHashTag);
+
+		return () => hashTagElement.removeEventListener('keydown', handleHashTag);
 	}, [inputHashtag]);
 
 	useEffect(() => {
@@ -182,6 +189,15 @@ const PopupCreateGroup = ({ handleClose }) => {
 			setListHashtags(newList);
 		}
 	}, [dataRef.current]);
+
+	const onInputChange = f => e => {
+		f(e.target.value);
+		if (!hastagRegex.test(inputHashtag)) {
+			setShow(true);
+		} else {
+			setShow(false);
+		}
+	};
 
 	useEffect(() => {
 		if (inputAuthors !== '') {
@@ -269,8 +285,6 @@ const PopupCreateGroup = ({ handleClose }) => {
 	useEffect(() => {
 		setKindOfGroup(kindOfGroupRef.current);
 	}, [kindOfGroupRef.current]);
-
-	const onInputChange = f => e => f(e.target.value);
 
 	const handleAddAuthors = e => {
 		try {
@@ -581,6 +595,7 @@ const PopupCreateGroup = ({ handleClose }) => {
 							inputRef={inputRefHashtag}
 						/>
 					</div>
+					{show && !!inputHashtag ? <span>Vui lòng nhập đúng định dạng</span> : ''}
 				</div>
 				<div className={!isShowBtn ? 'disableBtn' : `form-button`} onClick={() => creatGroup()}>
 					<button>Tạo nhóm</button>

@@ -229,8 +229,20 @@
 	margin-bottom: 16px;
 }
 
+.creat-quotes-modal__body__option-item__search-container.list__tags {
+	padding: 8px 24px;
+	border-radius: 12px;
+	background-color: $ash-background;
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	height: fit-content;
+}
+
 .creat-quotes-modal__body__option-item__search-container {
-	padding: 16px 24px;
+	height: 57px;
+	margin-bottom: 24px;
+	padding: 0px 24px;
 	border-radius: 12px;
 	background-color: $ash-background;
 	display: flex;
@@ -240,7 +252,7 @@
 		height: 18px;
 	}
 	> Input {
-		width: 95%;
+		width: 100%;
 		background-color: unset;
 		margin-left: 16px;
 		outline: none;
@@ -249,11 +261,6 @@
 			color: $ash-placeholder;
 		}
 	}
-}
-
-.creat-quotes-modal__body__option-item__search-container {
-	height: 57px;
-	margin-bottom: 24px;
 }
 .input-keyword {
 	margin-left: -14px !important;
@@ -371,7 +378,13 @@
 }
 
 .input__tag {
+	flex-wrap: wrap;
 	display: flex;
+	cursor: pointer;
+	align-items: center;
+	margin-bottom: 10px;
+	margin-top: 10px;
+	gap: 10px;
 	span {
 		width: max-content;
 		color: #b38c64;

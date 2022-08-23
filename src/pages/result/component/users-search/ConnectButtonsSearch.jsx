@@ -80,10 +80,9 @@ const ConnectButtonsSearch = ({ direction, item }) => {
 		}, 1500),
 		[]
 	);
-	console.log(item.friendRequest?.type);
+
 	const handleRenderButtonFriend = () => {
 		let contentBtn = '';
-		console.log(friendStatusBtn);
 		if (friendStatusBtn === 'friend') {
 			contentBtn = 'Hủy kết bạn';
 		} else if (friendStatusBtn === 'unknown') {
