@@ -5,10 +5,17 @@ import classNames from 'classnames';
 import _ from 'lodash';
 import Lightbox from 'react-image-lightbox';
 import 'react-image-lightbox/style.css';
+import { useRef } from 'react';
 
 const GridImage = ({ images, inPost, postId }) => {
 	const [photoIndex, setPhotoIndex] = useState(0);
 	const [isOpen, setIsOpen] = useState(false);
+
+	const safeDocument = typeof document !== 'undefined' ? document : {};
+	const { body } = safeDocument;
+	const html = safeDocument.documentElement;
+
+	const scrollBlocked = useRef(false);
 
 	useEffect(() => {
 		if (!_.isEmpty(images)) {
@@ -64,6 +71,34 @@ const GridImage = ({ images, inPost, postId }) => {
 		}
 	}, [images]);
 
+	useEffect(() => {
+		if (isOpen) {
+			blockScroll();
+		} else {
+			allowScroll();
+		}
+	}, [isOpen]);
+
+	const blockScroll = () => {
+		if (!body || !body.style || scrollBlocked.current) return;
+		const scrollBarWidth = window.innerWidth - html.clientWidth;
+		const bodyPaddingRight = parseInt(window.getComputedStyle(body).getPropertyValue('padding-right')) || 0;
+		body.style.position = 'relative';
+		body.style.overflow = 'hidden';
+		body.style.paddingRight = `${bodyPaddingRight + scrollBarWidth}px`;
+		scrollBlocked.current = true;
+	};
+
+	const allowScroll = () => {
+		if (!body || !body.style || !scrollBlocked.current) return;
+		html.style.position = '';
+		html.style.overflow = '';
+		body.style.position = '';
+		body.style.overflow = '';
+		body.style.paddingRight = '';
+		scrollBlocked.current = false;
+	};
+
 	return (
 		<>
 			{!_.isEmpty(images) && (
@@ -94,22 +129,20 @@ const GridImage = ({ images, inPost, postId }) => {
 									) : (
 										<img src={URL.createObjectURL(image)} alt='image' />
 									)}
-									{isOpen && (
-										<Lightbox
-											mainSrc={images[photoIndex]}
-											nextSrc={images[(photoIndex + 1) % images.length]}
-											prevSrc={images[(photoIndex + images.length - 1) % images.length]}
-											onCloseRequest={() => {
-												setIsOpen(false);
-											}}
-											onMovePrevRequest={() =>
-												setPhotoIndex((photoIndex + images.length - 1) % images.length)
-											}
-											onMoveNextRequest={() => setPhotoIndex((photoIndex + 1) % images.length)}
-										/>
-									)}
 								</div>
 							))}
+							{isOpen && (
+								<Lightbox
+									mainSrc={images[photoIndex]}
+									nextSrc={images[(photoIndex + 1) % images.length]}
+									prevSrc={images[(photoIndex + images.length - 1) % images.length]}
+									onCloseRequest={() => setIsOpen(false)}
+									onMovePrevRequest={() =>
+										setPhotoIndex((photoIndex + images.length - 1) % images.length)
+									}
+									onMoveNextRequest={() => setPhotoIndex((photoIndex + 1) % images.length)}
+								/>
+							)}
 						</>
 					) : (
 						<>
