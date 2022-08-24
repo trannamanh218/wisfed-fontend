@@ -12,7 +12,7 @@ const ConnectButtonsSearch = ({ direction, item }) => {
 	const [showModalUnfriends, setShowModalUnfriends] = useState(false);
 	const [friendStatusBtn, setFriendStatusBtn] = useState(item.relation);
 	const [followStatusBtn, setFollowStatusBtn] = useState(item.isFollow);
-	const [tung, setTung] = useState(item.friendRequest?.type);
+	const [requestStatus, setRequestStatus] = useState(item.friendRequest?.type);
 
 	const dispatch = useDispatch();
 
@@ -24,7 +24,7 @@ const ConnectButtonsSearch = ({ direction, item }) => {
 			await dispatch(makeFriendRequest(param)).unwrap();
 
 			setFriendStatusBtn('sentRequest');
-			setTung('sentRequest');
+			setRequestStatus('sentRequest');
 		} catch (err) {
 			NotificationError(err);
 		}
@@ -87,9 +87,9 @@ const ConnectButtonsSearch = ({ direction, item }) => {
 			contentBtn = 'Hủy kết bạn';
 		} else if (friendStatusBtn === 'unknown') {
 			contentBtn = 'Kết bạn';
-		} else if (tung === 'requestToMe') {
+		} else if (requestStatus === 'requestToMe') {
 			contentBtn = 'Chấp nhận';
-		} else if (tung === 'sentRequest' || friendStatusBtn === 'sentRequest') {
+		} else if (requestStatus === 'sentRequest' || friendStatusBtn === 'sentRequest') {
 			contentBtn = 'Đã gửi lời mời';
 		}
 
