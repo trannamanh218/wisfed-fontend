@@ -38,6 +38,8 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 	const [listHashtags, setListHashtags] = useState([]);
 	const [show, setShow] = useState(false);
 
+	const hastagRegex = /(#[a-z0-9][a-z0-9\-_]*)/gi;
+
 	const dispatch = useDispatch();
 	const colorData = [
 		'100deg, #E3F7FF, #FFD8C3',
@@ -48,21 +50,27 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 		'100deg, #FFD42A, #FFFC49',
 		'100deg, #C5FFAA, #00BAC6',
 	];
-
 	useEffect(() => {
-		document.getElementById('hashtag').addEventListener('keydown', e => {
-			if (e.keyCode === 32 && inputHashtag.includes('#')) {
+		const hastagElement = document.getElementById('hashtag');
+		const handleHashTag = e => {
+			if (e.keyCode === 32 && hastagRegex.test(inputHashtag)) {
 				dataRef.current = inputHashtag.trim();
 				inputRefHashtag.current.value = '';
 			}
-		});
+		};
+		hastagElement.addEventListener('keydown', handleHashTag);
+
+		return () => hastagElement.removeEventListener('keydown', handleHashTag);
 	}, [inputHashtag]);
 
 	const handleChangeHashtag = e => {
 		setInputHashtag(e.target.value);
-		setShow(true);
+		if (!hastagRegex.test(inputHashtag)) {
+			setShow(true);
+		} else {
+			setShow(false);
+		}
 	};
-
 	useEffect(() => {
 		const dataCheck = listHashtags.filter(item => dataRef.current === item);
 
@@ -375,9 +383,9 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 
 					<div className='creat-quotes-modal__body__option-item'>
 						<div className='creat-quotes-modal__body__option-item__title'>Từ khóa</div>
-						<div className='creat-quotes-modal__body__option-item__search-container'>
+						<div className='creat-quotes-modal__body__option-item__search-container list__tags'>
 							{listHashtags.length > 0 && (
-								<div className='input__tag ' style={{ flexWrap: 'nowrap', gap: '10px' }}>
+								<div className='input__tag'>
 									{listHashtags.map(item => (
 										<>
 											<span key={item}>
@@ -404,7 +412,7 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 								inputRef={inputRefHashtag}
 							/>
 						</div>
-						{show ? <span>Vui lòng nhập đúng định dạng</span> : ''}
+						{show && !!inputHashtag ? <span>Vui lòng nhập đúng định dạng</span> : ''}
 					</div>
 				</div>
 			</div>

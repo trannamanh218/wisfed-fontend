@@ -21,6 +21,13 @@ export const registerValidate = yup.object().shape({
 		.min(8, '*Mật khẩu từ 8-15 kí tự. Vui lòng kiểm tra lại')
 		.max(15, '*Mật khẩu từ 8-15 kí tự. Vui lòng kiểm tra lại')
 		.required('*Vui lòng điền đầy đủ thông tin'),
+	confirmPassword: yup
+		.string()
+		.when('password', {
+			is: val => (val && val.length > 0 ? true : false),
+			then: yup.string().oneOf([yup.ref('password')], '*Mật khẩu không trùng khớp'),
+		})
+		.required('*Vui lòng điền đầy đủ thông tin'),
 });
 
 export const emailValidate = yup.object().shape({

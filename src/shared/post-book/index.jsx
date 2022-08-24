@@ -15,7 +15,6 @@ function PostBook({ data, inCreatePost }) {
 			return 'Tác giả: Chưa xác định';
 		}
 	};
-
 	return (
 		<div className='post-book'>
 			<Link to={`/book/detail/${data.id}`}>

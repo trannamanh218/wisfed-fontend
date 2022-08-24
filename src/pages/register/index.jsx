@@ -12,6 +12,7 @@ import { register } from 'reducers/redux-utils/auth';
 import Circle from 'shared/loading/circle';
 import { Link, useNavigate } from 'react-router-dom';
 import Storage from 'helpers/Storage';
+import EyeIcon from 'shared/eye-icon';
 
 function Register() {
 	const dispatch = useDispatch();
@@ -19,6 +20,8 @@ function Register() {
 	const [isShow, setIsShow] = useState(false);
 	const [dataModal, setDataModal] = useState({});
 	const [isLoading, setIsLoading] = useState(false);
+	const [isPublic, setIsPublic] = useState(false);
+	const [isPublicConfirm, setIsPublicConfirm] = useState(false);
 
 	const navigate = useNavigate();
 
@@ -72,6 +75,14 @@ function Register() {
 			navigate('/');
 		}
 	}, []);
+
+	const handleChangeIcon = () => {
+		setIsPublic(!isPublic);
+	};
+
+	const handleChangeIconComfirm = () => {
+		setIsPublicConfirm(!isPublicConfirm);
+	};
 
 	return (
 		<div className='register__container'>
@@ -299,13 +310,14 @@ function Register() {
 										>
 											<input
 												className='register__form__input'
-												type='password'
+												type={isPublic ? 'text' : 'password'}
 												placeholder='Mật khẩu'
 												{...field}
 												value={field.value}
 												autoComplete='new-password'
 												style={meta.error ? { width: '93%' } : { width: '100%' }}
 											/>
+											<EyeIcon isPublic={isPublic} handlePublic={handleChangeIcon} />
 											<div
 												className={classNames('error--text', {
 													'show': meta.error,
@@ -323,6 +335,64 @@ function Register() {
 																'login__form__error__popover-container',
 																{
 																	'show': showImagePopover === 4,
+																}
+															)}
+														>
+															<div>
+																<div className='error--textbox'>
+																	<div className='error--textbox--logo'></div>
+																	<div className='error--textbox--error'></div>
+																</div>
+																<div className='Login__form__error__popover'>
+																	<div>{meta.error}</div>
+																</div>
+															</div>
+														</div>
+													</div>
+												)}
+											</div>
+											<div></div>
+										</div>
+									)}
+								</Field>
+
+								<Field name='confirmPassword'>
+									{({ field, meta }) => (
+										<div
+											className={classNames('register__form__field', {
+												'error': meta.error && meta.touched,
+											})}
+										>
+											<input
+												className='register__form__input'
+												type={isPublicConfirm ? 'text' : 'password'}
+												placeholder='Xác nhận mật khẩu'
+												{...field}
+												value={field.value}
+												// autoComplete='new-password'
+												style={meta.error ? { width: '93%' } : { width: '100%' }}
+											/>
+											<EyeIcon
+												isPublic={isPublicConfirm}
+												handlePublic={handleChangeIconComfirm}
+											/>
+											<div
+												className={classNames('error--text', {
+													'show': meta.error,
+												})}
+											>
+												{meta.touched && meta.error && (
+													<div
+														className='login__form__error'
+														onMouseOver={() => setShowImagePopover(5)}
+														onMouseLeave={() => setShowImagePopover(0)}
+													>
+														<img src={Subtract} alt='img' data-tip data-for='registerTip' />
+														<div
+															className={classNames(
+																'login__form__error__popover-container',
+																{
+																	'show': showImagePopover === 5,
 																}
 															)}
 														>
