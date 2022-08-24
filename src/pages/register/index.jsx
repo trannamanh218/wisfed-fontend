@@ -136,41 +136,35 @@ function Register() {
 													/>
 													<div
 														className={classNames('error--text', {
-															'show': meta.error,
+															'show': meta.touched && meta.error,
 														})}
 													>
-														{meta.touched && meta.error && (
-															<div
-																className='login__form__error'
+														<div className='login__form__error'>
+															<img
+																src={Subtract}
+																alt='img'
 																onMouseOver={() => setShowImagePopover(1)}
 																onMouseLeave={() => setShowImagePopover(0)}
+															/>
+															<div
+																className={classNames(
+																	'login__form__error__popover-container',
+																	{
+																		'show': showImagePopover === 1,
+																	}
+																)}
 															>
-																<img
-																	src={Subtract}
-																	alt='img'
-																	data-tip
-																	data-for='registerTip'
-																/>
-																<div
-																	className={classNames(
-																		'login__form__error__popover-container',
-																		{
-																			'show': showImagePopover === 1,
-																		}
-																	)}
-																>
-																	<div>
-																		<div className='error--textbox'>
-																			<div className='error--textbox--logo'></div>
-																			<div className='error--textbox--error'></div>
-																		</div>
-																		<div className='Login__form__error__popover'>
-																			<div>{meta.error}</div>
-																		</div>
+																<div>
+																	<div className='error--textbox'>
+																		<div className='error--textbox--logo'></div>
+																		<div className='error--textbox--error'></div>
+																	</div>
+																	<div className='Login__form__error__popover'>
+																		<div>{meta.error}</div>
 																	</div>
 																</div>
 															</div>
-														)}
+														</div>
 													</div>
 												</div>
 											);
@@ -195,43 +189,41 @@ function Register() {
 													/>
 													<div
 														className={classNames('error--text', {
-															'show': meta.error,
+															'show': meta.touched && meta.error,
 														})}
 													>
-														{meta.touched && meta.error && (
+														<div
+															className='login__form__error'
+															onMouseOver={() => setShowImagePopover(2)}
+															onMouseLeave={() => setShowImagePopover(0)}
+														>
+															<img
+																src={Subtract}
+																alt='img'
+																data-tip
+																data-for='registerTip'
+															/>
 															<div
-																className='login__form__error'
-																onMouseOver={() => setShowImagePopover(2)}
-																onMouseLeave={() => setShowImagePopover(0)}
+																className={classNames(
+																	'login__form__error__popover-container',
+																	{
+																		'show': showImagePopover === 2,
+																	}
+																)}
 															>
-																<img
-																	src={Subtract}
-																	alt='img'
-																	data-tip
-																	data-for='registerTip'
-																/>
-																<div
-																	className={classNames(
-																		'login__form__error__popover-container',
-																		{
-																			'show': showImagePopover === 2,
-																		}
-																	)}
-																>
-																	<div>
-																		<div className='error--textbox'>
-																			<div className='error--textbox--logo'></div>
-																			<div className='error--textbox--error'></div>
-																		</div>
-																		<div className='Login__form__error__popover'>
-																			{meta.touched && meta.error && (
-																				<div>{meta.error}</div>
-																			)}
-																		</div>
+																<div>
+																	<div className='error--textbox'>
+																		<div className='error--textbox--logo'></div>
+																		<div className='error--textbox--error'></div>
+																	</div>
+																	<div className='Login__form__error__popover'>
+																		{meta.touched && meta.error && (
+																			<div>{meta.error}</div>
+																		)}
 																	</div>
 																</div>
 															</div>
-														)}
+														</div>
 													</div>
 												</div>
 											);

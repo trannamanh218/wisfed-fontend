@@ -133,7 +133,7 @@ function CreateNewPasswordAdminForm() {
 														<div className='error--textbox--error'></div>
 													</div>
 													<div className='Login__form__error__popover'>
-														{meta.touched && meta.error && <div>{meta.error}</div>}
+														<div>{meta.error}</div>
 													</div>
 												</div>
 											</div>
@@ -189,7 +189,7 @@ function CreateNewPasswordAdminForm() {
 														<div className='error--textbox--error'></div>
 													</div>
 													<div className='Login__form__error__popover'>
-														{meta.touched && meta.error && <div>{meta.error}</div>}
+														<div>{meta.error}</div>
 													</div>
 												</div>
 											</div>
