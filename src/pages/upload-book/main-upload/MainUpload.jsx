@@ -5,7 +5,6 @@ import { Image } from 'react-bootstrap';
 import { CameraIcon, BackArrow, Calendar } from 'components/svg';
 import './MainUpload.scss';
 import { useState, useRef, useEffect } from 'react';
-import { Row, Col } from 'react-bootstrap';
 import Button from 'shared/button';
 import SelectBox from 'shared/select-box';
 import ArrowChevronForward from 'assets/images/ArrowChevronForward.png';
@@ -222,14 +221,9 @@ export default function MainUpload() {
 				</span>
 			</div>
 			<div className='upload-book-form'>
-				<div className='upload-image__wrapper'>
+				<div className={`upload-image__wrapper ${image ? 'hasImage' : ''}`}>
 					{image ? (
-						<img
-							src={image}
-							alt='img'
-							onClick={open}
-							onMouseEnter={e => (e.target.style.cursor = 'pointer')}
-						/>
+						<img src={image} alt='img' onClick={open} />
 					) : (
 						<Dropzone>
 							{() => (
@@ -331,8 +325,8 @@ export default function MainUpload() {
 						></input>
 					</div>
 					<div className='inp-book'>
-						<Row>
-							<Col xs={6}>
+						<div className='inp-book-row'>
+							<div className='inp-book-col'>
 								<label>
 									ISBN<span className='upload-text-danger'>*</span>
 								</label>
@@ -343,10 +337,10 @@ export default function MainUpload() {
 									name='isbn'
 									onChange={onChange}
 								></input>
-							</Col>
-							<Col xs={6}>
+							</div>
+							<div className='inp-book-col'>
 								<label>Ngày phát hành</label>
-								<label className='inp-date'>
+								<div className='inp-date'>
 									<div className='icon-calendar'>
 										<Calendar />
 									</div>
@@ -361,13 +355,13 @@ export default function MainUpload() {
 										showMonthDropdown
 										dropdownMode='select'
 									/>
-								</label>
-							</Col>
-						</Row>
+								</div>
+							</div>
+						</div>
 					</div>
 					<div className='inp-book'>
-						<Row>
-							<Col>
+						<div className='inp-book-row'>
+							<div className='inp-book-col'>
 								<label>
 									Số trang<span className='upload-text-danger'>*</span>
 								</label>
@@ -381,8 +375,8 @@ export default function MainUpload() {
 									name='page'
 									onChange={onChange}
 								></input>
-							</Col>
-							<Col>
+							</div>
+							<div className='inp-book-col'>
 								<label>
 									Ngôn ngữ<span className='upload-text-danger'>*</span>
 								</label>
@@ -394,8 +388,8 @@ export default function MainUpload() {
 									imgDropDown={ArrowChevronForward}
 									resetSelect={resetSelect}
 								/>
-							</Col>
-						</Row>
+							</div>
+						</div>
 					</div>
 
 					{userInfoJwt?.role === 'tecinus' || userInfoJwt?.role === 'author' ? (
@@ -429,13 +423,13 @@ export default function MainUpload() {
 							<textarea rows={9} value={description} name='description' onChange={onChange} />
 						</div>
 					</div>
-					<Row>
-						<Col>
+					<div className='inp-book-row'>
+						<div className='inp-book-col'>
 							<Button onClick={clearState} className='btn btnMainUpload' isOutline>
 								Xóa tất cả
 							</Button>
-						</Col>
-						<Col>
+						</div>
+						<div className='inp-book-col'>
 							<button
 								onClick={onBtnSaveClick}
 								className={classNames('creat-post-modal-content__main__submit', 'btn-upload', {
@@ -445,8 +439,8 @@ export default function MainUpload() {
 							>
 								Lưu
 							</button>
-						</Col>
-					</Row>
+						</div>
+					</div>
 				</div>
 			</div>
 		</>
