@@ -8,8 +8,8 @@ import UserAvatar from 'shared/user-avatar';
 import './author-slider.scss';
 import { useNavigate } from 'react-router-dom';
 
-const AuthorSlider = ({ list, title, className, size = 'sm' }) => {
-	const settingSlider = settings();
+const AuthorSlider = ({ list, title, className, size = 'sm', inUpload = false }) => {
+	const settingSlider = settings(inUpload);
 
 	const navigate = useNavigate();
 
@@ -68,7 +68,7 @@ function SlidePrevBtn({ className, style, onClick }) {
 	);
 }
 
-function settings() {
+function settings(inUpload) {
 	return {
 		dots: false,
 		speed: 600,
@@ -87,8 +87,8 @@ function settings() {
 			{
 				breakpoint: 1025,
 				settings: {
-					slidesToShow: 3,
-					slidesToScroll: 3,
+					slidesToShow: inUpload ? 2 : 3,
+					slidesToScroll: inUpload ? 2 : 3,
 				},
 			},
 			{
@@ -141,6 +141,7 @@ AuthorSlider.propTypes = {
 	title: PropTypes.string.isRequired,
 	className: PropTypes.string,
 	size: PropTypes.oneOf(['sm', 'md', 'lg']),
+	inUpload: PropTypes.bool,
 };
 
 SlideNextBtn.propTypes = {

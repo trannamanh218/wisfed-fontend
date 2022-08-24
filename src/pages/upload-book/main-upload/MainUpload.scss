@@ -15,10 +15,14 @@
 		border-radius: 6px;
 		font-size: 15px;
 		&__wrapper {
+			display: flex;
+			justify-content: center;
 			width: 199px;
 			height: 223px;
 			border-radius: 6px;
 			padding: 0px;
+			margin: 0 auto;
+			cursor: pointer;
 			img {
 				max-width: 199px;
 				height: 100%;
@@ -27,6 +31,9 @@
 			}
 			.dropzone.upload-image {
 				width: 199px;
+			}
+			&.hasImage {
+				border: none;
 			}
 		}
 	}
@@ -171,7 +178,20 @@
 	}
 
 	.btn-upload {
+		cursor: not-allowed;
+		background-color: #eff0f7;
 		margin-top: 0px;
+		&.active {
+			background-color: #e0af7e;
+		}
+	}
+}
+
+.inp-book-row {
+	display: flex;
+	gap: 20px;
+	.inp-book-col {
+		width: 50%;
 	}
 }
 
@@ -180,4 +200,19 @@
 }
 .react-datepicker-popper[data-placement^='bottom'] .react-datepicker__triangle {
 	display: none;
+}
+
+@media only screen and (max-width: 1159px) {
+	.upload-book-form {
+		flex-direction: column;
+	}
+}
+
+@media only screen and (min-width: 820px) and (max-width: 920px) {
+	.inp-book-row {
+		flex-direction: column;
+		.inp-book-col {
+			width: 100%;
+		}
+	}
 }

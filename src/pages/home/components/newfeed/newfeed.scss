@@ -135,6 +135,9 @@
 				}
 			}
 		}
+		.post-book__button-and-rating {
+			gap: 1rem;
+		}
 	}
 }
 
@@ -151,7 +154,7 @@
 			}
 		}
 		.post-book__button-and-rating {
-			gap: 2rem;
+			gap: 1rem;
 		}
 	}
 }
@@ -178,6 +181,14 @@
 			.post-book__edit .linear-progress {
 				max-width: 70%;
 			}
+		}
+	}
+}
+
+@media only screen and (max-width: 768px) {
+	.newfeed {
+		.post-book__button-and-rating {
+			gap: 3rem;
 		}
 	}
 }

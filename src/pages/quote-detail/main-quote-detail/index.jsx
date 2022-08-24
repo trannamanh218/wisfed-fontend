@@ -13,6 +13,7 @@ import { QUOTE_TYPE } from 'constants/index';
 import { useSelector, useDispatch } from 'react-redux';
 import { handleCheckReplyToMe } from 'reducers/redux-utils/comment';
 import { useRef } from 'react';
+import { Row, Col } from 'react-bootstrap';
 
 const MainQuoteDetail = ({ quoteData, onCreateComment, setMentionUsersArr, mentionUsersArr }) => {
 	const [replyingCommentId, setReplyingCommentId] = useState(0);
@@ -42,11 +43,13 @@ const MainQuoteDetail = ({ quoteData, onCreateComment, setMentionUsersArr, menti
 				<h4>Chi tiết Quote</h4>
 				{quoteData?.user?.fullName || (quoteData?.user?.firstName && quoteData?.user?.lastName) ? (
 					<Link to={`/quotes/${quoteData.user.id}`} className='main-quote-detail__link'>
-						<span>
-							Xem tất cả Quotes của{' '}
-							{quoteData.user.fullName || quoteData.user.firstName + ' ' + quoteData.user.lastName}{' '}
-						</span>
-						<Forward />
+						<div className='main-quote-detail__link__row'>
+							<>
+								Xem tất cả Quotes của{' '}
+								{quoteData.user.fullName || quoteData.user.firstName + ' ' + quoteData.user.lastName}{' '}
+							</>
+							<Forward />
+						</div>
 					</Link>
 				) : (
 					<></>

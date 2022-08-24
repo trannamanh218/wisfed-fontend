@@ -1,4 +1,4 @@
-import { useRef, useEffect } from 'react';
+import { useRef } from 'react';
 import SearchIcon from 'assets/icons/search.svg';
 import PropTypes from 'prop-types';
 import './search-field.scss';
@@ -37,6 +37,7 @@ SearchField.propTypes = {
 	value: PropTypes.string,
 	onKeyDown: PropTypes.func,
 	onChange: PropTypes.func,
+	autoFocus: PropTypes.bool,
 };
 
 export default SearchField;
