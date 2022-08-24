@@ -7,10 +7,12 @@ import { useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import Storage from 'helpers/Storage';
+import PropTypes from 'prop-types';
 
-function ForgetPassWordComponet() {
+function ForgetPassWordComponent({ type }) {
 	const key = useSelector(state => state.forgetPasswordSliceReducer.keyChange);
 	const navigate = useNavigate();
+
 	useEffect(() => {
 		if (Storage.getAccessToken()) {
 			navigate('/');
@@ -19,19 +21,27 @@ function ForgetPassWordComponet() {
 
 	return (
 		<div className='forget__container'>
-			<Link to='/login'>
-				<div className='login__header'>
+			<div className='login__header'>
+				<Link to='/login'>
 					<img src={Logo} alt='logo' />
-				</div>
-			</Link>
+				</Link>
+			</div>
 			<div className='forget__body'>
 				<div className='forget__form__img'>
 					<img src={ImgForget} alt='' />
 				</div>
-				{key ? <CreateNewPasswordForm /> : <ForgetpasswordFormComponent />}
+				{key ? <CreateNewPasswordForm /> : <ForgetpasswordFormComponent type={type} />}
 			</div>
 		</div>
 	);
 }
 
-export default ForgetPassWordComponet;
+ForgetPassWordComponent.defaultProps = {
+	type: 'default',
+};
+
+ForgetPassWordComponent.propTypes = {
+	type: PropTypes.string,
+};
+
+export default ForgetPassWordComponent;

@@ -9,6 +9,7 @@
 	overflow: hidden;
 	box-shadow: 0px 0px 32px rgba(0, 0, 0, 0.04);
 	cursor: default;
+
 	.notificaiton__container {
 		background: #fcfcfc;
 		font-family: 'Montserrat';
@@ -18,7 +19,6 @@
 
 .notificaiton__loading__container {
 	margin-top: 12px;
-	height: 80vh;
 }
 
 .notification-title {
@@ -228,6 +228,24 @@
 	display: flex;
 	align-items: center;
 	justify-content: center;
+}
+
+@media only screen and (max-width: 1366px) {
+	.notificaiton {
+		max-height: 85vh;
+		.notificaiton__all-wrapper {
+			max-height: 70vh;
+		}
+	}
+}
+
+@media only screen and (max-width: 1024px) {
+	.notificaiton {
+		max-height: unset;
+		.notificaiton__all-wrapper {
+			max-height: 75vh;
+		}
+	}
 }
 
 @media only screen and (max-width: 820px) {

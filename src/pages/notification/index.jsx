@@ -18,7 +18,7 @@ import ModalItem from './modal-item';
 const NotificationModal = ({ setModalNoti, buttonModal, realTime }) => {
 	const notifymodal = useRef(null);
 	const [selectKey, setSelectKey] = useState('all');
-	const [isLoading, setIsLoading] = useState(null);
+	const [isLoading, setIsLoading] = useState(true);
 	const [renderFriend, setRenderFriend] = useState(false);
 	const [getNotifications, setGetNotifications] = useState([]);
 	const [getListUnread, setGetListUnRead] = useState([]);

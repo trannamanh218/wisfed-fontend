@@ -52,7 +52,7 @@ const Header = () => {
 	const [userLogin, setUserLogin] = useState(false);
 	const [activeNotificaiton, setActiveNotification] = useState(false);
 	const [realTime, setRealTime] = useState(false);
-	const [showNavIcon, setShowNavIcon] = useState(false);
+	const [showNavIcon, setShowNavIcon] = useState(true);
 
 	const buttonModal = useRef(null);
 	const userOptions = useRef(null);

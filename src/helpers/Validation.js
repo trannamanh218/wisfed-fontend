@@ -31,16 +31,8 @@ export const emailValidate = yup.object().shape({
 		.required('*Vui lòng điền đầy đủ thông tin'),
 });
 
-export const emailAdminValidation = yup.object().shape({
-	email: yup
-		.string()
-		.max(200, '*Email không vượt quá 200 ký tự')
-		.email('*Email không đúng định dạng')
-		.required('*Vui lòng điền đầy đủ thông tin'),
-});
-
 export const resetPasswordValidate = yup.object().shape({
-	OTP: yup.string().required('*Vui lòng điền mã OTP'),
+	OTP: yup.string().required('*Vui lòng điền mã OTP').max(8, '*Mã OTP tối đa 8 kí tự. Vui lòng kiểm tra lại'),
 	newPassword: yup
 		.string()
 		.min(8, '*Mật khẩu từ 8-15 kí tự. Vui lòng kiểm tra lại')
@@ -54,7 +46,8 @@ export const resetPasswordValidate = yup.object().shape({
 		})
 		.required('*Vui lòng điền đầy đủ thông tin'),
 });
-export const resetPasswordValidateAdmin = yup.object().shape({
+
+export const resetPasswordAdminValidate = yup.object().shape({
 	newPassword: yup
 		.string()
 		.min(8, '*Mật khẩu từ 8-15 kí tự. Vui lòng kiểm tra lại')
@@ -62,9 +55,9 @@ export const resetPasswordValidateAdmin = yup.object().shape({
 		.required('*Vui lòng điền đầy đủ thông tin'),
 	confirmPassword: yup
 		.string()
-		.when('newPasword', {
+		.when('newPassword', {
 			is: val => (val && val.length > 0 ? true : false),
-			then: yup.string().oneOf([yup.ref('newPasword')], '*Mật khẩu không trùng khớp'),
+			then: yup.string().oneOf([yup.ref('newPassword')], '*Mật khẩu không trùng khớp'),
 		})
 		.required('*Vui lòng điền đầy đủ thông tin'),
 });

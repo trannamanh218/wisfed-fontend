@@ -20,7 +20,7 @@ import { getSuggestionForPost } from 'reducers/redux-utils/activity';
 import { handleResetGroupList } from 'reducers/redux-utils/group';
 
 const PopupCreateGroup = ({ handleClose }) => {
-	const tungref = useRef('');
+	const groupNameInput = useRef('');
 	const [inputNameGroup, setInputNameGroup] = useState('');
 	const [inputDiscription, setInputDiscription] = useState('');
 	const [inputAuthors, setInputAuthors] = useState('');
@@ -273,31 +273,21 @@ const PopupCreateGroup = ({ handleClose }) => {
 	const onInputChange = f => e => f(e.target.value);
 
 	const handleAddAuthors = e => {
-		try {
-			const checkItem = listAuthors.filter(item => item.id === e.id);
-			if (checkItem.length < 1) {
-				setListAuthors([...listAuthors, e]);
-			}
-		} catch (err) {
-			// console.log(err);
-		} finally {
-			inputRefAuthor.current.value = '';
-			setUserList([]);
+		const checkItem = listAuthors.filter(item => item.id === e.id);
+		if (checkItem.length < 1) {
+			setListAuthors([...listAuthors, e]);
 		}
+		inputRefAuthor.current.value = '';
+		setUserList([]);
 	};
 
 	const handleAddBook = e => {
-		try {
-			const checkItem = listBookAdd.filter(item => item.id === e.id);
-			if (checkItem.length < 1) {
-				setListBookAdd([...listBookAdd, e]);
-			}
-		} catch (err) {
-			// console.log(err);
-		} finally {
-			inputRefBook.current.value = '';
-			setListBooks([]);
+		const checkItem = listBookAdd.filter(item => item.id === e.id);
+		if (checkItem.length < 1) {
+			setListBookAdd([...listBookAdd, e]);
 		}
+		inputRefBook.current.value = '';
+		setListBooks([]);
 	};
 
 	const handleRemove = e => {
@@ -327,8 +317,9 @@ const PopupCreateGroup = ({ handleClose }) => {
 	}, [listBookAdd]);
 
 	useEffect(() => {
-		tungref.current.focus();
+		groupNameInput.current.focus();
 	}, []);
+
 	return (
 		<>
 			<div className='popup-group__header'>
@@ -365,7 +356,7 @@ const PopupCreateGroup = ({ handleClose }) => {
 					<label>Tên nhóm</label>
 					<span style={{ color: 'red', marginLeft: '4px' }}>*</span>
 					<Input
-						inputRef={tungref}
+						inputRef={groupNameInput}
 						isBorder={false}
 						placeholder='Tên nhóm'
 						handleChange={onInputChange(setInputNameGroup)}
@@ -525,15 +516,9 @@ const PopupCreateGroup = ({ handleClose }) => {
 							{!!listBooks?.length &&
 								listBooks?.map(item => {
 									return (
-										<>
-											<span
-												key={item}
-												className='author__item'
-												onClick={() => handleAddBook(item)}
-											>
-												{item?.name}
-											</span>
-										</>
+										<span key={item} className='author__item' onClick={() => handleAddBook(item)}>
+											{item?.name}
+										</span>
 									);
 								})}
 						</div>

@@ -1,29 +1,26 @@
 import { useState, useEffect } from 'react';
 import { Formik, Field, Form } from 'formik';
 import classNames from 'classnames';
-import { resetPassword, forgotPassword } from 'reducers/redux-utils/auth';
-import { useDispatch, useSelector } from 'react-redux';
+import { resetPasswordAdmin } from 'reducers/redux-utils/auth';
+import { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import ModalLogin from 'pages/login/element/ModalLogin';
-import { resetPasswordValidate } from 'helpers/Validation';
+import { resetPasswordAdminValidate } from 'helpers/Validation';
 import Circle from 'shared/loading/circle';
-import { changeKey } from 'reducers/redux-utils/forget-password';
-import { NotificationError } from 'helpers/Error';
 import Subtract from 'assets/images/Subtract.png';
 import EyeIcon from 'shared/eye-icon';
 
-function CreateNewPasswordForm() {
+function CreateNewPasswordAdminForm() {
 	const [isFetching, setIsFetching] = useState(false);
 	const dispatch = useDispatch();
 	const [isShow, setIsShow] = useState(false);
 	const [dataModal, setDataModal] = useState({});
-	const [seconds, setSeconds] = useState(180);
 	const [isShowBtn, setIsShowBtn] = useState(false);
-	const [valueOtp, setValueOtp] = useState('');
-	const [valuePassword, setValuePassword] = useState('');
 	const [valuePassword2, setValuePassword2] = useState('');
-	const [showImagePopover, setShowImagePopover] = useState(0);
+	const [valuePassword, setValuePassword] = useState('');
 	const [isShowNewPassword, setIsShowNewPassword] = useState(false);
 	const [isShowConfirmPassword, setIsShowConfirmPassword] = useState(false);
+	const [showImagePopover, setShowImagePopover] = useState(0);
 
 	const dataToResetPassword = useSelector(state => state.auth.dataToResetPassword);
 
@@ -33,11 +30,10 @@ function CreateNewPasswordForm() {
 			try {
 				const newData = {
 					email: dataToResetPassword.email,
+					OTP: dataToResetPassword.otp,
 					...data,
-					OTP: data.OTP.toString(),
 				};
-				await dispatch(resetPassword(newData)).unwrap();
-
+				await dispatch(resetPasswordAdmin(newData)).unwrap();
 				setIsShow(true);
 				setDataModal({
 					title: 'Tạo mật khẩu',
@@ -49,7 +45,6 @@ function CreateNewPasswordForm() {
 				});
 			} catch (err) {
 				setIsShow(true);
-				setIsFetching(false);
 				setDataModal({
 					title: 'Tạo mật khẩu',
 					title2: ' mới thất bại',
@@ -63,65 +58,20 @@ function CreateNewPasswordForm() {
 		}
 	};
 
-	const formatTime = number => {
-		const mins = Math.floor(number / 60)
-			.toString()
-			.padStart(2, '0');
-		const secondRemain = Math.floor(number % 60)
-			.toString()
-			.padStart(2, '0');
-		return `${mins}:${secondRemain}`;
-	};
-
-	useEffect(() => {
-		const countDown = setInterval(() => {
-			if (seconds > 0) {
-				setSeconds(seconds - 1);
-			}
-		}, 1000);
-
-		return () => {
-			clearInterval(countDown);
-		};
-	}, [seconds]);
-
-	const handleResendOTP = async () => {
-		const data = {
-			email: dataToResetPassword.email,
-		};
-		try {
-			await dispatch(forgotPassword(data)).unwrap();
-			setSeconds(180);
-			setDataModal({
-				title: 'Đã gửi mã',
-				title2: 'Xác Nhận',
-				isShowIcon: true,
-				scribe: 'Vui lòng kiểm tra hòm thư ',
-				scribe2: `${data.email}`,
-			});
-			setIsShow(true);
-		} catch (err) {
-			NotificationError(err);
-		}
-	};
-
 	const handleChangeModal = () => {
 		setIsShow(false);
-		if (dataModal.icon === true) {
-			dispatch(changeKey(false));
-		}
 	};
 
 	useEffect(() => {
-		if (valueOtp && valuePassword && valuePassword2) {
+		if (valuePassword && valuePassword2) {
 			setIsShowBtn(true);
-		} else {
+		} else if (valuePassword === '' || valuePassword2 === '') {
 			setIsShowBtn(false);
 		}
-	}, [valueOtp, valuePassword, valuePassword2]);
+	}, [valuePassword, valuePassword2]);
 
 	return (
-		<div className='forget__form__email create-new-password'>
+		<div className='forget__form__email'>
 			<Circle loading={isFetching} />
 			{isShow && (
 				<div>
@@ -129,79 +79,14 @@ function CreateNewPasswordForm() {
 				</div>
 			)}
 			<Formik
-				initialValues={{ OTP: '', newPassword: '', confirmPassword: '' }}
+				initialValues={{ newPassword: '', confirmPassword: '' }}
 				onSubmit={handleSubmit}
-				validationSchema={resetPasswordValidate}
+				validationSchema={resetPasswordAdminValidate}
 			>
 				<Form className='forgetPassword__form'>
 					<div className='forget__name-title'>
 						<span>Xác nhận mật khẩu mới</span>
 					</div>
-					<div className='forget__subcribe'>
-						<span>
-							Nhập mã xác nhận 08 chữ số vừa được gửi <br /> về Email đã đăng ký của bạn. Sau đó <br />
-							tạo mật khẩu mới
-						</span>
-					</div>
-					<Field name='OTP'>
-						{({ field, meta }) => {
-							setValueOtp(field.value);
-							return (
-								<div
-									className={classNames('forgetPassword__form__field', {
-										'error': meta.touched && meta.error,
-									})}
-								>
-									<input
-										className='forgetPassword__form__input'
-										type='number'
-										placeholder='Nhập mã OTP'
-										{...field}
-										value={field.value}
-									/>
-									<div
-										className={classNames('error--text', {
-											'show': meta.touched && meta.error,
-										})}
-									>
-										<div className='login__form__error'>
-											<img
-												src={Subtract}
-												alt='img'
-												onMouseOver={() => setShowImagePopover(1)}
-												onMouseLeave={() => setShowImagePopover(0)}
-											/>
-											<div
-												className={classNames('login__form__error__popover-container', {
-													'show': showImagePopover === 1,
-												})}
-											>
-												<div>
-													<div className='error--textbox'>
-														<div className='error--textbox--logo'></div>
-														<div className='error--textbox--error'></div>
-													</div>
-													<div className='Login__form__error__popover'>
-														{meta.touched && meta.error && <div>{meta.error}</div>}
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-							);
-						}}
-					</Field>
-					<div className='forget__send-otp__link'>
-						<span
-							className={seconds === 0 ? 'forget__send-otp__link__get-otp-again' : 'disabled-link'}
-							onClick={handleResendOTP}
-						>
-							Không nhận được mã? Gửi lại
-						</span>
-						<span className={seconds !== 0 ? 'timer' : 'hide-timer'}>{formatTime(seconds)}</span>
-					</div>
-					<hr />
 					<Field name='newPassword'>
 						{({ field, meta }) => {
 							setValuePassword(field.value);
@@ -315,6 +200,7 @@ function CreateNewPasswordForm() {
 						}}
 					</Field>
 					<button
+						type='submit'
 						className={
 							isShowBtn
 								? 'forgetPassword__form__btn-otp'
@@ -329,4 +215,4 @@ function CreateNewPasswordForm() {
 	);
 }
 
-export default CreateNewPasswordForm;
+export default CreateNewPasswordAdminForm;

@@ -88,11 +88,11 @@ function Login() {
 				</div>
 			)}
 			<div>
-				<Link to='/'>
-					<div className='login__header'>
+				<div className='login__header'>
+					<Link to='/'>
 						<img src={Logo} alt='logo' />
-					</div>
-				</Link>
+					</Link>
+				</div>
 				<div className='login__body'>
 					<div>
 						<span className='login__body-text1'>
@@ -151,33 +151,32 @@ function Login() {
 							/>
 							<div
 								className={classNames('error--text', {
-									'show': formik.errors.email,
+									'show': formik.errors.email && formik.touched.email,
 								})}
 							>
-								{formik.errors.email && formik.touched.email && (
-									<div
-										className='login__form__error'
+								<div className='login__form__error'>
+									<img
+										src={Subtract}
+										alt='img'
 										onMouseOver={() => setShowImagePopover(1)}
 										onMouseLeave={() => setShowImagePopover(0)}
+									/>
+									<div
+										className={classNames('login__form__error__popover-container', {
+											'show': showImagePopover === 1,
+										})}
 									>
-										<img src={Subtract} alt='img' data-tip data-for='registerTip' />
-										<div
-											className={classNames('login__form__error__popover-container', {
-												'show': showImagePopover === 1,
-											})}
-										>
-											<div>
-												<div className='error--textbox'>
-													<div className='error--textbox--logo'></div>
-													<div className='error--textbox--error'></div>
-												</div>
-												<div className='Login__form__error__popover'>
-													<div>{formik.errors.email}</div>
-												</div>
+										<div>
+											<div className='error--textbox'>
+												<div className='error--textbox--logo'></div>
+												<div className='error--textbox--error'></div>
+											</div>
+											<div className='Login__form__error__popover'>
+												<div>{formik.errors.email}</div>
 											</div>
 										</div>
 									</div>
-								)}
+								</div>
 							</div>
 						</div>
 
@@ -200,33 +199,32 @@ function Login() {
 							</div>
 							<div
 								className={classNames('error--text', {
-									'show': formik.errors.password,
+									'show': formik.errors.password && formik.touched.password,
 								})}
 							>
-								{formik.errors.password && formik.touched.password && (
-									<div
-										className='login__form__error'
+								<div className='login__form__error'>
+									<img
+										src={Subtract}
+										alt='img'
 										onMouseOver={() => setShowImagePopover(2)}
 										onMouseLeave={() => setShowImagePopover(0)}
+									/>
+									<div
+										className={classNames('login__form__error__popover-container', {
+											'show': showImagePopover === 2,
+										})}
 									>
-										<img src={Subtract} alt='img' data-tip data-for='registerTip' />
-										<div
-											className={classNames('login__form__error__popover-container', {
-												'show': showImagePopover === 2,
-											})}
-										>
-											<div>
-												<div className='error--textbox'>
-													<div className='error--textbox--logo'></div>
-													<div className='error--textbox--error'></div>
-												</div>
-												<div className='Login__form__error__popover'>
-													<div>{formik.errors.password}</div>
-												</div>
+										<div>
+											<div className='error--textbox'>
+												<div className='error--textbox--logo'></div>
+												<div className='error--textbox--error'></div>
+											</div>
+											<div className='Login__form__error__popover'>
+												<div>{formik.errors.password}</div>
 											</div>
 										</div>
 									</div>
-								)}
+								</div>
 							</div>
 						</div>
 						<button className='login__form__btn'>Đăng nhập</button>

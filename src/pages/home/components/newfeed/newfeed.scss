@@ -77,7 +77,6 @@
 	}
 	&--book {
 		path {
-			stroke: $primary;
 			fill: $primary;
 		}
 	}
@@ -86,12 +85,12 @@
 			stroke: $primary;
 		}
 	}
-	&--hashtag {
-		path {
-			stroke: $primary;
-			fill: $primary;
-		}
-	}
+	// &--hashtag {
+	// 	path {
+	// 		stroke: $primary;
+	// 		fill: $primary;
+	// 	}
+	// }
 	&--friend {
 		path {
 			stroke: $primary;
