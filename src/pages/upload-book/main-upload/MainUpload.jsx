@@ -175,7 +175,6 @@ export default function MainUpload() {
 			tags: [],
 			series: series,
 		};
-		// console.log(bookInfo);
 		if (buttonActive) {
 			handleCreateBook(bookInfo);
 		}

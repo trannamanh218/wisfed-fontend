@@ -3,54 +3,59 @@ import { Formik, Field, Form } from 'formik';
 import classNames from 'classnames';
 import { useDispatch } from 'react-redux';
 import ModalLogin from 'pages/login/element/ModalLogin';
-import { forgotPassword } from 'reducers/redux-utils/auth';
 import { changeKey } from 'reducers/redux-utils/forget-password';
-import { useSelector } from 'react-redux';
 import Circle from 'shared/loading/circle';
 import { emailValidate } from 'helpers/Validation';
 import Subtract from 'assets/images/Subtract.png';
+import { forgotPassword, handleDataToResetPassword, forgotPasswordAdmin } from 'reducers/redux-utils/auth';
+import PropTypes from 'prop-types';
 
-function ForgetpasswordFormComponent() {
-	const isFetching = useSelector(state => state.auth.isFetching);
-	const dispatch = useDispatch();
+function ForgetpasswordFormComponent({ type }) {
 	const [isShow, setIsShow] = useState(false);
 	const [dataModal, setDatamodal] = useState({});
-	const [showImagePopover, setShowImagePopover] = useState(false);
-	const [checkUser, setCheckUser] = useState(false);
+	const [showImagePopover, setShowImagePopover] = useState(0);
 	const [isLoading, setIsLoading] = useState(false);
+
+	const dispatch = useDispatch();
 
 	const handleChangeModal = () => {
 		setIsShow(false);
-		if (checkUser === true) {
+		if (type === 'default') {
 			dispatch(changeKey(true));
 		}
 	};
 
 	const handleSubmit = async data => {
-		setIsLoading(true);
-		try {
-			localStorage.setItem('emailForgot', JSON.stringify(data.email));
-			await dispatch(forgotPassword(data)).unwrap();
-			setCheckUser(true);
-			setIsShow(true);
-			setIsLoading(false);
-			setDatamodal({
-				title: 'Đã gửi mã',
-				title2: 'Xác Nhận',
-				isShowIcon: true,
-				scribe: 'Vui lòng kiểm tra hòm thư ',
-				scribe2: `${data.email}`,
-			});
-		} catch (err) {
-			setIsShow(true);
-			setIsLoading(false);
-			setDatamodal({
-				title: 'Lấy lại mật khẩu',
-				title2: 'thất bại',
-				isShowIcon: false,
-				scribe: `${err.errorCode === 303 ? 'Tài khoản của bạn chưa tồn tại.' : ''}`,
-				scribe2: `${err.errorCode === 303 ? 'Vui lòng đăng kí tài khoản' : ''}`,
-			});
+		if (!isShow) {
+			setIsLoading(true);
+			try {
+				if (type === 'default') {
+					const dataToResetPassword = await dispatch(forgotPassword(data)).unwrap();
+					dispatch(handleDataToResetPassword({ email: dataToResetPassword.userEmail }));
+				} else {
+					await dispatch(forgotPasswordAdmin(data)).unwrap();
+				}
+				setIsShow(true);
+				setDatamodal({
+					title: 'Đã gửi mã',
+					title2: 'Xác Nhận',
+					isShowIcon: true,
+					scribe: 'Vui lòng kiểm tra hòm thư ',
+					scribe2: `${data.email}`,
+				});
+			} catch (err) {
+				setIsShow(true);
+				setIsLoading(false);
+				setDatamodal({
+					title: 'Lấy lại mật khẩu',
+					title2: 'thất bại',
+					isShowIcon: false,
+					scribe: `${err.errorCode === 303 ? 'Tài khoản của bạn chưa tồn tại.' : ''}`,
+					scribe2: `${err.errorCode === 303 ? 'Vui lòng đăng kí tài khoản' : ''}`,
+				});
+			} finally {
+				setIsLoading(false);
+			}
 		}
 	};
 
@@ -76,44 +81,48 @@ function ForgetpasswordFormComponent() {
 					<Field name='email'>
 						{({ field, meta }) => {
 							return (
-								<div className='forgetPassword__form__field'>
+								<div
+									className={classNames('forgetPassword__form__field', {
+										'error': meta.touched && meta.error,
+									})}
+								>
+									<input
+										className='forgetPassword__form__input'
+										type='text'
+										name='email'
+										placeholder='Email đăng ký'
+										{...field}
+										value={field.value}
+										autoComplete='false'
+									/>
 									<div
-										className={classNames('forgetPassword__form__group', {
-											'error': meta.touched && meta.error,
+										className={classNames('error--text', {
+											'show': meta.touched && meta.error,
 										})}
 									>
-										<input
-											className='forgetPassword__form__input'
-											type='email'
-											placeholder='Email đăng ký'
-											{...field}
-											value={field.value}
-											autoComplete='false'
-										/>
-										{meta.touched && meta.error && (
-											<div
-												className='login__form__error'
+										<div className='login__form__error'>
+											<img
+												src={Subtract}
+												alt='img'
 												onMouseOver={() => setShowImagePopover(1)}
 												onMouseLeave={() => setShowImagePopover(0)}
+											/>
+											<div
+												className={classNames('login__form__error__popover-container', {
+													'show': showImagePopover === 1,
+												})}
 											>
-												<img src={Subtract} alt='img' data-tip data-for='registerTip' />
-												<div
-													className={classNames('login__form__error__popover-container', {
-														'show': showImagePopover === 1,
-													})}
-												>
-													<div>
-														<div className='error--textbox'>
-															<div className='error--textbox--logo'></div>
-															<div className='error--textbox--error'></div>
-														</div>
-														<div className='Login__form__error__popover'>
-															{meta.touched && meta.error && <div>{meta.error}</div>}
-														</div>
+												<div>
+													<div className='error--textbox'>
+														<div className='error--textbox--logo'></div>
+														<div className='error--textbox--error'></div>
+													</div>
+													<div className='Login__form__error__popover'>
+														<div>{meta.error}</div>
 													</div>
 												</div>
 											</div>
-										)}
+										</div>
 									</div>
 								</div>
 							);
@@ -125,5 +134,13 @@ function ForgetpasswordFormComponent() {
 		</div>
 	);
 }
+
+ForgetpasswordFormComponent.defaultProps = {
+	type: 'default',
+};
+
+ForgetpasswordFormComponent.propTypes = {
+	type: PropTypes.string,
+};
 
 export default ForgetpasswordFormComponent;

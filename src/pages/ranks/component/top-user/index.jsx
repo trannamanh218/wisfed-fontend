@@ -87,7 +87,7 @@ const TopUser = ({ rows, listYear, tabSelected }) => {
 		setValueDataSort(data.value);
 	};
 
-	const handleShare = data => {
+	const handleShare = (data, index) => {
 		const newData = {
 			by: valueDate,
 			categoryId: valueDataSort !== 'topFollow' ? topUserFilter : null,
@@ -95,6 +95,7 @@ const TopUser = ({ rows, listYear, tabSelected }) => {
 			userType: valueDataSort,
 			type: 'topUser',
 			id: data.id,
+			trueRank: index + 1,
 			verb: TOP_USER_VERB_SHARE,
 			...data,
 		};
@@ -155,7 +156,7 @@ const TopUser = ({ rows, listYear, tabSelected }) => {
 						<div className='topbooks__container__main__layout'>
 							<AuthorCard size='lg' item={item} setModalShow={setModalShow} />
 						</div>
-						<div onClick={() => handleShare(item)} className='author-book__share'>
+						<div onClick={() => handleShare(item, index)} className='author-book__share'>
 							<ShareRanks />
 						</div>
 					</div>

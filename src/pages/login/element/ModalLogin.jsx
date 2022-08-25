@@ -6,9 +6,10 @@ import { Link } from 'react-router-dom';
 
 export default function ModalLogin({ data, handleClose }) {
 	const location = useLocation();
+
 	return (
 		<div className='modal__container'>
-			<div className='modal__closeButton' onClick={() => handleClose()}>
+			<div className='modal__closeButton'>
 				{data.pathname && data.isShowIcon === true ? (
 					<Link to={data.pathname}>
 						<button>
@@ -16,7 +17,7 @@ export default function ModalLogin({ data, handleClose }) {
 						</button>
 					</Link>
 				) : (
-					<button>
+					<button onClick={() => handleClose()}>
 						<CloseButtonIcon />
 					</button>
 				)}

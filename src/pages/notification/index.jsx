@@ -15,10 +15,10 @@ import { NotificationError } from 'helpers/Error';
 import LoadingTimeLine from './loading-timeline';
 import ModalItem from './modal-item';
 
-const NotificationModal = ({ setModalNotti, buttonModal, realTime }) => {
+const NotificationModal = ({ setModalNoti, buttonModal, realTime }) => {
 	const notifymodal = useRef(null);
 	const [selectKey, setSelectKey] = useState('all');
-	const [isLoading, setIsLoading] = useState(null);
+	const [isLoading, setIsLoading] = useState(true);
 	const [renderFriend, setRenderFriend] = useState(false);
 	const [getNotifications, setGetNotifications] = useState([]);
 	const [getListUnread, setGetListUnRead] = useState([]);
@@ -28,7 +28,7 @@ const NotificationModal = ({ setModalNotti, buttonModal, realTime }) => {
 
 	const handleClickOutside = e => {
 		if (notifymodal.current && !notifymodal.current.contains(e.target) && !buttonModal.current.contains(e.target)) {
-			setModalNotti(false);
+			setModalNoti(false);
 			dispatch(backgroundToggle(true));
 		}
 	};
@@ -105,7 +105,7 @@ const NotificationModal = ({ setModalNotti, buttonModal, realTime }) => {
 
 	const handleNotificaiton = () => {
 		dispatch(backgroundToggle(true));
-		setModalNotti(false);
+		setModalNoti(false);
 		dispatch(activeKeyTabsNotification(selectKey));
 	};
 
@@ -135,7 +135,7 @@ const NotificationModal = ({ setModalNotti, buttonModal, realTime }) => {
 													<ModalItem
 														key={item.id}
 														item={item}
-														setModalNotti={setModalNotti}
+														setModalNoti={setModalNoti}
 														selectKey={selectKey}
 														setGetNotifications={setGetNotifications}
 														getNotifications={getNotifications}
@@ -151,7 +151,7 @@ const NotificationModal = ({ setModalNotti, buttonModal, realTime }) => {
 													<ModalItem
 														key={item.id}
 														item={item}
-														setModalNotti={setModalNotti}
+														setModalNoti={setModalNoti}
 														selectKey={selectKey}
 														setGetNotifications={setGetNotifications}
 														getNotifications={getNotifications}
@@ -181,7 +181,7 @@ const NotificationModal = ({ setModalNotti, buttonModal, realTime }) => {
 														<ModalItem
 															key={item.id}
 															item={item}
-															setModalNotti={setModalNotti}
+															setModalNoti={setModalNoti}
 														/>
 													)
 											)}
@@ -211,7 +211,7 @@ const NotificationModal = ({ setModalNotti, buttonModal, realTime }) => {
 													<ModalItem
 														key={item.id}
 														item={item}
-														setModalNotti={setModalNotti}
+														setModalNoti={setModalNoti}
 														selectKey={selectKey}
 														setGetNotifications={setGetNotifications}
 														getNotifications={getNotifications}
@@ -238,7 +238,7 @@ const NotificationModal = ({ setModalNotti, buttonModal, realTime }) => {
 	);
 };
 NotificationModal.propTypes = {
-	setModalNotti: PropTypes.func,
+	setModalNoti: PropTypes.func,
 	buttonModal: PropTypes.object,
 	realTime: PropTypes.bool,
 };

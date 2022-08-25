@@ -27,12 +27,15 @@ function PostTab({ currentTab }) {
 
 	const getPostListByUser = async () => {
 		try {
-			const params = {
-				start: callApiStart.current,
-				limit: callApiPerPage.current,
-				sort: JSON.stringify([{ property: 'createdAt', direction: 'DESC' }]),
+			const data = {
+				params: {
+					start: callApiStart.current,
+					limit: callApiPerPage.current,
+					sort: JSON.stringify([{ property: 'createdAt', direction: 'DESC' }]),
+				},
+				userId: userId,
 			};
-			const posts = await dispatch(getPostsByUser({ userId, params })).unwrap();
+			const posts = await dispatch(getPostsByUser(data)).unwrap();
 			if (posts.length > 0) {
 				callApiStart.current += callApiPerPage.current;
 				setPostList(postList.concat(posts));

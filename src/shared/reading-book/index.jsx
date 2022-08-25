@@ -5,7 +5,6 @@ import { useEffect, useState } from 'react';
 import { updateCurrentBook } from 'reducers/redux-utils/book';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { Row, Col } from 'react-bootstrap';
 import _ from 'lodash';
 
 function ReadingBook({ bookData }) {
@@ -33,6 +32,14 @@ function ReadingBook({ bookData }) {
 		navigate(`/book/detail/${bookData.id}`);
 	};
 
+	const generateAuthorName = authors => {
+		if (authors && authors.length) {
+			const authorNameArr = authors.map(item => item.authorName);
+			return authorNameArr.join(' - ');
+		} else {
+			return 'Ẩn Danh';
+		}
+	};
 	return (
 		!_.isEmpty(bookData) && (
 			<div className='reading-book'>
@@ -47,14 +54,16 @@ function ReadingBook({ bookData }) {
 							<img
 								data-testid='reading-book__book-img'
 								src={bookData?.images?.length > 0 ? bookData.images[0] : ''}
-								alt=''
+								alt='image'
 							/>
 						</div>
 
 						<div className='reading-book__information'>
 							<div>
 								<div className='reading-book__information__book-name'>{bookData.name}</div>
-								<div className='reading-book__information__author'>{bookData?.author}</div>
+								<div className='reading-book__information__author'>
+									{generateAuthorName(bookData?.authors)}
+								</div>
 							</div>
 							<div className='reading-book__information__current-progress'>
 								<ProgressBar now={percent} />

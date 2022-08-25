@@ -24,7 +24,6 @@ const MainProfile = ({ currentUserInfo }) => {
 						className={classNames('main-profile__tabs', {
 							'none-books': currentUserInfo?.role !== 'author',
 						})}
-						// defaultActiveKey
 						activeKey={currentTab}
 						onSelect={eventKey => setCurrentTab(eventKey)}
 					>

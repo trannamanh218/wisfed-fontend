@@ -13,11 +13,11 @@ import Notification from 'pages/notification/compornent-main';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Routes, Route, useLocation } from 'react-router-dom';
-import { checkLogin, updateLoginExternal } from 'reducers/redux-utils/auth';
+import { checkLogin } from 'reducers/redux-utils/auth';
 import { ToastContainer } from 'react-toastify';
 import Login from 'pages/login';
 import Register from 'pages/register';
-import ForgetPassWord from 'pages/foget-password/component';
+import ForgetPassWordComponent from 'pages/foget-password/component';
 import ChooseTopic from 'pages/choose-topic';
 import Direct from 'pages/choose-topic/DirectPage';
 import PropTypes from 'prop-types';
@@ -25,8 +25,7 @@ import NotFound from 'pages/not-found';
 import { getCheckJwt } from 'reducers/redux-utils/auth';
 import ReadingSummary from 'pages/reading-summary';
 import ReadingTarget from 'pages/reading-target';
-import ForgetPassWordAdminComponet from 'pages/foget-password/component-admin/ForgotAdmin';
-import AdminCreatNewPassword from 'pages/foget-password/component-admin/CreatNewPasswordAdmin';
+import AdminCreateNewPassword from 'pages/foget-password/component-admin/CreateNewPasswordAdmin';
 import LayoutGroup from 'pages/group-page/group-layout';
 import DetailFriend from 'pages/friends/component/detail-friend';
 import 'scss/main.scss';
@@ -51,23 +50,16 @@ function App({ children }) {
 	const dispatch = useDispatch();
 	const updateMyLibrary = useSelector(state => state.library.updateMyLibrary);
 	const { routerLogin, userInfo } = useSelector(state => state.auth);
-	const isLoginExternal = useSelector(state => state.auth.isLoginExternal);
 
 	const location = useLocation();
 
 	useEffect(async () => {
 		const accsetToken = Storage.getAccessToken();
-		console.log('isLoginEx', isLoginExternal);
-		if (!isLoginExternal) {
-			if (accsetToken) {
-				console.log('app');
-				dispatch(checkLogin(true));
-				await dispatch(getCheckJwt()).unwrap();
-			} else {
-				dispatch(checkLogin(false));
-			}
+		if (accsetToken) {
+			dispatch(checkLogin(true));
+			await dispatch(getCheckJwt()).unwrap();
 		} else {
-			dispatch(updateLoginExternal(false));
+			dispatch(checkLogin(false));
 		}
 	}, []);
 
@@ -131,10 +123,11 @@ function App({ children }) {
 				<Route path='/confirm-my-book/:bookId' element={<ConfirmMyBook />} />
 				<Route path='/login' element={<Login />} />
 				<Route path='/register' element={<Register />} />
-				<Route path='/forget-password' element={<ForgetPassWord />} />
-				<Route path='/forget-password-admin' element={<ForgetPassWordAdminComponet />} />
-				<Route path='/creat-newpassword-admin' element={<AdminCreatNewPassword />} />
+				<Route path='/forget-password' element={<ForgetPassWordComponent />} />
+				<Route path='/forget-password-admin' element={<ForgetPassWordComponent type='admin' />} />
+				<Route path='/create-newpassword-admin' element={<AdminCreateNewPassword />} />
 				<Route path='/choose-topic' element={<ChooseTopic />} />
+				<Route path='direct' element={<Direct />} />
 				<Route path='direct/login' element={<Direct />} />
 				<Route path='/reading-summary/:userId' element={<ReadingSummary />} />
 				<Route path='/reading-target/:userId' element={<ReadingTarget />} />

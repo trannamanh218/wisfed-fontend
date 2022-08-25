@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Logo from 'assets/images/Logo 2.png';
 import ImageLogin from 'assets/images/cover-sign 1.png';
-import { Formik, Field, Form } from 'formik';
+import { useFormik } from 'formik';
 import './login.scss';
 import classNames from 'classnames';
 import { Link } from 'react-router-dom';
@@ -26,7 +26,6 @@ function Login() {
 
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
-	const [registerEmailFill, setRegisterEmailFill] = useState('');
 
 	const handleSubmit = async data => {
 		const dataSend = {
@@ -62,10 +61,6 @@ function Login() {
 		if (Storage.getAccessToken()) {
 			navigate('/');
 		}
-		const registerEmailFillLocalStorage = localStorage.getItem('registerEmailFill');
-		if (registerEmailFillLocalStorage) {
-			setRegisterEmailFill(registerEmailFillLocalStorage);
-		}
 	}, []);
 
 	const handleChangeIcon = () => {
@@ -76,6 +71,15 @@ function Login() {
 		setIsShow(false);
 	};
 
+	const formik = useFormik({
+		initialValues: {
+			email: localStorage.getItem('registerEmailFill') ? localStorage.getItem('registerEmailFill') : '',
+			password: '',
+		},
+		onSubmit: handleSubmit,
+		validationSchema: Validation.login(),
+	});
+
 	return (
 		<div className='login__container'>
 			{isShow && dataModal && (
@@ -84,11 +88,11 @@ function Login() {
 				</div>
 			)}
 			<div>
-				<Link to='/'>
-					<div className='login__header'>
+				<div className='login__header'>
+					<Link to='/'>
 						<img src={Logo} alt='logo' />
-					</div>
-				</Link>
+					</Link>
+				</div>
 				<div className='login__body'>
 					<div>
 						<span className='login__body-text1'>
@@ -130,122 +134,101 @@ function Login() {
 					<div>
 						<span className='login__form-title'>Đăng nhập tài khoản Wisfeed</span>
 					</div>
-					<Formik
-						initialValues={{ email: '', password: '' }}
-						onSubmit={handleSubmit}
-						validationSchema={Validation.login()}
-					>
-						<Form className='login__form'>
-							<Field name='email'>
-								{({ field, meta }) => {
-									return (
-										<div
-											className={classNames('login__form__field', {
-												'error': meta.error && meta.touched,
-											})}
-										>
-											<input
-												className='login__form__input'
-												type='email'
-												placeholder='Email'
-												{...field}
-												value={registerEmailFill || field.value}
-												autoComplete='false'
-												style={meta.error ? { width: '93%' } : { width: '100%' }}
-											/>
-											<div
-												className={classNames('error--text', {
-													'show': meta.error,
-												})}
-											>
-												{meta.touched && meta.error && (
-													<div
-														className='login__form__error'
-														onMouseOver={() => setShowImagePopover(1)}
-														onMouseLeave={() => setShowImagePopover(0)}
-													>
-														<img src={Subtract} alt='img' data-tip data-for='registerTip' />
-														<div
-															className={classNames(
-																'login__form__error__popover-container',
-																{
-																	'show': showImagePopover === 1,
-																}
-															)}
-														>
-															<div>
-																<div className='error--textbox'>
-																	<div className='error--textbox--logo'></div>
-																	<div className='error--textbox--error'></div>
-																</div>
-																<div className='Login__form__error__popover'>
-																	<div>{meta.error}</div>
-																</div>
-															</div>
-														</div>
-													</div>
-												)}
-											</div>
-										</div>
-									);
-								}}
-							</Field>
-
-							<Field name='password'>
-								{({ field, meta }) => (
+					<form onSubmit={formik.handleSubmit}>
+						<div
+							className={classNames('login__form__field', {
+								'error': formik.errors.email && formik.touched.email,
+							})}
+						>
+							<input
+								className='login__form__input'
+								type='text'
+								name='email'
+								placeholder='Email'
+								value={formik.values.email}
+								autoComplete='false'
+								onChange={formik.handleChange}
+							/>
+							<div
+								className={classNames('error--text', {
+									'show': formik.errors.email && formik.touched.email,
+								})}
+							>
+								<div className='login__form__error'>
+									<img
+										src={Subtract}
+										alt='img'
+										onMouseOver={() => setShowImagePopover(1)}
+										onMouseLeave={() => setShowImagePopover(0)}
+									/>
 									<div
-										className={classNames('login__form__field', {
-											'error': meta.error && meta.touched,
+										className={classNames('login__form__error__popover-container', {
+											'show': showImagePopover === 1,
 										})}
 									>
-										<input
-											className='login__form__input'
-											type={isPublic ? 'text' : 'password'}
-											placeholder='Mật khẩu'
-											{...field}
-											value={field.value}
-											autoComplete='new-password'
-											style={meta.error ? { width: '93%' } : { width: '100%' }}
-										/>
 										<div>
-											<EyeIcon isPublic={isPublic} handlePublic={handleChangeIcon} />
-										</div>
-										<div
-											className={classNames('error--text', {
-												'show': meta.error,
-											})}
-										>
-											{meta.touched && meta.error && (
-												<div
-													className='login__form__error'
-													onMouseOver={() => setShowImagePopover(2)}
-													onMouseLeave={() => setShowImagePopover(0)}
-												>
-													<img src={Subtract} alt='img' data-tip data-for='registerTip' />
-													<div
-														className={classNames('login__form__error__popover-container', {
-															'show': showImagePopover === 2,
-														})}
-													>
-														<div>
-															<div className='error--textbox'>
-																<div className='error--textbox--logo'></div>
-																<div className='error--textbox--error'></div>
-															</div>
-															<div className='Login__form__error__popover'>
-																<div>{meta.error}</div>
-															</div>
-														</div>
-													</div>
-												</div>
-											)}
+											<div className='error--textbox'>
+												<div className='error--textbox--logo'></div>
+												<div className='error--textbox--error'></div>
+											</div>
+											<div className='Login__form__error__popover'>
+												<div>{formik.errors.email}</div>
+											</div>
 										</div>
 									</div>
-								)}
-							</Field>
-							<button className='login__form__btn'>Đăng nhập</button>
-						</Form>
-					</Formik>
+								</div>
+							</div>
+						</div>
+
+						<div
+							className={classNames('login__form__field', {
+								'error': formik.errors.password && formik.touched.password,
+							})}
+						>
+							<input
+								className='login__form__input'
+								type={isPublic ? 'text' : 'password'}
+								name='password'
+								placeholder='Mật khẩu'
+								value={formik.values.password}
+								autoComplete='new-password'
+								onChange={formik.handleChange}
+							/>
+							<div>
+								<EyeIcon isPublic={isPublic} handlePublic={handleChangeIcon} />
+							</div>
+							<div
+								className={classNames('error--text', {
+									'show': formik.errors.password && formik.touched.password,
+								})}
+							>
+								<div className='login__form__error'>
+									<img
+										src={Subtract}
+										alt='img'
+										onMouseOver={() => setShowImagePopover(2)}
+										onMouseLeave={() => setShowImagePopover(0)}
+									/>
+									<div
+										className={classNames('login__form__error__popover-container', {
+											'show': showImagePopover === 2,
+										})}
+									>
+										<div>
+											<div className='error--textbox'>
+												<div className='error--textbox--logo'></div>
+												<div className='error--textbox--error'></div>
+											</div>
+											<div className='Login__form__error__popover'>
+												<div>{formik.errors.password}</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<button className='login__form__btn'>Đăng nhập</button>
+					</form>
 					<div className='login__form__link'>
 						<Link to='/forget-password'>Quên mật khẩu ?</Link>
 					</div>

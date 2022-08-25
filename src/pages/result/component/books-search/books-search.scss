@@ -9,8 +9,30 @@
 	}
 	.bookSearch__main {
 		margin-top: 35px;
-		.author-book__title {
-			flex: 1;
+		.author-book {
+			.book-thumbnail {
+				height: 208px;
+			}
+			.author-book__info {
+				justify-content: flex-end;
+				.author-book__info__book-name {
+					.author-book__title {
+						margin-bottom: 12px;
+						-webkit-line-clamp: 2;
+					}
+				}
+				.author-book__authors {
+					margin-bottom: 20px;
+				}
+				.react-rating-container {
+					> span {
+						margin-right: 12px;
+						.star-icon {
+							width: 28px;
+						}
+					}
+				}
+			}
 		}
 	}
 }

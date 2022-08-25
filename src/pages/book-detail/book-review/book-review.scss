@@ -98,3 +98,12 @@
 		}
 	}
 }
+@media only screen and (min-width: 1030px) and (max-width: 1280px) {
+	.review-tab {
+		.filter-pane {
+			.review-tab__filter__options {
+				margin-left: 100px;
+			}
+		}
+	}
+}

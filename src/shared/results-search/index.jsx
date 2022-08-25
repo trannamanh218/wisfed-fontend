@@ -1,6 +1,6 @@
 import { TimeIcon, CloseIconX, Search } from 'components/svg';
 import './results-search.scss';
-import UserAvatar from 'shared/user-avatar';
+import defaultAvatar from 'assets/images/avatar.jpeg';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import Storage from 'helpers/Storage';
@@ -53,7 +53,7 @@ const ResultSearch = ({ valueInputSearch, resultSearch, setIsShow }) => {
 				const item = saveLocalSearch.reverse()[0];
 				directItem(item);
 			} else {
-				const filterData = saveLocalSearch.filter((item, index) => index !== 0);
+				const filterData = saveLocalSearch.filter((_, index) => index !== 0);
 				Storage.setItem('result', JSON.stringify(filterData.reverse()));
 				const item = saveLocalSearch.reverse()[0];
 				directItem(item);
@@ -96,67 +96,59 @@ const ResultSearch = ({ valueInputSearch, resultSearch, setIsShow }) => {
 	};
 
 	return (
-		<>
-			<div className='result__search__container'>
-				{valueInputSearch ? (
-					<>
-						{resultSearch.books?.slice(0, 5).map(item => (
-							<div key={item.id} onClick={() => handleItem(item)} className='result__search__main'>
-								<div className='result__search__main__left'>
-									<div className='result__search__icon__time'>
-										<img
-											src={item?.images[0] || bookImage}
-											className='result__search__img'
-											onError={e => e.target.setAttribute('src', `${bookImage}`)}
-										/>
-									</div>
-									<div className='result__search__name'>{item.name}</div>
+		<div className='result__search__container'>
+			{valueInputSearch ? (
+				<>
+					{resultSearch.books?.slice(0, 5).map(item => (
+						<div key={item.id} onClick={() => handleItem(item)} className='result__search__main'>
+							<div className='result__search__main__left'>
+								<div className='result__search__icon__time'>
+									<img
+										src={item?.images[0] || bookImage}
+										className='result__search__img'
+										onError={e => e.target.setAttribute('src', `${bookImage}`)}
+									/>
 								</div>
+								<div className='result__search__name'>{item.name}</div>
 							</div>
-						))}
-						{resultSearch.users?.slice(0, 5).map(item => (
-							<div key={item.id} className='result__search__main'>
-								<div onClick={() => handleItem(item)} className='result__search__main__left'>
-									<div className='result__search__main__avatar'>
-										<UserAvatar
-											source={item?.avatarImage}
-											size='sm'
-											className='result__search__main__img'
-										/>
-									</div>
-									<div className='result__search__name'>
-										{item.fullName || (
-											<p>
-												{item.firstName} {item.lastName}
-											</p>
-										)}
-									</div>
-								</div>
-							</div>
-						))}
-					</>
-				) : (
-					<>
-						{renderSetting()}
-						{historySearch()}
-					</>
-				)}
-
-				{valueInputSearch?.length > 0 && (
-					<Link to={`/result/q=${valueInputSearch}`} className='result__search__value'>
-						<div className='result__search__icon'>
-							<Search />
 						</div>
-						<div className='result__search__value__input'>Tìm kiếm {valueInputSearch}</div>
-					</Link>
-				)}
-			</div>
-		</>
+					))}
+					{resultSearch.users?.slice(0, 5).map(item => (
+						<div key={item.id} className='result__search__main'>
+							<div onClick={() => handleItem(item)} className='result__search__main__left'>
+								<div className='result__search__icon__time'>
+									<img src={item?.avatarImage || defaultAvatar} className='result__search__img' />
+								</div>
+								<div className='result__search__name'>
+									{item.fullName || `${item.firstName} ${item.lastName}`}
+								</div>
+							</div>
+						</div>
+					))}
+				</>
+			) : (
+				<>
+					{renderSetting()}
+					{historySearch()}
+				</>
+			)}
+
+			{valueInputSearch?.length > 0 && (
+				<Link to={`/result/q=${valueInputSearch}`} className='result__search__value'>
+					<div className='result__search__icon'>
+						<Search />
+					</div>
+					<div className='result__search__value__input'>Tìm kiếm {valueInputSearch}</div>
+				</Link>
+			)}
+		</div>
 	);
 };
+
 ResultSearch.propTypes = {
 	valueInputSearch: PropTypes.string,
 	resultSearch: PropTypes.any,
 	setIsShow: PropTypes.func,
 };
+
 export default ResultSearch;

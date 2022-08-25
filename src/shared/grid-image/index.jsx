@@ -5,10 +5,17 @@ import classNames from 'classnames';
 import _ from 'lodash';
 import Lightbox from 'react-image-lightbox';
 import 'react-image-lightbox/style.css';
+import { useRef } from 'react';
 
 const GridImage = ({ images, inPost, postId }) => {
 	const [photoIndex, setPhotoIndex] = useState(0);
 	const [isOpen, setIsOpen] = useState(false);
+
+	const safeDocument = typeof document !== 'undefined' ? document : {};
+	const { body } = safeDocument;
+	const html = safeDocument.documentElement;
+
+	const scrollBlocked = useRef(false);
 
 	useEffect(() => {
 		if (!_.isEmpty(images)) {
@@ -64,6 +71,34 @@ const GridImage = ({ images, inPost, postId }) => {
 		}
 	}, [images]);
 
+	useEffect(() => {
+		if (isOpen) {
+			blockScroll();
+		} else {
+			allowScroll();
+		}
+	}, [isOpen]);
+
+	const blockScroll = () => {
+		if (!body || !body.style || scrollBlocked.current) return;
+		const scrollBarWidth = window.innerWidth - html.clientWidth;
+		const bodyPaddingRight = parseInt(window.getComputedStyle(body).getPropertyValue('padding-right')) || 0;
+		body.style.position = 'relative';
+		body.style.overflow = 'hidden';
+		body.style.paddingRight = `${bodyPaddingRight + scrollBarWidth}px`;
+		scrollBlocked.current = true;
+	};
+
+	const allowScroll = () => {
+		if (!body || !body.style || !scrollBlocked.current) return;
+		html.style.position = '';
+		html.style.overflow = '';
+		body.style.position = '';
+		body.style.overflow = '';
+		body.style.paddingRight = '';
+		scrollBlocked.current = false;
+	};
+
 	return (
 		<>
 			{!_.isEmpty(images) && (
@@ -77,37 +112,37 @@ const GridImage = ({ images, inPost, postId }) => {
 					{images.length < 6 ? (
 						<>
 							{images.map((image, index) => (
-								<button key={index} onClick={() => setIsOpen(true)}>
-									<div
-										className={
-											inPost
-												? `creat-post-modal-content__main__body__image img-${index}-${postId}`
-												: `creat-post-modal-content__main__body__image img-${index}`
-										}
-									>
-										{inPost ? (
-											<img src={image} alt='image' />
-										) : (
-											<img src={URL.createObjectURL(image)} alt='image' />
-										)}
-									</div>
-									{isOpen && (
-										<Lightbox
-											mainSrc={images[photoIndex]}
-											nextSrc={images[(photoIndex + 1) % images.length]}
-											prevSrc={images[(photoIndex + images.length - 1) % images.length]}
-											onCloseRequest={() => {
-												setIsOpen(false);
-												setPhotoIndex(0);
-											}}
-											onMovePrevRequest={() =>
-												setPhotoIndex((photoIndex + images.length - 1) % images.length)
-											}
-											onMoveNextRequest={() => setPhotoIndex((photoIndex + 1) % images.length)}
-										/>
+								<div
+									className={
+										inPost
+											? `creat-post-modal-content__main__body__image img-${index}-${postId}`
+											: `creat-post-modal-content__main__body__image img-${index}`
+									}
+									key={index}
+									onClick={() => {
+										setIsOpen(true);
+										setPhotoIndex(index);
+									}}
+								>
+									{inPost ? (
+										<img src={image} alt='image' />
+									) : (
+										<img src={URL.createObjectURL(image)} alt='image' />
 									)}
-								</button>
+								</div>
 							))}
+							{isOpen && (
+								<Lightbox
+									mainSrc={images[photoIndex]}
+									nextSrc={images[(photoIndex + 1) % images.length]}
+									prevSrc={images[(photoIndex + images.length - 1) % images.length]}
+									onCloseRequest={() => setIsOpen(false)}
+									onMovePrevRequest={() =>
+										setPhotoIndex((photoIndex + images.length - 1) % images.length)
+									}
+									onMoveNextRequest={() => setPhotoIndex((photoIndex + 1) % images.length)}
+								/>
+							)}
 						</>
 					) : (
 						<>
@@ -116,60 +151,24 @@ const GridImage = ({ images, inPost, postId }) => {
 									{images.map((image, index) => {
 										if (index < 4) {
 											return (
-												<button key={index} onClick={() => setIsOpen(true)}>
-													<div
-														className={
-															inPost
-																? `creat-post-modal-content__main__body__image img-${index}-${postId}`
-																: `creat-post-modal-content__main__body__image img-${index}`
-														}
-													>
-														{inPost ? (
-															<img src={image} alt='image' />
-														) : (
-															<img src={URL.createObjectURL(image)} alt='image' />
-														)}
-													</div>
-													{isOpen && (
-														<Lightbox
-															mainSrc={images[photoIndex]}
-															nextSrc={images[(photoIndex + 1) % images.length]}
-															prevSrc={
-																images[(photoIndex + images.length - 1) % images.length]
-															}
-															onCloseRequest={() => setIsOpen(false)}
-															onMovePrevRequest={() =>
-																setPhotoIndex(
-																	(photoIndex + images.length - 1) % images.length
-																)
-															}
-															onMoveNextRequest={() =>
-																setPhotoIndex((photoIndex + 1) % images.length)
-															}
-														/>
+												<div
+													className={
+														inPost
+															? `creat-post-modal-content__main__body__image img-${index}-${postId}`
+															: `creat-post-modal-content__main__body__image img-${index}`
+													}
+													key={index}
+													onClick={() => {
+														setIsOpen(true);
+														setPhotoIndex(index);
+													}}
+												>
+													{inPost ? (
+														<img src={image} alt='image' />
+													) : (
+														<img src={URL.createObjectURL(image)} alt='image' />
 													)}
-												</button>
-											);
-										}
-										{
-											isOpen && (
-												<Lightbox
-													mainSrc={images[photoIndex]}
-													nextSrc={images[(photoIndex + 1) % images.length]}
-													prevSrc={images[(photoIndex + images.length - 1) % images.length]}
-													onCloseRequest={() => setIsOpen(false)}
-													onMovePrevRequest={() =>
-														setPhotoIndex({
-															photoIndex:
-																(photoIndex + images.length - 1) % images.length,
-														})
-													}
-													onMoveNextRequest={() =>
-														setPhotoIndex({
-															photoIndex: (photoIndex + 1) % images.length,
-														})
-													}
-												/>
+												</div>
 											);
 										}
 									})}
@@ -179,6 +178,10 @@ const GridImage = ({ images, inPost, postId }) => {
 												? `creat-post-modal-content__main__body__image img-4-${postId}`
 												: `creat-post-modal-content__main__body__image img-4`
 										}
+										onClick={() => {
+											setIsOpen(true);
+											setPhotoIndex(4);
+										}}
 									>
 										{inPost ? (
 											<img src={images[4]} alt='image' />
@@ -189,6 +192,18 @@ const GridImage = ({ images, inPost, postId }) => {
 											+{images.length - 4}
 										</div>
 									</div>
+									{isOpen && (
+										<Lightbox
+											mainSrc={images[photoIndex]}
+											nextSrc={images[(photoIndex + 1) % images.length]}
+											prevSrc={images[(photoIndex + images.length - 1) % images.length]}
+											onCloseRequest={() => setIsOpen(false)}
+											onMovePrevRequest={() =>
+												setPhotoIndex((photoIndex + images.length - 1) % images.length)
+											}
+											onMoveNextRequest={() => setPhotoIndex((photoIndex + 1) % images.length)}
+										/>
+									)}
 								</>
 							)}
 						</>

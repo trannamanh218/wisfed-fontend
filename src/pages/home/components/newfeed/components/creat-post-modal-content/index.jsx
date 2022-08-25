@@ -54,6 +54,7 @@ const verbShareArray = [
 	READ_TARGET_VERB_SHARE,
 	TOP_BOOK_VERB_SHARE,
 	TOP_QUOTE_VERB_SHARE,
+	TOP_USER_VERB_SHARE,
 ];
 
 const urlRegex =
@@ -219,7 +220,6 @@ function CreatPostModalContent({
 	const limitedValue = 5;
 	const handleAddToPost = data => {
 		const newData = { ...taggedData };
-		setCheckProgress(Number(data.progress));
 		if (option.value === 'addAuthor' || option.value === 'addFriends' || option.value === 'addCategory') {
 			const listData = [...taggedData[option.value]];
 			const lastItem = listData[listData.length - 1];
@@ -456,6 +456,13 @@ function CreatPostModalContent({
 
 	useEffect(() => {
 		checkActive();
+		if (!_.isEmpty(taggedData.addBook)) {
+			if (taggedData.addBook.status === 'read') {
+				setCheckProgress(taggedData.addBook.page);
+			} else {
+				setCheckProgress(parseInt(taggedData.addBook.progress));
+			}
+		}
 	}, [showMainModal, content, taggedData, imagesUpload]);
 
 	const checkActive = () => {
@@ -616,7 +623,7 @@ function CreatPostModalContent({
 							/>
 							{postDataShare.type === 'topQuote' && (
 								<div className='post__title__share__rank'>
-									<span className='number__title__rank'># Top {postDataShare.rank} quotes </span>{' '}
+									<span className='number__title__rank'># Top {postDataShare.trueRank} quotes </span>{' '}
 									<span className='title__rank'>
 										{postDataShare.categoryName?.length
 											? `  được like nhiều nhất thuộc ${
@@ -629,7 +636,7 @@ function CreatPostModalContent({
 							)}
 							{postDataShare.type === 'topBook' && (
 								<div className='post__title__share__rank'>
-									<span className='number__title__rank'># Top {postDataShare.rank}</span>
+									<span className='number__title__rank'># Top {postDataShare.trueRank}</span>
 									<span className='title__rank'>
 										{postDataShare.categoryName
 											? `  cuốn sách tốt nhất thuộc  ${

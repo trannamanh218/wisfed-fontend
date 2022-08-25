@@ -79,3 +79,39 @@
 		padding: 32px 40px;
 	}
 }
+@media only screen and (max-width: 1024px) {
+	.review-tab {
+		.review-tab__filter__options {
+			gap: 20px;
+		}
+	}
+}
+@media only screen and (max-width: 768px) {
+	.review-tab {
+		.review-tab__filter__options {
+			padding: 0 85px;
+		}
+	}
+}
+@media only screen and (max-width: 820px) {
+	.review-tab {
+		.review-tab__filter__options {
+			padding: 0 80px;
+		}
+	}
+}
+@media only screen and (max-width: 1280px) {
+	.sort-review-modal__item {
+		button {
+			width: 84%;
+			margin-top: 30px;
+		}
+	}
+	.sort-review-modal {
+		.modal-dialog {
+			.modal-content {
+				padding-left: 20px;
+			}
+		}
+	}
+}

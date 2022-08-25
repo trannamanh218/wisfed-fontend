@@ -2,7 +2,6 @@
 	margin: 0;
 	padding: 0;
 	border: 0;
-	// border: 1px solid red;
 	vertical-align: baseline;
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
@@ -185,40 +184,4 @@ div[contenteditable='true'] {
 .modal-portal-open {
 	overflow: hidden;
 	padding-right: 0.5rem;
-}
-
-@media only screen and (max-width: 1280px) {
-	.sidebar-category {
-		width: 210px;
-	}
-	.mainContainer__main {
-		.main-confirm-my-book {
-			margin-right: 50px;
-		}
-	}
-}
-@media only screen and (max-width: 1024px) {
-	.sidebar-category {
-		width: 155px;
-	}
-	.mainContainer__main {
-		.main-confirm-my-book__book-info-content {
-			width: 420px;
-		}
-		.main-confirm-my-book {
-			margin-right: 20px;
-		}
-	}
-	.mainContainer__right {
-		.dualColumn {
-			width: 200px;
-		}
-	}
-}
-@media only screen and (max-width: 820px) {
-	.mainContainer__main {
-		.main-confirm-my-book {
-			margin-right: 0px;
-		}
-	}
 }

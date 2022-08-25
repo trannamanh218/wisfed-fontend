@@ -70,32 +70,36 @@ const UsersSearch = ({ isFetching, value, setIsFetching, searchResultInput, acti
 				<>
 					<InfiniteScroll next={handleGetUserSearch} dataLength={listArrayUsers.length} hasMore={hasMore}>
 						<div className='myfriends__layout__container'>
-							{listArrayUsers.map(item => (
-								<div key={item.id} className='myfriends__layout'>
-									<Link to={`/profile/${item.id}`}>
-										<img
-											className='myfriends__layout__img'
-											src={item.avatarImage ? item.avatarImage : defaultAvatar}
-											alt=''
-										/>
-										<div className='myfriends__star'>
-											<div className='myfriends__star__name'>
-												{item.fullName ? (
-													item.fullName
-												) : (
-													<>
-														<span>{item.firstName}</span>&nbsp;
-														<span>{item.lastName}</span>
-													</>
-												)}
+							{listArrayUsers.map(item => {
+								if (item.relation !== 'isMe') {
+									return (
+										<div key={item.id} className='myfriends__layout'>
+											<Link to={`/profile/${item.id}`}>
+												<img
+													className='myfriends__layout__img'
+													src={item.avatarImage ? item.avatarImage : defaultAvatar}
+													alt=''
+												/>
+												<div className='myfriends__star'>
+													<div className='myfriends__star__name'>
+														{item.fullName ? (
+															item.fullName
+														) : (
+															<>
+																<span>{item.firstName}</span>&nbsp;
+																<span>{item.lastName}</span>
+															</>
+														)}
+													</div>
+												</div>
+											</Link>
+											<div className='myfriends__button__container'>
+												<ConnectButtonsSearch item={item} />
 											</div>
 										</div>
-									</Link>
-									<div className='myfriends__button__container'>
-										<ConnectButtonsSearch item={item} />
-									</div>
-								</div>
-							))}
+									);
+								}
+							})}
 						</div>
 					</InfiniteScroll>
 				</>

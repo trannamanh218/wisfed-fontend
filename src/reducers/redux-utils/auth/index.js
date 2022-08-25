@@ -4,7 +4,7 @@ import {
 	forgotPasswordAPI,
 	registerAPI,
 	resetPasswordAPI,
-	checkTokenResetPassword,
+	checkTokenResetPasswordAPI,
 	forgotPasswordAPIAdmin,
 	resetPasswordAPIAdmin,
 	checkJwt,
@@ -33,9 +33,9 @@ export const getCheckJwt = createAsyncThunk('auth/getCheckJwt', async (params, {
 	}
 });
 
-export const checkApiToken = createAsyncThunk('/auth/forgot-admin', async (params, { rejectWithValue }) => {
+export const checkTokenResetPassword = createAsyncThunk('/auth/forgot-admin', async (params, { rejectWithValue }) => {
 	try {
-		const response = await Request.makeGet(checkTokenResetPassword(params));
+		const response = await Request.makeGet(checkTokenResetPasswordAPI(params));
 		return response;
 	} catch (err) {
 		return rejectWithValue(err.response);
@@ -62,7 +62,7 @@ export const login = createAsyncThunk('auth/login', async (params, { rejectWithV
 export const forgotPassword = createAsyncThunk('auth/forgotPassword', async (params, { rejectWithValue }) => {
 	try {
 		const response = await Request.makePost(forgotPasswordAPI, params);
-		return response;
+		return response.data;
 	} catch (err) {
 		const error = JSON.parse(err.response);
 		return rejectWithValue(error);
@@ -116,10 +116,9 @@ const authSlice = createSlice({
 		isAuth: null,
 		userInfo: {},
 		error: {},
-		infoForgot: {},
 		routerLogin: false,
 		userInfoJwt: {},
-		isLoginExternal: false,
+		dataToResetPassword: '',
 	},
 	reducers: {
 		checkLogin: (state, action) => {
@@ -137,8 +136,8 @@ const authSlice = createSlice({
 		updateIsNewNotificationUserInfo: (state, action) => {
 			state.userInfoJwt = action.payload;
 		},
-		updateLoginExternal: (state, action) => {
-			state.isLoginExternal = action.payload;
+		handleDataToResetPassword: (state, action) => {
+			state.dataToResetPassword = action.payload;
 		},
 	},
 
@@ -156,19 +155,6 @@ const authSlice = createSlice({
 			state.isFetching = false;
 			state.userInfo = {};
 			state.error = action.payload;
-		},
-		[checkApiToken.pending]: state => {
-			state.isFetching = true;
-		},
-		[checkApiToken.fulfilled]: (state, action) => {
-			state.isFetching = false;
-			state.infoForgot = action.payload;
-			state.error = {};
-		},
-		[checkApiToken.rejected]: (state, action) => {
-			state.isFetching = false;
-			state.error = action.payload;
-			state.infoForgot = {};
 		},
 		[forgotPasswordAdmin.pending]: state => {
 			state.isFetching = true;
@@ -207,7 +193,7 @@ export const {
 	deleteUserInfo,
 	updateUserInfo,
 	updateIsNewNotificationUserInfo,
-	updateLoginExternal,
+	handleDataToResetPassword,
 } = authSlice.actions;
 
 export default auth;

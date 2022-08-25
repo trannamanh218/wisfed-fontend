@@ -26,9 +26,16 @@ const ReviewBookInfo = ({ bookInfo }) => {
 						<div className='review-book-info__author'>Bởi {bookInfo.authors[0].authorName}</div>
 					)}
 				</div>
+
 				<div className='review-book-info__stars'>
-					<ReactRating readonly={true} initialRating={bookInfo.avgRating.toFixed(1)} />
-					<span>(Trung bình {bookInfo.avgRating.toFixed(1)} sao)</span>
+					{bookInfo.avgRating ? (
+						<>
+							<ReactRating readonly={true} initialRating={bookInfo.avgRating.toFixed(1)} />
+							<span>(Trung bình {bookInfo.avgRating.toFixed(1)} sao)</span>
+						</>
+					) : (
+						<div>Chưa có đánh giá</div>
+					)}
 				</div>
 
 				<div className='review-book-info__description'>

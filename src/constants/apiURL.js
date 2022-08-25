@@ -6,7 +6,7 @@ export const forgotPasswordAPI = '/api/v1/auth/forgotPassword';
 export const forgotPasswordAPIAdmin = '/api/v1/auth/adminForgotPassword/';
 export const resetPasswordAPI = '/api/v1/auth/resetPassword/';
 export const resetPasswordAPIAdmin = '/api/v1/auth/resetPasswordByMail/';
-export const checkTokenResetPassword = token => `/api/v1/auth/verify-password?token=${token}`;
+export const checkTokenResetPasswordAPI = token => `/api/v1/auth/verify-password?token=${token}`;
 export const checkJwt = '/api/v1/auth/jwt';
 
 // quote
