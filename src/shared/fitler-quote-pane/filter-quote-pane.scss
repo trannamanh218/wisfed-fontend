@@ -97,13 +97,17 @@
 	}
 }
 
-@media only screen and (min-width: 820px) and (max-width: 1088px) {
+@media only screen and (min-width: 821px) and (max-width: 1088px) {
 	.filter-quote-pane {
-		&__heading {
-			flex-wrap: wrap;
+		&__btn {
+			width: 70px !important;
+			min-width: 70px !important;
 		}
-		.filter-options.filter-quote-pane__options {
-			width: 80%;
+		&__icon {
+			margin-right: 0px;
+		}
+		&__text {
+			display: none;
 		}
 
 		.quote-footer {
@@ -117,20 +121,12 @@
 	}
 }
 
-@media only screen and (min-width: 820px) and (max-width: 929px) {
+@media only screen and (min-width: 821px) and (max-width: 929px) {
 	.main-quote {
 		.search-field__input {
 			&::placeholder {
 				font-size: smaller;
 			}
-		}
-	}
-}
-
-@media only screen and (min-width: 820px) and (max-width: 860px) {
-	.filter-quote-pane {
-		.filter-options.filter-quote-pane__options {
-			width: 78% !important;
 		}
 	}
 }
