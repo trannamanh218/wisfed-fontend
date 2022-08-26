@@ -100,6 +100,13 @@ function settings(inCategory, inCategoryDetail, inResult) {
 		prevArrow: <SlidePrevBtn />,
 		responsive: [
 			{
+				breakpoint: 1281,
+				settings: {
+					slidesToShow: inCategory ? 3 : 1,
+					slidesToScroll: 1,
+				},
+			},
+			{
 				breakpoint: 1025,
 				settings: {
 					slidesToShow: inCategory ? 3 : inResult ? 4 : 1,

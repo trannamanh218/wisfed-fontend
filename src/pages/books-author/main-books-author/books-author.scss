@@ -7,6 +7,7 @@
 		justify-content: space-between;
 		h4 {
 			margin: 0;
+			min-width: fit-content;
 		}
 	}
 
@@ -49,6 +50,7 @@
 			.main-reading-author__books__item__column {
 				display: flex;
 				flex-direction: column;
+				gap: 5px;
 				justify-content: center;
 				align-items: center;
 				height: 82px;
@@ -95,6 +97,7 @@
 				.main-reading-author__books__item__under {
 					font-size: 13px;
 					text-decoration: underline;
+					text-align: center;
 					color: $blue;
 					height: 22px;
 					display: flex;
@@ -110,5 +113,17 @@
 		width: 220px;
 		display: block;
 		margin: 38px 0 80px auto;
+	}
+}
+
+@media only screen and (max-width: 768px) {
+	.main-reading-author__container {
+		.main-reading-author__books__item__column {
+			&.book-name {
+				span {
+					font-size: smaller;
+				}
+			}
+		}
 	}
 }

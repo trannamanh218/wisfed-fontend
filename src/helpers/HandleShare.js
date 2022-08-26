@@ -1,5 +1,4 @@
 import Button from 'shared/button';
-import { Minus } from 'components/svg';
 
 export const renderMessage = item => {
 	if (item.verb === 'addFriend') {
@@ -30,8 +29,7 @@ export const renderMessage = item => {
 export const buttonReqFriend = () => {
 	return (
 		<Button className='connect-button' isOutline={true} name='friend'>
-			<Minus className='connect-button__icon' />
-			<span className='connect-button__content'>Đã gửi lời mời</span>
+			<span className='connect-button__content'>─&nbsp;&nbsp; Đã gửi lời mời</span>
 		</Button>
 	);
 };
