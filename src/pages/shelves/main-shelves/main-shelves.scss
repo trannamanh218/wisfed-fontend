@@ -123,7 +123,6 @@
 @media only screen and (max-width: 1367px) {
 	.mainContainer {
 		.mainContainer__main {
-			margin-right: 2.5rem;
 			.main-shelves {
 				.main-shelves__pane {
 					.shelf {
@@ -158,9 +157,6 @@
 @media only screen and (max-width: 1281px) {
 	.mainContainer {
 		.mainContainer__main {
-			margin-right: 2.5rem;
-			max-width: 800px;
-			width: 60%;
 			.main-shelves {
 				.main-shelves__header {
 					h4 {
@@ -280,10 +276,9 @@
 	}
 }
 
-@media only screen and (max-width: 700px) {
+@media only screen and (max-width: 768px) {
 	.mainContainer {
 		.mainContainer__main {
-			margin: 0;
 			.main-shelves {
 				.main-shelves__header {
 					h4 {

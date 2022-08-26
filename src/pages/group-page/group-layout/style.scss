@@ -286,11 +286,8 @@
 		border-radius: 0;
 	}
 }
+
 @media only screen and (max-width: 1280px) {
-	.modal-content {
-		width: 80% !important;
-		margin-left: 75px;
-	}
 	.list-group__container {
 		h3 {
 			font-size: 17px;
@@ -307,6 +304,7 @@
 		}
 	}
 }
+
 @media only screen and (max-width: 1024px) {
 	.mainContainer__right-left {
 		.list-group__container {

@@ -224,7 +224,7 @@
 
 		&__search {
 			width: 300px;
-			margin-left: 36px;
+			margin-left: 24px;
 			&__input {
 				font-size: 14px;
 			}
@@ -252,6 +252,10 @@
 				width: 12px;
 				height: 12px;
 			}
+		}
+
+		&__userInfo {
+			margin-left: 2rem;
 		}
 	}
 }

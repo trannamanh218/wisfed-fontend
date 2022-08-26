@@ -11,6 +11,7 @@ const MainContainer = ({ main, right, sub }) => {
 			</div>
 		);
 	};
+
 	return (
 		<Layout>
 			{sub && <div className='subcontainer__sub'>{sub}</div>}

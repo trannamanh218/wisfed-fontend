@@ -27,15 +27,14 @@ import { updateCurrentBook } from 'reducers/redux-utils/book';
 const SettingMore = ({ bookData, handleUpdateBookList }) => {
 	const [showLibrariesModal, setShowLibrariesModal] = useState(false);
 	const [showDeleteBookModal, setShowDeleteBookModal] = useState(false);
-	const [currentStatus, setCurrentStatus] = useState('');
+	const [currentStatus, setCurrentStatus] = useState(bookData.status);
 	const [isVisible, setIsVisible] = useState(false);
 	const [customLibrariesContainCurrentBookId, setCustomLibrariesContainCurrentBookId] = useState([]);
-	const [updateDefaultLibrary, setUpdateDefaultLibrary] = useState(true);
 
 	const addedArray = useRef([]);
 	const removedArray = useRef([]);
 	const settingMoreContainer = useRef();
-	const oldStatus = useRef('');
+	const initalStatus = useRef(bookData.status);
 
 	const myCustomLibraries = useSelector(state => state.library.myAllLibrary).custom;
 
@@ -72,14 +71,11 @@ const SettingMore = ({ bookData, handleUpdateBookList }) => {
 		navigate(`/review/${bookData.id}/${userId}`);
 	};
 
-	const switchLibraries = async () => {
+	const switchLibraries = async e => {
+		e.stopPropagation();
+		//check duoc trang thai co trong thu vien
 		try {
 			const checkLibrariesData = await dispatch(checkBookInLibraries(bookData.id || bookData.bookId)).unwrap();
-			const defaultLibrariesContainCurrentBook = checkLibrariesData.filter(
-				item => item.library.isDefault === true
-			);
-			oldStatus.current = defaultLibrariesContainCurrentBook[0].library.defaultType;
-			setCurrentStatus(defaultLibrariesContainCurrentBook[0].library.defaultType);
 			const customLibrariesContainCurrentBook = checkLibrariesData.filter(
 				item => item.library.isDefault === false
 			);
@@ -95,13 +91,6 @@ const SettingMore = ({ bookData, handleUpdateBookList }) => {
 		} finally {
 			setShowLibrariesModal(true);
 			setIsVisible(false);
-		}
-	};
-
-	const updateStatusBook = () => {
-		if (!_.isEmpty(bookData)) {
-			const params = { bookId: bookData.id || bookData.bookId, type: currentStatus };
-			dispatch(addBookToDefaultLibrary(params));
 		}
 	};
 
@@ -134,26 +123,41 @@ const SettingMore = ({ bookData, handleUpdateBookList }) => {
 		setCurrentStatus(statusSelected);
 	};
 
-	const handleAddAndRemoveBook = () => {
-		if (!_.isEmpty(addedArray.current) || !_.isEmpty(removedArray.current)) {
-			dispatch(
-				addRemoveBookInLibraries({
-					id: bookData.id || bookData.bookId,
-					data: { add: addedArray.current, remove: removedArray.current },
-				})
-			);
+	const updateStatusBook = async () => {
+		try {
+			if (!_.isEmpty(bookData)) {
+				const params = { bookId: bookData.id || bookData.bookId, type: currentStatus };
+				await dispatch(addBookToDefaultLibrary(params)).unwrap();
+			}
+		} catch (err) {
+			NotificationError(err);
 		}
 	};
 
-	const handleConfirm = async () => {
+	const handleAddAndRemoveBook = async () => {
 		try {
-			await handleAddAndRemoveBook();
-			await updateStatusBook();
-			const customId = 'custom-id-SettingMore';
-			toast.success('Chuyển giá sách thành công', { toastId: customId });
-			setTimeout(() => {
-				dispatch(updateMyAllLibraryRedux());
-			}, 150);
+			if (!_.isEmpty(addedArray.current) || !_.isEmpty(removedArray.current)) {
+				await dispatch(
+					addRemoveBookInLibraries({
+						id: bookData.id || bookData.bookId,
+						data: { add: addedArray.current, remove: removedArray.current },
+					})
+				).unwrap();
+			}
+		} catch (err) {
+			NotificationError(err);
+		}
+	};
+
+	const handleConfirm = () => {
+		try {
+			if (currentStatus !== initalStatus.current) {
+				updateStatusBook();
+				initalStatus.current = currentStatus;
+				const customId = 'custom-id-SettingMore';
+				toast.success('Chuyển giá sách thành công', { toastId: customId });
+			}
+			handleAddAndRemoveBook();
 			dispatch(updateCurrentBook({ ...bookData, status: currentStatus }));
 			navigate('/');
 		} catch (err) {

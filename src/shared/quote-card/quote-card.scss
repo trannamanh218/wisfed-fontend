@@ -1,7 +1,7 @@
 @import 'src/scss/abstracts/_variables.scss';
 
 .quote-card {
-	padding: 2.5em;
+	padding: 40px 40px 32px;
 	background-color: $secondary;
 	font-size: 1rem;
 	border-radius: 1rem;
@@ -21,7 +21,7 @@
 		line-height: 1.5rem;
 		text-align: center;
 		&:first-child {
-			max-width: 60%;
+			max-width: 75%;
 			word-break: break-word;
 		}
 	}
@@ -43,7 +43,6 @@
 	&__detail {
 		display: flex;
 		flex-direction: column;
-		// align-items: center;
 		justify-content: space-between;
 		&__text {
 			font-size: 13px;
