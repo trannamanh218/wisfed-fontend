@@ -41,20 +41,22 @@
 }
 
 @media only screen and (max-width: 1024px) {
-	.sort-quotes-modal {
-		.modal-content {
-			padding: 0 32px 32px 32px !important;
+	.quotes-tab {
+		.sort-quotes-modal {
+			.modal-content {
+				padding: 0 32px 32px 32px !important;
+			}
 		}
-	}
 
-	.filter-quote-pane__setting__title {
-		margin-top: 60px !important;
-	}
-	.form-check {
-		margin-top: 15px !important;
-	}
-	.form-check-wrapper {
-		margin-top: 20px !important;
+		.filter-quote-pane__setting__title {
+			margin-top: 60px !important;
+		}
+		.form-check {
+			margin-top: 15px !important;
+		}
+		.form-check-wrapper {
+			margin-top: 20px !important;
+		}
 	}
 }
 

@@ -167,9 +167,10 @@
 		line-height: 1;
 		&__btn {
 			height: 50px;
+			justify-content: space-between;
 		}
-		&__btn {
-			height: 50px;
+		&__list {
+			width: 100%;
 		}
 	}
 
@@ -205,14 +206,5 @@
 @media only screen and (max-width: 1159px) {
 	.upload-book-form {
 		flex-direction: column;
-	}
-}
-
-@media only screen and (min-width: 820px) and (max-width: 920px) {
-	.inp-book-row {
-		flex-direction: column;
-		.inp-book-col {
-			width: 100%;
-		}
 	}
 }
