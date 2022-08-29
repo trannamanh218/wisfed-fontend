@@ -313,43 +313,73 @@
 	}
 }
 
-// @include responsive(992px) {
-// 	.login__form__wrapper {
-// 		padding: 40px;
-// 	}
-// }
-//
-// @include responsive(768px) {
-// 	.login {
-// 		flex-direction: column;
-// 	}
-//
-// 	.login__form__wrapper {
-// 		width: 100%;
-// 		max-width: 100%;
-// 		flex-grow: 1;
-// 	}
-//
-// 	.login__form {
-// 		width: 70%;
-// 	}
-//
-// 	.login__form__logo {
-// 		margin-top: 25%;
-// 	}
-// }
-//
-// @include responsive(576px) {
-// 	.login__form {
-// 		width: 100%;
-// 	}
-// }
-//
-// @include responsive(420px) {
-// 	.login__form__wrapper {
-// 		padding: 20px;
-// 	}
-// 	.login__login__btn {
-// 		font-size: 12px;
-// 	}
-// }
+// responsive
+@media screen and (max-width: 1367px) {
+	.login__container {
+		.login__header {
+			padding-left: 100px;
+		}
+		.login__body {
+			margin-left: 100px;
+		}
+
+		.login__login-box {
+			right: 8rem;
+		}
+	}
+}
+
+@media screen and (max-width: 1280px) {
+	.login__container {
+		.login__header {
+			padding-left: 20px;
+		}
+		.login__body {
+			margin-left: 20px;
+			&-text1 {
+				font-size: 17px;
+			}
+			&-text2 {
+				font-size: 14px;
+			}
+		}
+
+		.login__login-box {
+			right: 2rem;
+		}
+	}
+}
+
+@media screen and(max-width: 1024px) {
+	.login__container {
+		.login__body {
+			visibility: hidden;
+		}
+		.login__login-box {
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			width: 60%;
+			margin-top: 52px;
+
+			.login__form__field {
+				padding: 15px 0;
+
+				.login__form__input {
+					width: 336px;
+				}
+			}
+		}
+	}
+}
+
+@media screen and (max-width: 768px) {
+	.login__container {
+		.login__login-box {
+			width: 70%;
+		}
+	}
+}

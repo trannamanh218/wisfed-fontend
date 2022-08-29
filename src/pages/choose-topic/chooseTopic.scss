@@ -106,3 +106,31 @@
 	background-color: none;
 	outline: none;
 }
+
+@media screen and (max-width: 1280px) {
+	.choose-topic__container {
+		.choose-topic__body {
+			width: 86%;
+		}
+	}
+}
+
+@media screen and (max-width: 1024px) {
+	.choose-topic__container {
+		.choose-topic__box {
+			grid-template-columns: repeat(2, 1fr);
+
+			.form-check-wrapper {
+				margin-top: 0;
+			}
+		}
+	}
+}
+
+@media screen and (max-width: 768px) {
+	.choose-topic__container {
+		.choose-topic__body {
+			width: 90%;
+		}
+	}
+}
