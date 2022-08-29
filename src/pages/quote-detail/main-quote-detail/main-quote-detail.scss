@@ -105,16 +105,3 @@
 		}
 	}
 }
-
-@media only screen and (min-width: 820px) and (max-width: 980px) {
-	.main-quote-detail {
-		.quote-footer {
-			flex-direction: column;
-			gap: 1rem;
-			&__left {
-				width: 100%;
-				justify-content: center;
-			}
-		}
-	}
-}

@@ -115,6 +115,13 @@
 .quote-card__author__detail__name:hover {
 	cursor: pointer;
 }
+
+@media only screen and (max-width: 768px) {
+	.quote-card {
+		padding: 40px 28px 32px;
+	}
+}
+
 @media only screen and (max-width: 768px) {
 	.quote-footer__right {
 		.quote-action-bar {
