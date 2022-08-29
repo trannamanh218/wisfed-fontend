@@ -1,4 +1,4 @@
-import { Add, Minus } from 'components/svg';
+import { Add } from 'components/svg';
 import { useState } from 'react';
 import Button from 'shared/button';
 import PropTypes from 'prop-types';
@@ -48,8 +48,7 @@ const ConnectButtonsFriends = ({ direction, item }) => {
 	const buttonUnFriend = () => {
 		return (
 			<Button className='connect-button' onClick={handleModalUnFriend}>
-				<Minus className='connect-button__icon' />
-				<span className='connect-button__content'>Hủy kết bạn</span>
+				<span className='connect-button__content'>─&nbsp;&nbsp; Hủy kết bạn</span>
 			</Button>
 		);
 	};
@@ -57,8 +56,7 @@ const ConnectButtonsFriends = ({ direction, item }) => {
 	const buttonPendingFriend = () => {
 		return (
 			<Button className='connect-button'>
-				<Minus className='connect-button__icon' />
-				<span className='connect-button__content'>Đã gửi lời mời</span>
+				<span className='connect-button__content'>─&nbsp;&nbsp; Đã gửi lời mời</span>
 			</Button>
 		);
 	};

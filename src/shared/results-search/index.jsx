@@ -88,10 +88,16 @@ const ResultSearch = ({ valueInputSearch, resultSearch, setIsShow }) => {
 			return (
 				<div className='search__all__main__title'>
 					<div className='search__all__title'>Tìm kiếm gần đây </div>
+					<br />
 				</div>
 			);
 		} else {
-			return <div className='history__search'>Không có tìm kiếm nào gần đây</div>;
+			return (
+				<div className='history__search'>
+					Không có tìm kiếm nào gần đây
+					<br />
+				</div>
+			);
 		}
 	};
 

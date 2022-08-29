@@ -8,6 +8,8 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { getFilterSearch } from 'reducers/redux-utils/search';
 import { NotificationError } from 'helpers/Error';
+import PropTypes from 'prop-types';
+import { useRef } from 'react';
 
 function HeaderSearchMobile({ searchRef, isShowSearchMobile, setIsShowSearchMobile }) {
 	const [valueInputSearch, setValueInputSearch] = useState('');
@@ -17,6 +19,12 @@ function HeaderSearchMobile({ searchRef, isShowSearchMobile, setIsShowSearchMobi
 
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
+	const inpSearchSmall = useRef(null);
+
+	const onClickSearchIcon = () => {
+		setIsShowSearchMobile(true);
+		inpSearchSmall.current.focus();
+	};
 
 	const updateInputSearch = value => {
 		if (value) {
@@ -70,7 +78,7 @@ function HeaderSearchMobile({ searchRef, isShowSearchMobile, setIsShowSearchMobi
 
 	return (
 		<div className='header-search-small' ref={searchRef}>
-			<div className='header-search-small__icon' onClick={() => setIsShowSearchMobile(true)}>
+			<div className='header-search-small__icon' onClick={onClickSearchIcon}>
 				<img src={SearchIcon} alt='search-icon' />
 			</div>
 			<div
@@ -79,6 +87,7 @@ function HeaderSearchMobile({ searchRef, isShowSearchMobile, setIsShowSearchMobi
 				})}
 			>
 				<input
+					ref={inpSearchSmall}
 					placeholder='Tìm kiếm trên Wisfeed'
 					value={valueInputSearch}
 					onChange={handleChange}
@@ -96,5 +105,11 @@ function HeaderSearchMobile({ searchRef, isShowSearchMobile, setIsShowSearchMobi
 		</div>
 	);
 }
+
+HeaderSearchMobile.propTypes = {
+	searchRef: PropTypes.string,
+	isShowSearchMobile: PropTypes.bool,
+	setIsShowSearchMobile: PropTypes.func,
+};
 
 export default HeaderSearchMobile;

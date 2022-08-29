@@ -149,7 +149,7 @@ const FriendsItem = ({ data, keyTabs, getListFollower, getMyListFriendReq, getLi
 	const buttonPending = () => {
 		return (
 			<Button className='myfriends__button' isOutline={false} name='friend'>
-				<span className='myfriends__button__content'> Đã gửi lời mời</span>
+				<span className='myfriends__button__content'>Đã gửi lời mời</span>
 			</Button>
 		);
 	};

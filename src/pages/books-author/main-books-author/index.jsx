@@ -218,6 +218,7 @@ const MainBooksAuthor = ({ shelveGroupName }) => {
 								<div
 									className='main-reading-author__books__item__column'
 									onClick={() => handleShare(item)}
+									title='Chia sẻ'
 								>
 									<ShareAuthor />
 								</div>

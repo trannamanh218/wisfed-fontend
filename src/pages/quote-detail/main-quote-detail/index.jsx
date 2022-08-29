@@ -13,7 +13,6 @@ import { QUOTE_TYPE } from 'constants/index';
 import { useSelector, useDispatch } from 'react-redux';
 import { handleCheckReplyToMe } from 'reducers/redux-utils/comment';
 import { useRef } from 'react';
-import { Row, Col } from 'react-bootstrap';
 
 const MainQuoteDetail = ({ quoteData, onCreateComment, setMentionUsersArr, mentionUsersArr }) => {
 	const [replyingCommentId, setReplyingCommentId] = useState(0);

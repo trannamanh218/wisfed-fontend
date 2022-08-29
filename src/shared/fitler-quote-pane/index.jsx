@@ -110,7 +110,8 @@ const FilterQuotePane = ({
 			<div className='filter-quote-pane'>
 				<div className='filter-quote-pane__heading'>
 					<Button className='filter-quote-pane__btn' varient='primary-light' onClick={creatQuotes}>
-						<Add className='filter-quote-pane__icon' /> Tạo Quotes
+						<Add className='filter-quote-pane__icon' />{' '}
+						<span className='filter-quote-pane__text'>Tạo Quotes</span>
 					</Button>
 					{hasFilters && (
 						<FitlerOptions
