@@ -50,6 +50,7 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 		'100deg, #FFD42A, #FFFC49',
 		'100deg, #C5FFAA, #00BAC6',
 	];
+
 	useEffect(() => {
 		const hastagElement = document.getElementById('hashtag');
 		const handleHashTag = e => {
@@ -65,15 +66,15 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 
 	const handleChangeHashtag = e => {
 		setInputHashtag(e.target.value);
-		if (!hastagRegex.test(inputHashtag)) {
+		if (!hastagRegex.test(e.target.value)) {
 			setShow(true);
 		} else {
 			setShow(false);
 		}
 	};
+
 	useEffect(() => {
 		const dataCheck = listHashtags.filter(item => dataRef.current === item);
-
 		if (dataRef.current !== '' && dataCheck.length < 1) {
 			const check = dataRef.current
 				.normalize('NFD')

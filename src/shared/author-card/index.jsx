@@ -5,10 +5,12 @@ import PropTypes from 'prop-types';
 import Storage from 'helpers/Storage';
 import Button from 'shared/button';
 import { Add } from 'components/svg';
+import { useNavigate } from 'react-router-dom';
 const AuthorCard = ({ direction, size, item, setModalShow, checkAuthors }) => {
+	const navigate = useNavigate();
 	return (
 		<div className='author-card'>
-			<div className='author-card__left'>
+			<div className='author-card__left' onClick={() => navigate(`/profile/${item.id}`)}>
 				<UserAvatar className='author-card__avatar' size={size} source={item.avatarImage || ''} />
 				<div className='author-card__info'>
 					<h5>{item.fullName || `${item.firstName} ${item.lastName}`}</h5>

@@ -1,9 +1,12 @@
 import UserAvatar from 'shared/user-avatar';
 import { Crown } from 'components/svg';
 import './top-ranks.scss';
+import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 const TopRanks = ({ getListTopBooks, valueDataSort }) => {
+	const navigate = useNavigate();
+
 	const handleRenderTitle = () => {
 		if (valueDataSort === 'topFollow') {
 			return <span>Follow</span>;
@@ -27,10 +30,22 @@ const TopRanks = ({ getListTopBooks, valueDataSort }) => {
 			return <div className='number__books'>{getListTopBooks[number].numReview}</div>;
 		}
 	};
+
+	const onClickRedirectTwo = data => {
+		return navigate(`/profile/${data.id}`);
+	};
+
+	const onClickRedirectOne = data => {
+		return navigate(`/profile/${data.id}`);
+	};
+
+	const onClickRedirectThree = data => {
+		return navigate(`/profile/${data.id}`);
+	};
 	return (
 		<div className='top__user__ranks'>
 			<div className='top__user__ranks__two'>
-				<div className='top__user__ranks__two__avatar'>
+				<div className='top__user__ranks__two__avatar' onClick={() => onClickRedirectTwo(getListTopBooks[1])}>
 					<UserAvatar className='author-card__avatar' source={getListTopBooks[1].avatarImage} />
 					<div className='number__ranks'>2</div>
 				</div>
@@ -44,7 +59,7 @@ const TopRanks = ({ getListTopBooks, valueDataSort }) => {
 				</div>
 			</div>
 			<div className='top__user__ranks__one'>
-				<div className='top__user__ranks__one__avatar'>
+				<div className='top__user__ranks__one__avatar' onClick={() => onClickRedirectOne(getListTopBooks[0])}>
 					<div className='Crown'>
 						<Crown />
 					</div>
@@ -61,7 +76,10 @@ const TopRanks = ({ getListTopBooks, valueDataSort }) => {
 				</div>
 			</div>
 			<div className='top__user__ranks__two'>
-				<div className='top__user__ranks__two__avatar three'>
+				<div
+					className='top__user__ranks__two__avatar three'
+					onClick={() => onClickRedirectThree(getListTopBooks[2])}
+				>
 					<UserAvatar className='author-card__avatar' source={getListTopBooks[2].avatarImage} />
 					<div className='number__ranks three'>3</div>
 				</div>
