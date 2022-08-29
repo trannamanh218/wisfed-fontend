@@ -42,3 +42,10 @@
 	line-height: 1.37rem;
 	font-weight: 500;
 }
+
+@media only screen and (max-width: 1024px) {
+	.event-and-rank-bar__block__title {
+		font-size: 1rem;
+		margin-top: 29px;
+	}
+}
