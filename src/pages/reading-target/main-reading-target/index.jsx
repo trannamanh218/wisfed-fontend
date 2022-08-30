@@ -86,33 +86,30 @@ const MainReadingTarget = () => {
 		return newData.length ? (
 			newData.map((item, index) => (
 				<>
-					<tr className={`highlight highlight-${index} `}>
-						<td colSpan={8}></td>
-					</tr>
-					<tr className='book-row' key={item.id}>
-						<td className='hightlight-column'></td>
-						<td>
+					<div className='book-row' key={item.id}>
+						<div className='book-row__container'>
 							<Link to={`/book/detail/${item.book.id}`}>
 								<BookThumbnail size='sm' source={item.book?.images[0]} />
 							</Link>
-						</td>
-						<td>
+						</div>
+						<div className='book-row__container'>
 							<span className='book-name' title={item.book.name}>
 								<Link to={`/book/detail/${item.book.id}`}>{item.book.name}</Link>
 							</span>
-						</td>
-						<td>{!_.isEmpty(item.authors) ? item.authors[0].name : 'Chưa cập nhật'}</td>
-						<td>{moment(item.createdAt).format('DD/MM/YYYY')}</td>
-						<td>{moment(item.createdAt).format('DD/MM/YYYY')}</td>
-						<td>{moment(item.updatedAt).format('DD/MM/YYYY')}</td>
-						<td className='hightlight-column'></td>
-					</tr>
+						</div>
+						<div className='book-row__container'>
+							{!_.isEmpty(item.authors) ? item.authors[0].name : 'Chưa cập nhật'}
+						</div>
+						<div className='book-row__container'>{moment(item.createdAt).format('DD/MM/YYYY')}</div>
+						<div className='book-row__container'>{moment(item.createdAt).format('DD/MM/YYYY')}</div>
+						<div className='book-row__container'>{moment(item.updatedAt).format('DD/MM/YYYY')}</div>
+					</div>
 				</>
 			))
 		) : (
-			<tr className='highlight'>
-				<td colSpan={8}>Không tìm thấy kết quả nào</td>
-			</tr>
+			<div className='highlight'>
+				<span>Không tìm thấy kết quả nào</span>
+			</div>
 		);
 	};
 
@@ -176,26 +173,20 @@ const MainReadingTarget = () => {
 							/>
 							{!_.isEmpty(item.booksRead) && (
 								<div className='reading-target__table'>
-									<Table>
-										<thead className='reading-target__table__header'>
-											<tr>
-												<th colSpan={3}>Tên sách</th>
-												<th>Tác giả</th>
-												<th>Ngày thêm</th>
-												<th>Ngày đọc</th>
-												<th colSpan={2}>Ngày hoàn thành</th>
-											</tr>
-											<tr className='empty-row' />
-										</thead>
-										<tbody>
-											{inputSearch.length > 0
-												? handleRenderUseSearch(newArrSearch)
-												: handleRenderUseSearch(item)}
-											<tr className='highlight'>
-												<td colSpan={8}></td>
-											</tr>
-										</tbody>
-									</Table>
+									<div className='reading-target__table__header'>
+										<div className='reading-target__table__header-column'></div>
+										<div className='reading-target__table__header-column'>Tên sách</div>
+										<div className='reading-target__table__header-column'>Tác giả</div>
+										<div className='reading-target__table__header-column'>Ngày thêm</div>
+										<div className='reading-target__table__header-column'>Ngày đọc</div>
+										<div className='reading-target__table__header-column'>Ngày hoàn thành</div>
+										<div className='empty-row' />
+									</div>
+									<div className='reading-target__table__body'>
+										{inputSearch.length > 0
+											? handleRenderUseSearch(newArrSearch)
+											: handleRenderUseSearch(item)}
+									</div>
 								</div>
 							)}
 						</>
