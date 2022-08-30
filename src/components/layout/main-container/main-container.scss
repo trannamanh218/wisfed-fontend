@@ -34,6 +34,33 @@
 
 @media only screen and (max-width: 1024px) {
 	.mainContainer {
+		.mainContainer__main {
+			margin-right: 0px;
+			max-width: none;
+			.main-shelves {
+				.main-shelves__header {
+					h4 {
+						font-size: 1.2rem;
+					}
+					.main-shelves__search {
+						max-width: 250px;
+					}
+				}
+				.main-shelves__pane {
+					.main-shelves__filters {
+						.select-box {
+							width: 200px;
+						}
+					}
+					.shelf {
+						grid-template-columns: repeat(3, 1fr);
+						grid-gap: 1rem;
+					}
+				}
+			}
+		}
+	}
+	.mainContainer {
 		padding: 40px 32px;
 	}
 }
@@ -49,5 +76,52 @@
 
 	& .mainContainer__main {
 		margin-right: 0;
+	}
+}
+
+@media only screen and (max-width: 700px) {
+	.mainContainer {
+		.mainContainer__main {
+			margin: 0;
+			.main-shelves {
+				.main-shelves__header {
+					h4 {
+						font-size: 1.2rem;
+					}
+					.main-shelves__search {
+						max-width: 230px;
+					}
+				}
+				.main-shelves__pane {
+					.main-shelves__filters {
+						.select-box {
+							width: 180px;
+						}
+					}
+					.shelf {
+						grid-template-columns: repeat(2, 1fr);
+						grid-gap: 1rem;
+
+						.book-item {
+							.book-thumbnail {
+								img {
+									width: 100%;
+									height: 100%;
+									object-fit: cover;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		.main-shelves {
+			.main-shelves__pane {
+				margin-right: 0px;
+			}
+			.main-shelves__search {
+				margin: 0;
+			}
+		}
 	}
 }

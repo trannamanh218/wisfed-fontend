@@ -101,9 +101,6 @@
 		&__btn.btn {
 			width: 168px;
 		}
-		&__text {
-			font-size: small;
-		}
 		&__setting {
 			&.dropdown-menu {
 				transform: translate(-70%, 10px) !important;
@@ -125,18 +122,9 @@
 	}
 }
 
-@media only screen and (min-width: 821px) and (max-width: 929px) {
-	.filter-quote-pane {
-		.search-field__input {
-			&::placeholder {
-				font-size: smaller;
-			}
-		}
-	}
-}
-
 @media only screen and (max-width: 820px) {
 	.filter-quote-pane {
+		padding: 1.75rem 1.25rem;
 		&__btn {
 			width: 70px !important;
 		}
