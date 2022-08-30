@@ -124,7 +124,7 @@ function CreateNewPasswordForm() {
 		<div className='forget__form__email create-new-password'>
 			<Circle loading={isFetching} />
 			{isShow && (
-				<div>
+				<div className='forgot__modal__container'>
 					<ModalLogin data={dataModal} handleClose={handleChangeModal} />
 				</div>
 			)}
