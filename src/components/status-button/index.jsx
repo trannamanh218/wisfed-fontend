@@ -22,6 +22,7 @@ import { useNavigate } from 'react-router-dom';
 import { NotificationError } from 'helpers/Error';
 import Storage from 'helpers/Storage';
 import ModalCheckLogin from 'shared/modal-check-login';
+import { toast } from 'react-toastify';
 
 const STATUS_BOOK_OBJ = {
 	reading: {
@@ -90,7 +91,6 @@ const StatusButton = ({ className, bookData, inCreatePost, bookStatus }) => {
 		} finally {
 			setModalShow(true);
 		}
-		setModalShow(true);
 	};
 
 	const updateBookShelve = async params => {
@@ -103,20 +103,28 @@ const StatusButton = ({ className, bookData, inCreatePost, bookStatus }) => {
 	};
 
 	const updateStatusBook = async () => {
-		if (!_.isEmpty(bookData)) {
-			const params = { bookId: bookData.id || bookData.bookId, type: currentStatus };
-			await dispatch(addBookToDefaultLibrary(params)).unwrap();
+		try {
+			if (!_.isEmpty(bookData)) {
+				const params = { bookId: bookData.id || bookData.bookId, type: currentStatus };
+				await dispatch(addBookToDefaultLibrary(params)).unwrap();
+			}
+		} catch (err) {
+			NotificationError(err);
 		}
 	};
 
 	const handleAddAndRemoveBook = async () => {
-		if (!_.isEmpty(addedArray.current) || !_.isEmpty(removedArray.current)) {
-			await dispatch(
-				addRemoveBookInLibraries({
-					id: bookData.id || bookData.bookId,
-					data: { add: addedArray.current, remove: removedArray.current },
-				})
-			).unwrap();
+		try {
+			if (!_.isEmpty(addedArray.current) || !_.isEmpty(removedArray.current)) {
+				await dispatch(
+					addRemoveBookInLibraries({
+						id: bookData.id || bookData.bookId,
+						data: { add: addedArray.current, remove: removedArray.current },
+					})
+				).unwrap();
+			}
+		} catch (err) {
+			NotificationError(err);
 		}
 	};
 
@@ -126,6 +134,8 @@ const StatusButton = ({ className, bookData, inCreatePost, bookStatus }) => {
 			try {
 				if (currentStatus !== initalStatus) {
 					updateStatusBook();
+					const customId = 'custom-id-status-button-success';
+					toast.success('Chuyển giá sách thành công', { toastId: customId });
 					setInitialStatus(currentStatus);
 				}
 				handleAddAndRemoveBook();
@@ -173,10 +183,10 @@ const StatusButton = ({ className, bookData, inCreatePost, bookStatus }) => {
 			>
 				<WrapIcon
 					className='btn-status__icon'
-					component={currentStatus ? STATUS_BOOK_OBJ[currentStatus].icon : STATUS_BOOK_OBJ.wantToRead.icon}
+					component={initalStatus ? STATUS_BOOK_OBJ[initalStatus].icon : STATUS_BOOK_OBJ.wantToRead.icon}
 				/>
 				<span className='text-status'>
-					{currentStatus ? STATUS_BOOK_OBJ[currentStatus].name : STATUS_BOOK_OBJ.wantToRead.name}
+					{initalStatus ? STATUS_BOOK_OBJ[initalStatus].name : STATUS_BOOK_OBJ.wantToRead.name}
 				</span>
 				<DropdownGroupWhite />
 			</button>

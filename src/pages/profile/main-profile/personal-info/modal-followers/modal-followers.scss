@@ -5,9 +5,7 @@
 	font-style: normal;
 	z-index: 1000;
 	box-shadow: 0px 0px 72px rgba(0, 0, 0, 0.04);
-	// overflow-y: scroll;
 	overflow-x: hidden;
-	// height: 860px;
 }
 .modalFollowers__container__main .modal-dialog {
 	max-width: 900px;
@@ -77,6 +75,20 @@
 	}
 
 	.author-card {
+		padding: 2.25rem;
+		.author-card {
+			&__left {
+				margin-right: 10px;
+				cursor: pointer;
+				width: 300px;
+				overflow: hidden;
+			}
+			&__right {
+				.row {
+					margin-right: inherit;
+				}
+			}
+		}
 		.author-card__info h5 {
 			font-weight: 600;
 			font-size: 15px;
@@ -92,12 +104,31 @@
 			letter-spacing: 0.25px;
 		}
 	}
-	.author-card {
-		.author-card__left {
-			margin-right: 30px;
-			cursor: pointer;
-			width: 300px;
-			overflow: hidden;
+}
+
+@media only screen and (max-width: 986px) {
+	.modalFollowers__container__main {
+		.modal-content {
+			width: 85%;
+			margin: 0 auto;
+			.author-card {
+				.author-card {
+					&__right {
+						.connect-button {
+							&.row {
+								width: 600px;
+								flex-direction: row;
+							}
+							&.btn {
+								width: 45%;
+								span {
+									font-size: small;
+								}
+							}
+						}
+					}
+				}
+			}
 		}
 	}
 }

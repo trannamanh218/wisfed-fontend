@@ -6,7 +6,7 @@ import { Modal } from 'react-bootstrap';
 import { getListFollowing } from 'reducers/redux-utils/user';
 import React, { useState, useEffect } from 'react';
 import UserAvatar from 'shared/user-avatar';
-import { Add, Minus } from 'components/svg';
+import { Add } from 'components/svg';
 import Button from 'shared/button';
 import { unFollower, makeFriendRequest, unFriendRequest } from 'reducers/redux-utils/user';
 import { NotificationError } from 'helpers/Error';
@@ -120,8 +120,7 @@ const ModalWatching = ({ setModalFollowing, modalFollowing, userInfoDetail }) =>
 	const buttonUnFriend = item => {
 		return (
 			<Button onClick={() => handleModalUnFriend(item)} className='connect-button' isOutline={true} name='friend'>
-				<Minus className='connect-button__icon' />
-				<span className='connect-button__content'>Hủy kết bạn</span>
+				<span className='connect-button__content'>─ Hủy kết bạn</span>
 			</Button>
 		);
 	};

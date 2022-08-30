@@ -37,6 +37,10 @@ const BookSearch = ({ isFetching, value, setIsFetching, searchResultInput, activ
 		) {
 			handleGetBooksSearch();
 		}
+
+		if (searchResultInput.length === 0) {
+			setResultInformations({ count: 0, time: 0 });
+		}
 	}, [callApiStartBooks.current, value, isShowModal, listArrayBooks]);
 
 	const handleGetBooksSearch = async () => {

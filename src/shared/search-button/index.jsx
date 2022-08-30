@@ -7,7 +7,7 @@ const SearchButton = ({ handleChange, value, handleClickSearch, onKeyDown }) => 
 	return (
 		<div className='search__container'>
 			<SearchField
-				placeholder='Tìm kiếm bạn bè'
+				placeholder='Tìm kiếm trên wisfeed'
 				handleChange={handleChange}
 				value={value}
 				onKeyDown={onKeyDown}

@@ -39,10 +39,6 @@
 		}
 	}
 
-	// .shelf {
-	// 	margin-top: 90px;
-	// }
-
 	.select-shelf {
 		padding: 1rem 2.25rem;
 		border-radius: 16px;
@@ -152,9 +148,6 @@
 @media only screen and (max-width: 1280px) {
 	.mainContainer {
 		.mainContainer__main {
-			margin-right: 2.5rem;
-			max-width: 800px;
-			width: 60%;
 			.main-shelves {
 				.main-shelves__header {
 					h4 {
@@ -266,7 +259,6 @@
 @media only screen and (max-width: 768px) {
 	.mainContainer {
 		.mainContainer__main {
-			margin: 0;
 			.main-shelves {
 				.main-shelves__header {
 					h4 {

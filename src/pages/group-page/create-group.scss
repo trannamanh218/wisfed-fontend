@@ -95,8 +95,10 @@
 	pointer-events: none;
 }
 
-.form-field-wrapper {
-	padding: 25px;
+.create-group-modal {
+	.form-field-wrapper {
+		padding: 25px;
+	}
 }
 
 .form-field-name {

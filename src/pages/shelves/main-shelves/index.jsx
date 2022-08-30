@@ -5,8 +5,6 @@ import { useCallback, useEffect, useState, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { getAllBookInLirary, getListBookLibrary } from 'reducers/redux-utils/library';
-// import Button from 'shared/button';
-// import EyeIcon from 'shared/eye-icon';
 import PaginationGroup from 'shared/pagination-group';
 import SearchField from 'shared/search-field';
 import SelectBox from 'shared/select-box';
@@ -19,7 +17,6 @@ import { NotificationError } from 'helpers/Error';
 const DEFAULT_LIBRARY = { value: 'all', title: 'Tất cả', id: 'all' };
 
 const MainShelves = ({ allLibraryList, shelveGroupName, isMyShelve, handleViewBookDetail }) => {
-	// const [isPublic, setIsPublic] = useState(true);
 	const [currentBooks, setCurrentBooks] = useState([]);
 	const [currentLibrary, setCurrentLibrary] = useState(DEFAULT_LIBRARY);
 	const [filter, setFilter] = useState('[]');
@@ -58,10 +55,6 @@ const MainShelves = ({ allLibraryList, shelveGroupName, isMyShelve, handleViewBo
 			window.scroll(0, 0);
 		}
 	};
-
-	// const handlePublic = () => {
-	// 	setIsPublic(!isPublic);
-	// };
 
 	const onChangeLibrary = data => {
 		setCurrentPage(0);
@@ -119,12 +112,6 @@ const MainShelves = ({ allLibraryList, shelveGroupName, isMyShelve, handleViewBo
 									defaultOption={currentLibrary}
 									onChangeOption={onChangeLibrary}
 								/>
-								{/* {isMyShelve && (
-									<Button className='btn-private' isOutline={true} onClick={handlePublic}>
-										<EyeIcon isPublic={isPublic} handlePublic={handlePublic} />
-										<span>{isPublic ? 'Công khai' : 'Không công khai'}</span>
-									</Button>
-								)} */}
 							</div>
 
 							{isMyShelve !== undefined && (
