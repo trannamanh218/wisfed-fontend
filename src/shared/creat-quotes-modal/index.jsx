@@ -65,8 +65,9 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 	}, [inputHashtag]);
 
 	const handleChangeHashtag = e => {
-		setInputHashtag(e.target.value);
-		if (!hastagRegex.test(e.target.value)) {
+		const value = e.target.value;
+		setInputHashtag(value);
+		if (!hastagRegex.test(value) && value.trim()) {
 			setShow(true);
 		} else {
 			setShow(false);
