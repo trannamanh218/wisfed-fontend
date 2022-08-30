@@ -26,11 +26,13 @@ function ForgetPassWordComponent({ type }) {
 					<img src={Logo} alt='logo' />
 				</Link>
 			</div>
-			<div className='forget__body'>
-				<div className='forget__form__img'>
-					<img src={ImgForget} alt='' />
+			<div className='forget__body--wrapper'>
+				<div className='forget__body'>
+					<div className='forget__form__img'>
+						<img src={ImgForget} alt='' />
+					</div>
+					{key ? <CreateNewPasswordForm /> : <ForgetpasswordFormComponent type={type} />}
 				</div>
-				{key ? <CreateNewPasswordForm /> : <ForgetpasswordFormComponent type={type} />}
 			</div>
 		</div>
 	);

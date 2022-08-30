@@ -83,7 +83,17 @@
 		padding: 0px 20px;
 		margin-left: auto;
 		max-width: 600px;
-		transition: all 0.5s ease;
+		transition: all 0.4s ease;
+		overflow: hidden;
+		&.hidden {
+			max-width: 0;
+			padding: 0;
+			margin-left: 0;
+		}
+
+		&.show {
+			overflow: unset;
+		}
 
 		.notify-icon {
 			width: 15%;
@@ -284,15 +294,7 @@
 		&__nav {
 			margin-left: -20px;
 			gap: 32px;
-			&.hidden {
-				max-width: 0;
-				padding: 0;
-				margin-left: 0;
-				overflow: hidden;
-			}
-			&.show {
-				overflow: unset;
-			}
+
 			&__item {
 				svg {
 					width: 28px;

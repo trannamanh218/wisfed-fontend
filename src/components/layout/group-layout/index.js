@@ -1,6 +1,4 @@
 import PropTypes from 'prop-types';
-import '../main-container/main-container.scss';
-import Layout from '..';
 import { ErrorBoundary } from 'react-error-boundary';
 
 const GroupPageLayout = ({ main, right, sub }) => {
@@ -13,7 +11,7 @@ const GroupPageLayout = ({ main, right, sub }) => {
 	};
 
 	return (
-		<Layout>
+		<>
 			{sub && <div className='subcontainer__sub'>{sub}</div>}
 			<div className='mainContainer'>
 				{right && (
@@ -26,7 +24,7 @@ const GroupPageLayout = ({ main, right, sub }) => {
 					<ErrorBoundary FallbackComponent={ErrorFallback}>{main}</ErrorBoundary>
 				</div>
 			</div>
-		</Layout>
+		</>
 	);
 };
 

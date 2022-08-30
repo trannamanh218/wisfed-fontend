@@ -91,7 +91,7 @@ const ModalItem = ({ item, setModalNoti, getNotifications, setGetNotifications, 
 			navigate(`/Group/${items.originId.groupId}`);
 		} else if (items.verb === 'replyComment' || items.verb === 'shareQuote') {
 			navigate(`/detail-feed/${'mini-post'}/${items.originId.minipostId}`);
-		} else if (items.verb === 'commentQuote') {
+		} else if (items.verb === 'commentQuote' || item.verb === 'replyCommentQuote') {
 			navigate(`/quotes/detail/${items.originId.quoteId}`);
 		} else if (items.verb === 'mention') {
 			navigate(`/detail-feed/${'mini-post'}/${items.originId.minipostId}`);

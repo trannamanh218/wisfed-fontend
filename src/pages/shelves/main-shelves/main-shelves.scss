@@ -120,19 +120,18 @@
 	}
 }
 
-@media only screen and (max-width: 1367px) {
+@media only screen and (max-width: 1366px) {
 	.mainContainer {
 		.mainContainer__main {
-			.main-shelves {
-				.main-shelves__pane {
-					.shelf {
-						.book-item {
-							max-width: 195px;
-							.book-item__container {
-								.book-thumbnail.book-thumbnail-lg {
-									width: 180px;
-									height: 290px;
-								}
+			margin-right: 2.5rem;
+			.main-shelves__pane {
+				.shelf {
+					.book-item {
+						max-width: 195px;
+						.book-item__container {
+							.book-thumbnail.book-thumbnail-lg {
+								width: 180px;
+								height: 290px;
 							}
 						}
 					}
@@ -140,21 +139,17 @@
 			}
 		}
 
-		.mainContainer__right {
-			.sidebar-shelves {
-				.charts__reading__container {
-					.charts__reading__container__main {
-						.charts__reading__container__main__month {
-							width: auto;
-						}
-					}
+		.charts__reading__container {
+			.charts__reading__container__main {
+				.charts__reading__container__main__month {
+					width: auto;
 				}
 			}
 		}
 	}
 }
 
-@media only screen and (max-width: 1281px) {
+@media only screen and (max-width: 1280px) {
 	.mainContainer {
 		.mainContainer__main {
 			.main-shelves {
@@ -167,11 +162,6 @@
 					}
 				}
 				.main-shelves__pane {
-					.main-shelves__filters {
-						.select-box {
-							width: 200px;
-						}
-					}
 					.shelf {
 						grid-template-columns: repeat(3, 1fr);
 						grid-gap: 1rem;
@@ -205,26 +195,25 @@
 	}
 }
 
-@media only screen and (max-width: 1025px) {
+@media only screen and (max-width: 1024px) {
 	.mainContainer {
+		padding: 20px 40px;
 		.mainContainer__main {
+			width: 100%;
+			max-width: none;
+			margin-right: 0;
 			.main-shelves {
 				.main-shelves__header {
 					h4 {
 						font-size: 1.2rem;
 					}
 					.main-shelves__search {
-						max-width: 250px;
+						max-width: 456px;
 					}
 				}
 				.main-shelves__pane {
-					.main-shelves__filters {
-						.select-box {
-							width: 200px;
-						}
-					}
 					.shelf {
-						grid-template-columns: repeat(3, 1fr);
+						grid-template-columns: repeat(4, 1fr);
 						grid-gap: 1rem;
 					}
 				}
@@ -249,11 +238,6 @@
 					}
 				}
 				.main-shelves__pane {
-					.main-shelves__filters {
-						.select-box {
-							width: 200px;
-						}
-					}
 					.shelf {
 						grid-template-columns: repeat(3, 1fr);
 						grid-gap: 1rem;
@@ -284,18 +268,10 @@
 					h4 {
 						font-size: 1.2rem;
 					}
-					.main-shelves__search {
-						max-width: 230px;
-					}
 				}
 				.main-shelves__pane {
-					.main-shelves__filters {
-						.select-box {
-							width: 180px;
-						}
-					}
 					.shelf {
-						grid-template-columns: repeat(2, 1fr);
+						grid-template-columns: repeat(3, 1fr);
 						grid-gap: 1rem;
 
 						.book-item {

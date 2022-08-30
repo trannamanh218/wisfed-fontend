@@ -220,7 +220,7 @@
 				margin-left: 100px;
 				img {
 					width: 500px;
-					height: 590px;
+					height: 550px;
 				}
 			}
 		}
@@ -236,15 +236,39 @@
 		}
 		.register__body {
 			height: 86vh;
+			align-items: center;
+			&-img {
+				margin-left: 30px;
+				img {
+					width: 350px;
+					height: 400px;
+				}
+			}
+			.register__form {
+				.register__box {
+					margin-right: 20px;
+					padding: 38px 16px 90px 16px;
+				}
+			}
+		}
+	}
+}
+
+@media screen and (max-width: 820px) {
+	.register__container {
+		.register__body {
+			height: 86vh;
+			align-items: unset;
 			&-img {
 				display: none;
 			}
+
 			.register__form {
 				display: flex;
 				align-items: center;
 				justify-content: center;
 				.register__box {
-					max-width: 450px;
+					margin-right: 0px;
 				}
 			}
 		}
