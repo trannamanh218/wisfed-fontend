@@ -6,7 +6,7 @@ import { useState } from 'react';
 import AddSeriesForm from './addSeriesForm/AddSeriesForm';
 import { useDispatch } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
-import { getMySeries, postMoreSeries } from 'reducers/redux-utils/series';
+import { getMySeries, postMoreSeries, removeBookFromSeries } from 'reducers/redux-utils/series';
 import { useEffect } from 'react';
 import { CloseIconX } from 'components/svg';
 import _ from 'lodash';
@@ -19,8 +19,9 @@ const ModalSeries = ({
 	setSeries,
 	temporarySeries,
 	setTemporarySeries,
-	addToSeriesImmediately,
 	bookId,
+	currentSeries,
+	handleGetBookDetail,
 }) => {
 	const [buttonDisable, setButtonDisable] = useState(false);
 
@@ -61,11 +62,25 @@ const ModalSeries = ({
 		handlePostMoreSeries(params);
 	};
 
-	const handleConfirm = () => {
+	const handleConfirm = async () => {
 		setSeries(temporarySeries);
 		handleCloseModalSeries();
-
-		if (addToSeriesImmediately === true) {
+		// Trước hết kiểm tra xem sách đã ở trong một series chưa
+		if (currentSeries) {
+			// Đầu tiên xóa sách khỏi series cũ
+			const paramsForRemoveBookFromSeries = {
+				seriesId: currentSeries.id,
+				body: { bookIds: [Number(bookId)] },
+			};
+			await handleRemoveBookFromSeries(paramsForRemoveBookFromSeries);
+			// Sau đó thêm lại sách vào series mới chọn
+			const paramsForAddBookToSeries = {
+				seriesId: temporarySeries.id,
+				body: { bookIds: [Number(bookId)] },
+			};
+			handleAddBookToSeries(paramsForAddBookToSeries);
+		} else if (bookId) {
+			// Nếu sách chưa ở trong một series nào thì không cần xóa sách khỏi series cũ nữa
 			const paramsForAddBookToSeries = {
 				seriesId: temporarySeries.id,
 				body: { bookIds: [Number(bookId)] },
@@ -74,9 +89,18 @@ const ModalSeries = ({
 		}
 	};
 
+	const handleRemoveBookFromSeries = async params => {
+		try {
+			await dispatch(removeBookFromSeries(params)).unwrap();
+		} catch (err) {
+			NotificationError(err);
+		}
+	};
+
 	const handleAddBookToSeries = async params => {
 		try {
 			await dispatch(addBookToSeries(params)).unwrap();
+			handleGetBookDetail();
 		} catch (err) {
 			NotificationError(err);
 		}
@@ -180,7 +204,7 @@ const ModalSeries = ({
 						style={buttonDisable ? { cursor: 'not-allowed', backgroundColor: '#d9dbe9' } : null}
 						disabled={buttonDisable ? true : false}
 					>
-						<span>{addToSeriesImmediately ? 'Thêm vào series' : 'Xác nhận'}</span>
+						<span>{currentSeries ? 'Thêm vào series' : 'Xác nhận'}</span>
 					</button>
 				</div>
 			</Modal.Body>
@@ -200,8 +224,9 @@ ModalSeries.propTypes = {
 	setSeries: PropTypes.func,
 	temporarySeries: PropTypes.object,
 	setTemporarySeries: PropTypes.func,
-	addToSeriesImmediately: PropTypes.bool,
 	bookId: PropTypes.number,
+	currentSeries: PropTypes.object,
+	handleGetBookDetail: PropTypes.func,
 };
 
 export default ModalSeries;

@@ -15,6 +15,7 @@ function BookDetail() {
 	const dispatch = useDispatch();
 	const [bookInformation, setBookInformation] = useState({});
 	const [bookStatus, setBookStatus] = useState('LOADING');
+	const [toggleUpdateBookReference, setToggleUpdateBookReference] = useState(0);
 
 	const { bookId } = useParams();
 
@@ -43,6 +44,7 @@ function BookDetail() {
 			setBookStatus('SUCCESS');
 		}
 	}, [bookId]);
+
 	return (
 		<>
 			{bookStatus === STATUS_LOADING ? (
@@ -52,7 +54,9 @@ function BookDetail() {
 					{!_.isEmpty(bookInformation) ? (
 						<MainContainer
 							main={<BookInfo bookInfo={bookInformation} />}
-							right={<BookReference bookInfo={bookInformation} />}
+							right={
+								<BookReference bookInfo={bookInformation} handleGetBookDetail={handleGetBookDetail} />
+							}
 						/>
 					) : (
 						<NormalContainer>

@@ -166,3 +166,4 @@ export const getListBookBySeriesAPI = id => `/api/v1/series/listBook/${id}`;
 export const getSeriesDetailAPI = id => `/api/v1/series/${id}`;
 export const postMoreSeriesAPI = `/api/v1/series/`;
 export const addBookToSeriesAPI = id => `/api/v1/series/addBook/${id}`;
+export const removeBookFromSeriesAPI = id => `/api/v1/series/deleteBook/${id}`;

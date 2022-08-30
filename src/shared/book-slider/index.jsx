@@ -6,6 +6,7 @@ import arrowPrev from 'assets/images/arrow-chevron-back.png';
 import './book-slider.scss';
 import classNames from 'classnames';
 import { memo } from 'react';
+import pencil from 'assets/images/pencil.png';
 
 const BookSlider = ({
 	list,
@@ -16,6 +17,8 @@ const BookSlider = ({
 	inCategory = false,
 	inResult = false,
 	inCategoryDetail = false,
+	handleShowModalSeries,
+	editSeriesRole,
 	...rest
 }) => {
 	const settingSlider = settings(inCategory, inCategoryDetail, inResult);
@@ -24,7 +27,19 @@ const BookSlider = ({
 		<div className='main'>
 			{!!list.length && (
 				<div className={classNames('book-slider', { [`${className}`]: className })}>
-					<h4 className='book-slider__title'>{title}</h4>
+					<h4 className='book-slider__title'>
+						{title}
+
+						{/* Dùng trong book-detail */}
+						{editSeriesRole ? (
+							<img
+								className='edit-name__pencil'
+								src={pencil}
+								alt='pencil'
+								onClick={handleShowModalSeries}
+							/>
+						) : null}
+					</h4>
 
 					<div className='book-slider__content'>
 						{list?.length > 2 ? (
@@ -164,6 +179,7 @@ BookSlider.defaultProps = {
 	title: '',
 	className: '',
 	handleViewBookDetail: () => {},
+	editSeriesRole: false,
 };
 
 BookSlider.propTypes = {
@@ -175,6 +191,8 @@ BookSlider.propTypes = {
 	inCategory: PropTypes.bool,
 	inCategoryDetail: PropTypes.bool,
 	inResult: PropTypes.bool,
+	handleShowModalSeries: PropTypes.func,
+	editSeriesRole: PropTypes.bool,
 };
 
 SlideNextBtn.propTypes = {
