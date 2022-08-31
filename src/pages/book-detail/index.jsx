@@ -15,7 +15,6 @@ function BookDetail() {
 	const dispatch = useDispatch();
 	const [bookInformation, setBookInformation] = useState({});
 	const [bookStatus, setBookStatus] = useState('LOADING');
-	const [toggleUpdateBookReference, setToggleUpdateBookReference] = useState(0);
 
 	const { bookId } = useParams();
 

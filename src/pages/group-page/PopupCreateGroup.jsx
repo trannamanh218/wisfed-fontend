@@ -59,9 +59,7 @@ const PopupCreateGroup = ({ handleClose }) => {
 	const getSuggestionForCreatQuotes = async (input, option) => {
 		try {
 			const data = await dispatch(getSuggestionForPost({ input, option })).unwrap();
-			if (option.value === 'addBook') {
-				// setBookSearchedList(data.rows.slice(0, 3));
-			} else if (option.value === 'addCategory') {
+			if (option.value === 'addCategory') {
 				setCategorySearchedList(data.rows);
 			}
 		} catch (err) {
@@ -118,7 +116,14 @@ const PopupCreateGroup = ({ handleClose }) => {
 		};
 		try {
 			const res = await dispatch(getRandomAuthor(params)).unwrap();
-			setUserList(res);
+			setUserList(
+				res.filter(
+					item =>
+						item.fullName.toLowerCase().includes(inputAuthors.toLowerCase()) ||
+						item.firstName.toLowerCase().includes(inputAuthors.toLowerCase()) ||
+						item.lastName.toLowerCase().includes(inputAuthors.toLowerCase())
+				)
+			);
 		} catch (err) {
 			NotificationError(err);
 		}
@@ -191,7 +196,7 @@ const PopupCreateGroup = ({ handleClose }) => {
 	}, [dataRef.current]);
 
 	const onInputChange = f => e => {
-		f(e.target.value);
+		f(e.target.value.trim());
 		if (!hastagRegex.test(inputHashtag)) {
 			setShow(true);
 		} else {
@@ -449,7 +454,7 @@ const PopupCreateGroup = ({ handleClose }) => {
 							<div className='input__authors '>
 								{listAuthors.map(item => (
 									<span key={item.id}>
-										{item.fullName ? item.fullName : `${item.firstName + ' ' + item.lastName}`}
+										{item.fullName || `${item.firstName + ' ' + item.lastName}`}
 										<button
 											className='close__author'
 											onClick={() => {
@@ -481,9 +486,7 @@ const PopupCreateGroup = ({ handleClose }) => {
 												className='author__item'
 												onClick={() => handleAddAuthors(item)}
 											>
-												{item.fullName
-													? item.fullName
-													: `${item.firstName + ' ' + item.lastName}`}
+												{item.fullName || `${item.firstName + ' ' + item.lastName}`}
 											</span>
 										</>
 									);
@@ -496,13 +499,12 @@ const PopupCreateGroup = ({ handleClose }) => {
 					<div className='form-field-authors'>
 						<label>Tên sách</label>
 						<span style={{ color: 'red', marginLeft: '4px' }}>*</span>
-						<div className='list__author-tags'>
+						<div className='list__author-tags' onClick={() => inputRefBook.current.focus()}>
 							{listBookAdd.length > 0 ? (
 								<div className=' book-list'>
 									{listBookAdd.map(item => (
 										<span key={item.id} className='item-b'>
 											{item?.name}
-
 											<button
 												className='close__author'
 												onClick={() => {
@@ -525,7 +527,6 @@ const PopupCreateGroup = ({ handleClose }) => {
 							/>
 						</div>
 						{/* tên sách */}
-
 						<div className='author__list'>
 							{!!listBooks?.length &&
 								listBooks?.map(item => {

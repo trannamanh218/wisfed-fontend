@@ -137,6 +137,7 @@ const BookReference = ({ bookInfo, handleGetBookDetail }) => {
 										className='edit-name__pencil'
 										src={pencil}
 										alt='pencil'
+										title='Chỉnh sửa'
 										onClick={handleShowModalSeries}
 									/>
 								) : (
@@ -193,14 +194,12 @@ const BookReference = ({ bookInfo, handleGetBookDetail }) => {
 			)}
 
 			{(userInfo.role === 'tecinus' || userInfo.role === 'author') && !bookInfo.series ? (
-				<>
-					<div className='book-reference__add-to-series'>
-						<span>Series</span>
-						<button className='sidebar__view-more-btn--blue' onClick={handleShowModalSeries}>
-							Thêm sê-ri
-						</button>
-					</div>
-				</>
+				<div className='book-reference__add-to-series'>
+					<span>Series</span>
+					<button className='sidebar__view-more-btn--blue' onClick={handleShowModalSeries}>
+						Thêm sê-ri
+					</button>
+				</div>
 			) : (
 				''
 			)}

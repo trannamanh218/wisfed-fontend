@@ -36,9 +36,12 @@ const BookSlider = ({
 								className='edit-name__pencil'
 								src={pencil}
 								alt='pencil'
+								title='Chỉnh sửa'
 								onClick={handleShowModalSeries}
 							/>
-						) : null}
+						) : (
+							''
+						)}
 					</h4>
 
 					<div className='book-slider__content'>
