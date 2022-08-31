@@ -194,6 +194,7 @@ const PopupCreateGroup = ({ handleClose }) => {
 			setListHashtags(newList);
 		}
 	}, [dataRef.current]);
+
 	const onInputChange = f => e => {
 		const value = e.target.value;
 		f(value);
