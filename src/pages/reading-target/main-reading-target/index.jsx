@@ -80,6 +80,16 @@ const MainReadingTarget = () => {
 			</div>
 		);
 	};
+
+	const generateAuthorName = author => {
+		if (author && author.length) {
+			const authorNameArr = author.map(item => item.authorName);
+			return authorNameArr.join(' - ');
+		} else {
+			return 'Chưa cập nhật';
+		}
+	};
+
 	const handleRenderUseSearch = newArr => {
 		const newData = newArr.booksRead || newArr;
 		return newData.length ? (
@@ -96,9 +106,7 @@ const MainReadingTarget = () => {
 								<Link to={`/book/detail/${item.book.id}`}>{item.book.name}</Link>
 							</span>
 						</div>
-						<div className='book-row__container'>
-							{!_.isEmpty(item.authors) ? item.authors[0].name : 'Chưa cập nhật'}
-						</div>
+						<div className='book-row__container'>{generateAuthorName(item?.book.authors)}</div>
 						<div className='book-row__container'>{moment(item.createdAt).format('DD/MM/YYYY')}</div>
 						<div className='book-row__container'>{moment(item.createdAt).format('DD/MM/YYYY')}</div>
 						<div className='book-row__container'>{moment(item.updatedAt).format('DD/MM/YYYY')}</div>
