@@ -164,6 +164,9 @@
 
 @media only screen and (width: 820px) {
 	.newfeed {
+		.post-book__button-and-rating {
+			gap: 4rem;
+		}
 		.post__container {
 			.post__user-status {
 				&__subtitle {
@@ -185,6 +188,9 @@
 
 @media only screen and (max-width: 768px) {
 	.newfeed {
+		.post-book__button-and-rating {
+			gap: 4rem;
+		}
 		.btn-status.btn {
 			padding: 8px;
 		}

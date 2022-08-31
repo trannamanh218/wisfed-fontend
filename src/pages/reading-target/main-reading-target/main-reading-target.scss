@@ -106,7 +106,7 @@
 	&__table {
 		&__header {
 			display: grid;
-			grid-template-columns: 50px 2fr 2fr 2fr 2fr 2fr;
+			grid-template-columns: 60px 2fr 2fr 2fr 2fr 2fr;
 			padding: 16px 36px;
 			background-color: white;
 			border-radius: 16px;
@@ -128,7 +128,7 @@
 
 			.book-row {
 				display: grid;
-				grid-template-columns: 50px 2fr 2fr 2fr 2fr 2fr;
+				grid-template-columns: 60px 2fr 2fr 2fr 2fr 2fr;
 				padding: 16px 25px;
 				background-color: #fbf7f2;
 				margin: 9px 19px 9px 28px;
@@ -193,7 +193,7 @@
 
 		&__table {
 			&__header {
-				grid-template-columns: 50px 2fr 2fr 2fr 2fr 3fr;
+				grid-template-columns: 30px 2fr 2fr 2fr 2fr 3fr;
 
 				&-column {
 					font-size: 0.9rem;
@@ -202,7 +202,7 @@
 
 			&__body {
 				.book-row {
-					grid-template-columns: 40px 2fr 2fr 2fr 2fr 3fr;
+					grid-template-columns: 30px 2fr 2fr 2fr 2fr 3fr;
 					gap: 10px;
 					padding: 16px 15px;
 

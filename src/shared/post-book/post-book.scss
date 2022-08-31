@@ -105,7 +105,11 @@
 }
 
 @media only screen and (max-width: 820px) {
-	.post-book__button-and-rating {
-		justify-content: space-between;
+	.newfeed__creat-post__modal {
+		.post-book {
+			.post-book__button-and-rating {
+				gap: 0rem;
+			}
+		}
 	}
 }
