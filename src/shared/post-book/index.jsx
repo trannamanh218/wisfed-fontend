@@ -36,7 +36,7 @@ function PostBook({ data, inCreatePost }) {
 						<LinearProgressBar percent={((data.progress / data.page) * 100).toFixed()} />
 						<div className='post-book__editor'>
 							<span className='post-book__ratio'>
-								{data.status === 'wantToRead' ? data.progress : data.progress}/{data.page}
+								{data.actorProgress}/{data.page}
 							</span>
 							<span>Trang sách đã đọc</span>
 						</div>

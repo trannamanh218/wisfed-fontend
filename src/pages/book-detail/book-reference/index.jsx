@@ -39,7 +39,6 @@ const BookReference = ({ bookInfo }) => {
 	useEffect(() => {
 		getBooksByCategory();
 		getAllCategories();
-		// setSeries();
 	}, []);
 
 	const getAllCategories = async () => {

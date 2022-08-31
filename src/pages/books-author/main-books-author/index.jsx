@@ -97,7 +97,6 @@ const MainBooksAuthor = ({ shelveGroupName }) => {
 			authorId: userId,
 			type: 'books',
 			q: filter,
-			// sort: JSON.stringify([{ 'created_at': { 'order': 'desc' } }]),
 		};
 		try {
 			if (filter) {

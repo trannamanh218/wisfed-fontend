@@ -30,7 +30,6 @@ import FormCheckGroup from 'shared/form-check-group';
 import { getFavoriteCategories } from 'reducers/redux-utils/category';
 import { POST_TYPE } from 'constants/index';
 import { getCategoryDetail } from 'reducers/redux-utils/category';
-// import { getTopBooks } from 'reducers/redux-utils/ranks';
 
 const MainCategoryDetail = () => {
 	const { id } = useParams();
