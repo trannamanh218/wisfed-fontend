@@ -6,8 +6,6 @@ import SelectBox from 'shared/select-box';
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import './create-group.scss';
-import { getRandomAuthor } from 'reducers/redux-utils/user';
-import { getBookList } from 'reducers/redux-utils/book';
 import { getCreatGroup } from 'reducers/redux-utils/group';
 import Dropzone from 'react-dropzone';
 import { useDropzone } from 'react-dropzone';
@@ -23,32 +21,47 @@ const PopupCreateGroup = ({ handleClose }) => {
 	const groupNameInput = useRef('');
 	const [inputNameGroup, setInputNameGroup] = useState('');
 	const [inputDiscription, setInputDiscription] = useState('');
-	const [inputAuthors, setInputAuthors] = useState('');
-	const [inputBook, setInputBook] = useState('');
-	const [userlist, setUserList] = useState([]);
-	const [listBooks, setListBooks] = useState([]);
-	const [listAuthors, setListAuthors] = useState([]);
-	const [listBookAdd, setListBookAdd] = useState([]);
 	const [inputHashtag, setInputHashtag] = useState('');
 	const [listHashtags, setListHashtags] = useState([]);
 	const [imgUrl, setImgUrl] = useState('');
 	const [isShowBtn, setIsShowBtn] = useState(false);
 	const [kindOfGroup, setKindOfGroup] = useState('');
-	const [categoryIdBook, setCategoryIdBook] = useState([]);
 	const [lastTag, setLastTag] = useState('');
+
+	const [listAuthors, setListAuthors] = useState([]);
+	const [inputAuthorValue, setInputAuthorValue] = useState('');
+	const [authorAddedList, setAuthorAddedList] = useState([]);
+	const [authorSearchedList, setAuthorSearchedList] = useState([]);
+
+	const [categoryIdBook, setCategoryIdBook] = useState([]);
 	const [inputCategoryValue, setInputCategoryValue] = useState('');
 	const [categoryAddedList, setCategoryAddedList] = useState([]);
 	const [categorySearchedList, setCategorySearchedList] = useState([]);
+
+	const [listBookAdd, setListBookAdd] = useState([]);
+	const [inputBookValue, setInputBookValue] = useState('');
+	const [bookAddedList, setBookAddedList] = useState([]);
+	const [bookSearchedList, setBookSearchedList] = useState([]);
+
 	const [getDataFinish, setGetDataFinish] = useState(false);
+
 	const [show, setShow] = useState(false);
 
 	const dataRef = useRef('');
 	const inputRefHashtag = useRef(null);
 	const inputRefAuthor = useRef(null);
-	const inputRefBook = useRef(null);
+
+	const authorInputContainer = useRef(null);
+	const authorInputWrapper = useRef(null);
+	const authorInput = useRef(null);
+
 	const categoryInputContainer = useRef(null);
 	const categoryInputWrapper = useRef(null);
 	const categoryInput = useRef(null);
+
+	const bookInputContainer = useRef(null);
+	const bookInputWrapper = useRef(null);
+	const bookInput = useRef(null);
 
 	const hastagRegex = /(#[a-z0-9][a-z0-9\-_]*)/gi;
 
@@ -59,8 +72,14 @@ const PopupCreateGroup = ({ handleClose }) => {
 	const getSuggestionForCreatQuotes = async (input, option) => {
 		try {
 			const data = await dispatch(getSuggestionForPost({ input, option })).unwrap();
+			if (option.value === 'addAuthor') {
+				setAuthorSearchedList(data.rows);
+			}
 			if (option.value === 'addCategory') {
 				setCategorySearchedList(data.rows);
+			}
+			if (option.value === 'addBook') {
+				setBookSearchedList(data.rows);
 			}
 		} catch (err) {
 			NotificationError(err);
@@ -73,6 +92,21 @@ const PopupCreateGroup = ({ handleClose }) => {
 		_.debounce((inputValue, option) => getSuggestionForCreatQuotes(inputValue, option), 700),
 		[]
 	);
+
+	const addAuthor = author => {
+		if (authorAddedList.filter(authorAdded => authorAdded.id === author.id).length > 0) {
+			removeAuthor(author.id);
+		} else {
+			const authorArrayTemp = [...authorAddedList];
+			authorArrayTemp.push(author);
+			setAuthorAddedList(authorArrayTemp);
+			setInputAuthorValue('');
+			setAuthorSearchedList([]);
+			if (authorInputWrapper.current) {
+				authorInputWrapper.current.style.width = '0.5ch';
+			}
+		}
+	};
 
 	const addCategory = category => {
 		if (categoryAddedList.filter(categoryAdded => categoryAdded.id === category.id).length > 0) {
@@ -89,12 +123,55 @@ const PopupCreateGroup = ({ handleClose }) => {
 		}
 	};
 
+	const addBook = book => {
+		if (bookAddedList.filter(bookAdded => bookAdded.id === book.id).length > 0) {
+			removeBook(book.id);
+		} else {
+			const bookArrayTemp = [...bookAddedList];
+			bookArrayTemp.push(book);
+			setBookAddedList(bookArrayTemp);
+			setInputBookValue('');
+			setBookSearchedList([]);
+			if (bookInputWrapper.current) {
+				bookInputWrapper.current.style.width = '0.5ch';
+			}
+		}
+	};
+
+	const removeAuthor = authorId => {
+		const authorArr = [...authorAddedList];
+		const index = authorArr.findIndex(item => item.id === authorId);
+		authorArr.splice(index, 1);
+		if (authorAddedList.length <= 5) {
+			setAuthorAddedList(authorArr);
+		}
+	};
+
 	const removeCategory = categoryId => {
 		const categoryArr = [...categoryAddedList];
 		const index = categoryArr.findIndex(item => item.id === categoryId);
 		categoryArr.splice(index, 1);
 		if (categoryAddedList.length <= 5) {
 			setCategoryAddedList(categoryArr);
+		}
+	};
+
+	const removeBook = bookId => {
+		const bookArr = [...bookAddedList];
+		const index = bookArr.findIndex(item => item.id === bookId);
+		bookArr.splice(index, 1);
+		if (bookAddedList.length <= 5) {
+			setBookAddedList(bookArr);
+		}
+	};
+
+	const searchAuthor = e => {
+		setGetDataFinish(false);
+		setAuthorSearchedList([]);
+		setInputAuthorValue(e.target.value);
+		debounceSearch(e.target.value, { value: 'addAuthor' });
+		if (authorInputWrapper.current) {
+			authorInputWrapper.current.style.width = authorInput.current.value.length + 0.5 + 'ch';
 		}
 	};
 
@@ -108,38 +185,23 @@ const PopupCreateGroup = ({ handleClose }) => {
 		}
 	};
 
-	const getDataAuthor = async () => {
-		const params = {
-			filter: JSON.stringify([
-				{ 'operator': 'search', 'value': `${inputAuthors}`, 'property': 'fullName,lastName,firstName' },
-			]),
-		};
-		try {
-			const res = await dispatch(getRandomAuthor(params)).unwrap();
-			setUserList(
-				res.filter(
-					item =>
-						item.fullName.toLowerCase().includes(inputAuthors.toLowerCase()) ||
-						item.firstName.toLowerCase().includes(inputAuthors.toLowerCase()) ||
-						item.lastName.toLowerCase().includes(inputAuthors.toLowerCase())
-				)
-			);
-		} catch (err) {
-			NotificationError(err);
+	const searchBook = e => {
+		setGetDataFinish(false);
+		setBookSearchedList([]);
+		setInputBookValue(e.target.value);
+		debounceSearch(e.target.value, { value: 'addBook' });
+		if (bookInputWrapper.current) {
+			bookInputWrapper.current.style.width = bookInput.current.value.length + 0.5 + 'ch';
 		}
 	};
 
-	const getBookData = async () => {
-		const params = {
-			filter: JSON.stringify([{ 'operator': 'search', 'value': `${inputBook}`, 'property': 'name' }]),
-		};
-		try {
-			const res = await dispatch(getBookList(params)).unwrap();
-			setListBooks(res.rows);
-		} catch (err) {
-			NotificationError(err);
+	useEffect(() => {
+		const authorIdArr = [];
+		for (let i = 0; i < authorAddedList.length; i++) {
+			authorIdArr.push(authorAddedList[i].id);
 		}
-	};
+		setListAuthors(authorIdArr);
+	}, [authorAddedList]);
 
 	useEffect(() => {
 		const categoryIdArr = [];
@@ -148,6 +210,14 @@ const PopupCreateGroup = ({ handleClose }) => {
 		}
 		setCategoryIdBook(categoryIdArr);
 	}, [categoryAddedList]);
+
+	useEffect(() => {
+		const bookIdArr = [];
+		for (let i = 0; i < bookAddedList.length; i++) {
+			bookIdArr.push(bookAddedList[i].id);
+		}
+		setListBookAdd(bookIdArr);
+	}, [bookAddedList]);
 
 	useEffect(() => {
 		uploadImageFile();
@@ -206,34 +276,55 @@ const PopupCreateGroup = ({ handleClose }) => {
 	};
 
 	useEffect(() => {
-		if (inputAuthors !== '') {
-			getDataAuthor();
-		} else setUserList([]);
-	}, [inputAuthors]);
-
-	useEffect(() => {
-		if (inputBook !== '') {
-			getBookData();
-		} else setListBooks([]);
-	}, [inputBook]);
-
-	useEffect(() => {
 		if (
-			kindOfGroup.value !== 'default' &&
 			imgUrl !== undefined &&
 			!_.isEmpty(listAuthors) &&
 			(lastTag.includes('#') || !_.isEmpty(listHashtags)) &&
 			inputDiscription !== '' &&
-			inputNameGroup !== ''
+			inputNameGroup !== '' &&
+			categoryIdBook.length > 0
 		) {
-			setIsShowBtn(true);
+			switch (kindOfGroup.value) {
+				case 'book':
+					if (listBookAdd.length > 0) {
+						setIsShowBtn(true);
+					} else {
+						setIsShowBtn(false);
+					}
+					break;
+				case 'author':
+					if (listAuthors.length > 0) {
+						setIsShowBtn(true);
+					} else {
+						setIsShowBtn(false);
+					}
+					break;
+				case 'category':
+					if (listAuthors.length > 0) {
+						setIsShowBtn(true);
+					} else {
+						setIsShowBtn(false);
+					}
+					break;
+				default:
+					setIsShowBtn(false);
+			}
 		} else {
 			setIsShowBtn(false);
 		}
-	}, [imgUrl, listAuthors, lastTag, kindOfGroup, inputDiscription, inputNameGroup, listHashtags]);
+	}, [
+		imgUrl,
+		listAuthors,
+		lastTag,
+		kindOfGroup,
+		inputDiscription,
+		inputNameGroup,
+		listHashtags,
+		listBookAdd,
+		categoryIdBook,
+	]);
 
-	const creatGroup = async () => {
-		const listIdAuthor = listAuthors.map(item => item.id);
+	const createGroup = async () => {
 		const newListHastag = listHashtags.map(item => `${item}`);
 		let newList;
 		if (lastTag.includes('#')) {
@@ -241,18 +332,16 @@ const PopupCreateGroup = ({ handleClose }) => {
 		} else {
 			newList = newListHastag;
 		}
-		const newIdBook = listBookAdd.map(item => item.id);
 		const data = {
 			name: inputNameGroup,
 			description: inputDiscription,
 			avatar: imgUrl,
 			groupType: kindOfGroup.value,
-			authorIds: listIdAuthor,
+			authorIds: listAuthors,
 			tags: newList,
 			categoryIds: categoryIdBook,
-			bookIds: newIdBook,
+			bookIds: listBookAdd,
 		};
-
 		try {
 			await dispatch(getCreatGroup(data)).unwrap();
 			const customId = 'custom-id-PopupCreateGroup';
@@ -292,34 +381,6 @@ const PopupCreateGroup = ({ handleClose }) => {
 		setKindOfGroup(kindOfGroupRef.current);
 	}, [kindOfGroupRef.current]);
 
-	const handleAddAuthors = e => {
-		const checkItem = listAuthors.filter(item => item.id === e.id);
-		if (checkItem.length < 1) {
-			setListAuthors([...listAuthors, e]);
-		}
-		inputRefAuthor.current.value = '';
-		setUserList([]);
-	};
-
-	const handleAddBook = e => {
-		const checkItem = listBookAdd.filter(item => item.id === e.id);
-		if (checkItem.length < 1) {
-			setListBookAdd([...listBookAdd, e]);
-		}
-		inputRefBook.current.value = '';
-		setListBooks([]);
-	};
-
-	const handleRemove = e => {
-		const newList = listAuthors.filter(item => item.id !== e.id);
-		setListAuthors(newList);
-	};
-
-	const handleRemoveBook = e => {
-		const newList = listBookAdd.filter(item => item !== e);
-		setListBookAdd(newList);
-	};
-
 	const handleRemoveTag = e => {
 		const newList = listHashtags.filter(item => item !== e);
 		setListHashtags(newList);
@@ -329,12 +390,6 @@ const PopupCreateGroup = ({ handleClose }) => {
 			inputRefAuthor.current.focus();
 		}
 	}, [listAuthors]);
-
-	useEffect(() => {
-		if (inputRefBook.current) {
-			inputRefBook.current.focus();
-		}
-	}, [listBookAdd]);
 
 	useEffect(() => {
 		groupNameInput.current.focus();
@@ -406,27 +461,7 @@ const PopupCreateGroup = ({ handleClose }) => {
 					</div>
 				)}
 
-				{kindOfGroup.value == 'author' && (
-					<div className='form-field-select__kind-of-group'>
-						<label>Chủ đề </label>
-						<span style={{ color: 'red', marginLeft: '4px' }}>*</span>
-						<AddAndSearchCategories
-							categoryAddedList={categoryAddedList}
-							categorySearchedList={categorySearchedList}
-							addCategory={addCategory}
-							removeCategory={removeCategory}
-							getDataFinish={getDataFinish}
-							searchCategory={searchCategory}
-							inputCategoryValue={inputCategoryValue}
-							categoryInputContainer={categoryInputContainer}
-							categoryInputWrapper={categoryInputWrapper}
-							categoryInput={categoryInput}
-							hasSearchIcon={true}
-						/>
-					</div>
-				)}
-
-				{kindOfGroup.value == 'category' && (
+				{(kindOfGroup.value === 'author' || kindOfGroup.value === 'category') && (
 					<div className='form-field-select__kind-of-group'>
 						<label>Chủ đề </label>
 						<span style={{ color: 'red', marginLeft: '4px' }}>*</span>
@@ -449,95 +484,36 @@ const PopupCreateGroup = ({ handleClose }) => {
 				<div className='form-field-authors'>
 					<label>Tên tác giả</label>
 					<span style={{ color: 'red', marginLeft: '4px' }}>*</span>
-
-					<div className='list__author-tags' onClick={() => inputRefAuthor.current.focus()}>
-						{listAuthors.length > 0 ? (
-							<div className='input__authors '>
-								{listAuthors.map(item => (
-									<span key={item.id}>
-										{item.fullName || `${item.firstName + ' ' + item.lastName}`}
-										<button
-											className='close__author'
-											onClick={() => {
-												handleRemove(item);
-											}}
-										>
-											<CloseIconX />
-										</button>
-									</span>
-								))}
-							</div>
-						) : (
-							''
-						)}
-						<Input
-							isBorder={false}
-							placeholder='Nhập từ khóa'
-							handleChange={onInputChange(setInputAuthors)}
-							inputRef={inputRefAuthor}
-						/>
-					</div>
-					<div className='author__list'>
-						{userlist?.length > 0
-							? userlist?.map(item => {
-									return (
-										<>
-											<span
-												key={item}
-												className='author__item'
-												onClick={() => handleAddAuthors(item)}
-											>
-												{item.fullName || `${item.firstName + ' ' + item.lastName}`}
-											</span>
-										</>
-									);
-							  })
-							: ''}
-					</div>
+					<AddAndSearchCategories
+						categoryAddedList={authorAddedList}
+						categorySearchedList={authorSearchedList}
+						addCategory={addAuthor}
+						removeCategory={removeAuthor}
+						getDataFinish={getDataFinish}
+						searchCategory={searchAuthor}
+						inputCategoryValue={inputAuthorValue}
+						categoryInputContainer={authorInputContainer}
+						categoryInputWrapper={authorInputWrapper}
+						categoryInput={authorInput}
+					/>
 				</div>
 
 				{kindOfGroup.value === 'book' && (
 					<div className='form-field-authors'>
 						<label>Tên sách</label>
 						<span style={{ color: 'red', marginLeft: '4px' }}>*</span>
-						<div className='list__author-tags' onClick={() => inputRefBook.current.focus()}>
-							{listBookAdd.length > 0 ? (
-								<div className=' book-list'>
-									{listBookAdd.map(item => (
-										<span key={item.id} className='item-b'>
-											{item?.name}
-											<button
-												className='close__author'
-												onClick={() => {
-													handleRemoveBook(item);
-												}}
-											>
-												<CloseIconX />
-											</button>
-										</span>
-									))}
-								</div>
-							) : (
-								''
-							)}
-							<Input
-								isBorder={false}
-								placeholder='Nhập từ khóa'
-								handleChange={onInputChange(setInputBook)}
-								inputRef={inputRefBook}
-							/>
-						</div>
-						{/* tên sách */}
-						<div className='author__list'>
-							{!!listBooks?.length &&
-								listBooks?.map(item => {
-									return (
-										<span key={item} className='author__item' onClick={() => handleAddBook(item)}>
-											{item?.name}
-										</span>
-									);
-								})}
-						</div>
+						<AddAndSearchCategories
+							categoryAddedList={bookAddedList}
+							categorySearchedList={bookSearchedList}
+							addCategory={addBook}
+							removeCategory={removeBook}
+							getDataFinish={getDataFinish}
+							searchCategory={searchBook}
+							inputCategoryValue={inputBookValue}
+							categoryInputContainer={bookInputContainer}
+							categoryInputWrapper={bookInputWrapper}
+							categoryInput={bookInput}
+						/>
 					</div>
 				)}
 
@@ -584,7 +560,7 @@ const PopupCreateGroup = ({ handleClose }) => {
 					</div>
 					{show && !!inputHashtag ? <span>Vui lòng nhập đúng định dạng</span> : ''}
 				</div>
-				<div className={!isShowBtn ? 'disableBtn' : `form-button`} onClick={() => creatGroup()}>
+				<div className={!isShowBtn ? 'disableBtn' : `form-button`} onClick={() => createGroup()}>
 					<button>Tạo nhóm</button>
 				</div>
 			</div>

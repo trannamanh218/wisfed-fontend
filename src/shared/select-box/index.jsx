@@ -36,10 +36,10 @@ const SelectBox = ({ defaultOption, list, onChangeOption, name, className, imgDr
 	};
 
 	return (
-		<div className={`select-box ${className ? className : ''}`} ref={ref}>
+		<div className={`select-box ${className && className}`} ref={ref}>
 			<div className='select-box__btn' onClick={handleOpen}>
 				<span className='select-box__value'>
-					{activeItem.img ? activeItem.img : ''}
+					{activeItem.img && activeItem.img}
 					{activeItem.title || activeItem.name}
 				</span>
 				<img className='select-box__icon' src={imgDropDown} alt='dropdown' />
@@ -56,7 +56,7 @@ const SelectBox = ({ defaultOption, list, onChangeOption, name, className, imgDr
 								onClick={() => handleSelect(item)}
 							>
 								<span>
-									{item.img ? item.img : ''} {item.title || item.name}
+									{item.img && item.img} {item.title || item.name}
 								</span>
 								{isActive(item) && (
 									<span>

@@ -10,7 +10,7 @@ import bookImage from 'assets/images/default-book.png';
 
 const ResultSearch = ({ valueInputSearch, resultSearch, setIsShow }) => {
 	const [checkRenderStorage, setCheckRenderStorage] = useState(false);
-	const [saveLocalSearch, setSaveLoacalSearch] = useState([]);
+	const [saveLocalSearch, setSaveLocalSearch] = useState([]);
 	const [directClick, setDirectClick] = useState(false);
 	const navigate = useNavigate();
 
@@ -23,7 +23,7 @@ const ResultSearch = ({ valueInputSearch, resultSearch, setIsShow }) => {
 	useEffect(() => {
 		const getDataLocal = JSON.parse(Storage.getItem('result'));
 		if (getDataLocal) {
-			setSaveLoacalSearch(getDataLocal.reverse());
+			setSaveLocalSearch(getDataLocal.reverse());
 		}
 	}, [checkRenderStorage]);
 
@@ -39,7 +39,7 @@ const ResultSearch = ({ valueInputSearch, resultSearch, setIsShow }) => {
 	const handleItem = item => {
 		const newArr = saveLocalSearch?.filter(data => data.id === item.id);
 		if (!newArr.length) {
-			setSaveLoacalSearch(prev => [...prev, item]);
+			setSaveLocalSearch(prev => [...prev, item]);
 			setDirectClick(true);
 		} else {
 			directItem(item);
