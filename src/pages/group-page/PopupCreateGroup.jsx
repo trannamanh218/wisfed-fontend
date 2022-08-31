@@ -196,9 +196,9 @@ const PopupCreateGroup = ({ handleClose }) => {
 	}, [dataRef.current]);
 
 	const onInputChange = f => e => {
-		const value = e.target.value;
+		const value = e.target.value.trim();
 		f(value);
-		if (!hastagRegex.test(value) && value.trim()) {
+		if (!hastagRegex.test(value)) {
 			setShow(true);
 		} else {
 			setShow(false);
