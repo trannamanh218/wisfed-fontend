@@ -9,6 +9,7 @@ import { emailValidate } from 'helpers/Validation';
 import Subtract from 'assets/images/Subtract.png';
 import { forgotPassword, handleDataToResetPassword, forgotPasswordAdmin } from 'reducers/redux-utils/auth';
 import PropTypes from 'prop-types';
+import { useRef } from 'react';
 
 function ForgetpasswordFormComponent({ type }) {
 	const [isShow, setIsShow] = useState(false);
@@ -16,15 +17,16 @@ function ForgetpasswordFormComponent({ type }) {
 	const [showImagePopover, setShowImagePopover] = useState(0);
 	const [isLoading, setIsLoading] = useState(false);
 
+	const isError = useRef(false);
+
 	const dispatch = useDispatch();
 
 	const handleChangeModal = () => {
 		setIsShow(false);
-		if (type === 'default') {
+		if (type === 'default' && !isError.current) {
 			dispatch(changeKey(true));
 		}
 	};
-
 	const handleSubmit = async data => {
 		if (!isShow) {
 			setIsLoading(true);
@@ -43,6 +45,7 @@ function ForgetpasswordFormComponent({ type }) {
 					scribe: 'Vui lòng kiểm tra hòm thư ',
 					scribe2: `${data.email}`,
 				});
+				isError.current = false;
 			} catch (err) {
 				setIsShow(true);
 				setIsLoading(false);
@@ -53,6 +56,7 @@ function ForgetpasswordFormComponent({ type }) {
 					scribe: `${err.errorCode === 303 ? 'Tài khoản của bạn chưa tồn tại.' : ''}`,
 					scribe2: `${err.errorCode === 303 ? 'Vui lòng đăng kí tài khoản' : ''}`,
 				});
+				isError.current = true;
 			} finally {
 				setIsLoading(false);
 			}

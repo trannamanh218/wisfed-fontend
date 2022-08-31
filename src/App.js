@@ -26,7 +26,7 @@ import { getCheckJwt } from 'reducers/redux-utils/auth';
 import ReadingSummary from 'pages/reading-summary';
 import ReadingTarget from 'pages/reading-target';
 import AdminCreateNewPassword from 'pages/foget-password/component-admin/CreateNewPasswordAdmin';
-import LayoutGroup from 'pages/group-page/group-layout';
+import LayoutGroup from 'pages/group-page/group-container';
 import DetailFriend from 'pages/friends/component/detail-friend';
 import 'scss/main.scss';
 import QuoteAll from 'pages/quote/all-quote/';

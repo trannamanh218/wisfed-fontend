@@ -7,7 +7,7 @@ import PopupCreateGroup from '../PopupCreateGroup';
 import { getMyAdminGroup, getMyGroup } from 'reducers/redux-utils/group';
 import './style.scss';
 import { useDispatch } from 'react-redux';
-import GroupPageLayout from 'components/layout/main-container-left';
+import GroupPageLayout from 'components/layout/group-layout';
 import SearchField from 'shared/search-field';
 import _ from 'lodash';
 import { NotificationError } from 'helpers/Error';
@@ -15,6 +15,7 @@ import { useVisible } from 'shared/hooks';
 import MainLayoutSearch from './MainLayoutSearch';
 import { Modal } from 'react-bootstrap';
 import PropTypes from 'prop-types';
+import Layout from 'components/layout';
 
 const SearchGroup = ({ valueInput, handleChange, handleShowModal }) => {
 	const navigate = useNavigate();
@@ -87,21 +88,9 @@ const LayoutGroup = () => {
 	const handleCloseModal = () => setShow(false);
 
 	return (
-		<div className='groups-container'>
-			{!valueGroupSearch.trim().length ? (
-				<GroupPageLayout
-					sub={
-						<SearchGroup
-							handleChange={handleChange}
-							valueInput={inputSearchValue}
-							handleShowModal={() => setShow(true)}
-						/>
-					}
-					right={<SidebarLeft listMyGroup={myGroup} listAdminMyGroup={adminGroup} />}
-					main={<MainLayout />}
-				/>
-			) : (
-				<div className='result-search'>
+		<Layout>
+			<div className='groups-container'>
+				{!valueGroupSearch.trim().length ? (
 					<GroupPageLayout
 						sub={
 							<SearchGroup
@@ -110,17 +99,31 @@ const LayoutGroup = () => {
 								handleShowModal={() => setShow(true)}
 							/>
 						}
-						main={<MainLayoutSearch valueGroupSearch={valueGroupSearch} />}
+						right={<SidebarLeft listMyGroup={myGroup} listAdminMyGroup={adminGroup} />}
+						main={<MainLayout />}
 					/>
-				</div>
-			)}
+				) : (
+					<div className='result-search'>
+						<GroupPageLayout
+							sub={
+								<SearchGroup
+									handleChange={handleChange}
+									valueInput={inputSearchValue}
+									handleShowModal={() => setShow(true)}
+								/>
+							}
+							main={<MainLayoutSearch valueGroupSearch={valueGroupSearch} />}
+						/>
+					</div>
+				)}
 
-			<Modal className='create-group-modal' show={show} onHide={handleCloseModal}>
-				<Modal.Body>
-					<PopupCreateGroup handleClose={handleCloseModal} showRef={showRef} />
-				</Modal.Body>
-			</Modal>
-		</div>
+				<Modal className='create-group-modal' show={show} onHide={handleCloseModal}>
+					<Modal.Body>
+						<PopupCreateGroup handleClose={handleCloseModal} showRef={showRef} />
+					</Modal.Body>
+				</Modal>
+			</div>
+		</Layout>
 	);
 };
 
