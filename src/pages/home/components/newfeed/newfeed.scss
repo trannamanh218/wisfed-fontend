@@ -138,6 +138,9 @@
 		.post-book__button-and-rating {
 			gap: 1rem;
 		}
+		.btn-status.btn {
+			padding: 8px;
+		}
 	}
 }
 
@@ -162,24 +165,19 @@
 @media only screen and (width: 820px) {
 	.newfeed {
 		.post__container {
-			.post-book__button-and-rating {
-				gap: 1rem;
-			}
-
 			.post__user-status {
 				&__subtitle {
 					.react-rating-container {
 						width: 75px;
 					}
 				}
-
-				&__name-and-post-time-status {
-					width: 85%;
-				}
 			}
 
 			.post-book__edit .linear-progress {
 				max-width: 70%;
+			}
+			.btn-status.btn {
+				padding: 8px;
 			}
 		}
 	}
@@ -187,8 +185,8 @@
 
 @media only screen and (max-width: 768px) {
 	.newfeed {
-		.post-book__button-and-rating {
-			gap: 3rem;
+		.btn-status.btn {
+			padding: 8px;
 		}
 	}
 }
