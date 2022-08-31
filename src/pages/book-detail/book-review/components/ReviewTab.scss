@@ -1,7 +1,6 @@
 @import 'src/scss/abstracts/_variables.scss';
 .sort-review-modal {
 	&__item {
-		// border: 1px solid red;
 		padding: auto 0;
 		height: 56px;
 		display: flex;
@@ -23,7 +22,6 @@
 		width: 376px;
 
 		& .modal-content {
-			// height: 1085px;
 			border-radius: 8px;
 			gap: 12px;
 			display: flex;

@@ -5,7 +5,6 @@ import { Form } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { getCategoryList } from 'reducers/redux-utils/category';
 import { editUserInfo } from 'reducers/redux-utils/user';
-// import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import SearchIcon from 'assets/icons/search.svg';
 import SearchCategoryChooseTopic from './searchCateChooseTopic';

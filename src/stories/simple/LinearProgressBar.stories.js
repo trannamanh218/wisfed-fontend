@@ -8,7 +8,7 @@ export default {
 const Template = args => <LinearProgressBar {...args} />;
 
 export const Default = Template.bind({});
+
 Default.args = {
 	percent: 50,
-	// backgroundColor: '#e0af7e'
 };

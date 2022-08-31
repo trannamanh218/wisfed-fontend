@@ -2,7 +2,7 @@ import { backgroundToggle, readNotification } from 'reducers/redux-utils/notific
 import UserAvatar from 'shared/user-avatar';
 import { calculateDurationTime } from 'helpers/Common';
 import { useNavigate } from 'react-router-dom';
-import { ReplyFriendRequest, handleSaveUpdate, addFollower } from 'reducers/redux-utils/user';
+import { ReplyFriendRequest, addFollower } from 'reducers/redux-utils/user';
 import { NotificationError } from 'helpers/Error';
 import { renderMessage } from 'helpers/HandleShare';
 import PropTypes from 'prop-types';
@@ -59,9 +59,8 @@ const ModalItem = ({ item, setModalNoti, getNotifications, setGetNotifications, 
 				setGetNotifications(newArr);
 			}
 			await dispatch(readNotification({ notificationId: items.id })).unwrap();
-			// dispatch(handleSaveUpdate(!isreload));
 		} catch (err) {
-			// NotificationError(err);
+			NotificationError(err);
 		}
 	};
 

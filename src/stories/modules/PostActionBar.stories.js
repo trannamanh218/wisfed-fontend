@@ -11,14 +11,6 @@ export default {
 const Template = args => <PostActionBar {...args} />;
 
 export const Default = Template.bind({});
-// Default.args = {
-// 	postInformations: {
-// 		isLike: false,
-// 		likeNumber: 0,
-// 		commentNumber: 0,
-// 		shareNumber: 0,
-// 	},
-// };
 
 export const Custom = Template.bind({});
 Custom.args = {
