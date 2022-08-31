@@ -2,7 +2,6 @@ import { useState } from 'react';
 import SearchField from 'shared/search-field';
 import UserAvatar from 'shared/user-avatar';
 import LinearProgressBar from 'shared/linear-progress-bar';
-import { Table } from 'react-bootstrap';
 import _ from 'lodash';
 import moment from 'moment';
 import './main-reading-target.scss';
