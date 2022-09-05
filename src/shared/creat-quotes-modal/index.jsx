@@ -414,7 +414,11 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 								inputRef={inputRefHashtag}
 							/>
 						</div>
-						{show && !!inputHashtag ? <span>Vui lòng nhập đúng định dạng</span> : ''}
+						{show && !!inputHashtag ? (
+							<span style={{ color: '#e61b00' }}>Vui lòng nhập đúng định dạng</span>
+						) : (
+							''
+						)}
 					</div>
 				</div>
 			</div>

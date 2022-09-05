@@ -552,7 +552,11 @@ const PopupCreateGroup = ({ handleClose }) => {
 							inputRef={inputRefHashtag}
 						/>
 					</div>
-					{show && !!inputHashtag ? <span>Vui lòng nhập đúng định dạng</span> : ''}
+					{show && !!inputHashtag ? (
+						<span style={{ color: '#e61b00' }}>Vui lòng nhập đúng định dạng</span>
+					) : (
+						''
+					)}
 				</div>
 				<div className={!isShowBtn ? 'disableBtn' : `form-button`} onClick={() => createGroup()}>
 					<button>Tạo nhóm</button>

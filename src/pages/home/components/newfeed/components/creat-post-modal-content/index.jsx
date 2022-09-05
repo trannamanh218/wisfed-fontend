@@ -1,6 +1,6 @@
 /* eslint-disable max-lines */
 import classNames from 'classnames';
-import { CloseX, Image, IconRanks } from 'components/svg';
+import { CloseX, Image, IconRanks, WorldNet } from 'components/svg'; // k xóa WorldNet
 import { STATUS_IDLE, STATUS_LOADING, STATUS_SUCCESS } from 'constants/index';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
@@ -46,6 +46,7 @@ import {
 	TOP_QUOTE_VERB_SHARE,
 	MY_BOOK_VERB_SHARE,
 } from 'constants';
+// import ShareModeComponent from './ShareModeComponent';
 
 const verbShareArray = [
 	POST_VERB_SHARE,
@@ -70,7 +71,7 @@ function CreatPostModalContent({
 	onChangeNewPost,
 	showSubModal,
 }) {
-	// const [shareMode, setShareMode] = useState({ value: 'public', title: 'Mọi người', icon: <WorldNet /> });
+	// const [shareMode, setShareMode] = useState({ value: 'public', title: 'Mọi người', icon: <WorldNet /> }); // k xóa
 	const [showMainModal, setShowMainModal] = useState(showModalCreatPost);
 	const [taggedData, setTaggedData] = useState({
 		'addBook': {},
@@ -107,7 +108,7 @@ function CreatPostModalContent({
 
 	const { id } = useParams();
 
-	const { optionList } = setting;
+	const { optionList, shareModeList } = setting; // k xóa shareModeList
 
 	useEffect(() => {
 		const textFieldEdit = document.querySelector('.creat-post-modal-content__main__body__text-field-edit-wrapper');
@@ -594,6 +595,12 @@ function CreatPostModalContent({
 										</>
 									)}
 								</p>
+								{/* k xóa ShareModeComponent */}
+								{/* <ShareModeComponent
+									list={shareModeList}
+									shareMode={shareMode}
+									setShareMode={setShareMode}
+								/> */}
 							</div>
 						</div>
 						<div
