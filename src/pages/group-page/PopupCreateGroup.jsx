@@ -49,7 +49,6 @@ const PopupCreateGroup = ({ handleClose }) => {
 
 	const dataRef = useRef('');
 	const inputRefHashtag = useRef(null);
-	const inputRefAuthor = useRef(null);
 
 	const authorInputContainer = useRef(null);
 	const authorInputWrapper = useRef(null);
@@ -385,11 +384,6 @@ const PopupCreateGroup = ({ handleClose }) => {
 		const newList = listHashtags.filter(item => item !== e);
 		setListHashtags(newList);
 	};
-	useEffect(() => {
-		if (inputRefAuthor.current) {
-			inputRefAuthor.current.focus();
-		}
-	}, [listAuthors]);
 
 	useEffect(() => {
 		groupNameInput.current.focus();

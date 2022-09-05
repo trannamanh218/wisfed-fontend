@@ -8,14 +8,16 @@ import { NotificationError } from 'helpers/Error';
 import { useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import ConnectButtonsSearch from './ConnectButtonsSearch';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const UsersSearch = ({ isFetching, value, setIsFetching, searchResultInput, activeKeyDefault, updateBooks }) => {
 	const [listArrayUsers, setListArrayUsers] = useState([]);
 	const { isShowModal } = useSelector(state => state.search);
 	const [hasMore, setHasMore] = useState(true);
+	const [saveLocalSearch, setSaveLocalSearch] = useState([]);
 
 	const dispatch = useDispatch();
+	const navigate = useNavigate();
 
 	const callApiStart = useRef(0);
 	const callApiPerPage = useRef(10);
@@ -64,6 +66,21 @@ const UsersSearch = ({ isFetching, value, setIsFetching, searchResultInput, acti
 		}
 	};
 
+	useEffect(() => {
+		const getDataLocal = JSON.parse(localStorage.getItem('result'));
+		if (getDataLocal) {
+			setSaveLocalSearch(getDataLocal);
+		}
+	}, []);
+
+	const onUserClick = item => {
+		if (!saveLocalSearch.some(data => data.id === item.id)) {
+			saveLocalSearch.unshift(item);
+			localStorage.setItem('result', JSON.stringify(saveLocalSearch.slice(0, 10)));
+		}
+		navigate(`/profile/${item.id}`);
+	};
+
 	return (
 		<div className='user__search__container'>
 			{listArrayUsers?.length > 0 && activeKeyDefault === 'users' ? (
@@ -73,26 +90,29 @@ const UsersSearch = ({ isFetching, value, setIsFetching, searchResultInput, acti
 							{listArrayUsers.map(item => {
 								if (item.relation !== 'isMe') {
 									return (
-										<div key={item.id} className='myfriends__layout'>
-											<Link to={`/profile/${item.id}`}>
-												<img
-													className='myfriends__layout__img'
-													src={item.avatarImage ? item.avatarImage : defaultAvatar}
-													alt=''
-												/>
-												<div className='myfriends__star'>
-													<div className='myfriends__star__name'>
-														{item.fullName ? (
-															item.fullName
-														) : (
-															<>
-																<span>{item.firstName}</span>&nbsp;
-																<span>{item.lastName}</span>
-															</>
-														)}
-													</div>
+										<div
+											key={item.id}
+											className='myfriends__layout'
+											onClick={() => onUserClick(item)}
+										>
+											<img
+												className='myfriends__layout__img'
+												src={item.avatarImage ? item.avatarImage : defaultAvatar}
+												alt=''
+											/>
+											<div className='myfriends__star'>
+												<div className='myfriends__star__name'>
+													{item.fullName ? (
+														item.fullName
+													) : (
+														<>
+															<span>{item.firstName}</span>&nbsp;
+															<span>{item.lastName}</span>
+														</>
+													)}
 												</div>
-											</Link>
+											</div>
+
 											<div className='myfriends__button__container'>
 												<ConnectButtonsSearch item={item} />
 											</div>
