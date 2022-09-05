@@ -117,6 +117,15 @@ function Bookcase({ currentUserInfo, currentTab }) {
 		navigate('/');
 	};
 
+	const generateAuthorName = author => {
+		if (author && author.length) {
+			const authorName = author.map(item => item.authorName);
+			return authorName.join(' - ');
+		} else {
+			return 'Tác giả chưa xác định';
+		}
+	};
+
 	return (
 		<div className='bookcase'>
 			{currentTab === 'bookcase' && (
@@ -137,9 +146,7 @@ function Bookcase({ currentUserInfo, currentTab }) {
 															{item.book?.name}
 														</div>
 														<div className='bookcase__item__author-name'>
-															{item.book?.author
-																? item.book?.author
-																: 'Tác giả chưa xác định'}
+															{generateAuthorName(item?.book?.authors)}
 														</div>
 														{progressBarPercenNumber(item)}
 													</div>
@@ -197,9 +204,7 @@ function Bookcase({ currentUserInfo, currentTab }) {
 															{item.book?.name}
 														</div>
 														<div className='bookcase__item__author-name'>
-															{item.book?.author
-																? item.book?.author
-																: 'Tác giả chưa xác định'}
+															{generateAuthorName(item?.book?.authors)}
 														</div>
 														{progressBarPercenNumber(item)}
 													</div>
