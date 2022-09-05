@@ -9,6 +9,7 @@ import '../node_modules/react-bootstrap/dist/react-bootstrap';
 import '../node_modules/react-toastify/dist/ReactToastify.css';
 import '../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js';
 import '../node_modules/recharts/umd/Recharts.js';
+import '@fortawesome/fontawesome-free/css/all.min.css';
 
 ReactDOM.render(
 	<React.StrictMode>
