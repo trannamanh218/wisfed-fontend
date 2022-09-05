@@ -6,6 +6,7 @@ import {
 	getSeriesDetailAPI,
 	postMoreSeriesAPI,
 	addBookToSeriesAPI,
+	removeBookFromSeriesAPI,
 } from 'constants/apiURL';
 
 export const getMySeries = createAsyncThunk('series/getMySeries', async (params, { rejectWithValue }) => {
@@ -20,9 +21,9 @@ export const getMySeries = createAsyncThunk('series/getMySeries', async (params,
 
 export const getListBookBySeries = createAsyncThunk(
 	'series/getListBookBySeries',
-	async (params, { rejectWithValue }) => {
+	async (seriId, { rejectWithValue }) => {
 		try {
-			const response = await Request.makeGet(getListBookBySeriesAPI, params);
+			const response = await Request.makeGet(getListBookBySeriesAPI(seriId));
 			return response.data;
 		} catch (err) {
 			const error = JSON.parse(err.response);
@@ -33,7 +34,7 @@ export const getListBookBySeries = createAsyncThunk(
 
 export const getSeriesDetail = createAsyncThunk('series/getSeriesDetail', async (params, { rejectWithValue }) => {
 	try {
-		const response = await Request.makeGet(getSeriesDetailAPI, params);
+		const response = await Request.makeGet(getSeriesDetailAPI(params));
 		return response.data;
 	} catch (err) {
 		const error = JSON.parse(err.response);
@@ -65,6 +66,20 @@ export const addBookToSeries = createAsyncThunk('series/addBookToSeries', async 
 		return rejectWithValue(error);
 	}
 });
+
+export const removeBookFromSeries = createAsyncThunk(
+	'series/removeBookFromSeries',
+	async (params, { rejectWithValue }) => {
+		const { seriesId, body } = params;
+		try {
+			const response = await Request.makePost(removeBookFromSeriesAPI(seriesId), body);
+			return response.data;
+		} catch (err) {
+			const error = JSON.parse(err.response);
+			return rejectWithValue(error);
+		}
+	}
+);
 
 const seriesSlice = createSlice({
 	name: 'series',

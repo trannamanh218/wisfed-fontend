@@ -3,27 +3,26 @@ import './results-search.scss';
 import defaultAvatar from 'assets/images/avatar.jpeg';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import Storage from 'helpers/Storage';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import bookImage from 'assets/images/default-book.png';
 
 const ResultSearch = ({ valueInputSearch, resultSearch, setIsShow }) => {
 	const [checkRenderStorage, setCheckRenderStorage] = useState(false);
-	const [saveLocalSearch, setSaveLoacalSearch] = useState([]);
+	const [saveLocalSearch, setSaveLocalSearch] = useState([]);
 	const [directClick, setDirectClick] = useState(false);
 	const navigate = useNavigate();
 
 	const handleDeleteItem = id => {
 		const filterResult = saveLocalSearch.filter(item => item.id !== id);
-		Storage.setItem('result', JSON.stringify(filterResult));
+		localStorage.setItem('result', JSON.stringify(filterResult));
 		setCheckRenderStorage(!checkRenderStorage);
 	};
 
 	useEffect(() => {
-		const getDataLocal = JSON.parse(Storage.getItem('result'));
+		const getDataLocal = JSON.parse(localStorage.getItem('result'));
 		if (getDataLocal) {
-			setSaveLoacalSearch(getDataLocal.reverse());
+			setSaveLocalSearch(getDataLocal);
 		}
 	}, [checkRenderStorage]);
 
@@ -37,9 +36,9 @@ const ResultSearch = ({ valueInputSearch, resultSearch, setIsShow }) => {
 	};
 
 	const handleItem = item => {
-		const newArr = saveLocalSearch?.filter(data => data.id === item.id);
-		if (!newArr.length) {
-			setSaveLoacalSearch(prev => [...prev, item]);
+		if (!saveLocalSearch.some(data => data.id === item.id)) {
+			saveLocalSearch.unshift(item);
+			setSaveLocalSearch(saveLocalSearch.slice(0, 10));
 			setDirectClick(true);
 		} else {
 			directItem(item);
@@ -48,16 +47,8 @@ const ResultSearch = ({ valueInputSearch, resultSearch, setIsShow }) => {
 
 	useEffect(() => {
 		if (!!saveLocalSearch.length && directClick) {
-			if (saveLocalSearch.length < 9) {
-				Storage.setItem('result', JSON.stringify(saveLocalSearch));
-				const item = saveLocalSearch.reverse()[0];
-				directItem(item);
-			} else {
-				const filterData = saveLocalSearch.filter((_, index) => index !== 0);
-				Storage.setItem('result', JSON.stringify(filterData.reverse()));
-				const item = saveLocalSearch.reverse()[0];
-				directItem(item);
-			}
+			localStorage.setItem('result', JSON.stringify(saveLocalSearch));
+			directItem(saveLocalSearch[0]);
 		}
 	}, [directClick]);
 

@@ -6,11 +6,12 @@ import './author-book.scss';
 import { ShareRanks } from 'components/svg';
 import Storage from 'helpers/Storage';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate, useParams, Link } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { saveDataShare } from 'reducers/redux-utils/post';
 import classNames from 'classnames';
 import _ from 'lodash';
 import { TOP_BOOK_VERB_SHARE } from 'constants/index';
+import { useEffect, useState } from 'react';
 
 const AuthorBook = ({
 	data,
@@ -23,7 +24,10 @@ const AuthorBook = ({
 	inCreatePost,
 	inPost,
 	trueRank,
+	saveLocalStorage,
 }) => {
+	const [saveLocalSearch, setSaveLocalSearch] = useState([]);
+
 	const { userId } = useParams();
 	const userInfo = useSelector(state => state.auth.userInfo);
 	const dispatch = useDispatch();
@@ -78,6 +82,23 @@ const AuthorBook = ({
 		}
 	};
 
+	useEffect(() => {
+		const getDataLocal = JSON.parse(localStorage.getItem('result'));
+		if (getDataLocal) {
+			setSaveLocalSearch(getDataLocal);
+		}
+	}, []);
+
+	const onBookTitleOrThumbnailClick = () => {
+		if (saveLocalStorage) {
+			if (!saveLocalSearch.some(e => e.id === data.id)) {
+				saveLocalSearch.unshift(data);
+				localStorage.setItem('result', JSON.stringify(saveLocalSearch.slice(0, 10)));
+			}
+		}
+		navigate(`/book/detail/${data.info?.id || data.bookId || data.id}`);
+	};
+
 	return (
 		!_.isEmpty(data) && (
 			<div
@@ -85,21 +106,17 @@ const AuthorBook = ({
 					'author-book-custom': data.verb === TOP_BOOK_VERB_SHARE,
 				})}
 			>
-				<BookThumbnail
-					source={generateBookThumbnailSrc(data)}
-					handleClick={() => navigate(`/book/detail/${data.info?.id || data.bookId || data.id}`)}
-				/>
+				<BookThumbnail source={generateBookThumbnailSrc(data)} handleClick={onBookTitleOrThumbnailClick} />
 				<div className='author-book__info'>
 					<div className='author-book__info__book-name-and-authors'>
 						<div className='author-book__info__book-name'>
-							<Link to={`/book/detail/${data.info?.id || data.bookId || data.id}`}>
-								<h4
-									className='author-book__title'
-									title={data.book?.name || data?.name || data.info?.name}
-								>
-									{data.book?.name || data?.name || data.info?.name}
-								</h4>
-							</Link>
+							<h4
+								onClick={onBookTitleOrThumbnailClick}
+								className='author-book__title'
+								title={data.book?.name || data?.name || data.info?.name}
+							>
+								{data.book?.name || data?.name || data.info?.name}
+							</h4>
 							{showShareBtn && (
 								<div onClick={() => handleShare(data)} className='author-book__share'>
 									<ShareRanks />
@@ -153,6 +170,7 @@ AuthorBook.defaultProps = {
 	inCreatePost: false,
 	inPost: false,
 	trueRank: null,
+	saveLocalStorage: false,
 };
 
 AuthorBook.propTypes = {
@@ -166,6 +184,7 @@ AuthorBook.propTypes = {
 	inCreatePost: PropTypes.bool,
 	inPost: PropTypes.bool,
 	trueRank: PropTypes.number,
+	saveLocalStorage: PropTypes.func,
 };
 
 export default AuthorBook;

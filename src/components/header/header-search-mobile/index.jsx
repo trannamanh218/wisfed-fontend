@@ -107,7 +107,7 @@ function HeaderSearchMobile({ searchRef, isShowSearchMobile, setIsShowSearchMobi
 }
 
 HeaderSearchMobile.propTypes = {
-	searchRef: PropTypes.string,
+	searchRef: PropTypes.object,
 	isShowSearchMobile: PropTypes.bool,
 	setIsShowSearchMobile: PropTypes.func,
 };

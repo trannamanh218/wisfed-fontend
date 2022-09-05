@@ -43,6 +43,7 @@ function BookDetail() {
 			setBookStatus('SUCCESS');
 		}
 	}, [bookId]);
+
 	return (
 		<>
 			{bookStatus === STATUS_LOADING ? (
@@ -52,7 +53,9 @@ function BookDetail() {
 					{!_.isEmpty(bookInformation) ? (
 						<MainContainer
 							main={<BookInfo bookInfo={bookInformation} />}
-							right={<BookReference bookInfo={bookInformation} />}
+							right={
+								<BookReference bookInfo={bookInformation} handleGetBookDetail={handleGetBookDetail} />
+							}
 						/>
 					) : (
 						<NormalContainer>

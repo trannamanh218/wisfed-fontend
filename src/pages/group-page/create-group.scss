@@ -99,6 +99,9 @@
 	.form-field-wrapper {
 		padding: 25px;
 	}
+	.add-and-search-categories__categories-added__item {
+		max-width: 95%;
+	}
 }
 
 .form-field-name {
@@ -116,7 +119,6 @@
 	background-color: #f7f7fc;
 	border-radius: 12px;
 	padding: 0 10px;
-	margin-bottom: 24px;
 	.input {
 		width: fit-content;
 	}

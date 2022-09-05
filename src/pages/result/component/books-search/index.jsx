@@ -89,7 +89,7 @@ const BookSearch = ({ isFetching, value, setIsFetching, searchResultInput, activ
 					>
 						{listArrayBooks.map(item => (
 							<div key={item.id} className='bookSearch__main'>
-								<AuthorBook data={item} checkStar={true} />
+								<AuthorBook data={item} checkStar={true} saveLocalStorage={true} />
 							</div>
 						))}
 					</InfiniteScroll>

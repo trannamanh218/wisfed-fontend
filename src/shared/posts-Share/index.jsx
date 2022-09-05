@@ -191,7 +191,6 @@ const PostShare = ({ postData, inCreatePost = false }) => {
 			<ul className='tagged'>
 				{postData.sharePost.mentionsCategories?.map(item => (
 					<li key={item.id} className={classNames('badge bg-primary-light')}>
-						<Feather />
 						<span>
 							{item.category.name ||
 								item.category?.fullName ||
