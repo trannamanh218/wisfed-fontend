@@ -495,12 +495,10 @@ function CreatPostModalContent({
 					}
 				}
 			}
-		} else if (postDataShare && content) {
+		} else if (!_.isEmpty(postDataShare) && content) {
 			isActive = true;
-		} else {
-			if (content && (taggedData.addAuthor.length || taggedData.addCategory.length || imagesUpload.length)) {
-				isActive = true;
-			}
+		} else if (content && (taggedData.addAuthor.length || taggedData.addCategory.length || imagesUpload.length)) {
+			isActive = true;
 		}
 		setButtonActive(isActive);
 	};
@@ -757,13 +755,8 @@ function CreatPostModalContent({
 							className={classNames('creat-post-modal-content__main__submit', {
 								'active': buttonActive,
 							})}
-							type='button'
-							onClick={e => {
-								e.preventDefault();
-								if (buttonActive) {
-									onCreatePost();
-								}
-							}}
+							onClick={onCreatePost}
+							disabled={buttonActive ? false : true}
 						>
 							Đăng
 						</button>

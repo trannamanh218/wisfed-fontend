@@ -76,7 +76,7 @@ const UsersSearch = ({ isFetching, value, setIsFetching, searchResultInput, acti
 	const onUserClick = item => {
 		if (!saveLocalSearch.some(data => data.id === item.id)) {
 			saveLocalSearch.unshift(item);
-			localStorage.setItem('result', JSON.stringify(saveLocalSearch.slice(0, 10)));
+			localStorage.setItem('result', JSON.stringify(saveLocalSearch.slice(0, 8)));
 		}
 		navigate(`/profile/${item.id}`);
 	};

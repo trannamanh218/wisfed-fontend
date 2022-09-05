@@ -93,7 +93,7 @@ const AuthorBook = ({
 		if (saveLocalStorage) {
 			if (!saveLocalSearch.some(e => e.id === data.id)) {
 				saveLocalSearch.unshift(data);
-				localStorage.setItem('result', JSON.stringify(saveLocalSearch.slice(0, 10)));
+				localStorage.setItem('result', JSON.stringify(saveLocalSearch.slice(0, 8)));
 			}
 		}
 		navigate(`/book/detail/${data.info?.id || data.bookId || data.id}`);
@@ -184,7 +184,7 @@ AuthorBook.propTypes = {
 	inCreatePost: PropTypes.bool,
 	inPost: PropTypes.bool,
 	trueRank: PropTypes.number,
-	saveLocalStorage: PropTypes.func,
+	saveLocalStorage: PropTypes.bool,
 };
 
 export default AuthorBook;

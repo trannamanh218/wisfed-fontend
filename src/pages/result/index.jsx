@@ -49,6 +49,7 @@ const Result = () => {
 
 	useEffect(() => {
 		setSearchResultInput(value);
+		setUpdateBooks(!updateBooks);
 	}, [value]);
 
 	return (
