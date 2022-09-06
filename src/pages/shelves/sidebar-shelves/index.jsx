@@ -23,12 +23,11 @@ const SidebarShelves = ({ shelveGroupName, isMyShelve, handleViewBookDetail, all
 		JSON.stringify([{ operator: 'eq', value: userId, property: 'createdBy' }])
 	);
 
-	const { booksReadYear } = useFetchTargetReading(userId);
-
 	const handleRenderTargetReading = () => {
 		if (isMyShelve) {
 			return <RenderProgress userIdParams={userId} />;
 		} else {
+			const { booksReadYear } = useFetchTargetReading(userId);
 			if (booksReadYear.length > 0) {
 				return <ProgressBarCircle booksReadYear={booksReadYear} />;
 			}

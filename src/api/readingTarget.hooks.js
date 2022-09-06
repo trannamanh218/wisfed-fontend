@@ -19,6 +19,7 @@ export const useFetchTargetReading = (userIdParams, modalOpen, deleteModal) => {
 	};
 	const dob = new Date();
 	const year = dob.getFullYear();
+
 	useEffect(async () => {
 		let isMount = true;
 		if (isMount) {
