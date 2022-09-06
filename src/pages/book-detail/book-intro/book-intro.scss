@@ -9,12 +9,12 @@
 		display: flex;
 		flex-direction: column;
 		align-items: stretch;
+		gap: 24px;
 	}
 
 	&__btn {
 		&.btn {
 			width: 200px;
-			margin-top: 1.5em;
 		}
 	}
 
@@ -22,6 +22,7 @@
 		display: flex;
 		flex-direction: column;
 		justify-content: space-between;
+		gap: 24px;
 		.book-intro__content__infomations {
 			flex-grow: 1;
 			display: flex;
@@ -72,7 +73,6 @@
 
 	&__action {
 		height: 56px;
-		margin-top: 24px;
 		background: $white;
 		max-width: 200px;
 		border-radius: 12px;
@@ -179,24 +179,24 @@
 // 	}
 // }
 
-@media only screen and (max-width: 1025px) {
-	.mainContainer__right {
-		& .dualColumn-item__number {
-			display: none;
-		}
-	}
-	.book-intro {
-		gap: 20px;
-		.book-intro__btn {
-			width: 180px;
-			margin-top: 0;
-			margin-left: 0;
-		}
-		.text-status {
-			font-size: 14px;
-		}
-		.book-intro__content__infomations {
-			flex-grow: 0;
-		}
-	}
-}
+// @media only screen and (max-width: 1025px) {
+// 	.mainContainer__right {
+// 		& .dualColumn-item__number {
+// 			display: none;
+// 		}
+// 	}
+// 	.book-intro {
+// 		gap: 20px;
+// 		.book-intro__btn {
+// 			width: 180px;
+// 			margin-top: 0;
+// 			margin-left: 0;
+// 		}
+// 		.text-status {
+// 			font-size: 14px;
+// 		}
+// 		.book-intro__content__infomations {
+// 			flex-grow: 0;
+// 		}
+// 	}
+// }
