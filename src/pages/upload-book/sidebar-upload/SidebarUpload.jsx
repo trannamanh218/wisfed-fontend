@@ -1,18 +1,18 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, lazy, Suspense } from 'react';
 import PropTypes from 'prop-types';
 import './sidebar-upload.scss';
 import { useDispatch } from 'react-redux';
 import _ from 'lodash';
 import { useFetchAuthorBooks } from 'api/book.hooks';
 import { useFetchQuotes } from 'api/quote.hooks';
-import BookSlider from 'shared/book-slider';
-import QuotesLinks from 'shared/quote-links';
 import { useParams } from 'react-router-dom';
-import AuthorSlider from 'shared/author-slider';
 import { getRandomAuthor } from 'reducers/redux-utils/user';
 import { NotificationError } from 'helpers/Error';
-import GroupLinks from 'shared/group-links';
 import { useFetchGroups } from 'api/group.hooks';
+const QuotesLinks = lazy(() => import('shared/quote-links'));
+const AuthorSlider = lazy(() => import('shared/author-slider'));
+const GroupLinks = lazy(() => import('shared/group-links'));
+const BookSlider = lazy(() => import('shared/book-slider'));
 
 const SidebarUpload = ({ userInfo, currentUserInfo, handleViewBookDetail }) => {
 	const { userId } = useParams();
@@ -62,25 +62,27 @@ const SidebarUpload = ({ userInfo, currentUserInfo, handleViewBookDetail }) => {
 	}, []);
 
 	return (
-		<div className='sidebar-upload'>
-			{!_.isEmpty(userInfo) && (
-				<div className='sidebar-profile'>
-					{booksAuthor.length > 0 && (
-						<BookSlider
-							className='book-reference__slider'
-							title={booksSliderTitle}
-							list={booksAuthor}
-							handleViewBookDetail={handleViewBookDetail}
-						/>
-					)}
+		<Suspense fallback={<div>Loading...</div>}>
+			<div className='sidebar-upload'>
+				{!_.isEmpty(userInfo) && (
+					<div className='sidebar-profile'>
+						{booksAuthor.length > 0 && (
+							<BookSlider
+								className='book-reference__slider'
+								title={booksSliderTitle}
+								list={booksAuthor}
+								handleViewBookDetail={handleViewBookDetail}
+							/>
+						)}
+					</div>
+				)}
+				<AuthorSlider title='Tác giả nổi bật' list={authorList} size='lg' inUpload={true} />
+				<div className='sibar-pop-authors'>
+					{!!quoteData.length && <QuotesLinks list={quoteData} title={`Quotes của tôi`} />}
 				</div>
-			)}
-			<AuthorSlider title='Tác giả nổi bật' list={authorList} size='lg' inUpload={true} />
-			<div className='sibar-pop-authors'>
-				{!!quoteData.length && <QuotesLinks list={quoteData} title={`Quotes của tôi`} />}
+				<GroupLinks list={groupList.slice(0, 3)} title='Group' />
 			</div>
-			<GroupLinks list={groupList.slice(0, 3)} title='Group' />
-		</div>
+		</Suspense>
 	);
 };
 
