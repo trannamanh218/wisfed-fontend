@@ -78,7 +78,7 @@ OptionsPost.defaultProps = {
 OptionsPost.propTypes = {
 	taggedData: PropTypes.object.isRequired,
 	list: PropTypes.array,
-	postDataShare: PropTypes.array,
+	postDataShare: PropTypes.object,
 	addOptionsToPost: PropTypes.func,
 };
 

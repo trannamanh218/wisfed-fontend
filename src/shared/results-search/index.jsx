@@ -38,7 +38,7 @@ const ResultSearch = ({ valueInputSearch, resultSearch, setIsShow }) => {
 	const handleItem = item => {
 		if (!saveLocalSearch.some(data => data.id === item.id)) {
 			saveLocalSearch.unshift(item);
-			setSaveLocalSearch(saveLocalSearch.slice(0, 10));
+			setSaveLocalSearch(saveLocalSearch.slice(0, 8));
 			setDirectClick(true);
 		} else {
 			directItem(item);
@@ -110,7 +110,7 @@ const ResultSearch = ({ valueInputSearch, resultSearch, setIsShow }) => {
 							</div>
 						</div>
 					))}
-					{resultSearch.users?.slice(0, 5).map(item => (
+					{resultSearch.users?.slice(0, 3).map(item => (
 						<div key={item.id} className='result__search__main'>
 							<div onClick={() => handleItem(item)} className='result__search__main__left'>
 								<div className='result__search__icon__time'>

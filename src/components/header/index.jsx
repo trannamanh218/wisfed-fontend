@@ -240,7 +240,7 @@ const Header = () => {
 						<LogoNonText className='header__logo' />
 					</Link>
 				</div>
-				<div className='header__search'>
+				<div className='header__search' onClick={handlePopup}>
 					{/* Modal tìm kiếm */}
 					{isShow ? (
 						<SearchAllModal showRef={showRef} setIsShow={setIsShow} />
@@ -250,7 +250,6 @@ const Header = () => {
 							<input
 								className='header__search__input'
 								placeholder='Tìm kiếm trên Wisfeed'
-								onClick={handlePopup}
 								disabled={isShow}
 								value={getSlugResult}
 								onChange={() => {}}
