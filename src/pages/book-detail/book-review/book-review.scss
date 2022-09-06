@@ -74,7 +74,6 @@
 
 @media only screen and (max-width: 820px) {
 	.book-review {
-		width: 676px;
 		&__rating {
 			margin-bottom: 4.25rem;
 		}
@@ -83,7 +82,6 @@
 		}
 		& .book-review__rating {
 			width: 575px;
-			margin-left: 30px;
 			margin-top: 2.5rem;
 			margin-bottom: 2.5rem;
 		}
@@ -91,7 +89,6 @@
 }
 @media only screen and (max-width: 768px) {
 	.book-review {
-		width: 624px;
 		& .book-review__rating {
 			width: 495px;
 			margin-left: 43px;

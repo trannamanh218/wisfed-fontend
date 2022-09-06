@@ -98,10 +98,7 @@ const UsersSearch = ({ isFetching, value, setIsFetching, searchResultInput, acti
 												onClick={() => onUserClick(item)}
 											/>
 											<div className='myfriends__star'>
-												<div
-													className='myfriends__star__name'
-													onClick={() => onUserClick(item)}
-												>
+												<div className='myfriends__star__name'>
 													{item.fullName ? (
 														item.fullName
 													) : (
