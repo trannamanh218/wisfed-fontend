@@ -76,7 +76,7 @@ const UsersSearch = ({ isFetching, value, setIsFetching, searchResultInput, acti
 	const onUserClick = item => {
 		if (!saveLocalSearch.some(data => data.id === item.id)) {
 			saveLocalSearch.unshift(item);
-			localStorage.setItem('result', JSON.stringify(saveLocalSearch.slice(0, 10)));
+			localStorage.setItem('result', JSON.stringify(saveLocalSearch.slice(0, 8)));
 		}
 		navigate(`/profile/${item.id}`);
 	};
@@ -90,16 +90,13 @@ const UsersSearch = ({ isFetching, value, setIsFetching, searchResultInput, acti
 							{listArrayUsers.map(item => {
 								if (item.relation !== 'isMe') {
 									return (
-										<div
-											key={item.id}
-											className='myfriends__layout'
-											onClick={() => onUserClick(item)}
-										>
+										<div key={item.id} className='myfriends__layout'>
 											<img
 												className='myfriends__layout__img'
 												src={item.avatarImage ? item.avatarImage : defaultAvatar}
 												onError={e => e.target.setAttribute('src', defaultAvatar)}
 												alt=''
+												onClick={() => onUserClick(item)}
 											/>
 											<div className='myfriends__star'>
 												<div className='myfriends__star__name'>

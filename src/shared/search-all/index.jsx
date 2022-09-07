@@ -48,6 +48,7 @@ const SearchAllModal = ({ showRef, setIsShow }) => {
 
 	const handleKeyDown = e => {
 		if (e.key === 'Enter' && valueInputSearch) {
+			setIsShow(false);
 			navigate(`/result/q=${valueInputSearch}`);
 		}
 	};

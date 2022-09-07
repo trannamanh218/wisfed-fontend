@@ -20,6 +20,8 @@ const Result = () => {
 	const [searchResultInput, setSearchResultInput] = useState('');
 	const [updateBooks, setUpdateBooks] = useState(false);
 	const [isFetching, setIsFetching] = useState(false);
+	const [firstTimeRender, setFirstTimeRender] = useState(true);
+
 	const navigate = useNavigate();
 
 	const handleChange = e => {
@@ -29,7 +31,6 @@ const Result = () => {
 	const handleDirectParam = () => {
 		if (searchResultInput) {
 			navigate(`/result/q=${searchResultInput}`);
-			setUpdateBooks(!updateBooks);
 		}
 	};
 
@@ -49,6 +50,11 @@ const Result = () => {
 
 	useEffect(() => {
 		setSearchResultInput(value);
+		if (firstTimeRender) {
+			setFirstTimeRender(false);
+		} else {
+			setUpdateBooks(!updateBooks);
+		}
 	}, [value]);
 
 	return (

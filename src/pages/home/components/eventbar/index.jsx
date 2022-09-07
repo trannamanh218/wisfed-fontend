@@ -13,12 +13,12 @@ const EventBar = () => {
 					<button className='event-bar__join-event'>Tham gia sự kiện</button>
 				</div>
 			</div> */}
-			<Link to={`/top100`} className='event-and-rank-bar__block'>
+			<div className='event-and-rank-bar__block'>
 				<h4 className='event-and-rank-bar__block__title'>Bảng xếp hạng</h4>
-				<div className='event-and-rank-bar__content'>
+				<Link to={`/top100`} className='event-and-rank-bar__content'>
 					<img src={eventBarImageSample} alt='' />
-				</div>
-			</Link>
+				</Link>
+			</div>
 		</div>
 	);
 };
