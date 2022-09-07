@@ -102,7 +102,7 @@ const PostShare = ({ postData, inCreatePost = false }) => {
 			return content;
 		}
 	};
-
+	console.log(postData);
 	return (
 		<div className='post__container'>
 			<div className='post__user-status'>
@@ -131,8 +131,8 @@ const PostShare = ({ postData, inCreatePost = false }) => {
 								{inCreatePost ? (
 									<span>{postData.sharePost.groupInfo.name}</span>
 								) : (
-									<Link to={`/group/${postData.sharePost.groupInfo.id}`}>
-										{postData.sharePost.groupInfo.name}
+									<Link to={`/group/${postData.sharePost.groupInfo?.id}`}>
+										{postData.sharePost.groupInfo?.name}
 									</Link>
 								)}
 							</>
