@@ -23,7 +23,7 @@ const BookIntro = ({ bookInfo, listRatingStar }) => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	const [urlShare, seturlShare] = useState('');
-	const [textLength, setTextLength] = useState(450);
+	const [textLength, setTextLength] = useState(500);
 
 	const handleClick = () => {
 		if (location.pathname !== '/' || location.pathname !== '/home') {
@@ -32,10 +32,12 @@ const BookIntro = ({ bookInfo, listRatingStar }) => {
 	};
 
 	useEffect(() => {
-		if (window.innerWidth <= 1024 && window.innerWidth > 820) {
-			setTextLength(200);
+		if (window.innerWidth <= 768) {
+			setTextLength(290);
 		} else if (window.innerWidth <= 820) {
-			setTextLength(150);
+			setTextLength(320);
+		} else if (window.innerWidth <= 1024) {
+			setTextLength(380);
 		} else if (window.innerWidth <= 1280) {
 			setTextLength(400);
 		}

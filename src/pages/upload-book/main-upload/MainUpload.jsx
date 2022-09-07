@@ -1,3 +1,4 @@
+import { lazy, Suspense } from 'react';
 import Dropzone from 'react-dropzone';
 import { useDropzone } from 'react-dropzone';
 import { Link } from 'react-router-dom';
@@ -11,15 +12,17 @@ import ArrowChevronForward from 'assets/images/ArrowChevronForward.png';
 import Datepicker from 'react-datepicker';
 import { useDispatch, useSelector } from 'react-redux';
 import { uploadImage } from 'reducers/redux-utils/common';
-import ModalSeries from 'shared/modal-series/ModalSeries';
 import { toast } from 'react-toastify';
 import { createBook } from 'reducers/redux-utils/book';
 import { addBookToSeries } from 'reducers/redux-utils/series';
 import { NotificationError } from 'helpers/Error';
 import classNames from 'classnames';
 import _ from 'lodash';
-import AddAndSearchAuthorUploadBook from './AddAndSearchAuthorUploadBook/AddAndSearchAuthorUploadBook';
-import AddAndSearchCategoriesUploadBook from './AddAndSearchCategoriesUploadBook/AddAndSearchCategoriesUploadBook';
+const ModalSeries = lazy(() => import('shared/modal-series/ModalSeries'));
+const AddAndSearchAuthorUploadBook = lazy(() => import('./AddAndSearchAuthorUploadBook/AddAndSearchAuthorUploadBook'));
+const AddAndSearchCategoriesUploadBook = lazy(() =>
+	import('./AddAndSearchCategoriesUploadBook/AddAndSearchCategoriesUploadBook')
+);
 // import AddAndSearchPublisherUploadBook from './AddAndSearchPublisherUploadBook/AddAndSearchPublisherUploadBook';
 // import AddAndSearchTranslatorsUploadBook from './AddAndSearchTranslatorsUploadBook/AddAndSearchTranslatorsUploadBook';
 
@@ -208,7 +211,7 @@ export default function MainUpload() {
 	};
 
 	return (
-		<>
+		<Suspense fallback={<div>Loading...</div>}>
 			<div className='group-btn-back'>
 				<Link to='/'>
 					<button style={{ width: '48px', height: '48px' }}>
@@ -442,6 +445,6 @@ export default function MainUpload() {
 					</div>
 				</div>
 			</div>
-		</>
+		</Suspense>
 	);
 }

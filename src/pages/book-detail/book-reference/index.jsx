@@ -3,11 +3,11 @@ import { STATUS_SUCCESS } from 'constants/index';
 import { STATUS_LOADING } from 'constants/index';
 import { STATUS_IDLE } from 'constants/index';
 import RouteLink from 'helpers/RouteLink';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, lazy, Suspense } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { getBookDetail } from 'reducers/redux-utils/book';
-import BookSlider from 'shared/book-slider';
+const BookSlider = lazy(() => import('shared/book-slider'));
 import Circle from 'shared/loading/circle';
 import './book-reference.scss';
 import { NotificationError } from 'helpers/Error';
@@ -15,7 +15,7 @@ import { getCategoryList, getListBookByCategory } from 'reducers/redux-utils/cat
 import caretIcon from 'assets/images/caret.png';
 import { Link } from 'react-router-dom';
 import { useFetchAuthorBooks } from 'api/book.hooks';
-import ModalSeries from 'shared/modal-series/ModalSeries';
+const ModalSeries = lazy(() => import('shared/modal-series/ModalSeries'));
 import { getListBookBySeries } from 'reducers/redux-utils/series';
 import bookImage from 'assets/images/default-book.png';
 import pencil from 'assets/images/pencil.png';
@@ -114,84 +114,92 @@ const BookReference = ({ bookInfo, handleGetBookDetail }) => {
 
 	return (
 		<div className='book-reference'>
-			<Circle loading={status === STATUS_LOADING} />
-			{/* sách của tác giả */}
-			{!!bookInfo.authors.length && (
-				<BookSlider
-					className='book-reference__slider'
-					title={`Sách của ${bookInfo.authors[0]?.authorName} `}
-					list={booksAuthor}
-					handleViewBookDetail={handleViewBookDetail}
+			<Suspense fallback={<div>Loading...</div>}>
+				<Circle loading={status === STATUS_LOADING} />
+				{/* sách của tác giả */}
+				{!!bookInfo.authors.length && (
+					<BookSlider
+						className='book-reference__slider'
+						title={`Sách của ${bookInfo.authors[0]?.authorName} `}
+						list={booksAuthor}
+						handleViewBookDetail={handleViewBookDetail}
+					/>
+				)}
+
+				{/* Phần hiển thị series */}
+				{bookInfo.series ? (
+					<>
+						{listBookOfSeries.length < 3 ? (
+							<>
+								<h4 className='book-slider__title'>
+									{`Series ${bookInfo.series.name}`}
+									{userInfo.role === 'tecinus' || userInfo.role === 'author' ? (
+										<img
+											className='edit-name__pencil'
+											src={pencil}
+											alt='pencil'
+											title='Chỉnh sửa'
+											onClick={handleShowModalSeries}
+										/>
+									) : (
+										''
+									)}
+								</h4>
+								<div
+									className='book-reference__slider'
+									style={{ display: 'flex', flexDirection: 'row' }}
+								>
+									{listBookOfSeries.map((item, index) => (
+										<div style={{ width: '50%' }} key={index}>
+											<Link to={`/book/detail/${item.id}`}>
+												<div className='wants-to-read__thumbnail'>
+													<img
+														src={item.frontBookCover || item.images[0] || bookImage}
+														alt=''
+													/>
+												</div>
+											</Link>
+										</div>
+									))}
+								</div>
+							</>
+						) : (
+							<BookSlider
+								className='book-reference__slider'
+								title={`Series ${bookInfo.series.name}`}
+								list={listBookOfSeries}
+								handleViewBookDetail={handleViewBookDetail}
+								handleShowModalSeries={handleShowModalSeries}
+								editSeriesRole={userInfo.role === 'tecinus' || userInfo.role === 'author'}
+							/>
+						)}
+					</>
+				) : (
+					''
+				)}
+
+				{/* Modal thêm series */}
+				<ModalSeries
+					showModalSeries={showModalSeries}
+					handleCloseModalSeries={handleCloseModalSeries}
+					series={series}
+					setSeries={setSeries}
+					temporarySeries={temporarySeries}
+					setTemporarySeries={setTemporarySeries}
+					bookId={bookInfo.id}
+					currentSeries={bookInfo.series}
+					handleGetBookDetail={handleGetBookDetail}
 				/>
-			)}
 
-			{/* Phần hiển thị series */}
-			{bookInfo.series ? (
-				<>
-					{listBookOfSeries.length < 3 ? (
-						<>
-							<h4 className='book-slider__title'>
-								{`Series ${bookInfo.series.name}`}
-								{userInfo.role === 'tecinus' || userInfo.role === 'author' ? (
-									<img
-										className='edit-name__pencil'
-										src={pencil}
-										alt='pencil'
-										title='Chỉnh sửa'
-										onClick={handleShowModalSeries}
-									/>
-								) : (
-									''
-								)}
-							</h4>
-							<div className='book-reference__slider' style={{ display: 'flex', flexDirection: 'row' }}>
-								{listBookOfSeries.map((item, index) => (
-									<div style={{ width: '50%' }} key={index}>
-										<Link to={`/book/detail/${item.id}`}>
-											<div className='wants-to-read__thumbnail'>
-												<img src={item.frontBookCover || item.images[0] || bookImage} alt='' />
-											</div>
-										</Link>
-									</div>
-								))}
-							</div>
-						</>
-					) : (
-						<BookSlider
-							className='book-reference__slider'
-							title={`Series ${bookInfo.series.name}`}
-							list={listBookOfSeries}
-							handleViewBookDetail={handleViewBookDetail}
-							handleShowModalSeries={handleShowModalSeries}
-							editSeriesRole={userInfo.role === 'tecinus' || userInfo.role === 'author'}
-						/>
-					)}
-				</>
-			) : (
-				''
-			)}
-
-			{/* Modal thêm series */}
-			<ModalSeries
-				showModalSeries={showModalSeries}
-				handleCloseModalSeries={handleCloseModalSeries}
-				series={series}
-				setSeries={setSeries}
-				temporarySeries={temporarySeries}
-				setTemporarySeries={setTemporarySeries}
-				bookId={bookInfo.id}
-				currentSeries={bookInfo.series}
-				handleGetBookDetail={handleGetBookDetail}
-			/>
-
-			{relatedBooks.length > 0 && (
-				<BookSlider
-					className='book-reference__slider'
-					title='Gợi ý cùng thể loại'
-					list={relatedBooks}
-					handleViewBookDetail={handleViewBookDetail}
-				/>
-			)}
+				{relatedBooks.length > 0 && (
+					<BookSlider
+						className='book-reference__slider'
+						title='Gợi ý cùng thể loại'
+						list={relatedBooks}
+						handleViewBookDetail={handleViewBookDetail}
+					/>
+				)}
+			</Suspense>
 
 			{(userInfo.role === 'tecinus' || userInfo.role === 'author') && !bookInfo.series ? (
 				<div className='book-reference__add-to-series'>

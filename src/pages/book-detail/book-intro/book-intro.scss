@@ -9,12 +9,12 @@
 		display: flex;
 		flex-direction: column;
 		align-items: stretch;
+		gap: 24px;
 	}
 
 	&__btn {
 		&.btn {
 			width: 200px;
-			margin-top: 1.5em;
 		}
 	}
 
@@ -22,6 +22,7 @@
 		display: flex;
 		flex-direction: column;
 		justify-content: space-between;
+		gap: 24px;
 		.book-intro__content__infomations {
 			flex-grow: 1;
 			display: flex;
@@ -72,7 +73,6 @@
 
 	&__action {
 		height: 56px;
-		margin-top: 24px;
 		background: $white;
 		max-width: 200px;
 		border-radius: 12px;
@@ -109,104 +109,94 @@
 	}
 }
 
-@media only screen and (max-width: 820px) {
-	.book-intro {
-		gap: 10px;
-		.book-intro__content {
-			margin-top: 30px;
-		}
-	}
-	.book-intro__name {
-		font-size: 20px;
-	}
-	.book-intro__btn {
-		&.btn {
-			width: 184px;
-			margin-left: 16px;
-			margin-top: 0;
-		}
-	}
-	.book-intro__content {
-		justify-content: center;
-		margin-top: 45px;
-	}
-}
+// @media only screen and (max-width: 820px) {
+// 	.main-profile {
+// 		.tab-content {
+// 			margin-right: 0;
+// 		}
+// 	}
+// 	.book-intro {
+// 		gap: 25px;
+// 		& .book-intro__action {
+// 			margin-top: 18px;
+// 		}
+// 	}
+// 	.main-shelves {
+// 		.book-thumbnail {
+// 			& img {
+// 				margin: 0;
+// 			}
+// 		}
+// 	}
+// 	.mainContainer {
+// 		.book-thumbnail {
+// 			& img {
+// 				margin-left: 0;
+// 			}
+// 		}
+// 	}
 
-@media only screen and (max-width: 1025px) {
-	.mainContainer__right {
-		& .dualColumn-item__number {
-			display: none;
-		}
-	}
-	.book-intro {
-		gap: 20px;
-		.book-intro__btn {
-			width: 180px;
-			margin-top: 0;
-			margin-left: 0;
-		}
-		.text-status {
-			font-size: 14px;
-		}
-		.book-intro__content__infomations {
-			flex-grow: 0;
-		}
-		.book-intro__content__infomations {
-			width: 415px;
-		}
-	}
-}
-@media only screen and (max-width: 820px) {
-	.book-intro {
-		gap: 25px;
-		& .book-intro__action {
-			margin-top: 18px;
-		}
-	}
-	.main-shelves {
-		.book-thumbnail {
-			& img {
-				margin: 0;
-			}
-		}
-	}
-	.mainContainer {
-		.book-thumbnail {
-			& img {
-				margin-left: 0;
-			}
-		}
-	}
-}
-@media only screen and (max-width: 1280px) {
-	.mainContainer__main {
-		& .book-intro__content {
-			width: 575px;
-		}
-	}
-	.mainContainer__right {
-		& .book-reference {
-			margin-left: 10px;
-		}
-	}
-	.main-profile {
-		.nav-tabs {
-			margin-right: 0;
-		}
-		.tab-content {
-			margin-right: 0;
-		}
-	}
-}
-@media only screen and (max-width: 820px) {
-	.mainContainer__main {
-		& .book-intro__content__infomations {
-			width: 395px;
-		}
-	}
-	.main-profile {
-		.tab-content {
-			margin-right: 0;
-		}
-	}
-}
+// 	.book-intro {
+// 		gap: 10px;
+// 		.book-intro__content {
+// 			margin-top: 30px;
+// 		}
+// 	}
+// 	.book-intro__name {
+// 		font-size: 20px;
+// 	}
+// 	.book-intro__btn {
+// 		&.btn {
+// 			width: 184px;
+// 			margin-left: 16px;
+// 			margin-top: 0;
+// 		}
+// 	}
+// 	.book-intro__content {
+// 		justify-content: center;
+// 		margin-top: 45px;
+// 	}
+// }
+
+// @media only screen and (max-width: 1281px) {
+// 	.mainContainer__main {
+// 		& .book-intro__content {
+// 			width: 575px;
+// 		}
+// 	}
+// 	.mainContainer__right {
+// 		& .book-reference {
+// 			margin-left: 10px;
+// 		}
+// 	}
+// 	.main-profile {
+// 		.nav-tabs {
+// 			margin-right: 0;
+// 		}
+// 		.tab-content {
+// 			margin-right: 0;
+// 		}
+// 	}
+// }
+
+// @media only screen and (max-width: 1025px) {
+// 	.mainContainer__right {
+// 		& .dualColumn-item__number {
+// 			display: none;
+// 		}
+// 	}
+// 	.book-intro {
+// 		gap: 20px;
+// 		.book-intro__btn {
+// 			width: 180px;
+// 			margin-top: 0;
+// 			margin-left: 0;
+// 		}
+// 		.text-status {
+// 			font-size: 14px;
+// 		}
+// 		.book-intro__content__infomations {
+// 			flex-grow: 0;
+// 		}
+// 	}
+// }

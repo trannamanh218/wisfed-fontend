@@ -45,7 +45,6 @@ import QuotesByCategory from 'pages/quotes-by-category';
 import UploadBook from 'pages/upload-book/UploadBook';
 import 'react-datepicker/dist/react-datepicker.css';
 import { changeKey } from 'reducers/redux-utils/forget-password';
-
 function App({ children }) {
 	const dispatch = useDispatch();
 	const updateMyLibrary = useSelector(state => state.library.updateMyLibrary);

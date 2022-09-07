@@ -90,16 +90,13 @@ const UsersSearch = ({ isFetching, value, setIsFetching, searchResultInput, acti
 							{listArrayUsers.map(item => {
 								if (item.relation !== 'isMe') {
 									return (
-										<div
-											key={item.id}
-											className='myfriends__layout'
-											onClick={() => onUserClick(item)}
-										>
+										<div key={item.id} className='myfriends__layout'>
 											<img
 												className='myfriends__layout__img'
 												src={item.avatarImage ? item.avatarImage : defaultAvatar}
 												onError={e => e.target.setAttribute('src', defaultAvatar)}
 												alt=''
+												onClick={() => onUserClick(item)}
 											/>
 											<div className='myfriends__star'>
 												<div className='myfriends__star__name'>
