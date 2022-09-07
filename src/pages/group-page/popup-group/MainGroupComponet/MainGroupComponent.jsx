@@ -191,9 +191,10 @@ function MainGroupComponent({ handleChange, keyChange, data, member, handleUpdat
 
 	useEffect(() => {
 		if (!_.isEmpty(data) && !_.isEmpty(userInfo)) {
-			const checkItem = data?.memberGroups?.filter(item => item?.userId === userInfo?.id);
-			if (checkItem?.length > 0) {
+			const checkIsGroupMember = data?.memberGroups?.some(item => item?.userId === userInfo?.id);
+			if (checkIsGroupMember) {
 				setShow(true);
+				setKey('post');
 			}
 			setIsFetching(false);
 		}
