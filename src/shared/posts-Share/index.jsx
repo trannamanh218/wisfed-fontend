@@ -110,16 +110,24 @@ const PostShare = ({ postData, inCreatePost = false }) => {
 					<UserAvatar
 						data-testid='post__user-avatar'
 						className='post__user-status__avatar'
-						source={postData.sharePost?.createdBy?.avatarImage}
+						source={
+							postData.sharePost.user
+								? postData.sharePost?.user?.avatarImage
+								: postData.sharePost?.createdBy?.avatarImage
+						}
 					/>
 				</Link>
 				{/*  */}
 				<div className='post__user-status__name-and-post-time-status'>
 					<div data-testid='post__user-name' className='post__user-status__name'>
-						<Link to={`/profile/${postData.sharePost.createdBy.id}`}>
-							{postData.sharePost.createdBy.fullName ||
-								postData.sharePost.createdBy.firstName + ' ' + postData.sharePost.createdBy.lastName ||
-								'Ẩn danh'}
+						<Link to={`/profile/${postData.sharePost.createdBy.id || postData.sharePost.user.id}`}>
+							{postData.sharePost.user
+								? postData.sharePost?.user?.fullName ||
+								  postData.sharePost.user.firstName + ' ' + postData.sharePost.user.lastName
+								: postData.sharePost?.createdBy.fullName ||
+								  postData.sharePost?.createdBy.firstName +
+										' ' +
+										postData.sharePost?.createdBy.lastName}
 						</Link>
 						{/* tagged people */}
 						{postData.sharePost?.mentionsUsers &&
@@ -129,9 +137,11 @@ const PostShare = ({ postData, inCreatePost = false }) => {
 							<>
 								<img className='post__user-icon' src={Play} alt='arrow' />
 								{inCreatePost ? (
-									<span>{postData.group.name}</span>
+									<span>{postData?.group?.name || 'Ẩn danh'}</span>
 								) : (
-									<Link to={`/group/${postData.group.id}`}>{postData.group.name}</Link>
+									<Link to={`/group/${postData?.group?.id}`}>
+										{postData?.group?.name || 'Ẩn danh'}
+									</Link>
 								)}
 							</>
 						)}

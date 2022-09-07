@@ -127,28 +127,28 @@ function settings(inCategory, inCategoryDetail, inResult) {
 			{
 				breakpoint: 1025,
 				settings: {
-					slidesToShow: inCategory ? 3 : inResult ? 4 : 1,
+					slidesToShow: inCategory ? 4 : inResult ? 4 : 1,
 					slidesToScroll: 1,
 				},
 			},
 			{
 				breakpoint: 992,
 				settings: {
-					slidesToShow: inResult ? 4 : 2,
+					slidesToShow: inCategory ? 3 : inResult ? 4 : 2,
 					slidesToScroll: 1,
 				},
 			},
 			{
 				breakpoint: 821,
 				settings: {
-					slidesToShow: inResult ? 3 : 2,
+					slidesToShow: inCategory ? 3 : inResult ? 3 : 2,
 					slidesToScroll: 1,
 				},
 			},
 			{
 				breakpoint: 769,
 				settings: {
-					slidesToShow: inResult ? 3 : 2,
+					slidesToShow: inCategory ? 3 : inResult ? 3 : 2,
 					slidesToScroll: 2,
 				},
 			},
