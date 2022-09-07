@@ -95,6 +95,8 @@ const ModalItem = ({ item, setModalNoti, getNotifications, setGetNotifications, 
 		} else if (items.verb === 'mention') {
 			if (items.originId.type === 'commentQuote') {
 				navigate(`/quotes/detail/${items.originId.quoteId}`);
+			} else if (items.originId.type === 'groupPost') {
+				navigate(`/detail-feed/${'group-post'}/${items.originId.groupPostId}`);
 			} else {
 				navigate(`/detail-feed/${'mini-post'}/${items.originId.minipostId}`);
 			}
@@ -107,6 +109,8 @@ const ModalItem = ({ item, setModalNoti, getNotifications, setGetNotifications, 
 		} else if (item.verb === 'likeReview') {
 			navigate(`/review/${items.originId.bookId}/${userInfo.id}`);
 		} else if (item.verb === 'likeCommentMiniPost') {
+			navigate(`/detail-feed/mini-post/${items.originId.minipostId}`);
+		} else if (item.verb === 'sharePost') {
 			navigate(`/detail-feed/mini-post/${items.originId.minipostId}`);
 		}
 		dispatch(backgroundToggle(true));
