@@ -50,6 +50,12 @@
 	}
 }
 @media only screen and (max-width: 1024px) {
+	.book-slider__content {
+		.book-thumbnail.book-thumbnail-lg {
+			width: 190px;
+			height: 290px;
+		}
+	}
 	.slick-arrow {
 		width: 25px !important;
 		height: 25px !important;
@@ -61,8 +67,6 @@
 	.dualColumn-item__title {
 		margin-top: 4px;
 	}
-}
-@media only screen and (max-width: 1024px) {
 	.book-slider__title {
 		font-size: 18px;
 	}
