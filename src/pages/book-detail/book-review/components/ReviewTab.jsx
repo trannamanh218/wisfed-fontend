@@ -128,9 +128,11 @@ const ReviewTab = ({ currentTab }) => {
 					dispatch(updateCurrentBookReviewsNumber(response.count));
 				}
 			} else if (currentOption.value === 'friendReviews') {
-				response = await dispatch(getReviewsBookByFriends({ bookId, params })).unwrap();
+				const data = await dispatch(getReviewsBookByFriends({ bookId, params })).unwrap();
+				response = data.rows;
 			} else {
-				response = await dispatch(getReviewsBookByFollowers({ bookId, params })).unwrap();
+				const data = (response = await dispatch(getReviewsBookByFollowers({ bookId, params })).unwrap());
+				response = data.rows;
 			}
 			setReviewList(response);
 			setReviewCount(response.length);
