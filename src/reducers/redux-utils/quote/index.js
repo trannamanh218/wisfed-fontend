@@ -9,6 +9,7 @@ import {
 	getQuotesByFriendsOrFollowersAPI,
 	countQuotesByCategoryWithUserIdAPI,
 	countAllQuotesByCategorydAPI,
+	getQuoteCommentsAPI,
 } from 'constants/apiURL';
 import Request from 'helpers/Request';
 
@@ -113,6 +114,17 @@ export const getCountQuotesByCategory = createAsyncThunk(
 		}
 	}
 );
+
+export const getQuoteComments = createAsyncThunk('quote/getQuoteComments', async (data, { rejectWithValue }) => {
+	try {
+		const { quoteId, params } = data;
+		const response = await Request.makeGet(getQuoteCommentsAPI(quoteId), params);
+		return response.data;
+	} catch (err) {
+		const error = JSON.parse(err.response);
+		return rejectWithValue(error);
+	}
+});
 
 const quoteSlice = createSlice({
 	name: 'quoteSlice',

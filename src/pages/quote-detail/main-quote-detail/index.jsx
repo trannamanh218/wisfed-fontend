@@ -12,14 +12,19 @@ import { Link } from 'react-router-dom';
 import { QUOTE_TYPE } from 'constants/index';
 import { useSelector, useDispatch } from 'react-redux';
 import { handleCheckReplyToMe } from 'reducers/redux-utils/comment';
-import { useRef } from 'react';
+import { getQuoteComments } from 'reducers/redux-utils/quote';
+import { useRef, useEffect } from 'react';
+import { NotificationError } from 'helpers/Error';
+import { handleMentionCommentId } from 'reducers/redux-utils/notificaiton';
 
 const MainQuoteDetail = ({ quoteData, onCreateComment, setMentionUsersArr, mentionUsersArr }) => {
 	const [replyingCommentId, setReplyingCommentId] = useState(0);
-
+	const [comments, setComments] = useState([]);
 	const clickReply = useRef(null);
 
 	const userInfo = useSelector(state => state.auth.userInfo);
+	const mentionCommentId = useSelector(state => state.notificationReducer.mentionCommentId);
+
 	const dispatch = useDispatch();
 
 	const handleReply = (cmtLv1Id, userData) => {
@@ -34,6 +39,38 @@ const MainQuoteDetail = ({ quoteData, onCreateComment, setMentionUsersArr, menti
 		setReplyingCommentId(cmtLv1Id);
 		clickReply.current = !clickReply.current;
 	};
+
+	const handleChangeOrderQuoteComments = async () => {
+		try {
+			const params = { filter: JSON.stringify([{ operator: 'eq', value: mentionCommentId, property: 'id' }]) };
+			const mentionedComment = await dispatch(
+				getQuoteComments({ quoteId: quoteData.id, params: params })
+			).unwrap();
+			let commentsArray = quoteData.usersComments.reverse();
+			if (!_.isEmpty(mentionedComment)) {
+				// Xóa bình luận nhắc đến bạn
+				commentsArray = commentsArray.filter(item => item.id !== mentionCommentId);
+				// Thêm bình luận nhắc đến bạn lên đầu
+				commentsArray.unshift(mentionedComment[0]);
+			}
+			setComments(commentsArray);
+		} catch (err) {
+			NotificationError(err);
+		}
+	};
+
+	useEffect(() => {
+		if (!_.isEmpty(quoteData)) {
+			if (mentionCommentId) {
+				// Nếu bấm xem bình luận nhắc đến bạn từ thông báo thì sẽ đưa bình luận đó lên đầu
+				handleChangeOrderQuoteComments();
+				// Sau đó xóa mentionCommentId trong redux
+				dispatch(handleMentionCommentId(null));
+			} else {
+				setComments(quoteData.usersComments.reverse());
+			}
+		}
+	}, [quoteData]);
 
 	return (
 		<div className='main-quote-detail'>
@@ -57,49 +94,45 @@ const MainQuoteDetail = ({ quoteData, onCreateComment, setMentionUsersArr, menti
 			{!_.isEmpty(quoteData) && (
 				<div className='main-quote-detail__pane'>
 					<QuoteCard isDetail={true} data={quoteData} />
-					{quoteData.usersComments && !!quoteData.usersComments?.length && (
-						<>
-							{quoteData.usersComments.map(comment => (
-								<div key={comment.id}>
-									<Comment
-										commentLv1Id={comment.id}
-										dataProp={comment}
-										postData={quoteData}
-										handleReply={handleReply}
-										type={QUOTE_TYPE}
-									/>
-									<div className='comment-reply-container'>
-										{comment.reply && !!comment.reply.length && (
-											<>
-												{comment.reply.map(commentChild => (
-													<div key={commentChild.id}>
-														<Comment
-															commentLv1Id={comment.id}
-															dataProp={commentChild}
-															postData={quoteData}
-															handleReply={handleReply}
-															type={QUOTE_TYPE}
-														/>
-													</div>
-												))}
-											</>
-										)}
-										<CommentEditor
-											onCreateComment={onCreateComment}
-											className={classNames(`reply-comment-editor reply-comment-${comment.id}`, {
-												'show': comment.id === replyingCommentId,
-											})}
-											mentionUsersArr={mentionUsersArr}
-											commentLv1Id={comment.id}
-											replyingCommentId={replyingCommentId}
-											clickReply={clickReply.current}
-											setMentionUsersArr={setMentionUsersArr}
-										/>
-									</div>
-								</div>
-							))}
-						</>
-					)}
+					{comments.map(comment => (
+						<div key={comment.id}>
+							<Comment
+								commentLv1Id={comment.id}
+								dataProp={comment}
+								postData={quoteData}
+								handleReply={handleReply}
+								type={QUOTE_TYPE}
+							/>
+							<div className='comment-reply-container'>
+								{comment.reply && !!comment.reply.length && (
+									<>
+										{comment.reply.map(commentChild => (
+											<div key={commentChild.id}>
+												<Comment
+													commentLv1Id={comment.id}
+													dataProp={commentChild}
+													postData={quoteData}
+													handleReply={handleReply}
+													type={QUOTE_TYPE}
+												/>
+											</div>
+										))}
+									</>
+								)}
+								<CommentEditor
+									onCreateComment={onCreateComment}
+									className={classNames(`reply-comment-editor reply-comment-${comment.id}`, {
+										'show': comment.id === replyingCommentId,
+									})}
+									mentionUsersArr={mentionUsersArr}
+									commentLv1Id={comment.id}
+									replyingCommentId={replyingCommentId}
+									clickReply={clickReply.current}
+									setMentionUsersArr={setMentionUsersArr}
+								/>
+							</div>
+						</div>
+					))}
 					<CommentEditor
 						commentLv1Id={null}
 						onCreateComment={onCreateComment}

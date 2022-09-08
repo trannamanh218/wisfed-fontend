@@ -3,7 +3,7 @@ import { calculateDurationTime } from 'helpers/Common';
 import UserAvatar from 'shared/user-avatar';
 import { renderMessage } from 'helpers/HandleShare';
 import { ReplyFriendRequest, CancelFriendRequest } from 'reducers/redux-utils/user';
-import { readNotification } from 'reducers/redux-utils/notificaiton';
+import { readNotification, handleMentionCommentId } from 'reducers/redux-utils/notificaiton';
 import { useDispatch, useSelector } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
 import { useNavigate } from 'react-router-dom';
@@ -77,15 +77,32 @@ const NotificationStatus = ({ item, setGetNotifications, getNotifications }) => 
 		} else if (item.verb === 'inviteGroup') {
 			navigate(`/Group/${items.originId.groupId}`);
 		} else if (items.verb === 'replyComment' || items.verb === 'shareQuote') {
-			navigate(`/detail-feed/${'mini-post'}/${items.originId.minipostId}`);
+			navigate(`/detail-feed/mini-post/${items.originId.minipostId}`);
 		} else if (items.verb === 'commentQuote') {
 			navigate(`/quotes/detail/${items.originId.quoteId}`);
 		} else if (items.verb === 'mention') {
-			navigate(`/detail-feed/${'mini-post'}/${items.originId.minipostId}`);
+			switch (items.originId.type) {
+				case 'commentQuote':
+					dispatch(handleMentionCommentId(item.originId.commentQuoteId));
+					navigate(`/quotes/detail/${items.originId.quoteId}`);
+					break;
+				case 'groupPost':
+					navigate(`/detail-feed/group-post/${items.originId.groupPostId}`);
+					break;
+				case 'mentionMiniPost':
+					navigate(`/detail-feed/mini-post/${items.originId.minipostId}`);
+					break;
+				case 'commentMiniPost':
+					dispatch(handleMentionCommentId(item.originId.commentMiniPostId));
+					navigate(`/detail-feed/mini-post/${items.originId.minipostId}`);
+					break;
+				default:
+					navigate(`/detail-feed/mini-post/${items.originId.minipostId}`);
+			}
 		} else if (items.verb === 'likeQuote') {
 			navigate(`/quotes/detail/${items.originId.quoteId}`);
 		} else if (item.verb === 'likeCommentReview') {
-			navigate(`/detail-feed/${'mini-post'}/${items.originId.minipostId}`);
+			navigate(`/detail-feed/mini-post/${items.originId.minipostId}`);
 		} else if (item.verb === 'requestGroup') {
 			navigate(`/group/${items.originId.groupId}`);
 		} else if (item.verb === 'likeReview') {

@@ -43,6 +43,7 @@ import { checkUserLogin } from 'reducers/redux-utils/auth';
 import ShareUsers from 'pages/home/components/newfeed/components/modal-share-users';
 import { handleCheckReplyToMe } from 'reducers/redux-utils/comment';
 import ShareTarget from 'shared/share-target';
+// import { handleMentionCommentId } from 'reducers/redux-utils/notificaiton';
 
 const urlRegex =
 	/(https?:\/\/)?(www(\.))?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/g;
@@ -60,8 +61,10 @@ function Post({ postInformations, type }) {
 	const [postData, setPostData] = useState({});
 	const [videoId, setVideoId] = useState('');
 	const { userInfo } = useSelector(state => state.auth);
+	// const mentionCommentId = useSelector(state => state.notificationReducer.mentionCommentId);
 	const [replyingCommentId, setReplyingCommentId] = useState(-1);
 	const [mentionUsersArr, setMentionUsersArr] = useState([]);
+	// const [comments, setComments] = useState([]);
 
 	const clickReply = useRef(null);
 	const doneGetPostData = useRef(false);
@@ -75,6 +78,9 @@ function Post({ postInformations, type }) {
 			const commentsReverse = [...postInformations.usersComments];
 			commentsReverse.reverse();
 			setPostData({ ...postInformations, usersComments: commentsReverse });
+			// if (mentionCommentId) {
+			// 	// Nếu bấm xem bình luận nhắc đến bạn từ thông báo thì sẽ đưa bình luận đó lên đầu
+			// }
 		} else {
 			setPostData(postInformations);
 		}

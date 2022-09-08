@@ -19,6 +19,7 @@ export const getMyLikedQuotesAPI = '/api/v1/quotes/listQuotesLiked';
 export const getQuotesByFriendsOrFollowersAPI = '/api/v1/quotes/listQuotesRelation';
 export const countQuotesByCategoryWithUserIdAPI = id => `/api/v1/quotes/countQuotes/${id}`;
 export const countAllQuotesByCategorydAPI = '/api/v1/quotes/countQuotes';
+export const getQuoteCommentsAPI = id => `/api/v1/quotes/listCommentQuote/${id}/`;
 
 // post
 export const postAPI = '/api/v1/posts';
@@ -139,19 +140,22 @@ export const leaveGroup = id => `/api/v1/groups/leaveGroup/${id}`;
 export const createPostGroup = id => `/api/v1/groups/${id}/createPost`;
 export const listPostGroup = id => `/api/v1/groups/${id}/groupFeed`;
 export const searchGroup = id => `/api/v1/groups/search/${id}`;
-
 export const unFollowGroupAPI = id => `/api/v1/groups/unFollow/${id}`;
 export const followGroupAPI = id => `/api/v1/groups/follow/${id}`;
+
 // search
 export const getSearchAPI = `/api/v1/searchs`;
 
 //share
 export const shareInternalAPI = (id, type) => `/api/v1/getstream/share/${id}?type=${type}`;
 export const shareTargetReadingAPI = '/api/v1/getstream/shareTargetRead';
+
 // share BXH
 export const shareApiRanks = id => `/api/v1/getstream/shareTop/${id}`;
+
 // share sach cua toi lam tac gia
 export const shareApiMyBook = id => `/api/v1/getstream/shareMyBook/${id}`;
+
 //authors
 export const randomAuthorAPI = '/api/v1/users/randomAuthor';
 
