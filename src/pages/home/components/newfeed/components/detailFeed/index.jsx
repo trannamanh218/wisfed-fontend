@@ -20,9 +20,10 @@ const DetailFeed = () => {
 			id: idPost,
 		};
 		try {
-			let res = [];
+			let res;
 			if (type === 'mini-post') {
-				res = await dispatch(getDetailFeed(params)).unwrap();
+				const data = await dispatch(getDetailFeed(params)).unwrap();
+				res = data[0];
 			} else {
 				res = await dispatch(getDetailFeedGroup(params)).unwrap();
 			}
@@ -34,12 +35,16 @@ const DetailFeed = () => {
 		}
 	}, []);
 
+	useEffect(() => {
+		window.scroll(0, 0);
+	}, []);
+
 	return (
 		<NormalContainer>
 			<Circle loading={isLoading} />
 			<div className='detail_feed_container'>
 				{type === 'mini-post' ? (
-					detailFeed.map(item => <Post postInformations={item} key={item.id} type={POST_TYPE} />)
+					<Post postInformations={detailFeed} type={POST_TYPE} />
 				) : (
 					<Post postInformations={detailFeed} type={GROUP_TYPE} />
 				)}
