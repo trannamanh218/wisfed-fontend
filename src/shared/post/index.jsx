@@ -303,8 +303,11 @@ function Post({ postInformations, type }) {
 							{postData.verb === GROUP_POST_VERB && (
 								<>
 									<img className='post__user-icon' src={Play} alt='arrow' />
-									<Link to={`/group/${postData.group?.id}`} className='post__name__group'>
-										{postData.group?.name}
+									<Link
+										to={`/group/${postData.group?.id || postData.groupInfo?.id}`}
+										className='post__name__group'
+									>
+										{postData.group?.name || postData.groupInfo?.name}
 									</Link>
 								</>
 							)}
