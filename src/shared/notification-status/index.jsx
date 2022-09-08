@@ -81,7 +81,13 @@ const NotificationStatus = ({ item, setGetNotifications, getNotifications }) => 
 		} else if (items.verb === 'commentQuote') {
 			navigate(`/quotes/detail/${items.originId.quoteId}`);
 		} else if (items.verb === 'mention') {
-			navigate(`/detail-feed/${'mini-post'}/${items.originId.minipostId}`);
+			if (items.originId.type === 'commentQuote') {
+				navigate(`/quotes/detail/${items.originId.quoteId}`);
+			} else if (items.originId.type === 'groupPost') {
+				navigate(`/detail-feed/${'group-post'}/${items.originId.groupPostId}`);
+			} else {
+				navigate(`/detail-feed/${'mini-post'}/${items.originId.minipostId}`);
+			}
 		} else if (items.verb === 'likeQuote') {
 			navigate(`/quotes/detail/${items.originId.quoteId}`);
 		} else if (item.verb === 'likeCommentReview') {
@@ -91,6 +97,8 @@ const NotificationStatus = ({ item, setGetNotifications, getNotifications }) => 
 		} else if (item.verb === 'likeReview') {
 			navigate(`/review/${items.originId.bookId}/${userInfo.id}`);
 		} else if (item.verb === 'likeCommentMiniPost') {
+			navigate(`/detail-feed/mini-post/${items.originId.minipostId}`);
+		} else if (item.verb === 'sharePost') {
 			navigate(`/detail-feed/mini-post/${items.originId.minipostId}`);
 		}
 		dispatch(readNotification(params)).unwrap();
