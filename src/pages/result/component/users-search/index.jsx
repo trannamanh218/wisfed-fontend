@@ -94,6 +94,7 @@ const UsersSearch = ({ isFetching, value, setIsFetching, searchResultInput, acti
 											<img
 												className='myfriends__layout__img'
 												src={item.avatarImage ? item.avatarImage : defaultAvatar}
+												onError={e => e.target.setAttribute('src', defaultAvatar)}
 												alt=''
 												onClick={() => onUserClick(item)}
 											/>

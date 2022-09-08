@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import BaseLoading from '../base';
 import LoadingIndicator from 'shared/loading-indicator';
-
+import React from 'react';
 function Circle({ loading }) {
 	return (
 		<BaseLoading loading={loading}>
@@ -14,4 +14,4 @@ Circle.propTypes = {
 	loading: PropTypes.bool,
 };
 
-export default Circle;
+export default React.memo(Circle);
