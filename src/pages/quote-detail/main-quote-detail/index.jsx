@@ -1,11 +1,11 @@
 import { Forward } from 'components/svg';
 import { useState } from 'react';
-import BackButton from 'shared/back-button';
-import Comment from 'shared/comments';
-import QuoteCard from 'shared/quote-card';
+const BackButton = lazy(() => import('shared/back-button'));
+const Comment = lazy(() => import('shared/comments'));
+const QuoteCard = lazy(() => import('shared/quote-card'));
 import './main-quote-detail.scss';
 import _ from 'lodash';
-import CommentEditor from 'shared/comment-editor';
+const CommentEditor = lazy(() => import('shared/comment-editor'));
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
@@ -13,9 +13,10 @@ import { QUOTE_TYPE } from 'constants/index';
 import { useSelector, useDispatch } from 'react-redux';
 import { handleCheckReplyToMe } from 'reducers/redux-utils/comment';
 import { getQuoteComments } from 'reducers/redux-utils/quote';
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, lazy, Suspense } from 'react';
 import { NotificationError } from 'helpers/Error';
 import { handleMentionCommentId } from 'reducers/redux-utils/notificaiton';
+import Circle from 'shared/loading/circle';
 
 const MainQuoteDetail = ({ quoteData, onCreateComment, setMentionUsersArr, mentionUsersArr }) => {
 	const [replyingCommentId, setReplyingCommentId] = useState(0);
@@ -74,73 +75,76 @@ const MainQuoteDetail = ({ quoteData, onCreateComment, setMentionUsersArr, menti
 
 	return (
 		<div className='main-quote-detail'>
-			<div className='main-quote-detail__header'>
-				<BackButton destination={-1} />
-				<h4>Chi tiết Quote</h4>
-				{quoteData?.user?.fullName || (quoteData?.user?.firstName && quoteData?.user?.lastName) ? (
-					<Link to={`/quotes/${quoteData.user.id}`} className='main-quote-detail__link'>
-						<div className='main-quote-detail__link__row'>
-							<>
-								Xem tất cả Quotes của{' '}
-								{quoteData.user.fullName || quoteData.user.firstName + ' ' + quoteData.user.lastName}{' '}
-							</>
-							<Forward />
-						</div>
-					</Link>
-				) : (
-					<></>
-				)}
-			</div>
-			{!_.isEmpty(quoteData) && (
-				<div className='main-quote-detail__pane'>
-					<QuoteCard isDetail={true} data={quoteData} />
-					{comments.map(comment => (
-						<div key={comment.id}>
-							<Comment
-								commentLv1Id={comment.id}
-								dataProp={comment}
-								postData={quoteData}
-								handleReply={handleReply}
-								type={QUOTE_TYPE}
-							/>
-							<div className='comment-reply-container'>
-								{comment.reply && !!comment.reply.length && (
-									<>
-										{comment.reply.map(commentChild => (
-											<div key={commentChild.id}>
-												<Comment
-													commentLv1Id={comment.id}
-													dataProp={commentChild}
-													postData={quoteData}
-													handleReply={handleReply}
-													type={QUOTE_TYPE}
-												/>
-											</div>
-										))}
-									</>
-								)}
-								<CommentEditor
-									onCreateComment={onCreateComment}
-									className={classNames(`reply-comment-editor reply-comment-${comment.id}`, {
-										'show': comment.id === replyingCommentId,
-									})}
-									mentionUsersArr={mentionUsersArr}
-									commentLv1Id={comment.id}
-									replyingCommentId={replyingCommentId}
-									clickReply={clickReply.current}
-									setMentionUsersArr={setMentionUsersArr}
-								/>
+			<Suspense fallback={<Circle />}>
+				<div className='main-quote-detail__header'>
+					<BackButton destination={-1} />
+					<h4>Chi tiết Quote</h4>
+					{quoteData?.user?.fullName || (quoteData?.user?.firstName && quoteData?.user?.lastName) ? (
+						<Link to={`/quotes/${quoteData.user.id}`} className='main-quote-detail__link'>
+							<div className='main-quote-detail__link__row'>
+								<>
+									Xem tất cả Quotes của{' '}
+									{quoteData.user.fullName ||
+										quoteData.user.firstName + ' ' + quoteData.user.lastName}{' '}
+								</>
+								<Forward />
 							</div>
-						</div>
-					))}
-					<CommentEditor
-						commentLv1Id={null}
-						onCreateComment={onCreateComment}
-						mentionUsersArr={mentionUsersArr}
-						setMentionUsersArr={setMentionUsersArr}
-					/>
+						</Link>
+					) : (
+						<></>
+					)}
 				</div>
-			)}
+				{!_.isEmpty(quoteData) && (
+					<div className='main-quote-detail__pane'>
+						<QuoteCard isDetail={true} data={quoteData} />
+						{comments.map(comment => (
+							<div key={comment.id}>
+								<Comment
+									commentLv1Id={comment.id}
+									dataProp={comment}
+									postData={quoteData}
+									handleReply={handleReply}
+									type={QUOTE_TYPE}
+								/>
+								<div className='comment-reply-container'>
+									{comment.reply && !!comment.reply.length && (
+										<>
+											{comment.reply.map(commentChild => (
+												<div key={commentChild.id}>
+													<Comment
+														commentLv1Id={comment.id}
+														dataProp={commentChild}
+														postData={quoteData}
+														handleReply={handleReply}
+														type={QUOTE_TYPE}
+													/>
+												</div>
+											))}
+										</>
+									)}
+									<CommentEditor
+										onCreateComment={onCreateComment}
+										className={classNames(`reply-comment-editor reply-comment-${comment.id}`, {
+											'show': comment.id === replyingCommentId,
+										})}
+										mentionUsersArr={mentionUsersArr}
+										commentLv1Id={comment.id}
+										replyingCommentId={replyingCommentId}
+										clickReply={clickReply.current}
+										setMentionUsersArr={setMentionUsersArr}
+									/>
+								</div>
+							</div>
+						))}
+						<CommentEditor
+							commentLv1Id={null}
+							onCreateComment={onCreateComment}
+							mentionUsersArr={mentionUsersArr}
+							setMentionUsersArr={setMentionUsersArr}
+						/>
+					</div>
+				)}
+			</Suspense>
 		</div>
 	);
 };

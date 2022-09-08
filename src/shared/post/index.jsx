@@ -102,57 +102,59 @@ function Post({ postInformations, type }) {
 	};
 
 	const onCreateComment = async (content, replyId) => {
-		const newArr = [];
-		mentionUsersArr.forEach(item => newArr.push(item.id));
-		try {
-			let res = {};
-			if (type === REVIEW_TYPE) {
-				const commentReviewData = {
-					reviewId: postData.id,
-					replyId: replyId,
-					content: content,
-					mediaUrl: [],
-					mentionsUser: newArr,
-				};
-				res = await dispatch(createCommentReview(commentReviewData)).unwrap();
-			} else if (type === POST_TYPE) {
-				const params = {
-					minipostId: postData.minipostId || postData.id,
-					content: content,
-					mediaUrl: [],
-					mentionsUser: newArr,
-					replyId: replyId,
-				};
-				res = await dispatch(createComment(params)).unwrap();
-			} else {
-				const params = {
-					groupPostId: postData.groupPostId || postData.id,
-					content: content,
-					mentionsUser: newArr,
-					mediaUrl: [],
-					replyId: replyId,
-				};
-				res = await dispatch(createCommentGroup(params)).unwrap();
-			}
-			if (!_.isEmpty(res)) {
-				const newComment = { ...res, user: userInfo };
-				const usersComments = [...postData.usersComments];
-				if (res.replyId) {
-					const cmtReplying = usersComments.filter(item => item.id === res.replyId);
-					const reply = [...cmtReplying[0].reply];
-					reply.push(newComment);
-					const obj = { ...cmtReplying[0], reply };
-					const index = usersComments.findIndex(item => item.id === res.replyId);
-					usersComments[index] = obj;
+		if (content) {
+			const newArr = [];
+			mentionUsersArr.forEach(item => newArr.push(item.id));
+			try {
+				let res = {};
+				if (type === REVIEW_TYPE) {
+					const commentReviewData = {
+						reviewId: postData.id,
+						replyId: replyId,
+						content: content,
+						mediaUrl: [],
+						mentionsUser: newArr,
+					};
+					res = await dispatch(createCommentReview(commentReviewData)).unwrap();
+				} else if (type === POST_TYPE) {
+					const params = {
+						minipostId: postData.minipostId || postData.id,
+						content: content,
+						mediaUrl: [],
+						mentionsUser: newArr,
+						replyId: replyId,
+					};
+					res = await dispatch(createComment(params)).unwrap();
 				} else {
-					newComment.reply = [];
-					usersComments.push(newComment);
+					const params = {
+						groupPostId: postData.groupPostId || postData.id,
+						content: content,
+						mentionsUser: newArr,
+						mediaUrl: [],
+						replyId: replyId,
+					};
+					res = await dispatch(createCommentGroup(params)).unwrap();
 				}
-				const newPostData = { ...postData, usersComments, comment: postData.comment + 1 };
-				setPostData(newPostData);
+				if (!_.isEmpty(res)) {
+					const newComment = { ...res, user: userInfo };
+					const usersComments = [...postData.usersComments];
+					if (res.replyId) {
+						const cmtReplying = usersComments.filter(item => item.id === res.replyId);
+						const reply = [...cmtReplying[0].reply];
+						reply.push(newComment);
+						const obj = { ...cmtReplying[0], reply };
+						const index = usersComments.findIndex(item => item.id === res.replyId);
+						usersComments[index] = obj;
+					} else {
+						newComment.reply = [];
+						usersComments.push(newComment);
+					}
+					const newPostData = { ...postData, usersComments, comment: postData.comment + 1 };
+					setPostData(newPostData);
+				}
+			} catch (err) {
+				NotificationError(err);
 			}
-		} catch (err) {
-			NotificationError(err);
 		}
 	};
 

@@ -171,7 +171,7 @@ function RichTextEditor({
 				filter: JSON.stringify([{ operator: 'search', value: value, property: 'firstName,lastName' }]),
 			};
 			const suggestionsResponse = await dispatch(getFriendList({ userId: userInfo.id, query: params })).unwrap();
-			let suggestionData = [];
+			const suggestionData = [];
 			suggestionsResponse.rows.forEach(item => {
 				const mentionData = {
 					name: item.fullName || item.firstName + item.lastName,

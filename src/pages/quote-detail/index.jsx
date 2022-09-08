@@ -37,36 +37,38 @@ const QuoteDetail = () => {
 	};
 
 	const onCreateComment = async (content, replyId) => {
-		const newArr = [];
-		mentionUsersArr.forEach(item => newArr.push(item.id));
-		const params = {
-			quoteId: Number(id),
-			content: content,
-			mediaUrl: [],
-			replyId: replyId,
-			mentionsUser: newArr,
-		};
-		try {
-			const res = await dispatch(creatQuotesComment(params)).unwrap();
-			if (!_.isEmpty(res)) {
-				const newComment = { ...res, user: userInfo };
-				const usersComments = [...quoteData.usersComments];
-				if (res.replyId) {
-					const cmtReplying = usersComments.filter(item => item.id === res.replyId);
-					const reply = [...cmtReplying[0].reply];
-					reply.push(newComment);
-					const obj = { ...cmtReplying[0], reply };
-					const index = usersComments.findIndex(item => item.id === res.replyId);
-					usersComments[index] = obj;
-				} else {
-					newComment.reply = [];
-					usersComments.push(newComment);
+		if (content) {
+			const newArr = [];
+			mentionUsersArr.forEach(item => newArr.push(item.id));
+			const params = {
+				quoteId: Number(id),
+				content: content,
+				mediaUrl: [],
+				replyId: replyId,
+				mentionsUser: newArr,
+			};
+			try {
+				const res = await dispatch(creatQuotesComment(params)).unwrap();
+				if (!_.isEmpty(res)) {
+					const newComment = { ...res, user: userInfo };
+					const usersComments = [...quoteData.usersComments];
+					if (res.replyId) {
+						const cmtReplying = usersComments.filter(item => item.id === res.replyId);
+						const reply = [...cmtReplying[0].reply];
+						reply.push(newComment);
+						const obj = { ...cmtReplying[0], reply };
+						const index = usersComments.findIndex(item => item.id === res.replyId);
+						usersComments[index] = obj;
+					} else {
+						newComment.reply = [];
+						usersComments.push(newComment);
+					}
+					const newQuoteData = { ...quoteData, usersComments, comments: quoteData.comments + 1 };
+					setQuoteData(newQuoteData);
 				}
-				const newQuoteData = { ...quoteData, usersComments, comments: quoteData.comments + 1 };
-				setQuoteData(newQuoteData);
+			} catch (err) {
+				NotificationError(err);
 			}
-		} catch (err) {
-			NotificationError(err);
 		}
 	};
 

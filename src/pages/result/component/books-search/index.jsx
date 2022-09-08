@@ -87,10 +87,21 @@ const BookSearch = ({ isFetching, value, setIsFetching, searchResultInput, activ
 						hasMore={hasMore}
 						loader={<LoadingIndicator />}
 					>
-						{listArrayBooks.map(item => (
-							<div key={item.id} className='bookSearch__main'>
-								<AuthorBook data={item} checkStar={true} saveLocalStorage={true} />
-							</div>
+						{listArrayBooks.map((item, index) => (
+							<>
+								<div key={item.id} className='bookSearch__main'>
+									<AuthorBook data={item} checkStar={true} saveLocalStorage={true} />
+								</div>
+								{index === 9 && (
+									<div className='btn-goTo-upload-book has-background'>
+										<h6>Vui lòng thêm sách nếu bạn không tìm thấy trên hệ thống</h6>
+										<br />
+										<Link to='/upload-book'>
+											<Button>Thêm sách</Button>
+										</Link>
+									</div>
+								)}
+							</>
 						))}
 					</InfiniteScroll>
 				) : (
