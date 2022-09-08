@@ -136,8 +136,8 @@ function Bookcase({ currentUserInfo, currentTab }) {
 							{readingBooks.length > 0 && (
 								<>
 									<div className='bookcase__item-name'>Sách đang đọc</div>
-									{readingBooks.map(item => (
-										<div key={item.bookId} className='bookcase__item'>
+									{readingBooks.map((item, index) => (
+										<div key={index} className='bookcase__item'>
 											<div className='bookcase__item__book'>
 												<BookThumbnail source={item.book?.images[0]} size='lg' />
 												<div className='bookcase__item__book-info'>
@@ -162,7 +162,7 @@ function Bookcase({ currentUserInfo, currentTab }) {
 													<div className='bookcase__item__reviews-name'>{`Bài Review ${item.book?.name}`}</div>
 													<div className='bookcase__item__reviews-list'>
 														{item.reviewBook.slice(0, 3).map((reviewItem, index) => (
-															<div key={reviewItem.id} className='bookcase__review-item'>
+															<div key={index} className='bookcase__review-item'>
 																<div className='bookcase__review-item__svg'>
 																	<BoldCenterCircle />
 																	{index > 0 && (
@@ -194,8 +194,8 @@ function Bookcase({ currentUserInfo, currentTab }) {
 							{readBooks.length > 0 && (
 								<>
 									<div className='bookcase__item-name'>Sách đã đọc</div>
-									{readBooks.map(item => (
-										<div key={item.bookId} className='bookcase__item'>
+									{readBooks.map((item, index) => (
+										<div key={index} className='bookcase__item'>
 											<div className='bookcase__item__book'>
 												<BookThumbnail source={item.book?.images[0]} size='lg' />
 												<div className='bookcase__item__book-info'>
@@ -220,7 +220,7 @@ function Bookcase({ currentUserInfo, currentTab }) {
 													<div className='bookcase__item__reviews-name'>{`Bài Review ${item.book?.name}`}</div>
 													<div className='bookcase__item__reviews-list'>
 														{item.reviewBook.slice(0, 3).map((reviewItem, index) => (
-															<div key={reviewItem.id} className='bookcase__review-item'>
+															<div key={index} className='bookcase__review-item'>
 																<div className='bookcase__review-item__svg'>
 																	<BoldCenterCircle />
 																	{index > 0 && (
