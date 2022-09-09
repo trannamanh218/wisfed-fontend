@@ -11,7 +11,6 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { QUOTE_TYPE } from 'constants/index';
 import { useSelector, useDispatch } from 'react-redux';
-import { handleCheckReplyToMe } from 'reducers/redux-utils/comment';
 import { getQuoteComments } from 'reducers/redux-utils/quote';
 import { useRef, useEffect, lazy, Suspense } from 'react';
 import { NotificationError } from 'helpers/Error';
@@ -27,7 +26,8 @@ const MainQuoteDetail = ({ quoteData, onCreateComment, setMentionUsersArr, menti
 	const clickReply = useRef(null);
 
 	const userInfo = useSelector(state => state.auth.userInfo);
-	const mentionCommentId = useSelector(state => state.notificationReducer.mentionCommentId);
+	const reduxMentionCommentId = useSelector(state => state.notificationReducer.mentionCommentId);
+	const [mentionCommentId, setMentionCommentId] = useState(null);
 
 	const dispatch = useDispatch();
 
@@ -35,9 +35,6 @@ const MainQuoteDetail = ({ quoteData, onCreateComment, setMentionUsersArr, menti
 		const arr = [];
 		if (userData.id !== userInfo.id) {
 			arr.push(userData);
-			dispatch(handleCheckReplyToMe(false));
-		} else {
-			dispatch(handleCheckReplyToMe(true));
 		}
 		setMentionUsersArr(arr);
 		setReplyingCommentId(cmtLv1Id);
@@ -51,10 +48,13 @@ const MainQuoteDetail = ({ quoteData, onCreateComment, setMentionUsersArr, menti
 			const mentionedCommentAPI = await dispatch(
 				getQuoteComments({ quoteId: quoteData.id, params: params })
 			).unwrap();
-
 			if (!_.isEmpty(mentionedCommentAPI)) {
 				if (mentionedCommentAPI[0].replyId === null) {
-					setFirstPlaceComment(mentionedCommentAPI);
+					// Đảo thứ tự replies
+					const reverseReplies = mentionedCommentAPI[0].reply.reverse();
+					const obj = { ...mentionedCommentAPI[0], reply: reverseReplies };
+
+					setFirstPlaceComment([obj]);
 					setFirstPlaceCommentId(mentionCommentId);
 				} else {
 					const params2 = {
@@ -62,10 +62,16 @@ const MainQuoteDetail = ({ quoteData, onCreateComment, setMentionUsersArr, menti
 							{ operator: 'eq', value: mentionedCommentAPI[0].replyId, property: 'id' },
 						]),
 					};
+					// Gọi api lấy thông tin của bình luận cha của bình luận nhắc đến bạn
 					const fatherOfMentionedCommentAPI = await dispatch(
 						getQuoteComments({ quoteId: quoteData.id, params: params2 })
 					).unwrap();
-					setFirstPlaceComment(fatherOfMentionedCommentAPI);
+
+					// Đảo thứ tự replies
+					const reverseRepliesFather = fatherOfMentionedCommentAPI[0].reply.reverse();
+					const objFather = { ...fatherOfMentionedCommentAPI[0], reply: reverseRepliesFather };
+
+					setFirstPlaceComment([objFather]);
 					setFirstPlaceCommentId(mentionedCommentAPI[0].replyId);
 				}
 			}
@@ -75,6 +81,9 @@ const MainQuoteDetail = ({ quoteData, onCreateComment, setMentionUsersArr, menti
 	};
 
 	useEffect(() => {
+		if (reduxMentionCommentId && mentionCommentId === null) {
+			setMentionCommentId(reduxMentionCommentId);
+		}
 		if (!_.isEmpty(quoteData) && mentionCommentId) {
 			// Nếu bấm xem bình luận nhắc đến bạn từ thông báo thì sẽ đưa bình luận đó lên đầu
 			handleChangeOrderQuoteComments();
@@ -156,6 +165,7 @@ const MainQuoteDetail = ({ quoteData, onCreateComment, setMentionUsersArr, menti
 							</>
 						)}
 
+						{/* các bình luận ngoại trừ firstPlaceComment */}
 						{quoteData.usersComments && !!quoteData.usersComments?.length && (
 							<>
 								{quoteData.usersComments

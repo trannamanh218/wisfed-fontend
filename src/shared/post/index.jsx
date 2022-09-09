@@ -41,7 +41,6 @@ import AuthorBook from 'shared/author-book';
 import Storage from 'helpers/Storage';
 import { checkUserLogin } from 'reducers/redux-utils/auth';
 import ShareUsers from 'pages/home/components/newfeed/components/modal-share-users';
-import { handleCheckReplyToMe } from 'reducers/redux-utils/comment';
 import ShareTarget from 'shared/share-target';
 // import { handleMentionCommentId } from 'reducers/redux-utils/notificaiton';
 
@@ -197,9 +196,6 @@ function Post({ postInformations, type }) {
 		const arr = [];
 		if (userData.id !== userInfo.id) {
 			arr.push(userData);
-			dispatch(handleCheckReplyToMe(false));
-		} else {
-			dispatch(handleCheckReplyToMe(true));
 		}
 		setMentionUsersArr(arr);
 		setReplyingCommentId(cmtLv1Id);

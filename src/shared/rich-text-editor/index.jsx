@@ -58,7 +58,6 @@ function RichTextEditor({
 	const editor = useRef(null);
 
 	const userInfo = useSelector(state => state.auth.userInfo);
-	const checkReplyToMe = useSelector(state => state.comment.checkReplyToMe);
 
 	const dispatch = useDispatch();
 
@@ -96,14 +95,9 @@ function RichTextEditor({
 		}
 
 		// tags mention user khi nhan @
-		if (!checkReplyToMe) {
-			const editorStateRaws = convertToRaw(editorState.getCurrentContent());
-			const entytiMap = editorStateRaws.entityMap;
-			const newArr = Object.keys(entytiMap).map(key => entytiMap[key].data.mention);
-			setMentionUsersArr(newArr);
-		} else {
-			setMentionUsersArr([]);
-		}
+		const entytiMap = editorStateRaws.entityMap;
+		const newArr = Object.keys(entytiMap).map(key => entytiMap[key].data.mention);
+		setMentionUsersArr(newArr);
 	}, [editorState]);
 
 	const convertContentToHTML = () => {
