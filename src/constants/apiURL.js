@@ -26,6 +26,7 @@ export const postAPI = '/api/v1/posts';
 export const postDetailAPI = id => `/api/v1/posts/${id}`;
 export const previewLink = '/api/v1/preview/demo';
 export const likeCommentPostAPI = id => `/api/v1/commentMiniposts/like/${id}`;
+export const getMiniPostCommentsAPI = id => `/api/v1/getstream/listCommentMiniPost/${id}`;
 
 // books
 export const bookAPI = '/api/v1/books';

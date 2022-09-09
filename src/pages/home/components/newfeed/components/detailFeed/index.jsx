@@ -2,7 +2,7 @@ import NormalContainer from 'components/layout/normal-container';
 import Post from 'shared/post';
 import { getDetailFeed, getDetailFeedGroup } from 'reducers/redux-utils/notificaiton';
 import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { NotificationError } from 'helpers/Error';
 import './detail-feed.scss';
@@ -14,6 +14,7 @@ const DetailFeed = () => {
 	const [detailFeed, setDetailFedd] = useState([]);
 	const { idPost, type } = useParams();
 	const [isLoading, setIsLoading] = useState(true);
+	const reduxMentionCommentId = useSelector(state => state.notificationReducer.mentionCommentId);
 
 	useEffect(async () => {
 		const params = {
@@ -39,9 +40,20 @@ const DetailFeed = () => {
 			<Circle loading={isLoading} />
 			<div className='detail_feed_container'>
 				{type === 'mini-post' ? (
-					detailFeed.map(item => <Post postInformations={item} key={item.id} type={POST_TYPE} />)
+					detailFeed.map(item => (
+						<Post
+							postInformations={item}
+							key={item.id}
+							type={POST_TYPE}
+							reduxMentionCommentId={reduxMentionCommentId}
+						/>
+					))
 				) : (
-					<Post postInformations={detailFeed} type={GROUP_TYPE} />
+					<Post
+						postInformations={detailFeed}
+						type={GROUP_TYPE}
+						reduxMentionCommentId={reduxMentionCommentId}
+					/>
 				)}
 			</div>
 		</NormalContainer>
