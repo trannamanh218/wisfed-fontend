@@ -240,8 +240,20 @@ function Post({ postInformations, type, reduxMentionCommentId }) {
 							paramInfo[0].users.firstName + ' ' + paramInfo[0].users.lastName}
 					</Link>
 					{' và '}
-					{paramInfo.length - 1}
-					{' người khác.'}
+					<span className='post__user__container__mention-users-plus'>
+						{paramInfo.length - 1} người khác.
+						<div className='post__user__container__list-mention-users'>
+							{!!paramInfo.length && (
+								<>
+									{paramInfo.slice(1).map((item, index) => (
+										<div key={index}>
+											{item.users.fullName || item.users.firstName + ' ' + item.users.lastName}
+										</div>
+									))}
+								</>
+							)}
+						</div>
+					</span>
 				</span>
 			);
 		}
@@ -350,6 +362,7 @@ function Post({ postInformations, type, reduxMentionCommentId }) {
 								>
 									{postData?.createdBy?.fullName || postData?.user?.fullName || 'Ẩn danh'}
 								</Link>
+
 								{/* tagged people */}
 								{postData.mentionsUsers &&
 									!!postData.mentionsUsers.length &&
