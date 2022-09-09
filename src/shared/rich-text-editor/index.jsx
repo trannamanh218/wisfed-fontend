@@ -15,11 +15,14 @@ import { getFriendList } from 'reducers/redux-utils/user';
 import { useDispatch, useSelector } from 'react-redux';
 import defaultAvatar from 'assets/images/avatar.jpeg';
 import { NotificationError } from 'helpers/Error';
+import createHashtagPlugin from '@draft-js-plugins/hashtag';
+import '@draft-js-plugins/hashtag/lib/plugin.css';
 
 const generatePlugins = () => {
 	const linkifyPlugin = createLinkifyPlugin({ target: '_blank' });
 	const mentionPlugin = createMentionPlugin();
-	const plugins = [linkifyPlugin, mentionPlugin];
+	const hashtagPlugin = createHashtagPlugin();
+	const plugins = [linkifyPlugin, mentionPlugin, hashtagPlugin];
 	const MentionSuggestions = mentionPlugin.MentionSuggestions;
 	return {
 		plugins,

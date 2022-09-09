@@ -60,6 +60,7 @@ const verbShareArray = [
 
 const urlRegex =
 	/(https?:\/\/)?(www(\.))?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/g;
+const hashTagsRegex = /(#[a-z0-9][a-z0-9\-_]*)/g;
 
 function CreatPostModalContent({
 	hideCreatePostModal,
@@ -94,12 +95,13 @@ function CreatPostModalContent({
 	const [showImagePopover, setShowImagePopover] = useState(false);
 	const [buttonActive, setButtonActive] = useState(false);
 	const [content, setContent] = useState('');
-	const chartImgShare = useSelector(state => state.chart.updateImgPost);
+	const [hashTagsAdded, setHashTagsAdded] = useState([]);
 
 	const dispatch = useDispatch();
 	const location = useLocation();
 
 	const UpdateImg = useSelector(state => state.chart.updateImgPost);
+	const chartImgShare = useSelector(state => state.chart.updateImgPost);
 	const { resetTaggedData, postDataShare } = useSelector(state => state.post);
 	const {
 		auth: { userInfo },
@@ -154,6 +156,15 @@ function CreatPostModalContent({
 		}
 		setOldUrlAdded(urlAdded);
 	}, [urlAdded]);
+
+	useEffect(() => {
+		const hashTagsTemp = content.match(hashTagsRegex);
+		if (hashTagsTemp) {
+			setHashTagsAdded(hashTagsTemp);
+		} else {
+			setHashTagsAdded([]);
+		}
+	}, [content]);
 
 	const getPreviewUrlFnc = async url => {
 		if (url) {
@@ -267,7 +278,7 @@ function CreatPostModalContent({
 			mentionsCategory: [],
 			image: [],
 			preview: urlPreviewData,
-			tags: [],
+			tags: hashTagsAdded,
 			progress: checkProgress ? checkProgress : 0,
 		};
 
