@@ -84,6 +84,10 @@ const NotificationStatus = ({ item, setGetNotifications, getNotifications }) => 
 			case 'commentQuote':
 				navigate(`/quotes/detail/${items.originId.quoteId}`);
 				break;
+			case 'replyCommentQuote':
+				dispatch(handleMentionCommentId(item.originId.commentQuoteId));
+				navigate(`/quotes/detail/${items.originId.quoteId}`);
+				break;
 			case 'mention':
 				switch (items.originId.type) {
 					case 'commentQuote':

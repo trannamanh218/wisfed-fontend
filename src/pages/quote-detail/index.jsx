@@ -23,12 +23,14 @@ const QuoteDetail = () => {
 	useEffect(() => {
 		window.scrollTo(0, 0);
 		getQuoteData();
-	}, []);
+	}, [id]);
 
 	const getQuoteData = async () => {
 		try {
 			const response = await dispatch(getQuoteDetail(id)).unwrap();
-			setQuoteData(response);
+			const newUserComments = response.usersComments.reverse();
+			const obj = { ...response, usersComments: newUserComments };
+			setQuoteData(obj);
 			setListHashtags(response.tags);
 			isLikeTemp.current = response.isLike;
 		} catch (err) {
