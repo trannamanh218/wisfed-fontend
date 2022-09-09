@@ -87,10 +87,15 @@ const ModalItem = ({ item, setModalNoti, getNotifications, setGetNotifications, 
 		} else if (item.verb === 'readingGoal') {
 			navigate(`/reading-target/${userInfo.id}`);
 		} else if (item.verb === 'inviteGroup') {
-			navigate(`/Group/${items.originId.groupId}`);
+			navigate(`/group/${items.originId.groupId}`);
 		} else if (items.verb === 'replyComment' || items.verb === 'shareQuote') {
 			navigate(`/detail-feed/${'mini-post'}/${items.originId.minipostId}`);
-		} else if (items.verb === 'commentQuote' || item.verb === 'replyCommentQuote') {
+		} else if (
+			items.verb === 'commentQuote' ||
+			item.verb === 'replyCommentQuote' ||
+			items.verb === 'likeQuote' ||
+			items.verb === 'likeCommentQuote'
+		) {
 			navigate(`/quotes/detail/${items.originId.quoteId}`);
 		} else if (items.verb === 'mention') {
 			if (items.originId.type === 'commentQuote') {
@@ -100,8 +105,6 @@ const ModalItem = ({ item, setModalNoti, getNotifications, setGetNotifications, 
 			} else {
 				navigate(`/detail-feed/${'mini-post'}/${items.originId.minipostId}`);
 			}
-		} else if (items.verb === 'likeQuote') {
-			navigate(`/quotes/detail/${items.originId.quoteId}`);
 		} else if (item.verb === 'likeCommentReview') {
 			navigate(`/detail-feed/${'mini-post'}/${items.originId.minipostId}`);
 		} else if (item.verb === 'requestGroup') {
