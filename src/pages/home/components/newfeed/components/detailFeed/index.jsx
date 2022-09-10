@@ -11,7 +11,7 @@ import { POST_TYPE, GROUP_TYPE } from 'constants/index';
 
 const DetailFeed = () => {
 	const dispatch = useDispatch();
-	const [detailFeed, setDetailFedd] = useState([]);
+	const [detailFeed, setDetailFeed] = useState([]);
 	const { idPost, type } = useParams();
 	const [isLoading, setIsLoading] = useState(true);
 
@@ -27,7 +27,7 @@ const DetailFeed = () => {
 			} else {
 				res = await dispatch(getDetailFeedGroup(params)).unwrap();
 			}
-			setDetailFedd(res);
+			setDetailFeed(res);
 		} catch (err) {
 			NotificationError(err);
 		} finally {

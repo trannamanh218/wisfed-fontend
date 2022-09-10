@@ -61,7 +61,6 @@ function RichTextEditor({
 	const editor = useRef(null);
 
 	const userInfo = useSelector(state => state.auth.userInfo);
-	const checkReplyToMe = useSelector(state => state.comment.checkReplyToMe);
 
 	const dispatch = useDispatch();
 
@@ -91,7 +90,7 @@ function RichTextEditor({
 				detectUrl('');
 			}
 		}
-		if (textValue.length) {
+		if (editorState.getCurrentContent().getPlainText().trim().length) {
 			const html = convertContentToHTML();
 			setContent(html);
 		} else {
@@ -99,14 +98,9 @@ function RichTextEditor({
 		}
 
 		// tags mention user khi nhan @
-		if (!checkReplyToMe) {
-			const editorStateRaws = convertToRaw(editorState.getCurrentContent());
-			const entytiMap = editorStateRaws.entityMap;
-			const newArr = Object.keys(entytiMap).map(key => entytiMap[key].data.mention);
-			setMentionUsersArr(newArr);
-		} else {
-			setMentionUsersArr([]);
-		}
+		const entytiMap = editorStateRaws.entityMap;
+		const newArr = Object.keys(entytiMap).map(key => entytiMap[key].data.mention);
+		setMentionUsersArr(newArr);
 	}, [editorState]);
 
 	const convertContentToHTML = () => {
@@ -174,7 +168,7 @@ function RichTextEditor({
 				filter: JSON.stringify([{ operator: 'search', value: value, property: 'firstName,lastName' }]),
 			};
 			const suggestionsResponse = await dispatch(getFriendList({ userId: userInfo.id, query: params })).unwrap();
-			let suggestionData = [];
+			const suggestionData = [];
 			suggestionsResponse.rows.forEach(item => {
 				const mentionData = {
 					name: item.fullName || item.firstName + item.lastName,

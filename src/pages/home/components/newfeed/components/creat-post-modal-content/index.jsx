@@ -60,7 +60,7 @@ const verbShareArray = [
 
 const urlRegex =
 	/(https?:\/\/)?(www(\.))?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/g;
-const hashTagsRegex = /(#[a-z0-9][a-z0-9\-_]*)/g;
+const hashtagRegex = /(#[a-z0-9][a-z0-9\-_]*)/g;
 
 function CreatPostModalContent({
 	hideCreatePostModal,
@@ -95,7 +95,7 @@ function CreatPostModalContent({
 	const [showImagePopover, setShowImagePopover] = useState(false);
 	const [buttonActive, setButtonActive] = useState(false);
 	const [content, setContent] = useState('');
-	const [hashTagsAdded, setHashTagsAdded] = useState([]);
+	const [hashtagsAdded, setHashtagsAdded] = useState([]);
 
 	const dispatch = useDispatch();
 	const location = useLocation();
@@ -158,11 +158,11 @@ function CreatPostModalContent({
 	}, [urlAdded]);
 
 	useEffect(() => {
-		const hashTagsTemp = content.match(hashTagsRegex);
-		if (hashTagsTemp) {
-			setHashTagsAdded(hashTagsTemp);
+		const hashtagsTemp = content.match(hashtagRegex);
+		if (hashtagsTemp) {
+			setHashtagsAdded(hashtagsTemp);
 		} else {
-			setHashTagsAdded([]);
+			setHashtagsAdded([]);
 		}
 	}, [content]);
 
@@ -278,7 +278,7 @@ function CreatPostModalContent({
 			mentionsCategory: [],
 			image: [],
 			preview: urlPreviewData,
-			tags: hashTagsAdded,
+			tags: hashtagsAdded,
 			progress: checkProgress ? checkProgress : 0,
 		};
 

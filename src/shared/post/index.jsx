@@ -41,11 +41,11 @@ import AuthorBook from 'shared/author-book';
 import Storage from 'helpers/Storage';
 import { checkUserLogin } from 'reducers/redux-utils/auth';
 import ShareUsers from 'pages/home/components/newfeed/components/modal-share-users';
-import { handleCheckReplyToMe } from 'reducers/redux-utils/comment';
 import ShareTarget from 'shared/share-target';
 
 const urlRegex =
 	/(https?:\/\/)?(www(\.))?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/g;
+const hashtagRegex = /(#[a-z0-9][a-z0-9\-_]*)/g;
 
 const verbShareArray = [
 	POST_VERB_SHARE,
@@ -59,9 +59,10 @@ const verbShareArray = [
 function Post({ postInformations, type }) {
 	const [postData, setPostData] = useState({});
 	const [videoId, setVideoId] = useState('');
-	const { userInfo } = useSelector(state => state.auth);
 	const [replyingCommentId, setReplyingCommentId] = useState(-1);
 	const [mentionUsersArr, setMentionUsersArr] = useState([]);
+
+	const { userInfo } = useSelector(state => state.auth);
 
 	const clickReply = useRef(null);
 	const doneGetPostData = useRef(false);
@@ -96,57 +97,59 @@ function Post({ postInformations, type }) {
 	};
 
 	const onCreateComment = async (content, replyId) => {
-		const newArr = [];
-		mentionUsersArr.forEach(item => newArr.push(item.id));
-		try {
-			let res = {};
-			if (type === REVIEW_TYPE) {
-				const commentReviewData = {
-					reviewId: postData.id,
-					replyId: replyId,
-					content: content,
-					mediaUrl: [],
-					mentionsUser: newArr,
-				};
-				res = await dispatch(createCommentReview(commentReviewData)).unwrap();
-			} else if (type === POST_TYPE) {
-				const params = {
-					minipostId: postData.minipostId || postData.id,
-					content: content,
-					mediaUrl: [],
-					mentionsUser: newArr,
-					replyId: replyId,
-				};
-				res = await dispatch(createComment(params)).unwrap();
-			} else {
-				const params = {
-					groupPostId: postData.groupPostId || postData.id,
-					content: content,
-					mentionsUser: newArr,
-					mediaUrl: [],
-					replyId: replyId,
-				};
-				res = await dispatch(createCommentGroup(params)).unwrap();
-			}
-			if (!_.isEmpty(res)) {
-				const newComment = { ...res, user: userInfo };
-				const usersComments = [...postData.usersComments];
-				if (res.replyId) {
-					const cmtReplying = usersComments.filter(item => item.id === res.replyId);
-					const reply = [...cmtReplying[0].reply];
-					reply.push(newComment);
-					const obj = { ...cmtReplying[0], reply };
-					const index = usersComments.findIndex(item => item.id === res.replyId);
-					usersComments[index] = obj;
+		if (content) {
+			const newArr = [];
+			mentionUsersArr.forEach(item => newArr.push(item.id));
+			try {
+				let res = {};
+				if (type === REVIEW_TYPE) {
+					const commentReviewData = {
+						reviewId: postData.id,
+						replyId: replyId,
+						content: content.replace(/&nbsp;/g, ''),
+						mediaUrl: [],
+						mentionsUser: newArr,
+					};
+					res = await dispatch(createCommentReview(commentReviewData)).unwrap();
+				} else if (type === POST_TYPE) {
+					const params = {
+						minipostId: postData.minipostId || postData.id,
+						content: content.replace(/&nbsp;/g, ''),
+						mediaUrl: [],
+						mentionsUser: newArr,
+						replyId: replyId,
+					};
+					res = await dispatch(createComment(params)).unwrap();
 				} else {
-					newComment.reply = [];
-					usersComments.push(newComment);
+					const params = {
+						groupPostId: postData.groupPostId || postData.id,
+						content: content.replace(/&nbsp;/g, ''),
+						mentionsUser: newArr,
+						mediaUrl: [],
+						replyId: replyId,
+					};
+					res = await dispatch(createCommentGroup(params)).unwrap();
 				}
-				const newPostData = { ...postData, usersComments, comment: postData.comment + 1 };
-				setPostData(newPostData);
+				if (!_.isEmpty(res)) {
+					const newComment = { ...res, user: userInfo };
+					const usersComments = [...postData.usersComments];
+					if (res.replyId) {
+						const cmtReplying = usersComments.filter(item => item.id === res.replyId);
+						const reply = [...cmtReplying[0].reply];
+						reply.push(newComment);
+						const obj = { ...cmtReplying[0], reply };
+						const index = usersComments.findIndex(item => item.id === res.replyId);
+						usersComments[index] = obj;
+					} else {
+						newComment.reply = [];
+						usersComments.push(newComment);
+					}
+					const newPostData = { ...postData, usersComments, comment: postData.comment + 1 };
+					setPostData(newPostData);
+				}
+			} catch (err) {
+				NotificationError(err);
 			}
-		} catch (err) {
-			NotificationError(err);
 		}
 	};
 
@@ -181,7 +184,7 @@ function Post({ postInformations, type }) {
 					NotificationError(err);
 				}
 			}
-		}, 1500),
+		}, 1000),
 		[doneGetPostData.current]
 	);
 
@@ -189,9 +192,6 @@ function Post({ postInformations, type }) {
 		const arr = [];
 		if (userData.id !== userInfo.id) {
 			arr.push(userData);
-			dispatch(handleCheckReplyToMe(false));
-		} else {
-			dispatch(handleCheckReplyToMe(true));
 		}
 		setMentionUsersArr(arr);
 		setReplyingCommentId(cmtLv1Id);
@@ -256,21 +256,16 @@ function Post({ postInformations, type }) {
 	};
 
 	const generateContent = content => {
-		if (content.match(urlRegex)) {
-			let newContent;
-			if (content.includes('https://')) {
-				newContent = content.replace(urlRegex, data => {
-					return `<a class="url-class" href=${data} target="_blank">${
-						data.length <= 50 ? data : data.slice(0, 50) + '...'
-					}</a>`;
-				});
-			} else {
-				newContent = content.replace(urlRegex, data => {
-					return `<a class="url-class" href=https://${data} target="_blank">${
-						data.length <= 50 ? data : data.slice(0, 50) + '...'
-					}</a>`;
-				});
-			}
+		if (content.match(urlRegex) || content.match(hashtagRegex)) {
+			const newContent = content
+				.replace(
+					urlRegex,
+					data =>
+						`<a class="url-class" href=${
+							data.includes('https://') ? data : `https://${data}`
+						} target="_blank">${data.length <= 50 ? data : data.slice(0, 50) + '...'}</a>`
+				)
+				.replace(hashtagRegex, data => `<a class="hashtag-class" href="/hashtag/${data.slice(1)}">${data}</a>`);
 			return newContent;
 		} else {
 			return content;

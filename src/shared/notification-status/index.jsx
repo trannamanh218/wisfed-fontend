@@ -3,7 +3,7 @@ import { calculateDurationTime } from 'helpers/Common';
 import UserAvatar from 'shared/user-avatar';
 import { renderMessage } from 'helpers/HandleShare';
 import { ReplyFriendRequest, CancelFriendRequest } from 'reducers/redux-utils/user';
-import { readNotification } from 'reducers/redux-utils/notificaiton';
+import { readNotification, handleMentionCommentId } from 'reducers/redux-utils/notificaiton';
 import { useDispatch, useSelector } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
 import { useNavigate } from 'react-router-dom';
@@ -51,65 +51,88 @@ const NotificationStatus = ({ item, setGetNotifications, getNotifications }) => 
 		}
 	};
 
-	const hanleActiveIsReed = items => {
+	const handleActiveIsReed = items => {
 		const params = {
 			notificationId: items.id,
 		};
 
 		setIsRead(true);
-		if (
-			items.verb === 'likeMiniPost' ||
-			items.verb === 'commentMiniPost' ||
-			items.verb === 'likeGroupPost' ||
-			items.verb === 'commentGroupPost'
-		) {
-			navigate(
-				`/detail-feed/${
-					items.verb === 'commentMiniPost' || items.verb === 'likeMiniPost' ? 'mini-post' : 'group-post'
-				}/${items.originId?.minipostId || items.originId?.groupPostId}`
-			);
-		} else if (items.verb === 'follow' || items.verb === 'addFriend' || items.verb === 'friendAccepted') {
-			navigate(`/profile/${items.createdBy?.id || items.originId.userId}`);
-		} else if (item.verb === 'topUserRanking') {
-			navigate(`/top100`);
-		} else if (item.verb === 'readingGoal') {
-			navigate(`/reading-target/${userInfo.id}`);
-		} else if (item.verb === 'inviteGroup') {
-			navigate(`/group/${items.originId.groupId}`);
-		} else if (items.verb === 'replyComment' || items.verb === 'shareQuote') {
-			navigate(`/detail-feed/${'mini-post'}/${items.originId.minipostId}`);
-		} else if (
-			items.verb === 'commentQuote' ||
-			item.verb === 'replyCommentQuote' ||
-			items.verb === 'likeQuote' ||
-			items.verb === 'likeCommentQuote'
-		) {
-			navigate(`/quotes/detail/${items.originId.quoteId}`);
-		} else if (items.verb === 'mention') {
-			if (items.originId.type === 'commentQuote') {
+
+		switch (items.verb) {
+			case 'likeMiniPost' || 'commentMiniPost' || 'likeGroupPost' || 'commentGroupPost':
+				navigate(
+					`/detail-feed/${
+						items.verb === 'commentMiniPost' || items.verb === 'likeMiniPost' ? 'mini-post' : 'group-post'
+					}/${items.originId?.minipostId || items.originId?.groupPostId}`
+				);
+				break;
+			case 'follow' || 'addFriend' || 'friendAccepted':
+				navigate(`/profile/${items.createdBy?.id || items.originId.userId}`);
+				break;
+			case 'topUserRanking':
+				navigate(`/top100`);
+				break;
+			case 'readingGoal':
+				navigate(`/reading-target/${userInfo.id}`);
+				break;
+			case 'inviteGroup':
+				navigate(`/Group/${items.originId.groupId}`);
+				break;
+			case 'replyComment' || 'shareQuote':
+				navigate(`/detail-feed/mini-post/${items.originId.minipostId}`);
+				break;
+			case 'commentQuote':
 				navigate(`/quotes/detail/${items.originId.quoteId}`);
-			} else if (items.originId.type === 'groupPost') {
-				navigate(`/detail-feed/${'group-post'}/${items.originId.groupPostId}`);
-			} else {
-				navigate(`/detail-feed/${'mini-post'}/${items.originId.minipostId}`);
-			}
-		} else if (item.verb === 'likeCommentReview') {
-			navigate(`/detail-feed/${'mini-post'}/${items.originId.minipostId}`);
-		} else if (item.verb === 'requestGroup') {
-			navigate(`/group/${items.originId.groupId}`);
-		} else if (item.verb === 'likeReview') {
-			navigate(`/review/${items.originId.bookId}/${userInfo.id}`);
-		} else if (item.verb === 'likeCommentMiniPost') {
-			navigate(`/detail-feed/mini-post/${items.originId.minipostId}`);
-		} else if (item.verb === 'sharePost') {
-			navigate(`/detail-feed/mini-post/${items.originId.minipostId}`);
+				break;
+			case 'replyCommentQuote':
+				dispatch(handleMentionCommentId(item.originId.commentQuoteId));
+				navigate(`/quotes/detail/${items.originId.quoteId}`);
+				break;
+			case 'mention':
+				switch (items.originId.type) {
+					case 'commentQuote':
+						dispatch(handleMentionCommentId(item.originId.commentQuoteId));
+						navigate(`/quotes/detail/${items.originId.quoteId}`);
+						break;
+					case 'groupPost':
+						navigate(`/detail-feed/group-post/${items.originId.groupPostId}`);
+						break;
+					case 'mentionMiniPost':
+						navigate(`/detail-feed/mini-post/${items.originId.minipostId}`);
+						break;
+					case 'commentMiniPost':
+						dispatch(handleMentionCommentId(item.originId.commentMiniPostId));
+						navigate(`/detail-feed/mini-post/${items.originId.minipostId}`);
+						break;
+					default:
+						navigate(`/detail-feed/mini-post/${items.originId.minipostId}`);
+				}
+				break;
+			case 'likeQuote':
+				navigate(`/quotes/detail/${items.originId.quoteId}`);
+				break;
+			case 'likeCommentReview':
+				navigate(`/detail-feed/mini-post/${items.originId.minipostId}`);
+				break;
+			case 'requestGroup':
+				navigate(`/group/${items.originId.groupId}`);
+				break;
+			case 'likeReview':
+				navigate(`/review/${items.originId.bookId}/${userInfo.id}`);
+				break;
+			case 'likeCommentMiniPost':
+				navigate(`/detail-feed/mini-post/${items.originId.minipostId}`);
+				break;
+			default:
+				console.log('Xét thiếu verb: ', items.verb);
 		}
+
 		dispatch(readNotification(params)).unwrap();
 	};
 
 	return (
 		<div
-			onClick={() => hanleActiveIsReed(item)}
+			onClick={() => handleActiveIsReed(item)}
 			className={
 				isRead || item.isRead ? 'notificaiton__tabs__main__all__active' : 'notificaiton__tabs__main__all__seen'
 			}
@@ -138,7 +161,7 @@ const NotificationStatus = ({ item, setGetNotifications, getNotifications }) => 
 														<span> {item.createdBy?.lastName}</span>
 													</>
 												)}
-											</span>{' '}
+											</span>
 											{renderMessage(item)}
 										</>
 									)}

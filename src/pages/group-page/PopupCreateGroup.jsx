@@ -238,16 +238,16 @@ const PopupCreateGroup = ({ handleClose }) => {
 	};
 
 	useEffect(() => {
-		const hashTagElement = document.getElementById('hashtag');
-		const handleHashTag = e => {
+		const hashtagElement = document.getElementById('hashtag');
+		const handleHashtag = e => {
 			if (e.keyCode === 32 && hastagRegex.test(inputHashtag)) {
 				dataRef.current = inputHashtag.trim();
 				inputRefHashtag.current.value = '';
 			}
 		};
-		hashTagElement.addEventListener('keydown', handleHashTag);
+		hashtagElement.addEventListener('keydown', handleHashtag);
 
-		return () => hashTagElement.removeEventListener('keydown', handleHashTag);
+		return () => hashtagElement.removeEventListener('keydown', handleHashtag);
 	}, [inputHashtag]);
 
 	useEffect(() => {
