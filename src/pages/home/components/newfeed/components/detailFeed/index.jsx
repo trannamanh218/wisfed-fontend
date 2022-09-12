@@ -11,7 +11,7 @@ import { POST_TYPE, GROUP_TYPE } from 'constants/index';
 
 const DetailFeed = () => {
 	const dispatch = useDispatch();
-	const [detailFeed, setDetailFedd] = useState([]);
+	const [detailFeed, setDetailFeed] = useState([]);
 	const { idPost, type } = useParams();
 	const [isLoading, setIsLoading] = useState(true);
 	const reduxMentionCommentId = useSelector(state => state.notificationReducer.mentionCommentId);
@@ -21,13 +21,14 @@ const DetailFeed = () => {
 			id: idPost,
 		};
 		try {
-			let res = [];
+			let res;
 			if (type === 'mini-post') {
-				res = await dispatch(getDetailFeed(params)).unwrap();
+				const data = await dispatch(getDetailFeed(params)).unwrap();
+				res = data[0];
 			} else {
 				res = await dispatch(getDetailFeedGroup(params)).unwrap();
 			}
-			setDetailFedd(res);
+			setDetailFeed(res);
 		} catch (err) {
 			NotificationError(err);
 		} finally {
@@ -35,19 +36,16 @@ const DetailFeed = () => {
 		}
 	}, []);
 
+	useEffect(() => {
+		window.scroll(0, 0);
+	}, []);
+
 	return (
 		<NormalContainer>
 			<Circle loading={isLoading} />
 			<div className='detail_feed_container'>
 				{type === 'mini-post' ? (
-					detailFeed.map(item => (
-						<Post
-							postInformations={item}
-							key={item.id}
-							type={POST_TYPE}
-							reduxMentionCommentId={reduxMentionCommentId}
-						/>
-					))
+					<Post postInformations={detailFeed} type={POST_TYPE} />
 				) : (
 					<Post
 						postInformations={detailFeed}

@@ -45,7 +45,7 @@ const QuoteDetail = () => {
 
 			const params = {
 				quoteId: Number(id),
-				content: content,
+				content: content.replace(/&nbsp;/g, ''),
 				mediaUrl: [],
 				replyId: replyId,
 				mentionsUser: newArr,

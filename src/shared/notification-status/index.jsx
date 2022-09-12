@@ -161,7 +161,7 @@ const NotificationStatus = ({ item, setGetNotifications, getNotifications }) => 
 														<span> {item.createdBy?.lastName}</span>
 													</>
 												)}
-											</span>{' '}
+											</span>
 											{renderMessage(item)}
 										</>
 									)}

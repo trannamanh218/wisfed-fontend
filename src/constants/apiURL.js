@@ -1,6 +1,5 @@
 // auth
 export const authAPI = '/api/v1/auth';
-export const authAPIToken = '/api/v1/auth/jwt';
 export const registerAPI = '/api/v1/auth/register';
 export const forgotPasswordAPI = '/api/v1/auth/forgotPassword';
 export const forgotPasswordAPIAdmin = '/api/v1/auth/adminForgotPassword/';
@@ -106,7 +105,8 @@ export const addfollow = '/api/v1/users/follow';
 export const unFollow = id => `/api/v1/users/${id}/unFollow`;
 export const listFollowing = id => `/api/v1/users/listFollowings/${id}`;
 
-//chart
+// hashtag
+export const listPostByHashtagAPI = '/api/v1/searchs/tags';
 
 // export const listAPIChart = (count, by) => `/api/v1/tracking?count=${count}&by=${by}`;
 export const listBooksReadYear = (type, id) => `/api/v1/libraries/listBookByType/${type}/${id}`;

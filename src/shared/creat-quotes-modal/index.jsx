@@ -53,15 +53,15 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 
 	useEffect(() => {
 		const hastagElement = document.getElementById('hashtag');
-		const handleHashTag = e => {
+		const handleHashtag = e => {
 			if (e.keyCode === 32 && hastagRegex.test(inputHashtag)) {
 				dataRef.current = inputHashtag.trim();
 				inputRefHashtag.current.value = '';
 			}
 		};
-		hastagElement.addEventListener('keydown', handleHashTag);
+		hastagElement.addEventListener('keydown', handleHashtag);
 
-		return () => hastagElement.removeEventListener('keydown', handleHashTag);
+		return () => hastagElement.removeEventListener('keydown', handleHashtag);
 	}, [inputHashtag]);
 
 	const handleChangeHashtag = e => {

@@ -11,7 +11,6 @@ import {
 	newNotification,
 } from 'constants/apiURL';
 import Request from 'helpers/Request';
-import Storage from 'helpers/Storage';
 import _ from 'lodash';
 
 export const register = createAsyncThunk('auth/register', async (params, { rejectWithValue }) => {
@@ -49,8 +48,6 @@ export const login = createAsyncThunk('auth/login', async (params, { rejectWithV
 		if (!_.isEmpty(data)) {
 			const { accessToken, refreshToken } = data.JWT;
 			Request.setToken(accessToken, refreshToken);
-			Storage.setAccessToken(accessToken);
-			Storage.setRefreshToken(refreshToken);
 			return data;
 		}
 		return {};

@@ -77,7 +77,7 @@ const ConnectButtonsSearch = ({ direction, item }) => {
 			} catch (err) {
 				NotificationError(err);
 			}
-		}, 1500),
+		}, 1000),
 		[]
 	);
 

@@ -49,6 +49,7 @@ import Circle from 'shared/loading/circle';
 
 const urlRegex =
 	/(https?:\/\/)?(www(\.))?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/g;
+const hashtagRegex = /(#[a-z0-9][a-z0-9\-_]*)/g;
 
 const verbShareArray = [
 	POST_VERB_SHARE,
@@ -117,7 +118,7 @@ function Post({ postInformations, type, reduxMentionCommentId }) {
 					const commentReviewData = {
 						reviewId: postData.id,
 						replyId: replyId,
-						content: content,
+						content: content.replace(/&nbsp;/g, ''),
 						mediaUrl: [],
 						mentionsUser: newArr,
 					};
@@ -125,7 +126,7 @@ function Post({ postInformations, type, reduxMentionCommentId }) {
 				} else if (type === POST_TYPE) {
 					const params = {
 						minipostId: postData.minipostId || postData.id,
-						content: content,
+						content: content.replace(/&nbsp;/g, ''),
 						mediaUrl: [],
 						mentionsUser: newArr,
 						replyId: replyId,
@@ -134,7 +135,7 @@ function Post({ postInformations, type, reduxMentionCommentId }) {
 				} else {
 					const params = {
 						groupPostId: postData.groupPostId || postData.id,
-						content: content,
+						content: content.replace(/&nbsp;/g, ''),
 						mentionsUser: newArr,
 						mediaUrl: [],
 						replyId: replyId,
@@ -195,7 +196,7 @@ function Post({ postInformations, type, reduxMentionCommentId }) {
 					NotificationError(err);
 				}
 			}
-		}, 1500),
+		}, 1000),
 		[doneGetPostData.current]
 	);
 
@@ -285,21 +286,16 @@ function Post({ postInformations, type, reduxMentionCommentId }) {
 	};
 
 	const generateContent = content => {
-		if (content.match(urlRegex)) {
-			let newContent;
-			if (content.includes('https://')) {
-				newContent = content.replace(urlRegex, data => {
-					return `<a class="url-class" href=${data} target="_blank">${
-						data.length <= 50 ? data : data.slice(0, 50) + '...'
-					}</a>`;
-				});
-			} else {
-				newContent = content.replace(urlRegex, data => {
-					return `<a class="url-class" href=https://${data} target="_blank">${
-						data.length <= 50 ? data : data.slice(0, 50) + '...'
-					}</a>`;
-				});
-			}
+		if (content.match(urlRegex) || content.match(hashtagRegex)) {
+			const newContent = content
+				.replace(
+					urlRegex,
+					data =>
+						`<a class="url-class" href=${
+							data.includes('https://') ? data : `https://${data}`
+						} target="_blank">${data.length <= 50 ? data : data.slice(0, 50) + '...'}</a>`
+				)
+				.replace(hashtagRegex, data => `<a class="hashtag-class" href="/hashtag/${data.slice(1)}">${data}</a>`);
 			return newContent;
 		} else {
 			return content;
@@ -382,8 +378,8 @@ function Post({ postInformations, type, reduxMentionCommentId }) {
 								{postData.verb === GROUP_POST_VERB && (
 									<>
 										<img className='post__user-icon' src={Play} alt='arrow' />
-										<Link to={`/group/${postData.group?.id}`} className='post__name__group'>
-											{postData.group?.name}
+										<Link to={`/group/${postData.groupInfo?.id}`} className='post__name__group'>
+											{postData.groupInfo?.name}
 										</Link>
 									</>
 								)}

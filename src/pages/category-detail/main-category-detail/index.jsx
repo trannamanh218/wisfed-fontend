@@ -171,7 +171,7 @@ const MainCategoryDetail = () => {
 					NotificationError(err);
 				}
 			}
-		}, 1500),
+		}, 1000),
 		[favoriteCategories.current, userInfo]
 	);
 
