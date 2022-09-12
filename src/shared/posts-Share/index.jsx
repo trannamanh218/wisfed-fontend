@@ -85,7 +85,21 @@ const PostShare = ({ postData, inCreatePost = false }) => {
 						<Modal.Header closeButton>
 							<Modal.Title>Mọi người</Modal.Title>
 						</Modal.Header>
-						<Modal.Body>Woohoo, you're reading this text in a modal!</Modal.Body>
+						<Modal.Body>
+							{!!paramInfo.length && (
+								<>
+									{paramInfo.slice(1).map((item, index) => (
+										<div key={index}>
+											<img
+												className='modal-tagged-others__avatar'
+												src={item.users.avatarImage}
+											></img>
+											{item.users.fullName || item.users.firstName + ' ' + item.users.lastName}
+										</div>
+									))}
+								</>
+							)}
+						</Modal.Body>
 					</Modal>
 				</span>
 			);

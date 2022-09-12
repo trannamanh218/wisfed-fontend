@@ -24,5 +24,23 @@
 }
 
 .modal-tagged-others {
-	top: 40%;
+	top: 20%;
+	.modal-title {
+		margin-bottom: 0;
+	}
+	.modal-content {
+		border-radius: 10px;
+	}
+	.modal-body {
+		height: 40vh;
+		overflow-y: auto;
+	}
+	&__avatar {
+		width: 40px;
+		height: 40px;
+		border-radius: 50%;
+		margin-left: 1rem;
+		margin-right: 2rem;
+		margin-bottom: 1rem;
+	}
 }

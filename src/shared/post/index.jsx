@@ -265,7 +265,21 @@ function Post({ postInformations, type, reduxMentionCommentId }) {
 						<Modal.Header closeButton>
 							<Modal.Title>Mọi người</Modal.Title>
 						</Modal.Header>
-						<Modal.Body>Woohoo, you're reading this text in a modal!</Modal.Body>
+						<Modal.Body>
+							{!!paramInfo.length && (
+								<>
+									{paramInfo.slice(1).map((item, index) => (
+										<div key={index}>
+											<img
+												className='modal-tagged-others__avatar'
+												src={item.users.avatarImage}
+											></img>
+											{item.users.fullName || item.users.firstName + ' ' + item.users.lastName}
+										</div>
+									))}
+								</>
+							)}
+						</Modal.Body>
 					</Modal>
 				</span>
 			);
@@ -378,8 +392,11 @@ function Post({ postInformations, type, reduxMentionCommentId }) {
 								{postData.verb === GROUP_POST_VERB && (
 									<>
 										<img className='post__user-icon' src={Play} alt='arrow' />
-										<Link to={`/group/${postData.groupInfo?.id}`} className='post__name__group'>
-											{postData.groupInfo?.name}
+										<Link
+											to={`/group/${postData.group?.id || postData.groupInfo?.id}`}
+											className='post__name__group'
+										>
+											{postData.group?.name || postData.groupInfo?.name}
 										</Link>
 									</>
 								)}
