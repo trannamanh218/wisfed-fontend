@@ -8,6 +8,7 @@ import {
 	shareInternalAPI,
 	shareApiAuthorBook,
 	shareApiMyBook,
+	getMiniPostCommentsAPI,
 } from 'constants/apiURL';
 import Request from 'helpers/Request';
 
@@ -78,6 +79,17 @@ export const createPost = createAsyncThunk('post/createPost', async (params, { r
 export const getPreviewUrl = createAsyncThunk('post/getPreviewUrl', async (data, { rejectWithValue }) => {
 	try {
 		const response = await Request.makePost(previewLink, data);
+		return response.data;
+	} catch (err) {
+		const error = JSON.parse(err.response);
+		return rejectWithValue(error);
+	}
+});
+
+export const getMiniPostComments = createAsyncThunk('post/getMiniPostComments', async (data, { rejectWithValue }) => {
+	try {
+		const { postId, params } = data;
+		const response = await Request.makeGet(getMiniPostCommentsAPI(postId), params);
 		return response.data;
 	} catch (err) {
 		const error = JSON.parse(err.response);

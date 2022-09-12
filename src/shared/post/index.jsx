@@ -3,24 +3,24 @@ import { Feather } from 'components/svg';
 import { calculateDurationTime } from 'helpers/Common';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
-import { useCallback, useEffect, useState, useRef } from 'react';
+import { useCallback, useEffect, useState, useRef, lazy, Suspense } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateReactionActivity, updateReactionActivityGroup } from 'reducers/redux-utils/activity';
 import { createComment, createCommentGroup } from 'reducers/redux-utils/comment';
-import CommentEditor from 'shared/comment-editor';
-import GridImage from 'shared/grid-image';
-import PostActionBar from 'shared/post-action-bar';
-import PostBook from 'shared/post-book';
-import UserAvatar from 'shared/user-avatar';
+const CommentEditor = lazy(() => import('shared/comment-editor'));
+const GridImage = lazy(() => import('shared/grid-image'));
+const PostActionBar = lazy(() => import('shared/post-action-bar'));
+const PostBook = lazy(() => import('shared/post-book'));
+const UserAvatar = lazy(() => import('shared/user-avatar'));
 import './post.scss';
-import PreviewLink from 'shared/preview-link/PreviewLink';
+const PreviewLink = lazy(() => import('shared/preview-link/PreviewLink'));
 import { NotificationError } from 'helpers/Error';
-import ReactRating from 'shared/react-rating';
+const ReactRating = lazy(() => import('shared/react-rating'));
 import { Link, useNavigate } from 'react-router-dom';
 import { createCommentReview } from 'reducers/redux-utils/book';
-import Comment from 'shared/comments';
-import QuoteCard from 'shared/quote-card';
-import PostShare from 'shared/posts-Share';
+const Comment = lazy(() => import('shared/comments'));
+const QuoteCard = lazy(() => import('shared/quote-card'));
+const PostShare = lazy(() => import('shared/posts-Share'));
 import Play from 'assets/images/play.png';
 import { likeAndUnlikeReview } from 'reducers/redux-utils/book';
 import {
@@ -37,11 +37,14 @@ import {
 	MY_BOOK_VERB_SHARE,
 } from 'constants';
 import { IconRanks } from 'components/svg';
-import AuthorBook from 'shared/author-book';
+const AuthorBook = lazy(() => import('shared/author-book'));
 import Storage from 'helpers/Storage';
 import { checkUserLogin } from 'reducers/redux-utils/auth';
 import ShareUsers from 'pages/home/components/newfeed/components/modal-share-users';
-import ShareTarget from 'shared/share-target';
+const ShareTarget = lazy(() => import('shared/share-target'));
+import { handleMentionCommentId } from 'reducers/redux-utils/notificaiton';
+import { getMiniPostComments } from 'reducers/redux-utils/post';
+import Circle from 'shared/loading/circle';
 
 const urlRegex =
 	/(https?:\/\/)?(www(\.))?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/g;
@@ -56,13 +59,16 @@ const verbShareArray = [
 	MY_BOOK_VERB_SHARE,
 ];
 
-function Post({ postInformations, type }) {
+function Post({ postInformations, type, reduxMentionCommentId }) {
 	const [postData, setPostData] = useState({});
 	const [videoId, setVideoId] = useState('');
+	const { userInfo } = useSelector(state => state.auth);
 	const [replyingCommentId, setReplyingCommentId] = useState(-1);
 	const [mentionUsersArr, setMentionUsersArr] = useState([]);
 
-	const { userInfo } = useSelector(state => state.auth);
+	const [mentionCommentId, setMentionCommentId] = useState(null);
+	const [firstPlaceComment, setFirstPlaceComment] = useState([]);
+	const [firstPlaceCommentId, setFirstPlaceCommentId] = useState(null);
 
 	const clickReply = useRef(null);
 	const doneGetPostData = useRef(false);
@@ -235,8 +241,20 @@ function Post({ postInformations, type }) {
 							paramInfo[0].users.firstName + ' ' + paramInfo[0].users.lastName}
 					</Link>
 					{' và '}
-					{paramInfo.length - 1}
-					{' người khác.'}
+					<span className='post__user__container__mention-users-plus'>
+						{paramInfo.length - 1} người khác.
+						<div className='post__user__container__list-mention-users'>
+							{!!paramInfo.length && (
+								<>
+									{paramInfo.slice(1).map((item, index) => (
+										<div key={index}>
+											{item.users.fullName || item.users.firstName + ' ' + item.users.lastName}
+										</div>
+									))}
+								</>
+							)}
+						</div>
+					</span>
 				</span>
 			);
 		}
@@ -272,225 +290,324 @@ function Post({ postInformations, type }) {
 		}
 	};
 
+	const handleChangeOrderQuoteComments = async () => {
+		try {
+			// Gọi api lấy thông tin của bình luận nhắc đến bạn
+			const params = { filter: JSON.stringify([{ operator: 'eq', value: mentionCommentId, property: 'id' }]) };
+			const mentionedCommentAPI = await dispatch(
+				getMiniPostComments({ postId: postData.id, params: params })
+			).unwrap();
+			if (!_.isEmpty(mentionedCommentAPI)) {
+				if (mentionedCommentAPI[0].replyId === null) {
+					// Đảo thứ tự replies
+					const reverseReplies = mentionedCommentAPI[0].reply.reverse();
+					const obj = { ...mentionedCommentAPI[0], reply: reverseReplies };
+					setFirstPlaceComment([obj]);
+					setFirstPlaceCommentId(mentionCommentId);
+				} else {
+					const params2 = {
+						filter: JSON.stringify([
+							{ operator: 'eq', value: mentionedCommentAPI[0].replyId, property: 'id' },
+						]),
+					};
+					// Gọi api lấy thông tin của bình luận cha của bình luận nhắc đến bạn
+					const fatherOfMentionedCommentAPI = await dispatch(
+						getMiniPostComments({ postId: postData.id, params: params2 })
+					).unwrap();
+					// Đảo thứ tự replies
+					const reverseRepliesFather = fatherOfMentionedCommentAPI[0].reply.reverse();
+					const objFather = { ...fatherOfMentionedCommentAPI[0], reply: reverseRepliesFather };
+					setFirstPlaceComment([objFather]);
+					setFirstPlaceCommentId(mentionedCommentAPI[0].replyId);
+				}
+			}
+		} catch (err) {
+			NotificationError(err);
+		}
+	};
+
+	useEffect(() => {
+		if (reduxMentionCommentId && mentionCommentId === null) {
+			setMentionCommentId(reduxMentionCommentId);
+		}
+		if (!_.isEmpty(postData) && mentionCommentId) {
+			// Nếu bấm xem bình luận nhắc đến bạn từ thông báo thì sẽ đưa bình luận đó lên đầu
+			handleChangeOrderQuoteComments();
+			// Sau đó xóa mentionCommentId trong redux
+			dispatch(handleMentionCommentId(null));
+		}
+	}, [postData]);
+
 	return (
 		<div className='post__container'>
-			<div className='post__user-status'>
-				<UserAvatar
-					data-testid='post__user-avatar'
-					className='post__user-status__avatar'
-					source={postData?.createdBy?.avatarImage || postData.user?.avatarImage}
-					handleClick={() => navigate(`/profile/${postData.createdBy.id}`)}
-				/>
-				<div className='post__user-status__name-and-post-time-status'>
-					<div data-testid='post__user-name' className='post__user-status__name'>
-						<div className='post__user__container'>
-							<Link
-								to={`/profile/${postData.createdBy?.id || postData.user?.id}`}
-								data-testid='post__user-name'
-								className='post__user-status__name'
-							>
-								{postData?.createdBy?.fullName || postData?.user?.fullName || 'Ẩn danh'}
-							</Link>
-							{/* tagged people */}
-							{postData.mentionsUsers &&
-								!!postData.mentionsUsers.length &&
-								withFriends(postData.mentionsUsers)}
-							{postData.verb === GROUP_POST_VERB && (
-								<>
-									<img className='post__user-icon' src={Play} alt='arrow' />
-									<Link
-										to={`/group/${postData.group?.id || postData.groupInfo?.id}`}
-										className='post__name__group'
-									>
-										{postData.group?.name || postData.groupInfo?.name}
-									</Link>
-								</>
-							)}
-						</div>
+			<Suspense fallback={<Circle />}>
+				<div className='post__user-status'>
+					<UserAvatar
+						data-testid='post__user-avatar'
+						className='post__user-status__avatar'
+						source={postData?.createdBy?.avatarImage || postData.user?.avatarImage}
+						handleClick={() => navigate(`/profile/${postData.createdBy.id}`)}
+					/>
+					<div className='post__user-status__name-and-post-time-status'>
+						<div data-testid='post__user-name' className='post__user-status__name'>
+							<div className='post__user__container'>
+								<Link
+									to={`/profile/${postData.createdBy?.id || postData.user?.id}`}
+									data-testid='post__user-name'
+									className='post__user-status__name'
+								>
+									{postData?.createdBy?.fullName || postData?.user?.fullName || 'Ẩn danh'}
+								</Link>
 
-						<div className='post__user-status__post-time-status'>
-							<span>{calculateDurationTime(postData.time || postData.createdAt)}</span>
-							<>
-								{postData.book && (
-									<div className='post__user-status__subtitle'>
-										<span>Cập nhật tiến độ đọc sách</span>
-										{postInformations?.book?.actorRating !== null ? (
-											<>
-												<div className='post__user-status__post-time-status__online-dot'></div>
-												<span>Xếp hạng</span>
-												<ReactRating
-													readonly={true}
-													initialRating={
-														postInformations?.book?.actorRating
-															? postInformations?.book?.actorRating?.star
-															: 0
-													}
-												/>
-											</>
-										) : null}
-									</div>
+								{/* tagged people */}
+								{postData.mentionsUsers &&
+									!!postData.mentionsUsers.length &&
+									withFriends(postData.mentionsUsers)}
+								{postData.verb === GROUP_POST_VERB && (
+									<>
+										<img className='post__user-icon' src={Play} alt='arrow' />
+										<Link to={`/group/${postData.groupInfo?.id}`} className='post__name__group'>
+											{postData.groupInfo?.name}
+										</Link>
+									</>
 								)}
-							</>
+							</div>
+
+							<div className='post__user-status__post-time-status'>
+								<span>{calculateDurationTime(postData.time || postData.createdAt)}</span>
+								<>
+									{postData.book && (
+										<div className='post__user-status__subtitle'>
+											<span>Cập nhật tiến độ đọc sách</span>
+											{postInformations?.book?.actorRating !== null ? (
+												<>
+													<div className='post__user-status__post-time-status__online-dot'></div>
+													<span>Xếp hạng</span>
+													<ReactRating
+														readonly={true}
+														initialRating={
+															postInformations?.book?.actorRating
+																? postInformations?.book?.actorRating?.star
+																: 0
+														}
+													/>
+												</>
+											) : null}
+										</div>
+									)}
+								</>
+							</div>
 						</div>
 					</div>
 				</div>
-			</div>
-			{(postData.message || postData.content) && (
-				<div
-					className='post__description'
-					dangerouslySetInnerHTML={{
-						__html: generateContent(postData.message || postData.content),
-					}}
-				></div>
-			)}
+				{(postData.message || postData.content) && (
+					<div
+						className='post__description'
+						dangerouslySetInnerHTML={{
+							__html: generateContent(postData.message || postData.content),
+						}}
+					></div>
+				)}
 
-			{!!postData?.mentionsAuthors?.length && (
-				<ul className='tagged'>
-					{postData.mentionsAuthors?.map(item => (
-						<li key={item.id} className={classNames('badge bg-primary-light')}>
-							<Feather />
-							<span>
-								{item.authors.name ||
-									item.authors.fullName ||
-									item.authors.lastName ||
-									item.authors.firstName ||
-									'Không xác định'}
-							</span>
-						</li>
-					))}
-				</ul>
-			)}
+				{!!postData?.mentionsAuthors?.length && (
+					<ul className='tagged'>
+						{postData.mentionsAuthors?.map(item => (
+							<li key={item.id} className={classNames('badge bg-primary-light')}>
+								<Feather />
+								<span>
+									{item.authors.name ||
+										item.authors.fullName ||
+										item.authors.lastName ||
+										item.authors.firstName ||
+										'Không xác định'}
+								</span>
+							</li>
+						))}
+					</ul>
+				)}
 
-			{!!postData?.mentionsCategories?.length && (
-				<ul className='tagged'>
-					{postData.mentionsCategories?.map(item => (
-						<li key={item.id} className={classNames('badge bg-primary-light')}>
-							<span>{item.category.name}</span>
-						</li>
-					))}
-				</ul>
-			)}
-			{!_.isEmpty(postData.originId) && postData.originId.type === 'topQuote' && (
-				<div className='post__title__share__rank'>
-					<span className='number__title__rank'># Top {postData.originId.rank} quotes </span>
-					<span className='title__rank'>
-						{postData.info.category
-							? `  được like nhiều nhất thuộc ${postData.info.category.name} theo ${handleTime()} `
-							: `  được like nhiều nhất theo ${handleTime()} `}
-					</span>
-					<IconRanks />
-				</div>
-			)}
-			{!_.isEmpty(postData.originId) && postData.originId.type === 'topBook' && (
-				<div className='post__title__share__rank'>
-					<span className='number__title__rank'># Top {postData.originId.rank} </span>
-					<span className='title__rank'>
-						{`  cuốn sách tốt nhất ${
-							postData.info.category ? ` thuộc ${postData.info.category.name}` : ''
-						} theo ${handleTime()} `}
-					</span>
-					<IconRanks />
-				</div>
-			)}
+				{!!postData?.mentionsCategories?.length && (
+					<ul className='tagged'>
+						{postData.mentionsCategories?.map(item => (
+							<li key={item.id} className={classNames('badge bg-primary-light')}>
+								<span>{item.category.name}</span>
+							</li>
+						))}
+					</ul>
+				)}
+				{!_.isEmpty(postData.originId) && postData.originId.type === 'topQuote' && (
+					<div className='post__title__share__rank'>
+						<span className='number__title__rank'># Top {postData.originId.rank} quotes </span>
+						<span className='title__rank'>
+							{postData.info.category
+								? `  được like nhiều nhất thuộc ${postData.info.category.name} theo ${handleTime()} `
+								: `  được like nhiều nhất theo ${handleTime()} `}
+						</span>
+						<IconRanks />
+					</div>
+				)}
+				{!_.isEmpty(postData.originId) && postData.originId.type === 'topBook' && (
+					<div className='post__title__share__rank'>
+						<span className='number__title__rank'># Top {postData.originId.rank} </span>
+						<span className='title__rank'>
+							{`  cuốn sách tốt nhất ${
+								postData.info.category ? ` thuộc ${postData.info.category.name}` : ''
+							} theo ${handleTime()} `}
+						</span>
+						<IconRanks />
+					</div>
+				)}
 
-			{!_.isEmpty(postData.verb) && postData.verb === 'shareMyBook' && (
-				<div className='post__title__share__rank'>
-					<span className='number__title__rank'># Sách của tôi làm tác giả</span>
-				</div>
-			)}
+				{!_.isEmpty(postData.verb) && postData.verb === 'shareMyBook' && (
+					<div className='post__title__share__rank'>
+						<span className='number__title__rank'># Sách của tôi làm tác giả</span>
+					</div>
+				)}
 
-			{verbShareArray.indexOf(postData.verb) !== -1 && (
-				<div className='creat-post-modal-content__main__share-container'>
-					{postData.verb === POST_VERB_SHARE && <PostShare postData={postData} />}
-					{postData.verb === QUOTE_VERB_SHARE && <QuoteCard data={postData.sharePost} isShare={true} />}
-					{postData.verb === GROUP_POST_VERB_SHARE && <PostShare postData={postData} />}
-					{(postData.verb === TOP_BOOK_VERB_SHARE || postData.verb === MY_BOOK_VERB_SHARE) && (
-						<AuthorBook data={postData} inPost={true} />
-					)}
-					{postData.verb === TOP_QUOTE_VERB_SHARE && <QuoteCard data={postData.info} isShare={true} />}
-				</div>
-			)}
-			{postData.verb === TOP_USER_VERB_SHARE && <ShareUsers postData={postData} />}
-			{postData.book && (
-				<PostBook
-					data={{ ...postData.book, bookLibrary: postData.bookLibrary, actorCreatedPost: postData.actor }}
-				/>
-			)}
-			{postData.verb === READ_TARGET_VERB_SHARE && <ShareTarget postData={postData} inPost={true} />}
-			{postData?.image?.length > 0 && <GridImage images={postData.image} inPost={true} postId={postData.id} />}
-			{(postData?.image?.length === 0 &&
-				!_.isEmpty(postData.sharePost?.preview) &&
-				_.isEmpty(postData.sharePost?.book)) ||
-				(!_.isEmpty(postData.preview) && _.isEmpty(postData.book) && (
-					<>
-						{videoId ? (
-							<iframe
-								className='post__video-youtube'
-								src={`//www.youtube.com/embed/${videoId}`}
-								frameBorder={0}
-								allowFullScreen={true}
-							></iframe>
-						) : (
-							<div onClick={() => directUrl(postData?.sharePost.url)}>
-								<PreviewLink
-									isFetching={false}
-									urlData={postData.sharePost?.preview || postData.preview}
-								/>
-							</div>
+				{verbShareArray.indexOf(postData.verb) !== -1 && (
+					<div className='creat-post-modal-content__main__share-container'>
+						{postData.verb === POST_VERB_SHARE && <PostShare postData={postData} />}
+						{postData.verb === QUOTE_VERB_SHARE && <QuoteCard data={postData.sharePost} isShare={true} />}
+						{postData.verb === GROUP_POST_VERB_SHARE && <PostShare postData={postData} />}
+						{(postData.verb === TOP_BOOK_VERB_SHARE || postData.verb === MY_BOOK_VERB_SHARE) && (
+							<AuthorBook data={postData} inPost={true} />
 						)}
-					</>
-				))}
-			<PostActionBar postData={postData} handleLikeAction={handleLikeAction} />
-			{postData.usersComments && !!postData.usersComments?.length && (
-				<>
-					{postData.usersComments.map(comment => (
-						<div key={comment.id}>
-							<Comment
-								commentLv1Id={comment.id}
-								dataProp={comment}
-								postData={postData}
-								handleReply={handleReply}
-								type={type}
-							/>
-							<div className='comment-reply-container'>
-								{comment.reply && !!comment.reply.length && (
-									<>
-										{comment.reply.map(commentChild => (
-											<div key={commentChild.id}>
-												<Comment
-													commentLv1Id={comment.id}
-													dataProp={commentChild}
-													postData={postData}
-													handleReply={handleReply}
-													type={type}
-												/>
-											</div>
-										))}
-									</>
-								)}
-								<CommentEditor
-									onCreateComment={onCreateComment}
-									className={classNames(`reply-comment-editor reply-comment-${comment.id}`, {
-										'show': comment.id === replyingCommentId,
-									})}
-									mentionUsersArr={mentionUsersArr}
-									commentLv1Id={comment.id}
-									replyingCommentId={replyingCommentId}
-									clickReply={clickReply.current}
-									setMentionUsersArr={setMentionUsersArr}
-								/>
-							</div>
-						</div>
+						{postData.verb === TOP_QUOTE_VERB_SHARE && <QuoteCard data={postData.info} isShare={true} />}
+					</div>
+				)}
+				{postData.verb === TOP_USER_VERB_SHARE && <ShareUsers postData={postData} />}
+				{postData.book && (
+					<PostBook
+						data={{ ...postData.book, bookLibrary: postData.bookLibrary, actorCreatedPost: postData.actor }}
+					/>
+				)}
+				{postData.verb === READ_TARGET_VERB_SHARE && <ShareTarget postData={postData} inPost={true} />}
+				{postData?.image?.length > 0 && (
+					<GridImage images={postData.image} inPost={true} postId={postData.id} />
+				)}
+				{(postData?.image?.length === 0 &&
+					!_.isEmpty(postData.sharePost?.preview) &&
+					_.isEmpty(postData.sharePost?.book)) ||
+					(!_.isEmpty(postData.preview) && _.isEmpty(postData.book) && (
+						<>
+							{videoId ? (
+								<iframe
+									className='post__video-youtube'
+									src={`//www.youtube.com/embed/${videoId}`}
+									frameBorder={0}
+									allowFullScreen={true}
+								></iframe>
+							) : (
+								<div onClick={() => directUrl(postData?.sharePost.url)}>
+									<PreviewLink
+										isFetching={false}
+										urlData={postData.sharePost?.preview || postData.preview}
+									/>
+								</div>
+							)}
+						</>
 					))}
-				</>
-			)}
-			<CommentEditor
-				className={`comment-editor-last-${postInformations.id}`}
-				commentLv1Id={null}
-				onCreateComment={onCreateComment}
-				mentionUsersArr={mentionUsersArr}
-				setMentionUsersArr={setMentionUsersArr}
-			/>
+				<PostActionBar postData={postData} handleLikeAction={handleLikeAction} />
+
+				{/* Comment mention đặt trên đầu  */}
+				{firstPlaceComment && !!firstPlaceComment?.length && (
+					<>
+						{firstPlaceComment.map(comment => (
+							<div key={comment.id}>
+								<Comment
+									commentLv1Id={comment.id}
+									dataProp={comment}
+									postData={postData}
+									handleReply={handleReply}
+									type={type}
+								/>
+								<div className='comment-reply-container'>
+									{comment.reply && !!comment.reply.length && (
+										<>
+											{comment.reply.map(commentChild => (
+												<div key={commentChild.id}>
+													<Comment
+														commentLv1Id={comment.id}
+														dataProp={commentChild}
+														postData={postData}
+														handleReply={handleReply}
+														type={type}
+													/>
+												</div>
+											))}
+										</>
+									)}
+									<CommentEditor
+										onCreateComment={onCreateComment}
+										className={classNames(`reply-comment-editor reply-comment-${comment.id}`, {
+											'show': comment.id === replyingCommentId,
+										})}
+										mentionUsersArr={mentionUsersArr}
+										commentLv1Id={comment.id}
+										replyingCommentId={replyingCommentId}
+										clickReply={clickReply.current}
+										setMentionUsersArr={setMentionUsersArr}
+									/>
+								</div>
+							</div>
+						))}
+					</>
+				)}
+
+				{/* các bình luận ngoại trừ firstPlaceComment */}
+				{postData.usersComments && !!postData.usersComments?.length && (
+					<>
+						{postData.usersComments
+							.filter(x => x.id !== firstPlaceCommentId)
+							.map(comment => (
+								<div key={comment.id}>
+									<Comment
+										commentLv1Id={comment.id}
+										dataProp={comment}
+										postData={postData}
+										handleReply={handleReply}
+										type={type}
+									/>
+									<div className='comment-reply-container'>
+										{comment.reply && !!comment.reply.length && (
+											<>
+												{comment.reply.map(commentChild => (
+													<div key={commentChild.id}>
+														<Comment
+															commentLv1Id={comment.id}
+															dataProp={commentChild}
+															postData={postData}
+															handleReply={handleReply}
+															type={type}
+														/>
+													</div>
+												))}
+											</>
+										)}
+										<CommentEditor
+											onCreateComment={onCreateComment}
+											className={classNames(`reply-comment-editor reply-comment-${comment.id}`, {
+												'show': comment.id === replyingCommentId,
+											})}
+											mentionUsersArr={mentionUsersArr}
+											commentLv1Id={comment.id}
+											replyingCommentId={replyingCommentId}
+											clickReply={clickReply.current}
+											setMentionUsersArr={setMentionUsersArr}
+										/>
+									</div>
+								</div>
+							))}
+					</>
+				)}
+				<CommentEditor
+					className={`comment-editor-last-${postInformations.id}`}
+					commentLv1Id={null}
+					onCreateComment={onCreateComment}
+					mentionUsersArr={mentionUsersArr}
+					setMentionUsersArr={setMentionUsersArr}
+				/>
+			</Suspense>
 		</div>
 	);
 }
@@ -498,11 +615,13 @@ function Post({ postInformations, type }) {
 Post.defaultProps = {
 	postInformations: {},
 	type: POST_TYPE,
+	reduxMentionCommentId: null,
 };
 
 Post.propTypes = {
 	postInformations: PropTypes.object,
 	type: PropTypes.string,
+	reduxMentionCommentId: PropTypes.any,
 };
 
 export default Post;

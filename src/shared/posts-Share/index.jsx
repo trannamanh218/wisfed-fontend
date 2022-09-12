@@ -61,8 +61,7 @@ const PostShare = ({ postData, inCreatePost = false }) => {
 							paramInfo[0].users.firstName + ' ' + paramInfo[0].users.lastName}
 					</Link>
 					<span style={{ fontWeight: '500' }}> và </span>
-					{paramInfo.length - 1}
-					<span style={{ fontWeight: '500' }}> người khác.</span>
+					<span style={{ fontWeight: '600', cursor: 'pointer' }}>{paramInfo.length - 1} người khác.</span>
 				</span>
 			);
 		}
