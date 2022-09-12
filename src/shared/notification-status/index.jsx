@@ -59,14 +59,19 @@ const NotificationStatus = ({ item, setGetNotifications, getNotifications }) => 
 		setIsRead(true);
 
 		switch (items.verb) {
-			case 'likeMiniPost' || 'commentMiniPost' || 'likeGroupPost' || 'commentGroupPost':
+			case 'likeMiniPost':
+			case 'commentMiniPost':
+			case 'likeGroupPost':
+			case 'commentGroupPost':
 				navigate(
 					`/detail-feed/${
 						items.verb === 'commentMiniPost' || items.verb === 'likeMiniPost' ? 'mini-post' : 'group-post'
 					}/${items.originId?.minipostId || items.originId?.groupPostId}`
 				);
 				break;
-			case 'follow' || 'addFriend' || 'friendAccepted':
+			case 'follow':
+			case 'addFriend':
+			case 'friendAccepted':
 				navigate(`/profile/${items.createdBy?.id || items.originId.userId}`);
 				break;
 			case 'topUserRanking':
@@ -78,7 +83,8 @@ const NotificationStatus = ({ item, setGetNotifications, getNotifications }) => 
 			case 'inviteGroup':
 				navigate(`/Group/${items.originId.groupId}`);
 				break;
-			case 'replyComment' || 'shareQuote':
+			case 'replyComment':
+			case 'shareQuote':
 				navigate(`/detail-feed/mini-post/${items.originId.minipostId}`);
 				break;
 			case 'commentQuote':
