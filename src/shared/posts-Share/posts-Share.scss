@@ -34,6 +34,24 @@
 	.modal-body {
 		height: 40vh;
 		overflow-y: auto;
+		&::-webkit-scrollbar {
+			width: 8px;
+		}
+
+		/* Track */
+		&::-webkit-scrollbar-track {
+			background: #f1f1f1;
+			border-radius: 8px;
+		}
+
+		/* Handle */
+		&::-webkit-scrollbar-thumb {
+			background: rgba(#606060, 0.3);
+			border-radius: 8px;
+			&:hover {
+				background: rgba(#606060, 0.2);
+			}
+		}
 	}
 	&__avatar {
 		width: 40px;
