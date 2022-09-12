@@ -2,7 +2,7 @@ import './add-and-search-categories.scss';
 import { CloseX, Search, CheckIcon } from 'components/svg';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 function AddAndSearchCategories({
 	categoryAddedList,
@@ -18,12 +18,15 @@ function AddAndSearchCategories({
 	hasSearchIcon,
 	placeholder,
 	disabledAddValue,
+	maxAddedValue,
 }) {
 	const focusCategoryInput = () => {
 		if (categoryInput.current) {
 			categoryInput.current.focus();
 		}
 	};
+
+	const [hiddenInput, setHiddenInput] = useState(false);
 
 	useEffect(() => {
 		if (categoryInput.current) {
@@ -39,6 +42,16 @@ function AddAndSearchCategories({
 			};
 		}
 	}, []);
+
+	useEffect(() => {
+		if (maxAddedValue) {
+			if (categoryAddedList.length >= maxAddedValue) {
+				setHiddenInput(true);
+			} else {
+				setHiddenInput(false);
+			}
+		}
+	}, [categoryAddedList]);
 
 	return (
 		<div className='add-and-search-categories'>
@@ -64,7 +77,7 @@ function AddAndSearchCategories({
 							style={{ width: '8px' }}
 						>
 							<input
-								className='add-and-search-categories__input'
+								className={`add-and-search-categories__input ${hiddenInput ? 'hidden' : ''}`}
 								value={inputCategoryValue}
 								onChange={searchCategory}
 								ref={categoryInput}
@@ -89,7 +102,7 @@ function AddAndSearchCategories({
 									key={item.id}
 									onClick={() => addCategory(item)}
 								>
-									<span>{item.name || item.fullName}</span>
+									<span>{item.name || item.fullName || item.firstName + ' ' + item.lastName}</span>
 									<>
 										{categoryAddedList.filter(categoryAdded => categoryAdded.id === item.id)
 											.length > 0 && (
@@ -114,6 +127,7 @@ function AddAndSearchCategories({
 AddAndSearchCategories.defaultProps = {
 	placeholder: 'Tìm kiếm và thêm chủ đề',
 	disabledAddValue: false,
+	maxAddedValue: null,
 };
 
 AddAndSearchCategories.propTypes = {
@@ -130,6 +144,7 @@ AddAndSearchCategories.propTypes = {
 	hasSearchIcon: PropTypes.bool,
 	placeholder: PropTypes.string,
 	disabledAddValue: PropTypes.bool,
+	maxAddedValue: PropTypes.number,
 };
 
 export default AddAndSearchCategories;

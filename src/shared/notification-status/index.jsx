@@ -110,6 +110,10 @@ const NotificationStatus = ({ item, setGetNotifications, getNotifications }) => 
 						dispatch(handleMentionCommentId(item.originId.commentMiniPostId));
 						navigate(`/detail-feed/mini-post/${items.originId.minipostId}`);
 						break;
+					case 'commentGroupPost':
+						dispatch(handleMentionCommentId(item.originId.commentGroupPostId));
+						navigate(`/detail-feed/group-post/${items.originId.groupPostId}`);
+						break;
 					default:
 						navigate(`/detail-feed/mini-post/${items.originId.minipostId}`);
 				}

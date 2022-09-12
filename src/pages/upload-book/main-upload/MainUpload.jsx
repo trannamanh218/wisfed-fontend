@@ -308,6 +308,7 @@ export default function MainUpload() {
 							setInputCategoryValue={setInputCategoryValue}
 							categoryAddedList={categoryAddedList}
 							setCategoryAddedList={setCategoryAddedList}
+							maxAddedValue={5}
 						/>
 					</div>
 					<div className='inp-book'>

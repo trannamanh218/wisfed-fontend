@@ -279,6 +279,7 @@ const PopupCreateGroup = ({ handleClose }) => {
 			imgUrl !== undefined &&
 			!_.isEmpty(listAuthors) &&
 			(lastTag.includes('#') || !_.isEmpty(listHashtags)) &&
+			lastTag !== '#' &&
 			inputDiscription !== '' &&
 			inputNameGroup !== '' &&
 			categoryIdBook.length > 0
@@ -326,7 +327,7 @@ const PopupCreateGroup = ({ handleClose }) => {
 	const createGroup = async () => {
 		const newListHastag = listHashtags.map(item => `${item}`);
 		let newList;
-		if (lastTag.includes('#')) {
+		if (lastTag.includes('#') && lastTag !== '#') {
 			newList = [...newListHastag, lastTag];
 		} else {
 			newList = newListHastag;
@@ -341,22 +342,24 @@ const PopupCreateGroup = ({ handleClose }) => {
 			categoryIds: categoryIdBook,
 			bookIds: listBookAdd,
 		};
-		try {
-			await dispatch(getCreatGroup(data)).unwrap();
-			const customId = 'custom-id-PopupCreateGroup';
-			toast.success('Tạo nhóm thành công', { toastId: customId });
-			dispatch(handleResetGroupList());
-		} catch (err) {
-			NotificationError(err);
-		} finally {
-			handleClose();
+		if (isShowBtn) {
+			try {
+				await dispatch(getCreatGroup(data)).unwrap();
+				const customId = 'custom-id-PopupCreateGroup';
+				toast.success('Tạo nhóm thành công', { toastId: customId });
+				dispatch(handleResetGroupList());
+			} catch (err) {
+				NotificationError(err);
+			} finally {
+				handleClose();
+			}
 		}
 	};
 
 	const listKindOfGroup = [
 		{ value: 'book', title: 'Sách' },
 		{ value: 'author', title: 'Tác giả' },
-		{ value: 'category', title: ' Chia sẻ' },
+		{ value: 'category', title: 'Chia sẻ' },
 	];
 
 	const listIdBook = [
@@ -442,6 +445,7 @@ const PopupCreateGroup = ({ handleClose }) => {
 						onChangeOption={onchangeKindOfGroup}
 					/>
 				</div>
+
 				{kindOfGroup.value === 'book' && (
 					<div className='form-field-select__kind-of-group'>
 						<label>Chủ đề sách</label>
@@ -558,7 +562,7 @@ const PopupCreateGroup = ({ handleClose }) => {
 						''
 					)}
 				</div>
-				<div className={!isShowBtn ? 'disableBtn' : `form-button`} onClick={() => createGroup()}>
+				<div className={!isShowBtn ? 'disableBtn' : `form-button`} onClick={createGroup}>
 					<button>Tạo nhóm</button>
 				</div>
 			</div>
