@@ -61,8 +61,7 @@ const PostShare = ({ postData, inCreatePost = false }) => {
 							paramInfo[0].users.firstName + ' ' + paramInfo[0].users.lastName}
 					</Link>
 					<span style={{ fontWeight: '500' }}> và </span>
-					{paramInfo.length - 1}
-					<span style={{ fontWeight: '500' }}> người khác.</span>
+					<span style={{ fontWeight: '600', cursor: 'pointer' }}>{paramInfo.length - 1} người khác.</span>
 				</span>
 			);
 		}
@@ -137,12 +136,10 @@ const PostShare = ({ postData, inCreatePost = false }) => {
 							<>
 								<img className='post__user-icon' src={Play} alt='arrow' />
 								{inCreatePost ? (
-									<span>
-										{postData?.group?.name || postData.sharePost.groupInfo.name || 'Ẩn danh'}
-									</span>
+									<span>{postData?.group?.name || postData?.sharePost?.groupInfo.name || ''}</span>
 								) : (
-									<Link to={`/group/${postData?.group?.id || postData.sharePost.groupId}`}>
-										{postData?.group?.name || postData.sharePost.groupInfo.name || 'Ẩn danh'}
+									<Link to={`/group/${postData?.group?.id || postData?.sharePost?.groupInfo.id}`}>
+										{postData?.group?.name || postData?.sharePost?.groupInfo.name || ''}
 									</Link>
 								)}
 							</>

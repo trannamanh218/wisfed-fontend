@@ -27,17 +27,8 @@ export const createCommentGroup = createAsyncThunk(
 
 const commentSlice = createSlice({
 	name: 'comment',
-	initialState: {
-		checkReplyToMe: false,
-	},
-	reducers: {
-		//check xem co phai dang phan hoi binh luan cua chinh minh k
-		handleCheckReplyToMe: (state, action) => {
-			state.checkReplyToMe = action.payload;
-		},
-	},
+	initialState: {},
 });
 
-export const { handleCheckReplyToMe } = commentSlice.actions;
 const comment = commentSlice.reducer;
 export default comment;

@@ -52,6 +52,9 @@
 				}
 			}
 		}
+		&__rating {
+			margin-bottom: 5px;
+		}
 	}
 
 	.favorite-quotes {
@@ -69,11 +72,15 @@
 		width: 100% !important;
 		.nav-tabs {
 			margin-right: 0;
+			font-size: small;
 		}
-	}
-}
-@media only screen and (max-width: 1280px) {
-	.main-profile {
-		width: 95%;
+		.author-book {
+			.btn-status {
+				transform: scale(0.85);
+				position: relative;
+				bottom: -4px;
+				right: -14px;
+			}
+		}
 	}
 }

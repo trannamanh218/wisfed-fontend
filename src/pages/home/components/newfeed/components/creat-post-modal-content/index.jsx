@@ -4,7 +4,7 @@ import { CloseX, Image, IconRanks, WorldNet } from 'components/svg'; // k xóa W
 import { STATUS_IDLE, STATUS_LOADING, STATUS_SUCCESS } from 'constants/index';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
-import { Fragment, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { createActivity } from 'reducers/redux-utils/activity';
@@ -60,6 +60,7 @@ const verbShareArray = [
 
 const urlRegex =
 	/(https?:\/\/)?(www(\.))?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/g;
+const hashtagRegex = /(#[a-z0-9][a-z0-9\-_]*)/g;
 
 function CreatPostModalContent({
 	hideCreatePostModal,
@@ -94,12 +95,13 @@ function CreatPostModalContent({
 	const [showImagePopover, setShowImagePopover] = useState(false);
 	const [buttonActive, setButtonActive] = useState(false);
 	const [content, setContent] = useState('');
-	const chartImgShare = useSelector(state => state.chart.updateImgPost);
+	const [hashtagsAdded, setHashtagsAdded] = useState([]);
 
 	const dispatch = useDispatch();
 	const location = useLocation();
 
 	const UpdateImg = useSelector(state => state.chart.updateImgPost);
+	const chartImgShare = useSelector(state => state.chart.updateImgPost);
 	const { resetTaggedData, postDataShare } = useSelector(state => state.post);
 	const {
 		auth: { userInfo },
@@ -154,6 +156,15 @@ function CreatPostModalContent({
 		}
 		setOldUrlAdded(urlAdded);
 	}, [urlAdded]);
+
+	useEffect(() => {
+		const hashtagsTemp = content.match(hashtagRegex);
+		if (hashtagsTemp) {
+			setHashtagsAdded(hashtagsTemp);
+		} else {
+			setHashtagsAdded([]);
+		}
+	}, [content]);
 
 	const getPreviewUrlFnc = async url => {
 		if (url) {
@@ -267,7 +278,7 @@ function CreatPostModalContent({
 			mentionsCategory: [],
 			image: [],
 			preview: urlPreviewData,
-			tags: [],
+			tags: hashtagsAdded,
 			progress: checkProgress ? checkProgress : 0,
 		};
 
@@ -542,6 +553,38 @@ function CreatPostModalContent({
 		}
 	};
 
+	const withFriends = paramInfo => {
+		if (paramInfo.length === 1) {
+			return (
+				<span>
+					{' cùng với '}
+					{paramInfo[0].fullName || paramInfo[0].firstName + ' ' + paramInfo[0].lastName}
+					<span style={{ fontWeight: '500' }}>.</span>
+				</span>
+			);
+		} else if (paramInfo.length === 2) {
+			return (
+				<span>
+					{' cùng với '}
+					{paramInfo[0].fullName || paramInfo[0].firstName + ' ' + paramInfo[0].lastName}
+					{' và '}
+					{paramInfo[1].fullName || paramInfo[1].firstName + ' ' + paramInfo[1].lastName}
+					<span style={{ fontWeight: '500' }}>.</span>
+				</span>
+			);
+		} else {
+			return (
+				<span>
+					{' cùng với '}
+					{paramInfo[0].fullName || paramInfo[0].firstName + ' ' + paramInfo[0].lastName}
+					{' và '}
+					{paramInfo.length - 1}
+					{' người khác.'}
+				</span>
+			);
+		}
+	};
+
 	return (
 		<div className='creat-post-modal-content'>
 			<Circle loading={status === STATUS_LOADING} />
@@ -578,22 +621,10 @@ function CreatPostModalContent({
 										userInfo?.firstName ||
 										'Không xác định'}
 
-									{taggedData.addFriends.length > 0 && (
-										<>
-											<span className='d-inline-block mx-1'>cùng với</span>
-											{taggedData.addFriends.map((item, index) => (
-												<Fragment key={item.id}>
-													{index !== 0 && <span>{' và '}</span>}
-													<span>
-														{item.fullName ||
-															item.lastName ||
-															item.firstName ||
-															'Không xác định'}
-													</span>
-												</Fragment>
-											))}
-										</>
-									)}
+									{/* tagged people */}
+									{taggedData.addFriends &&
+										!!taggedData.addFriends.length &&
+										withFriends(taggedData.addFriends)}
 								</p>
 								{/* k xóa ShareModeComponent */}
 								{/* <ShareModeComponent

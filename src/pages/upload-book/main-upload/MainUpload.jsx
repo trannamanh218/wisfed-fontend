@@ -18,6 +18,7 @@ import { addBookToSeries } from 'reducers/redux-utils/series';
 import { NotificationError } from 'helpers/Error';
 import classNames from 'classnames';
 import _ from 'lodash';
+import Circle from 'shared/loading/circle';
 const ModalSeries = lazy(() => import('shared/modal-series/ModalSeries'));
 const AddAndSearchAuthorUploadBook = lazy(() => import('./AddAndSearchAuthorUploadBook/AddAndSearchAuthorUploadBook'));
 const AddAndSearchCategoriesUploadBook = lazy(() =>
@@ -211,7 +212,7 @@ export default function MainUpload() {
 	};
 
 	return (
-		<Suspense fallback={<div>Loading...</div>}>
+		<Suspense fallback={<Circle />}>
 			<div className='group-btn-back'>
 				<Link to='/'>
 					<button style={{ width: '48px', height: '48px' }}>

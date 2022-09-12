@@ -81,9 +81,9 @@ const MainLayoutSearch = ({ valueGroupSearch }) => {
 					) : (
 						<InfiniteScroll dataLength={list.length} next={getSearch} hasMore={hasMore}>
 							<div className='list-group-container'>
-								{list.map(item => {
+								{list.map((item, index) => {
 									return (
-										<Link key={item.id} to={`/group/${item.id}`}>
+										<Link key={index} to={`/group/${item.id}`}>
 											<div className='item-group'>
 												<img
 													src={item.avatar}

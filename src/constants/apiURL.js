@@ -1,6 +1,5 @@
 // auth
 export const authAPI = '/api/v1/auth';
-export const authAPIToken = '/api/v1/auth/jwt';
 export const registerAPI = '/api/v1/auth/register';
 export const forgotPasswordAPI = '/api/v1/auth/forgotPassword';
 export const forgotPasswordAPIAdmin = '/api/v1/auth/adminForgotPassword/';
@@ -19,12 +18,14 @@ export const getMyLikedQuotesAPI = '/api/v1/quotes/listQuotesLiked';
 export const getQuotesByFriendsOrFollowersAPI = '/api/v1/quotes/listQuotesRelation';
 export const countQuotesByCategoryWithUserIdAPI = id => `/api/v1/quotes/countQuotes/${id}`;
 export const countAllQuotesByCategorydAPI = '/api/v1/quotes/countQuotes';
+export const getQuoteCommentsAPI = id => `/api/v1/quotes/listCommentQuote/${id}/`;
 
 // post
 export const postAPI = '/api/v1/posts';
 export const postDetailAPI = id => `/api/v1/posts/${id}`;
 export const previewLink = '/api/v1/preview/demo';
 export const likeCommentPostAPI = id => `/api/v1/commentMiniposts/like/${id}`;
+export const getMiniPostCommentsAPI = id => `/api/v1/getstream/listCommentMiniPost/${id}`;
 
 // books
 export const bookAPI = '/api/v1/books';
@@ -104,7 +105,8 @@ export const addfollow = '/api/v1/users/follow';
 export const unFollow = id => `/api/v1/users/${id}/unFollow`;
 export const listFollowing = id => `/api/v1/users/listFollowings/${id}`;
 
-//chart
+// hashtag
+export const listPostByHashtagAPI = '/api/v1/searchs/tags';
 
 // export const listAPIChart = (count, by) => `/api/v1/tracking?count=${count}&by=${by}`;
 export const listBooksReadYear = (type, id) => `/api/v1/libraries/listBookByType/${type}/${id}`;
@@ -139,19 +141,22 @@ export const leaveGroup = id => `/api/v1/groups/leaveGroup/${id}`;
 export const createPostGroup = id => `/api/v1/groups/${id}/createPost`;
 export const listPostGroup = id => `/api/v1/groups/${id}/groupFeed`;
 export const searchGroup = id => `/api/v1/groups/search/${id}`;
-
 export const unFollowGroupAPI = id => `/api/v1/groups/unFollow/${id}`;
 export const followGroupAPI = id => `/api/v1/groups/follow/${id}`;
+
 // search
 export const getSearchAPI = `/api/v1/searchs`;
 
 //share
 export const shareInternalAPI = (id, type) => `/api/v1/getstream/share/${id}?type=${type}`;
 export const shareTargetReadingAPI = '/api/v1/getstream/shareTargetRead';
+
 // share BXH
 export const shareApiRanks = id => `/api/v1/getstream/shareTop/${id}`;
+
 // share sach cua toi lam tac gia
 export const shareApiMyBook = id => `/api/v1/getstream/shareMyBook/${id}`;
+
 //authors
 export const randomAuthorAPI = '/api/v1/users/randomAuthor';
 

@@ -77,6 +77,7 @@ const notificationSlice = createSlice({
 		listNotifcaiton: [],
 		isRealTime: null,
 		reviewIdFromNotification: null,
+		mentionCommentId: null,
 	},
 	reducers: {
 		backgroundToggle: (state, action) => {
@@ -93,6 +94,9 @@ const notificationSlice = createSlice({
 		},
 		updateReviewIdFromNoti: (state, action) => {
 			state.reviewIdFromNotification = action.payload;
+		},
+		handleMentionCommentId: (state, action) => {
+			state.mentionCommentId = action.payload;
 		},
 	},
 	extraReducers: {
@@ -118,6 +122,7 @@ export const {
 	handleListNotification,
 	depenRenderNotificaion,
 	updateReviewIdFromNoti,
+	handleMentionCommentId,
 } = notificationSlice.actions;
 
 const notificationReducer = notificationSlice.reducer;

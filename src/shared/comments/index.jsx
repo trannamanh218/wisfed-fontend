@@ -75,6 +75,10 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 	};
 
 	useEffect(() => {
+		setData(dataProp);
+	}, [dataProp]);
+
+	useEffect(() => {
 		if (type === QUOTE_TYPE) {
 			if (data.createdBy === postData.createdBy) {
 				setIsAuthor(true);
