@@ -13,16 +13,19 @@ import { getBookDetail } from 'reducers/redux-utils/book';
 import { getUserDetail } from 'reducers/redux-utils/user';
 import Post from 'shared/post';
 import { REVIEW_TYPE } from 'constants/index';
+import { updateReviewIdFromNoti } from 'reducers/redux-utils/notificaiton';
 
 const Review = () => {
+	const { bookId, userId } = useParams();
 	const [listReview, setListReview] = useState([]);
 	const [bookInfo, setBookInfo] = useState({});
 	const [title, setTitle] = useState('');
+	const [filter, setFilter] = useState([]);
 
-	const { bookId, userId } = useParams();
 	const bookInfoRedux = useSelector(state => state.book.bookInfo);
 	const titleReviewPage = useSelector(state => state.common.titleReviewPage);
 	const directedFromProfile = useSelector(state => state.common.directedFromProfile);
+	const reviewIdFromNotification = useSelector(state => state.notificationReducer.reviewIdFromNotification);
 
 	const dispatch = useDispatch();
 
@@ -37,8 +40,22 @@ const Review = () => {
 				getUserData(bookName);
 			}
 		}
-		getReviewList();
+		if (reviewIdFromNotification) {
+			setFilter([{ 'operator': 'eq', 'value': reviewIdFromNotification, 'property': 'id' }]);
+		} else {
+			setFilter([
+				{ operator: 'eq', value: bookId, property: 'bookId' },
+				{ operator: 'eq', value: userId, property: 'updatedBy' },
+			]);
+		}
 	}, [bookId]);
+
+	useEffect(() => {
+		if (filter.length) {
+			getReviewList();
+			dispatch(updateReviewIdFromNoti(null));
+		}
+	}, [filter]);
 
 	const getReviewList = async () => {
 		try {
@@ -46,10 +63,7 @@ const Review = () => {
 				start: 0,
 				limit: 10,
 				sort: JSON.stringify([{ direction: 'DESC', property: 'createdAt' }]),
-				filter: JSON.stringify([
-					{ operator: 'eq', value: bookId, property: 'bookId' },
-					{ operator: 'eq', value: userId, property: 'updatedBy' },
-				]),
+				filter: JSON.stringify(filter),
 			};
 			const response = await dispatch(getReviewsBook(params)).unwrap();
 			setListReview(response);

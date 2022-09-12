@@ -76,6 +76,7 @@ const notificationSlice = createSlice({
 		activeKeyTabs: '',
 		listNotifcaiton: [],
 		isRealTime: null,
+		reviewIdFromNotification: null,
 		mentionCommentId: null,
 	},
 	reducers: {
@@ -90,6 +91,9 @@ const notificationSlice = createSlice({
 		},
 		depenRenderNotificaion: (state, action) => {
 			state.isRealTime = action.payload;
+		},
+		updateReviewIdFromNoti: (state, action) => {
+			state.reviewIdFromNotification = action.payload;
 		},
 		handleMentionCommentId: (state, action) => {
 			state.mentionCommentId = action.payload;
@@ -117,6 +121,7 @@ export const {
 	activeKeyTabsNotification,
 	handleListNotification,
 	depenRenderNotificaion,
+	updateReviewIdFromNoti,
 	handleMentionCommentId,
 } = notificationSlice.actions;
 

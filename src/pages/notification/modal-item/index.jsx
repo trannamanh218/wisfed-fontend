@@ -9,6 +9,7 @@ import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
 import { useState } from 'react';
 import { updateUser } from 'reducers/redux-utils/user';
+import { updateReviewIdFromNoti } from 'reducers/redux-utils/notificaiton';
 
 const ModalItem = ({ item, setModalNoti, getNotifications, setGetNotifications, selectKey }) => {
 	const navigate = useNavigate();
