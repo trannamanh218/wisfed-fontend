@@ -3,7 +3,7 @@ import { calculateDurationTime } from 'helpers/Common';
 import UserAvatar from 'shared/user-avatar';
 import { renderMessage } from 'helpers/HandleShare';
 import { ReplyFriendRequest, CancelFriendRequest } from 'reducers/redux-utils/user';
-import { readNotification } from 'reducers/redux-utils/notificaiton';
+import { readNotification, updateReviewIdFromNoti } from 'reducers/redux-utils/notificaiton';
 import { useDispatch, useSelector } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
 import { useNavigate } from 'react-router-dom';
@@ -98,10 +98,9 @@ const NotificationStatus = ({ item, setGetNotifications, getNotifications }) => 
 		} else if (item.verb === 'requestGroup') {
 			navigate(`/group/${items.originId.groupId}`);
 		} else if (item.verb === 'likeReview') {
+			dispatch(updateReviewIdFromNoti(Number(items.originId.reviewId)));
 			navigate(`/review/${items.originId.bookId}/${userInfo.id}`);
-		} else if (item.verb === 'likeCommentMiniPost') {
-			navigate(`/detail-feed/mini-post/${items.originId.minipostId}`);
-		} else if (item.verb === 'sharePost') {
+		} else if (item.verb === 'likeCommentMiniPost' || item.verb === 'sharePost') {
 			navigate(`/detail-feed/mini-post/${items.originId.minipostId}`);
 		}
 		dispatch(readNotification(params)).unwrap();

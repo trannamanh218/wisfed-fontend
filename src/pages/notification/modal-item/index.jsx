@@ -9,6 +9,7 @@ import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
 import { useState } from 'react';
 import { updateUser } from 'reducers/redux-utils/user';
+import { updateReviewIdFromNoti } from 'reducers/redux-utils/notificaiton';
 
 const ModalItem = ({ item, setModalNoti, getNotifications, setGetNotifications, selectKey }) => {
 	const navigate = useNavigate();
@@ -110,10 +111,9 @@ const ModalItem = ({ item, setModalNoti, getNotifications, setGetNotifications, 
 		} else if (item.verb === 'requestGroup') {
 			navigate(`/group/${items.originId.groupId}`);
 		} else if (item.verb === 'likeReview') {
+			dispatch(updateReviewIdFromNoti(Number(items.originId.reviewId)));
 			navigate(`/review/${items.originId.bookId}/${userInfo.id}`);
-		} else if (item.verb === 'likeCommentMiniPost') {
-			navigate(`/detail-feed/mini-post/${items.originId.minipostId}`);
-		} else if (item.verb === 'sharePost') {
+		} else if (item.verb === 'likeCommentMiniPost' || item.verb === 'sharePost') {
 			navigate(`/detail-feed/mini-post/${items.originId.minipostId}`);
 		}
 		dispatch(backgroundToggle(true));

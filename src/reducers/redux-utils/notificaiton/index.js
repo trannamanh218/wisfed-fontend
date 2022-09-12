@@ -76,6 +76,7 @@ const notificationSlice = createSlice({
 		activeKeyTabs: '',
 		listNotifcaiton: [],
 		isRealTime: null,
+		reviewIdFromNotification: null,
 	},
 	reducers: {
 		backgroundToggle: (state, action) => {
@@ -89,6 +90,9 @@ const notificationSlice = createSlice({
 		},
 		depenRenderNotificaion: (state, action) => {
 			state.isRealTime = action.payload;
+		},
+		updateReviewIdFromNoti: (state, action) => {
+			state.reviewIdFromNotification = action.payload;
 		},
 	},
 	extraReducers: {
@@ -108,8 +112,13 @@ const notificationSlice = createSlice({
 	},
 });
 
-export const { backgroundToggle, activeKeyTabsNotification, handleListNotification, depenRenderNotificaion } =
-	notificationSlice.actions;
+export const {
+	backgroundToggle,
+	activeKeyTabsNotification,
+	handleListNotification,
+	depenRenderNotificaion,
+	updateReviewIdFromNoti,
+} = notificationSlice.actions;
 
 const notificationReducer = notificationSlice.reducer;
 export default notificationReducer;
