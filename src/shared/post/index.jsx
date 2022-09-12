@@ -21,6 +21,7 @@ import { createCommentReview } from 'reducers/redux-utils/book';
 const Comment = lazy(() => import('shared/comments'));
 const QuoteCard = lazy(() => import('shared/quote-card'));
 const PostShare = lazy(() => import('shared/posts-Share'));
+import { Modal } from 'react-bootstrap';
 import Play from 'assets/images/play.png';
 import { likeAndUnlikeReview } from 'reducers/redux-utils/book';
 import {
@@ -68,6 +69,11 @@ function Post({ postInformations, type, reduxMentionCommentId }) {
 	const [mentionCommentId, setMentionCommentId] = useState(null);
 	const [firstPlaceComment, setFirstPlaceComment] = useState([]);
 	const [firstPlaceCommentId, setFirstPlaceCommentId] = useState(null);
+
+	const [showModalOthers, setShowModalOthers] = useState(false);
+
+	const handleCloseModalOthers = () => setShowModalOthers(false);
+	const handleShowModalOthers = () => setShowModalOthers(true);
 
 	const clickReply = useRef(null);
 	const doneGetPostData = useRef(false);
@@ -240,7 +246,7 @@ function Post({ postInformations, type, reduxMentionCommentId }) {
 							paramInfo[0].users.firstName + ' ' + paramInfo[0].users.lastName}
 					</Link>
 					{' và '}
-					<span className='post__user__container__mention-users-plus'>
+					<span className='post__user__container__mention-users-plus' onClick={() => handleShowModalOthers()}>
 						{paramInfo.length - 1} người khác.
 						<div className='post__user__container__list-mention-users'>
 							{!!paramInfo.length && (
@@ -254,6 +260,12 @@ function Post({ postInformations, type, reduxMentionCommentId }) {
 							)}
 						</div>
 					</span>
+					<Modal show={showModalOthers} onHide={handleCloseModalOthers} className='modal-tagged-others'>
+						<Modal.Header closeButton>
+							<Modal.Title>Mọi người</Modal.Title>
+						</Modal.Header>
+						<Modal.Body>Woohoo, you're reading this text in a modal!</Modal.Body>
+					</Modal>
 				</span>
 			);
 		}
