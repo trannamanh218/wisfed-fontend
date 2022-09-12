@@ -175,12 +175,20 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 		}
 	};
 
+	const limitedValue = 5;
 	const addCategory = category => {
 		if (categoryAddedList.filter(categoryAdded => categoryAdded.id === category.id).length > 0) {
 			removeCategory(category.id);
 		} else {
 			const categoryArrayTemp = [...categoryAddedList];
-			categoryArrayTemp.push(category);
+			if (categoryArrayTemp.length < limitedValue) {
+				categoryArrayTemp.push(category);
+			} else {
+				const customId = 'custom-id-handleAddToQuotes-addAuthor';
+				toast.warning(`Chỉ được chọn tối đa ${limitedValue} chủ đề trong 1 lần tạo quotes`, {
+					toastId: customId,
+				});
+			}
 			setCategoryAddedList(categoryArrayTemp);
 			setInputCategoryValue('');
 			setCategorySearchedList([]);
