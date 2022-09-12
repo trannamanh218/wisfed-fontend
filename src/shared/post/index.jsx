@@ -366,8 +366,11 @@ function Post({ postInformations, type, reduxMentionCommentId }) {
 								{postData.verb === GROUP_POST_VERB && (
 									<>
 										<img className='post__user-icon' src={Play} alt='arrow' />
-										<Link to={`/group/${postData.groupInfo?.id}`} className='post__name__group'>
-											{postData.groupInfo?.name}
+										<Link
+											to={`/group/${postData.groupInfo?.id || postData.group.id}`}
+											className='post__name__group'
+										>
+											{postData.groupInfo?.name || postData.group.name}
 										</Link>
 									</>
 								)}

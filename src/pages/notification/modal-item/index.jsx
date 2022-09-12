@@ -69,16 +69,21 @@ const ModalItem = ({ item, setModalNoti, getNotifications, setGetNotifications, 
 		const params = {
 			notificationId: items.id,
 		};
-
 		switch (items.verb) {
-			case 'likeMiniPost' || 'commentMiniPost' || 'likeGroupPost' || 'commentGroupPost':
+			case 'likeMiniPost':
+			case 'commentMiniPost':
+			case 'likeGroupPost':
+			case 'commentGroupPost':
+			case 'likeCommentGroupPost':
 				navigate(
 					`/detail-feed/${
 						items.verb === 'commentMiniPost' || items.verb === 'likeMiniPost' ? 'mini-post' : 'group-post'
 					}/${items.originId?.minipostId || items.originId?.groupPostId}`
 				);
 				break;
-			case 'follow' || 'addFriend' || 'friendAccepted':
+			case 'follow':
+			case 'addFriend':
+			case 'friendAccepted':
 				navigate(`/profile/${items.createdBy?.id || items.originId.userId}`);
 				break;
 			case 'topUserRanking':
@@ -90,10 +95,12 @@ const ModalItem = ({ item, setModalNoti, getNotifications, setGetNotifications, 
 			case 'inviteGroup':
 				navigate(`/Group/${items.originId.groupId}`);
 				break;
-			case 'replyComment' || 'shareQuote':
+			case 'replyComment':
+			case 'shareQuote':
 				navigate(`/detail-feed/mini-post/${items.originId.minipostId}`);
 				break;
 			case 'commentQuote':
+			case 'likeQuote':
 				navigate(`/quotes/detail/${items.originId.quoteId}`);
 				break;
 			case 'replyCommentQuote':
@@ -110,18 +117,15 @@ const ModalItem = ({ item, setModalNoti, getNotifications, setGetNotifications, 
 						navigate(`/detail-feed/group-post/${items.originId.groupPostId}`);
 						break;
 					case 'mentionMiniPost':
+					case 'commentMiniPost':
 						navigate(`/detail-feed/mini-post/${items.originId.minipostId}`);
 						break;
-					case 'commentMiniPost':
-						dispatch(handleMentionCommentId(item.originId.commentMiniPostId));
-						navigate(`/detail-feed/mini-post/${items.originId.minipostId}`);
+					case 'commentGroupPost':
+						navigate(`/detail-feed/group-post/${items.originId.groupPostId}`);
 						break;
 					default:
 						navigate(`/detail-feed/mini-post/${items.originId.minipostId}`);
 				}
-				break;
-			case 'likeQuote':
-				navigate(`/quotes/detail/${items.originId.quoteId}`);
 				break;
 			case 'likeCommentReview':
 				navigate(`/detail-feed/mini-post/${items.originId.minipostId}`);
@@ -130,6 +134,7 @@ const ModalItem = ({ item, setModalNoti, getNotifications, setGetNotifications, 
 				navigate(`/group/${items.originId.groupId}`);
 				break;
 			case 'likeReview':
+				dispatch(updateReviewIdFromNoti(items.originId.reviewId));
 				navigate(`/review/${items.originId.bookId}/${userInfo.id}`);
 				break;
 			case 'likeCommentMiniPost':
