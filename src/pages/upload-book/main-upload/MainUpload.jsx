@@ -83,9 +83,7 @@ export default function MainUpload() {
 		// setTranslators([]);
 		setTranslators('');
 		// setInputPublisherValue('');
-		// setPublisher([]);
-		setPublisher('');
-
+		setPublisher([]);
 		setInputCategoryValue('');
 		setCategoryAddedList([]);
 		setSeries({});
