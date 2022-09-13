@@ -63,9 +63,15 @@ const NotificationStatus = ({ item, setGetNotifications, getNotifications }) => 
 			case 'commentMiniPost':
 			case 'likeGroupPost':
 			case 'commentGroupPost':
+			case 'likeCommentGroupPost':
+			case 'shareGroupPost':
 				navigate(
 					`/detail-feed/${
-						items.verb === 'commentMiniPost' || items.verb === 'likeMiniPost' ? 'mini-post' : 'group-post'
+						items.verb === 'commentMiniPost' ||
+						items.verb === 'likeMiniPost' ||
+						items.verb === 'shareGroupPost'
+							? 'mini-post'
+							: 'group-post'
 					}/${items.originId?.minipostId || items.originId?.groupPostId}`
 				);
 				break;
@@ -126,6 +132,7 @@ const NotificationStatus = ({ item, setGetNotifications, getNotifications }) => 
 				navigate(`/review/${items.originId.bookId}/${userInfo.id}`);
 				break;
 			case 'likeCommentMiniPost':
+			case 'sharePost':
 				navigate(`/detail-feed/mini-post/${items.originId.minipostId}`);
 				break;
 			default:

@@ -72,7 +72,7 @@ function HeaderSearchMobile({ searchRef, isShowSearchMobile, setIsShowSearchMobi
 
 	const handleKeyDown = e => {
 		if (e.key === 'Enter' && valueInputSearch.trim().length) {
-			navigate(`/result/q=${valueInputSearch}`);
+			navigate(`/result/q=${valueInputSearch.trim()}`);
 		}
 	};
 
