@@ -70,7 +70,9 @@ const Header = () => {
 	}, [pathname]);
 
 	useEffect(() => {
-		setGetSlugResult(value);
+		if (value) {
+			setGetSlugResult(value);
+		}
 	}, [value]);
 
 	useEffect(() => {
