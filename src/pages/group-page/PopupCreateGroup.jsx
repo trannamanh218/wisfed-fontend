@@ -25,7 +25,7 @@ const PopupCreateGroup = ({ handleClose }) => {
 	const [listHashtags, setListHashtags] = useState([]);
 	const [imgUrl, setImgUrl] = useState('');
 	const [isShowBtn, setIsShowBtn] = useState(false);
-	const [kindOfGroup, setKindOfGroup] = useState('');
+	const [kindOfGroup, setKindOfGroup] = useState({});
 	const [lastTag, setLastTag] = useState('');
 
 	const [listAuthors, setListAuthors] = useState([]);
@@ -277,16 +277,14 @@ const PopupCreateGroup = ({ handleClose }) => {
 	useEffect(() => {
 		if (
 			imgUrl !== undefined &&
-			!_.isEmpty(listAuthors) &&
 			(lastTag.includes('#') || !_.isEmpty(listHashtags)) &&
 			lastTag !== '#' &&
 			inputDiscription !== '' &&
-			inputNameGroup !== '' &&
-			categoryIdBook.length > 0
+			inputNameGroup !== ''
 		) {
 			switch (kindOfGroup.value) {
 				case 'book':
-					if (listBookAdd.length > 0) {
+					if (listBookAdd.length > 0 && categoryIdBook.length > 0) {
 						setIsShowBtn(true);
 					} else {
 						setIsShowBtn(false);
@@ -299,15 +297,12 @@ const PopupCreateGroup = ({ handleClose }) => {
 						setIsShowBtn(false);
 					}
 					break;
-				case 'category':
-					if (listAuthors.length > 0) {
+				default: // case 'category'
+					if (categoryIdBook.length > 0) {
 						setIsShowBtn(true);
 					} else {
 						setIsShowBtn(false);
 					}
-					break;
-				default:
-					setIsShowBtn(false);
 			}
 		} else {
 			setIsShowBtn(false);
@@ -426,7 +421,7 @@ const PopupCreateGroup = ({ handleClose }) => {
 			<div className='form-field-wrapper'>
 				<div className='form-field-name'>
 					<label>Tên nhóm</label>
-					<span style={{ color: 'red', marginLeft: '4px' }}>*</span>
+					<span className='form-field-authors__asterisk'>*</span>
 					<Input
 						inputRef={groupNameInput}
 						isBorder={false}
@@ -437,7 +432,7 @@ const PopupCreateGroup = ({ handleClose }) => {
 
 				<div className='form-field-select__kind-of-group'>
 					<label>Kiểu nội dung</label>
-					<span style={{ color: 'red', marginLeft: '4px' }}>*</span>
+					<span className='form-field-authors__asterisk'>*</span>
 					<SelectBox
 						name='kindofgroup'
 						list={listKindOfGroup}
@@ -446,73 +441,88 @@ const PopupCreateGroup = ({ handleClose }) => {
 					/>
 				</div>
 
-				{kindOfGroup.value === 'book' && (
-					<div className='form-field-select__kind-of-group'>
-						<label>Chủ đề sách</label>
-						<span style={{ color: 'red', marginLeft: '4px' }}>*</span>
-						<SelectBox
-							name='categoryBook'
-							list={listIdBook}
-							defaultOption={categoryBookRef.current}
-							onChangeOption={onchangeBookCategory}
-						/>
-					</div>
-				)}
+				{kindOfGroup.value !== 'default' && (
+					<>
+						{kindOfGroup.value === 'book' && (
+							<div className='form-field-select__kind-of-group'>
+								<label>Chủ đề sách</label>
+								<span className='form-field-authors__asterisk'>*</span>
+								<SelectBox
+									name='categoryBook'
+									list={listIdBook}
+									defaultOption={categoryBookRef.current}
+									onChangeOption={onchangeBookCategory}
+								/>
+							</div>
+						)}
 
-				{(kindOfGroup.value === 'author' || kindOfGroup.value === 'category') && (
-					<div className='form-field-select__kind-of-group'>
-						<label>Chủ đề </label>
-						<span style={{ color: 'red', marginLeft: '4px' }}>*</span>
-						<AddAndSearchCategories
-							categoryAddedList={categoryAddedList}
-							categorySearchedList={categorySearchedList}
-							addCategory={addCategory}
-							removeCategory={removeCategory}
-							getDataFinish={getDataFinish}
-							searchCategory={searchCategory}
-							inputCategoryValue={inputCategoryValue}
-							categoryInputContainer={categoryInputContainer}
-							categoryInputWrapper={categoryInputWrapper}
-							categoryInput={categoryInput}
-							hasSearchIcon={true}
-						/>
-					</div>
-				)}
+						{kindOfGroup.value !== 'book' && (
+							<div className='form-field-select__kind-of-group'>
+								<label>Chủ đề </label>
+								{kindOfGroup.value === 'author' ? (
+									''
+								) : (
+									<span className='form-field-authors__asterisk'>*</span>
+								)}
+								<AddAndSearchCategories
+									categoryAddedList={categoryAddedList}
+									categorySearchedList={categorySearchedList}
+									addCategory={addCategory}
+									removeCategory={removeCategory}
+									getDataFinish={getDataFinish}
+									searchCategory={searchCategory}
+									inputCategoryValue={inputCategoryValue}
+									categoryInputContainer={categoryInputContainer}
+									categoryInputWrapper={categoryInputWrapper}
+									categoryInput={categoryInput}
+									hasSearchIcon={true}
+								/>
+							</div>
+						)}
 
-				<div className='form-field-authors'>
-					<label>Tên tác giả</label>
-					<span style={{ color: 'red', marginLeft: '4px' }}>*</span>
-					<AddAndSearchCategories
-						categoryAddedList={authorAddedList}
-						categorySearchedList={authorSearchedList}
-						addCategory={addAuthor}
-						removeCategory={removeAuthor}
-						getDataFinish={getDataFinish}
-						searchCategory={searchAuthor}
-						inputCategoryValue={inputAuthorValue}
-						categoryInputContainer={authorInputContainer}
-						categoryInputWrapper={authorInputWrapper}
-						categoryInput={authorInput}
-					/>
-				</div>
+						<div className='form-field-authors'>
+							<label>Tên tác giả</label>
+							{kindOfGroup.value === 'category' ? (
+								''
+							) : (
+								<span className='form-field-authors__asterisk'>*</span>
+							)}
+							<AddAndSearchCategories
+								categoryAddedList={authorAddedList}
+								categorySearchedList={authorSearchedList}
+								addCategory={addAuthor}
+								removeCategory={removeAuthor}
+								getDataFinish={getDataFinish}
+								searchCategory={searchAuthor}
+								inputCategoryValue={inputAuthorValue}
+								categoryInputContainer={authorInputContainer}
+								categoryInputWrapper={authorInputWrapper}
+								categoryInput={authorInput}
+								maxAddedValue={kindOfGroup.value === 'author' ? 5 : null}
+							/>
+						</div>
 
-				{kindOfGroup.value === 'book' && (
-					<div className='form-field-authors'>
-						<label>Tên sách</label>
-						<span style={{ color: 'red', marginLeft: '4px' }}>*</span>
-						<AddAndSearchCategories
-							categoryAddedList={bookAddedList}
-							categorySearchedList={bookSearchedList}
-							addCategory={addBook}
-							removeCategory={removeBook}
-							getDataFinish={getDataFinish}
-							searchCategory={searchBook}
-							inputCategoryValue={inputBookValue}
-							categoryInputContainer={bookInputContainer}
-							categoryInputWrapper={bookInputWrapper}
-							categoryInput={bookInput}
-						/>
-					</div>
+						<div className='form-field-authors'>
+							<label>Tên sách</label>
+							{kindOfGroup.value === 'category' || kindOfGroup.value === 'author' ? (
+								''
+							) : (
+								<span className='form-field-authors__asterisk'>*</span>
+							)}
+							<AddAndSearchCategories
+								categoryAddedList={bookAddedList}
+								categorySearchedList={bookSearchedList}
+								addCategory={addBook}
+								removeCategory={removeBook}
+								getDataFinish={getDataFinish}
+								searchCategory={searchBook}
+								inputCategoryValue={inputBookValue}
+								categoryInputContainer={bookInputContainer}
+								categoryInputWrapper={bookInputWrapper}
+								categoryInput={bookInput}
+							/>
+						</div>
+					</>
 				)}
 
 				<div className='form-field-discription'>

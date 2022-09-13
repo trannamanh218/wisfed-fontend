@@ -43,8 +43,8 @@ import Storage from 'helpers/Storage';
 import { checkUserLogin } from 'reducers/redux-utils/auth';
 import ShareUsers from 'pages/home/components/newfeed/components/modal-share-users';
 import ShareTarget from 'shared/share-target';
-import { handleMentionCommentId } from 'reducers/redux-utils/notificaiton';
-import { getMiniPostComments } from 'reducers/redux-utils/post';
+import { handleMentionCommentId, handleCheckIfMentionFromGroup } from 'reducers/redux-utils/notificaiton';
+import { getMiniPostComments, getGroupPostComments } from 'reducers/redux-utils/post';
 
 const urlRegex =
 	/(https?:\/\/)?(www(\.))?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/g;
@@ -59,7 +59,7 @@ const verbShareArray = [
 	MY_BOOK_VERB_SHARE,
 ];
 
-function Post({ postInformations, type, reduxMentionCommentId }) {
+function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMentionCmtFromGroup }) {
 	const [postData, setPostData] = useState({});
 	const [videoId, setVideoId] = useState('');
 	const { userInfo } = useSelector(state => state.auth);
@@ -67,6 +67,7 @@ function Post({ postInformations, type, reduxMentionCommentId }) {
 	const [mentionUsersArr, setMentionUsersArr] = useState([]);
 
 	const [mentionCommentId, setMentionCommentId] = useState(null);
+	const [checkIfMentionCmtFromGroup, setCheckIfMentionCmtFromGroup] = useState(null);
 	const [firstPlaceComment, setFirstPlaceComment] = useState([]);
 	const [firstPlaceCommentId, setFirstPlaceCommentId] = useState(null);
 
@@ -252,7 +253,7 @@ function Post({ postInformations, type, reduxMentionCommentId }) {
 							{!!paramInfo.length && (
 								<>
 									{paramInfo.slice(1).map((item, index) => (
-										<div key={index}>
+										<div className='post__user__container__list-mention-users__name' key={index}>
 											{item.users.fullName || item.users.firstName + ' ' + item.users.lastName}
 										</div>
 									))}
@@ -268,12 +269,15 @@ function Post({ postInformations, type, reduxMentionCommentId }) {
 							{!!paramInfo.length && (
 								<>
 									{paramInfo.slice(1).map((item, index) => (
-										<div key={index}>
-											<img
-												className='modal-tagged-others__avatar'
-												src={item.users.avatarImage}
-											></img>
-											{item.users.fullName || item.users.firstName + ' ' + item.users.lastName}
+										<div key={index} style={{ marginBottom: '1rem' }}>
+											<Link to={`/profile/${item.userId}`}>
+												<img
+													className='modal-tagged-others__avatar'
+													src={item.users.avatarImage}
+												></img>
+												{item.users.fullName ||
+													item.users.firstName + ' ' + item.users.lastName}
+											</Link>
 										</div>
 									))}
 								</>
@@ -315,13 +319,11 @@ function Post({ postInformations, type, reduxMentionCommentId }) {
 		}
 	};
 
-	const handleChangeOrderQuoteComments = async () => {
+	const handleChangeOrderMiniComments = async paramAPI => {
 		try {
 			// Gọi api lấy thông tin của bình luận nhắc đến bạn
 			const params = { filter: JSON.stringify([{ operator: 'eq', value: mentionCommentId, property: 'id' }]) };
-			const mentionedCommentAPI = await dispatch(
-				getMiniPostComments({ postId: postData.id, params: params })
-			).unwrap();
+			const mentionedCommentAPI = await dispatch(paramAPI({ postId: postData.id, params: params })).unwrap();
 			if (!_.isEmpty(mentionedCommentAPI)) {
 				if (mentionedCommentAPI[0].replyId === null) {
 					// Đảo thứ tự replies
@@ -337,7 +339,7 @@ function Post({ postInformations, type, reduxMentionCommentId }) {
 					};
 					// Gọi api lấy thông tin của bình luận cha của bình luận nhắc đến bạn
 					const fatherOfMentionedCommentAPI = await dispatch(
-						getMiniPostComments({ postId: postData.id, params: params2 })
+						paramAPI({ postId: postData.id, params: params2 })
 					).unwrap();
 					// Đảo thứ tự replies
 					const reverseRepliesFather = fatherOfMentionedCommentAPI[0].reply.reverse();
@@ -355,11 +357,19 @@ function Post({ postInformations, type, reduxMentionCommentId }) {
 		if (reduxMentionCommentId && mentionCommentId === null) {
 			setMentionCommentId(reduxMentionCommentId);
 		}
+		if (reduxCheckIfMentionCmtFromGroup === 'group') {
+			setCheckIfMentionCmtFromGroup(reduxCheckIfMentionCmtFromGroup);
+		}
 		if (!_.isEmpty(postData) && mentionCommentId) {
 			// Nếu bấm xem bình luận nhắc đến bạn từ thông báo thì sẽ đưa bình luận đó lên đầu
-			handleChangeOrderQuoteComments();
+			if (checkIfMentionCmtFromGroup === 'group') {
+				handleChangeOrderMiniComments(getGroupPostComments);
+			} else {
+				handleChangeOrderMiniComments(getMiniPostComments);
+			}
 			// Sau đó xóa mentionCommentId trong redux
 			dispatch(handleMentionCommentId(null));
+			dispatch(handleCheckIfMentionFromGroup(null));
 		}
 	}, [postData]);
 
@@ -640,12 +650,14 @@ Post.defaultProps = {
 	postInformations: {},
 	type: POST_TYPE,
 	reduxMentionCommentId: null,
+	reduxCheckIfMentionCmtFromGroup: null,
 };
 
 Post.propTypes = {
-	postInformations: PropTypes.object,
+	postInformations: PropTypes.any,
 	type: PropTypes.string,
 	reduxMentionCommentId: PropTypes.any,
+	reduxCheckIfMentionCmtFromGroup: PropTypes.any,
 };
 
 export default Post;

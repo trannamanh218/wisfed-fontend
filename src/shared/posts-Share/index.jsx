@@ -73,7 +73,7 @@ const PostShare = ({ postData, inCreatePost = false }) => {
 							{!!paramInfo.length && (
 								<>
 									{paramInfo.slice(1).map((item, index) => (
-										<div key={index}>
+										<div className='post__user__container__list-mention-users__name' key={index}>
 											{item.users.fullName || item.users.firstName + ' ' + item.users.lastName}
 										</div>
 									))}
@@ -89,12 +89,15 @@ const PostShare = ({ postData, inCreatePost = false }) => {
 							{!!paramInfo.length && (
 								<>
 									{paramInfo.slice(1).map((item, index) => (
-										<div key={index}>
-											<img
-												className='modal-tagged-others__avatar'
-												src={item.users.avatarImage}
-											></img>
-											{item.users.fullName || item.users.firstName + ' ' + item.users.lastName}
+										<div key={index} style={{ marginBottom: '1rem' }}>
+											<Link to={`/profile/${item.userId}`}>
+												<img
+													className='modal-tagged-others__avatar'
+													src={item.users.avatarImage}
+												></img>
+												{item.users.fullName ||
+													item.users.firstName + ' ' + item.users.lastName}
+											</Link>
 										</div>
 									))}
 								</>

@@ -27,6 +27,9 @@
 	top: 20%;
 	.modal-title {
 		margin-bottom: 0;
+		&.h4 {
+			margin-left: 40%;
+		}
 	}
 	.modal-content {
 		border-radius: 10px;
@@ -58,7 +61,7 @@
 		height: 40px;
 		border-radius: 50%;
 		margin-left: 1rem;
-		margin-right: 2rem;
-		margin-bottom: 1rem;
+		margin-right: 1rem;
+		object-fit: cover;
 	}
 }

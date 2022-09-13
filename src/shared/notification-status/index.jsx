@@ -3,7 +3,12 @@ import { calculateDurationTime } from 'helpers/Common';
 import UserAvatar from 'shared/user-avatar';
 import { renderMessage } from 'helpers/HandleShare';
 import { ReplyFriendRequest, CancelFriendRequest } from 'reducers/redux-utils/user';
-import { readNotification, updateReviewIdFromNoti, handleMentionCommentId } from 'reducers/redux-utils/notificaiton';
+import {
+	readNotification,
+	updateReviewIdFromNoti,
+	handleMentionCommentId,
+	handleCheckIfMentionFromGroup,
+} from 'reducers/redux-utils/notificaiton';
 import { useDispatch, useSelector } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
 import { useNavigate } from 'react-router-dom';
@@ -112,6 +117,7 @@ const NotificationStatus = ({ item, setGetNotifications, getNotifications }) => 
 						break;
 					case 'commentGroupPost':
 						dispatch(handleMentionCommentId(item.originId.commentGroupPostId));
+						dispatch(handleCheckIfMentionFromGroup('group'));
 						navigate(`/detail-feed/group-post/${items.originId.groupPostId}`);
 						break;
 					default:
