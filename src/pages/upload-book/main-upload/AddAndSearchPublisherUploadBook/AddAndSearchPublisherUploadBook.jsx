@@ -3,7 +3,7 @@ import { useState, useRef, useCallback } from 'react';
 // import ShareModeDropdown from 'shared/share-mode-dropdown';
 import _ from 'lodash';
 import { useDispatch } from 'react-redux';
-import { getSuggestionForPost } from 'reducers/redux-utils/activity';
+import { getPublishers } from 'reducers/redux-utils/publishers';
 import { NotificationError } from 'helpers/Error';
 import PropTypes from 'prop-types';
 
@@ -39,10 +39,13 @@ function AddAndSearchPublisherUploadBook({ inputPublisherValue, setInputPublishe
 		setPublisher(categoryArr);
 	};
 
-	const getSuggestionForCreatQuotes = async (input, option) => {
+	const getSuggestionForCreatQuotes = async option => {
 		try {
-			const data = await dispatch(getSuggestionForPost({ input, option })).unwrap();
-			setCategorySearchedList(data.rows);
+			const params = {
+				filter: JSON.stringify([option]),
+			};
+			const data = await dispatch(getPublishers(params)).unwrap();
+			setCategorySearchedList(data);
 		} catch (err) {
 			NotificationError(err);
 		} finally {
@@ -51,7 +54,7 @@ function AddAndSearchPublisherUploadBook({ inputPublisherValue, setInputPublishe
 	};
 
 	const debounceSearch = useCallback(
-		_.debounce((inputValue, option) => getSuggestionForCreatQuotes(inputValue, option), 700),
+		_.debounce(option => getSuggestionForCreatQuotes(option), 700),
 		[]
 	);
 
@@ -59,7 +62,7 @@ function AddAndSearchPublisherUploadBook({ inputPublisherValue, setInputPublishe
 		setGetDataFinish(false);
 		setCategorySearchedList([]);
 		setInputPublisherValue(e.target.value);
-		debounceSearch(e.target.value, { value: 'addCategory' });
+		debounceSearch({ operator: 'search', value: e.target.value, property: 'name' });
 		if (categoryInputWrapper.current) {
 			categoryInputWrapper.current.style.width = categoryInput.current.value?.length + 0.5 + 'ch';
 		}
@@ -83,7 +86,7 @@ function AddAndSearchPublisherUploadBook({ inputPublisherValue, setInputPublishe
 				categoryInput={categoryInput}
 				hasSearchIcon={true}
 				placeholder={'Tìm kiếm và chọn một nhà xuất bản'}
-				disabledAddValue={true}
+				maxAddedValue={1}
 			/>
 		</div>
 	);

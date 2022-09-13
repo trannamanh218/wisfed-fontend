@@ -20,6 +20,7 @@ import shelves from './shelves';
 import target from './target';
 import series from './series';
 import hashtagPage from './hashtag-page';
+import publishers from './publishers';
 
 const rootReducer = {
 	auth,
@@ -44,6 +45,7 @@ const rootReducer = {
 	target,
 	series,
 	hashtagPage,
+	publishers,
 };
 
 export default rootReducer;

@@ -17,7 +17,6 @@ function AddAndSearchCategories({
 	categoryInput,
 	hasSearchIcon,
 	placeholder,
-	disabledAddValue,
 	maxAddedValue,
 }) {
 	const focusCategoryInput = () => {
@@ -81,7 +80,6 @@ function AddAndSearchCategories({
 								value={inputCategoryValue}
 								onChange={searchCategory}
 								ref={categoryInput}
-								disabled={disabledAddValue}
 							/>
 						</div>
 					</div>
@@ -126,7 +124,6 @@ function AddAndSearchCategories({
 
 AddAndSearchCategories.defaultProps = {
 	placeholder: 'Tìm kiếm và thêm chủ đề',
-	disabledAddValue: false,
 	maxAddedValue: null,
 };
 
@@ -143,7 +140,6 @@ AddAndSearchCategories.propTypes = {
 	categoryInput: PropTypes.object,
 	hasSearchIcon: PropTypes.bool,
 	placeholder: PropTypes.string,
-	disabledAddValue: PropTypes.bool,
 	maxAddedValue: PropTypes.number,
 };
 

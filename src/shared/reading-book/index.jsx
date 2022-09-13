@@ -40,6 +40,7 @@ function ReadingBook({ bookData }) {
 			return 'Ẩn Danh';
 		}
 	};
+
 	return (
 		!_.isEmpty(bookData) && (
 			<div className='reading-book'>
