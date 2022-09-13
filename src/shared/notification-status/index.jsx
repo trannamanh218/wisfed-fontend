@@ -117,17 +117,23 @@ const NotificationStatus = ({ item, setGetNotifications, getNotifications }) => 
 					case 'commentGroupPost':
 						navigate(`/detail-feed/group-post/${items.originId.groupPostId}`);
 						break;
+					case 'commentReview':
+						dispatch(updateReviewIdFromNoti(items.originId.reviewId));
+						navigate(`/review/${items.originId.bookId}/${userInfo.id}`);
+						break;
 					default:
 						navigate(`/detail-feed/mini-post/${items.originId.minipostId}`);
 				}
 				break;
 			case 'likeCommentReview':
-				navigate(`/detail-feed/mini-post/${items.originId.minipostId}`);
+				dispatch(updateReviewIdFromNoti(items.originId.reviewId));
+				navigate(`/review/${items.originId.bookId}/${userInfo.id}`);
 				break;
 			case 'requestGroup':
 				navigate(`/group/${items.originId.groupId}`);
 				break;
 			case 'likeReview':
+			case 'commentReview':
 				dispatch(updateReviewIdFromNoti(items.originId.reviewId));
 				navigate(`/review/${items.originId.bookId}/${userInfo.id}`);
 				break;

@@ -15,6 +15,7 @@ import {
 	likeCommentGroupAPI,
 	unFollowGroupAPI,
 	followGroupAPI,
+	recommendGroup,
 } from 'constants/apiURL';
 import Request from 'helpers/Request';
 
@@ -27,6 +28,19 @@ export const getGroupList = createAsyncThunk('group/getGroupList', async (params
 		return rejectWithValue(error);
 	}
 });
+
+export const getRecommendGroup = createAsyncThunk(
+	'group/getRecommendGroup',
+	async (params = {}, { rejectWithValue }) => {
+		try {
+			const res = await Request.makeGet(recommendGroup, params);
+			return res.data;
+		} catch (err) {
+			const error = JSON.parse(err.response);
+			return rejectWithValue(error);
+		}
+	}
+);
 
 export const getGroupDettail = createAsyncThunk('group/getGroupDettail', async (id, { rejectWithValue }) => {
 	try {
