@@ -37,7 +37,7 @@ export default function MainUpload() {
 	const [image, setFrontBookCover] = useState('');
 	const [categoryAddedList, setCategoryAddedList] = useState([]);
 	const [authors, setAuthors] = useState([]);
-	const [translators, setTranslators] = useState('');
+	const [translators, setTranslators] = useState([]);
 	const [publisher, setPublisher] = useState([]);
 	const [language, setLanguage] = useState('');
 	const [series, setSeries] = useState({});
@@ -81,7 +81,7 @@ export default function MainUpload() {
 		setAuthors([]);
 		// setInputTranslatorValue('');
 		// setTranslators([]);
-		setTranslators('');
+		setTranslators([]);
 		// setInputPublisherValue('');
 		setPublisher([]);
 		setInputCategoryValue('');
@@ -165,7 +165,7 @@ export default function MainUpload() {
 			originalName: originalName,
 			authors: authorsArr,
 			translators: translators,
-			publisher: publisher[0],
+			publisher: publisher[0].id,
 			isbn: isbn,
 			publishDate: publishDate,
 			page: Number(page),
@@ -295,7 +295,7 @@ export default function MainUpload() {
 							className='input input--non-border'
 							placeholder='Dịch giả'
 							value={translators}
-							onChange={e => setTranslators(e.target.value)}
+							onChange={e => setTranslators([e.target.value])}
 						></input>
 					</div>
 					<div className='inp-book'>
