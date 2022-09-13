@@ -7,7 +7,13 @@ import { getPublishers } from 'reducers/redux-utils/publishers';
 import { NotificationError } from 'helpers/Error';
 import PropTypes from 'prop-types';
 
-function AddAndSearchPublisherUploadBook({ inputPublisherValue, setInputPublisherValue, publisher, setPublisher }) {
+function AddAndSearchPublisherUploadBook({
+	inputPublisherValue,
+	setInputPublisherValue,
+	publisher,
+	setPublisher,
+	maxAddedValue,
+}) {
 	const [categorySearchedList, setCategorySearchedList] = useState([]);
 	const [getDataFinish, setGetDataFinish] = useState(false);
 
@@ -86,7 +92,7 @@ function AddAndSearchPublisherUploadBook({ inputPublisherValue, setInputPublishe
 				categoryInput={categoryInput}
 				hasSearchIcon={true}
 				placeholder={'Tìm kiếm và chọn một nhà xuất bản'}
-				maxAddedValue={1}
+				maxAddedValue={maxAddedValue}
 			/>
 		</div>
 	);
@@ -97,6 +103,7 @@ AddAndSearchPublisherUploadBook.propTypes = {
 	setPublisher: PropTypes.func,
 	inputPublisherValue: PropTypes.string,
 	setInputPublisherValue: PropTypes.func,
+	maxAddedValue: PropTypes.number,
 };
 
 export default AddAndSearchPublisherUploadBook;

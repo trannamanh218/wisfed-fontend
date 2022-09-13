@@ -315,6 +315,7 @@ export default function MainUpload() {
 							setInputPublisherValue={setInputPublisherValue}
 							publisher={publisher}
 							setPublisher={setPublisher}
+							maxAddedValue={1}
 						/>
 					</div>
 					<div className='inp-book'>
