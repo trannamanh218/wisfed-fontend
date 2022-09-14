@@ -267,6 +267,7 @@
 		transform: translateX(-50%);
 		width: fit-content;
 		max-width: 150px;
+		z-index: 3;
 		&__name {
 			white-space: nowrap;
 			text-overflow: ellipsis;
