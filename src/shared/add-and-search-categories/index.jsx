@@ -89,7 +89,7 @@ function AddAndSearchCategories({
 									key={item.id}
 									onClick={() => addCategory(item)}
 								>
-									<span>{item.name || item.fullName}</span>
+									<span>{item.name || item.fullName || item.firstName + ' ' + item.lastName}</span>
 									<>
 										{categoryAddedList.filter(categoryAdded => categoryAdded.id === item.id)
 											.length > 0 && (
