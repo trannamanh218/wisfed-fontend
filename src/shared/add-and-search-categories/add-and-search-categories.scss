@@ -48,6 +48,7 @@
 	font-weight: 600;
 	font-size: 13px;
 	width: fit-content;
+	max-width: 95%;
 	line-height: 19px;
 	display: flex;
 	align-items: center;
@@ -75,6 +76,9 @@
 	font-size: 13px;
 	line-height: 19px;
 	background-color: transparent;
+	&.hidden {
+		display: none;
+	}
 }
 
 .add-and-search-categories__search-result {

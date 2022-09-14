@@ -15,6 +15,7 @@ const DetailFeed = () => {
 	const { idPost, type } = useParams();
 	const [isLoading, setIsLoading] = useState(true);
 	const reduxMentionCommentId = useSelector(state => state.notificationReducer.mentionCommentId);
+	const reduxCheckIfMentionCmtFromGroup = useSelector(state => state.notificationReducer.checkIfMentionFromGroup);
 
 	useEffect(async () => {
 		const params = {
@@ -34,7 +35,7 @@ const DetailFeed = () => {
 		} finally {
 			setIsLoading(false);
 		}
-	}, []);
+	}, [window.location.pathname]);
 
 	useEffect(() => {
 		window.scroll(0, 0);
@@ -45,12 +46,17 @@ const DetailFeed = () => {
 			<Circle loading={isLoading} />
 			<div className='detail_feed_container'>
 				{type === 'mini-post' ? (
-					<Post postInformations={detailFeed} type={POST_TYPE} />
+					<Post
+						postInformations={detailFeed}
+						type={POST_TYPE}
+						reduxMentionCommentId={reduxMentionCommentId}
+					/>
 				) : (
 					<Post
 						postInformations={detailFeed}
 						type={GROUP_TYPE}
 						reduxMentionCommentId={reduxMentionCommentId}
+						reduxCheckIfMentionCmtFromGroup={reduxCheckIfMentionCmtFromGroup}
 					/>
 				)}
 			</div>

@@ -6,8 +6,8 @@ import { Image } from 'react-bootstrap';
 import { CameraIcon, BackArrow, Calendar } from 'components/svg';
 import './MainUpload.scss';
 import { useState, useRef, useEffect } from 'react';
-import Button from 'shared/button';
-import SelectBox from 'shared/select-box';
+const Button = lazy(() => import('shared/button'));
+const SelectBox = lazy(() => import('shared/select-box'));
 import ArrowChevronForward from 'assets/images/ArrowChevronForward.png';
 import Datepicker from 'react-datepicker';
 import { useDispatch, useSelector } from 'react-redux';
@@ -24,22 +24,21 @@ const AddAndSearchAuthorUploadBook = lazy(() => import('./AddAndSearchAuthorUplo
 const AddAndSearchCategoriesUploadBook = lazy(() =>
 	import('./AddAndSearchCategoriesUploadBook/AddAndSearchCategoriesUploadBook')
 );
-// import AddAndSearchPublisherUploadBook from './AddAndSearchPublisherUploadBook/AddAndSearchPublisherUploadBook';
+const AddAndSearchPublisherUploadBook = lazy(() =>
+	import('./AddAndSearchPublisherUploadBook/AddAndSearchPublisherUploadBook')
+);
 // import AddAndSearchTranslatorsUploadBook from './AddAndSearchTranslatorsUploadBook/AddAndSearchTranslatorsUploadBook';
 
 export default function MainUpload() {
 	const [publishDate, setPublishDate] = useState(null);
-	const inpCalendar = useRef();
 	const dispatch = useDispatch();
 	const { userInfoJwt } = useSelector(state => state.auth);
 
 	const [image, setFrontBookCover] = useState('');
 	const [categoryAddedList, setCategoryAddedList] = useState([]);
 	const [authors, setAuthors] = useState([]);
-	// const [translators, setTranslators] = useState([]);
-	const [translators, setTranslators] = useState('');
-	// const [publisher, setPublisher] = useState([]);
-	const [publisher, setPublisher] = useState('');
+	const [translators, setTranslators] = useState([]);
+	const [publisher, setPublisher] = useState([]);
 	const [language, setLanguage] = useState('');
 	const [series, setSeries] = useState({});
 
@@ -50,7 +49,7 @@ export default function MainUpload() {
 	const [inputAuthorValue, setInputAuthorValue] = useState('');
 	// const [inputTranslatorValue, setInputTranslatorValue] = useState('');
 	const [inputCategoryValue, setInputCategoryValue] = useState('');
-	// const [inputPublisherValue, setInputPublisherValue] = useState('');
+	const [inputPublisherValue, setInputPublisherValue] = useState('');
 
 	const blockInvalidChar = e => {
 		return ['e', 'E', '+', '-'].includes(e.key) && e.preventDefault();
@@ -82,11 +81,9 @@ export default function MainUpload() {
 		setAuthors([]);
 		// setInputTranslatorValue('');
 		// setTranslators([]);
-		setTranslators('');
+		setTranslators([]);
 		// setInputPublisherValue('');
-		// setPublisher([]);
-		setPublisher('');
-
+		setPublisher([]);
 		setInputCategoryValue('');
 		setCategoryAddedList([]);
 		setSeries({});
@@ -168,8 +165,7 @@ export default function MainUpload() {
 			originalName: originalName,
 			authors: authorsArr,
 			translators: translators,
-			// publisher: publisher[0],
-			publisher: publisher,
+			publisher: publisher[0].id,
 			isbn: isbn,
 			publishDate: publishDate,
 			page: Number(page),
@@ -299,7 +295,7 @@ export default function MainUpload() {
 							className='input input--non-border'
 							placeholder='Dịch giả'
 							value={translators}
-							onChange={e => setTranslators(e.target.value)}
+							onChange={e => setTranslators([e.target.value])}
 						></input>
 					</div>
 					<div className='inp-book'>
@@ -308,24 +304,17 @@ export default function MainUpload() {
 							setInputCategoryValue={setInputCategoryValue}
 							categoryAddedList={categoryAddedList}
 							setCategoryAddedList={setCategoryAddedList}
+							maxAddedValue={5}
 						/>
 					</div>
 					<div className='inp-book'>
-						{/* <AddAndSearchPublisherUploadBook
+						<AddAndSearchPublisherUploadBook
 							inputPublisherValue={inputPublisherValue}
 							setInputPublisherValue={setInputPublisherValue}
 							publisher={publisher}
 							setPublisher={setPublisher}
-						/> */}
-						<label>
-							Nhà xuất bản<span className='upload-text-danger'>*</span>
-						</label>
-						<input
-							className='input input--non-border'
-							placeholder='Nhà xuất bản'
-							value={publisher}
-							onChange={e => setPublisher(e.target.value)}
-						></input>
+							maxAddedValue={1}
+						/>
 					</div>
 					<div className='inp-book'>
 						<div className='inp-book-row'>
@@ -343,22 +332,23 @@ export default function MainUpload() {
 							</div>
 							<div className='inp-book-col'>
 								<label>Ngày phát hành</label>
-								<div className='inp-date'>
-									<div className='icon-calendar'>
-										<Calendar />
+								<label style={{ marginBottom: '0px' }}>
+									<div className='inp-date'>
+										<div className='icon-calendar'>
+											<Calendar />
+										</div>
+										<Datepicker
+											isClearable
+											placeholderText='dd/mm/yyyy'
+											dateFormat='dd/MM/yyyy'
+											selected={publishDate}
+											onChange={date => setPublishDate(date)}
+											showYearDropdown
+											showMonthDropdown
+											dropdownMode='select'
+										/>
 									</div>
-									<Datepicker
-										ref={inpCalendar}
-										isClearable
-										placeholderText='dd/mm/yyyy'
-										dateFormat='dd/MM/yyyy'
-										selected={publishDate}
-										onChange={date => setPublishDate(date)}
-										showYearDropdown
-										showMonthDropdown
-										dropdownMode='select'
-									/>
-								</div>
+								</label>
 							</div>
 						</div>
 					</div>

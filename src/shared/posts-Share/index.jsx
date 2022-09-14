@@ -13,12 +13,18 @@ import ReactRating from 'shared/react-rating';
 import { Link } from 'react-router-dom';
 import Play from 'assets/images/play.png';
 import { GROUP_POST_VERB_SHARE } from 'constants/index';
+import { Modal } from 'react-bootstrap';
 
 const urlRegex =
 	/(https?:\/\/)?(www(\.))?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/g;
 
 const PostShare = ({ postData, inCreatePost = false }) => {
 	const [videoId, setVideoId] = useState('');
+
+	const [showModalOthers, setShowModalOthers] = useState(false);
+
+	const handleCloseModalOthers = () => setShowModalOthers(false);
+	const handleShowModalOthers = () => setShowModalOthers(true);
 
 	const directUrl = url => {
 		window.open(url);
@@ -61,7 +67,43 @@ const PostShare = ({ postData, inCreatePost = false }) => {
 							paramInfo[0].users.firstName + ' ' + paramInfo[0].users.lastName}
 					</Link>
 					<span style={{ fontWeight: '500' }}> và </span>
-					<span style={{ fontWeight: '600', cursor: 'pointer' }}>{paramInfo.length - 1} người khác.</span>
+					<span className='post__user__container__mention-users-plus' onClick={() => handleShowModalOthers()}>
+						{paramInfo.length - 1} người khác.
+						<div className='post__user__container__list-mention-users'>
+							{!!paramInfo.length && (
+								<>
+									{paramInfo.slice(1).map((item, index) => (
+										<div className='post__user__container__list-mention-users__name' key={index}>
+											{item.users.fullName || item.users.firstName + ' ' + item.users.lastName}
+										</div>
+									))}
+								</>
+							)}
+						</div>
+					</span>
+					<Modal show={showModalOthers} onHide={handleCloseModalOthers} className='modal-tagged-others'>
+						<Modal.Header closeButton>
+							<Modal.Title>Mọi người</Modal.Title>
+						</Modal.Header>
+						<Modal.Body>
+							{!!paramInfo.length && (
+								<>
+									{paramInfo.slice(1).map((item, index) => (
+										<div key={index} style={{ marginBottom: '1rem' }}>
+											<Link to={`/profile/${item.userId}`}>
+												<img
+													className='modal-tagged-others__avatar'
+													src={item.users.avatarImage}
+												></img>
+												{item.users.fullName ||
+													item.users.firstName + ' ' + item.users.lastName}
+											</Link>
+										</div>
+									))}
+								</>
+							)}
+						</Modal.Body>
+					</Modal>
 				</span>
 			);
 		}

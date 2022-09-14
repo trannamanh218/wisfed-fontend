@@ -162,6 +162,14 @@
 		margin-bottom: 23px;
 	}
 }
+
+.form-field-authors {
+	&__asterisk {
+		color: red;
+		margin-left: 4px;
+	}
+}
+
 .form-field-select__kind-of-group {
 	.select-box {
 		.select-box__btn {
@@ -192,6 +200,7 @@
 	background-color: #e0af7e;
 	padding: 16px;
 	border-radius: 12px;
+	cursor: pointer;
 	button {
 		color: #fcfcfc;
 	}

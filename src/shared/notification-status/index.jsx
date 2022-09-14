@@ -3,7 +3,12 @@ import { calculateDurationTime } from 'helpers/Common';
 import UserAvatar from 'shared/user-avatar';
 import { renderMessage } from 'helpers/HandleShare';
 import { ReplyFriendRequest, CancelFriendRequest } from 'reducers/redux-utils/user';
-import { readNotification, updateReviewIdFromNoti, handleMentionCommentId } from 'reducers/redux-utils/notificaiton';
+import {
+	readNotification,
+	updateReviewIdFromNoti,
+	handleMentionCommentId,
+	handleCheckIfMentionFromGroup,
+} from 'reducers/redux-utils/notificaiton';
 import { useDispatch, useSelector } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
 import { useNavigate } from 'react-router-dom';
@@ -114,12 +119,14 @@ const NotificationStatus = ({ item, setGetNotifications, getNotifications }) => 
 					case 'commentMiniPost':
 						navigate(`/detail-feed/mini-post/${items.originId.minipostId}`);
 						break;
-					case 'commentGroupPost':
-						navigate(`/detail-feed/group-post/${items.originId.groupPostId}`);
-						break;
 					case 'commentReview':
 						dispatch(updateReviewIdFromNoti(items.originId.reviewId));
 						navigate(`/review/${items.originId.bookId}/${userInfo.id}`);
+						break;
+					case 'commentGroupPost':
+						dispatch(handleMentionCommentId(item.originId.commentGroupPostId));
+						dispatch(handleCheckIfMentionFromGroup('group'));
+						navigate(`/detail-feed/group-post/${items.originId.groupPostId}`);
 						break;
 					default:
 						navigate(`/detail-feed/mini-post/${items.originId.minipostId}`);

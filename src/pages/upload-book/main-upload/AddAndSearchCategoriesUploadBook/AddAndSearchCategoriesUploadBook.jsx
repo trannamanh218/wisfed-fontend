@@ -12,6 +12,7 @@ function AddAndSearchCategoriesUploadBook({
 	setInputCategoryValue,
 	categoryAddedList,
 	setCategoryAddedList,
+	maxAddedValue,
 }) {
 	const [categorySearchedList, setCategorySearchedList] = useState([]);
 	const [getDataFinish, setGetDataFinish] = useState(false);
@@ -87,6 +88,7 @@ function AddAndSearchCategoriesUploadBook({
 				categoryInputWrapper={categoryInputWrapper}
 				categoryInput={categoryInput}
 				hasSearchIcon={true}
+				maxAddedValue={maxAddedValue}
 			/>
 		</div>
 	);
@@ -97,6 +99,7 @@ AddAndSearchCategoriesUploadBook.propTypes = {
 	setCategoryAddedList: PropTypes.func,
 	inputCategoryValue: PropTypes.string,
 	setInputCategoryValue: PropTypes.func,
+	maxAddedValue: PropTypes.number,
 };
 
 export default AddAndSearchCategoriesUploadBook;
