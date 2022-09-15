@@ -10,7 +10,7 @@ import PostBook from 'shared/post-book';
 import UserAvatar from 'shared/user-avatar';
 import PreviewLink from 'shared/preview-link/PreviewLink';
 import ReactRating from 'shared/react-rating';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Play from 'assets/images/play.png';
 import { GROUP_POST_VERB_SHARE } from 'constants/index';
 import { Modal } from 'react-bootstrap';
@@ -28,6 +28,13 @@ const PostShare = ({ postData, inCreatePost = false }) => {
 
 	const directUrl = url => {
 		window.open(url);
+	};
+
+	const navigate = useNavigate();
+
+	const onClickUserInModalOthers = paramItem => {
+		handleCloseModalOthers();
+		navigate(`/profile/${paramItem.userId}`);
 	};
 
 	const withFriends = paramInfo => {
@@ -90,14 +97,18 @@ const PostShare = ({ postData, inCreatePost = false }) => {
 								<>
 									{paramInfo.slice(1).map((item, index) => (
 										<div key={index} style={{ marginBottom: '1rem' }}>
-											<Link to={`/profile/${item.userId}`}>
-												<img
-													className='modal-tagged-others__avatar'
-													src={item.users.avatarImage}
-												></img>
+											<img
+												onClick={() => onClickUserInModalOthers(item)}
+												className='modal-tagged-others__avatar'
+												src={item.users.avatarImage}
+											></img>
+											<span
+												onClick={() => onClickUserInModalOthers(item)}
+												className='modal-tagged-others__name'
+											>
 												{item.users.fullName ||
 													item.users.firstName + ' ' + item.users.lastName}
-											</Link>
+											</span>
 										</div>
 									))}
 								</>
