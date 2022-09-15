@@ -206,6 +206,23 @@
 	}
 }
 
+.upload-image {
+	&__wrapper {
+		&__icon {
+			height: 60px;
+			width: 60px;
+			border-radius: 50%;
+			background-color: #eff0f7;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			svg {
+				transform: scale(1.2);
+			}
+		}
+	}
+}
+
 @media only screen and (max-width: 1024px) {
 	.form-field-select__kind-of-group {
 		label {

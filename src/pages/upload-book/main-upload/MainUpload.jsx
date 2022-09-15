@@ -2,7 +2,7 @@ import { lazy, Suspense } from 'react';
 import Dropzone from 'react-dropzone';
 import { useDropzone } from 'react-dropzone';
 import { Link } from 'react-router-dom';
-import { CameraIcon, BackArrow, Calendar } from 'components/svg';
+import { BackArrow, Calendar, Image } from 'components/svg';
 import './MainUpload.scss';
 import { useState, useRef, useEffect } from 'react';
 const Button = lazy(() => import('shared/button'));
@@ -219,7 +219,7 @@ export default function MainUpload() {
 				</span>
 			</div>
 			<div className='upload-book-form'>
-				<div className={`upload-image__wrapper ${image ? 'hasImage' : ''}`}>
+				<div className={`upload-image__wrapper ${image ? 'has-image' : ''}`}>
 					{image ? (
 						<img src={image} alt='img' onClick={open} />
 					) : (
@@ -228,7 +228,9 @@ export default function MainUpload() {
 								<div {...getRootProps()}>
 									<input {...getInputProps()} />
 									<div className='dropzone upload-image'>
-										<CameraIcon />
+										<div className='upload-image__wrapper__icon'>
+											<Image />
+										</div>
 										<br />
 										<p className='upload-image__description'>Thêm ảnh bìa từ thiết bị</p>
 										<span style={{ fontWeight: 500, marginTop: '5px' }}>hoặc kéo thả</span>
