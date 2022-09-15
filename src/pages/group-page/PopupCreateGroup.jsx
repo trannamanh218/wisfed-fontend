@@ -22,7 +22,7 @@ const PopupCreateGroup = ({ handleClose }) => {
 	const [inputDiscription, setInputDiscription] = useState('');
 	const [inputHashtag, setInputHashtag] = useState('');
 	const [listHashtags, setListHashtags] = useState([]);
-	const [imgUrl, setImgUrl] = useState('');
+	const [image, setImage] = useState('');
 	const [isShowBtn, setIsShowBtn] = useState(false);
 	const [kindOfGroup, setKindOfGroup] = useState({});
 	const [lastTag, setLastTag] = useState('');
@@ -218,10 +218,6 @@ const PopupCreateGroup = ({ handleClose }) => {
 	}, [bookAddedList]);
 
 	useEffect(() => {
-		uploadImageFile();
-	}, [acceptedFiles]);
-
-	useEffect(() => {
 		setLastTag(
 			inputHashtag
 				.normalize('NFD')
@@ -231,9 +227,9 @@ const PopupCreateGroup = ({ handleClose }) => {
 		);
 	}, [inputHashtag]);
 
-	const uploadImageFile = async () => {
+	const uploadImageFile = async acceptedFiles => {
 		const imageUploadedData = await dispatch(uploadImage(acceptedFiles)).unwrap();
-		setImgUrl(imageUploadedData?.streamPath);
+		return imageUploadedData?.streamPath;
 	};
 
 	useEffect(() => {
@@ -275,7 +271,7 @@ const PopupCreateGroup = ({ handleClose }) => {
 
 	useEffect(() => {
 		if (
-			imgUrl !== undefined &&
+			image !== undefined &&
 			(lastTag.includes('#') || !_.isEmpty(listHashtags)) &&
 			lastTag !== '#' &&
 			inputDiscription !== '' &&
@@ -307,7 +303,7 @@ const PopupCreateGroup = ({ handleClose }) => {
 			setIsShowBtn(false);
 		}
 	}, [
-		imgUrl,
+		image,
 		listAuthors,
 		lastTag,
 		kindOfGroup,
@@ -319,24 +315,28 @@ const PopupCreateGroup = ({ handleClose }) => {
 	]);
 
 	const createGroup = async () => {
-		const newListHastag = listHashtags.map(item => `${item}`);
-		let newList;
-		if (lastTag.includes('#') && lastTag !== '#') {
-			newList = [...newListHastag, lastTag];
-		} else {
-			newList = newListHastag;
-		}
-		const data = {
-			name: inputNameGroup,
-			description: inputDiscription,
-			avatar: imgUrl,
-			groupType: kindOfGroup.value,
-			authorIds: listAuthors,
-			tags: newList,
-			categoryIds: categoryIdBook,
-			bookIds: listBookAdd,
-		};
 		if (isShowBtn) {
+			const newListHastag = listHashtags.map(item => `${item}`);
+			let newList;
+			if (lastTag.includes('#') && lastTag !== '#') {
+				newList = [...newListHastag, lastTag];
+			} else {
+				newList = newListHastag;
+			}
+
+			const imgSrc = await uploadImageFile(image);
+
+			const data = {
+				name: inputNameGroup,
+				description: inputDiscription,
+				avatar: imgSrc,
+				groupType: kindOfGroup.value,
+				authorIds: listAuthors,
+				tags: newList,
+				categoryIds: categoryIdBook,
+				bookIds: listBookAdd,
+			};
+
 			try {
 				await dispatch(getCreatGroup(data)).unwrap();
 				const customId = 'custom-id-PopupCreateGroup';
@@ -396,14 +396,14 @@ const PopupCreateGroup = ({ handleClose }) => {
 			</div>
 
 			<div>
-				<div className={`upload-image__wrapper ${imgUrl ? 'has-image' : ''}`}>
-					<Dropzone onDrop={acceptedFiles => setImgUrl(acceptedFiles)}>
+				<div className={`upload-image__wrapper ${image ? 'has-image' : ''}`}>
+					<Dropzone onDrop={acceptedFiles => setImage(acceptedFiles)}>
 						{({ getRootProps, getInputProps, open }) => (
 							<>
-								{imgUrl ? (
+								{image ? (
 									<img
 										style={{ width: '100%', maxHeight: '266px', objectFit: 'cover' }}
-										src={URL.createObjectURL(imgUrl[0])}
+										src={URL.createObjectURL(image[0])}
 										alt='img'
 										onClick={open}
 									/>
