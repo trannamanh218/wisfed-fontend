@@ -2,7 +2,6 @@ import { lazy, Suspense } from 'react';
 import Dropzone from 'react-dropzone';
 import { useDropzone } from 'react-dropzone';
 import { Link } from 'react-router-dom';
-import { Image } from 'react-bootstrap';
 import { CameraIcon, BackArrow, Calendar } from 'components/svg';
 import './MainUpload.scss';
 import { useState, useRef, useEffect } from 'react';
@@ -230,7 +229,7 @@ export default function MainUpload() {
 									<input {...getInputProps()} />
 									<div className='dropzone upload-image'>
 										<CameraIcon />
-										<Image className='upload-image__icon' />
+										<br />
 										<p className='upload-image__description'>Thêm ảnh bìa từ thiết bị</p>
 										<span style={{ fontWeight: 500, marginTop: '5px' }}>hoặc kéo thả</span>
 										<span style={{ fontWeight: 500, color: 'red', marginTop: '10px' }}>

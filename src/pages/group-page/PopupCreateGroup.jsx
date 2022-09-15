@@ -1,6 +1,5 @@
 import { CameraIcon, CloseIconX } from 'components/svg';
 import { useEffect, useRef, useState, useCallback } from 'react';
-import { Image } from 'react-bootstrap';
 import Input from 'shared/input';
 import SelectBox from 'shared/select-box';
 import PropTypes from 'prop-types';
@@ -407,7 +406,7 @@ const PopupCreateGroup = ({ handleClose }) => {
 									<input {...getInputProps()} />
 									<div className='dropzone upload-image'>
 										<CameraIcon />
-										<Image className='upload-image__icon' />
+										<br />
 										<p className='upload-image__description'>Thêm ảnh từ thiết bị</p>
 										<span>hoặc kéo thả</span>
 										<span style={{ color: 'red', paddingTop: '5px' }}>(bắt buộc)</span>
