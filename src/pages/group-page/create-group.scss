@@ -208,6 +208,9 @@
 
 .upload-image {
 	&__wrapper {
+		img {
+			cursor: pointer;
+		}
 		&__icon {
 			height: 60px;
 			width: 60px;

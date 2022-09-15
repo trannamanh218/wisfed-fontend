@@ -396,27 +396,34 @@ const PopupCreateGroup = ({ handleClose }) => {
 			</div>
 
 			<div>
-				<div className='upload-image__wrapper'>
-					{imgUrl ? (
-						<img style={{ width: '100%', maxHeight: '266px', objectFit: 'cover' }} src={imgUrl} alt='img' />
-					) : (
-						<Dropzone>
-							{() => (
-								<div {...getRootProps()}>
-									<input {...getInputProps()} />
-									<div className='dropzone upload-image'>
-										<div className='upload-image__wrapper__icon'>
-											<Image />
+				<div className={`upload-image__wrapper ${imgUrl ? 'has-image' : ''}`}>
+					<Dropzone onDrop={acceptedFiles => setImgUrl(acceptedFiles)}>
+						{({ getRootProps, getInputProps, open }) => (
+							<>
+								{imgUrl ? (
+									<img
+										style={{ width: '100%', maxHeight: '266px', objectFit: 'cover' }}
+										src={URL.createObjectURL(imgUrl[0])}
+										alt='img'
+										onClick={open}
+									/>
+								) : (
+									<div {...getRootProps()}>
+										<input {...getInputProps()} />
+										<div className='dropzone upload-image'>
+											<div className='upload-image__wrapper__icon'>
+												<Image />
+											</div>
+											<br />
+											<p className='upload-image__description'>Thêm ảnh từ thiết bị</p>
+											<span>hoặc kéo thả</span>
+											<span style={{ color: 'red', paddingTop: '5px' }}>(bắt buộc)</span>
 										</div>
-										<br />
-										<p className='upload-image__description'>Thêm ảnh từ thiết bị</p>
-										<span>hoặc kéo thả</span>
-										<span style={{ color: 'red', paddingTop: '5px' }}>(bắt buộc)</span>
 									</div>
-								</div>
-							)}
-						</Dropzone>
-					)}
+								)}
+							</>
+						)}
+					</Dropzone>
 				</div>
 			</div>
 			<div className='form-field-wrapper'>

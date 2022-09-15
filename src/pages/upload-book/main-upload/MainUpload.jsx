@@ -1,6 +1,5 @@
 import { lazy, Suspense } from 'react';
 import Dropzone from 'react-dropzone';
-import { useDropzone } from 'react-dropzone';
 import { Link } from 'react-router-dom';
 import { BackArrow, Calendar, Image } from 'components/svg';
 import './MainUpload.scss';
@@ -33,7 +32,7 @@ export default function MainUpload() {
 	const dispatch = useDispatch();
 	const { userInfoJwt } = useSelector(state => state.auth);
 
-	const [image, setFrontBookCover] = useState('');
+	const [image, setImage] = useState('');
 	const [categoryAddedList, setCategoryAddedList] = useState([]);
 	const [authors, setAuthors] = useState([]);
 	const [translators, setTranslators] = useState([]);
@@ -49,6 +48,7 @@ export default function MainUpload() {
 	// const [inputTranslatorValue, setInputTranslatorValue] = useState('');
 	const [inputCategoryValue, setInputCategoryValue] = useState('');
 	const [inputPublisherValue, setInputPublisherValue] = useState('');
+	const [openDropzone, setOpenDropzone] = useState(false);
 
 	const blockInvalidChar = e => {
 		return ['e', 'E', '+', '-'].includes(e.key) && e.preventDefault();
@@ -73,7 +73,7 @@ export default function MainUpload() {
 	const languagesRef = useRef({ value: 'default', name: 'Ngôn ngữ' });
 
 	const clearState = () => {
-		setFrontBookCover('');
+		setImage('');
 		setPublishDate(null);
 		setTemporarySeries({});
 		setInputAuthorValue('');
@@ -95,8 +95,6 @@ export default function MainUpload() {
 	const handleCloseModalSeries = () => setShowModalSeries(false);
 	const handleShowModalSeries = () => setShowModalSeries(true);
 
-	const { acceptedFiles, getRootProps, getInputProps, open } = useDropzone();
-
 	const listLanguages = [
 		{ value: 'vn', name: 'Việt Nam' },
 		{ value: 'en', name: 'Anh' },
@@ -110,7 +108,7 @@ export default function MainUpload() {
 		try {
 			// Tạo sách mới
 			const res = await dispatch(createBook(params)).unwrap();
-
+			console.log(res);
 			// Nếu sách có trường series thì cập nhật series đó
 			if (!_.isEmpty(series)) {
 				// Lấy id của sách vừa được tạo
@@ -139,7 +137,7 @@ export default function MainUpload() {
 		}
 	};
 
-	const onBtnSaveClick = () => {
+	const onBtnSaveClick = async () => {
 		// Lấy danh sách categoryIds
 		const categoryIds = [];
 		for (let i = 0; i < categoryAddedList.length; i++) {
@@ -156,9 +154,11 @@ export default function MainUpload() {
 			});
 		}
 
+		const imgSrc = await uploadImageFile(image);
+
 		const bookInfo = {
-			frontBookCover: image,
-			images: [image],
+			frontBookCover: imgSrc,
+			images: [imgSrc],
 			name: name,
 			subName: subName,
 			originalName: originalName,
@@ -174,14 +174,9 @@ export default function MainUpload() {
 			tags: [],
 			series: series,
 		};
-		if (buttonActive) {
-			handleCreateBook(bookInfo);
-		}
-	};
 
-	useEffect(() => {
-		uploadImageFile();
-	}, [acceptedFiles]);
+		handleCreateBook(bookInfo);
+	};
 
 	useEffect(() => {
 		if (
@@ -201,10 +196,22 @@ export default function MainUpload() {
 		}
 	}, [image, name, authors, categoryAddedList, publisher, isbn, page, language, description]);
 
-	const uploadImageFile = async () => {
+	const uploadImageFile = async acceptedFiles => {
 		const imageUploadedData = await dispatch(uploadImage(acceptedFiles)).unwrap();
-		setFrontBookCover(imageUploadedData?.streamPath);
+		return imageUploadedData?.streamPath;
 	};
+
+	const onClickChangeImage = () => {
+		setImage('');
+		setOpenDropzone(true);
+	};
+
+	useEffect(() => {
+		if (openDropzone) {
+			open();
+			setOpenDropzone(false);
+		}
+	}, [openDropzone]);
 
 	return (
 		<Suspense fallback={<Circle />}>
@@ -220,28 +227,30 @@ export default function MainUpload() {
 			</div>
 			<div className='upload-book-form'>
 				<div className={`upload-image__wrapper ${image ? 'has-image' : ''}`}>
-					{image ? (
-						<img src={image} alt='img' onClick={open} />
-					) : (
-						<Dropzone>
-							{() => (
-								<div {...getRootProps()}>
-									<input {...getInputProps()} />
-									<div className='dropzone upload-image'>
-										<div className='upload-image__wrapper__icon'>
-											<Image />
+					<Dropzone onDrop={acceptedFiles => setImage(acceptedFiles)}>
+						{({ getRootProps, getInputProps, open }) => (
+							<>
+								{image ? (
+									<img src={URL.createObjectURL(image[0])} alt='img' onClick={open} />
+								) : (
+									<div {...getRootProps()}>
+										<input {...getInputProps()} />
+										<div className='dropzone upload-image'>
+											<div className='upload-image__wrapper__icon'>
+												<Image />
+											</div>
+											<br />
+											<p className='upload-image__description'>Thêm ảnh bìa từ thiết bị</p>
+											<span style={{ fontWeight: 500, marginTop: '5px' }}>hoặc kéo thả</span>
+											<span style={{ fontWeight: 500, color: 'red', marginTop: '10px' }}>
+												(Bắt buộc*)
+											</span>
 										</div>
-										<br />
-										<p className='upload-image__description'>Thêm ảnh bìa từ thiết bị</p>
-										<span style={{ fontWeight: 500, marginTop: '5px' }}>hoặc kéo thả</span>
-										<span style={{ fontWeight: 500, color: 'red', marginTop: '10px' }}>
-											(Bắt buộc*)
-										</span>
 									</div>
-								</div>
-							)}
-						</Dropzone>
-					)}
+								)}
+							</>
+						)}
+					</Dropzone>
 				</div>
 				<div className='upload-info-form'>
 					<div className='inp-book'>
