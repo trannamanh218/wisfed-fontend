@@ -7,7 +7,6 @@ import { useDispatch } from 'react-redux';
 import './create-group.scss';
 import { getCreatGroup } from 'reducers/redux-utils/group';
 import Dropzone from 'react-dropzone';
-import { useDropzone } from 'react-dropzone';
 import { uploadImage } from 'reducers/redux-utils/common';
 import { NotificationError } from 'helpers/Error';
 import _ from 'lodash';
@@ -62,8 +61,6 @@ const PopupCreateGroup = ({ handleClose }) => {
 	const bookInput = useRef(null);
 
 	const hastagRegex = /(#[a-z0-9][a-z0-9\-_]*)/gi;
-
-	const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
 
 	const dispatch = useDispatch();
 

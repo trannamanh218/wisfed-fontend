@@ -108,7 +108,6 @@ export default function MainUpload() {
 		try {
 			// Tạo sách mới
 			const res = await dispatch(createBook(params)).unwrap();
-			console.log(res);
 			// Nếu sách có trường series thì cập nhật series đó
 			if (!_.isEmpty(series)) {
 				// Lấy id của sách vừa được tạo
