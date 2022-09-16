@@ -54,7 +54,6 @@ import { ReactComponent as WrongIcon } from 'assets/icons/Circle Actions Close.s
 import { ReactComponent as CloseButtonIcon } from 'assets/icons/CloseButton.svg';
 import { ReactComponent as Subtract } from 'assets/icons/subtract.svg';
 import { ReactComponent as CloseIconX } from 'assets/icons/Close X.svg';
-import { ReactComponent as CameraIcon } from 'assets/icons/IconCamera.svg';
 import { ReactComponent as MoreIcon } from 'assets/icons/More.svg';
 import { ReactComponent as ActionPlusGroup } from 'assets/icons/action-plus-group.svg';
 import { ReactComponent as LogInCircle } from 'assets/icons/Log In Circle.svg';
@@ -149,7 +148,6 @@ export {
 	CloseButtonIcon,
 	Subtract,
 	CloseIconX,
-	CameraIcon,
 	MoreIcon,
 	ActionPlusGroup,
 	LogInCircle,

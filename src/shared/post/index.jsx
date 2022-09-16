@@ -83,6 +83,11 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
+	const onClickUserInModalOthers = paramItem => {
+		handleCloseModalOthers();
+		navigate(`/profile/${paramItem.userId}`);
+	};
+
 	useEffect(() => {
 		if (!_.isEmpty(postInformations) && postInformations.usersComments?.length) {
 			const commentsReverse = [...postInformations.usersComments];
@@ -270,14 +275,18 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 								<>
 									{paramInfo.slice(1).map((item, index) => (
 										<div key={index} style={{ marginBottom: '1rem' }}>
-											<Link to={`/profile/${item.userId}`}>
-												<img
-													className='modal-tagged-others__avatar'
-													src={item.users.avatarImage}
-												></img>
+											<img
+												onClick={() => onClickUserInModalOthers(item)}
+												className='modal-tagged-others__avatar'
+												src={item.users.avatarImage}
+											></img>
+											<span
+												onClick={() => onClickUserInModalOthers(item)}
+												className='modal-tagged-others__name'
+											>
 												{item.users.fullName ||
 													item.users.firstName + ' ' + item.users.lastName}
-											</Link>
+											</span>
 										</div>
 									))}
 								</>

@@ -63,5 +63,9 @@
 		margin-left: 1rem;
 		margin-right: 1rem;
 		object-fit: cover;
+		cursor: pointer;
+	}
+	&__name {
+		cursor: pointer;
 	}
 }

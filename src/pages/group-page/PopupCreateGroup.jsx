@@ -1,6 +1,5 @@
-import { CameraIcon, CloseIconX } from 'components/svg';
+import { CloseIconX, Image } from 'components/svg';
 import { useEffect, useRef, useState, useCallback } from 'react';
-import { Image } from 'react-bootstrap';
 import Input from 'shared/input';
 import SelectBox from 'shared/select-box';
 import PropTypes from 'prop-types';
@@ -8,7 +7,6 @@ import { useDispatch } from 'react-redux';
 import './create-group.scss';
 import { getCreatGroup } from 'reducers/redux-utils/group';
 import Dropzone from 'react-dropzone';
-import { useDropzone } from 'react-dropzone';
 import { uploadImage } from 'reducers/redux-utils/common';
 import { NotificationError } from 'helpers/Error';
 import _ from 'lodash';
@@ -23,7 +21,7 @@ const PopupCreateGroup = ({ handleClose }) => {
 	const [inputDiscription, setInputDiscription] = useState('');
 	const [inputHashtag, setInputHashtag] = useState('');
 	const [listHashtags, setListHashtags] = useState([]);
-	const [imgUrl, setImgUrl] = useState('');
+	const [image, setImage] = useState('');
 	const [isShowBtn, setIsShowBtn] = useState(false);
 	const [kindOfGroup, setKindOfGroup] = useState({});
 	const [lastTag, setLastTag] = useState('');
@@ -63,8 +61,6 @@ const PopupCreateGroup = ({ handleClose }) => {
 	const bookInput = useRef(null);
 
 	const hastagRegex = /(#[a-z0-9][a-z0-9\-_]*)/gi;
-
-	const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
 
 	const dispatch = useDispatch();
 
@@ -219,10 +215,6 @@ const PopupCreateGroup = ({ handleClose }) => {
 	}, [bookAddedList]);
 
 	useEffect(() => {
-		uploadImageFile();
-	}, [acceptedFiles]);
-
-	useEffect(() => {
 		setLastTag(
 			inputHashtag
 				.normalize('NFD')
@@ -232,9 +224,9 @@ const PopupCreateGroup = ({ handleClose }) => {
 		);
 	}, [inputHashtag]);
 
-	const uploadImageFile = async () => {
+	const uploadImageFile = async acceptedFiles => {
 		const imageUploadedData = await dispatch(uploadImage(acceptedFiles)).unwrap();
-		setImgUrl(imageUploadedData?.streamPath);
+		return imageUploadedData?.streamPath;
 	};
 
 	useEffect(() => {
@@ -276,7 +268,7 @@ const PopupCreateGroup = ({ handleClose }) => {
 
 	useEffect(() => {
 		if (
-			imgUrl !== undefined &&
+			image !== undefined &&
 			(lastTag.includes('#') || !_.isEmpty(listHashtags)) &&
 			lastTag !== '#' &&
 			inputDiscription !== '' &&
@@ -308,7 +300,7 @@ const PopupCreateGroup = ({ handleClose }) => {
 			setIsShowBtn(false);
 		}
 	}, [
-		imgUrl,
+		image,
 		listAuthors,
 		lastTag,
 		kindOfGroup,
@@ -320,24 +312,28 @@ const PopupCreateGroup = ({ handleClose }) => {
 	]);
 
 	const createGroup = async () => {
-		const newListHastag = listHashtags.map(item => `${item}`);
-		let newList;
-		if (lastTag.includes('#') && lastTag !== '#') {
-			newList = [...newListHastag, lastTag];
-		} else {
-			newList = newListHastag;
-		}
-		const data = {
-			name: inputNameGroup,
-			description: inputDiscription,
-			avatar: imgUrl,
-			groupType: kindOfGroup.value,
-			authorIds: listAuthors,
-			tags: newList,
-			categoryIds: categoryIdBook,
-			bookIds: listBookAdd,
-		};
 		if (isShowBtn) {
+			const newListHastag = listHashtags.map(item => `${item}`);
+			let newList;
+			if (lastTag.includes('#') && lastTag !== '#') {
+				newList = [...newListHastag, lastTag];
+			} else {
+				newList = newListHastag;
+			}
+
+			const imgSrc = await uploadImageFile(image);
+
+			const data = {
+				name: inputNameGroup,
+				description: inputDiscription,
+				avatar: imgSrc,
+				groupType: kindOfGroup.value,
+				authorIds: listAuthors,
+				tags: newList,
+				categoryIds: categoryIdBook,
+				bookIds: listBookAdd,
+			};
+
 			try {
 				await dispatch(getCreatGroup(data)).unwrap();
 				const customId = 'custom-id-PopupCreateGroup';
@@ -397,25 +393,34 @@ const PopupCreateGroup = ({ handleClose }) => {
 			</div>
 
 			<div>
-				<div className='upload-image__wrapper'>
-					{imgUrl ? (
-						<img style={{ width: '100%', maxHeight: '266px', objectFit: 'cover' }} src={imgUrl} alt='img' />
-					) : (
-						<Dropzone>
-							{() => (
-								<div {...getRootProps()}>
-									<input {...getInputProps()} />
-									<div className='dropzone upload-image'>
-										<CameraIcon />
-										<Image className='upload-image__icon' />
-										<p className='upload-image__description'>Thêm ảnh từ thiết bị</p>
-										<span>hoặc kéo thả</span>
-										<span style={{ color: 'red', paddingTop: '5px' }}>(bắt buộc)</span>
+				<div className={`upload-image__wrapper ${image ? 'has-image' : ''}`}>
+					<Dropzone onDrop={acceptedFiles => setImage(acceptedFiles)}>
+						{({ getRootProps, getInputProps, open }) => (
+							<>
+								{image ? (
+									<img
+										style={{ width: '100%', maxHeight: '266px', objectFit: 'cover' }}
+										src={URL.createObjectURL(image[0])}
+										alt='img'
+										onClick={open}
+									/>
+								) : (
+									<div {...getRootProps()}>
+										<input {...getInputProps()} />
+										<div className='dropzone upload-image'>
+											<div className='upload-image__wrapper__icon'>
+												<Image />
+											</div>
+											<br />
+											<p className='upload-image__description'>Thêm ảnh từ thiết bị</p>
+											<span>hoặc kéo thả</span>
+											<span style={{ color: 'red', paddingTop: '5px' }}>(bắt buộc)</span>
+										</div>
 									</div>
-								</div>
-							)}
-						</Dropzone>
-					)}
+								)}
+							</>
+						)}
+					</Dropzone>
 				</div>
 			</div>
 			<div className='form-field-wrapper'>
