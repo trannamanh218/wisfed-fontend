@@ -65,7 +65,7 @@
     "src/**/*.{js, jsx}": "eslint --cache --fix",
     "src/**/*.{js,jsx,json,scss,css}": "prettier --write"
   },
-  "huskey": {
+  "husky": {
     "pre-commit": "lint-staged && git add ."
   },
   "eslintConfig": {
