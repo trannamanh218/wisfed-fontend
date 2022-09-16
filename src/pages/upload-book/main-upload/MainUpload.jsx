@@ -200,11 +200,6 @@ export default function MainUpload() {
 		return imageUploadedData?.streamPath;
 	};
 
-	const onClickChangeImage = () => {
-		setImage('');
-		setOpenDropzone(true);
-	};
-
 	useEffect(() => {
 		if (openDropzone) {
 			open();
