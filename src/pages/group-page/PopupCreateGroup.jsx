@@ -14,6 +14,7 @@ import { toast } from 'react-toastify';
 import AddAndSearchCategories from 'shared/add-and-search-categories';
 import { getSuggestionForPost } from 'reducers/redux-utils/activity';
 import { handleResetGroupList } from 'reducers/redux-utils/group';
+import { getFilterSearch } from 'reducers/redux-utils/search';
 
 const PopupCreateGroup = ({ handleClose }) => {
 	const groupNameInput = useRef('');
@@ -66,15 +67,25 @@ const PopupCreateGroup = ({ handleClose }) => {
 
 	const getSuggestionForCreatQuotes = async (input, option) => {
 		try {
-			const data = await dispatch(getSuggestionForPost({ input, option })).unwrap();
+			if (option.value !== 'addAuthor') {
+				const data = await dispatch(getSuggestionForPost({ input, option })).unwrap();
+				if (option.value === 'addCategory') {
+					setCategorySearchedList(data.rows);
+				}
+				if (option.value === 'addBook') {
+					setBookSearchedList(data.rows);
+				}
+			}
 			if (option.value === 'addAuthor') {
-				setAuthorSearchedList(data.rows);
-			}
-			if (option.value === 'addCategory') {
-				setCategorySearchedList(data.rows);
-			}
-			if (option.value === 'addBook') {
-				setBookSearchedList(data.rows);
+				const params = {
+					q: input,
+					type: 'authors',
+					start: 0,
+					limit: 10,
+				};
+
+				const result = await dispatch(getFilterSearch(params)).unwrap();
+				setAuthorSearchedList(result.rows);
 			}
 		} catch (err) {
 			NotificationError(err);
