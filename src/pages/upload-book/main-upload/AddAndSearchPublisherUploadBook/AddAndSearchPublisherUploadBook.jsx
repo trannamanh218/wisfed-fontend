@@ -1,11 +1,11 @@
 import AddAndSearchCategories from 'shared/add-and-search-categories';
 import { useState, useRef, useCallback } from 'react';
-// import ShareModeDropdown from 'shared/share-mode-dropdown';
 import _ from 'lodash';
 import { useDispatch } from 'react-redux';
 import { getPublishers } from 'reducers/redux-utils/publishers';
 import { NotificationError } from 'helpers/Error';
 import PropTypes from 'prop-types';
+import { toast } from 'react-toastify';
 
 function AddAndSearchPublisherUploadBook({
 	inputPublisherValue,
@@ -27,13 +27,17 @@ function AddAndSearchPublisherUploadBook({
 		if (publisher.filter(categoryAdded => categoryAdded.id === category.id).length > 0) {
 			removeCategory(category.id);
 		} else {
-			const categoryArrayTemp = [...publisher];
-			categoryArrayTemp.push(category);
-			setPublisher(categoryArrayTemp);
-			setInputPublisherValue('');
-			setCategorySearchedList([]);
-			if (categoryInputWrapper.current) {
-				categoryInputWrapper.current.style.width = '0.5ch';
+			if (publisher.length < maxAddedValue) {
+				const categoryArrayTemp = [...publisher];
+				categoryArrayTemp.push(category);
+				setPublisher(categoryArrayTemp);
+				setInputPublisherValue('');
+				setCategorySearchedList([]);
+				if (categoryInputWrapper.current) {
+					categoryInputWrapper.current.style.width = '0.5ch';
+				}
+			} else {
+				toast.warning(`Chỉ được chọn tối đa ${maxAddedValue} nhà xuất bản`);
 			}
 		}
 	};
@@ -45,10 +49,10 @@ function AddAndSearchPublisherUploadBook({
 		setPublisher(categoryArr);
 	};
 
-	const getSuggestionForCreatQuotes = async option => {
+	const getSuggestionForCreatQuotes = async input => {
 		try {
 			const params = {
-				filter: JSON.stringify([option]),
+				filter: JSON.stringify([{ operator: 'search', value: input, property: 'name' }]),
 			};
 			const data = await dispatch(getPublishers(params)).unwrap();
 			setCategorySearchedList(data);
@@ -59,16 +63,15 @@ function AddAndSearchPublisherUploadBook({
 		}
 	};
 
-	const debounceSearch = useCallback(
-		_.debounce(option => getSuggestionForCreatQuotes(option), 700),
-		[]
-	);
+	const debounceSearch = useCallback(_.debounce(getSuggestionForCreatQuotes, 700), []);
 
 	const searchCategory = e => {
 		setGetDataFinish(false);
 		setCategorySearchedList([]);
 		setInputPublisherValue(e.target.value);
-		debounceSearch({ operator: 'search', value: e.target.value, property: 'name' });
+		if (e.target.value) {
+			debounceSearch(e.target.value);
+		}
 		if (categoryInputWrapper.current) {
 			categoryInputWrapper.current.style.width = categoryInput.current.value?.length + 0.5 + 'ch';
 		}
@@ -92,7 +95,6 @@ function AddAndSearchPublisherUploadBook({
 				categoryInput={categoryInput}
 				hasSearchIcon={true}
 				placeholder={'Tìm kiếm và chọn một nhà xuất bản'}
-				maxAddedValue={maxAddedValue}
 			/>
 		</div>
 	);

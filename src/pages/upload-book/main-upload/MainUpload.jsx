@@ -48,7 +48,6 @@ export default function MainUpload() {
 	// const [inputTranslatorValue, setInputTranslatorValue] = useState('');
 	const [inputCategoryValue, setInputCategoryValue] = useState('');
 	const [inputPublisherValue, setInputPublisherValue] = useState('');
-	const [openDropzone, setOpenDropzone] = useState(false);
 
 	const blockInvalidChar = e => {
 		return ['e', 'E', '+', '-'].includes(e.key) && e.preventDefault();
@@ -165,7 +164,7 @@ export default function MainUpload() {
 			translators: translators,
 			publisher: publisher[0].id,
 			isbn: isbn,
-			publishDate: publishDate,
+			publishDate: publishDate.toISOString().split('T')[0],
 			page: Number(page),
 			language: language,
 			description: description,
@@ -200,13 +199,6 @@ export default function MainUpload() {
 		return imageUploadedData?.streamPath;
 	};
 
-	useEffect(() => {
-		if (openDropzone) {
-			open();
-			setOpenDropzone(false);
-		}
-	}, [openDropzone]);
-
 	return (
 		<Suspense fallback={<Circle />}>
 			<div className='group-btn-back'>
@@ -221,7 +213,7 @@ export default function MainUpload() {
 			</div>
 			<div className='upload-book-form'>
 				<div className={`upload-image__wrapper ${image ? 'has-image' : ''}`}>
-					<Dropzone onDrop={acceptedFiles => setImage(acceptedFiles)}>
+					<Dropzone onDrop={acceptedFiles => setImage(acceptedFiles)} multiple={false}>
 						{({ getRootProps, getInputProps, open }) => (
 							<>
 								{image ? (
@@ -328,6 +320,9 @@ export default function MainUpload() {
 								</label>
 								<input
 									className='input input--non-border'
+									type='number'
+									onWheel={e => e.target.blur()}
+									onKeyDown={blockInvalidChar}
 									placeholder='ISBN'
 									value={isbn}
 									name='isbn'

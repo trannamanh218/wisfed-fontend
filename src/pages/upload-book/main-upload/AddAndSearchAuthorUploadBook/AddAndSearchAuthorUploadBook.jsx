@@ -56,7 +56,9 @@ function AddAndSearchAuthorUploadBook({ inputAuthorValue, setInputAuthorValue, a
 		setGetDataFinish(false);
 		setCategorySearchedList([]);
 		setInputAuthorValue(e.target.value);
-		debounceSearch(e.target.value, 'addAuthor');
+		if (e.target.value) {
+			debounceSearch(e.target.value, 'addAuthor');
+		}
 		if (categoryInputWrapper.current) {
 			categoryInputWrapper.current.style.width = categoryInput.current.value?.length + 0.5 + 'ch';
 		}

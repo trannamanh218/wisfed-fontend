@@ -92,13 +92,17 @@ const PopupCreateGroup = ({ handleClose }) => {
 		if (authorAddedList.filter(authorAdded => authorAdded.id === author.id).length > 0) {
 			removeAuthor(author.id);
 		} else {
-			const authorArrayTemp = [...authorAddedList];
-			authorArrayTemp.push(author);
-			setAuthorAddedList(authorArrayTemp);
-			setInputAuthorValue('');
-			setAuthorSearchedList([]);
-			if (authorInputWrapper.current) {
-				authorInputWrapper.current.style.width = '0.5ch';
+			if (kindOfGroup.value === 'author' && authorAddedList.length >= 5) {
+				toast.warning('Chỉ được chọn tối đa 5 tác giả');
+			} else {
+				const authorArrayTemp = [...authorAddedList];
+				authorArrayTemp.push(author);
+				setAuthorAddedList(authorArrayTemp);
+				setInputAuthorValue('');
+				setAuthorSearchedList([]);
+				if (authorInputWrapper.current) {
+					authorInputWrapper.current.style.width = '0.5ch';
+				}
 			}
 		}
 	};
@@ -137,34 +141,30 @@ const PopupCreateGroup = ({ handleClose }) => {
 		const authorArr = [...authorAddedList];
 		const index = authorArr.findIndex(item => item.id === authorId);
 		authorArr.splice(index, 1);
-		if (authorAddedList.length <= 5) {
-			setAuthorAddedList(authorArr);
-		}
+		setAuthorAddedList(authorArr);
 	};
 
 	const removeCategory = categoryId => {
 		const categoryArr = [...categoryAddedList];
 		const index = categoryArr.findIndex(item => item.id === categoryId);
 		categoryArr.splice(index, 1);
-		if (categoryAddedList.length <= 5) {
-			setCategoryAddedList(categoryArr);
-		}
+		setCategoryAddedList(categoryArr);
 	};
 
 	const removeBook = bookId => {
 		const bookArr = [...bookAddedList];
 		const index = bookArr.findIndex(item => item.id === bookId);
 		bookArr.splice(index, 1);
-		if (bookAddedList.length <= 5) {
-			setBookAddedList(bookArr);
-		}
+		setBookAddedList(bookArr);
 	};
 
 	const searchAuthor = e => {
 		setGetDataFinish(false);
 		setAuthorSearchedList([]);
 		setInputAuthorValue(e.target.value);
-		debounceSearch(e.target.value, { value: 'addAuthor' });
+		if (e.target.value) {
+			debounceSearch(e.target.value, { value: 'addAuthor' });
+		}
 		if (authorInputWrapper.current) {
 			authorInputWrapper.current.style.width = authorInput.current.value.length + 0.5 + 'ch';
 		}
@@ -174,7 +174,9 @@ const PopupCreateGroup = ({ handleClose }) => {
 		setGetDataFinish(false);
 		setCategorySearchedList([]);
 		setInputCategoryValue(e.target.value);
-		debounceSearch(e.target.value, { value: 'addCategory' });
+		if (e.target.value) {
+			debounceSearch(e.target.value, { value: 'addCategory' });
+		}
 		if (categoryInputWrapper.current) {
 			categoryInputWrapper.current.style.width = categoryInput.current.value.length + 0.5 + 'ch';
 		}
@@ -184,7 +186,9 @@ const PopupCreateGroup = ({ handleClose }) => {
 		setGetDataFinish(false);
 		setBookSearchedList([]);
 		setInputBookValue(e.target.value);
-		debounceSearch(e.target.value, { value: 'addBook' });
+		if (e.target.value) {
+			debounceSearch(e.target.value, { value: 'addBook' });
+		}
 		if (bookInputWrapper.current) {
 			bookInputWrapper.current.style.width = bookInput.current.value.length + 0.5 + 'ch';
 		}
@@ -503,7 +507,6 @@ const PopupCreateGroup = ({ handleClose }) => {
 								categoryInputContainer={authorInputContainer}
 								categoryInputWrapper={authorInputWrapper}
 								categoryInput={authorInput}
-								maxAddedValue={kindOfGroup.value === 'author' ? 5 : null}
 							/>
 						</div>
 

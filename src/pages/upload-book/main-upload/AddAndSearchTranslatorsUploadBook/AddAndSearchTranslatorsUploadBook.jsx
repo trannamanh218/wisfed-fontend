@@ -64,7 +64,9 @@ function AddAndSearchTranslatorsUploadBook({
 		setGetDataFinish(false);
 		setCategorySearchedList([]);
 		setInputTranslatorValue(e.target.value);
-		debounceSearch(e.target.value, { value: 'addCategory' });
+		if (e.target.value) {
+			debounceSearch(e.target.value, { value: 'addCategory' });
+		}
 		if (categoryInputWrapper.current) {
 			categoryInputWrapper.current.style.width = categoryInput.current.value?.length + 0.5 + 'ch';
 		}

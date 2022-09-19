@@ -1,11 +1,11 @@
 import AddAndSearchCategories from 'shared/add-and-search-categories';
 import { useState, useRef, useCallback } from 'react';
-// import ShareModeDropdown from 'shared/share-mode-dropdown';
 import _ from 'lodash';
 import { useDispatch } from 'react-redux';
 import { getSuggestionForPost } from 'reducers/redux-utils/activity';
 import { NotificationError } from 'helpers/Error';
 import PropTypes from 'prop-types';
+import { toast } from 'react-toastify';
 
 function AddAndSearchCategoriesUploadBook({
 	inputCategoryValue,
@@ -27,13 +27,17 @@ function AddAndSearchCategoriesUploadBook({
 		if (categoryAddedList.filter(categoryAdded => categoryAdded.id === category.id).length > 0) {
 			removeCategory(category.id);
 		} else {
-			const categoryArrayTemp = [...categoryAddedList];
-			categoryArrayTemp.push(category);
-			setCategoryAddedList(categoryArrayTemp);
-			setInputCategoryValue('');
-			setCategorySearchedList([]);
-			if (categoryInputWrapper.current) {
-				categoryInputWrapper.current.style.width = '0.5ch';
+			if (categoryAddedList.length < maxAddedValue) {
+				const categoryArrayTemp = [...categoryAddedList];
+				categoryArrayTemp.push(category);
+				setCategoryAddedList(categoryArrayTemp);
+				setInputCategoryValue('');
+				setCategorySearchedList([]);
+				if (categoryInputWrapper.current) {
+					categoryInputWrapper.current.style.width = '0.5ch';
+				}
+			} else {
+				toast.warning(`Chỉ được chọn tối đa ${maxAddedValue} chủ đề`);
 			}
 		}
 	};
@@ -65,7 +69,9 @@ function AddAndSearchCategoriesUploadBook({
 		setGetDataFinish(false);
 		setCategorySearchedList([]);
 		setInputCategoryValue(e.target.value);
-		debounceSearch(e.target.value, { value: 'addCategory' });
+		if (e.target.value) {
+			debounceSearch(e.target.value, { value: 'addCategory' });
+		}
 		if (categoryInputWrapper.current) {
 			categoryInputWrapper.current.style.width = categoryInput.current.value?.length + 0.5 + 'ch';
 		}
@@ -88,7 +94,6 @@ function AddAndSearchCategoriesUploadBook({
 				categoryInputWrapper={categoryInputWrapper}
 				categoryInput={categoryInput}
 				hasSearchIcon={true}
-				maxAddedValue={maxAddedValue}
 			/>
 		</div>
 	);
