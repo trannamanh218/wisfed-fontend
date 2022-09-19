@@ -156,7 +156,9 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 		setGetDataFinish(false);
 		setBookSearchedList([]);
 		setInputBookValue(e.target.value);
-		debounceSearch(e.target.value, { value: 'addBook' });
+		if (e.target.value) {
+			debounceSearch(e.target.value, { value: 'addBook' });
+		}
 	};
 
 	const addBook = book => {
@@ -169,18 +171,28 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 		setGetDataFinish(false);
 		setCategorySearchedList([]);
 		setInputCategoryValue(e.target.value);
-		debounceSearch(e.target.value, { value: 'addCategory' });
+		if (e.target.value) {
+			debounceSearch(e.target.value, { value: 'addCategory' });
+		}
 		if (categoryInputWrapper.current) {
 			categoryInputWrapper.current.style.width = categoryInput.current.value.length + 0.5 + 'ch';
 		}
 	};
 
+	const limitedValue = 5;
 	const addCategory = category => {
 		if (categoryAddedList.filter(categoryAdded => categoryAdded.id === category.id).length > 0) {
 			removeCategory(category.id);
 		} else {
 			const categoryArrayTemp = [...categoryAddedList];
-			categoryArrayTemp.push(category);
+			if (categoryArrayTemp.length < limitedValue) {
+				categoryArrayTemp.push(category);
+			} else {
+				const customId = 'custom-id-handleAddToQuotes-addAuthor';
+				toast.warning(`Chỉ được chọn tối đa ${limitedValue} chủ đề trong 1 lần tạo quotes`, {
+					toastId: customId,
+				});
+			}
 			setCategoryAddedList(categoryArrayTemp);
 			setInputCategoryValue('');
 			setCategorySearchedList([]);

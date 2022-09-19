@@ -245,7 +245,17 @@
 		font-weight: 600 !important;
 		position: relative;
 		cursor: pointer;
-		flex-grow: 1;
+		position: relative;
+
+		::before {
+			content: '';
+			position: absolute;
+			top: -7px;
+			left: 0;
+			width: 100%;
+			height: 20px;
+			background-color: transparent;
+		}
 		&:hover {
 			.post__user__container__list-mention-users {
 				display: block;

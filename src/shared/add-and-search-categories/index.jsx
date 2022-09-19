@@ -2,7 +2,7 @@ import './add-and-search-categories.scss';
 import { CloseX, Search, CheckIcon } from 'components/svg';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
 function AddAndSearchCategories({
 	categoryAddedList,
@@ -17,15 +17,12 @@ function AddAndSearchCategories({
 	categoryInput,
 	hasSearchIcon,
 	placeholder,
-	maxAddedValue,
 }) {
 	const focusCategoryInput = () => {
 		if (categoryInput.current) {
 			categoryInput.current.focus();
 		}
 	};
-
-	const [hiddenInput, setHiddenInput] = useState(false);
 
 	useEffect(() => {
 		if (categoryInput.current) {
@@ -41,16 +38,6 @@ function AddAndSearchCategories({
 			};
 		}
 	}, []);
-
-	useEffect(() => {
-		if (maxAddedValue) {
-			if (categoryAddedList.length >= maxAddedValue) {
-				setHiddenInput(true);
-			} else {
-				setHiddenInput(false);
-			}
-		}
-	}, [categoryAddedList]);
 
 	return (
 		<div className='add-and-search-categories'>
@@ -76,7 +63,7 @@ function AddAndSearchCategories({
 							style={{ width: '8px' }}
 						>
 							<input
-								className={`add-and-search-categories__input ${hiddenInput ? 'hidden' : ''}`}
+								className='add-and-search-categories__input'
 								value={inputCategoryValue}
 								onChange={searchCategory}
 								ref={categoryInput}
@@ -124,7 +111,6 @@ function AddAndSearchCategories({
 
 AddAndSearchCategories.defaultProps = {
 	placeholder: 'Tìm kiếm và thêm chủ đề',
-	maxAddedValue: null,
 };
 
 AddAndSearchCategories.propTypes = {
@@ -140,7 +126,6 @@ AddAndSearchCategories.propTypes = {
 	categoryInput: PropTypes.object,
 	hasSearchIcon: PropTypes.bool,
 	placeholder: PropTypes.string,
-	maxAddedValue: PropTypes.number,
 };
 
 export default AddAndSearchCategories;

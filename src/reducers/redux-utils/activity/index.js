@@ -69,7 +69,7 @@ export const getSuggestionForPost = createAsyncThunk(
 					break;
 				}
 				case 'addCategory': {
-					const response = await Request.makeGet(categoryAPI({ option: false }), query);
+					const response = await Request.makeGet(categoryAPI(false), query);
 					data = response.data;
 					break;
 				}

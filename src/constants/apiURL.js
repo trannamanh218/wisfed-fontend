@@ -144,6 +144,7 @@ export const listPostGroup = id => `/api/v1/groups/${id}/groupFeed`;
 export const searchGroup = id => `/api/v1/groups/search/${id}`;
 export const unFollowGroupAPI = id => `/api/v1/groups/unFollow/${id}`;
 export const followGroupAPI = id => `/api/v1/groups/follow/${id}`;
+export const recommendGroup = '/api/v1/groups/recommendGroup';
 
 // search
 export const getSearchAPI = `/api/v1/searchs`;

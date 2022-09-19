@@ -1,11 +1,10 @@
 import NormalContainer from 'components/layout/normal-container';
-import { useState, useCallback } from 'react';
+import { useState } from 'react';
 import './friend.scss';
 import MyFriends from './component/my-friend';
 import MyFollow from './component/my-follow';
 import InvitationFriend from './component/invitation-friend';
 import SuggestFriend from './component/suggest-friend';
-import _ from 'lodash';
 import SearchButton from 'shared/search-button';
 
 const Friends = () => {
@@ -56,22 +55,20 @@ const Friends = () => {
 		}
 	};
 
-	const debounceSearch = useCallback(_.debounce(updateInputSearch, 0), []);
-
 	const handleSearch = e => {
 		setInputSearch(e.target.value);
 		if (e.target.value === '') {
-			debounceSearch('');
+			updateInputSearch('');
 		}
 	};
 
 	const onClickSearchBtn = () => {
-		debounceSearch(inputSearch);
+		updateInputSearch(inputSearch);
 	};
 
 	const onBtnEnterPress = e => {
 		if (e.key === 'Enter') {
-			debounceSearch(inputSearch);
+			updateInputSearch(inputSearch);
 		}
 	};
 

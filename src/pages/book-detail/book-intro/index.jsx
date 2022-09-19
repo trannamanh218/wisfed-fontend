@@ -52,6 +52,12 @@ const BookIntro = ({ bookInfo, listRatingStar }) => {
 		}
 	};
 
+	const handleConfirmMyBook = () => {
+		if (!bookInfo.verify) {
+			navigate(`/confirm-my-book/${bookInfo.id}`);
+		}
+	};
+
 	return (
 		<div className='book-intro'>
 			<div className='book-intro__image'>
@@ -65,7 +71,9 @@ const BookIntro = ({ bookInfo, listRatingStar }) => {
 			</div>
 			<div className='book-intro__content'>
 				<div className='book-intro__content__infomations'>
-					<h1 className='book-intro__name'>{bookInfo.name}</h1>
+					<h1 className='book-intro__name' onClick={handleConfirmMyBook} title={bookInfo.name}>
+						{bookInfo.name}
+					</h1>
 					<div className='book-intro__author'>
 						<span>
 							{!_.isEmpty(bookInfo.authors)

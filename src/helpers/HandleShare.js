@@ -19,6 +19,8 @@ export const renderMessage = item => {
 		return <> đã thích bình luận trong quote của bạn</>;
 	} else if (item.verb === 'likeCommentReview') {
 		return <> đã thích bình luận trong bài đánh giá của bạn</>;
+	} else if (item.verb === 'likeCommentGroupPost') {
+		return <> đã thích bình luận bài viết trong nhóm của bạn</>;
 	} else if (item.verb === 'likeCommentMiniPost') {
 		return <> đã thích bình luận trong bài viết của bạn</>;
 	} else if (item.verb === 'likeReview') {

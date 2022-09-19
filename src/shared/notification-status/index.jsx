@@ -68,9 +68,15 @@ const NotificationStatus = ({ item, setGetNotifications, getNotifications }) => 
 			case 'commentMiniPost':
 			case 'likeGroupPost':
 			case 'commentGroupPost':
+			case 'likeCommentGroupPost':
+			case 'shareGroupPost':
 				navigate(
 					`/detail-feed/${
-						items.verb === 'commentMiniPost' || items.verb === 'likeMiniPost' ? 'mini-post' : 'group-post'
+						items.verb === 'commentMiniPost' ||
+						items.verb === 'likeMiniPost' ||
+						items.verb === 'shareGroupPost'
+							? 'mini-post'
+							: 'group-post'
 					}/${items.originId?.minipostId || items.originId?.groupPostId}`
 				);
 				break;
@@ -93,6 +99,7 @@ const NotificationStatus = ({ item, setGetNotifications, getNotifications }) => 
 				navigate(`/detail-feed/mini-post/${items.originId.minipostId}`);
 				break;
 			case 'commentQuote':
+			case 'likeQuote':
 				navigate(`/quotes/detail/${items.originId.quoteId}`);
 				break;
 			case 'replyCommentQuote':
@@ -109,11 +116,12 @@ const NotificationStatus = ({ item, setGetNotifications, getNotifications }) => 
 						navigate(`/detail-feed/group-post/${items.originId.groupPostId}`);
 						break;
 					case 'mentionMiniPost':
+					case 'commentMiniPost':
 						navigate(`/detail-feed/mini-post/${items.originId.minipostId}`);
 						break;
-					case 'commentMiniPost':
-						dispatch(handleMentionCommentId(item.originId.commentMiniPostId));
-						navigate(`/detail-feed/mini-post/${items.originId.minipostId}`);
+					case 'commentReview':
+						dispatch(updateReviewIdFromNoti(items.originId.reviewId));
+						navigate(`/review/${items.originId.bookId}/${userInfo.id}`);
 						break;
 					case 'commentGroupPost':
 						dispatch(handleMentionCommentId(item.originId.commentGroupPostId));
@@ -124,19 +132,20 @@ const NotificationStatus = ({ item, setGetNotifications, getNotifications }) => 
 						navigate(`/detail-feed/mini-post/${items.originId.minipostId}`);
 				}
 				break;
-			case 'likeQuote':
-				navigate(`/quotes/detail/${items.originId.quoteId}`);
-				break;
 			case 'likeCommentReview':
-				navigate(`/detail-feed/mini-post/${items.originId.minipostId}`);
+				dispatch(updateReviewIdFromNoti(items.originId.reviewId));
+				navigate(`/review/${items.originId.bookId}/${userInfo.id}`);
 				break;
 			case 'requestGroup':
 				navigate(`/group/${items.originId.groupId}`);
 				break;
 			case 'likeReview':
+			case 'commentReview':
+				dispatch(updateReviewIdFromNoti(items.originId.reviewId));
 				navigate(`/review/${items.originId.bookId}/${userInfo.id}`);
 				break;
 			case 'likeCommentMiniPost':
+			case 'sharePost':
 				navigate(`/detail-feed/mini-post/${items.originId.minipostId}`);
 				break;
 			default:

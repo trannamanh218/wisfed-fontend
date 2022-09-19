@@ -5,7 +5,7 @@ import ResultNotFound from 'pages/result/component/result-not-found';
 import LoadingIndicator from 'shared/loading-indicator';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { useDispatch } from 'react-redux';
-import { getGroupList } from 'reducers/redux-utils/group';
+import { getRecommendGroup } from 'reducers/redux-utils/group';
 import { NotificationError } from 'helpers/Error';
 import defaultAvatar from 'assets/images/Rectangle 17435.png';
 import { useSelector } from 'react-redux';
@@ -26,11 +26,11 @@ const MainLayout = () => {
 				start: 0,
 				limit: callApiPerPage.current,
 			};
-			const data = await dispatch(getGroupList(params)).unwrap();
-			if (!data.rows.length || data.rows.length < callApiPerPage.current) {
+			const data = await dispatch(getRecommendGroup(params)).unwrap();
+			if (!data.length || data.length < callApiPerPage.current) {
 				setHasMore(false);
 			}
-			setList(data.rows);
+			setList(data);
 		} catch (err) {
 			NotificationError(err);
 		}
@@ -42,14 +42,14 @@ const MainLayout = () => {
 				start: callApiStart.current,
 				limit: callApiPerPage.current,
 			};
-			const data = await dispatch(getGroupList(params)).unwrap();
-			if (data.rows.length) {
-				if (data.rows.length < callApiPerPage.current) {
+			const data = await dispatch(getRecommendGroup(params)).unwrap();
+			if (data.length) {
+				if (data.length < callApiPerPage.current) {
 					setHasMore(false);
 				} else {
 					callApiStart.current += callApiPerPage.current;
 				}
-				setList(list.concat(data.rows));
+				setList(list.concat(data));
 			} else {
 				setHasMore(false);
 			}
