@@ -113,7 +113,7 @@ function GroupType({
 									className='form-field__btn save'
 									onClick={() => setUserSocialsMedia(intialDataArray)}
 								>
-									Tải lại
+									Khôi phục
 								</div>
 								<div className='form-field__btn cancel' onClick={() => setIsEditting(false)}>
 									Thoát
@@ -131,6 +131,17 @@ function GroupType({
 							<div className='form-field'>
 								<div className='form-field__no-data'>Chưa có dữ liệu</div>
 							</div>
+							{intialDataArray && !dataArray.length ? (
+								<div
+									className='form-field__btn save'
+									style={{ width: '110px' }}
+									onClick={() => setUserSocialsMedia(intialDataArray)}
+								>
+									Khôi phục
+								</div>
+							) : (
+								''
+							)}
 							<div className='btn-icon' onClick={() => enableEdit('socials-editting')}>
 								<Add />
 							</div>
