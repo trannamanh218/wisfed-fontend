@@ -156,7 +156,9 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 		setGetDataFinish(false);
 		setBookSearchedList([]);
 		setInputBookValue(e.target.value);
-		debounceSearch(e.target.value, { value: 'addBook' });
+		if (e.target.value) {
+			debounceSearch(e.target.value, { value: 'addBook' });
+		}
 	};
 
 	const addBook = book => {
@@ -169,7 +171,9 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 		setGetDataFinish(false);
 		setCategorySearchedList([]);
 		setInputCategoryValue(e.target.value);
-		debounceSearch(e.target.value, { value: 'addCategory' });
+		if (e.target.value) {
+			debounceSearch(e.target.value, { value: 'addCategory' });
+		}
 		if (categoryInputWrapper.current) {
 			categoryInputWrapper.current.style.width = categoryInput.current.value.length + 0.5 + 'ch';
 		}

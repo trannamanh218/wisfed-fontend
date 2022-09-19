@@ -9,6 +9,7 @@ import {
 	shareApiAuthorBook,
 	shareApiMyBook,
 	getMiniPostCommentsAPI,
+	getGroupPostCommentsAPI,
 } from 'constants/apiURL';
 import Request from 'helpers/Request';
 
@@ -90,6 +91,17 @@ export const getMiniPostComments = createAsyncThunk('post/getMiniPostComments', 
 	try {
 		const { postId, params } = data;
 		const response = await Request.makeGet(getMiniPostCommentsAPI(postId), params);
+		return response.data;
+	} catch (err) {
+		const error = JSON.parse(err.response);
+		return rejectWithValue(error);
+	}
+});
+
+export const getGroupPostComments = createAsyncThunk('post/getGroupPostComments', async (data, { rejectWithValue }) => {
+	try {
+		const { postId, params } = data;
+		const response = await Request.makeGet(getGroupPostCommentsAPI(postId), params);
 		return response.data;
 	} catch (err) {
 		const error = JSON.parse(err.response);

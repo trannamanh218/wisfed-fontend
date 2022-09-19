@@ -1,6 +1,5 @@
-import { CameraIcon, CloseIconX } from 'components/svg';
+import { CloseIconX, Image } from 'components/svg';
 import { useEffect, useRef, useState, useCallback } from 'react';
-import { Image } from 'react-bootstrap';
 import Input from 'shared/input';
 import SelectBox from 'shared/select-box';
 import PropTypes from 'prop-types';
@@ -8,7 +7,6 @@ import { useDispatch } from 'react-redux';
 import './create-group.scss';
 import { getCreatGroup } from 'reducers/redux-utils/group';
 import Dropzone from 'react-dropzone';
-import { useDropzone } from 'react-dropzone';
 import { uploadImage } from 'reducers/redux-utils/common';
 import { NotificationError } from 'helpers/Error';
 import _ from 'lodash';
@@ -23,9 +21,9 @@ const PopupCreateGroup = ({ handleClose }) => {
 	const [inputDiscription, setInputDiscription] = useState('');
 	const [inputHashtag, setInputHashtag] = useState('');
 	const [listHashtags, setListHashtags] = useState([]);
-	const [imgUrl, setImgUrl] = useState('');
+	const [image, setImage] = useState('');
 	const [isShowBtn, setIsShowBtn] = useState(false);
-	const [kindOfGroup, setKindOfGroup] = useState('');
+	const [kindOfGroup, setKindOfGroup] = useState({});
 	const [lastTag, setLastTag] = useState('');
 
 	const [listAuthors, setListAuthors] = useState([]);
@@ -64,8 +62,6 @@ const PopupCreateGroup = ({ handleClose }) => {
 
 	const hastagRegex = /(#[a-z0-9][a-z0-9\-_]*)/gi;
 
-	const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
-
 	const dispatch = useDispatch();
 
 	const getSuggestionForCreatQuotes = async (input, option) => {
@@ -96,13 +92,17 @@ const PopupCreateGroup = ({ handleClose }) => {
 		if (authorAddedList.filter(authorAdded => authorAdded.id === author.id).length > 0) {
 			removeAuthor(author.id);
 		} else {
-			const authorArrayTemp = [...authorAddedList];
-			authorArrayTemp.push(author);
-			setAuthorAddedList(authorArrayTemp);
-			setInputAuthorValue('');
-			setAuthorSearchedList([]);
-			if (authorInputWrapper.current) {
-				authorInputWrapper.current.style.width = '0.5ch';
+			if (kindOfGroup.value === 'author' && authorAddedList.length >= 5) {
+				toast.warning('Chỉ được chọn tối đa 5 tác giả');
+			} else {
+				const authorArrayTemp = [...authorAddedList];
+				authorArrayTemp.push(author);
+				setAuthorAddedList(authorArrayTemp);
+				setInputAuthorValue('');
+				setAuthorSearchedList([]);
+				if (authorInputWrapper.current) {
+					authorInputWrapper.current.style.width = '0.5ch';
+				}
 			}
 		}
 	};
@@ -141,34 +141,30 @@ const PopupCreateGroup = ({ handleClose }) => {
 		const authorArr = [...authorAddedList];
 		const index = authorArr.findIndex(item => item.id === authorId);
 		authorArr.splice(index, 1);
-		if (authorAddedList.length <= 5) {
-			setAuthorAddedList(authorArr);
-		}
+		setAuthorAddedList(authorArr);
 	};
 
 	const removeCategory = categoryId => {
 		const categoryArr = [...categoryAddedList];
 		const index = categoryArr.findIndex(item => item.id === categoryId);
 		categoryArr.splice(index, 1);
-		if (categoryAddedList.length <= 5) {
-			setCategoryAddedList(categoryArr);
-		}
+		setCategoryAddedList(categoryArr);
 	};
 
 	const removeBook = bookId => {
 		const bookArr = [...bookAddedList];
 		const index = bookArr.findIndex(item => item.id === bookId);
 		bookArr.splice(index, 1);
-		if (bookAddedList.length <= 5) {
-			setBookAddedList(bookArr);
-		}
+		setBookAddedList(bookArr);
 	};
 
 	const searchAuthor = e => {
 		setGetDataFinish(false);
 		setAuthorSearchedList([]);
 		setInputAuthorValue(e.target.value);
-		debounceSearch(e.target.value, { value: 'addAuthor' });
+		if (e.target.value) {
+			debounceSearch(e.target.value, { value: 'addAuthor' });
+		}
 		if (authorInputWrapper.current) {
 			authorInputWrapper.current.style.width = authorInput.current.value.length + 0.5 + 'ch';
 		}
@@ -178,7 +174,9 @@ const PopupCreateGroup = ({ handleClose }) => {
 		setGetDataFinish(false);
 		setCategorySearchedList([]);
 		setInputCategoryValue(e.target.value);
-		debounceSearch(e.target.value, { value: 'addCategory' });
+		if (e.target.value) {
+			debounceSearch(e.target.value, { value: 'addCategory' });
+		}
 		if (categoryInputWrapper.current) {
 			categoryInputWrapper.current.style.width = categoryInput.current.value.length + 0.5 + 'ch';
 		}
@@ -188,7 +186,9 @@ const PopupCreateGroup = ({ handleClose }) => {
 		setGetDataFinish(false);
 		setBookSearchedList([]);
 		setInputBookValue(e.target.value);
-		debounceSearch(e.target.value, { value: 'addBook' });
+		if (e.target.value) {
+			debounceSearch(e.target.value, { value: 'addBook' });
+		}
 		if (bookInputWrapper.current) {
 			bookInputWrapper.current.style.width = bookInput.current.value.length + 0.5 + 'ch';
 		}
@@ -219,10 +219,6 @@ const PopupCreateGroup = ({ handleClose }) => {
 	}, [bookAddedList]);
 
 	useEffect(() => {
-		uploadImageFile();
-	}, [acceptedFiles]);
-
-	useEffect(() => {
 		setLastTag(
 			inputHashtag
 				.normalize('NFD')
@@ -232,9 +228,9 @@ const PopupCreateGroup = ({ handleClose }) => {
 		);
 	}, [inputHashtag]);
 
-	const uploadImageFile = async () => {
+	const uploadImageFile = async acceptedFiles => {
 		const imageUploadedData = await dispatch(uploadImage(acceptedFiles)).unwrap();
-		setImgUrl(imageUploadedData?.streamPath);
+		return imageUploadedData?.streamPath;
 	};
 
 	useEffect(() => {
@@ -276,16 +272,15 @@ const PopupCreateGroup = ({ handleClose }) => {
 
 	useEffect(() => {
 		if (
-			imgUrl !== undefined &&
-			!_.isEmpty(listAuthors) &&
+			image !== undefined &&
 			(lastTag.includes('#') || !_.isEmpty(listHashtags)) &&
+			lastTag !== '#' &&
 			inputDiscription !== '' &&
-			inputNameGroup !== '' &&
-			categoryIdBook.length > 0
+			inputNameGroup !== ''
 		) {
 			switch (kindOfGroup.value) {
 				case 'book':
-					if (listBookAdd.length > 0) {
+					if (listBookAdd.length > 0 && categoryIdBook.length > 0) {
 						setIsShowBtn(true);
 					} else {
 						setIsShowBtn(false);
@@ -298,21 +293,18 @@ const PopupCreateGroup = ({ handleClose }) => {
 						setIsShowBtn(false);
 					}
 					break;
-				case 'category':
-					if (listAuthors.length > 0) {
+				default: // case 'category'
+					if (categoryIdBook.length > 0) {
 						setIsShowBtn(true);
 					} else {
 						setIsShowBtn(false);
 					}
-					break;
-				default:
-					setIsShowBtn(false);
 			}
 		} else {
 			setIsShowBtn(false);
 		}
 	}, [
-		imgUrl,
+		image,
 		listAuthors,
 		lastTag,
 		kindOfGroup,
@@ -324,39 +316,45 @@ const PopupCreateGroup = ({ handleClose }) => {
 	]);
 
 	const createGroup = async () => {
-		const newListHastag = listHashtags.map(item => `${item}`);
-		let newList;
-		if (lastTag.includes('#')) {
-			newList = [...newListHastag, lastTag];
-		} else {
-			newList = newListHastag;
-		}
-		const data = {
-			name: inputNameGroup,
-			description: inputDiscription,
-			avatar: imgUrl,
-			groupType: kindOfGroup.value,
-			authorIds: listAuthors,
-			tags: newList,
-			categoryIds: categoryIdBook,
-			bookIds: listBookAdd,
-		};
-		try {
-			await dispatch(getCreatGroup(data)).unwrap();
-			const customId = 'custom-id-PopupCreateGroup';
-			toast.success('Tạo nhóm thành công', { toastId: customId });
-			dispatch(handleResetGroupList());
-		} catch (err) {
-			NotificationError(err);
-		} finally {
-			handleClose();
+		if (isShowBtn) {
+			const newListHastag = listHashtags.map(item => `${item}`);
+			let newList;
+			if (lastTag.includes('#') && lastTag !== '#') {
+				newList = [...newListHastag, lastTag];
+			} else {
+				newList = newListHastag;
+			}
+
+			const imgSrc = await uploadImageFile(image);
+
+			const data = {
+				name: inputNameGroup,
+				description: inputDiscription,
+				avatar: imgSrc,
+				groupType: kindOfGroup.value,
+				authorIds: listAuthors,
+				tags: newList,
+				categoryIds: categoryIdBook,
+				bookIds: listBookAdd,
+			};
+
+			try {
+				await dispatch(getCreatGroup(data)).unwrap();
+				const customId = 'custom-id-PopupCreateGroup';
+				toast.success('Tạo nhóm thành công', { toastId: customId });
+				dispatch(handleResetGroupList());
+			} catch (err) {
+				NotificationError(err);
+			} finally {
+				handleClose();
+			}
 		}
 	};
 
 	const listKindOfGroup = [
 		{ value: 'book', title: 'Sách' },
 		{ value: 'author', title: 'Tác giả' },
-		{ value: 'category', title: ' Chia sẻ' },
+		{ value: 'category', title: 'Chia sẻ' },
 	];
 
 	const listIdBook = [
@@ -399,31 +397,40 @@ const PopupCreateGroup = ({ handleClose }) => {
 			</div>
 
 			<div>
-				<div className='upload-image__wrapper'>
-					{imgUrl ? (
-						<img style={{ width: '100%', maxHeight: '266px', objectFit: 'cover' }} src={imgUrl} alt='img' />
-					) : (
-						<Dropzone>
-							{() => (
-								<div {...getRootProps()}>
-									<input {...getInputProps()} />
-									<div className='dropzone upload-image'>
-										<CameraIcon />
-										<Image className='upload-image__icon' />
-										<p className='upload-image__description'>Thêm ảnh từ thiết bị</p>
-										<span>hoặc kéo thả</span>
-										<span style={{ color: 'red', paddingTop: '5px' }}>(bắt buộc)</span>
+				<div className={`upload-image__wrapper ${image ? 'has-image' : ''}`}>
+					<Dropzone onDrop={acceptedFiles => setImage(acceptedFiles)}>
+						{({ getRootProps, getInputProps, open }) => (
+							<>
+								{image ? (
+									<img
+										style={{ width: '100%', maxHeight: '266px', objectFit: 'cover' }}
+										src={URL.createObjectURL(image[0])}
+										alt='img'
+										onClick={open}
+									/>
+								) : (
+									<div {...getRootProps()}>
+										<input {...getInputProps()} />
+										<div className='dropzone upload-image'>
+											<div className='upload-image__wrapper__icon'>
+												<Image />
+											</div>
+											<br />
+											<p className='upload-image__description'>Thêm ảnh từ thiết bị</p>
+											<span>hoặc kéo thả</span>
+											<span style={{ color: 'red', paddingTop: '5px' }}>(bắt buộc)</span>
+										</div>
 									</div>
-								</div>
-							)}
-						</Dropzone>
-					)}
+								)}
+							</>
+						)}
+					</Dropzone>
 				</div>
 			</div>
 			<div className='form-field-wrapper'>
 				<div className='form-field-name'>
 					<label>Tên nhóm</label>
-					<span style={{ color: 'red', marginLeft: '4px' }}>*</span>
+					<span className='form-field-authors__asterisk'>*</span>
 					<Input
 						inputRef={groupNameInput}
 						isBorder={false}
@@ -434,7 +441,7 @@ const PopupCreateGroup = ({ handleClose }) => {
 
 				<div className='form-field-select__kind-of-group'>
 					<label>Kiểu nội dung</label>
-					<span style={{ color: 'red', marginLeft: '4px' }}>*</span>
+					<span className='form-field-authors__asterisk'>*</span>
 					<SelectBox
 						name='kindofgroup'
 						list={listKindOfGroup}
@@ -442,73 +449,88 @@ const PopupCreateGroup = ({ handleClose }) => {
 						onChangeOption={onchangeKindOfGroup}
 					/>
 				</div>
-				{kindOfGroup.value === 'book' && (
-					<div className='form-field-select__kind-of-group'>
-						<label>Chủ đề sách</label>
-						<span style={{ color: 'red', marginLeft: '4px' }}>*</span>
-						<SelectBox
-							name='categoryBook'
-							list={listIdBook}
-							defaultOption={categoryBookRef.current}
-							onChangeOption={onchangeBookCategory}
-						/>
-					</div>
-				)}
 
-				{(kindOfGroup.value === 'author' || kindOfGroup.value === 'category') && (
-					<div className='form-field-select__kind-of-group'>
-						<label>Chủ đề </label>
-						<span style={{ color: 'red', marginLeft: '4px' }}>*</span>
-						<AddAndSearchCategories
-							categoryAddedList={categoryAddedList}
-							categorySearchedList={categorySearchedList}
-							addCategory={addCategory}
-							removeCategory={removeCategory}
-							getDataFinish={getDataFinish}
-							searchCategory={searchCategory}
-							inputCategoryValue={inputCategoryValue}
-							categoryInputContainer={categoryInputContainer}
-							categoryInputWrapper={categoryInputWrapper}
-							categoryInput={categoryInput}
-							hasSearchIcon={true}
-						/>
-					</div>
-				)}
+				{kindOfGroup.value !== 'default' && (
+					<>
+						{kindOfGroup.value === 'book' && (
+							<div className='form-field-select__kind-of-group'>
+								<label>Chủ đề sách</label>
+								<span className='form-field-authors__asterisk'>*</span>
+								<SelectBox
+									name='categoryBook'
+									list={listIdBook}
+									defaultOption={categoryBookRef.current}
+									onChangeOption={onchangeBookCategory}
+								/>
+							</div>
+						)}
 
-				<div className='form-field-authors'>
-					<label>Tên tác giả</label>
-					<span style={{ color: 'red', marginLeft: '4px' }}>*</span>
-					<AddAndSearchCategories
-						categoryAddedList={authorAddedList}
-						categorySearchedList={authorSearchedList}
-						addCategory={addAuthor}
-						removeCategory={removeAuthor}
-						getDataFinish={getDataFinish}
-						searchCategory={searchAuthor}
-						inputCategoryValue={inputAuthorValue}
-						categoryInputContainer={authorInputContainer}
-						categoryInputWrapper={authorInputWrapper}
-						categoryInput={authorInput}
-					/>
-				</div>
+						{kindOfGroup.value !== 'book' && (
+							<div className='form-field-select__kind-of-group'>
+								<label>Chủ đề </label>
+								{kindOfGroup.value === 'author' ? (
+									''
+								) : (
+									<span className='form-field-authors__asterisk'>*</span>
+								)}
+								<AddAndSearchCategories
+									categoryAddedList={categoryAddedList}
+									categorySearchedList={categorySearchedList}
+									addCategory={addCategory}
+									removeCategory={removeCategory}
+									getDataFinish={getDataFinish}
+									searchCategory={searchCategory}
+									inputCategoryValue={inputCategoryValue}
+									categoryInputContainer={categoryInputContainer}
+									categoryInputWrapper={categoryInputWrapper}
+									categoryInput={categoryInput}
+									hasSearchIcon={true}
+								/>
+							</div>
+						)}
 
-				{kindOfGroup.value === 'book' && (
-					<div className='form-field-authors'>
-						<label>Tên sách</label>
-						<span style={{ color: 'red', marginLeft: '4px' }}>*</span>
-						<AddAndSearchCategories
-							categoryAddedList={bookAddedList}
-							categorySearchedList={bookSearchedList}
-							addCategory={addBook}
-							removeCategory={removeBook}
-							getDataFinish={getDataFinish}
-							searchCategory={searchBook}
-							inputCategoryValue={inputBookValue}
-							categoryInputContainer={bookInputContainer}
-							categoryInputWrapper={bookInputWrapper}
-							categoryInput={bookInput}
-						/>
-					</div>
+						<div className='form-field-authors'>
+							<label>Tên tác giả</label>
+							{kindOfGroup.value === 'category' ? (
+								''
+							) : (
+								<span className='form-field-authors__asterisk'>*</span>
+							)}
+							<AddAndSearchCategories
+								categoryAddedList={authorAddedList}
+								categorySearchedList={authorSearchedList}
+								addCategory={addAuthor}
+								removeCategory={removeAuthor}
+								getDataFinish={getDataFinish}
+								searchCategory={searchAuthor}
+								inputCategoryValue={inputAuthorValue}
+								categoryInputContainer={authorInputContainer}
+								categoryInputWrapper={authorInputWrapper}
+								categoryInput={authorInput}
+							/>
+						</div>
+
+						<div className='form-field-authors'>
+							<label>Tên sách</label>
+							{kindOfGroup.value === 'category' || kindOfGroup.value === 'author' ? (
+								''
+							) : (
+								<span className='form-field-authors__asterisk'>*</span>
+							)}
+							<AddAndSearchCategories
+								categoryAddedList={bookAddedList}
+								categorySearchedList={bookSearchedList}
+								addCategory={addBook}
+								removeCategory={removeBook}
+								getDataFinish={getDataFinish}
+								searchCategory={searchBook}
+								inputCategoryValue={inputBookValue}
+								categoryInputContainer={bookInputContainer}
+								categoryInputWrapper={bookInputWrapper}
+								categoryInput={bookInput}
+							/>
+						</div>
+					</>
 				)}
 
 				<div className='form-field-discription'>
@@ -558,7 +580,7 @@ const PopupCreateGroup = ({ handleClose }) => {
 						''
 					)}
 				</div>
-				<div className={!isShowBtn ? 'disableBtn' : `form-button`} onClick={() => createGroup()}>
+				<div className={!isShowBtn ? 'disableBtn' : `form-button`} onClick={createGroup}>
 					<button>Tạo nhóm</button>
 				</div>
 			</div>

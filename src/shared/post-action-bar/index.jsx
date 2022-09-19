@@ -181,7 +181,7 @@ PostActionBar.defaultProps = {
 };
 
 PostActionBar.propTypes = {
-	postData: PropTypes.object.isRequired,
+	postData: PropTypes.any.isRequired,
 	handleLikeAction: PropTypes.func,
 };
 

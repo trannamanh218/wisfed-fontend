@@ -26,6 +26,7 @@ export const postDetailAPI = id => `/api/v1/posts/${id}`;
 export const previewLink = '/api/v1/preview/demo';
 export const likeCommentPostAPI = id => `/api/v1/commentMiniposts/like/${id}`;
 export const getMiniPostCommentsAPI = id => `/api/v1/getstream/listCommentMiniPost/${id}`;
+export const getGroupPostCommentsAPI = id => `/api/v1/groups/listCommentPost/${id}`;
 
 // books
 export const bookAPI = '/api/v1/books';
@@ -173,3 +174,6 @@ export const getSeriesDetailAPI = id => `/api/v1/series/${id}`;
 export const postMoreSeriesAPI = `/api/v1/series/`;
 export const addBookToSeriesAPI = id => `/api/v1/series/addBook/${id}`;
 export const removeBookFromSeriesAPI = id => `/api/v1/series/deleteBook/${id}`;
+
+// publisher
+export const getPublishersAPI = `/api/v1/publishers`;

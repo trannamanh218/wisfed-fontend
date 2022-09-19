@@ -5,7 +5,7 @@ const Comment = lazy(() => import('shared/comments'));
 const QuoteCard = lazy(() => import('shared/quote-card'));
 import './main-quote-detail.scss';
 import _ from 'lodash';
-const CommentEditor = lazy(() => import('shared/comment-editor'));
+import CommentEditor from 'shared/comment-editor';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';

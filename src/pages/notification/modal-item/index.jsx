@@ -1,4 +1,9 @@
-import { backgroundToggle, readNotification, handleMentionCommentId } from 'reducers/redux-utils/notificaiton';
+import {
+	backgroundToggle,
+	readNotification,
+	handleMentionCommentId,
+	handleCheckIfMentionFromGroup,
+} from 'reducers/redux-utils/notificaiton';
 import UserAvatar from 'shared/user-avatar';
 import { calculateDurationTime } from 'helpers/Common';
 import { useNavigate } from 'react-router-dom';
@@ -125,12 +130,14 @@ const ModalItem = ({ item, setModalNoti, getNotifications, setGetNotifications, 
 					case 'commentMiniPost':
 						navigate(`/detail-feed/mini-post/${items.originId.minipostId}`);
 						break;
-					case 'commentGroupPost':
-						navigate(`/detail-feed/group-post/${items.originId.groupPostId}`);
-						break;
 					case 'commentReview':
 						dispatch(updateReviewIdFromNoti(items.originId.reviewId));
 						navigate(`/review/${items.originId.bookId}/${userInfo.id}`);
+						break;
+					case 'commentGroupPost':
+						dispatch(handleMentionCommentId(item.originId.commentGroupPostId));
+						dispatch(handleCheckIfMentionFromGroup('group'));
+						navigate(`/detail-feed/group-post/${items.originId.groupPostId}`);
 						break;
 					default:
 						navigate(`/detail-feed/mini-post/${items.originId.minipostId}`);

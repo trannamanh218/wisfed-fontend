@@ -162,6 +162,14 @@
 		margin-bottom: 23px;
 	}
 }
+
+.form-field-authors {
+	&__asterisk {
+		color: red;
+		margin-left: 4px;
+	}
+}
+
 .form-field-select__kind-of-group {
 	.select-box {
 		.select-box__btn {
@@ -192,8 +200,29 @@
 	background-color: #e0af7e;
 	padding: 16px;
 	border-radius: 12px;
+	cursor: pointer;
 	button {
 		color: #fcfcfc;
+	}
+}
+
+.upload-image {
+	&__wrapper {
+		img {
+			cursor: pointer;
+		}
+		&__icon {
+			height: 60px;
+			width: 60px;
+			border-radius: 50%;
+			background-color: #eff0f7;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			svg {
+				transform: scale(1.2);
+			}
+		}
 	}
 }
 

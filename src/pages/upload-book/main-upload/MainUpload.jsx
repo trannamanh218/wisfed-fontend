@@ -1,13 +1,11 @@
 import { lazy, Suspense } from 'react';
 import Dropzone from 'react-dropzone';
-import { useDropzone } from 'react-dropzone';
 import { Link } from 'react-router-dom';
-import { Image } from 'react-bootstrap';
-import { CameraIcon, BackArrow, Calendar } from 'components/svg';
+import { BackArrow, Calendar, Image } from 'components/svg';
 import './MainUpload.scss';
 import { useState, useRef, useEffect } from 'react';
-import Button from 'shared/button';
-import SelectBox from 'shared/select-box';
+const Button = lazy(() => import('shared/button'));
+const SelectBox = lazy(() => import('shared/select-box'));
 import ArrowChevronForward from 'assets/images/ArrowChevronForward.png';
 import Datepicker from 'react-datepicker';
 import { useDispatch, useSelector } from 'react-redux';
@@ -24,22 +22,21 @@ const AddAndSearchAuthorUploadBook = lazy(() => import('./AddAndSearchAuthorUplo
 const AddAndSearchCategoriesUploadBook = lazy(() =>
 	import('./AddAndSearchCategoriesUploadBook/AddAndSearchCategoriesUploadBook')
 );
-// import AddAndSearchPublisherUploadBook from './AddAndSearchPublisherUploadBook/AddAndSearchPublisherUploadBook';
+const AddAndSearchPublisherUploadBook = lazy(() =>
+	import('./AddAndSearchPublisherUploadBook/AddAndSearchPublisherUploadBook')
+);
 // import AddAndSearchTranslatorsUploadBook from './AddAndSearchTranslatorsUploadBook/AddAndSearchTranslatorsUploadBook';
 
 export default function MainUpload() {
 	const [publishDate, setPublishDate] = useState(null);
-	const inpCalendar = useRef();
 	const dispatch = useDispatch();
 	const { userInfoJwt } = useSelector(state => state.auth);
 
-	const [image, setFrontBookCover] = useState('');
+	const [image, setImage] = useState('');
 	const [categoryAddedList, setCategoryAddedList] = useState([]);
 	const [authors, setAuthors] = useState([]);
-	// const [translators, setTranslators] = useState([]);
-	const [translators, setTranslators] = useState('');
-	// const [publisher, setPublisher] = useState([]);
-	const [publisher, setPublisher] = useState('');
+	const [translators, setTranslators] = useState([]);
+	const [publisher, setPublisher] = useState([]);
 	const [language, setLanguage] = useState('');
 	const [series, setSeries] = useState({});
 
@@ -50,7 +47,7 @@ export default function MainUpload() {
 	const [inputAuthorValue, setInputAuthorValue] = useState('');
 	// const [inputTranslatorValue, setInputTranslatorValue] = useState('');
 	const [inputCategoryValue, setInputCategoryValue] = useState('');
-	// const [inputPublisherValue, setInputPublisherValue] = useState('');
+	const [inputPublisherValue, setInputPublisherValue] = useState('');
 
 	const blockInvalidChar = e => {
 		return ['e', 'E', '+', '-'].includes(e.key) && e.preventDefault();
@@ -75,18 +72,16 @@ export default function MainUpload() {
 	const languagesRef = useRef({ value: 'default', name: 'Ngôn ngữ' });
 
 	const clearState = () => {
-		setFrontBookCover('');
+		setImage('');
 		setPublishDate(null);
 		setTemporarySeries({});
 		setInputAuthorValue('');
 		setAuthors([]);
 		// setInputTranslatorValue('');
 		// setTranslators([]);
-		setTranslators('');
+		setTranslators([]);
 		// setInputPublisherValue('');
-		// setPublisher([]);
-		setPublisher('');
-
+		setPublisher([]);
 		setInputCategoryValue('');
 		setCategoryAddedList([]);
 		setSeries({});
@@ -98,8 +93,6 @@ export default function MainUpload() {
 	const [showModalSeries, setShowModalSeries] = useState(false);
 	const handleCloseModalSeries = () => setShowModalSeries(false);
 	const handleShowModalSeries = () => setShowModalSeries(true);
-
-	const { acceptedFiles, getRootProps, getInputProps, open } = useDropzone();
 
 	const listLanguages = [
 		{ value: 'vn', name: 'Việt Nam' },
@@ -114,7 +107,6 @@ export default function MainUpload() {
 		try {
 			// Tạo sách mới
 			const res = await dispatch(createBook(params)).unwrap();
-
 			// Nếu sách có trường series thì cập nhật series đó
 			if (!_.isEmpty(series)) {
 				// Lấy id của sách vừa được tạo
@@ -143,7 +135,7 @@ export default function MainUpload() {
 		}
 	};
 
-	const onBtnSaveClick = () => {
+	const onBtnSaveClick = async () => {
 		// Lấy danh sách categoryIds
 		const categoryIds = [];
 		for (let i = 0; i < categoryAddedList.length; i++) {
@@ -160,18 +152,19 @@ export default function MainUpload() {
 			});
 		}
 
+		const imgSrc = await uploadImageFile(image);
+
 		const bookInfo = {
-			frontBookCover: image,
-			images: [image],
+			frontBookCover: imgSrc,
+			images: [imgSrc],
 			name: name,
 			subName: subName,
 			originalName: originalName,
 			authors: authorsArr,
 			translators: translators,
-			// publisher: publisher[0],
-			publisher: publisher,
+			publisher: publisher[0].id,
 			isbn: isbn,
-			publishDate: publishDate,
+			publishDate: publishDate.toISOString().split('T')[0],
 			page: Number(page),
 			language: language,
 			description: description,
@@ -179,14 +172,9 @@ export default function MainUpload() {
 			tags: [],
 			series: series,
 		};
-		if (buttonActive) {
-			handleCreateBook(bookInfo);
-		}
-	};
 
-	useEffect(() => {
-		uploadImageFile();
-	}, [acceptedFiles]);
+		handleCreateBook(bookInfo);
+	};
 
 	useEffect(() => {
 		if (
@@ -206,9 +194,9 @@ export default function MainUpload() {
 		}
 	}, [image, name, authors, categoryAddedList, publisher, isbn, page, language, description]);
 
-	const uploadImageFile = async () => {
+	const uploadImageFile = async acceptedFiles => {
 		const imageUploadedData = await dispatch(uploadImage(acceptedFiles)).unwrap();
-		setFrontBookCover(imageUploadedData?.streamPath);
+		return imageUploadedData?.streamPath;
 	};
 
 	return (
@@ -224,27 +212,31 @@ export default function MainUpload() {
 				</span>
 			</div>
 			<div className='upload-book-form'>
-				<div className={`upload-image__wrapper ${image ? 'hasImage' : ''}`}>
-					{image ? (
-						<img src={image} alt='img' onClick={open} />
-					) : (
-						<Dropzone>
-							{() => (
-								<div {...getRootProps()}>
-									<input {...getInputProps()} />
-									<div className='dropzone upload-image'>
-										<CameraIcon />
-										<Image className='upload-image__icon' />
-										<p className='upload-image__description'>Thêm ảnh bìa từ thiết bị</p>
-										<span style={{ fontWeight: 500, marginTop: '5px' }}>hoặc kéo thả</span>
-										<span style={{ fontWeight: 500, color: 'red', marginTop: '10px' }}>
-											(Bắt buộc*)
-										</span>
+				<div className={`upload-image__wrapper ${image ? 'has-image' : ''}`}>
+					<Dropzone onDrop={acceptedFiles => setImage(acceptedFiles)} multiple={false}>
+						{({ getRootProps, getInputProps, open }) => (
+							<>
+								{image ? (
+									<img src={URL.createObjectURL(image[0])} alt='img' onClick={open} />
+								) : (
+									<div {...getRootProps()}>
+										<input {...getInputProps()} />
+										<div className='dropzone upload-image'>
+											<div className='upload-image__wrapper__icon'>
+												<Image />
+											</div>
+											<br />
+											<p className='upload-image__description'>Thêm ảnh bìa từ thiết bị</p>
+											<span style={{ fontWeight: 500, marginTop: '5px' }}>hoặc kéo thả</span>
+											<span style={{ fontWeight: 500, color: 'red', marginTop: '10px' }}>
+												(Bắt buộc*)
+											</span>
+										</div>
 									</div>
-								</div>
-							)}
-						</Dropzone>
-					)}
+								)}
+							</>
+						)}
+					</Dropzone>
 				</div>
 				<div className='upload-info-form'>
 					<div className='inp-book'>
@@ -299,7 +291,7 @@ export default function MainUpload() {
 							className='input input--non-border'
 							placeholder='Dịch giả'
 							value={translators}
-							onChange={e => setTranslators(e.target.value)}
+							onChange={e => setTranslators([e.target.value])}
 						></input>
 					</div>
 					<div className='inp-book'>
@@ -308,24 +300,17 @@ export default function MainUpload() {
 							setInputCategoryValue={setInputCategoryValue}
 							categoryAddedList={categoryAddedList}
 							setCategoryAddedList={setCategoryAddedList}
+							maxAddedValue={5}
 						/>
 					</div>
 					<div className='inp-book'>
-						{/* <AddAndSearchPublisherUploadBook
+						<AddAndSearchPublisherUploadBook
 							inputPublisherValue={inputPublisherValue}
 							setInputPublisherValue={setInputPublisherValue}
 							publisher={publisher}
 							setPublisher={setPublisher}
-						/> */}
-						<label>
-							Nhà xuất bản<span className='upload-text-danger'>*</span>
-						</label>
-						<input
-							className='input input--non-border'
-							placeholder='Nhà xuất bản'
-							value={publisher}
-							onChange={e => setPublisher(e.target.value)}
-						></input>
+							maxAddedValue={1}
+						/>
 					</div>
 					<div className='inp-book'>
 						<div className='inp-book-row'>
@@ -335,6 +320,9 @@ export default function MainUpload() {
 								</label>
 								<input
 									className='input input--non-border'
+									type='number'
+									onWheel={e => e.target.blur()}
+									onKeyDown={blockInvalidChar}
 									placeholder='ISBN'
 									value={isbn}
 									name='isbn'
@@ -343,22 +331,23 @@ export default function MainUpload() {
 							</div>
 							<div className='inp-book-col'>
 								<label>Ngày phát hành</label>
-								<div className='inp-date'>
-									<div className='icon-calendar'>
-										<Calendar />
+								<label style={{ marginBottom: '0px' }}>
+									<div className='inp-date'>
+										<div className='icon-calendar'>
+											<Calendar />
+										</div>
+										<Datepicker
+											isClearable
+											placeholderText='dd/mm/yyyy'
+											dateFormat='dd/MM/yyyy'
+											selected={publishDate}
+											onChange={date => setPublishDate(date)}
+											showYearDropdown
+											showMonthDropdown
+											dropdownMode='select'
+										/>
 									</div>
-									<Datepicker
-										ref={inpCalendar}
-										isClearable
-										placeholderText='dd/mm/yyyy'
-										dateFormat='dd/MM/yyyy'
-										selected={publishDate}
-										onChange={date => setPublishDate(date)}
-										showYearDropdown
-										showMonthDropdown
-										dropdownMode='select'
-									/>
-								</div>
+								</label>
 							</div>
 						</div>
 					</div>

@@ -22,3 +22,50 @@
 	margin: 0 6px;
 	vertical-align: baseline;
 }
+
+.modal-tagged-others {
+	top: 20%;
+	.modal-title {
+		margin-bottom: 0;
+		&.h4 {
+			margin-left: 40%;
+		}
+	}
+	.modal-content {
+		border-radius: 10px;
+	}
+	.modal-body {
+		height: 40vh;
+		overflow-y: auto;
+		&::-webkit-scrollbar {
+			width: 8px;
+		}
+
+		/* Track */
+		&::-webkit-scrollbar-track {
+			background: #f1f1f1;
+			border-radius: 8px;
+		}
+
+		/* Handle */
+		&::-webkit-scrollbar-thumb {
+			background: rgba(#606060, 0.3);
+			border-radius: 8px;
+			&:hover {
+				background: rgba(#606060, 0.2);
+			}
+		}
+	}
+	&__avatar {
+		width: 40px;
+		height: 40px;
+		border-radius: 50%;
+		margin-left: 1rem;
+		margin-right: 1rem;
+		object-fit: cover;
+		cursor: pointer;
+	}
+	&__name {
+		cursor: pointer;
+	}
+}
