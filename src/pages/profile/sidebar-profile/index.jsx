@@ -76,7 +76,6 @@ const SidebarProfile = ({ currentUserInfo, handleViewBookDetail }) => {
 			return '';
 		}
 	};
-
 	return (
 		<>
 			{!_.isEmpty(userInfo) && (
