@@ -52,32 +52,30 @@ export const useFetchAuthorBooks = userId => {
 
 	useEffect(() => {
 		const isMount = true;
-		if (userId) {
-			if (isMount) {
-				setStatus(STATUS_LOADING);
-				const query = generateQuery(
-					0,
-					10,
-					JSON.stringify([{ 'operator': 'search', 'value': `${userId}`, 'property': 'authorId' }])
-				);
+		if (userId && isMount) {
+			setStatus(STATUS_LOADING);
+			const query = generateQuery(
+				0,
+				10,
+				JSON.stringify([{ 'operator': 'search', 'value': `${userId}`, 'property': 'authorId' }])
+			);
 
-				const fetchData = async () => {
-					const params = {
-						id: userId,
-						...query,
-					};
-					try {
-						const data = await dispatch(getBookAuthorList(params)).unwrap();
-						setBooksAuthor(data);
-					} catch (err) {
-						NotificationError(err);
-						const statusCode = err?.statusCode || 500;
-						setStatus(statusCode);
-					}
+			const fetchData = async () => {
+				const params = {
+					id: userId,
+					...query,
 				};
+				try {
+					const data = await dispatch(getBookAuthorList(params)).unwrap();
+					setBooksAuthor(data);
+				} catch (err) {
+					NotificationError(err);
+					const statusCode = err?.statusCode || 500;
+					setStatus(statusCode);
+				}
+			};
 
-				fetchData();
-			}
+			fetchData();
 		}
 	}, [retry, userId]);
 

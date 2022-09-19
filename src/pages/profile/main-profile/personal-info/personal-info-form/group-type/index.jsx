@@ -1,11 +1,13 @@
 // import ShareModeDropdown from 'shared/share-mode-dropdown';
 import PropTypes from 'prop-types';
 import Input from 'shared/input';
-import { Add } from 'components/svg';
+import { Add, Pencil, TrashIcon, UndoIcon } from 'components/svg';
 import _ from 'lodash';
+import { useState } from 'react';
 
 function GroupType({
 	dataArray,
+	intialDataArray,
 	socialsMediaInputValue,
 	updateInputValue,
 	userSocialsMediaRef,
@@ -13,7 +15,10 @@ function GroupType({
 	cancelEdit,
 	enableEdit,
 	addSocialsMediaLink,
+	setUserSocialsMedia,
 }) {
+	const [isEditting, setIsEditting] = useState(false);
+
 	const renderAddSocialsMediaLink = () => {
 		return (
 			<div className='form-field-wrapper'>
@@ -36,27 +41,86 @@ function GroupType({
 		);
 	};
 
+	const updateText = (e, index) => {
+		const cloneArr = [...dataArray];
+		cloneArr[index] = e.target.value;
+		setUserSocialsMedia(cloneArr);
+	};
+
+	const updateItem = e => {
+		if (e.keyCode == 13) {
+			setIsEditting(false);
+		}
+	};
+
+	const deleteItem = index => {
+		const cloneArr = [...dataArray];
+		cloneArr.splice(index, 1);
+		setUserSocialsMedia(cloneArr);
+	};
+
 	return (
 		<div className='form-field-group'>
 			<label className='form-field-label'>URL Mạng xã hội khác</label>
 			{!_.isEmpty(dataArray) ? (
 				<>
-					{dataArray.map((item, index) => (
-						<div className='form-field-wrapper socials-link' key={index}>
-							<div className='form-field'>
-								<div className='form-field-filled'>{item}</div>
-							</div>
-
-							{/* <ShareModeDropdown /> */}
-
-							{!editStatus && index === dataArray.length - 1 && (
-								<div className='btn-icon' onClick={() => enableEdit('socials-editting')}>
-									<Add />
+					{!isEditting ? (
+						<>
+							{dataArray.map((item, index) => (
+								<div className='form-field-wrapper socials-link' key={index}>
+									<div className='form-field'>
+										<div className='form-field-filled'>{item}</div>
+									</div>
+									{/* <ShareModeDropdown /> */}
+									{!editStatus && index === dataArray.length - 1 && (
+										<>
+											<div className='btn-icon' onClick={() => enableEdit('socials-editting')}>
+												<Add />
+											</div>
+											<div className='btn-icon' onClick={() => setIsEditting(true)}>
+												<Pencil />
+											</div>
+										</>
+									)}
 								</div>
-							)}
-						</div>
-					))}
-					{editStatus && renderAddSocialsMediaLink()}
+							))}
+							{editStatus && renderAddSocialsMediaLink()}
+						</>
+					) : (
+						<>
+							{dataArray.map((item, index) => (
+								<div className='form-field-wrapper socials-link' key={index}>
+									<div className='form-field'>
+										<input
+											className='form-field-filled'
+											value={item}
+											onChange={e => updateText(e, index)}
+											onKeyDown={e => updateItem(e)}
+										></input>
+									</div>
+									<div
+										className='btn-icon'
+										onClick={() => {
+											deleteItem(index);
+										}}
+									>
+										<TrashIcon />
+									</div>
+								</div>
+							))}
+							<div style={{ display: 'flex', justifyContent: 'end', gap: '10px' }}>
+								<div
+									className='form-field__btn save'
+									onClick={() => setUserSocialsMedia(intialDataArray)}
+								>
+									Tải lại
+								</div>
+								<div className='form-field__btn cancel' onClick={() => setIsEditting(false)}>
+									Thoát
+								</div>
+							</div>
+						</>
+					)}
 				</>
 			) : (
 				<>

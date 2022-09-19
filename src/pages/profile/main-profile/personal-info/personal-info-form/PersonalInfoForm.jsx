@@ -336,6 +336,7 @@ const PersonalInfoForm = ({ userData, toggleModal }) => {
 		editHighSchool,
 		editUniversity,
 		editInterest,
+		userSocialsMedia,
 	]);
 
 	useEffect(() => {
@@ -489,6 +490,7 @@ const PersonalInfoForm = ({ userData, toggleModal }) => {
 
 			<GroupType
 				dataArray={userSocialsMedia}
+				intialDataArray={userData.socials}
 				socialsMediaInputValue={socialsMediaInputValue}
 				updateInputValue={updateInputValue}
 				userSocialsMediaRef={userSocialsMediaRef}
@@ -496,6 +498,7 @@ const PersonalInfoForm = ({ userData, toggleModal }) => {
 				cancelEdit={cancelEdit}
 				enableEdit={enableEdit}
 				addSocialsMediaLink={addSocialsMediaLink}
+				setUserSocialsMedia={setUserSocialsMedia}
 			/>
 
 			<div className='personal-info-form__btn__container'>
