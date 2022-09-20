@@ -5,7 +5,7 @@ import { getPublishersAPI } from 'constants/apiURL';
 export const getPublishers = createAsyncThunk('publishers/getPublisher', async (params, { rejectWithValue }) => {
 	try {
 		const res = await Request.makeGet(getPublishersAPI, params);
-		return res.data.rows;
+		return res.data;
 	} catch (err) {
 		const error = err.response.message;
 		return rejectWithValue(error);

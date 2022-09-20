@@ -31,16 +31,19 @@ const PopupCreateGroup = ({ handleClose }) => {
 	const [inputAuthorValue, setInputAuthorValue] = useState('');
 	const [authorAddedList, setAuthorAddedList] = useState([]);
 	const [authorSearchedList, setAuthorSearchedList] = useState([]);
+	const [hasMoreAuthorsEllipsis, setHasMoreAuthorsEllipsis] = useState(false);
 
 	const [categoryIdBook, setCategoryIdBook] = useState([]);
 	const [inputCategoryValue, setInputCategoryValue] = useState('');
 	const [categoryAddedList, setCategoryAddedList] = useState([]);
 	const [categorySearchedList, setCategorySearchedList] = useState([]);
+	const [hasMoreCategoriesEllipsis, setHasMoreCategoriesEllipsis] = useState(false);
 
 	const [listBookAdd, setListBookAdd] = useState([]);
 	const [inputBookValue, setInputBookValue] = useState('');
 	const [bookAddedList, setBookAddedList] = useState([]);
 	const [bookSearchedList, setBookSearchedList] = useState([]);
+	const [hasMoreBooksEllipsis, setHasMoreBooksEllipsis] = useState(false);
 
 	const [getDataFinish, setGetDataFinish] = useState(false);
 
@@ -71,9 +74,19 @@ const PopupCreateGroup = ({ handleClose }) => {
 				const data = await dispatch(getSuggestionForPost({ input, option })).unwrap();
 				if (option.value === 'addCategory') {
 					setCategorySearchedList(data.rows);
+					if (data.count > data.rows.length) {
+						setHasMoreCategoriesEllipsis(true);
+					} else {
+						setHasMoreCategoriesEllipsis(false);
+					}
 				}
 				if (option.value === 'addBook') {
 					setBookSearchedList(data.rows);
+					if (data.count > data.rows.length) {
+						setHasMoreBooksEllipsis(true);
+					} else {
+						setHasMoreBooksEllipsis(false);
+					}
 				}
 			}
 			if (option.value === 'addAuthor') {
@@ -86,6 +99,11 @@ const PopupCreateGroup = ({ handleClose }) => {
 
 				const result = await dispatch(getFilterSearch(params)).unwrap();
 				setAuthorSearchedList(result.rows);
+				if (result.count > result.rows.length) {
+					setHasMoreAuthorsEllipsis(true);
+				} else {
+					setHasMoreAuthorsEllipsis(false);
+				}
 			}
 		} catch (err) {
 			NotificationError(err);
@@ -496,6 +514,7 @@ const PopupCreateGroup = ({ handleClose }) => {
 									categoryInputWrapper={categoryInputWrapper}
 									categoryInput={categoryInput}
 									hasSearchIcon={true}
+									hasMoreEllipsis={hasMoreCategoriesEllipsis}
 								/>
 							</div>
 						)}
@@ -518,6 +537,7 @@ const PopupCreateGroup = ({ handleClose }) => {
 								categoryInputContainer={authorInputContainer}
 								categoryInputWrapper={authorInputWrapper}
 								categoryInput={authorInput}
+								hasMoreEllipsis={hasMoreAuthorsEllipsis}
 							/>
 						</div>
 
@@ -539,6 +559,7 @@ const PopupCreateGroup = ({ handleClose }) => {
 								categoryInputContainer={bookInputContainer}
 								categoryInputWrapper={bookInputWrapper}
 								categoryInput={bookInput}
+								hasMoreEllipsis={hasMoreBooksEllipsis}
 							/>
 						</div>
 					</>
