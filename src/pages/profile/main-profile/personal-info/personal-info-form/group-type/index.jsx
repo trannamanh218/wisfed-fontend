@@ -131,7 +131,7 @@ function GroupType({
 							<div className='form-field'>
 								<div className='form-field__no-data'>Chưa có dữ liệu</div>
 							</div>
-							{intialDataArray && !dataArray.length ? (
+							{intialDataArray.length > 0 && !dataArray.length ? (
 								<div
 									className='form-field__btn save'
 									style={{ width: '110px' }}
