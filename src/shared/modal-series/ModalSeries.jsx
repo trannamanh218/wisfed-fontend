@@ -106,13 +106,6 @@ const ModalSeries = ({
 		}
 	};
 
-	const handleCancel = () => {
-		setButtonDisable(true);
-		setSeries({});
-		setTemporarySeries({});
-		setTemporarySeriesName('');
-	};
-
 	const handleGetSeriesList = async () => {
 		try {
 			const res = await dispatch(getMySeries()).unwrap();
@@ -196,9 +189,6 @@ const ModalSeries = ({
 					<AddSeriesForm updateSeries={updateSeries} />
 				</div>
 				<div className='modal-series__footer'>
-					<button className='btn-upload-cancel' onClick={handleCancel}>
-						Hủy bỏ
-					</button>
 					<button
 						onClick={handleConfirm}
 						style={buttonDisable ? { cursor: 'not-allowed', backgroundColor: '#d9dbe9' } : null}
