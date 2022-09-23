@@ -25,16 +25,16 @@ const ChartsReading = () => {
 				userId: userId,
 			};
 			const data = await dispatch(getChartsByid(paramsBook)).unwrap();
-			const pageMonth = data.filter(item => item.month === month);
-			setPagesMonth(pageMonth);
+			const bookMonth = data.filter(item => item.month === month);
+			setBooksMonth(bookMonth);
 			const paramsPage = {
 				count: 'numPageRead',
 				by: 'month',
 				userId: userId,
 			};
 			const newData = await dispatch(getChartsByid(paramsPage)).unwrap();
-			const bookMonth = newData.filter(item => item.month === month);
-			setBooksMonth(bookMonth);
+			const pageMonth = newData.filter(item => item.month === month);
+			setPagesMonth(pageMonth);
 		} catch (err) {
 			NotificationError(err);
 		}
