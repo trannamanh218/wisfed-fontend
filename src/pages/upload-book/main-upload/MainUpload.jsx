@@ -43,7 +43,6 @@ export default function MainUpload() {
 	const [resetSelect, setResetSelect] = useState(false);
 	const [buttonActive, setButtonActive] = useState(false);
 	const [temporarySeries, setTemporarySeries] = useState({});
-	const [temporarySeriesName, setTemporarySeriesName] = useState('');
 
 	const [inputAuthorValue, setInputAuthorValue] = useState('');
 	// const [inputTranslatorValue, setInputTranslatorValue] = useState('');
@@ -180,7 +179,6 @@ export default function MainUpload() {
 	const onClickCancelSeries = () => {
 		setSeries({});
 		setTemporarySeries({});
-		setTemporarySeriesName('');
 	};
 
 	useEffect(() => {
@@ -401,12 +399,11 @@ export default function MainUpload() {
 								value={series.name || ''}
 								readOnly
 							></input>
-							<button
-								className={`btn-cancel-series${_.isEmpty(series) ? '--hide' : ''}`}
-								onClick={onClickCancelSeries}
-							>
-								<CloseX />
-							</button>
+							{!_.isEmpty(series) && (
+								<button className='btn-cancel-series' onClick={onClickCancelSeries}>
+									<CloseX />
+								</button>
+							)}
 							<div className='upload-modal-series'>
 								<ModalSeries
 									showModalSeries={showModalSeries}
@@ -415,8 +412,6 @@ export default function MainUpload() {
 									setSeries={setSeries}
 									temporarySeries={temporarySeries}
 									setTemporarySeries={setTemporarySeries}
-									temporarySeriesName={temporarySeriesName}
-									setTemporarySeriesName={setTemporarySeriesName}
 								/>
 							</div>
 						</div>

@@ -22,8 +22,6 @@ const ModalSeries = ({
 	bookId,
 	currentSeries,
 	handleGetBookDetail,
-	temporarySeriesName,
-	setTemporarySeriesName,
 }) => {
 	const [buttonDisable, setButtonDisable] = useState(false);
 
@@ -43,7 +41,6 @@ const ModalSeries = ({
 
 	const onItemChange = item => {
 		setTemporarySeries(item);
-		setTemporarySeriesName(item.name);
 	};
 
 	const handleClose = () => {
@@ -123,7 +120,6 @@ const ModalSeries = ({
 
 	useEffect(() => {
 		setTemporarySeries(series);
-		setTemporarySeriesName(series.name);
 	}, [showModalSeries]);
 
 	useEffect(() => {
@@ -154,7 +150,7 @@ const ModalSeries = ({
 						className='input input--non-border'
 						placeholder='Sê-ri bộ sách'
 						disabled
-						value={temporarySeriesName}
+						value={temporarySeries?.name || ''}
 					></input>
 				</div>
 
@@ -206,7 +202,6 @@ const ModalSeries = ({
 ModalSeries.defaultProps = {
 	showModalSeries: false,
 	addToSeriesImmediately: false,
-	temporarySeriesName: '',
 };
 
 ModalSeries.propTypes = {
@@ -219,8 +214,6 @@ ModalSeries.propTypes = {
 	bookId: PropTypes.number,
 	currentSeries: PropTypes.object,
 	handleGetBookDetail: PropTypes.func,
-	temporarySeriesName: PropTypes.string,
-	setTemporarySeriesName: PropTypes.func,
 };
 
 export default ModalSeries;
