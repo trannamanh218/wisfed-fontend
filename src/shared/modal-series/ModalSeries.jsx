@@ -11,6 +11,7 @@ import { useEffect } from 'react';
 import { CloseIconX } from 'components/svg';
 import _ from 'lodash';
 import { addBookToSeries } from 'reducers/redux-utils/series';
+import { toast } from 'react-toastify';
 
 const ModalSeries = ({
 	showModalSeries,
@@ -52,6 +53,7 @@ const ModalSeries = ({
 	const handlePostMoreSeries = async params => {
 		try {
 			await dispatch(postMoreSeries(params)).unwrap();
+			toast.success('Tạo sê-ri thành công');
 			setUpdateListSeries(!updateListSeries);
 		} catch (err) {
 			NotificationError(err);

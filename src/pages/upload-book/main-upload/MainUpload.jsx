@@ -28,7 +28,7 @@ const AddAndSearchPublisherUploadBook = lazy(() =>
 // import AddAndSearchTranslatorsUploadBook from './AddAndSearchTranslatorsUploadBook/AddAndSearchTranslatorsUploadBook';
 
 export default function MainUpload() {
-	const [publishDate, setPublishDate] = useState('');
+	const [publishDate, setPublishDate] = useState(null);
 	const dispatch = useDispatch();
 	const { userInfoJwt } = useSelector(state => state.auth);
 
