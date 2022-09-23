@@ -28,7 +28,7 @@ const AddAndSearchPublisherUploadBook = lazy(() =>
 // import AddAndSearchTranslatorsUploadBook from './AddAndSearchTranslatorsUploadBook/AddAndSearchTranslatorsUploadBook';
 
 export default function MainUpload() {
-	const [publishDate, setPublishDate] = useState(null);
+	const [publishDate, setPublishDate] = useState('');
 	const dispatch = useDispatch();
 	const { userInfoJwt } = useSelector(state => state.auth);
 
@@ -154,6 +154,12 @@ export default function MainUpload() {
 
 		const imgSrc = await uploadImageFile(image);
 
+		let dataDate = publishDate;
+		if (publishDate) {
+			const offset = dataDate.getTimezoneOffset();
+			dataDate = new Date(dataDate.getTime() - offset * 60 * 1000).toISOString().split('T')[0];
+		}
+
 		const bookInfo = {
 			frontBookCover: imgSrc,
 			images: [imgSrc],
@@ -164,7 +170,7 @@ export default function MainUpload() {
 			translators: translators,
 			publisher: publisher[0].id,
 			isbn: isbn,
-			publishDate: publishDate.toISOString().split('T')[0],
+			publishDate: dataDate,
 			page: Number(page),
 			language: language,
 			description: description,

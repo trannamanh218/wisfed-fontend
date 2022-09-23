@@ -325,8 +325,8 @@ function CreatPostModalContent({
 					type = STATUS_BOOK.read;
 				}
 				const addBookParams = { bookId: params.bookId, type };
-				const addToDefaultLibraryRequest = dispatch(addBookToDefaultLibrary(addBookParams)).unwrap();
-				const updateProgressRequest = dispatch(updateProgressReadingBook(progressParams)).unwrap();
+				const addToDefaultLibraryRequest = await dispatch(addBookToDefaultLibrary(addBookParams)).unwrap();
+				const updateProgressRequest = await dispatch(updateProgressReadingBook(progressParams)).unwrap();
 				await Promise.all([addToDefaultLibraryRequest, updateProgressRequest]);
 			}
 		} catch (error) {
