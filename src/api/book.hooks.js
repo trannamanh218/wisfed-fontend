@@ -52,13 +52,14 @@ export const useFetchAuthorBooks = userId => {
 
 	useEffect(() => {
 		const isMount = true;
-		if (isMount) {
+		if (userId && isMount) {
 			setStatus(STATUS_LOADING);
 			const query = generateQuery(
 				0,
 				10,
 				JSON.stringify([{ 'operator': 'search', 'value': `${userId}`, 'property': 'authorId' }])
 			);
+
 			const fetchData = async () => {
 				const params = {
 					id: userId,

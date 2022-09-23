@@ -16,6 +16,7 @@ function AddAndSearchCategoriesUploadBook({
 }) {
 	const [categorySearchedList, setCategorySearchedList] = useState([]);
 	const [getDataFinish, setGetDataFinish] = useState(false);
+	const [hasMoreEllipsis, setHasMoreEllipsis] = useState(false);
 
 	const categoryInputContainer = useRef(null);
 	const categoryInputWrapper = useRef(null);
@@ -53,6 +54,11 @@ function AddAndSearchCategoriesUploadBook({
 		try {
 			const data = await dispatch(getSuggestionForPost({ input, option })).unwrap();
 			setCategorySearchedList(data.rows);
+			if (data.count > data.rows.length) {
+				setHasMoreEllipsis(true);
+			} else {
+				setHasMoreEllipsis(false);
+			}
 		} catch (err) {
 			NotificationError(err);
 		} finally {
@@ -94,6 +100,7 @@ function AddAndSearchCategoriesUploadBook({
 				categoryInputWrapper={categoryInputWrapper}
 				categoryInput={categoryInput}
 				hasSearchIcon={true}
+				hasMoreEllipsis={hasMoreEllipsis}
 			/>
 		</div>
 	);

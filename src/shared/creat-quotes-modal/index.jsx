@@ -37,6 +37,7 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 	const categoryInput = useRef(null);
 	const [listHashtags, setListHashtags] = useState([]);
 	const [show, setShow] = useState(false);
+	const [hasMoreEllipsis, setHasMoreEllipsis] = useState(false);
 
 	const hastagRegex = /(#[a-z0-9][a-z0-9\-_]*)/gi;
 
@@ -135,6 +136,12 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 				setBookSearchedList(data.rows.slice(0, 3));
 			} else if (option.value === 'addCategory') {
 				setCategorySearchedList(data.rows);
+			}
+
+			if (data.count > data.rows.length) {
+				setHasMoreEllipsis(true);
+			} else {
+				setHasMoreEllipsis(false);
 			}
 		} catch (err) {
 			NotificationError(err);
@@ -392,6 +399,7 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 							categoryInputWrapper={categoryInputWrapper}
 							categoryInput={categoryInput}
 							hasSearchIcon={true}
+							hasMoreEllipsis={hasMoreEllipsis}
 						/>
 					</div>
 

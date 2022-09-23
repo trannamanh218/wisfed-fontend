@@ -12,6 +12,7 @@ function SelectType({ dataAdded, setDataAdded, editStatus, cancelEdit, enableEdi
 	const [categorySearchedList, setCategorySearchedList] = useState([]);
 	const [inputCategoryValue, setInputCategoryValue] = useState('');
 	const [getDataFinish, setGetDataFinish] = useState(false);
+	const [hasMoreEllipsis, setHasMoreEllipsis] = useState(false);
 
 	const categoryInputContainer = useRef(null);
 	const categoryInputWrapper = useRef(null);
@@ -57,6 +58,11 @@ function SelectType({ dataAdded, setDataAdded, editStatus, cancelEdit, enableEdi
 		try {
 			const data = await dispatch(getSuggestionForPost({ input, option })).unwrap();
 			setCategorySearchedList(data.rows);
+			if (data.count > data.rows.length) {
+				setHasMoreEllipsis(true);
+			} else {
+				setHasMoreEllipsis(false);
+			}
 		} catch (err) {
 			NotificationError(err);
 		} finally {
@@ -87,6 +93,7 @@ function SelectType({ dataAdded, setDataAdded, editStatus, cancelEdit, enableEdi
 							categoryInputWrapper={categoryInputWrapper}
 							categoryInput={categoryInput}
 							hasSearchIcon={false}
+							hasMoreEllipsis={hasMoreEllipsis}
 						/>
 					) : (
 						<>

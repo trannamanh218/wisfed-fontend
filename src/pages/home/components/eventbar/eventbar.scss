@@ -13,12 +13,28 @@
 }
 
 .event-and-rank-bar__content {
-	display: block;
+	display: flex;
 	padding: 20px 16px;
 	background-color: white;
 	border-radius: 16px;
+	position: relative;
+	justify-content: center;
 	img {
 		width: 100%;
+	}
+
+	.top__user__ranks {
+		transform: scale(0.5);
+		position: absolute;
+		align-items: unset;
+		&__one {
+			position: relative;
+			bottom: 40px;
+		}
+		&__two {
+			position: relative;
+			top: 40px;
+		}
 	}
 }
 
@@ -48,5 +64,45 @@
 	.event-and-rank-bar__block__title {
 		font-size: 1rem;
 		margin-top: 29px;
+	}
+}
+
+@media only screen and (max-width: 1367px) {
+	.event-and-rank-bar__content {
+		.top__user__ranks {
+			transform: scale(0.45);
+			top: 14px;
+		}
+	}
+}
+
+@media only screen and (max-width: 1281px) {
+	.event-and-rank-bar__content {
+		padding: 10px;
+		.top__user__ranks {
+			transform: scale(0.3);
+			top: -30px;
+			&__two {
+				top: 10px;
+			}
+		}
+	}
+}
+
+@media only screen and (max-width: 1025px) {
+	.event-and-rank-bar__content {
+		.top__user__ranks {
+			transform: scale(0.25);
+			top: -17px;
+			&__two {
+				top: 36px;
+			}
+			.top__user__ranks__one__title {
+				display: none;
+			}
+			.top__user__ranks__two__title {
+				display: none;
+			}
+		}
 	}
 }

@@ -232,11 +232,11 @@ export default function MainUpload() {
 												<Image />
 											</div>
 											<br />
-											<p className='upload-image__description'>Thêm ảnh bìa từ thiết bị</p>
-											<span style={{ fontWeight: 500, marginTop: '5px' }}>hoặc kéo thả</span>
-											<span style={{ fontWeight: 500, color: 'red', marginTop: '10px' }}>
-												(Bắt buộc*)
-											</span>
+											<p className='upload-image__description'>
+												Thêm ảnh bìa từ thiết bị
+												<span style={{ color: 'red' }}>*</span>
+											</p>
+											<span style={{ fontWeight: 500, marginTop: '5px' }}>(hoặc kéo thả)</span>
 										</div>
 									</div>
 								)}

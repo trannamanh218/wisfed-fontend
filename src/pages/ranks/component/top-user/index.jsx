@@ -57,7 +57,7 @@ const TopUser = ({ rows, listYear, tabSelected }) => {
 			if (isAuth === false) {
 				const topUser = await dispatch(getTopUser(params)).unwrap();
 				setGetListTopBooks(topUser);
-			} else if (isAuth === true) {
+			} else {
 				const topUser = await dispatch(getTopUserAuth(params)).unwrap();
 				setGetListTopBooks(topUser);
 			}

@@ -9,6 +9,7 @@ import { getFilterSearch } from 'reducers/redux-utils/search';
 function AddAndSearchAuthorUploadBook({ inputAuthorValue, setInputAuthorValue, authors, setAuthors }) {
 	const [categorySearchedList, setCategorySearchedList] = useState([]);
 	const [getDataFinish, setGetDataFinish] = useState(false);
+	const [hasMoreEllipsis, setHasMoreEllipsis] = useState(false);
 
 	const categoryInputContainer = useRef(null);
 	const categoryInputWrapper = useRef(null);
@@ -43,6 +44,11 @@ function AddAndSearchAuthorUploadBook({ inputAuthorValue, setInputAuthorValue, a
 		try {
 			const data = await dispatch(getFilterSearch(params)).unwrap();
 			setCategorySearchedList(data.rows);
+			if (data.count > data.rows.length) {
+				setHasMoreEllipsis(true);
+			} else {
+				setHasMoreEllipsis(false);
+			}
 		} catch (err) {
 			NotificationError(err);
 		} finally {
@@ -81,6 +87,7 @@ function AddAndSearchAuthorUploadBook({ inputAuthorValue, setInputAuthorValue, a
 				categoryInputWrapper={categoryInputWrapper}
 				categoryInput={categoryInput}
 				hasSearchIcon={true}
+				hasMoreEllipsis={hasMoreEllipsis}
 				placeholder={'Tìm kiếm và thêm tác giả'}
 			/>
 		</div>
