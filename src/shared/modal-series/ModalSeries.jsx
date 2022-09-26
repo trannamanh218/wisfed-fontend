@@ -23,13 +23,14 @@ const ModalSeries = ({
 	bookId,
 	currentSeries,
 	handleGetBookDetail,
+	temporarySeriesName,
+	setTemporarySeriesName,
 }) => {
 	const [buttonDisable, setButtonDisable] = useState(false);
 
 	const [APIListSeries, setAPIListSeries] = useState([]);
 	const [listSeries, setListSeries] = useState([]);
 	const [updateListSeries, setUpdateListSeries] = useState(false);
-	const [temporarySeriesName, setTemporarySeriesName] = useState('');
 
 	const dispatch = useDispatch();
 
@@ -123,8 +124,10 @@ const ModalSeries = ({
 	}, [updateListSeries]);
 
 	useEffect(() => {
-		setTemporarySeries(series);
-		setTemporarySeriesName(series.name);
+		if (showModalSeries) {
+			setTemporarySeries(series);
+			setTemporarySeriesName(series.name);
+		}
 	}, [showModalSeries]);
 
 	useEffect(() => {
@@ -207,6 +210,7 @@ const ModalSeries = ({
 ModalSeries.defaultProps = {
 	showModalSeries: false,
 	addToSeriesImmediately: false,
+	temporarySeriesName: '',
 };
 
 ModalSeries.propTypes = {
@@ -219,6 +223,8 @@ ModalSeries.propTypes = {
 	bookId: PropTypes.number,
 	currentSeries: PropTypes.object,
 	handleGetBookDetail: PropTypes.func,
+	temporarySeriesName: PropTypes.string,
+	setTemporarySeriesName: PropTypes.func,
 };
 
 export default ModalSeries;

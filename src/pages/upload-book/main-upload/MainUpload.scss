@@ -168,6 +168,21 @@
 			.add-and-search-categories__main-content.added-categories {
 				padding: 4px 15px;
 			}
+
+			&.inp-series {
+				.btn-cancel-series {
+					position: absolute;
+					bottom: 11px;
+					right: 5px;
+					svg {
+						transform: scale(0.7);
+					}
+
+					&--hide {
+						display: none;
+					}
+				}
+			}
 		}
 	}
 

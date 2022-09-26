@@ -1,7 +1,7 @@
 import { lazy, Suspense } from 'react';
 import Dropzone from 'react-dropzone';
 import { Link } from 'react-router-dom';
-import { BackArrow, Calendar, Image } from 'components/svg';
+import { BackArrow, Calendar, Image, CloseX } from 'components/svg';
 import './MainUpload.scss';
 import { useState, useRef, useEffect } from 'react';
 const Button = lazy(() => import('shared/button'));
@@ -43,6 +43,7 @@ export default function MainUpload() {
 	const [resetSelect, setResetSelect] = useState(false);
 	const [buttonActive, setButtonActive] = useState(false);
 	const [temporarySeries, setTemporarySeries] = useState({});
+	const [temporarySeriesName, setTemporarySeriesName] = useState('');
 
 	const [inputAuthorValue, setInputAuthorValue] = useState('');
 	// const [inputTranslatorValue, setInputTranslatorValue] = useState('');
@@ -78,16 +79,14 @@ export default function MainUpload() {
 		setInputAuthorValue('');
 		setAuthors([]);
 		// setInputTranslatorValue('');
-		// setTranslators([]);
 		setTranslators([]);
-		// setInputPublisherValue('');
 		setPublisher([]);
 		setInputCategoryValue('');
 		setCategoryAddedList([]);
 		setSeries({});
 		setLanguage('');
 		setResetSelect(!resetSelect);
-		setState({ ...initialState });
+		setState(initialState);
 	};
 
 	const [showModalSeries, setShowModalSeries] = useState(false);
@@ -117,7 +116,7 @@ export default function MainUpload() {
 					body: { bookIds: [Number(bookCreatedId)] },
 				};
 
-				handleAddBookToSeries(paramsForAddBookToSeries);
+				await handleAddBookToSeries(paramsForAddBookToSeries);
 			}
 
 			// Xử lý hiển thị kết quả
@@ -168,7 +167,7 @@ export default function MainUpload() {
 			originalName: originalName,
 			authors: authorsArr,
 			translators: translators,
-			publisher: publisher[0].id,
+			publisherId: publisher[0].id,
 			isbn: isbn,
 			publishDate: dataDate,
 			page: Number(page),
@@ -182,13 +181,19 @@ export default function MainUpload() {
 		handleCreateBook(bookInfo);
 	};
 
+	const onClickCancelSeries = () => {
+		setSeries({});
+		setTemporarySeries({});
+		setTemporarySeriesName('');
+	};
+
 	useEffect(() => {
 		if (
 			!image ||
 			!name ||
 			authors.length === 0 ||
 			categoryAddedList.length === 0 ||
-			!publisher ||
+			publisher.length === 0 ||
 			!isbn ||
 			!page ||
 			!language ||
@@ -219,7 +224,11 @@ export default function MainUpload() {
 			</div>
 			<div className='upload-book-form'>
 				<div className={`upload-image__wrapper ${image ? 'has-image' : ''}`}>
-					<Dropzone onDrop={acceptedFiles => setImage(acceptedFiles)} multiple={false}>
+					<Dropzone
+						onDrop={acceptedFiles => setImage(acceptedFiles)}
+						multiple={false}
+						accept={{ 'image/png': ['.png', '.gif', '.jpeg', '.jpg'] }}
+					>
 						{({ getRootProps, getInputProps, open }) => (
 							<>
 								{image ? (
@@ -337,7 +346,7 @@ export default function MainUpload() {
 							</div>
 							<div className='inp-book-col'>
 								<label>Ngày phát hành</label>
-								<label style={{ marginBottom: '0px' }}>
+								<label style={{ marginBottom: '0px', display: 'inherit' }}>
 									<div className='inp-date'>
 										<div className='icon-calendar'>
 											<Calendar />
@@ -390,8 +399,8 @@ export default function MainUpload() {
 						</div>
 					</div>
 
-					{userInfoJwt?.role === 'tecinus' || userInfoJwt?.role === 'author' ? (
-						<div className='inp-book'>
+					{(userInfoJwt?.role === 'tecinus' || userInfoJwt?.role === 'author') && (
+						<div className='inp-book inp-series' style={{ position: 'relative' }}>
 							<label>Sê-ri</label>
 							<input
 								className='input input--non-border'
@@ -400,6 +409,12 @@ export default function MainUpload() {
 								value={series.name || ''}
 								readOnly
 							></input>
+							<button
+								className={`btn-cancel-series${_.isEmpty(series) ? '--hide' : ''}`}
+								onClick={onClickCancelSeries}
+							>
+								<CloseX />
+							</button>
 							<div className='upload-modal-series'>
 								<ModalSeries
 									showModalSeries={showModalSeries}
@@ -408,10 +423,12 @@ export default function MainUpload() {
 									setSeries={setSeries}
 									temporarySeries={temporarySeries}
 									setTemporarySeries={setTemporarySeries}
+									temporarySeriesName={temporarySeriesName}
+									setTemporarySeriesName={setTemporarySeriesName}
 								/>
 							</div>
 						</div>
-					) : null}
+					)}
 
 					<div className='inp-book'>
 						<label>
@@ -433,7 +450,7 @@ export default function MainUpload() {
 								className={classNames('creat-post-modal-content__main__submit', 'btn-upload', {
 									'active': buttonActive,
 								})}
-								disabled={buttonActive ? false : true}
+								disabled={!buttonActive}
 							>
 								Lưu
 							</button>
