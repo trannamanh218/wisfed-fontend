@@ -29,7 +29,6 @@ const BookReference = ({ bookInfo, handleGetBookDetail }) => {
 	const [series, setSeries] = useState({});
 	const [temporarySeries, setTemporarySeries] = useState({});
 	const [listBookOfSeries, setlistBookOfSeries] = useState([]);
-	const [temporarySeriesName, setTemporarySeriesName] = useState('');
 
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
@@ -190,8 +189,6 @@ const BookReference = ({ bookInfo, handleGetBookDetail }) => {
 					bookId={bookInfo.id}
 					currentSeries={bookInfo.series}
 					handleGetBookDetail={handleGetBookDetail}
-					temporarySeriesName={temporarySeriesName}
-					setTemporarySeriesName={setTemporarySeriesName}
 				/>
 
 				{relatedBooks.length > 0 && (
