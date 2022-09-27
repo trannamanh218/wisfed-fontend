@@ -2,49 +2,56 @@ import { CircleActionsAlertQuestion, SettingIcon } from 'components/svg';
 import { useEffect, useState } from 'react';
 import './group-sibar.scss';
 import PropTypes from 'prop-types';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { updateKey } from 'reducers/redux-utils/group';
 import defaultAvatar from 'assets/images/avatar.jpeg';
 
 const SidebarGroupLef = ({ handleChange, data, member }) => {
 	const [listFriend, setListFriend] = useState([]);
 	const [listFolow, setListFolow] = useState([]);
+	const [listAdmin, setListAdmin] = useState([]);
 	const dispatch = useDispatch();
+	const { userInfo } = useSelector(state => state.auth);
 
 	useEffect(() => {
 		const newListFolow = member.filter(item => item.isFollowMe === true);
 		setListFolow(newListFolow);
 		const newListFriend = member.filter(item => item.relation === 'friend');
 		setListFriend(newListFriend);
+		const newListAdmin = member.filter(item => item.isAdmin === true);
+		setListAdmin(newListAdmin);
 	}, [member]);
 
 	const { groupType, description } = data;
 	return (
 		<div className='group-sibar-left__container'>
-			<div className='group__manager'>
-				<h3 className='group-sibar-left__title'>Quản lý nhóm</h3>
-				<div className='group-sibar-left__description'>
-					<div style={{ display: 'none' }}>
-						<div className='manage-item' onClick={() => handleChange('settingsQuestion')}>
-							<span>
-								<CircleActionsAlertQuestion /> Câu hỏi thành viên
+			{listAdmin.some(item => item.id === userInfo.id) && (
+				<div className='group__manager'>
+					<h3 className='group-sibar-left__title'>Quản lý nhóm</h3>
+					<div className='group-sibar-left__description'>
+						<div style={{ display: 'none' }}>
+							<div className='manage-item' onClick={() => handleChange('settingsQuestion')}>
+								<span>
+									<CircleActionsAlertQuestion /> Câu hỏi thành viên
+								</span>
+							</div>
+
+							<span className='manage-item' onClick={() => handleChange('manageJoin')}>
+								<p>99+</p> Yêu cầu làm thành viên
+							</span>
+
+							<span className='manage-item' onClick={() => handleChange('managePost')}>
+								<p>99+</p> Bài viết đang chờ
 							</span>
 						</div>
 
-						<span className='manage-item' onClick={() => handleChange('manageJoin')}>
-							<p>99+</p> Yêu cầu làm thành viên
-						</span>
-
-						<span className='manage-item' onClick={() => handleChange('managePost')}>
-							<p>99+</p> Bài viết đang chờ
-						</span>
-					</div>
-
-					<div className='manage-btn' onClick={() => handleChange('settings')}>
-						<SettingIcon /> Cài đặt
+						<div className='manage-btn' onClick={() => handleChange('settings')}>
+							<SettingIcon /> Cài đặt
+						</div>
 					</div>
 				</div>
-			</div>
+			)}
+
 			<div className='group__intro'>
 				<h3 className='group-sibar-left__title'>Giới thiệu</h3>
 				<div className='group-sibar-left__description'>
