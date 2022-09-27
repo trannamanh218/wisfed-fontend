@@ -106,6 +106,7 @@ const PostEditBook = ({
 									autoFocus
 									name='progress'
 									type='number'
+									onWheel={e => e.target.blur()}
 								/>
 							)}
 							<span>/{data.page}</span>
