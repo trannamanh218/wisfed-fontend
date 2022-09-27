@@ -200,7 +200,6 @@ $wallpaper-height: 350px;
 
 	&-form {
 		.form-field {
-			width: 80%;
 			display: flex;
 			gap: 24px;
 			&-group {
@@ -290,6 +289,10 @@ $wallpaper-height: 350px;
 					width: fit-content;
 					min-width: 90px;
 					padding: 0 1.5rem;
+				}
+
+				&.editting {
+					border: 1px solid #d9dbe9;
 				}
 			}
 

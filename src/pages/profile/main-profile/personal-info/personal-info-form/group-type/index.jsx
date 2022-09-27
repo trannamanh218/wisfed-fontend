@@ -61,7 +61,24 @@ function GroupType({
 
 	return (
 		<div className='form-field-group'>
-			<label className='form-field-label'>URL Mạng xã hội khác</label>
+			<label
+				className='form-field-label'
+				style={{ display: 'flex', flexDirection: 'row', gap: '10px', alignItems: 'flex-end' }}
+			>
+				<span>URL Mạng xã hội khác</span>
+				{/* <ShareModeDropdown /> */}
+				{!editStatus && (
+					<div style={{ display: 'flex', flexDirection: 'row', gap: '5px' }}>
+						<div className='btn-icon' onClick={() => enableEdit('socials-editting')}>
+							<Add />
+						</div>
+						<div className='btn-icon' onClick={() => setIsEditting(true)}>
+							<Pencil />
+						</div>
+					</div>
+				)}
+			</label>
+
 			{!_.isEmpty(dataArray) ? (
 				<>
 					{!isEditting ? (
@@ -71,17 +88,6 @@ function GroupType({
 									<div className='form-field'>
 										<div className='form-field-filled'>{item}</div>
 									</div>
-									{/* <ShareModeDropdown /> */}
-									{!editStatus && index === dataArray.length - 1 && (
-										<>
-											<div className='btn-icon' onClick={() => enableEdit('socials-editting')}>
-												<Add />
-											</div>
-											<div className='btn-icon' onClick={() => setIsEditting(true)}>
-												<Pencil />
-											</div>
-										</>
-									)}
 								</div>
 							))}
 							{editStatus && renderAddSocialsMediaLink()}
@@ -92,7 +98,7 @@ function GroupType({
 								<div className='form-field-wrapper socials-link' key={index}>
 									<div className='form-field'>
 										<input
-											className='form-field-filled'
+											className='form-field-filled editting'
 											value={item}
 											onChange={e => updateText(e, index)}
 											onKeyDown={e => updateItem(e)}

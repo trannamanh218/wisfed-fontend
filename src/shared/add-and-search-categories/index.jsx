@@ -104,7 +104,9 @@ function AddAndSearchCategories({
 									</div>
 								</>
 							))}
-							{hasMoreEllipsis && <div className='add-and-search-categories__searched-item'>...</div>}
+							{hasMoreEllipsis && (
+								<div className='add-and-search-categories__searched-item-elipsis'>...</div>
+							)}
 						</div>
 					) : (
 						<div className='add-and-search-categories__no-search-result'>Không có kết quả phù hợp</div>
