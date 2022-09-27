@@ -158,7 +158,7 @@ const PostShare = ({ postData, inCreatePost = false }) => {
 	return (
 		<div className='post__container'>
 			<div className='post__user-status'>
-				<Link to={`/profile/${postData.sharePost.createdBy.id}`}>
+				<Link to={`/profile/${postData?.sharePost?.createdBy?.id}`}>
 					<UserAvatar
 						data-testid='post__user-avatar'
 						className='post__user-status__avatar'
@@ -172,14 +172,13 @@ const PostShare = ({ postData, inCreatePost = false }) => {
 				{/*  */}
 				<div className='post__user-status__name-and-post-time-status'>
 					<div data-testid='post__user-name' className='post__user-status__name'>
-						<Link to={`/profile/${postData.sharePost.createdBy.id || postData.sharePost.user.id}`}>
-							{postData.sharePost.user
-								? postData.sharePost?.user?.fullName ||
-								  postData.sharePost.user.firstName + ' ' + postData.sharePost.user.lastName
-								: postData.sharePost?.createdBy.fullName ||
-								  postData.sharePost?.createdBy.firstName +
-										' ' +
-										postData.sharePost?.createdBy.lastName}
+						<Link to={`/profile/${postData?.sharePost?.createdBy?.id || postData?.sharePost?.user?.id}`}>
+							{postData?.sharePost?.user
+								? postData?.sharePost?.user?.fullName ||
+								  postData?.sharePost?.user?.firstName + ' ' + postData?.sharePost?.user?.lastName
+								: postData?.sharePost?.createdBy?.fullName ||
+								  postData?.sharePost?.createdBy?.firstName + postData?.sharePost?.createdBy?.lastName}
+							' ' +
 						</Link>
 						{/* tagged people */}
 						{postData.sharePost?.mentionsUsers &&
