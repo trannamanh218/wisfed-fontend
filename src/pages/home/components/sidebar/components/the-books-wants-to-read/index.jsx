@@ -30,7 +30,7 @@ function TheBooksWantsToRead(props) {
 									onMouseEnter={onMouseEnterImgBook}
 									onClick={() => onClickImgBook(item)}
 								>
-									<img src={item.images[0] || bookImage} alt='' />
+									<img src={item?.images[0] || bookImage} alt='' />
 								</div>
 							))}
 						</Slider>
@@ -40,7 +40,7 @@ function TheBooksWantsToRead(props) {
 								<Col lg={6} md={12} key={index}>
 									<Link to={`/book/detail/${item.id}`}>
 										<div className='wants-to-read__thumbnail'>
-											<img src={item.images[0] || bookImage} alt='' />
+											<img src={item?.images[0] || bookImage} alt='' />
 										</div>
 									</Link>
 								</Col>
