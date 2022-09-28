@@ -148,9 +148,6 @@ function GroupType({
 							) : (
 								''
 							)}
-							<div className='btn-icon' onClick={() => enableEdit('socials-editting')}>
-								<Add />
-							</div>
 						</div>
 					)}
 				</>

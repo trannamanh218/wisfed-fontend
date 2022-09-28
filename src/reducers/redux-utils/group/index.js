@@ -66,6 +66,18 @@ export const getupdateBackground = createAsyncThunk(
 	}
 );
 
+export const editGroup = createAsyncThunk('group/editGroup', async (params = {}, { rejectWithValue }) => {
+	const { id, param } = params;
+	try {
+		console.log(params.param);
+		const res = await Request.makePatch(groupDetailAPI(id), param);
+		return res.data;
+	} catch (err) {
+		const error = JSON.parse(err.response);
+		return rejectWithValue(error);
+	}
+});
+
 export const likeAndUnlikeGroupComment = createAsyncThunk(
 	'group/like group comment',
 	async (id, { rejectWithValue }) => {
@@ -135,19 +147,6 @@ export const getCreatGroup = createAsyncThunk('group/getCreatGroup', async (data
 	try {
 		const res = await Request.makePost(groupAPI, data);
 		return res;
-	} catch (err) {
-		const error = JSON.parse(err.response);
-		return rejectWithValue(error);
-	}
-});
-
-export const editGroup = createAsyncThunk('group/editGroup', async (params, { rejectWithValue }) => {
-	const { id, body } = params;
-	try {
-		console.log(id);
-		console.log(body);
-		// const res = await Request.makePatch(groupDetailAPI(id), body);
-		// return res.data;
 	} catch (err) {
 		const error = JSON.parse(err.response);
 		return rejectWithValue(error);

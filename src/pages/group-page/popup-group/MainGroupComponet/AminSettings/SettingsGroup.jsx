@@ -13,33 +13,24 @@ import { useDispatch } from 'react-redux';
 import { getSuggestionForPost } from 'reducers/redux-utils/activity';
 import { getFilterSearch } from 'reducers/redux-utils/search';
 import { editGroup } from 'reducers/redux-utils/group';
-import { groupDetailAPI } from 'constants/apiURL';
 
 function SettingsGroup({ handleChange, data }) {
 	const listIdBook = [
 		{ value: 27, title: 'Yêu đọc sách' },
 		{ value: 30, title: 'Thử thách đọc sách' },
 	];
-	const listKindOfGroup = [
-		{ value: 'book', title: 'Sách' },
-		{ value: 'author', title: 'Tác giả' },
-		{ value: 'category', title: ' Chia sẻ' },
-	];
-	const kindOfGroupRef = useRef({
-		value: data.groupType,
-		title: data.groupType === 'book' ? 'Sách' : data.groupType === 'author' ? 'Tác giả' : 'Chia sẻ',
-	});
+
 	const textArea = useRef(null);
 	const groupNameInput = useRef('');
-	const categoryBookRef = useRef({ value: 'default', title: 'Chọn chủ đề' });
 	const dispatch = useDispatch();
 
+	const [defaultCategoryOption, setDefaultCategoryOption] = useState({});
+
 	const [inputNameGroup, setInputNameGroup] = useState(data.name);
-	const [inputDiscription, setInputDiscription] = useState(data.description);
+	const [inputDescription, setInputDescription] = useState(data.description);
 	const [inputHashtag, setInputHashtag] = useState('');
 	const [listHashtags, setListHashtags] = useState([]);
 	const [isShowBtn, setIsShowBtn] = useState(false);
-	const [kindOfGroup, setKindOfGroup] = useState({});
 	const [lastTag, setLastTag] = useState('');
 
 	const [listAuthors, setListAuthors] = useState([]);
@@ -82,11 +73,6 @@ function SettingsGroup({ handleChange, data }) {
 
 	const hastagRegex = /(#[a-z0-9][a-z0-9\-_]*)/gi;
 
-	const onchangeKindOfGroup = data => {
-		kindOfGroupRef.current = data;
-		setKindOfGroup(data);
-	};
-
 	const onInputChange = f => e => {
 		const value = e.target.value.trim();
 		f(value);
@@ -102,6 +88,7 @@ function SettingsGroup({ handleChange, data }) {
 
 	const onchangeBookCategory = data => {
 		setCategoryIdBook([data.value]);
+		console.log(categoryIdBook);
 	};
 
 	const addCategory = category => {
@@ -142,7 +129,7 @@ function SettingsGroup({ handleChange, data }) {
 		if (authorAddedList.filter(authorAdded => authorAdded.id === author.id).length > 0) {
 			removeAuthor(author.id);
 		} else {
-			if (kindOfGroup.value === 'author' && authorAddedList.length >= 5) {
+			if (data.groupType === 'author' && authorAddedList.length >= 5) {
 				toast.warning('Chỉ được chọn tối đa 5 tác giả');
 			} else {
 				const authorArrayTemp = [...authorAddedList];
@@ -221,40 +208,35 @@ function SettingsGroup({ handleChange, data }) {
 	);
 
 	const updateGroup = async () => {
-		// if (isShowBtn) {
-		const newListHastag = listHashtags.map(item => `${item}`);
-		let newList;
-		if (lastTag.includes('#') && lastTag !== '#') {
-			newList = [...newListHastag, lastTag];
-		} else {
-			newList = newListHastag;
-		}
+		if (isShowBtn) {
+			const newListHastag = listHashtags.map(item => `${item}`);
+			let newList;
+			if (lastTag.includes('#') && lastTag !== '#') {
+				newList = [...newListHastag, lastTag];
+			} else {
+				newList = newListHastag;
+			}
 
-		const params = {
-			id: data.id,
-			body: {
-				name: inputNameGroup,
-				description: inputDiscription,
-				groupType: kindOfGroup.value || data.groupType,
-				authorIds: listAuthors,
-				tags: newList,
-				categoryIds: categoryIdBook,
-				bookIds: listBookAdd,
-			},
-		};
+			const params = {
+				id: data.id,
+				param: {
+					name: inputNameGroup,
+					description: inputDescription,
+					authorIds: listAuthors,
+					tags: newList,
+					categoryIds: categoryIdBook,
+					bookIds: listBookAdd,
+				},
+			};
 
-		try {
-			await dispatch(editGroup(params)).unwrap();
-			console.log(params);
-			const customId = 'custom-id-PopupCreateGroup';
-			toast.success('Thay đổi thông tin nhóm thành công', { toastId: customId });
-			// dispatch(handleResetGroupList());
-		} catch (err) {
-			NotificationError(err);
-		} finally {
-			// handleClose();
+			try {
+				console.log(params.param);
+				await dispatch(editGroup(params)).unwrap();
+				toast.success('Thay đổi thông tin nhóm thành công', { toastId: 'custom-id-PopupCreateGroup' });
+			} catch (err) {
+				NotificationError(err);
+			}
 		}
-		// }
 	};
 
 	const getSuggestionForCreatQuotes = async (input, option) => {
@@ -302,6 +284,7 @@ function SettingsGroup({ handleChange, data }) {
 	};
 
 	useEffect(() => {
+		// Điền dữ liệu ban đầu vào form
 		const cloneArr1 = [];
 		data.groupTags.forEach(item => cloneArr1.push(item.tag.name));
 		setListHashtags(cloneArr1);
@@ -317,6 +300,12 @@ function SettingsGroup({ handleChange, data }) {
 		const cloneArr4 = [];
 		data.groupBooks.forEach(item => cloneArr4.push(item.book));
 		setBookAddedList(cloneArr4);
+
+		if (data.groupType === 'book') {
+			setDefaultCategoryOption(listIdBook.find(item => item.value === data.groupCategories[0].category.id));
+		} else {
+			setDefaultCategoryOption({ value: 'default', title: 'Chọn chủ đề' });
+		}
 	}, []);
 
 	useEffect(() => {
@@ -347,10 +336,10 @@ function SettingsGroup({ handleChange, data }) {
 		if (
 			(lastTag.includes('#') || !_.isEmpty(listHashtags)) &&
 			lastTag !== '#' &&
-			inputDiscription !== '' &&
+			inputDescription !== '' &&
 			inputNameGroup !== ''
 		) {
-			switch (kindOfGroup.value) {
+			switch (data.groupType) {
 				case 'book':
 					if (listBookAdd.length > 0 && categoryIdBook.length > 0) {
 						setIsShowBtn(true);
@@ -375,23 +364,17 @@ function SettingsGroup({ handleChange, data }) {
 		} else {
 			setIsShowBtn(false);
 		}
-	}, [
-		listAuthors,
-		lastTag,
-		kindOfGroup,
-		inputDiscription,
-		inputNameGroup,
-		listHashtags,
-		listBookAdd,
-		categoryIdBook,
-	]);
+	}, [listAuthors, lastTag, inputDescription, inputNameGroup, listHashtags, listBookAdd, categoryIdBook]);
 
+	console.log(inputNameGroup === data.name);
 	useEffect(() => {
 		const hashtagElement = document.getElementById('hashtag');
 		const handleHashtag = e => {
 			if (e.keyCode === 32 && hastagRegex.test(inputHashtag)) {
-				dataRef.current = inputHashtag.trim();
 				inputRefHashtag.current.value = '';
+				if (!listHashtags.includes(inputHashtag)) {
+					dataRef.current = inputHashtag.trim();
+				}
 			}
 		};
 		hashtagElement.addEventListener('keydown', handleHashtag);
@@ -422,7 +405,7 @@ function SettingsGroup({ handleChange, data }) {
 		}
 		setCategoryIdBook(categoryIdArr);
 	}, [categoryAddedList]);
-
+	// console.log(listIdBook.find(item => item.value === data.groupCategories[0].category.id));
 	return (
 		<>
 			<div className='group-settings__container'>
@@ -449,112 +432,109 @@ function SettingsGroup({ handleChange, data }) {
 							/>
 						</div>
 						<div className='form-field-select__kind-of-group'>
-							<label>Kiểu nội dung</label>
-							<SelectBox
-								name='kindofgroup'
-								list={listKindOfGroup}
-								defaultOption={kindOfGroupRef.current}
-								onChangeOption={onchangeKindOfGroup}
+							<h4>
+								Kiểu nội dung:{' '}
+								{data.groupType === 'book'
+									? 'Sách'
+									: data.groupType === 'author'
+									? 'Tác giả'
+									: 'Chia sẻ'}
+							</h4>
+						</div>
+
+						{data.groupType === 'book' && (
+							<div className='form-field-select__kind-of-group'>
+								<label>Chủ đề sách</label>
+								<span className='form-field-authors__asterisk'>*</span>
+								<SelectBox
+									name='categoryBook'
+									list={listIdBook}
+									defaultOption={defaultCategoryOption}
+									onChangeOption={onchangeBookCategory}
+								/>
+							</div>
+						)}
+
+						{data.groupType !== 'book' && (
+							<div className='form-field-select__kind-of-group'>
+								<label>Chủ đề </label>
+								{data.groupType === 'author' ? (
+									''
+								) : (
+									<span className='form-field-authors__asterisk'>*</span>
+								)}
+								<AddAndSearchCategories
+									categoryAddedList={categoryAddedList}
+									categorySearchedList={categorySearchedList}
+									addCategory={addCategory}
+									removeCategory={removeCategory}
+									getDataFinish={getDataFinish}
+									searchCategory={searchCategory}
+									inputCategoryValue={inputCategoryValue}
+									categoryInputContainer={categoryInputContainer}
+									categoryInputWrapper={categoryInputWrapper}
+									categoryInput={categoryInput}
+									hasSearchIcon={true}
+									hasMoreEllipsis={hasMoreCategoriesEllipsis}
+									disableAutoFocus={true}
+								/>
+							</div>
+						)}
+
+						<div className='form-field-authors'>
+							<label>Tên tác giả</label>
+							{data.groupType === 'category' ? (
+								''
+							) : (
+								<span className='form-field-authors__asterisk'>*</span>
+							)}
+							<AddAndSearchCategories
+								categoryAddedList={authorAddedList}
+								categorySearchedList={authorSearchedList}
+								addCategory={addAuthor}
+								removeCategory={removeAuthor}
+								getDataFinish={getDataFinish}
+								searchCategory={searchAuthor}
+								inputCategoryValue={inputAuthorValue}
+								categoryInputContainer={authorInputContainer}
+								categoryInputWrapper={authorInputWrapper}
+								categoryInput={authorInput}
+								hasMoreEllipsis={hasMoreAuthorsEllipsis}
+								disableAutoFocus={true}
 							/>
 						</div>
 
-						{kindOfGroup.value !== 'default' && (
-							<>
-								{kindOfGroup.value === 'book' && (
-									<div className='form-field-select__kind-of-group'>
-										<label>Chủ đề sách</label>
-										<span className='form-field-authors__asterisk'>*</span>
-										<SelectBox
-											name='categoryBook'
-											list={listIdBook}
-											defaultOption={categoryBookRef.current}
-											onChangeOption={onchangeBookCategory}
-										/>
-									</div>
-								)}
+						<div className='form-field-authors'>
+							<label>Tên sách</label>
+							{data.groupType === 'category' || data.groupType === 'author' ? (
+								''
+							) : (
+								<span className='form-field-authors__asterisk'>*</span>
+							)}
+							<AddAndSearchCategories
+								categoryAddedList={bookAddedList}
+								categorySearchedList={bookSearchedList}
+								addCategory={addBook}
+								removeCategory={removeBook}
+								getDataFinish={getDataFinish}
+								searchCategory={searchBook}
+								inputCategoryValue={inputBookValue}
+								categoryInputContainer={bookInputContainer}
+								categoryInputWrapper={bookInputWrapper}
+								categoryInput={bookInput}
+								hasMoreEllipsis={hasMoreBooksEllipsis}
+								disableAutoFocus={true}
+							/>
+						</div>
 
-								{kindOfGroup.value !== 'book' && (
-									<div className='form-field-select__kind-of-group'>
-										<label>Chủ đề </label>
-										{kindOfGroup.value === 'author' ? (
-											''
-										) : (
-											<span className='form-field-authors__asterisk'>*</span>
-										)}
-										<AddAndSearchCategories
-											categoryAddedList={categoryAddedList}
-											categorySearchedList={categorySearchedList}
-											addCategory={addCategory}
-											removeCategory={removeCategory}
-											getDataFinish={getDataFinish}
-											searchCategory={searchCategory}
-											inputCategoryValue={inputCategoryValue}
-											categoryInputContainer={categoryInputContainer}
-											categoryInputWrapper={categoryInputWrapper}
-											categoryInput={categoryInput}
-											hasSearchIcon={true}
-											hasMoreEllipsis={hasMoreCategoriesEllipsis}
-											disableAutoFocus={true}
-										/>
-									</div>
-								)}
-
-								<div className='form-field-authors'>
-									<label>Tên tác giả</label>
-									{kindOfGroup.value === 'category' ? (
-										''
-									) : (
-										<span className='form-field-authors__asterisk'>*</span>
-									)}
-									<AddAndSearchCategories
-										categoryAddedList={authorAddedList}
-										categorySearchedList={authorSearchedList}
-										addCategory={addAuthor}
-										removeCategory={removeAuthor}
-										getDataFinish={getDataFinish}
-										searchCategory={searchAuthor}
-										inputCategoryValue={inputAuthorValue}
-										categoryInputContainer={authorInputContainer}
-										categoryInputWrapper={authorInputWrapper}
-										categoryInput={authorInput}
-										hasMoreEllipsis={hasMoreAuthorsEllipsis}
-										disableAutoFocus={true}
-									/>
-								</div>
-
-								<div className='form-field-authors'>
-									<label>Tên sách</label>
-									{kindOfGroup.value === 'category' || kindOfGroup.value === 'author' ? (
-										''
-									) : (
-										<span className='form-field-authors__asterisk'>*</span>
-									)}
-									<AddAndSearchCategories
-										categoryAddedList={bookAddedList}
-										categorySearchedList={bookSearchedList}
-										addCategory={addBook}
-										removeCategory={removeBook}
-										getDataFinish={getDataFinish}
-										searchCategory={searchBook}
-										inputCategoryValue={inputBookValue}
-										categoryInputContainer={bookInputContainer}
-										categoryInputWrapper={bookInputWrapper}
-										categoryInput={bookInput}
-										hasMoreEllipsis={hasMoreBooksEllipsis}
-										disableAutoFocus={true}
-									/>
-								</div>
-							</>
-						)}
-
-						<div className='form-field-discription'>
-							<label style={{ marginTop: '0px' }}>Giới thiệu</label>
+						<div className='form-field-description'>
+							<label style={{ marginTop: '0px', marginBottom: '23px' }}>Giới thiệu</label>
 							<span style={{ color: 'red', marginLeft: '4px' }}>*</span>
 							<textarea
 								ref={textArea}
 								className='form-field-textarea'
 								rows={10}
-								onChange={onInputChange(setInputDiscription)}
+								onChange={onInputChange(setInputDescription)}
 								defaultValue={data.description}
 							/>
 						</div>
@@ -565,9 +545,9 @@ function SettingsGroup({ handleChange, data }) {
 							<div className='list__author-tags' onClick={() => inputRefHashtag.current.focus()}>
 								{listHashtags.length > 0 ? (
 									<div className='input__authors'>
-										{listHashtags.map(item => (
+										{listHashtags.map((item, index) => (
 											<>
-												<span key={item}>
+												<span key={index}>
 													{item}
 													<button
 														className='close__author'
@@ -606,8 +586,8 @@ function SettingsGroup({ handleChange, data }) {
 								''
 							)}
 						</div>
-						<div className='form-button'>
-							<button onClick={updateGroup}>Lưu thay đổi</button>
+						<div className={!isShowBtn ? 'disable-btn' : `form-button`} onClick={updateGroup}>
+							<button>Lưu thay đổi</button>
 						</div>
 					</div>
 				</div>

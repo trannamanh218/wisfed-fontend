@@ -419,7 +419,7 @@ const PopupCreateGroup = ({ handleClose }) => {
 	useEffect(() => {
 		groupNameInput.current.focus();
 	}, []);
-	console.log(categoryAddedList);
+
 	return (
 		<>
 			<div className='popup-group__header'>
@@ -585,9 +585,9 @@ const PopupCreateGroup = ({ handleClose }) => {
 					<div className='list__author-tags' onClick={() => inputRefHashtag.current.focus()}>
 						{listHashtags.length > 0 ? (
 							<div className='input__authors'>
-								{listHashtags.map(item => (
+								{listHashtags.map((item, index) => (
 									<>
-										<span key={item}>
+										<span key={index}>
 											{item}
 											<button
 												className='close__author'
@@ -625,7 +625,7 @@ const PopupCreateGroup = ({ handleClose }) => {
 						''
 					)}
 				</div>
-				<div className={!isShowBtn ? 'disableBtn' : `form-button`} onClick={createGroup}>
+				<div className={!isShowBtn ? 'disable-btn' : `form-button`} onClick={createGroup}>
 					<button>Tạo nhóm</button>
 				</div>
 			</div>
