@@ -51,6 +51,7 @@ const PopupCreateGroup = ({ handleClose }) => {
 
 	const dataRef = useRef('');
 	const inputRefHashtag = useRef(null);
+	const hashtagInputWrapper = useRef(null);
 
 	const authorInputContainer = useRef(null);
 	const authorInputWrapper = useRef(null);
@@ -297,6 +298,9 @@ const PopupCreateGroup = ({ handleClose }) => {
 		} else {
 			setShow(false);
 		}
+		if (hashtagInputWrapper.current) {
+			hashtagInputWrapper.current.style.width = inputRefHashtag.current.value.length + 0.5 + 'ch';
+		}
 	};
 
 	useEffect(() => {
@@ -415,7 +419,7 @@ const PopupCreateGroup = ({ handleClose }) => {
 	useEffect(() => {
 		groupNameInput.current.focus();
 	}, []);
-
+	console.log(categoryAddedList);
 	return (
 		<>
 			<div className='popup-group__header'>
@@ -579,7 +583,7 @@ const PopupCreateGroup = ({ handleClose }) => {
 					<label>Hashtags</label>
 					<span style={{ color: 'red', marginLeft: '4px' }}>*</span>
 					<div className='list__author-tags' onClick={() => inputRefHashtag.current.focus()}>
-						{listHashtags.length > 0 && (
+						{listHashtags.length > 0 ? (
 							<div className='input__authors'>
 								{listHashtags.map(item => (
 									<>
@@ -596,15 +600,24 @@ const PopupCreateGroup = ({ handleClose }) => {
 										</span>
 									</>
 								))}
+								<div ref={hashtagInputWrapper} style={{ width: '8px' }}>
+									<input
+										id='hashtag'
+										className='add-and-search-categories__input'
+										onChange={onInputChange(setInputHashtag)}
+										ref={inputRefHashtag}
+									/>
+								</div>
 							</div>
+						) : (
+							<Input
+								id='hashtag'
+								isBorder={false}
+								placeholder='Nhập hashtag'
+								handleChange={onInputChange(setInputHashtag)}
+								inputRef={inputRefHashtag}
+							/>
 						)}
-						<Input
-							id='hashtag'
-							isBorder={false}
-							placeholder='Nhập hashtag'
-							handleChange={onInputChange(setInputHashtag)}
-							inputRef={inputRefHashtag}
-						/>
 					</div>
 					{show && !!inputHashtag ? (
 						<span style={{ color: '#e61b00' }}>Vui lòng nhập đúng định dạng</span>

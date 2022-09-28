@@ -18,6 +18,7 @@ function AddAndSearchCategories({
 	hasSearchIcon,
 	placeholder,
 	hasMoreEllipsis,
+	disableAutoFocus,
 }) {
 	const focusCategoryInput = () => {
 		if (categoryInput.current) {
@@ -26,7 +27,7 @@ function AddAndSearchCategories({
 	};
 
 	useEffect(() => {
-		if (categoryInput.current) {
+		if (categoryInput.current && !disableAutoFocus) {
 			categoryInput.current.focus();
 		}
 	}, [categoryAddedList]);
@@ -120,6 +121,7 @@ function AddAndSearchCategories({
 AddAndSearchCategories.defaultProps = {
 	placeholder: 'Tìm kiếm và thêm chủ đề',
 	hasMoreEllipsis: false,
+	disableAutoFocus: false,
 };
 
 AddAndSearchCategories.propTypes = {
@@ -136,6 +138,7 @@ AddAndSearchCategories.propTypes = {
 	hasSearchIcon: PropTypes.bool,
 	placeholder: PropTypes.string,
 	hasMoreEllipsis: PropTypes.bool,
+	disableAutoFocus: PropTypes.bool,
 };
 
 export default AddAndSearchCategories;

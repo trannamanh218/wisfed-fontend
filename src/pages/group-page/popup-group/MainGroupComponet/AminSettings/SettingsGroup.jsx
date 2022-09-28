@@ -12,6 +12,9 @@ import _ from 'lodash';
 import { useDispatch } from 'react-redux';
 import { getSuggestionForPost } from 'reducers/redux-utils/activity';
 import { getFilterSearch } from 'reducers/redux-utils/search';
+import { editGroup } from 'reducers/redux-utils/group';
+import { groupDetailAPI } from 'constants/apiURL';
+
 function SettingsGroup({ handleChange, data }) {
 	const listIdBook = [
 		{ value: 27, title: 'Yêu đọc sách' },
@@ -31,8 +34,8 @@ function SettingsGroup({ handleChange, data }) {
 	const categoryBookRef = useRef({ value: 'default', title: 'Chọn chủ đề' });
 	const dispatch = useDispatch();
 
-	const [inputNameGroup, setInputNameGroup] = useState('');
-	const [inputDiscription, setInputDiscription] = useState('');
+	const [inputNameGroup, setInputNameGroup] = useState(data.name);
+	const [inputDiscription, setInputDiscription] = useState(data.description);
 	const [inputHashtag, setInputHashtag] = useState('');
 	const [listHashtags, setListHashtags] = useState([]);
 	const [isShowBtn, setIsShowBtn] = useState(false);
@@ -63,6 +66,7 @@ function SettingsGroup({ handleChange, data }) {
 
 	const dataRef = useRef('');
 	const inputRefHashtag = useRef(null);
+	const hashtagInputWrapper = useRef(null);
 
 	const authorInputContainer = useRef(null);
 	const authorInputWrapper = useRef(null);
@@ -90,6 +94,9 @@ function SettingsGroup({ handleChange, data }) {
 			setShow(true);
 		} else {
 			setShow(false);
+		}
+		if (hashtagInputWrapper.current) {
+			hashtagInputWrapper.current.style.width = inputRefHashtag.current.value.length + 0.5 + 'ch';
 		}
 	};
 
@@ -214,36 +221,40 @@ function SettingsGroup({ handleChange, data }) {
 	);
 
 	const updateGroup = async () => {
-		if (isShowBtn) {
-			const newListHastag = listHashtags.map(item => `${item}`);
-			let newList;
-			if (lastTag.includes('#') && lastTag !== '#') {
-				newList = [...newListHastag, lastTag];
-			} else {
-				newList = newListHastag;
-			}
+		// if (isShowBtn) {
+		const newListHastag = listHashtags.map(item => `${item}`);
+		let newList;
+		if (lastTag.includes('#') && lastTag !== '#') {
+			newList = [...newListHastag, lastTag];
+		} else {
+			newList = newListHastag;
+		}
 
-			const data = {
+		const params = {
+			id: data.id,
+			body: {
 				name: inputNameGroup,
 				description: inputDiscription,
-				groupType: kindOfGroup.value,
+				groupType: kindOfGroup.value || data.groupType,
 				authorIds: listAuthors,
 				tags: newList,
 				categoryIds: categoryIdBook,
 				bookIds: listBookAdd,
-			};
+			},
+		};
 
-			try {
-				// await dispatch(getCreatGroup(data)).unwrap();
-				const customId = 'custom-id-PopupCreateGroup';
-				toast.success('Thay đổi thông tin nhóm thành công', { toastId: customId });
-				// dispatch(handleResetGroupList());
-			} catch (err) {
-				NotificationError(err);
-			} finally {
-				// handleClose();
-			}
+		try {
+			await dispatch(editGroup(params)).unwrap();
+			console.log(params);
+			const customId = 'custom-id-PopupCreateGroup';
+			toast.success('Thay đổi thông tin nhóm thành công', { toastId: customId });
+			// dispatch(handleResetGroupList());
+		} catch (err) {
+			NotificationError(err);
+		} finally {
+			// handleClose();
 		}
+		// }
 	};
 
 	const getSuggestionForCreatQuotes = async (input, option) => {
@@ -286,14 +297,26 @@ function SettingsGroup({ handleChange, data }) {
 		} catch (err) {
 			NotificationError(err);
 		} finally {
-			// setGetDataFinish(true);
+			setGetDataFinish(true);
 		}
 	};
 
 	useEffect(() => {
-		const cloneArr = [];
-		data.groupTags.forEach(item => cloneArr.push(item.tag.name));
-		setListHashtags(cloneArr);
+		const cloneArr1 = [];
+		data.groupTags.forEach(item => cloneArr1.push(item.tag.name));
+		setListHashtags(cloneArr1);
+
+		const cloneArr2 = [];
+		data.groupCategories.forEach(item => cloneArr2.push(item.category));
+		setCategoryAddedList(cloneArr2);
+
+		const cloneArr3 = [];
+		data.groupAuthors.forEach(item => cloneArr3.push(item.author));
+		setAuthorAddedList(cloneArr3);
+
+		const cloneArr4 = [];
+		data.groupBooks.forEach(item => cloneArr4.push(item.book));
+		setBookAddedList(cloneArr4);
 	}, []);
 
 	useEffect(() => {
@@ -376,6 +399,30 @@ function SettingsGroup({ handleChange, data }) {
 		return () => hashtagElement.removeEventListener('keydown', handleHashtag);
 	}, [inputHashtag]);
 
+	useEffect(() => {
+		const authorIdArr = [];
+		for (let i = 0; i < authorAddedList.length; i++) {
+			authorIdArr.push(authorAddedList[i].id);
+		}
+		setListAuthors(authorIdArr);
+	}, [authorAddedList]);
+
+	useEffect(() => {
+		const bookIdArr = [];
+		for (let i = 0; i < bookAddedList.length; i++) {
+			bookIdArr.push(bookAddedList[i].id);
+		}
+		setListBookAdd(bookIdArr);
+	}, [bookAddedList]);
+
+	useEffect(() => {
+		const categoryIdArr = [];
+		for (let i = 0; i < categoryAddedList.length; i++) {
+			categoryIdArr.push(categoryAddedList[i].id);
+		}
+		setCategoryIdBook(categoryIdArr);
+	}, [categoryAddedList]);
+
 	return (
 		<>
 			<div className='group-settings__container'>
@@ -447,6 +494,7 @@ function SettingsGroup({ handleChange, data }) {
 											categoryInput={categoryInput}
 											hasSearchIcon={true}
 											hasMoreEllipsis={hasMoreCategoriesEllipsis}
+											disableAutoFocus={true}
 										/>
 									</div>
 								)}
@@ -470,6 +518,7 @@ function SettingsGroup({ handleChange, data }) {
 										categoryInputWrapper={authorInputWrapper}
 										categoryInput={authorInput}
 										hasMoreEllipsis={hasMoreAuthorsEllipsis}
+										disableAutoFocus={true}
 									/>
 								</div>
 
@@ -492,6 +541,7 @@ function SettingsGroup({ handleChange, data }) {
 										categoryInputWrapper={bookInputWrapper}
 										categoryInput={bookInput}
 										hasMoreEllipsis={hasMoreBooksEllipsis}
+										disableAutoFocus={true}
 									/>
 								</div>
 							</>
@@ -513,7 +563,7 @@ function SettingsGroup({ handleChange, data }) {
 							<label>Hashtags</label>
 							<span style={{ color: 'red', marginLeft: '4px' }}>*</span>
 							<div className='list__author-tags' onClick={() => inputRefHashtag.current.focus()}>
-								{listHashtags.length > 0 && (
+								{listHashtags.length > 0 ? (
 									<div className='input__authors'>
 										{listHashtags.map(item => (
 											<>
@@ -530,46 +580,31 @@ function SettingsGroup({ handleChange, data }) {
 												</span>
 											</>
 										))}
+										<div ref={hashtagInputWrapper} style={{ width: '8px' }}>
+											<input
+												id='hashtag'
+												className='add-and-search-categories__input'
+												onChange={onInputChange(setInputHashtag)}
+												ref={inputRefHashtag}
+											/>
+										</div>
 									</div>
+								) : (
+									<Input
+										id='hashtag'
+										isBorder={false}
+										placeholder='Nhập hashtag'
+										handleChange={onInputChange(setInputHashtag)}
+										inputRef={inputRefHashtag}
+									/>
 								)}
-								<Input
-									id='hashtag'
-									isBorder={false}
-									placeholder='Nhập hashtag'
-									handleChange={onInputChange(setInputHashtag)}
-									inputRef={inputRefHashtag}
-								/>
 							</div>
+
 							{show && !!inputHashtag ? (
 								<span style={{ color: '#e61b00' }}>Vui lòng nhập đúng định dạng</span>
 							) : (
 								''
 							)}
-						</div>
-
-						<div className='group-manage__title__content'>
-							<h3>Quản lý thành viên và nội dung</h3>
-						</div>
-						<div className='form-field-select__kind-of-group'>
-							<label>Kiểu nội dung</label>
-							<SelectBox
-								name='kindofgroup'
-								list={listKindOfGroup}
-								defaultOption={kindOfGroupRef.current}
-								onChangeOption={onchangeKindOfGroup}
-							/>
-						</div>
-						<div className='form-field-select__kind-of-group'>
-							<label>Kiểu nội dung</label>
-							<SelectBox
-								name='kindofgroup'
-								list={listKindOfGroup}
-								defaultOption={kindOfGroupRef.current}
-								onChangeOption={onchangeKindOfGroup}
-							/>
-						</div>
-						<div>
-							<span>Phê duyệt bài viết</span> <button></button>
 						</div>
 						<div className='form-button'>
 							<button onClick={updateGroup}>Lưu thay đổi</button>

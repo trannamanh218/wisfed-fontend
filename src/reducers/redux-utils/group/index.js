@@ -141,6 +141,19 @@ export const getCreatGroup = createAsyncThunk('group/getCreatGroup', async (data
 	}
 });
 
+export const editGroup = createAsyncThunk('group/editGroup', async (params, { rejectWithValue }) => {
+	const { id, body } = params;
+	try {
+		console.log(id);
+		console.log(body);
+		// const res = await Request.makePatch(groupDetailAPI(id), body);
+		// return res.data;
+	} catch (err) {
+		const error = JSON.parse(err.response);
+		return rejectWithValue(error);
+	}
+});
+
 export const getListPost = createAsyncThunk('group/getListPost', async (params = {}, { rejectWithValue }) => {
 	const { id, query } = params;
 	try {
