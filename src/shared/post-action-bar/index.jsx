@@ -31,7 +31,12 @@ const PostActionBar = ({ postData, handleLikeAction }) => {
 			dispatch(checkUserLogin(true));
 		} else {
 			let dataToShare;
-			if (postData.verb === POST_VERB || postData.verb === POST_VERB_SHARE) {
+			if (
+				location.pathname.includes('profile') ||
+				postData.verb === POST_VERB ||
+				postData.verb === POST_VERB_SHARE ||
+				postData.verb === GROUP_POST_VERB_SHARE
+			) {
 				if (postData.verb === POST_VERB) {
 					dataToShare = {
 						...postData,
@@ -39,11 +44,21 @@ const PostActionBar = ({ postData, handleLikeAction }) => {
 						sharePost: { ...postData },
 						verb: POST_VERB_SHARE,
 					};
-				} else {
+				} else if (postData.verb === POST_VERB_SHARE) {
 					dataToShare = {
 						...postData,
 						type: 'postShare',
 						verb: POST_VERB_SHARE,
+					};
+				} else if (postData.verb === GROUP_POST_VERB_SHARE) {
+					dataToShare = {
+						verb: GROUP_POST_VERB_SHARE,
+						...postData,
+					};
+				} else {
+					dataToShare = {
+						verb: POST_VERB_SHARE || TOP_BOOK_VERB_SHARE,
+						sharePost: { ...postData },
 					};
 				}
 			} else if (postData.verb === QUOTE_VERB_SHARE) {
