@@ -14,7 +14,7 @@ import { getSuggestionForPost } from 'reducers/redux-utils/activity';
 import { getFilterSearch } from 'reducers/redux-utils/search';
 import { editGroup } from 'reducers/redux-utils/group';
 
-function SettingsGroup({ handleChange, data }) {
+function SettingsGroup({ handleChange, data, fetchData }) {
 	const listIdBook = [
 		{ value: 27, title: 'Yêu đọc sách' },
 		{ value: 30, title: 'Thử thách đọc sách' },
@@ -232,6 +232,8 @@ function SettingsGroup({ handleChange, data }) {
 			try {
 				await dispatch(editGroup(params)).unwrap();
 				toast.success('Thay đổi thông tin nhóm thành công', { toastId: 'custom-id-PopupCreateGroup' });
+				await fetchData();
+				window.scroll(0, 0);
 				handleChange('tabs');
 			} catch (err) {
 				NotificationError(err);
@@ -405,7 +407,7 @@ function SettingsGroup({ handleChange, data }) {
 		}
 		setCategoryIdBook(categoryIdArr);
 	}, [categoryAddedList]);
-	// console.log(listIdBook.find(item => item.value === data.groupCategories[0].category.id));
+
 	return (
 		<>
 			<div className='group-settings__container'>
@@ -599,6 +601,7 @@ function SettingsGroup({ handleChange, data }) {
 SettingsGroup.propTypes = {
 	handleChange: PropTypes.func,
 	data: PropTypes.object,
+	fetchData: PropTypes.func,
 };
 
 export default SettingsGroup;
