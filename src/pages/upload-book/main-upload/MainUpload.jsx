@@ -188,6 +188,7 @@ export default function MainUpload() {
 	useEffect(() => {
 		if (
 			!image ||
+			(image && image.length === 0) ||
 			!name ||
 			authors.length === 0 ||
 			categoryAddedList.length === 0 ||
