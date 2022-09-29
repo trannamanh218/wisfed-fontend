@@ -230,9 +230,9 @@ function SettingsGroup({ handleChange, data }) {
 			};
 
 			try {
-				console.log(params.param);
 				await dispatch(editGroup(params)).unwrap();
 				toast.success('Thay đổi thông tin nhóm thành công', { toastId: 'custom-id-PopupCreateGroup' });
+				handleChange('tabs');
 			} catch (err) {
 				NotificationError(err);
 			}

@@ -69,7 +69,6 @@ export const getupdateBackground = createAsyncThunk(
 export const editGroup = createAsyncThunk('group/editGroup', async (params = {}, { rejectWithValue }) => {
 	const { id, param } = params;
 	try {
-		console.log(params.param);
 		const res = await Request.makePatch(groupDetailAPI(id), param);
 		return res.data;
 	} catch (err) {
