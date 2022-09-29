@@ -61,6 +61,7 @@ const MainGroup = () => {
 					keyChange={keyChange}
 					data={detailGroup}
 					member={listMember}
+					fetchData={fetchData}
 				/>
 			</div>
 		</div>
