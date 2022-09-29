@@ -75,13 +75,12 @@ const InvitationFriend = ({ activeTabs }) => {
 							/>
 						))}
 					</div>
-					<div className='myfriends__line'></div>
 				</>
 			) : (
-				''
+				<p style={{ textAlign: 'center' }}>Chưa có lời mời kết bạn</p>
 			)}
 
-			<div className='myfriends__container__content'>
+			{/* <div className='myfriends__container__content'>
 				<div className='myfriends__title__addfriend'>Lời mời Từ người nổi tiếng</div>
 				<Link to={'/friends/invitation/star'} className='myfriends__title__all'>
 					Xem tất cả
@@ -91,7 +90,7 @@ const InvitationFriend = ({ activeTabs }) => {
 				{newData.map(item => (
 					<FriendsItem key={item.id} data={item} />
 				))}
-			</div>
+			</div> */}
 		</div>
 	);
 };
