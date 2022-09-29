@@ -24,7 +24,7 @@ function SettingsGroup({ handleChange, data }) {
 	const groupNameInput = useRef('');
 	const dispatch = useDispatch();
 
-	const [defaultCategoryOption, setDefaultCategoryOption] = useState({});
+	const [defaultCategoryOption, setDefaultCategoryOption] = useState({ value: 'default', title: 'Chọn chủ đề' });
 
 	const [inputNameGroup, setInputNameGroup] = useState(data.name);
 	const [inputDescription, setInputDescription] = useState(data.description);
@@ -88,7 +88,6 @@ function SettingsGroup({ handleChange, data }) {
 
 	const onchangeBookCategory = data => {
 		setCategoryIdBook([data.value]);
-		console.log(categoryIdBook);
 	};
 
 	const addCategory = category => {
@@ -302,9 +301,10 @@ function SettingsGroup({ handleChange, data }) {
 		setBookAddedList(cloneArr4);
 
 		if (data.groupType === 'book') {
-			setDefaultCategoryOption(listIdBook.find(item => item.value === data.groupCategories[0].category.id));
-		} else {
-			setDefaultCategoryOption({ value: 'default', title: 'Chọn chủ đề' });
+			const obj = listIdBook.find(item => item.value === data.groupCategories[0]?.category?.id);
+			if (!_.isEmpty(obj)) {
+				setDefaultCategoryOption(obj);
+			}
 		}
 	}, []);
 
@@ -366,7 +366,6 @@ function SettingsGroup({ handleChange, data }) {
 		}
 	}, [listAuthors, lastTag, inputDescription, inputNameGroup, listHashtags, listBookAdd, categoryIdBook]);
 
-	console.log(inputNameGroup === data.name);
 	useEffect(() => {
 		const hashtagElement = document.getElementById('hashtag');
 		const handleHashtag = e => {
@@ -405,7 +404,7 @@ function SettingsGroup({ handleChange, data }) {
 		}
 		setCategoryIdBook(categoryIdArr);
 	}, [categoryAddedList]);
-	// console.log(listIdBook.find(item => item.value === data.groupCategories[0].category.id));
+
 	return (
 		<>
 			<div className='group-settings__container'>
