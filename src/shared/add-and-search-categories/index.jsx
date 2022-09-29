@@ -18,6 +18,7 @@ function AddAndSearchCategories({
 	hasSearchIcon,
 	placeholder,
 	hasMoreEllipsis,
+	disableAutoFocus,
 }) {
 	const focusCategoryInput = () => {
 		if (categoryInput.current) {
@@ -26,7 +27,7 @@ function AddAndSearchCategories({
 	};
 
 	useEffect(() => {
-		if (categoryInput.current) {
+		if (categoryInput.current && !disableAutoFocus) {
 			categoryInput.current.focus();
 		}
 	}, [categoryAddedList]);
@@ -83,26 +84,22 @@ function AddAndSearchCategories({
 					{categorySearchedList.length > 0 ? (
 						<div className='add-and-search-categories__search-result'>
 							{categorySearchedList.map(item => (
-								<>
-									<div
-										className='add-and-search-categories__searched-item'
-										key={item.id}
-										onClick={() => addCategory(item)}
-									>
-										<span>
-											{item.name || item.fullName || item.firstName + ' ' + item.lastName}
-										</span>
-										<>
-											{categoryAddedList.filter(categoryAdded => categoryAdded.id === item.id)
-												.length > 0 && (
-												<>
-													<div className='add-and-search-categories__checked-category'></div>
-													<CheckIcon />
-												</>
-											)}
-										</>
-									</div>
-								</>
+								<div
+									className='add-and-search-categories__searched-item'
+									key={item.id}
+									onClick={() => addCategory(item)}
+								>
+									<span>{item.name || item.fullName || item.firstName + ' ' + item.lastName}</span>
+									<>
+										{categoryAddedList.filter(categoryAdded => categoryAdded.id === item.id)
+											.length > 0 && (
+											<>
+												<div className='add-and-search-categories__checked-category'></div>
+												<CheckIcon />
+											</>
+										)}
+									</>
+								</div>
 							))}
 							{hasMoreEllipsis && (
 								<div className='add-and-search-categories__searched-item-elipsis'>...</div>
@@ -120,6 +117,7 @@ function AddAndSearchCategories({
 AddAndSearchCategories.defaultProps = {
 	placeholder: 'Tìm kiếm và thêm chủ đề',
 	hasMoreEllipsis: false,
+	disableAutoFocus: false,
 };
 
 AddAndSearchCategories.propTypes = {
@@ -136,6 +134,7 @@ AddAndSearchCategories.propTypes = {
 	hasSearchIcon: PropTypes.bool,
 	placeholder: PropTypes.string,
 	hasMoreEllipsis: PropTypes.bool,
+	disableAutoFocus: PropTypes.bool,
 };
 
 export default AddAndSearchCategories;

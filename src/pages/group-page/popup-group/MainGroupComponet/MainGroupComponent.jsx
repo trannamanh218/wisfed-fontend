@@ -358,7 +358,7 @@ function MainGroupComponent({ handleChange, keyChange, data, member, handleUpdat
 					</Tabs>
 				</div>
 			)}
-			{keyChange === 'settings' && <SettingsGroup handleChange={handleChange} />}
+			{keyChange === 'settings' && <SettingsGroup handleChange={handleChange} data={data} />}
 			{keyChange === 'settingsQuestion' && <SettingsQuestions handleChange={handleChange} />}
 			{keyChange === 'manageJoin' && <ManageJoin handleChange={handleChange} />}
 			{keyChange === 'managePost' && <PostWatting handleChange={handleChange} />}

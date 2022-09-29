@@ -51,6 +51,7 @@ const PopupCreateGroup = ({ handleClose }) => {
 
 	const dataRef = useRef('');
 	const inputRefHashtag = useRef(null);
+	const hashtagInputWrapper = useRef(null);
 
 	const authorInputContainer = useRef(null);
 	const authorInputWrapper = useRef(null);
@@ -296,6 +297,9 @@ const PopupCreateGroup = ({ handleClose }) => {
 			setShow(true);
 		} else {
 			setShow(false);
+		}
+		if (hashtagInputWrapper.current) {
+			hashtagInputWrapper.current.style.width = inputRefHashtag.current.value.length + 0.5 + 'ch';
 		}
 	};
 
@@ -579,11 +583,11 @@ const PopupCreateGroup = ({ handleClose }) => {
 					<label>Hashtags</label>
 					<span style={{ color: 'red', marginLeft: '4px' }}>*</span>
 					<div className='list__author-tags' onClick={() => inputRefHashtag.current.focus()}>
-						{listHashtags.length > 0 && (
+						{listHashtags.length > 0 ? (
 							<div className='input__authors'>
-								{listHashtags.map(item => (
+								{listHashtags.map((item, index) => (
 									<>
-										<span key={item}>
+										<span key={index}>
 											{item}
 											<button
 												className='close__author'
@@ -596,15 +600,24 @@ const PopupCreateGroup = ({ handleClose }) => {
 										</span>
 									</>
 								))}
+								<div ref={hashtagInputWrapper} style={{ width: '8px' }}>
+									<input
+										id='hashtag'
+										className='add-and-search-categories__input'
+										onChange={onInputChange(setInputHashtag)}
+										ref={inputRefHashtag}
+									/>
+								</div>
 							</div>
+						) : (
+							<Input
+								id='hashtag'
+								isBorder={false}
+								placeholder='Nhập hashtag'
+								handleChange={onInputChange(setInputHashtag)}
+								inputRef={inputRefHashtag}
+							/>
 						)}
-						<Input
-							id='hashtag'
-							isBorder={false}
-							placeholder='Nhập hashtag'
-							handleChange={onInputChange(setInputHashtag)}
-							inputRef={inputRefHashtag}
-						/>
 					</div>
 					{show && !!inputHashtag ? (
 						<span style={{ color: '#e61b00' }}>Vui lòng nhập đúng định dạng</span>
@@ -612,7 +625,7 @@ const PopupCreateGroup = ({ handleClose }) => {
 						''
 					)}
 				</div>
-				<div className={!isShowBtn ? 'disableBtn' : `form-button`} onClick={createGroup}>
+				<div className={!isShowBtn ? 'disable-btn' : `form-button`} onClick={createGroup}>
 					<button>Tạo nhóm</button>
 				</div>
 			</div>
