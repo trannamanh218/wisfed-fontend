@@ -22,6 +22,7 @@ function SettingsGroup({ handleChange, data, fetchData }) {
 
 	const textArea = useRef(null);
 	const groupNameInput = useRef('');
+	const groupSettingContainer = useRef(null);
 	const dispatch = useDispatch();
 
 	const [defaultCategoryOption, setDefaultCategoryOption] = useState({ value: 'default', title: 'Chọn chủ đề' });
@@ -369,7 +370,6 @@ function SettingsGroup({ handleChange, data, fetchData }) {
 		}
 	}, [listAuthors, lastTag, inputDescription, inputNameGroup, listHashtags, listBookAdd, categoryIdBook]);
 
-	console.log(inputNameGroup === data.name);
 	useEffect(() => {
 		const hashtagElement = document.getElementById('hashtag');
 		const handleHashtag = e => {
@@ -409,193 +409,186 @@ function SettingsGroup({ handleChange, data, fetchData }) {
 		setCategoryIdBook(categoryIdArr);
 	}, [categoryAddedList]);
 
+	useEffect(() => {
+		window.scroll({
+			top: groupSettingContainer.current.offsetTop,
+			behavior: 'smooth',
+		});
+	}, []);
+
 	return (
-		<>
-			<div className='group-settings__container'>
-				<div className='group-settings__title'>
-					<button onClick={() => handleChange('tabs')}>
-						<BackArrow />
-					</button>
-					<h2>Cài đặt</h2>
+		<div className='group-settings__container' ref={groupSettingContainer}>
+			<div className='group-settings__title'>
+				<button onClick={() => handleChange('tabs')}>
+					<BackArrow />
+				</button>
+				<h2>Cài đặt</h2>
+			</div>
+			<hr />
+			<div className='group-settings__form'>
+				<div className='group-settings__title-content'>
+					<h3>Thiết lập nhóm</h3>
 				</div>
-				<hr />
-				<div className='group-settings__form'>
-					<div className='group-settings__title-content'>
-						<h3>Thiết lập nhóm</h3>
+				<div className='form-field-wrapper'>
+					<div className='form-field-name'>
+						<label>Tên nhóm</label>
+						<Input
+							inputRef={groupNameInput}
+							isBorder={false}
+							placeholder='Tên nhóm'
+							defaultValue={data.name}
+							handleChange={onInputChange(setInputNameGroup)}
+						/>
 					</div>
-					<div className='form-field-wrapper'>
-						<div className='form-field-name'>
-							<label>Tên nhóm</label>
-							<Input
-								inputRef={groupNameInput}
-								isBorder={false}
-								placeholder='Tên nhóm'
-								defaultValue={data.name}
-								handleChange={onInputChange(setInputNameGroup)}
-							/>
-						</div>
+					<div className='form-field-select__kind-of-group'>
+						<h4>
+							Kiểu nội dung:{' '}
+							{data.groupType === 'book' ? 'Sách' : data.groupType === 'author' ? 'Tác giả' : 'Chia sẻ'}
+						</h4>
+					</div>
+
+					{data.groupType === 'book' && (
 						<div className='form-field-select__kind-of-group'>
-							<h4>
-								Kiểu nội dung:{' '}
-								{data.groupType === 'book'
-									? 'Sách'
-									: data.groupType === 'author'
-									? 'Tác giả'
-									: 'Chia sẻ'}
-							</h4>
+							<label>Chủ đề sách</label>
+							<span className='form-field-authors__asterisk'>*</span>
+							<SelectBox
+								name='categoryBook'
+								list={listIdBook}
+								defaultOption={defaultCategoryOption}
+								onChangeOption={onchangeBookCategory}
+							/>
 						</div>
+					)}
 
-						{data.groupType === 'book' && (
-							<div className='form-field-select__kind-of-group'>
-								<label>Chủ đề sách</label>
-								<span className='form-field-authors__asterisk'>*</span>
-								<SelectBox
-									name='categoryBook'
-									list={listIdBook}
-									defaultOption={defaultCategoryOption}
-									onChangeOption={onchangeBookCategory}
-								/>
-							</div>
-						)}
-
-						{data.groupType !== 'book' && (
-							<div className='form-field-select__kind-of-group'>
-								<label>Chủ đề </label>
-								{data.groupType === 'author' ? (
-									''
-								) : (
-									<span className='form-field-authors__asterisk'>*</span>
-								)}
-								<AddAndSearchCategories
-									categoryAddedList={categoryAddedList}
-									categorySearchedList={categorySearchedList}
-									addCategory={addCategory}
-									removeCategory={removeCategory}
-									getDataFinish={getDataFinish}
-									searchCategory={searchCategory}
-									inputCategoryValue={inputCategoryValue}
-									categoryInputContainer={categoryInputContainer}
-									categoryInputWrapper={categoryInputWrapper}
-									categoryInput={categoryInput}
-									hasSearchIcon={true}
-									hasMoreEllipsis={hasMoreCategoriesEllipsis}
-									disableAutoFocus={true}
-								/>
-							</div>
-						)}
-
-						<div className='form-field-authors'>
-							<label>Tên tác giả</label>
-							{data.groupType === 'category' ? (
-								''
-							) : (
-								<span className='form-field-authors__asterisk'>*</span>
-							)}
+					{data.groupType !== 'book' && (
+						<div className='form-field-select__kind-of-group'>
+							<label>Chủ đề </label>
+							{data.groupType === 'author' ? '' : <span className='form-field-authors__asterisk'>*</span>}
 							<AddAndSearchCategories
-								categoryAddedList={authorAddedList}
-								categorySearchedList={authorSearchedList}
-								addCategory={addAuthor}
-								removeCategory={removeAuthor}
+								categoryAddedList={categoryAddedList}
+								categorySearchedList={categorySearchedList}
+								addCategory={addCategory}
+								removeCategory={removeCategory}
 								getDataFinish={getDataFinish}
-								searchCategory={searchAuthor}
-								inputCategoryValue={inputAuthorValue}
-								categoryInputContainer={authorInputContainer}
-								categoryInputWrapper={authorInputWrapper}
-								categoryInput={authorInput}
-								hasMoreEllipsis={hasMoreAuthorsEllipsis}
+								searchCategory={searchCategory}
+								inputCategoryValue={inputCategoryValue}
+								categoryInputContainer={categoryInputContainer}
+								categoryInputWrapper={categoryInputWrapper}
+								categoryInput={categoryInput}
+								hasSearchIcon={true}
+								hasMoreEllipsis={hasMoreCategoriesEllipsis}
 								disableAutoFocus={true}
 							/>
 						</div>
+					)}
 
-						<div className='form-field-authors'>
-							<label>Tên sách</label>
-							{data.groupType === 'category' || data.groupType === 'author' ? (
-								''
-							) : (
-								<span className='form-field-authors__asterisk'>*</span>
-							)}
-							<AddAndSearchCategories
-								categoryAddedList={bookAddedList}
-								categorySearchedList={bookSearchedList}
-								addCategory={addBook}
-								removeCategory={removeBook}
-								getDataFinish={getDataFinish}
-								searchCategory={searchBook}
-								inputCategoryValue={inputBookValue}
-								categoryInputContainer={bookInputContainer}
-								categoryInputWrapper={bookInputWrapper}
-								categoryInput={bookInput}
-								hasMoreEllipsis={hasMoreBooksEllipsis}
-								disableAutoFocus={true}
-							/>
-						</div>
+					<div className='form-field-authors'>
+						<label>Tên tác giả</label>
+						{data.groupType === 'category' ? '' : <span className='form-field-authors__asterisk'>*</span>}
+						<AddAndSearchCategories
+							categoryAddedList={authorAddedList}
+							categorySearchedList={authorSearchedList}
+							addCategory={addAuthor}
+							removeCategory={removeAuthor}
+							getDataFinish={getDataFinish}
+							searchCategory={searchAuthor}
+							inputCategoryValue={inputAuthorValue}
+							categoryInputContainer={authorInputContainer}
+							categoryInputWrapper={authorInputWrapper}
+							categoryInput={authorInput}
+							hasMoreEllipsis={hasMoreAuthorsEllipsis}
+							disableAutoFocus={true}
+						/>
+					</div>
 
-						<div className='form-field-description'>
-							<label style={{ marginTop: '0px', marginBottom: '23px' }}>Giới thiệu</label>
-							<span style={{ color: 'red', marginLeft: '4px' }}>*</span>
-							<textarea
-								ref={textArea}
-								className='form-field-textarea'
-								rows={10}
-								onChange={onInputChange(setInputDescription)}
-								defaultValue={data.description}
-							/>
-						</div>
+					<div className='form-field-authors'>
+						<label>Tên sách</label>
+						{data.groupType === 'category' || data.groupType === 'author' ? (
+							''
+						) : (
+							<span className='form-field-authors__asterisk'>*</span>
+						)}
+						<AddAndSearchCategories
+							categoryAddedList={bookAddedList}
+							categorySearchedList={bookSearchedList}
+							addCategory={addBook}
+							removeCategory={removeBook}
+							getDataFinish={getDataFinish}
+							searchCategory={searchBook}
+							inputCategoryValue={inputBookValue}
+							categoryInputContainer={bookInputContainer}
+							categoryInputWrapper={bookInputWrapper}
+							categoryInput={bookInput}
+							hasMoreEllipsis={hasMoreBooksEllipsis}
+							disableAutoFocus={true}
+						/>
+					</div>
 
-						<div className='form-field-hashtag'>
-							<label>Hashtags</label>
-							<span style={{ color: 'red', marginLeft: '4px' }}>*</span>
-							<div className='list__author-tags' onClick={() => inputRefHashtag.current.focus()}>
-								{listHashtags.length > 0 ? (
-									<div className='input__authors'>
-										{listHashtags.map((item, index) => (
-											<>
-												<span key={index}>
-													{item}
-													<button
-														className='close__author'
-														onClick={() => {
-															handleRemoveTag(item);
-														}}
-													>
-														<CloseIconX />
-													</button>
-												</span>
-											</>
-										))}
-										<div ref={hashtagInputWrapper} style={{ width: '8px' }}>
-											<input
-												id='hashtag'
-												className='add-and-search-categories__input'
-												onChange={onInputChange(setInputHashtag)}
-												ref={inputRefHashtag}
-											/>
-										</div>
+					<div className='form-field-description'>
+						<label style={{ marginTop: '0px', marginBottom: '23px' }}>Giới thiệu</label>
+						<span style={{ color: 'red', marginLeft: '4px' }}>*</span>
+						<textarea
+							ref={textArea}
+							className='form-field-textarea'
+							rows={10}
+							onChange={onInputChange(setInputDescription)}
+							defaultValue={data.description}
+						/>
+					</div>
+
+					<div className='form-field-hashtag'>
+						<label>Hashtags</label>
+						<span style={{ color: 'red', marginLeft: '4px' }}>*</span>
+						<div className='list__author-tags' onClick={() => inputRefHashtag.current.focus()}>
+							{listHashtags.length > 0 ? (
+								<div className='input__authors'>
+									{listHashtags.map((item, index) => (
+										<>
+											<span key={index}>
+												{item}
+												<button
+													className='close__author'
+													onClick={() => {
+														handleRemoveTag(item);
+													}}
+												>
+													<CloseIconX />
+												</button>
+											</span>
+										</>
+									))}
+									<div ref={hashtagInputWrapper} style={{ width: '8px' }}>
+										<input
+											id='hashtag'
+											className='add-and-search-categories__input'
+											onChange={onInputChange(setInputHashtag)}
+											ref={inputRefHashtag}
+										/>
 									</div>
-								) : (
-									<Input
-										id='hashtag'
-										isBorder={false}
-										placeholder='Nhập hashtag'
-										handleChange={onInputChange(setInputHashtag)}
-										inputRef={inputRefHashtag}
-									/>
-								)}
-							</div>
-
-							{show && !!inputHashtag ? (
-								<span style={{ color: '#e61b00' }}>Vui lòng nhập đúng định dạng</span>
+								</div>
 							) : (
-								''
+								<Input
+									id='hashtag'
+									isBorder={false}
+									placeholder='Nhập hashtag'
+									handleChange={onInputChange(setInputHashtag)}
+									inputRef={inputRefHashtag}
+								/>
 							)}
 						</div>
-						<div className={!isShowBtn ? 'disable-btn' : `form-button`} onClick={updateGroup}>
-							<button>Lưu thay đổi</button>
-						</div>
+
+						{show && !!inputHashtag ? (
+							<span style={{ color: '#e61b00' }}>Vui lòng nhập đúng định dạng</span>
+						) : (
+							''
+						)}
+					</div>
+					<div className={!isShowBtn ? 'disable-btn' : `form-button`} onClick={updateGroup}>
+						<button>Lưu thay đổi</button>
 					</div>
 				</div>
 			</div>
-		</>
+		</div>
 	);
 }
 
