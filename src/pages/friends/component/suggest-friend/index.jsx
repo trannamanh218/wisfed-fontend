@@ -4,7 +4,7 @@ import { useEffect, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { getTopUserAuth } from 'reducers/redux-utils/ranks';
+import { getTopUser } from 'reducers/redux-utils/ranks';
 import FriendsItem from 'shared/friends';
 
 const SuggestFriend = () => {
@@ -25,7 +25,7 @@ const SuggestFriend = () => {
 		};
 		try {
 			if (isAuth) {
-				const data = await dispatch(getTopUserAuth(params)).unwrap();
+				const data = await dispatch(getTopUser(params)).unwrap();
 				return data;
 			}
 		} catch (err) {
@@ -41,7 +41,7 @@ const SuggestFriend = () => {
 		};
 		try {
 			if (isAuth) {
-				const data = await dispatch(getTopUserAuth(params)).unwrap();
+				const data = await dispatch(getTopUser(params)).unwrap();
 				setListByCategory(data);
 				return data;
 			}

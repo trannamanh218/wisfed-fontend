@@ -341,7 +341,7 @@ const Header = () => {
 						'show': modalInforUser && localStorage.getItem('accessToken'),
 					})}
 				>
-					<Link to={localStorage.getItem('accessToken') && `/profile/${userInfo.id}`}>
+					<Link to={`/profile/${userInfo.id}`}>
 						<li>
 							<ProfileIcon />
 							&nbsp;Thông tin cá nhân
