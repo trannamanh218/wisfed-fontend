@@ -169,7 +169,6 @@ const PostShare = ({ postData, inCreatePost = false }) => {
 						}
 					/>
 				</Link>
-				{/*  */}
 				<div className='post__user-status__name-and-post-time-status'>
 					<div data-testid='post__user-name' className='post__user-status__name'>
 						<Link to={`/profile/${postData?.sharePost?.createdBy?.id || postData?.sharePost?.user?.id}`}>
