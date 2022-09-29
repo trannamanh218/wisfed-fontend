@@ -24,7 +24,7 @@ function SettingsGroup({ handleChange, data, fetchData }) {
 	const groupNameInput = useRef('');
 	const dispatch = useDispatch();
 
-	const [defaultCategoryOption, setDefaultCategoryOption] = useState({});
+	const [defaultCategoryOption, setDefaultCategoryOption] = useState({ value: 'default', title: 'Chọn chủ đề' });
 
 	const [inputNameGroup, setInputNameGroup] = useState(data.name);
 	const [inputDescription, setInputDescription] = useState(data.description);
@@ -304,9 +304,10 @@ function SettingsGroup({ handleChange, data, fetchData }) {
 		setBookAddedList(cloneArr4);
 
 		if (data.groupType === 'book') {
-			setDefaultCategoryOption(listIdBook.find(item => item.value === data.groupCategories[0].category.id));
-		} else {
-			setDefaultCategoryOption({ value: 'default', title: 'Chọn chủ đề' });
+			const obj = listIdBook.find(item => item.value === data.groupCategories[0]?.category?.id);
+			if (!_.isEmpty(obj)) {
+				setDefaultCategoryOption(obj);
+			}
 		}
 	}, []);
 
