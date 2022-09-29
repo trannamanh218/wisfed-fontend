@@ -21,7 +21,6 @@ import { ratingUser } from 'reducers/redux-utils/book';
 import UserAvatar from 'shared/user-avatar';
 import { updateCurrentBook, updateProgressReadingBook, createReviewBook } from 'reducers/redux-utils/book';
 import { STATUS_BOOK } from 'constants/index';
-import { usePrevious } from 'shared/hooks';
 import { addBookToDefaultLibrary, updateMyAllLibraryRedux } from 'reducers/redux-utils/library';
 import { setting } from './settings';
 import { NotificationError } from 'helpers/Error';
@@ -89,7 +88,6 @@ function CreatPostModalContent({
 	const [showUpload, setShowUpload] = useState(false);
 	const [imagesUpload, setImagesUpload] = useState([]);
 	const [validationInput, setValidationInput] = useState('');
-	const taggedDataPrevious = usePrevious(taggedData);
 	const [valueStar, setValueStar] = useState(0);
 	const [checkProgress, setCheckProgress] = useState();
 	const [showImagePopover, setShowImagePopover] = useState(false);
@@ -467,7 +465,6 @@ function CreatPostModalContent({
 	};
 
 	useEffect(() => {
-		checkActive();
 		if (!_.isEmpty(taggedData.addBook)) {
 			if (taggedData.addBook.status === 'read') {
 				setCheckProgress(taggedData.addBook.page);
@@ -475,7 +472,11 @@ function CreatPostModalContent({
 				setCheckProgress(parseInt(taggedData.addBook.progress));
 			}
 		}
-	}, [showMainModal, content, taggedData, imagesUpload]);
+	}, [taggedData]);
+
+	useEffect(() => {
+		checkActive();
+	}, [showMainModal, content, checkProgress, imagesUpload]);
 
 	const checkActive = () => {
 		let isActive = false;
@@ -507,16 +508,16 @@ function CreatPostModalContent({
 					}
 				}
 			}
-		} else if (!_.isEmpty(postDataShare) && content) {
-			isActive = true;
-		} else if (content && (taggedData.addAuthor.length || taggedData.addCategory.length || imagesUpload.length)) {
+		} else if (
+			content &&
+			(taggedData.addAuthor.length ||
+				taggedData.addCategory.length ||
+				imagesUpload.length ||
+				!_.isEmpty(postDataShare))
+		) {
 			isActive = true;
 		}
 		setButtonActive(isActive);
-	};
-
-	const handleValidationInput = value => {
-		setValidationInput(value);
 	};
 
 	const handleChangeStar = e => {
@@ -722,8 +723,6 @@ function CreatPostModalContent({
 									{!_.isEmpty(taggedData.addBook) && (
 										<PostEditBook
 											data={taggedData.addBook}
-											handleValidationInput={handleValidationInput}
-											validationInput={validationInput}
 											handleAddToPost={handleAddToPost}
 											handleChangeStar={handleChangeStar}
 											valueStar={valueStar}
@@ -815,8 +814,6 @@ function CreatPostModalContent({
 					taggedData={taggedData}
 					removeTaggedItem={removeTaggedItem}
 					images={imagesUpload}
-					taggedDataPrevious={taggedDataPrevious}
-					handleValidationInput={handleValidationInput}
 					userInfo={userInfo}
 				/>
 			</div>

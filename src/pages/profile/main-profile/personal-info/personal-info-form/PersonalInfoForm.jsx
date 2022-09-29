@@ -1,4 +1,4 @@
-import { Pencil } from 'components/svg';
+import { Pencil, CloseX } from 'components/svg';
 import { YEAR_LIMIT } from 'constants/index';
 import { useEffect, useState, useRef } from 'react';
 import Input from 'shared/input';
@@ -16,6 +16,7 @@ import SelectType from './select-type';
 import TextareaType from './textarea-type';
 import GroupType from './group-type';
 import { updateUserInfo } from 'reducers/redux-utils/auth';
+import { Modal } from 'react-bootstrap';
 
 const PersonalInfoForm = ({ userData, toggleModal }) => {
 	const [userFirstName, setUserFirstName] = useState(userData.firstName);
@@ -34,7 +35,6 @@ const PersonalInfoForm = ({ userData, toggleModal }) => {
 	const [userDescriptions, setUserDescriptions] = useState(userData.descriptions);
 	const [userSocialsMedia, setUserSocialsMedia] = useState(userData.socials || []);
 	const [editSocialsMedia, setEditSocialsMedia] = useState(false);
-	const [socialsMediaInputValue, setSocialsMediaInputValue] = useState('');
 	const [accessSubmit, setaccessSubmit] = useState(false);
 	const [fieldEditting, setFeildEditting] = useState('');
 	const [userHighSchool, setUserHighschool] = useState(userData.highSchool);
@@ -43,6 +43,7 @@ const PersonalInfoForm = ({ userData, toggleModal }) => {
 	const [editUniversity, setEditUniversity] = useState(false);
 	const [userInterest, setUserInterest] = useState(userData.interest);
 	const [editInterest, setEditInterest] = useState(false);
+	const [showModalDeleteSocialMedia, setShowModalDeleteSocialMedia] = useState(false);
 
 	const textareaRef = useRef(null);
 	const userFirstNameRef = useRef(null);
@@ -60,6 +61,7 @@ const PersonalInfoForm = ({ userData, toggleModal }) => {
 	const userUniversityRef = useRef(null);
 	const userInterestRef = useRef(null);
 	const favoriteCategoriesAddId = useRef([]);
+	const socialDeleteTempIndex = useRef(null);
 
 	const dispatch = useDispatch();
 	const currentYear = new Date().getFullYear();
@@ -159,8 +161,6 @@ const PersonalInfoForm = ({ userData, toggleModal }) => {
 			setUserDescriptions(e.target.value);
 			textareaRef.current.style.height = '96px';
 			textareaRef.current.style.height = textareaRef.current.scrollHeight + 'px';
-		} else if (option === 'edit-socials-media') {
-			setSocialsMediaInputValue(e.target.value);
 		} else if (option === 'edit-high-school') {
 			setUserHighschool(e.target.value);
 		} else if (option === 'edit-university') {
@@ -233,7 +233,6 @@ const PersonalInfoForm = ({ userData, toggleModal }) => {
 			setUserDescriptions(userData.descriptions);
 		} else if (option === 'cancel-edit-socials-media') {
 			setEditSocialsMedia(false);
-			setSocialsMediaInputValue('');
 		} else if (option === 'cancel-edit-high-school') {
 			setEditHighSchool(false);
 			setUserHighschool(userData.highSchool);
@@ -275,14 +274,23 @@ const PersonalInfoForm = ({ userData, toggleModal }) => {
 		}
 	};
 
-	const addSocialsMediaLink = () => {
-		if (socialsMediaInputValue) {
-			const socialsMediaArr = [...userSocialsMedia];
-			socialsMediaArr.push(socialsMediaInputValue);
-			setEditSocialsMedia(false);
-			setSocialsMediaInputValue('');
-			setUserSocialsMedia(socialsMediaArr);
-		}
+	const addSocialsMediaLink = newLinkSocialMedia => {
+		const socialsMediaArr = [...userSocialsMedia];
+		socialsMediaArr.push(newLinkSocialMedia);
+		setEditSocialsMedia(false);
+		setUserSocialsMedia(socialsMediaArr);
+	};
+
+	const deleteSocialsMediaLink = index => {
+		socialDeleteTempIndex.current = index;
+		setShowModalDeleteSocialMedia(true);
+	};
+
+	const handleDeleteSocialMedia = () => {
+		const cloneArr = [...userSocialsMedia];
+		cloneArr.splice(socialDeleteTempIndex.current, 1);
+		setUserSocialsMedia(cloneArr);
+		setShowModalDeleteSocialMedia(false);
 	};
 
 	useEffect(() => {
@@ -489,16 +497,39 @@ const PersonalInfoForm = ({ userData, toggleModal }) => {
 
 			<GroupType
 				dataArray={userSocialsMedia}
-				intialDataArray={userData.socials}
-				socialsMediaInputValue={socialsMediaInputValue}
-				updateInputValue={updateInputValue}
 				userSocialsMediaRef={userSocialsMediaRef}
 				editStatus={editSocialsMedia}
 				cancelEdit={cancelEdit}
 				enableEdit={enableEdit}
 				addSocialsMediaLink={addSocialsMediaLink}
-				setUserSocialsMedia={setUserSocialsMedia}
+				deleteSocialsMediaLink={deleteSocialsMediaLink}
 			/>
+
+			{showModalDeleteSocialMedia && (
+				<div className='modal-delete-social-container'>
+					<Modal
+						className='modal-delete-social'
+						show={showModalDeleteSocialMedia}
+						onHide={() => setShowModalDeleteSocialMedia(false)}
+						keyboard={false}
+						centered
+					>
+						<CloseX className='btn-closeX' onClick={() => setShowModalDeleteSocialMedia(false)} />
+						<Modal.Body>
+							<p className='mb-4'>Bạn có muốn xóa URL mạng xã hội này không</p>
+							<button
+								className='btn modal-delete-social__del-btn btn-danger'
+								onClick={handleDeleteSocialMedia}
+							>
+								Xóa
+							</button>
+							<button className='btn-cancel' onClick={() => setShowModalDeleteSocialMedia(false)}>
+								Không
+							</button>
+						</Modal.Body>
+					</Modal>
+				</div>
+			)}
 
 			<div className='personal-info-form__btn__container'>
 				<button
@@ -513,6 +544,11 @@ const PersonalInfoForm = ({ userData, toggleModal }) => {
 	);
 };
 
-PersonalInfoForm.propTypes = { userData: PropTypes.object };
+PersonalInfoForm.defaultProps = {
+	userData: {},
+	toggleModal: () => {},
+};
+
+PersonalInfoForm.propTypes = { userData: PropTypes.object, toggleModal: PropTypes.func };
 
 export default PersonalInfoForm;

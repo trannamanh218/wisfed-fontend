@@ -1,23 +1,21 @@
 // import ShareModeDropdown from 'shared/share-mode-dropdown';
 import PropTypes from 'prop-types';
 import Input from 'shared/input';
-import { Add, Pencil, TrashIcon, UndoIcon } from 'components/svg';
+import { Add, TrashIcon } from 'components/svg';
 import _ from 'lodash';
 import { useState } from 'react';
+import classNames from 'classnames';
 
 function GroupType({
 	dataArray,
-	intialDataArray,
-	socialsMediaInputValue,
-	updateInputValue,
 	userSocialsMediaRef,
 	editStatus,
 	cancelEdit,
 	enableEdit,
 	addSocialsMediaLink,
-	setUserSocialsMedia,
+	deleteSocialsMediaLink,
 }) {
-	const [isEditting, setIsEditting] = useState(false);
+	const [inputValue, setInputValue] = useState('');
 
 	const renderAddSocialsMediaLink = () => {
 		return (
@@ -26,12 +24,17 @@ function GroupType({
 					<Input
 						isBorder={true}
 						placeholder='Nhập link'
-						value={socialsMediaInputValue}
-						handleChange={e => updateInputValue(e, 'edit-socials-media')}
+						value={inputValue}
+						handleChange={e => setInputValue(e.target.value)}
 						inputRef={userSocialsMediaRef}
 					/>
 				</div>
-				<div className='form-field__btn save' onClick={addSocialsMediaLink}>
+				<div
+					className={classNames('form-field__btn save', {
+						'disabled': !inputValue.trim().length,
+					})}
+					onClick={handleAddSocialsMediaLink}
+				>
 					Lưu
 				</div>
 				<div className='form-field__btn cancel' onClick={() => cancelEdit('cancel-edit-socials-media')}>
@@ -41,117 +44,54 @@ function GroupType({
 		);
 	};
 
-	const updateText = (e, index) => {
-		const cloneArr = [...dataArray];
-		cloneArr[index] = e.target.value;
-		setUserSocialsMedia(cloneArr);
-	};
-
-	const updateItem = e => {
-		if (e.keyCode == 13) {
-			setIsEditting(false);
+	const handleAddSocialsMediaLink = () => {
+		if (inputValue.trim().length) {
+			setInputValue('');
+			addSocialsMediaLink(inputValue);
 		}
-	};
-
-	const deleteItem = index => {
-		const cloneArr = [...dataArray];
-		cloneArr.splice(index, 1);
-		setUserSocialsMedia(cloneArr);
 	};
 
 	return (
 		<div className='form-field-group'>
 			<label
 				className='form-field-label'
-				style={{ display: 'flex', flexDirection: 'row', gap: '10px', alignItems: 'flex-end' }}
+				style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
 			>
 				<span>URL Mạng xã hội khác</span>
 				{/* <ShareModeDropdown /> */}
-				{!editStatus && (
-					<div style={{ display: 'flex', flexDirection: 'row', gap: '5px' }}>
-						<div className='btn-icon' onClick={() => enableEdit('socials-editting')}>
-							<Add />
-						</div>
-						<div className='btn-icon' onClick={() => setIsEditting(true)}>
-							<Pencil />
-						</div>
-					</div>
-				)}
+				<div
+					className={classNames('btn-icon', { 'hidden': editStatus })}
+					onClick={() => enableEdit('socials-editting')}
+				>
+					<Add />
+				</div>
 			</label>
 
 			{!_.isEmpty(dataArray) ? (
 				<>
-					{!isEditting ? (
-						<>
-							{dataArray.map((item, index) => (
-								<div className='form-field-wrapper socials-link' key={index}>
-									<div className='form-field'>
-										<div className='form-field-filled'>{item}</div>
-									</div>
-								</div>
-							))}
-							{editStatus && renderAddSocialsMediaLink()}
-						</>
-					) : (
-						<>
-							{dataArray.map((item, index) => (
-								<div className='form-field-wrapper socials-link' key={index}>
-									<div className='form-field'>
-										<input
-											className='form-field-filled editting'
-											value={item}
-											onChange={e => updateText(e, index)}
-											onKeyDown={e => updateItem(e)}
-										></input>
-									</div>
-									<div
-										className='btn-icon'
-										onClick={() => {
-											deleteItem(index);
-										}}
-									>
-										<TrashIcon />
-									</div>
-								</div>
-							))}
-							<div style={{ display: 'flex', justifyContent: 'end', gap: '10px' }}>
-								<div
-									className='form-field__btn save'
-									onClick={() => setUserSocialsMedia(intialDataArray)}
-								>
-									Khôi phục
-								</div>
-								<div className='form-field__btn cancel' onClick={() => setIsEditting(false)}>
-									Thoát
-								</div>
+					{dataArray.map((item, index) => (
+						<div className='form-field-wrapper socials-link' key={index}>
+							<div className='form-field'>
+								<div className='form-field-filled'>{item}</div>
 							</div>
-						</>
-					)}
+							<div
+								className='btn-icon'
+								onClick={() => {
+									deleteSocialsMediaLink(index);
+								}}
+							>
+								<TrashIcon />
+							</div>
+						</div>
+					))}
+					{editStatus && renderAddSocialsMediaLink()}
 				</>
 			) : (
 				<>
 					{editStatus ? (
 						renderAddSocialsMediaLink()
 					) : (
-						<div className='form-field-wrapper'>
-							<div className='form-field'>
-								<div className='form-field__no-data'>Chưa có dữ liệu</div>
-							</div>
-							{intialDataArray.length > 0 && !dataArray.length ? (
-								<div
-									className='form-field__btn save'
-									style={{ width: '110px' }}
-									onClick={() => setUserSocialsMedia(intialDataArray)}
-								>
-									Khôi phục
-								</div>
-							) : (
-								''
-							)}
-							<div className='btn-icon' onClick={() => enableEdit('socials-editting')}>
-								<Add />
-							</div>
-						</div>
+						<div className='form-field__no-data'>Chưa có dữ liệu</div>
 					)}
 				</>
 			)}
@@ -159,15 +99,24 @@ function GroupType({
 	);
 }
 
+GroupType.defaultProps = {
+	dataArray: [],
+	userSocialsMediaRef: {},
+	editStatus: false,
+	cancelEdit: () => {},
+	enableEdit: () => {},
+	addSocialsMediaLink: () => {},
+	deleteSocialsMediaLink: () => {},
+};
+
 GroupType.propTypes = {
 	dataArray: PropTypes.array,
-	socialsMediaInputValue: PropTypes.string,
-	updateInputValue: PropTypes.func,
 	userSocialsMediaRef: PropTypes.object,
 	editStatus: PropTypes.bool,
 	cancelEdit: PropTypes.func,
 	enableEdit: PropTypes.func,
 	addSocialsMediaLink: PropTypes.func,
+	deleteSocialsMediaLink: PropTypes.func,
 };
 
 export default GroupType;

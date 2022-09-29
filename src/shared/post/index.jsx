@@ -482,7 +482,7 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 						<li
 							key={item.id}
 							className={classNames('badge bg-primary-light')}
-							onClick={() => navigate(`/category/detail/${item.id}/slug`)}
+							onClick={() => navigate(`/category/detail/${item.categoryId}`)}
 						>
 							<span>{item.category.name}</span>
 						</li>

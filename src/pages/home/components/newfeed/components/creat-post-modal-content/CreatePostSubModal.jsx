@@ -7,27 +7,22 @@ import SuggestSection from './SuggestSection';
 import TaggedList from './TaggedList';
 import './style.scss';
 import { useDispatch } from 'react-redux';
-import { checkBookInLibraries } from 'reducers/redux-utils/library';
 import { getSuggestionForPost } from 'reducers/redux-utils/activity';
 import { useState } from 'react';
 import { NotificationError } from 'helpers/Error';
 import LoadingIndicator from 'shared/loading-indicator';
 import { getFilterSearch } from 'reducers/redux-utils/search';
 
-function CreatPostSubModal(props) {
-	const {
-		option,
-		backToMainModal,
-		deleteImage,
-		handleAddToPost,
-		taggedData,
-		removeTaggedItem,
-		images,
-		taggedDataPrevious,
-		handleValidationInput,
-		userInfo,
-	} = props;
-
+function CreatPostSubModal({
+	option,
+	backToMainModal,
+	deleteImage,
+	handleAddToPost,
+	taggedData,
+	removeTaggedItem,
+	images,
+	userInfo,
+}) {
 	const [suggestionData, setSuggestionData] = useState([]);
 	const [isFetchingSuggestions, setIsFetchingSuggestions] = useState(true);
 
@@ -178,14 +173,9 @@ CreatPostSubModal.propTypes = {
 	backToMainModal: PropTypes.func,
 	images: PropTypes.array,
 	deleteImage: PropTypes.func,
-	suggestionData: PropTypes.array,
-	fetchSuggestion: PropTypes.func,
 	handleAddToPost: PropTypes.func.isRequired,
 	taggedData: PropTypes.object,
 	removeTaggedItem: PropTypes.func,
-	addOptionsToPost: PropTypes.func,
-	taggedDataPrevious: PropTypes.object,
-	handleValidationInput: PropTypes.func,
 	userInfo: PropTypes.object,
 };
 
