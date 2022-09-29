@@ -40,7 +40,7 @@ function ChooseTopic() {
 			const params = {
 				favoriteCategory: addFavorite,
 			};
-			await dispatch(editUserInfo({ userId: userInfo.id, params: params }));
+			await dispatch(editUserInfo(params)).unwrap();
 		} catch (err) {
 			NotificationError(err);
 		} finally {

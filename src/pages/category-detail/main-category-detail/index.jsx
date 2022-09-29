@@ -166,7 +166,7 @@ const MainCategoryDetail = () => {
 					const params = {
 						favoriteCategory: favoriteCategoryList,
 					};
-					await dispatch(editUserInfo({ userId: userInfo.id, params: params })).unwrap();
+					await dispatch(editUserInfo(params)).unwrap();
 				} catch (err) {
 					NotificationError(err);
 				}

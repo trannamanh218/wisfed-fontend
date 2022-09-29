@@ -137,22 +137,9 @@ export const CancelFriendRequest = createAsyncThunk('user/makeFriendRequest', as
 	}
 });
 
-// Dùng cho admin
-export const editUserInfo = createAsyncThunk('user/edit user info', async (data, { rejectWithValue }) => {
+export const editUserInfo = createAsyncThunk('user/edit user info', async (params, { rejectWithValue }) => {
 	try {
-		const { userId, params } = data;
-		const response = await Request.makePatch(userDetailAPI(userId), params);
-		return response.data;
-	} catch (err) {
-		const error = JSON.parse(err.response);
-		return rejectWithValue(error);
-	}
-});
-
-// Tự update
-export const editUserInfoMyself = createAsyncThunk('user/edit user info', async (data, { rejectWithValue }) => {
-	try {
-		const response = await Request.makePatch(userUpdateAPI, data);
+		const response = await Request.makePatch(userUpdateAPI, params);
 		return response.data;
 	} catch (err) {
 		const error = JSON.parse(err.response);
