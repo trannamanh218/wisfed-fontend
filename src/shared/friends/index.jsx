@@ -236,21 +236,20 @@ const FriendsItem = ({ data, keyTabs, getListFollower, getMyListFriendReq, getLi
 				<Link to={`/profile/${data.userTwo?.id}`}>
 					<img
 						className='myfriends__layout__img'
-						src={data.userTwo?.avatarImage ? data.userTwo.avatarImage : defaultAvatar}
+						src={data.userTwo?.avatarImage || data?.avatarImage || defaultAvatar}
 						alt=''
 						onError={e => e.target.setAttribute('src', `${defaultAvatar}`)}
 					/>
 
 					<div className='myfriends__star'>
 						<div className='myfriends__star__name'>
-							{data.userTwo?.fullName ? (
-								data.userTwo?.fullName
-							) : (
-								<>
-									<span>{data.userTwo?.firstName}</span>&nbsp;
-									<span>{data.userTwo?.lastName}</span>
-								</>
-							)}
+							{data.userTwo?.fullName
+								? data.userTwo?.fullName
+								: // <>
+								  // 	<span>{data.userTwo?.firstName}</span>&nbsp;
+								  // 	<span>{data.userTwo?.lastName}</span>
+								  // </>
+								  data.fullName}
 						</div>
 						{data.isStar && <Subtract />}
 					</div>
