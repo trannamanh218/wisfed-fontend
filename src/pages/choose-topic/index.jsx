@@ -4,7 +4,7 @@ import Logo from 'assets/images/Logo 2.png';
 import { Form } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { getCategoryList } from 'reducers/redux-utils/category';
-import { editUserInfo } from 'reducers/redux-utils/user';
+import { editUserInfoMyself } from 'reducers/redux-utils/user';
 import { useNavigate } from 'react-router-dom';
 import SearchIcon from 'assets/icons/search.svg';
 import SearchCategoryChooseTopic from './searchCateChooseTopic';
@@ -40,7 +40,7 @@ function ChooseTopic() {
 			const params = {
 				favoriteCategory: addFavorite,
 			};
-			await dispatch(editUserInfo({ userId: userInfo.id, params: params }));
+			await dispatch(editUserInfoMyself(params));
 		} catch (err) {
 			NotificationError(err);
 		} finally {

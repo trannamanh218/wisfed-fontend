@@ -17,7 +17,7 @@ import ModalFriend from './modal-friend';
 import { useSelector, useDispatch } from 'react-redux';
 import { uploadImage } from 'reducers/redux-utils/common';
 import _ from 'lodash';
-import { editUserInfo } from 'reducers/redux-utils/user';
+import { editUserInfoMyself } from 'reducers/redux-utils/user';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import backgroundImageDefault from 'assets/images/background-profile.png';
@@ -61,8 +61,7 @@ const PersonalInfo = ({ currentUserInfo, setCurrentTab }) => {
 				} else {
 					params = { avatarImage: imageUploadedData.streamPath };
 				}
-				const data = { userId: currentUserInfo.id, params: params };
-				const changeUserImage = await dispatch(editUserInfo(data)).unwrap();
+				const changeUserImage = await dispatch(editUserInfoMyself(params)).unwrap();
 				dispatch(updateUserInfo(changeUserImage));
 				if (!_.isEmpty(changeUserImage)) {
 					const customId = 'custom-id-PersonalInfo-handleDrop-success';

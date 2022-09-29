@@ -16,7 +16,7 @@ import PropTypes from 'prop-types';
 import { Modal, ModalBody } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-import { editUserInfo } from 'reducers/redux-utils/user';
+import { editUserInfoMyself } from 'reducers/redux-utils/user';
 import { NotificationError } from 'helpers/Error';
 import { getListBookByCategory, getPostsByCategory } from 'reducers/redux-utils/category';
 import caretIcon from 'assets/images/caret.png';
@@ -166,7 +166,7 @@ const MainCategoryDetail = () => {
 					const params = {
 						favoriteCategory: favoriteCategoryList,
 					};
-					await dispatch(editUserInfo({ userId: userInfo.id, params: params })).unwrap();
+					await dispatch(editUserInfoMyself(params)).unwrap();
 				} catch (err) {
 					NotificationError(err);
 				}
