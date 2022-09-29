@@ -122,7 +122,7 @@ const PostShare = ({ postData, inCreatePost = false }) => {
 
 	useEffect(() => {
 		if (
-			!_.isEmpty(postData.sharePost.preview) &&
+			!_.isEmpty(postData.sharePost?.preview) &&
 			postData.sharePost.preview.url.includes('https://www.youtube.com/')
 		) {
 			const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
@@ -158,28 +158,26 @@ const PostShare = ({ postData, inCreatePost = false }) => {
 	return (
 		<div className='post__container'>
 			<div className='post__user-status'>
-				<Link to={`/profile/${postData.sharePost.createdBy.id}`}>
+				<Link to={`/profile/${postData?.sharePost?.createdBy?.id}`}>
 					<UserAvatar
 						data-testid='post__user-avatar'
 						className='post__user-status__avatar'
 						source={
-							postData.sharePost.user
-								? postData.sharePost?.user?.avatarImage
-								: postData.sharePost?.createdBy?.avatarImage
+							postData?.sharePost?.user
+								? postData?.sharePost?.user?.avatarImage
+								: postData?.sharePost?.createdBy?.avatarImage
 						}
 					/>
 				</Link>
 				{/*  */}
 				<div className='post__user-status__name-and-post-time-status'>
 					<div data-testid='post__user-name' className='post__user-status__name'>
-						<Link to={`/profile/${postData.sharePost.createdBy.id || postData.sharePost.user.id}`}>
-							{postData.sharePost.user
-								? postData.sharePost?.user?.fullName ||
-								  postData.sharePost.user.firstName + ' ' + postData.sharePost.user.lastName
-								: postData.sharePost?.createdBy.fullName ||
-								  postData.sharePost?.createdBy.firstName +
-										' ' +
-										postData.sharePost?.createdBy.lastName}
+						<Link to={`/profile/${postData?.sharePost?.createdBy?.id || postData?.sharePost?.user?.id}`}>
+							{postData?.sharePost?.user
+								? postData?.sharePost?.user?.fullName ||
+								  postData?.sharePost?.user?.firstName + ' ' + postData?.sharePost?.user?.lastName
+								: postData?.sharePost?.createdBy?.fullName ||
+								  postData?.sharePost?.createdBy?.firstName + postData?.sharePost?.createdBy?.lastName}
 						</Link>
 						{/* tagged people */}
 						{postData.sharePost?.mentionsUsers &&
@@ -208,7 +206,7 @@ const PostShare = ({ postData, inCreatePost = false }) => {
 							)}
 						</span>
 						<>
-							{postData.sharePost.book && (
+							{postData.sharePost?.book && (
 								<div className='post__user-status__subtitle'>
 									<span>Cập nhật tiến độ đọc sách</span>
 									<div className='post__user-status__post-time-status__online-dot'></div>
@@ -227,7 +225,7 @@ const PostShare = ({ postData, inCreatePost = false }) => {
 					</div>
 				</div>
 			</div>
-			{postData.sharePost.message && (
+			{postData.sharePost?.message && (
 				<div
 					className='post__description'
 					dangerouslySetInnerHTML={{
@@ -236,7 +234,7 @@ const PostShare = ({ postData, inCreatePost = false }) => {
 				></div>
 			)}
 			<ul className='tagged'>
-				{postData.sharePost.mentionsAuthors?.map(item => (
+				{postData.sharePost?.mentionsAuthors?.map(item => (
 					<li key={item.id} className={classNames('badge bg-primary-light')}>
 						<Feather />
 						<span>
@@ -251,7 +249,7 @@ const PostShare = ({ postData, inCreatePost = false }) => {
 			</ul>
 
 			<ul className='tagged'>
-				{postData.sharePost.mentionsCategories?.map(item => (
+				{postData.sharePost?.mentionsCategories?.map(item => (
 					<li key={item.id} className={classNames('badge bg-primary-light')}>
 						<span>
 							{item.category.name ||
@@ -263,7 +261,7 @@ const PostShare = ({ postData, inCreatePost = false }) => {
 					</li>
 				))}
 			</ul>
-			{postData.sharePost.book && (
+			{postData.sharePost?.book && (
 				<PostBook
 					data={{
 						...postData.sharePost.book,
@@ -274,11 +272,11 @@ const PostShare = ({ postData, inCreatePost = false }) => {
 				/>
 			)}
 
-			{postData.sharePost.image?.length > 0 && (
+			{postData.sharePost?.image?.length > 0 && (
 				<GridImage images={postData.sharePost.image} inPost={true} postId={postData?.id} />
 			)}
 
-			{postData.sharePost.image?.length === 0 &&
+			{postData.sharePost?.image?.length === 0 &&
 				!_.isEmpty(postData.sharePost.preview) &&
 				_.isEmpty(postData.sharePost.book) && (
 					<>

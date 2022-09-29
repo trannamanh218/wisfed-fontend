@@ -458,7 +458,11 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 			{!!postData?.mentionsAuthors?.length && (
 				<ul className='tagged'>
 					{postData.mentionsAuthors?.map(item => (
-						<li key={item.id} className={classNames('badge bg-primary-light')}>
+						<li
+							key={item.id}
+							className={classNames('badge bg-primary-light')}
+							onClick={() => navigate(`/profile/${item.id}`)}
+						>
 							<Feather />
 							<span>
 								{item.authors.name ||
@@ -475,7 +479,11 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 			{!!postData?.mentionsCategories?.length && (
 				<ul className='tagged'>
 					{postData.mentionsCategories?.map(item => (
-						<li key={item.id} className={classNames('badge bg-primary-light')}>
+						<li
+							key={item.id}
+							className={classNames('badge bg-primary-light')}
+							onClick={() => navigate(`/category/detail/${item.categoryId}`)}
+						>
 							<span>{item.category.name}</span>
 						</li>
 					))}

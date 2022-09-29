@@ -10,14 +10,7 @@ import { getRatingBook } from 'reducers/redux-utils/book';
 import { NotificationError } from 'helpers/Error';
 import _ from 'lodash';
 
-const PostEditBook = ({
-	data,
-	handleValidationInput,
-	validationInput,
-	handleAddToPost,
-	handleChangeStar,
-	valueStar,
-}) => {
+const PostEditBook = ({ data, handleAddToPost, handleChangeStar, valueStar }) => {
 	const [listRatingStar, setListRatingStar] = useState(null);
 	const [showText, setShowText] = useState(true);
 	const inputRef = useRef(null);
@@ -62,15 +55,11 @@ const PostEditBook = ({
 		} else {
 			setShowText(true);
 		}
-		let message = '';
 		if (value > data.page) {
 			handleAddToPost({ ...data, progress: data.page });
-		} else if (value < 0) {
-			message = 'Số trang không được bé hơn 0';
 		} else {
 			handleAddToPost({ ...data, progress: value });
 		}
-		handleValidationInput(message);
 	};
 
 	const generateAuthorName = authorsInfo => {
@@ -106,14 +95,14 @@ const PostEditBook = ({
 									autoFocus
 									name='progress'
 									type='number'
+									onWheel={e => e.target.blur()}
 								/>
 							)}
 							<span>/{data.page}</span>
-							{(data.status === STATUS_BOOK.reading || data.status === undefined) && showText && (
+							{(data.status === STATUS_BOOK.reading || !data.status) && showText && (
 								<span className='post-edit-book__message'>Nhập số trang sách đã đọc</span>
 							)}
 						</div>
-						<small className='post-edit-book__message'>{validationInput}</small>
 					</div>
 				</div>
 				{(data.status === STATUS_BOOK.read || data.progress == data.page) && (
@@ -145,8 +134,6 @@ const PostEditBook = ({
 
 PostEditBook.propTypes = {
 	data: PropTypes.object,
-	handleValidationInput: PropTypes.func,
-	validationInput: PropTypes.string,
 	handleAddToPost: PropTypes.func,
 	handleChangeStar: PropTypes.func,
 	valueStar: PropTypes.number,

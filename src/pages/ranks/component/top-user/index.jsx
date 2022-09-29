@@ -8,7 +8,7 @@ import TopRanks from 'shared/top-ranks';
 import PropTypes from 'prop-types';
 import { NotificationError } from 'helpers/Error';
 import { useDispatch, useSelector } from 'react-redux';
-import { getTopUser, getTopUserAuth } from 'reducers/redux-utils/ranks';
+import { getTopUser } from 'reducers/redux-utils/ranks';
 import dropdownIcon from 'assets/images/dropdown.png';
 import ModalCheckLogin from 'shared/modal-check-login';
 import Storage from 'helpers/Storage';
@@ -54,13 +54,8 @@ const TopUser = ({ rows, listYear, tabSelected }) => {
 		}
 
 		try {
-			if (isAuth === false) {
-				const topUser = await dispatch(getTopUser(params)).unwrap();
-				setGetListTopBooks(topUser);
-			} else {
-				const topUser = await dispatch(getTopUserAuth(params)).unwrap();
-				setGetListTopBooks(topUser);
-			}
+			const topUser = await dispatch(getTopUser(params)).unwrap();
+			setGetListTopBooks(topUser);
 		} catch (err) {
 			NotificationError(err);
 		}
