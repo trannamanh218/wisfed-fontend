@@ -438,6 +438,7 @@ function SettingsGroup({ handleChange, data, fetchData }) {
 							placeholder='Tên nhóm'
 							defaultValue={data.name}
 							handleChange={onInputChange(setInputNameGroup)}
+							autoFocus
 						/>
 					</div>
 					<div className='form-field-select__kind-of-group'>
@@ -477,7 +478,6 @@ function SettingsGroup({ handleChange, data, fetchData }) {
 								categoryInput={categoryInput}
 								hasSearchIcon={true}
 								hasMoreEllipsis={hasMoreCategoriesEllipsis}
-								disableAutoFocus={true}
 							/>
 						</div>
 					)}
@@ -497,7 +497,7 @@ function SettingsGroup({ handleChange, data, fetchData }) {
 							categoryInputWrapper={authorInputWrapper}
 							categoryInput={authorInput}
 							hasMoreEllipsis={hasMoreAuthorsEllipsis}
-							disableAutoFocus={true}
+							placeholder={'Tìm kiếm và thêm tác giả'}
 						/>
 					</div>
 
@@ -520,7 +520,7 @@ function SettingsGroup({ handleChange, data, fetchData }) {
 							categoryInputWrapper={bookInputWrapper}
 							categoryInput={bookInput}
 							hasMoreEllipsis={hasMoreBooksEllipsis}
-							disableAutoFocus={true}
+							placeholder={'Tìm kiếm và thêm sách'}
 						/>
 					</div>
 

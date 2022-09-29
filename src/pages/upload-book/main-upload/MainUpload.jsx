@@ -209,12 +209,6 @@ export default function MainUpload() {
 		return imageUploadedData?.streamPath;
 	};
 
-	useEffect(() => {
-		if (image && image.length === 0) {
-			toast.warning('Chỉ được chọn ảnh PNG, JPG, hoặc JPEG');
-		}
-	}, [image]);
-
 	return (
 		<Suspense fallback={<Circle />}>
 			<div className='group-btn-back'>
@@ -229,11 +223,7 @@ export default function MainUpload() {
 			</div>
 			<div className='upload-book-form'>
 				<div className={`upload-image__wrapper ${image ? 'has-image' : ''}`}>
-					<Dropzone
-						onDrop={acceptedFiles => setImage(acceptedFiles)}
-						multiple={false}
-						accept={['image/jpg', 'image/jpeg', 'image/png']}
-					>
+					<Dropzone onDrop={acceptedFiles => setImage(acceptedFiles)} multiple={false}>
 						{({ getRootProps, getInputProps }) => (
 							<div {...getRootProps()}>
 								{image && image.length > 0 ? (
