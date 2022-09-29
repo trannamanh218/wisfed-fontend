@@ -210,7 +210,7 @@ export default function MainUpload() {
 
 	useEffect(() => {
 		if (image && image.length === 0) {
-			toast.warning('Không đúng định dạng ảnh');
+			toast.warning('Chỉ được chọn ảnh PNG, JPG, hoặc JPEG');
 		}
 	}, [image]);
 
@@ -231,7 +231,7 @@ export default function MainUpload() {
 					<Dropzone
 						onDrop={acceptedFiles => setImage(acceptedFiles)}
 						multiple={false}
-						accept={['image/jpg', 'image/jpeg', 'image/png', 'image/gif']}
+						accept={['image/jpg', 'image/jpeg', 'image/png']}
 					>
 						{({ getRootProps, getInputProps }) => (
 							<div {...getRootProps()}>
