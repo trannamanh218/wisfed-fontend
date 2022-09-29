@@ -32,7 +32,7 @@ export default function MainUpload() {
 	const dispatch = useDispatch();
 	const { userInfoJwt } = useSelector(state => state.auth);
 
-	const [image, setImage] = useState('');
+	const [image, setImage] = useState(null);
 	const [categoryAddedList, setCategoryAddedList] = useState([]);
 	const [authors, setAuthors] = useState([]);
 	const [translators, setTranslators] = useState([]);
@@ -188,6 +188,7 @@ export default function MainUpload() {
 	useEffect(() => {
 		if (
 			!image ||
+			(image && image.length === 0) ||
 			!name ||
 			authors.length === 0 ||
 			categoryAddedList.length === 0 ||
@@ -208,6 +209,12 @@ export default function MainUpload() {
 		return imageUploadedData?.streamPath;
 	};
 
+	useEffect(() => {
+		if (image && image.length === 0) {
+			toast.warning('Chỉ được chọn ảnh PNG, JPG, hoặc JPEG');
+		}
+	}, [image]);
+
 	return (
 		<Suspense fallback={<Circle />}>
 			<div className='group-btn-back'>
@@ -225,14 +232,14 @@ export default function MainUpload() {
 					<Dropzone
 						onDrop={acceptedFiles => setImage(acceptedFiles)}
 						multiple={false}
-						accept={{ 'image/png': ['.png', '.gif', '.jpeg', '.jpg'] }}
+						accept={['image/jpg', 'image/jpeg', 'image/png']}
 					>
-						{({ getRootProps, getInputProps, open }) => (
-							<>
-								{image ? (
-									<img src={URL.createObjectURL(image[0])} alt='img' onClick={open} />
+						{({ getRootProps, getInputProps }) => (
+							<div {...getRootProps()}>
+								{image && image.length > 0 ? (
+									<img src={URL.createObjectURL(image[0])} alt='img' />
 								) : (
-									<div {...getRootProps()}>
+									<>
 										<input {...getInputProps()} />
 										<div className='dropzone upload-image'>
 											<div className='upload-image__wrapper__icon'>
@@ -245,9 +252,9 @@ export default function MainUpload() {
 											</p>
 											<span style={{ fontWeight: 500, marginTop: '5px' }}>(hoặc kéo thả)</span>
 										</div>
-									</div>
+									</>
 								)}
-							</>
+							</div>
 						)}
 					</Dropzone>
 				</div>
