@@ -169,7 +169,6 @@ const PostShare = ({ postData, inCreatePost = false }) => {
 						}
 					/>
 				</Link>
-				{/*  */}
 				<div className='post__user-status__name-and-post-time-status'>
 					<div data-testid='post__user-name' className='post__user-status__name'>
 						<Link to={`/profile/${postData?.sharePost?.createdBy?.id || postData?.sharePost?.user?.id}`}>
@@ -235,7 +234,11 @@ const PostShare = ({ postData, inCreatePost = false }) => {
 			)}
 			<ul className='tagged'>
 				{postData.sharePost?.mentionsAuthors?.map(item => (
-					<li key={item.id} className={classNames('badge bg-primary-light')}>
+					<li
+						key={item.id}
+						className={classNames('badge bg-primary-light')}
+						onClick={() => navigate(`/profile/${item.authorId}`)}
+					>
 						<Feather />
 						<span>
 							{item.authors.name ||
@@ -250,7 +253,11 @@ const PostShare = ({ postData, inCreatePost = false }) => {
 
 			<ul className='tagged'>
 				{postData.sharePost?.mentionsCategories?.map(item => (
-					<li key={item.id} className={classNames('badge bg-primary-light')}>
+					<li
+						key={item.id}
+						className={classNames('badge bg-primary-light')}
+						onClick={() => navigate(`/category/detail/${item.categoryId}`)}
+					>
 						<span>
 							{item.category.name ||
 								item.category?.fullName ||

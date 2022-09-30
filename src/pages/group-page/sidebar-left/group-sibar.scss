@@ -24,6 +24,7 @@
 		}
 	}
 }
+
 .group-sibar-left__text1,
 .group-sibar-left__text2 {
 	margin-top: 20px;
@@ -39,6 +40,7 @@
 		line-height: 24px;
 		color: #6e7191;
 	}
+	word-break: break-word;
 }
 .group-sibar-left__btn {
 	margin-top: 20px;
@@ -61,7 +63,7 @@
 	padding: 20px 6px 24px 16px;
 	img {
 		width: 54px;
-		height: 54 px;
+		height: 54px;
 		object-fit: cover;
 		border-radius: 50%;
 	}
@@ -158,8 +160,8 @@
 		margin-bottom: 5px;
 	}
 }
-.group__intro {
-	margin-top: 60px;
+.group__manager {
+	margin-bottom: 60px;
 }
 
 .group-sibar-left__description {

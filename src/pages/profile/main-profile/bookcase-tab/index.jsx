@@ -29,22 +29,25 @@ function Bookcase({ currentUserInfo, currentTab }) {
 	const { userInfo } = useSelector(state => state.auth);
 
 	useEffect(() => {
-		// Sửa lại phần tủ sách trang cá nhân
-		if (!_.isEmpty(userInfo) && userId === userInfo.id && !_.isEmpty(myAllLibraryDefault)) {
-			const filterReadbooks = myAllLibraryDefault.filter(item => item.defaultType === 'read');
-			const filterReadingbooks = myAllLibraryDefault.filter(item => item.defaultType === 'reading');
-			if (filterReadbooks.length) {
-				setReadBooks([...filterReadbooks[0].books].reverse());
+		if (!_.isEmpty(userInfo)) {
+			if (userId === userInfo.id) {
+				if (myAllLibraryDefault && myAllLibraryDefault.length) {
+					const filterReadbooks = myAllLibraryDefault.filter(item => item.defaultType === 'read');
+					const filterReadingbooks = myAllLibraryDefault.filter(item => item.defaultType === 'reading');
+					if (filterReadbooks.length) {
+						setReadBooks([...filterReadbooks[0].books]);
+					} else {
+						setReadBooks([]);
+					}
+					if (filterReadingbooks.length) {
+						setReadingBooks([...filterReadingbooks[0].books].slice(0, 3));
+					} else {
+						setReadingBooks([]);
+					}
+				}
 			} else {
-				setReadBooks([]);
+				getBooksInCurrentLibrary();
 			}
-			if (filterReadingbooks.length) {
-				setReadingBooks([...filterReadingbooks[0].books].reverse().slice(0, 3));
-			} else {
-				setReadingBooks([]);
-			}
-		} else {
-			getBooksInCurrentLibrary();
 		}
 	}, [userInfo, userId, myAllLibraryDefault]);
 
@@ -55,7 +58,7 @@ function Bookcase({ currentUserInfo, currentTab }) {
 			if (readingBooksResponse.length === 0) {
 				setReadingBooks([]);
 			} else {
-				setReadingBooks(readingBooksResponse[0].books.reverse().slice(0, 3));
+				setReadingBooks(readingBooksResponse[0].books.slice(0, 3));
 			}
 			const haveReadResponse = data.default.filter(x => x.defaultType === 'read');
 			if (haveReadResponse.length === 0) {
@@ -69,24 +72,26 @@ function Bookcase({ currentUserInfo, currentTab }) {
 	};
 
 	const progressBarPercenNumber = item => {
-		const progress = ((item?.book?.bookProgress[0]?.progress / item?.book?.page) * 100).toFixed();
-		return (
-			<div className='bookcase__item__book-progress'>
-				<ProgressBar
-					className={classNames('bookcase__item__book-progress-bar', {
-						'fullBar': progress == 100,
-					})}
-					now={progress}
-				/>
-				<div
-					className={classNames('bookcase__item__book-percent', {
-						'fullBar': progress == 100,
-					})}
-				>
-					{progress}%
+		if (item.book) {
+			const progress = ((item.book.bookProgress[0]?.progress / item.book.page) * 100).toFixed();
+			return (
+				<div className='bookcase__item__book-progress'>
+					<ProgressBar
+						className={classNames('bookcase__item__book-progress-bar', {
+							'fullBar': progress == 100,
+						})}
+						now={progress}
+					/>
+					<div
+						className={classNames('bookcase__item__book-percent', {
+							'fullBar': progress == 100,
+						})}
+					>
+						{progress}%
+					</div>
 				</div>
-			</div>
-		);
+			);
+		}
 	};
 
 	const formatDate = dateData => {

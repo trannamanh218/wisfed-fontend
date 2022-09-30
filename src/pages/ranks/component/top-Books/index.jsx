@@ -4,7 +4,7 @@ import { useRef, useEffect, useState } from 'react';
 import AuthorBook from 'shared/author-book';
 import StarRanking from 'shared/starRanks';
 import PropTypes from 'prop-types';
-import { getTopBooks, getTopBooksAuth } from 'reducers/redux-utils/ranks';
+import { getTopBooks } from 'reducers/redux-utils/ranks';
 import { useDispatch, useSelector } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
 import ModalCheckLogin from 'shared/modal-check-login';
@@ -36,13 +36,8 @@ const TopBooks = ({ rows, listYear, tabSelected }) => {
 			by: valueDate,
 		};
 		try {
-			if (isAuth === false) {
-				const topBooks = await dispatch(getTopBooks(params)).unwrap();
-				setGetListTopBooks(topBooks);
-			} else if (isAuth === true) {
-				const topBooks = await dispatch(getTopBooksAuth(params)).unwrap();
-				setGetListTopBooks(topBooks);
-			}
+			const topBooks = await dispatch(getTopBooks(params)).unwrap();
+			setGetListTopBooks(topBooks);
 		} catch (err) {
 			NotificationError(err);
 		} finally {
@@ -57,13 +52,8 @@ const TopBooks = ({ rows, listYear, tabSelected }) => {
 			by: valueDate,
 		};
 		try {
-			if (isAuth === false) {
-				const topBooks = await dispatch(getTopBooks(params)).unwrap();
-				setGetListTopBooks(topBooks);
-			} else if (isAuth === true) {
-				const topBooks = await dispatch(getTopBooksAuth(params)).unwrap();
-				setGetListTopBooks(topBooks);
-			}
+			const topBooks = await dispatch(getTopBooks(params)).unwrap();
+			setGetListTopBooks(topBooks);
 		} catch (err) {
 			NotificationError(err);
 		} finally {

@@ -190,6 +190,9 @@ const errVN = {
 	759: {
 		vi: 'Type không hợp lệ',
 	},
+	705: {
+		vi: 'ISBN đã tồn tại',
+	},
 };
 
 export const NotificationError = err => {

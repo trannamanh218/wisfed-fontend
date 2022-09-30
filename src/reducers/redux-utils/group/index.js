@@ -66,6 +66,17 @@ export const getupdateBackground = createAsyncThunk(
 	}
 );
 
+export const editGroup = createAsyncThunk('group/editGroup', async (params = {}, { rejectWithValue }) => {
+	const { id, param } = params;
+	try {
+		const res = await Request.makePatch(groupDetailAPI(id), param);
+		return res.data;
+	} catch (err) {
+		const error = JSON.parse(err.response);
+		return rejectWithValue(error);
+	}
+});
+
 export const likeAndUnlikeGroupComment = createAsyncThunk(
 	'group/like group comment',
 	async (id, { rejectWithValue }) => {

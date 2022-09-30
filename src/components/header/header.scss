@@ -188,6 +188,7 @@
 	}
 
 	&__option-info {
+		visibility: hidden;
 		position: absolute;
 		background-color: #fff;
 		box-shadow: 0px 0px 32px rgba(0, 0, 0, 0.12);
@@ -198,6 +199,9 @@
 		bottom: -80%;
 		li {
 			margin-top: 10px;
+		}
+		&.show {
+			visibility: visible;
 		}
 	}
 }

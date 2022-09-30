@@ -1,7 +1,7 @@
 import camera from 'assets/images/camera.png';
 import dots from 'assets/images/dots.png';
 import pencil from 'assets/images/pencil.png';
-import { Clock, CloseX, Pencil, QuoteIcon, Restrict } from 'components/svg';
+import { CloseX, Pencil, QuoteIcon } from 'components/svg';
 import { useCallback, useEffect, useState } from 'react';
 import { Modal } from 'react-bootstrap';
 import Dropzone from 'react-dropzone';
@@ -61,8 +61,7 @@ const PersonalInfo = ({ currentUserInfo, setCurrentTab }) => {
 				} else {
 					params = { avatarImage: imageUploadedData.streamPath };
 				}
-				const data = { userId: currentUserInfo.id, params: params };
-				const changeUserImage = await dispatch(editUserInfo(data)).unwrap();
+				const changeUserImage = await dispatch(editUserInfo(params)).unwrap();
 				dispatch(updateUserInfo(changeUserImage));
 				if (!_.isEmpty(changeUserImage)) {
 					const customId = 'custom-id-PersonalInfo-handleDrop-success';
@@ -71,7 +70,7 @@ const PersonalInfo = ({ currentUserInfo, setCurrentTab }) => {
 			} catch (err) {
 				if (err.statusCode === 413) {
 					const customId = 'custom-id-PersonalInfo-handleDrop-warning';
-					toast.warning('Không cập nhật được ảnh quá 1Mb', { toastId: customId });
+					toast.warning('Không cập nhật được ảnh quá 10Mb', { toastId: customId });
 				} else {
 					const customId = 'custom-id-PersonalInfo-handleDrop-error';
 					toast.error('Cập nhật ảnh thất bại', { toastId: customId });
@@ -88,7 +87,7 @@ const PersonalInfo = ({ currentUserInfo, setCurrentTab }) => {
 		<div className='personal-info'>
 			<div className='personal-info__wallpaper'>
 				<img src={bgImage} alt='background-image' onError={() => setBgImage(backgroundImageDefault)} />
-				<Dropzone onDrop={acceptedFile => handleDrop(acceptedFile, 'change-bgImage')}>
+				<Dropzone onDrop={acceptedFile => handleDrop(acceptedFile, 'change-bgImage')} multiple={false}>
 					{({ getRootProps, getInputProps }) => (
 						<div className='edit-wallpaper' {...getRootProps()}>
 							<input {...getInputProps()} />
@@ -111,7 +110,10 @@ const PersonalInfo = ({ currentUserInfo, setCurrentTab }) => {
 							source={currentUserInfo.avatarImage}
 							className='personal-info__detail__avatar__user'
 						/>
-						<Dropzone onDrop={acceptedFile => handleDrop(acceptedFile, 'change-avatarImage')}>
+						<Dropzone
+							onDrop={acceptedFile => handleDrop(acceptedFile, 'change-avatarImage')}
+							multiple={false}
+						>
 							{({ getRootProps, getInputProps }) => (
 								<div className='edit-avatar' {...getRootProps()}>
 									<input {...getInputProps()} />
@@ -164,14 +166,14 @@ const PersonalInfo = ({ currentUserInfo, setCurrentTab }) => {
 											<QuoteIcon />
 											<span className='setting-item__content'>Quotes</span>
 										</li>
-										<li className='setting-item' onClick={handleSettings}>
+										{/* <li className='setting-item' onClick={handleSettings}>
 											<Clock />
 											<span className='setting-item__content'>Lịch sử đọc</span>
-										</li>
-										<li className='setting-item' onClick={handleSettings}>
+										</li> */}
+										{/* <li className='setting-item' onClick={handleSettings}>
 											<Restrict />
 											<span className='setting-item__content'>Chặn</span>
-										</li>
+										</li> */}
 									</ul>
 								)}
 							</div>

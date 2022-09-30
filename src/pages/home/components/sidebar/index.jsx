@@ -76,8 +76,7 @@ const Sidebar = () => {
 					<p>Không có dữ liệu</p>
 				)}
 			</div>
-
-			<GroupShortcuts />
+			{!_.isEmpty(userInfo) && <GroupShortcuts />}
 		</div>
 	);
 };

@@ -74,7 +74,7 @@ export const likeActivityAPI = id => `/api/v1/getstream/like/${id}`;
 export const getPostsByUserAPI = id => `/api/v1/getstream/profile/${id}`;
 
 // upload files
-export const uploadImageAPI = '/api/v1/upload/image';
+export const uploadImageAPI = '/api/v1/upload';
 export const uploadMultipleImageAPI = '/api/v1/upload/multiple';
 
 // library
@@ -123,8 +123,6 @@ export const getReadingTargetIdAPI = id => `/api/v1/books/readingGoalById/${id}`
 export const getTopQuotesAPI = `/api/v1/report/reportTopQuotes`;
 export const getTopBooksAPI = `/api/v1/report/reportTopBooks`;
 export const getFilterTopUserAPI = `/api/v1/report/reportTopUsers`;
-export const getTopBooksApiAuth = `api/v1/report/reportTopBooks`;
-export const getFilterTopUserApiAuth = `/api/v1/report/reportTopUsers`;
 export const getBooksChartsData = id => `/api/v1/report/growthChartBook/${id}`;
 
 // group

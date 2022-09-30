@@ -41,7 +41,7 @@ import vector from 'assets/images/Vector.png';
 import pani from 'assets/images/pani.png';
 import LoadingIndicator from 'shared/loading-indicator';
 
-function MainGroupComponent({ handleChange, keyChange, data, member, handleUpdate }) {
+function MainGroupComponent({ handleChange, keyChange, data, member, handleUpdate, fetchData }) {
 	const [key, setKey] = useState('intro');
 	const [valueGroupSearch, setValueGroupSearch] = useState('');
 	const [filter, setFilter] = useState('[]');
@@ -358,7 +358,9 @@ function MainGroupComponent({ handleChange, keyChange, data, member, handleUpdat
 					</Tabs>
 				</div>
 			)}
-			{keyChange === 'settings' && <SettingsGroup handleChange={handleChange} />}
+			{keyChange === 'settings' && (
+				<SettingsGroup handleChange={handleChange} data={data} fetchData={fetchData} />
+			)}
 			{keyChange === 'settingsQuestion' && <SettingsQuestions handleChange={handleChange} />}
 			{keyChange === 'manageJoin' && <ManageJoin handleChange={handleChange} />}
 			{keyChange === 'managePost' && <PostWatting handleChange={handleChange} />}
@@ -388,6 +390,7 @@ MainGroupComponent.propTypes = {
 	backgroundImage: PropTypes.string,
 	member: PropTypes.array,
 	handleUpdate: PropTypes.func,
+	fetchData: PropTypes.func,
 };
 
 export default MainGroupComponent;

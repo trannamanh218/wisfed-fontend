@@ -328,28 +328,30 @@ const Header = () => {
 				</div>
 			</ul>
 
-			<div className='header__userInfo' onClick={() => tollgleModaleInfoUser()} ref={userOptions}>
-				<div className='header__avatar'>
+			<div className='header__userInfo' ref={userOptions}>
+				<div className='header__avatar' onClick={tollgleModaleInfoUser}>
 					<img
 						src={userInfo?.avatarImage || defaultAvatar}
 						onError={e => e.target.setAttribute('src', `${defaultAvatar}`)}
 						alt='avatar'
 					/>
 				</div>
-				{modalInforUser && localStorage.getItem('accessToken') && (
-					<ul className='header__option-info'>
-						<Link to={localStorage.getItem('accessToken') && `/profile/${userInfo.id}`}>
-							<li>
-								<ProfileIcon />
-								&nbsp;Thông tin cá nhân
-							</li>
-						</Link>
-						<li onClick={() => handleLogout()}>
-							<LogOutIcon />
-							&nbsp;Đăng xuất
+				<ul
+					className={classNames('header__option-info', {
+						'show': modalInforUser && localStorage.getItem('accessToken'),
+					})}
+				>
+					<Link to={`/profile/${userInfo.id}`}>
+						<li>
+							<ProfileIcon />
+							&nbsp;Thông tin cá nhân
 						</li>
-					</ul>
-				)}
+					</Link>
+					<li onClick={() => handleLogout()}>
+						<LogOutIcon />
+						&nbsp;Đăng xuất
+					</li>
+				</ul>
 			</div>
 		</div>
 	);

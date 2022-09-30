@@ -110,6 +110,17 @@
 	}
 }
 
+.add-and-search-categories__searched-item-elipsis {
+	border: none;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	color: $primary;
+	margin: 16px 16px 0 0;
+	font-size: 24px;
+	cursor: default;
+}
+
 .add-and-search-categories__checked-category {
 	position: absolute;
 	top: 0px;

@@ -200,7 +200,6 @@ $wallpaper-height: 350px;
 
 	&-form {
 		.form-field {
-			width: 80%;
 			display: flex;
 			gap: 24px;
 			&-group {
@@ -219,6 +218,13 @@ $wallpaper-height: 350px;
 				gap: 1.5rem;
 				&.socials-link {
 					margin-bottom: 1rem;
+					.btn-icon {
+						svg {
+							path {
+								fill: $red;
+							}
+						}
+					}
 				}
 			}
 
@@ -253,6 +259,10 @@ $wallpaper-height: 350px;
 				}
 				&.save {
 					color: $success;
+					&.disabled {
+						opacity: 0.4;
+						cursor: no-drop;
+					}
 				}
 			}
 
@@ -290,6 +300,10 @@ $wallpaper-height: 350px;
 					width: fit-content;
 					min-width: 90px;
 					padding: 0 1.5rem;
+				}
+
+				&.editting {
+					border: 1px solid #d9dbe9;
 				}
 			}
 
@@ -333,6 +347,9 @@ $wallpaper-height: 350px;
 			svg {
 				width: 14px;
 				height: 14px;
+			}
+			&.hidden {
+				visibility: hidden;
 			}
 		}
 
@@ -416,6 +433,56 @@ $wallpaper-height: 350px;
 	height: 56px;
 	display: flex;
 	align-items: center;
+}
+
+.modal-delete-social-container {
+	background-color: rgba(22, 22, 22, 0.3);
+	width: 100vw;
+	height: 100vh;
+	position: fixed;
+	top: 0;
+	left: 0;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.modal-delete-social {
+	.modal-content {
+		padding: 2rem;
+		text-align: center;
+		border-radius: 24px;
+	}
+
+	.btn-closeX {
+		display: inline-block;
+		margin-left: auto;
+		width: 24px;
+		height: 24px;
+		cursor: pointer;
+	}
+
+	&__title {
+		margin-bottom: 1.25rem;
+		font-size: 2.25rem;
+		font-weight: 700;
+		color: #14142b;
+	}
+	&__subtitle {
+		margin-bottom: 1.5rem;
+		font-size: 1.125rem;
+		color: $ash-body;
+	}
+
+	&__del-btn {
+		&.btn {
+			display: block;
+			margin: 0 auto;
+			width: 255px;
+			max-width: 255px;
+			margin-bottom: 1.5rem;
+		}
+	}
 }
 
 @media only screen and (max-width: 1024px) {
