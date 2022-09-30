@@ -93,6 +93,14 @@ const ReviewTab = ({ currentTab }) => {
 
 	const bookInfo = useSelector(state => state.book.bookInfo);
 
+	const [bookInfoProp, setBookInfoProp] = useState({});
+
+	useEffect(() => {
+		const cloneObj = { ...bookInfo };
+		cloneObj.progress = NaN;
+		setBookInfoProp(cloneObj);
+	}, []);
+
 	useEffect(() => {
 		if (currentTab === 'reviews') {
 			callApiStart.current = 10;
@@ -358,7 +366,7 @@ const ReviewTab = ({ currentTab }) => {
 						))}
 					</InfiniteScroll>
 				) : (
-					<h5>Chưa có bài Review nào</h5>
+					<h5 className='review-tab__no-data'>Chưa có bài Review nào</h5>
 				)}
 			</FilterPane>
 
@@ -460,7 +468,7 @@ const ReviewTab = ({ currentTab }) => {
 						onChangeNewPost={() => {}}
 						setShowModalCreatPost={setShowModalCreatPost}
 						showSubModal={showSubModal}
-						bookInfoProp={bookInfo}
+						bookInfoProp={bookInfoProp}
 					/>
 				</div>
 			)}

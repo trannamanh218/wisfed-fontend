@@ -14,7 +14,7 @@ import CreatPostSubModal from 'pages/home/components/newfeed/components/creat-po
 import TaggedList from 'pages/home/components/newfeed/components/creat-post-modal-content/TaggedList';
 import UploadImage from 'pages/home/components/newfeed/components/creat-post-modal-content/UploadImage';
 import PreviewLink from 'shared/preview-link/PreviewLink';
-import { getPreviewUrl, getSharePostInternal, getSharePostRanks, shareMyBook } from 'reducers/redux-utils/post';
+import { getPreviewUrl } from 'reducers/redux-utils/post';
 import Circle from 'shared/loading/circle';
 import 'pages/home/components/newfeed/components/creat-post-modal-content/style.scss';
 import { ratingUser } from 'reducers/redux-utils/book';
@@ -25,15 +25,12 @@ import { addBookToDefaultLibrary, updateMyAllLibraryRedux } from 'reducers/redux
 import { NotificationError } from 'helpers/Error';
 import { uploadMultiFile } from 'reducers/redux-utils/common';
 import { useLocation, useParams } from 'react-router-dom';
-import { creatNewPost } from 'reducers/redux-utils/group';
 import QuoteCard from 'shared/quote-card';
-import { saveDataShare } from 'reducers/redux-utils/post';
 import AuthorBook from 'shared/author-book';
 import ShareUsers from 'pages/home/components/newfeed/components/modal-share-users';
 import RichTextEditor from 'shared/rich-text-editor';
 import ShareTarget from 'shared/share-target';
 import PostShare from 'shared/posts-Share';
-import { shareTargetReadings } from 'reducers/redux-utils/target';
 import {
 	POST_VERB_SHARE,
 	QUOTE_VERB_SHARE,
@@ -66,7 +63,6 @@ function CreatPostModalContentReviewBookOnly({
 	option,
 	setOption,
 	onChangeOption,
-	onChangeNewPost,
 	showSubModal,
 	bookInfoProp,
 }) {
@@ -379,7 +375,6 @@ function CreatPostModalContentReviewBookOnly({
 								: 0,
 					};
 					dispatch(createReviewBook(reviewData));
-					console.log(reviewData);
 				}
 				if (valueStar > 0) {
 					userRating();
@@ -392,7 +387,6 @@ function CreatPostModalContentReviewBookOnly({
 			setStatus(STATUS_SUCCESS);
 			const customId = 'custom-id-CreatPostModalContentReviewBookOnly-onCreatePost-success';
 			toast.success('Tạo post thành công!', { toastId: customId });
-			// onChangeNewPost();
 		} catch (err) {
 			const statusCode = err?.statusCode || 500;
 			if (err.errorCode === 702) {
@@ -404,11 +398,9 @@ function CreatPostModalContentReviewBookOnly({
 			setStatus(statusCode);
 		} finally {
 			dispatch(updateCurrentBook({}));
-			// dispatch(saveDataShare({}));
-			setStatus(STATUS_IDLE);
+			// setStatus(STATUS_IDLE);
 			hideCreatePostModal();
 			onChangeOption({});
-			setShowModalCreatPost(false);
 		}
 	};
 
@@ -774,7 +766,7 @@ CreatPostModalContentReviewBookOnly.propTypes = {
 	renderBookReading: PropTypes.object,
 	setShowModalCreatPost: PropTypes.func,
 	showSubModal: PropTypes.bool,
-	bookInfoProp: PropTypes.bool,
+	bookInfoProp: PropTypes.object,
 };
 
 export default CreatPostModalContentReviewBookOnly;

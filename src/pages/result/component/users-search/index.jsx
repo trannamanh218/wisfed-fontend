@@ -9,6 +9,7 @@ import { useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import ConnectButtonsSearch from './ConnectButtonsSearch';
 import { useNavigate } from 'react-router-dom';
+import Button from 'shared/button';
 
 const UsersSearch = ({ isFetching, value, setIsFetching, searchResultInput, activeKeyDefault, updateBooks }) => {
 	const [listArrayUsers, setListArrayUsers] = useState([]);
@@ -88,35 +89,43 @@ const UsersSearch = ({ isFetching, value, setIsFetching, searchResultInput, acti
 					<InfiniteScroll next={handleGetUserSearch} dataLength={listArrayUsers.length} hasMore={hasMore}>
 						<div className='myfriends__layout__container'>
 							{listArrayUsers.map((item, index) => {
-								if (item.relation !== 'isMe') {
-									return (
-										<div key={index} className='myfriends__layout'>
-											<img
-												className='myfriends__layout__img'
-												src={item.avatarImage ? item.avatarImage : defaultAvatar}
-												onError={e => e.target.setAttribute('src', defaultAvatar)}
-												alt=''
-												onClick={() => onUserClick(item)}
-											/>
-											<div className='myfriends__star'>
-												<div className='myfriends__star__name'>
-													{item.fullName ? (
-														item.fullName
-													) : (
-														<>
-															<span>{item.firstName}</span>&nbsp;
-															<span>{item.lastName}</span>
-														</>
-													)}
-												</div>
+								return (
+									<div key={index} className='myfriends__layout'>
+										<img
+											className='myfriends__layout__img'
+											src={item.avatarImage ? item.avatarImage : defaultAvatar}
+											onError={e => e.target.setAttribute('src', defaultAvatar)}
+											alt=''
+											onClick={() => onUserClick(item)}
+										/>
+										<div className='myfriends__star'>
+											<div className='myfriends__star__name'>
+												{item.fullName ? (
+													item.fullName
+												) : (
+													<>
+														<span>{item.firstName}</span>&nbsp;
+														<span>{item.lastName}</span>
+													</>
+												)}
 											</div>
-
+										</div>
+										{item.relation !== 'isMe' ? (
 											<div className='myfriends__button__container'>
 												<ConnectButtonsSearch item={item} />
 											</div>
-										</div>
-									);
-								}
+										) : (
+											<div
+												className='myfriends__button__container'
+												style={{ padding: '0 11px 28px 11px', margin: 'auto 0' }}
+											>
+												<Button className='myfriends__button'>
+													<span style={{ fontSize: 'smaller' }}>Xem trang cá nhân</span>
+												</Button>
+											</div>
+										)}
+									</div>
+								);
 							})}
 						</div>
 					</InfiniteScroll>
