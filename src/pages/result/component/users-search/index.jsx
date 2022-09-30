@@ -115,11 +115,11 @@ const UsersSearch = ({ isFetching, value, setIsFetching, searchResultInput, acti
 												<ConnectButtonsSearch item={item} />
 											</div>
 										) : (
-											<div
-												className='myfriends__button__container'
-												style={{ padding: '0 11px 28px 11px', margin: 'auto 0' }}
-											>
-												<Button className='myfriends__button'>
+											<div className='myfriends__button__container' style={{ margin: 'auto 0' }}>
+												<Button
+													className='myfriends__button'
+													onClick={() => navigate(`/profile/${item.id}`)}
+												>
 													<span style={{ fontSize: 'smaller' }}>Xem trang cá nhân</span>
 												</Button>
 											</div>
