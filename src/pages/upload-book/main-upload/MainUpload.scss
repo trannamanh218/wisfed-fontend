@@ -12,33 +12,27 @@
 	gap: 37px;
 
 	.upload-image {
+		width: 100%;
+		height: 100%;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		padding: 0 8px;
 		border-radius: 6px;
-		font-size: 15px;
+		font-size: 14px;
 		&__wrapper {
 			display: flex;
 			justify-content: center;
-			width: 199px;
+			width: 200px;
+			min-width: 200px;
 			height: 271px;
 			border-radius: 6px;
 			padding: 0px;
-			margin: 0 auto;
+			overflow: hidden;
 			cursor: pointer;
-			img {
-				width: 199px;
-				height: 271px;
-				object-fit: cover;
-				border-radius: 6px;
-			}
-			.dropzone.upload-image {
-				width: 199px;
-				height: 271px;
-			}
-			&.has-image {
-				border: none;
-			}
 			&__icon {
-				height: 60px;
-				width: 60px;
+				height: 52px;
+				width: 52px;
 				border-radius: 50%;
 				background-color: #eff0f7;
 				display: flex;

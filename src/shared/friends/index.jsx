@@ -180,14 +180,6 @@ const FriendsItem = ({ data, keyTabs, getListFollower, getMyListFriendReq, getLi
 		);
 	};
 
-	// const buttonAcces = () => {
-	// 	return (
-	// 		<Button className='myfriends__button'>
-	// 			<span className='myfriends__button__content'>Chấp nhận</span>
-	// 		</Button>
-	// 	);
-	// };
-
 	const renderButtonFriends = () => {
 		if (keyTabs === 'friend') {
 			return buttonUnFriend();
@@ -243,13 +235,7 @@ const FriendsItem = ({ data, keyTabs, getListFollower, getMyListFriendReq, getLi
 
 					<div className='myfriends__star'>
 						<div className='myfriends__star__name'>
-							{data.userTwo?.fullName
-								? data.userTwo?.fullName
-								: // <>
-								  // 	<span>{data.userTwo?.firstName}</span>&nbsp;
-								  // 	<span>{data.userTwo?.lastName}</span>
-								  // </>
-								  data.fullName}
+							{data.userTwo?.fullName ? data.userTwo?.fullName : data.fullName}
 						</div>
 						{data.isStar && <Subtract />}
 					</div>
