@@ -1,21 +1,22 @@
-import { Link } from 'react-router-dom';
-import BookSlider from 'shared/book-slider';
-import MyShelvesList from 'shared/my-shelves-list';
-import QuotesLinks from 'shared/quote-links';
-import StatisticList from 'shared/statistic-list';
-import PropTypes from 'prop-types';
-import './sidebar-shelves.scss';
-import { useFetchQuotes } from 'api/quote.hooks';
-import ChartsReading from 'shared/charts-Reading';
 import { useFetchAuthorBooks } from 'api/book.hooks';
-import { useParams } from 'react-router-dom';
-import RenderProgress from 'shared/render-progress';
-import ProgressBarCircle from 'shared/progress-circle';
-import _ from 'lodash';
+import { useFetchQuotes } from 'api/quote.hooks';
 import { useFetchTargetReading } from 'api/readingTarget.hooks';
+import _ from 'lodash';
+import PropTypes from 'prop-types';
+import { useCallback } from 'react';
+import { Link, useParams } from 'react-router-dom';
+import BookSlider from 'shared/book-slider';
+import ChartsReading from 'shared/charts-Reading';
+import MyShelvesList from 'shared/my-shelves-list';
+import ProgressBarCircle from 'shared/progress-circle';
+import QuotesLinks from 'shared/quote-links';
+import RenderProgress from 'shared/render-progress';
+import StatisticList from 'shared/statistic-list';
+import './sidebar-shelves.scss';
 
 const SidebarShelves = ({ shelveGroupName, isMyShelve, handleViewBookDetail, allLibrary }) => {
 	const { userId } = useParams();
+	const { booksReadYear } = useFetchTargetReading(userId);
 	const { booksAuthor } = useFetchAuthorBooks(userId);
 	const { quoteData } = useFetchQuotes(
 		0,
@@ -23,16 +24,15 @@ const SidebarShelves = ({ shelveGroupName, isMyShelve, handleViewBookDetail, all
 		JSON.stringify([{ operator: 'eq', value: userId, property: 'createdBy' }])
 	);
 
-	const handleRenderTargetReading = () => {
+	const handleRenderTargetReading = useCallback(() => {
 		if (isMyShelve) {
 			return <RenderProgress userIdParams={userId} />;
 		} else {
-			const { booksReadYear } = useFetchTargetReading(userId);
 			if (booksReadYear.length > 0) {
 				return <ProgressBarCircle booksReadYear={booksReadYear} />;
 			}
 		}
-	};
+	}, [isMyShelve]);
 
 	return (
 		<div className='sidebar-shelves'>
