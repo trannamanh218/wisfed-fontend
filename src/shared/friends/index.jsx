@@ -233,7 +233,7 @@ const FriendsItem = ({ data, keyTabs, getListFollower, getMyListFriendReq, getLi
 	const renderDisplay = () => {
 		return (
 			<div className='myfriends__layout'>
-				<Link to={`/profile/${data.userTwo?.id}`}>
+				<Link to={`/profile/${data.userTwo?.id || data.id}`}>
 					<img
 						className='myfriends__layout__img'
 						src={data.userTwo?.avatarImage || data?.avatarImage || defaultAvatar}

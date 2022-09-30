@@ -1,20 +1,17 @@
 import { NotificationError } from 'helpers/Error';
-import { useState } from 'react';
-import { useEffect, useRef } from 'react';
-import { useDispatch } from 'react-redux';
-import { useSelector } from 'react-redux';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { getTopUserAuth } from 'reducers/redux-utils/ranks';
 import FriendsItem from 'shared/friends';
 
 const SuggestFriend = () => {
 	const [list, setList] = useState([]);
-	const [listByCategory, setListByCategory] = useState([]);
 
 	const userInfo = useSelector(state => state.auth.userInfo);
 	const { isAuth } = useSelector(state => state.auth);
 
-	const result = userInfo.favoriteCategory.map(item => item.categoryId);
+	const result = userInfo?.favoriteCategory.map(item => item.categoryId);
 
 	const dispatch = useDispatch();
 
@@ -42,7 +39,6 @@ const SuggestFriend = () => {
 		try {
 			if (isAuth) {
 				const data = await dispatch(getTopUserAuth(params)).unwrap();
-				setListByCategory(data);
 				return data;
 			}
 		} catch (err) {
@@ -53,7 +49,15 @@ const SuggestFriend = () => {
 	useEffect(() => {
 		Promise.all([getSuggestFriendByTopFollow(), getSuggestFriendByCategory()]).then(data => {
 			const listUser = data.reduce((acc, item) => acc.concat(item));
-			const newList = listUser.filter(item => item.id !== userInfo.id);
+			const listuserNew = listUser.filter(item => item.id !== userInfo.id);
+			const newList = listuserNew.reduce((acc, curr) => {
+				const userId = acc.find(item => item.id === curr.id);
+				if (!userId) {
+					return acc.concat([curr]);
+				} else {
+					return acc;
+				}
+			}, []);
 			setList(newList);
 		});
 	}, []);
@@ -62,9 +66,11 @@ const SuggestFriend = () => {
 		<div className='myfriends__container'>
 			<div className='myfriends__container__content'>
 				<div className='myfriends__title__addfriend'>Bạn bè gợi ý từ BXH</div>
-				<Link to={'/friends/suggestions'} className='myfriends__title__all'>
-					Xem tất cả
-				</Link>
+				{list && (
+					<Link to={'/friends/suggestions'} className='myfriends__title__all'>
+						Xem tất cả
+					</Link>
+				)}
 			</div>
 			<div className='myfriends__layout__container'>
 				{list.map(item => (

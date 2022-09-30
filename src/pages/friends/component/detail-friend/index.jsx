@@ -12,6 +12,7 @@ import { NotificationError } from 'helpers/Error';
 import { useNavigate } from 'react-router-dom';
 import _ from 'lodash';
 import { generateQuery } from 'helpers/Common';
+import { getTopUserAuth } from 'reducers/redux-utils/ranks';
 
 const DetailFriend = () => {
 	const location = useLocation();
@@ -25,6 +26,9 @@ const DetailFriend = () => {
 	const dispatch = useDispatch();
 	const [inputSearch, setInputSearch] = useState('');
 	const [filter, setFilter] = useState('[]');
+
+	const { isAuth } = useSelector(state => state.auth);
+	const result = userInfo?.favoriteCategory.map(item => item.categoryId);
 
 	const updateInputSearch = value => {
 		if (value) {
@@ -53,6 +57,37 @@ const DetailFriend = () => {
 	const onBtnEnterPress = e => {
 		if (e.key === 'Enter') {
 			debounceSearch(inputSearch);
+		}
+	};
+
+	const getSuggestFriendByTopFollow = async () => {
+		const params = {
+			reportType: 'topFollow',
+			by: 'month',
+		};
+		try {
+			if (isAuth) {
+				const data = await dispatch(getTopUserAuth(params)).unwrap();
+				return data;
+			}
+		} catch (err) {
+			NotificationError(err);
+		}
+	};
+
+	const getSuggestFriendByCategory = async () => {
+		const params = {
+			reportType: 'topRead',
+			by: 'month',
+			categoryId: result[0],
+		};
+		try {
+			if (isAuth) {
+				const data = await dispatch(getTopUserAuth(params)).unwrap();
+				return data;
+			}
+		} catch (err) {
+			NotificationError(err);
 		}
 	};
 
@@ -85,6 +120,20 @@ const DetailFriend = () => {
 						const friendReq = await dispatch(getListReqFriendsToMe({ userId })).unwrap();
 						setGetListFollowings(friendReq.rows);
 					}
+				} else if (suggestions) {
+					Promise.all([getSuggestFriendByTopFollow(), getSuggestFriendByCategory()]).then(data => {
+						const listUser = data.reduce((acc, item) => acc.concat(item));
+						const listuserNew = listUser.filter(item => item.id !== userInfo.id);
+						const newList = listuserNew.reduce((acc, curr) => {
+							const userId = acc.find(item => item.id === curr.id);
+							if (!userId) {
+								return acc.concat([curr]);
+							} else {
+								return acc;
+							}
+						}, []);
+						setGetListFollowings(newList);
+					});
 				}
 			}
 		} catch (err) {
@@ -98,7 +147,7 @@ const DetailFriend = () => {
 
 	const renderTitleHeader = () => {
 		if (suggestions) {
-			return 'Tất cả gợi ý từ danh bạ';
+			return 'Tất cả gợi ý từ BXH';
 		} else if (invitation) {
 			return 'Tất cả lời mời kết bạn';
 		} else if (following) {
@@ -121,7 +170,7 @@ const DetailFriend = () => {
 
 	const renderTitleContainer = () => {
 		if (suggestions) {
-			return 'Bạn bè gợi ý từ danh bạ';
+			return 'Bạn bè gợi ý từ BXH';
 		} else if (invitation) {
 			return 'Lời mời kết bạn';
 		} else if (following) {
@@ -132,13 +181,13 @@ const DetailFriend = () => {
 	};
 
 	const renderLength = () => {
-		if (following || follower || invitation) {
+		if (following || follower || invitation || suggestions) {
 			return getListFollowings.length ? getListFollowings.length : '';
 		}
 	};
 
 	const renderListMap = () => {
-		if (following || follower || invitation) {
+		if (following || follower || invitation || suggestions) {
 			return (
 				getListFollowings.length > 0 &&
 				getListFollowings.map(item => (
