@@ -34,11 +34,14 @@ function PostBook({ data, inCreatePost }) {
 					<div className='post-book__author'>{generateAuthorName(data.authors)}</div>
 					<div className='post-book__edit'>
 						<LinearProgressBar
-							percent={(((data.actorProgress || data.progress) / data.page) * 100).toFixed()}
+							percent={(
+								((data.actorProgress ? data.actorProgress : data.progress) / data.page) *
+								100
+							).toFixed()}
 						/>
 						<div className='post-book__editor'>
 							<span className='post-book__ratio'>
-								{data.actorProgress || data.progress}/{data.page}
+								{data.actorProgress ? data.actorProgress : data.progress}/{data.page}
 							</span>
 							<span>Trang sách đã đọc</span>
 						</div>
