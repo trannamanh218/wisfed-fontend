@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { getTopUser } from 'reducers/redux-utils/ranks';
 import FriendsItem from 'shared/friends';
 
-const SuggestFriend = () => {
+const SuggestFriend = ({ activeTabs }) => {
 	const [list, setList] = useState([]);
 
 	const userInfo = useSelector(state => state.auth.userInfo);
@@ -38,7 +38,7 @@ const SuggestFriend = () => {
 		};
 		try {
 			if (isAuth) {
-				const data = await dispatch(getTopUserAuth(params)).unwrap();
+				const data = await dispatch(getTopUser(params)).unwrap();
 				return data;
 			}
 		} catch (err) {
@@ -74,7 +74,7 @@ const SuggestFriend = () => {
 			</div>
 			<div className='myfriends__layout__container'>
 				{list.map(item => (
-					<FriendsItem key={item.id} data={item} />
+					<FriendsItem key={item.id} data={item} keyTabs={activeTabs} getListSuggest={list} />
 				))}
 			</div>
 		</div>

@@ -12,7 +12,7 @@ import { NotificationError } from 'helpers/Error';
 import { useNavigate } from 'react-router-dom';
 import _ from 'lodash';
 import { generateQuery } from 'helpers/Common';
-import { getTopUserAuth } from 'reducers/redux-utils/ranks';
+import { getTopUser } from 'reducers/redux-utils/ranks';
 
 const DetailFriend = () => {
 	const location = useLocation();
@@ -67,7 +67,7 @@ const DetailFriend = () => {
 		};
 		try {
 			if (isAuth) {
-				const data = await dispatch(getTopUserAuth(params)).unwrap();
+				const data = await dispatch(getTopUser(params)).unwrap();
 				return data;
 			}
 		} catch (err) {
@@ -83,7 +83,7 @@ const DetailFriend = () => {
 		};
 		try {
 			if (isAuth) {
-				const data = await dispatch(getTopUserAuth(params)).unwrap();
+				const data = await dispatch(getTopUser(params)).unwrap();
 				return data;
 			}
 		} catch (err) {
