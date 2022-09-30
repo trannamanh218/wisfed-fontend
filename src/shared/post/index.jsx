@@ -461,7 +461,7 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 						<li
 							key={item.id}
 							className={classNames('badge bg-primary-light')}
-							onClick={() => navigate(`/profile/${item.id}`)}
+							onClick={() => navigate(`/profile/${item.authorId}`)}
 						>
 							<Feather />
 							<span>

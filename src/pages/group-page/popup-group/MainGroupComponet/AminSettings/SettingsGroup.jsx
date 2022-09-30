@@ -89,7 +89,6 @@ function SettingsGroup({ handleChange, data, fetchData }) {
 
 	const onchangeBookCategory = data => {
 		setCategoryIdBook([data.value]);
-		console.log(categoryIdBook);
 	};
 
 	const addCategory = category => {

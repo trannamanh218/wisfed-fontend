@@ -7,7 +7,7 @@ import _ from 'lodash';
 import { toast } from 'react-toastify';
 import { useDispatch } from 'react-redux';
 import classNames from 'classnames';
-import { editUserInfoMyself } from 'reducers/redux-utils/user';
+import { editUserInfo } from 'reducers/redux-utils/user';
 import PropTypes from 'prop-types';
 // import ShareModeDropdown from 'shared/share-mode-dropdown';
 import InputType from './input-type';
@@ -258,7 +258,7 @@ const PersonalInfoForm = ({ userData, toggleModal }) => {
 				socials: userSocialsMedia,
 				favoriteCategory: favoriteCategoriesAddId.current,
 			};
-			const userDataChanged = await dispatch(editUserInfoMyself(params)).unwrap();
+			const userDataChanged = await dispatch(editUserInfo(params)).unwrap();
 			if (!_.isEmpty(userDataChanged)) {
 				const customId = 'custom-id-PersonalInfoForm-editUserProfile-success';
 				toast.success('Chỉnh sửa thành công', {

@@ -74,7 +74,7 @@ export const likeActivityAPI = id => `/api/v1/getstream/like/${id}`;
 export const getPostsByUserAPI = id => `/api/v1/getstream/profile/${id}`;
 
 // upload files
-export const uploadImageAPI = '/api/v1/upload/image';
+export const uploadImageAPI = '/api/v1/upload';
 export const uploadMultipleImageAPI = '/api/v1/upload/multiple';
 
 // library
