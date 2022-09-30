@@ -542,6 +542,7 @@ const PopupCreateGroup = ({ handleClose }) => {
 								categoryInputWrapper={authorInputWrapper}
 								categoryInput={authorInput}
 								hasMoreEllipsis={hasMoreAuthorsEllipsis}
+								placeholder={'Tìm kiếm và thêm tác giả'}
 							/>
 						</div>
 
@@ -564,6 +565,7 @@ const PopupCreateGroup = ({ handleClose }) => {
 								categoryInputWrapper={bookInputWrapper}
 								categoryInput={bookInput}
 								hasMoreEllipsis={hasMoreBooksEllipsis}
+								placeholder={'Tìm kiếm và thêm sách'}
 							/>
 						</div>
 					</>

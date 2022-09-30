@@ -15,7 +15,7 @@ function PostBook({ data, inCreatePost }) {
 			return 'Tác giả: Chưa xác định';
 		}
 	};
-
+	console.log(data);
 	return (
 		<div className='post-book'>
 			{data.images.length > 0 && (
@@ -34,11 +34,11 @@ function PostBook({ data, inCreatePost }) {
 					<div className='post-book__author'>{generateAuthorName(data.authors)}</div>
 					<div className='post-book__edit'>
 						<LinearProgressBar
-							percent={(((data.actorProgress || data.progress) / data.page) * 100).toFixed()}
+							percent={(((data.progress || data.actorProgress) / data.page) * 100).toFixed()}
 						/>
 						<div className='post-book__editor'>
 							<span className='post-book__ratio'>
-								{data.actorProgress || data.progress}/{data.page}
+								{data.progress || data.actorProgress}/{data.page}
 							</span>
 							<span>Trang sách đã đọc</span>
 						</div>

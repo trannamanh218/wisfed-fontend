@@ -13,7 +13,7 @@ function TheBooksWantsToRead(props) {
 	};
 
 	const onClickImgBook = item => {
-		navigate(`/book/detail/${item.id}`);
+		navigate(`/book/detail/${item?.id}`);
 	};
 
 	return (
@@ -38,7 +38,7 @@ function TheBooksWantsToRead(props) {
 						<Row>
 							{list.map((item, index) => (
 								<Col lg={6} md={12} key={index}>
-									<Link to={`/book/detail/${item.id}`}>
+									<Link to={`/book/detail/${item?.id}`}>
 										<div className='wants-to-read__thumbnail'>
 											<img src={item?.images[0] || bookImage} alt='' />
 										</div>

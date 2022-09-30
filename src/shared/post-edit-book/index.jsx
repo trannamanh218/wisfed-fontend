@@ -10,7 +10,7 @@ import { getRatingBook } from 'reducers/redux-utils/book';
 import { NotificationError } from 'helpers/Error';
 import _ from 'lodash';
 
-const PostEditBook = ({ data, handleAddToPost, handleChangeStar, valueStar }) => {
+const PostEditBook = ({ data, handleAddToPost, handleChangeStar, valueStar, allowToEdit = false }) => {
 	const [listRatingStar, setListRatingStar] = useState(null);
 	const [showText, setShowText] = useState(true);
 	const inputRef = useRef(null);
@@ -62,6 +62,12 @@ const PostEditBook = ({ data, handleAddToPost, handleChangeStar, valueStar }) =>
 		}
 	};
 
+	useEffect(() => {
+		if (allowToEdit) {
+			handleAddToPost({ ...data, progress: NaN });
+		}
+	}, []);
+
 	const generateAuthorName = authorsInfo => {
 		if (authorsInfo && authorsInfo.length) {
 			const authorNameArr = authorsInfo.map(item => item.authorName);
@@ -83,7 +89,8 @@ const PostEditBook = ({ data, handleAddToPost, handleChangeStar, valueStar }) =>
 					<div className='post-edit-book__edit'>
 						<LinearProgressBar percent={(data.progress / data.page) * 100} />
 						<div className='post-edit-book__editor'>
-							{data.status === STATUS_BOOK.wantToRead || data.status === STATUS_BOOK.read ? (
+							{(data.status === STATUS_BOOK.wantToRead || data.status === STATUS_BOOK.read) &&
+							!allowToEdit ? (
 								<span>{data.progress || 0}</span>
 							) : (
 								<input
@@ -137,6 +144,7 @@ PostEditBook.propTypes = {
 	handleAddToPost: PropTypes.func,
 	handleChangeStar: PropTypes.func,
 	valueStar: PropTypes.number,
+	allowToEdit: PropTypes.bool,
 };
 
 export default PostEditBook;

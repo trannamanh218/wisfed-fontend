@@ -213,12 +213,6 @@ export default function MainUpload() {
 		}
 	};
 
-	useEffect(() => {
-		if (image && image.length === 0) {
-			toast.warning('Chỉ được chọn ảnh PNG, JPG, hoặc JPEG');
-		}
-	}, [image]);
-
 	return (
 		<Suspense fallback={<Circle />}>
 			<div className='group-btn-back'>
