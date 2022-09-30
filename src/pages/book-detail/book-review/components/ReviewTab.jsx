@@ -1,4 +1,4 @@
-import { Fragment, useState, useEffect, useRef } from 'react';
+import { Fragment, useState, useEffect, useRef, useCallback } from 'react';
 import FilterPane from 'shared/filter-pane';
 import SearchField from 'shared/search-field';
 import Post from 'shared/post';
@@ -77,10 +77,9 @@ const ReviewTab = ({ currentTab }) => {
 	const [filterRate, setFilterRate] = useState(false);
 	const [reviewBook, setReviewBook] = useState('');
 	const [reviewTurn, setReviewTurn] = useState(false);
-	const [filterInput, setFilterInput] = useState([]);
 	const [showModalCreatPost, setShowModalCreatPost] = useState(false);
 	const [option, setOption] = useState({});
-	const [showSubModal, setShowSubModal] = useState(false);
+	const [valueSearch, setValueSearch] = useState('');
 
 	const { userInfo } = useSelector(state => state.auth);
 
@@ -93,12 +92,29 @@ const ReviewTab = ({ currentTab }) => {
 
 	const bookInfo = useSelector(state => state.book.bookInfo);
 
+	const [bookInfoProp, setBookInfoProp] = useState({});
+
+	useEffect(() => {
+		const cloneObj = { ...bookInfo };
+		cloneObj.progress = NaN;
+		setBookInfoProp(cloneObj);
+	}, []);
+
 	useEffect(() => {
 		if (currentTab === 'reviews') {
 			callApiStart.current = 10;
 			getReviewListFirstTime();
 		}
-	}, [currentOption, currentTab, directionSort, propertySort, inputSearch, reviewTurn]);
+	}, [currentOption, currentTab, directionSort, propertySort, valueSearch, reviewTurn]);
+
+	const updateInputSearch = value => {
+		if (value) {
+			const filterValue = value.toLowerCase().trim();
+			setValueSearch(JSON.stringify(filterValue));
+		} else {
+			setValueSearch('');
+		}
+	};
 
 	const getReviewListFirstTime = async () => {
 		try {
@@ -114,7 +130,7 @@ const ReviewTab = ({ currentTab }) => {
 						{ operator: 'in', value: checkedStarArr, property: 'rate' },
 					]),
 
-					searchUser: inputSearch,
+					searchUser: valueSearch,
 				};
 			} else {
 				params = {
@@ -123,7 +139,7 @@ const ReviewTab = ({ currentTab }) => {
 					sort: JSON.stringify([{ direction: directionSort, property: propertySort }]),
 					filter: JSON.stringify([{ operator: 'eq', value: bookId, property: 'bookId' }]),
 
-					searchUser: inputSearch,
+					searchUser: valueSearch,
 				};
 			}
 
@@ -150,8 +166,14 @@ const ReviewTab = ({ currentTab }) => {
 		}
 	};
 
+	const debounceSearch = useCallback(_.debounce(updateInputSearch, 700), []);
+
 	const ChangeSearch = e => {
 		setInputSearch(e.target.value);
+		if (currentTab === 'reviews') {
+			callApiStart.current = 10;
+			debounceSearch(e.target.value);
+		}
 	};
 
 	const postReviewList = async () => {
@@ -300,7 +322,6 @@ const ReviewTab = ({ currentTab }) => {
 		// dispatch(updateCurrentBook({}));
 		// setOption({});
 		setShowModalCreatPost(false);
-		// setShowSubModal(false);
 	};
 
 	const onChangeOption = data => {
@@ -358,7 +379,7 @@ const ReviewTab = ({ currentTab }) => {
 						))}
 					</InfiniteScroll>
 				) : (
-					<h5>Chưa có bài Review nào</h5>
+					<h5 className='review-tab__no-data'>Chưa có bài Review nào</h5>
 				)}
 			</FilterPane>
 
@@ -459,8 +480,8 @@ const ReviewTab = ({ currentTab }) => {
 						onChangeOption={onChangeOption}
 						onChangeNewPost={() => {}}
 						setShowModalCreatPost={setShowModalCreatPost}
-						showSubModal={showSubModal}
-						bookInfoProp={bookInfo}
+						showSubModal={false}
+						bookInfoProp={bookInfoProp}
 					/>
 				</div>
 			)}

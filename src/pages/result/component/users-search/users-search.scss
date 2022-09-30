@@ -1,17 +1,24 @@
 .user__search__container {
 	padding: 20px;
-	.myfriends__star {
-		cursor: pointer;
-	}
-	.myfriends__layout {
-		&__img {
-			cursor: pointer;
+	.myfriends {
+		&__layout {
+			&__img {
+				cursor: pointer;
+			}
+			&__container {
+				display: grid;
+				grid-template-columns: 1fr 1fr 1fr;
+				justify-items: center;
+				row-gap: 28px;
+			}
 		}
-		&__container {
-			display: grid;
-			grid-template-columns: 1fr 1fr 1fr;
-			justify-items: center;
-			row-gap: 28px;
+		&__star__name {
+			cursor: pointer;
+			-webkit-box-orient: vertical;
+			-webkit-line-clamp: 2;
+			text-overflow: ellipsis;
+			overflow: hidden;
+			display: -webkit-box;
 		}
 	}
 }

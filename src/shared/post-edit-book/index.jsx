@@ -62,12 +62,6 @@ const PostEditBook = ({ data, handleAddToPost, handleChangeStar, valueStar, allo
 		}
 	};
 
-	useEffect(() => {
-		if (allowToEdit) {
-			handleAddToPost({ ...data, progress: NaN });
-		}
-	}, []);
-
 	const generateAuthorName = authorsInfo => {
 		if (authorsInfo && authorsInfo.length) {
 			const authorNameArr = authorsInfo.map(item => item.authorName);
