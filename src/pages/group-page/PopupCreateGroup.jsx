@@ -22,7 +22,7 @@ const PopupCreateGroup = ({ handleClose }) => {
 	const [inputDiscription, setInputDiscription] = useState('');
 	const [inputHashtag, setInputHashtag] = useState('');
 	const [listHashtags, setListHashtags] = useState([]);
-	const [image, setImage] = useState('');
+	const [image, setImage] = useState(null);
 	const [isShowBtn, setIsShowBtn] = useState(false);
 	const [kindOfGroup, setKindOfGroup] = useState({});
 	const [lastTag, setLastTag] = useState('');
@@ -420,6 +420,13 @@ const PopupCreateGroup = ({ handleClose }) => {
 		groupNameInput.current.focus();
 	}, []);
 
+	useEffect(() => {
+		if (image && !image.length) {
+			const toastId = 'create-group-image';
+			toast.warning('Chỉ được chọn ảnh PNG, JPG, JPEG', { toastId: toastId });
+		}
+	}, [image]);
+
 	return (
 		<>
 			<div className='popup-group__header'>
@@ -429,37 +436,33 @@ const PopupCreateGroup = ({ handleClose }) => {
 				</button>
 			</div>
 
-			<div>
-				<div className={`upload-image__wrapper ${image ? 'has-image' : ''}`}>
-					<Dropzone onDrop={acceptedFiles => setImage(acceptedFiles)}>
-						{({ getRootProps, getInputProps, open }) => (
+			<Dropzone
+				onDrop={acceptedFiles => setImage(acceptedFiles)}
+				multiple={false}
+				accept={['.png', '.jpeg', '.jpg']}
+			>
+				{({ getRootProps, getInputProps }) => (
+					<div {...getRootProps({ className: 'upload-image__wrapper' })}>
+						{image && image.length > 0 ? (
+							<img src={URL.createObjectURL(image[0])} alt='img' />
+						) : (
 							<>
-								{image ? (
-									<img
-										style={{ width: '100%', maxHeight: '266px', objectFit: 'cover' }}
-										src={URL.createObjectURL(image[0])}
-										alt='img'
-										onClick={open}
-									/>
-								) : (
-									<div {...getRootProps()}>
-										<input {...getInputProps()} />
-										<div className='dropzone upload-image'>
-											<div className='upload-image__wrapper__icon'>
-												<Image />
-											</div>
-											<br />
-											<p className='upload-image__description'>Thêm ảnh từ thiết bị</p>
-											<span>hoặc kéo thả</span>
-											<span style={{ color: 'red', paddingTop: '5px' }}>(bắt buộc)</span>
-										</div>
+								<input {...getInputProps()} />
+								<div className='dropzone upload-image'>
+									<div className='upload-image__wrapper__icon'>
+										<Image />
 									</div>
-								)}
+									<br />
+									<p className='upload-image__description'>Thêm ảnh từ thiết bị</p>
+									<span>hoặc kéo thả</span>
+									<span style={{ color: 'red', paddingTop: '5px' }}>(bắt buộc)</span>
+								</div>
 							</>
 						)}
-					</Dropzone>
-				</div>
-			</div>
+					</div>
+				)}
+			</Dropzone>
+
 			<div className='form-field-wrapper'>
 				<div className='form-field-name'>
 					<label>Tên nhóm</label>

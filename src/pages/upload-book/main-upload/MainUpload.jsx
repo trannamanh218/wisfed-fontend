@@ -213,6 +213,13 @@ export default function MainUpload() {
 		}
 	};
 
+	useEffect(() => {
+		if (image && !image.length) {
+			const toastId = 'main-upload-front-book-cover';
+			toast.warning('Chỉ được chọn ảnh PNG, JPG, JPEG', { toastId: toastId });
+		}
+	}, [image]);
+
 	return (
 		<Suspense fallback={<Circle />}>
 			<div className='group-btn-back'>

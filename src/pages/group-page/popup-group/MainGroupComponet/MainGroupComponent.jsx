@@ -208,6 +208,15 @@ function MainGroupComponent({ handleChange, keyChange, data, member, handleUpdat
 		handleSelect();
 	}, [keyRedux]);
 
+	const handleChangeGroupImage = imgFile => {
+		if (imgFile.length) {
+			handleUpload(imgFile);
+		} else {
+			const customId = 'main-group-upload-bg-img';
+			toast.warning('Chỉ được chọn ảnh PNG, JPG, JPEG', { toastId: customId });
+		}
+	};
+
 	return (
 		<div className='group-main-component__container'>
 			<Circle loading={isFetching} />
@@ -215,19 +224,21 @@ function MainGroupComponent({ handleChange, keyChange, data, member, handleUpdat
 				<img
 					src={data.avatar ? data.avatar : defaultAvatar}
 					onError={e => e.target.setAttribute('src', defaultAvatar)}
-					alt=''
+					alt='image'
 				/>
 
 				{/* Chỉ quản trị viên mới có thể thay đổi ảnh bìa */}
 				{data.createdBy?.id === userInfo.id ? (
-					<Dropzone onDrop={acceptedFiles => handleUpload(acceptedFiles)}>
+					<Dropzone
+						onDrop={acceptedFiles => handleChangeGroupImage(acceptedFiles)}
+						multiple={false}
+						accept={['.png', '.jpeg', '.jpg']}
+					>
 						{({ getRootProps, getInputProps }) => (
 							<div {...getRootProps()}>
 								<input {...getInputProps()} />
 								<div className='dropzone upload-image'>
-									<div className=''>
-										<img src={camera} alt='camera' />
-									</div>
+									<img src={camera} alt='camera' />
 									<span style={{ marginRight: '3px' }}>Chỉnh sửa ảnh bìa</span>
 								</div>
 							</div>

@@ -379,7 +379,6 @@ function CreatPostModalContentReviewBookOnly({
 								: 0,
 					};
 					dispatch(createReviewBook(reviewData));
-					console.log(reviewData);
 				}
 				if (valueStar > 0) {
 					userRating();

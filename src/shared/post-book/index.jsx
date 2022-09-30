@@ -15,7 +15,7 @@ function PostBook({ data, inCreatePost }) {
 			return 'Tác giả: Chưa xác định';
 		}
 	};
-	console.log(data);
+
 	return (
 		<div className='post-book'>
 			{data.images.length > 0 && (
