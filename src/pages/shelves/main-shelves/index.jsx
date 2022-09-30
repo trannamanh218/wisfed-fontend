@@ -116,33 +116,30 @@ const MainShelves = ({ allLibraryList, shelveGroupName, isMyShelve, handleViewBo
 
 							{isMyShelve !== undefined && (
 								<>
-									<>
-										{filter !== '[]' ? (
-											<SearchBook
-												inputSearch={inputSearch}
-												list={currentBooks}
-												isMyShelve={isMyShelve}
-												handleUpdateBookList={handleUpdateBookList}
-												handleViewBookDetail={handleViewBookDetail}
-											/>
-										) : (
-											<Shelf
-												list={currentBooks}
-												isMyShelve={isMyShelve}
-												handleUpdateBookList={handleUpdateBookList}
-												handleViewBookDetail={handleViewBookDetail}
-											/>
-										)}
-									</>
-									<>
-										{totalPage > 1 && (
-											<PaginationGroup
-												totalPage={totalPage}
-												currentPage={currentPage + 1}
-												changePage={changePage}
-											/>
-										)}
-									</>
+									{filter !== '[]' ? (
+										<SearchBook
+											inputSearch={inputSearch}
+											list={currentBooks}
+											isMyShelve={isMyShelve}
+											handleUpdateBookList={handleUpdateBookList}
+											handleViewBookDetail={handleViewBookDetail}
+										/>
+									) : (
+										<Shelf
+											list={currentBooks}
+											isMyShelve={isMyShelve}
+											handleUpdateBookList={handleUpdateBookList}
+											handleViewBookDetail={handleViewBookDetail}
+										/>
+									)}
+
+									{totalPage > 1 && (
+										<PaginationGroup
+											totalPage={totalPage}
+											currentPage={currentPage + 1}
+											changePage={changePage}
+										/>
+									)}
 								</>
 							)}
 						</>
