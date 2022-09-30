@@ -26,6 +26,7 @@ const DetailFriend = () => {
 	const dispatch = useDispatch();
 	const [inputSearch, setInputSearch] = useState('');
 	const [filter, setFilter] = useState('[]');
+	const [listFriendSuggest, setListFriendSuggest] = useState([]);
 
 	const { isAuth } = useSelector(state => state.auth);
 	const result = userInfo?.favoriteCategory.map(item => item.categoryId);
@@ -121,19 +122,28 @@ const DetailFriend = () => {
 						setGetListFollowings(friendReq.rows);
 					}
 				} else if (suggestions) {
-					Promise.all([getSuggestFriendByTopFollow(), getSuggestFriendByCategory()]).then(data => {
-						const listUser = data.reduce((acc, item) => acc.concat(item));
-						const listuserNew = listUser.filter(item => item.id !== userInfo.id);
-						const newList = listuserNew.reduce((acc, curr) => {
-							const userId = acc.find(item => item.id === curr.id);
-							if (!userId) {
-								return acc.concat([curr]);
-							} else {
-								return acc;
-							}
-						}, []);
-						setGetListFollowings(newList);
-					});
+					if (inputSearch.length > 0) {
+						setGetListFollowings(
+							listFriendSuggest.filter(item =>
+								item.fullName.toLowerCase().includes(inputSearch.toLowerCase())
+							)
+						);
+					} else {
+						Promise.all([getSuggestFriendByTopFollow(), getSuggestFriendByCategory()]).then(data => {
+							const listUser = data.reduce((acc, item) => acc.concat(item));
+							const listuserNew = listUser.filter(item => item.id !== userInfo.id);
+							const newList = listuserNew.reduce((acc, curr) => {
+								const userId = acc.find(item => item.id === curr.id);
+								if (!userId) {
+									return acc.concat([curr]);
+								} else {
+									return acc;
+								}
+							}, []);
+							setListFriendSuggest(newList);
+							setGetListFollowings(newList);
+						});
+					}
 				}
 			}
 		} catch (err) {
@@ -176,13 +186,13 @@ const DetailFriend = () => {
 		} else if (following) {
 			return ` ${renderNameUser()} đang theo dõi `;
 		} else if (follower) {
-			return `Người đang theo dõi ${renderNameUser()}`;
+			return `đang theo dõi ${renderNameUser()}`;
 		}
 	};
 
 	const renderLength = () => {
 		if (following || follower || invitation || suggestions) {
-			return getListFollowings.length ? getListFollowings.length : '';
+			return getListFollowings.length ? getListFollowings.length : 0;
 		}
 	};
 
