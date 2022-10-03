@@ -96,7 +96,7 @@ const ReviewTab = ({ currentTab }) => {
 
 	useEffect(() => {
 		const cloneObj = { ...bookInfo };
-		cloneObj.progress = '';
+		cloneObj.progress = undefined;
 		setBookInfoProp(cloneObj);
 	}, []);
 
