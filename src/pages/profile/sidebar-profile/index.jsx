@@ -49,7 +49,19 @@ const SidebarProfile = ({ currentUserInfo, handleViewBookDetail }) => {
 
 	const getAllLibraryListUser = async () => {
 		try {
-			const data = await dispatch(getAllLibraryList({ userId })).unwrap();
+			let body = {
+				userId: '',
+			};
+			if (userId) {
+				body = {
+					userId: userId,
+				};
+			} else {
+				body = {
+					userId: userInfo.id,
+				};
+			}
+			const data = await dispatch(getAllLibraryList(body)).unwrap();
 			library.current = data;
 
 			const reading = library.current.default.filter(item => item.defaultType === 'reading');
