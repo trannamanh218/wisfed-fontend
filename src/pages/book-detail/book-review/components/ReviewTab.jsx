@@ -24,7 +24,7 @@ import FormCheckGroup from 'shared/form-check-group';
 import Button from 'shared/button';
 import { REVIEW_TYPE } from 'constants/index';
 import searchreview from 'assets/images/search-review.png';
-import CreatPostModalContentReviewBookOnly from './CreatPostModalContentReviewBookOnly';
+import CreatPostModalContent from 'pages/home/components/newfeed/components/creat-post-modal-content';
 
 const ReviewTab = ({ currentTab }) => {
 	const filterOptions = [
@@ -96,7 +96,7 @@ const ReviewTab = ({ currentTab }) => {
 
 	useEffect(() => {
 		const cloneObj = { ...bookInfo };
-		cloneObj.progress = NaN;
+		cloneObj.progress = '';
 		setBookInfoProp(cloneObj);
 	}, []);
 
@@ -472,13 +472,13 @@ const ReviewTab = ({ currentTab }) => {
 			</Modal>
 			{showModalCreatPost && (
 				<div className='newfeed__creat-post__modal' ref={creatPostModalContainer}>
-					<CreatPostModalContentReviewBookOnly
+					<CreatPostModalContent
 						hideCreatePostModal={hideCreatePostModal}
 						showModalCreatPost={showModalCreatPost}
 						option={option}
 						setOption={setOption}
 						onChangeOption={onChangeOption}
-						onChangeNewPost={() => {}}
+						onChangeNewPost={getReviewListFirstTime}
 						setShowModalCreatPost={setShowModalCreatPost}
 						showSubModal={false}
 						bookInfoProp={bookInfoProp}
