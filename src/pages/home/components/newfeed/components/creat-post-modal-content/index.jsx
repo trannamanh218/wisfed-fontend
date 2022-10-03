@@ -604,7 +604,7 @@ function CreatPostModalContent({
 			);
 		}
 	};
-	console.log(taggedData?.addBook?.progress);
+
 	return (
 		<div className='creat-post-modal-content'>
 			<Circle loading={status === STATUS_LOADING} />
