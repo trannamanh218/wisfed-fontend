@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateKey } from 'reducers/redux-utils/group';
 import defaultAvatar from 'assets/images/avatar.jpeg';
+import { Link } from 'react-router-dom';
 
 const SidebarGroupLef = ({ handleChange, data, member }) => {
 	const [listFriend, setListFriend] = useState([]);
@@ -85,13 +86,17 @@ const SidebarGroupLef = ({ handleChange, data, member }) => {
 								<div key={index}>
 									{item?.isAdmin && (
 										<div className='people-item'>
-											<img
-												src={item.avatarImage ? item.avatarImage : defaultAvatar}
-												onError={e => e.target.setAttribute('src', defaultAvatar)}
-												alt=''
-											/>
+											<Link to={`/profile/${item.id}`}>
+												<img
+													src={item.avatarImage ? item.avatarImage : defaultAvatar}
+													onError={e => e.target.setAttribute('src', defaultAvatar)}
+													alt=''
+												/>
+											</Link>
 											<div className='people-item__text'>
-												<span>{item.fullName || item.firstName + ' ' + item.lastName}</span>
+												<Link to={`/profile/${item.id}`}>
+													<span>{item.fullName || item.firstName + ' ' + item.lastName}</span>
+												</Link>
 												{item.mutualFriend ? (
 													<div>
 														{item.mutualFriend < 10
@@ -109,55 +114,27 @@ const SidebarGroupLef = ({ handleChange, data, member }) => {
 							);
 						})}
 					</div>
-					<div className='group-sibar-left__people-friends'>
-						<span>Bạn bè</span>
-						<div style={{ marginTop: '10px' }}>
-							{listFriend.length > 0
-								? listFriend.map((item, index) => {
-										return (
-											<div key={index}>
-												<div className='people-item'>
+					{listFriend.length > 0 ? (
+						<div className='group-sibar-left__people-friends'>
+							<span>Bạn bè</span>
+							<div style={{ marginTop: '10px' }}>
+								{listFriend.map((item, index) => {
+									return (
+										<div key={index}>
+											<div className='people-item'>
+												<Link to={`/profile/${item.id}`}>
 													<img
 														src={item.avatarImage ? item.avatarImage : defaultAvatar}
 														onError={e => e.target.setAttribute('src', defaultAvatar)}
 														alt=''
 													/>
-													<div className='people-item__text'>
+												</Link>
+												<div className='people-item__text'>
+													<Link to={`/profile/${item.id}`}>
 														<span>
 															{item.fullName || item.firstName + ' ' + item.lastName}
 														</span>
-														{item.mutualFriend ? (
-															<div>
-																{item.mutualFriend < 10
-																	? `0${item.mutualFriend} `
-																	: `${item.mutualFriend} `}
-																bạn chung
-															</div>
-														) : (
-															''
-														)}
-													</div>
-												</div>
-											</div>
-										);
-								  })
-								: 'Không có dữ liệu'}
-						</div>
-					</div>
-					<div className='group-sibar-left__people-friends'>
-						<span>Người theo dõi</span>
-						<div style={{ marginTop: '10px' }}>
-							{listFolow.length > 0
-								? listFolow.map((item, index) => {
-										return (
-											<div className='people-item' key={index}>
-												<img
-													src={item.avatarImage ? item.avatarImage : defaultAvatar}
-													onError={e => e.target.setAttribute('src', defaultAvatar)}
-													alt=''
-												/>
-												<div className='people-item__text'>
-													<span>{item.fullName || item.firstName + ' ' + item.lastName}</span>
+													</Link>
 													{item.mutualFriend ? (
 														<div>
 															{item.mutualFriend < 10
@@ -170,11 +147,51 @@ const SidebarGroupLef = ({ handleChange, data, member }) => {
 													)}
 												</div>
 											</div>
-										);
-								  })
-								: 'Không có dữ liệu'}
+										</div>
+									);
+								})}
+							</div>
 						</div>
-					</div>
+					) : (
+						''
+					)}
+					{listFolow.length > 0 ? (
+						<div className='group-sibar-left__people-friends'>
+							<span>Người theo dõi</span>
+							<div style={{ marginTop: '10px' }}>
+								{listFolow.map((item, index) => {
+									return (
+										<div className='people-item' key={index}>
+											<Link to={`/profile/${item.id}`}>
+												<img
+													src={item.avatarImage ? item.avatarImage : defaultAvatar}
+													onError={e => e.target.setAttribute('src', defaultAvatar)}
+													alt=''
+												/>
+											</Link>
+											<div className='people-item__text'>
+												<Link to={`/profile/${item.id}`}>
+													<span>{item.fullName || item.firstName + ' ' + item.lastName}</span>
+												</Link>
+												{item.mutualFriend ? (
+													<div>
+														{item.mutualFriend < 10
+															? `0${item.mutualFriend} `
+															: `${item.mutualFriend} `}
+														bạn chung
+													</div>
+												) : (
+													''
+												)}
+											</div>
+										</div>
+									);
+								})}
+							</div>
+						</div>
+					) : (
+						''
+					)}
 				</div>
 			</div>
 			<div className='group-sibar-left__btn'>
