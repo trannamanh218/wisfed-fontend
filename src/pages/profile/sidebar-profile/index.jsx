@@ -14,6 +14,10 @@ import RenderProgress from 'shared/render-progress';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import { DEFAULT_TOGGLE_ROWS } from 'constants/index';
+import { useDispatch } from 'react-redux';
+import { getAllLibraryList } from 'reducers/redux-utils/library';
+import { NotificationError } from 'helpers/Error';
+import { useRef } from 'react';
 
 const SidebarProfile = ({ currentUserInfo, handleViewBookDetail }) => {
 	const { userId } = useParams();
@@ -27,6 +31,8 @@ const SidebarProfile = ({ currentUserInfo, handleViewBookDetail }) => {
 	const { userInfo } = useSelector(state => state.auth);
 	const myAllLibraryRedux = useSelector(state => state.library.myAllLibrary);
 
+	const library = useRef([]);
+	const dispatch = useDispatch();
 	useEffect(() => {
 		if (!_.isEmpty(userInfo)) {
 			if (window.location.pathname.includes('profile')) {
@@ -41,15 +47,34 @@ const SidebarProfile = ({ currentUserInfo, handleViewBookDetail }) => {
 		}
 	}, [userInfo, currentUserInfo]);
 
-	useEffect(() => {
-		if (!_.isEmpty(myAllLibraryRedux)) {
-			const readingLibrary = myAllLibraryRedux.default.filter(item => item.defaultType === 'reading');
-			if (readingLibrary.length && readingLibrary[0].books.length) {
-				const books = readingLibrary[0].books;
-				setBookReading(books[books.length - 1].book);
+	const getAllLibraryListUser = async () => {
+		try {
+			const data = await dispatch(getAllLibraryList({ userId })).unwrap();
+			library.current = data;
+
+			const reading = library.current.default.filter(item => item.defaultType === 'reading');
+			if (reading.length && reading[0].books.length) {
+				const books = reading[0].books;
+				setBookReading(books[0].book);
 			}
+		} catch (err) {
+			NotificationError(err);
 		}
-	}, [myAllLibraryRedux]);
+	};
+
+	useEffect(async () => {
+		if (userInfo.id === userId) {
+			if (!_.isEmpty(myAllLibraryRedux)) {
+				const readingLibrary = myAllLibraryRedux.default.filter(item => item.defaultType === 'reading');
+				if (readingLibrary.length && readingLibrary[0].books.length) {
+					const books = readingLibrary[0].books;
+					setBookReading(books[0].book);
+				}
+			}
+		} else {
+			getAllLibraryListUser();
+		}
+	}, [myAllLibraryRedux, userId]);
 
 	const handleViewMore = () => {
 		const length = myAllLibraryRedux.custom.length;
@@ -76,6 +101,7 @@ const SidebarProfile = ({ currentUserInfo, handleViewBookDetail }) => {
 			return '';
 		}
 	};
+
 	return (
 		<>
 			{!_.isEmpty(userInfo) && (
@@ -97,18 +123,33 @@ const SidebarProfile = ({ currentUserInfo, handleViewBookDetail }) => {
 							<h4>Giá sách cá nhân</h4>
 							<div className='dualColumn'>
 								<ul className={classNames('dualColumn-list', { [`bg-light`]: false })}>
-									{myAllLibraryRedux.custom.length > 0 &&
-										myAllLibraryRedux.custom.slice(0, rows).map((item, index) => (
-											<li
-												className={classNames('dualColumn-item', { 'has-background': false })}
-												key={index}
-											>
-												<span className='dualColumn-item__title'>{item.name}</span>
-												<span className='dualColumn-item__number'>
-													{item.books.length} cuốn
-												</span>
-											</li>
-										))}
+									{userInfo.id === userId
+										? myAllLibraryRedux.custom.slice(0, rows).map((item, index) => (
+												<li
+													className={classNames('dualColumn-item', {
+														'has-background': false,
+													})}
+													key={index}
+												>
+													<span className='dualColumn-item__title'>{item.name}</span>
+													<span className='dualColumn-item__number'>
+														{item.books.length} cuốn
+													</span>
+												</li>
+										  ))
+										: library.current?.custom?.slice(0, rows).map((item, index) => (
+												<li
+													className={classNames('dualColumn-item', {
+														'has-background': false,
+													})}
+													key={index}
+												>
+													<span className='dualColumn-item__title'>{item?.name}</span>
+													<span className='dualColumn-item__number'>
+														{item?.books.length} cuốn
+													</span>
+												</li>
+										  ))}
 								</ul>
 								{!isExpand && myAllLibraryRedux.custom.length > 0 && (
 									<button className='dualColumn-btn' onClick={handleViewMore}>

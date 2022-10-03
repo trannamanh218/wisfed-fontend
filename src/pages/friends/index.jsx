@@ -37,7 +37,7 @@ const Friends = () => {
 		} else if (activeTabs === 'addfriend') {
 			return <InvitationFriend activeTabs={activeTabs} />;
 		} else if (activeTabs === 'suggest') {
-			return <SuggestFriend />;
+			return <SuggestFriend activeTabs={activeTabs} />;
 		}
 	};
 

@@ -205,9 +205,20 @@ export default function MainUpload() {
 	}, [image, name, authors, categoryAddedList, publisher, isbn, page, language, description]);
 
 	const uploadImageFile = async acceptedFiles => {
-		const imageUploadedData = await dispatch(uploadImage(acceptedFiles)).unwrap();
-		return imageUploadedData?.streamPath;
+		try {
+			const imageUploadedData = await dispatch(uploadImage(acceptedFiles)).unwrap();
+			return imageUploadedData?.streamPath;
+		} catch (err) {
+			NotificationError(err);
+		}
 	};
+
+	useEffect(() => {
+		if (image && !image.length) {
+			const toastId = 'main-upload-front-book-cover';
+			toast.warning('Chỉ được chọn ảnh PNG, JPG, JPEG', { toastId: toastId });
+		}
+	}, [image]);
 
 	return (
 		<Suspense fallback={<Circle />}>
@@ -222,32 +233,34 @@ export default function MainUpload() {
 				</span>
 			</div>
 			<div className='upload-book-form'>
-				<div className={`upload-image__wrapper ${image ? 'has-image' : ''}`}>
-					<Dropzone onDrop={acceptedFiles => setImage(acceptedFiles)} multiple={false}>
-						{({ getRootProps, getInputProps }) => (
-							<div {...getRootProps()}>
-								{image && image.length > 0 ? (
-									<img src={URL.createObjectURL(image[0])} alt='img' />
-								) : (
-									<>
-										<input {...getInputProps()} />
-										<div className='dropzone upload-image'>
-											<div className='upload-image__wrapper__icon'>
-												<Image />
-											</div>
-											<br />
-											<p className='upload-image__description'>
-												Thêm ảnh bìa từ thiết bị
-												<span style={{ color: 'red' }}>*</span>
-											</p>
-											<span style={{ fontWeight: 500, marginTop: '5px' }}>(hoặc kéo thả)</span>
+				<Dropzone
+					onDrop={acceptedFiles => setImage(acceptedFiles)}
+					multiple={false}
+					accept={['.png', '.jpeg', '.jpg']}
+				>
+					{({ getRootProps, getInputProps }) => (
+						<div {...getRootProps({ className: 'upload-image__wrapper' })}>
+							{image && image.length > 0 ? (
+								<img src={URL.createObjectURL(image[0])} alt='img' />
+							) : (
+								<>
+									<input {...getInputProps()} />
+									<div className='upload-image'>
+										<div className='upload-image__wrapper__icon'>
+											<Image />
 										</div>
-									</>
-								)}
-							</div>
-						)}
-					</Dropzone>
-				</div>
+										<br />
+										<p className='upload-image__description'>
+											Thêm ảnh bìa từ thiết bị
+											<span style={{ color: 'red' }}>*</span>
+										</p>
+										<span style={{ fontWeight: 500, marginTop: '5px' }}>(hoặc kéo thả)</span>
+									</div>
+								</>
+							)}
+						</div>
+					)}
+				</Dropzone>
 				<div className='upload-info-form'>
 					<div className='inp-book'>
 						<label>

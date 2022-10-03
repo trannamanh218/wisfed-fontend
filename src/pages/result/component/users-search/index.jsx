@@ -95,10 +95,10 @@ const UsersSearch = ({ isFetching, value, setIsFetching, searchResultInput, acti
 											className='myfriends__layout__img'
 											src={item.avatarImage ? item.avatarImage : defaultAvatar}
 											onError={e => e.target.setAttribute('src', defaultAvatar)}
-											alt=''
+											alt='img'
 											onClick={() => onUserClick(item)}
 										/>
-										<div className='myfriends__star'>
+										<div className='myfriends__star' onClick={() => onUserClick(item)}>
 											<div className='myfriends__star__name'>
 												{item.fullName ? (
 													item.fullName

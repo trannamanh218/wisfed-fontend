@@ -22,6 +22,7 @@ const FriendsItem = ({ data, keyTabs, getListFollower, getMyListFriendReq, getLi
 	const invitation = location.pathname === '/friends/invitation';
 	const following = location.pathname === '/friends/following';
 	const follower = location.pathname === '/friends/follower';
+	const suggestions = location.pathname === '/friends/suggestions';
 	const [unFriend, setUnFriend] = useState(true);
 	const [toggleUnFollow, setToggleUnFollow] = useState(true);
 	const [toggleAddFollow, setToggleAddFollow] = useState(true);
@@ -180,18 +181,10 @@ const FriendsItem = ({ data, keyTabs, getListFollower, getMyListFriendReq, getLi
 		);
 	};
 
-	// const buttonAcces = () => {
-	// 	return (
-	// 		<Button className='myfriends__button'>
-	// 			<span className='myfriends__button__content'>Chấp nhận</span>
-	// 		</Button>
-	// 	);
-	// };
-
 	const renderButtonFriends = () => {
 		if (keyTabs === 'friend') {
 			return buttonUnFriend();
-		} else if (keyTabs === 'follow' || following || follower) {
+		} else if (keyTabs === 'follow' || following || follower || keyTabs === 'suggest' || suggestions) {
 			if (data.relation === 'friend') {
 				return toggleAddFriend ? buttonUnFriend() : togglePendingFriend ? buttonAddFriend() : buttonPending();
 			} else if (data.relation === 'unknown') {
@@ -213,7 +206,7 @@ const FriendsItem = ({ data, keyTabs, getListFollower, getMyListFriendReq, getLi
 			} else {
 				return toggleAddFollow ? buttonFollow() : buttonUnfollow();
 			}
-		} else if (keyTabs === 'follow' || following || follower) {
+		} else if (keyTabs === 'follow' || following || follower || keyTabs === 'suggest' || suggestions) {
 			if (data.isFollow) {
 				return toggleUnFollow ? buttonUnfollow() : buttonFollow();
 			} else {
@@ -233,7 +226,7 @@ const FriendsItem = ({ data, keyTabs, getListFollower, getMyListFriendReq, getLi
 	const renderDisplay = () => {
 		return (
 			<div className='myfriends__layout'>
-				<Link to={`/profile/${data.userTwo?.id}`}>
+				<Link to={`/profile/${data.userTwo?.id || data.id}`}>
 					<img
 						className='myfriends__layout__img'
 						src={data.userTwo?.avatarImage || data?.avatarImage || defaultAvatar}
@@ -243,13 +236,7 @@ const FriendsItem = ({ data, keyTabs, getListFollower, getMyListFriendReq, getLi
 
 					<div className='myfriends__star'>
 						<div className='myfriends__star__name'>
-							{data.userTwo?.fullName
-								? data.userTwo?.fullName
-								: // <>
-								  // 	<span>{data.userTwo?.firstName}</span>&nbsp;
-								  // 	<span>{data.userTwo?.lastName}</span>
-								  // </>
-								  data.fullName}
+							{data.userTwo?.fullName ? data.userTwo?.fullName : data.fullName}
 						</div>
 						{data.isStar && <Subtract />}
 					</div>
