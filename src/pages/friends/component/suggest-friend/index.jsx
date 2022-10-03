@@ -3,13 +3,17 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { getTopUser } from 'reducers/redux-utils/ranks';
+import { getRecommendFriend } from 'reducers/redux-utils/user';
 import FriendsItem from 'shared/friends';
 
 const SuggestFriend = ({ activeTabs }) => {
 	const [list, setList] = useState([]);
+	const [listRecommendFriend, setListRecommendFriend] = useState([]);
 
 	const userInfo = useSelector(state => state.auth.userInfo);
 	const { isAuth } = useSelector(state => state.auth);
+
+	const LIMIT_RECOMMEND = 6;
 
 	const result = userInfo?.favoriteCategory.map(item => item.categoryId);
 
@@ -46,6 +50,19 @@ const SuggestFriend = ({ activeTabs }) => {
 		}
 	};
 
+	const getRecommendFriendData = async () => {
+		const params = {
+			start: 0,
+			limit: LIMIT_RECOMMEND,
+		};
+		try {
+			const data = await dispatch(getRecommendFriend(params)).unwrap();
+			setListRecommendFriend(data);
+		} catch (err) {
+			NotificationError(err);
+		}
+	};
+
 	useEffect(() => {
 		Promise.all([getSuggestFriendByTopFollow(), getSuggestFriendByCategory()]).then(data => {
 			const listUser = data.reduce((acc, item) => acc.concat(item));
@@ -60,21 +77,36 @@ const SuggestFriend = ({ activeTabs }) => {
 			}, []);
 			setList(newList);
 		});
+		getRecommendFriendData();
 	}, []);
 
 	return (
 		<div className='myfriends__container'>
 			<div className='myfriends__container__content'>
 				<div className='myfriends__title__addfriend'>Bạn bè gợi ý từ BXH</div>
-				{list && (
-					<Link to={'/friends/suggestions'} className='myfriends__title__all'>
-						Xem tất cả
-					</Link>
-				)}
+				<Link to={'/friends/suggestions'} className='myfriends__title__all'>
+					Xem tất cả
+				</Link>
 			</div>
 			<div className='myfriends__layout__container'>
-				{list.map(item => (
-					<FriendsItem key={item.id} data={item} keyTabs={activeTabs} getListSuggest={list} />
+				{list.length > 0 ? (
+					list.map(item => (
+						<FriendsItem key={item.id} data={item} keyTabs={activeTabs} getListSuggest={list} />
+					))
+				) : (
+					<p style={{ textAlign: 'center' }}>Không có dữ liệu</p>
+				)}
+			</div>
+			<div className='myfriends__line'></div>
+			<div className='myfriends__container__content'>
+				<div className='myfriends__title__addfriend'>Những người bạn có thể biết</div>
+				<Link to={'/friends/recommend'} className='myfriends__title__all'>
+					Xem tất cả
+				</Link>
+			</div>
+			<div className='myfriends__layout__container'>
+				{listRecommendFriend.map(item => (
+					<FriendsItem key={item.id} data={item} />
 				))}
 			</div>
 		</div>
