@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import './chooseTopic.scss';
 import Logo from 'assets/images/Logo 2.png';
 import { Form } from 'react-bootstrap';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { getCategoryList } from 'reducers/redux-utils/category';
 import { editUserInfo } from 'reducers/redux-utils/user';
 import { useNavigate } from 'react-router-dom';
@@ -16,7 +16,6 @@ function ChooseTopic() {
 	const [addFavorite, setAddFavorite] = useState([]);
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
-	const { userInfo } = useSelector(state => state.auth);
 	const [inputValue, setInputValue] = useState('');
 
 	const getListCategory = async () => {

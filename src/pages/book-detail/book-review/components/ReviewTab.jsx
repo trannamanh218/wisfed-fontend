@@ -1,4 +1,4 @@
-import { Fragment, useState, useEffect, useRef } from 'react';
+import { Fragment, useState, useEffect, useRef, useCallback } from 'react';
 import FilterPane from 'shared/filter-pane';
 import SearchField from 'shared/search-field';
 import Post from 'shared/post';
@@ -24,6 +24,7 @@ import FormCheckGroup from 'shared/form-check-group';
 import Button from 'shared/button';
 import { REVIEW_TYPE } from 'constants/index';
 import searchreview from 'assets/images/search-review.png';
+import CreatPostModalContentReviewBookOnly from './CreatPostModalContentReviewBookOnly';
 
 const ReviewTab = ({ currentTab }) => {
 	const filterOptions = [
@@ -76,23 +77,44 @@ const ReviewTab = ({ currentTab }) => {
 	const [filterRate, setFilterRate] = useState(false);
 	const [reviewBook, setReviewBook] = useState('');
 	const [reviewTurn, setReviewTurn] = useState(false);
-	const [filterInput, setFilterInput] = useState([]);
+	const [showModalCreatPost, setShowModalCreatPost] = useState(false);
+	const [option, setOption] = useState({});
+	const [valueSearch, setValueSearch] = useState('');
+
 	const { userInfo } = useSelector(state => state.auth);
 
 	const callApiStart = useRef(10);
 	const callApiPerPage = useRef(10);
+	const creatPostModalContainer = useRef(null);
 
 	const dispatch = useDispatch();
 	const { bookId } = useParams();
 
 	const bookInfo = useSelector(state => state.book.bookInfo);
 
+	const [bookInfoProp, setBookInfoProp] = useState({});
+
+	useEffect(() => {
+		const cloneObj = { ...bookInfo };
+		cloneObj.progress = NaN;
+		setBookInfoProp(cloneObj);
+	}, []);
+
 	useEffect(() => {
 		if (currentTab === 'reviews') {
 			callApiStart.current = 10;
 			getReviewListFirstTime();
 		}
-	}, [currentOption, currentTab, directionSort, propertySort, inputSearch, reviewTurn]);
+	}, [currentOption, currentTab, directionSort, propertySort, valueSearch, reviewTurn]);
+
+	const updateInputSearch = value => {
+		if (value) {
+			const filterValue = value.toLowerCase().trim();
+			setValueSearch(JSON.stringify(filterValue));
+		} else {
+			setValueSearch('');
+		}
+	};
 
 	const getReviewListFirstTime = async () => {
 		try {
@@ -108,7 +130,7 @@ const ReviewTab = ({ currentTab }) => {
 						{ operator: 'in', value: checkedStarArr, property: 'rate' },
 					]),
 
-					searchUser: inputSearch,
+					searchUser: valueSearch,
 				};
 			} else {
 				params = {
@@ -117,7 +139,7 @@ const ReviewTab = ({ currentTab }) => {
 					sort: JSON.stringify([{ direction: directionSort, property: propertySort }]),
 					filter: JSON.stringify([{ operator: 'eq', value: bookId, property: 'bookId' }]),
 
-					searchUser: inputSearch,
+					searchUser: valueSearch,
 				};
 			}
 
@@ -144,8 +166,14 @@ const ReviewTab = ({ currentTab }) => {
 		}
 	};
 
+	const debounceSearch = useCallback(_.debounce(updateInputSearch, 700), []);
+
 	const ChangeSearch = e => {
 		setInputSearch(e.target.value);
+		if (currentTab === 'reviews') {
+			callApiStart.current = 10;
+			debounceSearch(e.target.value);
+		}
 	};
 
 	const postReviewList = async () => {
@@ -276,6 +304,30 @@ const ReviewTab = ({ currentTab }) => {
 		if (checkedStarArr.length == 0) setFilterRate(false);
 		else setFilterRate(true);
 	};
+
+	useEffect(() => {
+		if (showModalCreatPost) {
+			creatPostModalContainer.current.addEventListener('mousedown', e => {
+				if (e.target === creatPostModalContainer.current) {
+					hideCreatePostModal();
+				}
+			});
+		}
+	}, [showModalCreatPost]);
+
+	const hideCreatePostModal = () => {
+		// dispatch(resetTaggedDataFunc(true));
+		// dispatch(saveDataShare({}));
+		// dispatch(updateImg([]));
+		// dispatch(updateCurrentBook({}));
+		// setOption({});
+		setShowModalCreatPost(false);
+	};
+
+	const onChangeOption = data => {
+		setOption(data);
+	};
+
 	return (
 		<div className='review-tab'>
 			<div className='search-review'>
@@ -283,6 +335,7 @@ const ReviewTab = ({ currentTab }) => {
 				<input
 					className='search-review__input'
 					placeholder='Bạn review cuốn sách này thế nào'
+					onClick={() => setShowModalCreatPost(true)}
 					onChange={changeReview}
 					value={reviewBook}
 					onKeyPress={handleKeyPress}
@@ -326,7 +379,7 @@ const ReviewTab = ({ currentTab }) => {
 						))}
 					</InfiniteScroll>
 				) : (
-					<h5>Chưa có bài Review nào</h5>
+					<h5 className='review-tab__no-data'>Chưa có bài Review nào</h5>
 				)}
 			</FilterPane>
 
@@ -417,6 +470,21 @@ const ReviewTab = ({ currentTab }) => {
 					</div>
 				</Modal.Body>
 			</Modal>
+			{showModalCreatPost && (
+				<div className='newfeed__creat-post__modal' ref={creatPostModalContainer}>
+					<CreatPostModalContentReviewBookOnly
+						hideCreatePostModal={hideCreatePostModal}
+						showModalCreatPost={showModalCreatPost}
+						option={option}
+						setOption={setOption}
+						onChangeOption={onChangeOption}
+						onChangeNewPost={() => {}}
+						setShowModalCreatPost={setShowModalCreatPost}
+						showSubModal={false}
+						bookInfoProp={bookInfoProp}
+					/>
+				</div>
+			)}
 		</div>
 	);
 };

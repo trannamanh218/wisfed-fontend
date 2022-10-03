@@ -76,6 +76,9 @@ const PersonalInfo = ({ currentUserInfo, setCurrentTab }) => {
 					toast.error('Cập nhật ảnh thất bại', { toastId: customId });
 				}
 			}
+		} else {
+			const customId = 'profile-upload-image';
+			toast.warning('Chỉ được chọn ảnh PNG, JPG, JPEG', { toastId: customId });
 		}
 	});
 
@@ -87,7 +90,11 @@ const PersonalInfo = ({ currentUserInfo, setCurrentTab }) => {
 		<div className='personal-info'>
 			<div className='personal-info__wallpaper'>
 				<img src={bgImage} alt='background-image' onError={() => setBgImage(backgroundImageDefault)} />
-				<Dropzone onDrop={acceptedFile => handleDrop(acceptedFile, 'change-bgImage')} multiple={false}>
+				<Dropzone
+					onDrop={acceptedFile => handleDrop(acceptedFile, 'change-bgImage')}
+					multiple={false}
+					accept={['.png', '.jpeg', '.jpg']}
+				>
 					{({ getRootProps, getInputProps }) => (
 						<div className='edit-wallpaper' {...getRootProps()}>
 							<input {...getInputProps()} />
@@ -113,6 +120,7 @@ const PersonalInfo = ({ currentUserInfo, setCurrentTab }) => {
 						<Dropzone
 							onDrop={acceptedFile => handleDrop(acceptedFile, 'change-avatarImage')}
 							multiple={false}
+							accept={['.png', '.jpeg', '.jpg']}
 						>
 							{({ getRootProps, getInputProps }) => (
 								<div className='edit-avatar' {...getRootProps()}>
