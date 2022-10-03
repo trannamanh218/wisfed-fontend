@@ -240,8 +240,8 @@ const PersonalInfo = ({ currentUserInfo, setCurrentTab }) => {
 								<span>
 									Bạn bè
 									{currentUserInfo.id !== userInfo.id ? (
-										<span> ({currentUserInfo.mutualFriends})</span>
-									) : null}
+										<span> ({currentUserInfo.mutualFriends} bạn chung)</span>
+									) : null}{' '}
 								</span>
 							</li>
 							{modalFriend && (
