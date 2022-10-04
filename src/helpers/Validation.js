@@ -39,7 +39,14 @@ export const emailValidate = yup.object().shape({
 });
 
 export const resetPasswordValidate = yup.object().shape({
-	OTP: yup.string().required('*Vui lòng điền mã OTP').max(8, '*Mã OTP tối đa 8 kí tự. Vui lòng kiểm tra lại'),
+	OTP: yup
+		.string()
+		.required('*Vui lòng điền mã OTP')
+		.min(8, '*Mã OTP tối thiểu 8 kí tự. Vui lòng kiểm tra lại')
+		.matches('^[0-9]*$', {
+			message: 'Vui lòng nhập số',
+			excludeEmptyString: true,
+		}),
 	newPassword: yup
 		.string()
 		.min(8, '*Mật khẩu từ 8-15 kí tự. Vui lòng kiểm tra lại')

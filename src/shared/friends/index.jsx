@@ -17,12 +17,13 @@ import { changeToggleFollows } from 'reducers/redux-utils/friends';
 import ModalUnFriend from 'pages/friends/component/modalUnFriends';
 import { Link } from 'react-router-dom';
 
-const FriendsItem = ({ data, keyTabs, getListFollower, getMyListFriendReq, getListFollowings }) => {
+const FriendsItem = ({ data, keyTabs, getListFollower, getMyListFriendReq, getListFollowings, getListSuggest }) => {
 	const dispatch = useDispatch();
 	const invitation = location.pathname === '/friends/invitation';
 	const following = location.pathname === '/friends/following';
 	const follower = location.pathname === '/friends/follower';
 	const suggestions = location.pathname === '/friends/suggestions';
+	const recommend = location.pathname === '/friends/recommend';
 	const [unFriend, setUnFriend] = useState(true);
 	const [toggleUnFollow, setToggleUnFollow] = useState(true);
 	const [toggleAddFollow, setToggleAddFollow] = useState(true);
@@ -184,10 +185,16 @@ const FriendsItem = ({ data, keyTabs, getListFollower, getMyListFriendReq, getLi
 	const renderButtonFriends = () => {
 		if (keyTabs === 'friend') {
 			return buttonUnFriend();
-		} else if (keyTabs === 'follow' || following || follower || keyTabs === 'suggest' || suggestions) {
+		} else if (keyTabs === 'follow' || following || follower) {
 			if (data.relation === 'friend') {
 				return toggleAddFriend ? buttonUnFriend() : togglePendingFriend ? buttonAddFriend() : buttonPending();
 			} else if (data.relation === 'unknown') {
+				return togglePendingFriend ? buttonAddFriend() : buttonPending();
+			} else {
+				return buttonPending();
+			}
+		} else if (keyTabs === 'suggest' || suggestions || recommend) {
+			if (data.relation === 'unknown' || data.relation === undefined) {
 				return togglePendingFriend ? buttonAddFriend() : buttonPending();
 			} else {
 				return buttonPending();
@@ -206,7 +213,7 @@ const FriendsItem = ({ data, keyTabs, getListFollower, getMyListFriendReq, getLi
 			} else {
 				return toggleAddFollow ? buttonFollow() : buttonUnfollow();
 			}
-		} else if (keyTabs === 'follow' || following || follower || keyTabs === 'suggest' || suggestions) {
+		} else if (keyTabs === 'follow' || following || follower) {
 			if (data.isFollow) {
 				return toggleUnFollow ? buttonUnfollow() : buttonFollow();
 			} else {
@@ -214,6 +221,16 @@ const FriendsItem = ({ data, keyTabs, getListFollower, getMyListFriendReq, getLi
 					return toggleAddFollow ? buttonFollow() : buttonUnfollow();
 				} else {
 					return toggleAddFollow ? buttonUnfollow() : buttonFollow();
+				}
+			}
+		} else if (keyTabs === 'suggest' || suggestions || recommend) {
+			if (!data.isFollow) {
+				return toggleUnFollow ? buttonFollow() : buttonUnfollow();
+			} else {
+				if ((toggleUnFollow && getListSuggest) || suggestions) {
+					return toggleAddFollow ? buttonFollow() : buttonUnfollow();
+				} else {
+					return toggleUnFollow ? buttonUnfollow() : buttonFollow();
 				}
 			}
 		} else if (keyTabs === 'addfriend' || invitation) {
@@ -355,5 +372,7 @@ FriendsItem.propTypes = {
 	getListFollower: PropTypes.array,
 	getMyListFriendReq: PropTypes.array,
 	getListFollowings: PropTypes.array,
+	getListSuggest: PropTypes.array,
+	getListRecommends: PropTypes.array,
 };
 export default FriendsItem;

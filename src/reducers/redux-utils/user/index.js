@@ -14,6 +14,7 @@ import {
 	myFriendsReq,
 	randomAuthorAPI,
 	userUpdateAPI,
+	recommendFriendAPI,
 } from 'constants/apiURL';
 import Request from 'helpers/Request';
 
@@ -160,6 +161,16 @@ export const getUserDetail = createAsyncThunk('user/get user detail', async (use
 export const getRandomAuthor = createAsyncThunk('user/get random author', async (params, { rejectWithValue }) => {
 	try {
 		const response = await Request.makeGet(randomAuthorAPI, params);
+		return response.data.rows;
+	} catch (err) {
+		const error = JSON.parse(err.response);
+		throw rejectWithValue(error);
+	}
+});
+
+export const getRecommendFriend = createAsyncThunk('user/getRecommendFriend', async (params, { rejectWithValue }) => {
+	try {
+		const response = await Request.makeGet(recommendFriendAPI, params);
 		return response.data.rows;
 	} catch (err) {
 		const error = JSON.parse(err.response);

@@ -154,10 +154,11 @@ function CreateNewPasswordForm() {
 								>
 									<input
 										className='forgetPassword__form__input'
-										type='number'
+										type='text'
 										placeholder='Nhập mã OTP'
 										{...field}
 										value={field.value}
+										maxLength={8}
 									/>
 									<div
 										className={classNames('error--text', {

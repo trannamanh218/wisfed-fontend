@@ -13,6 +13,7 @@ import { NotificationError } from 'helpers/Error';
 import { buttonReqFriend } from 'helpers/HandleShare';
 import { useParams, useNavigate } from 'react-router-dom';
 import ModalUnFriend from 'pages/friends/component/modalUnFriends';
+import _ from 'lodash';
 
 const ModalWatching = ({ setModalFollowing, modalFollowing, userInfoDetail }) => {
 	const navigate = useNavigate();
@@ -191,10 +192,12 @@ const ModalWatching = ({ setModalFollowing, modalFollowing, userInfoDetail }) =>
 											>
 												{item.userTwo.firstName} {item.userTwo.lastName}
 											</h5>
-											<p className='author-card__subtitle'>
-												{item?.dataCounting?.follower} follow, {item?.dataCounting?.friend} bạn
-												bè
-											</p>
+											{!_.isEmpty(item?.dataCounting) && (
+												<p className='author-card__subtitle'>
+													{item?.dataCounting?.follower} người theo dõi,{' '}
+													{item?.dataCounting?.friend} bạn bè
+												</p>
+											)}
 										</div>
 									</div>
 									<div className='author-card__right'>

@@ -6,7 +6,12 @@ import { BackArrow } from 'components/svg';
 import './detail-friend.scss';
 import { useLocation } from 'react-router-dom';
 import FriendsItem from 'shared/friends';
-import { getListFollowing, getListFollowrs, getListReqFriendsToMe } from 'reducers/redux-utils/user';
+import {
+	getListFollowing,
+	getListFollowrs,
+	getListReqFriendsToMe,
+	getRecommendFriend,
+} from 'reducers/redux-utils/user';
 import { useSelector, useDispatch } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
 import { useNavigate } from 'react-router-dom';
@@ -19,6 +24,7 @@ const DetailFriend = () => {
 	const { userInfo } = useSelector(state => state.auth);
 	const [getListFollowings, setGetListFollowings] = useState([]);
 	const suggestions = location.pathname === '/friends/suggestions';
+	const recommend = location.pathname === '/friends/recommend';
 	const invitation = location.pathname === '/friends/invitation';
 	const following = location.pathname === '/friends/following';
 	const follower = location.pathname === '/friends/follower';
@@ -27,6 +33,7 @@ const DetailFriend = () => {
 	const [inputSearch, setInputSearch] = useState('');
 	const [filter, setFilter] = useState('[]');
 	const [listFriendSuggest, setListFriendSuggest] = useState([]);
+	const [listRecommendFriend, setListRecommendFriend] = useState([]);
 
 	const { isAuth } = useSelector(state => state.auth);
 	const result = userInfo?.favoriteCategory.map(item => item.categoryId);
@@ -92,6 +99,19 @@ const DetailFriend = () => {
 		}
 	};
 
+	const getRecommendFriendData = async () => {
+		const params = {
+			start: 0,
+		};
+		try {
+			const data = await dispatch(getRecommendFriend(params)).unwrap();
+			setGetListFollowings(data);
+			setListRecommendFriend(data);
+		} catch (err) {
+			NotificationError(err);
+		}
+	};
+
 	useEffect(async () => {
 		const query = generateQuery(0, 10, filter);
 		const userId = userInfo.id;
@@ -140,9 +160,20 @@ const DetailFriend = () => {
 									return acc;
 								}
 							}, []);
-							setListFriendSuggest(newList);
-							setGetListFollowings(newList);
+							const newListNotFriend = newList.filter(item => item.relation !== 'friend');
+							setListFriendSuggest(newListNotFriend);
+							setGetListFollowings(newListNotFriend);
 						});
+					}
+				} else if (getRecommendFriendData) {
+					if (inputSearch.length > 0) {
+						setGetListFollowings(
+							listRecommendFriend.filter(item =>
+								item.fullName.toLowerCase().includes(inputSearch.toLowerCase())
+							)
+						);
+					} else {
+						getRecommendFriendData();
 					}
 				}
 			}
@@ -158,6 +189,8 @@ const DetailFriend = () => {
 	const renderTitleHeader = () => {
 		if (suggestions) {
 			return 'Tất cả gợi ý từ BXH';
+		} else if (recommend) {
+			return 'Tất cả những người bạn có thể biết';
 		} else if (invitation) {
 			return 'Tất cả lời mời kết bạn';
 		} else if (following) {
@@ -181,6 +214,8 @@ const DetailFriend = () => {
 	const renderTitleContainer = () => {
 		if (suggestions) {
 			return 'Bạn bè gợi ý từ BXH';
+		} else if (recommend) {
+			return 'gợi ý kết bạn';
 		} else if (invitation) {
 			return 'Lời mời kết bạn';
 		} else if (following) {
@@ -191,13 +226,13 @@ const DetailFriend = () => {
 	};
 
 	const renderLength = () => {
-		if (following || follower || invitation || suggestions) {
+		if (following || follower || invitation || suggestions || recommend) {
 			return getListFollowings.length ? getListFollowings.length : 0;
 		}
 	};
 
 	const renderListMap = () => {
-		if (following || follower || invitation || suggestions) {
+		if (following || follower || invitation || suggestions || recommend) {
 			return (
 				getListFollowings.length > 0 &&
 				getListFollowings.map(item => (
