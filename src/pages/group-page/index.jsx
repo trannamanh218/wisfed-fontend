@@ -1,98 +1,75 @@
-import MainContainer from 'components/layout/main-container';
-import SearchField from 'shared/search-field';
-import MainGroup from './MainGroup';
 import { useEffect, useState } from 'react';
-import { ForwardGroup } from 'components/svg';
-import { getTagGroup } from 'reducers/redux-utils/group';
 import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { NotificationError } from 'helpers/Error';
 import './index.scss';
+import './mainGroup.scss';
+import SubContainer from 'components/layout/sub-container';
+import SidebarGroupLef from './sidebar-left';
+import { getGroupDettail, getMember } from 'reducers/redux-utils/group';
+import MainGroupComponent from './popup-group/MainGroupComponet/MainGroupComponent';
+import RightSidebarGroup from './RightSidebarGroup';
 
 const Group = () => {
-	const [numberIndex, setNumberIndex] = useState(4);
-	const [show, setShow] = useState(false);
 	const dispatch = useDispatch();
 	const { id = '' } = useParams();
-	const [tagGroup, setTagGroup] = useState([]);
-	const [inputSearch, setInputSearch] = useState('');
 
-	const list = [
-		{ name: '#Shadow', quantity: '30 bài viết' },
-		{ name: '#GaoRanger', quantity: '30 bài viết' },
-		{ name: '#FairyTail', quantity: '30 bài viết' },
-		{ name: '#HiềnHồ', quantity: '30 bài viết' },
-		{ name: '#Anime', quantity: '30 bài viết' },
-	];
+	const [keyChange, setKeyChange] = useState('tabs');
+	const [update, setUpdate] = useState(false);
+	const [detailGroup, setDetailGroup] = useState({});
+	const [listMember, setListMember] = useState([]);
 
-	const listTagGroup = async () => {
+	const fetchData = async () => {
 		try {
-			const actionGetListTag = await dispatch(getTagGroup(id)).unwrap();
-			setTagGroup(actionGetListTag);
-		} catch (error) {
-			NotificationError(error);
+			const res = await dispatch(getGroupDettail(id)).unwrap();
+			setDetailGroup(res);
+		} catch (err) {
+			NotificationError(err);
 		}
+	};
+
+	const getListMember = async () => {
+		try {
+			const actionGetList = await dispatch(getMember(id)).unwrap();
+			setListMember(actionGetList);
+		} catch (err) {
+			NotificationError(err);
+		}
+	};
+
+	const handleUpdate = () => {
+		setUpdate(!update);
 	};
 
 	useEffect(() => {
-		listTagGroup();
-	}, [id]);
+		fetchData();
+		getListMember();
+	}, []);
 
-	const handleChangeNumber = () => {
-		if (numberIndex === 4) {
-			setNumberIndex(list?.length);
-			setShow(!show);
-		} else {
-			setNumberIndex(4);
-			setShow(!show);
-		}
+	useEffect(() => {
+		fetchData();
+	}, [update]);
+
+	const handleChange = e => {
+		setKeyChange(e);
 	};
-
-	const onChangeInputSearch = e => {
-		setInputSearch(e.target.value);
-	};
-
-	const SidebarGroup = () => (
-		<div className='group-sibar-right'>
-			<h2>Hashtag</h2>
-			<SearchField placeholder='Tìm kiếm hashtag' value={inputSearch} handleChange={onChangeInputSearch} />
-			{/* <input value={inputSearch} onChange={onChangeInputSearch} placeholder='abc' /> */}
-
-			<div>
-				{tagGroup.map((item, index) => {
-					return (
-						<>
-							{index < numberIndex && (
-								<div className='hastag__group'>
-									<div className='hastag__group-name'>{item.name}</div>
-									<div className='hastag__group-number'>{item.quantity}</div>
-								</div>
-							)}
-						</>
-					);
-				})}
-
-				{tagGroup.length > 4 && (
-					<>
-						{!show ? (
-							<button className='more__btn' onClick={() => handleChangeNumber()}>
-								<ForwardGroup /> Xem thêm
-							</button>
-						) : (
-							<button className='more__btn rotate__more' onClick={() => handleChangeNumber()}>
-								<ForwardGroup />
-								Thu gọn
-							</button>
-						)}
-					</>
-				)}
-			</div>
-		</div>
-	);
 
 	return (
 		<div className='group__main-container'>
-			<MainContainer main={<MainGroup />} right={<SidebarGroup />} />
+			<SubContainer
+				left={<SidebarGroupLef handleChange={handleChange} data={detailGroup} member={listMember} />}
+				main={
+					<MainGroupComponent
+						handleUpdate={handleUpdate}
+						handleChange={handleChange}
+						keyChange={keyChange}
+						data={detailGroup}
+						member={listMember}
+						fetchData={fetchData}
+					/>
+				}
+				right={<RightSidebarGroup />}
+			/>
 		</div>
 	);
 };

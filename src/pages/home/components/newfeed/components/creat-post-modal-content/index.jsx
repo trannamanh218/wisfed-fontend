@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import { CloseX, Image, IconRanks, WorldNet } from 'components/svg'; // k xóa WorldNet
 import { STATUS_IDLE, STATUS_LOADING, STATUS_SUCCESS } from 'constants/index';
 import _ from 'lodash';
-import PropTypes from 'prop-types';
+import PropTypes, { number } from 'prop-types';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
@@ -70,6 +70,7 @@ function CreatPostModalContent({
 	onChangeOption,
 	onChangeNewPost,
 	showSubModal,
+	bookInfoProp = {},
 }) {
 	// const [shareMode, setShareMode] = useState({ value: 'public', title: 'Mọi người', icon: <WorldNet /> }); // k xóa
 	const [showMainModal, setShowMainModal] = useState(showModalCreatPost);
@@ -93,6 +94,7 @@ function CreatPostModalContent({
 	const [buttonActive, setButtonActive] = useState(false);
 	const [content, setContent] = useState('');
 	const [hashtagsAdded, setHashtagsAdded] = useState([]);
+	const [optionListState, setOptionListState] = useState([]);
 
 	const dispatch = useDispatch();
 	const location = useLocation();
@@ -110,6 +112,23 @@ function CreatPostModalContent({
 	const { id } = useParams();
 
 	const { optionList, shareModeList } = setting; // k xóa shareModeList
+
+	useEffect(() => {
+		// Dùng cho khi mở lên từ book detail
+		if (!_.isEmpty(bookInfoProp)) {
+			const cloneArr = [...optionList];
+			cloneArr.splice(0, 1);
+			setOptionListState(cloneArr);
+			setTaggedData({
+				'addBook': bookInfoProp,
+				'addAuthor': [],
+				'addFriends': [],
+				'addCategory': [],
+			});
+		} else {
+			setOptionListState(optionList);
+		}
+	}, []);
 
 	useEffect(() => {
 		const textFieldEdit = document.querySelector('.creat-post-modal-content__main__body__text-field-edit-wrapper');
@@ -709,6 +728,7 @@ function CreatPostModalContent({
 											handleAddToPost={handleAddToPost}
 											handleChangeStar={handleChangeStar}
 											valueStar={valueStar}
+											allowToEdit={!_.isEmpty(bookInfoProp)} // Dùng cho book detail
 										/>
 									)}
 									{showUpload && (
@@ -740,7 +760,7 @@ function CreatPostModalContent({
 							<span>Thêm vào bài viết</span>
 							<div className='creat-post-modal-content__main__options__items'>
 								<OptionsPost
-									list={optionList}
+									list={optionListState}
 									addOptionsToPost={addOptionsToPost}
 									taggedData={taggedData}
 									postDataShare={postDataShare}
@@ -814,6 +834,7 @@ CreatPostModalContent.propTypes = {
 	renderBookReading: PropTypes.object,
 	setShowModalCreatPost: PropTypes.func,
 	showSubModal: PropTypes.bool,
+	bookInfoProp: PropTypes.object,
 };
 
 export default CreatPostModalContent;

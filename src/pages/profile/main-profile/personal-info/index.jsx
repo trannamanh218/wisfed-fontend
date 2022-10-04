@@ -249,7 +249,7 @@ const PersonalInfo = ({ currentUserInfo, setCurrentTab }) => {
 									Bạn bè
 									{currentUserInfo.id !== userInfo.id ? (
 										<span> ({currentUserInfo.mutualFriends} bạn chung)</span>
-									) : null}{' '}
+									) : null}
 								</span>
 							</li>
 							{modalFriend && (
