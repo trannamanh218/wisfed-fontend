@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import { CloseX, Image, IconRanks, WorldNet } from 'components/svg'; // k xóa WorldNet
 import { STATUS_IDLE, STATUS_LOADING, STATUS_SUCCESS } from 'constants/index';
 import _ from 'lodash';
-import PropTypes from 'prop-types';
+import PropTypes, { number } from 'prop-types';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
@@ -495,6 +495,11 @@ function CreatPostModalContent({
 
 	useEffect(() => {
 		checkActive();
+
+		// Thêm validate cho phần book-detail review
+		if (!_.isEmpty(bookInfoProp) && !content) {
+			setButtonActive(false);
+		}
 	}, [showMainModal, content, checkProgress, imagesUpload]);
 
 	const checkActive = () => {

@@ -61,12 +61,13 @@ const SidebarGroupLef = ({ handleChange, data, member }) => {
 				</span> */}
 					<div className='group-sibar-left__text1'>
 						<span>
-							<strong>Kiểu nội dung:</strong> {groupType}
+							<strong>Kiểu nội dung: </strong>
+							{groupType === 'book' ? 'Sách' : groupType === 'author' ? 'Tác giả' : 'Chia sẻ'}
 						</span>
 					</div>
 					<div className='group-sibar-left__text1'>
 						<span>
-							<strong>Giới thiệu:</strong> {description}
+							<strong>Giới thiệu: </strong> {description}
 						</span>
 					</div>
 				</div>
@@ -80,7 +81,7 @@ const SidebarGroupLef = ({ handleChange, data, member }) => {
 				<h3 className='group-sibar-left__title under-title'>Thành viên</h3>
 				<div className='group-sibar-left__people'>
 					<div className='group-sibar-left__people-admin'>
-						<span>Quản trị viên</span>
+						<b>Quản trị viên</b>
 						{member?.map((item, index) => {
 							return (
 								<div key={index}>
@@ -116,7 +117,7 @@ const SidebarGroupLef = ({ handleChange, data, member }) => {
 					</div>
 					{listFriend.length > 0 ? (
 						<div className='group-sibar-left__people-friends'>
-							<span>Bạn bè</span>
+							<b>Bạn bè</b>
 							<div style={{ marginTop: '10px' }}>
 								{listFriend.map((item, index) => {
 									return (
@@ -157,7 +158,7 @@ const SidebarGroupLef = ({ handleChange, data, member }) => {
 					)}
 					{listFolow.length > 0 ? (
 						<div className='group-sibar-left__people-friends'>
-							<span>Người theo dõi</span>
+							<b>Người theo dõi</b>
 							<div style={{ marginTop: '10px' }}>
 								{listFolow.map((item, index) => {
 									return (

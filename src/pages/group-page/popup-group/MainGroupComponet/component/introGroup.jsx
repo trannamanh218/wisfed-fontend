@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 function IntroGroup({ groupType, description, createdAt, data }) {
 	const [date, setDate] = useState({});
 	const [arrDate, setArrDate] = useState([]);
+	const [authorsNames, setAuthorsNames] = useState([]);
 
 	useEffect(() => {
 		const newItem = createdAt?.split('-');
@@ -22,6 +23,15 @@ function IntroGroup({ groupType, description, createdAt, data }) {
 		}
 	}, [arrDate]);
 
+	useEffect(() => {
+		let newArr = [];
+		if (data?.groupAuthors?.length > 0) {
+			data.groupAuthors.forEach(item => newArr.push(item.author?.firstName + ' ' + item.author?.lastName));
+		}
+		setAuthorsNames(newArr);
+	}, []);
+	console.log(data);
+
 	return (
 		<div className='intro__container'>
 			<div className='intro-content'>
@@ -34,27 +44,28 @@ function IntroGroup({ groupType, description, createdAt, data }) {
 				<div>
 					<div className='group-sibar-left__text1'>
 						<span>
-							<strong>Kiểu nội dung:</strong> {groupType}
+							<strong>Kiểu nội dung: </strong>
+							{groupType === 'book' ? 'Sách' : groupType === 'author' ? 'Tác giả' : 'Chia sẻ'}
 						</span>
 					</div>
 					<div className='group-sibar-left__text1'>
 						<span>
-							<strong>Tác giả:</strong>
+							<strong>Tác giả: </strong>
 						</span>
-						{data?.authors?.map((item, index) => {
-							return (
-								<span key={index}>
-									{' '}
-									{item.fullName || item.firstName + ' ' + item.lastName}{' '}
-									{index < data.authors.length - 1 && ','}
-								</span>
-							);
-						})}
+						{authorsNames.length > 0
+							? authorsNames.map((item, index) => {
+									if (index < authorsNames.length - 1) {
+										return <span key={index}>{item}, </span>;
+									} else {
+										return <span key={index}>{item}. </span>;
+									}
+							  })
+							: 'Chưa có dữ liệu'}
 						{/* {data.active ? <p>(Đã xác nhận)</p> : <p>(Chưa xác nhận)</p>} */}
 					</div>
 					<div className='group-sibar-left__text1'>
 						<span>
-							<strong>Giới thiệu:</strong> {description}
+							<strong>Giới thiệu: </strong> {description || 'Chưa có dữ liệu'}
 						</span>
 					</div>
 				</div>

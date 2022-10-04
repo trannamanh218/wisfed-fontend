@@ -1,6 +1,4 @@
-import MainContainer from 'components/layout/main-container';
 import SearchField from 'shared/search-field';
-import MainGroup from './MainGroup';
 import { useEffect, useState } from 'react';
 import { ForwardGroup } from 'components/svg';
 import { getTagGroup } from 'reducers/redux-utils/group';
@@ -8,6 +6,11 @@ import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { NotificationError } from 'helpers/Error';
 import './index.scss';
+import './mainGroup.scss';
+import SubContainer from 'components/layout/sub-container';
+import SidebarGroupLef from './sidebar-left';
+import { getGroupDettail, getMember } from 'reducers/redux-utils/group';
+import MainGroupComponent from './popup-group/MainGroupComponet/MainGroupComponent';
 
 const Group = () => {
 	const [numberIndex, setNumberIndex] = useState(4);
@@ -16,6 +19,11 @@ const Group = () => {
 	const { id = '' } = useParams();
 	const [tagGroup, setTagGroup] = useState([]);
 	const [inputSearch, setInputSearch] = useState('');
+
+	const [keyChange, setKeyChange] = useState('tabs');
+	const [update, setUpdate] = useState(false);
+	const [detailGroup, setDetailGroup] = useState({});
+	const [listMember, setListMember] = useState([]);
 
 	const list = [
 		{ name: '#Shadow', quantity: '30 bài viết' },
@@ -90,9 +98,57 @@ const Group = () => {
 		</div>
 	);
 
+	const fetchData = async () => {
+		try {
+			const res = await dispatch(getGroupDettail(id)).unwrap();
+			setDetailGroup(res);
+		} catch (err) {
+			NotificationError(err);
+		}
+	};
+
+	const getListMember = async () => {
+		try {
+			const actionGetList = await dispatch(getMember(id)).unwrap();
+			setListMember(actionGetList);
+		} catch (err) {
+			NotificationError(err);
+		}
+	};
+
+	const handleUpdate = () => {
+		setUpdate(!update);
+	};
+
+	useEffect(() => {
+		fetchData();
+		getListMember();
+	}, []);
+
+	useEffect(() => {
+		fetchData();
+	}, [update]);
+
+	const handleChange = e => {
+		setKeyChange(e);
+	};
+
 	return (
 		<div className='group__main-container'>
-			<MainContainer main={<MainGroup />} right={<SidebarGroup />} />
+			<SubContainer
+				left={<SidebarGroupLef handleChange={handleChange} data={detailGroup} member={listMember} />}
+				main={
+					<MainGroupComponent
+						handleUpdate={handleUpdate}
+						handleChange={handleChange}
+						keyChange={keyChange}
+						data={detailGroup}
+						member={listMember}
+						fetchData={fetchData}
+					/>
+				}
+				right={<SidebarGroup />}
+			/>
 		</div>
 	);
 };
