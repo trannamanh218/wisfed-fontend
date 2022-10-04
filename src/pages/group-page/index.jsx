@@ -64,8 +64,6 @@ const Group = () => {
 		<div className='group-sibar-right'>
 			<h2>Hashtag</h2>
 			<SearchField placeholder='Tìm kiếm hashtag' value={inputSearch} handleChange={onChangeInputSearch} />
-			{/* <input value={inputSearch} onChange={onChangeInputSearch} placeholder='abc' /> */}
-
 			<div>
 				{tagGroup.map((item, index) => {
 					return (

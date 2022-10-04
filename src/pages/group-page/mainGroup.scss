@@ -147,3 +147,16 @@
 		transform: rotate(180deg);
 	}
 }
+
+@media only screen and (max-width: 1024px) {
+	.group-sibar-right {
+		.search-field__icon {
+			width: 15px;
+			height: 15px;
+			margin-right: 10px;
+		}
+		.search-field {
+			padding: 0 0.7rem;
+		}
+	}
+}

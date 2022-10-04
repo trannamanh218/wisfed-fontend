@@ -30,7 +30,6 @@ function IntroGroup({ groupType, description, createdAt, data }) {
 		}
 		setAuthorsNames(newArr);
 	}, []);
-	console.log(data);
 
 	return (
 		<div className='intro__container'>

@@ -140,7 +140,7 @@ function MainGroupComponent({ handleChange, keyChange, data, member, handleUpdat
 		}
 	};
 
-	const debounceSearch = useCallback(_.debounce(updateInputSearch, 500), []);
+	const debounceSearch = useCallback(_.debounce(updateInputSearch, 700), []);
 
 	useEffect(async () => {
 		setIsFetchingSearchInGroup(true);

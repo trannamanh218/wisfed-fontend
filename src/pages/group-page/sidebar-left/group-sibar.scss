@@ -1,5 +1,5 @@
 .group-sibar-left__container {
-	width: 270px;
+	width: 100%;
 }
 .group-sibar-left__title {
 	font-family: 'Montserrat';
@@ -27,7 +27,6 @@
 
 .group-sibar-left__text1,
 .group-sibar-left__text2 {
-	margin-top: 20px;
 	strong {
 		color: #2d2c42;
 		font-weight: 600;
@@ -166,4 +165,7 @@
 
 .group-sibar-left__description {
 	margin-top: 32px;
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
 }
