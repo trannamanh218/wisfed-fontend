@@ -191,7 +191,7 @@ const PersonalInfo = ({ currentUserInfo, setCurrentTab }) => {
 				</div>
 
 				<div className='personal-info__detail__connect-buttons-and-introduction'>
-					<div className={currentUserInfo.id !== userInfo.id ? 'personal-info' : 'personal-info-none'}>
+					<div className={currentUserInfo.id === userInfo.id ? 'personal-info-none' : ''}>
 						<ConnectButtons item={currentUserInfo} />
 					</div>
 					<div className='personal-info__detail__introduction'>

@@ -66,7 +66,7 @@ const ReviewTab = ({ currentTab }) => {
 	const [currentOption, setCurrentOption] = useState(filterOptions[0]);
 	const [reviewList, setReviewList] = useState([]);
 	const [reviewCount, setReviewCount] = useState(0);
-	const [hasMore, setHasMore] = useState(false);
+	const [hasMore, setHasMore] = useState(true);
 	const { modalOpen, toggleModal } = useModal(false);
 	const [sortValue, setSortValue] = useState('mostLiked');
 	const [checkedStarArr, setCheckedStarArr] = useState([]);
@@ -76,7 +76,6 @@ const ReviewTab = ({ currentTab }) => {
 	const [topUser, setTopUser] = useState('');
 	const [filterRate, setFilterRate] = useState(false);
 	const [reviewBook, setReviewBook] = useState('');
-	const [reviewTurn, setReviewTurn] = useState(false);
 	const [showModalCreatPost, setShowModalCreatPost] = useState(false);
 	const [option, setOption] = useState({});
 	const [valueSearch, setValueSearch] = useState('');
@@ -105,7 +104,7 @@ const ReviewTab = ({ currentTab }) => {
 			callApiStart.current = 10;
 			getReviewListFirstTime();
 		}
-	}, [currentOption, currentTab, directionSort, propertySort, valueSearch, reviewTurn]);
+	}, [currentOption, currentTab, directionSort, propertySort, valueSearch]);
 
 	const updateInputSearch = value => {
 		if (value) {
@@ -126,10 +125,8 @@ const ReviewTab = ({ currentTab }) => {
 					sort: JSON.stringify([{ direction: directionSort, property: propertySort }]),
 					filter: JSON.stringify([
 						{ operator: 'eq', value: bookId, property: 'bookId' },
-
 						{ operator: 'in', value: checkedStarArr, property: 'rate' },
 					]),
-
 					searchUser: valueSearch,
 				};
 			} else {
@@ -138,7 +135,6 @@ const ReviewTab = ({ currentTab }) => {
 					limit: callApiPerPage.current,
 					sort: JSON.stringify([{ direction: directionSort, property: propertySort }]),
 					filter: JSON.stringify([{ operator: 'eq', value: bookId, property: 'bookId' }]),
-
 					searchUser: valueSearch,
 				};
 			}
@@ -165,6 +161,8 @@ const ReviewTab = ({ currentTab }) => {
 			NotificationError(err);
 		}
 	};
+
+	console.log(hasMore, reviewList);
 
 	const debounceSearch = useCallback(_.debounce(updateInputSearch, 700), []);
 
@@ -195,7 +193,7 @@ const ReviewTab = ({ currentTab }) => {
 			let params = {};
 			if (sortValue === 'oldest' || sortValue === 'lastest' || sortValue === 'mostLiked' || filterRate === true) {
 				params = {
-					start: 0,
+					start: callApiStart.current,
 					limit: callApiPerPage.current,
 					sort: JSON.stringify([{ direction: directionSort, property: propertySort }]),
 					filter: JSON.stringify([
@@ -280,9 +278,10 @@ const ReviewTab = ({ currentTab }) => {
 			default:
 		}
 	};
-	useEffect(() => {
-		getReviewList();
-	}, [topUser]);
+
+	// useEffect(() => {
+	// 	getReviewList();
+	// }, [topUser]);
 
 	const handleChange = data => {
 		setSortValue(data);
@@ -339,7 +338,6 @@ const ReviewTab = ({ currentTab }) => {
 					onChange={changeReview}
 					value={reviewBook}
 					onKeyPress={handleKeyPress}
-					autoFocus
 				/>
 			</div>
 			<FilterPane

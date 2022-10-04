@@ -14,7 +14,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { getQuoteComments } from 'reducers/redux-utils/quote';
 import { useRef, useEffect, lazy, Suspense } from 'react';
 import { NotificationError } from 'helpers/Error';
-import { handleMentionCommentId } from 'reducers/redux-utils/notificaiton';
+import { handleMentionCommentId } from 'reducers/redux-utils/notification';
 import Circle from 'shared/loading/circle';
 
 const MainQuoteDetail = ({ quoteData, onCreateComment, setMentionUsersArr, mentionUsersArr }) => {

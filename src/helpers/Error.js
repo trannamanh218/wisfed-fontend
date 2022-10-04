@@ -129,7 +129,7 @@ const errVN = {
 		en: `Have you reviewed this book?`,
 	},
 	400: {
-		vi: 'Lỗi hệ thống',
+		vi: 'Đã xảy ra lỗi',
 		en: `something is not right`,
 	},
 	711: {
@@ -137,7 +137,7 @@ const errVN = {
 		en: `You were review this book`,
 	},
 	999: {
-		vi: 'Lỗi hệ thống',
+		vi: 'Đã xảy ra lỗi',
 	},
 	331: {
 		vi: 'Người dùng không phải tác giả',

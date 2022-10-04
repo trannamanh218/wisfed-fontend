@@ -386,14 +386,14 @@ function CreatPostModalContentReviewBookOnly({
 
 			setStatus(STATUS_SUCCESS);
 			const customId = 'custom-id-CreatPostModalContentReviewBookOnly-onCreatePost-success';
-			toast.success('Tạo post thành công!', { toastId: customId });
+			toast.success('Tạo bài viết thành công!', { toastId: customId });
 		} catch (err) {
 			const statusCode = err?.statusCode || 500;
 			if (err.errorCode === 702) {
 				NotificationError(err);
 			} else if (!location.pathname.includes('group')) {
 				const customId = 'custom-id-CreatPostModalContentReviewBookOnly-onCreatePost-error';
-				toast.error('Tạo post thất bại!', { toastId: customId });
+				toast.error('Tạo bài viết thất bại!', { toastId: customId });
 			}
 			setStatus(statusCode);
 		} finally {

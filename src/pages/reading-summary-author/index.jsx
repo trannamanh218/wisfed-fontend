@@ -231,11 +231,11 @@ const ReadingSummaryChartAuthor = () => {
 		<NormalContainer>
 			<div className='book__author__charts'>
 				<Circle loading={loading} />
-				<div className='notificaiton__main__container'>
-					<Link to={'/'} className='notificaiton__main__back'>
+				<div className='notification__main__container'>
+					<Link to={'/'} className='notification__main__back'>
 						<BackArrow />
 					</Link>
-					<div className='notificaiton__main__title'>Biểu đồ tăng trưởng cuốn sách “{`${nameBook}`}”</div>
+					<div className='notification__main__title'>Biểu đồ tăng trưởng cuốn sách “{`${nameBook}`}”</div>
 				</div>
 				<div className='book__author__charts__main'>
 					<div className='book__author__charts__search__main'>

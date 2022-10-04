@@ -5,7 +5,7 @@ import Tabs from 'react-bootstrap/Tabs';
 import NormalContainer from 'components/layout/normal-container';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { getNotification } from 'reducers/redux-utils/notificaiton';
+import { getNotification } from 'reducers/redux-utils/notification';
 import { useDispatch } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
 import NotificationStatus from 'shared/notification-status';
@@ -13,7 +13,7 @@ import Circle from 'shared/loading/circle';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import LoadingIndicator from 'shared/loading-indicator';
 import { useState, useEffect, useRef } from 'react';
-import { depenRenderNotificaion } from 'reducers/redux-utils/notificaiton';
+import { depenRenderNotificaion } from 'reducers/redux-utils/notification';
 const Notification = () => {
 	const [getNotifications, setGetNotifications] = useState([]);
 	const [getListDefault, setListDefault] = useState([]);
@@ -87,17 +87,17 @@ const Notification = () => {
 		<NormalContainer>
 			<Circle loading={isLoading} />
 			{!isLoading && (
-				<div className='notificaiton__main'>
-					<div className='notificaiton__main__container'>
-						<Link to={'/'} className='notificaiton__main__back'>
+				<div className='notification__main'>
+					<div className='notification__main__container'>
+						<Link to={'/'} className='notification__main__back'>
 							<BackArrow />
 						</Link>
-						<div className='notificaiton__main__title'>Thông báo</div>
+						<div className='notification__main__title'>Thông báo</div>
 					</div>
-					<div className='notificaiton__tabs_main'>
+					<div className='notification__tabs_main'>
 						<Tabs defaultActiveKey={keyTabsActive ? keyTabsActive : 'all'}>
 							<Tab eventKey='all' title='Tất cả'>
-								<div className='notificaiton__all__main__title'>Mới nhất</div>
+								<div className='notification__all__main__title'>Mới nhất</div>
 								{getNotifications
 									.slice(0, 1)
 									.map(
@@ -112,7 +112,7 @@ const Notification = () => {
 												/>
 											)
 									)}
-								<div className='notificaiton__all__main__title'>Gần đây</div>
+								<div className='notification__all__main__title'>Gần đây</div>
 								<InfiniteScroll
 									dataLength={getListDefault.length}
 									next={getMyNotification}
@@ -135,7 +135,7 @@ const Notification = () => {
 								</InfiniteScroll>
 							</Tab>
 							<Tab eventKey='unread' title='Chưa đọc'>
-								<div className='notificaiton__all__main__title'>Thông báo chưa đọc</div>
+								<div className='notification__all__main__title'>Thông báo chưa đọc</div>
 								<InfiniteScroll
 									dataLength={getListDefault.length}
 									next={getMyNotification}
@@ -158,7 +158,7 @@ const Notification = () => {
 							</Tab>
 							{renderFriend && (
 								<Tab eventKey='friendrequest' title='Lời mời kết bạn'>
-									<div className='notificaiton__all__main__title'>
+									<div className='notification__all__main__title'>
 										{lengthAddFriend()}&nbsp;lời kết bạn
 									</div>
 									{getNotifications.map(

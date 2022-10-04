@@ -8,7 +8,7 @@ import activity from './activity';
 import quote from './quote';
 import library from './library';
 import comment from './comment';
-import notificationReducer from './notificaiton';
+import notificationReducer from './notification';
 import profile from './profile';
 import forgetPasswordSliceReducer from './forget-password';
 import friends from './friends';

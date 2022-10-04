@@ -13,7 +13,7 @@ import { getBookDetail } from 'reducers/redux-utils/book';
 import { getUserDetail } from 'reducers/redux-utils/user';
 import Post from 'shared/post';
 import { REVIEW_TYPE } from 'constants/index';
-import { updateReviewIdFromNoti } from 'reducers/redux-utils/notificaiton';
+import { updateReviewIdFromNoti } from 'reducers/redux-utils/notification';
 
 const Review = () => {
 	const { bookId, userId } = useParams();

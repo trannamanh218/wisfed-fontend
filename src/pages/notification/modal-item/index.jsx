@@ -3,18 +3,18 @@ import {
 	readNotification,
 	handleMentionCommentId,
 	handleCheckIfMentionFromGroup,
-} from 'reducers/redux-utils/notificaiton';
+} from 'reducers/redux-utils/notification';
 import UserAvatar from 'shared/user-avatar';
 import { calculateDurationTime } from 'helpers/Common';
 import { useNavigate } from 'react-router-dom';
-import { ReplyFriendRequest, addFollower } from 'reducers/redux-utils/user';
+import { ReplyFriendRequest } from 'reducers/redux-utils/user';
 import { NotificationError } from 'helpers/Error';
 import { renderMessage } from 'helpers/HandleShare';
 import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
 import { useState } from 'react';
 import { updateUser } from 'reducers/redux-utils/user';
-import { updateReviewIdFromNoti } from 'reducers/redux-utils/notificaiton';
+import { updateReviewIdFromNoti } from 'reducers/redux-utils/notification';
 
 const ModalItem = ({ item, setModalNoti, getNotifications, setGetNotifications, selectKey }) => {
 	const navigate = useNavigate();
@@ -30,6 +30,7 @@ const ModalItem = ({ item, setModalNoti, getNotifications, setGetNotifications, 
 		const params = { id: parseObject.requestId, data: { reply: true } };
 		try {
 			await dispatch(ReplyFriendRequest(params)).unwrap();
+			dispatch(updateUser(!isReload));
 			if (selectKey !== 'unread') {
 				const newArr = getNotifications.map(item => {
 					if (items.id === item.id) {
@@ -41,8 +42,6 @@ const ModalItem = ({ item, setModalNoti, getNotifications, setGetNotifications, 
 				setGetNotifications(newArr);
 			}
 			await dispatch(readNotification({ notificationId: items.id })).unwrap();
-			await dispatch(addFollower({ userId: items.actor })).unwrap();
-			dispatch(updateUser(!isReload));
 		} catch (err) {
 			NotificationError(err);
 		}
@@ -54,6 +53,7 @@ const ModalItem = ({ item, setModalNoti, getNotifications, setGetNotifications, 
 		const params = { id: parseObject.requestId, data: { reply: false } };
 		try {
 			await dispatch(ReplyFriendRequest(params)).unwrap();
+			dispatch(updateUser(!isReload));
 			if (selectKey !== 'unread') {
 				const newArr = getNotifications.map(item => {
 					if (items.id === item.id) {
@@ -172,14 +172,14 @@ const ModalItem = ({ item, setModalNoti, getNotifications, setGetNotifications, 
 		<div
 			className={
 				(item.isRead || item.isAccept || item.isRefuse) && item.verb !== 'addFriend'
-					? 'notificaiton__tabs__all__active'
-					: 'notificaiton__tabs__all__seen'
+					? 'notification__tabs__all__active'
+					: 'notification__tabs__all__seen'
 			}
 		>
-			<div onClick={() => handleActiveIsReed(item)} className='notificaiton__all__layout'>
+			<div onClick={() => handleActiveIsReed(item)} className='notification__all__layout'>
 				<UserAvatar size='mm' source={item.createdBy?.avatarImage} />
-				<div className='notificaiton__all__layout__status'>
-					<div className='notificaiton__all__infor'>
+				<div className='notification__all__layout__status'>
+					<div className='notification__all__infor'>
 						{item.message ? (
 							<p dangerouslySetInnerHTML={{ __html: item?.message }}></p>
 						) : (
@@ -210,35 +210,35 @@ const ModalItem = ({ item, setModalNoti, getNotifications, setGetNotifications, 
 					<div
 						className={
 							item.isRead || item.isAccept || item.isRefuse
-								? 'notificaiton__all__status__seen'
-								: 'notificaiton__all__status'
+								? 'notification__all__status__seen'
+								: 'notification__all__status'
 						}
 					>{`${calculateDurationTime(item.time)}`}</div>
 					{item.isAccept ? (
-						<div className='notificaiton___main__all__status'>Đã chấp nhận lời mời</div>
+						<div className='notification___main__all__status'>Đã chấp nhận lời mời</div>
 					) : (
-						item.isRefuse && <div className='notificaiton___main__all__status'>Đã từ chối lời mời</div>
+						item.isRefuse && <div className='notification___main__all__status'>Đã từ chối lời mời</div>
 					)}
 				</div>
 				<div
 					className={
 						item.isRead || item.isAccept || item.isRefuse
-							? 'notificaiton__all__seen'
-							: 'notificaiton__all__unseen'
+							? 'notification__all__seen'
+							: 'notification__all__unseen'
 					}
 				></div>
 			</div>
 			{buttonNotClicked ? (
 				<>
 					{item.verb === 'addFriend' && (!item.isAccept || !item.isRefuse) && (
-						<div className='notificaiton__all__friend'>
+						<div className='notification__all__friend'>
 							<div
 								onClick={() => ReplyFriendReq(item.object, item)}
-								className='notificaiton__all__accept'
+								className='notification__all__accept'
 							>
 								Chấp nhận
 							</div>
-							<div onClick={() => cancelFriend(item.object, item)} className='notificaiton__all__refuse'>
+							<div onClick={() => cancelFriend(item.object, item)} className='notification__all__refuse'>
 								Từ chối
 							</div>
 						</div>

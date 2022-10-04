@@ -7,6 +7,7 @@ import Storage from 'helpers/Storage';
 import Button from 'shared/button';
 import { Add } from 'components/svg';
 import { useNavigate } from 'react-router-dom';
+
 const AuthorCard = ({ direction, size, item, setModalShow, checkAuthors }) => {
 	const navigate = useNavigate();
 	return (

@@ -8,7 +8,7 @@ import {
 	updateReviewIdFromNoti,
 	handleMentionCommentId,
 	handleCheckIfMentionFromGroup,
-} from 'reducers/redux-utils/notificaiton';
+} from 'reducers/redux-utils/notification';
 import { useDispatch, useSelector } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
 import { useNavigate } from 'react-router-dom';
@@ -159,13 +159,13 @@ const NotificationStatus = ({ item, setGetNotifications, getNotifications }) => 
 		<div
 			onClick={() => handleActiveIsReed(item)}
 			className={
-				isRead || item.isRead ? 'notificaiton__tabs__main__all__active' : 'notificaiton__tabs__main__all__seen'
+				isRead || item.isRead ? 'notification__tabs__main__all__active' : 'notification__tabs__main__all__seen'
 			}
 		>
-			<div className='notificaiton__all__main__layout'>
+			<div className='notification__all__main__layout'>
 				<UserAvatar size='mm' source={item.createdBy?.avatarImage} />
-				<div className='notificaiton__all__main__layout__status'>
-					<div className='notificaiton__main__all__infor'>
+				<div className='notification__all__main__layout__status'>
+					<div className='notification__main__all__infor'>
 						{item.message ? (
 							<p dangerouslySetInnerHTML={{ __html: item?.message }}></p>
 						) : (
@@ -196,34 +196,34 @@ const NotificationStatus = ({ item, setGetNotifications, getNotifications }) => 
 					<div
 						className={
 							item.isAccept || item.isRefuse
-								? 'notificaiton__all__status__seen'
-								: 'notificaiton__all__status'
+								? 'notification__all__status__seen'
+								: 'notification__all__status'
 						}
 					>{`${calculateDurationTime(item?.time)}`}</div>
 					{item.isAccept ? (
-						<div className='notificaiton___main__all__status'>Đã chấp nhận lời mời</div>
+						<div className='notification___main__all__status'>Đã chấp nhận lời mời</div>
 					) : (
-						item.isRefuse && <div className='notificaiton___main__all__status'>Đã từ chối lời mời</div>
+						item.isRefuse && <div className='notification___main__all__status'>Đã từ chối lời mời</div>
 					)}
 				</div>
 
-				<div className={isRead || item.isRead ? 'notificaiton__all__seen' : 'notificaiton__all__unseen'}></div>
+				<div className={isRead || item.isRead ? 'notification__all__seen' : 'notification__all__unseen'}></div>
 			</div>
 
 			{item.verb === 'addFriend' &&
 				(item.isAccept || item.isRefuse ? (
 					''
 				) : (
-					<div className='notificaiton__main__all__friend'>
+					<div className='notification__main__all__friend'>
 						<div
 							onClick={() => ReplyFriendReq(item.object, item)}
-							className='notificaiton__main__all__accept'
+							className='notification__main__all__accept'
 						>
 							{item.verb === 'browse' ? 'Duyệt' : 'Chấp nhận'}
 						</div>
 						<div
 							onClick={() => cancelFriend(item.object, item)}
-							className='notificaiton__main__all__refuse'
+							className='notification__main__all__refuse'
 						>
 							Từ chối
 						</div>

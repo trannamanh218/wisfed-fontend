@@ -1,5 +1,5 @@
-import { Add } from 'components/svg';
-import { useState } from 'react';
+import { Add, Minus } from 'components/svg';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import Button from 'shared/button';
 import PropTypes from 'prop-types';
 import './connect-buttons.scss';
@@ -8,135 +8,131 @@ import { useDispatch } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
 import { ReplyFriendRequest } from 'reducers/redux-utils/user';
 import ModalUnFriend from 'pages/friends/component/modalUnFriends';
+import _ from 'lodash';
 
 const ConnectButtons = ({ direction, item }) => {
-	const dispatch = useDispatch();
-	const [unFriend, setUnFriend] = useState(true);
-	const [toggleUnFollow, setToggleUnFollow] = useState(true);
-	const [toggleAddFollow, setToggleAddFollow] = useState(true);
-	const [togglePendingFriend, setTogglePendingFriend] = useState(true);
-	const [toggleAcces, setToggleAcces] = useState(true);
 	const [showModalUnfriends, setShowModalUnfriends] = useState(false);
+	const [friendStatusBtn, setFriendStatusBtn] = useState(item.relation);
+	const [followStatusBtn, setFollowStatusBtn] = useState(item.isFollow);
+	const [requestStatus, setRequestStatus] = useState(item.friendRequest?.type);
 
-	const buttonUnFollow = () => {
-		return (
-			<Button className='connect-button follow' isOutline={true} name='friend' onClick={handleUnFollow}>
-				<span className='connect-button__content follow'>Bỏ theo dõi </span>
-			</Button>
-		);
+	const oldFollowStatusBtn = useRef(item.isFollow);
+
+	const dispatch = useDispatch();
+
+	useEffect(() => {
+		setFriendStatusBtn(item.relation);
+		setFollowStatusBtn(item.isFollow);
+		oldFollowStatusBtn.current = item.isFollow;
+	}, [item]);
+
+	// xu ly khi an nut them ban, huy ket ban, chap nhan loi moi ket ban
+	const handleFriendBtn = () => {
+		if (friendStatusBtn === 'friend') {
+			setShowModalUnfriends(true);
+		} else if (friendStatusBtn === 'unknown') {
+			handleAddFriend();
+		} else if (requestStatus === 'requestToMe') {
+			handleAcces();
+		}
 	};
 
-	const buttonAddFollow = () => {
-		return (
-			<Button className=' connect-button follow' isOutline={true} name='friend' onClick={handleFollow}>
-				<span className='connect-button__content follow'>Theo dõi </span>
-			</Button>
-		);
-	};
-
-	const buttonAddFriend = () => {
-		return (
-			<Button className='connect-button' onClick={handleAddFriend}>
-				<Add className='connect-button__icon' />
-
-				<span className='connect-button__content'>Kết bạn</span>
-			</Button>
-		);
-	};
-
-	const buttonAcces = () => {
-		return (
-			<Button className='connect-button' onClick={handleAcces}>
-				<span className='connect-button__content'>Chấp nhận</span>
-			</Button>
-		);
-	};
-
-	const buttonUnFriend = () => {
-		return (
-			<Button className='connect-button' onClick={handleModalUnFriend}>
-				<span className='connect-button__content'>─&nbsp;&nbsp; Hủy kết bạn</span>
-			</Button>
-		);
-	};
-
-	const buttonPendingFriend = () => {
-		return (
-			<Button className='connect-button'>
-				<span className='connect-button__content'>─&nbsp;&nbsp; Đã gửi lời mời</span>
-			</Button>
-		);
-	};
-
-	const handleAddFriend = () => {
+	const handleAddFriend = async () => {
 		try {
 			const param = {
 				userId: item.id,
 			};
-			dispatch(makeFriendRequest(param)).unwrap();
-			setTogglePendingFriend(false);
-		} catch (err) {
-			NotificationError(err);
-		}
-	};
-	const handleModalUnFriend = () => {
-		setShowModalUnfriends(true);
-	};
-
-	const handleUnfriend = () => {
-		setShowModalUnfriends(false);
-		try {
-			dispatch(unFriendRequest(item.id)).unwrap();
-			setUnFriend(false);
-			handleUnFollow();
+			await dispatch(makeFriendRequest(param)).unwrap();
+			setFriendStatusBtn('sentRequest');
+			setRequestStatus('sentRequest');
 		} catch (err) {
 			NotificationError(err);
 		}
 	};
 
 	const handleAcces = () => {
-		const params = { id: item.friendRequest.id, data: { reply: true } };
-		setToggleAcces(false);
-		dispatch(ReplyFriendRequest(params)).unwrap();
+		try {
+			const params = { id: item.friendRequest.id, data: { reply: true } };
+			dispatch(ReplyFriendRequest(params)).unwrap();
+			setFriendStatusBtn('friend');
+			setFollowStatusBtn(true);
+		} catch (err) {
+			NotificationError(err);
+		}
 	};
 
-	const handleFollow = () => {
+	const handleUnfriend = async () => {
 		try {
-			dispatch(addFollower({ userId: item.id }));
-			setToggleAddFollow(false);
-			setToggleUnFollow(true);
+			await dispatch(unFriendRequest(item.id)).unwrap();
+			setFriendStatusBtn('unknown');
+			setFollowStatusBtn(false);
+			setShowModalUnfriends(false);
 		} catch (err) {
 			NotificationError(err);
 		}
 	};
-	const handleUnFollow = () => {
-		try {
-			dispatch(unFollower(item.id)).unwrap();
-			setToggleAddFollow(true);
-			setToggleUnFollow(false);
-		} catch (err) {
-			NotificationError(err);
+
+	// xu ly nut theo doi va huy theo doi
+	const handleFollowAndUnfollow = () => {
+		setFollowStatusBtn(!followStatusBtn);
+		handleCallFollowAndUnfollowApi(!followStatusBtn);
+	};
+
+	const handleCallFollowAndUnfollowApi = useCallback(
+		_.debounce(currentStatus => {
+			try {
+				if (currentStatus !== oldFollowStatusBtn.current) {
+					if (currentStatus) {
+						dispatch(addFollower({ userId: item.id }));
+					} else {
+						dispatch(unFollower(item.id)).unwrap();
+					}
+					oldFollowStatusBtn.current = currentStatus;
+				}
+			} catch (err) {
+				NotificationError(err);
+			}
+		}, 700),
+		[]
+	);
+
+	const handleRenderButtonFriend = () => {
+		let contentBtn = '';
+		if (friendStatusBtn === 'friend') {
+			contentBtn = 'Hủy kết bạn';
+		} else if (friendStatusBtn === 'unknown') {
+			contentBtn = 'Thêm bạn';
+		} else {
+			if (requestStatus === 'requestToMe') {
+				contentBtn = 'Chấp nhận';
+			} else if (requestStatus === 'sentRequest') {
+				contentBtn = 'Đã gửi lời mời';
+			}
 		}
+
+		return (
+			<Button className='connect-button' onClick={handleFriendBtn}>
+				{friendStatusBtn === 'unknown' && <Add className='connect-button__icon' />}
+				{friendStatusBtn === 'friend' && <Minus className='connect-button__icon' />}
+				<span className='connect-button__content'>{contentBtn}</span>
+			</Button>
+		);
 	};
 
 	const handleRenderButtonFollow = () => {
-		if (item.isFollow) {
-			return toggleUnFollow ? buttonUnFollow() : buttonAddFollow();
-		} else {
-			return toggleAddFollow ? buttonAddFollow() : buttonUnFollow();
+		// dat dieu kien cho 3 trtang thai cua nut follow
+		let contentBtn = '';
+		if (followStatusBtn === true) {
+			contentBtn = 'Bỏ theo dõi';
+		} else if (followStatusBtn === false) {
+			contentBtn = 'Theo dõi';
 		}
-	};
 
-	const handleRenderButtonFriend = () => {
-		if (item.relation === 'friend') {
-			return unFriend ? buttonUnFriend() : togglePendingFriend ? buttonAddFriend() : buttonPendingFriend();
-		} else if (item.relation === 'pending' && item.friendRequest?.type !== 'requestToMe') {
-			return buttonPendingFriend();
-		} else if (item.relation === 'unknown' && !item.friendRequest) {
-			return togglePendingFriend ? buttonAddFriend() : buttonPendingFriend();
-		} else if (item.friendRequest?.type === 'requestToMe') {
-			return toggleAcces ? buttonAcces() : buttonUnFriend();
-		}
+		return (
+			<Button className='connect-button' isOutline={true} onClick={handleFollowAndUnfollow}>
+				<span className='connect-button__content'>{contentBtn}</span>
+			</Button>
+		);
 	};
 
 	const toggleModal = () => {
@@ -145,19 +141,14 @@ const ConnectButtons = ({ direction, item }) => {
 
 	return (
 		<div className={`connect-buttons ${direction}`}>
-			{item.relation !== 'isMe' && (
-				<>
-					{' '}
-					{handleRenderButtonFriend()}
-					{handleRenderButtonFollow()}
-					<ModalUnFriend
-						showModalUnfriends={showModalUnfriends}
-						toggleModal={toggleModal}
-						handleUnfriend={handleUnfriend}
-						data={item}
-					/>
-				</>
-			)}
+			{handleRenderButtonFriend()}
+			{handleRenderButtonFollow()}
+			<ModalUnFriend
+				showModalUnfriends={showModalUnfriends}
+				toggleModal={toggleModal}
+				handleUnfriend={handleUnfriend}
+				data={item}
+			/>
 		</div>
 	);
 };

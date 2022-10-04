@@ -43,7 +43,7 @@ import Storage from 'helpers/Storage';
 import { checkUserLogin } from 'reducers/redux-utils/auth';
 import ShareUsers from 'pages/home/components/newfeed/components/modal-share-users';
 import ShareTarget from 'shared/share-target';
-import { handleMentionCommentId, handleCheckIfMentionFromGroup } from 'reducers/redux-utils/notificaiton';
+import { handleMentionCommentId, handleCheckIfMentionFromGroup } from 'reducers/redux-utils/notification';
 import { getMiniPostComments, getGroupPostComments } from 'reducers/redux-utils/post';
 
 const urlRegex =

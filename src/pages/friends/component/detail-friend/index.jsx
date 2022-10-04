@@ -210,11 +210,11 @@ const DetailFriend = () => {
 	return (
 		<NormalContainer>
 			<div className='friends__container'>
-				<div className='notificaiton__main__container'>
-					<div className='notificaiton__main__back' onClick={handleBack}>
+				<div className='notification__main__container'>
+					<div className='notification__main__back' onClick={handleBack}>
 						<BackArrow />
 					</div>
-					<div className='notificaiton__main__title'>{renderTitleHeader()}</div>
+					<div className='notification__main__title'>{renderTitleHeader()}</div>
 				</div>
 				<div className='friends__detail__header'>
 					<div className='friends__search'>

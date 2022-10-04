@@ -93,7 +93,6 @@ export const likeAndUnlikeGroupComment = createAsyncThunk(
 export const getTagGroup = createAsyncThunk('group/getTagGroup', async (id = {}, { rejectWithValue }) => {
 	try {
 		const res = await Request.makeGet(listTagGroup(id));
-
 		return res.data;
 	} catch (err) {
 		const error = JSON.parse(err.response);
