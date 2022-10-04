@@ -334,7 +334,7 @@ function MainGroupComponent({ handleChange, keyChange, data, member, handleUpdat
 						<SearchField
 							handleChange={handleChangeSearch}
 							value={valueGroupSearch}
-							placeholder='Tìm kiếm sách, chủ để, hashtag ...'
+							placeholder='Tìm kiếm sách, chủ để, hashtag...'
 						/>
 					</div>
 				</div>
