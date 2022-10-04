@@ -5,6 +5,7 @@ import { useParams } from 'react-router-dom';
 import { NotificationError } from 'helpers/Error';
 import { useDispatch } from 'react-redux';
 import { getTagGroup } from 'reducers/redux-utils/group';
+import '../sidebar-right/RightSideBarGroup.scss';
 
 export default function RightSidebarGroup() {
 	const [tagGroup, setTagGroup] = useState([]);

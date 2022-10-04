@@ -8,7 +8,7 @@ import SubContainer from 'components/layout/sub-container';
 import SidebarGroupLef from './sidebar-left';
 import { getGroupDettail, getMember } from 'reducers/redux-utils/group';
 import MainGroupComponent from './popup-group/MainGroupComponet/MainGroupComponent';
-import RightSidebarGroup from './RightSidebarGroup';
+import RightSidebarGroup from './sidebar-right/RightSidebarGroup';
 
 const Group = () => {
 	const dispatch = useDispatch();
@@ -42,7 +42,6 @@ const Group = () => {
 	};
 
 	useEffect(() => {
-		fetchData();
 		getListMember();
 	}, []);
 

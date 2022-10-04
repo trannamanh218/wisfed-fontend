@@ -363,7 +363,7 @@ function MainGroupComponent({ handleChange, keyChange, data, member, handleUpdat
 						</Tab>
 						{show && (
 							<Tab eventKey='member' title='Thành viên'>
-								<MemberGroup memberGroups={member} />
+								<MemberGroup memberGroupsProp={member} />
 							</Tab>
 						)}
 					</Tabs>
