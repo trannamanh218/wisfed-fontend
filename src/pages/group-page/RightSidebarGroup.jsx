@@ -60,8 +60,10 @@ export default function RightSidebarGroup() {
 						<>
 							{index < numberIndex && (
 								<div className='hastag__group'>
-									<div className='hastag__group-name'>{item.name}</div>
-									<div className='hastag__group-number'>{item.quantity}</div>
+									<div className='hastag__group-name'>{item.tagName}</div>
+									<div className='hastag__group-number'>
+										{item.count < 10000 ? item.count : '9999+'} bài viết
+									</div>
 								</div>
 							)}
 						</>

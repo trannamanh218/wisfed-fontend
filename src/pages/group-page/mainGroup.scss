@@ -111,19 +111,24 @@
 	align-items: center;
 	letter-spacing: 0.25px;
 	color: #2d2c42;
+	&-name {
+		word-break: break-word;
+		padding-right: 5px;
+	}
+	&-number {
+		font-family: 'Montserrat';
+		font-style: normal;
+		font-weight: 600;
+		font-size: 16px;
+		line-height: 24px;
+		display: flex;
+		align-items: center;
+		text-align: right;
+		letter-spacing: 0.75px;
+		min-width: fit-content;
+	}
 }
-.hastag__group-number {
-	font-family: 'Montserrat';
-	font-style: normal;
-	font-weight: 700;
-	font-size: 18px;
-	line-height: 24px;
-	display: flex;
-	align-items: center;
-	text-align: right;
-	letter-spacing: 0.75px;
-	color: #2d2c42;
-}
+
 .more__btn {
 	margin-top: 35px;
 	font-family: 'Montserrat';
@@ -157,6 +162,10 @@
 		}
 		.search-field {
 			padding: 0 0.7rem;
+		}
+		.hastag__group-number {
+			font-size: 13px;
+			letter-spacing: 0px;
 		}
 	}
 }

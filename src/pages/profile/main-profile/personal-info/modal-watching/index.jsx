@@ -192,8 +192,8 @@ const ModalWatching = ({ setModalFollowing, modalFollowing, userInfoDetail }) =>
 												{item.userTwo.firstName} {item.userTwo.lastName}
 											</h5>
 											<p className='author-card__subtitle'>
-												{item?.dataCounting?.follower} follow, {item?.dataCounting?.friend} bạn
-												bè
+												{item?.dataCounting?.follower} người theo dõi,{' '}
+												{item?.dataCounting?.friend} bạn bè
 											</p>
 										</div>
 									</div>

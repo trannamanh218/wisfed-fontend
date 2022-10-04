@@ -89,8 +89,8 @@ const ModalFriend = ({ setModalFriend, modalFriend, userInfoDetail }) => {
 												{item.userTwo?.lastName || item.lastName}
 											</h5>
 											<p className='author-card__subtitle'>
-												{item?.dataCounting?.follower} follow, {item?.dataCounting?.friend} bạn
-												bè
+												{item?.dataCounting?.follower} người theo dõi,{' '}
+												{item?.dataCounting?.friend} bạn bè
 											</p>
 										</div>
 									</div>
