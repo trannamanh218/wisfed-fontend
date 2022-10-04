@@ -107,7 +107,12 @@ const SuggestFriend = ({ activeTabs }) => {
 			</div>
 			<div className='myfriends__layout__container'>
 				{listRecommendFriend.map(item => (
-					<FriendsItem key={item.id} data={item} />
+					<FriendsItem
+						key={item.id}
+						data={item}
+						keyTabs={activeTabs}
+						getListRecommend={listRecommendFriend}
+					/>
 				))}
 			</div>
 		</div>
