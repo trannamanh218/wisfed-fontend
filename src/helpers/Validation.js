@@ -43,7 +43,7 @@ export const resetPasswordValidate = yup.object().shape({
 		.string()
 		.required('*Vui lòng điền mã OTP')
 		.min(8, '*Mã OTP tối thiểu 8 kí tự. Vui lòng kiểm tra lại')
-		.matches(/^([0]([.][0-9]+)?|[1-9]([0-9]+)?([.][0-9]+)?)$/, {
+		.matches('^[0-9]*$', {
 			message: 'Vui lòng nhập số',
 			excludeEmptyString: true,
 		}),
