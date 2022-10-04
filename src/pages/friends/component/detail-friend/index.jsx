@@ -160,8 +160,9 @@ const DetailFriend = () => {
 									return acc;
 								}
 							}, []);
-							setListFriendSuggest(newList);
-							setGetListFollowings(newList);
+							const newListNotFriend = newList.filter(item => item.relation !== 'friend');
+							setListFriendSuggest(newListNotFriend);
+							setGetListFollowings(newListNotFriend);
 						});
 					}
 				} else if (getRecommendFriendData) {

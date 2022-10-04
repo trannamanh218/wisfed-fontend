@@ -75,7 +75,8 @@ const SuggestFriend = ({ activeTabs }) => {
 					return acc;
 				}
 			}, []);
-			setList(newList);
+			const newListNotFriend = newList.filter(item => item.relation !== 'friend');
+			setList(newListNotFriend.slice(0, 6));
 		});
 		getRecommendFriendData();
 	}, []);
