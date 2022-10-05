@@ -1,6 +1,10 @@
 @import 'src/scss/abstracts/_variables.scss';
 
 .main-profile {
+	.tab-content {
+		background-color: transparent;
+		padding-bottom: 0;
+	}
 	width: 100%;
 
 	.tab-pane {
