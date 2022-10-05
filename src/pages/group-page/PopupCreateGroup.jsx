@@ -65,7 +65,7 @@ const PopupCreateGroup = ({ handleClose }) => {
 	const bookInputWrapper = useRef(null);
 	const bookInput = useRef(null);
 
-	const hastagRegex = /(#[a-z0-9][a-z0-9\-_]*)/gi;
+	const hastagRegex = /(?<=[\s>]|^)#(\w*[A-Za-z_]+\w*)/g;
 
 	const dispatch = useDispatch();
 

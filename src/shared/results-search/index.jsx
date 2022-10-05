@@ -114,7 +114,11 @@ const ResultSearch = ({ valueInputSearch, resultSearch, setIsShow }) => {
 						<div key={item.id} className='result__search__main'>
 							<div onClick={() => handleItem(item)} className='result__search__main__left'>
 								<div className='result__search__icon__time'>
-									<img src={item?.avatarImage || defaultAvatar} className='result__search__img' />
+									<img
+										src={item?.avatarImage || defaultAvatar}
+										className='result__search__img'
+										onError={e => e.target.setAttribute('src', defaultAvatar)}
+									/>
 								</div>
 								<div className='result__search__name'>
 									{item.fullName || `${item.firstName} ${item.lastName}`}

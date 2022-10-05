@@ -39,7 +39,7 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 	const [show, setShow] = useState(false);
 	const [hasMoreEllipsis, setHasMoreEllipsis] = useState(false);
 
-	const hastagRegex = /(#[a-z0-9][a-z0-9\-_]*)/gi;
+	const hastagRegex = /(?<=[\s>]|^)#(\w*[A-Za-z_]+\w*)/g;
 
 	const dispatch = useDispatch();
 	const colorData = [
