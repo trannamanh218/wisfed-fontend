@@ -59,7 +59,7 @@ const verbShareArray = [
 
 const urlRegex =
 	/(https?:\/\/)?(www(\.))?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/g;
-const hashtagRegex = /(#[a-zA-Z0-9][a-zA-Z0-9_]*)/g;
+const hashtagRegex = /(?<=[\s>]|^)#(\w*[A-Za-z_]+\w*)/g;
 
 function CreatPostModalContent({
 	hideCreatePostModal,

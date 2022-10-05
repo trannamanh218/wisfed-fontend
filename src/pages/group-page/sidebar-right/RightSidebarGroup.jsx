@@ -5,7 +5,7 @@ import '../sidebar-right/RightSideBarGroup.scss';
 import PropTypes from 'prop-types';
 
 export default function RightSidebarGroup({ tagGroup }) {
-	const [numberIndex, setNumberIndex] = useState(Infinity);
+	const [numberIndex, setNumberIndex] = useState(6);
 	const [show, setShow] = useState(false);
 	const [inputSearch, setInputSearch] = useState('');
 
@@ -18,7 +18,7 @@ export default function RightSidebarGroup({ tagGroup }) {
 	];
 
 	const handleChangeNumber = () => {
-		if (numberIndex === 7) {
+		if (numberIndex === 6) {
 			setNumberIndex(list?.length);
 			setShow(!show);
 		} else {

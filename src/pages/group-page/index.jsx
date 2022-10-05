@@ -43,13 +43,13 @@ const Group = () => {
 			id: id,
 			body: {
 				start: 0,
-				limit: 6,
+				limit: 7,
 				sort: JSON.stringify([{ property: 'count', direction: 'DESC' }]),
 			},
 		};
 		try {
-			const actionGetListTag = await dispatch(getTagGroup(params)).unwrap();
-			setTagGroup(actionGetListTag);
+			const res = await dispatch(getTagGroup(params)).unwrap();
+			setTagGroup(res);
 		} catch (error) {
 			NotificationError(error);
 		}
