@@ -42,6 +42,8 @@ const Group = () => {
 		const params = {
 			id: id,
 			body: {
+				start: 0,
+				limit: 6,
 				sort: JSON.stringify([{ property: 'count', direction: 'DESC' }]),
 			},
 		};

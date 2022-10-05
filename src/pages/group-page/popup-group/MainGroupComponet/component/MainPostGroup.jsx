@@ -7,8 +7,9 @@ import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { NotificationError } from 'helpers/Error';
 import { GROUP_TYPE } from 'constants/index';
+import PropTypes from 'prop-types';
 
-function MainPostGroup() {
+function MainPostGroup({ handleUpdate }) {
 	const [listPost, setListPost] = useState([]);
 	const [isNewPost, setIsNewPost] = useState(false);
 	const dispatch = useDispatch();
@@ -31,6 +32,7 @@ function MainPostGroup() {
 
 	const onChangeNewPost = () => {
 		setIsNewPost(!isNewPost);
+		handleUpdate();
 	};
 
 	useEffect(() => {
@@ -50,3 +52,7 @@ function MainPostGroup() {
 }
 
 export default MainPostGroup;
+
+MainPostGroup.propTypes = {
+	handleUpdate: PropTypes.func,
+};

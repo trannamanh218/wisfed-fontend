@@ -72,12 +72,12 @@ function SettingsGroup({ handleChange, data, fetchData }) {
 	const bookInputWrapper = useRef(null);
 	const bookInput = useRef(null);
 
-	const hastagRegex = /(#[a-z0-9][a-z0-9\-_]*)/gi;
+	const hashtagRegex = /(#[a-zA-Z0-9][a-zA-Z0-9\-_]*)/gi;
 
 	const onInputChange = f => e => {
 		const value = e.target.value.trim();
 		f(value);
-		if (!hastagRegex.test(value)) {
+		if (!hashtagRegex.test(value)) {
 			setShow(true);
 		} else {
 			setShow(false);
@@ -372,7 +372,7 @@ function SettingsGroup({ handleChange, data, fetchData }) {
 	useEffect(() => {
 		const hashtagElement = document.getElementById('hashtag');
 		const handleHashtag = e => {
-			if (e.keyCode === 32 && hastagRegex.test(inputHashtag)) {
+			if (e.keyCode === 32 && hashtagRegex.test(inputHashtag)) {
 				inputRefHashtag.current.value = '';
 				if (!listHashtags.includes(inputHashtag)) {
 					dataRef.current = inputHashtag.trim();

@@ -2,9 +2,10 @@ import SearchField from 'shared/search-field';
 import { ForwardGroup } from 'components/svg';
 import { useState } from 'react';
 import '../sidebar-right/RightSideBarGroup.scss';
+import PropTypes from 'prop-types';
 
 export default function RightSidebarGroup({ tagGroup }) {
-	const [numberIndex, setNumberIndex] = useState(4);
+	const [numberIndex, setNumberIndex] = useState(Infinity);
 	const [show, setShow] = useState(false);
 	const [inputSearch, setInputSearch] = useState('');
 
@@ -17,7 +18,7 @@ export default function RightSidebarGroup({ tagGroup }) {
 	];
 
 	const handleChangeNumber = () => {
-		if (numberIndex === 4) {
+		if (numberIndex === 7) {
 			setNumberIndex(list?.length);
 			setShow(!show);
 		} else {
@@ -50,7 +51,7 @@ export default function RightSidebarGroup({ tagGroup }) {
 					);
 				})}
 
-				{tagGroup.length > 4 && (
+				{tagGroup.length > 6 && (
 					<>
 						{!show ? (
 							<button className='more__btn' onClick={() => handleChangeNumber()}>
@@ -68,3 +69,7 @@ export default function RightSidebarGroup({ tagGroup }) {
 		</div>
 	);
 }
+
+RightSidebarGroup.propTypes = {
+	tagGroup: PropTypes.array,
+};
