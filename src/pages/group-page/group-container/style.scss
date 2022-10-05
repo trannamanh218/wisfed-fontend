@@ -107,9 +107,10 @@
 		text-overflow: ellipsis;
 		display: -webkit-box;
 		-webkit-box-orient: vertical;
-		-webkit-line-clamp: 2;
+		-webkit-line-clamp: 1;
 		letter-spacing: -0.180357px;
 		color: #2d2c42;
+		max-width: 150px;
 	}
 }
 
