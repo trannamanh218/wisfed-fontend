@@ -90,12 +90,21 @@ const SidebarProfile = ({ currentUserInfo, handleViewBookDetail }) => {
 
 	const handleViewMore = () => {
 		const length = myAllLibraryRedux.custom.length;
+		const lengthNew = library.current?.custom?.length;
 		let maxLength;
 
-		if (length <= 20) {
-			maxLength = length;
+		if (userInfo.id === userId) {
+			if (length <= 20) {
+				maxLength = length;
+			} else {
+				maxLength = 20;
+			}
 		} else {
-			maxLength = 20;
+			if (length <= 20) {
+				maxLength = lengthNew;
+			} else {
+				maxLength = 20;
+			}
 		}
 
 		const newRows = isExpand ? DEFAULT_TOGGLE_ROWS : maxLength;
@@ -163,12 +172,14 @@ const SidebarProfile = ({ currentUserInfo, handleViewBookDetail }) => {
 												</li>
 										  ))}
 								</ul>
-								{!isExpand && myAllLibraryRedux.custom.length > 0 && (
-									<button className='dualColumn-btn' onClick={handleViewMore}>
-										<img className='view-caret' src={caretIcon} alt='caret-icon' />
-										<span>Xem thêm</span>
-									</button>
-								)}
+
+								{!isExpand &&
+									(library.current?.custom?.length > 0 || myAllLibraryRedux.custom.length > 0) && (
+										<button className='dualColumn-btn' onClick={handleViewMore}>
+											<img className='view-caret' src={caretIcon} alt='caret-icon' />
+											<span>Xem thêm</span>
+										</button>
+									)}
 								{isExpand && (
 									<Link to={`/shelves/${userId}`} className='sidebar__view-more-btn--blue'>
 										Xem thêm
