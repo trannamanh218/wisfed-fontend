@@ -1,19 +1,12 @@
 import SearchField from 'shared/search-field';
 import { ForwardGroup } from 'components/svg';
-import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import { NotificationError } from 'helpers/Error';
-import { useDispatch } from 'react-redux';
-import { getTagGroup } from 'reducers/redux-utils/group';
+import { useState } from 'react';
+import '../sidebar-right/RightSideBarGroup.scss';
 
-export default function RightSidebarGroup() {
-	const [tagGroup, setTagGroup] = useState([]);
+export default function RightSidebarGroup({ tagGroup }) {
 	const [numberIndex, setNumberIndex] = useState(4);
 	const [show, setShow] = useState(false);
 	const [inputSearch, setInputSearch] = useState('');
-
-	const { id } = useParams();
-	const dispatch = useDispatch();
 
 	const list = [
 		{ name: '#Shadow', quantity: '30 bài viết' },
@@ -22,15 +15,6 @@ export default function RightSidebarGroup() {
 		{ name: '#HiềnHồ', quantity: '30 bài viết' },
 		{ name: '#Anime', quantity: '30 bài viết' },
 	];
-
-	const listTagGroup = async () => {
-		try {
-			const actionGetListTag = await dispatch(getTagGroup(id)).unwrap();
-			setTagGroup(actionGetListTag);
-		} catch (error) {
-			NotificationError(error);
-		}
-	};
 
 	const handleChangeNumber = () => {
 		if (numberIndex === 4) {
@@ -45,10 +29,6 @@ export default function RightSidebarGroup() {
 	const onChangeInputSearch = e => {
 		setInputSearch(e.target.value);
 	};
-
-	useEffect(() => {
-		listTagGroup();
-	}, [id]);
 
 	return (
 		<div className='group-sibar-right'>

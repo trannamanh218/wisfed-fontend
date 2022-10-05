@@ -6,9 +6,9 @@ import './index.scss';
 import './mainGroup.scss';
 import SubContainer from 'components/layout/sub-container';
 import SidebarGroupLef from './sidebar-left';
-import { getGroupDettail, getMember } from 'reducers/redux-utils/group';
+import { getGroupDettail, getMember, getTagGroup } from 'reducers/redux-utils/group';
 import MainGroupComponent from './popup-group/MainGroupComponet/MainGroupComponent';
-import RightSidebarGroup from './RightSidebarGroup';
+import RightSidebarGroup from './sidebar-right/RightSidebarGroup';
 
 const Group = () => {
 	const dispatch = useDispatch();
@@ -18,6 +18,7 @@ const Group = () => {
 	const [update, setUpdate] = useState(false);
 	const [detailGroup, setDetailGroup] = useState({});
 	const [listMember, setListMember] = useState([]);
+	const [tagGroup, setTagGroup] = useState([]);
 
 	const fetchData = async () => {
 		try {
@@ -37,17 +38,32 @@ const Group = () => {
 		}
 	};
 
+	const getlistTagGroup = async () => {
+		const params = {
+			id: id,
+			body: {
+				sort: JSON.stringify([{ property: 'count', direction: 'DESC' }]),
+			},
+		};
+		try {
+			const actionGetListTag = await dispatch(getTagGroup(params)).unwrap();
+			setTagGroup(actionGetListTag);
+		} catch (error) {
+			NotificationError(error);
+		}
+	};
+
 	const handleUpdate = () => {
 		setUpdate(!update);
 	};
 
 	useEffect(() => {
-		fetchData();
 		getListMember();
 	}, []);
 
 	useEffect(() => {
 		fetchData();
+		getlistTagGroup();
 	}, [update]);
 
 	const handleChange = e => {
@@ -68,7 +84,7 @@ const Group = () => {
 						fetchData={fetchData}
 					/>
 				}
-				right={<RightSidebarGroup />}
+				right={<RightSidebarGroup tagGroup={tagGroup} />}
 			/>
 		</div>
 	);

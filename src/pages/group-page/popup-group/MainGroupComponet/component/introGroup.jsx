@@ -24,7 +24,7 @@ function IntroGroup({ groupType, description, createdAt, data }) {
 	}, [arrDate]);
 
 	useEffect(() => {
-		let newArr = [];
+		const newArr = [];
 		if (data?.groupAuthors?.length > 0) {
 			data.groupAuthors.forEach(item => newArr.push(item.author?.firstName + ' ' + item.author?.lastName));
 		}
@@ -71,6 +71,7 @@ function IntroGroup({ groupType, description, createdAt, data }) {
 			</div>
 			<div className='intro-activity'>
 				<h3>Hoạt động của nhóm</h3>
+				<br />
 				<span>
 					hôm nay có <strong>{`${data?.countPost} bài viết mới`}</strong>
 				</span>

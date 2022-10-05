@@ -1,0 +1,56 @@
+.group-sibar-right {
+	h2 {
+		font-family: 'Montserrat';
+		font-style: normal;
+		font-weight: 700;
+		font-size: 20px;
+		line-height: 32px;
+		display: flex;
+		align-items: center;
+		letter-spacing: 0.75px;
+		color: #2d2c42;
+	}
+	.search-field {
+		margin-top: 24px;
+		border: 1px solid #d9dbe9;
+	}
+	.search-field__input {
+		font-family: 'Montserrat';
+		font-style: normal;
+		font-weight: 500;
+		font-size: 15px;
+		line-height: 24px;
+		display: flex;
+		align-items: center;
+		letter-spacing: 0.75px;
+		color: #a0a3bd;
+	}
+
+	.dualColumn-item {
+		width: 100%;
+	}
+	.dualColumn-item__title {
+		font-family: 'Montserrat';
+		font-style: normal;
+		font-weight: 600;
+		font-size: 13px;
+		line-height: 22px;
+		display: flex;
+		align-items: center;
+		letter-spacing: 0.25px;
+		color: #2d2c42;
+	}
+	.dualColumn-item__number {
+		font-family: 'Montserrat';
+		font-style: normal;
+		font-weight: 700;
+		font-size: 15px;
+		line-height: 24px;
+		display: flex;
+		align-items: center;
+		text-align: right;
+		letter-spacing: 0.75px;
+		color: #2d2c42;
+		margin-right: 10px;
+	}
+}

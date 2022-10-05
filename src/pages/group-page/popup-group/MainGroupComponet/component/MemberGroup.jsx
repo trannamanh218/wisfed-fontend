@@ -9,7 +9,7 @@ import { useParams } from 'react-router-dom';
 import { getMember } from 'reducers/redux-utils/group';
 import defaultAvatar from 'assets/images/avatar.jpeg';
 import ModalUnFriend from 'pages/friends/component/modalUnFriends';
-function MemberGroup() {
+function MemberGroup({ memberGroupsProp = [] }) {
 	const [listFriend, setListFriend] = useState([]);
 	const [listFolow, setListFolow] = useState([]);
 	const dispatch = useDispatch();
@@ -30,7 +30,11 @@ function MemberGroup() {
 	};
 
 	useEffect(() => {
-		getListMember();
+		if (memberGroupsProp.length === 0) {
+			getListMember();
+		} else {
+			setMemberGroups(memberGroupsProp);
+		}
 	}, [isCallApi]);
 
 	useEffect(() => {
@@ -446,7 +450,7 @@ function MemberGroup() {
 }
 
 MemberGroup.propTypes = {
-	memberGroups: PropTypes.array,
+	memberGroupsProp: PropTypes.array,
 };
 
 export default MemberGroup;
