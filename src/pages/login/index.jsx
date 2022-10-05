@@ -29,7 +29,7 @@ function Login() {
 
 	const handleSubmit = async data => {
 		const dataSend = {
-			email: data.email.toLowerCase(),
+			email: data.email.toLowerCase().trim(),
 			password: data.password,
 		};
 		try {

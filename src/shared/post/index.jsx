@@ -47,7 +47,7 @@ import { handleMentionCommentId, handleCheckIfMentionFromGroup } from 'reducers/
 import { getMiniPostComments, getGroupPostComments } from 'reducers/redux-utils/post';
 
 const urlRegex =
-	/(https?:\/\/)?(www(\.))?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/g;
+	/(https?:\/\/)?(www(\.))?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)([^"<\s]+)(?![^<>]*>|[^"]*?<\/a)/g;
 const hashtagRegex = /(#[a-z0-9][a-z0-9\-_]*)/g;
 
 const verbShareArray = [
@@ -313,15 +313,13 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 
 	const generateContent = content => {
 		if (content.match(urlRegex) || content.match(hashtagRegex)) {
-			const newContent = content
-				.replace(
-					urlRegex,
-					data =>
-						`<a class="url-class" href=${
-							data.includes('https://') ? data : `https://${data}`
-						} target="_blank">${data.length <= 50 ? data : data.slice(0, 50) + '...'}</a>`
-				)
-				.replace(hashtagRegex, data => `<a class="hashtag-class" href="/hashtag/${data.slice(1)}">${data}</a>`);
+			const newContent = content.replace(urlRegex, data => {
+				console.log('old', content, 'data', data, 'new', content.match(urlRegex));
+				return `<a class="url-class" href=${
+					data.includes('https://') ? data : `https://${data}`
+				} target="_blank">${data.length <= 50 ? data : data.slice(0, 50) + '...'}</a>`;
+			});
+			// .replace(hashtagRegex, data => `<a class="hashtag-class" href="/hashtag/${data.slice(1)}">${data}</a>`);
 			return newContent;
 		} else {
 			return content;

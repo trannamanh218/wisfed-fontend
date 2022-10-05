@@ -81,6 +81,7 @@ class Validation {
 		return yup.object().shape({
 			email: yup
 				.string()
+				.trim()
 				.email('*Email không đúng định dạng')
 				.max(200, '*Email không vượt quá 200 ký tự')
 				.required('*Vui lòng điền đầy đủ thông tin'),
