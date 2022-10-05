@@ -65,7 +65,7 @@ const PopupCreateGroup = ({ handleClose }) => {
 	const bookInputWrapper = useRef(null);
 	const bookInput = useRef(null);
 
-	const hastagRegex = /(^|\B)#(?![0-9_]+\b)([a-zA-Z0-9_]*)(\b|\r)/g;
+	const hashtagRegex = /(^|\B)#(?![0-9_]+\b)([a-zA-Z0-9_]{1,30})(\b|\r)/g;
 
 	const dispatch = useDispatch();
 
@@ -266,7 +266,7 @@ const PopupCreateGroup = ({ handleClose }) => {
 	useEffect(() => {
 		const hashtagElement = document.getElementById('hashtag');
 		const handleHashtag = e => {
-			if (e.keyCode === 32 && hastagRegex.test(inputHashtag)) {
+			if (e.keyCode === 32 && hashtagRegex.test(inputHashtag)) {
 				dataRef.current = inputHashtag.trim();
 				inputRefHashtag.current.value = '';
 			}
@@ -293,7 +293,7 @@ const PopupCreateGroup = ({ handleClose }) => {
 	const onInputChange = f => e => {
 		const value = e.target.value.trim();
 		f(value);
-		if (!hastagRegex.test(value)) {
+		if (!hashtagRegex.test(value)) {
 			setShow(true);
 		} else {
 			setShow(false);

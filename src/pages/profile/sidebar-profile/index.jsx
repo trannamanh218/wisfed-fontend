@@ -8,8 +8,6 @@ import { Link } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 import { useFetchAuthorBooks } from 'api/book.hooks';
 import { useSelector } from 'react-redux';
-import { useFetchTargetReading } from 'api/readingTarget.hooks';
-import ProgressBarCircle from 'shared/progress-circle';
 import RenderProgress from 'shared/render-progress';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
@@ -23,7 +21,6 @@ const SidebarProfile = ({ currentUserInfo, handleViewBookDetail }) => {
 	const { userId } = useParams();
 	const { booksAuthor } = useFetchAuthorBooks(userId);
 	const [bookReading, setBookReading] = useState({});
-	const { booksReadYear } = useFetchTargetReading(userId);
 	const [isExpand, setIsExpand] = useState(false);
 	const [rows, setRows] = useState(DEFAULT_TOGGLE_ROWS);
 	const [booksSliderTitle, setBooksSliderTitle] = useState('');
@@ -113,13 +110,10 @@ const SidebarProfile = ({ currentUserInfo, handleViewBookDetail }) => {
 	};
 
 	const handleRenderTargetReading = () => {
-		if (userInfo.id === userId) {
+		if (userId) {
 			return <RenderProgress userIdParams={userId} />;
-		} else {
-			if (booksReadYear.length > 0) {
-				return <ProgressBarCircle booksReadYear={booksReadYear} />;
-			}
-			return '';
+		} else if (!_.isEmpty(userInfo)) {
+			return <RenderProgress userIdParams={userInfo.id} />;
 		}
 	};
 

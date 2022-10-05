@@ -77,7 +77,7 @@ const DualColumn = props => {
 							</span>
 
 							{pageText ? (
-								<span className='dualColumn-item__number'>{item?.quoteCount} Quotes</span>
+								<span className='dualColumn-item__number'>{item?.countQuote} Quotes</span>
 							) : (
 								<span className='dualColumn-item__number no-page-text'>
 									{inCategory ? item.category.numberBooks : item.books.length}
