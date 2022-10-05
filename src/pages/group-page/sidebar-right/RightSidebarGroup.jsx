@@ -1,28 +1,43 @@
 import SearchField from 'shared/search-field';
 import { ForwardGroup } from 'components/svg';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import '../sidebar-right/RightSideBarGroup.scss';
 import PropTypes from 'prop-types';
+import { useParams } from 'react-router-dom';
+import { getTagGroup } from 'reducers/redux-utils/group';
+import { useDispatch } from 'react-redux';
+import { NotificationError } from 'helpers/Error';
 
-export default function RightSidebarGroup({ tagGroup }) {
+export default function RightSidebarGroup({ update }) {
 	const [numberIndex, setNumberIndex] = useState(6);
 	const [show, setShow] = useState(false);
 	const [inputSearch, setInputSearch] = useState('');
+	const [tagGroup, setTagGroup] = useState([]);
 
-	const list = [
-		{ name: '#Shadow', quantity: '30 bài viết' },
-		{ name: '#GaoRanger', quantity: '30 bài viết' },
-		{ name: '#FairyTail', quantity: '30 bài viết' },
-		{ name: '#HiềnHồ', quantity: '30 bài viết' },
-		{ name: '#Anime', quantity: '30 bài viết' },
-	];
+	const { id = '' } = useParams();
+	const dispatch = useDispatch();
+
+	const getlistTagGroupFirstTime = async () => {
+		const params = {
+			id: id,
+			body: {
+				sort: JSON.stringify([{ property: 'count', direction: 'DESC' }]),
+			},
+		};
+		try {
+			const res = await dispatch(getTagGroup(params)).unwrap();
+			setTagGroup(res);
+		} catch (error) {
+			NotificationError(error);
+		}
+	};
 
 	const handleChangeNumber = () => {
 		if (numberIndex === 6) {
-			setNumberIndex(list?.length);
+			setNumberIndex(tagGroup?.length);
 			setShow(!show);
 		} else {
-			setNumberIndex(4);
+			setNumberIndex(6);
 			setShow(!show);
 		}
 	};
@@ -30,6 +45,10 @@ export default function RightSidebarGroup({ tagGroup }) {
 	const onChangeInputSearch = e => {
 		setInputSearch(e.target.value);
 	};
+
+	useEffect(() => {
+		getlistTagGroupFirstTime();
+	}, [update]);
 
 	return (
 		<div className='group-sibar-right'>
@@ -71,5 +90,5 @@ export default function RightSidebarGroup({ tagGroup }) {
 }
 
 RightSidebarGroup.propTypes = {
-	tagGroup: PropTypes.array,
+	update: PropTypes.bool,
 };

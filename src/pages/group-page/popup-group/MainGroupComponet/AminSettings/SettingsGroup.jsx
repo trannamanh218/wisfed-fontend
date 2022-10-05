@@ -72,7 +72,7 @@ function SettingsGroup({ handleChange, data, fetchData }) {
 	const bookInputWrapper = useRef(null);
 	const bookInput = useRef(null);
 
-	const hashtagRegex = /(?<=[\s>]|^)#(\w*[A-Za-z_]+\w*)/g;
+	const hashtagRegex = /(^|\B)#(?![0-9_]+\b)([a-zA-Z0-9_]{1,30})(\b|\r)/g;
 
 	const onInputChange = f => e => {
 		const value = e.target.value.trim();

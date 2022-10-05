@@ -48,7 +48,7 @@ import { getMiniPostComments, getGroupPostComments } from 'reducers/redux-utils/
 
 const urlRegex =
 	/(https?:\/\/)?(www(\.))?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/g;
-const hashtagRegex = /(?<=[\s>]|^)#(\w*[A-Za-z_]+\w*)/g;
+const hashtagRegex = /(^|\B)#(?![0-9_]+\b)([a-zA-Z0-9_]{1,30})(\b|\r)/g;
 
 const verbShareArray = [
 	POST_VERB_SHARE,
