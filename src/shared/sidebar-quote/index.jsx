@@ -34,7 +34,7 @@ const SidebarQuote = ({ listHashtags, inMyQuote, hasCountQuotes }) => {
 
 	const getCountQuotesByCategoryData = async () => {
 		try {
-			const params = { limit: 100, sort: JSON.stringify([{ property: 'quoteCount', direction: 'DESC' }]) };
+			const params = { limit: 100, sort: JSON.stringify([{ property: 'countQuote', direction: 'DESC' }]) };
 			const res = await dispatch(getCountQuotesByCategory({ userId: userId || '', params: params })).unwrap();
 			setCategoryList(res);
 		} catch (err) {
