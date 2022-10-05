@@ -12,7 +12,7 @@ export default function RightSidebarGroup() {
 	const [show, setShow] = useState(false);
 	const [inputSearch, setInputSearch] = useState('');
 
-	const { id = '' } = useParams();
+	const { id } = useParams();
 	const dispatch = useDispatch();
 
 	const list = [
