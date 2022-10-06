@@ -72,6 +72,8 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 	const [firstPlaceComment, setFirstPlaceComment] = useState([]);
 	const [firstPlaceCommentId, setFirstPlaceCommentId] = useState(null);
 
+	const [haveNotClickedSeeMoreOnce, setHaveNotClickedSeeMoreOnce] = useState(true);
+
 	const [showModalOthers, setShowModalOthers] = useState(false);
 
 	const handleCloseModalOthers = () => setShowModalOthers(false);
@@ -363,23 +365,33 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 		}
 	};
 
+	// Sau khi bấm xem thêm thì không đặt comment nhắc đến bạn lên đầu nữa
 	useEffect(() => {
-		if (reduxMentionCommentId && mentionCommentId === null) {
-			setMentionCommentId(reduxMentionCommentId);
+		if (!haveNotClickedSeeMoreOnce) {
+			setFirstPlaceComment([]);
+			setFirstPlaceCommentId(null);
 		}
-		if (reduxCheckIfMentionCmtFromGroup === 'group') {
-			setCheckIfMentionCmtFromGroup(reduxCheckIfMentionCmtFromGroup);
-		}
-		if (!_.isEmpty(postData) && mentionCommentId) {
-			// Nếu bấm xem bình luận nhắc đến bạn từ thông báo thì sẽ đưa bình luận đó lên đầu
-			if (checkIfMentionCmtFromGroup === 'group') {
-				handleChangeOrderMiniComments(getGroupPostComments);
-			} else {
-				handleChangeOrderMiniComments(getMiniPostComments);
+	}, [haveNotClickedSeeMoreOnce]);
+
+	useEffect(() => {
+		if (haveNotClickedSeeMoreOnce) {
+			if (reduxMentionCommentId && mentionCommentId === null) {
+				setMentionCommentId(reduxMentionCommentId);
 			}
-			// Sau đó xóa mentionCommentId trong redux
-			dispatch(handleMentionCommentId(null));
-			dispatch(handleCheckIfMentionFromGroup(null));
+			if (reduxCheckIfMentionCmtFromGroup === 'group') {
+				setCheckIfMentionCmtFromGroup(reduxCheckIfMentionCmtFromGroup);
+			}
+			if (!_.isEmpty(postData) && mentionCommentId) {
+				// Nếu bấm xem bình luận nhắc đến bạn từ thông báo thì sẽ đưa bình luận đó lên đầu
+				if (checkIfMentionCmtFromGroup === 'group') {
+					handleChangeOrderMiniComments(getGroupPostComments);
+				} else {
+					handleChangeOrderMiniComments(getMiniPostComments);
+				}
+				// Sau đó xóa mentionCommentId trong redux
+				dispatch(handleMentionCommentId(null));
+				dispatch(handleCheckIfMentionFromGroup(null));
+			}
 		}
 	}, [postData]);
 
@@ -558,10 +570,15 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 				))}
 			<PostActionBar postData={postData} handleLikeAction={handleLikeAction} />
 
-			<SeeMoreComments data={postData} setData={setPostData} />
+			<SeeMoreComments
+				data={postData}
+				setData={setPostData}
+				haveNotClickedSeeMoreOnce={haveNotClickedSeeMoreOnce}
+				setHaveNotClickedSeeMoreOnce={setHaveNotClickedSeeMoreOnce}
+			/>
 
 			{/* Comment mention đặt trên đầu  */}
-			{firstPlaceComment && !!firstPlaceComment?.length && (
+			{firstPlaceComment && firstPlaceComment?.length > 0 && (
 				<>
 					{firstPlaceComment.map(comment => (
 						<div key={comment.id}>

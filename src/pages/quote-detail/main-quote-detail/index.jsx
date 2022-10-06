@@ -21,6 +21,7 @@ import SeeMoreComments from 'shared/see-more-comments/SeeMoreComments';
 const MainQuoteDetail = ({ quoteData, setQuoteData, onCreateComment, setMentionUsersArr, mentionUsersArr }) => {
 	const [replyingCommentId, setReplyingCommentId] = useState(0);
 
+	const [haveNotClickedSeeMoreOnce, setHaveNotClickedSeeMoreOnce] = useState(true);
 	const [firstPlaceComment, setFirstPlaceComment] = useState([]);
 	const [firstPlaceCommentId, setFirstPlaceCommentId] = useState(null);
 
@@ -81,15 +82,26 @@ const MainQuoteDetail = ({ quoteData, setQuoteData, onCreateComment, setMentionU
 		}
 	};
 
+	// Sau khi bấm xem thêm thì không đặt comment nhắc đến bạn lên đầu nữa
 	useEffect(() => {
-		if (reduxMentionCommentId && mentionCommentId === null) {
-			setMentionCommentId(reduxMentionCommentId);
+		if (!haveNotClickedSeeMoreOnce) {
+			setFirstPlaceComment([]);
+			setFirstPlaceCommentId(null);
 		}
-		if (!_.isEmpty(quoteData) && mentionCommentId) {
-			// Nếu bấm xem bình luận nhắc đến bạn từ thông báo thì sẽ đưa bình luận đó lên đầu
-			handleChangeOrderQuoteComments();
-			// Sau đó xóa mentionCommentId trong redux
-			dispatch(handleMentionCommentId(null));
+	}, [haveNotClickedSeeMoreOnce]);
+
+	// Lấy comment nhắc đến bạn đặt trên đầu
+	useEffect(() => {
+		if (haveNotClickedSeeMoreOnce) {
+			if (reduxMentionCommentId && mentionCommentId === null) {
+				setMentionCommentId(reduxMentionCommentId);
+			}
+			if (!_.isEmpty(quoteData) && mentionCommentId) {
+				// Nếu bấm xem bình luận nhắc đến bạn từ thông báo thì sẽ đưa bình luận đó lên đầu
+				handleChangeOrderQuoteComments();
+				// Sau đó xóa mentionCommentId trong redux
+				dispatch(handleMentionCommentId(null));
+			}
 		}
 	}, [quoteData]);
 
@@ -118,10 +130,15 @@ const MainQuoteDetail = ({ quoteData, setQuoteData, onCreateComment, setMentionU
 					<div className='main-quote-detail__pane'>
 						<QuoteCard isDetail={true} data={quoteData} />
 
-						<SeeMoreComments data={quoteData} setData={setQuoteData} />
+						<SeeMoreComments
+							data={quoteData}
+							setData={setQuoteData}
+							haveNotClickedSeeMoreOnce={haveNotClickedSeeMoreOnce}
+							setHaveNotClickedSeeMoreOnce={setHaveNotClickedSeeMoreOnce}
+						/>
 
 						{/* Comment mention đặt trên đầu  */}
-						{firstPlaceComment && !!firstPlaceComment?.length && (
+						{firstPlaceComment && firstPlaceComment?.length > 0 && (
 							<>
 								{firstPlaceComment.map(comment => (
 									<div key={comment.id}>
