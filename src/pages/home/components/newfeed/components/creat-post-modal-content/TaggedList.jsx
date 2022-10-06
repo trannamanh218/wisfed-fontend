@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import { CloseX, Feather } from 'components/svg';
 
 const TaggedList = props => {
-	const { taggedData, removeTaggedItem, type } = props;
+	const { taggedData, removeTaggedItem, type, handleFriend } = props;
 
 	if (type && type !== 'addBook') {
 		const list = taggedData[type];
@@ -14,7 +14,10 @@ const TaggedList = props => {
 						<li
 							key={item.id}
 							className={classNames('badge bg-primary-light', { [type]: type })}
-							onClick={() => removeTaggedItem(item, type)}
+							onClick={() => {
+								removeTaggedItem(item, type);
+								handleFriend(item, null, 'remove');
+							}}
 						>
 							{type === 'addAuthor' && <Feather />}
 							<span>

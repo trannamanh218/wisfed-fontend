@@ -1,10 +1,10 @@
-import PropTypes from 'prop-types';
 import noSearchResult from 'assets/images/no-search-result.png';
+import PropTypes from 'prop-types';
 import BookSlider from 'shared/book-slider';
 import UserAvatar from 'shared/user-avatar';
 
 const SuggestSection = props => {
-	const { option, list, handleAddToPost } = props;
+	const { option, list, handleAddToPost, handleFriend } = props;
 
 	if (list.length > 0) {
 		switch (option.value) {
@@ -48,13 +48,16 @@ const SuggestSection = props => {
 			case 'addFriends':
 				return (
 					<div className='creat-post-modal-content__substitute__suggest-author-container'>
-						{list.map(item => {
+						{list.map((item, index) => {
 							const friendInfo = item;
 							return (
 								<div
 									className='creat-post-modal-content__substitute__suggest-author-item'
 									key={item.id}
-									onClick={() => handleAddToPost(friendInfo)}
+									onClick={() => {
+										handleAddToPost(friendInfo);
+										handleFriend(1, index, 'add');
+									}}
 								>
 									<UserAvatar size='lg' {...friendInfo} />
 									<div className='creat-post-modal-content__substitute__suggest-author__name'>
