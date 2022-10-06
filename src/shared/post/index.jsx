@@ -45,6 +45,7 @@ import ShareUsers from 'pages/home/components/newfeed/components/modal-share-use
 import ShareTarget from 'shared/share-target';
 import { handleMentionCommentId, handleCheckIfMentionFromGroup } from 'reducers/redux-utils/notificaiton';
 import { getMiniPostComments, getGroupPostComments } from 'reducers/redux-utils/post';
+import SeeMoreComments from 'shared/see-more-comments/SeeMoreComments';
 
 const urlRegex =
 	/(https?:\/\/)?(www(\.))?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/g;
@@ -454,7 +455,6 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 					}}
 				></div>
 			)}
-
 			{!!postData?.mentionsAuthors?.length && (
 				<ul className='tagged'>
 					{postData.mentionsAuthors?.map(item => (
@@ -475,7 +475,6 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 					))}
 				</ul>
 			)}
-
 			{!!postData?.mentionsCategories?.length && (
 				<ul className='tagged'>
 					{postData.mentionsCategories?.map(item => (
@@ -511,13 +510,11 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 					<IconRanks />
 				</div>
 			)}
-
 			{!_.isEmpty(postData.verb) && postData.verb === 'shareMyBook' && (
 				<div className='post__title__share__rank'>
 					<span className='number__title__rank'># Sách của tôi làm tác giả</span>
 				</div>
 			)}
-
 			{verbShareArray.indexOf(postData.verb) !== -1 && (
 				<div className='creat-post-modal-content__main__share-container'>
 					{postData.verb === POST_VERB_SHARE && <PostShare postData={postData} />}
@@ -560,6 +557,8 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 					</>
 				))}
 			<PostActionBar postData={postData} handleLikeAction={handleLikeAction} />
+
+			<SeeMoreComments data={postData} setData={setPostData} />
 
 			{/* Comment mention đặt trên đầu  */}
 			{firstPlaceComment && !!firstPlaceComment?.length && (

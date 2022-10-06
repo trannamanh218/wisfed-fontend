@@ -12,6 +12,16 @@ export const createComment = createAsyncThunk('comment/createComment', async (pa
 	}
 });
 
+export const getComments = createAsyncThunk('comment/createComment', async (params, { rejectWithValue }) => {
+	try {
+		const response = await Request.makeGet(commentActivityAPI, params);
+		return response.data;
+	} catch (err) {
+		const error = JSON.stringify(err.response);
+		throw rejectWithValue(error);
+	}
+});
+
 export const createCommentGroup = createAsyncThunk(
 	'comment/createCommentGroup',
 	async (params, { rejectWithValue }) => {

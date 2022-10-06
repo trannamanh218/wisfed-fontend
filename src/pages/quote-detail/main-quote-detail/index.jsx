@@ -16,8 +16,9 @@ import { useRef, useEffect, lazy, Suspense } from 'react';
 import { NotificationError } from 'helpers/Error';
 import { handleMentionCommentId } from 'reducers/redux-utils/notificaiton';
 import Circle from 'shared/loading/circle';
+import SeeMoreComments from 'shared/see-more-comments/SeeMoreComments';
 
-const MainQuoteDetail = ({ quoteData, onCreateComment, setMentionUsersArr, mentionUsersArr }) => {
+const MainQuoteDetail = ({ quoteData, setQuoteData, onCreateComment, setMentionUsersArr, mentionUsersArr }) => {
 	const [replyingCommentId, setReplyingCommentId] = useState(0);
 
 	const [firstPlaceComment, setFirstPlaceComment] = useState([]);
@@ -116,6 +117,8 @@ const MainQuoteDetail = ({ quoteData, onCreateComment, setMentionUsersArr, menti
 				{!_.isEmpty(quoteData) && (
 					<div className='main-quote-detail__pane'>
 						<QuoteCard isDetail={true} data={quoteData} />
+
+						<SeeMoreComments data={quoteData} setData={setQuoteData} />
 
 						{/* Comment mention đặt trên đầu  */}
 						{firstPlaceComment && !!firstPlaceComment?.length && (
@@ -230,6 +233,7 @@ const MainQuoteDetail = ({ quoteData, onCreateComment, setMentionUsersArr, menti
 
 MainQuoteDetail.propTypes = {
 	quoteData: PropTypes.object,
+	setQuoteData: PropTypes.func,
 	onCreateComment: PropTypes.func,
 	setMentionUsersArr: PropTypes.any,
 	mentionUsersArr: PropTypes.any,
