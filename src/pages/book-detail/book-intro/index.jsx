@@ -85,7 +85,7 @@ const BookIntro = ({ bookInfo, listRatingStar }) => {
 					<div className='book-intro__stars'>
 						<ReactRating readonly={true} initialRating={listRatingStar?.avg} />
 						<span>({listRatingStar?.count} đánh giá)</span>
-						<span>({reviewsNumber} review)</span>
+						<span>({reviewsNumber} reviews)</span>
 					</div>
 
 					<div className='book-intro__description'>

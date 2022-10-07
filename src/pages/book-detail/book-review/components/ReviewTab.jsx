@@ -40,6 +40,7 @@ const ReviewTab = ({ currentTab }) => {
 		{ value: 'follow', title: 'Có nhiều Follow nhất' },
 		{ value: 'review', title: 'Có nhiều Review nhất' },
 	];
+
 	const checkBoxStarOptions = [
 		{
 			value: '5',
@@ -75,14 +76,14 @@ const ReviewTab = ({ currentTab }) => {
 	const [inputSearch, setInputSearch] = useState('');
 	const [topUser, setTopUser] = useState('');
 	const [filterRate, setFilterRate] = useState(false);
-	const [reviewBook, setReviewBook] = useState('');
 	const [showModalCreatPost, setShowModalCreatPost] = useState(false);
 	const [option, setOption] = useState({});
-	const [valueSearch, setValueSearch] = useState('');
 
-	const { userInfo } = useSelector(state => state.auth);
+	const [inputSearchUpdated, setInputSearchUpdated] = useState(true);
+	const [filter, setFilter] = useState([]);
 
-	const callApiStart = useRef(10);
+	const initialCallApiStartValue = useRef(10);
+	const callApiStart = useRef(initialCallApiStartValue.current);
 	const callApiPerPage = useRef(10);
 	const creatPostModalContainer = useRef(null);
 
@@ -101,19 +102,10 @@ const ReviewTab = ({ currentTab }) => {
 
 	useEffect(() => {
 		if (currentTab === 'reviews') {
-			callApiStart.current = 10;
+			callApiStart.current = initialCallApiStartValue.current;
 			getReviewListFirstTime();
 		}
-	}, [currentOption, currentTab, directionSort, propertySort, valueSearch]);
-
-	const updateInputSearch = value => {
-		if (value) {
-			const filterValue = value.toLowerCase().trim();
-			setValueSearch(JSON.stringify(filterValue));
-		} else {
-			setValueSearch('');
-		}
-	};
+	}, [currentOption, currentTab, directionSort, propertySort, inputSearchUpdated]);
 
 	const getReviewListFirstTime = async () => {
 		try {
@@ -127,62 +119,33 @@ const ReviewTab = ({ currentTab }) => {
 						{ operator: 'eq', value: bookId, property: 'bookId' },
 						{ operator: 'in', value: checkedStarArr, property: 'rate' },
 					]),
-					searchUser: valueSearch,
 				};
 			} else {
 				params = {
 					start: 0,
 					limit: callApiPerPage.current,
+					search: inputSearch.toLocaleLowerCase().trim(),
 					sort: JSON.stringify([{ direction: directionSort, property: propertySort }]),
-					filter: JSON.stringify([{ operator: 'eq', value: bookId, property: 'bookId' }]),
-					searchUser: valueSearch,
+					// filter: JSON.stringify([{ operator: 'eq', value: bookId, property: 'bookId' }]),
 				};
 			}
 
 			let response;
 			if (currentOption.value === 'allReviews') {
-				response = await dispatch(getReviewsBook(params)).unwrap();
-				if (!_.isEmpty(response)) {
+				response = await dispatch(getReviewsBook({ bookId, params })).unwrap();
+				if (response.count) {
 					dispatch(updateCurrentBookReviewsNumber(response.count));
 				}
 			} else if (currentOption.value === 'friendReviews') {
-				const data = await dispatch(getReviewsBookByFriends({ bookId, params })).unwrap();
-				response = data.rows;
+				response = await dispatch(getReviewsBookByFriends({ bookId, params })).unwrap();
 			} else {
-				const data = (response = await dispatch(getReviewsBookByFollowers({ bookId, params })).unwrap());
-				response = data.rows;
+				response = await dispatch(getReviewsBookByFollowers({ bookId, params })).unwrap();
 			}
-			setReviewList(response);
-			setReviewCount(response.length);
-			if (!response.rows.length || response.rows.length < callApiPerPage.current) {
+			setReviewList(response.rows);
+			setReviewCount(response.count);
+			if (!response.count || response.count < callApiPerPage.current) {
 				setHasMore(false);
 			}
-		} catch (err) {
-			NotificationError(err);
-		}
-	};
-
-	console.log(hasMore, reviewList);
-
-	const debounceSearch = useCallback(_.debounce(updateInputSearch, 700), []);
-
-	const ChangeSearch = e => {
-		setInputSearch(e.target.value);
-		if (currentTab === 'reviews') {
-			callApiStart.current = 10;
-			debounceSearch(e.target.value);
-		}
-	};
-
-	const postReviewList = async () => {
-		const params = {
-			bookId: parseInt(bookId),
-
-			content: reviewBook,
-		};
-
-		try {
-			return dispatch(createReviewBook(params));
 		} catch (err) {
 			NotificationError(err);
 		}
@@ -198,25 +161,22 @@ const ReviewTab = ({ currentTab }) => {
 					sort: JSON.stringify([{ direction: directionSort, property: propertySort }]),
 					filter: JSON.stringify([
 						{ operator: 'eq', value: bookId, property: 'bookId' },
-
 						{ operator: 'in', value: checkedStarArr, property: 'rate' },
 					]),
-					searchUser: inputSearch,
 				};
 			} else {
 				params = {
-					start: 0,
+					start: callApiStart.current,
 					limit: callApiPerPage.current,
 					sort: JSON.stringify([{ direction: directionSort, property: propertySort }]),
-					filter: JSON.stringify([{ operator: 'eq', value: bookId, property: 'bookId' }]),
-					topUser: topUser,
-					searchUser: inputSearch,
+					// filter: JSON.stringify([{ operator: 'eq', value: bookId, property: 'bookId' }]),
+					// topUser: topUser,
 				};
 			}
 
 			let response;
 			if (currentOption.value === 'allReviews') {
-				response = await dispatch(getReviewsBook(params)).unwrap();
+				response = await dispatch(getReviewsBook({ bookId, params })).unwrap();
 			} else if (currentOption.value === 'friendReviews') {
 				response = await dispatch(getReviewsBookByFriends({ bookId, params })).unwrap();
 			} else {
@@ -226,7 +186,8 @@ const ReviewTab = ({ currentTab }) => {
 			if (response.rows.length > 0) {
 				callApiStart.current += callApiPerPage.current;
 				setReviewList(reviewList.concat(response.rows));
-			} else {
+			}
+			if (!response.rows.length || response.rows.length < callApiPerPage.current) {
 				setHasMore(false);
 			}
 		} catch (err) {
@@ -234,22 +195,20 @@ const ReviewTab = ({ currentTab }) => {
 		}
 	};
 
-	const handleChangeOption = item => {
-		callApiStart.current = 0;
-		setCurrentOption(item);
+	const updateInputSearch = () => {
+		console.log('ok');
+		setInputSearchUpdated(!inputSearchUpdated);
 	};
-	const handleKeyPress = async e => {
-		if (e.key === 'Enter' && !_.isEmpty(reviewBook)) {
-			const rs = await postReviewList();
-			setReviewBook('');
-			const newPayload = JSON.parse(JSON.stringify(rs.payload));
 
-			newPayload['user'] = userInfo;
+	const debounceSearch = useCallback(_.debounce(updateInputSearch, 700), []);
 
-			let newPost = [newPayload, ...reviewList];
+	const ChangeSearch = e => {
+		setInputSearch(e.target.value);
+		debounceSearch();
+	};
 
-			setReviewList(newPost);
-		}
+	const handleChangeOption = item => {
+		setCurrentOption(item);
 	};
 
 	const onBtnConfirmClick = () => {
@@ -279,16 +238,8 @@ const ReviewTab = ({ currentTab }) => {
 		}
 	};
 
-	// useEffect(() => {
-	// 	getReviewList();
-	// }, [topUser]);
-
 	const handleChange = data => {
 		setSortValue(data);
-	};
-
-	const changeReview = e => {
-		setReviewBook(e.target.value);
 	};
 
 	const handleChangeStar = data => {
@@ -315,11 +266,6 @@ const ReviewTab = ({ currentTab }) => {
 	}, [showModalCreatPost]);
 
 	const hideCreatePostModal = () => {
-		// dispatch(resetTaggedDataFunc(true));
-		// dispatch(saveDataShare({}));
-		// dispatch(updateImg([]));
-		// dispatch(updateCurrentBook({}));
-		// setOption({});
 		setShowModalCreatPost(false);
 	};
 
@@ -329,20 +275,13 @@ const ReviewTab = ({ currentTab }) => {
 
 	return (
 		<div className='review-tab'>
-			<div className='search-review'>
+			<div className='search-review' onClick={() => setShowModalCreatPost(true)}>
 				<img className='search-review__icon' src={searchreview} />
-				<input
-					className='search-review__input'
-					placeholder='Bạn review cuốn sách này thế nào'
-					onClick={() => setShowModalCreatPost(true)}
-					onChange={changeReview}
-					value={reviewBook}
-					onKeyPress={handleKeyPress}
-				/>
+				<div className='search-review__input'>Bạn review cuốn sách này thế nào</div>
 			</div>
 			<FilterPane
 				title='Bài review'
-				subtitle={`(${reviewCount} đánh giá)`}
+				subtitle={`(${reviewCount} Reviews)`}
 				key='Bài-review'
 				handleSortFilter={toggleModal}
 			>

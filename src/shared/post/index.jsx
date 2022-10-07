@@ -313,13 +313,15 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 
 	const generateContent = content => {
 		if (content.match(urlRegex) || content.match(hashtagRegex)) {
-			const newContent = content.replace(urlRegex, data => {
-				console.log('old', content, 'data', data, 'new', content.match(urlRegex));
-				return `<a class="url-class" href=${
-					data.includes('https://') ? data : `https://${data}`
-				} target="_blank">${data.length <= 50 ? data : data.slice(0, 50) + '...'}</a>`;
-			});
-			// .replace(hashtagRegex, data => `<a class="hashtag-class" href="/hashtag/${data.slice(1)}">${data}</a>`);
+			const newContent = content
+				.replace(
+					urlRegex,
+					data =>
+						`<a class="url-class" href=${
+							data.includes('https://') ? data : `https://${data}`
+						} target="_blank">${data.length <= 50 ? data : data.slice(0, 50) + '...'}</a>`
+				)
+				.replace(hashtagRegex, data => `<a class="hashtag-class" href="/hashtag/${data.slice(1)}">${data}</a>`);
 			return newContent;
 		} else {
 			return content;
