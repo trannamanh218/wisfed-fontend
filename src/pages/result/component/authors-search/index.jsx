@@ -67,7 +67,9 @@ const AuthorSearch = ({ value, setIsFetching, searchResultInput, activeKeyDefaul
 				<InfiniteScroll next={handleGetAuthorsSearch} dataLength={listArrayAuthors.length} hasMore={hasMore}>
 					<div className='myfriends__layout__container'>
 						{listArrayAuthors.map((item, index) => (
-							<AuthorCard key={index} item={item} size={'lg'} checkAuthors={true} />
+							<div key={index} className='myfriends__layout__container__top'>
+								<AuthorCard item={item} size={'lg'} checkAuthors={true} />
+							</div>
 						))}
 					</div>
 				</InfiniteScroll>
