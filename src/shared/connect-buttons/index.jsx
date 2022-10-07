@@ -105,7 +105,7 @@ const ConnectButtons = ({ direction, item }) => {
 		} else {
 			if (requestStatus === 'requestToMe') {
 				contentBtn = 'Chấp nhận';
-			} else if (requestStatus === 'sentRequest') {
+			} else if (requestStatus === 'sentRequest' || friendStatusBtn === 'pending') {
 				contentBtn = 'Đã gửi lời mời';
 			}
 		}

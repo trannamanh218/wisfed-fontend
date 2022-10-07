@@ -69,6 +69,18 @@ function CreatPostSubModal({
 		inputRef.current.value = '';
 	};
 
+	const handleFriend = (item, index, option) => {
+		if (option === 'add') {
+			const arr = [...suggestionData];
+			arr.splice(index, 1);
+			setSuggestionData(arr);
+		} else {
+			const arr = [...suggestionData];
+			arr.unshift(item);
+			setSuggestionData(arr);
+		}
+	};
+
 	return (
 		<>
 			<div className='creat-post-modal-content__substitute__header'>
@@ -141,9 +153,11 @@ function CreatPostSubModal({
 									</span>
 								)}
 								<TaggedList
+									list={suggestionData}
 									taggedData={taggedData}
 									removeTaggedItem={removeTaggedItem}
 									type={option.value}
+									handleFriend={handleFriend}
 								/>
 
 								{suggestionData && suggestionData.length !== 0 && !inputRef.current.value && (
@@ -158,6 +172,7 @@ function CreatPostSubModal({
 									list={suggestionData}
 									handleAddToPost={handleAddToPost}
 									taggedData={taggedData}
+									handleFriend={handleFriend}
 								/>
 							</>
 						)}

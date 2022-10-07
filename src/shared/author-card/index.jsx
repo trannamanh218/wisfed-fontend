@@ -28,27 +28,37 @@ const AuthorCard = ({ direction, size, item, setModalShow, checkAuthors }) => {
 					)}
 				</div>
 			</div>
-			<div className='author-card__right'>
-				{Storage.getAccessToken() ? (
-					<ConnectButtons direction={direction} item={item} />
-				) : (
-					<div className={`connect-buttons ${'column'}`}>
-						<Button className='connect-button' onClick={() => setModalShow(true)}>
-							<Add className='connect-button__icon' />
+			{item.relation === 'isMe' ? (
+				<div className={`connect-buttons ${'column'}`}>
+					<Button className='connect-button' onClick={() => navigate(`/profile/${item.id}`)}>
+						<span className='connect-button__content' style={{ fontSize: 'smaller' }}>
+							Xem trang cá nhân
+						</span>
+					</Button>
+				</div>
+			) : (
+				<div className='author-card__right'>
+					{Storage.getAccessToken() ? (
+						<ConnectButtons direction={direction} item={item} />
+					) : (
+						<div className={`connect-buttons ${'column'}`}>
+							<Button className='connect-button' onClick={() => setModalShow(true)}>
+								<Add className='connect-button__icon' />
 
-							<span className='connect-button__content'>Kết bạn</span>
-						</Button>
-						<Button
-							className=' connect-button follow'
-							isOutline={true}
-							name='friend'
-							onClick={() => setModalShow(true)}
-						>
-							<span className='connect-button__content follow'>Theo dõi </span>
-						</Button>
-					</div>
-				)}
-			</div>
+								<span className='connect-button__content'>Kết bạn</span>
+							</Button>
+							<Button
+								className=' connect-button follow'
+								isOutline={true}
+								name='friend'
+								onClick={() => setModalShow(true)}
+							>
+								<span className='connect-button__content follow'>Theo dõi </span>
+							</Button>
+						</div>
+					)}
+				</div>
+			)}
 		</div>
 	);
 };

@@ -4,12 +4,17 @@
 	.tab-content {
 		background-color: transparent;
 		padding-bottom: 0;
+
+		.active {
+			border-radius: 0;
+		}
 	}
 	width: 100%;
 
 	.tab-pane {
 		&.active {
 			padding: 2.5rem;
+			background-color: #fff;
 		}
 		&.post-tab-active {
 			padding: 0;

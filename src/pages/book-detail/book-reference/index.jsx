@@ -242,7 +242,11 @@ const BookReference = ({ bookInfo, handleGetBookDetail }) => {
 						<ul className='dualColumn-list'>
 							{allCategories.length > 0 &&
 								allCategories.slice(0, rows).map((item, index) => (
-									<li className='dualColumn-item' key={index}>
+									<li
+										className='dualColumn-item'
+										key={index}
+										onClick={() => navigate(`/category/detail/${item.id}`)}
+									>
 										<span className='dualColumn-item__title'>{item.name}</span>
 										<span className='dualColumn-item__number'>{item.numberBooks} cuốn</span>
 									</li>

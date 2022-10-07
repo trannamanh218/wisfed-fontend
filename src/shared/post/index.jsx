@@ -45,6 +45,7 @@ import ShareUsers from 'pages/home/components/newfeed/components/modal-share-use
 import ShareTarget from 'shared/share-target';
 import { handleMentionCommentId, handleCheckIfMentionFromGroup } from 'reducers/redux-utils/notification';
 import { getMiniPostComments, getGroupPostComments } from 'reducers/redux-utils/post';
+import defaultAvatar from 'assets/images/avatar.jpeg';
 
 const urlRegex =
 	/(https?:\/\/)?(www(\.))?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)([^"<\s]+)(?![^<>]*>|[^"]*?<\/a)/g;
@@ -278,7 +279,8 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 											<img
 												onClick={() => onClickUserInModalOthers(item)}
 												className='modal-tagged-others__avatar'
-												src={item.users.avatarImage}
+												src={item.users.avatarImage || defaultAvatar}
+												onError={e => e.target.setAttribute('src', defaultAvatar)}
 											></img>
 											<span
 												onClick={() => onClickUserInModalOthers(item)}
