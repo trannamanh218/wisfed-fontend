@@ -4,38 +4,6 @@ import { Link } from 'react-router-dom';
 
 const SidebarLeft = ({ listMyGroup, listAdminMyGroup }) => {
 	const defaultItems = 3;
-	// let maxItems = 10;
-
-	// const [isExpandAdmin, setIsExpandAdmin] = useState(false);
-	// const [isExpandMyGroup, setIsExpandMyGroup] = useState(false);
-	// const [rows, setRows] = useState(defaultItems);
-	// const [rows1, setRows1] = useState(defaultItems);
-
-	// const handleViewMoreAdmin = () => {
-	// 	const lengthAdminMyGroup = listAdminMyGroup.length;
-	// 	let maxLength;
-	// 	if (lengthAdminMyGroup <= maxItems) {
-	// 		maxLength = lengthAdminMyGroup;
-	// 	} else {
-	// 		maxLength = maxItems;
-	// 	}
-	// 	const newRows = isExpandAdmin ? defaultItems : maxLength;
-	// 	setRows(newRows);
-	// 	setIsExpandAdmin(!isExpandAdmin);
-	// };
-
-	// const handleViewMoreMyGroup = () => {
-	// 	const lengthMyGroup = listMyGroup.length;
-	// 	let maxLength;
-	// 	if (lengthMyGroup <= maxItems) {
-	// 		maxLength = lengthMyGroup;
-	// 	} else {
-	// 		maxLength = maxItems;
-	// 	}
-	// 	const newRows = isExpandMyGroup ? defaultItems : maxLength;
-	// 	setRows1(newRows);
-	// 	setIsExpandMyGroup(!isExpandMyGroup);
-	// };
 
 	return (
 		<div>
