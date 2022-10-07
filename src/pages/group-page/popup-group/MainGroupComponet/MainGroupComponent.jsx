@@ -122,35 +122,32 @@ function MainGroupComponent({ handleChange, keyChange, data, member, handleUpdat
 
 	const handleChangeSearch = e => {
 		setValueGroupSearch(e.target.value);
-		debounceSearch(e.target.value);
 		if (e.target.value !== '') {
+			debounceSearch(e.target.value);
 			handleChange('search');
 		} else {
 			handleChange('tabs');
+			setGetData({});
+			setFilter('[]');
 		}
 	};
 
 	const updateInputSearch = value => {
-		if (value) {
-			const filterValue = value.toLowerCase().trim();
-			setFilter(filterValue);
-		} else {
-			setGetData({});
-			setFilter('[]');
-		}
+		const filterValue = value.toLowerCase().trim();
+		setFilter(filterValue);
 	};
 
 	const debounceSearch = useCallback(_.debounce(updateInputSearch, 700), []);
 
 	useEffect(async () => {
 		setIsFetchingSearchInGroup(true);
-		const params = {
-			q: filter,
-			id: id,
-			limit: 50,
-		};
 		try {
 			if (valueGroupSearch.length > 0) {
+				const params = {
+					q: filter,
+					id: id,
+					limit: 50,
+				};
 				const result = await dispatch(getFillterGroup({ ...params })).unwrap();
 				setGetData(result);
 			}
@@ -376,7 +373,7 @@ function MainGroupComponent({ handleChange, keyChange, data, member, handleUpdat
 			{keyChange === 'manageJoin' && <ManageJoin handleChange={handleChange} />}
 			{keyChange === 'managePost' && <PostWatting handleChange={handleChange} />}
 			{keyChange === 'search' && (
-				<>
+				<div style={{ marginTop: '20px' }}>
 					{!isFetchingSearchInFroup && !_.isEmpty(getData) ? (
 						<SearchLayout
 							dataGroup={getData}
@@ -388,7 +385,7 @@ function MainGroupComponent({ handleChange, keyChange, data, member, handleUpdat
 					) : (
 						<LoadingIndicator />
 					)}
-				</>
+				</div>
 			)}
 		</div>
 	);

@@ -34,6 +34,7 @@ export const bookDetailAPI = id => `/api/v1/books/${id}`;
 export const bookElasticSearchAPI = '/api/v1/books/search';
 export const bookCopyrightsAPI = '/api/v1/bookCopyrights';
 export const bookReviewAPI = '/api/v1/reviews';
+export const listReviewByBookIdAPI = bookId => `/api/v1/reviews/listReviewBook/${bookId}`;
 export const likeReviewsAPI = reviewId => `/api/v1/reviews/like/${reviewId}`;
 export const likeCommentReviewsAPI = id => `/api/v1/commentReviews/like/${id}`;
 export const commentBookReviewAPI = '/api/v1/commentReviews';
@@ -49,11 +50,11 @@ export const favoriteCategoriesAPI = '/api/v1/categories/favoriteCategories';
 export const listBookByCategoryAPI = categoryId => `/api/v1/books/listBookCategory/${categoryId}`;
 export const postByCategoryAPI = categoryId => `/api/v1/getstream/listPostByCategory/${categoryId}`;
 
-//rating
+// rating
 export const bookRating = id => `/api/v1/books/ratingBook/${id}`;
 export const userRating = id => `api/v1/books/rating/${id}`;
 
-//user
+// user
 export const userAPI = '/api/v1/users';
 export const userDetailAPI = id => `/api/v1/users/${id}`;
 export const checkUserInfoAPI = '/api/v1/auth/jwt';

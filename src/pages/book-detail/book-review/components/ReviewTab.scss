@@ -1,4 +1,5 @@
 @import 'src/scss/abstracts/_variables.scss';
+
 .sort-review-modal {
 	&__item {
 		padding: auto 0;
@@ -52,6 +53,7 @@
 	display: flex;
 	align-items: center;
 	background-color: $ash-background;
+	cursor: pointer;
 
 	&__icon {
 		width: 20px;
@@ -60,14 +62,9 @@
 	}
 
 	&__input {
-		flex-grow: 1;
 		background-color: inherit;
-		border: none;
-		outline: none;
 		font-size: 16px;
-		&:focus {
-			border: none;
-		}
+		color: $ash-placeholder;
 	}
 }
 
@@ -76,7 +73,12 @@
 	.post__container {
 		padding: 32px 40px;
 	}
+
+	.search-field__input::placeholder {
+		color: $ash-placeholder;
+	}
 }
+
 @media only screen and (max-width: 1024px) {
 	.review-tab {
 		.review-tab__filter__options {
@@ -84,6 +86,7 @@
 		}
 	}
 }
+
 @media only screen and (max-width: 768px) {
 	.review-tab {
 		.review-tab__filter__options {
@@ -91,6 +94,7 @@
 		}
 	}
 }
+
 @media only screen and (max-width: 820px) {
 	.review-tab {
 		.review-tab__filter__options {
@@ -98,6 +102,7 @@
 		}
 	}
 }
+
 @media only screen and (max-width: 1280px) {
 	.sort-review-modal__item {
 		button {

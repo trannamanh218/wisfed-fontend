@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import { CloseX, Image, IconRanks, WorldNet } from 'components/svg'; // k xóa WorldNet
 import { STATUS_IDLE, STATUS_LOADING, STATUS_SUCCESS } from 'constants/index';
 import _ from 'lodash';
-import PropTypes, { number } from 'prop-types';
+import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
@@ -70,7 +70,7 @@ function CreatPostModalContent({
 	onChangeOption,
 	onChangeNewPost,
 	showSubModal,
-	bookInfoProp = {},
+	bookForCreatePost,
 }) {
 	// const [shareMode, setShareMode] = useState({ value: 'public', title: 'Mọi người', icon: <WorldNet /> }); // k xóa
 	const [showMainModal, setShowMainModal] = useState(showModalCreatPost);
@@ -104,7 +104,7 @@ function CreatPostModalContent({
 	const { resetTaggedData, postDataShare } = useSelector(state => state.post);
 	const {
 		auth: { userInfo },
-		book: { bookForCreatePost, bookInfo },
+		book: { bookInfo },
 	} = useSelector(state => state);
 
 	const myAllLibraryReduxDefault = useSelector(state => state.library.myAllLibrary).default;
@@ -115,20 +115,23 @@ function CreatPostModalContent({
 
 	useEffect(() => {
 		// Dùng cho khi mở lên từ book detail
-		if (!_.isEmpty(bookInfoProp)) {
-			const cloneArr = [...optionList];
-			cloneArr.splice(0, 1);
-			setOptionListState(cloneArr);
-			setTaggedData({
-				'addBook': bookInfoProp,
-				'addAuthor': [],
-				'addFriends': [],
-				'addCategory': [],
-			});
-		} else {
-			setOptionListState(optionList);
-		}
+		// 		if (!_.isEmpty(bookInfoProp)) {
+		// 			const cloneArr = [...optionList];
+		// 			cloneArr.splice(0, 1);
+		// 			setOptionListState(cloneArr);
+		//
+		// 			const newObj = {
+		// 				...taggedData,
+		// 				addBook: bookInfoProp,
+		// 			};
+		// 			// console.log(newObj);
+		// 			setTaggedData(newObj);
+		// 		} else {
+		setOptionListState(optionList);
+		// }
 	}, []);
+
+	console.log('tagged', taggedData);
 
 	useEffect(() => {
 		const textFieldEdit = document.querySelector('.creat-post-modal-content__main__body__text-field-edit-wrapper');
@@ -155,13 +158,13 @@ function CreatPostModalContent({
 		}
 	}, [bookForCreatePost]);
 
-	useEffect(() => {
-		if (resetTaggedData) {
-			setTaggedData({ 'addBook': {}, 'addAuthor': [], 'addFriends': [], 'addCategory': [] });
-			setImagesUpload([]);
-			setShowUpload(false);
-		}
-	}, [resetTaggedData]);
+	// useEffect(() => {
+	// 	if (resetTaggedData) {
+	// 		setTaggedData({ 'addBook': {}, 'addAuthor': [], 'addFriends': [], 'addCategory': [] });
+	// 		setImagesUpload([]);
+	// 		setShowUpload(false);
+	// 	}
+	// }, [resetTaggedData]);
 
 	useEffect(() => {
 		if (urlAdded) {
@@ -448,7 +451,9 @@ function CreatPostModalContent({
 							mediaUrl: [],
 							content: content,
 							curProgress:
-								taggedData.addBook.status === 'read' ? taggedData.addBook.page : progressInputValue,
+								taggedData.addBook.status === 'read'
+									? taggedData.addBook.page
+									: progressInputValue || 0,
 							rate:
 								taggedData.addBook.status === 'read' || progressInputValue === taggedData.addBook.page
 									? valueStar
@@ -728,7 +733,7 @@ function CreatPostModalContent({
 											handleAddToPost={handleAddToPost}
 											handleChangeStar={handleChangeStar}
 											valueStar={valueStar}
-											allowToEdit={!_.isEmpty(bookInfoProp)} // Dùng cho book detail
+											// allowToEdit={!_.isEmpty(bookInfoProp)} // Dùng cho book detail
 										/>
 									)}
 									{showUpload && (

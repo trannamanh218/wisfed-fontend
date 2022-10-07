@@ -1,3 +1,5 @@
+@import 'src/scss/abstracts/_variables.scss';
+
 .group__background {
 	position: relative;
 	& > img {
@@ -218,9 +220,17 @@
 		cursor: pointer;
 	}
 }
+
 .group__search {
 	margin-top: 14px;
+	.search-field {
+		background-color: #eff0f7;
+		&::placeholder {
+			color: $ash-placeholder;
+		}
+	}
 }
+
 .group-tabs {
 	margin-top: 32px;
 	.nav-item {

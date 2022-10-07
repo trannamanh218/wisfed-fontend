@@ -1,6 +1,7 @@
 .result__container {
 	max-width: 850px;
 	margin: auto;
+	padding-bottom: 60px;
 	.result__header {
 		padding-top: 34px;
 		margin-bottom: 22px;
@@ -14,6 +15,8 @@
 	}
 	.result__main {
 		margin-top: 24px;
+		border-radius: 16px;
+		overflow: hidden;
 		.nav-tabs {
 			display: flex;
 			flex-wrap: wrap;

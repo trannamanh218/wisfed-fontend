@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
-import { BookIcon, Feather, CategoryIcon, GroupIcon, Hashtag } from 'components/svg';
+import { BookIcon, Feather, CategoryIcon, GroupIcon } from 'components/svg';
 import CreatPostModalContent from '../creat-post-modal-content';
 import { useDispatch, useSelector } from 'react-redux';
 import UserAvatar from 'shared/user-avatar';
@@ -84,7 +84,7 @@ function CreatePost({ onChangeNewPost }) {
 	useEffect(() => {
 		if (!_.isEmpty(bookForCreatePost) || !_.isEmpty(postDataShare) || !_.isEmpty(updateImgPost)) {
 			setShowModalCreatPost(true);
-			dispatch(resetTaggedDataFunc(false));
+			// dispatch(resetTaggedDataFunc(false));
 		}
 	}, [bookForCreatePost, postDataShare, updateImgPost]);
 
@@ -122,7 +122,7 @@ function CreatePost({ onChangeNewPost }) {
 	};
 
 	const hideCreatePostModal = () => {
-		dispatch(resetTaggedDataFunc(true));
+		// dispatch(resetTaggedDataFunc(true));
 		dispatch(saveDataShare({}));
 		dispatch(updateImg([]));
 		dispatch(updateCurrentBook({}));
@@ -143,7 +143,7 @@ function CreatePost({ onChangeNewPost }) {
 				onClick={() => {
 					onChangeOption(item);
 					setShowModalCreatPost(true);
-					dispatch(resetTaggedDataFunc(false));
+					// dispatch(resetTaggedDataFunc(false));
 					setShowSubModal(true);
 				}}
 			>

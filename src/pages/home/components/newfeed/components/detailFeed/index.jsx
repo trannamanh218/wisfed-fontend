@@ -50,6 +50,7 @@ const DetailFeed = () => {
 						postInformations={detailFeed}
 						type={POST_TYPE}
 						reduxMentionCommentId={reduxMentionCommentId}
+						isInDetail={true}
 					/>
 				) : (
 					<Post
@@ -57,6 +58,7 @@ const DetailFeed = () => {
 						type={GROUP_TYPE}
 						reduxMentionCommentId={reduxMentionCommentId}
 						reduxCheckIfMentionCmtFromGroup={reduxCheckIfMentionCmtFromGroup}
+						isInDetail={true}
 					/>
 				)}
 			</div>

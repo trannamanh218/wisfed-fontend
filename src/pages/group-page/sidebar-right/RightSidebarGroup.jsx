@@ -1,27 +1,30 @@
 import SearchField from 'shared/search-field';
 import { ForwardGroup } from 'components/svg';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import '../sidebar-right/RightSideBarGroup.scss';
 import PropTypes from 'prop-types';
 import { useParams } from 'react-router-dom';
-import { getTagGroup } from 'reducers/redux-utils/group';
+import { getTagGroup, searchGroupHashTag } from 'reducers/redux-utils/group';
 import { useDispatch } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
+import _ from 'lodash';
 
 export default function RightSidebarGroup({ update }) {
 	const [numberIndex, setNumberIndex] = useState(6);
 	const [show, setShow] = useState(false);
 	const [inputSearch, setInputSearch] = useState('');
 	const [tagGroup, setTagGroup] = useState([]);
+	const [valueSearch, setValueSearch] = useState('');
 
 	const { id = '' } = useParams();
 	const dispatch = useDispatch();
 
-	const getlistTagGroupFirstTime = async () => {
+	const getListHashtags = async () => {
 		const params = {
 			id: id,
 			body: {
 				sort: JSON.stringify([{ property: 'count', direction: 'DESC' }]),
+				search: valueSearch,
 			},
 		};
 		try {
@@ -44,11 +47,22 @@ export default function RightSidebarGroup({ update }) {
 
 	const onChangeInputSearch = e => {
 		setInputSearch(e.target.value);
+		debounceSearch(e.target.value);
 	};
 
+	const updateInputSearch = value => {
+		if (value) {
+			setValueSearch(value.trim());
+		} else {
+			setValueSearch('');
+		}
+	};
+
+	const debounceSearch = useCallback(_.debounce(updateInputSearch, 700), []);
+
 	useEffect(() => {
-		getlistTagGroupFirstTime();
-	}, [update]);
+		getListHashtags();
+	}, [update, valueSearch]);
 
 	return (
 		<div className='group-sibar-right'>
@@ -59,7 +73,7 @@ export default function RightSidebarGroup({ update }) {
 					return (
 						<>
 							{index < numberIndex && (
-								<div className='hastag__group'>
+								<div className='hastag__group' key={index}>
 									<div className='hastag__group-name'>{item.tagName}</div>
 									<div className='hastag__group-number'>
 										{item.count < 10000 ? item.count : '9999+'} bài viết
@@ -71,18 +85,9 @@ export default function RightSidebarGroup({ update }) {
 				})}
 
 				{tagGroup.length > 6 && (
-					<>
-						{!show ? (
-							<button className='more__btn' onClick={() => handleChangeNumber()}>
-								<ForwardGroup /> Xem thêm
-							</button>
-						) : (
-							<button className='more__btn rotate__more' onClick={() => handleChangeNumber()}>
-								<ForwardGroup />
-								Thu gọn
-							</button>
-						)}
-					</>
+					<button className={`${show && 'rotate__more'} more__btn`} onClick={() => handleChangeNumber()}>
+						<ForwardGroup /> {`${show ? 'Thu gọn' : 'Xem thêm'}`}
+					</button>
 				)}
 			</div>
 		</div>
