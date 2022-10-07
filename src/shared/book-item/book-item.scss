@@ -76,10 +76,16 @@
 			color: $white;
 			margin-top: auto;
 			transition: all 0.2s ease-in-out;
+			display: none;
 		}
 
 		.setting-more {
 			margin-left: auto;
 		}
 	}
+}
+
+.book-item:hover .btn-status {
+	display: flex;
+	transition: all 0.3s ease;
 }

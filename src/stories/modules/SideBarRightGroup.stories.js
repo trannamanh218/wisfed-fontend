@@ -11,6 +11,7 @@ const list = [
 	{ name: '#HiềnHồ', quantity: '30 bài viết' },
 	{ name: '#Anime', quantity: '30 bài viết' },
 ];
+
 const SidebarGroup = () => (
 	<div className='group-sibar-right'>
 		<h2>Hashtag</h2>

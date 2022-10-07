@@ -1,29 +1,29 @@
-.notificaiton__main {
+.notification__main {
 	width: 69%;
 	margin: auto;
 	font-family: 'Montserrat';
 	font-style: normal;
 	min-height: 100vh;
 }
-.notificaiton__main__container {
+.notification__main__container {
 	display: flex;
 	padding-top: 40px;
 	gap: 36px;
 	align-items: center;
 }
-.notificaiton__main__back {
+.notification__main__back {
 	background: #eff0f7;
 	border-radius: 50%;
 	padding: 5px;
 	cursor: pointer;
 }
-.notificaiton__main__title {
+.notification__main__title {
 	font-weight: 600;
 	font-size: 20px;
 	line-height: 32px;
 	letter-spacing: 0.75px;
 }
-.notificaiton__tabs_main {
+.notification__tabs_main {
 	margin-top: 40px;
 	border-radius: 16px;
 	.nav-tabs .nav-link {
@@ -38,34 +38,34 @@
 	}
 }
 
-.notificaiton__all__main__title {
+.notification__all__main__title {
 	font-weight: 600;
 	font-size: 20px;
 	line-height: 32px;
 	letter-spacing: 0.75px;
 	padding: 32px 40px;
 }
-.notificaiton__tabs__main__all__active {
+.notification__tabs__main__all__active {
 	opacity: 0.7;
 }
-.notificaiton__tabs__main__all,
-.notificaiton__tabs__main__all__seen,
-.notificaiton__tabs__main__all__active {
+.notification__tabs__main__all,
+.notification__tabs__main__all__seen,
+.notification__tabs__main__all__active {
 	margin: 0 32px 12px 32px;
 	cursor: pointer;
-	.notificaiton__all__main__layout {
+	.notification__all__main__layout {
 		display: flex;
 		gap: 15px;
 		align-items: center;
 		padding: 8px;
 		border-radius: 8px;
-		.notificaiton__all__main__layout__image {
+		.notification__all__main__layout__image {
 			border-radius: 50%;
 		}
-		.notificaiton__all__main__layout__status {
+		.notification__all__main__layout__status {
 			flex: 1;
 		}
-		.notificaiton__main__all__infor {
+		.notification__main__all__infor {
 			font-weight: 500;
 			font-size: 15px;
 			line-height: 24px;
@@ -73,19 +73,19 @@
 				font-weight: 600;
 			}
 		}
-		.notificaiton__main__all__unseen {
+		.notification__main__all__unseen {
 			width: 16px;
 			height: 16px;
 			border-radius: 50%;
 			background: #e0af7e;
 		}
-		.notificaiton__main__all__seen {
+		.notification__main__all__seen {
 			width: 16px;
 			height: 16px;
 			border-radius: 50%;
 			background: #fff;
 		}
-		.notificaiton__all__status__seen {
+		.notification__all__status__seen {
 			font-weight: 500;
 			font-size: 13px;
 			line-height: 22px;
@@ -93,15 +93,15 @@
 		}
 	}
 }
-.notificaiton__tabs__all__seen:hover {
+.notification__tabs__all__seen:hover {
 	background-color: #eaecec;
 }
-.notificaiton__main__all__friend {
+.notification__main__all__friend {
 	display: flex;
 	margin: 15px 70px;
 	gap: 20px;
-	.notificaiton__main__all__accept,
-	.notificaiton__main__all__refuse {
+	.notification__main__all__accept,
+	.notification__main__all__refuse {
 		padding: 11px 55px;
 		border-radius: 12px;
 		font-weight: 600;
@@ -113,16 +113,16 @@
 		// min-width: 180px;
 		border: none;
 	}
-	.notificaiton__main__all__accept {
+	.notification__main__all__accept {
 		background: #e0af7e;
 		color: #fcfcfc;
 	}
-	.notificaiton__main__all__refuse {
+	.notification__main__all__refuse {
 		background: #eff0f7;
 		color: #6e7191;
 	}
 }
-.notificaiton___main__all__status {
+.notification___main__all__status {
 	font-weight: 500;
 	font-size: 13px;
 	line-height: 22px;

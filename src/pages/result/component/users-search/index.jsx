@@ -99,15 +99,13 @@ const UsersSearch = ({ isFetching, value, setIsFetching, searchResultInput, acti
 											onClick={() => onUserClick(item)}
 										/>
 										<div className='myfriends__star' onClick={() => onUserClick(item)}>
-											<div className='myfriends__star__name'>
-												{item.fullName ? (
-													item.fullName
-												) : (
-													<>
-														<span>{item.firstName}</span>&nbsp;
-														<span>{item.lastName}</span>
-													</>
-												)}
+											<div
+												className='myfriends__star__name'
+												title={
+													item.fullName ? item.fullName : `${item.firtName} ${item.lastName}`
+												}
+											>
+												{item.fullName ? item.fullName : `${item.firtName} ${item.lastName}`}
 											</div>
 										</div>
 										{item.relation !== 'isMe' ? (

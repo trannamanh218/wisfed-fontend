@@ -60,15 +60,20 @@ function MainConfirmMyBook() {
 		}
 	};
 
-	const onDrop = useCallback(acceptedFiles => {
-		if (!_.isEmpty(acceptedFiles)) {
-			const newArrayFile = [...images, ...acceptedFiles];
+	const onDrop = useCallback(
+		acceptedFiles => {
+			if (!_.isEmpty(acceptedFiles)) {
+				const newArrayFile = [...images, ...acceptedFiles];
+				setImages(newArrayFile);
+			} else {
+				const toastId = 'confirm-my-book-upload-img';
+				toast.warning('Chỉ được chọn ảnh PNG, JPG, JPEG', { toastId: toastId });
+			}
+		},
+		[images]
+	);
 
-			setImages(newArrayFile);
-		}
-	});
-
-	const { getRootProps, getInputProps } = useDropzone({ accept: 'image/*', onDrop, multiple: true });
+	const { getRootProps, getInputProps } = useDropzone({ accept: ['.png', '.jpeg', '.jpg'], onDrop, multiple: true });
 
 	const submitConfirm = async () => {
 		try {

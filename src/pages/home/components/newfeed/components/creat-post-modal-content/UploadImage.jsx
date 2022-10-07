@@ -10,22 +10,28 @@ import { toast } from 'react-toastify';
 const UploadImage = props => {
 	const { addOptionsToPost, images, setImages, removeAllImages, maxFiles, maxSize } = props;
 
-	const onDrop = useCallback(acceptedFiles => {
-		if (!_.isEmpty(acceptedFiles)) {
-			const newArrayFile = [...images, ...acceptedFiles];
-			// Get files size
-			let imagesSize = 0;
-			for (let i = 0; i < newArrayFile.length; i++) {
-				imagesSize += newArrayFile[i].size;
-			}
-			// Cảnh báo nếu đăng quá nhiều ảnh
-			if (newArrayFile.length > maxFiles || imagesSize > maxSize) {
-				warningLimited();
+	const onDrop = useCallback(
+		acceptedFiles => {
+			if (!_.isEmpty(acceptedFiles)) {
+				const newArrayFile = [...images, ...acceptedFiles];
+				// Get files size
+				let imagesSize = 0;
+				for (let i = 0; i < newArrayFile.length; i++) {
+					imagesSize += newArrayFile[i].size;
+				}
+				// Cảnh báo nếu đăng quá nhiều ảnh
+				if (newArrayFile.length > maxFiles || imagesSize > maxSize) {
+					warningLimited();
+				} else {
+					setImages(newArrayFile);
+				}
 			} else {
-				setImages(newArrayFile);
+				const toastId = 'create-post-modal-content-upload-img';
+				toast.warning('Chỉ được chọn ảnh PNG, JPG, JPEG', { toastId: toastId });
 			}
-		}
-	});
+		},
+		[images]
+	);
 
 	const warningLimited = () => {
 		const customId = 'custom-id-UploadImage';
@@ -38,7 +44,7 @@ const UploadImage = props => {
 	};
 
 	const { getRootProps, getInputProps } = useDropzone({
-		accept: 'image/*',
+		accept: ['.png', '.jpeg', '.jpg'],
 		onDrop,
 		multiple: true,
 	});
@@ -103,8 +109,8 @@ const UploadImage = props => {
 };
 
 UploadImage.defaultProps = {
-	maxFiles: Infinity,
-	maxSize: Infinity,
+	maxFiles: 10,
+	maxSize: 1024,
 };
 
 UploadImage.propTypes = {

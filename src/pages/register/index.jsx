@@ -242,7 +242,7 @@ function Register() {
 												<input
 													className='register__form__input'
 													type='email'
-													placeholder='Số điện thoại hoặc Email'
+													placeholder='Email'
 													{...field}
 													value={field.value}
 													autoComplete='false'

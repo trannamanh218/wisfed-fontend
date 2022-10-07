@@ -9,6 +9,7 @@ import UserAvatar from 'shared/user-avatar';
 import { NotificationError } from 'helpers/Error';
 import { useParams, useNavigate } from 'react-router-dom';
 import ConnectButtonsFriends from './ConnectButtonsFriends';
+import _ from 'lodash';
 
 const ModalFriend = ({ setModalFriend, modalFriend, userInfoDetail }) => {
 	const { userInfo } = useSelector(state => state.auth);
@@ -88,10 +89,12 @@ const ModalFriend = ({ setModalFriend, modalFriend, userInfoDetail }) => {
 												{item.userTwo?.firstName || item.firstName}{' '}
 												{item.userTwo?.lastName || item.lastName}
 											</h5>
-											<p className='author-card__subtitle'>
-												{item?.dataCounting?.follower} người theo dõi,{' '}
-												{item?.dataCounting?.friend} bạn bè
-											</p>
+											{!_.isEmpty(item?.dataCounting) && (
+												<p className='author-card__subtitle'>
+													{item?.dataCounting?.follower} người theo dõi,{' '}
+													{item?.dataCounting?.friend} bạn bè
+												</p>
+											)}
 										</div>
 									</div>
 									<div className='author-card__right'>

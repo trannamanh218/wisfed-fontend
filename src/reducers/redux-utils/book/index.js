@@ -8,6 +8,7 @@ import {
 	progressBookAPI,
 	bookAuthorAPI,
 	bookReviewAPI,
+	listReviewByBookIdAPI,
 	userRating,
 	bookRating,
 	commentBookReviewAPI,
@@ -103,9 +104,10 @@ export const createReviewBook = createAsyncThunk('book/create review', async (re
 	}
 });
 
-export const getReviewsBook = createAsyncThunk('book/get reviews', async (params, { rejectWithValue }) => {
+export const getReviewsBook = createAsyncThunk('book/get reviews', async (data, { rejectWithValue }) => {
+	const { bookId, params } = data;
 	try {
-		const response = await Request.makeGet(bookReviewAPI, params);
+		const response = await Request.makeGet(listReviewByBookIdAPI(bookId), params);
 		return response.data;
 	} catch (err) {
 		const error = JSON.parse(err.response);

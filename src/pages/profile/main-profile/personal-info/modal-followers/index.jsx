@@ -11,6 +11,7 @@ import UserAvatar from 'shared/user-avatar';
 import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import ConnectButtonsFollower from './ConnectButtonsFollower';
+import _ from 'lodash';
 
 const ModalFollowers = ({ modalFollower, setModalFollower, userInfoDetail }) => {
 	const { userInfo } = useSelector(state => state.auth);
@@ -86,10 +87,12 @@ const ModalFollowers = ({ modalFollower, setModalFollower, userInfoDetail }) => 
 										<h5>
 											{item.userOne.firstName} {item.userOne.lastName}
 										</h5>
-										<p className='author-card__subtitle'>
-											{item.dataCounting.follower} người theo dõi, {item.dataCounting.friend} bạn
-											bè
-										</p>
+										{!_.isEmpty(item?.dataCounting) && (
+											<p className='author-card__subtitle'>
+												{item?.dataCounting?.follower} người theo dõi,{' '}
+												{item?.dataCounting?.friend} bạn bè
+											</p>
+										)}
 									</div>
 								</div>
 								<div className='author-card__right'>

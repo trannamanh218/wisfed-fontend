@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import Button from 'shared/button';
 import PropTypes from 'prop-types';
 import { makeFriendRequest, addFollower, unFollower, unFriendRequest } from 'reducers/redux-utils/user';
@@ -14,15 +14,17 @@ const ConnectButtonsSearch = ({ direction, item }) => {
 	const [followStatusBtn, setFollowStatusBtn] = useState(item.isFollow);
 	const [requestStatus, setRequestStatus] = useState(item.friendRequest?.type);
 
+	const oldFollowStatusBtn = useRef(item.isFollow);
+
 	const dispatch = useDispatch();
 
+	// xu ly khi an nut them ban, huy ket ban, chap nhan loi moi ket ban
 	const handleAddFriend = async () => {
 		try {
 			const param = {
 				userId: item.id,
 			};
 			await dispatch(makeFriendRequest(param)).unwrap();
-
 			setFriendStatusBtn('sentRequest');
 			setRequestStatus('sentRequest');
 		} catch (err) {
@@ -34,18 +36,19 @@ const ConnectButtonsSearch = ({ direction, item }) => {
 		try {
 			await dispatch(unFriendRequest(item.id)).unwrap();
 			setFriendStatusBtn('unknown');
+			setFollowStatusBtn(false);
 			setShowModalUnfriends(false);
-			dispatch(unFollower(item.id)).unwrap();
 		} catch (err) {
 			NotificationError(err);
 		}
 	};
-	const handleAcces = async () => {
+
+	const handleAcces = () => {
 		try {
 			const params = { id: item.friendRequest.id, data: { reply: true } };
-			setFriendStatusBtn('friend');
-
 			dispatch(ReplyFriendRequest(params)).unwrap();
+			setFriendStatusBtn('friend');
+			setFollowStatusBtn(true);
 		} catch (err) {
 			NotificationError(err);
 		}
@@ -61,6 +64,7 @@ const ConnectButtonsSearch = ({ direction, item }) => {
 		}
 	};
 
+	// xu ly khi an nut theo doi va huy theo doi
 	const handleFollowAndUnfollow = () => {
 		setFollowStatusBtn(!followStatusBtn);
 		handleCallFollowAndUnfollowApi(!followStatusBtn);
@@ -69,15 +73,17 @@ const ConnectButtonsSearch = ({ direction, item }) => {
 	const handleCallFollowAndUnfollowApi = useCallback(
 		_.debounce(currentStatus => {
 			try {
-				if (currentStatus) {
-					dispatch(addFollower({ userId: item.id }));
-				} else {
-					dispatch(unFollower(item.id)).unwrap();
+				if (currentStatus !== oldFollowStatusBtn.current) {
+					if (currentStatus) {
+						dispatch(addFollower({ userId: item.id }));
+					} else {
+						dispatch(unFollower(item.id)).unwrap();
+					}
 				}
 			} catch (err) {
 				NotificationError(err);
 			}
-		}, 1000),
+		}, 700),
 		[]
 	);
 
@@ -87,10 +93,12 @@ const ConnectButtonsSearch = ({ direction, item }) => {
 			contentBtn = 'Hủy kết bạn';
 		} else if (friendStatusBtn === 'unknown') {
 			contentBtn = 'Kết bạn';
-		} else if (requestStatus === 'requestToMe') {
-			contentBtn = 'Chấp nhận';
-		} else if (requestStatus === 'sentRequest' || friendStatusBtn === 'sentRequest') {
-			contentBtn = 'Đã gửi lời mời';
+		} else {
+			if (requestStatus === 'requestToMe') {
+				contentBtn = 'Chấp nhận';
+			} else if (requestStatus === 'sentRequest') {
+				contentBtn = 'Đã gửi lời mời';
+			}
 		}
 
 		return (
@@ -114,18 +122,14 @@ const ConnectButtonsSearch = ({ direction, item }) => {
 
 	return (
 		<div className={`myfriends__buttons ${direction}`}>
-			{item.relation !== 'isMe' && (
-				<>
-					{handleRenderButtonFriend()}
-					{handleRenderButtonFollow()}
-					<ModalUnFriend
-						showModalUnfriends={showModalUnfriends}
-						toggleModal={toggleModal}
-						data={item}
-						handleUnfriend={handleUnfriend}
-					/>
-				</>
-			)}
+			{handleRenderButtonFriend()}
+			{handleRenderButtonFollow()}
+			<ModalUnFriend
+				showModalUnfriends={showModalUnfriends}
+				toggleModal={toggleModal}
+				data={item}
+				handleUnfriend={handleUnfriend}
+			/>
 		</div>
 	);
 };

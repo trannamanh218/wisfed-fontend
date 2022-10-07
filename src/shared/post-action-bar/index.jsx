@@ -57,7 +57,7 @@ const PostActionBar = ({ postData, handleLikeAction }) => {
 					};
 				} else {
 					dataToShare = {
-						verb: POST_VERB_SHARE || TOP_BOOK_VERB_SHARE,
+						verb: POST_VERB_SHARE,
 						sharePost: { ...postData },
 					};
 				}

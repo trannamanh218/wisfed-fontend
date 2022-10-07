@@ -20,7 +20,7 @@ import classNames from 'classnames';
 import './header.scss';
 import NotificationModal from 'pages/notification/';
 import { useDispatch, useSelector } from 'react-redux';
-import { backgroundToggle, depenRenderNotificaion } from 'reducers/redux-utils/notificaiton';
+import { backgroundToggle, depenRenderNotificaion } from 'reducers/redux-utils/notification';
 import { checkUserLogin, deleteUserInfo } from 'reducers/redux-utils/auth';
 import { useVisible } from 'shared/hooks';
 import SearchAllModal from 'shared/search-all';
@@ -49,7 +49,7 @@ const Header = () => {
 	const [modalInforUser, setModalInforUser] = useState(false);
 	const [getSlugResult, setGetSlugResult] = useState('');
 	const [userLogin, setUserLogin] = useState(false);
-	const [activeNotificaiton, setActiveNotification] = useState(false);
+	const [activeNotification, setActiveNotification] = useState(false);
 	const [realTime, setRealTime] = useState(false);
 	const [showNavIcon, setShowNavIcon] = useState(true);
 
@@ -229,6 +229,11 @@ const Header = () => {
 		}
 	};
 
+	const handleViewProfile = () => {
+		setModalInforUser(false);
+		navigate(`/profile/${userInfo.id}`);
+	};
+
 	return (
 		<div className='header'>
 			<div className='header__left'>
@@ -317,7 +322,7 @@ const Header = () => {
 						ref={buttonModal}
 						onClick={toglleModalNotify}
 						className={classNames('header__notify__icon', {
-							'active': modalNoti || activeNotificaiton,
+							'active': modalNoti || activeNotification,
 							'header__notify__icon__active': realTime,
 						})}
 					/>
@@ -341,12 +346,12 @@ const Header = () => {
 						'show': modalInforUser && localStorage.getItem('accessToken'),
 					})}
 				>
-					<Link to={`/profile/${userInfo.id}`}>
+					<div onClick={handleViewProfile}>
 						<li>
 							<ProfileIcon />
 							&nbsp;Thông tin cá nhân
 						</li>
-					</Link>
+					</div>
 					<li onClick={() => handleLogout()}>
 						<LogOutIcon />
 						&nbsp;Đăng xuất

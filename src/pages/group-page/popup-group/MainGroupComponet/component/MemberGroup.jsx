@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import { makeFriendRequest, addFollower, unFollower, unFriendRequest } from 'reducers/redux-utils/user';
 import { useDispatch } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { getMember } from 'reducers/redux-utils/group';
 import defaultAvatar from 'assets/images/avatar.jpeg';
 import ModalUnFriend from 'pages/friends/component/modalUnFriends';
@@ -19,6 +19,8 @@ function MemberGroup({ memberGroupsProp = [] }) {
 	const [sliceEndIndex, setSliceEndIndex] = useState(6);
 	const [showModalUnfriends, setShowModalUnfriends] = useState(false);
 	const [userFriendRequest, setUserFriendRequest] = useState({});
+
+	const navigate = useNavigate();
 
 	const getListMember = async () => {
 		try {
@@ -100,7 +102,7 @@ function MemberGroup({ memberGroupsProp = [] }) {
 				<h2>Quản trị viên và người kiểm duyệt</h2>
 				{memberGroups?.map((item, index) => {
 					return (
-						<div key={index}>
+						<div key={index} onClick={() => navigate(`/profile/${item.id}`)}>
 							{item?.isAdmin && (
 								<div className='member-item'>
 									<div className='member-item__info'>
@@ -187,7 +189,7 @@ function MemberGroup({ memberGroupsProp = [] }) {
 				{listFriend.length > 0
 					? listFriend.map((item, index) => {
 							return (
-								<div key={index}>
+								<div key={index} onClick={() => navigate(`/profile/${item.id}`)}>
 									<div className='member-item'>
 										<div className='member-item__info'>
 											<img
@@ -271,7 +273,7 @@ function MemberGroup({ memberGroupsProp = [] }) {
 				{listFolow.length > 0
 					? listFolow.slice(0, sliceEndIndex).map((item, index) => {
 							return (
-								<div key={index}>
+								<div key={index} onClick={() => navigate(`/profile/${item.id}`)}>
 									<div className='member-item'>
 										<div className='member-item__info'>
 											<img
@@ -364,7 +366,7 @@ function MemberGroup({ memberGroupsProp = [] }) {
 				<h2>Tất cả mọi người</h2>
 				{memberGroups.map((item, index) => {
 					return (
-						<div className='member-item' key={index}>
+						<div className='member-item' key={index} onClick={() => navigate(`/profile/${item.id}`)}>
 							<div className='member-item__info'>
 								<img
 									src={item.avatarImage ? item.avatarImage : defaultAvatar}

@@ -10,7 +10,7 @@
 		align-items: center;
 		justify-content: center;
 		gap: 7px;
-		padding: 15px 0 7px 0;
+		padding: 15px 11px 7px;
 		.myfriends__star__name {
 			font-weight: 600;
 			font-size: 15px;
@@ -18,7 +18,12 @@
 			letter-spacing: 0.75px;
 			color: #2d2c42;
 			text-align: center;
-			max-width: 140px;
+			cursor: pointer;
+			display: -webkit-box;
+			-webkit-box-orient: vertical;
+			-webkit-line-clamp: 1;
+			overflow: hidden;
+			word-break: break-all;
 		}
 	}
 	.myfriends__layout__img {

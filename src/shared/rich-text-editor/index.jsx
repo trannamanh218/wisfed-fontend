@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useCallback } from 'react';
+import { useEffect, useRef, useState, useCallback, memo } from 'react';
 import { EditorState, convertToRaw, convertFromRaw } from 'draft-js';
 import Editor from '@draft-js-plugins/editor';
 import createLinkifyPlugin from '@draft-js-plugins/linkify';
@@ -73,9 +73,13 @@ function RichTextEditor({
 		}
 	}, [clickReply]);
 
+	// refresh editor
 	useEffect(() => {
 		if (content && hasMentionsUser) {
 			setEditorState(EditorState.createEmpty());
+			setTimeout(() => {
+				editor.current.focus();
+			}, 200);
 		}
 	}, [createCmt]);
 
@@ -298,4 +302,4 @@ RichTextEditor.propTypes = {
 	hasUrl: PropTypes.bool,
 };
 
-export default RichTextEditor;
+export default memo(RichTextEditor);

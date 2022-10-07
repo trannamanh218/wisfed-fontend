@@ -1,6 +1,6 @@
 import NormalContainer from 'components/layout/normal-container';
 import Post from 'shared/post';
-import { getDetailFeed, getDetailFeedGroup } from 'reducers/redux-utils/notificaiton';
+import { getDetailFeed, getDetailFeedGroup } from 'reducers/redux-utils/notification';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';

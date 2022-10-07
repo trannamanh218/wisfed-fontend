@@ -43,12 +43,13 @@ import Storage from 'helpers/Storage';
 import { checkUserLogin } from 'reducers/redux-utils/auth';
 import ShareUsers from 'pages/home/components/newfeed/components/modal-share-users';
 import ShareTarget from 'shared/share-target';
-import { handleMentionCommentId, handleCheckIfMentionFromGroup } from 'reducers/redux-utils/notificaiton';
+import { handleMentionCommentId, handleCheckIfMentionFromGroup } from 'reducers/redux-utils/notification';
 import { getMiniPostComments, getGroupPostComments } from 'reducers/redux-utils/post';
+import defaultAvatar from 'assets/images/avatar.jpeg';
 import SeeMoreComments from 'shared/see-more-comments/SeeMoreComments';
 
 const urlRegex =
-	/(https?:\/\/)?(www(\.))?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/g;
+	/(https?:\/\/)?(www(\.))?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)([^"<\s]+)(?![^<>]*>|[^"]*?<\/a)/g;
 const hashtagRegex = /(^|\B)#(?![0-9_]+\b)([a-zA-Z0-9_]{1,30})(\b|\r)/g;
 
 const verbShareArray = [
@@ -281,7 +282,8 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 											<img
 												onClick={() => onClickUserInModalOthers(item)}
 												className='modal-tagged-others__avatar'
-												src={item.users.avatarImage}
+												src={item.users.avatarImage || defaultAvatar}
+												onError={e => e.target.setAttribute('src', defaultAvatar)}
 											></img>
 											<span
 												onClick={() => onClickUserInModalOthers(item)}

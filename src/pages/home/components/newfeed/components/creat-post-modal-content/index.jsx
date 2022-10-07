@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import { CloseX, Image, IconRanks, WorldNet } from 'components/svg'; // k xóa WorldNet
 import { STATUS_IDLE, STATUS_LOADING, STATUS_SUCCESS } from 'constants/index';
 import _ from 'lodash';
-import PropTypes, { number } from 'prop-types';
+import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
@@ -58,7 +58,7 @@ const verbShareArray = [
 ];
 
 const urlRegex =
-	/(https?:\/\/)?(www(\.))?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/g;
+	/(https?:\/\/)?(www(\.))?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)([^"<\s]+)(?![^<>]*>|[^"]*?<\/a)/g;
 const hashtagRegex = /(^|\B)#(?![0-9_]+\b)([a-zA-Z0-9_]{1,30})(\b|\r)/g;
 
 function CreatPostModalContent({
@@ -70,7 +70,7 @@ function CreatPostModalContent({
 	onChangeOption,
 	onChangeNewPost,
 	showSubModal,
-	bookInfoProp = {},
+	bookForCreatePost,
 }) {
 	// const [shareMode, setShareMode] = useState({ value: 'public', title: 'Mọi người', icon: <WorldNet /> }); // k xóa
 	const [showMainModal, setShowMainModal] = useState(showModalCreatPost);
@@ -88,9 +88,8 @@ function CreatPostModalContent({
 	const [status, setStatus] = useState(STATUS_IDLE);
 	const [showUpload, setShowUpload] = useState(false);
 	const [imagesUpload, setImagesUpload] = useState([]);
-	const [validationInput, setValidationInput] = useState('');
 	const [valueStar, setValueStar] = useState(0);
-	const [checkProgress, setCheckProgress] = useState();
+	const [progressInputValue, setProgressInputValue] = useState(0);
 	const [showImagePopover, setShowImagePopover] = useState(false);
 	const [buttonActive, setButtonActive] = useState(false);
 	const [content, setContent] = useState('');
@@ -105,8 +104,10 @@ function CreatPostModalContent({
 	const { resetTaggedData, postDataShare } = useSelector(state => state.post);
 	const {
 		auth: { userInfo },
-		book: { bookForCreatePost, bookInfo },
+		book: { bookInfo },
 	} = useSelector(state => state);
+
+	const myAllLibraryReduxDefault = useSelector(state => state.library.myAllLibrary).default;
 
 	const { id } = useParams();
 
@@ -114,20 +115,23 @@ function CreatPostModalContent({
 
 	useEffect(() => {
 		// Dùng cho khi mở lên từ book detail
-		if (!_.isEmpty(bookInfoProp)) {
-			const cloneArr = [...optionList];
-			cloneArr.splice(0, 1);
-			setOptionListState(cloneArr);
-			setTaggedData({
-				'addBook': bookInfoProp,
-				'addAuthor': [],
-				'addFriends': [],
-				'addCategory': [],
-			});
-		} else {
-			setOptionListState(optionList);
-		}
+		// 		if (!_.isEmpty(bookInfoProp)) {
+		// 			const cloneArr = [...optionList];
+		// 			cloneArr.splice(0, 1);
+		// 			setOptionListState(cloneArr);
+		//
+		// 			const newObj = {
+		// 				...taggedData,
+		// 				addBook: bookInfoProp,
+		// 			};
+		// 			// console.log(newObj);
+		// 			setTaggedData(newObj);
+		// 		} else {
+		setOptionListState(optionList);
+		// }
 	}, []);
+
+	console.log('tagged', taggedData);
 
 	useEffect(() => {
 		const textFieldEdit = document.querySelector('.creat-post-modal-content__main__body__text-field-edit-wrapper');
@@ -154,13 +158,13 @@ function CreatPostModalContent({
 		}
 	}, [bookForCreatePost]);
 
-	useEffect(() => {
-		if (resetTaggedData) {
-			setTaggedData({ 'addBook': {}, 'addAuthor': [], 'addFriends': [], 'addCategory': [] });
-			setImagesUpload([]);
-			setShowUpload(false);
-		}
-	}, [resetTaggedData]);
+	// useEffect(() => {
+	// 	if (resetTaggedData) {
+	// 		setTaggedData({ 'addBook': {}, 'addAuthor': [], 'addFriends': [], 'addCategory': [] });
+	// 		setImagesUpload([]);
+	// 		setShowUpload(false);
+	// 	}
+	// }, [resetTaggedData]);
 
 	useEffect(() => {
 		if (urlAdded) {
@@ -296,7 +300,7 @@ function CreatPostModalContent({
 			image: [],
 			preview: urlPreviewData,
 			tags: hashtagsAdded,
-			progress: checkProgress ? checkProgress : 0,
+			progress: progressInputValue ? progressInputValue : 0,
 		};
 
 		params.mentionsUser = taggedData.addFriends.length ? taggedData.addFriends.map(item => item.id) : [];
@@ -322,34 +326,41 @@ function CreatPostModalContent({
 		return params;
 	};
 
-	const handleUpdateProgress = async params => {
-		const { status, progress } = taggedData.addBook;
+	const handleUpdateProgress = async () => {
+		const { status, progress, id, page } = taggedData.addBook;
 		const convertProgress = parseInt(progress) || 0;
-		const progressParams = { id: params.bookId, progress: convertProgress };
-		// read
+		const progressParams = { id: id, progress: convertProgress };
 		try {
 			if (status) {
-				if (status === STATUS_BOOK.read || STATUS_BOOK.reading) {
-					await dispatch(updateProgressReadingBook(progressParams)).unwrap();
-				} else if (status === STATUS_BOOK.wantToRead) {
-					await dispatch(updateProgressReadingBook(progressParams)).unwrap();
-				}
+				dispatch(updateProgressReadingBook(progressParams)).unwrap();
 			} else {
+				// check cuon sach hien tai dang o trong thu vien nao cua ng dung
+				let libraryContainCurrentBook = null;
+				if (myAllLibraryReduxDefault.length) {
+					for (let i = 0; i < myAllLibraryReduxDefault.length; i++) {
+						for (let j = 0; j < myAllLibraryReduxDefault[i].books.length; j++) {
+							if (myAllLibraryReduxDefault[i].books[j].bookId === id) {
+								libraryContainCurrentBook = myAllLibraryReduxDefault[i].defaultType;
+								break;
+							}
+						}
+					}
+				}
 				let type = STATUS_BOOK.wantToRead;
-				if (convertProgress > 0 && convertProgress < taggedData.addBook.page) {
+				if (convertProgress > 0 && convertProgress < page) {
 					type = STATUS_BOOK.reading;
-				} else if (convertProgress === taggedData.addBook.page) {
+				} else if (convertProgress === page) {
 					type = STATUS_BOOK.read;
 				}
-				const addBookParams = { bookId: params.bookId, type };
-				const addToDefaultLibraryRequest = await dispatch(addBookToDefaultLibrary(addBookParams)).unwrap();
-				const updateProgressRequest = await dispatch(updateProgressReadingBook(progressParams)).unwrap();
-				await Promise.all([addToDefaultLibraryRequest, updateProgressRequest]);
+				if (type !== libraryContainCurrentBook) {
+					const addBookParams = { bookId: id, type };
+					await dispatch(addBookToDefaultLibrary(addBookParams)).unwrap();
+				}
+				await dispatch(updateProgressReadingBook(progressParams)).unwrap();
+				dispatch(updateMyAllLibraryRedux());
 			}
 		} catch (error) {
 			NotificationError(error);
-		} finally {
-			dispatch(updateMyAllLibraryRedux());
 		}
 	};
 
@@ -439,9 +450,12 @@ function CreatPostModalContent({
 							bookId: params.bookId,
 							mediaUrl: [],
 							content: content,
-							curProgress: taggedData.addBook.status === 'read' ? taggedData.addBook.page : checkProgress,
+							curProgress:
+								taggedData.addBook.status === 'read'
+									? taggedData.addBook.page
+									: progressInputValue || 0,
 							rate:
-								taggedData.addBook.status === 'read' || checkProgress === taggedData.addBook.page
+								taggedData.addBook.status === 'read' || progressInputValue === taggedData.addBook.page
 									? valueStar
 									: 0,
 						};
@@ -450,7 +464,7 @@ function CreatPostModalContent({
 					if (valueStar > 0) {
 						userRating();
 					}
-					handleUpdateProgress(params);
+					handleUpdateProgress();
 				}
 
 				if (location.pathname.includes('group')) {
@@ -462,17 +476,11 @@ function CreatPostModalContent({
 			}
 			setStatus(STATUS_SUCCESS);
 			const customId = 'custom-id-CreatPostModalContent-onCreatePost-success';
-			toast.success('Tạo post thành công!', { toastId: customId });
+			toast.success('Tạo bài viết thành công!', { toastId: customId });
 			onChangeNewPost();
 		} catch (err) {
-			const statusCode = err?.statusCode || 500;
-			if (err.errorCode === 702) {
-				NotificationError(err);
-			} else if (!location.pathname.includes('group')) {
-				const customId = 'custom-id-CreatPostModalContent-onCreatePost-error';
-				toast.error('Tạo post thất bại!', { toastId: customId });
-			}
-			setStatus(statusCode);
+			const customId = 'custom-id-CreatPostModalContent-onCreatePost-error';
+			toast.error('Tạo bài viết thất bại!', { toastId: customId });
 		} finally {
 			dispatch(updateCurrentBook({}));
 			dispatch(saveDataShare({}));
@@ -486,51 +494,26 @@ function CreatPostModalContent({
 	useEffect(() => {
 		if (!_.isEmpty(taggedData.addBook)) {
 			if (taggedData.addBook.status === 'read') {
-				setCheckProgress(taggedData.addBook.page);
+				setProgressInputValue(taggedData.addBook.page);
 			} else {
-				setCheckProgress(parseInt(taggedData.addBook.progress));
+				setProgressInputValue(parseInt(taggedData.addBook.progress));
 			}
 		}
 	}, [taggedData]);
 
 	useEffect(() => {
 		checkActive();
-
-		// Thêm validate cho phần book-detail review
-		if (!_.isEmpty(bookInfoProp) && !content) {
-			setButtonActive(false);
-		}
-	}, [showMainModal, content, checkProgress, imagesUpload]);
+	}, [showMainModal, content, progressInputValue, imagesUpload]);
 
 	const checkActive = () => {
 		let isActive = false;
 		if (!_.isEmpty(taggedData.addBook)) {
-			if (taggedData.addBook.status) {
-				if (taggedData.addBook.status === 'read') {
-					if (content) {
-						isActive = true;
-					}
-				} else if (taggedData.addBook.status === 'reading') {
-					if (checkProgress === taggedData.addBook.page) {
-						const newTaggedData = { ...taggedData };
-						newTaggedData.addBook.status = 'read';
-						setTaggedData(newTaggedData);
-					} else {
-						if (!validationInput) {
-							isActive = true;
-						}
-					}
-				} else {
+			if (taggedData.addBook.status === 'read' || taggedData.addBook.page === progressInputValue) {
+				if (content) {
 					isActive = true;
 				}
 			} else {
-				if (taggedData.addBook.page !== checkProgress && !validationInput) {
-					isActive = true;
-				} else {
-					if (content) {
-						isActive = true;
-					}
-				}
+				isActive = true;
 			}
 		} else if (
 			content &&
@@ -750,7 +733,7 @@ function CreatPostModalContent({
 											handleAddToPost={handleAddToPost}
 											handleChangeStar={handleChangeStar}
 											valueStar={valueStar}
-											allowToEdit={!_.isEmpty(bookInfoProp)} // Dùng cho book detail
+											// allowToEdit={!_.isEmpty(bookInfoProp)} // Dùng cho book detail
 										/>
 									)}
 									{showUpload && (

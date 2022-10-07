@@ -16,7 +16,7 @@ import { GROUP_POST_VERB_SHARE } from 'constants/index';
 import { Modal } from 'react-bootstrap';
 
 const urlRegex =
-	/(https?:\/\/)?(www(\.))?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/g;
+	/(https?:\/\/)?(www(\.))?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)([^"<\s]+)(?![^<>]*>|[^"]*?<\/a)/g;
 
 const PostShare = ({ postData, inCreatePost = false }) => {
 	const [videoId, setVideoId] = useState('');

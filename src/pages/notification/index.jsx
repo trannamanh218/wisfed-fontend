@@ -9,8 +9,8 @@ import {
 	backgroundToggle,
 	activeKeyTabsNotification,
 	getListNotificationUnRead,
-} from 'reducers/redux-utils/notificaiton';
-import { getNotification } from 'reducers/redux-utils/notificaiton';
+} from 'reducers/redux-utils/notification';
+import { getNotification } from 'reducers/redux-utils/notification';
 import { NotificationError } from 'helpers/Error';
 import LoadingTimeLine from './loading-timeline';
 import ModalItem from './modal-item';
@@ -103,30 +103,30 @@ const NotificationModal = ({ setModalNoti, buttonModal, realTime }) => {
 		return length.length;
 	};
 
-	const handleNotificaiton = () => {
+	const handleNotification = () => {
 		dispatch(backgroundToggle(true));
 		setModalNoti(false);
 		dispatch(activeKeyTabsNotification(selectKey));
 	};
 
 	return (
-		<div className='notificaiton' ref={notifymodal}>
-			<div className='notificaiton__container'>
-				<div className='notificaiton__title'>Thông báo</div>
+		<div className='notification' ref={notifymodal}>
+			<div className='notification__container'>
+				<div className='notification__title'>Thông báo</div>
 				{isLoading ? (
-					<div className='notificaiton__loading__container'>
+					<div className='notification__loading__container'>
 						<LoadingTimeLine />
 					</div>
 				) : (
-					<div className='notificaiton__tabs'>
+					<div className='notification__tabs'>
 						<Tabs
 							onSelect={eventKey => setSelectKey(eventKey)}
 							defaultActiveKey='all'
 							activeKey={selectKey}
 						>
 							<Tab eventKey='all' title='Tất cả'>
-								<div className='notificaiton__all-wrapper'>
-									<div className='notificaiton__all__title'>Mới nhất</div>
+								<div className='notification__all-wrapper'>
+									<div className='notification__all__title'>Mới nhất</div>
 									{getNotifications
 										.slice(0, 1)
 										.map(
@@ -142,7 +142,7 @@ const NotificationModal = ({ setModalNoti, buttonModal, realTime }) => {
 													/>
 												)
 										)}
-									<div className='notificaiton__all__title'>Gần đây</div>
+									<div className='notification__all__title'>Gần đây</div>
 									{getNotifications
 										.slice(1, 6)
 										.map(
@@ -160,8 +160,8 @@ const NotificationModal = ({ setModalNoti, buttonModal, realTime }) => {
 										)}
 									<Link
 										to={`/notification`}
-										onClick={handleNotificaiton}
-										className='notificaiton__tabs__button'
+										onClick={handleNotification}
+										className='notification__tabs__button'
 									>
 										Xem tất cả
 									</Link>
@@ -187,8 +187,8 @@ const NotificationModal = ({ setModalNoti, buttonModal, realTime }) => {
 											)}
 										<Link
 											to={`/notification`}
-											onClick={handleNotificaiton}
-											className='notificaiton__tabs__button'
+											onClick={handleNotification}
+											className='notification__tabs__button'
 										>
 											Xem tất cả
 										</Link>
@@ -201,7 +201,7 @@ const NotificationModal = ({ setModalNoti, buttonModal, realTime }) => {
 							<Tab eventKey='friendrequest' title='Lời mời kết bạn'>
 								{renderFriend ? (
 									<>
-										<div className='notificaiton__all__title'>
+										<div className='notification__all__title'>
 											{lengthAddFriend()} lời mời kết bạn
 										</div>
 										{getNotifications.map(
@@ -220,8 +220,8 @@ const NotificationModal = ({ setModalNoti, buttonModal, realTime }) => {
 										)}
 										<Link
 											to={`/notification`}
-											onClick={handleNotificaiton}
-											className='notificaiton__tabs__button'
+											onClick={handleNotification}
+											className='notification__tabs__button'
 										>
 											Xem tất cả
 										</Link>
