@@ -245,6 +245,7 @@ const BookReference = ({ bookInfo, handleGetBookDetail }) => {
 									<li
 										className='dualColumn-item'
 										key={index}
+										style={{ cursor: 'pointer' }}
 										onClick={() => navigate(`/category/detail/${item.id}`)}
 									>
 										<span className='dualColumn-item__title'>{item.name}</span>
