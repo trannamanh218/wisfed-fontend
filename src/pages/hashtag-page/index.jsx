@@ -7,12 +7,12 @@ import { useParams } from 'react-router-dom';
 import { NotificationError } from 'helpers/Error';
 import LoadingIndicator from 'shared/loading-indicator';
 import { POST_TYPE } from 'constants/index';
-import { getListPostByHashtag } from 'reducers/redux-utils/hashtag-page';
+import { getListPostByHashtag, getListPostByHashtagGroup } from 'reducers/redux-utils/hashtag-page';
 import InfiniteScroll from 'react-infinite-scroll-component';
 
 function HashtagPage() {
 	const dispatch = useDispatch();
-	const { hashtag } = useParams();
+	const { hashtag, groupId } = useParams();
 
 	const [postList, setPostList] = useState([]);
 	const [hasMore, setHasMore] = useState(true);
@@ -20,9 +20,25 @@ function HashtagPage() {
 	const callApiStart = useRef(0);
 	const callApiPerPage = useRef(10);
 
-	useEffect(() => {
-		getPostsByHashtag();
-	}, []);
+	const getPostsByHashtagFromGroup = async () => {
+		const data = {
+			groupId: groupId,
+			params: {
+				tag: hashtag,
+			},
+		};
+		try {
+			const res = await dispatch(getListPostByHashtagGroup(data)).unwrap();
+			setPostList(postList.concat(res));
+			if (res.length === 0 || res.length < callApiPerPage.current) {
+				setHasMore(false);
+			} else {
+				callApiStart.current += callApiPerPage.current;
+			}
+		} catch (error) {
+			NotificationError(error);
+		}
+	};
 
 	const getPostsByHashtag = async () => {
 		const params = {
@@ -42,6 +58,14 @@ function HashtagPage() {
 			NotificationError(error);
 		}
 	};
+
+	useEffect(() => {
+		if (groupId) {
+			getPostsByHashtagFromGroup();
+		} else {
+			getPostsByHashtag();
+		}
+	}, [groupId, hashtag]);
 
 	return (
 		<NormalContainer>

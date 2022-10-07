@@ -697,7 +697,7 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 								<>
 									{postData.usersComments.map(
 										(comment, index) =>
-											index === 0 && (
+											index === postData.usersComments.length - 1 && (
 												<div key={comment.id}>
 													<Comment
 														commentLv1Id={comment.id}
