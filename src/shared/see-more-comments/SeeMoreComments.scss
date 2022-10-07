@@ -1,0 +1,23 @@
+.see-more-comment {
+	display: flex;
+	justify-content: space-between;
+	margin-bottom: 20px;
+	margin-top: -10px;
+	align-items: center;
+
+	&__button:hover {
+		cursor: pointer;
+		text-decoration: underline;
+	}
+
+	&__button {
+		font-size: 15px;
+	}
+}
+
+.loading-more-comments {
+	.loading-indicator {
+		transform: scale(0.5);
+		margin-top: -24px;
+	}
+}

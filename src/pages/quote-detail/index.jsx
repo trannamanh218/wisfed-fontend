@@ -80,6 +80,7 @@ const QuoteDetail = () => {
 			main={
 				<MainQuoteDetail
 					quoteData={quoteData}
+					setQuoteData={setQuoteData}
 					onCreateComment={onCreateComment}
 					setMentionUsersArr={setMentionUsersArr}
 					mentionUsersArr={mentionUsersArr}
