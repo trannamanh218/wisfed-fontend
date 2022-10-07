@@ -136,6 +136,7 @@ function App({ children }) {
 				<Route path='/group' element={<LayoutGroup />} />
 				<Route path='/group/:id' element={<Group />} />
 				<Route path='/hashtag/:hashtag' element={<HashtagPage />} />
+				<Route path='/hashtag-group/:groupId/:hashtag' element={<HashtagPage />} />
 				<Route path='/' element={<Home />} />
 				<Route path='*' element={<NotFound />} />
 				{children}

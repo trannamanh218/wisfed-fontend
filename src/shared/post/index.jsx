@@ -324,7 +324,15 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 							data.includes('https://') ? data : `https://${data}`
 						} target="_blank">${data.length <= 50 ? data : data.slice(0, 50) + '...'}</a>`
 				)
-				.replace(hashtagRegex, data => `<a class="hashtag-class" href="/hashtag/${data.slice(1)}">${data}</a>`);
+				.replace(hashtagRegex, data => {
+					if (postInformations.groupId) {
+						return `<a class="hashtag-class" href="/hashtag-group/${postInformations.groupId}/${data.slice(
+							1
+						)}">${data}</a>`;
+					} else {
+						return `<a class="hashtag-class" href="/hashtag/${data.slice(1)}">${data}</a>`;
+					}
+				});
 			return newContent;
 		} else {
 			return content;

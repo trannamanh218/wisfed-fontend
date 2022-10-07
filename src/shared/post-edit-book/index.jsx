@@ -84,21 +84,21 @@ const PostEditBook = ({ data, handleAddToPost, handleChangeStar, valueStar, allo
 						<LinearProgressBar percent={(data.progress / data.page) * 100} />
 						<div className='post-edit-book__editor'>
 							{(data.status === STATUS_BOOK.wantToRead || data.status === STATUS_BOOK.read) &&
-							!allowToEdit ? (
-								<span>{data.progress || 0}</span>
-							) : (
-								<input
-									ref={inputRef}
-									className='post-edit-book__input'
-									onKeyDown={blockInvalidChar}
-									onChange={handleChange}
-									value={data.progress}
-									autoFocus
-									name='progress'
-									type='number'
-									onWheel={e => e.target.blur()}
-								/>
-							)}
+								(!allowToEdit ? (
+									<span>{data.progress || 0}</span>
+								) : (
+									<input
+										ref={inputRef}
+										className='post-edit-book__input'
+										onKeyDown={blockInvalidChar}
+										onChange={handleChange}
+										value={data.progress}
+										autoFocus
+										name='progress'
+										type='number'
+										onWheel={e => e.target.blur()}
+									/>
+								))}
 							<span>/{data.page}</span>
 							{(data.status === STATUS_BOOK.reading || !data.status) && showText && (
 								<span className='post-edit-book__message'>Nhập số trang sách đã đọc</span>
