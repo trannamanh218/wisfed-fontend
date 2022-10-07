@@ -14,28 +14,38 @@ const SeeMoreComments = ({
 	setData = () => {},
 	haveNotClickedSeeMoreOnce,
 	setHaveNotClickedSeeMoreOnce = () => {},
+	isIndetail = false,
 }) => {
 	const dispatch = useDispatch();
 
-	const callApiStart = useRef(10);
+	const callApiStart = useRef(0);
 	const callApiPerPage = useRef(10);
 
 	const [isLoading, setIsLoading] = useState(false);
 	const [postType, setPostType] = useState('');
+	const [shownListCommentsLength, setShownListCommentsLength] = useState(0);
 
 	const params = {
-		start: haveNotClickedSeeMoreOnce ? 0 : callApiStart.current,
-		limit: haveNotClickedSeeMoreOnce ? 20 : callApiPerPage.current,
+		start: callApiStart.current,
+		limit: haveNotClickedSeeMoreOnce ? (isIndetail ? 20 : callApiPerPage.current) : callApiPerPage.current,
 		sort: JSON.stringify([{ property: 'createdAt', direction: 'DESC' }]),
 	};
 
 	useEffect(() => {
+		// Chia trường hợp để gọi api lấy comment
 		if (data.quote) {
 			setPostType('quote');
 		} else if (data.minipostId) {
 			setPostType('minipost');
 		} else if (data.groupId) {
 			setPostType('group');
+		}
+
+		// Nếu không ở trong màn detail và chưa bấm xem thêm thì dữ liệu số comment ban đầu là 1
+		if (!isIndetail && data.usersComments?.length > 0 && haveNotClickedSeeMoreOnce) {
+			setShownListCommentsLength(1);
+		} else {
+			setShownListCommentsLength(data.usersComments?.length);
 		}
 	}, [data]);
 
@@ -66,6 +76,8 @@ const SeeMoreComments = ({
 			handleAddMoreComments(data, rows);
 		} catch (err) {
 			NotificationError(err);
+		} finally {
+			setIsLoading(false);
 		}
 	};
 
@@ -77,14 +89,12 @@ const SeeMoreComments = ({
 		}
 		paramRows.forEach(item => cloneObj.usersComments.unshift(item));
 		setData(cloneObj);
-		console.log(cloneObj.usersComments);
 		callApiStart.current += callApiPerPage.current;
-		setIsLoading(false);
 	};
 
 	return (
 		<>
-			{data.usersComments?.length < data.comment && (
+			{shownListCommentsLength < data.comment && (
 				<>
 					{isLoading ? (
 						<div className='loading-more-comments'>
@@ -96,7 +106,7 @@ const SeeMoreComments = ({
 								Xem thêm bình luận
 							</span>
 							<span className='see-more-comment__number'>
-								{data.usersComments?.length}/{data.comment}
+								{shownListCommentsLength}/{data.comment}
 							</span>
 						</div>
 					)}
@@ -111,6 +121,7 @@ SeeMoreComments.propTypes = {
 	setData: PropTypes.func,
 	haveNotClickedSeeMoreOnce: PropTypes.bool,
 	setHaveNotClickedSeeMoreOnce: PropTypes.func,
+	isIndetail: PropTypes.bool,
 };
 
 export default SeeMoreComments;

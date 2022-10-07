@@ -60,7 +60,7 @@ const verbShareArray = [
 	MY_BOOK_VERB_SHARE,
 ];
 
-function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMentionCmtFromGroup }) {
+function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMentionCmtFromGroup, isInDetail = false }) {
 	const [postData, setPostData] = useState({});
 	const [videoId, setVideoId] = useState('');
 	const { userInfo } = useSelector(state => state.auth);
@@ -575,97 +575,212 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 				setData={setPostData}
 				haveNotClickedSeeMoreOnce={haveNotClickedSeeMoreOnce}
 				setHaveNotClickedSeeMoreOnce={setHaveNotClickedSeeMoreOnce}
+				isInDetail={isInDetail}
 			/>
-
-			{/* Comment mention đặt trên đầu  */}
-			{firstPlaceComment && firstPlaceComment?.length > 0 && (
+			{/* Nếu chưa bấm xem thêm: */}
+			{haveNotClickedSeeMoreOnce ? (
 				<>
-					{firstPlaceComment.map(comment => (
-						<div key={comment.id}>
-							<Comment
-								commentLv1Id={comment.id}
-								dataProp={comment}
-								postData={postData}
-								handleReply={handleReply}
-								type={type}
-							/>
-							<div className='comment-reply-container'>
-								{comment.reply && !!comment.reply.length && (
-									<>
-										{comment.reply.map(commentChild => (
-											<div key={commentChild.id}>
+					{/* Nếu ở trong màn detail: hiển thị 10 bình luận*/}
+					{isInDetail ? (
+						<>
+							{/* Comment mention đặt trên đầu  */}
+							{firstPlaceComment && firstPlaceComment?.length > 0 && (
+								<>
+									{firstPlaceComment.map(comment => (
+										<div key={comment.id}>
+											<Comment
+												commentLv1Id={comment.id}
+												dataProp={comment}
+												postData={postData}
+												handleReply={handleReply}
+												type={type}
+											/>
+											<div className='comment-reply-container'>
+												{comment.reply && !!comment.reply.length && (
+													<>
+														{comment.reply.map(commentChild => (
+															<div key={commentChild.id}>
+																<Comment
+																	commentLv1Id={comment.id}
+																	dataProp={commentChild}
+																	postData={postData}
+																	handleReply={handleReply}
+																	type={type}
+																/>
+															</div>
+														))}
+													</>
+												)}
+												<CommentEditor
+													onCreateComment={onCreateComment}
+													className={classNames(
+														`reply-comment-editor reply-comment-${comment.id}`,
+														{
+															'show': comment.id === replyingCommentId,
+														}
+													)}
+													mentionUsersArr={mentionUsersArr}
+													commentLv1Id={comment.id}
+													replyingCommentId={replyingCommentId}
+													clickReply={clickReply.current}
+													setMentionUsersArr={setMentionUsersArr}
+												/>
+											</div>
+										</div>
+									))}
+								</>
+							)}
+							{/* các bình luận ngoại trừ firstPlaceComment */}
+							{postData.usersComments && postData.usersComments?.length > 0 && (
+								<>
+									{postData.usersComments
+										.filter(x => x.id !== firstPlaceCommentId)
+										.map(comment => (
+											<div key={comment.id}>
 												<Comment
 													commentLv1Id={comment.id}
-													dataProp={commentChild}
+													dataProp={comment}
 													postData={postData}
 													handleReply={handleReply}
 													type={type}
 												/>
+												<div className='comment-reply-container'>
+													{comment.reply && !!comment.reply.length && (
+														<>
+															{comment.reply.map(commentChild => (
+																<div key={commentChild.id}>
+																	<Comment
+																		commentLv1Id={comment.id}
+																		dataProp={commentChild}
+																		postData={postData}
+																		handleReply={handleReply}
+																		type={type}
+																	/>
+																</div>
+															))}
+														</>
+													)}
+													<CommentEditor
+														onCreateComment={onCreateComment}
+														className={classNames(
+															`reply-comment-editor reply-comment-${comment.id}`,
+															{
+																'show': comment.id === replyingCommentId,
+															}
+														)}
+														mentionUsersArr={mentionUsersArr}
+														commentLv1Id={comment.id}
+														replyingCommentId={replyingCommentId}
+														clickReply={clickReply.current}
+														setMentionUsersArr={setMentionUsersArr}
+													/>
+												</div>
 											</div>
 										))}
-									</>
-								)}
-								<CommentEditor
-									onCreateComment={onCreateComment}
-									className={classNames(`reply-comment-editor reply-comment-${comment.id}`, {
-										'show': comment.id === replyingCommentId,
-									})}
-									mentionUsersArr={mentionUsersArr}
-									commentLv1Id={comment.id}
-									replyingCommentId={replyingCommentId}
-									clickReply={clickReply.current}
-									setMentionUsersArr={setMentionUsersArr}
-								/>
-							</div>
-						</div>
-					))}
-				</>
-			)}
-
-			{/* các bình luận ngoại trừ firstPlaceComment */}
-			{postData.usersComments && !!postData.usersComments?.length && (
-				<>
-					{postData.usersComments
-						.filter(x => x.id !== firstPlaceCommentId)
-						.map(comment => (
-							<div key={comment.id}>
-								<Comment
-									commentLv1Id={comment.id}
-									dataProp={comment}
-									postData={postData}
-									handleReply={handleReply}
-									type={type}
-								/>
-								<div className='comment-reply-container'>
-									{comment.reply && !!comment.reply.length && (
-										<>
-											{comment.reply.map(commentChild => (
-												<div key={commentChild.id}>
+								</>
+							)}
+						</>
+					) : (
+						// còn khi ở ngoài: chỉ hiển thị 1 cái mới nhất
+						<>
+							{postData.usersComments && postData.usersComments?.length > 0 && (
+								<>
+									{postData.usersComments.map(
+										(comment, index) =>
+											index === 0 && (
+												<div key={comment.id}>
 													<Comment
 														commentLv1Id={comment.id}
-														dataProp={commentChild}
+														dataProp={comment}
 														postData={postData}
 														handleReply={handleReply}
 														type={type}
 													/>
+													<div className='comment-reply-container'>
+														{comment.reply && !!comment.reply.length && (
+															<>
+																{comment.reply.map(commentChild => (
+																	<div key={commentChild.id}>
+																		<Comment
+																			commentLv1Id={comment.id}
+																			dataProp={commentChild}
+																			postData={postData}
+																			handleReply={handleReply}
+																			type={type}
+																		/>
+																	</div>
+																))}
+															</>
+														)}
+														<CommentEditor
+															onCreateComment={onCreateComment}
+															className={classNames(
+																`reply-comment-editor reply-comment-${comment.id}`,
+																{
+																	'show': comment.id === replyingCommentId,
+																}
+															)}
+															mentionUsersArr={mentionUsersArr}
+															commentLv1Id={comment.id}
+															replyingCommentId={replyingCommentId}
+															clickReply={clickReply.current}
+															setMentionUsersArr={setMentionUsersArr}
+														/>
+													</div>
 												</div>
-											))}
-										</>
+											)
 									)}
-									<CommentEditor
-										onCreateComment={onCreateComment}
-										className={classNames(`reply-comment-editor reply-comment-${comment.id}`, {
-											'show': comment.id === replyingCommentId,
-										})}
-										mentionUsersArr={mentionUsersArr}
+								</>
+							)}
+						</>
+					)}
+				</>
+			) : (
+				// Nếu đã bấm xem thêm thì hiển thị đầy đủ như bình thường
+				<>
+					{postData.usersComments && postData.usersComments?.length > 0 && (
+						<>
+							{postData.usersComments.map(comment => (
+								<div key={comment.id}>
+									<Comment
 										commentLv1Id={comment.id}
-										replyingCommentId={replyingCommentId}
-										clickReply={clickReply.current}
-										setMentionUsersArr={setMentionUsersArr}
+										dataProp={comment}
+										postData={postData}
+										handleReply={handleReply}
+										type={type}
 									/>
+									<div className='comment-reply-container'>
+										{comment.reply && !!comment.reply.length && (
+											<>
+												{comment.reply.map(commentChild => (
+													<div key={commentChild.id}>
+														<Comment
+															commentLv1Id={comment.id}
+															dataProp={commentChild}
+															postData={postData}
+															handleReply={handleReply}
+															type={type}
+														/>
+													</div>
+												))}
+											</>
+										)}
+										<CommentEditor
+											onCreateComment={onCreateComment}
+											className={classNames(`reply-comment-editor reply-comment-${comment.id}`, {
+												'show': comment.id === replyingCommentId,
+											})}
+											mentionUsersArr={mentionUsersArr}
+											commentLv1Id={comment.id}
+											replyingCommentId={replyingCommentId}
+											clickReply={clickReply.current}
+											setMentionUsersArr={setMentionUsersArr}
+										/>
+									</div>
 								</div>
-							</div>
-						))}
+							))}
+						</>
+					)}
 				</>
 			)}
 			<CommentEditor
@@ -691,6 +806,7 @@ Post.propTypes = {
 	type: PropTypes.string,
 	reduxMentionCommentId: PropTypes.any,
 	reduxCheckIfMentionCmtFromGroup: PropTypes.any,
+	isInDetail: PropTypes.bool,
 };
 
 export default Post;

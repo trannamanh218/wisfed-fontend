@@ -135,6 +135,7 @@ const MainQuoteDetail = ({ quoteData, setQuoteData, onCreateComment, setMentionU
 							setData={setQuoteData}
 							haveNotClickedSeeMoreOnce={haveNotClickedSeeMoreOnce}
 							setHaveNotClickedSeeMoreOnce={setHaveNotClickedSeeMoreOnce}
+							isIndetail={true}
 						/>
 
 						{/* Comment mention đặt trên đầu  */}
@@ -186,7 +187,7 @@ const MainQuoteDetail = ({ quoteData, setQuoteData, onCreateComment, setMentionU
 						)}
 
 						{/* các bình luận ngoại trừ firstPlaceComment */}
-						{quoteData.usersComments && !!quoteData.usersComments?.length && (
+						{quoteData.usersComments && quoteData.usersComments?.length > 0 && (
 							<>
 								{quoteData.usersComments
 									.filter(x => x.id !== firstPlaceCommentId)

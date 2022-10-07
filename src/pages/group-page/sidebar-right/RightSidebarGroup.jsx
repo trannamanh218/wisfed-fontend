@@ -24,7 +24,7 @@ export default function RightSidebarGroup({ update }) {
 			id: id,
 			body: {
 				sort: JSON.stringify([{ property: 'count', direction: 'DESC' }]),
-				search: JSON.stringify(valueSearch),
+				search: valueSearch,
 			},
 		};
 		try {
@@ -52,7 +52,7 @@ export default function RightSidebarGroup({ update }) {
 
 	const updateInputSearch = value => {
 		if (value) {
-			setValueSearch(value.toLowerCase().trim());
+			setValueSearch(value.trim());
 		} else {
 			setValueSearch('');
 		}
@@ -85,18 +85,9 @@ export default function RightSidebarGroup({ update }) {
 				})}
 
 				{tagGroup.length > 6 && (
-					<>
-						{!show ? (
-							<button className='more__btn' onClick={() => handleChangeNumber()}>
-								<ForwardGroup /> Xem thêm
-							</button>
-						) : (
-							<button className='more__btn rotate__more' onClick={() => handleChangeNumber()}>
-								<ForwardGroup />
-								Thu gọn
-							</button>
-						)}
-					</>
+					<button className={`${show && 'rotate__more'} more__btn`} onClick={() => handleChangeNumber()}>
+						<ForwardGroup /> {`${show ? 'Thu gọn' : 'Xem thêm'}`}
+					</button>
 				)}
 			</div>
 		</div>
