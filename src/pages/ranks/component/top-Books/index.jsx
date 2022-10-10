@@ -9,6 +9,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
 import ModalCheckLogin from 'shared/modal-check-login';
 import LoadingIndicator from 'shared/loading-indicator';
+import ModalSearchCategories from '../modal-search-categories/ModalSearchCategories';
+import dropdownIcon from 'assets/images/dropdown.png';
 
 const TopBooks = ({ rows, listYear, tabSelected }) => {
 	const kindOfGroupRef = useRef({ value: 'default', title: 'Chủ đề' });
@@ -20,6 +22,9 @@ const TopBooks = ({ rows, listYear, tabSelected }) => {
 	const [getListTopBooks, setGetListTopBooks] = useState([]);
 	const [modalShow, setModalShow] = useState(false);
 	const [loadingState, setLoadingState] = useState(false);
+
+	const [modalSearchCategoriesShow, setModalSearchCategoriesShow] = useState(false);
+
 	const dispatch = useDispatch();
 
 	const category = JSON.parse(localStorage.getItem('category'));
@@ -87,15 +92,19 @@ const TopBooks = ({ rows, listYear, tabSelected }) => {
 	return (
 		<div className='topbooks__container'>
 			<ModalCheckLogin setModalShow={setModalShow} modalShow={modalShow} />
+			<ModalSearchCategories
+				setModalSearchCategoriesShow={setModalSearchCategoriesShow}
+				modalSearchCategoriesShow={modalSearchCategoriesShow}
+			/>
 			<div className='topbooks__container__title'>TOP 100 Cuốn sách tốt nhất</div>
 			<div className='topbooks__container__sort'>
-				<div className='topbooks__container__sort__left'>
-					<SelectBox
-						name='themeGroup'
-						list={rows}
-						defaultOption={categoryOption}
-						onChangeOption={onchangeKindOfGroup}
-					/>
+				<div className='topbooks__container__sort__left' onClick={() => setModalSearchCategoriesShow(true)}>
+					<div className='select-box'>
+						<div className='select-box__btn'>
+							<span className='select-box__value'>Chủ đề</span>
+							<img className='select-box__icon' src={dropdownIcon} alt='dropdown' />
+						</div>
+					</div>
 				</div>
 
 				<div className='topbooks__container__sort__right'>
