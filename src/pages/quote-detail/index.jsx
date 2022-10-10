@@ -66,7 +66,7 @@ const QuoteDetail = () => {
 						newComment.reply = [];
 						usersComments.push(newComment);
 					}
-					const newQuoteData = { ...quoteData, usersComments, comments: quoteData.comments + 1 };
+					const newQuoteData = { ...quoteData, usersComments, comments: quoteData.comment + 1 };
 					setQuoteData(newQuoteData);
 				}
 			} catch (err) {

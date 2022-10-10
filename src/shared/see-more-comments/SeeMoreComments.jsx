@@ -86,7 +86,6 @@ const SeeMoreComments = ({
 	const handleAddMoreComments = (paramData, paramRows) => {
 		const cloneObj = { ...paramData };
 		if (haveNotClickedSeeMoreOnce) {
-			cloneObj.usersComments = [];
 			setHaveNotClickedSeeMoreOnce(false);
 		}
 		paramRows.forEach(item => cloneObj.usersComments.unshift(item));
