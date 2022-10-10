@@ -98,6 +98,7 @@ QuoteActionBar.propTypes = {
 	data: PropTypes.object,
 	isDetail: PropTypes.bool,
 	likeUnlikeQuoteFnc: PropTypes.func,
+	trueRank: PropTypes.number,
 };
 
 export default QuoteActionBar;

@@ -23,7 +23,8 @@ const SeeMoreComments = ({
 
 	const [isLoading, setIsLoading] = useState(false);
 	const [postType, setPostType] = useState('');
-	const [seeAll, setSeeAll] = useState(false);
+	const [fatherCommentsCount, setFatherCommentsCount] = useState(11);
+	const [show, setShow] = useState(false);
 
 	const params = {
 		start: callApiStart.current,
@@ -32,25 +33,40 @@ const SeeMoreComments = ({
 	};
 
 	useEffect(() => {
-		// Chia trường hợp để gọi api lấy comment
-		if (data.quote) {
-			setPostType('quote');
-		} else if (data.minipostId) {
-			setPostType('minipost');
-		} else if (data.groupId) {
-			setPostType('group');
-		}
+		// Cái if ngoài cùng này để ngăn code chạy lại mỗi khi bấm Xem thêm
+		if (haveNotClickedSeeMoreOnce) {
+			// Chia trường hợp để gọi api lấy comment
+			if (data.quote) {
+				setPostType('quote');
+			} else if (data.minipostId) {
+				setPostType('minipost');
+			} else if (data.groupId) {
+				setPostType('group');
+			}
 
-		// Nếu không ở trong màn detail và chưa bấm xem thêm thì dữ liệu số comment ban đầu là 1 cho nên bắt đầu gọi từ 0
-		if (!isIndetail && data.usersComments?.length > 0 && haveNotClickedSeeMoreOnce) {
-			callApiStart.current = 0;
+			// Nếu không ở trong màn detail và chưa bấm xem thêm thì dữ liệu số comment ban đầu là 1 cho nên bắt đầu gọi từ 0
+			if (!isIndetail && data.usersComments?.length > 0 && haveNotClickedSeeMoreOnce) {
+				callApiStart.current = 0;
+			}
+
+			// Kiểm tra xem nếu bài viết đã hiển thị đủ comment rồi thì không hiện nút Xem thêm nữa
+			if (data.usersComments?.length > 0) {
+				let fatherCommentsFirstCount = 1;
+				if (isIndetail) {
+					fatherCommentsFirstCount = data.usersComments?.length;
+				}
+				data.usersComments?.forEach(item => (fatherCommentsFirstCount += item.reply?.length));
+				if (fatherCommentsFirstCount < data.comment) {
+					setShow(true);
+				}
+			}
 		}
 	}, [data]);
 
 	const onClickSeeMore = async () => {
 		setIsLoading(true);
 		let sentData = {};
-		let res = [];
+		let res = {};
 		try {
 			if (postType === 'quote') {
 				sentData = {
@@ -74,10 +90,11 @@ const SeeMoreComments = ({
 		} catch (err) {
 			NotificationError(err);
 		} finally {
+			setFatherCommentsCount(res.count);
 			if (res.rows.length > 0) {
 				handleAddMoreComments(data, res.rows);
 			} else {
-				setSeeAll(true);
+				setShow(false);
 			}
 			setIsLoading(false);
 		}
@@ -87,6 +104,9 @@ const SeeMoreComments = ({
 		const cloneObj = { ...paramData };
 		if (haveNotClickedSeeMoreOnce) {
 			setHaveNotClickedSeeMoreOnce(false);
+			if (!isIndetail) {
+				cloneObj.usersComments = [];
+			}
 		}
 		paramRows.forEach(item => cloneObj.usersComments.unshift(item));
 		setData(cloneObj);
@@ -95,7 +115,7 @@ const SeeMoreComments = ({
 
 	return (
 		<>
-			{!seeAll ? (
+			{show && data.usersComments?.length < fatherCommentsCount && (
 				<>
 					{isLoading ? (
 						<div className='loading-more-comments'>
@@ -104,13 +124,11 @@ const SeeMoreComments = ({
 					) : (
 						<div className='see-more-comment'>
 							<span className='see-more-comment__button' onClick={onClickSeeMore}>
-								Xem thêm bình luận
+								Xem thêm
 							</span>
 						</div>
 					)}
 				</>
-			) : (
-				''
 			)}
 		</>
 	);
