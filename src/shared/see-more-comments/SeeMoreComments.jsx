@@ -27,7 +27,7 @@ const SeeMoreComments = ({
 
 	const params = {
 		start: callApiStart.current,
-		limit: haveNotClickedSeeMoreOnce ? (isIndetail ? 20 : callApiPerPage.current) : callApiPerPage.current,
+		limit: haveNotClickedSeeMoreOnce && isIndetail ? 20 : callApiPerPage.current,
 		sort: JSON.stringify([{ property: 'createdAt', direction: 'DESC' }]),
 	};
 
@@ -89,7 +89,12 @@ const SeeMoreComments = ({
 		}
 		paramRows.forEach(item => cloneObj.usersComments.unshift(item));
 		setData(cloneObj);
-		callApiStart.current += callApiPerPage.current;
+
+		if (haveNotClickedSeeMoreOnce && isIndetail) {
+			callApiStart.current += 20;
+		} else {
+			callApiStart.current += callApiPerPage.current;
+		}
 	};
 
 	return (

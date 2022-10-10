@@ -185,7 +185,6 @@ const MainQuoteDetail = ({ quoteData, setQuoteData, onCreateComment, setMentionU
 								))}
 							</>
 						)}
-
 						{/* các bình luận ngoại trừ firstPlaceComment */}
 						{quoteData.usersComments && quoteData.usersComments?.length > 0 && (
 							<>

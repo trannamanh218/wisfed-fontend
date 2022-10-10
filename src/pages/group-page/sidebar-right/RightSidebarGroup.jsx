@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import '../sidebar-right/RightSideBarGroup.scss';
 import PropTypes from 'prop-types';
 import { useParams } from 'react-router-dom';
-import { getTagGroup, searchGroupHashTag } from 'reducers/redux-utils/group';
+import { getTagGroup } from 'reducers/redux-utils/group';
 import { useDispatch } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
 import _ from 'lodash';
@@ -71,16 +71,16 @@ export default function RightSidebarGroup({ update }) {
 			<div>
 				{tagGroup.map((item, index) => {
 					return (
-						<>
+						<div key={index}>
 							{index < numberIndex && (
-								<div className='hastag__group' key={index}>
+								<div className='hastag__group'>
 									<div className='hastag__group-name'>{item.tagName}</div>
 									<div className='hastag__group-number'>
 										{item.count < 10000 ? item.count : '9999+'} bài viết
 									</div>
 								</div>
 							)}
-						</>
+						</div>
 					);
 				})}
 

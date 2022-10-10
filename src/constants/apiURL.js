@@ -111,6 +111,7 @@ export const listFollowing = id => `/api/v1/users/listFollowings/${id}`;
 
 // hashtag
 export const listPostByHashtagAPI = '/api/v1/searchs/tags';
+export const listPostByHashTagGroupAPI = id => `/api/v1/groups/searchTag/${id}`;
 
 // export const listAPIChart = (count, by) => `/api/v1/tracking?count=${count}&by=${by}`;
 export const listBooksReadYear = (type, id) => `/api/v1/libraries/listBookByType/${type}/${id}`;
