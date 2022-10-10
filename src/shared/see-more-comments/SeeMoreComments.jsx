@@ -23,7 +23,6 @@ const SeeMoreComments = ({
 
 	const [isLoading, setIsLoading] = useState(false);
 	const [postType, setPostType] = useState('');
-	// const [shownListCommentsLength, setShownListCommentsLength] = useState(0);
 	const [seeAll, setSeeAll] = useState(false);
 
 	const params = {
@@ -42,13 +41,10 @@ const SeeMoreComments = ({
 			setPostType('group');
 		}
 
-		// // Nếu không ở trong màn detail và chưa bấm xem thêm thì dữ liệu số comment ban đầu là 1
-		// if (!isIndetail && data.usersComments?.length > 0 && haveNotClickedSeeMoreOnce) {
-		// 	setShownListCommentsLength(1);
-		// 	callApiStart.current = 0;
-		// } else {
-		// 	setShownListCommentsLength(data.usersComments?.length);
-		// }
+		// Nếu không ở trong màn detail và chưa bấm xem thêm thì dữ liệu số comment ban đầu là 1 cho nên bắt đầu gọi từ 0
+		if (!isIndetail && data.usersComments?.length > 0 && haveNotClickedSeeMoreOnce) {
+			callApiStart.current = 0;
+		}
 	}, [data]);
 
 	const onClickSeeMore = async () => {
@@ -90,6 +86,7 @@ const SeeMoreComments = ({
 	const handleAddMoreComments = (paramData, paramRows) => {
 		const cloneObj = { ...paramData };
 		if (haveNotClickedSeeMoreOnce) {
+			cloneObj.usersComments = [];
 			setHaveNotClickedSeeMoreOnce(false);
 		}
 		paramRows.forEach(item => cloneObj.usersComments.unshift(item));
