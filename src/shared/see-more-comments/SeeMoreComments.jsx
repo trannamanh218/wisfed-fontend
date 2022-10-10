@@ -93,8 +93,6 @@ const SeeMoreComments = ({
 			setFatherCommentsCount(res.count);
 			if (res.rows.length > 0) {
 				handleAddMoreComments(data, res.rows);
-			} else {
-				setShow(false);
 			}
 			setIsLoading(false);
 		}

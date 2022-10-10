@@ -78,7 +78,7 @@ function HashtagPage() {
 					loader={<LoadingIndicator />}
 				>
 					{postList.map(post => (
-						<Post key={post.id} postInformations={post} type={POST_TYPE} />
+						<Post key={post.id} postInformations={post} type={POST_TYPE} isInDetail={true} />
 					))}
 				</InfiniteScroll>
 			</div>
