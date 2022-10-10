@@ -6,7 +6,7 @@ import UserAvatar from 'shared/user-avatar';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import { updateCurrentBook } from 'reducers/redux-utils/book';
-import { resetTaggedDataFunc, saveDataShare } from 'reducers/redux-utils/post';
+import { saveDataShare } from 'reducers/redux-utils/post';
 import { useLocation } from 'react-router-dom';
 import { updateImg } from 'reducers/redux-utils/chart';
 
@@ -84,7 +84,6 @@ function CreatePost({ onChangeNewPost }) {
 	useEffect(() => {
 		if (!_.isEmpty(bookForCreatePost) || !_.isEmpty(postDataShare) || !_.isEmpty(updateImgPost)) {
 			setShowModalCreatPost(true);
-			// dispatch(resetTaggedDataFunc(false));
 		}
 	}, [bookForCreatePost, postDataShare, updateImgPost]);
 
@@ -122,7 +121,6 @@ function CreatePost({ onChangeNewPost }) {
 	};
 
 	const hideCreatePostModal = () => {
-		// dispatch(resetTaggedDataFunc(true));
 		dispatch(saveDataShare({}));
 		dispatch(updateImg([]));
 		dispatch(updateCurrentBook({}));
@@ -143,7 +141,6 @@ function CreatePost({ onChangeNewPost }) {
 				onClick={() => {
 					onChangeOption(item);
 					setShowModalCreatPost(true);
-					// dispatch(resetTaggedDataFunc(false));
 					setShowSubModal(true);
 				}}
 			>
@@ -170,18 +167,20 @@ function CreatePost({ onChangeNewPost }) {
 						hideCreatePostModal={hideCreatePostModal}
 						showModalCreatPost={showModalCreatPost}
 						option={option}
-						setOption={setOption}
 						onChangeOption={onChangeOption}
 						onChangeNewPost={onChangeNewPost}
 						setShowModalCreatPost={setShowModalCreatPost}
 						showSubModal={showSubModal}
+						bookForCreatePost={bookForCreatePost}
 					/>
 				</div>
 			)}
 		</div>
 	);
 }
+
 CreatePost.propTypes = {
 	onChangeNewPost: PropTypes.func,
 };
+
 export default CreatePost;

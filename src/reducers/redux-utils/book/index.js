@@ -201,7 +201,6 @@ const bookSlice = createSlice({
 		error: {},
 		bookInfo: {},
 		bookReviewData: {},
-		currentBook: { id: null },
 		bookForCreatePost: {},
 		ratingBookStart: null,
 		currentBookReviewsNumber: 0,
@@ -222,7 +221,6 @@ const bookSlice = createSlice({
 		[getBookDetail.fulfilled]: (state, action) => {
 			state.isFetching = false;
 			state.bookInfo = action.payload;
-			state.currentBook = action.payload;
 			state.error = {};
 		},
 		[getBookDetail.rejected]: (state, action) => {

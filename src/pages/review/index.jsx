@@ -43,10 +43,7 @@ const Review = () => {
 		if (reviewIdFromNotification) {
 			setFilter([{ 'operator': 'eq', 'value': reviewIdFromNotification, 'property': 'id' }]);
 		} else {
-			setFilter([
-				{ operator: 'eq', value: bookId, property: 'bookId' },
-				{ operator: 'eq', value: userId, property: 'updatedBy' },
-			]);
+			setFilter([{ operator: 'eq', value: userId, property: 'createdBy' }]);
 		}
 	}, [bookId]);
 
@@ -65,8 +62,8 @@ const Review = () => {
 				sort: JSON.stringify([{ direction: 'DESC', property: 'createdAt' }]),
 				filter: JSON.stringify(filter),
 			};
-			const response = await dispatch(getReviewsBook(params)).unwrap();
-			setListReview(response);
+			const response = await dispatch(getReviewsBook({ bookId, params })).unwrap();
+			setListReview(response.rows);
 		} catch (err) {
 			NotificationError(err);
 		}

@@ -113,7 +113,9 @@ function PostWatting({ handleChange }) {
 		</div>
 	);
 }
+
 PostWatting.propTypes = {
 	handleChange: PropTypes.func,
 };
+
 export default PostWatting;

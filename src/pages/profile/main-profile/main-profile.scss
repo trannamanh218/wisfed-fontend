@@ -1,15 +1,14 @@
 @import 'src/scss/abstracts/_variables.scss';
 
 .main-profile {
+	width: 100%;
 	.tab-content {
-		background-color: transparent;
+		background-color: white;
 		padding-bottom: 0;
-
 		.active {
 			border-radius: 0;
 		}
 	}
-	width: 100%;
 
 	.tab-pane {
 		&.active {
@@ -29,7 +28,7 @@
 			.nav-link {
 				font-weight: 600;
 				line-height: 1.5;
-				padding: 0 0 32px;
+				padding: 0 12px 32px;
 			}
 		}
 		&.none-books {

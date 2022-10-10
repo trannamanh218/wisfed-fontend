@@ -196,28 +196,23 @@ const PostShare = ({ postData, inCreatePost = false }) => {
 						)}
 					</div>
 					<div className='post__user-status__post-time-status'>
-						<span>
-							{calculateDurationTime(
-								postData.time ||
-									postData.createdAt ||
-									postData.sharePost.time ||
-									postData.sharePost.createdAt
-							)}
-						</span>
+						<span>{calculateDurationTime(postData.sharePost.time || postData.sharePost.createdAt)}</span>
 						<>
 							{postData.sharePost?.book && (
 								<div className='post__user-status__subtitle'>
-									<span>Cập nhật tiến độ đọc sách</span>
-									<div className='post__user-status__post-time-status__online-dot'></div>
-									<span>Xếp hạng</span>
-									<ReactRating
-										readonly={true}
-										initialRating={
-											postData.sharePost.book.actorRating?.star
-												? postData.sharePost.book.actorRating?.star
-												: 0
-										}
-									/>
+									{postData.sharePost.isUpdateProgress && (
+										<span style={{ marginRight: '12px' }}>Cập nhật tiến độ đọc sách</span>
+									)}
+									{postData.sharePost.book.actorRating !== null && (
+										<>
+											<div className='post__user-status__post-time-status__online-dot'></div>
+											<span>Xếp hạng</span>
+											<ReactRating
+												readonly={true}
+												initialRating={postData.sharePost.book.actorRating.star}
+											/>
+										</>
+									)}
 								</div>
 							)}
 						</>
@@ -232,42 +227,47 @@ const PostShare = ({ postData, inCreatePost = false }) => {
 					}}
 				></div>
 			)}
-			<ul className='tagged'>
-				{postData.sharePost?.mentionsAuthors?.map(item => (
-					<li
-						key={item.id}
-						className={classNames('badge bg-primary-light')}
-						onClick={() => navigate(`/profile/${item.authorId}`)}
-					>
-						<Feather />
-						<span>
-							{item.authors.name ||
-								item.authors?.fullName ||
-								item.authors?.lastName ||
-								item.authors?.firstName ||
-								'Không xác định'}
-						</span>
-					</li>
-				))}
-			</ul>
+			{postData.sharePost.mentionsAuthors && !!postData.sharePost?.mentionsAuthors.length && (
+				<ul className='tagged'>
+					{postData.sharePost.mentionsAuthors.map(item => (
+						<li
+							key={item.id}
+							className={classNames('badge bg-primary-light')}
+							onClick={() => navigate(`/profile/${item.authorId}`)}
+						>
+							<Feather />
+							<span>
+								{item.authors.name ||
+									item.authors?.fullName ||
+									item.authors?.lastName ||
+									item.authors?.firstName ||
+									'Không xác định'}
+							</span>
+						</li>
+					))}
+				</ul>
+			)}
 
-			<ul className='tagged'>
-				{postData.sharePost?.mentionsCategories?.map(item => (
-					<li
-						key={item.id}
-						className={classNames('badge bg-primary-light')}
-						onClick={() => navigate(`/category/detail/${item.categoryId}`)}
-					>
-						<span>
-							{item.category.name ||
-								item.category?.fullName ||
-								item.category?.lastName ||
-								item.category?.firstName ||
-								'Không xác định'}
-						</span>
-					</li>
-				))}
-			</ul>
+			{postData.sharePost.mentionsCategories && !!postData.sharePost.mentionsCategories.length && (
+				<ul className='tagged'>
+					{postData.sharePost.mentionsCategories.map(item => (
+						<li
+							key={item.id}
+							className={classNames('badge bg-primary-light')}
+							onClick={() => navigate(`/category/detail/${item.categoryId}`)}
+						>
+							<span>
+								{item.category.name ||
+									item.category?.fullName ||
+									item.category?.lastName ||
+									item.category?.firstName ||
+									'Không xác định'}
+							</span>
+						</li>
+					))}
+				</ul>
+			)}
+
 			{postData.sharePost?.book && (
 				<PostBook
 					data={{

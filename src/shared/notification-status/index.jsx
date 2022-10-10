@@ -151,7 +151,6 @@ const NotificationStatus = ({ item, setGetNotifications, getNotifications }) => 
 			default:
 				console.log('Xét thiếu verb: ', items.verb);
 		}
-
 		dispatch(readNotification(params)).unwrap();
 	};
 

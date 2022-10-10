@@ -8,10 +8,10 @@ import MemberGroup from './component/MemberGroup';
 import './style.scss';
 import { ActionPlusGroup, CloseIconX, DropdownGroup, IconCheck, LogInCircle, LogOutGroup } from 'components/svg';
 import SettingsGroup from './AminSettings/SettingsGroup';
-import SettingsQuestions from './AminSettings/SettingsQuestions';
-import ManageJoin from './AminSettings/ManageJoin';
+// import SettingsQuestions from './AminSettings/SettingsQuestions'; // k xóa
+// import ManageJoin from './AminSettings/ManageJoin'; // k xóa
 import PropTypes from 'prop-types';
-import PostWatting from './AminSettings/PostWatting';
+// import PostWatting from './AminSettings/PostWatting'; // k xóa
 import PopupInviteFriend from '../popupInviteFriend';
 import {
 	getEnjoyGroup,
@@ -369,9 +369,9 @@ function MainGroupComponent({ handleChange, keyChange, data, member, handleUpdat
 			{keyChange === 'settings' && (
 				<SettingsGroup handleChange={handleChange} data={data} fetchData={fetchData} />
 			)}
-			{keyChange === 'settingsQuestion' && <SettingsQuestions handleChange={handleChange} />}
-			{keyChange === 'manageJoin' && <ManageJoin handleChange={handleChange} />}
-			{keyChange === 'managePost' && <PostWatting handleChange={handleChange} />}
+			{/* {keyChange === 'settingsQuestion' && <SettingsQuestions handleChange={handleChange} />} */}
+			{/* {keyChange === 'manageJoin' && <ManageJoin handleChange={handleChange} />} */}
+			{/* {keyChange === 'managePost' && <PostWatting handleChange={handleChange} />} */}
 			{keyChange === 'search' && (
 				<div style={{ marginTop: '20px' }}>
 					{!isFetchingSearchInFroup && !_.isEmpty(getData) ? (
