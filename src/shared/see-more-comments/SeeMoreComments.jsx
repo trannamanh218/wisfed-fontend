@@ -18,16 +18,17 @@ const SeeMoreComments = ({
 }) => {
 	const dispatch = useDispatch();
 
-	const callApiStart = useRef(0);
+	const callApiStart = useRef(10);
 	const callApiPerPage = useRef(10);
 
 	const [isLoading, setIsLoading] = useState(false);
 	const [postType, setPostType] = useState('');
-	const [shownListCommentsLength, setShownListCommentsLength] = useState(0);
+	// const [shownListCommentsLength, setShownListCommentsLength] = useState(0);
+	const [seeAll, setSeeAll] = useState(false);
 
 	const params = {
 		start: callApiStart.current,
-		limit: haveNotClickedSeeMoreOnce && isIndetail ? 20 : callApiPerPage.current,
+		limit: callApiPerPage.current,
 		sort: JSON.stringify([{ property: 'createdAt', direction: 'DESC' }]),
 	};
 
@@ -41,42 +42,47 @@ const SeeMoreComments = ({
 			setPostType('group');
 		}
 
-		// Nếu không ở trong màn detail và chưa bấm xem thêm thì dữ liệu số comment ban đầu là 1
-		if (!isIndetail && data.usersComments?.length > 0 && haveNotClickedSeeMoreOnce) {
-			setShownListCommentsLength(1);
-		} else {
-			setShownListCommentsLength(data.usersComments?.length);
-		}
+		// // Nếu không ở trong màn detail và chưa bấm xem thêm thì dữ liệu số comment ban đầu là 1
+		// if (!isIndetail && data.usersComments?.length > 0 && haveNotClickedSeeMoreOnce) {
+		// 	setShownListCommentsLength(1);
+		// 	callApiStart.current = 0;
+		// } else {
+		// 	setShownListCommentsLength(data.usersComments?.length);
+		// }
 	}, [data]);
 
 	const onClickSeeMore = async () => {
 		setIsLoading(true);
 		let sentData = {};
-		let rows = [];
+		let res = [];
 		try {
 			if (postType === 'quote') {
 				sentData = {
 					quoteId: data.id,
 					params: params,
 				};
-				rows = await dispatch(getQuoteComments(sentData)).unwrap();
+				res = await dispatch(getQuoteComments(sentData)).unwrap();
 			} else if (postType === 'minipost') {
 				sentData = {
 					postId: data.minipostId,
 					params: params,
 				};
-				rows = await dispatch(getMiniPostComments(sentData)).unwrap();
+				res = await dispatch(getMiniPostComments(sentData)).unwrap();
 			} else if (postType === 'group') {
 				sentData = {
 					postId: data.groupPostId,
 					params: params,
 				};
-				rows = await dispatch(getGroupPostComments(sentData)).unwrap();
+				res = await dispatch(getGroupPostComments(sentData)).unwrap();
 			}
-			handleAddMoreComments(data, rows);
 		} catch (err) {
 			NotificationError(err);
 		} finally {
+			if (res.rows.length > 0) {
+				handleAddMoreComments(data, res.rows);
+			} else {
+				setSeeAll(true);
+			}
 			setIsLoading(false);
 		}
 	};
@@ -84,22 +90,16 @@ const SeeMoreComments = ({
 	const handleAddMoreComments = (paramData, paramRows) => {
 		const cloneObj = { ...paramData };
 		if (haveNotClickedSeeMoreOnce) {
-			cloneObj.usersComments = [];
 			setHaveNotClickedSeeMoreOnce(false);
 		}
 		paramRows.forEach(item => cloneObj.usersComments.unshift(item));
 		setData(cloneObj);
-
-		if (haveNotClickedSeeMoreOnce && isIndetail) {
-			callApiStart.current += 20;
-		} else {
-			callApiStart.current += callApiPerPage.current;
-		}
+		callApiStart.current += callApiPerPage.current;
 	};
 
 	return (
 		<>
-			{shownListCommentsLength < data.comment && (
+			{!seeAll ? (
 				<>
 					{isLoading ? (
 						<div className='loading-more-comments'>
@@ -110,12 +110,11 @@ const SeeMoreComments = ({
 							<span className='see-more-comment__button' onClick={onClickSeeMore}>
 								Xem thêm bình luận
 							</span>
-							<span className='see-more-comment__number'>
-								{shownListCommentsLength}/{data.comment}
-							</span>
 						</div>
 					)}
 				</>
+			) : (
+				''
 			)}
 		</>
 	);
