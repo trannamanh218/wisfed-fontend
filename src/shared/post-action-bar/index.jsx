@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { CommentSvg, Like, LikeFill, Share } from 'components/svg';
+import { CommentSvg, Like, LikeFill, Share, Eye } from 'components/svg';
 import './post-action-bar.scss';
 import { saveDataShare } from 'reducers/redux-utils/post';
 import Storage from 'helpers/Storage';
@@ -25,6 +25,7 @@ const PostActionBar = ({ postData, handleLikeAction }) => {
 	const location = useLocation();
 
 	const currentGroupArrived = useSelector(state => state.group.currentGroupArrived);
+	const currentBook = useSelector(state => state.book.bookInfo);
 
 	const handleShare = () => {
 		if (!Storage.getAccessToken()) {
@@ -33,9 +34,10 @@ const PostActionBar = ({ postData, handleLikeAction }) => {
 			let dataToShare;
 			if (
 				location.pathname.includes('profile') ||
+				location.pathname.includes('book/detail') ||
+				location.pathname.includes('/review/') ||
 				postData.verb === POST_VERB ||
-				postData.verb === POST_VERB_SHARE ||
-				postData.verb === GROUP_POST_VERB_SHARE
+				postData.verb === POST_VERB_SHARE
 			) {
 				if (postData.verb === POST_VERB) {
 					dataToShare = {
@@ -50,10 +52,17 @@ const PostActionBar = ({ postData, handleLikeAction }) => {
 						type: 'postShare',
 						verb: POST_VERB_SHARE,
 					};
-				} else if (postData.verb === GROUP_POST_VERB_SHARE) {
+				} else if (location.pathname.includes('book/detail') || location.pathname.includes('/review/')) {
+					const newDataShare = {
+						book: { ...currentBook, actorRating: { star: postData.rate }, progress: postData.curProgress },
+						createdBy: { ...postData.createdBy },
+						message: postData.content,
+						time: postData.createdAt,
+					};
+
 					dataToShare = {
-						verb: GROUP_POST_VERB_SHARE,
-						...postData,
+						verb: POST_VERB_SHARE,
+						sharePost: { ...newDataShare },
 					};
 				} else {
 					dataToShare = {
@@ -68,7 +77,7 @@ const PostActionBar = ({ postData, handleLikeAction }) => {
 					verb: QUOTE_VERB_SHARE,
 				};
 			} else if (
-				location.pathname.includes('group') ||
+				location.pathname.includes('/group/') ||
 				postData.verb === GROUP_POST_VERB ||
 				postData.verb === GROUP_POST_VERB_SHARE
 			) {
@@ -140,8 +149,9 @@ const PostActionBar = ({ postData, handleLikeAction }) => {
 					...postData.info,
 				};
 			}
+
 			dispatch(saveDataShare(dataToShare));
-			if (!location.pathname.includes('group')) {
+			if (!location.pathname.includes('/group/')) {
 				navigate('/');
 			}
 		}
@@ -167,6 +177,10 @@ const PostActionBar = ({ postData, handleLikeAction }) => {
 		}
 	};
 
+	const handleDirectToReview = () => {
+		navigate(`/review/${postData.bookId}/${postData.actor}`);
+	};
+
 	return (
 		<div className='post-action-bar'>
 			<div data-testid='post__options__like-btn' className='post-action-bar__item' onClick={handleLikeAction}>
@@ -182,6 +196,12 @@ const PostActionBar = ({ postData, handleLikeAction }) => {
 				<Share />
 				<div className='post-action-bar__title'>{postData.share || null} Chia sẻ</div>
 			</div>
+			{location.pathname.includes('book/detail') && (
+				<div onClick={handleDirectToReview} className='post-action-bar__item'>
+					<Eye />
+					<div className='post-action-bar__title'>Xem Review</div>
+				</div>
+			)}
 		</div>
 	);
 };

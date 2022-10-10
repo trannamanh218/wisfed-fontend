@@ -29,6 +29,7 @@ const TopUser = ({ rows, listYear, tabSelected }) => {
 	const [modalShow, setModalShow] = useState(false);
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
+
 	const listDataSortType = [
 		{ value: 'topRead', title: 'Đọc nhiều nhất' },
 		{ value: 'topReview', title: 'Review nhiều nhất' },

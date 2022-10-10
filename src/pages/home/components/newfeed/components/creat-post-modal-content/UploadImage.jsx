@@ -27,7 +27,7 @@ const UploadImage = props => {
 				}
 			} else {
 				const toastId = 'create-post-modal-content-upload-img';
-				toast.warning('Chỉ được chọn ảnh PNG, JPG, JPEG', { toastId: toastId });
+				toast.warning('Chỉ được chọn ảnh PNG, JPG, JPEG và không được quá 3MB', { toastId: toastId });
 			}
 		},
 		[images]
@@ -47,6 +47,7 @@ const UploadImage = props => {
 		accept: ['.png', '.jpeg', '.jpg'],
 		onDrop,
 		multiple: true,
+		maxSize: 3000000,
 	});
 
 	if (images.length) {

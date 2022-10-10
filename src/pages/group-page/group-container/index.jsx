@@ -1,6 +1,6 @@
 import { BackArrow } from 'components/svg';
 import { useEffect, useState, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import MainLayout from './mainLayout';
 import SidebarLeft from './sidebarLeft';
 import PopupCreateGroup from '../PopupCreateGroup';
@@ -17,10 +17,15 @@ import { Modal } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import Layout from 'components/layout';
 
-const SearchGroup = ({ valueInput, handleChange, handleShowModal }) => {
+export const SearchGroup = ({ valueInput, handleChange, handleShowModal }) => {
 	const navigate = useNavigate();
+	const location = useLocation();
 	const handleClick = () => {
-		navigate('/');
+		if (location.pathname.includes('/group')) {
+			navigate('/');
+		} else {
+			navigate('/group');
+		}
 	};
 
 	return (
@@ -99,8 +104,12 @@ const LayoutGroup = () => {
 								handleShowModal={() => setShow(true)}
 							/>
 						}
-						right={<SidebarLeft listMyGroup={myGroup} listAdminMyGroup={adminGroup} />}
-						main={<MainLayout />}
+						right={
+							(myGroup.length > 0 || adminGroup.length > 0) && (
+								<SidebarLeft listMyGroup={myGroup} listAdminMyGroup={adminGroup} />
+							)
+						}
+						main={<MainLayout listMyGroup={myGroup} listAdminMyGroup={adminGroup} />}
 					/>
 				) : (
 					<div className='result-search'>

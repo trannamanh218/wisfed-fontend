@@ -115,13 +115,9 @@ const postSlice = createSlice({
 		isFetching: false,
 		postInfo: {},
 		error: {},
-		// resetTaggedData: false,
 		postDataShare: {},
 	},
 	reducers: {
-		// resetTaggedDataFunc: (state, action) => {
-		// 	state.resetTaggedData = action.payload;
-		// },
 		saveDataShare: (state, action) => {
 			state.postDataShare = action.payload;
 		},
@@ -142,6 +138,6 @@ const postSlice = createSlice({
 	},
 });
 
-export const { resetTaggedDataFunc, saveDataShare } = postSlice.actions;
+export const { saveDataShare } = postSlice.actions;
 const post = postSlice.reducer;
 export default post;

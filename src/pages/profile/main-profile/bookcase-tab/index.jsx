@@ -11,7 +11,7 @@ import { NotificationError } from 'helpers/Error';
 import { useDispatch, useSelector } from 'react-redux';
 import _ from 'lodash';
 import Circle from 'shared/loading/circle';
-import { updateTitleReviewPage, updateDirectFromProfile } from 'reducers/redux-utils/common';
+import { updateTitleReviewPage } from 'reducers/redux-utils/common';
 import PropTypes from 'prop-types';
 import { updateCurrentBook } from 'reducers/redux-utils/book';
 import { getAllLibraryList } from 'reducers/redux-utils/library';
@@ -105,7 +105,6 @@ function Bookcase({ currentUserInfo, currentTab }) {
 			const bookData = await dispatch(getBookDetail(book.id)).unwrap();
 			if (!_.isEmpty(bookData)) {
 				dispatch(updateTitleReviewPage(`Bài Review về ${book.name} của ${currentUserInfo.fullName}`));
-				dispatch(updateDirectFromProfile(true));
 				setStatus(STATUS_SUCCESS);
 				navigate(`/review/${book.id}/${currentUserInfo.id}`);
 			}

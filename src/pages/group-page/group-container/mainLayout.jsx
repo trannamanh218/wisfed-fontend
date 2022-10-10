@@ -8,9 +8,10 @@ import { useDispatch } from 'react-redux';
 import { getRecommendGroup } from 'reducers/redux-utils/group';
 import { NotificationError } from 'helpers/Error';
 import defaultAvatar from 'assets/images/Rectangle 17435.png';
+import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 
-const MainLayout = () => {
+const MainLayout = ({ listMyGroup, listAdminMyGroup }) => {
 	const [list, setList] = useState([]);
 	const [hasMore, setHasMore] = useState(true);
 
@@ -80,7 +81,13 @@ const MainLayout = () => {
 							hasMore={hasMore}
 							loader={<LoadingIndicator />}
 						>
-							<div className='list-group-container'>
+							<div
+								className={
+									listMyGroup.length > 0 || listAdminMyGroup.length > 0
+										? 'list-group-container'
+										: 'list-group-container--none'
+								}
+							>
 								{list.map((item, index) => {
 									return (
 										<Link key={index} to={`/group/${item.id}`}>
@@ -120,6 +127,11 @@ const MainLayout = () => {
 			)}
 		</>
 	);
+};
+
+MainLayout.propTypes = {
+	listMyGroup: PropTypes.array,
+	listAdminMyGroup: PropTypes.array,
 };
 
 export default MainLayout;

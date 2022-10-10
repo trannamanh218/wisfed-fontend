@@ -24,7 +24,6 @@ const Review = () => {
 
 	const bookInfoRedux = useSelector(state => state.book.bookInfo);
 	const titleReviewPage = useSelector(state => state.common.titleReviewPage);
-	const directedFromProfile = useSelector(state => state.common.directedFromProfile);
 	const reviewIdFromNotification = useSelector(state => state.notificationReducer.reviewIdFromNotification);
 
 	const dispatch = useDispatch();
@@ -43,10 +42,7 @@ const Review = () => {
 		if (reviewIdFromNotification) {
 			setFilter([{ 'operator': 'eq', 'value': reviewIdFromNotification, 'property': 'id' }]);
 		} else {
-			setFilter([
-				{ operator: 'eq', value: bookId, property: 'bookId' },
-				{ operator: 'eq', value: userId, property: 'updatedBy' },
-			]);
+			setFilter([{ operator: 'eq', value: userId, property: 'createdBy' }]);
 		}
 	}, [bookId]);
 
@@ -65,8 +61,8 @@ const Review = () => {
 				sort: JSON.stringify([{ direction: 'DESC', property: 'createdAt' }]),
 				filter: JSON.stringify(filter),
 			};
-			const response = await dispatch(getReviewsBook(params)).unwrap();
-			setListReview(response);
+			const response = await dispatch(getReviewsBook({ bookId, params })).unwrap();
+			setListReview(response.rows);
 		} catch (err) {
 			NotificationError(err);
 		}
@@ -98,10 +94,7 @@ const Review = () => {
 					<div className='review'>
 						<div className='review__header'>
 							<div>
-								<BackButton
-									destination={directedFromProfile ? `/profile/${userId}` : `/shelves/${userId}`}
-									className='review__header__btn'
-								/>
+								<BackButton destination={-1} className='review__header__btn' />
 							</div>
 							<h4>{title}</h4>
 						</div>

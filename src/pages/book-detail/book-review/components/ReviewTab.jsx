@@ -3,12 +3,7 @@ import FilterPane from 'shared/filter-pane';
 import SearchField from 'shared/search-field';
 import Post from 'shared/post';
 import FitlerOptions from 'shared/filter-options';
-import {
-	getReviewsBook,
-	getReviewsBookByFollowers,
-	getReviewsBookByFriends,
-	createReviewBook,
-} from 'reducers/redux-utils/book';
+import { getReviewsBook, getReviewsBookByFollowers, getReviewsBookByFriends } from 'reducers/redux-utils/book';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
@@ -69,18 +64,16 @@ const ReviewTab = ({ currentTab }) => {
 	const [reviewCount, setReviewCount] = useState(0);
 	const [hasMore, setHasMore] = useState(true);
 	const { modalOpen, toggleModal } = useModal(false);
-	const [sortValue, setSortValue] = useState('mostLiked');
 	const [checkedStarArr, setCheckedStarArr] = useState([]);
-	const [directionSort, setDirectionSort] = useState('DESC');
-	const [propertySort, setPropertySort] = useState('like');
 	const [inputSearch, setInputSearch] = useState('');
 	const [topUser, setTopUser] = useState('');
-	const [filterRate, setFilterRate] = useState(false);
 	const [showModalCreatPost, setShowModalCreatPost] = useState(false);
 	const [option, setOption] = useState({});
-
+	const [bookInfoProp, setBookInfoProp] = useState({});
+	const [isLoading, setIsLoading] = useState(false);
 	const [inputSearchUpdated, setInputSearchUpdated] = useState(true);
-	const [filter, setFilter] = useState([]);
+	const [sort, setSort] = useState([{ direction: 'DESC', property: 'like' }]);
+	const [sortValue, setSortValue] = useState(radioOptions[0].value);
 
 	const initialCallApiStartValue = useRef(10);
 	const callApiStart = useRef(initialCallApiStartValue.current);
@@ -92,43 +85,32 @@ const ReviewTab = ({ currentTab }) => {
 
 	const bookInfo = useSelector(state => state.book.bookInfo);
 
-	const [bookInfoProp, setBookInfoProp] = useState({});
-
 	useEffect(() => {
-		const cloneObj = { ...bookInfo };
-		cloneObj.progress = undefined;
+		const cloneObj = { ...bookInfo, progress: null, status: null };
 		setBookInfoProp(cloneObj);
 	}, []);
 
 	useEffect(() => {
 		if (currentTab === 'reviews') {
+			setHasMore(true);
 			callApiStart.current = initialCallApiStartValue.current;
 			getReviewListFirstTime();
 		}
-	}, [currentOption, currentTab, directionSort, propertySort, inputSearchUpdated]);
+	}, [currentOption, currentTab, sort, topUser, inputSearchUpdated]);
 
 	const getReviewListFirstTime = async () => {
+		setIsLoading(true);
 		try {
-			let params;
-			if (filterRate) {
-				params = {
-					start: 0,
-					limit: callApiPerPage.current,
-					sort: JSON.stringify([{ direction: directionSort, property: propertySort }]),
-					filter: JSON.stringify([
-						{ operator: 'eq', value: bookId, property: 'bookId' },
-						{ operator: 'in', value: checkedStarArr, property: 'rate' },
-					]),
-				};
-			} else {
-				params = {
-					start: 0,
-					limit: callApiPerPage.current,
-					search: inputSearch.toLocaleLowerCase().trim(),
-					sort: JSON.stringify([{ direction: directionSort, property: propertySort }]),
-					// filter: JSON.stringify([{ operator: 'eq', value: bookId, property: 'bookId' }]),
-				};
-			}
+			const params = {
+				start: 0,
+				limit: callApiPerPage.current,
+				search: inputSearch.toLocaleLowerCase().trim(),
+				sort: JSON.stringify(sort),
+				filter: JSON.stringify(
+					checkedStarArr.length ? [{ operator: 'in', value: checkedStarArr, property: 'rate' }] : []
+				),
+				topUser: topUser,
+			};
 
 			let response;
 			if (currentOption.value === 'allReviews') {
@@ -148,31 +130,21 @@ const ReviewTab = ({ currentTab }) => {
 			}
 		} catch (err) {
 			NotificationError(err);
+		} finally {
+			setIsLoading(false);
 		}
 	};
 
 	const getReviewList = async () => {
 		try {
-			let params = {};
-			if (sortValue === 'oldest' || sortValue === 'lastest' || sortValue === 'mostLiked' || filterRate === true) {
-				params = {
-					start: callApiStart.current,
-					limit: callApiPerPage.current,
-					sort: JSON.stringify([{ direction: directionSort, property: propertySort }]),
-					filter: JSON.stringify([
-						{ operator: 'eq', value: bookId, property: 'bookId' },
-						{ operator: 'in', value: checkedStarArr, property: 'rate' },
-					]),
-				};
-			} else {
-				params = {
-					start: callApiStart.current,
-					limit: callApiPerPage.current,
-					sort: JSON.stringify([{ direction: directionSort, property: propertySort }]),
-					// filter: JSON.stringify([{ operator: 'eq', value: bookId, property: 'bookId' }]),
-					// topUser: topUser,
-				};
-			}
+			const params = {
+				start: callApiStart.current,
+				limit: callApiPerPage.current,
+				search: inputSearch.toLocaleLowerCase().trim(),
+				sort: JSON.stringify(sort),
+				filter: JSON.stringify([]),
+				topUser: topUser,
+			};
 
 			let response;
 			if (currentOption.value === 'allReviews') {
@@ -195,66 +167,76 @@ const ReviewTab = ({ currentTab }) => {
 		}
 	};
 
-	const updateInputSearch = () => {
-		console.log('ok');
-		setInputSearchUpdated(!inputSearchUpdated);
-	};
-
-	const debounceSearch = useCallback(_.debounce(updateInputSearch, 700), []);
+	// xử lý cập nhật giá trị tìm kiếm
+	const debounceSearch = useCallback(
+		_.debounce(() => {
+			setInputSearchUpdated(prev => !prev);
+		}, 700),
+		[]
+	);
 
 	const ChangeSearch = e => {
 		setInputSearch(e.target.value);
 		debounceSearch();
 	};
+	//--------------------------------------------
 
 	const handleChangeOption = item => {
 		setCurrentOption(item);
 	};
 
+	// thêm các tùy chọn vào modal tạo review
+	const onChangeOption = data => {
+		setOption(data);
+	};
+
+	// xử lý khi tích chọn lọc theo số sao
+	const handleChangeStar = data => {
+		const arrTemp = [...checkedStarArr];
+		if (arrTemp.includes(data)) {
+			const index = arrTemp.indexOf(data);
+			arrTemp.splice(index, 1);
+		} else {
+			arrTemp.push(data);
+		}
+		setCheckedStarArr(arrTemp);
+	};
+
+	// nút xác nhận của modal sắp xếp và lọc reviews
 	const onBtnConfirmClick = () => {
 		switch (sortValue) {
-			case 'oldest':
-				setPropertySort('createdAt');
-				setDirectionSort('ASC');
+			case 'mostLiked':
+				setSort([{ direction: 'DESC', property: 'like' }]);
+				setTopUser('');
 				break;
 			case 'lastest':
-				setPropertySort('createdAt');
-				setDirectionSort('DESC');
+				setSort([{ direction: 'DESC', property: 'createdAt' }]);
+				setTopUser('');
 				break;
-			case 'mostLiked':
-				setPropertySort('like');
-				setDirectionSort('DESC');
+			case 'oldest':
+				setSort([{ direction: 'ASC', property: 'createdAt' }]);
+				setTopUser('');
 				break;
 			case 'follow':
+				setSort([{ direction: 'DESC', property: 'like' }]);
 				setTopUser('follow');
 				break;
 			case 'review':
+				setSort([{ direction: 'DESC', property: 'like' }]);
 				setTopUser('review');
 				break;
-			case 'rate':
-				getReviewListFirstTime();
-				break;
 			default:
+				break;
 		}
+		toggleModal();
 	};
 
+	// xử lý khi chọn radio
 	const handleChange = data => {
 		setSortValue(data);
 	};
 
-	const handleChangeStar = data => {
-		if (checkedStarArr.length < 1) {
-			setCheckedStarArr([...checkedStarArr, data]);
-		} else if (!checkedStarArr.includes(data)) {
-			setCheckedStarArr([...checkedStarArr, data]);
-		} else if (checkedStarArr.includes(data)) {
-			const newArr = checkedStarArr.filter(item => item !== data);
-			setCheckedStarArr(newArr);
-		}
-		if (checkedStarArr.length == 0) setFilterRate(false);
-		else setFilterRate(true);
-	};
-
+	// xử lý tắt modal tạo review
 	useEffect(() => {
 		if (showModalCreatPost) {
 			creatPostModalContainer.current.addEventListener('mousedown', e => {
@@ -268,10 +250,7 @@ const ReviewTab = ({ currentTab }) => {
 	const hideCreatePostModal = () => {
 		setShowModalCreatPost(false);
 	};
-
-	const onChangeOption = data => {
-		setOption(data);
-	};
+	//-----------------------------------------------------------
 
 	return (
 		<div className='review-tab'>
@@ -300,23 +279,35 @@ const ReviewTab = ({ currentTab }) => {
 						autoFocus={false}
 					/>
 				</div>
-				{currentTab === 'reviews' && reviewList?.length ? (
-					<InfiniteScroll
-						dataLength={reviewList?.length}
-						next={getReviewList}
-						hasMore={hasMore}
-						loader={<LoadingIndicator />}
-						className='review-tab__list'
-					>
-						{reviewList.map(item => (
-							<Fragment key={`post-${item.id}`}>
-								<Post className='post-container--review' postInformations={item} type={REVIEW_TYPE} />
-								<hr />
-							</Fragment>
-						))}
-					</InfiniteScroll>
+				{isLoading ? (
+					<div style={{ margin: '28px 0 300px' }}>
+						<LoadingIndicator />
+					</div>
 				) : (
-					<h5 className='review-tab__no-data'>Chưa có bài Review nào</h5>
+					<>
+						{reviewList?.length ? (
+							<InfiniteScroll
+								dataLength={reviewList?.length}
+								next={getReviewList}
+								hasMore={hasMore}
+								loader={<LoadingIndicator />}
+								className='review-tab__list'
+							>
+								{reviewList.map(item => (
+									<Fragment key={`post-${item.id}`}>
+										<Post
+											className='post-container--review'
+											postInformations={item}
+											type={REVIEW_TYPE}
+										/>
+										<hr />
+									</Fragment>
+								))}
+							</InfiniteScroll>
+						) : (
+							<h5 className='review-tab__no-data'>Chưa có bài Review nào</h5>
+						)}
+					</>
 				)}
 			</FilterPane>
 
@@ -394,13 +385,7 @@ const ReviewTab = ({ currentTab }) => {
 							/>
 						</div>
 						<div className='sort-review-modal__item' style={{ marginTop: '10px' }}>
-							<Button
-								className='btn'
-								varient='primary'
-								onClick={() => {
-									onBtnConfirmClick(), toggleModal();
-								}}
-							>
+							<Button className='btn' varient='primary' onClick={onBtnConfirmClick}>
 								Xác nhận
 							</Button>
 						</div>
@@ -413,12 +398,11 @@ const ReviewTab = ({ currentTab }) => {
 						hideCreatePostModal={hideCreatePostModal}
 						showModalCreatPost={showModalCreatPost}
 						option={option}
-						setOption={setOption}
 						onChangeOption={onChangeOption}
 						onChangeNewPost={getReviewListFirstTime}
 						setShowModalCreatPost={setShowModalCreatPost}
 						showSubModal={false}
-						bookInfoProp={bookInfoProp}
+						bookForCreatePost={bookInfoProp}
 					/>
 				</div>
 			)}

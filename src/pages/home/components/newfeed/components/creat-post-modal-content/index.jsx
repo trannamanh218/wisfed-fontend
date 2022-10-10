@@ -66,7 +66,6 @@ function CreatPostModalContent({
 	setShowModalCreatPost,
 	showModalCreatPost,
 	option,
-	setOption,
 	onChangeOption,
 	onChangeNewPost,
 	showSubModal,
@@ -101,7 +100,7 @@ function CreatPostModalContent({
 
 	const UpdateImg = useSelector(state => state.chart.updateImgPost);
 	const chartImgShare = useSelector(state => state.chart.updateImgPost);
-	const { resetTaggedData, postDataShare } = useSelector(state => state.post);
+	const { postDataShare } = useSelector(state => state.post);
 	const {
 		auth: { userInfo },
 		book: { bookInfo },
@@ -112,26 +111,6 @@ function CreatPostModalContent({
 	const { id } = useParams();
 
 	const { optionList, shareModeList } = setting; // k xóa shareModeList
-
-	useEffect(() => {
-		// Dùng cho khi mở lên từ book detail
-		// 		if (!_.isEmpty(bookInfoProp)) {
-		// 			const cloneArr = [...optionList];
-		// 			cloneArr.splice(0, 1);
-		// 			setOptionListState(cloneArr);
-		//
-		// 			const newObj = {
-		// 				...taggedData,
-		// 				addBook: bookInfoProp,
-		// 			};
-		// 			// console.log(newObj);
-		// 			setTaggedData(newObj);
-		// 		} else {
-		setOptionListState(optionList);
-		// }
-	}, []);
-
-	console.log('tagged', taggedData);
 
 	useEffect(() => {
 		const textFieldEdit = document.querySelector('.creat-post-modal-content__main__body__text-field-edit-wrapper');
@@ -146,6 +125,14 @@ function CreatPostModalContent({
 			setShowUpload(true);
 			setImagesUpload(UpdateImg);
 		}
+
+		if (!_.isEmpty(bookForCreatePost)) {
+			const cloneArr = [...optionList];
+			cloneArr.splice(0, 1);
+			setOptionListState(cloneArr);
+		} else {
+			setOptionListState(optionList);
+		}
 	}, []);
 
 	useEffect(() => {
@@ -157,14 +144,6 @@ function CreatPostModalContent({
 			setShowUpload(false);
 		}
 	}, [bookForCreatePost]);
-
-	// useEffect(() => {
-	// 	if (resetTaggedData) {
-	// 		setTaggedData({ 'addBook': {}, 'addAuthor': [], 'addFriends': [], 'addCategory': [] });
-	// 		setImagesUpload([]);
-	// 		setShowUpload(false);
-	// 	}
-	// }, [resetTaggedData]);
 
 	useEffect(() => {
 		if (urlAdded) {
@@ -209,7 +188,7 @@ function CreatPostModalContent({
 
 	const backToMainModal = () => {
 		setShowMainModal(true);
-		setOption({});
+		onChangeOption({});
 	};
 
 	const addOptionsToPost = param => {
@@ -445,7 +424,7 @@ function CreatPostModalContent({
 				}
 			} else {
 				if (params.bookId) {
-					if (params.msg) {
+					if (params.msg && params.progress > 0) {
 						const reviewData = {
 							bookId: params.bookId,
 							mediaUrl: [],
@@ -458,6 +437,7 @@ function CreatPostModalContent({
 								taggedData.addBook.status === 'read' || progressInputValue === taggedData.addBook.page
 									? valueStar
 									: 0,
+							tags: params.tags,
 						};
 						dispatch(createReviewBook(reviewData));
 					}
@@ -508,12 +488,18 @@ function CreatPostModalContent({
 	const checkActive = () => {
 		let isActive = false;
 		if (!_.isEmpty(taggedData.addBook)) {
-			if (taggedData.addBook.status === 'read' || taggedData.addBook.page === progressInputValue) {
-				if (content) {
+			if (window.location.pathname.includes('book/detail')) {
+				if (content && progressInputValue > 0) {
 					isActive = true;
 				}
 			} else {
-				isActive = true;
+				if (taggedData.addBook.status === 'read' || taggedData.addBook.page === progressInputValue) {
+					if (content) {
+						isActive = true;
+					}
+				} else {
+					isActive = true;
+				}
 			}
 		} else if (
 			content &&
