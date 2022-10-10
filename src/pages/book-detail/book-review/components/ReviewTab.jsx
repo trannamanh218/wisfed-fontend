@@ -70,7 +70,6 @@ const ReviewTab = ({ currentTab }) => {
 	const [showModalCreatPost, setShowModalCreatPost] = useState(false);
 	const [option, setOption] = useState({});
 	const [bookInfoProp, setBookInfoProp] = useState({});
-
 	const [isLoading, setIsLoading] = useState(false);
 	const [inputSearchUpdated, setInputSearchUpdated] = useState(true);
 	const [sort, setSort] = useState([{ direction: 'DESC', property: 'like' }]);
@@ -107,7 +106,9 @@ const ReviewTab = ({ currentTab }) => {
 				limit: callApiPerPage.current,
 				search: inputSearch.toLocaleLowerCase().trim(),
 				sort: JSON.stringify(sort),
-				filter: JSON.stringify([]),
+				filter: JSON.stringify(
+					checkedStarArr.length ? [{ operator: 'in', value: checkedStarArr, property: 'rate' }] : []
+				),
 				topUser: topUser,
 			};
 

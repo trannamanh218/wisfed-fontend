@@ -21,7 +21,6 @@ import {
 } from 'reducers/redux-utils/library';
 import './setting-more.scss';
 import { NotificationError } from 'helpers/Error';
-import { updateDirectFromProfile } from 'reducers/redux-utils/common';
 import { updateCurrentBook } from 'reducers/redux-utils/book';
 
 const SettingMore = ({ bookData, handleUpdateBookList }) => {
@@ -67,7 +66,6 @@ const SettingMore = ({ bookData, handleUpdateBookList }) => {
 	};
 
 	const hanldeReviewBook = () => {
-		dispatch(updateDirectFromProfile(false));
 		navigate(`/review/${bookData.id}/${userId}`);
 	};
 

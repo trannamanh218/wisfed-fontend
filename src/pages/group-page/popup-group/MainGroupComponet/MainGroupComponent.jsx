@@ -210,7 +210,7 @@ function MainGroupComponent({ handleChange, keyChange, data, member, handleUpdat
 			handleUpload(imgFile);
 		} else {
 			const customId = 'main-group-upload-bg-img';
-			toast.warning('Chỉ được chọn ảnh PNG, JPG, JPEG', { toastId: customId });
+			toast.warning('Chỉ được chọn ảnh PNG, JPG, JPEG và không được quá 3MB', { toastId: customId });
 		}
 	};
 
@@ -230,6 +230,7 @@ function MainGroupComponent({ handleChange, keyChange, data, member, handleUpdat
 						onDrop={acceptedFiles => handleChangeGroupImage(acceptedFiles)}
 						multiple={false}
 						accept={['.png', '.jpeg', '.jpg']}
+						maxSize={3000000}
 					>
 						{({ getRootProps, getInputProps }) => (
 							<div {...getRootProps()}>

@@ -437,6 +437,7 @@ function CreatPostModalContent({
 								taggedData.addBook.status === 'read' || progressInputValue === taggedData.addBook.page
 									? valueStar
 									: 0,
+							tags: params.tags,
 						};
 						dispatch(createReviewBook(reviewData));
 					}

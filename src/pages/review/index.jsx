@@ -24,7 +24,6 @@ const Review = () => {
 
 	const bookInfoRedux = useSelector(state => state.book.bookInfo);
 	const titleReviewPage = useSelector(state => state.common.titleReviewPage);
-	const directedFromProfile = useSelector(state => state.common.directedFromProfile);
 	const reviewIdFromNotification = useSelector(state => state.notificationReducer.reviewIdFromNotification);
 
 	const dispatch = useDispatch();
@@ -95,10 +94,7 @@ const Review = () => {
 					<div className='review'>
 						<div className='review__header'>
 							<div>
-								<BackButton
-									destination={directedFromProfile ? `/profile/${userId}` : `/shelves/${userId}`}
-									className='review__header__btn'
-								/>
+								<BackButton destination={-1} className='review__header__btn' />
 							</div>
 							<h4>{title}</h4>
 						</div>

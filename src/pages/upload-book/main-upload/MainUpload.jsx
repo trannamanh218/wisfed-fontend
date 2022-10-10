@@ -216,7 +216,7 @@ export default function MainUpload() {
 	useEffect(() => {
 		if (image && !image.length) {
 			const toastId = 'main-upload-front-book-cover';
-			toast.warning('Chỉ được chọn ảnh PNG, JPG, JPEG', { toastId: toastId });
+			toast.warning('Chỉ được chọn ảnh PNG, JPG, JPEG và không được quá 3MB', { toastId: toastId });
 		}
 	}, [image]);
 
@@ -237,6 +237,7 @@ export default function MainUpload() {
 					onDrop={acceptedFiles => setImage(acceptedFiles)}
 					multiple={false}
 					accept={['.png', '.jpeg', '.jpg']}
+					maxSize={3000000}
 				>
 					{({ getRootProps, getInputProps }) => (
 						<div {...getRootProps({ className: 'upload-image__wrapper' })}>

@@ -52,18 +52,14 @@ const commonSlice = createSlice({
 	name: 'common',
 	initialState: {
 		titleReviewPage: '',
-		directedFromProfile: true,
 	},
 
 	reducers: {
 		updateTitleReviewPage: (state, action) => {
 			state.titleReviewPage = action.payload;
 		},
-		updateDirectFromProfile: (state, action) => {
-			state.directedFromProfile = action.payload;
-		},
 	},
 });
 
-export const { updateTitleReviewPage, updateDirectFromProfile } = commonSlice.actions;
+export const { updateTitleReviewPage } = commonSlice.actions;
 export default commonSlice.reducer;

@@ -78,7 +78,7 @@ const PersonalInfo = ({ currentUserInfo, setCurrentTab }) => {
 			}
 		} else {
 			const customId = 'profile-upload-image';
-			toast.warning('Chỉ được chọn ảnh PNG, JPG, JPEG', { toastId: customId });
+			toast.warning('Chỉ được chọn ảnh PNG, JPG, JPEG và không được quá 3MB', { toastId: customId });
 		}
 	});
 
@@ -94,6 +94,7 @@ const PersonalInfo = ({ currentUserInfo, setCurrentTab }) => {
 					onDrop={acceptedFile => handleDrop(acceptedFile, 'change-bgImage')}
 					multiple={false}
 					accept={['.png', '.jpeg', '.jpg']}
+					maxSize={3000000}
 				>
 					{({ getRootProps, getInputProps }) => (
 						<div className='edit-wallpaper' {...getRootProps()}>

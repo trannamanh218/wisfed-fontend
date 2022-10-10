@@ -67,13 +67,18 @@ function MainConfirmMyBook() {
 				setImages(newArrayFile);
 			} else {
 				const toastId = 'confirm-my-book-upload-img';
-				toast.warning('Chỉ được chọn ảnh PNG, JPG, JPEG', { toastId: toastId });
+				toast.warning('Chỉ được chọn ảnh PNG, JPG, JPEG và không được quá 3MB', { toastId: toastId });
 			}
 		},
 		[images]
 	);
 
-	const { getRootProps, getInputProps } = useDropzone({ accept: ['.png', '.jpeg', '.jpg'], onDrop, multiple: true });
+	const { getRootProps, getInputProps } = useDropzone({
+		accept: ['.png', '.jpeg', '.jpg'],
+		onDrop,
+		multiple: true,
+		maxSize: 3000000,
+	});
 
 	const submitConfirm = async () => {
 		try {
