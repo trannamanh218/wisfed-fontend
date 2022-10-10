@@ -1,52 +1,53 @@
-import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Routes, Route, useLocation } from 'react-router-dom';
-import { checkLogin, getCheckJwt } from 'reducers/redux-utils/auth';
-import { ToastContainer } from 'react-toastify';
-import 'scss/main.scss';
-import { getAllLibraryList, getAllMyLibraryRedux } from 'reducers/redux-utils/library';
 import { NotificationError } from 'helpers/Error';
 import Storage from 'helpers/Storage';
 import _ from 'lodash';
+import { useEffect } from 'react';
 import 'react-datepicker/dist/react-datepicker.css';
+import { useDispatch, useSelector } from 'react-redux';
+import { Route, Routes, useLocation } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
+import { checkLogin, getCheckJwt } from 'reducers/redux-utils/auth';
 import { changeKey } from 'reducers/redux-utils/forget-password';
+import { getAllLibraryList, getAllMyLibraryRedux } from 'reducers/redux-utils/library';
+import 'scss/main.scss';
 
 // pages and components
 import BookDetail from 'pages/book-detail';
+import BooksAuthor from 'pages/books-author';
 import Category from 'pages/category';
 import CategoryDetail from 'pages/category-detail';
-import Friends from 'pages/friends';
-import Home from 'pages/home';
-import Profile from 'pages/profile';
-import QuoteDetail from 'pages/quote-detail';
-import Quote from 'pages/quote';
-import Review from 'pages/review';
-import BookShelves from 'pages/shelves';
-import ConfirmMyBook from 'pages/confirm-my-book';
-import Notification from 'pages/notification/compornent-main';
-import ModalCheckLogin from 'shared/modal-check-login';
-import BooksAuthor from 'pages/books-author';
-import ReadingSummaryChartAuthor from 'pages/reading-summary-author';
-import DetailFeed from 'pages/home/components/newfeed/components/detailFeed';
-import QuotesByCategory from 'pages/quotes-by-category';
-import UploadBook from 'pages/upload-book/UploadBook';
-import Login from 'pages/login';
-import Register from 'pages/register';
-import ForgetPassWordComponent from 'pages/foget-password/component';
 import ChooseTopic from 'pages/choose-topic';
 import Direct from 'pages/choose-topic/DirectPage';
-import PropTypes from 'prop-types';
-import NotFound from 'pages/not-found';
-import ReadingSummary from 'pages/reading-summary';
-import ReadingTarget from 'pages/reading-target';
+import ConfirmMyBook from 'pages/confirm-my-book';
+import ForgetPassWordComponent from 'pages/foget-password/component';
 import AdminCreateNewPassword from 'pages/foget-password/component-admin/CreateNewPasswordAdmin';
-import LayoutGroup from 'pages/group-page/group-container';
+import Friends from 'pages/friends';
 import DetailFriend from 'pages/friends/component/detail-friend';
-import QuoteAll from 'pages/quote/all-quote/';
 import Group from 'pages/group-page';
-import Ranks from 'pages/ranks';
-import Result from 'pages/result';
+import LayoutGroup from 'pages/group-page/group-container';
+import MyGroup from 'pages/group-page/group-container/MyGroup';
 import HashtagPage from 'pages/hashtag-page';
+import Home from 'pages/home';
+import DetailFeed from 'pages/home/components/newfeed/components/detailFeed';
+import Login from 'pages/login';
+import NotFound from 'pages/not-found';
+import Notification from 'pages/notification/compornent-main';
+import Profile from 'pages/profile';
+import Quote from 'pages/quote';
+import QuoteDetail from 'pages/quote-detail';
+import QuoteAll from 'pages/quote/all-quote/';
+import QuotesByCategory from 'pages/quotes-by-category';
+import Ranks from 'pages/ranks';
+import ReadingSummary from 'pages/reading-summary';
+import ReadingSummaryChartAuthor from 'pages/reading-summary-author';
+import ReadingTarget from 'pages/reading-target';
+import Register from 'pages/register';
+import Result from 'pages/result';
+import Review from 'pages/review';
+import BookShelves from 'pages/shelves';
+import UploadBook from 'pages/upload-book/UploadBook';
+import PropTypes from 'prop-types';
+import ModalCheckLogin from 'shared/modal-check-login';
 
 function App({ children }) {
 	const dispatch = useDispatch();
@@ -135,6 +136,7 @@ function App({ children }) {
 				<Route path='/reading-target/:userId' element={<ReadingTarget />} />
 				<Route path='/group' element={<LayoutGroup />} />
 				<Route path='/group/:id' element={<Group />} />
+				<Route path='/my-group' element={<MyGroup />} />
 				<Route path='/hashtag/:hashtag' element={<HashtagPage />} />
 				<Route path='/hashtag-group/:groupId/:hashtag' element={<HashtagPage />} />
 				<Route path='/' element={<Home />} />
