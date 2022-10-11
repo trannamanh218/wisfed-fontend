@@ -49,23 +49,19 @@ function PostTab({ currentTab }) {
 
 	return (
 		<div className='post-tab'>
-			{currentTab === 'post' && !!postList.length && (
+			{currentTab === 'post' && !!postList.length ? (
 				<InfiniteScroll
 					dataLength={postList.length}
 					next={getPostListByUser}
 					hasMore={hasMore}
 					loader={<LoadingIndicator />}
 				>
-					{postList.length > 0 ? (
-						<>
-							{postList.map(item => (
-								<Post key={item.id} postInformations={item} type={POST_TYPE} />
-							))}
-						</>
-					) : (
-						<p className='blank-content'>Không có bài viết nào</p>
-					)}
+					{postList.map(item => (
+						<Post key={item.id} postInformations={item} type={POST_TYPE} />
+					))}
 				</InfiniteScroll>
+			) : (
+				<p className='post-data__blank'>Không có bài viết nào</p>
 			)}
 		</div>
 	);
