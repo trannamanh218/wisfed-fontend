@@ -12,9 +12,8 @@ import LoadingIndicator from 'shared/loading-indicator';
 import ModalSearchCategories from '../modal-search-categories/ModalSearchCategories';
 import dropdownIcon from 'assets/images/dropdown.png';
 
-const TopBooks = ({ rows, listYear, tabSelected }) => {
+const TopBooks = ({ listYear, tabSelected }) => {
 	const kindOfGroupRef = useRef({ value: 'default', title: 'Chủ đề' });
-	const [categoryOption, setCategoryOption] = useState({});
 	const listYearRef = useRef({ value: 'default', title: 'Tuần' });
 	const { isAuth } = useSelector(state => state.auth);
 	const [topBooksId, setTopBooksId] = useState(null);
@@ -68,12 +67,10 @@ const TopBooks = ({ rows, listYear, tabSelected }) => {
 
 	useEffect(() => {
 		if (category) {
-			setCategoryOption(category);
+			kindOfGroupRef.current = { value: category.value, title: category.title };
 			setTopBooksId(category.value);
 			getTopBooksDataWhenAccessFromCategory(category);
 			localStorage.removeItem('category');
-		} else {
-			setCategoryOption(kindOfGroupRef.current);
 		}
 	}, []);
 
@@ -92,16 +89,22 @@ const TopBooks = ({ rows, listYear, tabSelected }) => {
 	return (
 		<div className='topbooks__container'>
 			<ModalCheckLogin setModalShow={setModalShow} modalShow={modalShow} />
-			<ModalSearchCategories
-				setModalSearchCategoriesShow={setModalSearchCategoriesShow}
-				modalSearchCategoriesShow={modalSearchCategoriesShow}
-			/>
+			{modalSearchCategoriesShow && (
+				<ModalSearchCategories
+					setModalSearchCategoriesShow={setModalSearchCategoriesShow}
+					modalSearchCategoriesShow={modalSearchCategoriesShow}
+					onSelectCategory={onchangeKindOfGroup}
+				/>
+			)}
+
 			<div className='topbooks__container__title'>TOP 100 Cuốn sách tốt nhất</div>
 			<div className='topbooks__container__sort'>
 				<div className='topbooks__container__sort__left' onClick={() => setModalSearchCategoriesShow(true)}>
 					<div className='select-box'>
 						<div className='select-box__btn'>
-							<span className='select-box__value'>Chủ đề</span>
+							<span className='select-box__value'>
+								{kindOfGroupRef.current.title || kindOfGroupRef.current.name || 'Chủ đề'}
+							</span>
 							<img className='select-box__icon' src={dropdownIcon} alt='dropdown' />
 						</div>
 					</div>

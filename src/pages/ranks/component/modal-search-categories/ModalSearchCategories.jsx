@@ -1,8 +1,6 @@
 import { useState } from 'react';
 import { Modal } from 'react-bootstrap';
 import SearchField from 'shared/search-field';
-import StatusItem from 'components/status-button/components/book-shelves-list/StatusItem';
-import { CircleCheckIcon, CoffeeCupIcon, TargetIcon } from 'components/svg';
 import './ModalSearchCategories.scss';
 import { getCategoryList } from 'reducers/redux-utils/category/index';
 import { useEffect, useCallback } from 'react';
@@ -10,19 +8,20 @@ import { NotificationError } from 'helpers/Error';
 import { useDispatch } from 'react-redux';
 import _ from 'lodash';
 
-const ModalSearchCategories = ({ modalSearchCategoriesShow, setModalSearchCategoriesShow }) => {
+const ModalSearchCategories = ({ modalSearchCategoriesShow, setModalSearchCategoriesShow, onSelectCategory }) => {
 	const dispatch = useDispatch();
 
 	const [inputSearch, setInputSearch] = useState('');
-	const [valueSearch, setValueSearch] = useState('');
-	const [shearchedList, setSearchedList] = useState([]);
+	const [searchedList, setSearchedList] = useState([]);
+	const [filter, setFilter] = useState('[]');
 
-	const updateInputSearch = value => {
+	const updateFilter = value => {
 		if (value) {
-			setValueSearch(value.toLowerCase().trim());
+			setFilter(JSON.stringify([{ operator: 'search', value: value.toLowerCase().trim(), property: 'name' }]));
 		} else {
-			setValueSearch('');
+			setFilter('[]');
 		}
+		console.log(1);
 	};
 
 	const handleSearch = e => {
@@ -30,25 +29,22 @@ const ModalSearchCategories = ({ modalSearchCategoriesShow, setModalSearchCatego
 		debounceSearch(e.target.value);
 	};
 
-	const debounceSearch = useCallback(_.debounce(updateInputSearch, 700), []);
+	const debounceSearch = useCallback(_.debounce(updateFilter, 700), []);
 
 	useEffect(async () => {
 		const query = {
 			start: 0,
 			limit: 10,
 			sort: JSON.stringify([{ property: 'createdAt', direction: 'DESC' }]),
-			filter: JSON.stringify([{ operator: 'search', value: valueSearch, property: 'name' }]),
+			filter: filter,
 		};
-
 		try {
-			if (inputSearch.length > 0) {
-				const result = await dispatch(getCategoryList({ option: true, params: query })).unwrap();
-				setSearchedList(result.rows);
-			}
+			const result = await dispatch(getCategoryList({ option: false, params: query })).unwrap();
+			setSearchedList(result.rows);
 		} catch (err) {
 			NotificationError(err);
 		}
-	}, [valueSearch]);
+	}, [filter]);
 
 	return (
 		<Modal
@@ -66,9 +62,16 @@ const ModalSearchCategories = ({ modalSearchCategoriesShow, setModalSearchCatego
 					value={inputSearch}
 				/>
 				<ul className='result-categories-list'>
-					{shearchedList.length ? (
-						shearchedList.map((item, index) => (
-							<div key={index} className='result-categories-item'>
+					{searchedList.length ? (
+						searchedList.map((item, index) => (
+							<div
+								key={index}
+								className='result-categories-item'
+								onClick={() => {
+									onSelectCategory(item);
+									setModalSearchCategoriesShow(false);
+								}}
+							>
 								{item.name}
 							</div>
 						))

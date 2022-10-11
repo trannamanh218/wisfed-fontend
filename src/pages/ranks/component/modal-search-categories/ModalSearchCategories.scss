@@ -1,6 +1,8 @@
 .modal-search-categories {
 	.modal-content {
 		border-radius: 10px;
+		max-width: 479px;
+		max-height: 752px;
 
 		h4 {
 			margin-bottom: 8px;
@@ -15,6 +17,12 @@
 			.result-categories-item {
 				padding: 16px 40px;
 				font-weight: 600;
+				border-radius: 10px;
+			}
+
+			.result-categories-item:hover {
+				background-color: antiquewhite;
+				cursor: pointer;
 			}
 
 			&::-webkit-scrollbar {
