@@ -9,6 +9,8 @@ import { updateCurrentBook } from 'reducers/redux-utils/book';
 import { saveDataShare } from 'reducers/redux-utils/post';
 import { useLocation } from 'react-router-dom';
 import { updateImg } from 'reducers/redux-utils/chart';
+import Storage from 'helpers/Storage';
+import { checkUserLogin } from 'reducers/redux-utils/auth';
 
 function CreatePost({ onChangeNewPost }) {
 	const [showModalCreatPost, setShowModalCreatPost] = useState(false);
@@ -133,21 +135,31 @@ function CreatePost({ onChangeNewPost }) {
 		setOption(data);
 	};
 
+	const handleCheck = item => {
+		if (!Storage.getAccessToken()) {
+			dispatch(checkUserLogin(true));
+		} else {
+			onChangeOption(item);
+			setShowModalCreatPost(true);
+			setShowSubModal(true);
+		}
+	};
+
 	const renderOptionList = () => {
 		return optionList.map(item => (
-			<div
-				className='newfeed__creat-post__options__item'
-				key={item.title}
-				onClick={() => {
-					onChangeOption(item);
-					setShowModalCreatPost(true);
-					setShowSubModal(true);
-				}}
-			>
+			<div className='newfeed__creat-post__options__item' key={item.title} onClick={() => handleCheck(item)}>
 				<div className='newfeed__creat-post__options__item__logo'>{item.icon}</div>
 				<span className='text-'>{item.title.charAt(0).toUpperCase() + item.title.slice(1)}</span>
 			</div>
 		));
+	};
+
+	const handleUserLogin = () => {
+		if (!Storage.getAccessToken()) {
+			dispatch(checkUserLogin(true));
+		} else {
+			setShowModalCreatPost(true);
+		}
 	};
 
 	return (
@@ -157,10 +169,19 @@ function CreatePost({ onChangeNewPost }) {
 				<input
 					className='newfeed__creat-post__input'
 					placeholder='Tạo bài viết của bạn ...'
-					onClick={() => setShowModalCreatPost(true)}
+					onClick={() => {
+						handleUserLogin();
+					}}
 				/>
 			</div>
-			<div className='newfeed__creat-post__options'>{renderOptionList()}</div>
+			<div
+				className='newfeed__creat-post__options'
+				onClick={() => {
+					handleUserLogin();
+				}}
+			>
+				{renderOptionList()}
+			</div>
 			{showModalCreatPost && (
 				<div className='newfeed__creat-post__modal' ref={creatPostModalContainer}>
 					<CreatPostModalContent
