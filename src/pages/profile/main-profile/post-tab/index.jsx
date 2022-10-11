@@ -56,9 +56,15 @@ function PostTab({ currentTab }) {
 					hasMore={hasMore}
 					loader={<LoadingIndicator />}
 				>
-					{postList.map(item => (
-						<Post key={item.id} postInformations={item} type={POST_TYPE} />
-					))}
+					{postList.length > 0 ? (
+						<>
+							{postList.map(item => (
+								<Post key={item.id} postInformations={item} type={POST_TYPE} />
+							))}
+						</>
+					) : (
+						<p className='blank-content'>Không có bài viết nào</p>
+					)}
 				</InfiniteScroll>
 			)}
 		</div>
