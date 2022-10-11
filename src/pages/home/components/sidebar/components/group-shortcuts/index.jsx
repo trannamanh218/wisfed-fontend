@@ -105,7 +105,7 @@ function GroupShortcuts() {
 					</div>
 					{!_.isEmpty(userInfo) ? (
 						<>
-							{myGroup.length > 6 && (
+							{myGroup.length > 3 && (
 								<button
 									className='group-short-cut__view-more'
 									onClick={() => setViewMoreGroupsStatus(!viewMoreGroupsStatus)}
@@ -126,7 +126,7 @@ function GroupShortcuts() {
 						</>
 					) : (
 						<>
-							{rows.length > 6 && (
+							{rows.length > 3 && (
 								<button
 									className='group-short-cut__view-more'
 									onClick={() => setViewMoreGroupsStatus(!viewMoreGroupsStatus)}

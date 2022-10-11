@@ -7,6 +7,9 @@ import './filter-quote-pane.scss';
 import CreatQuotesModal from 'shared/creat-quotes-modal';
 import FormCheckGroup from 'shared/form-check-group';
 import classNames from 'classnames';
+import Storage from 'helpers/Storage';
+import { checkUserLogin } from 'reducers/redux-utils/auth';
+import { useDispatch } from 'react-redux';
 
 const FilterQuotePane = ({
 	filterOptions,
@@ -27,6 +30,8 @@ const FilterQuotePane = ({
 	const safeDocument = typeof document !== 'undefined' ? document : {};
 	const { body } = safeDocument;
 	const html = safeDocument.documentElement;
+
+	const dispatch = useDispatch();
 
 	const radioOptions = [
 		{
@@ -53,7 +58,11 @@ const FilterQuotePane = ({
 	}, []);
 
 	const creatQuotes = () => {
-		setShowCreatQuotesModal(true);
+		if (!Storage.getAccessToken()) {
+			dispatch(checkUserLogin(true));
+		} else {
+			setShowCreatQuotesModal(true);
+		}
 	};
 
 	const hideCreatQuotesModal = () => {
