@@ -17,6 +17,7 @@ import { Modal } from 'react-bootstrap';
 
 const urlRegex =
 	/(https?:\/\/)?(www(\.))?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)([^"<\s]+)(?![^<>]*>|[^"]*?<\/a)/g;
+const hashtagRegex = /(^|\B)#(?![0-9_]+\b)([a-zA-Z0-9_]{1,30})(\b|\r)/g;
 
 const PostShare = ({ postData, inCreatePost = false }) => {
 	const [videoId, setVideoId] = useState('');
@@ -134,21 +135,24 @@ const PostShare = ({ postData, inCreatePost = false }) => {
 	}, [postData]);
 
 	const generateContent = content => {
-		if (content.match(urlRegex)) {
-			let newContent;
-			if (content.includes('https://')) {
-				newContent = content.replace(urlRegex, data => {
-					return `<a class="url-class" href=${data} target="_blank">${
-						data.length <= 50 ? data : data.slice(0, 50) + '...'
-					}</a>`;
+		if (content.match(urlRegex) || content.match(hashtagRegex)) {
+			const newContent = content
+				.replace(
+					urlRegex,
+					data =>
+						`<a class="url-class" href=${
+							data.includes('https://') ? data : `https://${data}`
+						} target="_blank">${data.length <= 50 ? data : data.slice(0, 50) + '...'}</a>`
+				)
+				.replace(hashtagRegex, data => {
+					if (postData.groupId) {
+						return `<a class="hashtag-class" href="/hashtag-group/${postData.groupId}/${data.slice(
+							1
+						)}">${data}</a>`;
+					} else {
+						return `<a class="hashtag-class" href="/hashtag/${data.slice(1)}">${data}</a>`;
+					}
 				});
-			} else {
-				newContent = content.replace(urlRegex, data => {
-					return `<a class="url-class" href=https://${data} target="_blank">${
-						data.length <= 50 ? data : data.slice(0, 50) + '...'
-					}</a>`;
-				});
-			}
 			return newContent;
 		} else {
 			return content;

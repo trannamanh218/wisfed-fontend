@@ -21,7 +21,6 @@ const ModalSearchCategories = ({ modalSearchCategoriesShow, setModalSearchCatego
 		} else {
 			setFilter('[]');
 		}
-		console.log(1);
 	};
 
 	const handleSearch = e => {
@@ -51,7 +50,6 @@ const ModalSearchCategories = ({ modalSearchCategoriesShow, setModalSearchCatego
 			className='modal-search-categories'
 			show={modalSearchCategoriesShow}
 			onHide={() => setModalSearchCategoriesShow(false)}
-			centered
 		>
 			<Modal.Body>
 				<h4>Chủ đề</h4>
