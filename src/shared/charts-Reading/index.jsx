@@ -49,7 +49,7 @@ const ChartsReading = () => {
 			<div className='charts__reading__container__title'>Biểu đồ đọc sách</div>
 			<div className='charts__reading__container__main'>
 				<div className='charts__reading__container__main__month'>
-					Tháng {`${chartsData.month} / ${chartsData.year}`}{' '}
+					Tháng {`${chartsData.month}/${chartsData.year}`}{' '}
 				</div>
 				{BooksMonth.map((item, index) => (
 					// <div key={item.id} className='charts__reading__container__main__read'>
