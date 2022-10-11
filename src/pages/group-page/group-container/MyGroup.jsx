@@ -176,7 +176,7 @@ const ListMyGroupComp = () => {
 	);
 };
 
-function myGroup() {
+function MyGroup() {
 	const [inputSearchValue, setInputSearchValue] = useState('');
 	const [valueGroupSearch, setValueGroupSearch] = useState('');
 	const [show, setShow] = useState(false);
@@ -246,4 +246,4 @@ function myGroup() {
 	);
 }
 
-export default myGroup;
+export default MyGroup;

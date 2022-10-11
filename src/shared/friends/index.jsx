@@ -322,6 +322,9 @@ const FriendsItem = ({ data, keyTabs, getListFollower, getMyListFriendReq, getLi
 						</div>
 						{data.isStar && <Subtract />}
 					</div>
+					{data.mutualFriend > 0 && (
+						<div className='myFriend__mutualFriend'>({data.mutualFriend} bạn chung)</div>
+					)}
 				</Link>
 				<div className='myfriends__button__container'>
 					{renderButtonFriends()}
