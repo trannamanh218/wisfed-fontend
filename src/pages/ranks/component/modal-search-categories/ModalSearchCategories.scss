@@ -14,6 +14,9 @@
 			}
 			.search-field {
 				border: none;
+				&__input::placeholder {
+					color: #a0a3bd;
+				}
 			}
 
 			.result-categories-list {
