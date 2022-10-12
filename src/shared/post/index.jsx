@@ -80,6 +80,7 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 	const handleCloseModalOthers = () => setShowModalOthers(false);
 	const handleShowModalOthers = () => setShowModalOthers(true);
 
+	const [showReplyArrayState, setShowReplyArrayState] = useState([]);
 	const clickReply = useRef(null);
 	const doneGetPostData = useRef(false);
 	const isLikeTemp = useRef(postInformations.isLike);
@@ -602,17 +603,32 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 											<div className='comment-reply-container'>
 												{comment.reply && !!comment.reply.length && (
 													<>
-														{comment.reply.map(commentChild => (
-															<div key={commentChild.id}>
-																<Comment
-																	commentLv1Id={comment.id}
-																	dataProp={commentChild}
-																	postData={postData}
-																	handleReply={handleReply}
-																	type={type}
-																/>
+														{showReplyArrayState.includes(comment.id) ? (
+															<div className='reply-comment-item'>
+																{comment.reply.map(commentChild => (
+																	<div key={commentChild.id}>
+																		<Comment
+																			commentLv1Id={comment.id}
+																			dataProp={commentChild}
+																			postData={postData}
+																			handleReply={handleReply}
+																			type={type}
+																		/>
+																	</div>
+																))}
 															</div>
-														))}
+														) : (
+															<div
+																className='reply-see-more'
+																onClick={() => {
+																	const arr = [...showReplyArrayState];
+																	arr.push(comment.id);
+																	setShowReplyArrayState(arr);
+																}}
+															>
+																Xem phản hồi
+															</div>
+														)}
 													</>
 												)}
 												<CommentEditor
@@ -648,20 +664,36 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 													handleReply={handleReply}
 													type={type}
 												/>
+
 												<div className='comment-reply-container'>
 													{comment.reply && !!comment.reply.length && (
 														<>
-															{comment.reply.map(commentChild => (
-																<div key={commentChild.id}>
-																	<Comment
-																		commentLv1Id={comment.id}
-																		dataProp={commentChild}
-																		postData={postData}
-																		handleReply={handleReply}
-																		type={type}
-																	/>
+															{showReplyArrayState.includes(comment.id) ? (
+																<div className='reply-comment-item'>
+																	{comment.reply.map(commentChild => (
+																		<div key={commentChild.id}>
+																			<Comment
+																				commentLv1Id={comment.id}
+																				dataProp={commentChild}
+																				postData={postData}
+																				handleReply={handleReply}
+																				type={type}
+																			/>
+																		</div>
+																	))}
 																</div>
-															))}
+															) : (
+																<div
+																	className='reply-see-more'
+																	onClick={() => {
+																		const arr = [...showReplyArrayState];
+																		arr.push(comment.id);
+																		setShowReplyArrayState(arr);
+																	}}
+																>
+																	Xem phản hồi
+																</div>
+															)}
 														</>
 													)}
 													<CommentEditor
@@ -701,19 +733,34 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 														type={type}
 													/>
 													<div className='comment-reply-container'>
-														{comment.reply && !!comment.reply.length && (
+														{comment.reply && !!comment.reply?.length && (
 															<>
-																{comment.reply.map(commentChild => (
-																	<div key={commentChild.id}>
-																		<Comment
-																			commentLv1Id={comment.id}
-																			dataProp={commentChild}
-																			postData={postData}
-																			handleReply={handleReply}
-																			type={type}
-																		/>
+																{showReplyArrayState.includes(comment.id) ? (
+																	<div className='reply-comment-item'>
+																		{comment.reply.map(commentChild => (
+																			<div key={commentChild.id}>
+																				<Comment
+																					commentLv1Id={comment.id}
+																					dataProp={commentChild}
+																					postData={postData}
+																					handleReply={handleReply}
+																					type={type}
+																				/>
+																			</div>
+																		))}
 																	</div>
-																))}
+																) : (
+																	<div
+																		className='reply-see-more'
+																		onClick={() => {
+																			const arr = [...showReplyArrayState];
+																			arr.push(comment.id);
+																			setShowReplyArrayState(arr);
+																		}}
+																	>
+																		Xem phản hồi
+																	</div>
+																)}
 															</>
 														)}
 														<CommentEditor
@@ -756,17 +803,32 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 									<div className='comment-reply-container'>
 										{comment.reply && !!comment.reply.length && (
 											<>
-												{comment.reply.map(commentChild => (
-													<div key={commentChild.id}>
-														<Comment
-															commentLv1Id={comment.id}
-															dataProp={commentChild}
-															postData={postData}
-															handleReply={handleReply}
-															type={type}
-														/>
+												{showReplyArrayState.includes(comment.id) ? (
+													<>
+														{comment.reply.map(commentChild => (
+															<div key={commentChild.id}>
+																<Comment
+																	commentLv1Id={comment.id}
+																	dataProp={commentChild}
+																	postData={postData}
+																	handleReply={handleReply}
+																	type={type}
+																/>
+															</div>
+														))}
+													</>
+												) : (
+													<div
+														className='reply-see-more'
+														onClick={() => {
+															const arr = [...showReplyArrayState];
+															arr.push(comment.id);
+															setShowReplyArrayState(arr);
+														}}
+													>
+														Xem phản hồi
 													</div>
-												))}
+												)}
 											</>
 										)}
 										<CommentEditor

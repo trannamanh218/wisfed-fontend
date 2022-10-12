@@ -25,6 +25,8 @@ const MainQuoteDetail = ({ quoteData, setQuoteData, onCreateComment, setMentionU
 	const [firstPlaceComment, setFirstPlaceComment] = useState([]);
 	const [firstPlaceCommentId, setFirstPlaceCommentId] = useState(null);
 
+	const [showReplyArrayState, setShowReplyArrayState] = useState([]);
+
 	const clickReply = useRef(null);
 
 	const userInfo = useSelector(state => state.auth.userInfo);
@@ -153,17 +155,32 @@ const MainQuoteDetail = ({ quoteData, setQuoteData, onCreateComment, setMentionU
 										<div className='comment-reply-container'>
 											{comment.reply && !!comment.reply.length && (
 												<>
-													{comment.reply.map(commentChild => (
-														<div key={commentChild.id}>
-															<Comment
-																commentLv1Id={comment.id}
-																dataProp={commentChild}
-																postData={quoteData}
-																handleReply={handleReply}
-																type={QUOTE_TYPE}
-															/>
+													{showReplyArrayState.includes(comment.id) ? (
+														<div className='reply-comment-item'>
+															{comment.reply.map(commentChild => (
+																<div key={commentChild.id}>
+																	<Comment
+																		commentLv1Id={comment.id}
+																		dataProp={commentChild}
+																		postData={quoteData}
+																		handleReply={handleReply}
+																		type={QUOTE_TYPE}
+																	/>
+																</div>
+															))}
 														</div>
-													))}
+													) : (
+														<div
+															className='reply-see-more'
+															onClick={() => {
+																const arr = [...showReplyArrayState];
+																arr.push(comment.id);
+																setShowReplyArrayState(arr);
+															}}
+														>
+															Xem phản hồi
+														</div>
+													)}
 												</>
 											)}
 											<CommentEditor
@@ -202,17 +219,32 @@ const MainQuoteDetail = ({ quoteData, setQuoteData, onCreateComment, setMentionU
 											<div className='comment-reply-container'>
 												{comment.reply && !!comment.reply.length && (
 													<>
-														{comment.reply.map(commentChild => (
-															<div key={commentChild.id}>
-																<Comment
-																	commentLv1Id={comment.id}
-																	dataProp={commentChild}
-																	postData={quoteData}
-																	handleReply={handleReply}
-																	type={QUOTE_TYPE}
-																/>
+														{showReplyArrayState.includes(comment.id) ? (
+															<div className='reply-comment-item'>
+																{comment.reply.map(commentChild => (
+																	<div key={commentChild.id}>
+																		<Comment
+																			commentLv1Id={comment.id}
+																			dataProp={commentChild}
+																			postData={quoteData}
+																			handleReply={handleReply}
+																			type={QUOTE_TYPE}
+																		/>
+																	</div>
+																))}
 															</div>
-														))}
+														) : (
+															<div
+																className='reply-see-more'
+																onClick={() => {
+																	const arr = [...showReplyArrayState];
+																	arr.push(comment.id);
+																	setShowReplyArrayState(arr);
+																}}
+															>
+																Xem phản hồi
+															</div>
+														)}
 													</>
 												)}
 												<CommentEditor
