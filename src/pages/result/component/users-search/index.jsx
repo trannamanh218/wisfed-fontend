@@ -102,10 +102,10 @@ const UsersSearch = ({ isFetching, value, setIsFetching, searchResultInput, acti
 											<div
 												className='myfriends__star__name'
 												title={
-													item.fullName ? item.fullName : `${item.firtName} ${item.lastName}`
+													item.fullName ? item.fullName : `${item.firstName} ${item.lastName}`
 												}
 											>
-												{item.fullName ? item.fullName : `${item.firtName} ${item.lastName}`}
+												{item.fullName ? item.fullName : `${item.firstName} ${item.lastName}`}
 											</div>
 										</div>
 										{item.relation !== 'isMe' ? (

@@ -9,6 +9,8 @@ import { NotificationError } from 'helpers/Error';
 import { ReplyFriendRequest } from 'reducers/redux-utils/user';
 import ModalUnFriend from 'pages/friends/component/modalUnFriends';
 import _ from 'lodash';
+import Storage from 'helpers/Storage';
+import { checkUserLogin } from 'reducers/redux-utils/auth';
 
 const ConnectButtons = ({ direction, item }) => {
 	const [showModalUnfriends, setShowModalUnfriends] = useState(false);
@@ -28,12 +30,16 @@ const ConnectButtons = ({ direction, item }) => {
 
 	// xu ly khi an nut them ban, huy ket ban, chap nhan loi moi ket ban
 	const handleFriendBtn = () => {
-		if (friendStatusBtn === 'friend') {
-			setShowModalUnfriends(true);
-		} else if (friendStatusBtn === 'unknown') {
-			handleAddFriend();
-		} else if (requestStatus === 'requestToMe') {
-			handleAcces();
+		if (!Storage.getAccessToken()) {
+			dispatch(checkUserLogin(true));
+		} else {
+			if (friendStatusBtn === 'friend') {
+				setShowModalUnfriends(true);
+			} else if (friendStatusBtn === 'unknown') {
+				handleAddFriend();
+			} else if (requestStatus === 'requestToMe') {
+				handleAcces();
+			}
 		}
 	};
 
@@ -74,8 +80,12 @@ const ConnectButtons = ({ direction, item }) => {
 
 	// xu ly nut theo doi va huy theo doi
 	const handleFollowAndUnfollow = () => {
-		setFollowStatusBtn(!followStatusBtn);
-		handleCallFollowAndUnfollowApi(!followStatusBtn);
+		if (!Storage.getAccessToken()) {
+			dispatch(checkUserLogin(true));
+		} else {
+			setFollowStatusBtn(!followStatusBtn);
+			handleCallFollowAndUnfollowApi(!followStatusBtn);
+		}
 	};
 
 	const handleCallFollowAndUnfollowApi = useCallback(
@@ -107,6 +117,8 @@ const ConnectButtons = ({ direction, item }) => {
 				contentBtn = 'Chấp nhận';
 			} else if (requestStatus === 'sentRequest' || friendStatusBtn === 'pending') {
 				contentBtn = 'Đã gửi lời mời';
+			} else {
+				contentBtn = 'Thêm bạn';
 			}
 		}
 
@@ -125,6 +137,8 @@ const ConnectButtons = ({ direction, item }) => {
 		if (followStatusBtn === true) {
 			contentBtn = 'Bỏ theo dõi';
 		} else if (followStatusBtn === false) {
+			contentBtn = 'Theo dõi';
+		} else {
 			contentBtn = 'Theo dõi';
 		}
 

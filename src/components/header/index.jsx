@@ -222,18 +222,14 @@ const Header = () => {
 	};
 
 	const handlePopup = () => {
-		if (userLogin) {
-			setIsShow(true);
-		} else {
-			handleUserLogin();
-		}
+		setIsShow(true);
 	};
 
 	const handleViewProfile = () => {
 		setModalInforUser(false);
 		navigate(`/profile/${userInfo.id}`);
 	};
-
+	console.log(isShow);
 	return (
 		<div className='header'>
 			<div className='header__left'>
@@ -301,10 +297,10 @@ const Header = () => {
 					</Link>
 				</li>
 				<li
-					onClick={handleUserLogin}
+					// onClick={handleUserLogin}
 					className={classNames('header__nav__item', { active: activeLink === '/category' })}
 				>
-					<Link className='header__nav__link' to={userLogin && '/category'}>
+					<Link className='header__nav__link' to={'/category'}>
 						{activeLink === '/category' ? <CategoryFillIcon /> : <CategoryIcon />}
 					</Link>
 				</li>

@@ -20,6 +20,8 @@ import Button from 'shared/button';
 import { REVIEW_TYPE } from 'constants/index';
 import searchreview from 'assets/images/search-review.png';
 import CreatPostModalContent from 'pages/home/components/newfeed/components/creat-post-modal-content';
+import Storage from 'helpers/Storage';
+import { checkUserLogin } from 'reducers/redux-utils/auth';
 
 const ReviewTab = ({ currentTab }) => {
 	const filterOptions = [
@@ -250,11 +252,19 @@ const ReviewTab = ({ currentTab }) => {
 	const hideCreatePostModal = () => {
 		setShowModalCreatPost(false);
 	};
+
+	const handleReview = () => {
+		if (!Storage.getAccessToken()) {
+			dispatch(checkUserLogin(true));
+		} else {
+			setShowModalCreatPost(true);
+		}
+	};
 	//-----------------------------------------------------------
 
 	return (
 		<div className='review-tab'>
-			<div className='search-review' onClick={() => setShowModalCreatPost(true)}>
+			<div className='search-review' onClick={() => handleReview()}>
 				<img className='search-review__icon' src={searchreview} />
 				<div className='search-review__input'>Bạn review cuốn sách này thế nào</div>
 			</div>
