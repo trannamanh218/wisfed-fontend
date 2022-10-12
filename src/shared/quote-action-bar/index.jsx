@@ -56,7 +56,7 @@ const QuoteActionBar = ({ data, isDetail, likeUnlikeQuoteFnc, trueRank }) => {
 				{isDetail ? (
 					<>
 						<CommentSvg className='quote-icon' />
-						<span className='quote-action__name'>{data.comments} Bình luận</span>
+						<span className='quote-action__name'>{data.comment} Bình luận</span>
 					</>
 				) : (
 					<div onClick={handleShareQuote}>
@@ -98,6 +98,7 @@ QuoteActionBar.propTypes = {
 	data: PropTypes.object,
 	isDetail: PropTypes.bool,
 	likeUnlikeQuoteFnc: PropTypes.func,
+	trueRank: PropTypes.number,
 };
 
 export default QuoteActionBar;

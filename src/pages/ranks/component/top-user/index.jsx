@@ -15,8 +15,9 @@ import Storage from 'helpers/Storage';
 import { saveDataShare } from 'reducers/redux-utils/post';
 import { useNavigate } from 'react-router-dom';
 import { TOP_USER_VERB_SHARE } from 'constants/index';
+import ModalSearchCategories from '../modal-search-categories/ModalSearchCategories';
 
-const TopUser = ({ rows, listYear, tabSelected }) => {
+const TopUser = ({ listYear, tabSelected }) => {
 	const kindOfGroupRef = useRef({ value: 'default', name: 'Chủ đề' });
 	const listYearRef = useRef({ value: 'default', title: 'Tuần' });
 	const listRead = useRef({ value: 'default', title: 'Đọc nhiều nhất' });
@@ -27,6 +28,7 @@ const TopUser = ({ rows, listYear, tabSelected }) => {
 	const [getListTopBooks, setGetListTopBooks] = useState([]);
 	const [checkSelectBox, setCheckSelectBox] = useState(false);
 	const [modalShow, setModalShow] = useState(false);
+	const [modalSearchCategoriesShow, setModalSearchCategoriesShow] = useState(false);
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
@@ -106,6 +108,13 @@ const TopUser = ({ rows, listYear, tabSelected }) => {
 	return (
 		<div className='topbooks__container'>
 			<ModalCheckLogin setModalShow={setModalShow} modalShow={modalShow} />
+			{modalSearchCategoriesShow && (
+				<ModalSearchCategories
+					setModalSearchCategoriesShow={setModalSearchCategoriesShow}
+					modalSearchCategoriesShow={modalSearchCategoriesShow}
+					onSelectCategory={onchangeKindOfGroup}
+				/>
+			)}
 			<div className='topbooks__container__header'>
 				<div className='topbooks__container__title'>TOP 100 người dùng</div>
 				<SelectBox
@@ -116,22 +125,13 @@ const TopUser = ({ rows, listYear, tabSelected }) => {
 				/>
 			</div>
 			<div className='topbooks__container__sort'>
-				<div className='topbooks__container__sort__left'>
-					{checkSelectBox ? (
-						<div className={`select-box `}>
-							<div className='select-box__btn disable'>
-								<span className='select-box__value'>Chủ đề</span>
-								<img className='select-box__icon' src={dropdownIcon} alt='dropdown' />
-							</div>
+				<div className='topbooks__container__sort__left' onClick={() => setModalSearchCategoriesShow(true)}>
+					<div className='select-box'>
+						<div className='select-box__btn'>
+							<span className='select-box__value'>{kindOfGroupRef.current.name || 'Chủ đề'}</span>
+							<img className='select-box__icon' src={dropdownIcon} alt='dropdown' />
 						</div>
-					) : (
-						<SelectBox
-							name='themeGroup'
-							list={rows}
-							defaultOption={kindOfGroupRef.current}
-							onChangeOption={onchangeKindOfGroup}
-						/>
-					)}
+					</div>
 				</div>
 
 				<div className='topbooks__container__sort__right'>
