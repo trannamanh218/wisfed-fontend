@@ -45,6 +45,12 @@ const MainQuoteDetail = ({ quoteData, setQuoteData, onCreateComment, setMentionU
 		clickReply.current = !clickReply.current;
 	};
 
+	const onClickSeeMoreReply = paramId => {
+		const arr = [...showReplyArrayState];
+		arr.push(paramId);
+		setShowReplyArrayState(arr);
+	};
+
 	const handleChangeOrderQuoteComments = async () => {
 		try {
 			// Gọi api lấy thông tin của bình luận nhắc đến bạn
@@ -172,11 +178,7 @@ const MainQuoteDetail = ({ quoteData, setQuoteData, onCreateComment, setMentionU
 													) : (
 														<div
 															className='reply-see-more'
-															onClick={() => {
-																const arr = [...showReplyArrayState];
-																arr.push(comment.id);
-																setShowReplyArrayState(arr);
-															}}
+															onClick={() => onClickSeeMoreReply(comment.id)}
 														>
 															Xem phản hồi
 														</div>
@@ -236,11 +238,7 @@ const MainQuoteDetail = ({ quoteData, setQuoteData, onCreateComment, setMentionU
 														) : (
 															<div
 																className='reply-see-more'
-																onClick={() => {
-																	const arr = [...showReplyArrayState];
-																	arr.push(comment.id);
-																	setShowReplyArrayState(arr);
-																}}
+																onClick={() => onClickSeeMoreReply(comment.id)}
 															>
 																Xem phản hồi
 															</div>

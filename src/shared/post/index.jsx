@@ -376,6 +376,12 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 		}
 	};
 
+	const onClickSeeMoreReply = paramId => {
+		const arr = [...showReplyArrayState];
+		arr.push(paramId);
+		setShowReplyArrayState(arr);
+	};
+
 	useEffect(() => {
 		if (haveNotClickedSeeMoreOnce) {
 			if (reduxMentionCommentId && mentionCommentId === null) {
@@ -620,11 +626,7 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 														) : (
 															<div
 																className='reply-see-more'
-																onClick={() => {
-																	const arr = [...showReplyArrayState];
-																	arr.push(comment.id);
-																	setShowReplyArrayState(arr);
-																}}
+																onClick={() => onClickSeeMoreReply(comment.id)}
 															>
 																Xem phản hồi
 															</div>
@@ -685,11 +687,7 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 															) : (
 																<div
 																	className='reply-see-more'
-																	onClick={() => {
-																		const arr = [...showReplyArrayState];
-																		arr.push(comment.id);
-																		setShowReplyArrayState(arr);
-																	}}
+																	onClick={() => onClickSeeMoreReply(comment.id)}
 																>
 																	Xem phản hồi
 																</div>
@@ -752,11 +750,7 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 																) : (
 																	<div
 																		className='reply-see-more'
-																		onClick={() => {
-																			const arr = [...showReplyArrayState];
-																			arr.push(comment.id);
-																			setShowReplyArrayState(arr);
-																		}}
+																		onClick={() => onClickSeeMoreReply(comment.id)}
 																	>
 																		Xem phản hồi
 																	</div>
@@ -820,11 +814,7 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 												) : (
 													<div
 														className='reply-see-more'
-														onClick={() => {
-															const arr = [...showReplyArrayState];
-															arr.push(comment.id);
-															setShowReplyArrayState(arr);
-														}}
+														onClick={() => onClickSeeMoreReply(comment.id)}
 													>
 														Xem phản hồi
 													</div>
