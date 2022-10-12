@@ -14,7 +14,6 @@ import { toast } from 'react-toastify';
 import {
 	addBookToDefaultLibrary,
 	addRemoveBookInLibraries,
-	checkBookInLibraries,
 	createLibrary,
 	removeBookInLibraries,
 	updateMyAllLibraryRedux,
@@ -71,19 +70,17 @@ const SettingMore = ({ bookData, handleUpdateBookList }) => {
 
 	const switchLibraries = async e => {
 		e.stopPropagation();
-		//check duoc trang thai co trong thu vien
 		try {
-			const checkLibrariesData = await dispatch(checkBookInLibraries(bookData.id || bookData.bookId)).unwrap();
-			const customLibrariesContainCurrentBook = checkLibrariesData.filter(
-				item => item.library.isDefault === false
-			);
-			if (customLibrariesContainCurrentBook.length) {
-				const arrId = [];
-				customLibrariesContainCurrentBook.forEach(item => arrId.push(item.libraryId));
-				setCustomLibrariesContainCurrentBookId(arrId);
-			} else {
-				setCustomLibrariesContainCurrentBookId([]);
+			// lấy các id của thư viện custom chứa quyển sách hiện tại
+			const arrId = [];
+			for (let i = 0; i < myCustomLibraries.length; i++) {
+				for (let j = 0; j < myCustomLibraries[i].books.length; j++) {
+					if (myCustomLibraries[i].books[j].bookId === bookData.id) {
+						arrId.push(myCustomLibraries[i].id);
+					}
+				}
 			}
+			setCustomLibrariesContainCurrentBookId(arrId);
 		} catch (err) {
 			NotificationError(err);
 		} finally {
@@ -157,6 +154,9 @@ const SettingMore = ({ bookData, handleUpdateBookList }) => {
 			}
 			handleAddAndRemoveBook();
 			dispatch(updateCurrentBook({ ...bookData, status: currentStatus }));
+			setTimeout(() => {
+				dispatch(updateMyAllLibraryRedux());
+			}, 200);
 			navigate('/');
 		} catch (err) {
 			NotificationError(err);
@@ -169,6 +169,7 @@ const SettingMore = ({ bookData, handleUpdateBookList }) => {
 	const closeLibrariesModal = () => {
 		setShowLibrariesModal(false);
 		setIsVisible(false);
+		setCurrentStatus(initalStatus.current);
 	};
 
 	const closeDeleteBookModal = () => {
@@ -209,10 +210,10 @@ const SettingMore = ({ bookData, handleUpdateBookList }) => {
 						<img className='setting-more__icon' alt='icon' src={convertIcon} />
 						<span className='setting-more__text'>Thay đổi giá sách</span>
 					</li>
-					<li className='setting-more__item' onClick={handleClose}>
+					{/* <li className='setting-more__item' onClick={handleClose}>
 						<img className='setting-more__icon' alt='icon' src={clockIcon} />
 						<span className='setting-more__text'>Lịch sử đọc</span>
-					</li>
+					</li> */}
 					<li className='setting-more__item' onClick={handleDelete}>
 						<img className='setting-more__icon' alt='icon' src={trashIcon} />
 						<span className='setting-more__text'>Xóa</span>

@@ -17,7 +17,7 @@ import { Modal } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import Layout from 'components/layout';
 
-export const SearchGroup = ({ valueInput, handleChange, handleShowModal }) => {
+export const SearchGroup = ({ valueInput, handleChange, handleShowModal, title }) => {
 	const navigate = useNavigate();
 	const location = useLocation();
 	const handleClick = () => {
@@ -34,7 +34,7 @@ export const SearchGroup = ({ valueInput, handleChange, handleShowModal }) => {
 				<button onClick={() => handleClick()}>
 					<BackArrow />
 				</button>
-				<span>Nhóm</span>
+				<span>{title}</span>
 			</div>
 			<div className='search'>
 				<SearchField placeholder='Tìm kiếm group' handleChange={handleChange} value={valueInput} />
@@ -99,6 +99,7 @@ const LayoutGroup = () => {
 					<GroupPageLayout
 						sub={
 							<SearchGroup
+								title='Nhóm'
 								handleChange={handleChange}
 								valueInput={inputSearchValue}
 								handleShowModal={() => setShow(true)}
@@ -116,6 +117,7 @@ const LayoutGroup = () => {
 						<GroupPageLayout
 							sub={
 								<SearchGroup
+									title='Nhóm'
 									handleChange={handleChange}
 									valueInput={inputSearchValue}
 									handleShowModal={() => setShow(true)}

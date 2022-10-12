@@ -10,7 +10,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
 	addBookToDefaultLibrary,
 	addRemoveBookInLibraries,
-	checkBookInLibraries,
 	createLibrary,
 	updateMyAllLibraryRedux,
 } from 'reducers/redux-utils/library';
@@ -45,47 +44,63 @@ const STATUS_BOOK_OBJ = {
 const StatusButton = ({ className, bookData, inCreatePost, bookStatus }) => {
 	const [modalShow, setModalShow] = useState(false);
 	const [currentStatus, setCurrentStatus] = useState('');
-	const [initalStatus, setInitialStatus] = useState('');
 	const [fetchStatus, setFetchStatus] = useState(false);
 	const [customLibrariesContainCurrentBookId, setCustomLibrariesContainCurrentBookId] = useState([]);
 
 	const addedArray = useRef([]);
 	const removedArray = useRef([]);
+	const initalStatus = useRef('');
 
 	const navigate = useNavigate();
 	const { userInfo } = useSelector(state => state.auth);
 	const myCustomLibraries = useSelector(state => state.library.myAllLibrary).custom;
+	const myAllLibraryReduxDefault = useSelector(state => state.library.myAllLibrary).default;
 
 	const dispatch = useDispatch();
 
-	useEffect(async () => {
+	useEffect(() => {
 		if (Storage.getAccessToken()) {
-			setCurrentStatus(bookStatus);
-			setInitialStatus(bookStatus);
+			// Check cuốn sách hiện tại đang ở trong thư viện nào của ng dùng hay k
+			if (myAllLibraryReduxDefault.length) {
+				let libraryContainCurrentBook = null;
+				for (let i = 0; i < myAllLibraryReduxDefault.length; i++) {
+					for (let j = 0; j < myAllLibraryReduxDefault[i].books.length; j++) {
+						if (myAllLibraryReduxDefault[i].books[j].bookId === bookData.id) {
+							libraryContainCurrentBook = myAllLibraryReduxDefault[i].defaultType;
+							break;
+						}
+					}
+				}
+				setCurrentStatus(bookStatus);
+				initalStatus.current = libraryContainCurrentBook;
+			}
 		} else {
 			setCurrentStatus(STATUS_BOOK.wantToRead);
 		}
-	}, [bookStatus]);
+	}, []);
 
 	const handleClose = () => {
 		setModalShow(false);
+		if (initalStatus.current) {
+			setCurrentStatus(initalStatus.current);
+		} else {
+			setCurrentStatus(bookStatus);
+		}
 	};
 
 	const handleShow = async e => {
 		e.stopPropagation();
-		//check duoc trang thai co trong thu vien
 		try {
-			const checkLibrariesData = await dispatch(checkBookInLibraries(bookData.id || bookData.bookId)).unwrap();
-			const customLibrariesContainCurrentBook = checkLibrariesData.filter(
-				item => item.library.isDefault === false
-			);
-			if (customLibrariesContainCurrentBook.length) {
-				const arrId = [];
-				customLibrariesContainCurrentBook.forEach(item => arrId.push(item.libraryId));
-				setCustomLibrariesContainCurrentBookId(arrId);
-			} else {
-				setCustomLibrariesContainCurrentBookId([]);
+			// lấy các id của thư viện custom chứa quyển sách hiện tại
+			const arrId = [];
+			for (let i = 0; i < myCustomLibraries.length; i++) {
+				for (let j = 0; j < myCustomLibraries[i].books.length; j++) {
+					if (myCustomLibraries[i].books[j].bookId === bookData.id) {
+						arrId.push(myCustomLibraries[i].id);
+					}
+				}
 			}
+			setCustomLibrariesContainCurrentBookId(arrId);
 		} catch (err) {
 			NotificationError(err);
 		} finally {
@@ -96,7 +111,9 @@ const StatusButton = ({ className, bookData, inCreatePost, bookStatus }) => {
 	const updateBookShelve = async params => {
 		try {
 			await dispatch(createLibrary(params)).unwrap();
-			dispatch(updateMyAllLibraryRedux());
+			setTimeout(() => {
+				dispatch(updateMyAllLibraryRedux());
+			}, 200);
 		} catch (err) {
 			NotificationError(err);
 		}
@@ -132,14 +149,17 @@ const StatusButton = ({ className, bookData, inCreatePost, bookStatus }) => {
 		if (!inCreatePost) {
 			setFetchStatus(true);
 			try {
-				if (currentStatus !== initalStatus) {
+				if (currentStatus !== initalStatus.current) {
 					updateStatusBook();
 					const customId = 'custom-id-status-button-success';
 					toast.success('Chuyển giá sách thành công', { toastId: customId });
-					setInitialStatus(currentStatus);
+					initalStatus.current = currentStatus;
 				}
 				handleAddAndRemoveBook();
 				dispatch(updateCurrentBook({ ...bookData, status: currentStatus }));
+				setTimeout(() => {
+					dispatch(updateMyAllLibraryRedux());
+				}, 200);
 				navigate('/');
 			} catch (err) {
 				NotificationError(err);
@@ -183,10 +203,16 @@ const StatusButton = ({ className, bookData, inCreatePost, bookStatus }) => {
 			>
 				<WrapIcon
 					className='btn-status__icon'
-					component={initalStatus ? STATUS_BOOK_OBJ[initalStatus].icon : STATUS_BOOK_OBJ.wantToRead.icon}
+					component={
+						initalStatus.current
+							? STATUS_BOOK_OBJ[initalStatus.current].icon
+							: STATUS_BOOK_OBJ.wantToRead.icon
+					}
 				/>
 				<span className='text-status'>
-					{initalStatus ? STATUS_BOOK_OBJ[initalStatus].name : STATUS_BOOK_OBJ.wantToRead.name}
+					{initalStatus.current
+						? STATUS_BOOK_OBJ[initalStatus.current].name
+						: STATUS_BOOK_OBJ.wantToRead.name}
 				</span>
 				<DropdownGroupWhite />
 			</button>
