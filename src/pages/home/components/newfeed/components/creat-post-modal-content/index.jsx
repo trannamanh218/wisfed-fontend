@@ -309,11 +309,10 @@ function CreatPostModalContent({
 		const { status, progress, id, page } = taggedData.addBook;
 		const convertProgress = parseInt(progress) || 0;
 		const progressParams = { id: id, progress: convertProgress };
+		dispatch(updateProgressReadingBook(progressParams)).unwrap();
 		try {
-			if (status) {
-				dispatch(updateProgressReadingBook(progressParams)).unwrap();
-			} else {
-				// check cuon sach hien tai dang o trong thu vien nao cua ng dung
+			if (!status) {
+				// Check cuốn sách hiện tại đang ở trong thư viện nào của ng dùng hay k
 				let libraryContainCurrentBook = null;
 				if (myAllLibraryReduxDefault.length) {
 					for (let i = 0; i < myAllLibraryReduxDefault.length; i++) {
@@ -325,18 +324,21 @@ function CreatPostModalContent({
 						}
 					}
 				}
+
 				let type = STATUS_BOOK.wantToRead;
 				if (convertProgress > 0 && convertProgress < page) {
 					type = STATUS_BOOK.reading;
 				} else if (convertProgress === page) {
 					type = STATUS_BOOK.read;
 				}
+
 				if (type !== libraryContainCurrentBook) {
 					const addBookParams = { bookId: id, type };
-					await dispatch(addBookToDefaultLibrary(addBookParams)).unwrap();
+					dispatch(addBookToDefaultLibrary(addBookParams)).unwrap();
+					setTimeout(() => {
+						dispatch(updateMyAllLibraryRedux());
+					}, 200);
 				}
-				await dispatch(updateProgressReadingBook(progressParams)).unwrap();
-				dispatch(updateMyAllLibraryRedux());
 			}
 		} catch (error) {
 			NotificationError(error);

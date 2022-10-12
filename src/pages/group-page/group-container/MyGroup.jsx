@@ -176,21 +176,32 @@ const ListMyGroupComp = () => {
 	);
 };
 
-function myGroup() {
+function MyGroup() {
 	const [inputSearchValue, setInputSearchValue] = useState('');
 	const [valueGroupSearch, setValueGroupSearch] = useState('');
 	const [show, setShow] = useState(false);
+	const [filterSearch, setFilterSearch] = useState();
 
 	const { ref: showRef } = useVisible(false);
 
 	const handleChange = e => {
 		setInputSearchValue(e.target.value);
 		debounceSearch(e.target.value);
+		updateFilter(e.target.value);
 	};
 
 	const updateInputSearch = value => {
 		const filterValue = value.toLowerCase().trim();
 		setValueGroupSearch(filterValue);
+	};
+
+	const updateFilter = value => {
+		if (value) {
+			const filterValue = [[{ 'operator': 'search', 'value': value.trim(), 'property': 'name' }]];
+			setFilterSearch(filterValue);
+		} else {
+			setFilterSearch([]);
+		}
 	};
 
 	const debounceSearch = useCallback(_.debounce(updateInputSearch, 700), []);
@@ -204,6 +215,7 @@ function myGroup() {
 					<GroupPageLayout
 						sub={
 							<SearchGroup
+								title='Nhóm của tôi'
 								handleChange={handleChange}
 								valueInput={inputSearchValue}
 								handleShowModal={() => setShow(true)}
@@ -216,12 +228,13 @@ function myGroup() {
 						<GroupPageLayout
 							sub={
 								<SearchGroup
+									title='Nhóm của tôi'
 									handleChange={handleChange}
 									valueInput={inputSearchValue}
 									handleShowModal={() => setShow(true)}
 								/>
 							}
-							main={<MainLayoutSearch valueGroupSearch={valueGroupSearch} />}
+							main={<MainLayoutSearch valueGroupSearch={valueGroupSearch} filterSearch={filterSearch} />}
 						/>
 					</div>
 				)}
@@ -235,4 +248,4 @@ function myGroup() {
 	);
 }
 
-export default myGroup;
+export default MyGroup;
