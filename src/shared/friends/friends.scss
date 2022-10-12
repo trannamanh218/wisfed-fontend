@@ -10,7 +10,7 @@
 		align-items: center;
 		justify-content: center;
 		gap: 7px;
-		padding: 15px 11px 7px;
+		padding: 15px 11px 5px;
 		.myfriends__star__name {
 			font-weight: 600;
 			font-size: 15px;
@@ -66,5 +66,15 @@
 				text-overflow: ellipsis;
 			}
 		}
+	}
+
+	.myFriend__mutualFriend {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-weight: 600;
+		font-size: 13.5px;
+		letter-spacing: 0.75px;
+		color: #6e7191;
 	}
 }

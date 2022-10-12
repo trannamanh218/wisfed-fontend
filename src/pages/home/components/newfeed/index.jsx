@@ -76,7 +76,7 @@ const NewFeed = () => {
 			<div className='newfeed__header'>
 				<p>Bảng tin</p>
 			</div>
-			{!_.isEmpty(userInfo) && <CreatePost onChangeNewPost={onChangeNewPost} />}
+			{<CreatePost onChangeNewPost={onChangeNewPost} />}
 
 			{isLoading ? (
 				<LoadingIndicator />

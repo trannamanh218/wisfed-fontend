@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import './style.scss';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import ResultNotFound from 'pages/result/component/result-not-found';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { useDispatch } from 'react-redux';
@@ -9,58 +9,105 @@ import { NotificationError } from 'helpers/Error';
 import defaultAvatar from 'assets/images/Rectangle 17435.png';
 import { getFilterSearch } from 'reducers/redux-utils/search';
 import LoadingIndicator from 'shared/loading-indicator';
+import { getMyGroup } from 'reducers/redux-utils/group';
 
-const MainLayoutSearch = ({ valueGroupSearch }) => {
+const MainLayoutSearch = ({ valueGroupSearch, filterSearch }) => {
 	const [list, setList] = useState([]);
 	const [hasMore, setHasMore] = useState(true);
-	const callApiStart = useRef(10);
-	const callApiPerPage = useRef(10);
+	const callApiStart = useRef(8);
+	const callApiPerPage = useRef(8);
 	const dispatch = useDispatch();
 	const [isFetching, setIsFetching] = useState(false);
 
+	const location = useLocation();
+
 	const getSearch = async () => {
-		setIsFetching(true);
-		try {
-			const params = {
-				q: valueGroupSearch,
-				type: 'groups',
-				start: callApiStart.current,
-				limit: callApiPerPage.current,
-			};
-			const data = await dispatch(getFilterSearch({ ...params })).unwrap();
-			if (data.rows.length) {
-				if (data.rows.length < callApiPerPage.current) {
-					setHasMore(false);
-				} else {
-					callApiStart.current += callApiPerPage.current;
+		if (location.pathname.includes('my-group')) {
+			setIsFetching(true);
+			try {
+				const params = {
+					start: callApiStart.current,
+					limit: callApiPerPage.current,
+					filter: filterSearch,
+				};
+				const res = await dispatch(getMyGroup(params)).unwrap();
+				if (res.data.length) {
+					if (res.data.length < callApiPerPage.current) {
+						setHasMore(false);
+					} else {
+						callApiStart.current += callApiPerPage.current;
+					}
+					setList(list.concat(res.data));
 				}
-				setList(list.concat(data.rows));
+			} catch (err) {
+				NotificationError(err);
+			} finally {
+				setIsFetching(false);
 			}
-		} catch (err) {
-			NotificationError(err);
-		} finally {
-			setIsFetching(false);
+		} else {
+			setIsFetching(true);
+			try {
+				const params = {
+					q: valueGroupSearch,
+					type: 'groups',
+					start: callApiStart.current,
+					limit: callApiPerPage.current,
+				};
+				const data = await dispatch(getFilterSearch({ ...params })).unwrap();
+				if (data.rows.length) {
+					if (data.rows.length < callApiPerPage.current) {
+						setHasMore(false);
+					} else {
+						callApiStart.current += callApiPerPage.current;
+					}
+					setList(list.concat(data.rows));
+				}
+			} catch (err) {
+				NotificationError(err);
+			} finally {
+				setIsFetching(false);
+			}
 		}
 	};
 
 	const getGroupsFirstTime = async () => {
-		setIsFetching(true);
-		try {
-			const params = {
-				q: valueGroupSearch,
-				type: 'groups',
-				start: 0,
-				limit: callApiPerPage.current,
-			};
-			const data = await dispatch(getFilterSearch(params)).unwrap();
-			setList(data.rows);
-			if (!data.rows.length || data.rows.length < callApiPerPage.current) {
-				setHasMore(false);
+		if (location.pathname.includes('/my-group')) {
+			setIsFetching(true);
+			try {
+				const params = {
+					start: 0,
+					limit: callApiPerPage.current,
+					filter: filterSearch,
+				};
+				const res = await dispatch(getMyGroup(params)).unwrap();
+				setList(res.data);
+				if (!res.data.length || res.data.length < callApiPerPage.current) {
+					setHasMore(false);
+				}
+			} catch (err) {
+				NotificationError(err);
+			} finally {
+				setIsFetching(false);
 			}
-		} catch (err) {
-			NotificationError(err);
-		} finally {
-			setIsFetching(false);
+		} else {
+			setIsFetching(true);
+			try {
+				const params = {
+					q: valueGroupSearch,
+					type: 'groups',
+					start: 0,
+					limit: callApiPerPage.current,
+				};
+				const data = await dispatch(getFilterSearch(params)).unwrap();
+				setList(data.rows);
+				if (!data.rows.length || data.rows.length < callApiPerPage.current) {
+					setHasMore(false);
+				}
+			} catch (err) {
+				NotificationError(err);
+			} finally {
+				setIsFetching(false);
+			}
 		}
 	};
 
