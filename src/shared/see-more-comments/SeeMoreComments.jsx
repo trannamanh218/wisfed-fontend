@@ -61,7 +61,6 @@ const SeeMoreComments = ({
 				}
 			}
 		}
-		console.log(data);
 	}, [data]);
 
 	const onClickSeeMore = async () => {

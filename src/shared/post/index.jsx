@@ -403,7 +403,6 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 				dispatch(handleCheckIfMentionFromGroup(null));
 			}
 		}
-		console.log(postData);
 	}, [postData]);
 
 	return (
