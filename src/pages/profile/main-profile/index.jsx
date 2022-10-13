@@ -43,7 +43,7 @@ const MainProfile = ({ currentUserInfo }) => {
 							<InforTab userInfo={currentUserInfo} currentTab={currentTab} />
 						</Tab>
 						<Tab eventKey='quotes' title='Quotes'>
-							<QuoteTab currentTab={currentTab} />
+							<QuoteTab currentTab={currentTab} currentUserInfo={currentUserInfo} />
 						</Tab>
 						<Tab eventKey='favorite-authors' title='Tác giả yêu thích'>
 							<FavoriteAuthorTab currentTab={currentTab} />
