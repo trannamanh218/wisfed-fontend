@@ -7,6 +7,8 @@ import { NotificationError } from 'helpers/Error';
 import _ from 'lodash';
 import ModalUnFriend from 'pages/friends/component/modalUnFriends';
 import { ReplyFriendRequest } from 'reducers/redux-utils/user';
+import { checkUserLogin } from 'reducers/redux-utils/auth';
+import Storage from 'helpers/Storage';
 
 const ConnectButtonsSearch = ({ direction, item }) => {
 	const [showModalUnfriends, setShowModalUnfriends] = useState(false);
@@ -55,19 +57,27 @@ const ConnectButtonsSearch = ({ direction, item }) => {
 	};
 
 	const handleFriendBtn = () => {
-		if (friendStatusBtn === 'friend') {
-			setShowModalUnfriends(true);
-		} else if (friendStatusBtn === 'unknown') {
-			handleAddFriend();
-		} else if (item.friendRequest?.type === 'requestToMe') {
-			handleAcces();
+		if (!Storage.getAccessToken()) {
+			dispatch(checkUserLogin(true));
+		} else {
+			if (friendStatusBtn === 'friend') {
+				setShowModalUnfriends(true);
+			} else if (friendStatusBtn === 'unknown') {
+				handleAddFriend();
+			} else if (item.friendRequest?.type === 'requestToMe') {
+				handleAcces();
+			}
 		}
 	};
 
 	// xu ly khi an nut theo doi va huy theo doi
 	const handleFollowAndUnfollow = () => {
-		setFollowStatusBtn(!followStatusBtn);
-		handleCallFollowAndUnfollowApi(!followStatusBtn);
+		if (!Storage.getAccessToken()) {
+			dispatch(checkUserLogin(true));
+		} else {
+			setFollowStatusBtn(!followStatusBtn);
+			handleCallFollowAndUnfollowApi(!followStatusBtn);
+		}
 	};
 
 	const handleCallFollowAndUnfollowApi = useCallback(
@@ -98,6 +108,8 @@ const ConnectButtonsSearch = ({ direction, item }) => {
 				contentBtn = 'Chấp nhận';
 			} else if (requestStatus === 'sentRequest') {
 				contentBtn = 'Đã gửi lời mời';
+			} else {
+				contentBtn = 'Kết bạn';
 			}
 		}
 

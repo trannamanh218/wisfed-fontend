@@ -61,7 +61,7 @@ const StatusButton = ({ className, bookData, inCreatePost, bookStatus }) => {
 	useEffect(() => {
 		if (Storage.getAccessToken()) {
 			// Check cuốn sách hiện tại đang ở trong thư viện nào của ng dùng hay k
-			if (myAllLibraryReduxDefault.length) {
+			if (myAllLibraryReduxDefault?.length) {
 				let libraryContainCurrentBook = null;
 				for (let i = 0; i < myAllLibraryReduxDefault.length; i++) {
 					for (let j = 0; j < myAllLibraryReduxDefault[i].books.length; j++) {

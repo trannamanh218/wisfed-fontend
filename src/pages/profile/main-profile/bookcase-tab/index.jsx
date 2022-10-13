@@ -48,6 +48,8 @@ function Bookcase({ currentUserInfo, currentTab }) {
 			} else {
 				getBooksInCurrentLibrary();
 			}
+		} else {
+			getBooksInCurrentLibrary();
 		}
 	}, [userInfo, userId, myAllLibraryDefault]);
 

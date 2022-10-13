@@ -26,6 +26,7 @@ const ListMyGroupComp = () => {
 	const callApiPerPage = useRef(8);
 
 	const dispatch = useDispatch();
+	const userInfo = useSelector(state => state.auth.userInfo);
 
 	const resetGroupList = useSelector(state => state.group.resetGroupList);
 
@@ -83,60 +84,15 @@ const ListMyGroupComp = () => {
 	}, [resetGroupList]);
 
 	return (
-		<>
-			{adminGroup.length > 0 && (
-				<div>
-					<h2 className='main__title' style={{ marginBottom: '20px', fontSize: '20px' }}>
-						Nhóm do bạn quản lý
-					</h2>
-					<div className='list-group-container--none'>
-						{adminGroup.map((item, index) => {
-							return (
-								<Link key={index} to={`/group/${item.id}`}>
-									<div className='item-group'>
-										<img
-											src={item.avatar}
-											onError={e => e.target.setAttribute('src', defaultAvatar)}
-											alt=''
-										/>
-										<div className='item-group__text'>
-											<div className='item-group__name'>
-												<span>{item.name}</span>
-											</div>
-											<div className='item-group__description'>
-												<span>
-													{item?.countMember < 10 ? `0${item.countMember}` : item.countMember}{' '}
-													thành viên
-												</span>
-											</div>
-											<div className='item-group__count-post'>
-												<span>{item.countPost} bài viết/ngày</span>
-											</div>
-											<div className='item-group-btn'>
-												<button>Truy cập vào nhóm </button>
-											</div>
-										</div>
-									</div>
-								</Link>
-							);
-						})}
-					</div>
-				</div>
-			)}
-
-			{myGroup.length > 0 && (
-				<div>
-					<h2 className='main__title' style={{ marginBottom: '20px', fontSize: '20px' }}>
-						Nhóm bạn đã tham gia
-					</h2>
-					<InfiniteScroll
-						dataLength={myGroup.length}
-						next={getGroupListNextTimes}
-						hasMore={hasMore}
-						loader={<LoadingIndicator />}
-					>
+		!_.isEmpty(userInfo) && (
+			<>
+				{adminGroup.length > 0 && (
+					<div>
+						<h2 className='main__title' style={{ marginBottom: '20px', fontSize: '20px' }}>
+							Nhóm do bạn quản lý
+						</h2>
 						<div className='list-group-container--none'>
-							{myGroup.map((item, index) => {
+							{adminGroup.map((item, index) => {
 								return (
 									<Link key={index} to={`/group/${item.id}`}>
 										<div className='item-group'>
@@ -169,10 +125,59 @@ const ListMyGroupComp = () => {
 								);
 							})}
 						</div>
-					</InfiniteScroll>
-				</div>
-			)}
-		</>
+					</div>
+				)}
+
+				{myGroup.length > 0 && (
+					<div>
+						<h2 className='main__title' style={{ marginBottom: '20px', fontSize: '20px' }}>
+							Nhóm bạn đã tham gia
+						</h2>
+						<InfiniteScroll
+							dataLength={myGroup.length}
+							next={getGroupListNextTimes}
+							hasMore={hasMore}
+							loader={<LoadingIndicator />}
+						>
+							<div className='list-group-container--none'>
+								{myGroup.map((item, index) => {
+									return (
+										<Link key={index} to={`/group/${item.id}`}>
+											<div className='item-group'>
+												<img
+													src={item.avatar}
+													onError={e => e.target.setAttribute('src', defaultAvatar)}
+													alt=''
+												/>
+												<div className='item-group__text'>
+													<div className='item-group__name'>
+														<span>{item.name}</span>
+													</div>
+													<div className='item-group__description'>
+														<span>
+															{item?.countMember < 10
+																? `0${item.countMember}`
+																: item.countMember}{' '}
+															thành viên
+														</span>
+													</div>
+													<div className='item-group__count-post'>
+														<span>{item.countPost} bài viết/ngày</span>
+													</div>
+													<div className='item-group-btn'>
+														<button>Truy cập vào nhóm </button>
+													</div>
+												</div>
+											</div>
+										</Link>
+									);
+								})}
+							</div>
+						</InfiniteScroll>
+					</div>
+				)}
+			</>
+		)
 	);
 };
 

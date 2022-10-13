@@ -229,7 +229,7 @@ const Header = () => {
 		setModalInforUser(false);
 		navigate(`/profile/${userInfo.id}`);
 	};
-	console.log(isShow);
+	// console.log(isShow);
 	return (
 		<div className='header'>
 			<div className='header__left'>
@@ -289,10 +289,10 @@ const Header = () => {
 					</Link>
 				</li>
 				<li
-					onClick={handleUserLogin}
+					// onClick={handleUserLogin}
 					className={classNames('header__nav__item', { active: activeLink === '/group' })}
 				>
-					<Link className='header__nav__link' to={userLogin && '/group'}>
+					<Link className='header__nav__link' to={'/group'}>
 						{activeLink === '/group' ? <GroupFillIcon /> : <GroupIcon />}
 					</Link>
 				</li>
