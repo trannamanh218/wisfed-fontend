@@ -142,6 +142,7 @@ SearchGroup.propTypes = {
 	valueInput: PropTypes.string,
 	handleChange: PropTypes.func,
 	handleShowModal: PropTypes.func,
+	title: PropTypes.string,
 };
 
 export default LayoutGroup;
