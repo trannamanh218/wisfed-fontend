@@ -57,6 +57,13 @@
 
 .comment-reply-container {
 	margin: 0 0 20px 44px;
+	.reply-see-more {
+		cursor: pointer;
+		display: 'block';
+		font-size: 12px;
+		margin: -14px 0 14px 0;
+		text-decoration: underline;
+	}
 }
 
 .reply-comment-editor {
