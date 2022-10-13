@@ -10,7 +10,7 @@ import { POST_TYPE } from 'constants/index';
 import { getListPostByHashtag, getListPostByHashtagGroup } from 'reducers/redux-utils/hashtag-page';
 import InfiniteScroll from 'react-infinite-scroll-component';
 
-function HashtagPage() {
+export default function HashtagPage() {
 	const dispatch = useDispatch();
 	const { hashtag, groupId } = useParams();
 
@@ -78,12 +78,10 @@ function HashtagPage() {
 					loader={<LoadingIndicator />}
 				>
 					{postList.map(post => (
-						<Post key={post.id} postInformations={post} type={POST_TYPE} />
+						<Post key={post.id} postInformations={post} type={POST_TYPE} isInDetail={true} />
 					))}
 				</InfiniteScroll>
 			</div>
 		</NormalContainer>
 	);
 }
-
-export default HashtagPage;

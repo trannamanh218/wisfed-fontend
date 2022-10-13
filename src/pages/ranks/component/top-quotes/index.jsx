@@ -6,11 +6,14 @@ import { getTopQuotes } from 'reducers/redux-utils/ranks';
 import { useDispatch } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
 import PropTypes from 'prop-types';
+import ModalSearchCategories from '../modal-search-categories/ModalSearchCategories';
+import dropdownIcon from 'assets/images/dropdown.png';
 
-const TopQuotes = ({ rows, listYear, tabSelected }) => {
+const TopQuotes = ({ listYear, tabSelected }) => {
 	const [topQuotesId, setTopQuotesId] = useState(null);
 	const [valueDate, setValueData] = useState('week');
 	const [getListTopQuotes, setGetListTopQuotes] = useState([]);
+	const [modalSearchCategoriesShow, setModalSearchCategoriesShow] = useState(false);
 
 	const kindOfGroupRef = useRef({ value: 'default', title: 'Chủ đề' });
 	const listYearRef = useRef({ value: 'default', title: 'Tuần' });
@@ -48,15 +51,22 @@ const TopQuotes = ({ rows, listYear, tabSelected }) => {
 
 	return (
 		<div className='topbooks__container'>
+			{modalSearchCategoriesShow && (
+				<ModalSearchCategories
+					setModalSearchCategoriesShow={setModalSearchCategoriesShow}
+					modalSearchCategoriesShow={modalSearchCategoriesShow}
+					onSelectCategory={onchangeKindOfGroup}
+				/>
+			)}
 			<div className='topbooks__container__title'>TOP 100 Quotes được like nhiều nhất</div>
 			<div className='topbooks__container__sort'>
-				<div className='topbooks__container__sort__left'>
-					<SelectBox
-						name='themeGroup'
-						list={rows}
-						defaultOption={kindOfGroupRef.current}
-						onChangeOption={onchangeKindOfGroup}
-					/>
+				<div className='topbooks__container__sort__left' onClick={() => setModalSearchCategoriesShow(true)}>
+					<div className='select-box'>
+						<div className='select-box__btn'>
+							<span className='select-box__value'>{kindOfGroupRef.current.name || 'Chủ đề'}</span>
+							<img className='select-box__icon' src={dropdownIcon} alt='dropdown' />
+						</div>
+					</div>
 				</div>
 
 				<div className='topbooks__container__sort__right'>

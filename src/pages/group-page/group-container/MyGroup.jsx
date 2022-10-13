@@ -215,6 +215,7 @@ function MyGroup() {
 					<GroupPageLayout
 						sub={
 							<SearchGroup
+								title='Nhóm của tôi'
 								handleChange={handleChange}
 								valueInput={inputSearchValue}
 								handleShowModal={() => setShow(true)}
@@ -227,6 +228,7 @@ function MyGroup() {
 						<GroupPageLayout
 							sub={
 								<SearchGroup
+									title='Nhóm của tôi'
 									handleChange={handleChange}
 									valueInput={inputSearchValue}
 									handleShowModal={() => setShow(true)}

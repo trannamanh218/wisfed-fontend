@@ -130,6 +130,10 @@ function Bookcase({ currentUserInfo, currentTab }) {
 		}
 	};
 
+	const directToBookDetail = bookId => {
+		navigate(`/book/detail/${bookId}`);
+	};
+
 	return (
 		<div className='bookcase'>
 			{currentTab === 'bookcase' && (
@@ -143,7 +147,12 @@ function Bookcase({ currentUserInfo, currentTab }) {
 									{readingBooks.map((item, index) => (
 										<div key={index} className='bookcase__item'>
 											<div className='bookcase__item__book'>
-												<BookThumbnail source={item.book?.images[0]} size='lg' />
+												<BookThumbnail
+													data={item.bookId}
+													source={item.book?.images[0]}
+													size='lg'
+													handleClick={directToBookDetail}
+												/>
 												<div className='bookcase__item__book-info'>
 													<div className='bookcase__item__book-info__detail'>
 														<div className='bookcase__item__book-name'>

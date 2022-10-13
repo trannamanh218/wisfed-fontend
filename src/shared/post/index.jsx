@@ -375,14 +375,6 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 		}
 	};
 
-	// Sau khi bấm xem thêm thì không đặt comment nhắc đến bạn lên đầu nữa
-	useEffect(() => {
-		if (!haveNotClickedSeeMoreOnce) {
-			setFirstPlaceComment([]);
-			setFirstPlaceCommentId(null);
-		}
-	}, [haveNotClickedSeeMoreOnce]);
-
 	useEffect(() => {
 		if (haveNotClickedSeeMoreOnce) {
 			if (reduxMentionCommentId && mentionCommentId === null) {
