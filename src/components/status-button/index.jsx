@@ -63,21 +63,19 @@ const StatusButton = ({ className, bookData, inCreatePost, bookStatus }) => {
 			// Check cuốn sách hiện tại đang ở trong thư viện nào của ng dùng hay k
 			if (myAllLibraryReduxDefault && myAllLibraryReduxDefault.length) {
 				let libraryContainCurrentBook = null;
-				for (let i = 0; i < myAllLibraryReduxDefault.length; i++) {
-					for (let j = 0; j < myAllLibraryReduxDefault[i].books.length; j++) {
-						if (myAllLibraryReduxDefault[i].books[j].bookId === bookData.id) {
-							libraryContainCurrentBook = myAllLibraryReduxDefault[i].defaultType;
-							break;
-						}
-					}
-				}
+
+				const found = myAllLibraryReduxDefault.find(item1 =>
+					item1.books.find(item2 => item2.bookId === bookData.id)
+				);
+				libraryContainCurrentBook = found.defaultType;
+
 				setCurrentStatus(bookStatus);
 				initalStatus.current = libraryContainCurrentBook;
 			}
 		} else {
 			setCurrentStatus(STATUS_BOOK.wantToRead);
 		}
-	}, []);
+	}, [myAllLibraryReduxDefault]);
 
 	const handleClose = () => {
 		setModalShow(false);
