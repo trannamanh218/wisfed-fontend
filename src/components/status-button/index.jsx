@@ -67,7 +67,7 @@ const StatusButton = ({ className, bookData, inCreatePost, bookStatus }) => {
 				const found = myAllLibraryReduxDefault.find(item1 =>
 					item1.books.find(item2 => item2.bookId === bookData.id)
 				);
-				libraryContainCurrentBook = found.defaultType;
+				libraryContainCurrentBook = found?.defaultType;
 
 				setCurrentStatus(bookStatus);
 				initalStatus.current = libraryContainCurrentBook;
