@@ -169,6 +169,7 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 					const newPostData = { ...postData, usersComments, comment: postData.comment + 1 };
 					setPostData(newPostData);
 				}
+				onClickSeeMoreReply(replyId);
 			} catch (err) {
 				NotificationError(err);
 			}
@@ -626,7 +627,7 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 														) : (
 															<div
 																className='reply-see-more'
-																onClick={() => onClickSeeMoreReply(comment.id)}
+																onClick={onClickSeeMoreReply}
 															>
 																Xem phản hồi
 															</div>
@@ -634,7 +635,7 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 													</>
 												)}
 												<CommentEditor
-													onCreateComment={onCreateComment}
+													onCreateComment={() => onCreateComment(comment.id)}
 													className={classNames(
 														`reply-comment-editor reply-comment-${comment.id}`,
 														{

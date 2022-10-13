@@ -29,7 +29,7 @@
 			.select-box {
 				.select-box__btn {
 					background: #f5e7d8;
-					width: 220px;
+					min-width: 220px;
 					justify-content: center;
 					.select-box__value {
 						flex: 1;
