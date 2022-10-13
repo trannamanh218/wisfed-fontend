@@ -143,7 +143,7 @@ const MainQuoteDetail = ({ quoteData, setQuoteData, onCreateComment, setMentionU
 							setData={setQuoteData}
 							haveNotClickedSeeMoreOnce={haveNotClickedSeeMoreOnce}
 							setHaveNotClickedSeeMoreOnce={setHaveNotClickedSeeMoreOnce}
-							isIndetail={true}
+							isInDetail={true}
 						/>
 
 						{/* Comment mention đặt trên đầu  */}

@@ -14,7 +14,7 @@ const SeeMoreComments = ({
 	setData = () => {},
 	haveNotClickedSeeMoreOnce,
 	setHaveNotClickedSeeMoreOnce = () => {},
-	isIndetail = false,
+	isInDetail = false,
 }) => {
 	const dispatch = useDispatch();
 
@@ -45,14 +45,14 @@ const SeeMoreComments = ({
 			}
 
 			// Nếu không ở trong màn detail và chưa bấm xem thêm thì dữ liệu số comment ban đầu là 1 cho nên bắt đầu gọi từ 0
-			if (!isIndetail && data.usersComments?.length > 0 && haveNotClickedSeeMoreOnce) {
+			if (!isInDetail && data.usersComments?.length > 0 && haveNotClickedSeeMoreOnce) {
 				callApiStart.current = 0;
 			}
 
 			// Kiểm tra xem nếu bài viết đã hiển thị đủ comment rồi thì không hiện nút Xem thêm nữa
 			if (data.usersComments?.length > 0) {
 				let fatherCommentsFirstCount = 1;
-				if (isIndetail) {
+				if (isInDetail) {
 					fatherCommentsFirstCount = data.usersComments?.length;
 				}
 				data.usersComments?.forEach(item => (fatherCommentsFirstCount += item.reply?.length));
@@ -61,6 +61,7 @@ const SeeMoreComments = ({
 				}
 			}
 		}
+		console.log(data);
 	}, [data]);
 
 	const onClickSeeMore = async () => {
@@ -102,7 +103,7 @@ const SeeMoreComments = ({
 		const cloneObj = { ...paramData };
 		if (haveNotClickedSeeMoreOnce) {
 			setHaveNotClickedSeeMoreOnce(false);
-			if (!isIndetail) {
+			if (!isInDetail) {
 				cloneObj.usersComments = [];
 			}
 		}
@@ -137,7 +138,7 @@ SeeMoreComments.propTypes = {
 	setData: PropTypes.func,
 	haveNotClickedSeeMoreOnce: PropTypes.bool,
 	setHaveNotClickedSeeMoreOnce: PropTypes.func,
-	isIndetail: PropTypes.bool,
+	isInDetail: PropTypes.bool,
 };
 
 export default SeeMoreComments;
