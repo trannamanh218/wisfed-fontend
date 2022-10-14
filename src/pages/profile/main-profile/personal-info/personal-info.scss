@@ -67,11 +67,17 @@ $wallpaper-height: 350px;
 			margin-top: 16px;
 			.personal-info-none {
 				visibility: hidden;
+				button {
+					padding: 0;
+				}
 			}
 		}
 
 		&__introduction {
 			flex-grow: 1;
+			.read-more {
+				margin-top: 1.2rem;
+			}
 		}
 
 		.edit-avatar {
@@ -181,7 +187,6 @@ $wallpaper-height: 350px;
 		flex-wrap: wrap;
 		column-gap: 2rem;
 		row-gap: 0.5rem;
-		margin-bottom: 1.2rem;
 	}
 
 	&__item {

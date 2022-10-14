@@ -3,7 +3,7 @@ import { ForwardGroup } from 'components/svg';
 import { useState, useEffect, useCallback } from 'react';
 import '../sidebar-right/RightSideBarGroup.scss';
 import PropTypes from 'prop-types';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { getTagGroup } from 'reducers/redux-utils/group';
 import { useDispatch } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
@@ -18,6 +18,7 @@ export default function RightSidebarGroup({ update }) {
 
 	const { id = '' } = useParams();
 	const dispatch = useDispatch();
+	const navigate = useNavigate();
 
 	const getListHashtags = async () => {
 		const params = {
@@ -74,7 +75,12 @@ export default function RightSidebarGroup({ update }) {
 						<div key={index}>
 							{index < numberIndex && (
 								<div className='hastag__group'>
-									<div className='hastag__group-name'>{item.tagName}</div>
+									<div
+										className='hastag__group-name'
+										onClick={() => navigate(`/hashtag-group/${id}/${item.tagName.slice(1)}`)}
+									>
+										{item.tagName}
+									</div>
 									<div className='hastag__group-number'>
 										{item.count < 10000 ? item.count : '9999+'} bài viết
 									</div>

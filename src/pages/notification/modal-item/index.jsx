@@ -168,6 +168,8 @@ const ModalItem = ({ item, setModalNoti, getNotifications, setGetNotifications, 
 		dispatch(readNotification(params)).unwrap();
 	};
 
+	console.log('tab', item);
+
 	return (
 		<div
 			className={

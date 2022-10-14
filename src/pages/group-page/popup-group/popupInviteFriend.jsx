@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
 import { getInviteFriend } from 'reducers/redux-utils/group';
 import { useParams } from 'react-router-dom';
+import defaultAvatar from 'assets/images/avatar.jpeg';
 
 const PopupInviteFriend = ({ handleClose, showRef, groupMembers }) => {
 	const [listFriendsNotInGroup, setListFriendsNotInGroup] = useState([]);
@@ -92,14 +93,9 @@ const PopupInviteFriend = ({ handleClose, showRef, groupMembers }) => {
 						return (
 							<div className='friend-item' key={item.id}>
 								<img
-									src={item.avatarImage}
+									src={item.avatarImage || defaultAvatar}
 									alt=''
-									onError={e =>
-										e.target.setAttribute(
-											'src',
-											'https://play-lh.googleusercontent.com/NIUu0OgXQO4nU-ugWTv6yNy92u9wQFFfwvlWOsCIG-tPYBagOZdpyrJCxfHULI_eeGI'
-										)
-									}
+									onError={e => e.target.setAttribute('src', defaultAvatar)}
 								/>
 								<label htmlFor='1'>{item.fullName}</label>
 								<input type='checkbox' id={item.id} onClick={() => handleSelectFriend(item)} />
@@ -113,14 +109,9 @@ const PopupInviteFriend = ({ handleClose, showRef, groupMembers }) => {
 						return (
 							<div className='friend-item' key={index}>
 								<img
-									src={item.avatarImage}
+									src={item.avatarImage || defaultAvatar}
 									alt=''
-									onError={e =>
-										e.target.setAttribute(
-											'src',
-											'https://play-lh.googleusercontent.com/NIUu0OgXQO4nU-ugWTv6yNy92u9wQFFfwvlWOsCIG-tPYBagOZdpyrJCxfHULI_eeGI'
-										)
-									}
+									onError={e => e.target.setAttribute('src', defaultAvatar)}
 								/>
 								<span>{item.fullName}</span>
 								<button>
