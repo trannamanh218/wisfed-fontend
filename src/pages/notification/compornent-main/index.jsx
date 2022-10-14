@@ -40,7 +40,6 @@ const Notification = () => {
 			} else {
 				setHasMore(false);
 			}
-			return;
 		} catch (err) {
 			NotificationError(err);
 		} finally {
@@ -82,6 +81,8 @@ const Notification = () => {
 		const length = getNotifications.filter(item => item.verb === 'addFriend' && !item.isCheck);
 		return length.length;
 	};
+
+	// console.log('dua',getNotifications);
 
 	return (
 		<NormalContainer>

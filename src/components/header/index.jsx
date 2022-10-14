@@ -229,7 +229,7 @@ const Header = () => {
 		setModalInforUser(false);
 		navigate(`/profile/${userInfo.id}`);
 	};
-	console.log(isShow);
+
 	return (
 		<div className='header'>
 			<div className='header__left'>

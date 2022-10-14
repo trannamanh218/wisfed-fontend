@@ -21,39 +21,41 @@ const NotificationStatus = ({ item, setGetNotifications, getNotifications }) => 
 	const { userInfo } = useSelector(state => state.auth);
 
 	const ReplyFriendReq = async (data, items) => {
-		const parseObject = JSON.parse(data);
-		const params = { id: parseObject.requestId, data: { reply: true } };
-		try {
-			await dispatch(ReplyFriendRequest(params)).unwrap();
-			const newArr = getNotifications.map(item => {
-				if (items.id === item.id) {
-					const data = { ...item, isAccept: true };
-					return { ...data };
-				}
-				return { ...item };
-			});
-			setGetNotifications(newArr);
-		} catch (err) {
-			NotificationError(err);
-		}
+		// 	const parseObject = JSON.parse(data);
+		// 	const params = { id: parseObject.requestId, data: { reply: true } };
+		// 	try {
+		// 		await dispatch(ReplyFriendRequest(params)).unwrap();
+		// 		const newArr = getNotifications.map(item => {
+		// 			if (items.id === item.id) {
+		// 				const data = { ...item, isAccept: true };
+		// 				return { ...data };
+		// 			}
+		// 			return { ...item };
+		// 		});
+		// 		setGetNotifications(newArr);
+		// 	} catch (err) {
+		// 		NotificationError(err);
+		// 	}
+		console.log('accept', item.verb);
 	};
 
 	const cancelFriend = async (data, items) => {
-		const parseObject = JSON.parse(data);
-		const params = { id: parseObject.requestId, data: { level: 'normal' } };
-		try {
-			await dispatch(CancelFriendRequest(params)).unwrap();
-			const newArr = getNotifications.map(item => {
-				if (items.id === item.id) {
-					const data = { ...item, isRefuse: true };
-					return { ...data };
-				}
-				return { ...item };
-			});
-			setGetNotifications(newArr);
-		} catch (err) {
-			NotificationError(err);
-		}
+		// const parseObject = JSON.parse(data);
+		// const params = { id: parseObject.requestId, data: { level: 'normal' } };
+		// try {
+		// 	await dispatch(CancelFriendRequest(params)).unwrap();
+		// 	const newArr = getNotifications.map(item => {
+		// 		if (items.id === item.id) {
+		// 			const data = { ...item, isRefuse: true };
+		// 			return { ...data };
+		// 		}
+		// 		return { ...item };
+		// 	});
+		// 	setGetNotifications(newArr);
+		// } catch (err) {
+		// 	NotificationError(err);
+		// }
+		console.log('denine');
 	};
 
 	const handleActiveIsReed = items => {
@@ -79,11 +81,6 @@ const NotificationStatus = ({ item, setGetNotifications, getNotifications }) => 
 							: 'group-post'
 					}/${items.originId?.minipostId || items.originId?.groupPostId}`
 				);
-				break;
-			case 'follow':
-			case 'addFriend':
-			case 'friendAccepted':
-				navigate(`/profile/${items.createdBy?.id || items.originId.userId}`);
 				break;
 			case 'topUserRanking':
 				navigate(`/top100`);
@@ -154,6 +151,8 @@ const NotificationStatus = ({ item, setGetNotifications, getNotifications }) => 
 		dispatch(readNotification(params)).unwrap();
 	};
 
+	// console.log('item', item);
+
 	return (
 		<div
 			onClick={() => handleActiveIsReed(item)}
@@ -214,18 +213,20 @@ const NotificationStatus = ({ item, setGetNotifications, getNotifications }) => 
 					''
 				) : (
 					<div className='notification__main__all__friend'>
-						<div
+						<button
 							onClick={() => ReplyFriendReq(item.object, item)}
 							className='notification__main__all__accept'
+							disabled={isRead || item.isRead}
 						>
 							{item.verb === 'browse' ? 'Duyệt' : 'Chấp nhận'}
-						</div>
-						<div
+						</button>
+						<button
 							onClick={() => cancelFriend(item.object, item)}
 							className='notification__main__all__refuse'
+							disabled={isRead || item.isRead}
 						>
 							Từ chối
-						</div>
+						</button>
 					</div>
 				))}
 		</div>
