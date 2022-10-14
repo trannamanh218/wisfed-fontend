@@ -27,7 +27,7 @@ function Register() {
 
 	const handleSubmit = async data => {
 		const newData = {
-			email: data.email,
+			email: data.email.toLowerCase().trim(),
 			password: data.password,
 			confirm_password: data.password,
 			firstName: data.firstname,
