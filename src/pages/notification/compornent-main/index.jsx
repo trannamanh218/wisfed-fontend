@@ -55,7 +55,8 @@ const Notification = () => {
 				const data = { ...item, isAccept: false, isRefuse: false };
 				return { ...data };
 			});
-			setGetNotifications(newArr);
+			const filterFriend = newArr.filter(item => !item.isCheck);
+			setGetNotifications(filterFriend);
 		}
 	}, [getListDefault, isRealTime]);
 
@@ -82,7 +83,7 @@ const Notification = () => {
 		return length.length;
 	};
 
-	// console.log('dua',getNotifications);
+	console.log('dua', getNotifications);
 
 	return (
 		<NormalContainer>

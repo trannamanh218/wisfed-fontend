@@ -16,6 +16,15 @@
 		font-family: 'Montserrat';
 		width: 400px;
 	}
+	.loading-indicator {
+		width: 30px;
+		height: 30px;
+		&::after {
+			width: 26px;
+			height: 26px;
+			border-width: 3px;
+		}
+	}
 }
 
 .notification__loading__container {

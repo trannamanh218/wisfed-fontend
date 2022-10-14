@@ -109,6 +109,8 @@ const NotificationModal = ({ setModalNoti, buttonModal, realTime }) => {
 		dispatch(activeKeyTabsNotification(selectKey));
 	};
 
+	console.log('modal', getNotifications);
+
 	return (
 		<div className='notification' ref={notifymodal}>
 			<div className='notification__container'>
