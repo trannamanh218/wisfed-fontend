@@ -11,6 +11,8 @@ import {
 import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 import { NotificationError } from 'helpers/Error';
+import { checkUserLogin } from 'reducers/redux-utils/auth';
+import Storage from 'helpers/Storage';
 
 function ReadChallenge({ modalOpen, setModalOpen }) {
 	const [inputValue, setInputValue] = useState(0);
@@ -29,46 +31,50 @@ function ReadChallenge({ modalOpen, setModalOpen }) {
 	}, [inputValue]);
 
 	const handleChangeTarget = async () => {
-		if (inputValue < 1) {
-			const customId = 'custom-id-ReadChallenge';
-			toast.error('Mục tiêu phải lớn hơn 0', { toastId: customId });
+		if (!Storage.getAccessToken()) {
+			dispatch(checkUserLogin(true));
 		} else {
-			if (modalOpen) {
-				try {
-					const dob = new Date();
-					const year = dob.getFullYear();
-					const query = {
-						numberBook: inputValue,
-					};
-					const params = {
-						year: year,
-						...query,
-					};
-					dispatch(checkRenderTargetReading(true));
-					return await dispatch(updateTargetRead(params)).unwrap();
-				} catch (err) {
-					NotificationError(err);
-				} finally {
-					const customId = 'custom-id-ReadChallenge-handleChangeTarget';
-					toast.success('Sửa mục tiêu thành công', { toastId: customId });
-					setModalOpen(false);
-					dispatch(checkRenderTargetReading(false));
-				}
+			if (inputValue < 1) {
+				const customId = 'custom-id-ReadChallenge';
+				toast.error('Mục tiêu phải lớn hơn 0', { toastId: customId });
 			} else {
-				try {
-					const dob = new Date();
-					const year = dob.getFullYear();
-					const params = {
-						year: year,
-						numberBook: inputValue,
-					};
-					await dispatch(createTargetRead(params)).unwrap();
-					const customId = 'custom-id-ReadChallenge-handleChangeTarget-success';
-					return toast.success('Tạo mục tiêu thành công', { toastId: customId });
-				} catch (err) {
-					NotificationError(err);
-				} finally {
-					dispatch(renderTargetReadingProgress(true));
+				if (modalOpen) {
+					try {
+						const dob = new Date();
+						const year = dob.getFullYear();
+						const query = {
+							numberBook: inputValue,
+						};
+						const params = {
+							year: year,
+							...query,
+						};
+						dispatch(checkRenderTargetReading(true));
+						return await dispatch(updateTargetRead(params)).unwrap();
+					} catch (err) {
+						NotificationError(err);
+					} finally {
+						const customId = 'custom-id-ReadChallenge-handleChangeTarget';
+						toast.success('Sửa mục tiêu thành công', { toastId: customId });
+						setModalOpen(false);
+						dispatch(checkRenderTargetReading(false));
+					}
+				} else {
+					try {
+						const dob = new Date();
+						const year = dob.getFullYear();
+						const params = {
+							year: year,
+							numberBook: inputValue,
+						};
+						await dispatch(createTargetRead(params)).unwrap();
+						const customId = 'custom-id-ReadChallenge-handleChangeTarget-success';
+						return toast.success('Tạo mục tiêu thành công', { toastId: customId });
+					} catch (err) {
+						NotificationError(err);
+					} finally {
+						dispatch(renderTargetReadingProgress(true));
+					}
 				}
 			}
 		}

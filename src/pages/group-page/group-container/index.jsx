@@ -16,6 +16,9 @@ import MainLayoutSearch from './MainLayoutSearch';
 import { Modal } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import Layout from 'components/layout';
+import { useSelector } from 'react-redux';
+import Storage from 'helpers/Storage';
+import { checkUserLogin } from 'reducers/redux-utils/auth';
 
 export const SearchGroup = ({ valueInput, handleChange, handleShowModal, title }) => {
 	const navigate = useNavigate();
@@ -54,6 +57,7 @@ const LayoutGroup = () => {
 	const { ref: showRef } = useVisible(false);
 
 	const dispatch = useDispatch();
+	const userInfo = useSelector(state => state.auth.userInfo);
 
 	const listMyGroup = async () => {
 		try {
@@ -74,9 +78,11 @@ const LayoutGroup = () => {
 	};
 
 	useEffect(() => {
-		listMyGroup();
-		listAdminMyGroup();
-	}, []);
+		if (!_.isEmpty(userInfo)) {
+			listMyGroup();
+			listAdminMyGroup();
+		}
+	}, [userInfo]);
 
 	const handleChange = e => {
 		setInputSearchValue(e.target.value);
@@ -102,7 +108,13 @@ const LayoutGroup = () => {
 								title='Nhóm'
 								handleChange={handleChange}
 								valueInput={inputSearchValue}
-								handleShowModal={() => setShow(true)}
+								handleShowModal={() => {
+									if (!Storage.getAccessToken()) {
+										dispatch(checkUserLogin(true));
+									} else {
+										setShow(true);
+									}
+								}}
 							/>
 						}
 						right={
@@ -120,7 +132,13 @@ const LayoutGroup = () => {
 									title='Nhóm'
 									handleChange={handleChange}
 									valueInput={inputSearchValue}
-									handleShowModal={() => setShow(true)}
+									handleShowModal={() => {
+										if (!Storage.getAccessToken()) {
+											dispatch(checkUserLogin(true));
+										} else {
+											setShow(true);
+										}
+									}}
 								/>
 							}
 							main={<MainLayoutSearch valueGroupSearch={valueGroupSearch} />}
@@ -142,6 +160,7 @@ SearchGroup.propTypes = {
 	valueInput: PropTypes.string,
 	handleChange: PropTypes.func,
 	handleShowModal: PropTypes.func,
+	title: PropTypes.string,
 };
 
 export default LayoutGroup;

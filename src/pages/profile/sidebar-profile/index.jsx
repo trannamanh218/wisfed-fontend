@@ -4,7 +4,7 @@ import ReadingBook from 'shared/reading-book';
 import './sidebar-profile.scss';
 import classNames from 'classnames';
 import caretIcon from 'assets/images/caret.png';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 import { useFetchAuthorBooks } from 'api/book.hooks';
 import { useSelector } from 'react-redux';
@@ -16,6 +16,8 @@ import { useDispatch } from 'react-redux';
 import { getAllLibraryList } from 'reducers/redux-utils/library';
 import { NotificationError } from 'helpers/Error';
 import { useRef } from 'react';
+import { checkUserLogin } from 'reducers/redux-utils/auth';
+import Storage from 'helpers/Storage';
 
 const SidebarProfile = ({ currentUserInfo, handleViewBookDetail }) => {
 	const { userId } = useParams();
@@ -30,6 +32,9 @@ const SidebarProfile = ({ currentUserInfo, handleViewBookDetail }) => {
 
 	const library = useRef([]);
 	const dispatch = useDispatch();
+
+	const navigate = useNavigate();
+
 	useEffect(() => {
 		if (!_.isEmpty(userInfo)) {
 			if (window.location.pathname.includes('profile')) {
@@ -86,7 +91,7 @@ const SidebarProfile = ({ currentUserInfo, handleViewBookDetail }) => {
 	}, [myAllLibraryRedux, userId]);
 
 	const handleViewMore = () => {
-		const length = myAllLibraryRedux.custom.length;
+		const length = myAllLibraryRedux?.custom?.length;
 		const lengthNew = library.current?.custom?.length;
 		let maxLength;
 
@@ -117,6 +122,14 @@ const SidebarProfile = ({ currentUserInfo, handleViewBookDetail }) => {
 		}
 	};
 
+	const handleDirect = () => {
+		if (!Storage.getAccessToken()) {
+			dispatch(checkUserLogin(true));
+		} else {
+			return navigate(`/shelves/${userId}`);
+		}
+	};
+
 	return (
 		<>
 			<div className='sidebar-profile'>
@@ -132,7 +145,7 @@ const SidebarProfile = ({ currentUserInfo, handleViewBookDetail }) => {
 
 				{handleRenderTargetReading()}
 
-				{!_.isEmpty(myAllLibraryRedux.custom) && (
+				{(!_.isEmpty(myAllLibraryRedux.custom) || !_.isEmpty(library.current?.custom)) && (
 					<div className='sidebar-profile__personal__category'>
 						<h4>Giá sách cá nhân</h4>
 						<div className='dualColumn'>
@@ -173,9 +186,9 @@ const SidebarProfile = ({ currentUserInfo, handleViewBookDetail }) => {
 								</button>
 							)}
 							{isExpand && (
-								<Link to={`/shelves/${userId}`} className='sidebar__view-more-btn--blue'>
+								<button onClick={handleDirect} className='sidebar__view-more-btn--blue'>
 									Xem thêm
-								</Link>
+								</button>
 							)}
 						</div>
 					</div>

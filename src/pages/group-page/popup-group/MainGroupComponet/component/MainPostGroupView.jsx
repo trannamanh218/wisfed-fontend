@@ -34,13 +34,19 @@ const MainPostGroupView = () => {
 	return (
 		<div className='main-content__container'>
 			<div className='main-content__post__review'>
-				{listPost.map(item => {
-					return (
-						<div key={item.id}>
-							<Post postInformations={item} type={GROUP_TYPE} />
-						</div>
-					);
-				})}
+				{listPost.length > 0 ? (
+					<>
+						{listPost.map(item => {
+							return (
+								<div key={item.id}>
+									<Post postInformations={item} type={GROUP_TYPE} />
+								</div>
+							);
+						})}
+					</>
+				) : (
+					<p className='post-data__blank'>Nhóm chưa có bài viết nào</p>
+				)}
 			</div>
 		</div>
 	);
