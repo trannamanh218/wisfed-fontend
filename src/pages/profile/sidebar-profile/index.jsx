@@ -151,7 +151,7 @@ const SidebarProfile = ({ currentUserInfo, handleViewBookDetail }) => {
 						<div className='dualColumn'>
 							<ul className={classNames('dualColumn-list', { [`bg-light`]: false })}>
 								{userInfo.id === userId
-									? myAllLibraryRedux.custom.slice(0, rows).map((item, index) => (
+									? myAllLibraryRedux?.custom?.slice(0, rows).map((item, index) => (
 											<li
 												className={classNames('dualColumn-item', {
 													'has-background': false,
