@@ -32,7 +32,7 @@ const QuoteCard = ({ data, isDetail = false, isShare = false }) => {
 
 	const navigate = useNavigate();
 	const onClickRedirectToAuthor = data => {
-		const id = data.createdBy.id || data.user.id;
+		const id = data.createdBy.id || data.user.id || data.createdBy;
 		navigate(`/profile/${id}`);
 	};
 	const onClickRedirectToBook = data => {
@@ -145,6 +145,7 @@ QuoteCard.defaultProps = {
 QuoteCard.propTypes = {
 	data: PropTypes.object,
 	isDetail: PropTypes.bool,
+	isShare: PropTypes.bool,
 };
 
 export default QuoteCard;

@@ -1,5 +1,4 @@
 // import { Configure } from 'components/svg';
-import _ from 'lodash';
 import { useState, useRef, useEffect } from 'react';
 import Post from 'shared/post';
 import CreatePost from './components/creat-post';
@@ -14,7 +13,6 @@ import { POST_TYPE, GROUP_TYPE } from 'constants/index';
 
 const NewFeed = () => {
 	const [isNewPost, setIsNewPost] = useState(false);
-	const { userInfo } = useSelector(state => state.auth);
 	const { refreshNewfeed } = useSelector(state => state.activity);
 	const [hasMore, setHasMore] = useState(true);
 	const [postList, setPostList] = useState([]);
