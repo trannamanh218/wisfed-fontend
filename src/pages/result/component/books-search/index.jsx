@@ -9,7 +9,9 @@ import { NotificationError } from 'helpers/Error';
 import { useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Button from 'shared/button';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import Storage from 'helpers/Storage';
+import { checkUserLogin } from 'reducers/redux-utils/auth';
 
 const BookSearch = ({ isFetching, value, setIsFetching, searchResultInput, activeKeyDefault, updateBooks }) => {
 	const [listArrayBooks, setListArrayBooks] = useState([]);
@@ -20,6 +22,7 @@ const BookSearch = ({ isFetching, value, setIsFetching, searchResultInput, activ
 	const callApiStartBooks = useRef(0);
 	const callApiPerPage = useRef(10);
 
+	const navigate = useNavigate();
 	useEffect(() => {
 		if (activeKeyDefault === 'books') {
 			setListArrayBooks([]);
@@ -72,6 +75,14 @@ const BookSearch = ({ isFetching, value, setIsFetching, searchResultInput, activ
 		}
 	};
 
+	const handleDiect = () => {
+		if (!Storage.getAccessToken()) {
+			dispatch(checkUserLogin(true));
+		} else {
+			navigate('/upload-book');
+		}
+	};
+
 	return (
 		<div className='bookSearch__container'>
 			{!!resultInformations.count && (
@@ -109,9 +120,7 @@ const BookSearch = ({ isFetching, value, setIsFetching, searchResultInput, activ
 						<>
 							<ResultNotFound />
 							<div className='btn-goTo-upload-book'>
-								<Link to='/upload-book'>
-									<Button>Tạo sách mới</Button>
-								</Link>
+								<Button onClick={handleDiect}>Tạo sách mới</Button>
 							</div>
 						</>
 					)

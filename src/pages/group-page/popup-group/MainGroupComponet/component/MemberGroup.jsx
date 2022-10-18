@@ -102,10 +102,10 @@ function MemberGroup({ memberGroupsProp = [] }) {
 				<h2>Quản trị viên và người kiểm duyệt</h2>
 				{memberGroups?.map((item, index) => {
 					return (
-						<div key={index} onClick={() => navigate(`/profile/${item.id}`)}>
+						<div key={index}>
 							{item?.isAdmin && (
 								<div className='member-item'>
-									<div className='member-item__info'>
+									<div className='member-item__info' onClick={() => navigate(`/profile/${item.id}`)}>
 										<img
 											src={item.avatarImage}
 											onError={e => e.target.setAttribute('src', defaultAvatar)}
@@ -189,9 +189,12 @@ function MemberGroup({ memberGroupsProp = [] }) {
 				{listFriend.length > 0
 					? listFriend.map((item, index) => {
 							return (
-								<div key={index} onClick={() => navigate(`/profile/${item.id}`)}>
+								<div key={index}>
 									<div className='member-item'>
-										<div className='member-item__info'>
+										<div
+											className='member-item__info'
+											onClick={() => navigate(`/profile/${item.id}`)}
+										>
 											<img
 												src={item.avatarImage ? item.avatarImage : defaultAvatar}
 												onError={e => e.target.setAttribute('src', defaultAvatar)}
@@ -273,9 +276,12 @@ function MemberGroup({ memberGroupsProp = [] }) {
 				{listFolow.length > 0
 					? listFolow.slice(0, sliceEndIndex).map((item, index) => {
 							return (
-								<div key={index} onClick={() => navigate(`/profile/${item.id}`)}>
+								<div key={index}>
 									<div className='member-item'>
-										<div className='member-item__info'>
+										<div
+											className='member-item__info'
+											onClick={() => navigate(`/profile/${item.id}`)}
+										>
 											<img
 												src={item.avatarImage ? item.avatarImage : defaultAvatar}
 												onError={e => e.target.setAttribute('src', defaultAvatar)}
@@ -366,8 +372,8 @@ function MemberGroup({ memberGroupsProp = [] }) {
 				<h2>Tất cả mọi người</h2>
 				{memberGroups.map((item, index) => {
 					return (
-						<div className='member-item' key={index} onClick={() => navigate(`/profile/${item.id}`)}>
-							<div className='member-item__info'>
+						<div className='member-item' key={index}>
+							<div className='member-item__info' onClick={() => navigate(`/profile/${item.id}`)}>
 								<img
 									src={item.avatarImage ? item.avatarImage : defaultAvatar}
 									onError={e => e.target.setAttribute('src', defaultAvatar)}

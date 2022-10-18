@@ -70,7 +70,7 @@ const QuoteTab = ({ currentTab, currentUserInfo }) => {
 					</div>
 					<div className='favorite-quotes'>
 						<h4>Quote yêu thích</h4>
-						<QuoteList list={myFavoriteQuoteList} />
+						<QuoteList list={myFavoriteQuoteList} userId={userId} />
 					</div>
 				</>
 			)}
