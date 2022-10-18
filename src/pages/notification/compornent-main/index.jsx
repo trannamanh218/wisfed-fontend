@@ -83,8 +83,6 @@ const Notification = () => {
 		return length.length;
 	};
 
-	console.log('dua', getNotifications);
-
 	return (
 		<NormalContainer>
 			<Circle loading={isLoading} />

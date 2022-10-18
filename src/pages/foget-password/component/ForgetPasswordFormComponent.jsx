@@ -36,7 +36,6 @@ function ForgetpasswordFormComponent({ type }) {
 			try {
 				if (type === 'default') {
 					const dataToResetPassword = await dispatch(forgotPassword(dataSend)).unwrap();
-					console.log(dataToResetPassword);
 					dispatch(handleDataToResetPassword({ email: dataToResetPassword.userEmail }));
 				} else {
 					await dispatch(forgotPasswordAdmin(data)).unwrap();

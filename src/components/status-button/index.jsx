@@ -61,16 +61,20 @@ const StatusButton = ({ className, bookData, inCreatePost, bookStatus }) => {
 	useEffect(() => {
 		if (Storage.getAccessToken()) {
 			// Check cuốn sách hiện tại đang ở trong thư viện nào của ng dùng hay k
-			if (myAllLibraryReduxDefault && myAllLibraryReduxDefault.length) {
-				let libraryContainCurrentBook = null;
+			if (myAllLibraryReduxDefault) {
+				if (myAllLibraryReduxDefault.length) {
+					let libraryContainCurrentBook = null;
 
-				const found = myAllLibraryReduxDefault.find(item1 =>
-					item1.books.find(item2 => item2.bookId === bookData.id)
-				);
-				libraryContainCurrentBook = found?.defaultType;
+					const found = myAllLibraryReduxDefault.find(item1 =>
+						item1.books.find(item2 => item2.bookId === bookData.id)
+					);
+					libraryContainCurrentBook = found?.defaultType;
 
-				setCurrentStatus(bookStatus);
-				initalStatus.current = libraryContainCurrentBook;
+					setCurrentStatus(bookStatus);
+					initalStatus.current = libraryContainCurrentBook;
+				} else {
+					setCurrentStatus(STATUS_BOOK.wantToRead);
+				}
 			}
 		} else {
 			setCurrentStatus(STATUS_BOOK.wantToRead);
@@ -111,7 +115,7 @@ const StatusButton = ({ className, bookData, inCreatePost, bookStatus }) => {
 			await dispatch(createLibrary(params)).unwrap();
 			setTimeout(() => {
 				dispatch(updateMyAllLibraryRedux());
-			}, 200);
+			}, 150);
 		} catch (err) {
 			NotificationError(err);
 		}
@@ -157,7 +161,7 @@ const StatusButton = ({ className, bookData, inCreatePost, bookStatus }) => {
 				dispatch(updateCurrentBook({ ...bookData, status: currentStatus }));
 				setTimeout(() => {
 					dispatch(updateMyAllLibraryRedux());
-				}, 200);
+				}, 150);
 				navigate('/');
 			} catch (err) {
 				NotificationError(err);
@@ -187,6 +191,8 @@ const StatusButton = ({ className, bookData, inCreatePost, bookStatus }) => {
 			removedArray.current.push(data.id);
 		}
 	};
+
+	console.log('ss', bookStatus, 'sss', currentStatus);
 
 	return (
 		<>

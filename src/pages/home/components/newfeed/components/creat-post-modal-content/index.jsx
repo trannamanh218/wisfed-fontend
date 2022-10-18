@@ -311,7 +311,15 @@ function CreatPostModalContent({
 		const progressParams = { id: id, progress: convertProgress };
 		dispatch(updateProgressReadingBook(progressParams)).unwrap();
 		try {
-			if (!status) {
+			if (status) {
+				if (convertProgress === page) {
+					const addBookParams = { bookId: id, type: STATUS_BOOK.read };
+					dispatch(addBookToDefaultLibrary(addBookParams)).unwrap();
+					setTimeout(() => {
+						dispatch(updateMyAllLibraryRedux());
+					}, 150);
+				}
+			} else {
 				// Check cuốn sách hiện tại đang ở trong thư viện nào của ng dùng hay k
 				let libraryContainCurrentBook = null;
 				if (myAllLibraryReduxDefault.length) {
@@ -337,7 +345,7 @@ function CreatPostModalContent({
 					dispatch(addBookToDefaultLibrary(addBookParams)).unwrap();
 					setTimeout(() => {
 						dispatch(updateMyAllLibraryRedux());
-					}, 200);
+					}, 150);
 				}
 			}
 		} catch (error) {

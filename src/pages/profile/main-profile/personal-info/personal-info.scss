@@ -98,10 +98,15 @@ $wallpaper-height: 350px;
 		align-items: center;
 		margin-top: 2.25rem;
 		margin-bottom: 0.875rem;
+		overflow: hidden;
 		h4 {
 			margin: 0;
 			font-size: 1.5rem;
 			font-weight: 700;
+			max-width: 300px;
+			text-overflow: ellipsis;
+			overflow: hidden;
+			white-space: nowrap;
 		}
 
 		.edit-name {
