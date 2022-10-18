@@ -16,6 +16,7 @@ import { useState } from 'react';
 import { updateUser } from 'reducers/redux-utils/user';
 import { updateReviewIdFromNoti } from 'reducers/redux-utils/notification';
 import LoadingIndicator from 'shared/loading-indicator';
+import LogoNonText from 'assets/icons/logoNonText.svg';
 
 const ModalItem = ({ item, setModalNoti, getNotifications, setGetNotifications, selectKey }) => {
 	const navigate = useNavigate();
@@ -182,7 +183,12 @@ const ModalItem = ({ item, setModalNoti, getNotifications, setGetNotifications, 
 			}
 		>
 			<div onClick={handleActiveIsReed} className='notification__all__layout'>
-				<UserAvatar size='mm' source={item.createdBy?.avatarImage} />
+				{item.actor === 'system-notification' ? (
+					<img src={LogoNonText} />
+				) : (
+					<UserAvatar size='mm' source={item.createdBy?.avatarImage} />
+				)}
+
 				<div className='notification__all__layout__status'>
 					<div className='notification__all__infor'>
 						{item.message ? (

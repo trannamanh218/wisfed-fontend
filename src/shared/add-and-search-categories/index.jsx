@@ -18,8 +18,10 @@ function AddAndSearchCategories({
 	hasSearchIcon,
 	placeholder,
 	hasMoreEllipsis,
+	acceptValueText,
 }) {
 	const [firstTimeFocus, setFirstTimeFocus] = useState(false);
+	const [show, setShow] = useState(true);
 
 	const focusCategoryInput = () => {
 		if (categoryInput.current) {
@@ -42,6 +44,12 @@ function AddAndSearchCategories({
 			};
 		}
 	}, []);
+
+	useEffect(() => {
+		if (!inputCategoryValue) {
+			setShow(true);
+		}
+	}, [inputCategoryValue]);
 
 	return (
 		<div className='add-and-search-categories'>
@@ -76,7 +84,7 @@ function AddAndSearchCategories({
 					</div>
 				) : (
 					<>
-						{hasSearchIcon && <Search className='add-and-search-categories__search-icon' />}
+						{hasSearchIcon && show && <Search className='add-and-search-categories__search-icon' />}
 						<input
 							placeholder={placeholder}
 							value={inputCategoryValue}
@@ -113,7 +121,21 @@ function AddAndSearchCategories({
 							)}
 						</div>
 					) : (
-						<div className='add-and-search-categories__no-search-result'>Không có kết quả phù hợp</div>
+						<>
+							{show && (
+								<div className='add-and-search-categories__no-search-result'>
+									Không có kết quả phù hợp{' '}
+									{acceptValueText && (
+										<span
+											className='add-and-search-categories__type-new'
+											onClick={() => setShow(false)}
+										>
+											(Nhập tên mới?)
+										</span>
+									)}
+								</div>
+							)}
+						</>
 					)}
 				</>
 			)}
@@ -124,6 +146,7 @@ function AddAndSearchCategories({
 AddAndSearchCategories.defaultProps = {
 	placeholder: 'Tìm kiếm và thêm chủ đề',
 	hasMoreEllipsis: false,
+	acceptValueText: false,
 };
 
 AddAndSearchCategories.propTypes = {
@@ -140,6 +163,7 @@ AddAndSearchCategories.propTypes = {
 	hasSearchIcon: PropTypes.bool,
 	placeholder: PropTypes.string,
 	hasMoreEllipsis: PropTypes.bool,
+	acceptValueText: PropTypes.bool,
 };
 
 export default AddAndSearchCategories;
