@@ -167,10 +167,12 @@ export default function MainUpload() {
 			authors:
 				authorsArr.length > 0
 					? authorsArr
-					: {
-							isUser: false,
-							authorName: inputAuthorValue,
-					  },
+					: [
+							{
+								isUser: false,
+								authorName: inputAuthorValue,
+							},
+					  ],
 			translators: translators,
 			publisherId: publisher[0].id,
 			isbn: isbn,
