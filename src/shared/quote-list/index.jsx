@@ -1,33 +1,51 @@
-import Storage from 'helpers/Storage';
+import caretIcon from 'assets/images/caret.png';
+import classNames from 'classnames';
 import PropTypes from 'prop-types';
-import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import { checkUserLogin } from 'reducers/redux-utils/auth';
+import { useState } from 'react';
 import QuoteCard from 'shared/quote-card';
 import './quote-list.scss';
 
-const QuoteList = ({ list, userId }) => {
-	const navigate = useNavigate();
+const QuoteList = ({ list }) => {
+	const defaultItems = 3;
+	const maxItems = 10;
 
-	const dispatch = useDispatch();
+	const [isExpand, setIsExpand] = useState(false);
+	const [rows, setRows] = useState(defaultItems);
 
-	const handleDirect = () => {
-		if (!Storage.getAccessToken()) {
-			dispatch(checkUserLogin(true));
+	const handleViewMore = () => {
+		const length = list.length;
+		let maxLength;
+
+		if (length <= maxItems) {
+			maxLength = length;
 		} else {
-			return navigate(`/quotes/${userId}`);
+			maxLength = maxItems;
 		}
+
+		const newRows = isExpand ? defaultItems : maxLength;
+		setRows(newRows);
+		setIsExpand(!isExpand);
 	};
 
 	if (list && list.length > 0) {
 		return (
 			<div className='quote-list'>
-				{list?.slice(0, 3).map(item => (
+				{list?.slice(0, rows).map(item => (
 					<QuoteCard key={item.id} data={item.data || item} isDetail={false} />
 				))}
+
 				{list?.length > 3 && (
-					<button className='sidebar__view-more-btn--blue' onClick={handleDirect}>
-						Xem thêm
+					<button
+						className='dualColumn-btn'
+						onClick={handleViewMore}
+						style={{ justifyContent: 'flex-end', width: '100%' }}
+					>
+						<img
+							className={classNames('view-caret', { 'view-more': isExpand })}
+							src={caretIcon}
+							alt='caret-icon'
+						/>
+						<span>{isExpand ? 'Rút gọn' : 'Xem thêm'}</span>
 					</button>
 				)}
 			</div>
