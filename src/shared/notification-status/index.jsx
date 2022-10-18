@@ -15,6 +15,7 @@ import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import classNames from 'classnames';
 import LoadingIndicator from 'shared/loading-indicator';
+import LogoNonText from 'assets/icons/logoNonText.svg';
 
 const NotificationStatus = ({ item, setGetNotifications, getNotifications }) => {
 	const dispatch = useDispatch();
@@ -175,7 +176,11 @@ const NotificationStatus = ({ item, setGetNotifications, getNotifications }) => 
 			})}
 		>
 			<div className='notification__all__main__layout'>
-				<UserAvatar size='mm' source={item.createdBy?.avatarImage} />
+				{item.actor === 'system-notification' ? (
+					<img src={LogoNonText} />
+				) : (
+					<UserAvatar size='mm' source={item.createdBy?.avatarImage} />
+				)}
 				<div className='notification__all__main__layout__status'>
 					<div className='notification__main__all__infor'>
 						{item.message ? (
