@@ -87,9 +87,9 @@ const NewFeed = () => {
 							hasMore={hasMore}
 							loader={<LoadingIndicator />}
 						>
-							{postList.map(item => (
+							{postList.map((item, index) => (
 								<Post
-									key={item.id}
+									key={index}
 									postInformations={item}
 									type={item.verb === 'groupPost' ? GROUP_TYPE : POST_TYPE}
 								/>

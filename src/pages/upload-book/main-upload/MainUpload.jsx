@@ -164,7 +164,13 @@ export default function MainUpload() {
 			name: name,
 			subName: subName,
 			originalName: originalName,
-			authors: authorsArr,
+			authors:
+				authorsArr.length > 0
+					? authorsArr
+					: {
+							isUser: false,
+							authorName: inputAuthorValue,
+					  },
 			translators: translators,
 			publisherId: publisher[0].id,
 			isbn: isbn,
@@ -190,7 +196,7 @@ export default function MainUpload() {
 			!image ||
 			(image && image.length === 0) ||
 			!name ||
-			authors.length === 0 ||
+			(authors.length === 0 && !inputAuthorValue) ||
 			categoryAddedList.length === 0 ||
 			publisher.length === 0 ||
 			!isbn ||
@@ -202,7 +208,7 @@ export default function MainUpload() {
 		} else {
 			setButtonActive(true);
 		}
-	}, [image, name, authors, categoryAddedList, publisher, isbn, page, language, description]);
+	}, [image, name, authors, inputAuthorValue, categoryAddedList, publisher, isbn, page, language, description]);
 
 	const uploadImageFile = async acceptedFiles => {
 		try {
