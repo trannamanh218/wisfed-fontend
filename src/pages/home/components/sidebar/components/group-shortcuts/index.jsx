@@ -2,20 +2,17 @@ import { useFetchGroups } from 'api/group.hooks';
 import bookIcon from 'assets/icons/book.svg';
 import { NotificationError } from 'helpers/Error';
 import _ from 'lodash';
-import { useRef } from 'react';
-import { useEffect } from 'react';
-import { useState } from 'react';
-import { memo } from 'react';
-import { useDispatch } from 'react-redux';
-import { useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
-import { getMyGroup } from 'reducers/redux-utils/group';
+import { memo, useEffect, useRef, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom';
+import { getMyGroup, getRecommendGroup } from 'reducers/redux-utils/group';
 
 function GroupShortcuts() {
-	const [viewMoreGroupsStatus, setViewMoreGroupsStatus] = useState(false);
 	const [myGroup, setMyGroup] = useState([]);
 
 	const callApiPerPage = useRef(10);
+
+	const navigate = useNavigate();
 
 	const {
 		groups: { rows = [] },
@@ -32,10 +29,22 @@ function GroupShortcuts() {
 				limit: callApiPerPage.current,
 			};
 			const actionListMyGroup = await dispatch(getMyGroup(params)).unwrap();
-
-			setMyGroup(actionListMyGroup.data);
-		} catch (error) {
-			NotificationError(error);
+			if (actionListMyGroup.data.length > 0) {
+				setMyGroup(actionListMyGroup.data);
+			} else {
+				try {
+					const params = {
+						start: 0,
+						limit: callApiPerPage.current,
+					};
+					const data = await dispatch(getRecommendGroup(params)).unwrap();
+					setMyGroup(data);
+				} catch (err) {
+					NotificationError(err);
+				}
+			}
+		} catch (err) {
+			NotificationError(err);
 		}
 	};
 
@@ -50,11 +59,7 @@ function GroupShortcuts() {
 			<div className='sidebar__block'>
 				<h4 className='sidebar__block__title'>Lối tắt nhóm</h4>
 				<div className='sidebar__block__content'>
-					<div
-						className={
-							'group-short-cut__items-box ' + `${viewMoreGroupsStatus ? 'view-more' : 'view-less'}`
-						}
-					>
+					<div className={'group-short-cut__items-box'}>
 						{!_.isEmpty(userInfo) ? (
 							<>
 								{!_.isEmpty(myGroup) ? (
@@ -103,49 +108,14 @@ function GroupShortcuts() {
 							</>
 						)}
 					</div>
-					{!_.isEmpty(userInfo) ? (
-						<>
-							{myGroup.length > 3 && (
-								<button
-									className='group-short-cut__view-more'
-									onClick={() => setViewMoreGroupsStatus(!viewMoreGroupsStatus)}
-									style={{ marginTop: '20px' }}
-								>
-									<i
-										data-testid='view-more-view-less-chevron'
-										className={
-											'fas fa-chevron-down group-short-cut__view-more__icon ' +
-											`${viewMoreGroupsStatus ? 'view-more' : 'view-less'}`
-										}
-									></i>
-									<span className='sidebar__view-more-btn--black'>
-										{viewMoreGroupsStatus ? 'Thu nhỏ' : 'Xem thêm'}
-									</span>
-								</button>
-							)}
-						</>
-					) : (
-						<>
-							{rows.length > 3 && (
-								<button
-									className='group-short-cut__view-more'
-									onClick={() => setViewMoreGroupsStatus(!viewMoreGroupsStatus)}
-									style={{ marginTop: '20px' }}
-								>
-									<i
-										data-testid='view-more-view-less-chevron'
-										className={
-											'fas fa-chevron-down group-short-cut__view-more__icon ' +
-											`${viewMoreGroupsStatus ? 'view-more' : 'view-less'}`
-										}
-									></i>
-									<span className='sidebar__view-more-btn--black'>
-										{viewMoreGroupsStatus ? 'Thu nhỏ' : 'Xem thêm'}
-									</span>
-								</button>
-							)}
-						</>
-					)}
+
+					<>
+						{(myGroup.length > 3 || rows.length > 3) && (
+							<button className='sidebar__view-more-btn--blue' onClick={() => navigate('/group')}>
+								Xem thêm
+							</button>
+						)}
+					</>
 				</div>
 			</div>
 		</>

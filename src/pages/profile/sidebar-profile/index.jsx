@@ -4,7 +4,7 @@ import ReadingBook from 'shared/reading-book';
 import './sidebar-profile.scss';
 import classNames from 'classnames';
 import caretIcon from 'assets/images/caret.png';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 import { useFetchAuthorBooks } from 'api/book.hooks';
 import { useSelector } from 'react-redux';
@@ -16,6 +16,8 @@ import { useDispatch } from 'react-redux';
 import { getAllLibraryList } from 'reducers/redux-utils/library';
 import { NotificationError } from 'helpers/Error';
 import { useRef } from 'react';
+import { checkUserLogin } from 'reducers/redux-utils/auth';
+import Storage from 'helpers/Storage';
 
 const SidebarProfile = ({ currentUserInfo, handleViewBookDetail }) => {
 	const { userId } = useParams();
@@ -30,6 +32,9 @@ const SidebarProfile = ({ currentUserInfo, handleViewBookDetail }) => {
 
 	const library = useRef([]);
 	const dispatch = useDispatch();
+
+	const navigate = useNavigate();
+
 	useEffect(() => {
 		if (!_.isEmpty(userInfo)) {
 			if (window.location.pathname.includes('profile')) {
@@ -86,7 +91,7 @@ const SidebarProfile = ({ currentUserInfo, handleViewBookDetail }) => {
 	}, [myAllLibraryRedux, userId]);
 
 	const handleViewMore = () => {
-		const length = myAllLibraryRedux.custom.length;
+		const length = myAllLibraryRedux?.custom?.length;
 		const lengthNew = library.current?.custom?.length;
 		let maxLength;
 
@@ -117,73 +122,78 @@ const SidebarProfile = ({ currentUserInfo, handleViewBookDetail }) => {
 		}
 	};
 
+	const handleDirect = () => {
+		if (!Storage.getAccessToken()) {
+			dispatch(checkUserLogin(true));
+		} else {
+			return navigate(`/shelves/${userId}`);
+		}
+	};
+
 	return (
 		<>
-			{!_.isEmpty(userInfo) && (
-				<div className='sidebar-profile'>
-					<ReadingBook bookData={bookReading} />
-					{booksAuthor.length > 0 && (
-						<BookSlider
-							className='book-reference__slider'
-							title={booksSliderTitle}
-							list={booksAuthor}
-							handleViewBookDetail={handleViewBookDetail}
-						/>
-					)}
+			<div className='sidebar-profile'>
+				<ReadingBook bookData={bookReading} />
+				{booksAuthor.length > 0 && (
+					<BookSlider
+						className='book-reference__slider'
+						title={booksSliderTitle}
+						list={booksAuthor}
+						handleViewBookDetail={handleViewBookDetail}
+					/>
+				)}
 
-					{handleRenderTargetReading()}
+				{handleRenderTargetReading()}
 
-					{!_.isEmpty(myAllLibraryRedux.custom) && (
-						<div className='sidebar-profile__personal__category'>
-							<h4>Giá sách cá nhân</h4>
-							<div className='dualColumn'>
-								<ul className={classNames('dualColumn-list', { [`bg-light`]: false })}>
-									{userInfo.id === userId
-										? myAllLibraryRedux.custom.slice(0, rows).map((item, index) => (
-												<li
-													className={classNames('dualColumn-item', {
-														'has-background': false,
-													})}
-													key={index}
-												>
-													<span className='dualColumn-item__title'>{item.name}</span>
-													<span className='dualColumn-item__number'>
-														{item.books.length} cuốn
-													</span>
-												</li>
-										  ))
-										: library.current?.custom?.slice(0, rows).map((item, index) => (
-												<li
-													className={classNames('dualColumn-item', {
-														'has-background': false,
-													})}
-													key={index}
-												>
-													<span className='dualColumn-item__title'>{item?.name}</span>
-													<span className='dualColumn-item__number'>
-														{item?.books.length} cuốn
-													</span>
-												</li>
-										  ))}
-								</ul>
+				{(!_.isEmpty(myAllLibraryRedux.custom) || !_.isEmpty(library.current?.custom)) && (
+					<div className='sidebar-profile__personal__category'>
+						<h4>Giá sách cá nhân</h4>
+						<div className='dualColumn'>
+							<ul className={classNames('dualColumn-list', { [`bg-light`]: false })}>
+								{userInfo.id === userId
+									? myAllLibraryRedux.custom.slice(0, rows).map((item, index) => (
+											<li
+												className={classNames('dualColumn-item', {
+													'has-background': false,
+												})}
+												key={index}
+											>
+												<span className='dualColumn-item__title'>{item.name}</span>
+												<span className='dualColumn-item__number'>
+													{item.books.length} cuốn
+												</span>
+											</li>
+									  ))
+									: library.current?.custom?.slice(0, rows).map((item, index) => (
+											<li
+												className={classNames('dualColumn-item', {
+													'has-background': false,
+												})}
+												key={index}
+											>
+												<span className='dualColumn-item__title'>{item?.name}</span>
+												<span className='dualColumn-item__number'>
+													{item?.books.length} cuốn
+												</span>
+											</li>
+									  ))}
+							</ul>
 
-								{!isExpand &&
-									(library.current?.custom?.length > 0 || myAllLibraryRedux.custom.length > 0) && (
-										<button className='dualColumn-btn' onClick={handleViewMore}>
-											<img className='view-caret' src={caretIcon} alt='caret-icon' />
-											<span>Xem thêm</span>
-										</button>
-									)}
-								{isExpand && (
-									<Link to={`/shelves/${userId}`} className='sidebar__view-more-btn--blue'>
-										Xem thêm
-									</Link>
-								)}
-							</div>
+							{!isExpand && (library.current?.custom?.length > 0 || myAllLibraryRedux.custom.length > 0) && (
+								<button className='dualColumn-btn' onClick={handleViewMore}>
+									<img className='view-caret' src={caretIcon} alt='caret-icon' />
+									<span>Xem thêm</span>
+								</button>
+							)}
+							{isExpand && (
+								<button onClick={handleDirect} className='sidebar__view-more-btn--blue'>
+									Xem thêm
+								</button>
+							)}
 						</div>
-					)}
-				</div>
-			)}
+					</div>
+				)}
+			</div>
 		</>
 	);
 };

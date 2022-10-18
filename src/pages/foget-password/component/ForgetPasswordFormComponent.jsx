@@ -28,11 +28,15 @@ function ForgetpasswordFormComponent({ type }) {
 		}
 	};
 	const handleSubmit = async data => {
+		const dataSend = {
+			email: data.email.toLowerCase().trim(),
+		};
 		if (!isShow) {
 			setIsLoading(true);
 			try {
 				if (type === 'default') {
-					const dataToResetPassword = await dispatch(forgotPassword(data)).unwrap();
+					const dataToResetPassword = await dispatch(forgotPassword(dataSend)).unwrap();
+					console.log(dataToResetPassword);
 					dispatch(handleDataToResetPassword({ email: dataToResetPassword.userEmail }));
 				} else {
 					await dispatch(forgotPasswordAdmin(data)).unwrap();

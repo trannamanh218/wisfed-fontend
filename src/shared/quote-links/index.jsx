@@ -12,12 +12,7 @@ const QuotesLinks = ({ title, list, className }) => {
 	const { userId } = useParams();
 	const { userInfo } = useSelector(state => state.auth);
 	const navigate = useNavigate();
-	const goToQuote = item => {
-		navigate(`/quotes/detail/${item.id}`);
-	};
-	const goToBook = item => {
-		navigate(`/book/detail/${item.bookId}`);
-	};
+
 	const [IdUser, setIdUser] = useState('');
 
 	useEffect(() => {
@@ -35,17 +30,16 @@ const QuotesLinks = ({ title, list, className }) => {
 					<h4>{title}</h4>
 					<div className='quote-links__card'>
 						{list.map(item => (
-							<div className='quote-links__item' key={item.id}>
-								<p
-									className='quote-links__item__content'
-									onClick={() => goToQuote(item)}
-									title={'Xem chi tiết quote'}
-								>{`\"${item?.quote}\"`}</p>
-								<span
-									className='quote-links__item__sub'
-									onClick={() => goToBook(item)}
-									title={'Xem chi tiết sách'}
-								>{`${item.authorName ? `${item.authorName},` : ''} ${item?.book?.name || ''}`}</span>
+							<div
+								className='quote-links__item'
+								key={item.id}
+								title={'Xem chi tiết quote'}
+								onClick={() => navigate(`/quotes/detail/${item.id}`)}
+							>
+								<p className='quote-links__item__content'>{`\"${item?.quote}\"`}</p>
+								<span className='quote-links__item__sub'>{`${
+									item.authorName ? `${item.authorName},` : ''
+								} ${item?.book?.name || ''}`}</span>
 							</div>
 						))}
 					</div>

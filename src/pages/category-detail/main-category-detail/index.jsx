@@ -30,6 +30,8 @@ import FormCheckGroup from 'shared/form-check-group';
 import { getFavoriteCategories } from 'reducers/redux-utils/category';
 import { POST_TYPE } from 'constants/index';
 import { getCategoryDetail } from 'reducers/redux-utils/category';
+import { checkUserLogin } from 'reducers/redux-utils/auth';
+import Storage from 'helpers/Storage';
 
 const MainCategoryDetail = () => {
 	const { id } = useParams();
@@ -137,9 +139,8 @@ const MainCategoryDetail = () => {
 	};
 
 	const handleLikeCategory = () => {
-		if (_.isEmpty(userInfo)) {
-			const customId = 'custom-id-MainCategoryDetail';
-			toast.warn('Vui lòng đăng nhập để sử dụng tính năng này', { toastId: customId });
+		if (!Storage.getAccessToken()) {
+			dispatch(checkUserLogin(true));
 		} else {
 			setIsLike(!isLike);
 			handleCallLikeAndUnlikeCategoryApi(!isLike);

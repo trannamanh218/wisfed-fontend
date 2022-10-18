@@ -7,9 +7,13 @@ import Storage from 'helpers/Storage';
 import Button from 'shared/button';
 import { Add } from 'components/svg';
 import { useNavigate } from 'react-router-dom';
+import { checkUserLogin } from 'reducers/redux-utils/auth';
+import { useDispatch } from 'react-redux';
 
 const AuthorCard = ({ direction, size, item, setModalShow, checkAuthors }) => {
 	const navigate = useNavigate();
+
+	const dispatch = useDispatch();
 	return (
 		<div className='author-card'>
 			<div className='author-card__left' onClick={() => navigate(`/profile/${item.id}`)}>
@@ -42,7 +46,16 @@ const AuthorCard = ({ direction, size, item, setModalShow, checkAuthors }) => {
 						<ConnectButtons direction={direction} item={item} />
 					) : (
 						<div className={`connect-buttons ${'column'}`}>
-							<Button className='connect-button' onClick={() => setModalShow(true)}>
+							<Button
+								className='connect-button'
+								onClick={() => {
+									if (!Storage.getAccessToken()) {
+										dispatch(checkUserLogin(true));
+									} else {
+										setModalShow(true);
+									}
+								}}
+							>
 								<Add className='connect-button__icon' />
 
 								<span className='connect-button__content'>Kết bạn</span>
@@ -51,7 +64,13 @@ const AuthorCard = ({ direction, size, item, setModalShow, checkAuthors }) => {
 								className=' connect-button follow'
 								isOutline={true}
 								name='friend'
-								onClick={() => setModalShow(true)}
+								onClick={() => {
+									if (!Storage.getAccessToken()) {
+										dispatch(checkUserLogin(true));
+									} else {
+										setModalShow(true);
+									}
+								}}
 							>
 								<span className='connect-button__content follow'>Theo dõi </span>
 							</Button>

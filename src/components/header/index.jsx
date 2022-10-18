@@ -222,11 +222,7 @@ const Header = () => {
 	};
 
 	const handlePopup = () => {
-		if (userLogin) {
-			setIsShow(true);
-		} else {
-			handleUserLogin();
-		}
+		setIsShow(true);
 	};
 
 	const handleViewProfile = () => {
@@ -292,19 +288,13 @@ const Header = () => {
 						{activeLink === `/shelves/${userInfo.id}` ? <BookFillIcon /> : <BookIcon />}
 					</Link>
 				</li>
-				<li
-					onClick={handleUserLogin}
-					className={classNames('header__nav__item', { active: activeLink === '/group' })}
-				>
-					<Link className='header__nav__link' to={userLogin && '/group'}>
+				<li className={classNames('header__nav__item', { active: activeLink === '/group' })}>
+					<Link className='header__nav__link' to={'/group'}>
 						{activeLink === '/group' ? <GroupFillIcon /> : <GroupIcon />}
 					</Link>
 				</li>
-				<li
-					onClick={handleUserLogin}
-					className={classNames('header__nav__item', { active: activeLink === '/category' })}
-				>
-					<Link className='header__nav__link' to={userLogin && '/category'}>
+				<li className={classNames('header__nav__item', { active: activeLink === '/category' })}>
+					<Link className='header__nav__link' to={'/category'}>
 						{activeLink === '/category' ? <CategoryFillIcon /> : <CategoryIcon />}
 					</Link>
 				</li>

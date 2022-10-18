@@ -45,7 +45,7 @@
 	letter-spacing: 0.75px;
 	padding: 32px 40px;
 }
-.notification__tabs__main__all__active {
+.notification__tabs__main__all__active:not(.notification__tabs__main__all__friend-request) {
 	opacity: 0.7;
 }
 .notification__tabs__main__all,
@@ -93,16 +93,20 @@
 		}
 	}
 }
+
 .notification__tabs__all__seen:hover {
 	background-color: #eaecec;
 }
+
 .notification__main__all__friend {
 	display: flex;
 	margin: 15px 70px;
 	gap: 20px;
+	min-width: 280px;
+	width: fit-content;
 	.notification__main__all__accept,
 	.notification__main__all__refuse {
-		padding: 11px 55px;
+		padding: 12px;
 		border-radius: 12px;
 		font-weight: 600;
 		font-size: 13px;
@@ -110,7 +114,7 @@
 		letter-spacing: 0.25px;
 		text-align: center;
 		cursor: pointer;
-		// min-width: 180px;
+		width: 160px;
 		border: none;
 	}
 	.notification__main__all__accept {

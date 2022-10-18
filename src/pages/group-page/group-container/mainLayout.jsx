@@ -5,11 +5,12 @@ import ResultNotFound from 'pages/result/component/result-not-found';
 import LoadingIndicator from 'shared/loading-indicator';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { useDispatch } from 'react-redux';
-import { getRecommendGroup } from 'reducers/redux-utils/group';
+import { getGroupList, getRecommendGroup } from 'reducers/redux-utils/group';
 import { NotificationError } from 'helpers/Error';
 import defaultAvatar from 'assets/images/Rectangle 17435.png';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
+import _ from 'lodash';
 
 const MainLayout = ({ listMyGroup, listAdminMyGroup }) => {
 	const [list, setList] = useState([]);
@@ -20,6 +21,8 @@ const MainLayout = ({ listMyGroup, listAdminMyGroup }) => {
 	const dispatch = useDispatch();
 
 	const resetGroupList = useSelector(state => state.group.resetGroupList);
+
+	const userInfo = useSelector(state => state.auth.userInfo);
 
 	const getGroupListFirstTime = async () => {
 		try {
@@ -59,11 +62,55 @@ const MainLayout = ({ listMyGroup, listAdminMyGroup }) => {
 		}
 	};
 
+	const getGroupListFirstTimeNoUserInfo = async () => {
+		try {
+			const params = {
+				start: 0,
+				limit: callApiPerPage.current,
+			};
+			const data = await dispatch(getGroupList(params)).unwrap();
+			if (!data.rows.length || data.rows.length < callApiPerPage.current) {
+				setHasMore(false);
+			}
+			setList(data.rows);
+		} catch (err) {
+			NotificationError(err);
+		}
+	};
+
+	const getGroupListNextTimesNoUserInfo = async () => {
+		try {
+			const params = {
+				start: callApiStart.current,
+				limit: callApiPerPage.current,
+			};
+			const data = await dispatch(getGroupList(params)).unwrap();
+			if (data.rows.length) {
+				if (data.rows.length < callApiPerPage.current) {
+					setHasMore(false);
+				} else {
+					callApiStart.current += callApiPerPage.current;
+				}
+				setList(list.concat(data.rows));
+			} else {
+				setHasMore(false);
+			}
+		} catch (err) {
+			NotificationError(err);
+		}
+	};
+
 	useEffect(() => {
-		setHasMore(true);
-		callApiStart.current = 9;
-		getGroupListFirstTime();
-	}, [resetGroupList]);
+		if (!_.isEmpty(userInfo)) {
+			setHasMore(true);
+			callApiStart.current = 9;
+			getGroupListFirstTime();
+		} else {
+			setHasMore(true);
+			callApiStart.current = 9;
+			getGroupListFirstTimeNoUserInfo();
+		}
+	}, [resetGroupList, userInfo]);
 
 	return (
 		<>
@@ -77,7 +124,7 @@ const MainLayout = ({ listMyGroup, listAdminMyGroup }) => {
 					{
 						<InfiniteScroll
 							dataLength={list.length}
-							next={getGroupListNextTimes}
+							next={!_.isEmpty(userInfo) ? getGroupListNextTimes : getGroupListNextTimesNoUserInfo}
 							hasMore={hasMore}
 							loader={<LoadingIndicator />}
 						>

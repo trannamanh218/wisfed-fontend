@@ -359,11 +359,9 @@ function MainGroupComponent({ handleChange, keyChange, data, member, handleUpdat
 						<Tab eventKey='post' title='Bài viết'>
 							{show ? <MainPostGroup handleUpdate={handleUpdate} /> : <MainPostGroupView />}
 						</Tab>
-						{show && (
-							<Tab eventKey='member' title='Thành viên'>
-								<MemberGroup memberGroupsProp={member} />
-							</Tab>
-						)}
+						<Tab eventKey='member' title='Thành viên'>
+							<MemberGroup memberGroupsProp={member} />
+						</Tab>
 					</Tabs>
 				</div>
 			)}

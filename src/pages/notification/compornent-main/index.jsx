@@ -40,7 +40,6 @@ const Notification = () => {
 			} else {
 				setHasMore(false);
 			}
-			return;
 		} catch (err) {
 			NotificationError(err);
 		} finally {
@@ -56,7 +55,8 @@ const Notification = () => {
 				const data = { ...item, isAccept: false, isRefuse: false };
 				return { ...data };
 			});
-			setGetNotifications(newArr);
+			const filterFriend = newArr.filter(item => !item.isCheck);
+			setGetNotifications(filterFriend);
 		}
 	}, [getListDefault, isRealTime]);
 
@@ -82,6 +82,8 @@ const Notification = () => {
 		const length = getNotifications.filter(item => item.verb === 'addFriend' && !item.isCheck);
 		return length.length;
 	};
+
+	console.log('dua', getNotifications);
 
 	return (
 		<NormalContainer>

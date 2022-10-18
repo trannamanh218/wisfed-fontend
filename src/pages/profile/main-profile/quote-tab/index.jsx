@@ -5,13 +5,16 @@ import { useDispatch } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
 import { useParams } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { useSelector } from 'react-redux';
 
-const QuoteTab = ({ currentTab }) => {
+const QuoteTab = ({ currentTab, currentUserInfo }) => {
 	const [myQuoteList, setMyQuoteList] = useState([]);
 	const [myFavoriteQuoteList, setMyFavoriteQuoteList] = useState([]);
 
 	const dispatch = useDispatch();
 	const { userId } = useParams();
+
+	const userInfo = useSelector(state => state.auth.userInfo);
 
 	useEffect(() => {
 		if (currentTab === 'quotes') {
@@ -24,7 +27,6 @@ const QuoteTab = ({ currentTab }) => {
 		try {
 			const params = {
 				start: 0,
-				limit: 3,
 				sort: JSON.stringify([{ property: 'createdAt', direction: 'DESC' }]),
 				filter: JSON.stringify([{ operator: 'eq', value: userId, property: 'createdBy' }]),
 			};
@@ -39,7 +41,6 @@ const QuoteTab = ({ currentTab }) => {
 		try {
 			const params = {
 				start: 0,
-				limit: 3,
 				sort: JSON.stringify([{ property: 'createdAt', direction: 'DESC' }]),
 			};
 			const res = await dispatch(getMyLikedQuotes(params)).unwrap();
@@ -54,8 +55,18 @@ const QuoteTab = ({ currentTab }) => {
 			{currentTab === 'quotes' && (
 				<>
 					<div className='my-quotes'>
-						<h4>Quote của tôi</h4>
-						<QuoteList list={myQuoteList} />
+						{userId === userInfo.id ? (
+							<h4>Quote của tôi</h4>
+						) : (
+							<h4>
+								Quote của{' '}
+								{currentUserInfo.fullName
+									? currentUserInfo.fullName
+									: currentUserInfo.firstName + '' + currentUserInfo.lastName}
+							</h4>
+						)}
+
+						<QuoteList list={myQuoteList} userId={userId} />
 					</div>
 					<div className='favorite-quotes'>
 						<h4>Quote yêu thích</h4>
@@ -69,6 +80,7 @@ const QuoteTab = ({ currentTab }) => {
 
 QuoteTab.propTypes = {
 	currentTab: PropTypes.string,
+	currentUserInfo: PropTypes.object,
 };
 
 export default memo(QuoteTab);
