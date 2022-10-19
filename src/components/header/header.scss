@@ -104,6 +104,31 @@
 			justify-content: center;
 			align-items: center;
 			cursor: pointer;
+
+			.header__notify__icon--hover {
+				position: absolute;
+				top: 100%;
+				padding: 10px 7px;
+				background-color: rgba(0, 0, 0, 0.7);
+				border-radius: 4px;
+				color: #fcfcfc;
+				z-index: 500;
+				text-align: center;
+				width: fit-content;
+				white-space: nowrap;
+				font-weight: 200;
+				font-size: 12px;
+				letter-spacing: 0.2px;
+				cursor: default;
+				user-select: none;
+				opacity: 0;
+				transition: all 0.2s ease;
+			}
+
+			&:hover .header__notify__icon--hover {
+				opacity: 1;
+				transition: all 0.2s ease;
+			}
 		}
 
 		&__link {
@@ -129,6 +154,31 @@
 					fill: $primary;
 				}
 			}
+		}
+
+		&--hover {
+			position: absolute;
+			top: 100%;
+			padding: 10px 7px;
+			background-color: rgba(0, 0, 0, 0.7);
+			border-radius: 4px;
+			color: #fcfcfc;
+			z-index: 500;
+			text-align: center;
+			width: fit-content;
+			white-space: nowrap;
+			font-weight: 200;
+			font-size: 12px;
+			letter-spacing: 0.2px;
+			cursor: default;
+			user-select: none;
+			opacity: 0;
+			transition: all 0.2s ease;
+		}
+
+		&:hover &--hover {
+			opacity: 1;
+			transition: all 0.2s ease;
 		}
 	}
 

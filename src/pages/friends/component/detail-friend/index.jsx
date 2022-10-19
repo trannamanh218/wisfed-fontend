@@ -144,9 +144,10 @@ const DetailFriend = () => {
 				} else if (suggestions) {
 					if (inputSearch.length > 0) {
 						setGetListFollowings(
-							listFriendSuggest.filter(item =>
-								item.fullName.toLowerCase().includes(inputSearch.toLowerCase())
-							)
+							listFriendSuggest.filter(item => {
+								const fullName = item.firstName + ' ' + item.lastName;
+								return fullName.toLowerCase().includes(inputSearch.toLowerCase());
+							})
 						);
 					} else {
 						Promise.all([getSuggestFriendByTopFollow(), getSuggestFriendByCategory()]).then(data => {
@@ -168,9 +169,10 @@ const DetailFriend = () => {
 				} else if (getRecommendFriendData) {
 					if (inputSearch.length > 0) {
 						setGetListFollowings(
-							listRecommendFriend.filter(item =>
-								item.fullName.toLowerCase().includes(inputSearch.toLowerCase())
-							)
+							listRecommendFriend.filter(item => {
+								const fullName = item.firstName + ' ' + item.lastName;
+								return fullName.toLowerCase().includes(inputSearch.toLowerCase());
+							})
 						);
 					} else {
 						getRecommendFriendData();

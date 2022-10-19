@@ -33,16 +33,24 @@ const PostActionBar = ({ postData, handleLikeAction }) => {
 		} else {
 			let dataToShare;
 			if (
-				location.pathname.includes('profile') ||
+				location.pathname.includes('/profile/') ||
 				location.pathname.includes('book/detail') ||
 				location.pathname.includes('/review/') ||
 				postData.verb === POST_VERB ||
-				postData.verb === POST_VERB_SHARE
+				postData.verb === POST_VERB_SHARE ||
+				postData.verb === GROUP_POST_VERB_SHARE ||
+				postData.verb === TOP_USER_VERB_SHARE ||
+				postData.verb === QUOTE_VERB_SHARE ||
+				postData.verb === READ_TARGET_VERB_SHARE ||
+				postData.verb === TOP_BOOK_VERB_SHARE ||
+				postData.verb === TOP_QUOTE_VERB_SHARE ||
+				postData.verb === MY_BOOK_VERB_SHARE
 			) {
 				if (postData.verb === POST_VERB) {
 					dataToShare = {
 						...postData,
 						type: 'post',
+						minipostId: postData.minipostId || postData.id,
 						sharePost: { ...postData },
 						verb: POST_VERB_SHARE,
 					};
@@ -64,18 +72,75 @@ const PostActionBar = ({ postData, handleLikeAction }) => {
 						verb: POST_VERB_SHARE,
 						sharePost: { ...newDataShare },
 					};
+				} else if (postData.verb === GROUP_POST_VERB_SHARE) {
+					dataToShare = {
+						verb: GROUP_POST_VERB_SHARE,
+						...postData,
+					};
+				} else if (postData.verb === TOP_USER_VERB_SHARE) {
+					dataToShare = {
+						by: postData.originId.by,
+						categoryId: postData.originId.categoryId || null,
+						userType: postData.originId.userType,
+						categoryName: postData.info?.category?.name,
+						type: postData.originId.type,
+						id: postData.info.id,
+						trueRank: postData.originId.rank,
+						verb: TOP_USER_VERB_SHARE,
+						...postData.info,
+					};
+				} else if (postData.verb === QUOTE_VERB_SHARE) {
+					dataToShare = {
+						type: 'quote',
+						...postData.sharePost,
+						verb: QUOTE_VERB_SHARE,
+					};
+				} else if (postData.verb === READ_TARGET_VERB_SHARE) {
+					const percentTemp = ((postData.currentRead / postData.totalTarget) * 100).toFixed();
+					dataToShare = {
+						numberBook: postData.totalTarget,
+						booksReadCount: postData.currentRead,
+						percent: percentTemp > 100 ? 100 : percentTemp,
+						verb: READ_TARGET_VERB_SHARE,
+					};
+				} else if (postData.verb === TOP_BOOK_VERB_SHARE) {
+					dataToShare = {
+						by: postData.originId.by,
+						categoryId: postData.originId.categoryId || null,
+						categoryName: postData.info?.category?.name,
+						type: postData.originId.type,
+						id: postData.info.id,
+						verb: TOP_BOOK_VERB_SHARE,
+						trueRank: postData.originId.rank,
+						...postData.info,
+					};
+				} else if (postData.verb === TOP_QUOTE_VERB_SHARE) {
+					dataToShare = {
+						by: postData.originId.by,
+						categoryId: postData.originId.categoryId || null,
+						categoryName: postData.info?.category?.name,
+						type: postData.originId.type,
+						id: postData.info.id,
+						verb: TOP_QUOTE_VERB_SHARE,
+						trueRank: postData.originId.rank,
+						...postData.info,
+					};
+				} else if (postData.verb === MY_BOOK_VERB_SHARE) {
+					dataToShare = {
+						id: postData.info.id,
+						verb: MY_BOOK_VERB_SHARE,
+						type: postData.originId.type,
+						...postData.info,
+					};
 				} else {
 					dataToShare = {
-						verb: POST_VERB_SHARE,
+						...postData,
+						type: 'post',
+						minipostId: postData.minipostId || postData.id,
 						sharePost: { ...postData },
+						verb: POST_VERB_SHARE,
 					};
 				}
-			} else if (postData.verb === QUOTE_VERB_SHARE) {
-				dataToShare = {
-					type: 'quote',
-					...postData.sharePost,
-					verb: QUOTE_VERB_SHARE,
-				};
 			} else if (
 				location.pathname.includes('/group/') ||
 				postData.verb === GROUP_POST_VERB ||
@@ -99,55 +164,6 @@ const PostActionBar = ({ postData, handleLikeAction }) => {
 						sharePost: { ...postData },
 					};
 				}
-			} else if (postData.verb === READ_TARGET_VERB_SHARE) {
-				const percentTemp = ((postData.currentRead / postData.totalTarget) * 100).toFixed();
-				dataToShare = {
-					numberBook: postData.totalTarget,
-					booksReadCount: postData.currentRead,
-					percent: percentTemp > 100 ? 100 : percentTemp,
-					verb: READ_TARGET_VERB_SHARE,
-				};
-			} else if (postData.verb === TOP_USER_VERB_SHARE) {
-				dataToShare = {
-					by: postData.originId.by,
-					categoryId: postData.originId.categoryId || null,
-					userType: postData.originId.userType,
-					categoryName: postData.info?.category?.name,
-					type: postData.originId.type,
-					id: postData.info.id,
-					trueRank: postData.originId.rank,
-					verb: TOP_USER_VERB_SHARE,
-					...postData.info,
-				};
-			} else if (postData.verb === TOP_BOOK_VERB_SHARE) {
-				dataToShare = {
-					by: postData.originId.by,
-					categoryId: postData.originId.categoryId || null,
-					categoryName: postData.info?.category?.name,
-					type: postData.originId.type,
-					id: postData.info.id,
-					verb: TOP_BOOK_VERB_SHARE,
-					trueRank: postData.originId.rank,
-					...postData.info,
-				};
-			} else if (postData.verb === TOP_QUOTE_VERB_SHARE) {
-				dataToShare = {
-					by: postData.originId.by,
-					categoryId: postData.originId.categoryId || null,
-					categoryName: postData.info?.category?.name,
-					type: postData.originId.type,
-					id: postData.info.id,
-					verb: TOP_QUOTE_VERB_SHARE,
-					trueRank: postData.originId.rank,
-					...postData.info,
-				};
-			} else if (postData.verb === MY_BOOK_VERB_SHARE) {
-				dataToShare = {
-					id: postData.info.id,
-					verb: MY_BOOK_VERB_SHARE,
-					type: postData.originId.type,
-					...postData.info,
-				};
 			}
 
 			dispatch(saveDataShare(dataToShare));
