@@ -15,7 +15,6 @@ import SearchBook from './SearchBook';
 import PropTypes from 'prop-types';
 import { Modal, ModalBody } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
-import { toast } from 'react-toastify';
 import { editUserInfo } from 'reducers/redux-utils/user';
 import { NotificationError } from 'helpers/Error';
 import { getListBookByCategory, getPostsByCategory } from 'reducers/redux-utils/category';

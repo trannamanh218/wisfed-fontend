@@ -89,6 +89,7 @@ function AddAndSearchAuthorUploadBook({ inputAuthorValue, setInputAuthorValue, a
 				hasSearchIcon={true}
 				hasMoreEllipsis={hasMoreEllipsis}
 				placeholder={'Tìm kiếm hoặc nhập tên tác giả'}
+				acceptValueText
 			/>
 		</div>
 	);

@@ -240,6 +240,19 @@
 	justify-content: center;
 }
 
+.system-notification__image {
+	display: flex !important;
+	justify-content: center;
+	align-items: center;
+	background-color: white;
+	.user-avatar__img {
+		width: 70%;
+		height: auto;
+		object-fit: cover;
+		transform: translateX(1px);
+	}
+}
+
 @media only screen and (max-width: 1366px) {
 	.notification {
 		max-height: 85vh;
