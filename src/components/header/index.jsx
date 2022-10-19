@@ -277,6 +277,7 @@ const Header = () => {
 					<Link className='header__nav__link' to='/' onClick={onClickReloadPosts}>
 						<HomeIcon className='header__nav__icon' />
 					</Link>
+					<span className='header__nav__item--hover'>Trang chủ</span>
 				</li>
 				<li
 					onClick={handleUserLogin}
@@ -287,16 +288,19 @@ const Header = () => {
 					<Link className='header__nav__link' to={userLogin && `/shelves/${userInfo.id}`}>
 						{activeLink === `/shelves/${userInfo.id}` ? <BookFillIcon /> : <BookIcon />}
 					</Link>
+					<span className='header__nav__item--hover'>Tủ sách</span>
 				</li>
 				<li className={classNames('header__nav__item', { active: activeLink === '/group' })}>
 					<Link className='header__nav__link' to={'/group'}>
 						{activeLink === '/group' ? <GroupFillIcon /> : <GroupIcon />}
 					</Link>
+					<span className='header__nav__item--hover'>Nhóm</span>
 				</li>
 				<li className={classNames('header__nav__item', { active: activeLink === '/category' })}>
 					<Link className='header__nav__link' to={'/category'}>
 						{activeLink === '/category' ? <CategoryFillIcon /> : <CategoryIcon />}
 					</Link>
+					<span className='header__nav__item--hover'>Chủ đề</span>
 				</li>
 				<li
 					onClick={handleUserLogin}
@@ -305,9 +309,11 @@ const Header = () => {
 					<Link className='header__nav__link' to={userLogin && '/friends'}>
 						{activeLink === '/friends' ? <FriendsFillIcon /> : <FriendsIcon />}
 					</Link>
+					<span className='header__nav__item--hover'>Bạn bè</span>
 				</li>
 
 				<div className='notify-icon'>
+					<span className='header__notify__icon--hover'>Thông báo</span>
 					<div
 						ref={buttonModal}
 						onClick={toglleModalNotify}
@@ -316,7 +322,6 @@ const Header = () => {
 							'header__notify__icon__active': realTime,
 						})}
 					/>
-
 					{modalNoti && (
 						<NotificationModal setModalNoti={setModalNoti} buttonModal={buttonModal} realTime={realTime} />
 					)}

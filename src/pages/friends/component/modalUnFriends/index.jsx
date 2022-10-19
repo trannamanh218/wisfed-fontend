@@ -4,7 +4,15 @@ import { Modal } from 'react-bootstrap';
 import './modalUnfriend.scss';
 import Button from 'shared/button';
 
-const ModalUnFriend = ({ showModalUnfriends, toggleModal, handleUnfriend, data }) => {
+const ModalUnFriend = ({ showModalUnfriends, toggleModal, handleUnfriend, data, type }) => {
+	const renderName = () => {
+		if (type === 'following') {
+			return data?.userTwo?.fullName;
+		} else {
+			return data?.fullName || data?.userOne?.fullName || data?.firstName + ' ' + data?.lastName;
+		}
+	};
+
 	return (
 		<Modal className='friends__unFriends__container' show={showModalUnfriends} onHide={toggleModal}>
 			<Modal.Body>
@@ -13,9 +21,8 @@ const ModalUnFriend = ({ showModalUnfriends, toggleModal, handleUnfriend, data }
 				</div>
 				<div className='friends__unFriend__content'>Xác nhận hủy kết bạn</div>
 				<div className='friends__unFriend__title'>
-					Bạn có chắc chắn muốn xóa{' '}
-					<span style={{ fontWeight: '700' }}>{data.fullName || data.firstName + ' ' + data.lastName}</span>{' '}
-					khỏi danh sách bạn bè không?
+					Bạn có chắc chắn muốn xóa <span style={{ fontWeight: '700' }}>{renderName()}</span> khỏi danh sách
+					bạn bè không?
 				</div>
 				<div className='friends__unFriend__main'>
 					<Button
@@ -42,6 +49,7 @@ ModalUnFriend.propTypes = {
 	data: PropTypes.object,
 	toggleModal: PropTypes.func,
 	showModalUnfriends: PropTypes.bool,
+	type: PropTypes.string,
 };
 
 export default ModalUnFriend;

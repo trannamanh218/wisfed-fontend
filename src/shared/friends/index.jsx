@@ -17,7 +17,15 @@ import { changeToggleFollows } from 'reducers/redux-utils/friends';
 import ModalUnFriend from 'pages/friends/component/modalUnFriends';
 import { Link } from 'react-router-dom';
 
-const FriendsItem = ({ data, keyTabs, getListFollower, getMyListFriendReq, getListFollowings, getListSuggest }) => {
+const FriendsItem = ({
+	data,
+	keyTabs,
+	getListFollower,
+	getMyListFriendReq,
+	getListFollowings,
+	getListSuggest,
+	type,
+}) => {
 	const dispatch = useDispatch();
 	const invitation = location.pathname === '/friends/invitation';
 	const following = location.pathname === '/friends/following';
@@ -253,7 +261,11 @@ const FriendsItem = ({ data, keyTabs, getListFollower, getMyListFriendReq, getLi
 
 					<div className='myfriends__star'>
 						<div className='myfriends__star__name'>
-							{data.userTwo?.fullName ? data.userTwo?.fullName : data.fullName}
+							{data.userTwo?.fullName
+								? data.userTwo?.fullName
+								: data.fullName
+								? data.fullName
+								: data.firstName + ' ' + data.lastName}
 						</div>
 						{data.isStar && <Subtract />}
 					</div>
@@ -363,6 +375,7 @@ const FriendsItem = ({ data, keyTabs, getListFollower, getMyListFriendReq, getLi
 				toggleModal={toggleModal}
 				handleUnfriend={handleUnfriend}
 				data={data}
+				type={type}
 			/>
 			{handleRenderDisplay()}
 		</>
@@ -377,5 +390,6 @@ FriendsItem.propTypes = {
 	getListFollowings: PropTypes.array,
 	getListSuggest: PropTypes.array,
 	getListRecommends: PropTypes.array,
+	type: PropTypes.string,
 };
 export default FriendsItem;

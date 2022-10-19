@@ -137,7 +137,11 @@ const PersonalInfo = ({ currentUserInfo, setCurrentTab }) => {
 					</div>
 					<div className='personal-info__detail__name'>
 						<div className='personal-info__username'>
-							<h4>{currentUserInfo.fullName}</h4>
+							<h4>
+								{currentUserInfo.fullName
+									? currentUserInfo.fullName
+									: currentUserInfo.firstName + ' ' + currentUserInfo.lastName}
+							</h4>
 							{currentUserInfo.id === userInfo.id && (
 								<div className='edit-name' onMouseEnter={onMouseEnterEdit} onClick={toggleModal}>
 									<img className='edit-name__pencil' src={pencil} alt='pencil' />

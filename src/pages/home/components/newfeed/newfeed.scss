@@ -124,6 +124,22 @@
 	}
 }
 
+@media only screen and (max-width: 1366px) {
+	.newfeed {
+		.creat-post-modal-content__main__body__text-field-edit-wrapper {
+			max-height: 250px;
+		}
+	}
+}
+
+@media only screen and (max-width: 1280px) {
+	.newfeed {
+		.creat-post-modal-content__main__body__text-field-edit-wrapper {
+			max-height: 350px;
+		}
+	}
+}
+
 @media only screen and (max-width: 1025px) {
 	.newfeed {
 		.post__container {

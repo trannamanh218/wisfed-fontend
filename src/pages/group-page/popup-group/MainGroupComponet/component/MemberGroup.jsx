@@ -107,7 +107,7 @@ function MemberGroup({ memberGroupsProp = [] }) {
 								<div className='member-item'>
 									<div className='member-item__info' onClick={() => navigate(`/profile/${item.id}`)}>
 										<img
-											src={item.avatarImage}
+											src={item.avatarImage || defaultAvatar}
 											onError={e => e.target.setAttribute('src', defaultAvatar)}
 											alt=''
 										/>

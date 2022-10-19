@@ -22,7 +22,7 @@ function ShareTarget({ postData, inPost = false }) {
 			}
 		}
 	}, []);
-
+	console.log(postData);
 	const renderContentTop = () => {
 		return (
 			<div className='share-target__content__top'>
