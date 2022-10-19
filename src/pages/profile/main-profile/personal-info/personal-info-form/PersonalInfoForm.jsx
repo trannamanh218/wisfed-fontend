@@ -18,6 +18,8 @@ import GroupType from './group-type';
 import { updateUserInfo } from 'reducers/redux-utils/auth';
 import { Modal } from 'react-bootstrap';
 
+const validationUserNameRegex = /^[0-9a-zàáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđ\s]+$/i;
+
 const PersonalInfoForm = ({ userData, toggleModal }) => {
 	const [userFirstName, setUserFirstName] = useState(userData.firstName);
 	const [userLastName, setUserLastName] = useState(userData.lastName);
@@ -44,6 +46,7 @@ const PersonalInfoForm = ({ userData, toggleModal }) => {
 	const [userInterest, setUserInterest] = useState(userData.interest);
 	const [editInterest, setEditInterest] = useState(false);
 	const [showModalDeleteSocialMedia, setShowModalDeleteSocialMedia] = useState(false);
+	const [userNameInputError, setUserNameInputError] = useState(false);
 
 	const textareaRef = useRef(null);
 	const userFirstNameRef = useRef(null);
@@ -129,6 +132,15 @@ const PersonalInfoForm = ({ userData, toggleModal }) => {
 		];
 		genderArray.current = newArray;
 	}, [genderRef.current]);
+
+	useEffect(() => {
+		const textToTest = userFirstName + userLastName;
+		if (textToTest) {
+			setUserNameInputError(!validationUserNameRegex.test(textToTest));
+		} else {
+			setUserNameInputError(false);
+		}
+	}, [userFirstName, userLastName]);
 
 	const onChangeDate = data => {
 		data.value = ('0' + data.value).slice(-2);
@@ -294,24 +306,6 @@ const PersonalInfoForm = ({ userData, toggleModal }) => {
 	};
 
 	useEffect(() => {
-		if (
-			editName ||
-			editBirthday ||
-			editGender ||
-			editAddress ||
-			editWorks ||
-			editDescriptions ||
-			editFavoriteCategories ||
-			!_.isEqual(userData.socials, userSocialsMedia) ||
-			editHighSchool ||
-			editUniversity ||
-			editInterest
-		) {
-			setaccessSubmit(true);
-		} else {
-			setaccessSubmit(false);
-		}
-
 		if (userFirstNameRef.current && fieldEditting === 'name-editting') {
 			userFirstNameRef.current.focus();
 		} else if (userAddressRef.current && fieldEditting === 'address-editting') {
@@ -344,6 +338,42 @@ const PersonalInfoForm = ({ userData, toggleModal }) => {
 		editUniversity,
 		editInterest,
 		userSocialsMedia,
+	]);
+
+	// kiểm tra trạng thái active nút submit form
+	useEffect(() => {
+		if (
+			(editName ||
+				editBirthday ||
+				editGender ||
+				editAddress ||
+				editWorks ||
+				editDescriptions ||
+				editFavoriteCategories ||
+				!_.isEqual(userData.socials, userSocialsMedia) ||
+				editHighSchool ||
+				editUniversity ||
+				editInterest) &&
+			!userNameInputError
+		) {
+			setaccessSubmit(true);
+		} else {
+			setaccessSubmit(false);
+		}
+	}, [
+		editName,
+		editBirthday,
+		editGender,
+		editAddress,
+		editWorks,
+		editDescriptions,
+		editSocialsMedia,
+		fieldEditting,
+		editHighSchool,
+		editUniversity,
+		editInterest,
+		userSocialsMedia,
+		userNameInputError,
 	]);
 
 	useEffect(() => {
@@ -396,6 +426,9 @@ const PersonalInfoForm = ({ userData, toggleModal }) => {
 						</div>
 					)}
 				</div>
+				{(userFirstName || userLastName) && userNameInputError && editName && (
+					<div className='form-field error'>Không được nhập kí tự đặc biệt</div>
+				)}
 			</div>
 
 			<div className='form-field-group'>

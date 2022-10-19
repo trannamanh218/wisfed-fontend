@@ -87,11 +87,11 @@ function Register() {
 	return (
 		<div className='register__container'>
 			<Circle loading={isLoading} />
-			<Link to='/login'>
-				<div className='register__header'>
+			<div className='register__header'>
+				<Link to='/login'>
 					<img src={Logo} alt='logo' />
-				</div>
-			</Link>
+				</Link>
+			</div>
 			{isShow ? (
 				<div className='register__container-modal'>
 					<ModalLogin data={dataModal} handleClose={handleClose} />

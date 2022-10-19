@@ -133,7 +133,6 @@ function Bookcase({ currentUserInfo, currentTab }) {
 	};
 
 	const directToBookDetail = bookId => {
-		console.log();
 		navigate(`/book/detail/${bookId}`);
 	};
 

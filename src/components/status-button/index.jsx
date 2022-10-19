@@ -192,8 +192,6 @@ const StatusButton = ({ className, bookData, inCreatePost, bookStatus }) => {
 		}
 	};
 
-	console.log('ss', bookStatus, 'sss', currentStatus);
-
 	return (
 		<>
 			<Circle loading={fetchStatus} />

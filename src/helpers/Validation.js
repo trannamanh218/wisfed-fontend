@@ -9,8 +9,22 @@ export const nameBookShelve = yup.object().shape({
 });
 
 export const registerValidate = yup.object().shape({
-	firstname: yup.string().max(30, '*Họ và tên không nhập quá 30 ký tự').required('*Vui lòng điền đầy đủ thông tin'),
-	lastname: yup.string().max(30, '*Họ và tên không nhập quá 30 ký tự').required('*Vui lòng điền đầy đủ thông tin'),
+	firstname: yup
+		.string()
+		.max(30, '*Họ và tên không nhập quá 30 ký tự')
+		.matches(
+			/^[0-9a-zàáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđ\s]+$/i,
+			'Không được viết kí tự đặc biệt'
+		)
+		.required('*Vui lòng điền đầy đủ thông tin'),
+	lastname: yup
+		.string()
+		.max(30, '*Họ và tên không nhập quá 30 ký tự')
+		.matches(
+			/^[0-9a-zàáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđ\s]+$/i,
+			'Không được viết kí tự đặc biệt'
+		)
+		.required('*Vui lòng điền đầy đủ thông tin'),
 	email: yup
 		.string()
 		.max(200, '*Email không vượt quá 200 ký tự')
