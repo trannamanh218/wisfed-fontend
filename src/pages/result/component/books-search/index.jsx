@@ -1,17 +1,17 @@
-import './books-search.scss';
-import AuthorBook from 'shared/author-book';
-import ResultNotFound from '../result-not-found';
-import PropTypes from 'prop-types';
-import InfiniteScroll from 'react-infinite-scroll-component';
-import LoadingIndicator from 'shared/loading-indicator';
-import { getFilterSearch } from 'reducers/redux-utils/search';
 import { NotificationError } from 'helpers/Error';
-import { useEffect, useState, useRef } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import Button from 'shared/button';
-import { Link, useNavigate } from 'react-router-dom';
 import Storage from 'helpers/Storage';
+import PropTypes from 'prop-types';
+import { useEffect, useRef, useState } from 'react';
+import InfiniteScroll from 'react-infinite-scroll-component';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { checkUserLogin } from 'reducers/redux-utils/auth';
+import { getFilterSearch } from 'reducers/redux-utils/search';
+import AuthorBook from 'shared/author-book';
+import Button from 'shared/button';
+import LoadingIndicator from 'shared/loading-indicator';
+import ResultNotFound from '../result-not-found';
+import './books-search.scss';
 
 const BookSearch = ({ isFetching, value, setIsFetching, searchResultInput, activeKeyDefault, updateBooks }) => {
 	const [listArrayBooks, setListArrayBooks] = useState([]);
@@ -107,9 +107,7 @@ const BookSearch = ({ isFetching, value, setIsFetching, searchResultInput, activ
 									<div className='btn-goTo-upload-book has-background'>
 										<h6>Vui lòng thêm sách nếu bạn không tìm thấy trên hệ thống</h6>
 										<br />
-										<Link to='/upload-book'>
-											<Button>Thêm sách</Button>
-										</Link>
+										<Button onClick={handleDiect}>Thêm sách</Button>
 									</div>
 								)}
 							</>
