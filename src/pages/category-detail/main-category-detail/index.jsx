@@ -386,23 +386,36 @@ const MainCategoryDetail = () => {
 											)}
 
 											<div className='main-category-detail__allbook'>
-												<h4>
-													{`Tất cả sách chủ đề "${
-														categoryInfo.name ? categoryInfo.name.toLowerCase() : ''
-													}"`}
-												</h4>
-												<div className='books'>
-													{bookList.map((item, index) => (
-														<BookThumbnail
-															key={index}
-															{...item}
-															source={item.source}
-															size='lg'
-															data={item}
-															handleClick={handleViewBookDetail}
-														/>
-													))}
-												</div>
+												{bookList.length > 0 ? (
+													<>
+														<h4>
+															{`Tất cả sách chủ đề "${
+																categoryInfo.name ? categoryInfo.name.toLowerCase() : ''
+															}"`}
+														</h4>
+														<div className='books'>
+															{bookList.map((item, index) => (
+																<BookThumbnail
+																	key={index}
+																	{...item}
+																	source={item.source}
+																	size='lg'
+																	data={item}
+																	handleClick={handleViewBookDetail}
+																/>
+															))}
+														</div>
+													</>
+												) : (
+													<p
+														style={{
+															textAlign: 'center',
+															fontSize: '18px',
+														}}
+													>
+														Chưa có cuốn sách nào thuộc chủ đề này
+													</p>
+												)}
 											</div>
 										</>
 									)}
