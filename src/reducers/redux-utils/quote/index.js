@@ -10,6 +10,7 @@ import {
 	countQuotesByCategoryWithUserIdAPI,
 	countAllQuotesByCategorydAPI,
 	getQuoteCommentsAPI,
+	listQuotesLikedByIdAPI,
 } from 'constants/apiURL';
 import Request from 'helpers/Request';
 
@@ -42,6 +43,20 @@ export const getQuoteDetail = createAsyncThunk('quote/get quote detail', async (
 		throw rejectWithValue(error);
 	}
 });
+
+export const getlistQuotesLikedById = createAsyncThunk(
+	'quote/get listQuotesLikedById',
+	async (data, { rejectWithValue }) => {
+		const { userId, params } = data;
+		try {
+			const response = await Request.makeGet(listQuotesLikedByIdAPI(userId), params);
+			return response.data;
+		} catch (err) {
+			const error = JSON.parse(err.response);
+			throw rejectWithValue(error);
+		}
+	}
+);
 
 export const creatQuotesComment = createAsyncThunk('quote/creat quotes comment', async (data, { rejectWithValue }) => {
 	try {
