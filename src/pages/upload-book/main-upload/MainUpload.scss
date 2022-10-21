@@ -155,9 +155,10 @@
 				display: flex;
 				gap: 4px;
 				flex-wrap: wrap;
+				align-items: center;
 
 				&__item {
-					height: 43px;
+					height: 37px;
 				}
 			}
 			.add-and-search-categories__main-content.added-categories {

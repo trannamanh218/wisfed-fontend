@@ -26,7 +26,6 @@ import { NotificationError } from 'helpers/Error';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
 import Circle from 'shared/loading/circle';
-import MainPostGroupView from './component/MainPostGroupView';
 import _ from 'lodash';
 import { useParams } from 'react-router-dom';
 import SearchLayout from './component/SearchLayout';
@@ -357,7 +356,7 @@ function MainGroupComponent({ handleChange, keyChange, data, member, handleUpdat
 							/>
 						</Tab>
 						<Tab eventKey='post' title='Bài viết'>
-							{show ? <MainPostGroup handleUpdate={handleUpdate} /> : <MainPostGroupView />}
+							<MainPostGroup handleUpdate={handleUpdate} show={show} />
 						</Tab>
 						<Tab eventKey='member' title='Thành viên'>
 							<MemberGroup memberGroupsProp={member} />

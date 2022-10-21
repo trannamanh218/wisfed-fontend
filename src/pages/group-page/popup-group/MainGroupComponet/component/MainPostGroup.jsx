@@ -11,7 +11,7 @@ import PropTypes from 'prop-types';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import LoadingIndicator from 'shared/loading-indicator';
 
-function MainPostGroup({ handleUpdate }) {
+function MainPostGroup({ handleUpdate, show }) {
 	const [listPost, setListPost] = useState([]);
 	const [isNewPost, setIsNewPost] = useState(false);
 	const [isLoading, setIsLoading] = useState(true);
@@ -75,12 +75,12 @@ function MainPostGroup({ handleUpdate }) {
 
 	return (
 		<div className='main-content__container'>
-			<CreatePost onChangeNewPost={onChangeNewPost} />
+			{show && <CreatePost onChangeNewPost={onChangeNewPost} />}
 			{isLoading ? (
 				<LoadingIndicator />
 			) : (
 				<>
-					{listPost.length > 0 && (
+					{listPost.length > 0 ? (
 						<InfiniteScroll
 							dataLength={listPost.length}
 							next={getDataListPost}
@@ -91,6 +91,8 @@ function MainPostGroup({ handleUpdate }) {
 								<Post key={index} postInformations={item} type={GROUP_TYPE} />
 							))}
 						</InfiniteScroll>
+					) : (
+						<p className='post-data__blank'>Nhóm chưa có bài viết nào</p>
 					)}
 				</>
 			)}
@@ -100,6 +102,12 @@ function MainPostGroup({ handleUpdate }) {
 
 export default MainPostGroup;
 
+MainPostGroup.defaultProps = {
+	handleUpdate: () => {},
+	show: false,
+};
+
 MainPostGroup.propTypes = {
 	handleUpdate: PropTypes.func,
+	show: PropTypes.bool,
 };
