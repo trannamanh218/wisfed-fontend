@@ -19,6 +19,7 @@ export const getQuotesByFriendsOrFollowersAPI = '/api/v1/quotes/listQuotesRelati
 export const countQuotesByCategoryWithUserIdAPI = id => `/api/v1/quotes/countQuotes/${id}`;
 export const countAllQuotesByCategorydAPI = '/api/v1/quotes/countQuotes';
 export const getQuoteCommentsAPI = id => `/api/v1/quotes/listCommentQuote/${id}/`;
+export const listQuotesLikedByIdAPI = id => `/api/v1/quotes/listQuotesLikedById/${id}`;
 
 // post
 export const postAPI = '/api/v1/posts';

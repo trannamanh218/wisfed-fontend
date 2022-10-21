@@ -169,6 +169,9 @@ const ModalItem = ({ item, setModalNoti, getNotifications, setGetNotifications, 
 			case 'sharePost':
 				navigate(`/detail-feed/mini-post/${item.originId.minipostId}`);
 				break;
+			case 'finishReadingGoal':
+				navigate(`/reading-target/${item.originId.userId}`);
+				break;
 			default:
 				console.log('Xét thiếu verb: ', item.verb);
 		}

@@ -96,10 +96,10 @@ const PostActionBar = ({ postData, handleLikeAction }) => {
 						verb: QUOTE_VERB_SHARE,
 					};
 				} else if (postData.verb === READ_TARGET_VERB_SHARE) {
-					const percentTemp = ((postData.currentRead / postData.totalTarget) * 100).toFixed();
+					const percentTemp = ((postData?.sharePost?.current / postData?.sharePost?.target) * 100).toFixed();
 					dataToShare = {
-						numberBook: postData.totalTarget,
-						booksReadCount: postData.currentRead,
+						numberBook: postData.totalTarget || postData?.sharePost?.target,
+						booksReadCount: postData.currentRead || postData?.sharePost?.current,
 						percent: percentTemp > 100 ? 100 : percentTemp,
 						verb: READ_TARGET_VERB_SHARE,
 					};

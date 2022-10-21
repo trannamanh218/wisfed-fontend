@@ -14,7 +14,7 @@ function ShareTarget({ postData, inPost = false }) {
 
 	useEffect(() => {
 		if (inPost && !_.isEmpty(postData)) {
-			const percentTemp = ((postData.currentRead / postData.totalTarget) * 100).toFixed();
+			const percentTemp = ((postData?.sharePost.current / postData?.sharePost.target) * 100).toFixed();
 			if (percentTemp > 100) {
 				setPercent(100);
 			} else {
@@ -27,8 +27,9 @@ function ShareTarget({ postData, inPost = false }) {
 		return (
 			<div className='share-target__content__top'>
 				<p>
-					Bạn đã đọc được {inPost ? postData.currentRead : postData?.booksReadCount} trên{' '}
-					{inPost ? postData.totalTarget : postData?.numberBook} cuốn
+					Bạn đã đọc được{' '}
+					{inPost ? postData.currentRead || postData?.sharePost.current : postData?.booksReadCount} trên{' '}
+					{inPost ? postData.totalTarget || postData?.sharePost.target : postData?.numberBook} cuốn
 				</p>
 			</div>
 		);

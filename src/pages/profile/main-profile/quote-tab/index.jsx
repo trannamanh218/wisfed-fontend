@@ -1,11 +1,12 @@
 import { useEffect, useState, memo } from 'react';
 import QuoteList from 'shared/quote-list';
-import { getQuoteList, getMyLikedQuotes } from 'reducers/redux-utils/quote';
+import { getQuoteList, getMyLikedQuotes, getlistQuotesLikedById } from 'reducers/redux-utils/quote';
 import { useDispatch } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
 import { useParams } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
+import { useRef } from 'react';
 
 const QuoteTab = ({ currentTab, currentUserInfo }) => {
 	const [myQuoteList, setMyQuoteList] = useState([]);
@@ -16,12 +17,15 @@ const QuoteTab = ({ currentTab, currentUserInfo }) => {
 
 	const userInfo = useSelector(state => state.auth.userInfo);
 
+	const callApiStart = useRef(0);
+	const callApiPerPage = useRef(3);
+
 	useEffect(() => {
 		if (currentTab === 'quotes') {
 			getMyQuoteList();
 			getMyFavoriteQuoteList();
 		}
-	}, [currentTab]);
+	}, [currentTab, userId]);
 
 	const getMyQuoteList = async () => {
 		try {
@@ -39,11 +43,15 @@ const QuoteTab = ({ currentTab, currentUserInfo }) => {
 
 	const getMyFavoriteQuoteList = async () => {
 		try {
-			const params = {
-				start: 0,
-				sort: JSON.stringify([{ property: 'createdAt', direction: 'DESC' }]),
+			const data = {
+				params: {
+					start: callApiStart.current,
+					// limit: callApiPerPage.current,
+					sort: JSON.stringify([{ 'property': 'createdAt', 'direction': 'DESC' }]),
+				},
+				userId: userId,
 			};
-			const res = await dispatch(getMyLikedQuotes(params)).unwrap();
+			const res = await dispatch(getlistQuotesLikedById(data)).unwrap();
 			setMyFavoriteQuoteList(res);
 		} catch (err) {
 			NotificationError(err);
@@ -66,7 +74,7 @@ const QuoteTab = ({ currentTab, currentUserInfo }) => {
 							</h4>
 						)}
 
-						<QuoteList list={myQuoteList} userId={userId} />
+						<QuoteList list={myQuoteList} userId={userId} type='myQuotes' />
 					</div>
 					<div className='favorite-quotes'>
 						<h4>Quote yêu thích</h4>
