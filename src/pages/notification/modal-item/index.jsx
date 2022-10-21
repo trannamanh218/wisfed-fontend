@@ -183,7 +183,7 @@ const ModalItem = ({ item, setModalNoti, getNotifications, setGetNotifications, 
 			}
 		>
 			<div onClick={handleActiveIsReed} className='notification__all__layout'>
-				{item.actor === 'system-notification' ? (
+				{item.actor === 'system-notification' && item.verb !== 'friendAccepted' ? (
 					<UserAvatar size='mm' source={logoNonText} className='system-notification__image' />
 				) : (
 					<UserAvatar size='mm' source={item.createdBy?.avatarImage} />
