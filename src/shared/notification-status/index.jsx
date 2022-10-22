@@ -176,7 +176,7 @@ const NotificationStatus = ({ item, setGetNotifications, getNotifications }) => 
 			})}
 		>
 			<div className='notification__all__main__layout'>
-				{item.actor === 'system-notification' ? (
+				{item.actor === 'system-notification' && item.verb !== 'friendAccepted' ? (
 					<UserAvatar size='mm' source={logoNonText} className='system-notification__image' />
 				) : (
 					<UserAvatar size='mm' source={item.createdBy?.avatarImage} />
