@@ -20,7 +20,7 @@ const Group = () => {
 	const [detailGroup, setDetailGroup] = useState({});
 	const [listMember, setListMember] = useState([]);
 	const [eventKey, setEventKey] = useState('intro');
-	const [toggleClickSeeMore, setToggleClickSeeMore] = useState(0);
+	const [toggleClickSeeMore, setToggleClickSeeMore] = useState(false);
 
 	const fetchData = async () => {
 		try {
@@ -59,7 +59,7 @@ const Group = () => {
 	const onClickSeeMore = () => {
 		dispatch(updateKey('intro'));
 		setEventKey('intro');
-		setToggleClickSeeMore(toggleClickSeeMore + 1);
+		setToggleClickSeeMore(true);
 	};
 
 	return (
@@ -84,6 +84,7 @@ const Group = () => {
 						eventKey={eventKey}
 						setEventKey={setEventKey}
 						toggleClickSeeMore={toggleClickSeeMore}
+						setToggleClickSeeMore={setToggleClickSeeMore}
 					/>
 				}
 				right={<RightSidebarGroup update={update} />}

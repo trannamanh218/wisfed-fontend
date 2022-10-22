@@ -50,6 +50,7 @@ function MainGroupComponent({
 	eventKey,
 	setEventKey,
 	toggleClickSeeMore,
+	setToggleClickSeeMore,
 }) {
 	const [valueGroupSearch, setValueGroupSearch] = useState('');
 	const [filter, setFilter] = useState('[]');
@@ -363,6 +364,7 @@ function MainGroupComponent({
 								description={description}
 								createdAt={data.createdAt}
 								toggleClickSeeMore={toggleClickSeeMore}
+								setToggleClickSeeMore={setToggleClickSeeMore}
 							/>
 						</Tab>
 						<Tab eventKey='post' title='Bài viết'>

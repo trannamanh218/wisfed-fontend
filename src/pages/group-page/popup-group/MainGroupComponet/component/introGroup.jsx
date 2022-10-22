@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import './intro.scss';
 import PropTypes from 'prop-types';
 
-function IntroGroup({ groupType, description, createdAt, data, toggleClickSeeMore }) {
+function IntroGroup({ groupType, description, createdAt, data, toggleClickSeeMore, setToggleClickSeeMore }) {
 	const [date, setDate] = useState({});
 	const [arrDate, setArrDate] = useState([]);
 	const [authorsNames, setAuthorsNames] = useState([]);
@@ -34,11 +34,12 @@ function IntroGroup({ groupType, description, createdAt, data, toggleClickSeeMor
 	}, []);
 
 	useEffect(() => {
-		if (toggleClickSeeMore > 0) {
+		if (toggleClickSeeMore) {
 			window.scroll({
 				top: groupIntroTab.current.offsetTop,
 				behavior: 'smooth',
 			});
+			setToggleClickSeeMore(false);
 		}
 	}, [toggleClickSeeMore]);
 
