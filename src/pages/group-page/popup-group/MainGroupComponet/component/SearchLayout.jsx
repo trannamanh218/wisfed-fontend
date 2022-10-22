@@ -30,9 +30,9 @@ function SearchLayout({ dataGroup }) {
 
 	const handleUnfriend = async () => {
 		try {
+			handleUnFollow(userFriendRequest);
 			dispatch(unFriendRequest(userFriendRequest.id)).unwrap();
 			setIsCallApi(!isCallApi);
-			handleUnFollow(userFriendRequest);
 		} catch (err) {
 			NotificationError(err);
 		}

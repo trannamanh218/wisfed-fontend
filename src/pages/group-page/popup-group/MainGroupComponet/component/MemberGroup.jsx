@@ -19,6 +19,7 @@ function MemberGroup({ memberGroupsProp = [] }) {
 	const [sliceEndIndex, setSliceEndIndex] = useState(6);
 	const [showModalUnfriends, setShowModalUnfriends] = useState(false);
 	const [userFriendRequest, setUserFriendRequest] = useState({});
+	const [gotMemebersFirstTime, setGotMemebersFirstTime] = useState(false);
 
 	const navigate = useNavigate();
 
@@ -32,11 +33,12 @@ function MemberGroup({ memberGroupsProp = [] }) {
 	};
 
 	useEffect(() => {
-		if (memberGroupsProp.length === 0) {
-			getListMember();
-		} else {
+		if (memberGroupsProp.length > 0 && !gotMemebersFirstTime) {
 			setMemberGroups(memberGroupsProp);
+		} else {
+			getListMember();
 		}
+		setGotMemebersFirstTime(true);
 	}, [isCallApi]);
 
 	useEffect(() => {
@@ -46,12 +48,12 @@ function MemberGroup({ memberGroupsProp = [] }) {
 		setListFriend(newListFriend);
 	}, [memberGroups]);
 
-	const handleAddFriend = item => {
+	const handleAddFriend = async item => {
 		try {
 			const param = {
 				userId: item.id,
 			};
-			dispatch(makeFriendRequest(param)).unwrap();
+			await dispatch(makeFriendRequest(param)).unwrap();
 			setIsCallApi(!isCallApi);
 		} catch (err) {
 			NotificationError(err);
@@ -70,26 +72,26 @@ function MemberGroup({ memberGroupsProp = [] }) {
 	const handleUnfriend = async () => {
 		setShowModalUnfriends(false);
 		try {
-			await dispatch(unFriendRequest(userFriendRequest.id)).unwrap();
 			handleUnFollow(userFriendRequest);
+			await dispatch(unFriendRequest(userFriendRequest.id)).unwrap();
 			setIsCallApi(!isCallApi);
 		} catch (err) {
 			NotificationError(err);
 		}
 	};
 
-	const handleFollow = item => {
+	const handleFollow = async item => {
 		try {
-			dispatch(addFollower({ userId: item.id }));
+			await dispatch(addFollower({ userId: item.id }));
 			setIsCallApi(!isCallApi);
 		} catch (err) {
 			NotificationError(err);
 		}
 	};
 
-	const handleUnFollow = item => {
+	const handleUnFollow = async item => {
 		try {
-			dispatch(unFollower(item.id)).unwrap();
+			await dispatch(unFollower(item.id)).unwrap();
 			setIsCallApi(!isCallApi);
 		} catch (err) {
 			NotificationError(err);
