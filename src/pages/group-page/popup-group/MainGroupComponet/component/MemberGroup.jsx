@@ -82,7 +82,7 @@ function MemberGroup({ memberGroupsProp = [] }) {
 
 	const handleFollow = async item => {
 		try {
-			await dispatch(addFollower({ userId: item.id }));
+			await dispatch(addFollower({ userId: item.id })).unwrap();
 			setIsCallApi(!isCallApi);
 		} catch (err) {
 			NotificationError(err);
