@@ -10,7 +10,7 @@ import { getRatingBook } from 'reducers/redux-utils/book';
 import { NotificationError } from 'helpers/Error';
 import _ from 'lodash';
 
-const PostEditBook = ({ data, handleAddToPost, handleChangeStar, valueStar, allowToEdit = false }) => {
+const PostEditBook = ({ data, handleAddToPost, handleChangeStar, valueStar }) => {
 	const [listRatingStar, setListRatingStar] = useState(null);
 	const [showText, setShowText] = useState(true);
 	const inputRef = useRef(null);
@@ -136,7 +136,6 @@ PostEditBook.propTypes = {
 	handleAddToPost: PropTypes.func,
 	handleChangeStar: PropTypes.func,
 	valueStar: PropTypes.number,
-	allowToEdit: PropTypes.bool,
 };
 
 export default PostEditBook;

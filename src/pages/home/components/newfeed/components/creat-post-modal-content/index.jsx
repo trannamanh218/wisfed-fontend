@@ -729,7 +729,6 @@ function CreatPostModalContent({
 											handleAddToPost={handleAddToPost}
 											handleChangeStar={handleChangeStar}
 											valueStar={valueStar}
-											// allowToEdit={!_.isEmpty(bookInfoProp)} // Dùng cho book detail
 										/>
 									)}
 									{showUpload && (
