@@ -9,6 +9,7 @@ import SidebarGroupLef from './sidebar-left';
 import { getGroupDettail, getMember } from 'reducers/redux-utils/group';
 import MainGroupComponent from './popup-group/MainGroupComponet/MainGroupComponent';
 import RightSidebarGroup from './sidebar-right/RightSidebarGroup';
+import { updateKey } from 'reducers/redux-utils/group';
 
 const Group = () => {
 	const dispatch = useDispatch();
@@ -18,6 +19,8 @@ const Group = () => {
 	const [update, setUpdate] = useState(false);
 	const [detailGroup, setDetailGroup] = useState({});
 	const [listMember, setListMember] = useState([]);
+	const [eventKey, setEventKey] = useState('intro');
+	const [toggleClickSeeMore, setToggleClickSeeMore] = useState(0);
 
 	const fetchData = async () => {
 		try {
@@ -53,10 +56,23 @@ const Group = () => {
 		setKeyChange(e);
 	};
 
+	const onClickSeeMore = () => {
+		dispatch(updateKey('intro'));
+		setEventKey('intro');
+		setToggleClickSeeMore(toggleClickSeeMore + 1);
+	};
+
 	return (
 		<div className='group__main-container'>
 			<SubContainer
-				left={<SidebarGroupLef handleChange={handleChange} data={detailGroup} member={listMember} />}
+				left={
+					<SidebarGroupLef
+						handleChange={handleChange}
+						data={detailGroup}
+						member={listMember}
+						onClickSeeMore={onClickSeeMore}
+					/>
+				}
 				main={
 					<MainGroupComponent
 						handleUpdate={handleUpdate}
@@ -65,6 +81,9 @@ const Group = () => {
 						data={detailGroup}
 						member={listMember}
 						fetchData={fetchData}
+						eventKey={eventKey}
+						setEventKey={setEventKey}
+						toggleClickSeeMore={toggleClickSeeMore}
 					/>
 				}
 				right={<RightSidebarGroup update={update} />}
