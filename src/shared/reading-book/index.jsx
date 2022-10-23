@@ -9,7 +9,7 @@ import _ from 'lodash';
 
 function ReadingBook({ bookData }) {
 	const dispatch = useDispatch();
-	const [percent, setPercent] = useState(null);
+	const [percent, setPercent] = useState(0);
 	const navigate = useNavigate();
 
 	useEffect(() => {

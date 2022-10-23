@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import _ from 'lodash';
 import { CloseX } from 'components/svg';
 import PropTypes from 'prop-types';
-function PreviewLink({ urlData, isFetching, removeUrlPreview }) {
+function PreviewLink({ urlData, isFetching, removeUrlPreview, inCreatePost }) {
 	const [domain, setDomain] = useState('');
 
 	useEffect(() => {
@@ -17,6 +17,12 @@ function PreviewLink({ urlData, isFetching, removeUrlPreview }) {
 		}
 	}, [urlData]);
 
+	const driectToUrl = url => {
+		if (!inCreatePost) {
+			window.open(url);
+		}
+	};
+
 	return (
 		<div className='preview-link'>
 			{isFetching ? (
@@ -28,9 +34,9 @@ function PreviewLink({ urlData, isFetching, removeUrlPreview }) {
 					</div>
 				</div>
 			) : (
-				<div className='preview-link__content'>
+				<div className='preview-link__content' onClick={() => driectToUrl(urlData.url)}>
 					{urlData.images?.length > 0 && (
-						<div className='preview-link__image' onClick={() => window.open(urlData.url)}>
+						<div className='preview-link__image'>
 							<img src={urlData.images[0]} alt='preview-link-image' />
 						</div>
 					)}
@@ -54,12 +60,14 @@ PreviewLink.defaultProps = {
 	urlData: {},
 	isFetching: false,
 	removeUrlPreview: () => {},
+	inCreatePost: false,
 };
 
 PreviewLink.propTypes = {
 	urlData: PropTypes.object,
 	isFetching: PropTypes.bool,
 	removeUrlPreview: PropTypes.func,
+	inCreatePost: PropTypes.bool,
 };
 
 export default PreviewLink;

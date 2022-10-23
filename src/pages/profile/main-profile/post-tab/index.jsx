@@ -17,7 +17,7 @@ function PostTab({ currentTab }) {
 	const dispatch = useDispatch();
 
 	const callApiStart = useRef(0);
-	const callApiPerPage = useRef(10);
+	const callApiPerPage = useRef(5);
 
 	useEffect(() => {
 		if (currentTab === 'post') {

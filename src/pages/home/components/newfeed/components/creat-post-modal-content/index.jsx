@@ -57,8 +57,6 @@ const verbShareArray = [
 	TOP_USER_VERB_SHARE,
 ];
 
-const urlRegex =
-	/(https?:\/\/)?(www(\.))?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)([^"<\s]+)(?![^<>]*>|[^"]*?<\/a)/g;
 const hashtagRegex = /#(?![0-9_]+\b)[0-9a-zàáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđ_]+/gi;
 
 function CreatPostModalContent({
@@ -147,7 +145,7 @@ function CreatPostModalContent({
 
 	useEffect(() => {
 		if (urlAdded) {
-			if (urlAdded.match(urlRegex) && !_.isEqual(urlAdded, oldUrlAdded)) {
+			if (!_.isEqual(urlAdded, oldUrlAdded)) {
 				setHasUrl(true);
 				getPreviewUrlFnc(urlAdded);
 			}
@@ -750,6 +748,7 @@ function CreatPostModalContent({
 											urlData={urlPreviewData}
 											isFetching={fetchingUrlInfo}
 											removeUrlPreview={removeUrlPreview}
+											inCreatePost={true}
 										/>
 									)}
 								</>
