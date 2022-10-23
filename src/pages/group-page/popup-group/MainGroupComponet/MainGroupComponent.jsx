@@ -40,8 +40,18 @@ import vector from 'assets/images/Vector.png';
 import pani from 'assets/images/pani.png';
 import LoadingIndicator from 'shared/loading-indicator';
 
-function MainGroupComponent({ handleChange, keyChange, data, member, handleUpdate, fetchData }) {
-	const [key, setKey] = useState('intro');
+function MainGroupComponent({
+	handleChange,
+	keyChange,
+	data,
+	member,
+	handleUpdate,
+	fetchData,
+	eventKey,
+	setEventKey,
+	toggleClickSeeMore,
+	setToggleClickSeeMore,
+}) {
 	const [valueGroupSearch, setValueGroupSearch] = useState('');
 	const [filter, setFilter] = useState('[]');
 	const [getData, setGetData] = useState({});
@@ -190,14 +200,14 @@ function MainGroupComponent({ handleChange, keyChange, data, member, handleUpdat
 			const checkIsGroupMember = data?.memberGroups?.some(item => item?.userId === userInfo?.id);
 			if (checkIsGroupMember) {
 				setShow(true);
-				setKey('post');
+				setEventKey('post');
 			}
 			setIsFetching(false);
 		}
 	}, [data, userInfo]);
 
 	const handleSelect = () => {
-		setKey(keyRedux);
+		setEventKey(keyRedux);
 	};
 
 	useEffect(() => {
@@ -340,9 +350,9 @@ function MainGroupComponent({ handleChange, keyChange, data, member, handleUpdat
 				<div className='group-tabs'>
 					<Tabs
 						id='controlled-tab'
-						activeKey={key}
+						activeKey={eventKey}
 						onSelect={k => {
-							setKey(k);
+							setEventKey(k);
 							dispatch(updateKey(k));
 						}}
 						className='mb-3'
@@ -353,6 +363,8 @@ function MainGroupComponent({ handleChange, keyChange, data, member, handleUpdat
 								groupType={groupType}
 								description={description}
 								createdAt={data.createdAt}
+								toggleClickSeeMore={toggleClickSeeMore}
+								setToggleClickSeeMore={setToggleClickSeeMore}
 							/>
 						</Tab>
 						<Tab eventKey='post' title='Bài viết'>
