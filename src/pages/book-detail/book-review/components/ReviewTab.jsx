@@ -19,7 +19,7 @@ import FormCheckGroup from 'shared/form-check-group';
 import Button from 'shared/button';
 import { REVIEW_TYPE } from 'constants/index';
 import searchreview from 'assets/images/search-review.png';
-import CreatPostModalContent from 'pages/home/components/newfeed/components/creat-post-modal-content';
+import CreatePostModalContent from 'pages/home/components/newfeed/components/creat-post-modal-content';
 import Storage from 'helpers/Storage';
 import { checkUserLogin } from 'reducers/redux-utils/auth';
 
@@ -404,7 +404,7 @@ const ReviewTab = ({ currentTab }) => {
 			</Modal>
 			{showModalCreatPost && (
 				<div className='newfeed__creat-post__modal' ref={creatPostModalContainer}>
-					<CreatPostModalContent
+					<CreatePostModalContent
 						hideCreatePostModal={hideCreatePostModal}
 						showModalCreatPost={showModalCreatPost}
 						option={option}

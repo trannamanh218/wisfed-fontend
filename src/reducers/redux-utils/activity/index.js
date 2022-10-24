@@ -138,10 +138,14 @@ const activitySlice = createSlice({
 		activityData: [],
 		error: {},
 		refreshNewfeed: true,
+		createNewPostForBook: false,
 	},
 	reducers: {
 		handleRefreshNewfeed: state => {
 			state.refreshNewfeed = !state.refreshNewfeed;
+		},
+		handleClickCreateNewPostForBook: (state, action) => {
+			state.createNewPostForBook = action.payload;
 		},
 	},
 	extraReducers: {
@@ -161,7 +165,7 @@ const activitySlice = createSlice({
 	},
 });
 
-export const { handleRefreshNewfeed } = activitySlice.actions;
+export const { handleRefreshNewfeed, handleClickCreateNewPostForBook } = activitySlice.actions;
 
 const activity = activitySlice.reducer;
 
