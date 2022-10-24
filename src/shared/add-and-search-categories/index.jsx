@@ -64,8 +64,7 @@ function AddAndSearchCategories({
 						{categoryAddedList.map(item => (
 							<div key={item.id} className='add-and-search-categories__categories-added__item'>
 								<div>{item.name || item.fullName || item.firstName + ' ' + item.lastName}</div>
-								{/* <button onClick={() => removeCategory(item.id)}> */}
-								<button onClick={() => console.log(item.id)}>
+								<button onClick={() => removeCategory(item.id)}>
 									<CloseX />
 								</button>
 							</div>
