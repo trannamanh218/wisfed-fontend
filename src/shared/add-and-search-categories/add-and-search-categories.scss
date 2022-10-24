@@ -55,6 +55,7 @@
 			button {
 				display: flex;
 				align-items: center;
+				z-index: 2;
 				svg {
 					path {
 						stroke: $primary-dark;
@@ -138,5 +139,6 @@
 	&__type-new {
 		text-decoration: underline;
 		cursor: pointer;
+		color: blue;
 	}
 }
