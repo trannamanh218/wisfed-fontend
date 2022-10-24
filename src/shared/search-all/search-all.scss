@@ -40,6 +40,14 @@
 			height: 64px;
 			width: 380px;
 			background-color: #eff0f7;
+			.search-field__input {
+				&::placeholder {
+					font-weight: 500;
+					color: #a0a3bd;
+					letter-spacing: 0.75px;
+					font-size: 15px;
+				}
+			}
 		}
 	}
 }

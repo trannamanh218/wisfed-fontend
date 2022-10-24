@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import './intro.scss';
 import PropTypes from 'prop-types';
 
-function IntroGroup({ groupType, description, createdAt, data }) {
+function IntroGroup({ groupType, description, createdAt, data, toggleClickSeeMore, setToggleClickSeeMore }) {
 	const [date, setDate] = useState({});
 	const [arrDate, setArrDate] = useState([]);
 	const [authorsNames, setAuthorsNames] = useState([]);
+
+	const groupIntroTab = useRef(null);
 
 	useEffect(() => {
 		const newItem = createdAt?.split('-');
@@ -31,8 +33,18 @@ function IntroGroup({ groupType, description, createdAt, data }) {
 		setAuthorsNames(newArr);
 	}, []);
 
+	useEffect(() => {
+		if (toggleClickSeeMore) {
+			window.scroll({
+				top: groupIntroTab.current.offsetTop - 120,
+				behavior: 'smooth',
+			});
+			setToggleClickSeeMore(false);
+		}
+	}, [toggleClickSeeMore]);
+
 	return (
-		<div className='intro__container'>
+		<div className='intro__container' ref={groupIntroTab}>
 			<div className='intro-content'>
 				<div className='intro-content__title'>
 					<h3>

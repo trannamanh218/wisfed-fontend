@@ -7,7 +7,7 @@ import { updateKey } from 'reducers/redux-utils/group';
 import defaultAvatar from 'assets/images/avatar.jpeg';
 import { Link } from 'react-router-dom';
 
-const SidebarGroupLef = ({ handleChange, data, member }) => {
+const SidebarGroupLef = ({ handleChange, data, member, onClickSeeMore }) => {
 	const [listFriend, setListFriend] = useState([]);
 	const [listFolow, setListFolow] = useState([]);
 	const [listAdmin, setListAdmin] = useState([]);
@@ -46,7 +46,13 @@ const SidebarGroupLef = ({ handleChange, data, member }) => {
 							</span>
 						</div>
 
-						<div className='manage-btn' onClick={() => handleChange('settings')}>
+						<div
+							className='manage-btn'
+							onClick={() => {
+								handleChange('settings');
+								console.log('yo');
+							}}
+						>
 							<SettingIcon /> Cài đặt
 						</div>
 					</div>
@@ -74,7 +80,7 @@ const SidebarGroupLef = ({ handleChange, data, member }) => {
 			</div>
 
 			<div className='group-sibar-left__btn'>
-				<button onClick={() => dispatch(updateKey('intro'))}>Xem thêm</button>
+				<button onClick={onClickSeeMore}>Xem thêm</button>
 			</div>
 
 			<div>

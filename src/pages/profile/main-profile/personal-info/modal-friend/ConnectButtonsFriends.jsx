@@ -75,9 +75,9 @@ const ConnectButtonsFriends = ({ direction, item }) => {
 	const handleUnfriend = () => {
 		setShowModalUnfriends(false);
 		try {
+			handleUnFollow();
 			dispatch(unFriendRequest(item.id)).unwrap();
 			setUnFriend(false);
-			handleUnFollow();
 		} catch (err) {
 			NotificationError(err);
 		}

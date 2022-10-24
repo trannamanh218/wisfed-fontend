@@ -57,8 +57,6 @@ const verbShareArray = [
 	TOP_USER_VERB_SHARE,
 ];
 
-const urlRegex =
-	/(https?:\/\/)?(www(\.))?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)([^"<\s]+)(?![^<>]*>|[^"]*?<\/a)/g;
 const hashtagRegex = /#(?![0-9_]+\b)[0-9a-zàáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđ_]+/gi;
 
 function CreatPostModalContent({
@@ -147,7 +145,7 @@ function CreatPostModalContent({
 
 	useEffect(() => {
 		if (urlAdded) {
-			if (urlAdded.match(urlRegex) && !_.isEqual(urlAdded, oldUrlAdded)) {
+			if (!_.isEqual(urlAdded, oldUrlAdded)) {
 				setHasUrl(true);
 				getPreviewUrlFnc(urlAdded);
 			}
@@ -315,22 +313,15 @@ function CreatPostModalContent({
 				if (convertProgress === page) {
 					const addBookParams = { bookId: id, type: STATUS_BOOK.read };
 					dispatch(addBookToDefaultLibrary(addBookParams)).unwrap();
-					setTimeout(() => {
-						dispatch(updateMyAllLibraryRedux());
-					}, 150);
 				}
 			} else {
 				// Check cuốn sách hiện tại đang ở trong thư viện nào của ng dùng hay k
 				let libraryContainCurrentBook = null;
 				if (myAllLibraryReduxDefault.length) {
-					for (let i = 0; i < myAllLibraryReduxDefault.length; i++) {
-						for (let j = 0; j < myAllLibraryReduxDefault[i].books.length; j++) {
-							if (myAllLibraryReduxDefault[i].books[j].bookId === id) {
-								libraryContainCurrentBook = myAllLibraryReduxDefault[i].defaultType;
-								break;
-							}
-						}
-					}
+					const found = myAllLibraryReduxDefault.find(item1 =>
+						item1.books.find(item2 => item2.bookId === id)
+					);
+					libraryContainCurrentBook = found?.defaultType;
 				}
 
 				let type = STATUS_BOOK.wantToRead;
@@ -343,11 +334,11 @@ function CreatPostModalContent({
 				if (type !== libraryContainCurrentBook) {
 					const addBookParams = { bookId: id, type };
 					dispatch(addBookToDefaultLibrary(addBookParams)).unwrap();
-					setTimeout(() => {
-						dispatch(updateMyAllLibraryRedux());
-					}, 150);
 				}
 			}
+			setTimeout(() => {
+				dispatch(updateMyAllLibraryRedux());
+			}, 150);
 		} catch (error) {
 			NotificationError(error);
 		}
@@ -729,7 +720,6 @@ function CreatPostModalContent({
 											handleAddToPost={handleAddToPost}
 											handleChangeStar={handleChangeStar}
 											valueStar={valueStar}
-											// allowToEdit={!_.isEmpty(bookInfoProp)} // Dùng cho book detail
 										/>
 									)}
 									{showUpload && (
@@ -750,6 +740,7 @@ function CreatPostModalContent({
 											urlData={urlPreviewData}
 											isFetching={fetchingUrlInfo}
 											removeUrlPreview={removeUrlPreview}
+											inCreatePost={true}
 										/>
 									)}
 								</>
