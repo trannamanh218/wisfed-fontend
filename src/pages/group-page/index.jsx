@@ -13,7 +13,7 @@ import { updateKey } from 'reducers/redux-utils/group';
 
 const Group = () => {
 	const dispatch = useDispatch();
-	const { id = '' } = useParams();
+	const { id } = useParams();
 
 	const [keyChange, setKeyChange] = useState('tabs');
 	const [update, setUpdate] = useState(false);
@@ -50,7 +50,7 @@ const Group = () => {
 
 	useEffect(() => {
 		fetchData();
-	}, [update]);
+	}, [update, id]);
 
 	const handleChange = e => {
 		setKeyChange(e);

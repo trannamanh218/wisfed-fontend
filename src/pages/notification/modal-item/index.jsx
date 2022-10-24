@@ -34,12 +34,12 @@ const ModalItem = ({ item, setModalNoti, getNotifications, setGetNotifications, 
 			await dispatch(ReplyFriendRequest(params)).unwrap();
 			dispatch(updateUser(!isReload));
 			if (selectKey !== 'unread') {
-				const newArr = getNotifications.map(item => {
-					if (item.id === item.id) {
-						const data = { ...item, isAccept: true };
+				const newArr = getNotifications.map(noti => {
+					if (noti.id === item.id) {
+						const data = { ...noti, isAccept: true };
 						return { ...data };
 					}
-					return { ...item };
+					return { ...noti };
 				});
 				setGetNotifications(newArr);
 			}
@@ -59,12 +59,12 @@ const ModalItem = ({ item, setModalNoti, getNotifications, setGetNotifications, 
 			await dispatch(ReplyFriendRequest(params)).unwrap();
 			dispatch(updateUser(!isReload));
 			if (selectKey !== 'unread') {
-				const newArr = getNotifications.map(item => {
-					if (item.id === item.id) {
-						const data = { ...item, isRefuse: true };
+				const newArr = getNotifications.map(noti => {
+					if (noti.id === item.id) {
+						const data = { ...noti, isRefuse: true };
 						return { ...data };
 					}
-					return { ...item };
+					return { ...noti };
 				});
 				setGetNotifications(newArr);
 			}
