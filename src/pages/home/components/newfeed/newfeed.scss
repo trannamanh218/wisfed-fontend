@@ -127,7 +127,18 @@
 @media only screen and (max-width: 1366px) {
 	.newfeed {
 		.creat-post-modal-content__main__body__text-field-edit-wrapper {
-			max-height: 250px;
+			max-height: 275px;
+
+			.rich-text-editor {
+				margin-bottom: 10px;
+			}
+
+			.tagged-book {
+				margin-bottom: 1.1rem;
+			}
+			.book-thumbnail.book-thumbnail-md {
+				height: 190px;
+			}
 		}
 	}
 }
@@ -136,6 +147,9 @@
 	.newfeed {
 		.creat-post-modal-content__main__body__text-field-edit-wrapper {
 			max-height: 350px;
+			.book-thumbnail.book-thumbnail-md {
+				height: 240px;
+			}
 		}
 	}
 }

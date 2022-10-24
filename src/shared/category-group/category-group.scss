@@ -6,6 +6,7 @@
 	border-bottom: 1px solid $grey-border;
 	h4 {
 		text-align: left;
+		margin-top: 20px;
 	}
 	&__link {
 		display: inline-block;
@@ -29,5 +30,19 @@
 			width: 100%;
 			height: 315px;
 		}
+	}
+}
+.data-blank {
+	margin: 20px 0 0 0;
+	min-height: 60px;
+	h4 {
+		margin-bottom: 10px;
+		font-size: 1.25rem;
+		font-weight: 600;
+		color: #2d2c42;
+	}
+	p {
+		color: #6e7191;
+		font-size: 1rem;
 	}
 }

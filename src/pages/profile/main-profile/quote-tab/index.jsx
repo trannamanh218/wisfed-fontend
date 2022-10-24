@@ -1,12 +1,10 @@
-import { useEffect, useState, memo } from 'react';
-import QuoteList from 'shared/quote-list';
-import { getQuoteList, getMyLikedQuotes, getlistQuotesLikedById } from 'reducers/redux-utils/quote';
-import { useDispatch } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
-import { useParams } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { useSelector } from 'react-redux';
-import { useRef } from 'react';
+import { memo, useEffect, useRef, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
+import { getlistQuotesLikedById, getQuoteList } from 'reducers/redux-utils/quote';
+import QuoteList from 'shared/quote-list';
 
 const QuoteTab = ({ currentTab, currentUserInfo }) => {
 	const [myQuoteList, setMyQuoteList] = useState([]);
@@ -18,7 +16,6 @@ const QuoteTab = ({ currentTab, currentUserInfo }) => {
 	const userInfo = useSelector(state => state.auth.userInfo);
 
 	const callApiStart = useRef(0);
-	const callApiPerPage = useRef(3);
 
 	useEffect(() => {
 		if (currentTab === 'quotes') {
@@ -46,7 +43,6 @@ const QuoteTab = ({ currentTab, currentUserInfo }) => {
 			const data = {
 				params: {
 					start: callApiStart.current,
-					// limit: callApiPerPage.current,
 					sort: JSON.stringify([{ 'property': 'createdAt', 'direction': 'DESC' }]),
 				},
 				userId: userId,
