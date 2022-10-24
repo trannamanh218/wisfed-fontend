@@ -46,13 +46,7 @@ const SidebarGroupLef = ({ handleChange, data, member, onClickSeeMore }) => {
 							</span>
 						</div>
 
-						<div
-							className='manage-btn'
-							onClick={() => {
-								handleChange('settings');
-								console.log('yo');
-							}}
-						>
+						<div className='manage-btn' onClick={() => handleChange('settings')}>
 							<SettingIcon /> Cài đặt
 						</div>
 					</div>

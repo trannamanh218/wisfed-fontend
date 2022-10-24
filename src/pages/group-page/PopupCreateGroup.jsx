@@ -72,23 +72,28 @@ const PopupCreateGroup = ({ handleClose }) => {
 
 	const getSuggestionForCreatQuotes = async (input, option) => {
 		try {
-			if (option.value !== 'addAuthor') {
-				const data = await dispatch(getSuggestionForPost({ input, option })).unwrap();
-				if (option.value === 'addCategory') {
-					setCategorySearchedList(data.rows);
-					if (data.count > data.rows.length) {
-						setHasMoreCategoriesEllipsis(true);
-					} else {
-						setHasMoreCategoriesEllipsis(false);
-					}
+			if (option.value === 'addCategory') {
+				const result = await dispatch(getSuggestionForPost({ input, option })).unwrap();
+				setCategorySearchedList(result.rows);
+				if (result.count > result.rows.length) {
+					setHasMoreCategoriesEllipsis(true);
+				} else {
+					setHasMoreCategoriesEllipsis(false);
 				}
-				if (option.value === 'addBook') {
-					setBookSearchedList(data.rows);
-					if (data.count > data.rows.length) {
-						setHasMoreBooksEllipsis(true);
-					} else {
-						setHasMoreBooksEllipsis(false);
-					}
+			}
+			if (option.value === 'addBook') {
+				const params = {
+					q: input,
+					type: 'books',
+					start: 0,
+					limit: 10,
+				};
+				const result = await dispatch(getFilterSearch(params)).unwrap();
+				setBookSearchedList(result.rows);
+				if (result.count > result.rows.length) {
+					setHasMoreBooksEllipsis(true);
+				} else {
+					setHasMoreBooksEllipsis(false);
 				}
 			}
 			if (option.value === 'addAuthor') {
@@ -98,7 +103,6 @@ const PopupCreateGroup = ({ handleClose }) => {
 					start: 0,
 					limit: 10,
 				};
-
 				const result = await dispatch(getFilterSearch(params)).unwrap();
 				setAuthorSearchedList(result.rows);
 				if (result.count > result.rows.length) {
