@@ -102,19 +102,25 @@ function App({ children }) {
 			/>
 			<ModalCheckLogin routerLogin={routerLogin} />
 			<Routes>
-				<Route path='/upload-book' element={<UploadBook />} />
+				{Storage.getAccessToken() !== null && (
+					<>
+						<Route path='/upload-book' element={<UploadBook />} />
+						<Route path='/shelves/:userId' element={<BookShelves />} />
+						<Route path='/friends' element={<Friends />} />
+						<Route path='/friends/:slug' element={<DetailFriend />} />
+						<Route path='/notification' element={<Notification />} />
+					</>
+				)}
+
 				<Route path='/top100' element={<Ranks />} />
 				<Route path='/detail-feed/:type/:idPost' element={<DetailFeed />} />
 				<Route path='/books-author/:userId' element={<BooksAuthor />} />
 				<Route path='/book-author-charts/:bookId' element={<ReadingSummaryChartAuthor />} />
 				<Route path='/result/q=:value' element={<Result />} />
-				<Route path='/notification' element={<Notification />} />
 				<Route path='/category' element={<Category />} />
+				<Route path='/profile/:userId' element={<Profile />} />
 				<Route path='/category/detail/:id' element={<CategoryDetail />} />
 				<Route path='/category/detail/:id/:slug' element={<CategoryDetail />} />
-				<Route path='/shelves/:userId' element={<BookShelves />} />
-				<Route path='/friends' element={<Friends />} />
-				<Route path='/friends/:slug' element={<DetailFriend />} />
 				<Route path='/book/detail/:bookId' element={<BookDetail />} />
 				<Route path='/book/detail/:bookId/:slug' element={<BookDetail />} />
 				<Route path='/review/:bookId/:userId' element={<Review />} />
@@ -122,7 +128,6 @@ function App({ children }) {
 				<Route path='/quotes/all' element={<QuoteAll />} />
 				<Route path='/quotes/category/:categoryId' element={<QuotesByCategory />} />
 				<Route path='/quotes/detail/:id' element={<QuoteDetail />} />
-				<Route path='/profile/:userId' element={<Profile />} />
 				<Route path='/confirm-my-book/:bookId' element={<ConfirmMyBook />} />
 				<Route path='/login' element={<Login />} />
 				<Route path='/register' element={<Register />} />

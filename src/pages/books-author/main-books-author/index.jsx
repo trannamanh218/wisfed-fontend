@@ -150,80 +150,84 @@ const MainBooksAuthor = ({ shelveGroupName }) => {
 					<div></div>
 				</div>
 				<div className='main-reading-author__books__content'>
-					<InfiniteScroll
-						dataLength={booksByAuthor?.length}
-						next={getBooksByAuthor}
-						hasMore={hasMore}
-						loader={<LoadingIndicator />}
-					>
-						{booksByAuthor?.map(item => (
-							<div key={item.id} className='main-reading-author__books__item'>
-								<div className='main-reading-author__books__item__column book-image'>
-									<img
-										src={item.images[1] || bookImage}
-										alt='book-image'
-										onError={e => e.target.setAttribute('src', `${bookImage}`)}
-									/>
-								</div>
-								<div className='main-reading-author__books__item__column book-name'>
-									<span>{item.name}</span>
-								</div>
-								<div className='main-reading-author__books__item__column'>
-									<div className='main-reading-author__books__item__top'>
-										<span>{item.avgRating}</span>
-										<StarAuthor />
+					{booksByAuthor.length > 0 ? (
+						<InfiniteScroll
+							dataLength={booksByAuthor?.length}
+							next={getBooksByAuthor}
+							hasMore={hasMore}
+							loader={<LoadingIndicator />}
+						>
+							{booksByAuthor?.map(item => (
+								<div key={item.id} className='main-reading-author__books__item'>
+									<div className='main-reading-author__books__item__column book-image'>
+										<img
+											src={item.images[1] || bookImage}
+											alt='book-image'
+											onError={e => e.target.setAttribute('src', `${bookImage}`)}
+										/>
 									</div>
-									<div className='main-reading-author__books__item__under'></div>
-								</div>
-								<div className='main-reading-author__books__item__column'>
-									<div className='main-reading-author__books__item__top'>
-										<span>{item.countRating}</span>
+									<div className='main-reading-author__books__item__column book-name'>
+										<span>{item.name}</span>
 									</div>
-									<div className='main-reading-author__books__item__under'></div>
-								</div>
-								<div className='main-reading-author__books__item__column'>
-									<div className='main-reading-author__books__item__top'>
-										<span className='underline-and-gold-color'>{item.countReview}</span>
+									<div className='main-reading-author__books__item__column'>
+										<div className='main-reading-author__books__item__top'>
+											<span>{item.avgRating}</span>
+											<StarAuthor />
+										</div>
+										<div className='main-reading-author__books__item__under'></div>
 									</div>
-									<Link
-										to={`/book/detail/${item.id} `}
-										className='main-reading-author__books__item__under'
+									<div className='main-reading-author__books__item__column'>
+										<div className='main-reading-author__books__item__top'>
+											<span>{item.countRating}</span>
+										</div>
+										<div className='main-reading-author__books__item__under'></div>
+									</div>
+									<div className='main-reading-author__books__item__column'>
+										<div className='main-reading-author__books__item__top'>
+											<span className='underline-and-gold-color'>{item.countReview}</span>
+										</div>
+										<Link
+											to={`/book/detail/${item.id} `}
+											className='main-reading-author__books__item__under'
+										>
+											{item.newReview} lượt review mới
+										</Link>
+									</div>
+									<div className='main-reading-author__books__item__column'>
+										<div className='main-reading-author__books__item__top'>
+											<span>{item.countAddBook}</span>
+										</div>
+										<Link
+											to={`/book-author-charts/${item.id}`}
+											className='main-reading-author__books__item__under'
+										>
+											Biểu đồ
+										</Link>
+									</div>
+									<div className='main-reading-author__books__item__column'>
+										<div className='main-reading-author__books__item__top'>
+											<span className='underline-and-gold-color'>{item.countQuote}</span>
+										</div>
+										<Link
+											to={`/book/detail/${item.id} `}
+											className='main-reading-author__books__item__under'
+										>
+											{item.newQuote} lượt quote mới
+										</Link>
+									</div>
+									<div
+										className='main-reading-author__books__item__column'
+										onClick={() => handleShare(item)}
+										title='Chia sẻ'
 									>
-										{item.newReview} lượt review mới
-									</Link>
-								</div>
-								<div className='main-reading-author__books__item__column'>
-									<div className='main-reading-author__books__item__top'>
-										<span>{item.countAddBook}</span>
+										<ShareAuthor />
 									</div>
-									<Link
-										to={`/book-author-charts/${item.id}`}
-										className='main-reading-author__books__item__under'
-									>
-										Biểu đồ
-									</Link>
 								</div>
-								<div className='main-reading-author__books__item__column'>
-									<div className='main-reading-author__books__item__top'>
-										<span className='underline-and-gold-color'>{item.countQuote}</span>
-									</div>
-									<Link
-										to={`/book/detail/${item.id} `}
-										className='main-reading-author__books__item__under'
-									>
-										{item.newQuote} lượt quote mới
-									</Link>
-								</div>
-								<div
-									className='main-reading-author__books__item__column'
-									onClick={() => handleShare(item)}
-									title='Chia sẻ'
-								>
-									<ShareAuthor />
-								</div>
-							</div>
-						))}
-					</InfiniteScroll>
+							))}
+						</InfiniteScroll>
+					) : (
+						<p style={{ textAlign: 'center' }}>Chưa có cuốn sách nào</p>
+					)}
 				</div>
 			</div>
 		</div>
