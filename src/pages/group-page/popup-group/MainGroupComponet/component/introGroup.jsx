@@ -36,7 +36,7 @@ function IntroGroup({ groupType, description, createdAt, data, toggleClickSeeMor
 	useEffect(() => {
 		if (toggleClickSeeMore) {
 			window.scroll({
-				top: groupIntroTab.current.offsetTop,
+				top: groupIntroTab.current.offsetTop - 120,
 				behavior: 'smooth',
 			});
 			setToggleClickSeeMore(false);
