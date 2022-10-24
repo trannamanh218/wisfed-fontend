@@ -17,6 +17,7 @@ import { updateUser } from 'reducers/redux-utils/user';
 import { updateReviewIdFromNoti } from 'reducers/redux-utils/notification';
 import LoadingIndicator from 'shared/loading-indicator';
 import logoNonText from 'assets/icons/logoNonText.svg';
+import { replyInviteGroup } from 'reducers/redux-utils/group';
 
 const ModalItem = ({ item, setModalNoti, getNotifications, setGetNotifications, selectKey }) => {
 	const navigate = useNavigate();
@@ -76,7 +77,49 @@ const ModalItem = ({ item, setModalNoti, getNotifications, setGetNotifications, 
 		}
 	};
 
-	const handleActiveIsReed = () => {
+	const acceptInviteGroup = async data => {
+		setIsLoading(true);
+		try {
+			const params = { id: data.originId.inviteId, body: { accept: true } };
+			await dispatch(replyInviteGroup(params)).unwrap();
+			const newArr = getNotifications.map(item => {
+				if (item.id === item.id) {
+					const data = { ...item, isAccept: true };
+					return { ...data };
+				}
+				return { ...item };
+			});
+			setGetNotifications(newArr);
+
+			await dispatch(readNotification({ notificationId: item.id })).unwrap();
+		} catch (err) {
+			NotificationError(err);
+		} finally {
+			setIsLoading(false);
+		}
+	};
+
+	const refuseInviteGroup = async data => {
+		setIsLoading(true);
+		try {
+			const params = { id: data.originId.inviteId, body: { accept: false } };
+			await dispatch(replyInviteGroup(params)).unwrap();
+			const newArr = getNotifications.map(item => {
+				if (item.id === item.id) {
+					const data = { ...item, isAccept: true };
+					return { ...data };
+				}
+				return { ...item };
+			});
+			setGetNotifications(newArr);
+		} catch (err) {
+			NotificationError(err);
+		} finally {
+			setIsLoading(false);
+		}
+	};
+
+	const handleActiveIsRead = () => {
 		const params = {
 			notificationId: item.id,
 		};
@@ -185,7 +228,7 @@ const ModalItem = ({ item, setModalNoti, getNotifications, setGetNotifications, 
 					: 'notification__tabs__all__seen'
 			}
 		>
-			<div onClick={handleActiveIsReed} className='notification__all__layout'>
+			<div onClick={handleActiveIsRead} className='notification__all__layout'>
 				{item.actor === 'system-notification' && item.verb !== 'friendAccepted' ? (
 					<UserAvatar size='mm' source={logoNonText} className='system-notification__image' />
 				) : (
@@ -252,13 +295,48 @@ const ModalItem = ({ item, setModalNoti, getNotifications, setGetNotifications, 
 							) : (
 								<>
 									<div
-										onClick={() => ReplyFriendReq(item.object)}
+										onClick={e => {
+											e.stopPropagation();
+											ReplyFriendReq(item.object);
+										}}
 										className='notification__all__accept'
 									>
-										Chấp nhận
+										{item.verb === 'browse' ? 'Duyệt' : 'Chấp nhận'}
 									</div>
 									<div
-										onClick={() => cancelFriend(item.object)}
+										onClick={e => {
+											e.stopPropagation();
+											cancelFriend(item.object);
+										}}
+										className='notification__all__refuse'
+									>
+										Từ chối
+									</div>
+								</>
+							)}
+						</div>
+					)}
+
+					{item.verb === 'inviteGroup' && (
+						<div className='notification__all__friend'>
+							{isLoading ? (
+								<LoadingIndicator />
+							) : (
+								<>
+									<div
+										onClick={e => {
+											e.stopPropagation();
+											acceptInviteGroup(item);
+										}}
+										className='notification__all__accept'
+									>
+										{item.verb === 'browse' ? 'Duyệt' : 'Chấp nhận'}
+									</div>
+									<div
+										onClick={e => {
+											e.stopPropagation();
+											refuseInviteGroup(item);
+										}}
 										className='notification__all__refuse'
 									>
 										Từ chối

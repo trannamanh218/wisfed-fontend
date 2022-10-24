@@ -16,6 +16,7 @@ import { useState } from 'react';
 import classNames from 'classnames';
 import LoadingIndicator from 'shared/loading-indicator';
 import logoNonText from 'assets/icons/logoNonText.svg';
+import { replyInviteGroup } from 'reducers/redux-utils/group';
 
 const NotificationStatus = ({ item, setGetNotifications, getNotifications }) => {
 	const dispatch = useDispatch();
@@ -72,7 +73,49 @@ const NotificationStatus = ({ item, setGetNotifications, getNotifications }) => 
 		}
 	};
 
-	const handleActiveIsReed = () => {
+	const acceptInviteGroup = async data => {
+		setIsLoading(true);
+		try {
+			const params = { id: data.originId.inviteId, body: { accept: true } };
+			await dispatch(replyInviteGroup(params)).unwrap();
+			const newArr = getNotifications.map(item => {
+				if (item.id === item.id) {
+					const data = { ...item, isAccept: true };
+					return { ...data };
+				}
+				return { ...item };
+			});
+			setGetNotifications(newArr);
+
+			await dispatch(readNotification({ notificationId: item.id })).unwrap();
+		} catch (err) {
+			NotificationError(err);
+		} finally {
+			setIsLoading(false);
+		}
+	};
+
+	const refuseInviteGroup = async data => {
+		setIsLoading(true);
+		try {
+			const params = { id: data.originId.inviteId, body: { accept: false } };
+			await dispatch(replyInviteGroup(params)).unwrap();
+			const newArr = getNotifications.map(item => {
+				if (item.id === item.id) {
+					const data = { ...item, isAccept: true };
+					return { ...data };
+				}
+				return { ...item };
+			});
+			setGetNotifications(newArr);
+		} catch (err) {
+			NotificationError(err);
+		} finally {
+			setIsLoading(false);
+		}
+	};
+
+	const handleActiveIsRead = () => {
 		setIsRead(true);
 
 		if (!item.isRead) {
@@ -98,6 +141,11 @@ const NotificationStatus = ({ item, setGetNotifications, getNotifications }) => 
 							: 'group-post'
 					}/${item.originId?.minipostId || item.originId?.groupPostId}`
 				);
+				break;
+			case 'follow':
+			case 'addFriend':
+			case 'friendAccepted':
+				navigate(`/profile/${item.createdBy?.id || item.originId.userId}`);
 				break;
 			case 'topUserRanking':
 				navigate(`/top100`);
@@ -162,6 +210,9 @@ const NotificationStatus = ({ item, setGetNotifications, getNotifications }) => 
 			case 'sharePost':
 				navigate(`/detail-feed/mini-post/${item.originId.minipostId}`);
 				break;
+			case 'finishReadingGoal':
+				navigate(`/reading-target/${item.originId.userId}`);
+				break;
 			default:
 				console.log('Xét thiếu verb: ', item.verb);
 		}
@@ -169,10 +220,11 @@ const NotificationStatus = ({ item, setGetNotifications, getNotifications }) => 
 
 	return (
 		<div
-			onClick={handleActiveIsReed}
+			onClick={handleActiveIsRead}
 			className={classNames('notification__tabs__main__all__seen', {
 				'notification__tabs__main__all__active': isRead || item.isRead,
-				'notification__tabs__main__all__friend-request': item.verb === 'addFriend',
+				'notification__tabs__main__all__friend-request':
+					item.verb === 'addFriend' || item.verb === 'inviteGroup',
 			})}
 		>
 			<div className='notification__all__main__layout'>
@@ -236,13 +288,48 @@ const NotificationStatus = ({ item, setGetNotifications, getNotifications }) => 
 							) : (
 								<>
 									<div
-										onClick={() => ReplyFriendReq(item.object)}
+										onClick={e => {
+											e.stopPropagation();
+											ReplyFriendReq(item.object);
+										}}
 										className='notification__main__all__accept'
 									>
 										{item.verb === 'browse' ? 'Duyệt' : 'Chấp nhận'}
 									</div>
 									<div
-										onClick={() => cancelFriend(item.object)}
+										onClick={e => {
+											e.stopPropagation();
+											cancelFriend(item.object);
+										}}
+										className='notification__main__all__refuse'
+									>
+										Từ chối
+									</div>
+								</>
+							)}
+						</div>
+					)}
+
+					{item.verb === 'inviteGroup' && (
+						<div className='notification__main__all__friend'>
+							{isLoading ? (
+								<LoadingIndicator />
+							) : (
+								<>
+									<div
+										onClick={e => {
+											e.stopPropagation();
+											acceptInviteGroup(item);
+										}}
+										className='notification__main__all__accept'
+									>
+										{item.verb === 'browse' ? 'Duyệt' : 'Chấp nhận'}
+									</div>
+									<div
+										onClick={e => {
+											e.stopPropagation();
+											refuseInviteGroup(item);
+										}}
 										className='notification__main__all__refuse'
 									>
 										Từ chối
