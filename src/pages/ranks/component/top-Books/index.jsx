@@ -11,6 +11,7 @@ import ModalCheckLogin from 'shared/modal-check-login';
 import LoadingIndicator from 'shared/loading-indicator';
 import ModalSearchCategories from '../modal-search-categories/ModalSearchCategories';
 import dropdownIcon from 'assets/images/dropdown.png';
+import InfiniteScroll from 'react-infinite-scroll-component';
 
 const TopBooks = ({ listYear, tabSelected }) => {
 	const kindOfGroupRef = useRef({ value: 'default', title: 'Chủ đề' });
@@ -21,6 +22,10 @@ const TopBooks = ({ listYear, tabSelected }) => {
 	const [getListTopBooks, setGetListTopBooks] = useState([]);
 	const [modalShow, setModalShow] = useState(false);
 	const [loadingState, setLoadingState] = useState(false);
+	const [hasMore, setHasMore] = useState(true);
+
+	const callApiStart = useRef(0);
+	const callApiPerPage = useRef(10);
 
 	const [modalSearchCategoriesShow, setModalSearchCategoriesShow] = useState(false);
 
@@ -36,16 +41,49 @@ const TopBooks = ({ listYear, tabSelected }) => {
 	const getTopBooksData = async () => {
 		setLoadingState(true);
 		const params = {
+			start: callApiStart.current,
+			limit: callApiPerPage.current,
 			categoryId: topBooksId,
 			by: valueDate,
 		};
 		try {
 			const topBooks = await dispatch(getTopBooks(params)).unwrap();
+			if (topBooks.length < callApiPerPage.current) {
+				setHasMore(false);
+			}
 			setGetListTopBooks(topBooks);
 		} catch (err) {
 			NotificationError(err);
 		} finally {
 			setLoadingState(false);
+		}
+	};
+
+	const getTopBooksDataNext = async () => {
+		const params = {
+			start: callApiStart.current,
+			limit: callApiPerPage.current,
+			categoryId: topBooksId,
+			by: valueDate,
+		};
+		try {
+			const topBooks = await dispatch(getTopBooks(params)).unwrap();
+			if (callApiStart.current == 80) {
+				setHasMore(false);
+			}
+
+			if (topBooks.length) {
+				if (topBooks.length < callApiPerPage.current) {
+					setHasMore(false);
+				} else {
+					callApiStart.current += callApiPerPage.current;
+				}
+				setGetListTopBooks(getListTopBooks.concat(topBooks));
+			} else {
+				setHasMore(false);
+			}
+		} catch (err) {
+			NotificationError(err);
 		}
 	};
 
@@ -76,6 +114,7 @@ const TopBooks = ({ listYear, tabSelected }) => {
 
 	useEffect(() => {
 		if (tabSelected === 'books' && !category) {
+			setHasMore(true);
 			getTopBooksData();
 		}
 	}, [topBooksId, valueDate, isAuth, tabSelected]);
@@ -96,7 +135,6 @@ const TopBooks = ({ listYear, tabSelected }) => {
 					onSelectCategory={onchangeKindOfGroup}
 				/>
 			)}
-
 			<div className='topbooks__container__title'>TOP 100 Cuốn sách tốt nhất</div>
 			<div className='topbooks__container__sort'>
 				<div className='topbooks__container__sort__left' onClick={() => setModalSearchCategoriesShow(true)}>
@@ -125,23 +163,32 @@ const TopBooks = ({ listYear, tabSelected }) => {
 			) : (
 				<>
 					{getListTopBooks.length > 0 ? (
-						getListTopBooks.map((item, index) => (
-							<div key={item.bookId} className='topbooks__container__main top__book'>
-								<StarRanking index={index} />
-								<div className='topbooks__container__main__layout'>
-									<AuthorBook
-										data={{ ...item.book, status: item.status }}
-										checkStar={true}
-										showShareBtn={true}
-										setModalShow={setModalShow}
-										valueDate={valueDate}
-										topBooksId={topBooksId}
-										categoryName={kindOfGroupRef.current.name}
-										trueRank={index + 1}
-									/>
-								</div>
-							</div>
-						))
+						<InfiniteScroll
+							dataLength={getListTopBooks.length}
+							next={getTopBooksDataNext}
+							hasMore={hasMore}
+							loader={<LoadingIndicator />}
+						>
+							<>
+								{getListTopBooks.map((item, index) => (
+									<div key={index} className='topbooks__container__main top__book'>
+										<StarRanking index={index} />
+										<div className='topbooks__container__main__layout'>
+											<AuthorBook
+												data={{ ...item.book, status: item.status }}
+												checkStar={true}
+												showShareBtn={true}
+												setModalShow={setModalShow}
+												valueDate={valueDate}
+												topBooksId={topBooksId}
+												categoryName={kindOfGroupRef.current.name}
+												trueRank={index + 1}
+											/>
+										</div>
+									</div>
+								))}
+							</>
+						</InfiniteScroll>
 					) : (
 						<div className='topbooks__notthing'>Không có dữ liệu</div>
 					)}
