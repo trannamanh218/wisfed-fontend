@@ -252,6 +252,7 @@ const groupSlice = createSlice({
 		error: {},
 		key: 'intro',
 		resetGroupList: true,
+		toggleUpdate: true,
 	},
 	reducers: {
 		updateKey: (state, action) => {
@@ -259,6 +260,9 @@ const groupSlice = createSlice({
 		},
 		handleResetGroupList: state => {
 			state.resetGroupList = !state.resetGroupList;
+		},
+		handleToggleUpdate: state => {
+			state.toggleUpdate = !state.toggleUpdate;
 		},
 	},
 	extraReducers: {
@@ -279,4 +283,4 @@ const groupSlice = createSlice({
 const group = groupSlice.reducer;
 
 export default group;
-export const { updateKey, handleResetGroupList } = groupSlice.actions;
+export const { updateKey, handleResetGroupList, handleToggleUpdate } = groupSlice.actions;

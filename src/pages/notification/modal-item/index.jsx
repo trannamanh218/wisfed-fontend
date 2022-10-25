@@ -6,7 +6,7 @@ import {
 } from 'reducers/redux-utils/notification';
 import UserAvatar from 'shared/user-avatar';
 import { calculateDurationTime } from 'helpers/Common';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { ReplyFriendRequest } from 'reducers/redux-utils/user';
 import { NotificationError } from 'helpers/Error';
 import { renderMessage } from 'helpers/HandleShare';
@@ -17,11 +17,12 @@ import { updateUser } from 'reducers/redux-utils/user';
 import { updateReviewIdFromNoti } from 'reducers/redux-utils/notification';
 import LoadingIndicator from 'shared/loading-indicator';
 import logoNonText from 'assets/icons/logoNonText.svg';
-import { replyInviteGroup } from 'reducers/redux-utils/group';
+import { replyInviteGroup, handleToggleUpdate } from 'reducers/redux-utils/group';
 
 const ModalItem = ({ item, setModalNoti, getNotifications, setGetNotifications, selectKey }) => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
+	const urlParams = useParams();
 	const { userInfo } = useSelector(state => state.auth);
 	const { isReload } = useSelector(state => state.user);
 
@@ -82,16 +83,23 @@ const ModalItem = ({ item, setModalNoti, getNotifications, setGetNotifications, 
 		try {
 			const params = { id: data.originId.inviteId, body: { accept: true } };
 			await dispatch(replyInviteGroup(params)).unwrap();
-			const newArr = getNotifications.map(item => {
-				if (item.id === item.id) {
-					const data = { ...item, isAccept: true };
+
+			const newArr = getNotifications.map(noti => {
+				if (noti.id === item.id) {
+					const data = { ...noti, isAccept: true };
 					return { ...data };
 				}
-				return { ...item };
+				return { ...noti };
 			});
 			setGetNotifications(newArr);
 
 			await dispatch(readNotification({ notificationId: item.id })).unwrap();
+
+			if (data.originId.groupId == urlParams.id) {
+				// Vì dữ liệu khác kiểu cho nên so sánh bằng == chứ không phải ===
+				// Nếu đang ở trong màn group thì thay đổi nút 'Yêu cầu tham gia'
+				await dispatch(handleToggleUpdate()).unwrap();
+			}
 		} catch (err) {
 			NotificationError(err);
 		} finally {
@@ -104,12 +112,12 @@ const ModalItem = ({ item, setModalNoti, getNotifications, setGetNotifications, 
 		try {
 			const params = { id: data.originId.inviteId, body: { accept: false } };
 			await dispatch(replyInviteGroup(params)).unwrap();
-			const newArr = getNotifications.map(item => {
-				if (item.id === item.id) {
-					const data = { ...item, isAccept: true };
+			const newArr = getNotifications.map(noti => {
+				if (noti.id === item.id) {
+					const data = { ...noti, isRefuse: true };
 					return { ...data };
 				}
-				return { ...item };
+				return { ...noti };
 			});
 			setGetNotifications(newArr);
 		} catch (err) {

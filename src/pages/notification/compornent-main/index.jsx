@@ -52,7 +52,10 @@ const Notification = () => {
 		if (getListDefault.length > 0 && !isRealTime) {
 			const arrNew = getListDefault.map(item => item.activities).flat(1);
 			const newArr = arrNew.map(item => {
-				const data = { ...item, isAccept: false, isRefuse: false };
+				let data = { ...item };
+				if (item.verb === 'addFriend' || item.verb === 'inviteGroup') {
+					data = { ...item, isAccept: false, isRefuse: false };
+				}
 				return { ...data };
 			});
 			const filterFriend = newArr.filter(item => !item.isCheck);

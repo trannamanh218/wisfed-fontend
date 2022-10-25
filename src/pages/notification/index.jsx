@@ -68,7 +68,7 @@ const NotificationModal = ({ setModalNoti, buttonModal, realTime }) => {
 			const arrNew = notificationList.map(item => item.activities).flat(1);
 			const newArr = arrNew.map(item => {
 				let data = { ...item };
-				if (item.verb === 'addFriend') {
+				if (item.verb === 'addFriend' || item.verb === 'inviteGroup') {
 					data = { ...item, isAccept: false, isRefuse: false };
 				}
 				return { ...data };

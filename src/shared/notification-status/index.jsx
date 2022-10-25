@@ -78,12 +78,12 @@ const NotificationStatus = ({ item, setGetNotifications, getNotifications }) => 
 		try {
 			const params = { id: data.originId.inviteId, body: { accept: true } };
 			await dispatch(replyInviteGroup(params)).unwrap();
-			const newArr = getNotifications.map(item => {
-				if (item.id === item.id) {
-					const data = { ...item, isAccept: true };
+			const newArr = getNotifications.map(noti => {
+				if (noti.id === item.id) {
+					const data = { ...noti, isAccept: true };
 					return { ...data };
 				}
-				return { ...item };
+				return { ...noti };
 			});
 			setGetNotifications(newArr);
 
@@ -100,12 +100,12 @@ const NotificationStatus = ({ item, setGetNotifications, getNotifications }) => 
 		try {
 			const params = { id: data.originId.inviteId, body: { accept: false } };
 			await dispatch(replyInviteGroup(params)).unwrap();
-			const newArr = getNotifications.map(item => {
-				if (item.id === item.id) {
-					const data = { ...item, isAccept: true };
+			const newArr = getNotifications.map(noti => {
+				if (noti.id === item.id) {
+					const data = { ...noti, isRefuse: true };
 					return { ...data };
 				}
-				return { ...item };
+				return { ...noti };
 			});
 			setGetNotifications(newArr);
 		} catch (err) {
