@@ -157,6 +157,9 @@ const NotificationStatus = ({ item, setGetNotifications, getNotifications }) => 
 				navigate(`/Group/${item.originId.groupId}`);
 				break;
 			case 'replyComment':
+				dispatch(handleMentionCommentId(item.originId.replyId));
+				navigate(`/detail-feed/mini-post/${item.originId.minipostId}`);
+				break;
 			case 'shareQuote':
 				navigate(`/detail-feed/mini-post/${item.originId.minipostId}`);
 				break;
