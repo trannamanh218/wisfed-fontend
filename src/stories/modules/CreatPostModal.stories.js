@@ -1,9 +1,9 @@
-import CreatPostModalContent from 'pages/home/components/newfeed/components/creat-post-modal-content';
+import CreatePostModalContent from 'pages/home/components/newfeed/components/creat-post-modal-content';
 
 export default {
 	title: 'Components/Modules/Creat post modal',
-	component: CreatPostModalContent,
+	component: CreatePostModalContent,
 };
 
-const Template = args => <CreatPostModalContent {...args} />;
+const Template = args => <CreatePostModalContent {...args} />;
 export const Default = Template.bind({});

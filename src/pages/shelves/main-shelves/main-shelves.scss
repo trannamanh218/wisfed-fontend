@@ -126,7 +126,6 @@
 						max-width: 195px;
 						.book-item__container {
 							.book-thumbnail.book-thumbnail-lg {
-								width: 180px;
 								height: 290px;
 							}
 						}
@@ -165,7 +164,6 @@
 							max-width: 190px;
 							.book-item__container {
 								.book-thumbnail.book-thumbnail-lg {
-									width: 160px;
 									height: 250px;
 								}
 							}
@@ -236,16 +234,6 @@
 				.main-shelves__pane {
 					.shelf {
 						grid-template-columns: repeat(3, 1fr);
-						grid-gap: 1rem;
-						.book-item {
-							.book-thumbnail {
-								img {
-									width: 100%;
-									height: 100%;
-									object-fit: cover;
-								}
-							}
-						}
 					}
 				}
 			}

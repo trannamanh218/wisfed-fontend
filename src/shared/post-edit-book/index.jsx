@@ -5,7 +5,7 @@ import BookThumbnail from 'shared/book-thumbnail';
 import LinearProgressBar from 'shared/linear-progress-bar';
 import ReactRating from 'shared/react-rating';
 import './post-edit-book.scss';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { getRatingBook } from 'reducers/redux-utils/book';
 import { NotificationError } from 'helpers/Error';
 import _ from 'lodash';
@@ -15,6 +15,8 @@ const PostEditBook = ({ data, handleAddToPost, handleChangeStar, valueStar }) =>
 	const [showText, setShowText] = useState(true);
 	const inputRef = useRef(null);
 	const dispatch = useDispatch();
+
+	const createNewPostForBook = useSelector(state => state.activity.createNewPostForBook);
 
 	const fetchData = async () => {
 		try {
@@ -31,11 +33,7 @@ const PostEditBook = ({ data, handleAddToPost, handleChangeStar, valueStar }) =>
 		} else {
 			setListRatingStar({ count: data.countRating, avg: data.avgRating });
 		}
-	}, []);
 
-	// rating là rating của user cho cuốn sách, không phải rating tổng -- rating 1 lần duy nhất)
-
-	useEffect(() => {
 		if (inputRef.current) {
 			inputRef.current.focus();
 			inputRef.current.addEventListener('keyup', event => {
@@ -83,7 +81,8 @@ const PostEditBook = ({ data, handleAddToPost, handleChangeStar, valueStar }) =>
 					<div className='post-edit-book__edit'>
 						<LinearProgressBar percent={(data.progress / data.page) * 100} />
 						<div className='post-edit-book__editor'>
-							{data.status === STATUS_BOOK.wantToRead || data.status === STATUS_BOOK.read ? (
+							{(data.status === STATUS_BOOK.wantToRead || data.status === STATUS_BOOK.read) &&
+							!createNewPostForBook ? (
 								<span>{data.progress || 0}</span>
 							) : (
 								<input
@@ -91,7 +90,7 @@ const PostEditBook = ({ data, handleAddToPost, handleChangeStar, valueStar }) =>
 									className='post-edit-book__input'
 									onKeyDown={blockInvalidChar}
 									onChange={handleChange}
-									value={data.progress}
+									value={data.progress || ''}
 									name='progress'
 									type='number'
 									onWheel={e => e.target.blur()}
@@ -104,7 +103,7 @@ const PostEditBook = ({ data, handleAddToPost, handleChangeStar, valueStar }) =>
 						</div>
 					</div>
 				</div>
-				{(data.status === STATUS_BOOK.read || data.progress == data.page) && (
+				{((data.status === STATUS_BOOK.read && !createNewPostForBook) || data.progress == data.page) && (
 					<div className='post-edit-book__action'>
 						<div className='post-edit-book__ratings'>
 							<ReactRating

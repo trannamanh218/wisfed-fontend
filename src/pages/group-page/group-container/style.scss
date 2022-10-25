@@ -63,12 +63,15 @@
 }
 
 .list-group__container {
-	margin-bottom: 30px;
+	background: #fff;
+	padding: 10px 16px;
+	border-radius: 15px;
+	margin-bottom: 15px;
 	h3 {
 		font-family: 'Montserrat';
 		font-style: normal;
 		font-weight: 600;
-		font-size: 18.0357px;
+		font-size: 17.9px;
 		line-height: 29px;
 		display: flex;
 		align-items: center;
@@ -131,7 +134,7 @@
 	}
 }
 .your-join-group {
-	margin-top: 33px;
+	margin-top: 15px;
 }
 
 .list-group-container {
@@ -307,6 +310,9 @@
 		.search-group-container {
 			padding: 40px 56px 0;
 		}
+		.mainContainer {
+			padding: 40px;
+		}
 	}
 }
 
@@ -383,6 +389,9 @@
 					}
 				}
 			}
+		}
+		.list-group__container {
+			padding: 10px 8px;
 		}
 	}
 }

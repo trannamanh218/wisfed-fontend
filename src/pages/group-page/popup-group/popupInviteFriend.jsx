@@ -1,5 +1,5 @@
 import { CloseIconX, CloseX } from 'components/svg';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import SearchField from 'shared/search-field';
 import PropTypes from 'prop-types';
 import './style.scss';
@@ -57,8 +57,8 @@ const PopupInviteFriend = ({ handleClose, showRef, groupMembers }) => {
 	};
 
 	useEffect(() => {
-		getListFriend(inputSearch);
-	}, [userInfo, inputSearch]);
+		getListFriend('');
+	}, []);
 
 	const handleSelectFriend = e => {
 		setListFriendSelect([...listFriendSelect, e]);
@@ -69,6 +69,18 @@ const PopupInviteFriend = ({ handleClose, showRef, groupMembers }) => {
 		setListFriendsNotInGroup([...listFriendsNotInGroup, e]);
 		const checkItem = listFriendSelect.filter(item => item !== e);
 		setListFriendSelect(checkItem);
+	};
+
+	const debounceFnc = useCallback(
+		_.debounce(value => {
+			getListFriend(value);
+		}, 700),
+		[]
+	);
+
+	const handleSearch = e => {
+		setInputSearch(e.target.value);
+		debounceFnc(e.target.value);
 	};
 
 	return (
@@ -82,31 +94,38 @@ const PopupInviteFriend = ({ handleClose, showRef, groupMembers }) => {
 			<hr />
 			<div style={{ padding: '0 24px' }}>
 				<div className='search-friend'>
-					<SearchField
-						value={inputSearch}
-						handleChange={e => _.debounce(setInputSearch(e.target.value), 700)}
-					/>
-					<button onClick={() => inViteFriend()}>Gợi ý</button>
+					<SearchField value={inputSearch} handleChange={handleSearch} />
+					<button onClick={() => inViteFriend()}>Gửi</button>
 				</div>
 
 				<div className='main-action'>
 					<div className='list-friend'>
 						<h4>Danh sách bạn bè</h4>
-						{listFriendsNotInGroup.map(item => {
-							return (
-								<div className='friend-item' key={item.id}>
-									<div className='friend-item__avatar'>
-										<img
-											src={item.avatarImage || defaultAvatar}
-											alt='image'
-											onError={e => e.target.setAttribute('src', defaultAvatar)}
-										/>
-										<span>{item.fullName}</span>
-									</div>
-									<input type='checkbox' id={item.id} onClick={() => handleSelectFriend(item)} />
-								</div>
-							);
-						})}
+						{listFriendsNotInGroup.length > 0 ? (
+							<>
+								{listFriendsNotInGroup.map(item => {
+									return (
+										<div className='friend-item' key={item.id}>
+											<div className='friend-item__avatar'>
+												<img
+													src={item.avatarImage || defaultAvatar}
+													alt='image'
+													onError={e => e.target.setAttribute('src', defaultAvatar)}
+												/>
+												<span>{item.fullName}</span>
+											</div>
+											<input
+												type='checkbox'
+												id={item.id}
+												onClick={() => handleSelectFriend(item)}
+											/>
+										</div>
+									);
+								})}
+							</>
+						) : (
+							<p style={{ fontSize: '14px' }}>Không tìm thấy bạn bè phù hợp</p>
+						)}
 					</div>
 					<div className='list-friend-select'>
 						<h4>Danh sách đã chọn ({listFriendSelect.length})</h4>

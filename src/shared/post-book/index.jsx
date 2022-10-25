@@ -6,7 +6,7 @@ import BookThumbnail from 'shared/book-thumbnail';
 import LinearProgressBar from 'shared/linear-progress-bar';
 import { Link } from 'react-router-dom';
 
-function PostBook({ data, inCreatePost }) {
+function PostBook({ data, inCreatePost, bookProgress }) {
 	const generateAuthorName = authorsInfo => {
 		if (authorsInfo && authorsInfo.length) {
 			const authorNameArr = authorsInfo.map(item => item.authorName);
@@ -33,10 +33,10 @@ function PostBook({ data, inCreatePost }) {
 					</Link>
 					<div className='post-book__author'>{generateAuthorName(data.authors)}</div>
 					<div className='post-book__edit'>
-						<LinearProgressBar percent={((data.progress / data.page) * 100).toFixed()} />
+						<LinearProgressBar percent={((bookProgress / data.page) * 100).toFixed()} />
 						<div className='post-book__editor'>
 							<span className='post-book__ratio'>
-								{data.progress}/{data.page}
+								{bookProgress}/{data.page}
 							</span>
 							<span>Trang sách đã đọc</span>
 						</div>
@@ -65,6 +65,7 @@ function PostBook({ data, inCreatePost }) {
 PostBook.propTypes = {
 	data: PropTypes.object.isRequired,
 	inCreatePost: PropTypes.bool,
+	bookProgress: 0,
 };
 
 export default PostBook;

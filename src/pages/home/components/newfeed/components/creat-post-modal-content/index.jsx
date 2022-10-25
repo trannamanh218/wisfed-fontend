@@ -45,6 +45,7 @@ import {
 	TOP_QUOTE_VERB_SHARE,
 	MY_BOOK_VERB_SHARE,
 } from 'constants';
+import { handleClickCreateNewPostForBook } from 'reducers/redux-utils/activity';
 // import ShareModeComponent from './ShareModeComponent';
 
 const verbShareArray = [
@@ -57,11 +58,9 @@ const verbShareArray = [
 	TOP_USER_VERB_SHARE,
 ];
 
-const urlRegex =
-	/(https?:\/\/)?(www(\.))?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)([^"<\s]+)(?![^<>]*>|[^"]*?<\/a)/g;
 const hashtagRegex = /#(?![0-9_]+\b)[0-9a-zàáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđ_]+/gi;
 
-function CreatPostModalContent({
+function CreatePostModalContent({
 	hideCreatePostModal,
 	setShowModalCreatPost,
 	showModalCreatPost,
@@ -147,7 +146,7 @@ function CreatPostModalContent({
 
 	useEffect(() => {
 		if (urlAdded) {
-			if (urlAdded.match(urlRegex) && !_.isEqual(urlAdded, oldUrlAdded)) {
+			if (!_.isEqual(urlAdded, oldUrlAdded)) {
 				setHasUrl(true);
 				getPreviewUrlFnc(urlAdded);
 			}
@@ -192,6 +191,9 @@ function CreatPostModalContent({
 	};
 
 	const addOptionsToPost = param => {
+		if (param.value === 'addBook') {
+			dispatch(handleClickCreateNewPostForBook(true));
+		}
 		onChangeOption(param);
 		setShowMainModal(false);
 	};
@@ -293,7 +295,7 @@ function CreatPostModalContent({
 				});
 				params.image = imagesArray;
 			} catch {
-				const customId = 'custom-id-CreatPostModalContent-generateData';
+				const customId = 'custom-id-CreatePostModalContent-generateData';
 				toast.error('Đăng ảnh không thành công', { toastId: customId });
 				params.image = {};
 			}
@@ -315,22 +317,15 @@ function CreatPostModalContent({
 				if (convertProgress === page) {
 					const addBookParams = { bookId: id, type: STATUS_BOOK.read };
 					dispatch(addBookToDefaultLibrary(addBookParams)).unwrap();
-					setTimeout(() => {
-						dispatch(updateMyAllLibraryRedux());
-					}, 150);
 				}
 			} else {
 				// Check cuốn sách hiện tại đang ở trong thư viện nào của ng dùng hay k
 				let libraryContainCurrentBook = null;
 				if (myAllLibraryReduxDefault.length) {
-					for (let i = 0; i < myAllLibraryReduxDefault.length; i++) {
-						for (let j = 0; j < myAllLibraryReduxDefault[i].books.length; j++) {
-							if (myAllLibraryReduxDefault[i].books[j].bookId === id) {
-								libraryContainCurrentBook = myAllLibraryReduxDefault[i].defaultType;
-								break;
-							}
-						}
-					}
+					const found = myAllLibraryReduxDefault.find(item1 =>
+						item1.books.find(item2 => item2.bookId === id)
+					);
+					libraryContainCurrentBook = found?.defaultType;
 				}
 
 				let type = STATUS_BOOK.wantToRead;
@@ -343,11 +338,11 @@ function CreatPostModalContent({
 				if (type !== libraryContainCurrentBook) {
 					const addBookParams = { bookId: id, type };
 					dispatch(addBookToDefaultLibrary(addBookParams)).unwrap();
-					setTimeout(() => {
-						dispatch(updateMyAllLibraryRedux());
-					}, 150);
 				}
 			}
+			setTimeout(() => {
+				dispatch(updateMyAllLibraryRedux());
+			}, 150);
 		} catch (error) {
 			NotificationError(error);
 		}
@@ -465,11 +460,11 @@ function CreatPostModalContent({
 				}
 			}
 			setStatus(STATUS_SUCCESS);
-			const customId = 'custom-id-CreatPostModalContent-onCreatePost-success';
+			const customId = 'custom-id-CreatePostModalContent-onCreatePost-success';
 			toast.success('Tạo bài viết thành công!', { toastId: customId });
 			onChangeNewPost();
 		} catch (err) {
-			const customId = 'custom-id-CreatPostModalContent-onCreatePost-error';
+			const customId = 'custom-id-CreatePostModalContent-onCreatePost-error';
 			toast.error('Tạo bài viết thất bại!', { toastId: customId });
 		} finally {
 			dispatch(updateCurrentBook({}));
@@ -749,6 +744,7 @@ function CreatPostModalContent({
 											urlData={urlPreviewData}
 											isFetching={fetchingUrlInfo}
 											removeUrlPreview={removeUrlPreview}
+											inCreatePost={true}
 										/>
 									)}
 								</>
@@ -824,7 +820,7 @@ function CreatPostModalContent({
 	);
 }
 
-CreatPostModalContent.propTypes = {
+CreatePostModalContent.propTypes = {
 	hideCreatePostModal: PropTypes.func,
 	showModalCreatPost: PropTypes.bool,
 	option: PropTypes.object,
@@ -837,4 +833,4 @@ CreatPostModalContent.propTypes = {
 	bookInfoProp: PropTypes.object,
 };
 
-export default CreatPostModalContent;
+export default CreatePostModalContent;

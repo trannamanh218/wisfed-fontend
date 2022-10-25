@@ -17,7 +17,7 @@ import { Modal } from 'react-bootstrap';
 import defaultAvatar from 'assets/images/defaultLogoAvatar.png';
 
 const urlRegex =
-	/(https?:\/\/)?(www(\.))?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)([^"<\s]+)(?![^<>]*>|[^"]*?<\/a)/g;
+	/(http(s)?:\/\/)?(www(\.))?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}([-a-zA-Z0-9()@:%_\+.~#?&//=]*)([^"<\s]+)(?![^<>]*>|[^"]*?<\/a)/g;
 const hashtagRegex = /#(?![0-9_]+\b)[0-9a-zàáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđ_]+/gi;
 
 const PostShare = ({ postData, inCreatePost = false }) => {
@@ -281,6 +281,7 @@ const PostShare = ({ postData, inCreatePost = false }) => {
 						bookLibrary: postData?.bookLibrary,
 						actorCreatedPost: postData?.actor,
 					}}
+					bookProgress={postData.sharePost.book.progress}
 					inCreatePost={inCreatePost}
 				/>
 			)}

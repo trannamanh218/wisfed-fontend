@@ -58,6 +58,12 @@ const BookIntro = ({ bookInfo, listRatingStar }) => {
 		}
 	};
 
+	const viewAuthorProfile = () => {
+		if (bookInfo.verify) {
+			navigate(`/profile/${bookInfo.author[0].authorId}`);
+		}
+	};
+
 	return (
 		<div className='book-intro'>
 			<div className='book-intro__image'>
@@ -75,12 +81,12 @@ const BookIntro = ({ bookInfo, listRatingStar }) => {
 						{bookInfo.name}
 					</h1>
 					<div className='book-intro__author'>
-						<span>
+						<span onClick={viewAuthorProfile}>
 							{!_.isEmpty(bookInfo.authors)
 								? 'Bởi ' + bookInfo.authors[0].authorName
-								: 'Chưa cập nhật tác giả'}{' '}
+								: 'Chưa cập nhật tác giả'}
 						</span>
-						<CircleCheckIcon className='book-intro__check' />
+						{bookInfo.verify && <CircleCheckIcon className='book-intro__check' />}
 					</div>
 					<div className='book-intro__stars'>
 						<ReactRating readonly={true} initialRating={listRatingStar?.avg} />
