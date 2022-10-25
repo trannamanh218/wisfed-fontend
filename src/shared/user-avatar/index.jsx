@@ -1,4 +1,4 @@
-import defaultAvatar from 'assets/images/avatar.jpeg';
+import defaultAvatar from 'assets/images/defaultLogoAvatar.png';
 import PropTypes from 'prop-types';
 import './user-avatar.scss';
 

@@ -45,7 +45,7 @@ import ShareUsers from 'pages/home/components/newfeed/components/modal-share-use
 import ShareTarget from 'shared/share-target';
 import { handleMentionCommentId, handleCheckIfMentionFromGroup } from 'reducers/redux-utils/notification';
 import { getMiniPostComments, getGroupPostComments } from 'reducers/redux-utils/post';
-import defaultAvatar from 'assets/images/avatar.jpeg';
+import defaultAvatar from 'assets/images/defaultLogoAvatar.png';
 import SeeMoreComments from 'shared/see-more-comments/SeeMoreComments';
 
 const urlRegex =
@@ -347,7 +347,8 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 		try {
 			// Gọi api lấy thông tin của bình luận nhắc đến bạn
 			const params = { filter: JSON.stringify([{ operator: 'eq', value: mentionCommentId, property: 'id' }]) };
-			const mentionedCommentAPI = await dispatch(paramAPI({ postId: postData.id, params: params })).unwrap();
+			const getMentionedCommentAPI = await dispatch(paramAPI({ postId: postData.id, params: params })).unwrap();
+			const mentionedCommentAPI = getMentionedCommentAPI?.rows;
 			if (!_.isEmpty(mentionedCommentAPI)) {
 				if (mentionedCommentAPI[0].replyId === null) {
 					// Đảo thứ tự replies

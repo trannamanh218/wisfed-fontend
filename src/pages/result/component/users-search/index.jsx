@@ -2,7 +2,7 @@ import './users-search.scss';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import PropTypes from 'prop-types';
 import ResultNotFound from '../result-not-found';
-import defaultAvatar from 'assets/images/avatar.jpeg';
+import defaultAvatar from 'assets/images/defaultLogoAvatar.png';
 import { getFilterSearch } from 'reducers/redux-utils/search';
 import { NotificationError } from 'helpers/Error';
 import { useEffect, useState, useRef } from 'react';

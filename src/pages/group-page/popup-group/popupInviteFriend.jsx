@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
 import { getInviteFriend } from 'reducers/redux-utils/group';
 import { useParams } from 'react-router-dom';
-import defaultAvatar from 'assets/images/avatar.jpeg';
+import defaultAvatar from 'assets/images/defaultLogoAvatar.png';
 import _ from 'lodash';
 
 const PopupInviteFriend = ({ handleClose, showRef, groupMembers }) => {

@@ -164,8 +164,12 @@ const NotificationStatus = ({ item, setGetNotifications, getNotifications }) => 
 			case 'likeQuote':
 				navigate(`/quotes/detail/${item.originId.quoteId}`);
 				break;
-			case 'replyCommentQuote':
+			case 'likeCommentQuote':
 				dispatch(handleMentionCommentId(item.originId.commentQuoteId));
+				navigate(`/quotes/detail/${item.originId.quoteId}`);
+				break;
+			case 'replyCommentQuote':
+				dispatch(handleMentionCommentId(item.originId.replyId));
 				navigate(`/quotes/detail/${item.originId.quoteId}`);
 				break;
 			case 'mention':
@@ -179,6 +183,7 @@ const NotificationStatus = ({ item, setGetNotifications, getNotifications }) => 
 						break;
 					case 'mentionMiniPost':
 					case 'commentMiniPost':
+						dispatch(handleMentionCommentId(item.originId.commentMiniPostId));
 						navigate(`/detail-feed/mini-post/${item.originId.minipostId}`);
 						break;
 					case 'commentReview':

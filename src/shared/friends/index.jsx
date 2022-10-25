@@ -2,7 +2,7 @@ import Button from 'shared/button';
 import PropTypes from 'prop-types';
 import './friends.scss';
 import { Subtract } from 'components/svg';
-import defaultAvatar from 'assets/images/avatar.jpeg';
+import defaultAvatar from 'assets/images/defaultLogoAvatar.png';
 import {
 	makeFriendRequest,
 	addFollower,

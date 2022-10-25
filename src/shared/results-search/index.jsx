@@ -1,6 +1,6 @@
 import { TimeIcon, CloseIconX, Search } from 'components/svg';
 import './results-search.scss';
-import defaultAvatar from 'assets/images/avatar.jpeg';
+import defaultAvatar from 'assets/images/defaultLogoAvatar.png';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';

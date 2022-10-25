@@ -82,7 +82,7 @@ const SeeMoreComments = ({
 				res = await dispatch(getMiniPostComments(sentData)).unwrap();
 			} else if (postType === 'group') {
 				sentData = {
-					postId: data.groupPostId,
+					postId: data.id,
 					params: params,
 				};
 				res = await dispatch(getGroupPostComments(sentData)).unwrap();
