@@ -45,6 +45,7 @@ import {
 	TOP_QUOTE_VERB_SHARE,
 	MY_BOOK_VERB_SHARE,
 } from 'constants';
+import { handleClickCreateNewPostForBook } from 'reducers/redux-utils/activity';
 // import ShareModeComponent from './ShareModeComponent';
 
 const verbShareArray = [
@@ -59,7 +60,7 @@ const verbShareArray = [
 
 const hashtagRegex = /#(?![0-9_]+\b)[0-9a-zàáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđ_]+/gi;
 
-function CreatPostModalContent({
+function CreatePostModalContent({
 	hideCreatePostModal,
 	setShowModalCreatPost,
 	showModalCreatPost,
@@ -190,6 +191,9 @@ function CreatPostModalContent({
 	};
 
 	const addOptionsToPost = param => {
+		if (param.value === 'addBook') {
+			dispatch(handleClickCreateNewPostForBook(true));
+		}
 		onChangeOption(param);
 		setShowMainModal(false);
 	};
@@ -291,7 +295,7 @@ function CreatPostModalContent({
 				});
 				params.image = imagesArray;
 			} catch {
-				const customId = 'custom-id-CreatPostModalContent-generateData';
+				const customId = 'custom-id-CreatePostModalContent-generateData';
 				toast.error('Đăng ảnh không thành công', { toastId: customId });
 				params.image = {};
 			}
@@ -456,11 +460,11 @@ function CreatPostModalContent({
 				}
 			}
 			setStatus(STATUS_SUCCESS);
-			const customId = 'custom-id-CreatPostModalContent-onCreatePost-success';
+			const customId = 'custom-id-CreatePostModalContent-onCreatePost-success';
 			toast.success('Tạo bài viết thành công!', { toastId: customId });
 			onChangeNewPost();
 		} catch (err) {
-			const customId = 'custom-id-CreatPostModalContent-onCreatePost-error';
+			const customId = 'custom-id-CreatePostModalContent-onCreatePost-error';
 			toast.error('Tạo bài viết thất bại!', { toastId: customId });
 		} finally {
 			dispatch(updateCurrentBook({}));
@@ -816,7 +820,7 @@ function CreatPostModalContent({
 	);
 }
 
-CreatPostModalContent.propTypes = {
+CreatePostModalContent.propTypes = {
 	hideCreatePostModal: PropTypes.func,
 	showModalCreatPost: PropTypes.bool,
 	option: PropTypes.object,
@@ -829,4 +833,4 @@ CreatPostModalContent.propTypes = {
 	bookInfoProp: PropTypes.object,
 };
 
-export default CreatPostModalContent;
+export default CreatePostModalContent;

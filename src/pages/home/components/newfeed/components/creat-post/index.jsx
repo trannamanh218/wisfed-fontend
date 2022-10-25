@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
 import { BookIcon, Feather, CategoryIcon, GroupIcon } from 'components/svg';
-import CreatPostModalContent from '../creat-post-modal-content';
+import CreatePostModalContent from '../creat-post-modal-content';
 import { useDispatch, useSelector } from 'react-redux';
 import UserAvatar from 'shared/user-avatar';
 import PropTypes from 'prop-types';
@@ -11,6 +11,7 @@ import { useLocation } from 'react-router-dom';
 import { updateImg } from 'reducers/redux-utils/chart';
 import Storage from 'helpers/Storage';
 import { checkUserLogin } from 'reducers/redux-utils/auth';
+import { handleClickCreateNewPostForBook } from 'reducers/redux-utils/activity';
 
 function CreatePost({ onChangeNewPost }) {
 	const [showModalCreatPost, setShowModalCreatPost] = useState(false);
@@ -126,6 +127,7 @@ function CreatePost({ onChangeNewPost }) {
 		dispatch(saveDataShare({}));
 		dispatch(updateImg([]));
 		dispatch(updateCurrentBook({}));
+		dispatch(handleClickCreateNewPostForBook(false));
 		setOption({});
 		setShowModalCreatPost(false);
 		setShowSubModal(false);
@@ -139,6 +141,9 @@ function CreatePost({ onChangeNewPost }) {
 		if (!Storage.getAccessToken()) {
 			dispatch(checkUserLogin(true));
 		} else {
+			if (item.value === 'addBook') {
+				dispatch(handleClickCreateNewPostForBook(true));
+			}
 			onChangeOption(item);
 			setShowModalCreatPost(true);
 			setShowSubModal(true);
@@ -184,7 +189,7 @@ function CreatePost({ onChangeNewPost }) {
 			</div>
 			{showModalCreatPost && (
 				<div className='newfeed__creat-post__modal' ref={creatPostModalContainer}>
-					<CreatPostModalContent
+					<CreatePostModalContent
 						hideCreatePostModal={hideCreatePostModal}
 						showModalCreatPost={showModalCreatPost}
 						option={option}

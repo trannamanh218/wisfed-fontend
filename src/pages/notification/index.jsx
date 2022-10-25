@@ -67,7 +67,10 @@ const NotificationModal = ({ setModalNoti, buttonModal, realTime }) => {
 			const notificationList = await dispatch(getNotification()).unwrap();
 			const arrNew = notificationList.map(item => item.activities).flat(1);
 			const newArr = arrNew.map(item => {
-				const data = { ...item, isAccept: false, isRefuse: false };
+				let data = { ...item };
+				if (item.verb === 'addFriend') {
+					data = { ...item, isAccept: false, isRefuse: false };
+				}
 				return { ...data };
 			});
 			const filterFriend = newArr.filter(item => !item.isCheck);
