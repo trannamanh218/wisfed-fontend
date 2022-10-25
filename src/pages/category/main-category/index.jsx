@@ -14,7 +14,7 @@ import { NotificationError } from 'helpers/Error';
 
 const MainCategory = ({ isFetching, handleViewBookDetail, handleViewCategoryDetail }) => {
 	const [inputValue, setInputValue] = useState('');
-	const [filter, setFilter] = useState('[]');
+	const [filter, setFilter] = useState([{ 'operator': 'ne', 'value': 0, 'property': 'numberBooks' }]);
 
 	const [categoryList, setCategoryList] = useState([]);
 	const [hasMore, setHasMore] = useState(true);
@@ -32,7 +32,11 @@ const MainCategory = ({ isFetching, handleViewBookDetail, handleViewCategoryDeta
 
 	const getCategoryListDataFirstTime = async () => {
 		try {
-			const params = { start: 0, limit: callApiPerPage.current, filter: filter };
+			const params = {
+				start: 0,
+				limit: callApiPerPage.current,
+				filter: JSON.stringify(filter),
+			};
 			const categoryListData = await dispatch(getCategoryList({ option: true, params })).unwrap();
 			setCategoryList(categoryListData.rows);
 			if (!categoryListData.rows.length || categoryListData.rows.length < callApiPerPage.current) {
@@ -45,7 +49,11 @@ const MainCategory = ({ isFetching, handleViewBookDetail, handleViewCategoryDeta
 
 	const getCategoryListData = async () => {
 		try {
-			const params = { start: callApiStart.current, limit: callApiPerPage.current, filter: filter };
+			const params = {
+				start: callApiStart.current,
+				limit: callApiPerPage.current,
+				filter: JSON.stringify(filter),
+			};
 			const categoryListData = await dispatch(getCategoryList({ option: true, params })).unwrap();
 			if (categoryListData.rows.length) {
 				if (categoryListData.rows.length < callApiPerPage.current) {
@@ -65,9 +73,9 @@ const MainCategory = ({ isFetching, handleViewBookDetail, handleViewCategoryDeta
 	const updateFilter = value => {
 		if (value) {
 			const filterValue = [{ 'operator': 'search', 'value': value.trim(), 'property': 'name' }];
-			setFilter(JSON.stringify(filterValue));
+			setFilter(filterValue);
 		} else {
-			setFilter('[]');
+			setFilter([{ 'operator': 'ne', 'value': 0, 'property': 'numberBooks' }]);
 		}
 	};
 
@@ -87,7 +95,16 @@ const MainCategory = ({ isFetching, handleViewBookDetail, handleViewCategoryDeta
 					<img className='search-field__icon' src={SearchIcon} alt='search-icon' />
 					<input className='search-field__input' placeholder='Tìm kiếm chủ đề' onChange={updateInputSearch} />
 				</div>
-				{filter === '[]' ? (
+				{inputValue.length > 0 ? (
+					<SearchCategory
+						searchCategories={categoryList}
+						fetchFilterData={getCategoryListData}
+						hasMoreFilterData={hasMore}
+						handleViewBookDetail={handleViewBookDetail}
+						handleViewCategoryDetail={handleViewCategoryDetail}
+						inputValue={inputValue}
+					/>
+				) : (
 					<InfiniteScroll
 						dataLength={categoryList.length}
 						next={getCategoryListData}
@@ -106,15 +123,6 @@ const MainCategory = ({ isFetching, handleViewBookDetail, handleViewCategoryDeta
 							/>
 						))}
 					</InfiniteScroll>
-				) : (
-					<SearchCategory
-						searchCategories={categoryList}
-						fetchFilterData={getCategoryListData}
-						hasMoreFilterData={hasMore}
-						handleViewBookDetail={handleViewBookDetail}
-						handleViewCategoryDetail={handleViewCategoryDetail}
-						inputValue={inputValue}
-					/>
 				)}
 			</div>
 		</div>

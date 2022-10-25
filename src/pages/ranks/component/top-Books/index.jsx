@@ -26,6 +26,7 @@ const TopBooks = ({ listYear, tabSelected }) => {
 
 	const callApiStart = useRef(0);
 	const callApiPerPage = useRef(10);
+	const limit = 80;
 
 	const [modalSearchCategoriesShow, setModalSearchCategoriesShow] = useState(false);
 
@@ -68,7 +69,7 @@ const TopBooks = ({ listYear, tabSelected }) => {
 		};
 		try {
 			const topBooks = await dispatch(getTopBooks(params)).unwrap();
-			if (callApiStart.current == 80) {
+			if (callApiStart.current === limit) {
 				setHasMore(false);
 			}
 

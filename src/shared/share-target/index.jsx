@@ -2,6 +2,7 @@ import { IconRanks } from 'components/svg';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import LinearProgressBar from 'shared/linear-progress-bar';
 import UserAvatar from 'shared/user-avatar';
 import './share-target.scss';
@@ -20,6 +21,8 @@ function ShareTarget({ postData, inPost = false }) {
 		}
 	}, []);
 
+	const userInfo = useSelector(state => state.auth.userInfo);
+
 	const renderContentTop = () => {
 		return (
 			<div className='share-target__content__top'>
@@ -36,7 +39,7 @@ function ShareTarget({ postData, inPost = false }) {
 		<div className='share-target'>
 			<UserAvatar
 				className='share-target__user'
-				source={postData?.createdBy?.avatarImage || postData?.user?.avatarImage}
+				source={inPost ? postData?.createdBy?.avatarImage || postData?.user?.avatarImage : userInfo.avatarImage}
 				size='lg'
 			/>
 			<div className='share-target__progress'>

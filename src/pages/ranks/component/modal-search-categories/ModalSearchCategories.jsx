@@ -60,6 +60,7 @@ const ModalSearchCategories = ({ modalSearchCategoriesShow, setModalSearchCatego
 					value={inputSearch}
 				/>
 				<ul className='result-categories-list'>
+					{/* <li className='result-categories-item'>Tất cả chủ đề</li> */}
 					{searchedList.length ? (
 						searchedList.map((item, index) => (
 							<div
