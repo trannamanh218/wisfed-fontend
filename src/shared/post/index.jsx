@@ -587,6 +587,7 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 				haveNotClickedSeeMoreOnce={haveNotClickedSeeMoreOnce}
 				setHaveNotClickedSeeMoreOnce={setHaveNotClickedSeeMoreOnce}
 				isInDetail={isInDetail}
+				postType={type}
 			/>
 			{/* Nếu chưa bấm xem thêm: */}
 			{haveNotClickedSeeMoreOnce ? (

@@ -5,6 +5,7 @@ import { NotificationError } from 'helpers/Error';
 import { useDispatch } from 'react-redux';
 import { getQuoteComments } from 'reducers/redux-utils/quote';
 import { getGroupPostComments, getMiniPostComments } from 'reducers/redux-utils/post';
+import { getListCommentsReview } from 'reducers/redux-utils/book';
 import { useState } from 'react';
 import LoadingIndicator from 'shared/loading-indicator';
 import { useEffect } from 'react';
@@ -15,6 +16,7 @@ const SeeMoreComments = ({
 	haveNotClickedSeeMoreOnce,
 	setHaveNotClickedSeeMoreOnce = () => {},
 	isInDetail = false,
+	postType = '',
 }) => {
 	const dispatch = useDispatch();
 
@@ -22,7 +24,7 @@ const SeeMoreComments = ({
 	const callApiPerPage = useRef(10);
 
 	const [isLoading, setIsLoading] = useState(false);
-	const [postType, setPostType] = useState('');
+	// const [postType, setPostType] = useState('');
 	const [fatherCommentsCount, setFatherCommentsCount] = useState(11);
 	const [show, setShow] = useState(false);
 
@@ -35,15 +37,6 @@ const SeeMoreComments = ({
 	useEffect(() => {
 		// Cái if ngoài cùng này để ngăn code chạy lại mỗi khi bấm Xem thêm
 		if (haveNotClickedSeeMoreOnce) {
-			// Chia trường hợp để gọi api lấy comment
-			if (data.quote) {
-				setPostType('quote');
-			} else if (data.minipostId) {
-				setPostType('minipost');
-			} else if (data.groupId) {
-				setPostType('group');
-			}
-
 			// Nếu không ở trong màn detail và chưa bấm xem thêm thì dữ liệu số comment ban đầu là 1 cho nên bắt đầu gọi từ 0
 			if (!isInDetail && data.usersComments?.length > 0 && haveNotClickedSeeMoreOnce) {
 				callApiStart.current = 0;
@@ -74,7 +67,7 @@ const SeeMoreComments = ({
 					params: params,
 				};
 				res = await dispatch(getQuoteComments(sentData)).unwrap();
-			} else if (postType === 'minipost') {
+			} else if (postType === 'post') {
 				sentData = {
 					postId: data.minipostId,
 					params: params,
@@ -86,12 +79,18 @@ const SeeMoreComments = ({
 					params: params,
 				};
 				res = await dispatch(getGroupPostComments(sentData)).unwrap();
+			} else if (postType === 'review') {
+				sentData = {
+					reviewId: data.id,
+					params: params,
+				};
+				res = await dispatch(getListCommentsReview(sentData)).unwrap();
 			}
 		} catch (err) {
 			NotificationError(err);
 		} finally {
 			setFatherCommentsCount(res.count);
-			if (res.rows.length > 0) {
+			if (res.rows?.length > 0) {
 				handleAddMoreComments(data, res.rows);
 			}
 			setIsLoading(false);
@@ -138,6 +137,7 @@ SeeMoreComments.propTypes = {
 	haveNotClickedSeeMoreOnce: PropTypes.bool,
 	setHaveNotClickedSeeMoreOnce: PropTypes.func,
 	isInDetail: PropTypes.bool,
+	postType: PropTypes.string,
 };
 
 export default SeeMoreComments;

@@ -160,6 +160,12 @@ const ModalItem = ({ item, setModalNoti, getNotifications, setGetNotifications, 
 			case 'topUserRanking':
 				navigate(`/top100`);
 				break;
+			case 'topBookRanking':
+				navigate(`/top100`);
+				break;
+			case 'topQuoteRanking':
+				navigate(`/top100`);
+				break;
 			case 'readingGoal':
 				navigate(`/reading-target/${userInfo.id}`);
 				break;

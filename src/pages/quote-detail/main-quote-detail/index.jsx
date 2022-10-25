@@ -145,6 +145,7 @@ const MainQuoteDetail = ({ quoteData, setQuoteData, onCreateComment, setMentionU
 							haveNotClickedSeeMoreOnce={haveNotClickedSeeMoreOnce}
 							setHaveNotClickedSeeMoreOnce={setHaveNotClickedSeeMoreOnce}
 							isInDetail={true}
+							postType={'quote'}
 						/>
 
 						{/* Comment mention đặt trên đầu  */}

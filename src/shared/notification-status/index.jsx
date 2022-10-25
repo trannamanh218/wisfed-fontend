@@ -150,6 +150,12 @@ const NotificationStatus = ({ item, setGetNotifications, getNotifications }) => 
 			case 'topUserRanking':
 				navigate(`/top100`);
 				break;
+			case 'topBookRanking':
+				navigate(`/top100`);
+				break;
+			case 'topQuoteRanking':
+				navigate(`/top100`);
+				break;
 			case 'readingGoal':
 				navigate(`/reading-target/${userInfo.id}`);
 				break;
