@@ -24,7 +24,6 @@ const SeeMoreComments = ({
 	const callApiPerPage = useRef(10);
 
 	const [isLoading, setIsLoading] = useState(false);
-	// const [postType, setPostType] = useState('');
 	const [fatherCommentsCount, setFatherCommentsCount] = useState(11);
 	const [show, setShow] = useState(false);
 
@@ -69,7 +68,7 @@ const SeeMoreComments = ({
 				res = await dispatch(getQuoteComments(sentData)).unwrap();
 			} else if (postType === 'post') {
 				sentData = {
-					postId: data.minipostId,
+					postId: data.minipostId || data.id,
 					params: params,
 				};
 				res = await dispatch(getMiniPostComments(sentData)).unwrap();

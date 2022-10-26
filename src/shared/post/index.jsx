@@ -36,6 +36,7 @@ import {
 	TOP_QUOTE_VERB_SHARE,
 	TOP_USER_VERB_SHARE,
 	MY_BOOK_VERB_SHARE,
+	REVIEW_VERB_SHARE,
 } from 'constants';
 import { IconRanks } from 'components/svg';
 import AuthorBook from 'shared/author-book';
@@ -59,6 +60,7 @@ const verbShareArray = [
 	TOP_BOOK_VERB_SHARE,
 	TOP_QUOTE_VERB_SHARE,
 	MY_BOOK_VERB_SHARE,
+	REVIEW_VERB_SHARE,
 ];
 
 function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMentionCmtFromGroup, isInDetail = false }) {
@@ -549,6 +551,7 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 						<AuthorBook data={postData} inPost={true} />
 					)}
 					{postData.verb === TOP_QUOTE_VERB_SHARE && <QuoteCard data={postData.info} isShare={true} />}
+					{postData.verb === REVIEW_VERB_SHARE && <PostShare postData={postData} />}
 				</div>
 			)}
 			{postData.verb === TOP_USER_VERB_SHARE && <ShareUsers postData={postData} />}

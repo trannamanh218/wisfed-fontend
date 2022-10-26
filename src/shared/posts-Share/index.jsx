@@ -215,7 +215,7 @@ const PostShare = ({ postData, inCreatePost = false }) => {
 											<span>Xếp hạng</span>
 											<ReactRating
 												readonly={true}
-												initialRating={postData.sharePost.book.actorRating.star}
+												initialRating={postData.sharePost.book.actorRating?.star}
 											/>
 										</>
 									)}

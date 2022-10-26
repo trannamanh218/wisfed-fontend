@@ -44,6 +44,7 @@ import {
 	TOP_BOOK_VERB_SHARE,
 	TOP_QUOTE_VERB_SHARE,
 	MY_BOOK_VERB_SHARE,
+	REVIEW_VERB_SHARE,
 } from 'constants';
 import { handleClickCreateNewPostForBook } from 'reducers/redux-utils/activity';
 // import ShareModeComponent from './ShareModeComponent';
@@ -56,6 +57,7 @@ const verbShareArray = [
 	TOP_BOOK_VERB_SHARE,
 	TOP_QUOTE_VERB_SHARE,
 	TOP_USER_VERB_SHARE,
+	REVIEW_VERB_SHARE,
 ];
 
 const hashtagRegex = /#(?![0-9_]+\b)[0-9a-zàáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđ_]+/gi;
@@ -426,6 +428,14 @@ function CreatePostModalContent({
 						mentionsUser: params.mentionsUser,
 					};
 					await dispatch(getSharePostRanks(query)).unwrap();
+				} else if (postDataShare.verb === REVIEW_VERB_SHARE) {
+					const query = {
+						id: postDataShare.reviewId,
+						type: 'review',
+						book: postDataShare.sharePost?.book,
+						...params,
+					};
+					await dispatch(getSharePostInternal(query)).unwrap();
 				}
 			} else {
 				if (params.bookId) {
@@ -710,6 +720,9 @@ function CreatePostModalContent({
 									{(postDataShare.verb === TOP_BOOK_VERB_SHARE ||
 										postDataShare.verb === MY_BOOK_VERB_SHARE) && (
 										<AuthorBook data={postDataShare} checkStar={true} inCreatePost={true} />
+									)}
+									{postDataShare.verb === REVIEW_VERB_SHARE && (
+										<PostShare postData={postDataShare} inCreatePost={true} />
 									)}
 								</div>
 							)}

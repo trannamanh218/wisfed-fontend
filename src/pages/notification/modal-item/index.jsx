@@ -95,7 +95,7 @@ const ModalItem = ({ item, setModalNoti, getNotifications, setGetNotifications, 
 
 			await dispatch(readNotification({ notificationId: item.id })).unwrap();
 
-			if (data.originId.groupId == urlParams.id) {
+			if (data.originId?.groupId == urlParams.id) {
 				// Vì dữ liệu khác kiểu cho nên so sánh bằng == chứ không phải ===
 				// Nếu đang ở trong màn group thì thay đổi nút 'Yêu cầu tham gia'
 				await dispatch(handleToggleUpdate()).unwrap();
