@@ -58,7 +58,7 @@ const verbShareArray = [
 	TOP_USER_VERB_SHARE,
 ];
 
-const hashtagRegex = /#(?![0-9_]+\b)[0-9a-zàáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđ_]+/gi;
+const hashtagRegex = /#(?![0-9_]+\b)[0-9a-z_]+/gi;
 
 function CreatePostModalContent({
 	hideCreatePostModal,

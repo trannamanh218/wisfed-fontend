@@ -16,6 +16,7 @@ import { useDispatch } from 'react-redux';
 import { FacebookShareButton } from 'react-share';
 import Storage from 'helpers/Storage';
 import { checkUserLogin } from 'reducers/redux-utils/auth';
+import classNames from 'classnames';
 
 const BookIntro = ({ bookInfo, listRatingStar }) => {
 	const reviewsNumber = useSelector(state => state.book.currentBookReviewsNumber);
@@ -77,20 +78,37 @@ const BookIntro = ({ bookInfo, listRatingStar }) => {
 			</div>
 			<div className='book-intro__content'>
 				<div className='book-intro__content__infomations'>
-					<h1 className='book-intro__name' onClick={handleConfirmMyBook} title={bookInfo.name}>
+					<h1
+						className={classNames('book-intro__name', {
+							'not-verify': !bookInfo.verify,
+						})}
+						onClick={handleConfirmMyBook}
+						title={bookInfo.name}
+					>
 						{bookInfo.name}
 					</h1>
 					<div className='book-intro__author'>
 						<span onClick={viewAuthorProfile}>
-							{!_.isEmpty(bookInfo.authors)
-								? 'Bởi ' + bookInfo.authors[0].authorName
-								: 'Chưa cập nhật tác giả'}
+							{!_.isEmpty(bookInfo.authors) ? (
+								<span>
+									Bời{' '}
+									<span
+										className={classNames({
+											'verified': bookInfo.verify,
+										})}
+									>
+										{bookInfo.authors[0].authorName}
+									</span>
+								</span>
+							) : (
+								'Chưa cập nhật tác giả'
+							)}
 						</span>
 						{bookInfo.verify && <CircleCheckIcon className='book-intro__check' />}
 					</div>
 					<div className='book-intro__stars'>
 						<ReactRating readonly={true} initialRating={listRatingStar?.avg} />
-						<span>({listRatingStar?.count} đánh giá)</span>
+						{listRatingStar?.count > 0 && <span>({listRatingStar.count})</span>}
 						<span>({reviewsNumber} reviews)</span>
 					</div>
 

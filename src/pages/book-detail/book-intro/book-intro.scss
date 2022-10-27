@@ -41,12 +41,24 @@
 		-webkit-line-clamp: 1;
 		text-overflow: ellipsis;
 		overflow: hidden;
+		&.not-verify {
+			cursor: pointer;
+			&:hover {
+				text-decoration: underline;
+			}
+		}
 	}
 
 	&__author {
 		margin-bottom: 1rem;
 		font-size: 1rem;
 		font-weight: 400;
+		.verified {
+			cursor: pointer;
+			&:hover {
+				text-decoration: underline;
+			}
+		}
 	}
 
 	&__check {
