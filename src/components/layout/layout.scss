@@ -2,10 +2,10 @@
 
 .layout {
 	max-width: 1440px;
+	min-height: 100vh;
 	margin: 0 auto;
 	background-color: $secondary;
 	position: relative;
-	height: 100vh;
 	overflow: auto;
 	&::-webkit-scrollbar {
 		width: 8px;
