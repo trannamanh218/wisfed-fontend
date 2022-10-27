@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
-import defaultAvatar from 'assets/images/defaultLogoAvatar.png';
+import defaultAvatar from 'assets/icons/defaultLogoAvatar.svg';
 import { useDispatch } from 'react-redux';
 import { makeFriendRequest, addFollower, unFollower, unFriendRequest } from 'reducers/redux-utils/user';
 import { NotificationError } from 'helpers/Error';

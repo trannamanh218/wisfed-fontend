@@ -13,7 +13,7 @@ import _ from 'lodash';
 import { stateToHTML } from 'draft-js-export-html';
 import { getFriendList } from 'reducers/redux-utils/user';
 import { useDispatch, useSelector } from 'react-redux';
-import defaultAvatar from 'assets/images/defaultLogoAvatar.png';
+import defaultAvatar from 'assets/icons/defaultLogoAvatar.svg';
 import { NotificationError } from 'helpers/Error';
 import createHashtagPlugin from '@draft-js-plugins/hashtag';
 import '@draft-js-plugins/hashtag/lib/plugin.css';

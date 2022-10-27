@@ -7,7 +7,7 @@ import { useDispatch } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getMember } from 'reducers/redux-utils/group';
-import defaultAvatar from 'assets/images/defaultLogoAvatar.png';
+import defaultAvatar from 'assets/icons/defaultLogoAvatar.svg';
 import ModalUnFriend from 'pages/friends/component/modalUnFriends';
 function MemberGroup({ memberGroupsProp = [] }) {
 	const [listFriend, setListFriend] = useState([]);

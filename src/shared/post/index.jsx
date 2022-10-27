@@ -46,7 +46,7 @@ import ShareUsers from 'pages/home/components/newfeed/components/modal-share-use
 import ShareTarget from 'shared/share-target';
 import { handleMentionCommentId, handleCheckIfMentionFromGroup } from 'reducers/redux-utils/notification';
 import { getMiniPostComments, getGroupPostComments } from 'reducers/redux-utils/post';
-import defaultAvatar from 'assets/images/defaultLogoAvatar.png';
+import defaultAvatar from 'assets/icons/defaultLogoAvatar.svg';
 import SeeMoreComments from 'shared/see-more-comments/SeeMoreComments';
 
 const urlRegex =

@@ -4,7 +4,7 @@ import './group-sibar.scss';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateKey } from 'reducers/redux-utils/group';
-import defaultAvatar from 'assets/images/defaultLogoAvatar.png';
+import defaultAvatar from 'assets/icons/defaultLogoAvatar.svg';
 import { Link } from 'react-router-dom';
 
 const SidebarGroupLef = ({ handleChange, data, member, onClickSeeMore }) => {
