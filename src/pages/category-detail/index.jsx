@@ -8,9 +8,11 @@ import MainCategoryDetail from './main-category-detail';
 import SidebarCategoryDetail from './sidebar-category-detail';
 import { NotificationError } from 'helpers/Error';
 import Circle from 'shared/loading/circle';
+import NotFound from 'pages/not-found';
 
 const CategoryDetail = () => {
 	const [isFetching, setIsFetching] = useState(false);
+	const [errorLoadPage, setErrorLoadPage] = useState(false);
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
@@ -32,10 +34,14 @@ const CategoryDetail = () => {
 	return (
 		<>
 			<Circle loading={isFetching} />
-			<MainContainer
-				main={<MainCategoryDetail />}
-				right={<SidebarCategoryDetail handleViewCategoryDetail={handleViewCategoryDetail} />}
-			/>
+			{!errorLoadPage ? (
+				<MainContainer
+					main={<MainCategoryDetail setErrorLoadPage={setErrorLoadPage} />}
+					right={<SidebarCategoryDetail handleViewCategoryDetail={handleViewCategoryDetail} />}
+				/>
+			) : (
+				<NotFound />
+			)}
 		</>
 	);
 };

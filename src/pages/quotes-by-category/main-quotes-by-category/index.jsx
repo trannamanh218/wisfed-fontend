@@ -12,8 +12,9 @@ import LoadingIndicator from 'shared/loading-indicator';
 import _ from 'lodash';
 import { useParams } from 'react-router-dom';
 import { getCategoryDetail } from 'reducers/redux-utils/category';
+import PropTypes from 'prop-types';
 
-const MainQuotesByCategory = () => {
+const MainQuotesByCategory = ({ setErrorLoadPage }) => {
 	const filterOptions = [
 		{ id: 1, title: 'Tất cả', value: 'all' },
 		{ id: 2, title: 'Bạn bè', value: 'friends' },
@@ -68,7 +69,7 @@ const MainQuotesByCategory = () => {
 			const res = await dispatch(getCategoryDetail(categoryId)).unwrap();
 			setCategoryName(res.name);
 		} catch (err) {
-			NotificationError(err);
+			setErrorLoadPage(true);
 		}
 	};
 
@@ -212,6 +213,10 @@ const MainQuotesByCategory = () => {
 			</FilterQuotePane>
 		</div>
 	);
+};
+
+MainQuotesByCategory.propTypes = {
+	setErrorLoadPage: PropTypes.func,
 };
 
 export default MainQuotesByCategory;

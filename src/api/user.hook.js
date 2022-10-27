@@ -47,6 +47,8 @@ export const useFetchUserParams = userId => {
 	const [status, setStatus] = useState(STATUS_IDLE);
 	const [userData, setUserData] = useState({});
 	const [retry, setRetry] = useState(false);
+	const [errorFetch, setErrorFetch] = useState(false);
+
 	const dispatch = useDispatch();
 
 	const retryRequest = useCallback(() => {
@@ -65,7 +67,7 @@ export const useFetchUserParams = userId => {
 					setUserData(data);
 					setStatus(STATUS_SUCCESS);
 				} catch (err) {
-					NotificationError(err);
+					setErrorFetch(true);
 					const statusCode = err?.statusCode || 500;
 					setStatus(statusCode);
 				}
@@ -78,5 +80,5 @@ export const useFetchUserParams = userId => {
 		};
 	}, [retry]);
 
-	return { status, userData, retryRequest };
+	return { status, userData, retryRequest, errorFetch };
 };

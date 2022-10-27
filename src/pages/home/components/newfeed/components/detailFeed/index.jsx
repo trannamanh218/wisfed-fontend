@@ -4,10 +4,10 @@ import { getDetailFeed, getDetailFeedGroup } from 'reducers/redux-utils/notifica
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { NotificationError } from 'helpers/Error';
 import './detail-feed.scss';
 import Circle from 'shared/loading/circle';
 import { POST_TYPE, GROUP_TYPE } from 'constants/index';
+import NotFound from 'pages/not-found';
 
 const DetailFeed = () => {
 	const dispatch = useDispatch();
@@ -31,7 +31,7 @@ const DetailFeed = () => {
 			}
 			setDetailFeed(res);
 		} catch (err) {
-			NotificationError(err);
+			return;
 		} finally {
 			setIsLoading(false);
 		}
@@ -42,27 +42,33 @@ const DetailFeed = () => {
 	}, []);
 
 	return (
-		<NormalContainer>
-			<Circle loading={isLoading} />
-			<div className='detail_feed_container'>
-				{type === 'mini-post' ? (
-					<Post
-						postInformations={detailFeed}
-						type={POST_TYPE}
-						reduxMentionCommentId={reduxMentionCommentId}
-						isInDetail={true}
-					/>
-				) : (
-					<Post
-						postInformations={detailFeed}
-						type={GROUP_TYPE}
-						reduxMentionCommentId={reduxMentionCommentId}
-						reduxCheckIfMentionCmtFromGroup={reduxCheckIfMentionCmtFromGroup}
-						isInDetail={true}
-					/>
-				)}
-			</div>
-		</NormalContainer>
+		<>
+			{detailFeed.length > 0 ? (
+				<NormalContainer>
+					<Circle loading={isLoading} />
+					<div className='detail_feed_container'>
+						{type === 'mini-post' ? (
+							<Post
+								postInformations={detailFeed}
+								type={POST_TYPE}
+								reduxMentionCommentId={reduxMentionCommentId}
+								isInDetail={true}
+							/>
+						) : (
+							<Post
+								postInformations={detailFeed}
+								type={GROUP_TYPE}
+								reduxMentionCommentId={reduxMentionCommentId}
+								reduxCheckIfMentionCmtFromGroup={reduxCheckIfMentionCmtFromGroup}
+								isInDetail={true}
+							/>
+						)}
+					</div>
+				</NormalContainer>
+			) : (
+				<NotFound />
+			)}
+		</>
 	);
 };
 

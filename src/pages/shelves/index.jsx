@@ -11,6 +11,7 @@ import { getBookDetail } from 'reducers/redux-utils/book';
 import { useNavigate } from 'react-router-dom';
 import RouteLink from 'helpers/RouteLink';
 import { handleShelvesGroup } from 'api/shelvesGroup.hooks';
+import NotFound from 'pages/not-found';
 
 const BookShelves = () => {
 	const [allLibraryList, setAllLibraryList] = useState([]);
@@ -42,26 +43,28 @@ const BookShelves = () => {
 	return (
 		<>
 			<Circle loading={isLoading || isViewBookDetailLoading} />
-			<MainContainer
-				main={
-					shelveGroupName && (
+			{shelveGroupName ? (
+				<MainContainer
+					main={
 						<MainShelves
 							allLibraryList={allLibraryList}
 							shelveGroupName={`Tủ sách của ${shelveGroupName}`}
 							isMyShelve={isMine}
 							handleViewBookDetail={handleViewBookDetail}
 						/>
-					)
-				}
-				right={
-					<SidebarShelves
-						shelveGroupName={shelveGroupName}
-						isMyShelve={isMine}
-						handleViewBookDetail={handleViewBookDetail}
-						allLibrary={allLibrary}
-					/>
-				}
-			/>
+					}
+					right={
+						<SidebarShelves
+							shelveGroupName={shelveGroupName}
+							isMyShelve={isMine}
+							handleViewBookDetail={handleViewBookDetail}
+							allLibrary={allLibrary}
+						/>
+					}
+				/>
+			) : (
+				<NotFound />
+			)}
 		</>
 	);
 };

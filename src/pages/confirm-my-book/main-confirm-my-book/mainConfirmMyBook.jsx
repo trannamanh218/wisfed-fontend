@@ -13,15 +13,16 @@ import { toast } from 'react-toastify';
 import { useParams, Link } from 'react-router-dom';
 import { useFetchBookDetail } from 'api/book.hooks';
 import { NotificationError } from 'helpers/Error';
+import PropTypes from 'prop-types';
 
-function MainConfirmMyBook() {
+function MainConfirmMyBook({ setErrorLoadPage }) {
 	const [images, setImages] = useState([]);
 	const [status, setStatus] = useState('');
 	const [refreshPage, setRefreshPage] = useState(false);
 
 	const dispatch = useDispatch();
 	const { bookId } = useParams();
-	const { bookInfo } = useFetchBookDetail(bookId);
+	const { bookInfo, errorFetch } = useFetchBookDetail(bookId);
 	const userInfo = useSelector(state => state.auth.userInfo);
 	const [textLength, setTextLength] = useState(450);
 
@@ -34,6 +35,12 @@ function MainConfirmMyBook() {
 			setTextLength(300);
 		}
 	}, []);
+
+	useEffect(() => {
+		if (errorFetch) {
+			setErrorLoadPage(true);
+		}
+	}, [errorFetch]);
 
 	useEffect(() => {
 		if (!_.isEmpty(userInfo)) {
@@ -259,5 +266,9 @@ function MainConfirmMyBook() {
 		</>
 	);
 }
+
+MainConfirmMyBook.propTypes = {
+	setErrorLoadPage: PropTypes.func,
+};
 
 export default MainConfirmMyBook;

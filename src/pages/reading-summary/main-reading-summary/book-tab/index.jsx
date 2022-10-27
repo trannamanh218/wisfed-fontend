@@ -5,13 +5,12 @@ import SelectBox from 'shared/select-box';
 import './book-tab.scss';
 import { getChartsByid, updateImg } from 'reducers/redux-utils/chart';
 import { useDispatch } from 'react-redux';
-import { NotificationError } from 'helpers/Error';
 import { useParams } from 'react-router-dom';
 import { useCurrentPng } from 'recharts-to-png';
 import { useNavigate } from 'react-router-dom';
 import Circle from 'shared/loading/circle';
 
-const BookTab = () => {
+const BookTab = ({ setErrorLoadPage }) => {
 	const [currentOption, setCurrentOption] = useState({ value: 'month', title: 'Theo tháng' });
 	const [chartsData, setChartsData] = useState({});
 	const [loading, setLoading] = useState(false);
@@ -75,7 +74,7 @@ const BookTab = () => {
 				setChartsData(newData);
 			}
 		} catch (err) {
-			NotificationError(err);
+			setErrorLoadPage(true);
 		}
 	};
 

@@ -19,13 +19,15 @@ import { useDispatch } from 'react-redux';
 import { saveDataShare } from 'reducers/redux-utils/post';
 import Storage from 'helpers/Storage';
 import { READ_TARGET_VERB_SHARE } from 'constants/index';
+import { useEffect } from 'react';
+import PropTypes from 'prop-types';
 
-const MainReadingTarget = () => {
+const MainReadingTarget = ({ setErrorLoadPage }) => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const { userId } = useParams();
 	const { userInfo } = useSelector(state => state.auth);
-	const { userData } = useFetchUserParams(userId);
+	const { userData, errorFetch } = useFetchUserParams(userId);
 	const { modalOpen, setModalOpen, toggleModal } = useModal(false);
 	const [deleteModal, setDeleteModal] = useState(false);
 	const [inputSearch, setInputSearch] = useState('');
@@ -41,6 +43,12 @@ const MainReadingTarget = () => {
 		}
 		return <LinearProgressBar height={2.75} percent={percent} label={`${percent} %`} />;
 	};
+
+	useEffect(() => {
+		if (errorFetch) {
+			setErrorLoadPage(true);
+		}
+	}, [errorFetch]);
 
 	const handleEditTarget = () => {
 		setModalOpen(true);
@@ -93,7 +101,7 @@ const MainReadingTarget = () => {
 	const handleRenderUseSearch = newArr => {
 		const newData = newArr.booksRead || newArr;
 		return newData.length ? (
-			newData.map((item, index) => (
+			newData.map(item => (
 				<>
 					<div className='book-row' key={item.id}>
 						<div className='book-row__container'>
@@ -203,5 +211,7 @@ const MainReadingTarget = () => {
 	);
 };
 
-MainReadingTarget.propTypes = {};
+MainReadingTarget.propTypes = {
+	setErrorLoadPage: PropTypes.func,
+};
 export default MainReadingTarget;

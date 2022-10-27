@@ -10,6 +10,8 @@ import { getGroupDettail, getMember } from 'reducers/redux-utils/group';
 import MainGroupComponent from './popup-group/MainGroupComponet/MainGroupComponent';
 import RightSidebarGroup from './sidebar-right/RightSidebarGroup';
 import { updateKey, handleToggleUpdate } from 'reducers/redux-utils/group';
+import NotFound from 'pages/not-found';
+import _ from 'lodash';
 
 const Group = () => {
 	const dispatch = useDispatch();
@@ -27,7 +29,7 @@ const Group = () => {
 			const res = await dispatch(getGroupDettail(id)).unwrap();
 			setDetailGroup(res);
 		} catch (err) {
-			NotificationError(err);
+			return;
 		}
 	};
 
@@ -36,7 +38,7 @@ const Group = () => {
 			const actionGetList = await dispatch(getMember(id)).unwrap();
 			setListMember(actionGetList);
 		} catch (err) {
-			NotificationError(err);
+			return;
 		}
 	};
 
@@ -64,31 +66,35 @@ const Group = () => {
 
 	return (
 		<div className='group__main-container'>
-			<SubContainer
-				left={
-					<SidebarGroupLef
-						handleChange={handleChange}
-						data={detailGroup}
-						member={listMember}
-						onClickSeeMore={onClickSeeMore}
-					/>
-				}
-				main={
-					<MainGroupComponent
-						handleUpdate={handleUpdate}
-						handleChange={handleChange}
-						keyChange={keyChange}
-						data={detailGroup}
-						member={listMember}
-						fetchData={fetchData}
-						eventKey={eventKey}
-						setEventKey={setEventKey}
-						toggleClickSeeMore={toggleClickSeeMore}
-						setToggleClickSeeMore={setToggleClickSeeMore}
-					/>
-				}
-				right={<RightSidebarGroup update={toggleUpdate} />}
-			/>
+			{!_.isEmpty(detailGroup) ? (
+				<SubContainer
+					left={
+						<SidebarGroupLef
+							handleChange={handleChange}
+							data={detailGroup}
+							member={listMember}
+							onClickSeeMore={onClickSeeMore}
+						/>
+					}
+					main={
+						<MainGroupComponent
+							handleUpdate={handleUpdate}
+							handleChange={handleChange}
+							keyChange={keyChange}
+							data={detailGroup}
+							member={listMember}
+							fetchData={fetchData}
+							eventKey={eventKey}
+							setEventKey={setEventKey}
+							toggleClickSeeMore={toggleClickSeeMore}
+							setToggleClickSeeMore={setToggleClickSeeMore}
+						/>
+					}
+					right={<RightSidebarGroup update={toggleUpdate} />}
+				/>
+			) : (
+				<NotFound />
+			)}
 		</div>
 	);
 };

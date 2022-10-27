@@ -87,6 +87,8 @@ export const useFetchBookDetail = id => {
 		book: { bookInfo },
 	} = useSelector(state => state);
 	const [status, setStatus] = useState(STATUS_IDLE);
+	const [errorFetch, setErrorFetch] = useState(false);
+
 	const dispatch = useDispatch();
 
 	useEffect(() => {
@@ -97,7 +99,7 @@ export const useFetchBookDetail = id => {
 				await dispatch(getBookDetail(id)).unwrap();
 				setStatus(STATUS_SUCCESS);
 			} catch (err) {
-				NotificationError(err);
+				setErrorFetch(true);
 				const statusCode = err?.statusCode || 500;
 				setStatus(statusCode);
 			}
@@ -112,7 +114,7 @@ export const useFetchBookDetail = id => {
 		};
 	}, [id]);
 
-	return { bookInfo, status };
+	return { bookInfo, status, errorFetch };
 };
 
 export const useFetchRelatedBooks = categoryId => {

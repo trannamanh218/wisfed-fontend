@@ -32,7 +32,7 @@ import { getCategoryDetail } from 'reducers/redux-utils/category';
 import { checkUserLogin } from 'reducers/redux-utils/auth';
 import Storage from 'helpers/Storage';
 
-const MainCategoryDetail = () => {
+const MainCategoryDetail = ({ setErrorLoadPage }) => {
 	const { id } = useParams();
 	const { userInfo } = useSelector(state => state.auth);
 	const categoryInfoRedux = useSelector(state => state.category.categoryInfo);
@@ -101,13 +101,6 @@ const MainCategoryDetail = () => {
 	}, [categoryInfo]);
 
 	useEffect(() => {
-		if (!_.isEmpty(categoryInfo)) {
-			setIsLike(categoryInfo.isFavorite);
-			isLikeTemp.current = categoryInfo.isFavorite;
-		}
-	}, [categoryInfo]);
-
-	useEffect(() => {
 		setHasMore(true);
 		callApiStart.current = 16;
 		getBooksByCategoryFirstTime();
@@ -125,6 +118,7 @@ const MainCategoryDetail = () => {
 			setCategoryInfo(res);
 		} catch (err) {
 			NotificationError(err);
+			setErrorLoadPage(true);
 		}
 	};
 
@@ -514,6 +508,7 @@ const MainCategoryDetail = () => {
 
 MainCategoryDetail.propTypes = {
 	handleViewBookDetail: PropTypes.func,
+	setErrorLoadPage: PropTypes.func,
 };
 
 export default MainCategoryDetail;

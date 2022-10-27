@@ -206,6 +206,7 @@ SidebarGroupLef.propTypes = {
 	handleChange: PropTypes.func,
 	data: PropTypes.object,
 	member: PropTypes.any,
+	onClickSeeMore: PropTypes.func,
 };
 
 export default SidebarGroupLef;
