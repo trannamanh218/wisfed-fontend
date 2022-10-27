@@ -126,8 +126,15 @@
 
 @media only screen and (max-width: 1366px) {
 	.newfeed {
+		.creat-post-modal-content__main__body {
+			padding: 15px 10px 15px 24px;
+		}
+
+		.creat-post-modal-content__main__options-and-submit {
+			padding: 17px;
+		}
 		.creat-post-modal-content__main__body__text-field-edit-wrapper {
-			max-height: 275px;
+			max-height: 290px;
 
 			.rich-text-editor {
 				margin-bottom: 10px;
@@ -145,6 +152,12 @@
 
 @media only screen and (max-width: 1280px) {
 	.newfeed {
+		.creat-post-modal-content__main__body {
+			padding: 24px 10px 24px 24px;
+		}
+		.creat-post-modal-content__main__options-and-submit {
+			padding: 24px;
+		}
 		.creat-post-modal-content__main__body__text-field-edit-wrapper {
 			max-height: 350px;
 			.book-thumbnail.book-thumbnail-md {

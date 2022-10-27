@@ -56,6 +56,8 @@ const TopQuotes = ({ listYear, tabSelected }) => {
 					setModalSearchCategoriesShow={setModalSearchCategoriesShow}
 					modalSearchCategoriesShow={modalSearchCategoriesShow}
 					onSelectCategory={onchangeKindOfGroup}
+					setTopQuotesId={setTopQuotesId}
+					tabSelected={tabSelected}
 				/>
 			)}
 			<div className='topbooks__container__title'>TOP 100 Quotes được like nhiều nhất</div>

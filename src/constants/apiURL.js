@@ -154,7 +154,7 @@ export const getSearchAPI = `/api/v1/searchs`;
 
 //share
 export const shareInternalAPI = (id, type) => `/api/v1/getstream/share/${id}?type=${type}`;
-export const shareTargetReadingAPI = '/api/v1/getstream/shareTargetRead';
+export const shareTargetReadingAPI = id => `/api/v1/getstream/shareTargetRead/${id}`;
 
 // share BXH
 export const shareApiRanks = id => `/api/v1/getstream/shareTop/${id}`;

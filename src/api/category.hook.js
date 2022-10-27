@@ -36,7 +36,7 @@ export const useFetchViewMoreCategories = (current = 0, perPage = 10, filter = '
 			start: current > 1 ? (current - 1) * perPage : 0,
 			limit: perPage,
 			sort: JSON.stringify([{ property: 'createdAt', direction: 'DESC' }]),
-			filter,
+			filter: JSON.stringify([{ 'operator': 'ne', 'value': 0, 'property': 'numberBooks' }]),
 		};
 	};
 
@@ -53,7 +53,8 @@ export const useFetchOtherCategories = (current, perPage, name) => {
 		return {
 			start: current,
 			limit: perPage,
-			filter: JSON.stringify([{ 'operator': 'ne', 'value': name, 'property': 'name' }]),
+			// filter: JSON.stringify([{ 'operator': 'ne', 'value': name, 'property': 'name' }]),
+			filter: JSON.stringify([{ 'operator': 'ne', 'value': 0, 'property': 'numberBooks' }]),
 			sort: JSON.stringify([{ 'direction': 'DESC', 'property': 'createdAt' }]),
 		};
 	};

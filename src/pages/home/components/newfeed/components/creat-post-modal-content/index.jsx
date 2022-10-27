@@ -386,7 +386,12 @@ function CreatePostModalContent({
 						current: postDataShare.booksReadCount,
 						mentionsUser: params.mentionsUser,
 					};
-					await dispatch(shareTargetReadings(data)).unwrap();
+					await dispatch(
+						shareTargetReadings({
+							userId: postDataShare.userId,
+							data,
+						})
+					).unwrap();
 				} else if (postDataShare.verb === TOP_USER_VERB_SHARE) {
 					const query = {
 						msg: content,

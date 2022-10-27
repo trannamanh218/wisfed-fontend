@@ -98,7 +98,6 @@ const PopupInviteFriend = ({ handleClose, showRef, groupMembers }) => {
 			<div style={{ padding: '0 24px' }}>
 				<div className='search-friend'>
 					<SearchField value={inputSearch} handleChange={handleSearch} />
-					<button onClick={() => inViteFriend()}>Gửi</button>
 				</div>
 
 				<div className='main-action'>
@@ -151,6 +150,9 @@ const PopupInviteFriend = ({ handleClose, showRef, groupMembers }) => {
 						})}
 					</div>
 				</div>
+			</div>
+			<div className='invite-sumit'>
+				<button onClick={() => inViteFriend()}>Gửi</button>
 			</div>
 		</div>
 	);

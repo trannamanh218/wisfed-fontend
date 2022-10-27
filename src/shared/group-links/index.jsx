@@ -30,7 +30,9 @@ const GroupLinks = ({ title, list, className }) => {
 									<span className='active'></span>
 									<span>{`Hoạt động lần cuối ${moment(item.updatedAt).format('DD/MM/YYYY')} `} </span>
 								</div>
-								<span>200k Thành viên, 05 Bài viết/ Ngày</span>
+								<span>
+									{item.countMember} Thành viên, {item.countPostPerDay} Bài viết/ Ngày
+								</span>
 							</div>
 						))}
 					</div>

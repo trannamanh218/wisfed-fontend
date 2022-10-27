@@ -389,9 +389,9 @@ const MainCategoryDetail = () => {
 												{bookList.length > 0 ? (
 													<>
 														<h4>
-															{`Tất cả sách chủ đề "${
+															{`Tất cả sách chủ đề "	${
 																categoryInfo.name ? categoryInfo.name.toLowerCase() : ''
-															}"`}
+															} " (${categoryInfo.numberBooks})`}
 														</h4>
 														<div className='books'>
 															{bookList.map((item, index) => (
