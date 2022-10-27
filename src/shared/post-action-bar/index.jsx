@@ -102,6 +102,13 @@ const PostActionBar = ({ postData, handleLikeAction }) => {
 						booksReadCount: postData.currentRead || postData?.sharePost?.current,
 						percent: percentTemp > 100 ? 100 : percentTemp,
 						verb: READ_TARGET_VERB_SHARE,
+						userId: postData?.readingGoalBy?.dataValues?.id || postData?.metaData?.readingGoalBy?.id,
+						fullName:
+							postData?.readingGoalBy?.dataValues?.fullName ||
+							postData?.metaData?.readingGoalBy?.fullName,
+						avatarImage:
+							postData?.readingGoalBy?.dataValues?.avatarImage ||
+							postData?.metaData?.readingGoalBy?.avatarImage,
 					};
 				} else if (postData.verb === TOP_BOOK_VERB_SHARE) {
 					dataToShare = {
