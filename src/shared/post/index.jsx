@@ -36,6 +36,7 @@ import {
 	TOP_QUOTE_VERB_SHARE,
 	TOP_USER_VERB_SHARE,
 	MY_BOOK_VERB_SHARE,
+	REVIEW_VERB_SHARE,
 } from 'constants';
 import { IconRanks } from 'components/svg';
 import AuthorBook from 'shared/author-book';
@@ -45,7 +46,7 @@ import ShareUsers from 'pages/home/components/newfeed/components/modal-share-use
 import ShareTarget from 'shared/share-target';
 import { handleMentionCommentId, handleCheckIfMentionFromGroup } from 'reducers/redux-utils/notification';
 import { getMiniPostComments, getGroupPostComments } from 'reducers/redux-utils/post';
-import defaultAvatar from 'assets/images/avatar.jpeg';
+import defaultAvatar from 'assets/icons/defaultLogoAvatar.svg';
 import SeeMoreComments from 'shared/see-more-comments/SeeMoreComments';
 
 const urlRegex =
@@ -59,6 +60,7 @@ const verbShareArray = [
 	TOP_BOOK_VERB_SHARE,
 	TOP_QUOTE_VERB_SHARE,
 	MY_BOOK_VERB_SHARE,
+	REVIEW_VERB_SHARE,
 ];
 
 function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMentionCmtFromGroup, isInDetail = false }) {
@@ -347,7 +349,8 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 		try {
 			// Gọi api lấy thông tin của bình luận nhắc đến bạn
 			const params = { filter: JSON.stringify([{ operator: 'eq', value: mentionCommentId, property: 'id' }]) };
-			const mentionedCommentAPI = await dispatch(paramAPI({ postId: postData.id, params: params })).unwrap();
+			const getMentionedCommentAPI = await dispatch(paramAPI({ postId: postData.id, params: params })).unwrap();
+			const mentionedCommentAPI = getMentionedCommentAPI?.rows;
 			if (!_.isEmpty(mentionedCommentAPI)) {
 				if (mentionedCommentAPI[0].replyId === null) {
 					// Đảo thứ tự replies
@@ -548,6 +551,7 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 						<AuthorBook data={postData} inPost={true} />
 					)}
 					{postData.verb === TOP_QUOTE_VERB_SHARE && <QuoteCard data={postData.info} isShare={true} />}
+					{postData.verb === REVIEW_VERB_SHARE && <PostShare postData={postData} />}
 				</div>
 			)}
 			{postData.verb === TOP_USER_VERB_SHARE && <ShareUsers postData={postData} />}
@@ -586,6 +590,7 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 				haveNotClickedSeeMoreOnce={haveNotClickedSeeMoreOnce}
 				setHaveNotClickedSeeMoreOnce={setHaveNotClickedSeeMoreOnce}
 				isInDetail={isInDetail}
+				postType={type}
 			/>
 			{/* Nếu chưa bấm xem thêm: */}
 			{haveNotClickedSeeMoreOnce ? (

@@ -8,7 +8,6 @@ import { TimeIcon } from 'components/svg';
 import { Bar, BarChart, Tooltip, XAxis, YAxis, CartesianGrid } from 'recharts';
 import PropTypes from 'prop-types';
 import { useCurrentPng } from 'recharts-to-png';
-import { NotificationError } from 'helpers/Error';
 import ModalChart from './modal-sort';
 import { updateImg, getChartsBooks } from 'reducers/redux-utils/chart';
 import { useDispatch } from 'react-redux';
@@ -19,6 +18,7 @@ import { useNavigate } from 'react-router-dom';
 import _ from 'lodash';
 import { getFilterSearch } from 'reducers/redux-utils/search';
 import Storage from 'helpers/Storage';
+import NotFound from 'pages/not-found';
 
 const ReadingSummaryChartAuthor = () => {
 	const [chartsData, setChartsData] = useState({});
@@ -39,6 +39,7 @@ const ReadingSummaryChartAuthor = () => {
 	const [localStorage, setLocalStorage] = useState([]);
 	const [checkRenderStorage, setCheckRenderStorage] = useState(false);
 	const [directClick, setDirectClick] = useState(false);
+
 	useEffect(() => {
 		fetchData();
 	}, [changeValue, booksId]);
@@ -72,7 +73,7 @@ const ReadingSummaryChartAuthor = () => {
 			}
 			setNameBook(data.book.name);
 		} catch (err) {
-			NotificationError(err);
+			return;
 		}
 	};
 
@@ -159,7 +160,7 @@ const ReadingSummaryChartAuthor = () => {
 				setResultSearch([]);
 			}
 		} catch (err) {
-			NotificationError(err);
+			return;
 		}
 	}, [filter]);
 
@@ -228,128 +229,136 @@ const ReadingSummaryChartAuthor = () => {
 	};
 
 	return (
-		<NormalContainer>
-			<div className='book__author__charts'>
-				<Circle loading={loading} />
-				<div className='notification__main__container'>
-					<Link to={'/'} className='notification__main__back'>
-						<BackArrow />
-					</Link>
-					<div className='notification__main__title'>Biểu đồ tăng trưởng cuốn sách “{`${nameBook}`}”</div>
-				</div>
-				<div className='book__author__charts__main'>
-					<div className='book__author__charts__search__main'>
-						<div className='book__author__charts__search__main__container'>
-							<SearchField
-								placeholder='Tìm kiếm tên sách'
-								handleChange={handleChange}
-								value={searchValue}
-							/>
-							{searchValue.length > 0 ? (
-								<div className='book__author__charts__search'>
-									{resultSearch.slice(0, 3).map(item => (
-										<div
-											key={item.id}
-											onClick={() => handleClickBooks(item)}
-											className='result__search__main__left'
-										>
-											<div className='result__search__icon__time'>
-												<TimeIcon />
-											</div>
-
-											<div className='result__search__name'>{item.name}</div>
-										</div>
-									))}
-								</div>
-							) : localStorage.length ? (
-								<div className='book__author__charts__search'>
-									<div className='chart__history__title'>Tìm kiếm gần đây</div>
-									{localStorage.map(item => (
-										<div
-											key={item.id}
-											onClick={() => handleClickBooks(item)}
-											className='result__search__main__left'
-										>
-											<div className='result__search__icon__time'>
-												<TimeIcon />
-											</div>
-
-											<div className='result__search__name'>{item.name}</div>
-										</div>
-									))}
-								</div>
-							) : (
-								<div className='chart__history__titles'>Không có tìm kiếm nào gần đây</div>
-							)}
+		<>
+			{!_.isEmpty(chartsData) ? (
+				<NormalContainer>
+					<div className='book__author__charts'>
+						<Circle loading={loading} />
+						<div className='notification__main__container'>
+							<Link to={'/'} className='notification__main__back'>
+								<BackArrow />
+							</Link>
+							<div className='notification__main__title'>
+								Biểu đồ tăng trưởng cuốn sách “{`${nameBook}`}”
+							</div>
 						</div>
-					</div>
+						<div className='book__author__charts__main'>
+							<div className='book__author__charts__search__main'>
+								<div className='book__author__charts__search__main__container'>
+									<SearchField
+										placeholder='Tìm kiếm tên sách'
+										handleChange={handleChange}
+										value={searchValue}
+									/>
+									{searchValue.length > 0 ? (
+										<div className='book__author__charts__search'>
+											{resultSearch.slice(0, 3).map(item => (
+												<div
+													key={item.id}
+													onClick={() => handleClickBooks(item)}
+													className='result__search__main__left'
+												>
+													<div className='result__search__icon__time'>
+														<TimeIcon />
+													</div>
 
-					<div className='book__author__recharts '>
-						<ModalChart
-							setSortValue={setSortValue}
-							sortValueKey={sortValueKey}
-							setSortValueKey={setSortValueKey}
-							sortValue={sortValue}
-							setChangeValue={setChangeValue}
-							changeValue={changeValue}
-							showDropdownMenu={showDropdownMenu}
-							setShowDropdownMenu={setShowDropdownMenu}
-						/>
-						<div className='reading-summary-book-tab__chart-wrapper'>
-							<BarChart
-								width={880}
-								height={500}
-								data={chartsData}
-								ref={areaRef}
-								margin={{
-									top: 50,
-									left: 30,
-								}}
-							>
-								<defs>
-									<linearGradient id='colorUv-book-tab' x1='0' y1='0' x2='0' y2='1'>
-										<stop offset='70%' stopColor='#FFA933' />
-										<stop offset='100%' stopColor='#FFDDAE' />
-									</linearGradient>
-								</defs>
-								<CartesianGrid strokeDasharray='3 3' />
-								<XAxis
-									stroke='#6E7191'
-									dataKey={sortValue === 'day' ? 'time' : 'month'}
-									tick={<CustomizedAxisXTick />}
-								></XAxis>
-								<YAxis
-									label={{
-										// value: sortValueKey.charAt(0).toUpperCase() + sortValueKey.slice(1),
-										position: 'top',
-										offset: 30,
-										value: renderHoverColumn(),
-									}}
-									tickCount={10}
-									domain={['dataMin', `dataMax + 9`]}
+													<div className='result__search__name'>{item.name}</div>
+												</div>
+											))}
+										</div>
+									) : localStorage.length ? (
+										<div className='book__author__charts__search'>
+											<div className='chart__history__title'>Tìm kiếm gần đây</div>
+											{localStorage.map(item => (
+												<div
+													key={item.id}
+													onClick={() => handleClickBooks(item)}
+													className='result__search__main__left'
+												>
+													<div className='result__search__icon__time'>
+														<TimeIcon />
+													</div>
+
+													<div className='result__search__name'>{item.name}</div>
+												</div>
+											))}
+										</div>
+									) : (
+										<div className='chart__history__titles'>Không có tìm kiếm nào gần đây</div>
+									)}
+								</div>
+							</div>
+
+							<div className='book__author__recharts '>
+								<ModalChart
+									setSortValue={setSortValue}
+									sortValueKey={sortValueKey}
+									setSortValueKey={setSortValueKey}
+									sortValue={sortValue}
+									setChangeValue={setChangeValue}
+									changeValue={changeValue}
+									showDropdownMenu={showDropdownMenu}
+									setShowDropdownMenu={setShowDropdownMenu}
 								/>
-								<Bar dataKey='count' fill='url(#colorUv-book-tab)' barSize={36} />
-								<Tooltip
-									cursor={false}
-									content={<CustomTooltip />}
-									wrapperStyle={{
-										backgroundColor: 'white',
-										borderRadius: '10px',
-										padding: '12px 16px',
-										border: '#ccc 1px solid',
-										fontWeight: 600,
-										fontSize: '0.875rem',
-									}}
-								/>
-							</BarChart>
+								<div className='reading-summary-book-tab__chart-wrapper'>
+									<BarChart
+										width={880}
+										height={500}
+										data={chartsData}
+										ref={areaRef}
+										margin={{
+											top: 50,
+											left: 30,
+										}}
+									>
+										<defs>
+											<linearGradient id='colorUv-book-tab' x1='0' y1='0' x2='0' y2='1'>
+												<stop offset='70%' stopColor='#FFA933' />
+												<stop offset='100%' stopColor='#FFDDAE' />
+											</linearGradient>
+										</defs>
+										<CartesianGrid strokeDasharray='3 3' />
+										<XAxis
+											stroke='#6E7191'
+											dataKey={sortValue === 'day' ? 'time' : 'month'}
+											tick={<CustomizedAxisXTick />}
+										></XAxis>
+										<YAxis
+											label={{
+												// value: sortValueKey.charAt(0).toUpperCase() + sortValueKey.slice(1),
+												position: 'top',
+												offset: 30,
+												value: renderHoverColumn(),
+											}}
+											tickCount={10}
+											domain={['dataMin', `dataMax + 9`]}
+										/>
+										<Bar dataKey='count' fill='url(#colorUv-book-tab)' barSize={36} />
+										<Tooltip
+											cursor={false}
+											content={<CustomTooltip />}
+											wrapperStyle={{
+												backgroundColor: 'white',
+												borderRadius: '10px',
+												padding: '12px 16px',
+												border: '#ccc 1px solid',
+												fontWeight: 600,
+												fontSize: '0.875rem',
+											}}
+										/>
+									</BarChart>
+								</div>
+							</div>
 						</div>
+						<button className='btn reading-summary-book-tab__btn' onClick={handleAreaDownload}>
+							Chia sẻ
+						</button>
 					</div>
-				</div>
-				<button className='btn reading-summary-book-tab__btn' onClick={handleAreaDownload}>
-					Chia sẻ
-				</button>
-			</div>
-		</NormalContainer>
+				</NormalContainer>
+			) : (
+				<NotFound />
+			)}
+		</>
 	);
 };
 

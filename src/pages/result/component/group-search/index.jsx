@@ -109,7 +109,7 @@ const GroupSearch = ({ value, setIsFetching, searchResultInput, activeKeyDefault
 									</Link>
 
 									<div className='group__search__info'>
-										Nhóm công khai. {item.countMember} thành viên <br />
+										Nhóm công khai ({item.countMember} thành viên). <br />
 										{item.countPostPerMonth} bài viết/tháng
 									</div>
 								</div>

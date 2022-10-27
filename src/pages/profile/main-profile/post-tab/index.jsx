@@ -21,9 +21,16 @@ function PostTab({ currentTab }) {
 
 	useEffect(() => {
 		if (currentTab === 'post') {
+			callApiStart.current = 0;
+			setPostList([]);
+		}
+	}, [userId]);
+
+	useEffect(() => {
+		if (!postList.length && currentTab === 'post') {
 			getPostListByUser();
 		}
-	}, [currentTab]);
+	}, [postList, currentTab]);
 
 	const getPostListByUser = async () => {
 		try {

@@ -17,6 +17,7 @@ import {
 	TOP_USER_VERB_SHARE,
 	TOP_QUOTE_VERB_SHARE,
 	MY_BOOK_VERB_SHARE,
+	REVIEW_VERB_SHARE,
 } from 'constants';
 
 const PostActionBar = ({ postData, handleLikeAction }) => {
@@ -33,18 +34,18 @@ const PostActionBar = ({ postData, handleLikeAction }) => {
 		} else {
 			let dataToShare;
 			if (
-				location.pathname.includes('/profile/') ||
-				location.pathname.includes('book/detail') ||
-				location.pathname.includes('/review/') ||
-				postData.verb === POST_VERB ||
-				postData.verb === POST_VERB_SHARE ||
-				postData.verb === GROUP_POST_VERB_SHARE ||
-				postData.verb === TOP_USER_VERB_SHARE ||
-				postData.verb === QUOTE_VERB_SHARE ||
-				postData.verb === READ_TARGET_VERB_SHARE ||
-				postData.verb === TOP_BOOK_VERB_SHARE ||
-				postData.verb === TOP_QUOTE_VERB_SHARE ||
-				postData.verb === MY_BOOK_VERB_SHARE
+				['/profile/', 'book/detail', '/review/'].some(subString => location.pathname.includes(subString)) ||
+				[
+					POST_VERB,
+					POST_VERB_SHARE,
+					GROUP_POST_VERB_SHARE,
+					TOP_USER_VERB_SHARE,
+					QUOTE_VERB_SHARE,
+					READ_TARGET_VERB_SHARE,
+					TOP_BOOK_VERB_SHARE,
+					TOP_QUOTE_VERB_SHARE,
+					MY_BOOK_VERB_SHARE,
+				].includes(postData.verb)
 			) {
 				if (postData.verb === POST_VERB) {
 					dataToShare = {
@@ -69,7 +70,8 @@ const PostActionBar = ({ postData, handleLikeAction }) => {
 					};
 
 					dataToShare = {
-						verb: POST_VERB_SHARE,
+						reviewId: postData.id,
+						verb: REVIEW_VERB_SHARE,
 						sharePost: { ...newDataShare },
 					};
 				} else if (postData.verb === GROUP_POST_VERB_SHARE) {

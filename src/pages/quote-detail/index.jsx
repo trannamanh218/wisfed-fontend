@@ -7,6 +7,7 @@ import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
 import _ from 'lodash';
+import NotFound from 'pages/not-found';
 
 const QuoteDetail = () => {
 	const [quoteData, setQuoteData] = useState({});
@@ -76,18 +77,24 @@ const QuoteDetail = () => {
 	};
 
 	return (
-		<MainContainer
-			main={
-				<MainQuoteDetail
-					quoteData={quoteData}
-					setQuoteData={setQuoteData}
-					onCreateComment={onCreateComment}
-					setMentionUsersArr={setMentionUsersArr}
-					mentionUsersArr={mentionUsersArr}
+		<>
+			{!_.isEmpty(quoteData) ? (
+				<MainContainer
+					main={
+						<MainQuoteDetail
+							quoteData={quoteData}
+							setQuoteData={setQuoteData}
+							onCreateComment={onCreateComment}
+							setMentionUsersArr={setMentionUsersArr}
+							mentionUsersArr={mentionUsersArr}
+						/>
+					}
+					right={<SidebarQuote listHashtags={listHashtags} inMyQuote={false} hasCountQuotes={false} />}
 				/>
-			}
-			right={<SidebarQuote listHashtags={listHashtags} inMyQuote={false} hasCountQuotes={false} />}
-		/>
+			) : (
+				<NotFound />
+			)}
+		</>
 	);
 };
 

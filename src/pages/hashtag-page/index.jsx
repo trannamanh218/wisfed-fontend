@@ -71,16 +71,20 @@ export default function HashtagPage() {
 		<NormalContainer>
 			<div className='hashtag-page'>
 				<h4>Kết quả tìm kiếm cho "#{hashtag}"</h4>
-				<InfiniteScroll
-					dataLength={postList.length}
-					next={getListPostByHashtag}
-					hasMore={hasMore}
-					loader={<LoadingIndicator />}
-				>
-					{postList.map(post => (
-						<Post key={post.id} postInformations={post} type={POST_TYPE} isInDetail={true} />
-					))}
-				</InfiniteScroll>
+				{postList.length ? (
+					<InfiniteScroll
+						dataLength={postList.length}
+						next={getListPostByHashtag}
+						hasMore={hasMore}
+						loader={<LoadingIndicator />}
+					>
+						{postList.map(post => (
+							<Post key={post.id} postInformations={post} type={POST_TYPE} isInDetail={true} />
+						))}
+					</InfiniteScroll>
+				) : (
+					<h6>Chưa có dữ liệu</h6>
+				)}
 			</div>
 		</NormalContainer>
 	);

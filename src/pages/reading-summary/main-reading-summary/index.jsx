@@ -1,10 +1,11 @@
 import { Col, Nav, Row, Tab, TabContainer } from 'react-bootstrap';
+import { propTypes } from 'react-bootstrap/esm/Image';
 import BookTab from './book-tab';
 import './main-reading-summary.scss';
 import PageTab from './page-tab';
 import ReadBookTab from './read-book-tab';
 
-const MainReadingSummary = () => {
+const MainReadingSummary = ({ setErrorLoadPage }) => {
 	return (
 		<div className='main-reading-summary'>
 			<TabContainer defaultActiveKey='books'>
@@ -29,7 +30,7 @@ const MainReadingSummary = () => {
 								<ReadBookTab />
 							</Tab.Pane>
 							<Tab.Pane eventKey='book-charts'>
-								<BookTab />
+								<BookTab setErrorLoadPage={setErrorLoadPage} />
 							</Tab.Pane>
 							<Tab.Pane eventKey='page-charts'>
 								<PageTab />
@@ -42,6 +43,8 @@ const MainReadingSummary = () => {
 	);
 };
 
-MainReadingSummary.propTypes = {};
+MainReadingSummary.propTypes = {
+	setErrorLoadPage: propTypes.func,
+};
 
 export default MainReadingSummary;

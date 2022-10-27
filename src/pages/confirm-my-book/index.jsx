@@ -4,11 +4,13 @@ import SidebarProfile from 'pages/profile/sidebar-profile';
 import { useSelector } from 'react-redux';
 import _ from 'lodash';
 import { useEffect, useState } from 'react';
+import NotFound from 'pages/not-found';
 
 function ConfirmMyBook() {
 	const userInfo = useSelector(state => state.auth.userInfo);
 
 	const [currentUserInfo, setCurrentUserInfo] = useState({});
+	const [errorLoadPage, setErrorLoadPage] = useState(false);
 
 	useEffect(() => {
 		if (!_.isEmpty(userInfo)) {
@@ -16,7 +18,18 @@ function ConfirmMyBook() {
 		}
 	}, [userInfo]);
 
-	return <MainContainer main={<MainConfirmMyBook />} right={<SidebarProfile currentUserInfo={currentUserInfo} />} />;
+	return (
+		<>
+			{!errorLoadPage ? (
+				<MainContainer
+					main={<MainConfirmMyBook setErrorLoadPage={setErrorLoadPage} />}
+					right={<SidebarProfile currentUserInfo={currentUserInfo} />}
+				/>
+			) : (
+				<NotFound />
+			)}
+		</>
+	);
 }
 
 export default ConfirmMyBook;

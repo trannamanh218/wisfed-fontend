@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { NotificationError } from 'helpers/Error';
 import './index.scss';
@@ -9,14 +9,16 @@ import SidebarGroupLef from './sidebar-left';
 import { getGroupDettail, getMember } from 'reducers/redux-utils/group';
 import MainGroupComponent from './popup-group/MainGroupComponet/MainGroupComponent';
 import RightSidebarGroup from './sidebar-right/RightSidebarGroup';
-import { updateKey } from 'reducers/redux-utils/group';
+import { updateKey, handleToggleUpdate } from 'reducers/redux-utils/group';
+import NotFound from 'pages/not-found';
+import _ from 'lodash';
 
 const Group = () => {
 	const dispatch = useDispatch();
 	const { id } = useParams();
+	const toggleUpdate = useSelector(state => state.group.toggleUpdate);
 
 	const [keyChange, setKeyChange] = useState('tabs');
-	const [update, setUpdate] = useState(false);
 	const [detailGroup, setDetailGroup] = useState({});
 	const [listMember, setListMember] = useState([]);
 	const [eventKey, setEventKey] = useState('intro');
@@ -27,7 +29,7 @@ const Group = () => {
 			const res = await dispatch(getGroupDettail(id)).unwrap();
 			setDetailGroup(res);
 		} catch (err) {
-			NotificationError(err);
+			return;
 		}
 	};
 
@@ -36,12 +38,12 @@ const Group = () => {
 			const actionGetList = await dispatch(getMember(id)).unwrap();
 			setListMember(actionGetList);
 		} catch (err) {
-			NotificationError(err);
+			return;
 		}
 	};
 
 	const handleUpdate = () => {
-		setUpdate(!update);
+		dispatch(handleToggleUpdate());
 	};
 
 	useEffect(() => {
@@ -50,7 +52,7 @@ const Group = () => {
 
 	useEffect(() => {
 		fetchData();
-	}, [update, id]);
+	}, [toggleUpdate, id]);
 
 	const handleChange = e => {
 		setKeyChange(e);
@@ -64,31 +66,35 @@ const Group = () => {
 
 	return (
 		<div className='group__main-container'>
-			<SubContainer
-				left={
-					<SidebarGroupLef
-						handleChange={handleChange}
-						data={detailGroup}
-						member={listMember}
-						onClickSeeMore={onClickSeeMore}
-					/>
-				}
-				main={
-					<MainGroupComponent
-						handleUpdate={handleUpdate}
-						handleChange={handleChange}
-						keyChange={keyChange}
-						data={detailGroup}
-						member={listMember}
-						fetchData={fetchData}
-						eventKey={eventKey}
-						setEventKey={setEventKey}
-						toggleClickSeeMore={toggleClickSeeMore}
-						setToggleClickSeeMore={setToggleClickSeeMore}
-					/>
-				}
-				right={<RightSidebarGroup update={update} />}
-			/>
+			{!_.isEmpty(detailGroup) ? (
+				<SubContainer
+					left={
+						<SidebarGroupLef
+							handleChange={handleChange}
+							data={detailGroup}
+							member={listMember}
+							onClickSeeMore={onClickSeeMore}
+						/>
+					}
+					main={
+						<MainGroupComponent
+							handleUpdate={handleUpdate}
+							handleChange={handleChange}
+							keyChange={keyChange}
+							data={detailGroup}
+							member={listMember}
+							fetchData={fetchData}
+							eventKey={eventKey}
+							setEventKey={setEventKey}
+							toggleClickSeeMore={toggleClickSeeMore}
+							setToggleClickSeeMore={setToggleClickSeeMore}
+						/>
+					}
+					right={<RightSidebarGroup update={toggleUpdate} />}
+				/>
+			) : (
+				<NotFound />
+			)}
 		</div>
 	);
 };

@@ -6,7 +6,7 @@ import {
 } from 'reducers/redux-utils/notification';
 import UserAvatar from 'shared/user-avatar';
 import { calculateDurationTime } from 'helpers/Common';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { ReplyFriendRequest } from 'reducers/redux-utils/user';
 import { NotificationError } from 'helpers/Error';
 import { renderMessage } from 'helpers/HandleShare';
@@ -17,10 +17,12 @@ import { updateUser } from 'reducers/redux-utils/user';
 import { updateReviewIdFromNoti } from 'reducers/redux-utils/notification';
 import LoadingIndicator from 'shared/loading-indicator';
 import logoNonText from 'assets/icons/logoNonText.svg';
+import { replyInviteGroup, handleToggleUpdate } from 'reducers/redux-utils/group';
 
 const ModalItem = ({ item, setModalNoti, getNotifications, setGetNotifications, selectKey }) => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
+	const urlParams = useParams();
 	const { userInfo } = useSelector(state => state.auth);
 	const { isReload } = useSelector(state => state.user);
 
@@ -76,7 +78,56 @@ const ModalItem = ({ item, setModalNoti, getNotifications, setGetNotifications, 
 		}
 	};
 
-	const handleActiveIsReed = () => {
+	const acceptInviteGroup = async data => {
+		setIsLoading(true);
+		try {
+			const params = { id: data.originId.inviteId, body: { accept: true } };
+			await dispatch(replyInviteGroup(params)).unwrap();
+
+			const newArr = getNotifications.map(noti => {
+				if (noti.id === item.id) {
+					const data = { ...noti, isAccept: true };
+					return { ...data };
+				}
+				return { ...noti };
+			});
+			setGetNotifications(newArr);
+
+			await dispatch(readNotification({ notificationId: item.id })).unwrap();
+
+			if (data.originId?.groupId == urlParams.id) {
+				// Vì dữ liệu khác kiểu cho nên so sánh bằng == chứ không phải ===
+				// Nếu đang ở trong màn group thì thay đổi nút 'Yêu cầu tham gia'
+				await dispatch(handleToggleUpdate()).unwrap();
+			}
+		} catch (err) {
+			NotificationError(err);
+		} finally {
+			setIsLoading(false);
+		}
+	};
+
+	const refuseInviteGroup = async data => {
+		setIsLoading(true);
+		try {
+			const params = { id: data.originId.inviteId, body: { accept: false } };
+			await dispatch(replyInviteGroup(params)).unwrap();
+			const newArr = getNotifications.map(noti => {
+				if (noti.id === item.id) {
+					const data = { ...noti, isRefuse: true };
+					return { ...data };
+				}
+				return { ...noti };
+			});
+			setGetNotifications(newArr);
+		} catch (err) {
+			NotificationError(err);
+		} finally {
+			setIsLoading(false);
+		}
+	};
+
+	const handleActiveIsRead = () => {
 		const params = {
 			notificationId: item.id,
 		};
@@ -109,6 +160,12 @@ const ModalItem = ({ item, setModalNoti, getNotifications, setGetNotifications, 
 			case 'topUserRanking':
 				navigate(`/top100`);
 				break;
+			case 'topBookRanking':
+				navigate(`/top100`);
+				break;
+			case 'topQuoteRanking':
+				navigate(`/top100`);
+				break;
 			case 'readingGoal':
 				navigate(`/reading-target/${userInfo.id}`);
 				break;
@@ -116,6 +173,9 @@ const ModalItem = ({ item, setModalNoti, getNotifications, setGetNotifications, 
 				navigate(`/Group/${item.originId.groupId}`);
 				break;
 			case 'replyComment':
+				dispatch(handleMentionCommentId(item.originId.replyId));
+				navigate(`/detail-feed/mini-post/${item.originId.minipostId}`);
+				break;
 			case 'shareQuote':
 				navigate(`/detail-feed/mini-post/${item.originId.minipostId}`);
 				break;
@@ -123,8 +183,12 @@ const ModalItem = ({ item, setModalNoti, getNotifications, setGetNotifications, 
 			case 'likeQuote':
 				navigate(`/quotes/detail/${item.originId.quoteId}`);
 				break;
-			case 'replyCommentQuote':
+			case 'likeCommentQuote':
 				dispatch(handleMentionCommentId(item.originId.commentQuoteId));
+				navigate(`/quotes/detail/${item.originId.quoteId}`);
+				break;
+			case 'replyCommentQuote':
+				dispatch(handleMentionCommentId(item.originId.replyId));
 				navigate(`/quotes/detail/${item.originId.quoteId}`);
 				break;
 			case 'mention':
@@ -138,6 +202,7 @@ const ModalItem = ({ item, setModalNoti, getNotifications, setGetNotifications, 
 						break;
 					case 'mentionMiniPost':
 					case 'commentMiniPost':
+						dispatch(handleMentionCommentId(item.originId.commentMiniPostId));
 						navigate(`/detail-feed/mini-post/${item.originId.minipostId}`);
 						break;
 					case 'commentReview':
@@ -185,7 +250,7 @@ const ModalItem = ({ item, setModalNoti, getNotifications, setGetNotifications, 
 					: 'notification__tabs__all__seen'
 			}
 		>
-			<div onClick={handleActiveIsReed} className='notification__all__layout'>
+			<div onClick={handleActiveIsRead} className='notification__all__layout'>
 				{item.actor === 'system-notification' && item.verb !== 'friendAccepted' ? (
 					<UserAvatar size='mm' source={logoNonText} className='system-notification__image' />
 				) : (
@@ -252,13 +317,48 @@ const ModalItem = ({ item, setModalNoti, getNotifications, setGetNotifications, 
 							) : (
 								<>
 									<div
-										onClick={() => ReplyFriendReq(item.object)}
+										onClick={e => {
+											e.stopPropagation();
+											ReplyFriendReq(item.object);
+										}}
 										className='notification__all__accept'
 									>
-										Chấp nhận
+										{item.verb === 'browse' ? 'Duyệt' : 'Chấp nhận'}
 									</div>
 									<div
-										onClick={() => cancelFriend(item.object)}
+										onClick={e => {
+											e.stopPropagation();
+											cancelFriend(item.object);
+										}}
+										className='notification__all__refuse'
+									>
+										Từ chối
+									</div>
+								</>
+							)}
+						</div>
+					)}
+
+					{item.verb === 'inviteGroup' && (
+						<div className='notification__all__friend'>
+							{isLoading ? (
+								<LoadingIndicator />
+							) : (
+								<>
+									<div
+										onClick={e => {
+											e.stopPropagation();
+											acceptInviteGroup(item);
+										}}
+										className='notification__all__accept'
+									>
+										{item.verb === 'browse' ? 'Duyệt' : 'Chấp nhận'}
+									</div>
+									<div
+										onClick={e => {
+											e.stopPropagation();
+											refuseInviteGroup(item);
+										}}
 										className='notification__all__refuse'
 									>
 										Từ chối

@@ -13,7 +13,7 @@ import _ from 'lodash';
 import { stateToHTML } from 'draft-js-export-html';
 import { getFriendList } from 'reducers/redux-utils/user';
 import { useDispatch, useSelector } from 'react-redux';
-import defaultAvatar from 'assets/images/avatar.jpeg';
+import defaultAvatar from 'assets/icons/defaultLogoAvatar.svg';
 import { NotificationError } from 'helpers/Error';
 
 const hashtagRegex = /#(?![0-9_]+\b)[0-9a-z_]+/gi;

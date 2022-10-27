@@ -29,7 +29,7 @@ import { handleResetValue } from 'reducers/redux-utils/search';
 import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { updateTargetReading } from 'reducers/redux-utils/chart';
-import defaultAvatar from 'assets/images/avatar.jpeg';
+import defaultAvatar from 'assets/icons/defaultLogoAvatar.svg';
 import * as stream from 'getstream';
 import _ from 'lodash';
 import { patchNewNotification, updateIsNewNotificationUserInfo } from 'reducers/redux-utils/auth';

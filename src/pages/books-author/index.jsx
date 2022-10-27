@@ -5,6 +5,7 @@ import { useParams } from 'react-router-dom';
 import { handleShelvesGroup } from 'api/shelvesGroup.hooks';
 import Circle from 'shared/loading/circle';
 import { useEffect } from 'react';
+import NotFound from 'pages/not-found';
 
 const BooksAuthor = () => {
 	const { userId } = useParams();
@@ -18,10 +19,16 @@ const BooksAuthor = () => {
 	return (
 		<>
 			<Circle loading={isLoading} />
-			<MainContainer
-				main={<MainBooksAuthor shelveGroupName={`Sách của ${shelveGroupName}`} />}
-				right={<SidebarBooksAuthor shelveGroupName={shelveGroupName} isMine={isMine} allLibrary={allLibrary} />}
-			/>
+			{shelveGroupName ? (
+				<MainContainer
+					main={<MainBooksAuthor shelveGroupName={`Sách của ${shelveGroupName}`} />}
+					right={
+						<SidebarBooksAuthor shelveGroupName={shelveGroupName} isMine={isMine} allLibrary={allLibrary} />
+					}
+				/>
+			) : (
+				<NotFound />
+			)}
 		</>
 	);
 };

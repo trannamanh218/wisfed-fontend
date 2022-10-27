@@ -14,6 +14,7 @@ import {
 	commentBookReviewAPI,
 	likeReviewsAPI,
 	likeCommentReviewsAPI,
+	listCommentsReviewAPI,
 } from 'constants/apiURL';
 import Request from 'helpers/Request';
 
@@ -189,6 +190,20 @@ export const likeAndUnlikeCommentReview = createAsyncThunk(
 		} catch (err) {
 			const error = JSON.parse(err.response);
 			return rejectWithValue(error);
+		}
+	}
+);
+
+export const getListCommentsReview = createAsyncThunk(
+	'book/getListCommentsReview',
+	async (data, { rejectWithValue }) => {
+		const { reviewId, params } = data;
+		try {
+			const response = await Request.makeGet(listCommentsReviewAPI(reviewId), params);
+			return response.data;
+		} catch (err) {
+			const error = JSON.parse(err.response);
+			throw rejectWithValue(error);
 		}
 	}
 );

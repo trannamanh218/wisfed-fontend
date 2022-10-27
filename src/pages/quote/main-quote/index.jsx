@@ -12,8 +12,9 @@ import _ from 'lodash';
 import { useParams } from 'react-router-dom';
 import { getUserDetail } from 'reducers/redux-utils/user';
 import LoadingIndicator from 'shared/loading-indicator';
+import PropTypes from 'prop-types';
 
-const MainQuote = () => {
+const MainQuote = ({ setFoundUser }) => {
 	const filterOptions = [
 		{ id: 1, title: 'Của tôi', value: 'me' },
 		{ id: 2, title: 'Yêu thích', value: 'me-like' },
@@ -61,9 +62,13 @@ const MainQuote = () => {
 	useEffect(async () => {
 		if (!_.isEmpty(userInfo)) {
 			if (userId !== userInfo.id) {
-				const user = await dispatch(getUserDetail(userId)).unwrap();
-				setQuotesUserName(`Quoets của ${user.fullName || user.firstName + ' ' + user.lastName}`);
-				setIsMyQuotes(false);
+				try {
+					const user = await dispatch(getUserDetail(userId)).unwrap();
+					setQuotesUserName(`Quotes của ${user.fullName || user.firstName + ' ' + user.lastName}`);
+					setIsMyQuotes(false);
+				} catch (err) {
+					setFoundUser(false);
+				}
 			} else {
 				setQuotesUserName('Quotes của tôi');
 				setIsMyQuotes(true);
@@ -223,6 +228,10 @@ const MainQuote = () => {
 			)}
 		</>
 	);
+};
+
+MainQuote.propTypes = {
+	setFoundUser: PropTypes.func,
 };
 
 export default MainQuote;

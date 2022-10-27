@@ -8,8 +8,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
 import { getInviteFriend } from 'reducers/redux-utils/group';
 import { useParams } from 'react-router-dom';
-import defaultAvatar from 'assets/images/avatar.jpeg';
+import defaultAvatar from 'assets/icons/defaultLogoAvatar.svg';
 import _ from 'lodash';
+import { toast } from 'react-toastify';
 
 const PopupInviteFriend = ({ handleClose, showRef, groupMembers }) => {
 	const [listFriendsNotInGroup, setListFriendsNotInGroup] = useState([]);
@@ -51,6 +52,7 @@ const PopupInviteFriend = ({ handleClose, showRef, groupMembers }) => {
 			};
 			try {
 				await dispatch(getInviteFriend(params)).unwrap();
+				toast.success('Đã mời bạn bè vào nhóm', { toastId: 'success-invite-friends-into-group' });
 			} catch (err) {
 				NotificationError(err);
 			} finally {

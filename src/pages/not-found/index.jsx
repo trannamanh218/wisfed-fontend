@@ -8,7 +8,7 @@ function NotFound() {
 	return (
 		<NormalContainer>
 			<div className='not-found'>
-				<h4 className='not-found__title'>Opps!... Đã có lỗi xảy ra </h4>
+				<h4 className='not-found__title'>Opps!... Đã có lỗi xảy ra</h4>
 				<p>Vui lòng thử truy cập lại</p>
 				<img src={notFoundImage} alt='not found' />
 				<Link className='btn btn-primary not-found__btn' to='/'>

@@ -1,5 +1,4 @@
 import MainContainer from 'components/layout/main-container';
-import NormalContainer from 'components/layout/normal-container';
 import _ from 'lodash';
 import { useParams } from 'react-router-dom';
 import BookInfo from './book-info';
@@ -9,7 +8,7 @@ import { STATUS_LOADING } from 'constants/index';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getBookDetail } from 'reducers/redux-utils/book';
-import { NotificationError } from 'helpers/Error';
+import NotFound from 'pages/not-found';
 
 function BookDetail() {
 	const dispatch = useDispatch();
@@ -24,9 +23,10 @@ function BookDetail() {
 		try {
 			const res = await dispatch(getBookDetail(bookId)).unwrap();
 			setBookInformation(res);
-			setBookStatus('SUCCESS');
 		} catch (err) {
-			NotificationError(err);
+			return;
+		} finally {
+			setBookStatus('SUCCESS');
 		}
 	};
 
@@ -58,9 +58,7 @@ function BookDetail() {
 							}
 						/>
 					) : (
-						<NormalContainer>
-							<h4 className='blank-content text-center mt-5 fs-4'>Không có dữ liệu</h4>
-						</NormalContainer>
+						<NotFound />
 					)}
 				</>
 			)}

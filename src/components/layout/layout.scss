@@ -3,9 +3,28 @@
 .layout {
 	max-width: 1440px;
 	margin: 0 auto;
-	min-height: 100vh;
 	background-color: $secondary;
 	position: relative;
+	height: 100vh;
+	overflow: auto;
+	&::-webkit-scrollbar {
+		width: 8px;
+	}
+
+	/* Track */
+	&::-webkit-scrollbar-track {
+		background: #f1f1f1;
+		border-radius: 8px;
+	}
+
+	/* Handle */
+	&::-webkit-scrollbar-thumb {
+		background: rgba(#606060, 0.3);
+		border-radius: 8px;
+		&:hover {
+			background: rgba(#606060, 0.2);
+		}
+	}
 	&__container {
 		margin-top: 96px;
 		.header__dard {

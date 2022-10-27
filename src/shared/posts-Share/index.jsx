@@ -14,7 +14,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import Play from 'assets/images/play.png';
 import { GROUP_POST_VERB_SHARE } from 'constants/index';
 import { Modal } from 'react-bootstrap';
-import defaultAvatar from 'assets/images/avatar.jpeg';
+import defaultAvatar from 'assets/icons/defaultLogoAvatar.svg';
 
 const urlRegex =
 	/(http(s)?:\/\/)?(www(\.))?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}([-a-zA-Z0-9()@:%_\+.~#?&//=]*)([^"<\s]+)(?![^<>]*>|[^"]*?<\/a)/g;
@@ -215,7 +215,7 @@ const PostShare = ({ postData, inCreatePost = false }) => {
 											<span>Xếp hạng</span>
 											<ReactRating
 												readonly={true}
-												initialRating={postData.sharePost.book.actorRating.star}
+												initialRating={postData.sharePost.book.actorRating?.star}
 											/>
 										</>
 									)}

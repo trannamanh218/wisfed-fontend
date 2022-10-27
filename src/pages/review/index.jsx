@@ -8,12 +8,13 @@ import BackButton from 'shared/back-button';
 import ReviewBookInfo from './review-book-info';
 import './review.scss';
 import { getReviewsBook } from 'reducers/redux-utils/book';
-import { NotificationError } from 'helpers/Error';
 import { getBookDetail } from 'reducers/redux-utils/book';
 import { getUserDetail } from 'reducers/redux-utils/user';
 import Post from 'shared/post';
 import { REVIEW_TYPE } from 'constants/index';
 import { updateReviewIdFromNoti } from 'reducers/redux-utils/notification';
+import NotFound from 'pages/not-found';
+import Circle from 'shared/loading/circle';
 
 const Review = () => {
 	const { bookId, userId } = useParams();
@@ -21,6 +22,7 @@ const Review = () => {
 	const [bookInfo, setBookInfo] = useState({});
 	const [title, setTitle] = useState('');
 	const [filter, setFilter] = useState([]);
+	const [isLoading, setIsLoading] = useState(false);
 
 	const bookInfoRedux = useSelector(state => state.book.bookInfo);
 	const titleReviewPage = useSelector(state => state.common.titleReviewPage);
@@ -55,6 +57,7 @@ const Review = () => {
 
 	const getReviewList = async () => {
 		try {
+			setIsLoading(true);
 			const params = {
 				start: 0,
 				limit: 10,
@@ -64,56 +67,72 @@ const Review = () => {
 			const response = await dispatch(getReviewsBook({ bookId, params })).unwrap();
 			setListReview(response.rows);
 		} catch (err) {
-			NotificationError(err);
+			return;
+		} finally {
+			setIsLoading(false);
 		}
 	};
 
 	const getBookData = async () => {
 		try {
+			setIsLoading(true);
 			const res = await dispatch(getBookDetail(bookId)).unwrap();
 			setBookInfo(res);
 			return res.name;
 		} catch (err) {
-			NotificationError(err);
+			return;
+		} finally {
+			setIsLoading(false);
 		}
 	};
 
 	const getUserData = async bookName => {
 		try {
+			setIsLoading(true);
 			const res = await dispatch(getUserDetail(userId)).unwrap();
 			setTitle(`Bài Review về ${bookName} của ${res.fullName}`);
 		} catch (err) {
-			NotificationError(err);
+			return;
+		} finally {
+			setIsLoading(false);
 		}
 	};
 
 	return (
 		<>
-			{!_.isEmpty(bookInfo) && (
-				<NormalContainer>
-					<div className='review'>
-						<div className='review__header'>
-							<div>
-								<BackButton destination={-1} className='review__header__btn' />
-							</div>
-							<h4>{title}</h4>
-						</div>
-						<ReviewBookInfo bookInfo={bookInfo} />
-						<div className='review__items'>
-							<h4>Bài Review</h4>
-							{listReview?.length > 0 ? (
-								listReview.map((item, index) => (
-									<div clas key={item.id}>
-										<Post postInformations={item} type={REVIEW_TYPE} />
-										{listReview.length > 1 && index < listReview.length - 1 && <hr />}
+			{isLoading ? (
+				<Circle />
+			) : (
+				<>
+					{!_.isEmpty(bookInfo) && title ? (
+						<NormalContainer>
+							<div className='review'>
+								<div className='review__header'>
+									<div>
+										<BackButton destination={-1} className='review__header__btn' />
 									</div>
-								))
-							) : (
-								<div className='review__no-data'>Chưa có bài review nào</div>
-							)}
-						</div>
-					</div>
-				</NormalContainer>
+									<h4>{title}</h4>
+								</div>
+								<ReviewBookInfo bookInfo={bookInfo} />
+								<div className='review__items'>
+									<h4>Bài Review</h4>
+									{listReview?.length > 0 ? (
+										listReview.map((item, index) => (
+											<div clas key={item.id}>
+												<Post postInformations={item} type={REVIEW_TYPE} />
+												{listReview.length > 1 && index < listReview.length - 1 && <hr />}
+											</div>
+										))
+									) : (
+										<div className='review__no-data'>Chưa có bài review nào</div>
+									)}
+								</div>
+							</div>
+						</NormalContainer>
+					) : (
+						<NotFound />
+					)}
+				</>
 			)}
 		</>
 	);

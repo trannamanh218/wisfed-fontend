@@ -55,9 +55,10 @@ const MainQuoteDetail = ({ quoteData, setQuoteData, onCreateComment, setMentionU
 		try {
 			// Gọi api lấy thông tin của bình luận nhắc đến bạn
 			const params = { filter: JSON.stringify([{ operator: 'eq', value: mentionCommentId, property: 'id' }]) };
-			const mentionedCommentAPI = await dispatch(
+			const getMentionedCommentAPI = await dispatch(
 				getQuoteComments({ quoteId: quoteData.id, params: params })
 			).unwrap();
+			const mentionedCommentAPI = getMentionedCommentAPI?.rows;
 			if (!_.isEmpty(mentionedCommentAPI)) {
 				if (mentionedCommentAPI[0].replyId === null) {
 					// Đảo thứ tự replies
@@ -144,6 +145,7 @@ const MainQuoteDetail = ({ quoteData, setQuoteData, onCreateComment, setMentionU
 							haveNotClickedSeeMoreOnce={haveNotClickedSeeMoreOnce}
 							setHaveNotClickedSeeMoreOnce={setHaveNotClickedSeeMoreOnce}
 							isInDetail={true}
+							postType={'quote'}
 						/>
 
 						{/* Comment mention đặt trên đầu  */}
