@@ -134,6 +134,8 @@ const TopBooks = ({ listYear, tabSelected }) => {
 					setModalSearchCategoriesShow={setModalSearchCategoriesShow}
 					modalSearchCategoriesShow={modalSearchCategoriesShow}
 					onSelectCategory={onchangeKindOfGroup}
+					setTopBooksId={setTopBooksId}
+					tabSelected={tabSelected}
 				/>
 			)}
 			<div className='topbooks__container__title'>TOP 100 Cuốn sách tốt nhất</div>

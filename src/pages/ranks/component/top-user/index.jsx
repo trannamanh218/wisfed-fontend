@@ -113,6 +113,7 @@ const TopUser = ({ listYear, tabSelected }) => {
 					setModalSearchCategoriesShow={setModalSearchCategoriesShow}
 					modalSearchCategoriesShow={modalSearchCategoriesShow}
 					onSelectCategory={onchangeKindOfGroup}
+					setTopUserFilter={setTopUserFilter}
 				/>
 			)}
 			<div className='topbooks__container__header'>
