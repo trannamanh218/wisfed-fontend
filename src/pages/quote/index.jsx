@@ -1,10 +1,9 @@
 import MainContainer from 'components/layout/main-container';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import MainQuote from './main-quote';
 import SidebarQuote from 'shared/sidebar-quote';
 import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import NotFound from 'pages/not-found';
 
 const Quote = () => {
 	const hashtagList = [
