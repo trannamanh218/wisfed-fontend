@@ -101,40 +101,37 @@ const Review = () => {
 
 	return (
 		<>
-			{isLoading ? (
-				<Circle loading={isLoading} />
-			) : (
-				<>
-					{!_.isEmpty(bookInfo) && title ? (
-						<NormalContainer>
-							<div className='review'>
-								<div className='review__header'>
-									<div>
-										<BackButton destination={-1} className='review__header__btn' />
-									</div>
-									<h4>{title}</h4>
+			<Circle loading={isLoading} />
+			<>
+				{!_.isEmpty(bookInfo) && title ? (
+					<NormalContainer>
+						<div className='review'>
+							<div className='review__header'>
+								<div>
+									<BackButton destination={-1} className='review__header__btn' />
 								</div>
-								<ReviewBookInfo bookInfo={bookInfo} />
-								<div className='review__items'>
-									<h4>Bài Review</h4>
-									{listReview?.length > 0 ? (
-										listReview.map((item, index) => (
-											<div clas key={item.id}>
-												<Post postInformations={item} type={REVIEW_TYPE} />
-												{listReview.length > 1 && index < listReview.length - 1 && <hr />}
-											</div>
-										))
-									) : (
-										<div className='review__no-data'>Chưa có bài review nào</div>
-									)}
-								</div>
+								<h4>{title}</h4>
 							</div>
-						</NormalContainer>
-					) : (
-						<>{renderNotFound ? <NotFound /> : <></>}</>
-					)}
-				</>
-			)}
+							<ReviewBookInfo bookInfo={bookInfo} />
+							<div className='review__items'>
+								<h4>Bài Review</h4>
+								{listReview?.length > 0 ? (
+									listReview.map((item, index) => (
+										<div clas key={item.id}>
+											<Post postInformations={item} type={REVIEW_TYPE} />
+											{listReview.length > 1 && index < listReview.length - 1 && <hr />}
+										</div>
+									))
+								) : (
+									<div className='review__no-data'>Chưa có bài review nào</div>
+								)}
+							</div>
+						</div>
+					</NormalContainer>
+				) : (
+					<>{renderNotFound ? <NotFound /> : <></>}</>
+				)}
+			</>
 		</>
 	);
 };
