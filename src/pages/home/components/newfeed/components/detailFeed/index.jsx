@@ -43,7 +43,7 @@ const DetailFeed = () => {
 
 	return (
 		<>
-			{detailFeed.length > 0 ? (
+			{detailFeed && detailFeed.length > 0 && (
 				<NormalContainer>
 					<Circle loading={isLoading} />
 					<div className='detail_feed_container'>
@@ -65,8 +65,6 @@ const DetailFeed = () => {
 						)}
 					</div>
 				</NormalContainer>
-			) : (
-				<NotFound />
 			)}
 		</>
 	);
