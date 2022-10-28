@@ -14,7 +14,7 @@ import { getUserDetail } from 'reducers/redux-utils/user';
 import LoadingIndicator from 'shared/loading-indicator';
 import PropTypes from 'prop-types';
 
-const MainQuote = ({ setFoundUser }) => {
+const MainQuote = () => {
 	const filterOptions = [
 		{ id: 1, title: 'Của tôi', value: 'me' },
 		{ id: 2, title: 'Yêu thích', value: 'me-like' },
@@ -67,7 +67,7 @@ const MainQuote = ({ setFoundUser }) => {
 					setQuotesUserName(`Quotes của ${user.fullName || user.firstName + ' ' + user.lastName}`);
 					setIsMyQuotes(false);
 				} catch (err) {
-					setFoundUser(false);
+					return;
 				}
 			} else {
 				setQuotesUserName('Quotes của tôi');
@@ -230,8 +230,6 @@ const MainQuote = ({ setFoundUser }) => {
 	);
 };
 
-MainQuote.propTypes = {
-	setFoundUser: PropTypes.func,
-};
+MainQuote.propTypes = {};
 
 export default MainQuote;

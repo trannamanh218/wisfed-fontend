@@ -23,6 +23,7 @@ const Review = () => {
 	const [title, setTitle] = useState('');
 	const [filter, setFilter] = useState([]);
 	const [isLoading, setIsLoading] = useState(false);
+	const [renderNotFound, setRenderNotFound] = useState(false);
 
 	const bookInfoRedux = useSelector(state => state.book.bookInfo);
 	const titleReviewPage = useSelector(state => state.common.titleReviewPage);
@@ -80,7 +81,7 @@ const Review = () => {
 			setBookInfo(res);
 			return res.name;
 		} catch (err) {
-			return;
+			setRenderNotFound(true);
 		} finally {
 			setIsLoading(false);
 		}
@@ -92,7 +93,7 @@ const Review = () => {
 			const res = await dispatch(getUserDetail(userId)).unwrap();
 			setTitle(`Bài Review về ${bookName} của ${res.fullName}`);
 		} catch (err) {
-			return;
+			setRenderNotFound(true);
 		} finally {
 			setIsLoading(false);
 		}
@@ -130,7 +131,7 @@ const Review = () => {
 							</div>
 						</NormalContainer>
 					) : (
-						<NotFound />
+						<>{renderNotFound ? <NotFound /> : <></>}</>
 					)}
 				</>
 			)}
