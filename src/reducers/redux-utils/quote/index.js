@@ -117,11 +117,13 @@ export const getCountQuotesByCategory = createAsyncThunk(
 		try {
 			const { userId, params } = data;
 			let response;
-			if (userId) {
-				response = await Request.makeGet(countQuotesByCategoryWithUserIdAPI(userId), params);
-			} else {
-				response = await Request.makeGet(countAllQuotesByCategorydAPI, params);
-			}
+			// Theo yêu cầu của Linh chị thì không lấy theo userId nữa vì có ít, thay vào đó lấy tất cả
+
+			// if (userId) {
+			// 	response = await Request.makeGet(countQuotesByCategoryWithUserIdAPI(userId), params);
+			// } else {
+			response = await Request.makeGet(countAllQuotesByCategorydAPI, params);
+			// }
 			return response.data;
 		} catch (err) {
 			const error = JSON.parse(err.response);
