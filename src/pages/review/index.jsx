@@ -102,7 +102,7 @@ const Review = () => {
 	return (
 		<>
 			{isLoading ? (
-				<Circle />
+				<Circle loading={isLoading} />
 			) : (
 				<>
 					{!_.isEmpty(bookInfo) && title ? (
