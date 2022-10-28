@@ -16,6 +16,7 @@ import NotFound from 'pages/not-found';
 const Profile = () => {
 	const [currentUserInfo, setCurrentUserInfo] = useState({});
 	const [status, setStatus] = useState(false);
+	const [renderNotFound, setRenderNotFound] = useState(false);
 
 	const dispatch = useDispatch();
 	const { userInfo } = useSelector(state => state.auth);
@@ -39,6 +40,8 @@ const Profile = () => {
 			}
 		} catch (err) {
 			return;
+		} finally {
+			setRenderNotFound(true);
 		}
 	};
 
@@ -66,7 +69,7 @@ const Profile = () => {
 					}
 				/>
 			) : (
-				<NotFound />
+				<>{renderNotFound ? <NotFound /> : <></>}</>
 			)}
 		</>
 	);

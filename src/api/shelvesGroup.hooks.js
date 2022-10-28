@@ -10,6 +10,7 @@ export const handleShelvesGroup = currentUserShelveId => {
 	const [shelveGroupName, setShelveGroupName] = useState('');
 	const [isMine, setIsMine] = useState();
 	const [allLibrary, setAllLibrary] = useState({});
+	const [renderNotFound, setRenderNotFound] = useState(false);
 
 	const dispatch = useDispatch();
 
@@ -94,10 +95,11 @@ export const handleShelvesGroup = currentUserShelveId => {
 				}
 			}
 		} catch (err) {
+			setRenderNotFound(true);
 			return;
 		} finally {
 			setIsLoading(false);
 		}
 	};
-	return { isLoading, shelveGroupName, isMine, allLibrary };
+	return { isLoading, shelveGroupName, isMine, allLibrary, renderNotFound };
 };
