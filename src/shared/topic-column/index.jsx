@@ -3,6 +3,7 @@ import { useState } from 'react';
 import PropTypes from 'prop-types';
 import caretIcon from 'assets/images/caret.png';
 import './topic-column.scss';
+import { Link } from 'react-router-dom';
 
 const TopicColumn = ({ topics, className, title, handleViewCategoryDetail, inCategory = false }) => {
 	const [isExpand, setIsExpand] = useState(false);
@@ -47,7 +48,9 @@ const TopicColumn = ({ topics, className, title, handleViewCategoryDetail, inCat
 								title={topic.name}
 								onClick={() => handleViewCategoryDetail(topic)}
 							>
-								<span>{topic.name || topic.tag?.name}</span>
+								<Link to={`/quotes/hashtag/${topic.name?.slice(1) || topic.tag?.name?.slice(1)}`}>
+									<span>{topic.name || topic.tag?.name}</span>
+								</Link>
 							</div>
 						))}
 					</div>

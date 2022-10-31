@@ -48,6 +48,7 @@ import BookShelves from 'pages/shelves';
 import UploadBook from 'pages/upload-book/UploadBook';
 import PropTypes from 'prop-types';
 import ModalCheckLogin from 'shared/modal-check-login';
+import QuotesByHashTag from 'pages/quotes-by-hashtag/QuotesByHashTag';
 
 function App({ children }) {
 	const dispatch = useDispatch();
@@ -127,6 +128,7 @@ function App({ children }) {
 				<Route path='/quotes/:userId' element={<Quote />} />
 				<Route path='/quotes/all' element={<QuoteAll />} />
 				<Route path='/quotes/category/:categoryId' element={<QuotesByCategory />} />
+				<Route path='/quotes/hashtag/:hashtag' element={<QuotesByHashTag />} />
 				<Route path='/quotes/detail/:id' element={<QuoteDetail />} />
 				<Route path='/confirm-my-book/:bookId' element={<ConfirmMyBook />} />
 				<Route path='/login' element={<Login />} />
