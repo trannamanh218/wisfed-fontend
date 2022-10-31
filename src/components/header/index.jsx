@@ -332,7 +332,7 @@ const Header = () => {
 			<div className='header__userInfo' ref={userOptions}>
 				<div className='header__avatar' onClick={tollgleModaleInfoUser}>
 					<img
-						src={!_.isEmpty(userInfo) ? userInfo.avatarImage : defaultAvatar}
+						src={!_.isEmpty(userInfo) && userInfo.avatarImage ? userInfo.avatarImage : defaultAvatar}
 						onError={e => e.target.setAttribute('src', `${defaultAvatar}`)}
 						alt='avatar'
 					/>
