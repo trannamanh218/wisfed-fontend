@@ -17,6 +17,8 @@ import { likeAndUnlikeGroupComment } from 'reducers/redux-utils/group';
 
 const urlRegex =
 	/(https?:\/\/)?(www(\.))?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)([^"<\s]+)(?![^<>]*>|[^"]*?<\/a)/g;
+const hashtagRegex =
+	/#(?![0-9_]+\b)[0-9a-z_ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễếệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ]+/gi;
 
 const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 	const [isLiked, setIsLiked] = useState(false);
@@ -53,21 +55,29 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 	};
 
 	const generateContent = content => {
-		if (content.match(urlRegex)) {
-			let newContent;
-			if (content.includes('https://')) {
-				newContent = content.replace(urlRegex, data => {
-					return `<a class="url-class" href=${data} target="_blank">${
-						data.length <= 50 ? data : data.slice(0, 50) + '...'
-					}</a>`;
+		if (content.match(urlRegex) || content.match(hashtagRegex)) {
+			const newContent = content
+				.replace(
+					urlRegex,
+					data =>
+						`<a class="url-class" href=${
+							data.includes('https://') ? data : `https://${data}`
+						} target="_blank">${data.length <= 50 ? data : data.slice(0, 50) + '...'}</a>`
+				)
+				.replace(hashtagRegex, data => {
+					const newData = data
+						.normalize('NFD')
+						.replace(/[\u0300-\u036f]/g, '')
+						.replace(/đ/g, 'd')
+						.replace(/Đ/g, 'D');
+					if (postData.groupId) {
+						return `<a class="hashtag-class" href="/hashtag-group/${postData.groupId}/${newData.slice(
+							1
+						)}">${newData}</a>`;
+					} else {
+						return `<a class="hashtag-class" href="/hashtag/${newData.slice(1)}">${newData}</a>`;
+					}
 				});
-			} else {
-				newContent = content.replace(urlRegex, data => {
-					return `<a class="url-class" href=https://${data} target="_blank">${
-						data.length <= 50 ? data : data.slice(0, 50) + '...'
-					}</a>`;
-				});
-			}
 			return newContent;
 		} else {
 			return content;

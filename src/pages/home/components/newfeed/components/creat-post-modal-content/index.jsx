@@ -60,7 +60,8 @@ const verbShareArray = [
 	REVIEW_VERB_SHARE,
 ];
 
-const hashtagRegex = /#(?![0-9_]+\b)[0-9a-z_]+/gi;
+const hashtagRegex =
+	/#(?![0-9_]+\b)[0-9a-z_ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễếệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ]+/gi;
 
 function CreatePostModalContent({
 	hideCreatePostModal,
@@ -161,7 +162,14 @@ function CreatePostModalContent({
 	useEffect(() => {
 		const hashtagsTemp = content.match(hashtagRegex);
 		if (hashtagsTemp) {
-			setHashtagsAdded(hashtagsTemp);
+			const hashtagsFormated = hashtagsTemp.map(item =>
+				item
+					.normalize('NFD')
+					.replace(/[\u0300-\u036f]/g, '')
+					.replace(/đ/g, 'd')
+					.replace(/Đ/g, 'D')
+			);
+			setHashtagsAdded(hashtagsFormated);
 		} else {
 			setHashtagsAdded([]);
 		}

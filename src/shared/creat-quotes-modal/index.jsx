@@ -39,7 +39,8 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 	const [show, setShow] = useState(false);
 	const [hasMoreEllipsis, setHasMoreEllipsis] = useState(false);
 
-	const hastagRegex = /(^|\B)#(?![0-9_]+\b)([a-zA-Z0-9_!^[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]*$]*)(\b|\r)/g;
+	const hashtagRegex =
+		/#(?![0-9_]+\b)[0-9a-z_ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễếệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ]+/gi;
 
 	const dispatch = useDispatch();
 	const colorData = [
@@ -55,7 +56,7 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 	useEffect(() => {
 		const hastagElement = document.getElementById('hashtag');
 		const handleHashtag = e => {
-			if (e.keyCode === 32 && hastagRegex.test(inputHashtag)) {
+			if (e.keyCode === 32 && hashtagRegex.test(inputHashtag)) {
 				dataRef.current = inputHashtag.trim();
 				inputRefHashtag.current.value = '';
 			}
@@ -68,7 +69,7 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 	const handleChangeHashtag = e => {
 		const value = e.target.value;
 		setInputHashtag(value);
-		if (!hastagRegex.test(value) && value.trim()) {
+		if (!hashtagRegex.test(value) && value.trim()) {
 			setShow(true);
 		} else {
 			setShow(false);
@@ -404,7 +405,7 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 					</div>
 
 					<div className='creat-quotes-modal__body__option-item'>
-						<div className='creat-quotes-modal__body__option-item__title'>Từ khóa</div>
+						<div className='creat-quotes-modal__body__option-item__title'>Hashtags</div>
 						<div className='creat-quotes-modal__body__option-item__search-container list__tags'>
 							{listHashtags.length > 0 && (
 								<div className='input__tag'>
@@ -434,11 +435,7 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 								inputRef={inputRefHashtag}
 							/>
 						</div>
-						{show && !!inputHashtag ? (
-							<span style={{ color: '#e61b00' }}>Vui lòng nhập đúng định dạng</span>
-						) : (
-							''
-						)}
+						{show && inputHashtag && <span style={{ color: '#e61b00' }}>Vui lòng nhập đúng định dạng</span>}
 					</div>
 				</div>
 			</div>

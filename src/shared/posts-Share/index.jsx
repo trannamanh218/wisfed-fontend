@@ -18,7 +18,10 @@ import defaultAvatar from 'assets/icons/defaultLogoAvatar.svg';
 
 const urlRegex =
 	/(http(s)?:\/\/)?(www(\.))?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}([-a-zA-Z0-9()@:%_\+.~#?&//=]*)([^"<\s]+)(?![^<>]*>|[^"]*?<\/a)/g;
-const hashtagRegex = /#(?![0-9_]+\b)[0-9a-z_]+/gi;
+const hashtagRegex =
+	/#(?![0-9_]+\b)[0-9a-z_ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễếệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ]+/gi;
+const regexContainVietnamese =
+	/[ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễếệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ]/;
 
 const PostShare = ({ postData, inCreatePost = false }) => {
 	const [videoId, setVideoId] = useState('');
@@ -147,12 +150,17 @@ const PostShare = ({ postData, inCreatePost = false }) => {
 						} target="_blank">${data.length <= 50 ? data : data.slice(0, 50) + '...'}</a>`
 				)
 				.replace(hashtagRegex, data => {
+					const newData = data
+						.normalize('NFD')
+						.replace(/[\u0300-\u036f]/g, '')
+						.replace(/đ/g, 'd')
+						.replace(/Đ/g, 'D');
 					if (postData.groupId) {
-						return `<a class="hashtag-class" href="/hashtag-group/${postData.groupId}/${data.slice(
+						return `<a class="hashtag-class" href="/hashtag-group/${postData.groupId}/${newData.slice(
 							1
-						)}">${data}</a>`;
+						)}">${newData}</a>`;
 					} else {
-						return `<a class="hashtag-class" href="/hashtag/${data.slice(1)}">${data}</a>`;
+						return `<a class="hashtag-class" href="/hashtag/${newData.slice(1)}">${newData}</a>`;
 					}
 				});
 			return newContent;

@@ -65,7 +65,8 @@ const PopupCreateGroup = ({ handleClose }) => {
 	const bookInputWrapper = useRef(null);
 	const bookInput = useRef(null);
 
-	const hashtagRegex = /#(?![0-9_]+\b)[0-9a-z_]+/gi;
+	const hashtagRegex =
+		/#(?![0-9_]+\b)[0-9a-z_ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễếệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ]+/gi;
 
 	const dispatch = useDispatch();
 
@@ -252,6 +253,11 @@ const PopupCreateGroup = ({ handleClose }) => {
 		setListBookAdd(bookIdArr);
 	}, [bookAddedList]);
 
+	const uploadImageFile = async acceptedFiles => {
+		const imageUploadedData = await dispatch(uploadImage(acceptedFiles)).unwrap();
+		return imageUploadedData?.streamPath;
+	};
+
 	useEffect(() => {
 		setLastTag(
 			inputHashtag
@@ -260,14 +266,7 @@ const PopupCreateGroup = ({ handleClose }) => {
 				.replace(/đ/g, 'd')
 				.replace(/Đ/g, 'D')
 		);
-	}, [inputHashtag]);
 
-	const uploadImageFile = async acceptedFiles => {
-		const imageUploadedData = await dispatch(uploadImage(acceptedFiles)).unwrap();
-		return imageUploadedData?.streamPath;
-	};
-
-	useEffect(() => {
 		const hashtagElement = document.getElementById('hashtag');
 		const handleHashtag = e => {
 			if (e.keyCode === 32 && hashtagRegex.test(inputHashtag)) {
@@ -282,7 +281,6 @@ const PopupCreateGroup = ({ handleClose }) => {
 
 	useEffect(() => {
 		const dataCheck = listHashtags.filter(item => dataRef.current === item);
-
 		if (dataRef.current !== '' && dataCheck.length < 1) {
 			const check = dataRef.current
 				.normalize('NFD')
