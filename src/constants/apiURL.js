@@ -20,6 +20,8 @@ export const countQuotesByCategoryWithUserIdAPI = id => `/api/v1/quotes/countQuo
 export const countAllQuotesByCategorydAPI = '/api/v1/quotes/countQuotes';
 export const getQuoteCommentsAPI = id => `/api/v1/quotes/listCommentQuote/${id}/`;
 export const listQuotesLikedByIdAPI = id => `/api/v1/quotes/listQuotesLikedById/${id}`;
+export const listHasgTagByUserAPI = '/api/v1/tags';
+export const listQuotesByTagAPI = '/api/v1/quotes/listQuoteByTag';
 
 // post
 export const postAPI = '/api/v1/posts';

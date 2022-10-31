@@ -5,20 +5,26 @@ import SidebarQuote from 'shared/sidebar-quote';
 import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import NotFound from 'pages/not-found';
+import { useDispatch } from 'react-redux';
+import { NotificationError } from 'helpers/Error';
+import { getListHasgTagByUser } from 'reducers/redux-utils/quote';
 
 const Quote = () => {
-	const hashtagList = [
-		{ tag: { id: 1, name: '#Tiểu thuyết' } },
-		{ tag: { id: 2, name: '#Hạnh phúc' } },
-		{ tag: { id: 3, name: '#Đầu tư' } },
-		{ tag: { id: 4, name: '#Hot Shearch' } },
-		{ tag: { id: 4, name: '#Trending' } },
-		{ tag: { id: 4, name: '#Hot' } },
-		{ tag: { id: 4, name: '#One Piece' } },
-	];
+	// const hashtagList = [
+	// 	{ tag: { id: 1, name: '#Tiểu thuyết' } },
+	// 	{ tag: { id: 2, name: '#Hạnh phúc' } },
+	// 	{ tag: { id: 3, name: '#Đầu tư' } },
+	// 	{ tag: { id: 4, name: '#Hot Shearch' } },
+	// 	{ tag: { id: 4, name: '#Trending' } },
+	// 	{ tag: { id: 4, name: '#Hot' } },
+	// 	{ tag: { id: 4, name: '#One Piece' } },
+	// ];
+
+	const [listHashtag, setListHashtag] = useState([]);
 
 	const { userId } = useParams();
 	const userInfo = useSelector(state => state.auth.userInfo);
+	const dispatch = useDispatch();
 
 	const [foundUser, setFoundUser] = useState(true);
 
@@ -28,6 +34,23 @@ const Quote = () => {
 		}, 22);
 	});
 
+	const getDataHasgTagByUser = async () => {
+		try {
+			const params = {
+				filter: JSON.stringify([{ 'operator': 'eq', 'value': userId, 'property': 'createdBy' }]),
+				sort: JSON.stringify([{ 'direction': 'DESC', 'property': 'createdAt' }]),
+			};
+			const res = await dispatch(getListHasgTagByUser(params)).unwrap();
+			setListHashtag(res.rows);
+		} catch (err) {
+			NotificationError(err);
+		}
+	};
+
+	useEffect(() => {
+		getDataHasgTagByUser();
+	}, [userId]);
+
 	return (
 		<>
 			{foundUser ? (
@@ -35,7 +58,7 @@ const Quote = () => {
 					main={<MainQuote setFoundUser={setFoundUser} />}
 					right={
 						<SidebarQuote
-							listHashtags={hashtagList}
+							listHashtags={listHashtag}
 							inMyQuote={userInfo.id === userId}
 							hasCountQuotes={true}
 						/>

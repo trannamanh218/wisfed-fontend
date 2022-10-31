@@ -10,7 +10,7 @@ import NotFound from 'pages/not-found';
 const BooksAuthor = () => {
 	const { userId } = useParams();
 
-	const { isLoading, shelveGroupName, isMine, allLibrary } = handleShelvesGroup(userId);
+	const { isLoading, shelveGroupName, isMine, allLibrary, renderNotFound } = handleShelvesGroup(userId);
 
 	useEffect(() => {
 		window.scroll(0, 0);
@@ -27,7 +27,7 @@ const BooksAuthor = () => {
 					}
 				/>
 			) : (
-				<NotFound />
+				<>{renderNotFound ? <NotFound /> : <></>}</>
 			)}
 		</>
 	);
