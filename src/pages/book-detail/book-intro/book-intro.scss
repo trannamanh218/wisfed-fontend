@@ -58,9 +58,9 @@
 		margin-bottom: 1rem;
 		font-size: 1rem;
 		font-weight: 400;
-		.verified {
-			cursor: pointer;
+		&__link {
 			&:hover {
+				cursor: pointer;
 				text-decoration: underline;
 			}
 		}

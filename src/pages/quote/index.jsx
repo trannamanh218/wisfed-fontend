@@ -10,16 +10,6 @@ import { NotificationError } from 'helpers/Error';
 import { getListHasgTagByUser } from 'reducers/redux-utils/quote';
 
 const Quote = () => {
-	// const hashtagList = [
-	// 	{ tag: { id: 1, name: '#Tiểu thuyết' } },
-	// 	{ tag: { id: 2, name: '#Hạnh phúc' } },
-	// 	{ tag: { id: 3, name: '#Đầu tư' } },
-	// 	{ tag: { id: 4, name: '#Hot Shearch' } },
-	// 	{ tag: { id: 4, name: '#Trending' } },
-	// 	{ tag: { id: 4, name: '#Hot' } },
-	// 	{ tag: { id: 4, name: '#One Piece' } },
-	// ];
-
 	const [listHashtag, setListHashtag] = useState([]);
 
 	const { userId } = useParams();

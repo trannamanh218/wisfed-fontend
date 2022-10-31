@@ -13,6 +13,7 @@ const QuoteDetail = () => {
 	const [quoteData, setQuoteData] = useState({});
 	const [listHashtags, setListHashtags] = useState([]);
 	const [mentionUsersArr, setMentionUsersArr] = useState([]);
+	const [renderNotFound, setRenderNotFound] = useState(false);
 
 	const isLikeTemp = useRef(false);
 
@@ -35,7 +36,7 @@ const QuoteDetail = () => {
 			setListHashtags(response.tags);
 			isLikeTemp.current = response.isLike;
 		} catch (err) {
-			NotificationError(err);
+			setRenderNotFound(true);
 		}
 	};
 
@@ -92,7 +93,7 @@ const QuoteDetail = () => {
 					right={<SidebarQuote listHashtags={listHashtags} inMyQuote={false} hasCountQuotes={false} />}
 				/>
 			) : (
-				<NotFound />
+				<>{renderNotFound ? <NotFound /> : <></>}</>
 			)}
 		</>
 	);

@@ -92,7 +92,11 @@
 	.filter-pane {
 		margin-top: 40px;
 		border-radius: 16px;
+		background: none;
 		&__heading {
+			background: white;
+			border-top-left-radius: 16px;
+			border-top-right-radius: 16px;
 			padding: 32px 40px 24px;
 			h4 {
 				margin-bottom: 0;
@@ -147,7 +151,15 @@
 	}
 
 	&__posts {
-		padding: 16px 24px;
+		position: relative;
+		&::before {
+			content: '';
+			display: block;
+			width: 100%;
+			height: 20px;
+			background-color: white;
+			position: absolute;
+		}
 	}
 }
 @media only screen and (max-width: 1280px) {
