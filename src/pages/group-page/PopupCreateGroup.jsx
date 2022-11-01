@@ -21,6 +21,7 @@ const PopupCreateGroup = ({ handleClose }) => {
 	const [inputNameGroup, setInputNameGroup] = useState('');
 	const [inputDiscription, setInputDiscription] = useState('');
 	const [inputHashtag, setInputHashtag] = useState('');
+	const [justAddedFirstOneHashTag, setJustAddedFirstOneHashTag] = useState(false);
 	const [listHashtags, setListHashtags] = useState([]);
 	const [image, setImage] = useState(null);
 	const [isShowBtn, setIsShowBtn] = useState(false);
@@ -282,6 +283,12 @@ const PopupCreateGroup = ({ handleClose }) => {
 	}, [inputHashtag]);
 
 	useEffect(() => {
+		if (justAddedFirstOneHashTag) {
+			inputRefHashtag.current.focus();
+		}
+	}, [justAddedFirstOneHashTag]);
+
+	useEffect(() => {
 		const dataCheck = listHashtags.filter(item => dataRef.current === item);
 
 		if (dataRef.current !== '' && dataCheck.length < 1) {
@@ -292,6 +299,7 @@ const PopupCreateGroup = ({ handleClose }) => {
 				.replace(/Đ/g, 'D');
 			const newList = [...listHashtags, check];
 			setListHashtags(newList);
+			setJustAddedFirstOneHashTag(true);
 		}
 	}, [dataRef.current]);
 
@@ -597,19 +605,17 @@ const PopupCreateGroup = ({ handleClose }) => {
 						{listHashtags.length > 0 ? (
 							<div className='input__authors'>
 								{listHashtags.map((item, index) => (
-									<>
-										<span key={index}>
-											{item}
-											<button
-												className='close__author'
-												onClick={() => {
-													handleRemoveTag(item);
-												}}
-											>
-												<CloseIconX />
-											</button>
-										</span>
-									</>
+									<span key={index}>
+										<span>{item}</span>
+										<button
+											className='close__author'
+											onClick={() => {
+												handleRemoveTag(item);
+											}}
+										>
+											<CloseIconX />
+										</button>
+									</span>
 								))}
 								<div ref={hashtagInputWrapper} style={{ width: '8px' }}>
 									<input

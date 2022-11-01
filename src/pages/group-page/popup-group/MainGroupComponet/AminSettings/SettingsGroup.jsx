@@ -30,6 +30,7 @@ function SettingsGroup({ handleChange, data, fetchData }) {
 	const [inputNameGroup, setInputNameGroup] = useState(data.name);
 	const [inputDescription, setInputDescription] = useState(data.description);
 	const [inputHashtag, setInputHashtag] = useState('');
+	const [justAddedFirstOneHashTag, setJustAddedFirstOneHashTag] = useState(false);
 	const [listHashtags, setListHashtags] = useState([]);
 	const [isShowBtn, setIsShowBtn] = useState(false);
 	const [lastTag, setLastTag] = useState('');
@@ -328,6 +329,7 @@ function SettingsGroup({ handleChange, data, fetchData }) {
 				.replace(/Đ/g, 'D');
 			const newList = [...listHashtags, check];
 			setListHashtags(newList);
+			setJustAddedFirstOneHashTag(true);
 		}
 	}, [dataRef.current]);
 
@@ -389,6 +391,12 @@ function SettingsGroup({ handleChange, data, fetchData }) {
 
 		return () => hashtagElement.removeEventListener('keydown', handleHashtag);
 	}, [inputHashtag]);
+
+	useEffect(() => {
+		if (justAddedFirstOneHashTag) {
+			inputRefHashtag.current.focus();
+		}
+	}, [justAddedFirstOneHashTag]);
 
 	useEffect(() => {
 		const authorIdArr = [];
@@ -550,7 +558,7 @@ function SettingsGroup({ handleChange, data, fetchData }) {
 									{listHashtags.map((item, index) => (
 										<>
 											<span key={index}>
-												{item}
+												<span>{item}</span>
 												<button
 													className='close__author'
 													onClick={() => {
