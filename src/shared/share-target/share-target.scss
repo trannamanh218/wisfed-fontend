@@ -23,6 +23,11 @@
 		line-height: 1.5;
 		font-weight: 600;
 		margin-bottom: 8px;
+
+		.share-target__content-user {
+			font-weight: bold;
+			cursor: pointer;
+		}
 	}
 	.bg-share-target-gradient {
 		background-image: linear-gradient(to right, #ffddae, #fb7f04);

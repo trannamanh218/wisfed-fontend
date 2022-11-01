@@ -21,7 +21,7 @@ const Shelf = ({ list, isMyShelve, handleUpdateBookList, handleViewBookDetail })
 		);
 	}
 
-	return <p>Không có dữ liệu</p>;
+	return <p style={{ textAlign: 'center' }}>Không có dữ liệu</p>;
 };
 
 Shelf.defaultProps = {

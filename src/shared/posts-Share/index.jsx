@@ -28,6 +28,7 @@ const PostShare = ({ postData, inCreatePost = false }) => {
 
 	const handleCloseModalOthers = () => setShowModalOthers(false);
 	const handleShowModalOthers = () => setShowModalOthers(true);
+	const [readMore, setReadMore] = useState(false);
 
 	const directUrl = url => {
 		window.open(url);
@@ -235,12 +236,23 @@ const PostShare = ({ postData, inCreatePost = false }) => {
 				</div>
 			</div>
 			{postData.sharePost?.message && (
-				<div
-					className='post__description'
-					dangerouslySetInnerHTML={{
-						__html: generateContent(postData.sharePost.message),
-					}}
-				></div>
+				<>
+					<div
+						className={readMore ? 'post__description--readmore' : 'post__description'}
+						dangerouslySetInnerHTML={{
+							__html: generateContent(postData.sharePost.message),
+						}}
+					></div>
+					{postData?.sharePost?.message?.length > 500 && (
+						<span
+							className='read-more-post'
+							style={{ cursor: 'pointer', display: 'block', marginBottom: '15px' }}
+							onClick={() => setReadMore(!readMore)}
+						>
+							{readMore ? 'Rút gọn' : 'Xem thêm'}
+						</span>
+					)}
+				</>
 			)}
 			{postData.sharePost.mentionsAuthors && !!postData.sharePost?.mentionsAuthors.length && (
 				<ul className='tagged'>

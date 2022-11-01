@@ -1,9 +1,6 @@
 import MainContainer from 'components/layout/main-container';
-import { useState, useEffect } from 'react';
 import MainQuote from './main-quote';
-import SidebarQuote from 'shared/sidebar-quote';
-import { useParams } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import NotFound from 'pages/not-found';
 import { useDispatch } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
 import { getListHasgTagByUser } from 'reducers/redux-utils/quote';
@@ -14,6 +11,8 @@ const Quote = () => {
 	const { userId } = useParams();
 	const userInfo = useSelector(state => state.auth.userInfo);
 	const dispatch = useDispatch();
+
+	const [foundUser, setFoundUser] = useState(true);
 
 	useEffect(() => {
 		window.scrollTo(0, 0);
@@ -37,10 +36,22 @@ const Quote = () => {
 	}, [userId]);
 
 	return (
-		<MainContainer
-			main={<MainQuote />}
-			right={<SidebarQuote listHashtags={listHashtag} inMyQuote={userInfo.id === userId} hasCountQuotes={true} />}
-		/>
+		<>
+			{foundUser ? (
+				<MainContainer
+					main={<MainQuote setFoundUser={setFoundUser} />}
+					right={
+						<SidebarQuote
+							listHashtags={listHashtag}
+							inMyQuote={userInfo.id === userId}
+							hasCountQuotes={true}
+						/>
+					}
+				/>
+			) : (
+				<NotFound />
+			)}
+		</>
 	);
 };
 

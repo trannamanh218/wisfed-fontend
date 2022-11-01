@@ -222,7 +222,9 @@ const PersonalInfo = ({ currentUserInfo, setCurrentTab }) => {
 								}}
 								className='personal-info__item'
 							>
-								<span className='number'>{currentUserInfo.follower}</span>
+								<span className='number'>
+									{currentUserInfo.follower > 0 ? currentUserInfo.follower : 0}
+								</span>
 								<span>Người theo dõi</span>
 							</li>
 
@@ -239,7 +241,9 @@ const PersonalInfo = ({ currentUserInfo, setCurrentTab }) => {
 								}}
 								className='personal-info__item'
 							>
-								<span className='number'>{currentUserInfo.following}</span>
+								<span className='number'>
+									{currentUserInfo.following > 0 ? currentUserInfo.following : 0}
+								</span>
 								<span>Đang theo dõi</span>
 							</li>
 							{modalFollowing && (
@@ -259,7 +263,11 @@ const PersonalInfo = ({ currentUserInfo, setCurrentTab }) => {
 								<span>
 									Bạn bè
 									{currentUserInfo.id !== userInfo.id ? (
-										<span> ({currentUserInfo.mutualFriends} bạn chung)</span>
+										<span>
+											{' '}
+											({currentUserInfo.mutualFriends > 0 ? currentUserInfo.mutualFriends : 0} bạn
+											chung)
+										</span>
 									) : null}
 								</span>
 							</li>

@@ -15,6 +15,7 @@ import _ from 'lodash';
 const MainLayout = ({ listMyGroup, listAdminMyGroup }) => {
 	const [list, setList] = useState([]);
 	const [hasMore, setHasMore] = useState(true);
+	const [loading, setLoading] = useState(false);
 
 	const callApiStart = useRef(9);
 	const callApiPerPage = useRef(9);
@@ -25,6 +26,7 @@ const MainLayout = ({ listMyGroup, listAdminMyGroup }) => {
 	const userInfo = useSelector(state => state.auth.userInfo);
 
 	const getGroupListFirstTime = async () => {
+		setLoading(true);
 		try {
 			const params = {
 				start: 0,
@@ -37,6 +39,8 @@ const MainLayout = ({ listMyGroup, listAdminMyGroup }) => {
 			setList(data);
 		} catch (err) {
 			NotificationError(err);
+		} finally {
+			setLoading(false);
 		}
 	};
 
@@ -63,6 +67,7 @@ const MainLayout = ({ listMyGroup, listAdminMyGroup }) => {
 	};
 
 	const getGroupListFirstTimeNoUserInfo = async () => {
+		setLoading(true);
 		try {
 			const params = {
 				start: 0,
@@ -75,6 +80,8 @@ const MainLayout = ({ listMyGroup, listAdminMyGroup }) => {
 			setList(data.rows);
 		} catch (err) {
 			NotificationError(err);
+		} finally {
+			setLoading(false);
 		}
 	};
 
@@ -114,62 +121,70 @@ const MainLayout = ({ listMyGroup, listAdminMyGroup }) => {
 
 	return (
 		<>
-			{!list.length ? (
-				<div style={{ marginTop: '54px', padding: '24px' }}>
-					<ResultNotFound />
-				</div>
+			{loading ? (
+				<LoadingIndicator />
 			) : (
 				<>
-					<h2 className='main__title'>Gợi ý nhóm</h2>
-					{
-						<InfiniteScroll
-							dataLength={list.length}
-							next={!_.isEmpty(userInfo) ? getGroupListNextTimes : getGroupListNextTimesNoUserInfo}
-							hasMore={hasMore}
-							loader={<LoadingIndicator />}
-						>
-							<div
-								className={
-									listMyGroup.length > 0 || listAdminMyGroup.length > 0
-										? 'list-group-container'
-										: 'list-group-container--none'
-								}
-							>
-								{list.map((item, index) => {
-									return (
-										<Link key={index} to={`/group/${item.id}`}>
-											<div className='item-group'>
-												<img
-													src={item.avatar}
-													onError={e => e.target.setAttribute('src', defaultAvatar)}
-													alt=''
-												/>
-												<div className='item-group__text'>
-													<div className='item-group__name'>
-														<span>{item.name}</span>
+					{!list.length ? (
+						<div style={{ marginTop: '54px', padding: '24px' }}>
+							<ResultNotFound />
+						</div>
+					) : (
+						<>
+							<h2 className='main__title'>Gợi ý nhóm</h2>
+							{
+								<InfiniteScroll
+									dataLength={list.length}
+									next={
+										!_.isEmpty(userInfo) ? getGroupListNextTimes : getGroupListNextTimesNoUserInfo
+									}
+									hasMore={hasMore}
+									loader={<LoadingIndicator />}
+								>
+									<div
+										className={
+											listMyGroup.length > 0 || listAdminMyGroup.length > 0
+												? 'list-group-container'
+												: 'list-group-container--none'
+										}
+									>
+										{list.map((item, index) => {
+											return (
+												<Link key={index} to={`/group/${item.id}`}>
+													<div className='item-group'>
+														<img
+															src={item.avatar}
+															onError={e => e.target.setAttribute('src', defaultAvatar)}
+															alt=''
+														/>
+														<div className='item-group__text'>
+															<div className='item-group__name'>
+																<span>{item.name}</span>
+															</div>
+															<div className='item-group__description'>
+																<span>
+																	{item?.countMember < 10
+																		? `0${item.countMember}`
+																		: item.countMember}{' '}
+																	thành viên
+																</span>
+															</div>
+															<div className='item-group__count-post'>
+																<span>{item.countPost} bài viết/ngày</span>
+															</div>
+															<div className='item-group-btn'>
+																<button>Truy cập vào nhóm </button>
+															</div>
+														</div>
 													</div>
-													<div className='item-group__description'>
-														<span>
-															{item?.countMember < 10
-																? `0${item.countMember}`
-																: item.countMember}{' '}
-															thành viên
-														</span>
-													</div>
-													<div className='item-group__count-post'>
-														<span>{item.countPost} bài viết/ngày</span>
-													</div>
-													<div className='item-group-btn'>
-														<button>Truy cập vào nhóm </button>
-													</div>
-												</div>
-											</div>
-										</Link>
-									);
-								})}
-							</div>
-						</InfiniteScroll>
-					}
+												</Link>
+											);
+										})}
+									</div>
+								</InfiniteScroll>
+							}
+						</>
+					)}
 				</>
 			)}
 		</>
