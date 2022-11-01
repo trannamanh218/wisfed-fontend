@@ -4,11 +4,13 @@ import { memo, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { getlistQuotesLikedById, getQuoteList } from 'reducers/redux-utils/quote';
+import LoadingIndicator from 'shared/loading-indicator';
 import QuoteList from 'shared/quote-list';
 
 const QuoteTab = ({ currentTab, currentUserInfo }) => {
 	const [myQuoteList, setMyQuoteList] = useState([]);
 	const [myFavoriteQuoteList, setMyFavoriteQuoteList] = useState([]);
+	const [loading, setLoading] = useState(false);
 
 	const dispatch = useDispatch();
 	const { userId } = useParams();
@@ -25,6 +27,7 @@ const QuoteTab = ({ currentTab, currentUserInfo }) => {
 	}, [currentTab, userId]);
 
 	const getMyQuoteList = async () => {
+		setLoading(true);
 		try {
 			const params = {
 				start: 0,
@@ -35,10 +38,13 @@ const QuoteTab = ({ currentTab, currentUserInfo }) => {
 			setMyQuoteList(quotesList);
 		} catch (err) {
 			NotificationError(err);
+		} finally {
+			setLoading(false);
 		}
 	};
 
 	const getMyFavoriteQuoteList = async () => {
+		setLoading(true);
 		try {
 			const data = {
 				params: {
@@ -51,6 +57,8 @@ const QuoteTab = ({ currentTab, currentUserInfo }) => {
 			setMyFavoriteQuoteList(res);
 		} catch (err) {
 			NotificationError(err);
+		} finally {
+			setLoading(false);
 		}
 	};
 
@@ -70,11 +78,15 @@ const QuoteTab = ({ currentTab, currentUserInfo }) => {
 							</h4>
 						)}
 
-						<QuoteList list={myQuoteList} userId={userId} type='myQuotes' />
+						{loading ? (
+							<LoadingIndicator />
+						) : (
+							<QuoteList list={myQuoteList} userId={userId} type='myQuotes' />
+						)}
 					</div>
 					<div className='favorite-quotes'>
 						<h4>Quote yêu thích</h4>
-						<QuoteList list={myFavoriteQuoteList} userId={userId} />
+						{loading ? <LoadingIndicator /> : <QuoteList list={myFavoriteQuoteList} userId={userId} />}
 					</div>
 				</>
 			)}

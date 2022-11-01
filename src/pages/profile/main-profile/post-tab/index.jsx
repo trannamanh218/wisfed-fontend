@@ -13,6 +13,8 @@ import { POST_TYPE } from 'constants/index';
 function PostTab({ currentTab }) {
 	const [postList, setPostList] = useState([]);
 	const [hasMore, setHasMore] = useState(true);
+	const [loading, setLoading] = useState(true);
+
 	const { userId } = useParams();
 	const dispatch = useDispatch();
 
@@ -51,24 +53,32 @@ function PostTab({ currentTab }) {
 			}
 		} catch (err) {
 			NotificationError(err);
+		} finally {
+			setLoading(false);
 		}
 	};
 
 	return (
 		<div className='post-tab'>
-			{currentTab === 'post' && !!postList.length ? (
-				<InfiniteScroll
-					dataLength={postList.length}
-					next={getPostListByUser}
-					hasMore={hasMore}
-					loader={<LoadingIndicator />}
-				>
-					{postList.map(item => (
-						<Post key={item.id} postInformations={item} type={POST_TYPE} />
-					))}
-				</InfiniteScroll>
+			{loading ? (
+				<LoadingIndicator />
 			) : (
-				<p className='post-data__blank'>Không có bài viết nào</p>
+				<>
+					{currentTab === 'post' && !!postList.length ? (
+						<InfiniteScroll
+							dataLength={postList.length}
+							next={getPostListByUser}
+							hasMore={hasMore}
+							loader={<LoadingIndicator />}
+						>
+							{postList.map(item => (
+								<Post key={item.id} postInformations={item} type={POST_TYPE} />
+							))}
+						</InfiniteScroll>
+					) : (
+						<p className='post-data__blank'>Không có bài viết nào</p>
+					)}
+				</>
 			)}
 		</div>
 	);

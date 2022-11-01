@@ -69,6 +69,7 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 	const { userInfo } = useSelector(state => state.auth);
 	const [replyingCommentId, setReplyingCommentId] = useState(-1);
 	const [mentionUsersArr, setMentionUsersArr] = useState([]);
+	const [readMore, setReadMore] = useState(false);
 
 	const [mentionCommentId, setMentionCommentId] = useState(null);
 	const [checkIfMentionCmtFromGroup, setCheckIfMentionCmtFromGroup] = useState(null);
@@ -475,12 +476,19 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 				</div>
 			</div>
 			{(postData.message || postData.content) && (
-				<div
-					className='post__description'
-					dangerouslySetInnerHTML={{
-						__html: generateContent(postData.message || postData.content),
-					}}
-				></div>
+				<>
+					<div
+						className={readMore ? 'post__description--readmore' : 'post__description'}
+						dangerouslySetInnerHTML={{
+							__html: generateContent(postData.message || postData.content),
+						}}
+					></div>
+					{(postData?.message?.length > 500 || postData.content?.length > 500) && (
+						<span className='read-more-post' onClick={() => setReadMore(!readMore)}>
+							{readMore ? 'Rút gọn' : 'Xem thêm'}
+						</span>
+					)}
+				</>
 			)}
 			{!!postData?.mentionsAuthors?.length && (
 				<ul className='tagged'>

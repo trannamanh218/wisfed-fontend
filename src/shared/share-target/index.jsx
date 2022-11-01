@@ -3,6 +3,7 @@ import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import LinearProgressBar from 'shared/linear-progress-bar';
 import UserAvatar from 'shared/user-avatar';
 import './share-target.scss';
@@ -23,21 +24,49 @@ function ShareTarget({ postData, inPost = false }) {
 
 	const userInfo = useSelector(state => state.auth.userInfo);
 
+	const navigate = useNavigate();
+
 	const renderName = () => {
 		if (inPost) {
 			if (
 				userInfo.id === postData?.readingGoalBy?.dataValues?.id ||
 				userInfo.id === postData?.metaData?.readingGoalBy?.id
 			) {
-				return 'Bạn';
+				return (
+					<span
+						className='share-target__content-user'
+						onClick={() =>
+							navigate(
+								`/profile/${
+									postData?.readingGoalBy?.dataValues?.id || postData?.metaData?.readingGoalBy?.id
+								}`
+							)
+						}
+					>
+						Bạn
+					</span>
+				);
 			} else {
-				return postData?.readingGoalBy?.dataValues?.fullName || postData?.metaData?.readingGoalBy?.fullName;
+				return (
+					<span
+						className='share-target__content-user'
+						onClick={() =>
+							navigate(
+								`/profile/${
+									postData?.readingGoalBy?.dataValues?.id || postData?.metaData?.readingGoalBy?.id
+								}`
+							)
+						}
+					>
+						{postData?.readingGoalBy?.dataValues?.fullName || postData?.metaData?.readingGoalBy?.fullName}
+					</span>
+				);
 			}
 		} else {
 			if (userInfo.id === postData?.userId) {
-				return 'Bạn';
+				return <span className='share-target__content-user'>Bạn</span>;
 			} else {
-				return postData.fullName;
+				return <span className='share-target__content-user'>{postData.fullName}</span>;
 			}
 		}
 	};

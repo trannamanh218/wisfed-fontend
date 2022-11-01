@@ -16,6 +16,7 @@ import { saveDataShare } from 'reducers/redux-utils/post';
 import { useNavigate } from 'react-router-dom';
 import { TOP_USER_VERB_SHARE } from 'constants/index';
 import ModalSearchCategories from '../modal-search-categories/ModalSearchCategories';
+import LoadingIndicator from 'shared/loading-indicator';
 
 const TopUser = ({ listYear, tabSelected }) => {
 	const kindOfGroupRef = useRef({ value: 'default', name: 'Chủ đề' });
@@ -29,6 +30,8 @@ const TopUser = ({ listYear, tabSelected }) => {
 	const [checkSelectBox, setCheckSelectBox] = useState(false);
 	const [modalShow, setModalShow] = useState(false);
 	const [modalSearchCategoriesShow, setModalSearchCategoriesShow] = useState(false);
+	const [loading, setLoading] = useState(false);
+
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
@@ -40,6 +43,7 @@ const TopUser = ({ listYear, tabSelected }) => {
 	];
 
 	const getTopUserData = async () => {
+		setLoading(true);
 		let params = {};
 		if (valueDataSort === 'topFollow') {
 			params = {
@@ -61,6 +65,8 @@ const TopUser = ({ listYear, tabSelected }) => {
 			setGetListTopBooks(topUser);
 		} catch (err) {
 			NotificationError(err);
+		} finally {
+			setLoading(false);
 		}
 	};
 
@@ -145,21 +151,28 @@ const TopUser = ({ listYear, tabSelected }) => {
 					/>
 				</div>
 			</div>
+
 			{getListTopBooks.length > 2 && <TopRanks getListTopBooks={getListTopBooks} valueDataSort={valueDataSort} />}
-			{getListTopBooks.length > 0 ? (
-				getListTopBooks.map((item, index) => (
-					<div key={item.id} className='topbooks__container__main top__user'>
-						<StarRanking index={index} />
-						<div className='topbooks__container__main__layout'>
-							<AuthorCard size='lg' item={item} setModalShow={setModalShow} />
-						</div>
-						<div onClick={() => handleShare(item, index)} className='author-book__share'>
-							<ShareRanks />
-						</div>
-					</div>
-				))
+			{loading ? (
+				<LoadingIndicator />
 			) : (
-				<div className='topbooks__notthing'>Không có dữ liệu</div>
+				<>
+					{getListTopBooks.length > 0 ? (
+						getListTopBooks.map((item, index) => (
+							<div key={item.id} className='topbooks__container__main top__user'>
+								<StarRanking index={index} />
+								<div className='topbooks__container__main__layout'>
+									<AuthorCard size='lg' item={item} setModalShow={setModalShow} />
+								</div>
+								<div onClick={() => handleShare(item, index)} className='author-book__share'>
+									<ShareRanks />
+								</div>
+							</div>
+						))
+					) : (
+						<div className='topbooks__notthing'>Không có dữ liệu</div>
+					)}
+				</>
 			)}
 		</div>
 	);
