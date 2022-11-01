@@ -283,10 +283,10 @@ const PopupCreateGroup = ({ handleClose }) => {
 	}, [inputHashtag]);
 
 	useEffect(() => {
-		if (justAddedFirstOneHashTag) {
+		if (justAddedFirstOneHashTag && listHashtags.length === 1) {
 			inputRefHashtag.current.focus();
 		}
-	}, [justAddedFirstOneHashTag]);
+	}, [justAddedFirstOneHashTag, listHashtags]);
 
 	useEffect(() => {
 		const dataCheck = listHashtags.filter(item => dataRef.current === item);

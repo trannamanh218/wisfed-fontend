@@ -393,10 +393,10 @@ function SettingsGroup({ handleChange, data, fetchData }) {
 	}, [inputHashtag]);
 
 	useEffect(() => {
-		if (justAddedFirstOneHashTag) {
+		if (justAddedFirstOneHashTag && listHashtags.length === 1) {
 			inputRefHashtag.current.focus();
 		}
-	}, [justAddedFirstOneHashTag]);
+	}, [justAddedFirstOneHashTag, listHashtags]);
 
 	useEffect(() => {
 		const authorIdArr = [];

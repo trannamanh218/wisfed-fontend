@@ -68,10 +68,10 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 	}, [inputHashtag]);
 
 	useEffect(() => {
-		if (justAddedFirstOneHashTag) {
+		if (justAddedFirstOneHashTag && listHashtags.length === 1) {
 			inputRefHashtag.current.focus();
 		}
-	}, [justAddedFirstOneHashTag]);
+	}, [justAddedFirstOneHashTag, listHashtags]);
 
 	const handleChangeHashtag = e => {
 		const value = e.target.value;
