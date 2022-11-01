@@ -25,10 +25,15 @@ const CommentEditor = ({
 	useEffect(() => {
 		if (replyingCommentId === commentLv1Id) {
 			const commentEditField = document.querySelector(`.reply-comment-${commentLv1Id}`);
+
+			let number = 400;
+			if (window.location.pathname.includes('category/detail')) {
+				number = -2460;
+			}
 			if (commentEditField) {
 				setTimeout(() => {
 					window.scroll({
-						top: commentEditField.offsetTop - 400,
+						top: commentEditField.offsetTop - number,
 						behavior: 'smooth',
 					});
 				}, 200);
