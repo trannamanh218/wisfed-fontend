@@ -118,7 +118,9 @@ const UsersSearch = ({ isFetching, value, setIsFetching, searchResultInput, acti
 													className='myfriends__button'
 													onClick={() => navigate(`/profile/${item.id}`)}
 												>
-													<span style={{ fontSize: 'smaller' }}>Xem trang cá nhân</span>
+													<span style={{ fontSize: 'smaller' }}>
+														<p>Xem trang</p>cá nhân<p></p>
+													</span>
 												</Button>
 											</div>
 										)}

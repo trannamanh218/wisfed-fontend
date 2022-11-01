@@ -61,7 +61,7 @@ const BookIntro = ({ bookInfo, listRatingStar }) => {
 
 	const viewAuthorProfile = () => {
 		if (bookInfo.verify) {
-			navigate(`/profile/${bookInfo.author[0].authorId}`);
+			navigate(`/profile/${bookInfo.authors[0].authorId}`);
 		}
 	};
 

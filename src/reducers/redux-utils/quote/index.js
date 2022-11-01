@@ -117,7 +117,7 @@ export const getCountQuotesByCategory = createAsyncThunk(
 	'quote/get count quotes by category',
 	async (data, { rejectWithValue }) => {
 		try {
-			const { userId, params } = data;
+			const { params } = data;
 			const response = await Request.makeGet(countAllQuotesByCategorydAPI, params);
 			return response.data;
 		} catch (err) {

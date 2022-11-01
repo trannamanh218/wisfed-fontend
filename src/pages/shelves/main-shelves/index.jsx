@@ -16,7 +16,7 @@ import { NotificationError } from 'helpers/Error';
 
 const DEFAULT_LIBRARY = { value: 'all', title: 'Tất cả', id: 'all' };
 
-const MainShelves = ({ allLibraryList, shelveGroupName, isMyShelve, handleViewBookDetail }) => {
+const MainShelves = ({ allLibraryList, shelveGroupName, isMyShelve, handleViewBookDetail, setRenderNotFound }) => {
 	const [currentBooks, setCurrentBooks] = useState([]);
 	const [currentLibrary, setCurrentLibrary] = useState(DEFAULT_LIBRARY);
 	const [filter, setFilter] = useState('[]');
@@ -49,6 +49,7 @@ const MainShelves = ({ allLibraryList, shelveGroupName, isMyShelve, handleViewBo
 			setCurrentBooks(data.rows);
 			setTotalPage(Math.ceil(data.count / itemsPerPage));
 		} catch (err) {
+			setRenderNotFound(true);
 			NotificationError(err);
 		} finally {
 			setIsLoading(false);
@@ -154,6 +155,7 @@ MainShelves.defaultProps = {
 	allLibraryList: [],
 	shelveGroupName: '',
 	isMyShelve: true,
+	setRenderNotFound: () => {},
 };
 
 MainShelves.propTypes = {
@@ -161,6 +163,7 @@ MainShelves.propTypes = {
 	shelveGroupName: PropTypes.string,
 	isMyShelve: PropTypes.bool,
 	handleViewBookDetail: PropTypes.func,
+	setRenderNotFound: PropTypes.func,
 };
 
 export default MainShelves;

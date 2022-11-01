@@ -6,7 +6,6 @@ import Circle from 'shared/loading/circle';
 import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import _ from 'lodash';
-import { NotificationError } from 'helpers/Error';
 import { getBookDetail } from 'reducers/redux-utils/book';
 import { useNavigate } from 'react-router-dom';
 import RouteLink from 'helpers/RouteLink';
@@ -16,6 +15,7 @@ import NotFound from 'pages/not-found';
 const BookShelves = () => {
 	const [allLibraryList, setAllLibraryList] = useState([]);
 	const [isViewBookDetailLoading, setIsViewBookDetailLoading] = useState(false);
+	const [renderNotFound, setRenderNotFound] = useState(false);
 
 	const { userId } = useParams();
 	const dispatch = useDispatch();
@@ -33,17 +33,18 @@ const BookShelves = () => {
 		setIsViewBookDetailLoading(true);
 		try {
 			await dispatch(getBookDetail(data.id)).unwrap();
-			setIsViewBookDetailLoading(false);
 			navigate(RouteLink.bookDetail(data.id, data.name));
 		} catch (err) {
-			NotificationError(err);
+			setRenderNotFound(true);
+		} finally {
+			setIsViewBookDetailLoading(false);
 		}
 	}, []);
 
 	return (
 		<>
 			<Circle loading={isLoading || isViewBookDetailLoading} />
-			{shelveGroupName ? (
+			{!renderNotFound ? (
 				<MainContainer
 					main={
 						<MainShelves
@@ -51,6 +52,7 @@ const BookShelves = () => {
 							shelveGroupName={`Tủ sách của ${shelveGroupName}`}
 							isMyShelve={isMine}
 							handleViewBookDetail={handleViewBookDetail}
+							setRenderNotFound={setRenderNotFound}
 						/>
 					}
 					right={

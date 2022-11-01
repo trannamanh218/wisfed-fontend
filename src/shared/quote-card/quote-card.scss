@@ -106,6 +106,8 @@
 	color: $ash-label;
 	letter-spacing: 0.75px;
 	font-weight: 600;
+	text-overflow: ellipsis;
+	overflow: hidden;
 }
 
 .quote-card__author__avatar:hover {

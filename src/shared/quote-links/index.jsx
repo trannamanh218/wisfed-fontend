@@ -8,7 +8,7 @@ import { useState } from 'react';
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 
-const QuotesLinks = ({ title, list, className }) => {
+const QuotesLinks = ({ title, list, className, linkClickSeeAll }) => {
 	const { userId } = useParams();
 	const { userInfo } = useSelector(state => state.auth);
 	const navigate = useNavigate();
@@ -43,7 +43,7 @@ const QuotesLinks = ({ title, list, className }) => {
 							</div>
 						))}
 					</div>
-					<Link className='view-all-link' to={`/quotes/${IdUser}`}>
+					<Link className='view-all-link' to={linkClickSeeAll ? linkClickSeeAll : `/quotes/${IdUser}`}>
 						Xem tất cả
 					</Link>
 				</div>
@@ -56,12 +56,14 @@ QuotesLinks.defaultProps = {
 	title: '',
 	list: [],
 	className: '',
+	linkClickSeeAll: '',
 };
 QuotesLinks.propTypes = {
 	title: PropTypes.string,
 	list: PropTypes.array,
 	className: PropTypes.string,
 	params: PropTypes.string,
+	linkClickSeeAll: PropTypes.string,
 };
 
 export default memo(QuotesLinks);

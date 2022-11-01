@@ -20,6 +20,8 @@ const SidebarCategoryDetail = ({ handleViewCategoryDetail }) => {
 	const [name, setName] = useState();
 	const [authorList, setAuthorList] = useState([]);
 
+	const linkClickSeeAll = `/quotes/category/${categoryInfo.id}`;
+
 	const dispatch = useDispatch();
 
 	useEffect(() => {
@@ -72,7 +74,12 @@ const SidebarCategoryDetail = ({ handleViewCategoryDetail }) => {
 					/>
 					<AuthorSlider title='Tác giả nổi bật' list={authorList} size='lg' />
 					<div className='sidebar-category-detail__quotes'>
-						<QuotesLinks list={quoteData} title='Quotes' className='sidebar-category-detail__quotes' />
+						<QuotesLinks
+							list={quoteData}
+							title='Quotes'
+							className='sidebar-category-detail__quotes'
+							linkClickSeeAll={linkClickSeeAll}
+						/>
 						<GroupLinks list={groupList} title='Group' />
 						{/* <NewsLinks list={quoteList} title='Tin tức liên quan' /> */}
 					</div>

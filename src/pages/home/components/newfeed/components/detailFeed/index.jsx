@@ -12,6 +12,7 @@ import NotFound from 'pages/not-found';
 const DetailFeed = () => {
 	const dispatch = useDispatch();
 	const [detailFeed, setDetailFeed] = useState([]);
+	const [renderNotFound, setRenderNotFound] = useState(false);
 	const { idPost, type } = useParams();
 	const [isLoading, setIsLoading] = useState(true);
 	const reduxMentionCommentId = useSelector(state => state.notificationReducer.mentionCommentId);
@@ -31,7 +32,7 @@ const DetailFeed = () => {
 			}
 			setDetailFeed(res);
 		} catch (err) {
-			return;
+			setRenderNotFound(true);
 		} finally {
 			setIsLoading(false);
 		}
@@ -43,7 +44,9 @@ const DetailFeed = () => {
 
 	return (
 		<>
-			{detailFeed.length > 0 ? (
+			{renderNotFound ? (
+				<NotFound />
+			) : (
 				<NormalContainer>
 					<Circle loading={isLoading} />
 					<div className='detail_feed_container'>
@@ -65,8 +68,6 @@ const DetailFeed = () => {
 						)}
 					</div>
 				</NormalContainer>
-			) : (
-				<NotFound />
 			)}
 		</>
 	);

@@ -23,13 +23,14 @@ const Group = () => {
 	const [listMember, setListMember] = useState([]);
 	const [eventKey, setEventKey] = useState('intro');
 	const [toggleClickSeeMore, setToggleClickSeeMore] = useState(false);
+	const [renderNotFound, setRenderNotFound] = useState(false);
 
 	const fetchData = async () => {
 		try {
 			const res = await dispatch(getGroupDettail(id)).unwrap();
 			setDetailGroup(res);
 		} catch (err) {
-			return;
+			setRenderNotFound(true);
 		}
 	};
 
@@ -93,7 +94,7 @@ const Group = () => {
 					right={<RightSidebarGroup update={toggleUpdate} />}
 				/>
 			) : (
-				<NotFound />
+				<>{renderNotFound ? <NotFound /> : <></>}</>
 			)}
 		</div>
 	);
