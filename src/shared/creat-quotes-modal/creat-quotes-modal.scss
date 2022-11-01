@@ -384,12 +384,24 @@
 	margin-bottom: 10px;
 	margin-top: 10px;
 	gap: 10px;
-	span {
+	max-width: 100%;
+	> span {
 		width: max-content;
 		color: #b38c64;
 		background-color: #f5e7d8;
 		padding: 0.75rem 1.25rem;
 		border-radius: 10px;
 		font-size: 0.75rem;
+		overflow: hidden;
+		display: flex;
+		align-items: center;
+		span {
+			overflow: hidden;
+			text-overflow: ellipsis;
+			max-width: 95%;
+		}
+		button {
+			z-index: 2;
+		}
 	}
 }
