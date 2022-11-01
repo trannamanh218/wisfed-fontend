@@ -287,6 +287,7 @@ function RichTextEditor({
 					keyBindingFn={handleKeyBind}
 					handleKeyCommand={handleKeyPress}
 					decorators={customDecorators}
+					stripPastedStyles={true}
 				/>
 				{hasMentionsUser && (
 					<MentionSuggestions

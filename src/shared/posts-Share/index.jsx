@@ -20,8 +20,6 @@ const urlRegex =
 	/(http(s)?:\/\/)?(www(\.))?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}([-a-zA-Z0-9()@:%_\+.~#?&//=]*)([^"<\s]+)(?![^<>]*>|[^"]*?<\/a)/g;
 const hashtagRegex =
 	/#(?![0-9_]+\b)[0-9a-z_ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễếệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ]+/gi;
-const regexContainVietnamese =
-	/[ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễếệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ]/;
 
 const PostShare = ({ postData, inCreatePost = false }) => {
 	const [videoId, setVideoId] = useState('');
@@ -169,6 +167,8 @@ const PostShare = ({ postData, inCreatePost = false }) => {
 		}
 	};
 
+	console.log(postData.verb);
+
 	return (
 		<div className='post__container'>
 			<div className='post__user-status'>
@@ -202,9 +202,10 @@ const PostShare = ({ postData, inCreatePost = false }) => {
 								{inCreatePost ? (
 									<span>{postData?.group?.name || postData?.sharePost?.groupInfo.name || ''}</span>
 								) : (
-									<Link to={`/group/${postData?.group?.id || postData?.sharePost?.groupInfo.id}`}>
-										{postData?.group?.name || postData?.sharePost?.groupInfo.name || ''}
-									</Link>
+									// <Link to={`/group/${postData?.group?.id || postData?.sharePost?.groupInfo.id}`}>
+									// 	{postData?.group?.name || postData?.sharePost?.groupInfo.name || ''}
+									// </Link>
+									<></>
 								)}
 							</>
 						)}
