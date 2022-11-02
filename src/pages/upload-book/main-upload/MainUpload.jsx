@@ -216,7 +216,7 @@ export default function MainUpload() {
 	const uploadImageFile = async acceptedFiles => {
 		try {
 			const imageUploadedData = await dispatch(uploadImage(acceptedFiles)).unwrap();
-			return imageUploadedData?.streamPath.medium;
+			return imageUploadedData?.streamPath.small;
 		} catch (err) {
 			NotificationError(err);
 		}
