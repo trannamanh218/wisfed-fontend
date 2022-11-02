@@ -1,5 +1,5 @@
 .bookSearch__container {
-	padding: 17px;
+	padding: 32px 28px;
 	.bookSearch__title {
 		font-weight: 500;
 		font-size: 15px;
@@ -8,7 +8,7 @@
 		padding-left: 4px;
 	}
 	.bookSearch__main {
-		margin-top: 35px;
+		margin-top: 36px;
 		.author-book {
 			.book-thumbnail {
 				height: 208px;
@@ -47,5 +47,17 @@
 		margin-bottom: 1.75rem;
 		padding: 1.125rem 1.75rem;
 		border-radius: 16px;
+	}
+}
+
+@media only screen and (max-width: 820px) {
+	.bookSearch__container {
+		padding: 28px 24px;
+	}
+}
+
+@media only screen and (max-width: 768px) {
+	.bookSearch__container {
+		padding: 24px 20px;
 	}
 }

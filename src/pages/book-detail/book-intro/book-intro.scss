@@ -27,12 +27,15 @@
 			flex-grow: 1;
 			display: flex;
 			flex-direction: column;
-			justify-content: space-between;
+			justify-content: flex-end;
 			h1 {
 				&:hover {
 					cursor: pointer;
 				}
 			}
+		}
+		.book-intro__description {
+			min-height: 50%;
 		}
 	}
 

@@ -38,11 +38,7 @@ class Request {
 				},
 			],
 			validateStatus: status => {
-				if (status === 403) {
-					window.location = `${window.location.origin}/#/403`;
-				} else {
-					return status >= 200 && status < 300; // default
-				}
+				return status >= 200 && status < 300; // default
 			},
 		});
 

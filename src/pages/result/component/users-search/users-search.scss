@@ -1,5 +1,5 @@
 .user__search__container {
-	padding: 20px;
+	padding: 32px 28px;
 	.myfriends {
 		&__button {
 			width: 100% !important;
@@ -12,7 +12,7 @@
 			.myfriends__layout {
 				width: 100%;
 				img {
-					height: 187px;
+					height: 183px;
 				}
 			}
 		}
@@ -21,10 +21,11 @@
 
 @media only screen and (max-width: 820px) {
 	.user__search__container {
+		padding: 28px 24px;
 		.myfriends__layout__container {
 			.myfriends__layout {
 				img {
-					height: 167px;
+					height: 164px;
 				}
 			}
 		}
@@ -33,10 +34,11 @@
 
 @media only screen and (max-width: 768px) {
 	.user__search__container {
+		padding: 24px 20px;
 		.myfriends__layout__container {
 			.myfriends__layout {
 				img {
-					height: 152px;
+					height: 156px;
 				}
 			}
 		}

@@ -105,6 +105,7 @@ export default function MainUpload() {
 		try {
 			// Tạo sách mới
 			const res = await dispatch(createBook(params)).unwrap();
+
 			// Nếu sách có trường series thì cập nhật series đó
 			if (!_.isEmpty(series)) {
 				// Lấy id của sách vừa được tạo
@@ -215,7 +216,7 @@ export default function MainUpload() {
 	const uploadImageFile = async acceptedFiles => {
 		try {
 			const imageUploadedData = await dispatch(uploadImage(acceptedFiles)).unwrap();
-			return imageUploadedData?.streamPath;
+			return imageUploadedData?.streamPath.medium;
 		} catch (err) {
 			NotificationError(err);
 		}

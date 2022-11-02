@@ -50,6 +50,10 @@ const errVN = {
 		vi: 'Otp hết hạn hoặc không đúng',
 		en: 'Otp expired or incorrect',
 	},
+	403: {
+		vi: 'Bạn không có quyền cho hành động này',
+		en: 'Not have permission for this action',
+	},
 	404: {
 		vi: 'Không tìm thấy dữ liệu',
 		en: 'No data found',

@@ -28,9 +28,13 @@
 			color: $ash;
 		}
 		p {
+			line-height: 22px;
 			&:last-of-type {
 				color: $ash;
 			}
+		}
+		span {
+			line-height: 22px;
 		}
 	}
 }

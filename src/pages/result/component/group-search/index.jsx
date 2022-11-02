@@ -116,15 +116,11 @@ const GroupSearch = ({ value, setIsFetching, searchResultInput, activeKeyDefault
 							</div>
 							{item.isJoined ? (
 								<Link to={`/group/${item.id}`}>
-									<Button>
-										<span className='group__search__button'>
-											<div>Truy cập đến nhóm</div>
-										</span>
-									</Button>
+									<Button className='group__search__button'>Truy cập nhóm</Button>
 								</Link>
 							) : (
-								<Button onClick={() => enjoyGroup(item.id)}>
-									<span className='group__search__button'>Tham gia nhóm</span>
+								<Button onClick={() => enjoyGroup(item.id)} className='group__search__button'>
+									Tham gia
 								</Button>
 							)}
 						</div>
