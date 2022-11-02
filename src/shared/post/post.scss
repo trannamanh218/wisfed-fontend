@@ -168,12 +168,15 @@
 	}
 }
 
-.post__description {
+.post__description,
+.post__description--readmore {
 	font-size: 0.94rem;
 	line-height: 1.5rem;
 	color: #4e4b66;
 	margin-bottom: 20px;
 	word-break: break-word;
+	max-height: 195px;
+	overflow: hidden;
 	a {
 		width: fit-content;
 		overflow: hidden;
@@ -183,6 +186,20 @@
 			color: $blue;
 		}
 	}
+}
+.read-more-post {
+	cursor: pointer;
+	display: block;
+	margin-bottom: 15px;
+	font-weight: 600;
+}
+
+.read-more-post:hover {
+	text-decoration: underline;
+}
+
+.post__description--readmore {
+	max-height: fit-content;
 }
 
 .post__options {

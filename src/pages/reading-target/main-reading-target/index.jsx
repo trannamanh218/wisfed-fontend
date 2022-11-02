@@ -138,6 +138,8 @@ const MainReadingTarget = ({ setErrorLoadPage }) => {
 				booksReadCount: booksReadYear[0].booksReadCount,
 				percent: percentTemp > 100 ? 100 : percentTemp,
 				verb: READ_TARGET_VERB_SHARE,
+				userId: userId,
+				avatarImage: userInfo.avatarImage,
 			};
 			dispatch(saveDataShare(target));
 			navigate('/');

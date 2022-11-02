@@ -1,5 +1,5 @@
 import { CloseIconX, CloseX } from 'components/svg';
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import SearchField from 'shared/search-field';
 import PropTypes from 'prop-types';
 import './style.scss';
@@ -16,9 +16,12 @@ const PopupInviteFriend = ({ handleClose, showRef, groupMembers }) => {
 	const [listFriendsNotInGroup, setListFriendsNotInGroup] = useState([]);
 	const [listFriendSelect, setListFriendSelect] = useState([]);
 	const dispatch = useDispatch();
-	const { id = '' } = useParams();
+	const { id } = useParams();
 	const { userInfo } = useSelector(state => state.auth);
 	const [inputSearch, setInputSearch] = useState('');
+
+	// const callApiStart = useRef(0);
+	// const callApiPerPage = useRef(10);
 
 	const getListFriend = async inputSearchValue => {
 		const params = {
@@ -97,7 +100,6 @@ const PopupInviteFriend = ({ handleClose, showRef, groupMembers }) => {
 			<div style={{ padding: '0 24px' }}>
 				<div className='search-friend'>
 					<SearchField value={inputSearch} handleChange={handleSearch} />
-					<button onClick={() => inViteFriend()}>Gửi</button>
 				</div>
 
 				<div className='main-action'>
@@ -150,6 +152,9 @@ const PopupInviteFriend = ({ handleClose, showRef, groupMembers }) => {
 						})}
 					</div>
 				</div>
+			</div>
+			<div className='invite-sumit'>
+				<button onClick={() => inViteFriend()}>Gửi</button>
 			</div>
 		</div>
 	);

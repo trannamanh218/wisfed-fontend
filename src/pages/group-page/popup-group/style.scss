@@ -1,3 +1,5 @@
+@import 'src/scss/abstracts/_global.scss';
+
 .popup-invite-friend-container {
 	width: 700px;
 	background-color: #fcfcfc;
@@ -7,6 +9,23 @@
 		margin-top: 24px;
 	}
 	border-radius: 24px;
+
+	.invite-sumit {
+		margin-top: 10px;
+		padding: 0px 24px;
+		display: flex;
+		justify-content: center;
+		width: 100%;
+		button {
+			align-items: center;
+			background-color: $primary;
+			border-radius: 12px;
+			cursor: pointer;
+			padding: 16px;
+			width: 100%;
+			color: #fff;
+		}
+	}
 }
 
 .title-popup {
@@ -68,7 +87,6 @@
 			background: rgba(#606060, 0.2);
 		}
 	}
-
 	.list-friend {
 		width: 40%;
 		&.select {

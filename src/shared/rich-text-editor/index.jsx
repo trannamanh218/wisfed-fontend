@@ -15,14 +15,14 @@ import { getFriendList } from 'reducers/redux-utils/user';
 import { useDispatch, useSelector } from 'react-redux';
 import defaultAvatar from 'assets/icons/defaultLogoAvatar.svg';
 import { NotificationError } from 'helpers/Error';
-import createHashtagPlugin from '@draft-js-plugins/hashtag';
-import '@draft-js-plugins/hashtag/lib/plugin.css';
+
+const hashtagRegex =
+	/#(?![0-9_]+\b)[0-9a-z_ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễếệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ]+/gi;
 
 const generatePlugins = () => {
 	const linkifyPlugin = createLinkifyPlugin({ target: '_blank' });
 	const mentionPlugin = createMentionPlugin();
-	const hashtagPlugin = createHashtagPlugin();
-	const plugins = [linkifyPlugin, mentionPlugin, hashtagPlugin];
+	const plugins = [linkifyPlugin, mentionPlugin];
 	const MentionSuggestions = mentionPlugin.MentionSuggestions;
 	return {
 		plugins,
@@ -106,6 +106,39 @@ function RichTextEditor({
 		const newArr = Object.keys(entytiMap).map(key => entytiMap[key].data.mention);
 		setMentionUsersArr(newArr);
 	}, [editorState]);
+
+	const hashtagStrategy = (contentBlock, callback) => {
+		findWithRegex(hashtagRegex, contentBlock, callback);
+	};
+
+	const findWithRegex = (regex, contentBlock, callback) => {
+		const text = contentBlock.getText();
+		let matchArr, start;
+		while ((matchArr = regex.exec(text)) !== null) {
+			start = matchArr.index;
+			callback(start, start + matchArr[0].length);
+		}
+	};
+
+	const HashtagSpan = ({ offsetKey, children }) => {
+		return (
+			<span
+				style={{
+					color: '#5e93c5',
+				}}
+				data-offset-key={offsetKey}
+			>
+				{children}
+			</span>
+		);
+	};
+
+	const customDecorators = [
+		{
+			strategy: hashtagStrategy,
+			component: HashtagSpan,
+		},
+	];
 
 	const convertContentToHTML = () => {
 		const contentState = editorState.getCurrentContent();
@@ -253,6 +286,8 @@ function RichTextEditor({
 					placeholder={placeholder}
 					keyBindingFn={handleKeyBind}
 					handleKeyCommand={handleKeyPress}
+					decorators={customDecorators}
+					stripPastedStyles={true}
 				/>
 				{hasMentionsUser && (
 					<MentionSuggestions

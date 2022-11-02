@@ -3,8 +3,9 @@ import { shareTargetReadingAPI } from 'constants/apiURL';
 import Request from 'helpers/Request';
 
 export const shareTargetReadings = createAsyncThunk('target/shareTarget', async (params, { rejectWithValue }) => {
+	const { userId, data } = params;
 	try {
-		const res = await Request.makePost(shareTargetReadingAPI, params);
+		const res = await Request.makePost(shareTargetReadingAPI(userId), data);
 		return res.data;
 	} catch (err) {
 		const error = JSON.parse(err.response);

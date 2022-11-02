@@ -48,9 +48,7 @@ function PostBook({ data, inCreatePost, bookProgress }) {
 						<ReactRating initialRating={data.avgRating?.toFixed(1)} readonly={true} fractions={2} />
 						<div className='post-book__rating__number'>
 							{data.avgRating !== 0 ? (
-								<div style={{ textAlign: 'center' }}>
-									( {data.avgRating?.toFixed(1) || 0} sao ) ( {data.countRating} đánh giá )
-								</div>
+								<div style={{ textAlign: 'center' }}>( {data.countRating} đánh giá )</div>
 							) : (
 								<div>(Chưa có đánh giá)</div>
 							)}

@@ -8,12 +8,14 @@ import { NotificationError } from 'helpers/Error';
 import PropTypes from 'prop-types';
 import ModalSearchCategories from '../modal-search-categories/ModalSearchCategories';
 import dropdownIcon from 'assets/images/dropdown.png';
+import LoadingIndicator from 'shared/loading-indicator';
 
 const TopQuotes = ({ listYear, tabSelected }) => {
 	const [topQuotesId, setTopQuotesId] = useState(null);
 	const [valueDate, setValueData] = useState('week');
 	const [getListTopQuotes, setGetListTopQuotes] = useState([]);
 	const [modalSearchCategoriesShow, setModalSearchCategoriesShow] = useState(false);
+	const [loading, setLoading] = useState(false);
 
 	const kindOfGroupRef = useRef({ value: 'default', title: 'Chủ đề' });
 	const listYearRef = useRef({ value: 'default', title: 'Tuần' });
@@ -21,6 +23,7 @@ const TopQuotes = ({ listYear, tabSelected }) => {
 	const dispatch = useDispatch();
 
 	const getTopQuotesData = async () => {
+		setLoading(true);
 		const params = {
 			categoryId: topQuotesId,
 			by: valueDate,
@@ -30,6 +33,8 @@ const TopQuotes = ({ listYear, tabSelected }) => {
 			setGetListTopQuotes(topQuotes.rows);
 		} catch (err) {
 			NotificationError(err);
+		} finally {
+			setLoading(false);
 		}
 	};
 
@@ -56,6 +61,8 @@ const TopQuotes = ({ listYear, tabSelected }) => {
 					setModalSearchCategoriesShow={setModalSearchCategoriesShow}
 					modalSearchCategoriesShow={modalSearchCategoriesShow}
 					onSelectCategory={onchangeKindOfGroup}
+					setTopQuotesId={setTopQuotesId}
+					tabSelected={tabSelected}
 				/>
 			)}
 			<div className='topbooks__container__title'>TOP 100 Quotes được like nhiều nhất</div>
@@ -79,22 +86,28 @@ const TopQuotes = ({ listYear, tabSelected }) => {
 					/>
 				</div>
 			</div>
-			{getListTopQuotes.length > 0 ? (
-				getListTopQuotes.map((item, index) => (
-					<div key={item.id} className='topbooks__container__main'>
-						<StarRanking index={index} />
-						<div className='topbooks__container__main__layout'>
-							<TopQuotesComponent
-								item={item}
-								valueDate={valueDate}
-								categoryItem={kindOfGroupRef.current}
-								trueRank={index + 1}
-							/>
-						</div>
-					</div>
-				))
+			{loading ? (
+				<LoadingIndicator />
 			) : (
-				<div className='topbooks__notthing'>Không có dữ liệu</div>
+				<>
+					{getListTopQuotes.length > 0 ? (
+						getListTopQuotes.map((item, index) => (
+							<div key={item.id} className='topbooks__container__main'>
+								<StarRanking index={index} />
+								<div className='topbooks__container__main__layout'>
+									<TopQuotesComponent
+										item={item}
+										valueDate={valueDate}
+										categoryItem={kindOfGroupRef.current}
+										trueRank={index + 1}
+									/>
+								</div>
+							</div>
+						))
+					) : (
+						<div className='topbooks__notthing'>Không có dữ liệu</div>
+					)}
+				</>
 			)}
 		</div>
 	);

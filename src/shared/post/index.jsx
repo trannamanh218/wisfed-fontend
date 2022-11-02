@@ -51,7 +51,8 @@ import SeeMoreComments from 'shared/see-more-comments/SeeMoreComments';
 
 const urlRegex =
 	/(http(s)?:\/\/)?(www(\.))?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}([-a-zA-Z0-9()@:%_\+.~#?&//=]*)([^"<\s]+)(?![^<>]*>|[^"]*?<\/a)/g;
-const hashtagRegex = /#(?![0-9_]+\b)[0-9a-zàáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđ_]+/gi;
+const hashtagRegex =
+	/#(?![0-9_]+\b)[0-9a-z_ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễếệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ]+/gi;
 
 const verbShareArray = [
 	POST_VERB_SHARE,
@@ -69,6 +70,7 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 	const { userInfo } = useSelector(state => state.auth);
 	const [replyingCommentId, setReplyingCommentId] = useState(-1);
 	const [mentionUsersArr, setMentionUsersArr] = useState([]);
+	const [readMore, setReadMore] = useState(false);
 
 	const [mentionCommentId, setMentionCommentId] = useState(null);
 	const [checkIfMentionCmtFromGroup, setCheckIfMentionCmtFromGroup] = useState(null);
@@ -331,12 +333,17 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 						} target="_blank">${data.length <= 50 ? data : data.slice(0, 50) + '...'}</a>`
 				)
 				.replace(hashtagRegex, data => {
+					const newData = data
+						.normalize('NFD')
+						.replace(/[\u0300-\u036f]/g, '')
+						.replace(/đ/g, 'd')
+						.replace(/Đ/g, 'D');
 					if (postInformations.groupId) {
-						return `<a class="hashtag-class" href="/hashtag-group/${postInformations.groupId}/${data.slice(
-							1
-						)}">${data}</a>`;
+						return `<a class="hashtag-class" href="/hashtag-group/${
+							postInformations.groupId
+						}/${newData.slice(1)}">${newData}</a>`;
 					} else {
-						return `<a class="hashtag-class" href="/hashtag/${data.slice(1)}">${data}</a>`;
+						return `<a class="hashtag-class" href="/hashtag/${newData.slice(1)}">${newData}</a>`;
 					}
 				});
 			return newContent;
@@ -475,12 +482,19 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 				</div>
 			</div>
 			{(postData.message || postData.content) && (
-				<div
-					className='post__description'
-					dangerouslySetInnerHTML={{
-						__html: generateContent(postData.message || postData.content),
-					}}
-				></div>
+				<>
+					<div
+						className={readMore ? 'post__description--readmore' : 'post__description'}
+						dangerouslySetInnerHTML={{
+							__html: generateContent(postData.message || postData.content),
+						}}
+					></div>
+					{(postData?.message?.length > 500 || postData.content?.length > 500) && (
+						<span className='read-more-post' onClick={() => setReadMore(!readMore)}>
+							{readMore ? 'Rút gọn' : 'Xem thêm'}
+						</span>
+					)}
+				</>
 			)}
 			{!!postData?.mentionsAuthors?.length && (
 				<ul className='tagged'>

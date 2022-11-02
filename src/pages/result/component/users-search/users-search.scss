@@ -5,16 +5,15 @@
 			width: 100% !important;
 		}
 
-		&__layout {
-			width: 172px;
-			&__img {
-				cursor: pointer;
-				height: 172px;
-			}
-			&__container {
-				display: grid;
-				grid-template-columns: 1fr 1fr 1fr 1fr;
-				justify-items: center;
+		&__layout__container {
+			display: grid;
+			grid-template-columns: 1fr 1fr 1fr 1fr;
+			gap: 20px;
+			.myfriends__layout {
+				width: 100%;
+				img {
+					height: 187px;
+				}
 			}
 		}
 	}
@@ -22,11 +21,22 @@
 
 @media only screen and (max-width: 820px) {
 	.user__search__container {
-		.myfriends {
-			&__layout {
-				width: 150px;
-				&__img {
-					height: 150px;
+		.myfriends__layout__container {
+			.myfriends__layout {
+				img {
+					height: 167px;
+				}
+			}
+		}
+	}
+}
+
+@media only screen and (max-width: 768px) {
+	.user__search__container {
+		.myfriends__layout__container {
+			.myfriends__layout {
+				img {
+					height: 152px;
 				}
 			}
 		}

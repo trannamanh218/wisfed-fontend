@@ -2,6 +2,8 @@ import { IconRanks } from 'components/svg';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import LinearProgressBar from 'shared/linear-progress-bar';
 import UserAvatar from 'shared/user-avatar';
 import './share-target.scss';
@@ -20,11 +22,60 @@ function ShareTarget({ postData, inPost = false }) {
 		}
 	}, []);
 
+	const userInfo = useSelector(state => state.auth.userInfo);
+
+	const navigate = useNavigate();
+
+	const renderName = () => {
+		if (inPost) {
+			if (
+				userInfo.id === postData?.readingGoalBy?.dataValues?.id ||
+				userInfo.id === postData?.metaData?.readingGoalBy?.id
+			) {
+				return (
+					<span
+						className='share-target__content-user'
+						onClick={() =>
+							navigate(
+								`/profile/${
+									postData?.readingGoalBy?.dataValues?.id || postData?.metaData?.readingGoalBy?.id
+								}`
+							)
+						}
+					>
+						Bạn
+					</span>
+				);
+			} else {
+				return (
+					<span
+						className='share-target__content-user'
+						onClick={() =>
+							navigate(
+								`/profile/${
+									postData?.readingGoalBy?.dataValues?.id || postData?.metaData?.readingGoalBy?.id
+								}`
+							)
+						}
+					>
+						{postData?.readingGoalBy?.dataValues?.fullName || postData?.metaData?.readingGoalBy?.fullName}
+					</span>
+				);
+			}
+		} else {
+			if (userInfo.id === postData?.userId) {
+				return <span className='share-target__content-user'>Bạn</span>;
+			} else {
+				return <span className='share-target__content-user'>{postData.fullName}</span>;
+			}
+		}
+	};
+
 	const renderContentTop = () => {
 		return (
 			<div className='share-target__content__top'>
 				<p>
-					Bạn đã đọc được{' '}
+					{renderName()} đã đọc được{' '}
 					{inPost ? postData.currentRead || postData?.sharePost.current : postData?.booksReadCount} trên{' '}
 					{inPost ? postData.totalTarget || postData?.sharePost.target : postData?.numberBook} cuốn
 				</p>
@@ -36,7 +87,12 @@ function ShareTarget({ postData, inPost = false }) {
 		<div className='share-target'>
 			<UserAvatar
 				className='share-target__user'
-				source={postData?.createdBy?.avatarImage || postData?.user?.avatarImage}
+				source={
+					inPost
+						? postData?.readingGoalBy?.dataValues?.avatarImage ||
+						  postData?.metaData?.readingGoalBy?.avatarImage
+						: postData.avatarImage
+				}
 				size='lg'
 			/>
 			<div className='share-target__progress'>

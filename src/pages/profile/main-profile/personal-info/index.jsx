@@ -265,7 +265,11 @@ const PersonalInfo = ({ currentUserInfo, setCurrentTab }) => {
 								<span>
 									Bạn bè
 									{currentUserInfo.id !== userInfo.id ? (
-										<span> ({currentUserInfo.mutualFriends} bạn chung)</span>
+										<span>
+											{' '}
+											({currentUserInfo.mutualFriends > 0 ? currentUserInfo.mutualFriends : 0} bạn
+											chung)
+										</span>
 									) : null}
 								</span>
 							</li>

@@ -11,6 +11,8 @@ import {
 	countAllQuotesByCategorydAPI,
 	getQuoteCommentsAPI,
 	listQuotesLikedByIdAPI,
+	listHasgTagByUserAPI,
+	listQuotesByTagAPI,
 } from 'constants/apiURL';
 import Request from 'helpers/Request';
 
@@ -115,15 +117,8 @@ export const getCountQuotesByCategory = createAsyncThunk(
 	'quote/get count quotes by category',
 	async (data, { rejectWithValue }) => {
 		try {
-			const { userId, params } = data;
-			let response;
-			// Theo yêu cầu của Linh chị thì không lấy theo userId nữa vì có ít, thay vào đó lấy tất cả
-
-			// if (userId) {
-			// 	response = await Request.makeGet(countQuotesByCategoryWithUserIdAPI(userId), params);
-			// } else {
-			response = await Request.makeGet(countAllQuotesByCategorydAPI, params);
-			// }
+			const { params } = data;
+			const response = await Request.makeGet(countAllQuotesByCategorydAPI, params);
 			return response.data;
 		} catch (err) {
 			const error = JSON.parse(err.response);
@@ -142,6 +137,29 @@ export const getQuoteComments = createAsyncThunk('quote/getQuoteComments', async
 		return rejectWithValue(error);
 	}
 });
+
+export const getlistQuotesByTag = createAsyncThunk('quotes/listQuotesByTag', async (params, { rejectWithValue }) => {
+	try {
+		const response = await Request.makeGet(listQuotesByTagAPI, params);
+		return response.data;
+	} catch (err) {
+		const error = JSON.parse(err.response);
+		return rejectWithValue(error);
+	}
+});
+
+export const getListHasgTagByUser = createAsyncThunk(
+	'quote/getListHasgTagByUserAPI',
+	async (params, { rejectWithValue }) => {
+		try {
+			const response = await Request.makeGet(listHasgTagByUserAPI, params);
+			return response.data;
+		} catch (err) {
+			const error = JSON.parse(err.response);
+			return rejectWithValue(error);
+		}
+	}
+);
 
 const quoteSlice = createSlice({
 	name: 'quoteSlice',
