@@ -21,7 +21,7 @@ const BookInfo = ({ bookInfo }) => {
 
 	useEffect(() => {
 		fetchData();
-	}, []);
+	}, [bookInfo]);
 
 	return (
 		<>

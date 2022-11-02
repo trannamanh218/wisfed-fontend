@@ -93,6 +93,7 @@ const PostEditBook = ({ data, handleAddToPost, handleChangeStar, valueStar }) =>
 									value={data.progress || ''}
 									name='progress'
 									type='number'
+									min='0'
 									onWheel={e => e.target.blur()}
 								/>
 							)}

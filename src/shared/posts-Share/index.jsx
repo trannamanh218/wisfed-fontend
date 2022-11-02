@@ -201,7 +201,7 @@ const PostShare = ({ postData, inCreatePost = false }) => {
 							<>
 								<img className='post__user-icon' src={Play} alt='arrow' />
 								{inCreatePost ? (
-									<span>{postData?.group?.name || postData?.sharePost?.groupInfo.name || ''}</span>
+									<span>{postData?.group?.name || postData?.sharePost?.groupInfo?.name || ''}</span>
 								) : (
 									<Link to={`/group/${postData?.group?.id || postData?.sharePost?.groupInfo.id}`}>
 										{postData?.group?.name || postData?.sharePost?.groupInfo.name || ''}
