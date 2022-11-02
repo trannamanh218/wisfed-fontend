@@ -68,6 +68,7 @@ const GoalsNotSetYet = ({ userInfo }) => {
 						<input
 							data-testid='read-challenge__input'
 							type='number'
+							min='0'
 							value={inputValue}
 							className='read-challenge__input__input-element'
 							onChange={e => setInputValue(e.target.value)}

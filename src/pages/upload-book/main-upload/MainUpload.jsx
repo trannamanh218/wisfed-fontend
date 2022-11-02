@@ -353,6 +353,7 @@ export default function MainUpload() {
 								<input
 									className='input input--non-border'
 									type='number'
+									min='0'
 									onWheel={e => e.target.blur()}
 									onKeyDown={blockInvalidChar}
 									placeholder='ISBN'
@@ -391,6 +392,7 @@ export default function MainUpload() {
 								</label>
 								<input
 									type='number'
+									min='0'
 									onWheel={e => e.target.blur()}
 									onKeyDown={blockInvalidChar}
 									className='input input--non-border'
