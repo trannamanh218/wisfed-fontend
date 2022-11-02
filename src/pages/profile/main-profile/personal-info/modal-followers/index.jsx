@@ -89,8 +89,9 @@ const ModalFollowers = ({ modalFollower, setModalFollower, userInfoDetail }) => 
 										</h5>
 										{!_.isEmpty(item?.dataCounting) && (
 											<p className='author-card__subtitle'>
-												{item?.dataCounting?.follower} người theo dõi,{' '}
-												{item?.dataCounting?.friend} bạn bè
+												{item?.dataCounting?.follower > 0 ? item?.dataCounting?.follower : 0}{' '}
+												người theo dõi,{' '}
+												{item?.dataCounting?.friend > 0 ? item?.dataCounting?.friend : 0} bạn bè
 											</p>
 										)}
 									</div>
