@@ -17,7 +17,7 @@ import { Modal } from 'react-bootstrap';
 import defaultAvatar from 'assets/icons/defaultLogoAvatar.svg';
 
 const urlRegex =
-	/(http(s)?:\/\/)?(www(\.))?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}([-a-zA-Z0-9()@:%_\+.~#?&//=]*)([^"<\s]+)(?![^<>]*>|[^"]*?<\/a)/g;
+	/(http(s)?:\/\/)?(www(\.))[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}([-a-zA-Z0-9()@:%_\+.~#?&//=]*)([^"<\s]+)(?![^<>]*>|[^"]*?<\/a)/g;
 const hashtagRegex =
 	/#(?![0-9_]+\b)[0-9a-z_ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễếệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ]+/gi;
 
@@ -233,23 +233,19 @@ const PostShare = ({ postData, inCreatePost = false }) => {
 				</div>
 			</div>
 			{postData.sharePost?.message && (
-				<>
+				<div className='post__content-wrapper'>
 					<div
-						className={readMore ? 'post__description--readmore' : 'post__description'}
+						className={readMore ? 'post__content--readmore' : 'post__content'}
 						dangerouslySetInnerHTML={{
 							__html: generateContent(postData.sharePost.message),
 						}}
 					></div>
 					{postData?.sharePost?.message?.length > 500 && (
-						<span
-							className='read-more-post'
-							style={{ cursor: 'pointer', display: 'block', marginBottom: '15px' }}
-							onClick={() => setReadMore(!readMore)}
-						>
+						<div className='read-more-post' onClick={() => setReadMore(!readMore)}>
 							{readMore ? 'Rút gọn' : 'Xem thêm'}
-						</span>
+						</div>
 					)}
-				</>
+				</div>
 			)}
 			{postData.sharePost.mentionsAuthors && !!postData.sharePost?.mentionsAuthors.length && (
 				<ul className='tagged'>

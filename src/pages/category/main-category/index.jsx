@@ -71,12 +71,10 @@ const MainCategory = ({ isFetching, handleViewBookDetail, handleViewCategoryDeta
 	};
 
 	const updateFilter = value => {
-		if (value) {
-			const filterValue = [{ 'operator': 'search', 'value': value.trim(), 'property': 'name' }];
-			setFilter(filterValue);
-		} else {
-			setFilter([{ 'operator': 'ne', 'value': 0, 'property': 'numberBooks' }]);
-		}
+		setFilter([
+			{ 'operator': 'ne', 'value': 0, 'property': 'numberBooks' },
+			{ 'operator': 'search', 'value': value.trim(), 'property': 'name' },
+		]);
 	};
 
 	const updateInputSearch = event => {
