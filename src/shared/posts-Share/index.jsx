@@ -195,8 +195,8 @@ const PostShare = ({ postData, inCreatePost = false }) => {
 								{inCreatePost ? (
 									<span>{postData?.group?.name || postData?.sharePost?.groupInfo.name || ''}</span>
 								) : (
-									<Link to={`/group/${postData?.group?.id || postData?.sharePost?.groupInfo.id}`}>
-										{postData?.group?.name || postData?.sharePost?.groupInfo.name || ''}
+									<Link to={`/group/${postData?.group?.id || postData?.sharePost?.groupInfo?.id}`}>
+										{postData?.group?.name || postData?.sharePost?.groupInfo?.name || ''}
 									</Link>
 								)}
 							</>
