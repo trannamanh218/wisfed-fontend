@@ -6,10 +6,10 @@ import { useDispatch } from 'react-redux';
 import { getChartsByid } from 'reducers/redux-utils/chart';
 import { useParams } from 'react-router-dom';
 
-const ChartsReading = () => {
+const ChartsReading = ({ setShowChartReading }) => {
 	const [chartsData, setChartsData] = useState({ month: '', year: '' });
 	const [pagesMonth, setPagesMonth] = useState([]);
-	const [BooksMonth, setBooksMonth] = useState([]);
+	const [booksMonth, setBooksMonth] = useState([]);
 	const dispatch = useDispatch();
 	const { userId } = useParams();
 
@@ -34,6 +34,9 @@ const ChartsReading = () => {
 			};
 			const newData = await dispatch(getChartsByid(paramsPage)).unwrap();
 			const pageMonth = newData.filter(item => item.month === month);
+			if (pageMonth.length === 0) {
+				setShowChartReading(false);
+			}
 			setPagesMonth(pageMonth);
 		} catch (err) {
 			NotificationError(err);
@@ -43,7 +46,7 @@ const ChartsReading = () => {
 	useEffect(() => {
 		fetchDataPage();
 	}, []);
-
+	console.log(chartsData, pagesMonth, booksMonth);
 	return (
 		<div className='charts__reading__container'>
 			<div className='charts__reading__container__title'>Biểu đồ đọc sách</div>
@@ -51,7 +54,7 @@ const ChartsReading = () => {
 				<div className='charts__reading__container__main__month'>
 					Tháng {`${chartsData.month}/${chartsData.year}`}{' '}
 				</div>
-				{BooksMonth.map((item, index) => (
+				{booksMonth.map((item, index) => (
 					// <div key={item.id} className='charts__reading__container__main__read'>
 					<div key={index} className='charts__reading__container__main__read'>
 						<div className='book__read__title'>Số sách đã đọc</div>
