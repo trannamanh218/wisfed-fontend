@@ -51,6 +51,7 @@ const CategorySearch = ({ value, isFetching, setIsFetching, searchResultInput, a
 				type: activeKeyDefault,
 				start: callApiStartCategory.current,
 				limit: callApiPerPage.current,
+				must_not: { 'numberBook': '0' },
 			};
 			const result = await dispatch(getFilterSearch(params)).unwrap();
 			if (result.rows.length > 0) {

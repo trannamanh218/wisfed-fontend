@@ -20,8 +20,12 @@ function CreatePost({ onChangeNewPost }) {
 	const creatPostModalContainer = useRef(null);
 	const scrollBlocked = useRef(false);
 	const location = useLocation();
+
 	const { postDataShare } = useSelector(state => state.post);
 	const { updateImgPost } = useSelector(state => state.chart);
+	const isWarning = useSelector(state => state.post.isWarning);
+
+	const message = 'Bạn đang có bài viết chưa hoàn thành.Bạn có chắc muốn rời khỏi khi chưa đăng không?';
 
 	const {
 		auth: { userInfo },
@@ -90,18 +94,31 @@ function CreatePost({ onChangeNewPost }) {
 		}
 	}, [bookForCreatePost, postDataShare, updateImgPost]);
 
-	useEffect(() => {
-		if (showModalCreatPost) {
-			creatPostModalContainer.current.addEventListener('mousedown', e => {
-				if (e.target === creatPostModalContainer.current) {
+	const handleHideCreatePost = e => {
+		if (e.target === creatPostModalContainer.current) {
+			if (isWarning) {
+				if (confirm(message) === true) {
 					hideCreatePostModal();
 				}
-			});
+			} else {
+				hideCreatePostModal();
+			}
+		}
+	};
+
+	useEffect(() => {
+		if (showModalCreatPost) {
+			creatPostModalContainer.current.addEventListener('mousedown', handleHideCreatePost);
 			blockScroll();
 		} else {
 			allowScroll();
 		}
-	}, [showModalCreatPost]);
+		return () => {
+			if (creatPostModalContainer.current) {
+				creatPostModalContainer.current.removeEventListener('mousedown', handleHideCreatePost);
+			}
+		};
+	}, [showModalCreatPost, isWarning]);
 
 	const blockScroll = () => {
 		if (!body || !body.style || scrollBlocked.current) return;
@@ -198,6 +215,7 @@ function CreatePost({ onChangeNewPost }) {
 						setShowModalCreatPost={setShowModalCreatPost}
 						showSubModal={showSubModal}
 						bookForCreatePost={bookForCreatePost}
+						message={message}
 					/>
 				</div>
 			)}
