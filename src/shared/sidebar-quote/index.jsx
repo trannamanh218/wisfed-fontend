@@ -10,7 +10,7 @@ import { useState, useEffect } from 'react';
 import DualColumn from 'shared/dual-column';
 import { getCountQuotesByCategory } from 'reducers/redux-utils/quote';
 import { useDispatch } from 'react-redux';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { NotificationError } from 'helpers/Error';
 import { handleCategoryByQuotesName } from 'reducers/redux-utils/quote';
 
@@ -18,8 +18,6 @@ const SidebarQuote = ({ listHashtags, inMyQuote, hasCountQuotes }) => {
 	const [inputSearch, setInputSearch] = useState('');
 	const [categoryList, setCategoryList] = useState([]);
 	const [categorySearchedList, setCategorySearchedList] = useState([]);
-
-	const { userId } = useParams();
 
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
@@ -35,7 +33,7 @@ const SidebarQuote = ({ listHashtags, inMyQuote, hasCountQuotes }) => {
 	const getCountQuotesByCategoryData = async () => {
 		try {
 			const params = { limit: 15, sort: JSON.stringify([{ property: 'countQuote', direction: 'DESC' }]) };
-			const res = await dispatch(getCountQuotesByCategory({ userId: userId || '', params: params })).unwrap();
+			const res = await dispatch(getCountQuotesByCategory({ params: params })).unwrap();
 			setCategoryList(res);
 		} catch (err) {
 			NotificationError(err);

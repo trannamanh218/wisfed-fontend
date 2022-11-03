@@ -78,35 +78,40 @@ const BookIntro = ({ bookInfo, listRatingStar }) => {
 			</div>
 			<div className='book-intro__content'>
 				<div className='book-intro__content__infomations'>
-					<h1
-						className={classNames('book-intro__name', {
-							'not-verify': !bookInfo.verify,
-						})}
-						onClick={handleConfirmMyBook}
-						title={bookInfo.name}
-					>
-						{bookInfo.name}
-					</h1>
-					<div className='book-intro__author'>
-						{_.isEmpty(bookInfo.authors) ? (
-							<span>Chưa cập nhật tác giả</span>
-						) : (
-							<span>
-								Bởi{' '}
-								<span
-									onClick={viewAuthorProfile}
-									className={`book-intro__author${bookInfo.verify && '__link'}`}
-								>
-									{bookInfo.authors[0].authorName}
-								</span>
+					<div className='book-intro__content__infomations__block-up'>
+						<h1
+							className={classNames('book-intro__name', {
+								'not-verify': !bookInfo.verify,
+							})}
+							onClick={handleConfirmMyBook}
+							title={bookInfo.name}
+						>
+							{bookInfo.name}
+						</h1>
+						<div className='book-intro__author'>
+							<span onClick={viewAuthorProfile}>
+								{!_.isEmpty(bookInfo.authors) ? (
+									<span>
+										Bời{' '}
+										<span
+											className={classNames({
+												'verified': bookInfo.verify,
+											})}
+										>
+											{bookInfo.authors[0].authorName}
+										</span>
+									</span>
+								) : (
+									'Chưa cập nhật tác giả'
+								)}
 							</span>
-						)}
-						{bookInfo.verify && <CircleCheckIcon className='book-intro__check' />}
-					</div>
-					<div className='book-intro__stars'>
-						<ReactRating readonly={true} initialRating={listRatingStar?.avg} />
-						{listRatingStar?.count > 0 && <span>({listRatingStar.count})</span>}
-						<span>({reviewsNumber} reviews)</span>
+							{bookInfo.verify && <CircleCheckIcon className='book-intro__check' />}
+						</div>
+						<div className='book-intro__stars'>
+							<ReactRating readonly={true} initialRating={listRatingStar?.avg} />
+							{listRatingStar?.count > 0 && <span>({listRatingStar.count})</span>}
+							<span>({reviewsNumber} reviews)</span>
+						</div>
 					</div>
 
 					<div className='book-intro__description'>

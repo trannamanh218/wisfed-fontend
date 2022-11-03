@@ -18,6 +18,8 @@ import Input from 'shared/input';
 function CreatQuotesModal({ hideCreatQuotesModal }) {
 	const dataRef = useRef('');
 	const [inputHashtag, setInputHashtag] = useState('');
+	const [justAddedFirstOneHashTag, setJustAddedFirstOneHashTag] = useState(false);
+	const hashtagInputWrapper = useRef(null);
 	const inputRefHashtag = useRef('');
 	const [showTextFieldEditPlaceholder, setShowTextFieldEditPlaceholder] = useState(true);
 	const [showTextFieldBackgroundSelect, setShowTextFieldBackgroundSelect] = useState(false);
@@ -39,7 +41,8 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 	const [show, setShow] = useState(false);
 	const [hasMoreEllipsis, setHasMoreEllipsis] = useState(false);
 
-	const hastagRegex = /(^|\B)#(?![0-9_]+\b)([a-zA-Z0-9_!^[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]*$]*)(\b|\r)/g;
+	const hashtagRegex =
+		/#(?![0-9_]+\b)[0-9a-z_ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễếệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ]+/gi;
 
 	const dispatch = useDispatch();
 	const colorData = [
@@ -55,7 +58,7 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 	useEffect(() => {
 		const hastagElement = document.getElementById('hashtag');
 		const handleHashtag = e => {
-			if (e.keyCode === 32 && hastagRegex.test(inputHashtag)) {
+			if (e.keyCode === 32 && hashtagRegex.test(inputHashtag)) {
 				dataRef.current = inputHashtag.trim();
 				inputRefHashtag.current.value = '';
 			}
@@ -65,13 +68,22 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 		return () => hastagElement.removeEventListener('keydown', handleHashtag);
 	}, [inputHashtag]);
 
+	useEffect(() => {
+		if (justAddedFirstOneHashTag && listHashtags.length === 1) {
+			inputRefHashtag.current.focus();
+		}
+	}, [justAddedFirstOneHashTag, listHashtags]);
+
 	const handleChangeHashtag = e => {
 		const value = e.target.value;
 		setInputHashtag(value);
-		if (!hastagRegex.test(value) && value.trim()) {
+		if (!hashtagRegex.test(value) && value.trim()) {
 			setShow(true);
 		} else {
 			setShow(false);
+		}
+		if (hashtagInputWrapper.current) {
+			hashtagInputWrapper.current.style.width = inputRefHashtag.current.value.length + 0.5 + 'ch';
 		}
 	};
 
@@ -86,6 +98,7 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 			const newList = [...listHashtags, check];
 			setShow(false);
 			setListHashtags(newList);
+			setJustAddedFirstOneHashTag(true);
 		}
 	}, [dataRef.current]);
 
@@ -405,40 +418,46 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 
 					<div className='creat-quotes-modal__body__option-item'>
 						<div className='creat-quotes-modal__body__option-item__title'>Từ khóa</div>
-						<div className='creat-quotes-modal__body__option-item__search-container list__tags'>
-							{listHashtags.length > 0 && (
+						<div
+							className='creat-quotes-modal__body__option-item__search-container list__tags'
+							onClick={() => inputRefHashtag.current.focus()}
+						>
+							{listHashtags.length > 0 ? (
 								<div className='input__tag'>
 									{listHashtags.map(item => (
-										<>
-											<span key={item}>
-												{item}
-												<button
-													className='close__author'
-													onClick={() => {
-														handleRemoveTag(item);
-													}}
-												>
-													<CloseIconX />
-												</button>
-											</span>
-										</>
+										<span key={item}>
+											<span>{item}</span>
+											<button
+												className='close__author'
+												onClick={() => {
+													handleRemoveTag(item);
+												}}
+											>
+												<CloseIconX />
+											</button>
+										</span>
 									))}
+									<div ref={hashtagInputWrapper} style={{ width: '80px' }}>
+										<input
+											id='hashtag'
+											className='add-and-search-categories__input'
+											onChange={handleChangeHashtag}
+											ref={inputRefHashtag}
+										/>
+									</div>
 								</div>
+							) : (
+								<Input
+									className='input-keyword'
+									id='hashtag'
+									isBorder={false}
+									placeholder='Nhập hashtag'
+									handleChange={handleChangeHashtag}
+									inputRef={inputRefHashtag}
+								/>
 							)}
-							<Input
-								className='input-keyword'
-								id='hashtag'
-								isBorder={false}
-								placeholder='Nhập hashtag'
-								handleChange={handleChangeHashtag}
-								inputRef={inputRefHashtag}
-							/>
 						</div>
-						{show && !!inputHashtag ? (
-							<span style={{ color: '#e61b00' }}>Vui lòng nhập đúng định dạng</span>
-						) : (
-							''
-						)}
+						{show && inputHashtag && <span style={{ color: '#e61b00' }}>Vui lòng nhập đúng định dạng</span>}
 					</div>
 				</div>
 			</div>

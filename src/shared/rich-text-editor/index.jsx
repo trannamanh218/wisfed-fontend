@@ -16,7 +16,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import defaultAvatar from 'assets/icons/defaultLogoAvatar.svg';
 import { NotificationError } from 'helpers/Error';
 
-const hashtagRegex = /#(?![0-9_]+\b)[0-9a-z_]+/gi;
+const hashtagRegex =
+	/#(?![0-9_]+\b)[0-9a-z_ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễếệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ]+/gi;
 
 const generatePlugins = () => {
 	const linkifyPlugin = createLinkifyPlugin({ target: '_blank' });
@@ -286,6 +287,7 @@ function RichTextEditor({
 					keyBindingFn={handleKeyBind}
 					handleKeyCommand={handleKeyPress}
 					decorators={customDecorators}
+					stripPastedStyles={true}
 				/>
 				{hasMentionsUser && (
 					<MentionSuggestions

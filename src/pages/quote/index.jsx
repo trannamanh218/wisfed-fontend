@@ -1,13 +1,12 @@
 import MainContainer from 'components/layout/main-container';
-import { useEffect, useState } from 'react';
 import MainQuote from './main-quote';
-import SidebarQuote from 'shared/sidebar-quote';
-import { useParams } from 'react-router-dom';
-import { useSelector } from 'react-redux';
 import NotFound from 'pages/not-found';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
 import { getListHasgTagByUser } from 'reducers/redux-utils/quote';
+import { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import SidebarQuote from 'shared/sidebar-quote';
 
 const Quote = () => {
 	const [listHashtag, setListHashtag] = useState([]);
@@ -19,10 +18,8 @@ const Quote = () => {
 	const [foundUser, setFoundUser] = useState(true);
 
 	useEffect(() => {
-		setTimeout(function () {
-			window.scrollTo(0, 0);
-		}, 22);
-	});
+		window.scrollTo(0, 0);
+	}, []);
 
 	const getDataHasgTagByUser = async () => {
 		try {

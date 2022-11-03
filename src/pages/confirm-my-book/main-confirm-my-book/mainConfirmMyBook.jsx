@@ -95,13 +95,13 @@ function MainConfirmMyBook({ setErrorLoadPage }) {
 			}
 			const imagesUploadedData = await dispatch(uploadMultiFile(data)).unwrap();
 			const imagesUploaded = [];
-			imagesUploadedData.forEach(item => imagesUploaded.push(item.streamPath));
+			imagesUploadedData.forEach(item => imagesUploaded.push(item.streamPath.default));
 			const dataCopyrights = {
 				'bookId': Number(bookId),
-				'content': 'string',
+				'content': '',
 				'documents': imagesUploaded,
-				'phone': '0142154152',
-				'address': 'dsafsfsaff',
+				'phone': '',
+				'address': userInfo.address,
 				'status': 'pending',
 			};
 			const creatBookCopyrightsResponse = await dispatch(creatBookCopyrights(dataCopyrights)).unwrap();

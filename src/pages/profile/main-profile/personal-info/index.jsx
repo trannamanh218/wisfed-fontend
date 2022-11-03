@@ -57,9 +57,9 @@ const PersonalInfo = ({ currentUserInfo, setCurrentTab }) => {
 				const imageUploadedData = await dispatch(uploadImage(acceptedFile)).unwrap();
 				let params;
 				if (option === 'change-bgImage') {
-					params = { backgroundImage: imageUploadedData.streamPath };
+					params = { backgroundImage: imageUploadedData.streamPath?.default };
 				} else {
-					params = { avatarImage: imageUploadedData.streamPath };
+					params = { avatarImage: imageUploadedData.streamPath?.small };
 				}
 				const changeUserImage = await dispatch(editUserInfo(params)).unwrap();
 				dispatch(updateUserInfo(changeUserImage));
@@ -213,7 +213,7 @@ const PersonalInfo = ({ currentUserInfo, setCurrentTab }) => {
 								}}
 								className='personal-info__item'
 							>
-								<span className='number'>{currentUserInfo.posts}</span>
+								<span className='number'>{currentUserInfo.posts > 0 ? currentUserInfo.posts : 0}</span>
 								<span>Bài viết</span>
 							</li>
 							<li
@@ -259,7 +259,9 @@ const PersonalInfo = ({ currentUserInfo, setCurrentTab }) => {
 								}}
 								className='personal-info__item'
 							>
-								<span className='number'>{currentUserInfo.friends}</span>
+								<span className='number'>
+									{currentUserInfo.friends > 0 ? currentUserInfo.friends : 0}
+								</span>
 								<span>
 									Bạn bè
 									{currentUserInfo.id !== userInfo.id ? (

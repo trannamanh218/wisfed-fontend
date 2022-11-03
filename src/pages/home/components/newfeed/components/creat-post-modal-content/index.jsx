@@ -60,7 +60,8 @@ const verbShareArray = [
 	REVIEW_VERB_SHARE,
 ];
 
-const hashtagRegex = /#(?![0-9_]+\b)[0-9a-z_]+/gi;
+const hashtagRegex =
+	/#(?![0-9_]+\b)[0-9a-z_ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễếệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ]+/gi;
 
 function CreatePostModalContent({
 	hideCreatePostModal,
@@ -161,7 +162,14 @@ function CreatePostModalContent({
 	useEffect(() => {
 		const hashtagsTemp = content.match(hashtagRegex);
 		if (hashtagsTemp) {
-			setHashtagsAdded(hashtagsTemp);
+			const hashtagsFormated = hashtagsTemp.map(item =>
+				item
+					.normalize('NFD')
+					.replace(/[\u0300-\u036f]/g, '')
+					.replace(/đ/g, 'd')
+					.replace(/Đ/g, 'D')
+			);
+			setHashtagsAdded(hashtagsFormated);
 		} else {
 			setHashtagsAdded([]);
 		}
@@ -293,7 +301,7 @@ function CreatePostModalContent({
 				const imagesUploaded = await dispatch(uploadMultiFile(imagesUpload)).unwrap();
 				const imagesArray = [];
 				imagesUploaded.forEach(item => {
-					imagesArray.push(item.streamPath);
+					imagesArray.push(item.streamPath.medium);
 				});
 				params.image = imagesArray;
 			} catch {
@@ -479,8 +487,13 @@ function CreatePostModalContent({
 			toast.success('Tạo bài viết thành công!', { toastId: customId });
 			onChangeNewPost();
 		} catch (err) {
-			const customId = 'custom-id-CreatePostModalContent-onCreatePost-error';
-			toast.error('Tạo bài viết thất bại!', { toastId: customId });
+			if (err.errorCode === 321) {
+				const customIdNotInGroup = 'custom-id-CreatePostModalContent-onCreatePost-not-in-group';
+				toast.error('Bạn chưa tham gia nhóm', { toastId: customIdNotInGroup });
+			} else {
+				const customIdCreatePostFail = 'custom-id-CreatePostModalContent-onCreatePost-error';
+				toast.error('Tạo bài viết thất bại!', { toastId: customIdCreatePostFail });
+			}
 		} finally {
 			dispatch(updateCurrentBook({}));
 			dispatch(saveDataShare({}));

@@ -45,6 +45,7 @@ const PostActionBar = ({ postData, handleLikeAction }) => {
 					TOP_BOOK_VERB_SHARE,
 					TOP_QUOTE_VERB_SHARE,
 					MY_BOOK_VERB_SHARE,
+					REVIEW_VERB_SHARE,
 				].includes(postData.verb)
 			) {
 				if (postData.verb === POST_VERB) {
@@ -140,6 +141,23 @@ const PostActionBar = ({ postData, handleLikeAction }) => {
 						verb: MY_BOOK_VERB_SHARE,
 						type: postData.originId.type,
 						...postData.info,
+					};
+				} else if (postData.verb === REVIEW_VERB_SHARE) {
+					const newDataShare = {
+						book: {
+							...postData.sharePost.book,
+							actorRating: { star: postData.sharePost.rate },
+							progress: postData.sharePost.curProgress,
+						},
+						createdBy: { ...postData.sharePost.createdBy },
+						message: postData.sharePost.content,
+						time: postData.sharePost.createdAt,
+					};
+
+					dataToShare = {
+						reviewId: postData.sharePost.id,
+						verb: REVIEW_VERB_SHARE,
+						sharePost: { ...newDataShare },
 					};
 				} else {
 					dataToShare = {
