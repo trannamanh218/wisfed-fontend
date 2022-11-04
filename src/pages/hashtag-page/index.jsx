@@ -24,6 +24,7 @@ export default function HashtagPage() {
 	const callApiPerPage = useRef(10);
 
 	const getPostsByHashtagFromGroup = async () => {
+		setIsFetching(true);
 		const data = {
 			groupId: groupId,
 			params: {
@@ -46,6 +47,7 @@ export default function HashtagPage() {
 	};
 
 	const getPostsByHashtag = async () => {
+		setIsFetching(true);
 		const params = {
 			q: hashtag,
 			start: callApiStart.current,
@@ -53,6 +55,7 @@ export default function HashtagPage() {
 		};
 		try {
 			const res = await dispatch(getListPostByHashtag(params)).unwrap();
+			console.log(res);
 			setPostList(postList.concat(res));
 			if (res.length === 0 || res.length < callApiPerPage.current) {
 				setHasMore(false);
@@ -69,6 +72,7 @@ export default function HashtagPage() {
 	useEffect(() => {
 		callApiStart.current = 0;
 		setIsFetching(true);
+		setHasMore(true);
 		setPostList([]);
 	}, [hashtag, groupId]);
 
@@ -80,7 +84,7 @@ export default function HashtagPage() {
 				getPostsByHashtag();
 			}
 		}
-	}, [postList.length]);
+	}, [postList]);
 
 	return (
 		<NormalContainer>
@@ -90,7 +94,7 @@ export default function HashtagPage() {
 				{postList.length > 0 ? (
 					<InfiniteScroll
 						dataLength={postList.length}
-						next={getListPostByHashtag}
+						next={groupId ? getPostsByHashtagFromGroup : getPostsByHashtag}
 						hasMore={hasMore}
 						loader={<LoadingIndicator />}
 					>

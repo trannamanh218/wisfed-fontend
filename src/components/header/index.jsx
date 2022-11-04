@@ -26,7 +26,6 @@ import { useVisible } from 'shared/hooks';
 import SearchAllModal from 'shared/search-all';
 import Storage from 'helpers/Storage';
 import { handleResetValue } from 'reducers/redux-utils/search';
-import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { updateTargetReading } from 'reducers/redux-utils/chart';
 import defaultAvatar from 'assets/icons/defaultLogoAvatar.svg';

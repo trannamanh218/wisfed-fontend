@@ -24,6 +24,8 @@ function PostTab({ currentTab }) {
 	useEffect(() => {
 		if (currentTab === 'post') {
 			callApiStart.current = 0;
+			setLoading(true);
+			setHasMore(true);
 			setPostList([]);
 		}
 	}, [userId]);
