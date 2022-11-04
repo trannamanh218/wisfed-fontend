@@ -8,7 +8,7 @@ import { NotificationError } from 'helpers/Error';
 import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
-const ReadBookTab = () => {
+const ReadBookTab = ({ setShowReadBookTab }) => {
 	const [booksRead, setBooksRead] = useState([]);
 	const { userId } = useParams();
 	const dispatch = useDispatch();
@@ -20,24 +20,28 @@ const ReadBookTab = () => {
 		};
 		try {
 			const data = await dispatch(getListBooksReadYear(params)).unwrap();
-			let n = 0;
-			const dob = new Date();
-			const year = dob.getFullYear();
-			const newData = data.rows.map(item => {
-				const dob = new Date(item.updatedAt);
+			if (data.rows.length > 0) {
+				let n = 0;
+				const dob = new Date();
 				const year = dob.getFullYear();
-				return { ...item, year };
-			});
-			const yearMin = newData.reduce(function (accumulator, element) {
-				return accumulator < element ? accumulator : element;
-			});
-			const newYearData = newData.filter(item => item.year === yearMin.year);
-			setBooksRead([{ year: yearMin.year, data: newYearData }]);
-			while (yearMin.year + n !== year) {
-				n = n + 1;
-				const newYearData = newData.filter(item => item.year === yearMin.year + n);
-				const data = { data: newYearData, year: yearMin.year + n };
-				setBooksRead(prev => [...prev, data]);
+				const newData = data.rows.map(item => {
+					const dob = new Date(item.updatedAt);
+					const year = dob.getFullYear();
+					return { ...item, year };
+				});
+				const yearMin = newData.reduce(function (accumulator, element) {
+					return accumulator < element ? accumulator : element;
+				});
+				const newYearData = newData.filter(item => item.year === yearMin.year);
+				setBooksRead([{ year: yearMin.year, data: newYearData }]);
+				while (yearMin.year + n !== year) {
+					n = n + 1;
+					const newYearData = newData.filter(item => item.year === yearMin.year + n);
+					const data = { data: newYearData, year: yearMin.year + n };
+					setBooksRead(prev => [...prev, data]);
+				}
+			} else {
+				setShowReadBookTab(false);
 			}
 		} catch (err) {
 			NotificationError(err);
