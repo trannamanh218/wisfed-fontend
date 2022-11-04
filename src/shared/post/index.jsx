@@ -422,7 +422,7 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 					data-testid='post__user-avatar'
 					className='post__user-status__avatar'
 					source={postData?.createdBy?.avatarImage || postData.user?.avatarImage}
-					handleClick={() => navigate(`/profile/${postData.createdBy.id}`)}
+					handleClick={() => navigate(`/profile/${postData.createdBy?.id || postData.user?.id}`)}
 				/>
 				<div className='post__user-status__name-and-post-time-status'>
 					<div data-testid='post__user-name' className='post__user-status__name'>
@@ -482,19 +482,19 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 				</div>
 			</div>
 			{(postData.message || postData.content) && (
-				<>
+				<div className='post__content-wrapper'>
 					<div
-						className={readMore ? 'post__description--readmore' : 'post__description'}
+						className={readMore ? 'post__content--readmore' : 'post__content'}
 						dangerouslySetInnerHTML={{
 							__html: generateContent(postData.message || postData.content),
 						}}
 					></div>
 					{(postData?.message?.length > 500 || postData.content?.length > 500) && (
-						<span className='read-more-post' onClick={() => setReadMore(!readMore)}>
+						<div className='read-more-post' onClick={() => setReadMore(!readMore)}>
 							{readMore ? 'Rút gọn' : 'Xem thêm'}
-						</span>
+						</div>
 					)}
-				</>
+				</div>
 			)}
 			{!!postData?.mentionsAuthors?.length && (
 				<ul className='tagged'>

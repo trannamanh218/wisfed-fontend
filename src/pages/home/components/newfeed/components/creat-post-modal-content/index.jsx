@@ -333,37 +333,28 @@ function CreatePostModalContent({
 	};
 
 	const handleUpdateProgress = async () => {
-		const { status, progress, id, page } = taggedData.addBook;
+		const { progress, id, page } = taggedData.addBook;
 		const convertProgress = parseInt(progress) || 0;
 		const progressParams = { id: id, progress: convertProgress };
 		dispatch(updateProgressReadingBook(progressParams)).unwrap();
 		try {
-			if (status) {
-				if (convertProgress === page) {
-					const addBookParams = { bookId: id, type: STATUS_BOOK.read };
-					dispatch(addBookToDefaultLibrary(addBookParams)).unwrap();
-				}
-			} else {
-				// Check cuốn sách hiện tại đang ở trong thư viện nào của ng dùng hay k
-				let libraryContainCurrentBook = null;
-				if (myAllLibraryReduxDefault.length) {
-					const found = myAllLibraryReduxDefault.find(item1 =>
-						item1.books.find(item2 => item2.bookId === id)
-					);
-					libraryContainCurrentBook = found?.defaultType;
-				}
+			// Check cuốn sách hiện tại đang ở trong thư viện nào của ng dùng hay k
+			let libraryContainCurrentBook = null;
+			if (myAllLibraryReduxDefault.length) {
+				const found = myAllLibraryReduxDefault.find(item1 => item1.books.find(item2 => item2.bookId === id));
+				libraryContainCurrentBook = found?.defaultType;
+			}
 
-				let type = STATUS_BOOK.wantToRead;
-				if (convertProgress > 0 && convertProgress < page) {
-					type = STATUS_BOOK.reading;
-				} else if (convertProgress === page) {
-					type = STATUS_BOOK.read;
-				}
+			let type = STATUS_BOOK.wantToRead;
+			if (convertProgress > 0 && convertProgress < page) {
+				type = STATUS_BOOK.reading;
+			} else if (convertProgress === page) {
+				type = STATUS_BOOK.read;
+			}
 
-				if (type !== libraryContainCurrentBook) {
-					const addBookParams = { bookId: id, type };
-					dispatch(addBookToDefaultLibrary(addBookParams)).unwrap();
-				}
+			if (type !== libraryContainCurrentBook) {
+				const addBookParams = { bookId: id, type };
+				dispatch(addBookToDefaultLibrary(addBookParams)).unwrap();
 			}
 			setTimeout(() => {
 				dispatch(updateMyAllLibraryRedux());
@@ -410,6 +401,7 @@ function CreatePostModalContent({
 						msg: content,
 						current: postDataShare.booksReadCount,
 						mentionsUser: params.mentionsUser,
+						tags: params.tags,
 					};
 					await dispatch(
 						shareTargetReadings({
@@ -426,6 +418,7 @@ function CreatePostModalContent({
 						userType: postDataShare.userType,
 						id: postDataShare.id,
 						mentionsUser: params.mentionsUser,
+						tags: params.tags,
 					};
 					await dispatch(getSharePostRanks(query)).unwrap();
 				} else if (postDataShare.verb === TOP_BOOK_VERB_SHARE) {
@@ -436,6 +429,7 @@ function CreatePostModalContent({
 						categoryId: postDataShare.categoryId || null,
 						id: postDataShare.id,
 						mentionsUser: params.mentionsUser,
+						tags: params.tags,
 					};
 					await dispatch(getSharePostRanks(query)).unwrap();
 				} else if (postDataShare.verb === MY_BOOK_VERB_SHARE) {
@@ -444,6 +438,7 @@ function CreatePostModalContent({
 						msg: content,
 						type: postDataShare.type,
 						mentionsUser: params.mentionsUser,
+						tags: params.tags,
 					};
 					await dispatch(shareMyBook(query)).unwrap();
 				} else if (postDataShare.verb === TOP_QUOTE_VERB_SHARE) {
@@ -454,6 +449,7 @@ function CreatePostModalContent({
 						categoryId: postDataShare.categoryId || null,
 						id: postDataShare.id,
 						mentionsUser: params.mentionsUser,
+						tags: params.tags,
 					};
 					await dispatch(getSharePostRanks(query)).unwrap();
 				} else if (postDataShare.verb === REVIEW_VERB_SHARE) {

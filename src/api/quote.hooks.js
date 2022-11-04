@@ -20,23 +20,18 @@ export const useFetchQuoteRandom = () => {
 
 	useEffect(async () => {
 		setStatus(STATUS_LOADING);
-
-		async function fetchData() {
-			try {
-				const data = await dispatch(getQuoteList()).unwrap();
-				if (data && data.length > 0) {
-					const item = data[Math.floor(Math.random() * data.length)];
-					setQuoteRandom(item);
-				}
-				setStatus(STATUS_SUCCESS);
-			} catch (err) {
-				NotificationError(err);
-				const statusCode = err?.statusCode || 500;
-				setStatus(statusCode);
+		try {
+			const data = await dispatch(getQuoteList()).unwrap();
+			if (data && data.length > 0) {
+				const item = data[Math.floor(Math.random() * data.length)];
+				setQuoteRandom(item);
 			}
+			setStatus(STATUS_SUCCESS);
+		} catch (err) {
+			NotificationError(err);
+			const statusCode = err?.statusCode || 500;
+			setStatus(statusCode);
 		}
-
-		fetchData();
 	}, [retry]);
 
 	return { status, quoteRandom, retryRequest };
@@ -53,25 +48,22 @@ export const useFetchQuotes = (current = 0, perPage = 10, filter = '[]') => {
 		setRetry(prev => !prev);
 	}, [setRetry]);
 
-	useEffect(() => {
+	useEffect(async () => {
 		let isMount = true;
 		if (isMount) {
 			setStatus(STATUS_LOADING);
 			const query = generateQuery(current, perPage, filter);
 
 			if (!_.isEmpty(userInfo)) {
-				const fetchData = async () => {
-					try {
-						const data = await dispatch(getQuoteList(query)).unwrap();
-						setQuoteData(data);
-						setStatus(STATUS_SUCCESS);
-					} catch (err) {
-						NotificationError(err);
-						const statusCode = err?.statusCode || 500;
-						setStatus(statusCode);
-					}
-				};
-				fetchData();
+				try {
+					const data = await dispatch(getQuoteList(query)).unwrap();
+					setQuoteData(data);
+					setStatus(STATUS_SUCCESS);
+				} catch (err) {
+					NotificationError(err);
+					const statusCode = err?.statusCode || 500;
+					setStatus(statusCode);
+				}
 			}
 		}
 
@@ -81,4 +73,42 @@ export const useFetchQuotes = (current = 0, perPage = 10, filter = '[]') => {
 	}, [retry, current, perPage, filter, userInfo]);
 
 	return { status, quoteData, retryRequest };
+};
+
+export const useFetchQuotesByCategory = (categoryId = '', limit = 10) => {
+	const [status, setStatus] = useState(STATUS_IDLE);
+	const [listQuotesByCategory, setListQuotesByCategory] = useState([]);
+	const [retry, setRetry] = useState(false);
+	const dispatch = useDispatch();
+
+	const retryRequest = useCallback(() => {
+		setRetry(prev => !prev);
+	}, [setRetry]);
+
+	useEffect(async () => {
+		let isMount = true;
+		if (isMount) {
+			setStatus(STATUS_LOADING);
+			const query = {
+				categoryId: categoryId,
+				limit: limit,
+			};
+			if (categoryId) {
+				try {
+					const data = await dispatch(getQuoteList(query)).unwrap();
+					setListQuotesByCategory(data);
+					setStatus(STATUS_SUCCESS);
+				} catch (err) {
+					NotificationError(err);
+					const statusCode = err?.statusCode || 500;
+					setStatus(statusCode);
+				}
+			}
+		}
+		return () => {
+			isMount = false;
+		};
+	}, [retry, categoryId, limit]);
+
+	return { status, listQuotesByCategory, retryRequest };
 };

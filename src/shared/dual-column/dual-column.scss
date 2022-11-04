@@ -17,7 +17,7 @@
 	color: $ash;
 	line-height: 1.5;
 	justify-content: space-between;
-
+	gap: 1rem;
 	&.has-background {
 		padding: 1rem 1rem 0;
 		&:last-of-type {
@@ -31,9 +31,12 @@
 	}
 
 	&__number {
-		display: inline-block;
+		display: flex;
+		justify-content: flex-end;
+		height: fit-content;
 		font-weight: 500;
 		color: $ash-placeholder;
+		min-width: 30%;
 		&.no-page-text {
 			color: $ash;
 			font-size: 15px;

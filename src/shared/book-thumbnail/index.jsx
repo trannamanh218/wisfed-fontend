@@ -3,8 +3,7 @@ import bookImage from 'assets/images/default-book.png';
 import './book-thumbnail.scss';
 import classNames from 'classnames';
 
-const BookThumbnail = props => {
-	const { images = [], source = '', name = 'book', size = 'md', handleClick, className = '', data = {} } = props;
+const BookThumbnail = ({ images, source, name, size, handleClick, className, data }) => {
 	return (
 		<div
 			className={classNames(`book-thumbnail book-thumbnail-${size}`, { [`${className}`]: className })}
@@ -23,6 +22,12 @@ const BookThumbnail = props => {
 };
 
 BookThumbnail.defaultProps = {
+	images: [],
+	source: '',
+	name: '',
+	size: 'md',
+	className: '',
+	data: {},
 	handleClick: () => {},
 };
 

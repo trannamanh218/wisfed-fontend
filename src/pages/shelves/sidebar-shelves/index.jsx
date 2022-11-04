@@ -3,7 +3,7 @@ import { useFetchQuotes } from 'api/quote.hooks';
 import { useFetchTargetReading } from 'api/readingTarget.hooks';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
-import { useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import BookSlider from 'shared/book-slider';
 import ChartsReading from 'shared/charts-Reading';
@@ -23,6 +23,8 @@ const SidebarShelves = ({ shelveGroupName, isMyShelve, handleViewBookDetail, all
 		3,
 		JSON.stringify([{ operator: 'eq', value: userId, property: 'createdBy' }])
 	);
+
+	const [showChartReading, setShowChartReading] = useState(true);
 
 	const handleRenderTargetReading = useCallback(() => {
 		if (isMyShelve) {
@@ -65,7 +67,7 @@ const SidebarShelves = ({ shelveGroupName, isMyShelve, handleViewBookDetail, all
 				</div>
 			)}
 			{handleRenderTargetReading()}
-			<ChartsReading />
+			{showChartReading && <ChartsReading setShowChartReading={setShowChartReading} />}
 		</div>
 	);
 };
