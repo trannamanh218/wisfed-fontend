@@ -116,6 +116,7 @@ const TopBooks = ({ listYear, tabSelected }) => {
 	useEffect(() => {
 		if (tabSelected === 'books' && !category) {
 			setHasMore(true);
+			callApiStart.current = 0;
 			getTopBooksData();
 		}
 	}, [topBooksId, valueDate, isAuth, tabSelected]);
@@ -165,7 +166,7 @@ const TopBooks = ({ listYear, tabSelected }) => {
 				<LoadingIndicator />
 			) : (
 				<>
-					{getListTopBooks.length > 0 ? (
+					{getListTopBooks.length > 0 && tabSelected === 'books' ? (
 						<InfiniteScroll
 							dataLength={getListTopBooks.length}
 							next={getTopBooksDataNext}
