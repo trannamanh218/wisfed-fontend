@@ -28,6 +28,7 @@
 			display: flex;
 			align-items: center;
 			justify-content: space-between;
+			font-size: 14.38px;
 			&.active {
 				border: unset;
 				font-weight: 400;
@@ -77,6 +78,14 @@
 			line {
 				display: none;
 			}
+			g {
+				text {
+					font-size: 11.28px;
+				}
+			}
+			tspan {
+				font-size: 11.28px;
+			}
 		}
 
 		.recharts-legend-item-text {
@@ -87,6 +96,7 @@
 		.recharts-text.recharts-label {
 			color: $ash !important;
 			font-weight: 600;
+			font-size: 13px;
 		}
 
 		.recharts-cartesian-axis-ticks {
@@ -102,6 +112,7 @@
 			width: 220px;
 			display: block;
 			margin: 38px 0 80px auto;
+			font-size: 14.38px;
 		}
 	}
 }

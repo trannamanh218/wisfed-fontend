@@ -2,7 +2,7 @@
 
 .select-box {
 	position: relative;
-	font-size: 1rem;
+	font-size: 13px;
 	line-height: 1.5;
 	svg {
 		margin-right: 17px;
@@ -16,6 +16,9 @@
 		border-radius: 12px;
 		background-color: $ash-background;
 		cursor: pointer;
+		.select-box__value {
+			font-size: 15px;
+		}
 	}
 
 	&__list {

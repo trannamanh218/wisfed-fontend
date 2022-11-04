@@ -78,6 +78,11 @@
 		letter-spacing: 0.75px;
 		color: #6e7191;
 	}
+	.groupPublic {
+		span {
+			font-size: 13px;
+		}
+	}
 }
 
 .main__title {
@@ -98,7 +103,7 @@
 		font-family: 'Montserrat';
 		font-style: normal;
 		font-weight: 500;
-		font-size: 13px;
+		font-size: 15px;
 		line-height: 22px;
 		display: flex;
 		align-items: center;
