@@ -38,7 +38,7 @@ const SidebarCategory = ({ isFetching, handleViewCategoryDetail }) => {
 	return (
 		<div className='sidebar-category'>
 			<Circle loading={isFetching} />
-			{!!favoriteCategories.length && (
+			{!!favoriteCategories.length > 0 && (
 				<StatisticList
 					title='Chủ đề yêu thích'
 					background='light'

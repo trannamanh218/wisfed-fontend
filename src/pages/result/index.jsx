@@ -15,6 +15,9 @@ import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 
 const Result = () => {
+	const hashtagRegex =
+		/#(?![0-9_]+\b)[0-9a-z_ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễếệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ]+/gi;
+
 	const { value } = useParams();
 	const [activeKeyDefault, setActiveKeyDefault] = useState('books');
 	const [searchResultInput, setSearchResultInput] = useState('');
@@ -30,7 +33,18 @@ const Result = () => {
 
 	const handleDirectParam = () => {
 		if (searchResultInput) {
-			navigate(`/result/q=${searchResultInput}`);
+			// Kiểm tra xem có kí tự hashtag # không
+			if (hashtagRegex.test(searchResultInput)) {
+				const formatedInpSearchValue = searchResultInput
+					.normalize('NFD')
+					.replace(/[\u0300-\u036f]/g, '')
+					.replace(/đ/g, 'd')
+					.replace(/Đ/g, 'D')
+					.replace(/#/g, '');
+				navigate(`/hashtag/${formatedInpSearchValue}`);
+			} else {
+				navigate(`/result/q=${searchResultInput}`);
+			}
 		}
 	};
 

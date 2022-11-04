@@ -368,7 +368,7 @@ const MainCategoryDetail = ({ setErrorLoadPage }) => {
 										/>
 									) : (
 										<>
-											{!!categoryInfo?.topBookReads.length && (
+											{!!categoryInfo?.topBookReads.length > 0 && (
 												<CategoryGroup
 													key={`category-group`}
 													list={categoryInfo.topBookReads}
@@ -423,7 +423,7 @@ const MainCategoryDetail = ({ setErrorLoadPage }) => {
 								</>
 							</div>
 
-							{!!postsByCategory.length && (
+							{!!postsByCategory.length > 0 && (
 								<FilterPane
 									title='Bài viết hay nhất'
 									handleSortFilter={handleSortPost}

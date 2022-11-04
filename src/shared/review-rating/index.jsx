@@ -14,7 +14,7 @@ const ReviewRating = props => {
 				<p>{ratingTotal} đánh giá</p>
 			</div>
 			<div className='review-rating__right'>
-				{list.length && list.map((item, index) => <RatingLevel key={index} data={item} />)}
+				{list.length > 0 && list.map((item, index) => <RatingLevel key={index} data={item} />)}
 			</div>
 		</div>
 	);

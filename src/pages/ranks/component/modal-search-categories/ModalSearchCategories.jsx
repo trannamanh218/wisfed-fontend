@@ -86,7 +86,7 @@ const ModalSearchCategories = ({
 					value={inputSearch}
 				/>
 				<ul className='result-categories-list'>
-					{(tabSelected === 'books' || tabSelected === 'quotes') && !inputSearch.length && (
+					{(tabSelected === 'books' || tabSelected === 'quotes') && !inputSearch.length > 0 && (
 						<div className='result-categories-item' onClick={handleDefault}>
 							{defaultCate.value}
 						</div>

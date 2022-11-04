@@ -63,7 +63,7 @@ const SidebarReadingSummary = () => {
 			<Circle loading={isLoading || isViewBookDetailLoading} />
 			{!_.isEmpty(allLibrary) && (
 				<>
-					{!!allLibrary.default.length && (
+					{!!allLibrary.default.length > 0 && (
 						<StatisticList
 							className='sidebar-books-author__reading__status'
 							title='Trạng thái đọc'
@@ -73,11 +73,11 @@ const SidebarReadingSummary = () => {
 							pageText={false}
 						/>
 					)}
-					{!!allLibrary.custom.length && <MyShelvesList list={allLibrary.custom} />}
+					{!!allLibrary.custom.length > 0 && <MyShelvesList list={allLibrary.custom} />}
 				</>
 			)}
 			<QuotesLinks list={quoteData} title='Quotes' />
-			{!!booksAuthor.length && (
+			{!!booksAuthor.length > 0 && (
 				<div className='my-compose'>
 					<BookSlider
 						className='book-reference__slider'

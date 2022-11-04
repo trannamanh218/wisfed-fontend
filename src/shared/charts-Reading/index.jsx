@@ -8,36 +8,57 @@ import { useParams } from 'react-router-dom';
 
 const ChartsReading = ({ setShowChartReading }) => {
 	const [chartsData, setChartsData] = useState({ month: '', year: '' });
-	const [pagesMonth, setPagesMonth] = useState([]);
-	const [booksMonth, setBooksMonth] = useState([]);
+	const [pagesMonth, setPagesMonth] = useState({});
+	const [booksMonth, setBooksMonth] = useState({});
 	const dispatch = useDispatch();
 	const { userId } = useParams();
 
 	const fetchDataPage = async () => {
 		const dob = new Date();
-		const month = dob.getMonth() + 1;
+		let month = dob.getMonth() + 1;
 		const year = dob.getFullYear();
 		setChartsData({ month: month, year: year });
+
 		try {
-			const paramsBook = {
-				count: 'numBookRead',
-				by: 'month',
-				userId: userId,
-			};
-			const data = await dispatch(getChartsByid(paramsBook)).unwrap();
-			const bookMonth = data.filter(item => item.month === month);
-			setBooksMonth(bookMonth);
-			const paramsPage = {
+			const params = {
 				count: 'numPageRead',
-				by: 'month',
+				by: 'year',
 				userId: userId,
 			};
-			const newData = await dispatch(getChartsByid(paramsPage)).unwrap();
-			const pageMonth = newData.filter(item => item.month === month);
-			if (pageMonth.length === 0) {
+			const data = await dispatch(getChartsByid(params)).unwrap();
+			if (data && data.length === 0) {
+				// Kiểm tra xem nếu user chưa từng đọc cuốn sách nào thì ẩn component đi
 				setShowChartReading(false);
+			} else {
+				try {
+					const paramsPage = {
+						count: 'numPageRead',
+						by: 'month',
+						userId: userId,
+					};
+					const newData = await dispatch(getChartsByid(paramsPage)).unwrap();
+
+					// Lấy tháng gần nhất có đọc sách
+					for (let i = month - 1; i > 0; i--) {
+						if (newData[i].count > 0) {
+							setPagesMonth(newData[i]);
+							month = newData[i].month;
+							break;
+						}
+					}
+
+					const paramsBook = {
+						count: 'numBookRead',
+						by: 'month',
+						userId: userId,
+					};
+					const data = await dispatch(getChartsByid(paramsBook)).unwrap();
+					const bookMonth = data.find(item => item.month === month);
+					setBooksMonth(bookMonth);
+				} catch (err) {
+					NotificationError(err);
+				}
 			}
-			setPagesMonth(pageMonth);
 		} catch (err) {
 			NotificationError(err);
 		}
@@ -45,8 +66,8 @@ const ChartsReading = ({ setShowChartReading }) => {
 
 	useEffect(() => {
 		fetchDataPage();
-	}, []);
-	console.log(chartsData, pagesMonth, booksMonth);
+	}, [userId]);
+
 	return (
 		<div className='charts__reading__container'>
 			<div className='charts__reading__container__title'>Biểu đồ đọc sách</div>
@@ -54,20 +75,14 @@ const ChartsReading = ({ setShowChartReading }) => {
 				<div className='charts__reading__container__main__month'>
 					Tháng {`${chartsData.month}/${chartsData.year}`}{' '}
 				</div>
-				{booksMonth.map((item, index) => (
-					// <div key={item.id} className='charts__reading__container__main__read'>
-					<div key={index} className='charts__reading__container__main__read'>
-						<div className='book__read__title'>Số sách đã đọc</div>
-						<div className='book__read__number'>{item.count}</div>
-					</div>
-				))}
-				{pagesMonth.map((item, index) => (
-					// <div key={item.id} className='charts__reading__container__main__read'>
-					<div key={index} className='charts__reading__container__main__read'>
-						<div className='book__read__title'>Số trang đã đọc</div>
-						<div className='book__read__number'>{item.count}</div>
-					</div>
-				))}
+				<div className='charts__reading__container__main__read'>
+					<div className='book__read__title'>Số sách đã đọc</div>
+					<div className='book__read__number'>{booksMonth.count}</div>
+				</div>
+				<div className='charts__reading__container__main__read'>
+					<div className='book__read__title'>Số trang đã đọc</div>
+					<div className='book__read__number'>{pagesMonth.count}</div>
+				</div>
 
 				<Link
 					to={`/reading-summary/${userId}`}

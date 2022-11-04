@@ -356,7 +356,7 @@ function MemberGroup({ memberGroupsProp = [] }) {
 							);
 					  })
 					: 'Không có dữ liệu'}
-				{sliceEndIndex < listFolow.length && (
+				{sliceEndIndex < listFolow.length > 0 && (
 					<button
 						className='view-member-all'
 						onClick={() => {

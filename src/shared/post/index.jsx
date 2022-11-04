@@ -265,7 +265,7 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 					<span className='post__user__container__mention-users-plus' onClick={() => handleShowModalOthers()}>
 						{paramInfo.length - 1} người khác.
 						<div className='post__user__container__list-mention-users'>
-							{!!paramInfo.length && (
+							{!!paramInfo.length > 0 && (
 								<>
 									{paramInfo.slice(1).map((item, index) => (
 										<div className='post__user__container__list-mention-users__name' key={index}>
@@ -281,7 +281,7 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 							<Modal.Title>Mọi người</Modal.Title>
 						</Modal.Header>
 						<Modal.Body>
-							{!!paramInfo.length && (
+							{!!paramInfo.length > 0 && (
 								<>
 									{paramInfo.slice(1).map((item, index) => (
 										<div key={index} style={{ marginBottom: '1rem' }}>
@@ -437,7 +437,7 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 
 							{/* tagged people */}
 							{postData.mentionsUsers &&
-								!!postData.mentionsUsers.length &&
+								!!postData.mentionsUsers.length > 0 &&
 								withFriends(postData.mentionsUsers)}
 							{postData.verb === GROUP_POST_VERB && (
 								<>
@@ -496,7 +496,7 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 					)}
 				</>
 			)}
-			{!!postData?.mentionsAuthors?.length && (
+			{!!postData?.mentionsAuthors?.length > 0 && (
 				<ul className='tagged'>
 					{postData.mentionsAuthors?.map(item => (
 						<li
@@ -516,7 +516,7 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 					))}
 				</ul>
 			)}
-			{!!postData?.mentionsCategories?.length && (
+			{!!postData?.mentionsCategories?.length > 0 && (
 				<ul className='tagged'>
 					{postData.mentionsCategories?.map(item => (
 						<li
@@ -625,7 +625,7 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 												type={type}
 											/>
 											<div className='comment-reply-container'>
-												{comment.reply && !!comment.reply.length && (
+												{comment.reply && !!comment.reply.length > 0 && (
 													<>
 														{showReplyArrayState.includes(comment.id) ? (
 															<div className='reply-comment-item'>
@@ -686,7 +686,7 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 												/>
 
 												<div className='comment-reply-container'>
-													{comment.reply && !!comment.reply.length && (
+													{comment.reply && !!comment.reply.length > 0 && (
 														<>
 															{showReplyArrayState.includes(comment.id) ? (
 																<div className='reply-comment-item'>
@@ -749,7 +749,7 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 														type={type}
 													/>
 													<div className='comment-reply-container'>
-														{comment.reply && !!comment.reply?.length && (
+														{comment.reply && !!comment.reply?.length > 0 && (
 															<>
 																{showReplyArrayState.includes(comment.id) ? (
 																	<div className='reply-comment-item'>
@@ -813,7 +813,7 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 										type={type}
 									/>
 									<div className='comment-reply-container'>
-										{comment.reply && !!comment.reply.length && (
+										{comment.reply && !!comment.reply.length > 0 && (
 											<>
 												{showReplyArrayState.includes(comment.id) ? (
 													<>

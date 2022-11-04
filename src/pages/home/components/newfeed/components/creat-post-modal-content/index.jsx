@@ -645,7 +645,7 @@ function CreatePostModalContent({
 
 									{/* tagged people */}
 									{taggedData.addFriends &&
-										!!taggedData.addFriends.length &&
+										!!taggedData.addFriends.length > 0 &&
 										withFriends(taggedData.addFriends)}
 								</p>
 								{/* k xóa ShareModeComponent */}

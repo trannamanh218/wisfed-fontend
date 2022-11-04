@@ -7,7 +7,7 @@ import classNames from 'classnames';
 const FitlerOptions = ({ list, name, className, currentOption, handleChangeOption }) => {
 	return (
 		<Form className={classNames('filter-options', { [`${className}`]: className })}>
-			{!!list.length &&
+			{!!list.length > 0 &&
 				list.map((item, index) => {
 					return (
 						<RadioInput

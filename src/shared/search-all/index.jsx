@@ -10,6 +10,9 @@ import { getFilterSearch } from 'reducers/redux-utils/search';
 import { NotificationError } from 'helpers/Error';
 
 const SearchAllModal = ({ showRef, setIsShow }) => {
+	const hashtagRegex =
+		/#(?![0-9_]+\b)[0-9a-z_ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễếệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ]+/gi;
+
 	const [valueInputSearch, setValueInputSearch] = useState('');
 	const [resultSearch, setResultSearch] = useState([]);
 	const [filter, setFilter] = useState('');
@@ -47,9 +50,20 @@ const SearchAllModal = ({ showRef, setIsShow }) => {
 	};
 
 	const handleKeyDown = e => {
-		if (e.key === 'Enter' && valueInputSearch.trim().length) {
+		const value = valueInputSearch.trim();
+		if (e.key === 'Enter' && value.length) {
 			setIsShow(false);
-			navigate(`/result/q=${valueInputSearch.trim()}`);
+			if (hashtagRegex.test(value)) {
+				const formatedInpSearchValue = value
+					.normalize('NFD')
+					.replace(/[\u0300-\u036f]/g, '')
+					.replace(/đ/g, 'd')
+					.replace(/Đ/g, 'D')
+					.replace(/#/g, '');
+				navigate(`/hashtag/${formatedInpSearchValue}`);
+			} else {
+				navigate(`/result/q=${value}`);
+			}
 		}
 	};
 

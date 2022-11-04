@@ -5,6 +5,7 @@ import './main-reading-summary.scss';
 import PageTab from './page-tab';
 import ReadBookTab from './read-book-tab';
 import PropTypes from 'prop-types';
+import { BackArrow } from 'components/svg';
 
 const MainReadingSummary = ({ setErrorLoadPage }) => {
 	const [showReadBookTab, setShowReadBookTab] = useState(true);
@@ -15,9 +16,17 @@ const MainReadingSummary = ({ setErrorLoadPage }) => {
 			setActiveKey('page-charts');
 		}
 	}, [showReadBookTab]);
+
 	return (
 		<div className='main-reading-summary'>
 			<TabContainer activeKey={activeKey} onSelect={k => setActiveKey(k)}>
+				<div className='group-btn-back'>
+					<button onClick={() => history.back()}>
+						<BackArrow />
+					</button>
+					<span>Biểu đồ đọc sách</span>
+				</div>
+
 				<Row>
 					<Col sm={12}>
 						<Nav className='main-reading-summary__nav'>

@@ -81,7 +81,7 @@ const PostShare = ({ postData, inCreatePost = false }) => {
 					<span className='post__user__container__mention-users-plus' onClick={() => handleShowModalOthers()}>
 						{paramInfo.length - 1} người khác.
 						<div className='post__user__container__list-mention-users'>
-							{!!paramInfo.length && (
+							{!!paramInfo.length > 0 && (
 								<>
 									{paramInfo.slice(1).map((item, index) => (
 										<div className='post__user__container__list-mention-users__name' key={index}>
@@ -97,7 +97,7 @@ const PostShare = ({ postData, inCreatePost = false }) => {
 							<Modal.Title>Mọi người</Modal.Title>
 						</Modal.Header>
 						<Modal.Body>
-							{!!paramInfo.length && (
+							{!!paramInfo.length > 0 && (
 								<>
 									{paramInfo.slice(1).map((item, index) => (
 										<div key={index} style={{ marginBottom: '1rem' }}>
@@ -168,8 +168,6 @@ const PostShare = ({ postData, inCreatePost = false }) => {
 		}
 	};
 
-	console.log(postData.verb);
-
 	return (
 		<div className='post__container'>
 			<div className='post__user-status'>
@@ -195,7 +193,7 @@ const PostShare = ({ postData, inCreatePost = false }) => {
 						</Link>
 						{/* tagged people */}
 						{postData.sharePost?.mentionsUsers &&
-							!!postData.sharePost.mentionsUsers.length &&
+							!!postData.sharePost.mentionsUsers.length > 0 &&
 							withFriends(postData.sharePost.mentionsUsers)}
 						{postData.verb === GROUP_POST_VERB_SHARE && (
 							<>
@@ -254,7 +252,7 @@ const PostShare = ({ postData, inCreatePost = false }) => {
 					)}
 				</>
 			)}
-			{postData.sharePost.mentionsAuthors && !!postData.sharePost?.mentionsAuthors.length && (
+			{postData.sharePost.mentionsAuthors && !!postData.sharePost?.mentionsAuthors.length > 0 && (
 				<ul className='tagged'>
 					{postData.sharePost.mentionsAuthors.map(item => (
 						<li
@@ -275,7 +273,7 @@ const PostShare = ({ postData, inCreatePost = false }) => {
 				</ul>
 			)}
 
-			{postData.sharePost.mentionsCategories && !!postData.sharePost.mentionsCategories.length && (
+			{postData.sharePost.mentionsCategories && !!postData.sharePost.mentionsCategories.length > 0 && (
 				<ul className='tagged'>
 					{postData.sharePost.mentionsCategories.map(item => (
 						<li

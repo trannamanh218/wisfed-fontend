@@ -94,7 +94,7 @@ const CategorySearch = ({ value, isFetching, setIsFetching, searchResultInput, a
 		<div className='category__search__container'>
 			{!isFetching && (
 				<>
-					{listArrayCategory.length && activeKeyDefault === 'categories' ? (
+					{listArrayCategory.length > 0 && activeKeyDefault === 'categories' ? (
 						<InfiniteScroll
 							dataLength={listArrayCategory.length}
 							next={handleGetGroupSearch}

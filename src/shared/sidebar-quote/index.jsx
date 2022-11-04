@@ -56,7 +56,7 @@ const SidebarQuote = ({ listHashtags, inMyQuote, hasCountQuotes }) => {
 			<>
 				{!inMyQuote && hasCountQuotes ? (
 					<>
-						{!!categoryList.length && (
+						{!!categoryList.length > 0 && (
 							<div className='sidebar-quote__category-list'>
 								<h4>Chủ đề Quotes</h4>
 								<SearchField
@@ -85,7 +85,7 @@ const SidebarQuote = ({ listHashtags, inMyQuote, hasCountQuotes }) => {
 					</>
 				) : (
 					<>
-						{!!listHashtags.length && (
+						{!!listHashtags.length > 0 && (
 							<TopicColumn
 								className='sidebar-category__topics'
 								title='Hashtag từ Quotes'

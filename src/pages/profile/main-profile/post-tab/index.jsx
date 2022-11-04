@@ -29,7 +29,7 @@ function PostTab({ currentTab }) {
 	}, [userId]);
 
 	useEffect(() => {
-		if (!postList.length && currentTab === 'post') {
+		if (!postList.length > 0 && currentTab === 'post') {
 			getPostListByUser();
 		}
 	}, [postList, currentTab]);
