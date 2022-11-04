@@ -13,3 +13,13 @@
 	padding: 24px;
 	border-radius: 12px;
 }
+.search-group__not-found {
+	background-color: white;
+	margin-top: 32px;
+	border-radius: 16px;
+	height: 596px;
+
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}

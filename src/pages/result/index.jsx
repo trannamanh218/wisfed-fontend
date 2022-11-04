@@ -32,11 +32,11 @@ const Result = () => {
 
 	const handleChange = e => {
 		setSearchResultInput(e.target.value);
-		dispatch(handleUpdateValueInputSearchRedux(e.target.value.trim()));
 	};
 
 	const handleDirectParam = () => {
 		if (searchResultInput) {
+			dispatch(handleUpdateValueInputSearchRedux(searchResultInput));
 			// Kiểm tra xem có kí tự hashtag # không
 			if (hashtagRegex.test(searchResultInput)) {
 				const formatedInpSearchValue = searchResultInput

@@ -8,6 +8,7 @@ import { getTagGroup } from 'reducers/redux-utils/group';
 import { useDispatch } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
 import _ from 'lodash';
+import LoadingIndicator from 'shared/loading-indicator';
 
 export default function RightSidebarGroup({ update }) {
 	const [numberIndex, setNumberIndex] = useState(6);
@@ -15,12 +16,14 @@ export default function RightSidebarGroup({ update }) {
 	const [inputSearch, setInputSearch] = useState('');
 	const [tagGroup, setTagGroup] = useState([]);
 	const [valueSearch, setValueSearch] = useState('');
+	const [isFetching, setIsFetching] = useState(false);
 
 	const { id = '' } = useParams();
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
 	const getListHashtags = async () => {
+		setIsFetching(true);
 		const params = {
 			id: id,
 			body: {
@@ -33,6 +36,8 @@ export default function RightSidebarGroup({ update }) {
 			setTagGroup(res);
 		} catch (error) {
 			NotificationError(error);
+		} finally {
+			setIsFetching(false);
 		}
 	};
 
@@ -70,25 +75,41 @@ export default function RightSidebarGroup({ update }) {
 			<h2>Hashtag</h2>
 			<SearchField placeholder='Tìm kiếm hashtag' value={inputSearch} handleChange={onChangeInputSearch} />
 			<div>
-				{tagGroup.map((item, index) => {
-					return (
-						<div key={index}>
-							{index < numberIndex && (
-								<div className='hastag__group'>
-									<div
-										className='hastag__group-name'
-										onClick={() => navigate(`/hashtag-group/${id}/${item.tagName.slice(1)}`)}
-									>
-										{item.tagName}
-									</div>
-									<div className='hastag__group-number'>
-										{item.count < 10000 ? item.count : '9999+'} bài viết
-									</div>
-								</div>
-							)}
-						</div>
-					);
-				})}
+				{isFetching ? (
+					<div style={{ marginTop: '15px' }}>
+						<LoadingIndicator />
+					</div>
+				) : (
+					<>
+						{tagGroup.length > 0 ? (
+							<>
+								{tagGroup.map((item, index) => {
+									return (
+										<div key={index}>
+											{index < numberIndex && (
+												<div className='hastag__group'>
+													<div
+														className='hastag__group-name'
+														onClick={() =>
+															navigate(`/hashtag-group/${id}/${item.tagName.slice(1)}`)
+														}
+													>
+														{item.tagName}
+													</div>
+													<div className='hastag__group-number'>
+														{item.count < 10000 ? item.count : '9999+'} bài viết
+													</div>
+												</div>
+											)}
+										</div>
+									);
+								})}
+							</>
+						) : (
+							<div className='hastag__group'>Không có kết quả</div>
+						)}
+					</>
+				)}
 
 				{tagGroup.length > 6 && (
 					<button className={`${show && 'rotate__more'} more__btn`} onClick={() => handleChangeNumber()}>
