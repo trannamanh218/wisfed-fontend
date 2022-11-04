@@ -120,6 +120,11 @@
 	.post-book__button-and-rating {
 		.post-book__rating__group {
 			min-width: 135px;
+			.react-rating-container {
+				span {
+					margin: 0px 0.8px;
+				}
+			}
 		}
 	}
 }
@@ -142,6 +147,9 @@
 
 			.tagged-book {
 				margin-bottom: 1.1rem;
+			}
+			.book-thumbnail.book-thumbnail-md {
+				height: 190px;
 			}
 		}
 	}
