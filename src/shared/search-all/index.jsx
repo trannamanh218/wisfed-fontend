@@ -4,22 +4,21 @@ import ResultSearch from 'shared/results-search';
 import { useState, useCallback, useEffect } from 'react';
 import SearchField from 'shared/search-field';
 import _ from 'lodash';
-import { useNavigate, useParams } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import { getFilterSearch } from 'reducers/redux-utils/search';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { getFilterSearch, handleUpdateValueInputSearchRedux } from 'reducers/redux-utils/search';
 import { NotificationError } from 'helpers/Error';
 
 const SearchAllModal = ({ showRef, setIsShow }) => {
 	const hashtagRegex =
 		/#(?![0-9_]+\b)[0-9a-z_ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễếệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ]+/gi;
 
-	const { value } = useParams();
-
 	const [valueInputSearch, setValueInputSearch] = useState('');
 	const [resultSearch, setResultSearch] = useState([]);
 	const [filter, setFilter] = useState('');
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
+	const { valueInputSearchRedux } = useSelector(state => state.search);
 
 	const updateInputSearch = value => {
 		if (value) {
@@ -49,11 +48,14 @@ const SearchAllModal = ({ showRef, setIsShow }) => {
 	const handleSearch = e => {
 		debounceSearch(e.target.value);
 		setValueInputSearch(e.target.value);
+		// Lưu giá trị vào redux
+		dispatch(handleUpdateValueInputSearchRedux(e.target.value.trim()));
 	};
 
 	useEffect(() => {
-		setValueInputSearch(value);
-	}, [value]);
+		// Điền vào ô search
+		setValueInputSearch(valueInputSearchRedux);
+	}, [valueInputSearchRedux]);
 
 	const handleKeyDown = e => {
 		const value = valueInputSearch?.trim();

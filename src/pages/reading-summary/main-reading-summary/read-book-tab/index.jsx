@@ -7,6 +7,7 @@ import { getListBooksReadYear } from 'reducers/redux-utils/chart';
 import { NotificationError } from 'helpers/Error';
 import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 const ReadBookTab = ({ setShowReadBookTab }) => {
 	const [booksRead, setBooksRead] = useState([]);
@@ -73,6 +74,8 @@ const ReadBookTab = ({ setShowReadBookTab }) => {
 	);
 };
 
-ReadBookTab.propTypes = {};
+ReadBookTab.propTypes = {
+	setShowReadBookTab: PropTypes.func,
+};
 
 export default ReadBookTab;

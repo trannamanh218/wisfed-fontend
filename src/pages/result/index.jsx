@@ -13,6 +13,8 @@ import { useEffect, useState } from 'react';
 import Circle from 'shared/loading/circle';
 import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import { handleUpdateValueInputSearchRedux } from 'reducers/redux-utils/search';
+import { useDispatch } from 'react-redux';
 
 const Result = () => {
 	const hashtagRegex =
@@ -25,10 +27,12 @@ const Result = () => {
 	const [isFetching, setIsFetching] = useState(false);
 	const [firstTimeRender, setFirstTimeRender] = useState(true);
 
+	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
 	const handleChange = e => {
 		setSearchResultInput(e.target.value);
+		dispatch(handleUpdateValueInputSearchRedux(e.target.value.trim()));
 	};
 
 	const handleDirectParam = () => {

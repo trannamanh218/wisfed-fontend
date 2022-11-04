@@ -5,6 +5,7 @@ import { NotificationError } from 'helpers/Error';
 import { useDispatch } from 'react-redux';
 import { getChartsByid } from 'reducers/redux-utils/chart';
 import { useParams } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 const ChartsReading = ({ setShowChartReading }) => {
 	const [chartsData, setChartsData] = useState({ month: '', year: '' });
@@ -94,6 +95,10 @@ const ChartsReading = ({ setShowChartReading }) => {
 			</div>
 		</div>
 	);
+};
+
+ChartsReading.propTypes = {
+	setShowChartReading: PropTypes.func,
 };
 
 export default memo(ChartsReading);
