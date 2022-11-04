@@ -257,6 +257,7 @@ const Header = () => {
 								placeholder='Tìm kiếm trên Wisfeed'
 								disabled={isShow}
 								value={getSlugResult}
+								readOnly
 							/>
 						</>
 					)}

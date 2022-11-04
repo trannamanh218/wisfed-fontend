@@ -56,7 +56,7 @@ const SearchAllModal = ({ showRef, setIsShow }) => {
 	}, [value]);
 
 	const handleKeyDown = e => {
-		const value = valueInputSearch.trim();
+		const value = valueInputSearch?.trim();
 		if (e.key === 'Enter' && value.length) {
 			setIsShow(false);
 			if (hashtagRegex.test(value)) {

@@ -98,13 +98,8 @@ const UsersSearch = ({ isFetching, value, setIsFetching, searchResultInput, acti
 											alt='img'
 											onClick={() => onUserClick(item)}
 										/>
-										<div className='myfriends__star' onClick={() => onUserClick(item)}>
-											<div
-												className='myfriends__star__name'
-												title={
-													item.fullName ? item.fullName : `${item.firstName} ${item.lastName}`
-												}
-											>
+										<div className='myfriends__star'>
+											<div className='myfriends__star__name' onClick={() => onUserClick(item)}>
 												{item.fullName ? item.fullName : `${item.firstName} ${item.lastName}`}
 											</div>
 										</div>
