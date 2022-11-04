@@ -74,49 +74,48 @@ export default function RightSidebarGroup({ update }) {
 		<div className='group-sibar-right'>
 			<h2>Hashtag</h2>
 			<SearchField placeholder='Tìm kiếm hashtag' value={inputSearch} handleChange={onChangeInputSearch} />
-			<div>
-				{isFetching ? (
-					<div style={{ marginTop: '15px' }}>
-						<LoadingIndicator />
-					</div>
-				) : (
-					<>
-						{tagGroup.length > 0 ? (
-							<>
-								{tagGroup.map((item, index) => {
-									return (
-										<div key={index}>
-											{index < numberIndex && (
-												<div className='hastag__group'>
-													<div
-														className='hastag__group-name'
-														onClick={() =>
-															navigate(`/hashtag-group/${id}/${item.tagName.slice(1)}`)
-														}
-													>
-														{item.tagName}
-													</div>
-													<div className='hastag__group-number'>
-														{item.count < 10000 ? item.count : '9999+'} bài viết
-													</div>
-												</div>
-											)}
-										</div>
-									);
-								})}
-							</>
-						) : (
-							<div className='hastag__group'>Không có kết quả</div>
-						)}
-					</>
-				)}
 
-				{tagGroup.length > 6 && (
-					<button className={`${show && 'rotate__more'} more__btn`} onClick={() => handleChangeNumber()}>
-						<ForwardGroup /> {`${show ? 'Thu gọn' : 'Xem thêm'}`}
-					</button>
-				)}
-			</div>
+			{isFetching ? (
+				<div style={{ marginTop: '15px' }}>
+					<LoadingIndicator />
+				</div>
+			) : (
+				<>
+					{tagGroup.length > 0 ? (
+						<>
+							{tagGroup.map((item, index) => {
+								return (
+									<div key={index}>
+										{index < numberIndex && (
+											<div className='hastag__group'>
+												<div
+													className='hastag__group-name'
+													onClick={() =>
+														navigate(`/hashtag-group/${id}/${item.tagName.slice(1)}`)
+													}
+												>
+													{item.tagName}
+												</div>
+												<div className='hastag__group-number'>
+													{item.count < 10000 ? item.count : '9999+'} bài viết
+												</div>
+											</div>
+										)}
+									</div>
+								);
+							})}
+						</>
+					) : (
+						<div className='hastag__group'>Không có kết quả</div>
+					)}
+				</>
+			)}
+
+			{tagGroup.length > 6 && (
+				<button className={`${show && 'rotate__more'} more__btn`} onClick={() => handleChangeNumber()}>
+					<ForwardGroup /> {`${show ? 'Thu gọn' : 'Xem thêm'}`}
+				</button>
+			)}
 		</div>
 	);
 }

@@ -17,9 +17,12 @@
 	background-color: white;
 	margin-top: 32px;
 	border-radius: 16px;
-	height: 596px;
 
 	display: flex;
 	align-items: center;
 	justify-content: center;
+
+	.result__notfound__main {
+		margin-top: 30px;
+	}
 }

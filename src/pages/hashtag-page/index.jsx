@@ -15,7 +15,7 @@ export default function HashtagPage() {
 	const dispatch = useDispatch();
 	const { hashtag, groupId } = useParams();
 
-	const [isFetching, setIsFetching] = useState(false);
+	const [isFetching, setIsFetching] = useState(true);
 
 	const [postList, setPostList] = useState([]);
 	const [hasMore, setHasMore] = useState(true);
@@ -69,12 +69,20 @@ export default function HashtagPage() {
 	};
 
 	useEffect(() => {
-		if (groupId) {
-			getPostsByHashtagFromGroup();
-		} else {
-			getPostsByHashtag();
+		callApiStart.current = 0;
+		setIsFetching(true);
+		setPostList([]);
+	}, [hashtag, groupId]);
+
+	useEffect(() => {
+		if (postList.length === 0 && isFetching) {
+			if (groupId) {
+				getPostsByHashtagFromGroup();
+			} else {
+				getPostsByHashtag();
+			}
 		}
-	}, [groupId, hashtag]);
+	}, [postList]);
 
 	return (
 		<NormalContainer>
