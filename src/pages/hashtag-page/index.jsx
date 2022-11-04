@@ -24,7 +24,6 @@ export default function HashtagPage() {
 	const callApiPerPage = useRef(10);
 
 	const getPostsByHashtagFromGroup = async () => {
-		setIsFetching(true);
 		const data = {
 			groupId: groupId,
 			params: {
@@ -47,7 +46,6 @@ export default function HashtagPage() {
 	};
 
 	const getPostsByHashtag = async () => {
-		setIsFetching(true);
 		const params = {
 			q: hashtag,
 			start: callApiStart.current,
@@ -82,7 +80,7 @@ export default function HashtagPage() {
 				getPostsByHashtag();
 			}
 		}
-	}, [postList]);
+	}, [postList.length]);
 
 	return (
 		<NormalContainer>
