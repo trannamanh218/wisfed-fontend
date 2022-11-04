@@ -55,7 +55,6 @@ export default function HashtagPage() {
 		};
 		try {
 			const res = await dispatch(getListPostByHashtag(params)).unwrap();
-			console.log(res);
 			setPostList(postList.concat(res));
 			if (res.length === 0 || res.length < callApiPerPage.current) {
 				setHasMore(false);
@@ -74,6 +73,7 @@ export default function HashtagPage() {
 		setIsFetching(true);
 		setHasMore(true);
 		setPostList([]);
+		window.scrollTo(0, 0);
 	}, [hashtag, groupId]);
 
 	useEffect(() => {
