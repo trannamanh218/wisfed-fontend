@@ -50,7 +50,7 @@ import defaultAvatar from 'assets/icons/defaultLogoAvatar.svg';
 import SeeMoreComments from 'shared/see-more-comments/SeeMoreComments';
 
 const urlRegex =
-	/(http(s)?:\/\/)?(www(\.))[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}([-a-zA-Z0-9()@:%_\+.~#?&//=]*)([^"<\s]+)(?![^<>]*>|[^"]*?<\/a)/g;
+	/(http(s)?:\/\/)?(www(\.))?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}([-a-zA-Z0-9()@:%_\+.~#?&//=]*)([^"<\s]+)(?![^<>]*>|[^"]*?<\/a)/g;
 const hashtagRegex =
 	/#(?![0-9_]+\b)[0-9a-z_ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễếệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ]+/gi;
 
@@ -422,7 +422,7 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 					data-testid='post__user-avatar'
 					className='post__user-status__avatar'
 					source={postData?.createdBy?.avatarImage || postData.user?.avatarImage}
-					handleClick={() => navigate(`/profile/${postData.createdBy.id}`)}
+					handleClick={() => navigate(`/profile/${postData.createdBy?.id || postData.user?.id}`)}
 				/>
 				<div className='post__user-status__name-and-post-time-status'>
 					<div data-testid='post__user-name' className='post__user-status__name'>

@@ -386,6 +386,7 @@ function CreatePostModalContent({
 						msg: content,
 						current: postDataShare.booksReadCount,
 						mentionsUser: params.mentionsUser,
+						tags: params.tags,
 					};
 					await dispatch(
 						shareTargetReadings({
@@ -402,6 +403,7 @@ function CreatePostModalContent({
 						userType: postDataShare.userType,
 						id: postDataShare.id,
 						mentionsUser: params.mentionsUser,
+						tags: params.tags,
 					};
 					await dispatch(getSharePostRanks(query)).unwrap();
 				} else if (postDataShare.verb === TOP_BOOK_VERB_SHARE) {
@@ -412,6 +414,7 @@ function CreatePostModalContent({
 						categoryId: postDataShare.categoryId || null,
 						id: postDataShare.id,
 						mentionsUser: params.mentionsUser,
+						tags: params.tags,
 					};
 					await dispatch(getSharePostRanks(query)).unwrap();
 				} else if (postDataShare.verb === MY_BOOK_VERB_SHARE) {
@@ -420,6 +423,7 @@ function CreatePostModalContent({
 						msg: content,
 						type: postDataShare.type,
 						mentionsUser: params.mentionsUser,
+						tags: params.tags,
 					};
 					await dispatch(shareMyBook(query)).unwrap();
 				} else if (postDataShare.verb === TOP_QUOTE_VERB_SHARE) {
@@ -430,6 +434,7 @@ function CreatePostModalContent({
 						categoryId: postDataShare.categoryId || null,
 						id: postDataShare.id,
 						mentionsUser: params.mentionsUser,
+						tags: params.tags,
 					};
 					await dispatch(getSharePostRanks(query)).unwrap();
 				} else if (postDataShare.verb === REVIEW_VERB_SHARE) {

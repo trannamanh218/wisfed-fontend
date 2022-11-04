@@ -68,7 +68,7 @@ const BookIntro = ({ bookInfo, listRatingStar }) => {
 	return (
 		<div className='book-intro'>
 			<div className='book-intro__image'>
-				<BookThumbnail name='book' {...bookInfo} size='lg' />
+				<BookThumbnail {...bookInfo} size='lg' />
 				<StatusButton
 					className='book-intro__btn'
 					handleClick={handleClick}

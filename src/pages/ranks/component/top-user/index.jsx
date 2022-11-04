@@ -55,7 +55,7 @@ const TopUser = ({ listYear, tabSelected }) => {
 			params = {
 				reportType: valueDataSort,
 				by: valueDate,
-				categoryId: topUserFilter,
+				// categoryId: topUserFilter,
 			};
 			setCheckSelectBox(false);
 		}

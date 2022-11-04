@@ -58,48 +58,54 @@ const DualColumn = props => {
 		}
 	};
 
-	if (list && list.length)
-		return (
-			<div className='dualColumn'>
-				<ul className={classNames('dualColumn-list', { [`bg-${background}`]: isBackground })}>
-					{list.slice(0, rows).map((item, index) => (
-						<li className={classNames('dualColumn-item', { 'has-background': isBackground })} key={index}>
-							<span
-								className='dualColumn-item__title'
-								onClick={
-									pageText
-										? () => filterQuotesByCategory(item.id, item.name)
-										: () => handleOnClick(item.category)
-								}
-								style={inCategory ? { cursor: 'pointer' } : {}}
+	return (
+		<>
+			{list && list.length > 0 ? (
+				<div className='dualColumn'>
+					<ul className={classNames('dualColumn-list', { [`bg-${background}`]: isBackground })}>
+						{list.slice(0, rows).map((item, index) => (
+							<li
+								className={classNames('dualColumn-item', { 'has-background': isBackground })}
+								key={index}
 							>
-								{inCategory ? item.category.name : item.name}
-							</span>
-
-							{pageText ? (
-								<span className='dualColumn-item__number'>{item?.countQuote} Quotes</span>
-							) : (
-								<span className='dualColumn-item__number no-page-text'>
-									{inCategory ? item.category.numberBooks : item.books.length}
+								<span
+									className='dualColumn-item__title'
+									onClick={
+										pageText
+											? () => filterQuotesByCategory(item.id, item.name)
+											: () => handleOnClick(item.category)
+									}
+									style={inCategory ? { cursor: 'pointer' } : {}}
+								>
+									{inCategory ? item.category.name : item.name}
 								</span>
-							)}
-						</li>
-					))}
-				</ul>
-				{list.length > defaultItems && (
-					<button className='dualColumn-btn' onClick={handleViewMore}>
-						<img
-							className={classNames('view-caret', { 'view-more': isExpand })}
-							src={caretIcon}
-							alt='caret-icon'
-						/>
-						<span>{isExpand ? 'Rút gọn' : 'Xem thêm'}</span>
-					</button>
-				)}
-			</div>
-		);
 
-	return <p>Không có dữ liệu</p>;
+								{pageText ? (
+									<span className='dualColumn-item__number'>{item?.countQuote} Quotes</span>
+								) : (
+									<span className='dualColumn-item__number no-page-text'>
+										{inCategory ? item.category.numberBooks : item.books.length}
+									</span>
+								)}
+							</li>
+						))}
+					</ul>
+					{list.length > defaultItems && (
+						<button className='dualColumn-btn' onClick={handleViewMore}>
+							<img
+								className={classNames('view-caret', { 'view-more': isExpand })}
+								src={caretIcon}
+								alt='caret-icon'
+							/>
+							<span>{isExpand ? 'Rút gọn' : 'Xem thêm'}</span>
+						</button>
+					)}
+				</div>
+			) : (
+				<p>Không có dữ liệu</p>
+			)}
+		</>
+	);
 };
 
 DualColumn.defaultProps = {

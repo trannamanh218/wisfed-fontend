@@ -27,7 +27,10 @@
 		.dualColumn {
 			margin-top: 24px;
 			.dualColumn-item {
-				cursor: pointer;
+				.dualColumn-item__title {
+					cursor: pointer;
+				}
+
 				.dualColumn-item__number {
 					font-size: 15px;
 					color: $ash;
