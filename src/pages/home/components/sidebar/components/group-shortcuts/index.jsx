@@ -1,10 +1,12 @@
 import { useFetchGroups } from 'api/group.hooks';
 import bookIcon from 'assets/icons/book.svg';
 import { NotificationError } from 'helpers/Error';
+import Storage from 'helpers/Storage';
 import _ from 'lodash';
 import { memo, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
+import { checkUserLogin } from 'reducers/redux-utils/auth';
 import { getMyGroup, getRecommendGroup } from 'reducers/redux-utils/group';
 
 function GroupShortcuts() {
@@ -54,6 +56,13 @@ function GroupShortcuts() {
 		}
 	}, [userInfo]);
 
+	const handleUserLogin = item => {
+		if (!Storage.getAccessToken()) {
+			dispatch(checkUserLogin(true));
+		} else {
+			navigate(`/group/${item.id}`);
+		}
+	};
 	return (
 		<>
 			<div className='sidebar__block'>
@@ -88,18 +97,19 @@ function GroupShortcuts() {
 								{!_.isEmpty(rows) ? (
 									rows.map((item, index) => (
 										<div key={index}>
-											<Link to={`/group/${item.id}`}>
-												<div className='group-short-cut__item'>
-													<div className='group-short-cut__item__logo'>
-														<img
-															src={item.avatar}
-															alt='group'
-															onError={e => e.target.setAttribute('src', `${bookIcon}`)}
-														/>
-													</div>
-													<div className='group-short-cut__item__name'>{item.name}</div>
+											<div
+												className='group-short-cut__item'
+												onClick={() => handleUserLogin(item)}
+											>
+												<div className='group-short-cut__item__logo'>
+													<img
+														src={item.avatar}
+														alt='group'
+														onError={e => e.target.setAttribute('src', `${bookIcon}`)}
+													/>
 												</div>
-											</Link>
+												<div className='group-short-cut__item__name'>{item.name}</div>
+											</div>
 										</div>
 									))
 								) : (

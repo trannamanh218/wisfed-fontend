@@ -186,10 +186,14 @@ const userSlice = createSlice({
 		categoriesData: {},
 		error: {},
 		isReload: false,
+		isFriend: false,
 	},
 	reducers: {
 		updateUser: (state, action) => {
 			state.isReload = action.payload;
+		},
+		checkListFriend: (state, action) => {
+			state.isFriend = action.payload;
 		},
 	},
 
@@ -212,4 +216,4 @@ const userSlice = createSlice({
 
 const user = userSlice.reducer;
 export default user;
-export const { updateUser } = userSlice.actions;
+export const { updateUser, checkListFriend } = userSlice.actions;
