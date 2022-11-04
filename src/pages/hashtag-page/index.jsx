@@ -84,7 +84,7 @@ export default function HashtagPage() {
 				getPostsByHashtag();
 			}
 		}
-	}, [postList]);
+	}, [isFetching]);
 
 	return (
 		<NormalContainer>
