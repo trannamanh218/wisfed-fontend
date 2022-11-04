@@ -21,13 +21,13 @@ const AuthorCard = ({ direction, size, item, setModalShow, checkAuthors }) => {
 				<div className='author-card__info'>
 					<h5>{item.fullName || `${item.firstName} ${item.lastName}`}</h5>
 					<p className='author-card__subtitle'>
-						{item.numberFollowing || item.countFollow} người theo dõi, {item.numFriends || item.countFriend}{' '}
-						bạn bè
+						{item?.numberFollowing || item?.countFollow || item?.userCounting?.follower || 0} người theo
+						dõi, {item?.numFriends || item?.countFriend || item.userCounting?.friend || 0} bạn bè
 					</p>
-					{checkAuthors && (
+					{checkAuthors && item?.bookAuthor.length > 0 && (
 						<>
 							<p>Tác giả của cuốn sách {item.bookAuthor[0]?.name}</p>
-							<span>và {item.countBook} cuốn sách khác</span>
+							{item?.countBook > 1 && <span>và {item?.countBook - 1} cuốn sách khác</span>}
 						</>
 					)}
 				</div>

@@ -39,6 +39,8 @@
 			.main-reading-summary {
 				.main-reading-summary__nav {
 					padding: 12px 10px !important;
+					display: flex;
+					justify-content: space-around;
 				}
 				.tab-content {
 					margin-right: 0;

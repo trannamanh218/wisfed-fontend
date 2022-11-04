@@ -109,6 +109,42 @@
 			}
 		}
 	}
+
+	.post__content-wrapper {
+		margin-bottom: 20px;
+		.post__content,
+		.post__content--readmore {
+			font-size: 0.94rem;
+			line-height: 1.5rem;
+			color: #4e4b66;
+			word-break: break-word;
+			max-height: 195px;
+			overflow: hidden;
+			a {
+				width: fit-content;
+				overflow: hidden;
+				color: $blue;
+				&:hover {
+					text-decoration: underline;
+					color: $blue;
+				}
+			}
+		}
+		.read-more-post {
+			cursor: pointer;
+			margin-top: 8px;
+			font-weight: 600;
+			font-size: 15px;
+			width: fit-content;
+			&:hover {
+				text-decoration: underline;
+			}
+		}
+
+		.post__content--readmore {
+			max-height: fit-content;
+		}
+	}
 }
 
 .post__user-status {
@@ -166,40 +202,6 @@
 			margin-left: 1rem;
 		}
 	}
-}
-
-.post__description,
-.post__description--readmore {
-	font-size: 0.94rem;
-	line-height: 1.5rem;
-	color: #4e4b66;
-	margin-bottom: 20px;
-	word-break: break-word;
-	max-height: 195px;
-	overflow: hidden;
-	a {
-		width: fit-content;
-		overflow: hidden;
-		color: $blue;
-		&:hover {
-			text-decoration: underline;
-			color: $blue;
-		}
-	}
-}
-.read-more-post {
-	cursor: pointer;
-	display: block;
-	margin-bottom: 15px;
-	font-weight: 600;
-}
-
-.read-more-post:hover {
-	text-decoration: underline;
-}
-
-.post__description--readmore {
-	max-height: fit-content;
 }
 
 .post__options {

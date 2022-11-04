@@ -128,11 +128,7 @@ function MainConfirmMyBook({ setErrorLoadPage }) {
 					</div>
 					<div className='main-confirm-my-book__book-info'>
 						<div className='main-confirm-my-book__image'>
-							<BookThumbnail
-								name='book'
-								source={bookInfo.frontBookCover || bookInfo.images[0]}
-								size='lg'
-							/>
+							<BookThumbnail source={bookInfo.frontBookCover || bookInfo.images[0]} size='lg' />
 							<div className='main-confirm-my-book__check'>
 								{status === 'pending' ? (
 									<span>Đang chờ xác thực</span>

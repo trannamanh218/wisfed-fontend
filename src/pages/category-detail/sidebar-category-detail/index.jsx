@@ -1,6 +1,6 @@
 import { useFetchOtherCategories } from 'api/category.hook';
 import { useFetchGroups } from 'api/group.hooks';
-import { useFetchQuotes } from 'api/quote.hooks';
+import { useFetchQuotes, useFetchQuotesByCategory } from 'api/quote.hooks';
 import _ from 'lodash';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
@@ -19,6 +19,7 @@ const SidebarCategoryDetail = ({ handleViewCategoryDetail }) => {
 	const { categoryInfo } = useSelector(state => state.category);
 	const [name, setName] = useState();
 	const [authorList, setAuthorList] = useState([]);
+	const [quotesList, setQuotesList] = useState([]);
 
 	const linkClickSeeAll = `/quotes/category/${categoryInfo.id}`;
 
@@ -44,6 +45,17 @@ const SidebarCategoryDetail = ({ handleViewCategoryDetail }) => {
 	} = useFetchOtherCategories(0, 30, name);
 
 	const { quoteData } = useFetchQuotes(0, 3);
+	const { listQuotesByCategory } = useFetchQuotesByCategory(categoryInfo?.id, 3);
+
+	useEffect(() => {
+		// Lọc ra danh sách quotes từ quoteData mà không có trong listQuotesByCategory
+		const newArr = quoteData.filter(item => !listQuotesByCategory.some(quote => quote.id === item.id));
+
+		// Lấy ra một danh sách chỉ có 3 quotes để hiển thị
+		if (quotesList) {
+			setQuotesList(listQuotesByCategory.concat(newArr).slice(0, 3));
+		}
+	}, [listQuotesByCategory, quoteData]);
 
 	const {
 		groups: { rows: groupList = [] },
@@ -75,7 +87,7 @@ const SidebarCategoryDetail = ({ handleViewCategoryDetail }) => {
 					<AuthorSlider title='Tác giả nổi bật' list={authorList} size='lg' />
 					<div className='sidebar-category-detail__quotes'>
 						<QuotesLinks
-							list={quoteData}
+							list={quotesList}
 							title='Quotes'
 							className='sidebar-category-detail__quotes'
 							linkClickSeeAll={linkClickSeeAll}

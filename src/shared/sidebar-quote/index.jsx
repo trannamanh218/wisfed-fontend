@@ -6,7 +6,7 @@ import TopicColumn from 'shared/topic-column';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import SearchField from 'shared/search-field';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import DualColumn from 'shared/dual-column';
 import { getCountQuotesByCategory } from 'reducers/redux-utils/quote';
 import { useDispatch } from 'react-redux';
@@ -17,7 +17,6 @@ import { handleCategoryByQuotesName } from 'reducers/redux-utils/quote';
 const SidebarQuote = ({ listHashtags, inMyQuote, hasCountQuotes }) => {
 	const [inputSearch, setInputSearch] = useState('');
 	const [categoryList, setCategoryList] = useState([]);
-	const [categorySearchedList, setCategorySearchedList] = useState([]);
 
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
@@ -26,13 +25,16 @@ const SidebarQuote = ({ listHashtags, inMyQuote, hasCountQuotes }) => {
 
 	useEffect(() => {
 		if (!inMyQuote && hasCountQuotes) {
-			getCountQuotesByCategoryData();
+			getCountQuotesByCategoryData('');
 		}
 	}, []);
 
-	const getCountQuotesByCategoryData = async () => {
+	const getCountQuotesByCategoryData = async inputValue => {
 		try {
-			const params = { limit: 15, sort: JSON.stringify([{ property: 'countQuote', direction: 'DESC' }]) };
+			const params = {
+				sort: JSON.stringify([{ property: 'countQuote', direction: 'DESC' }]),
+				filter: JSON.stringify([{ operator: 'search', value: inputValue, property: 'name' }]),
+			};
 			const res = await dispatch(getCountQuotesByCategory({ params: params })).unwrap();
 			setCategoryList(res);
 		} catch (err) {
@@ -40,10 +42,16 @@ const SidebarQuote = ({ listHashtags, inMyQuote, hasCountQuotes }) => {
 		}
 	};
 
+	const debouncSearch = useCallback(
+		_.debounce(inputValue => {
+			getCountQuotesByCategoryData(inputValue);
+		}, 700),
+		[]
+	);
+
 	const handleSearchCategories = e => {
 		setInputSearch(e.target.value);
-		const newArray = categoryList.filter(item => item.name.toLowerCase().includes(e.target.value.toLowerCase()));
-		setCategorySearchedList(newArray);
+		debouncSearch(e.target.value);
 	};
 
 	const filterQuotesByCategory = (categoryId, categoryName) => {
@@ -56,32 +64,21 @@ const SidebarQuote = ({ listHashtags, inMyQuote, hasCountQuotes }) => {
 			<>
 				{!inMyQuote && hasCountQuotes ? (
 					<>
-						{!!categoryList.length && (
-							<div className='sidebar-quote__category-list'>
-								<h4>Chủ đề Quotes</h4>
-								<SearchField
-									placeholder='Tìm kiếm danh mục'
-									className='sidebar-quote__category-list__search'
-									handleChange={handleSearchCategories}
-									value={inputSearch}
-								/>
-								{inputSearch ? (
-									<DualColumn
-										list={categorySearchedList}
-										pageText={true}
-										inQuotes={true}
-										filterQuotesByCategory={filterQuotesByCategory}
-									/>
-								) : (
-									<DualColumn
-										list={categoryList}
-										pageText={true}
-										inQuotes={true}
-										filterQuotesByCategory={filterQuotesByCategory}
-									/>
-								)}
-							</div>
-						)}
+						<div className='sidebar-quote__category-list'>
+							<h4>Chủ đề Quotes</h4>
+							<SearchField
+								placeholder='Tìm kiếm danh mục'
+								className='sidebar-quote__category-list__search'
+								handleChange={handleSearchCategories}
+								value={inputSearch}
+							/>
+							<DualColumn
+								list={categoryList}
+								pageText={true}
+								inQuotes={true}
+								filterQuotesByCategory={filterQuotesByCategory}
+							/>
+						</div>
 					</>
 				) : (
 					<>

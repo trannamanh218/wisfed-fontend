@@ -115,7 +115,7 @@ const MainReadingTarget = ({ setErrorLoadPage }) => {
 							</span>
 						</div>
 						<div className='book-row__container'>{generateAuthorName(item?.book.authors)}</div>
-						<div className='book-row__container'>{moment(item.createdAt).format('DD/MM/YYYY')}</div>
+						<div className='book-row__container'>{moment(item?.book.createdAt).format('DD/MM/YYYY')}</div>
 						<div className='book-row__container'>{moment(item.createdAt).format('DD/MM/YYYY')}</div>
 						<div className='book-row__container'>{moment(item.updatedAt).format('DD/MM/YYYY')}</div>
 					</div>
