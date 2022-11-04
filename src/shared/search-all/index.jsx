@@ -4,7 +4,7 @@ import ResultSearch from 'shared/results-search';
 import { useState, useCallback, useEffect } from 'react';
 import SearchField from 'shared/search-field';
 import _ from 'lodash';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { getFilterSearch } from 'reducers/redux-utils/search';
 import { NotificationError } from 'helpers/Error';
@@ -12,6 +12,8 @@ import { NotificationError } from 'helpers/Error';
 const SearchAllModal = ({ showRef, setIsShow }) => {
 	const hashtagRegex =
 		/#(?![0-9_]+\b)[0-9a-z_ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễếệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ]+/gi;
+
+	const { value } = useParams();
 
 	const [valueInputSearch, setValueInputSearch] = useState('');
 	const [resultSearch, setResultSearch] = useState([]);
@@ -48,6 +50,10 @@ const SearchAllModal = ({ showRef, setIsShow }) => {
 		debounceSearch(e.target.value);
 		setValueInputSearch(e.target.value);
 	};
+
+	useEffect(() => {
+		setValueInputSearch(value);
+	}, [value]);
 
 	const handleKeyDown = e => {
 		const value = valueInputSearch.trim();
