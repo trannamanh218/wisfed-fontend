@@ -5,6 +5,7 @@ import { NotificationError } from 'helpers/Error';
 import { useDispatch } from 'react-redux';
 import { getChartsByid } from 'reducers/redux-utils/chart';
 import { useParams } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 const ChartsReading = ({ setShowChartReading }) => {
 	const [chartsData, setChartsData] = useState({ month: '', year: '' });
@@ -12,6 +13,10 @@ const ChartsReading = ({ setShowChartReading }) => {
 	const [booksMonth, setBooksMonth] = useState([]);
 	const dispatch = useDispatch();
 	const { userId } = useParams();
+
+	useEffect(() => {
+		fetchDataPage();
+	}, []);
 
 	const fetchDataPage = async () => {
 		const dob = new Date();
@@ -43,10 +48,6 @@ const ChartsReading = ({ setShowChartReading }) => {
 		}
 	};
 
-	useEffect(() => {
-		fetchDataPage();
-	}, []);
-	console.log(chartsData, pagesMonth, booksMonth);
 	return (
 		<div className='charts__reading__container'>
 			<div className='charts__reading__container__title'>Biểu đồ đọc sách</div>
@@ -79,6 +80,10 @@ const ChartsReading = ({ setShowChartReading }) => {
 			</div>
 		</div>
 	);
+};
+
+ChartsReading.propTypes = {
+	setShowChartReading: PropTypes.func,
 };
 
 export default memo(ChartsReading);

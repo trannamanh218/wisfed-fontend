@@ -20,7 +20,7 @@ import classNames from 'classnames';
 import './header.scss';
 import NotificationModal from 'pages/notification/';
 import { useDispatch, useSelector } from 'react-redux';
-import { backgroundToggle, depenRenderNotificaion } from 'reducers/redux-utils/notification';
+import { backgroundToggle, depenRenderNotification } from 'reducers/redux-utils/notification';
 import { checkUserLogin, deleteUserInfo } from 'reducers/redux-utils/auth';
 import { useVisible } from 'shared/hooks';
 import SearchAllModal from 'shared/search-all';
@@ -192,7 +192,7 @@ const Header = () => {
 			const notificationFeed = client.feed('notification', userInfoJwt.id, userInfoJwt.userToken);
 
 			const callback = data => {
-				dispatch(depenRenderNotificaion(true));
+				dispatch(depenRenderNotification(true));
 				const params = {
 					isNewNotification: true,
 				};
@@ -211,7 +211,7 @@ const Header = () => {
 		if (userInfoJwt.isNewNotification) {
 			dispatch(patchNewNotification(params)).unwrap();
 			const dataNewNoti = { ...userInfoJwt, isNewNotification: false };
-			dispatch(depenRenderNotificaion(false));
+			dispatch(depenRenderNotification(false));
 			dispatch(updateIsNewNotificationUserInfo(dataNewNoti));
 		}
 	};

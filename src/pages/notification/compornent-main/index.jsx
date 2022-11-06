@@ -4,27 +4,60 @@ import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 import NormalContainer from 'components/layout/normal-container';
 import { Link } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { getNotification } from 'reducers/redux-utils/notification';
-import { useDispatch } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
 import NotificationStatus from 'shared/notification-status';
 import Circle from 'shared/loading/circle';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import LoadingIndicator from 'shared/loading-indicator';
 import { useState, useEffect, useRef } from 'react';
-import { depenRenderNotificaion } from 'reducers/redux-utils/notification';
+import { depenRenderNotification } from 'reducers/redux-utils/notification';
+import { getListReqFriendsToMe } from 'reducers/redux-utils/user';
+
 const Notification = () => {
-	const [getNotifications, setGetNotifications] = useState([]);
-	const [getListDefault, setListDefault] = useState([]);
-	const keyTabsActive = useSelector(state => state.notificationReducer.activeKeyTabs);
-	const { isRealTime } = useSelector(state => state.notificationReducer);
+	const [notificationsList, setNotificationsList] = useState([]);
+	const [listDefault, setListDefault] = useState([]);
+	const [listAddFriendReqToMe, setListAddFriendReqToMe] = useState([]);
+	const [friendReqToMeCount, setFriendReqToMeCount] = useState(0);
 	const [isLoading, setIsLoading] = useState(true);
-	const [renderFriend, setRenderFriend] = useState(false);
-	const dispatch = useDispatch();
 	const [hasMore, setHasMore] = useState(true);
+	const [currentTab, setCurrentTab] = useState('all');
+
 	const callApiStart = useRef(0);
 	const callApiPerPage = useRef(10);
+
+	const keyTabsActive = useSelector(state => state.notificationReducer.activeKeyTabs);
+	const isRealTime = useSelector(state => state.notificationReducer.isRealTime);
+
+	const dispatch = useDispatch();
+
+	useEffect(() => {
+		getListRequestFriendToMe();
+	}, []);
+
+	const getListRequestFriendToMe = async () => {
+		const params = { sort: JSON.stringify([{ property: 'createdAt', direction: 'DESC' }]) };
+		try {
+			const res = await dispatch(getListReqFriendsToMe(params)).unwrap();
+			const newArr = res.rows.map(item => {
+				return {
+					id: item.id,
+					createdBy: { ...item.userOne },
+					isCheck: false,
+					isRead: false,
+					originId: { requestId: item.id },
+					time: item.createdAt,
+					verb: 'addFriend',
+				};
+			});
+
+			setListAddFriendReqToMe(newArr);
+			setFriendReqToMeCount(res.count);
+		} catch (error) {
+			NotificationError(error);
+		}
+	};
 
 	const getMyNotification = async () => {
 		try {
@@ -33,10 +66,10 @@ const Notification = () => {
 				limit: callApiPerPage.current,
 			};
 
-			const notificationList = await dispatch(getNotification(params)).unwrap();
-			if (notificationList.length) {
+			const res = await dispatch(getNotification(params)).unwrap();
+			if (res.length) {
 				callApiStart.current += callApiPerPage.current;
-				setListDefault(getListDefault.concat(notificationList));
+				setListDefault(listDefault.concat(res));
 			} else {
 				setHasMore(false);
 			}
@@ -44,24 +77,17 @@ const Notification = () => {
 			NotificationError(err);
 		} finally {
 			setIsLoading(false);
-			dispatch(depenRenderNotificaion(null));
+			dispatch(depenRenderNotification(null));
 		}
 	};
 
 	useEffect(() => {
-		if (getListDefault.length > 0 && !isRealTime) {
-			const arrNew = getListDefault.map(item => item.activities).flat(1);
-			const newArr = arrNew.map(item => {
-				let data = { ...item };
-				if (item.verb === 'addFriend' || item.verb === 'inviteGroup') {
-					data = { ...item, isAccept: false, isRefuse: false };
-				}
-				return { ...data };
-			});
-			const filterFriend = newArr.filter(item => !item.isCheck);
-			setGetNotifications(filterFriend);
+		if (listDefault.length > 0 && !isRealTime) {
+			const arrNew = listDefault.map(item => item.activities).flat(1);
+			const arrFiltered = arrNew.filter(item => !item.isCheck);
+			setNotificationsList(arrFiltered);
 		}
-	}, [getListDefault, isRealTime]);
+	}, [listDefault, isRealTime]);
 
 	useEffect(() => {
 		if (!isRealTime) {
@@ -71,20 +97,6 @@ const Notification = () => {
 			setListDefault([]);
 		}
 	}, [isRealTime]);
-
-	useEffect(() => {
-		if (getNotifications.length > 0) {
-			const filterFriend = getNotifications.filter(item => item.verb === 'addFriend' && !item.isCheck);
-			if (filterFriend.length > 0) {
-				setRenderFriend(true);
-			}
-		}
-	}, [getNotifications]);
-
-	const lengthAddFriend = () => {
-		const length = getNotifications.filter(item => item.verb === 'addFriend' && !item.isCheck);
-		return length.length;
-	};
 
 	return (
 		<NormalContainer>
@@ -98,84 +110,72 @@ const Notification = () => {
 						<div className='notification__main__title'>Thông báo</div>
 					</div>
 					<div className='notification__tabs_main'>
-						<Tabs defaultActiveKey={keyTabsActive ? keyTabsActive : 'all'}>
+						<Tabs
+							defaultActiveKey={keyTabsActive ? keyTabsActive : 'all'}
+							onSelect={tabKey => setCurrentTab(tabKey)}
+						>
 							<Tab eventKey='all' title='Tất cả'>
 								<div className='notification__all__main__title'>Mới nhất</div>
-								{getNotifications
-									.slice(0, 1)
-									.map(
-										item =>
-											!item.isCheck &&
-											item && (
-												<NotificationStatus
-													key={item.id}
-													item={item}
-													setGetNotifications={setGetNotifications}
-													getNotifications={getNotifications}
-												/>
-											)
-									)}
+								{notificationsList.slice(0, 1).map(item => (
+									<NotificationStatus
+										key={item.id}
+										item={item}
+										setNotificationsList={setNotificationsList}
+										notificationsList={notificationsList}
+									/>
+								))}
 								<div className='notification__all__main__title'>Gần đây</div>
 								<InfiniteScroll
-									dataLength={getListDefault.length}
+									dataLength={listDefault.length}
 									next={getMyNotification}
 									hasMore={hasMore}
 									loader={<LoadingIndicator />}
 								>
-									{getNotifications
-										.slice(1)
-										.map(
-											item =>
-												!item.isCheck && (
-													<NotificationStatus
-														key={item.id}
-														item={item}
-														setGetNotifications={setGetNotifications}
-														getNotifications={getNotifications}
-													/>
-												)
-										)}
+									{notificationsList.slice(1).map(item => (
+										<NotificationStatus
+											key={item.id}
+											item={item}
+											setNotificationsList={setNotificationsList}
+											notificationsList={notificationsList}
+										/>
+									))}
 								</InfiniteScroll>
 							</Tab>
 							<Tab eventKey='unread' title='Chưa đọc'>
 								<div className='notification__all__main__title'>Thông báo chưa đọc</div>
 								<InfiniteScroll
-									dataLength={getListDefault.length}
+									dataLength={listDefault.length}
 									next={getMyNotification}
 									hasMore={hasMore}
 									loader={<LoadingIndicator />}
 								>
-									{getNotifications.map(
+									{notificationsList.map(
 										item =>
 											!item.isCheck &&
 											!item.isRead && (
 												<NotificationStatus
 													key={item.id}
 													item={item}
-													setGetNotifications={setGetNotifications}
-													getNotifications={getNotifications}
+													setNotificationsList={setNotificationsList}
+													notificationsList={notificationsList}
 												/>
 											)
 									)}
 								</InfiniteScroll>
 							</Tab>
-							{renderFriend && (
+							{friendReqToMeCount > 0 && (
 								<Tab eventKey='friendrequest' title='Lời mời kết bạn'>
 									<div className='notification__all__main__title'>
-										{lengthAddFriend()}&nbsp;lời kết bạn
+										{friendReqToMeCount} lời kết bạn
 									</div>
-									{getNotifications.map(
-										item =>
-											item.verb === 'addFriend' &&
-											!item.isCheck && (
-												<NotificationStatus
-													key={item.id}
-													item={item}
-													setGetNotifications={setGetNotifications}
-													getNotifications={getNotifications}
-												/>
-											)
-									)}
+									{listAddFriendReqToMe.map(item => (
+										<NotificationStatus
+											key={item.id}
+											item={item}
+											setNotificationsList={setListAddFriendReqToMe}
+											notificationsList={listAddFriendReqToMe}
+										/>
+									))}
 								</Tab>
 							)}
 						</Tabs>

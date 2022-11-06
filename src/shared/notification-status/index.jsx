@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import { calculateDurationTime } from 'helpers/Common';
 import UserAvatar from 'shared/user-avatar';
 import { renderMessage } from 'helpers/HandleShare';
-import { ReplyFriendRequest } from 'reducers/redux-utils/user';
+import { replyFriendRequest } from 'reducers/redux-utils/user';
 import {
 	readNotification,
 	updateReviewIdFromNoti,
@@ -12,37 +12,46 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import classNames from 'classnames';
 import LoadingIndicator from 'shared/loading-indicator';
 import logoNonText from 'assets/icons/logoNonText.svg';
 import { replyInviteGroup } from 'reducers/redux-utils/group';
 
-const NotificationStatus = ({ item, setGetNotifications, getNotifications }) => {
+const NotificationStatus = ({ item, setNotificationsList, notificationsList }) => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
 	const [isRead, setIsRead] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
+	const notiArrTemp = useRef(notificationsList);
 
 	const { userInfo } = useSelector(state => state.auth);
 
-	const ReplyFriendReq = async data => {
+	useEffect(() => {
+		notiArrTemp.current = [...notificationsList];
+	}, [notificationsList]);
+
+	const appectRequest = async (requestId, option) => {
 		setIsLoading(true);
-		const parseObject = JSON.parse(data);
-		const params = { id: parseObject.requestId, data: { reply: true } };
+
 		try {
-			await dispatch(ReplyFriendRequest(params)).unwrap();
-			const newArr = getNotifications.map(noti => {
+			if (option === 'addFriend') {
+				const params = { id: requestId, data: { reply: true } };
+				await dispatch(replyFriendRequest(params)).unwrap();
+			} else if (option === 'inviteGroup') {
+				const params = { id: requestId, body: { accept: true } };
+				await dispatch(replyInviteGroup(params)).unwrap();
+			}
+			const newArr = notiArrTemp.current.map(noti => {
 				if (noti.id === item.id) {
 					const data = { ...noti, isAccept: true };
 					return { ...data };
 				}
 				return { ...noti };
 			});
-			setGetNotifications(newArr);
-
-			await dispatch(readNotification({ notificationId: item.id })).unwrap();
+			setNotificationsList(newArr);
+			dispatch(readNotification({ notificationId: item.id })).unwrap();
 		} catch (err) {
 			NotificationError(err);
 		} finally {
@@ -50,64 +59,26 @@ const NotificationStatus = ({ item, setGetNotifications, getNotifications }) => 
 		}
 	};
 
-	const cancelFriend = async data => {
+	const refueRequest = async (requestId, option) => {
 		setIsLoading(true);
-		const parseObject = JSON.parse(data);
-		const params = { id: parseObject.requestId, data: { reply: false } };
 		try {
-			await dispatch(ReplyFriendRequest(params)).unwrap();
-			const newArr = getNotifications.map(noti => {
+			if (option === 'addFriend') {
+				const params = { id: requestId, data: { reply: false } };
+				await dispatch(replyFriendRequest(params)).unwrap();
+			} else if (option === 'inviteGroup') {
+				const params = { id: requestId, body: { accept: false } };
+				await dispatch(replyInviteGroup(params)).unwrap();
+			}
+
+			const newArr = notiArrTemp.current.map(noti => {
 				if (noti.id === item.id) {
-					const data = { ...noti, isRefuse: true };
+					const data = { ...noti, isAccept: false };
 					return { ...data };
 				}
 				return { ...noti };
 			});
-			setGetNotifications(newArr);
-
-			await dispatch(readNotification({ notificationId: item.id })).unwrap();
-		} catch (err) {
-			NotificationError(err);
-		} finally {
-			setIsLoading(false);
-		}
-	};
-
-	const acceptInviteGroup = async data => {
-		setIsLoading(true);
-		try {
-			const params = { id: data.originId.inviteId, body: { accept: true } };
-			await dispatch(replyInviteGroup(params)).unwrap();
-			const newArr = getNotifications.map(noti => {
-				if (noti.id === item.id) {
-					const data = { ...noti, isAccept: true };
-					return { ...data };
-				}
-				return { ...noti };
-			});
-			setGetNotifications(newArr);
-
-			await dispatch(readNotification({ notificationId: item.id })).unwrap();
-		} catch (err) {
-			NotificationError(err);
-		} finally {
-			setIsLoading(false);
-		}
-	};
-
-	const refuseInviteGroup = async data => {
-		setIsLoading(true);
-		try {
-			const params = { id: data.originId.inviteId, body: { accept: false } };
-			await dispatch(replyInviteGroup(params)).unwrap();
-			const newArr = getNotifications.map(noti => {
-				if (noti.id === item.id) {
-					const data = { ...noti, isRefuse: true };
-					return { ...data };
-				}
-				return { ...noti };
-			});
-			setGetNotifications(newArr);
+			setNotificationsList(newArr);
+			dispatch(readNotification({ notificationId: item.id })).unwrap();
 		} catch (err) {
 			NotificationError(err);
 		} finally {
@@ -117,7 +88,6 @@ const NotificationStatus = ({ item, setGetNotifications, getNotifications }) => 
 
 	const handleActiveIsRead = () => {
 		setIsRead(true);
-
 		if (!item.isRead) {
 			const params = {
 				notificationId: item.id,
@@ -276,82 +246,59 @@ const NotificationStatus = ({ item, setGetNotifications, getNotifications }) => 
 							</>
 						)}
 					</div>
-					<div
-						className={
-							item.isAccept || item.isRefuse
-								? 'notification__all__status__seen'
-								: 'notification__all__status'
-						}
-					>{`${calculateDurationTime(item?.time)}`}</div>
-					{item.isAccept ? (
-						<div className='notification___main__all__status'>Đã chấp nhận lời mời</div>
-					) : (
-						item.isRefuse && <div className='notification___main__all__status'>Đã từ chối lời mời</div>
+					<div className='notification__all__status'>{`${calculateDurationTime(item?.time)}`}</div>
+					{(item.verb === 'addFriend' || item.verb === 'inviteGroup') && (
+						<>
+							{item.isAccept !== undefined && (
+								<>
+									{item.isAccept ? (
+										<div className='notification___main__all__status'>Đã chấp nhận lời mời</div>
+									) : (
+										<div className='notification___main__all__status'>Đã từ chối lời mời</div>
+									)}
+								</>
+							)}
+						</>
 					)}
 				</div>
 
 				<div className={isRead || item.isRead ? 'notification__all__seen' : 'notification__all__unseen'}></div>
 			</div>
 
-			{!item.isAccept && !item.isRefuse && (
+			{item.isAccept === undefined && (item.verb === 'addFriend' || item.verb === 'inviteGroup') && (
 				<>
-					{item.verb === 'addFriend' && (
-						<div className='notification__main__all__friend'>
-							{isLoading ? (
-								<LoadingIndicator />
-							) : (
-								<>
-									<div
-										onClick={e => {
-											e.stopPropagation();
-											ReplyFriendReq(item.object);
-										}}
-										className='notification__main__all__accept'
-									>
-										{item.verb === 'browse' ? 'Duyệt' : 'Chấp nhận'}
-									</div>
-									<div
-										onClick={e => {
-											e.stopPropagation();
-											cancelFriend(item.object);
-										}}
-										className='notification__main__all__refuse'
-									>
-										Từ chối
-									</div>
-								</>
-							)}
-						</div>
-					)}
-
-					{item.verb === 'inviteGroup' && (
-						<div className='notification__main__all__friend'>
-							{isLoading ? (
-								<LoadingIndicator />
-							) : (
-								<>
-									<div
-										onClick={e => {
-											e.stopPropagation();
-											acceptInviteGroup(item);
-										}}
-										className='notification__main__all__accept'
-									>
-										{item.verb === 'browse' ? 'Duyệt' : 'Chấp nhận'}
-									</div>
-									<div
-										onClick={e => {
-											e.stopPropagation();
-											refuseInviteGroup(item);
-										}}
-										className='notification__main__all__refuse'
-									>
-										Từ chối
-									</div>
-								</>
-							)}
-						</div>
-					)}
+					<div className='notification__main__all__friend'>
+						{isLoading ? (
+							<LoadingIndicator />
+						) : (
+							<>
+								<div
+									onClick={e => {
+										e.stopPropagation();
+										appectRequest(
+											item.verb === 'addFriend' ? item.originId?.requestId : item,
+											item.verb
+										);
+									}}
+									className='notification__main__all__accept'
+								>
+									{item.verb === 'browse' ? 'Duyệt' : 'Chấp nhận'}
+								</div>
+								<div
+									onClick={e => {
+										e.stopPropagation();
+										refueRequest(
+											item.verb === 'addFriend' ? item.originId?.requestId : item,
+											item.verb
+										);
+									}}
+									className='notification__main__all__refuse'
+								>
+									Từ chối
+								</div>
+							</>
+						)}
+					</div>
 				</>
 			)}
 		</div>
@@ -360,7 +307,7 @@ const NotificationStatus = ({ item, setGetNotifications, getNotifications }) => 
 
 NotificationStatus.propTypes = {
 	item: PropTypes.object,
-	setGetNotifications: PropTypes.func,
-	getNotifications: PropTypes.array,
+	setNotificationsList: PropTypes.func,
+	notificationsList: PropTypes.array,
 };
 export default NotificationStatus;

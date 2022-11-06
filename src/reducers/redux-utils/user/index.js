@@ -65,13 +65,12 @@ export const getListFollowing = createAsyncThunk('user/getListFollowing', async 
 export const getListReqFriendsToMe = createAsyncThunk(
 	'user/getListReqFriendsToMe',
 	async (params, { rejectWithValue }) => {
-		const { ...query } = params;
 		try {
-			const response = await Request.makeGet(myFriendsReq, query);
+			const response = await Request.makeGet(myFriendsReq, params);
 			return response.data;
 		} catch (err) {
 			const error = JSON.parse(err.response);
-			throw rejectWithValue(error);
+			return rejectWithValue(error);
 		}
 	}
 );
@@ -86,7 +85,7 @@ export const makeFriendRequest = createAsyncThunk('user/makeFriendRequest', asyn
 	}
 });
 
-export const ReplyFriendRequest = createAsyncThunk('user/makeFriendRequest', async (params, { rejectWithValue }) => {
+export const replyFriendRequest = createAsyncThunk('user/makeFriendRequest', async (params, { rejectWithValue }) => {
 	const { id, data } = params;
 	try {
 		const response = await Request.makePost(replyFriendReqApi(id), data);

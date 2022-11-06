@@ -7,7 +7,7 @@ import {
 	makeFriendRequest,
 	addFollower,
 	unFollower,
-	ReplyFriendRequest,
+	replyFriendRequest,
 	unFriendRequest,
 } from 'reducers/redux-utils/user';
 import { NotificationError } from 'helpers/Error';
@@ -134,7 +134,7 @@ const FriendsItem = ({
 		const params = { id: data.id, data: { reply: true } };
 		try {
 			setToggleAcceptButton(false);
-			dispatch(ReplyFriendRequest(params)).unwrap();
+			dispatch(replyFriendRequest(params)).unwrap();
 		} catch (err) {
 			NotificationError(err);
 		}

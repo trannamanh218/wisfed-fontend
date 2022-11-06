@@ -71,7 +71,7 @@ export const cancelFriendApi = id => `/api/v1/users/${id}/cancelFriendReq`;
 export const makeFriendAPI = `/api/v1/users/friendRequest`;
 export const replyFriendReqApi = id => `/api/v1/users/${id}/replyFriendReq/`;
 export const unFriend = id => `/api/v1/users/${id}/unFriend`;
-export const myFriendsReq = `/api/v1/users/friendReqToMe/`;
+export const myFriendsReq = `/api/v1/users/friendReqToMe`;
 export const recommendFriendAPI = '/api/v1/users/recommendFriends';
 
 //activity

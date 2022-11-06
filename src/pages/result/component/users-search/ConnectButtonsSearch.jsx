@@ -6,7 +6,7 @@ import { useDispatch } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
 import _ from 'lodash';
 import ModalUnFriend from 'pages/friends/component/modalUnFriends';
-import { ReplyFriendRequest } from 'reducers/redux-utils/user';
+import { replyFriendRequest } from 'reducers/redux-utils/user';
 import { checkUserLogin } from 'reducers/redux-utils/auth';
 import Storage from 'helpers/Storage';
 
@@ -48,7 +48,7 @@ const ConnectButtonsSearch = ({ direction, item }) => {
 	const handleAcces = () => {
 		try {
 			const params = { id: item.friendRequest.id, data: { reply: true } };
-			dispatch(ReplyFriendRequest(params)).unwrap();
+			dispatch(replyFriendRequest(params)).unwrap();
 			setFriendStatusBtn('friend');
 			setFollowStatusBtn(true);
 		} catch (err) {
