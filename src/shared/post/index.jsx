@@ -47,6 +47,7 @@ import ShareTarget from 'shared/share-target';
 import { handleMentionCommentId, handleCheckIfMentionFromGroup } from 'reducers/redux-utils/notification';
 import { getMiniPostComments, getGroupPostComments } from 'reducers/redux-utils/post';
 import defaultAvatar from 'assets/icons/defaultLogoAvatar.svg';
+import vector from 'assets/images/Vector.png';
 import SeeMoreComments from 'shared/see-more-comments/SeeMoreComments';
 
 const urlRegex =
@@ -458,7 +459,13 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 								{postData.book && (
 									<div className='post__user-status__subtitle'>
 										{postData.isUpdateProgress && (
-											<span style={{ marginRight: '12px' }}>Cập nhật tiến độ đọc sách</span>
+											<>
+												<img src={vector} />
+												<span style={{ marginRight: '12px', marginLeft: '5px' }}>
+													{' '}
+													Cập nhật tiến độ đọc sách
+												</span>
+											</>
 										)}
 										{postInformations?.book?.actorRating !== null ? (
 											<>
