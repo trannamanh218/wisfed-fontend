@@ -51,6 +51,8 @@ function ChooseTopic() {
 		getListCategory();
 	}, []);
 
+	useEffect(() => {}, []);
+
 	const handleChange = e => {
 		const keyData = Number(e.target.value);
 		if (addFavorite.indexOf(keyData) !== -1) {
@@ -70,7 +72,7 @@ function ChooseTopic() {
 			</div>
 			<div className='choose-topic__body'>
 				<div className='choose-topic__title'>
-					<span>Lựa chọn ít nhất 02 chủ đề bạn yêu thích</span>
+					<span>Lựa chọn ít nhất 03 chủ đề bạn yêu thích</span>
 				</div>
 				<div className='choose-topic__subcribe'>
 					<span>
@@ -108,6 +110,7 @@ function ChooseTopic() {
 														checked={addFavorite.includes(item.id)}
 														value={item.id}
 														onClick={handleChange}
+														readOnly
 													/>
 													<Form.Check.Label className='form-check-label--custom'>
 														{item.name}
