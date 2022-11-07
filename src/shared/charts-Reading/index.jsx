@@ -7,7 +7,7 @@ import { getChartsByid } from 'reducers/redux-utils/chart';
 import { useParams } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
-const ChartsReading = ({ setShowChartReading }) => {
+const ChartsReading = () => {
 	const [chartsData, setChartsData] = useState({ month: '', year: '' });
 	const [pagesMonth, setPagesMonth] = useState({});
 	const [booksMonth, setBooksMonth] = useState({});
@@ -16,50 +16,28 @@ const ChartsReading = ({ setShowChartReading }) => {
 
 	const fetchDataPage = async () => {
 		const dob = new Date();
-		let month = dob.getMonth() + 1;
+		const month = dob.getMonth() + 1;
 		const year = dob.getFullYear();
 		setChartsData({ month: month, year: year });
 
 		try {
-			const params = {
+			const paramsPage = {
 				count: 'numPageRead',
-				by: 'year',
+				by: 'month',
 				userId: userId,
 			};
-			const data = await dispatch(getChartsByid(params)).unwrap();
-			if (data && data.length === 0) {
-				// Kiểm tra xem nếu user chưa từng đọc cuốn sách nào thì ẩn component đi
-				setShowChartReading(false);
-			} else {
-				try {
-					const paramsPage = {
-						count: 'numPageRead',
-						by: 'month',
-						userId: userId,
-					};
-					const newData = await dispatch(getChartsByid(paramsPage)).unwrap();
+			const newData = await dispatch(getChartsByid(paramsPage)).unwrap();
+			const pageMonth = newData.find(item => item.month === month);
+			setPagesMonth(pageMonth);
 
-					// Lấy tháng gần nhất có đọc sách
-					for (let i = month - 1; i > 0; i--) {
-						if (newData[i].count > 0) {
-							setPagesMonth(newData[i]);
-							month = newData[i].month;
-							break;
-						}
-					}
-
-					const paramsBook = {
-						count: 'numBookRead',
-						by: 'month',
-						userId: userId,
-					};
-					const data = await dispatch(getChartsByid(paramsBook)).unwrap();
-					const bookMonth = data.find(item => item.month === month);
-					setBooksMonth(bookMonth);
-				} catch (err) {
-					NotificationError(err);
-				}
-			}
+			const paramsBook = {
+				count: 'numBookRead',
+				by: 'month',
+				userId: userId,
+			};
+			const data = await dispatch(getChartsByid(paramsBook)).unwrap();
+			const bookMonth = data.find(item => item.month === month);
+			setBooksMonth(bookMonth);
 		} catch (err) {
 			NotificationError(err);
 		}
@@ -78,11 +56,11 @@ const ChartsReading = ({ setShowChartReading }) => {
 				</div>
 				<div className='charts__reading__container__main__read'>
 					<div className='book__read__title'>Số sách đã đọc</div>
-					<div className='book__read__number'>{booksMonth.count}</div>
+					<div className='book__read__number'>{booksMonth?.count || 0}</div>
 				</div>
 				<div className='charts__reading__container__main__read'>
 					<div className='book__read__title'>Số trang đã đọc</div>
-					<div className='book__read__number'>{pagesMonth.count}</div>
+					<div className='book__read__number'>{pagesMonth?.count || 0}</div>
 				</div>
 
 				<Link
