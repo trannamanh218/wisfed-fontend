@@ -2,16 +2,20 @@ import { NotificationError } from 'helpers/Error';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { changeToggleFollows } from 'reducers/redux-utils/friends';
 import { getTopUser } from 'reducers/redux-utils/ranks';
 import { getRecommendFriend } from 'reducers/redux-utils/user';
 import FriendsItem from 'shared/friends';
+import LoadingIndicator from 'shared/loading-indicator';
 
 const SuggestFriend = ({ activeTabs }) => {
 	const [list, setList] = useState([]);
 	const [listRecommendFriend, setListRecommendFriend] = useState([]);
+	const [isLoading, setIsLoading] = useState(false);
 
 	const userInfo = useSelector(state => state.auth.userInfo);
 	const { isAuth } = useSelector(state => state.auth);
+	const changeFollow = useSelector(state => state.friends.toggle);
 
 	const LIMIT_RECOMMEND = 6;
 
@@ -20,6 +24,7 @@ const SuggestFriend = ({ activeTabs }) => {
 	const dispatch = useDispatch();
 
 	const getSuggestFriendByTopFollow = async () => {
+		setIsLoading(true);
 		const params = {
 			reportType: 'topFollow',
 			by: 'month',
@@ -31,10 +36,13 @@ const SuggestFriend = ({ activeTabs }) => {
 			}
 		} catch (err) {
 			NotificationError(err);
+		} finally {
+			setIsLoading(false);
 		}
 	};
 
 	const getSuggestFriendByCategory = async () => {
+		setIsLoading(true);
 		const params = {
 			reportType: 'topRead',
 			by: 'month',
@@ -47,10 +55,13 @@ const SuggestFriend = ({ activeTabs }) => {
 			}
 		} catch (err) {
 			NotificationError(err);
+		} finally {
+			setIsLoading(false);
 		}
 	};
 
 	const getRecommendFriendData = async () => {
+		setIsLoading(true);
 		const params = {
 			start: 0,
 			limit: LIMIT_RECOMMEND,
@@ -58,8 +69,11 @@ const SuggestFriend = ({ activeTabs }) => {
 		try {
 			const data = await dispatch(getRecommendFriend(params)).unwrap();
 			setListRecommendFriend(data);
+			dispatch(changeToggleFollows(''));
 		} catch (err) {
 			NotificationError(err);
+		} finally {
+			setIsLoading(false);
 		}
 	};
 
@@ -79,7 +93,7 @@ const SuggestFriend = ({ activeTabs }) => {
 			setList(newListNotFriend.slice(0, 6));
 		});
 		getRecommendFriendData();
-	}, []);
+	}, [changeFollow, dispatch]);
 
 	return (
 		<div className='myfriends__container'>
@@ -89,6 +103,7 @@ const SuggestFriend = ({ activeTabs }) => {
 					Xem tất cả
 				</Link>
 			</div>
+
 			<div className='myfriends__layout__container'>
 				{list.length > 0 ? (
 					list.map(item => (
@@ -105,15 +120,20 @@ const SuggestFriend = ({ activeTabs }) => {
 					Xem tất cả
 				</Link>
 			</div>
+
 			<div className='myfriends__layout__container'>
-				{listRecommendFriend.map(item => (
-					<FriendsItem
-						key={item.id}
-						data={item}
-						keyTabs={activeTabs}
-						getListRecommend={listRecommendFriend}
-					/>
-				))}
+				{listRecommendFriend.length > 0 ? (
+					listRecommendFriend.map(item => (
+						<FriendsItem
+							key={item.id}
+							data={item}
+							keyTabs={activeTabs}
+							getListRecommend={listRecommendFriend}
+						/>
+					))
+				) : (
+					<p style={{ textAlign: 'center' }}>Không có dữ liệu</p>
+				)}
 			</div>
 		</div>
 	);

@@ -232,13 +232,13 @@ const FriendsItem = ({
 				}
 			}
 		} else if (keyTabs === 'suggest' || suggestions || recommend) {
-			if (!data.isFollow) {
-				return toggleUnFollow ? buttonFollow() : buttonUnfollow();
+			if (data.isFollow) {
+				return toggleUnFollow ? buttonUnfollow() : buttonFollow();
 			} else {
 				if ((toggleUnFollow && getListSuggest) || suggestions) {
 					return toggleAddFollow ? buttonFollow() : buttonUnfollow();
 				} else {
-					return toggleUnFollow ? buttonUnfollow() : buttonFollow();
+					return toggleAddFollow ? buttonFollow() : buttonUnfollow();
 				}
 			}
 		} else if (keyTabs === 'addfriend' || invitation) {
