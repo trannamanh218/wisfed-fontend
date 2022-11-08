@@ -800,7 +800,7 @@ function CreatePostModalContent({
 					</div>
 					<div className='creat-post-modal-content__main__options-and-submit'>
 						<div className='creat-post-modal-content__main__options'>
-							<span>Thêm vào bài viết</span>
+							<span className='creat-post-modal-content__title'>Thêm vào bài viết</span>
 							<div className='creat-post-modal-content__main__options__items'>
 								<OptionsPost
 									list={optionListState}

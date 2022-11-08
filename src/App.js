@@ -110,6 +110,7 @@ function App({ children }) {
 						<Route path='/friends' element={<Friends />} />
 						<Route path='/friends/:slug' element={<DetailFriend />} />
 						<Route path='/notification' element={<Notification />} />
+						<Route path='/group/:id' element={<Group />} />
 					</>
 				)}
 
@@ -142,7 +143,6 @@ function App({ children }) {
 				<Route path='/reading-summary/:userId' element={<ReadingSummary />} />
 				<Route path='/reading-target/:userId' element={<ReadingTarget />} />
 				<Route path='/group' element={<LayoutGroup />} />
-				<Route path='/group/:id' element={<Group />} />
 				<Route path='/my-group' element={<MyGroup />} />
 				<Route path='/hashtag/:hashtag' element={<HashtagPage />} />
 				<Route path='/hashtag-group/:groupId/:hashtag' element={<HashtagPage />} />

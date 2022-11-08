@@ -131,6 +131,7 @@ const MainShelves = ({ allLibraryList, shelveGroupName, isMyShelve, handleViewBo
 											isMyShelve={isMyShelve}
 											handleUpdateBookList={handleUpdateBookList}
 											handleViewBookDetail={handleViewBookDetail}
+											shelveGroupName={shelveGroupName}
 										/>
 									)}
 
