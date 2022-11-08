@@ -256,7 +256,7 @@ const PopupCreateGroup = ({ handleClose }) => {
 
 	const uploadImageFile = async acceptedFiles => {
 		const imageUploadedData = await dispatch(uploadImage(acceptedFiles)).unwrap();
-		return imageUploadedData?.streamPath;
+		return imageUploadedData?.streamPath.default;
 	};
 
 	useEffect(() => {

@@ -20,7 +20,7 @@ import classNames from 'classnames';
 import './header.scss';
 import NotificationModal from 'pages/notification/';
 import { useDispatch, useSelector } from 'react-redux';
-import { backgroundToggle, depenRenderNotificaion } from 'reducers/redux-utils/notification';
+import { backgroundToggle, depenRenderNotification } from 'reducers/redux-utils/notification';
 import { checkUserLogin, deleteUserInfo } from 'reducers/redux-utils/auth';
 import { useVisible } from 'shared/hooks';
 import SearchAllModal from 'shared/search-all';
@@ -183,9 +183,9 @@ const Header = () => {
 		if (!_.isEmpty(userInfoJwt)) {
 			const client = stream.connect('p77uwpux9zwu', null, '1169912');
 			const notificationFeed = client.feed('notification', userInfoJwt.id, userInfoJwt.userToken);
-
+			console.log('realtime', notificationFeed);
 			const callback = data => {
-				dispatch(depenRenderNotificaion(true));
+				dispatch(depenRenderNotification(true));
 				const params = {
 					isNewNotification: true,
 				};
@@ -198,13 +198,13 @@ const Header = () => {
 			};
 			notificationFeed.subscribe(callback);
 		}
-	}, [userInfoJwt]);
+	});
 
 	const updateNewNotificaionFalse = params => {
 		if (userInfoJwt.isNewNotification) {
 			dispatch(patchNewNotification(params)).unwrap();
 			const dataNewNoti = { ...userInfoJwt, isNewNotification: false };
-			dispatch(depenRenderNotificaion(false));
+			dispatch(depenRenderNotification(false));
 			dispatch(updateIsNewNotificationUserInfo(dataNewNoti));
 		}
 	};

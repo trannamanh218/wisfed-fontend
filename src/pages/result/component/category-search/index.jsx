@@ -51,6 +51,7 @@ const CategorySearch = ({ value, isFetching, setIsFetching, searchResultInput, a
 				type: activeKeyDefault,
 				start: callApiStartCategory.current,
 				limit: callApiPerPage.current,
+				must_not: { 'numberBook': '0' },
 			};
 			const result = await dispatch(getFilterSearch(params)).unwrap();
 			if (result.rows.length > 0) {
@@ -92,32 +93,30 @@ const CategorySearch = ({ value, isFetching, setIsFetching, searchResultInput, a
 
 	return (
 		<div className='category__search__container'>
-			{!isFetching && (
-				<>
-					{listArrayCategory.length > 0 && activeKeyDefault === 'categories' ? (
-						<InfiniteScroll
-							dataLength={listArrayCategory.length}
-							next={handleGetGroupSearch}
-							hasMore={hasMore}
-							loader={<LoadingIndicator />}
-						>
-							{listArrayCategory.map(category => (
-								<CategoryGroup
-									key={`category-group-${category.id}`}
-									list={category.books}
-									title={category.name}
-									data={category}
-									handleViewBookDetail={handleViewBookDetail}
-									handleViewCategoryDetail={handleViewCategoryDetail}
-									inResult={true}
-								/>
-							))}
-						</InfiniteScroll>
-					) : (
-						<ResultNotFound />
-					)}
-				</>
-			)}
+			<>
+				{listArrayCategory.length && activeKeyDefault === 'categories' ? (
+					<InfiniteScroll
+						dataLength={listArrayCategory.length}
+						next={handleGetGroupSearch}
+						hasMore={hasMore}
+						loader={<LoadingIndicator />}
+					>
+						{listArrayCategory.map(category => (
+							<CategoryGroup
+								key={`category-group-${category.id}`}
+								list={category.books}
+								title={category.name}
+								data={category}
+								handleViewBookDetail={handleViewBookDetail}
+								handleViewCategoryDetail={handleViewCategoryDetail}
+								inResult={true}
+							/>
+						))}
+					</InfiniteScroll>
+				) : (
+					<ResultNotFound />
+				)}
+			</>
 		</div>
 	);
 };

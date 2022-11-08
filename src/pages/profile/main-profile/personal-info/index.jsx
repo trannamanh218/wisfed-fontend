@@ -57,9 +57,9 @@ const PersonalInfo = ({ currentUserInfo, setCurrentTab }) => {
 				const imageUploadedData = await dispatch(uploadImage(acceptedFile)).unwrap();
 				let params;
 				if (option === 'change-bgImage') {
-					params = { backgroundImage: imageUploadedData.streamPath };
+					params = { backgroundImage: imageUploadedData.streamPath?.default };
 				} else {
-					params = { avatarImage: imageUploadedData.streamPath };
+					params = { avatarImage: imageUploadedData.streamPath?.small };
 				}
 				const changeUserImage = await dispatch(editUserInfo(params)).unwrap();
 				dispatch(updateUserInfo(changeUserImage));

@@ -174,7 +174,7 @@ function MainGroupComponent({
 				const params = {
 					id: id,
 					param: {
-						avatar: imageUploadedData.streamPath,
+						avatar: imageUploadedData.streamPath.default,
 					},
 				};
 				dispatch(getupdateBackground(params));

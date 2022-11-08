@@ -3,10 +3,13 @@ import { useState } from 'react';
 import PropTypes from 'prop-types';
 import caretIcon from 'assets/images/caret.png';
 import './topic-column.scss';
-import { Link } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const TopicColumn = ({ topics, className, title, handleViewCategoryDetail, inCategory = false }) => {
 	const [isExpand, setIsExpand] = useState(false);
+
+	const location = useLocation();
+	const navigate = useNavigate();
 
 	let defaultItems;
 	let maxItems;
@@ -35,6 +38,12 @@ const TopicColumn = ({ topics, className, title, handleViewCategoryDetail, inCat
 		setIsExpand(!isExpand);
 	};
 
+	const handleDirect = topic => {
+		if (location.pathname.includes('/quotes/') || location.pathname.includes('/quotes/detail/')) {
+			return navigate(`/quotes/hashtag/${topic.name?.slice(1) || topic.tag?.name?.slice(1)}`);
+		}
+	};
+
 	return (
 		<>
 			{!!topics.length > 0 && (
@@ -48,9 +57,9 @@ const TopicColumn = ({ topics, className, title, handleViewCategoryDetail, inCat
 								title={topic.name}
 								onClick={() => handleViewCategoryDetail(topic)}
 							>
-								<Link to={`/quotes/hashtag/${topic.name?.slice(1) || topic.tag?.name?.slice(1)}`}>
-									<span>{topic.name || topic.tag?.name}</span>
-								</Link>
+								{/* <Link to={`/quotes/hashtag/${topic.name?.slice(1) || topic.tag?.name?.slice(1)}`}> */}
+								<span onClick={() => handleDirect(topic)}>{topic.name || topic.tag?.name}</span>
+								{/* </Link> */}
 							</div>
 						))}
 					</div>

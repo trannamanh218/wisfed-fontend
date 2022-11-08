@@ -11,7 +11,7 @@
 		padding: 1em;
 		border-radius: 16px;
 		background-color: $ash-background;
-		font-size: 0.825rem;
+		font-size: 13px;
 		width: fit-content;
 	}
 
@@ -51,7 +51,7 @@
 	&__action {
 		display: flex;
 		gap: 1em;
-		font-size: 0.75rem;
+		font-size: 11px;
 		font-weight: 600;
 		line-height: 1.5;
 		color: $ash-label;

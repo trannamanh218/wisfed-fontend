@@ -14,6 +14,10 @@ const ChartsReading = () => {
 	const dispatch = useDispatch();
 	const { userId } = useParams();
 
+	useEffect(() => {
+		fetchDataPage();
+	}, [userId]);
+
 	const fetchDataPage = async () => {
 		const dob = new Date();
 		const month = dob.getMonth() + 1;
@@ -42,10 +46,6 @@ const ChartsReading = () => {
 			NotificationError(err);
 		}
 	};
-
-	useEffect(() => {
-		fetchDataPage();
-	}, [userId]);
 
 	return (
 		<div className='charts__reading__container'>

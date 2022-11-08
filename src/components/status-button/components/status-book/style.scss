@@ -4,6 +4,9 @@
 		margin-top: 1rem;
 	}
 	font-weight: 600;
+	.status-book__title {
+		font-size: 18px;
+	}
 }
 
 .status-book__title {
@@ -90,6 +93,7 @@
 
 	&__title {
 		margin-left: 1em;
+		font-size: 18px;
 	}
 
 	.custom-radio {

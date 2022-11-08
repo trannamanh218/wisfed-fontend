@@ -14,7 +14,13 @@ import CreatPostSubModal from './CreatePostSubModal';
 import TaggedList from './TaggedList';
 import UploadImage from './UploadImage';
 import PreviewLink from 'shared/preview-link/PreviewLink';
-import { getPreviewUrl, getSharePostInternal, getSharePostRanks, shareMyBook } from 'reducers/redux-utils/post';
+import {
+	getPreviewUrl,
+	getSharePostInternal,
+	getSharePostRanks,
+	shareMyBook,
+	warning,
+} from 'reducers/redux-utils/post';
 import Circle from 'shared/loading/circle';
 import './style.scss';
 import { ratingUser } from 'reducers/redux-utils/book';
@@ -72,6 +78,7 @@ function CreatePostModalContent({
 	onChangeNewPost,
 	showSubModal,
 	bookForCreatePost,
+	message,
 }) {
 	// const [shareMode, setShareMode] = useState({ value: 'public', title: 'Mọi người', icon: <WorldNet /> }); // k xóa
 	const [showMainModal, setShowMainModal] = useState(showModalCreatPost);
@@ -103,6 +110,8 @@ function CreatePostModalContent({
 	const UpdateImg = useSelector(state => state.chart.updateImgPost);
 	const chartImgShare = useSelector(state => state.chart.updateImgPost);
 	const { postDataShare } = useSelector(state => state.post);
+	const isWarning = useSelector(state => state.post.isWarning);
+
 	const {
 		auth: { userInfo },
 		book: { bookInfo },
@@ -172,6 +181,12 @@ function CreatePostModalContent({
 			setHashtagsAdded(hashtagsFormated);
 		} else {
 			setHashtagsAdded([]);
+		}
+
+		if (content !== '') {
+			dispatch(warning(true));
+		} else {
+			dispatch(warning(false));
 		}
 	}, [content]);
 
@@ -299,11 +314,7 @@ function CreatePostModalContent({
 		if (imagesUpload.length) {
 			try {
 				const imagesUploaded = await dispatch(uploadMultiFile(imagesUpload)).unwrap();
-				const imagesArray = [];
-				imagesUploaded.forEach(item => {
-					imagesArray.push(item.streamPath);
-				});
-				params.image = imagesArray;
+				params.image = imagesUploaded.map(item => item.streamPath.medium);
 			} catch {
 				const customId = 'custom-id-CreatePostModalContent-generateData';
 				toast.error('Đăng ảnh không thành công', { toastId: customId });
@@ -318,37 +329,28 @@ function CreatePostModalContent({
 	};
 
 	const handleUpdateProgress = async () => {
-		const { status, progress, id, page } = taggedData.addBook;
+		const { progress, id, page } = taggedData.addBook;
 		const convertProgress = parseInt(progress) || 0;
 		const progressParams = { id: id, progress: convertProgress };
 		dispatch(updateProgressReadingBook(progressParams)).unwrap();
 		try {
-			if (status) {
-				if (convertProgress === page) {
-					const addBookParams = { bookId: id, type: STATUS_BOOK.read };
-					dispatch(addBookToDefaultLibrary(addBookParams)).unwrap();
-				}
-			} else {
-				// Check cuốn sách hiện tại đang ở trong thư viện nào của ng dùng hay k
-				let libraryContainCurrentBook = null;
-				if (myAllLibraryReduxDefault.length) {
-					const found = myAllLibraryReduxDefault.find(item1 =>
-						item1.books.find(item2 => item2.bookId === id)
-					);
-					libraryContainCurrentBook = found?.defaultType;
-				}
+			// Check cuốn sách hiện tại đang ở trong thư viện nào của ng dùng hay k
+			let libraryContainCurrentBook = null;
+			if (myAllLibraryReduxDefault.length) {
+				const found = myAllLibraryReduxDefault.find(item1 => item1.books.find(item2 => item2.bookId === id));
+				libraryContainCurrentBook = found?.defaultType;
+			}
 
-				let type = STATUS_BOOK.wantToRead;
-				if (convertProgress > 0 && convertProgress < page) {
-					type = STATUS_BOOK.reading;
-				} else if (convertProgress === page) {
-					type = STATUS_BOOK.read;
-				}
+			let type = STATUS_BOOK.wantToRead;
+			if (convertProgress > 0 && convertProgress < page) {
+				type = STATUS_BOOK.reading;
+			} else if (convertProgress === page) {
+				type = STATUS_BOOK.read;
+			}
 
-				if (type !== libraryContainCurrentBook) {
-					const addBookParams = { bookId: id, type };
-					dispatch(addBookToDefaultLibrary(addBookParams)).unwrap();
-				}
+			if (type !== libraryContainCurrentBook) {
+				const addBookParams = { bookId: id, type };
+				dispatch(addBookToDefaultLibrary(addBookParams)).unwrap();
 			}
 			setTimeout(() => {
 				dispatch(updateMyAllLibraryRedux());
@@ -395,6 +397,7 @@ function CreatePostModalContent({
 						msg: content,
 						current: postDataShare.booksReadCount,
 						mentionsUser: params.mentionsUser,
+						tags: params.tags,
 					};
 					await dispatch(
 						shareTargetReadings({
@@ -411,6 +414,7 @@ function CreatePostModalContent({
 						userType: postDataShare.userType,
 						id: postDataShare.id,
 						mentionsUser: params.mentionsUser,
+						tags: params.tags,
 					};
 					await dispatch(getSharePostRanks(query)).unwrap();
 				} else if (postDataShare.verb === TOP_BOOK_VERB_SHARE) {
@@ -421,6 +425,7 @@ function CreatePostModalContent({
 						categoryId: postDataShare.categoryId || null,
 						id: postDataShare.id,
 						mentionsUser: params.mentionsUser,
+						tags: params.tags,
 					};
 					await dispatch(getSharePostRanks(query)).unwrap();
 				} else if (postDataShare.verb === MY_BOOK_VERB_SHARE) {
@@ -429,6 +434,7 @@ function CreatePostModalContent({
 						msg: content,
 						type: postDataShare.type,
 						mentionsUser: params.mentionsUser,
+						tags: params.tags,
 					};
 					await dispatch(shareMyBook(query)).unwrap();
 				} else if (postDataShare.verb === TOP_QUOTE_VERB_SHARE) {
@@ -439,6 +445,7 @@ function CreatePostModalContent({
 						categoryId: postDataShare.categoryId || null,
 						id: postDataShare.id,
 						mentionsUser: params.mentionsUser,
+						tags: params.tags,
 					};
 					await dispatch(getSharePostRanks(query)).unwrap();
 				} else if (postDataShare.verb === REVIEW_VERB_SHARE) {
@@ -487,8 +494,13 @@ function CreatePostModalContent({
 			toast.success('Tạo bài viết thành công!', { toastId: customId });
 			onChangeNewPost();
 		} catch (err) {
-			const customId = 'custom-id-CreatePostModalContent-onCreatePost-error';
-			toast.error('Tạo bài viết thất bại!', { toastId: customId });
+			if (err.errorCode === 321) {
+				const customIdNotInGroup = 'custom-id-CreatePostModalContent-onCreatePost-not-in-group';
+				toast.error('Bạn chưa tham gia nhóm', { toastId: customIdNotInGroup });
+			} else {
+				const customIdCreatePostFail = 'custom-id-CreatePostModalContent-onCreatePost-error';
+				toast.error('Tạo bài viết thất bại!', { toastId: customIdCreatePostFail });
+			}
 		} finally {
 			dispatch(updateCurrentBook({}));
 			dispatch(saveDataShare({}));
@@ -607,6 +619,15 @@ function CreatePostModalContent({
 		}
 	};
 
+	const handleClose = () => {
+		if (isWarning) {
+			if (confirm(message) === true) {
+				hideCreatePostModal();
+			}
+		} else {
+			hideCreatePostModal();
+		}
+	};
 	return (
 		<div className='creat-post-modal-content'>
 			<Circle loading={status === STATUS_LOADING} />
@@ -620,7 +641,7 @@ function CreatePostModalContent({
 						<CloseX />
 					</div>
 					<h5>{postDataShare && !_.isEmpty(postDataShare) ? 'Chia sẻ bài viết' : 'Tạo bài viết'}</h5>
-					<button className='creat-post-modal-content__main__close' onClick={hideCreatePostModal}>
+					<button className='creat-post-modal-content__main__close' onClick={handleClose}>
 						<CloseX />
 					</button>
 				</div>
@@ -779,7 +800,7 @@ function CreatePostModalContent({
 					</div>
 					<div className='creat-post-modal-content__main__options-and-submit'>
 						<div className='creat-post-modal-content__main__options'>
-							<span>Thêm vào bài viết</span>
+							<span className='creat-post-modal-content__title'>Thêm vào bài viết</span>
 							<div className='creat-post-modal-content__main__options__items'>
 								<OptionsPost
 									list={optionListState}

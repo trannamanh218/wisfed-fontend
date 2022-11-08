@@ -36,7 +36,7 @@
 
 	&__button-and-rating {
 		display: flex;
-		gap: 3rem;
+		gap: 0.8rem;
 
 		button {
 			width: fit-content;
@@ -52,7 +52,7 @@
 
 	&__rating__number {
 		font-weight: 600;
-		font-size: 0.71rem;
+		font-size: 11px;
 		color: #a0a3bd;
 		margin-top: 0.5rem;
 	}
@@ -77,10 +77,10 @@
 	}
 
 	&__ratio {
-		font-size: 1.125rem;
+		font-size: 18px;
 		font-weight: 600;
 		& + * {
-			font-size: 0.875rem;
+			font-size: 13px;
 			font-weight: 600;
 			color: $ash-label;
 			margin-left: 0.75rem;

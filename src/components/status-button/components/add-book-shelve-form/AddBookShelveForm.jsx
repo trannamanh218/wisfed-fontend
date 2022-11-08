@@ -1,6 +1,7 @@
 import { Field, Form, Formik } from 'formik';
 import { nameBookShelve } from 'helpers/Validation';
 import PropTypes from 'prop-types';
+import { Add } from 'components/svg';
 
 const AddBookShelveForm = ({ updateBookShelve, setShowInput, showInput, addBookShelves }) => {
 	const handleSubmit = values => {
@@ -50,7 +51,7 @@ const AddBookShelveForm = ({ updateBookShelve, setShowInput, showInput, addBookS
 
 	return (
 		<button className='status-book-modal__addBtn' onClick={addBookShelves}>
-			<span className='add-icon'>+</span>
+			<Add className='add-icon' />
 			<span>Thêm giá sách</span>
 		</button>
 	);

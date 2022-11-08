@@ -37,7 +37,7 @@ const MyFollow = ({ activeTabs }) => {
 		<div className='myfriends__container'>
 			<div className='myfriends__container__content'>
 				<div className='myfriends__title__addfriend'>
-					({getListFollower.length}) người Follow của {userInfo.fullName}{' '}
+					({getListFollower.length}) người theo dõi {userInfo.fullName}{' '}
 				</div>
 				<Link to={'/friends/follower'} className='myfriends__title__all'>
 					Xem tất cả
@@ -51,7 +51,7 @@ const MyFollow = ({ activeTabs }) => {
 			<div className='myfriends__line'></div>
 			<div className='myfriends__container__content'>
 				<div className='myfriends__title__addfriend'>
-					({getListFollowings.length}) Người {userInfo.fullName} đang Follow
+					({getListFollowings.length}) Người {userInfo.fullName} đang theo dõi
 				</div>
 				<Link to={'/friends/following'} className='myfriends__title__all'>
 					Xem tất cả

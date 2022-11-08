@@ -4,7 +4,7 @@
 	width: 100%;
 	border-radius: 16px;
 	overflow: hidden;
-	font-size: 0.825rem;
+	font-size: 13px;
 	span {
 		display: flex;
 		align-items: center;
@@ -17,7 +17,7 @@
 	color: $ash;
 	line-height: 1.5;
 	justify-content: space-between;
-
+	gap: 1rem;
 	&.has-background {
 		padding: 1rem 1rem 0;
 		&:last-of-type {
@@ -31,12 +31,15 @@
 	}
 
 	&__number {
-		display: inline-block;
+		display: flex;
+		justify-content: flex-end;
+		height: fit-content;
 		font-weight: 500;
 		color: $ash-placeholder;
+		min-width: 30%;
 		&.no-page-text {
 			color: $ash;
-			font-size: 15px;
+			font-size: 18px;
 			font-weight: 600;
 		}
 	}
@@ -48,6 +51,9 @@
 	// padding: 0 1em;
 	color: $ash;
 	margin-top: 1.25rem;
+	span {
+		font-size: 13px;
+	}
 	.view-caret {
 		margin-right: 15px;
 		transition: all 0.2s linear;

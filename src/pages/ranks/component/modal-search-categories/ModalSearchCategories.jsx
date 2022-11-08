@@ -17,6 +17,7 @@ const ModalSearchCategories = ({
 	setTopBooksId,
 	tabSelected,
 	setTopQuotesId,
+	setTopUserFilter,
 }) => {
 	const dispatch = useDispatch();
 
@@ -69,8 +70,13 @@ const ModalSearchCategories = ({
 			setModalSearchCategoriesShow(false);
 			setTopQuotesId(null);
 			onSelectCategory(defaultCate);
+		} else {
+			setModalSearchCategoriesShow(false);
+			setTopUserFilter(null);
+			onSelectCategory(defaultCate);
 		}
 	};
+
 	return (
 		<Modal
 			className='modal-search-categories'
@@ -86,7 +92,7 @@ const ModalSearchCategories = ({
 					value={inputSearch}
 				/>
 				<ul className='result-categories-list'>
-					{(tabSelected === 'books' || tabSelected === 'quotes') && !inputSearch.length > 0 && (
+					{!inputSearch.length && (
 						<div className='result-categories-item' onClick={handleDefault}>
 							{defaultCate.value}
 						</div>

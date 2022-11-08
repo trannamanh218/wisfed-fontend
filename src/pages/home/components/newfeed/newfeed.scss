@@ -66,7 +66,7 @@
 	span {
 		font-weight: 600;
 		color: #6e7191;
-		font-size: 0.94rem;
+		font-size: 18px;
 	}
 }
 
@@ -120,6 +120,11 @@
 	.post-book__button-and-rating {
 		.post-book__rating__group {
 			min-width: 135px;
+			.react-rating-container {
+				span {
+					margin: 0px 0.8px;
+				}
+			}
 		}
 	}
 }
@@ -127,14 +132,20 @@
 @media only screen and (max-width: 1366px) {
 	.newfeed {
 		.creat-post-modal-content__main__body {
-			padding: 15px 10px 15px 24px;
+			padding: 13px 10px 13px 24px;
 		}
-
+		.creat-post-modal-content__main__header {
+			padding: 12px 24px;
+		}
 		.creat-post-modal-content__main__options-and-submit {
 			padding: 17px;
 		}
 		.creat-post-modal-content__main__body__text-field-edit-wrapper {
 			max-height: 290px;
+
+			.book-thumbnail.book-thumbnail-md {
+				height: 220px;
+			}
 
 			.rich-text-editor {
 				margin-bottom: 10px;
@@ -155,11 +166,15 @@
 		.creat-post-modal-content__main__body {
 			padding: 24px 10px 24px 24px;
 		}
+		.creat-post-modal-content__main__header {
+			padding: 16px 24px;
+		}
 		.creat-post-modal-content__main__options-and-submit {
 			padding: 24px;
 		}
 		.creat-post-modal-content__main__body__text-field-edit-wrapper {
 			max-height: 350px;
+
 			.book-thumbnail.book-thumbnail-md {
 				height: 240px;
 			}

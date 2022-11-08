@@ -23,7 +23,7 @@ const TopUser = ({ listYear, tabSelected }) => {
 	const listYearRef = useRef({ value: 'default', title: 'Tuần' });
 	const listRead = useRef({ value: 'default', title: 'Đọc nhiều nhất' });
 	const { isAuth } = useSelector(state => state.auth);
-	const [topUserFilter, setTopUserFilter] = useState(1);
+	const [topUserFilter, setTopUserFilter] = useState(null);
 	const [valueDate, setValueDate] = useState('week');
 	const [valueDataSort, setValueDataSort] = useState('topRead');
 	const [getListTopBooks, setGetListTopBooks] = useState([]);

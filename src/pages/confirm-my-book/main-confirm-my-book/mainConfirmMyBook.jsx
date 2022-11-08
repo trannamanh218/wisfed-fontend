@@ -95,13 +95,13 @@ function MainConfirmMyBook({ setErrorLoadPage }) {
 			}
 			const imagesUploadedData = await dispatch(uploadMultiFile(data)).unwrap();
 			const imagesUploaded = [];
-			imagesUploadedData.forEach(item => imagesUploaded.push(item.streamPath));
+			imagesUploadedData.forEach(item => imagesUploaded.push(item.streamPath.default));
 			const dataCopyrights = {
 				'bookId': Number(bookId),
-				'content': 'string',
+				'content': '',
 				'documents': imagesUploaded,
-				'phone': '0142154152',
-				'address': 'dsafsfsaff',
+				'phone': '',
+				'address': userInfo.address,
 				'status': 'pending',
 			};
 			const creatBookCopyrightsResponse = await dispatch(creatBookCopyrights(dataCopyrights)).unwrap();
@@ -128,11 +128,7 @@ function MainConfirmMyBook({ setErrorLoadPage }) {
 					</div>
 					<div className='main-confirm-my-book__book-info'>
 						<div className='main-confirm-my-book__image'>
-							<BookThumbnail
-								name='book'
-								source={bookInfo.frontBookCover || bookInfo.images[0]}
-								size='lg'
-							/>
+							<BookThumbnail source={bookInfo.frontBookCover || bookInfo.images[0]} size='lg' />
 							<div className='main-confirm-my-book__check'>
 								{status === 'pending' ? (
 									<span>Đang chờ xác thực</span>

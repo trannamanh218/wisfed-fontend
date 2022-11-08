@@ -7,7 +7,7 @@ import {
 import UserAvatar from 'shared/user-avatar';
 import { calculateDurationTime } from 'helpers/Common';
 import { useNavigate, useParams } from 'react-router-dom';
-import { ReplyFriendRequest } from 'reducers/redux-utils/user';
+import { replyFriendRequest } from 'reducers/redux-utils/user';
 import { NotificationError } from 'helpers/Error';
 import { renderMessage } from 'helpers/HandleShare';
 import PropTypes from 'prop-types';
@@ -33,7 +33,7 @@ const ModalItem = ({ item, setModalNoti, getNotifications, setGetNotifications, 
 		const parseObject = JSON.parse(data);
 		const params = { id: parseObject.requestId, data: { reply: true } };
 		try {
-			await dispatch(ReplyFriendRequest(params)).unwrap();
+			await dispatch(replyFriendRequest(params)).unwrap();
 			dispatch(updateUser(!isReload));
 			if (selectKey !== 'unread') {
 				const newArr = getNotifications.map(noti => {
@@ -58,7 +58,7 @@ const ModalItem = ({ item, setModalNoti, getNotifications, setGetNotifications, 
 		const parseObject = JSON.parse(data);
 		const params = { id: parseObject.requestId, data: { reply: false } };
 		try {
-			await dispatch(ReplyFriendRequest(params)).unwrap();
+			await dispatch(replyFriendRequest(params)).unwrap();
 			dispatch(updateUser(!isReload));
 			if (selectKey !== 'unread') {
 				const newArr = getNotifications.map(noti => {

@@ -135,10 +135,10 @@ const DetailFriend = () => {
 					}
 				} else if (invitation) {
 					if (inputSearch.length > 0) {
-						const friendReq = await dispatch(getListReqFriendsToMe({ userId, ...query })).unwrap();
+						const friendReq = await dispatch(getListReqFriendsToMe()).unwrap();
 						setGetListFollowings(friendReq.rows);
 					} else {
-						const friendReq = await dispatch(getListReqFriendsToMe({ userId })).unwrap();
+						const friendReq = await dispatch(getListReqFriendsToMe()).unwrap();
 						setGetListFollowings(friendReq.rows);
 					}
 				} else if (suggestions) {

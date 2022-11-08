@@ -52,6 +52,7 @@ export default function HashtagPage() {
 			q: hashtag,
 			start: callApiStart.current,
 			limit: callApiPerPage.current,
+			sort: JSON.stringify([{ property: 'createdAt', direction: 'DESC' }]),
 		};
 		try {
 			const res = await dispatch(getListPostByHashtag(params)).unwrap();

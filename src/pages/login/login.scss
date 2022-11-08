@@ -85,6 +85,7 @@
 	margin-left: 200px;
 	margin-top: 82px;
 	margin-bottom: 83px;
+	max-width: 45%;
 }
 
 .login__body-text1 {
@@ -190,6 +191,7 @@
 	margin-top: 12px;
 	color: #0576f0;
 	flex-grow: 1;
+	font-size: 18px;
 }
 
 .login__form__input {
@@ -222,6 +224,7 @@
 	line-height: 1.5;
 	color: #fcfcfc;
 	outline: none;
+	font-size: 18px;
 }
 .login__login-box__title {
 	font-family: 'Montserrat';
@@ -263,6 +266,7 @@
 	background-color: #18bb0c;
 	border-radius: 12px;
 	color: #fcfcfc;
+	font-size: 18px;
 	&:hover {
 		color: #fcfcfc;
 	}

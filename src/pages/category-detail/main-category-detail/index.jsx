@@ -319,189 +319,184 @@ const MainCategoryDetail = ({ setErrorLoadPage }) => {
 
 	return (
 		<div className='main-category-detail'>
-			<Circle loading={isFetchingBookDetail || status === STATUS_LOADING} />
-			{status !== STATUS_LOADING && (
-				<>
-					{_.isEmpty(categoryInfo) ? (
-						<>
-							<div className='main-category-detail__header'>
-								<BackButton destination='/category' />
-							</div>
-							<p className='main-category-detail__intro'>Không tìm thấy chủ đề</p>
-						</>
-					) : (
-						<>
-							<div className='main-category-detail__header'>
-								<BackButton destination='/category' />
-								<h4>{categoryInfo.name}</h4>
-								{isLike !== null && (
-									<Button
-										className={classNames('btn-like', { 'active': isLike })}
-										isOutline={true}
-										onClick={handleLikeCategory}
-									>
-										<span className='heart-icon'>
-											<Heart />
-										</span>
-										<span>{isLike ? 'Đã yêu thích' : 'Yêu thích'}</span>
-									</Button>
-								)}
-							</div>
-
-							{categoryInfo.description && (
-								<p className='main-category-detail__intro'>{categoryInfo.description}</p>
-							)}
-
-							<div className='main-category-detail__container'>
-								<SearchField
-									placeholder={`Tìm kiếm sách trong chủ đề ${categoryInfo.name}`}
-									handleChange={handleSearch}
-									value={inputSearch}
-								/>
-
-								<>
-									{filter !== '[]' ? (
-										<SearchBook
-											list={bookList}
-											handleViewBookDetail={handleViewBookDetail}
-											inputSearch={inputSearch}
-										/>
-									) : (
-										<>
-											{!!categoryInfo?.topBookReads.length > 0 && (
-												<CategoryGroup
-													key={`category-group`}
-													list={categoryInfo.topBookReads}
-													title='Đọc nhiều nhất tuần này'
-													handleViewBookDetail={handleViewBookDetail}
-													handleViewCategoryDetail={handleViewTopBooksOfWeek}
-													inCategoryDetail={true}
-												/>
-											)}
-
-											<div className='main-category-detail__allbook'>
-												{bookList.length > 0 ? (
-													<>
-														<h4>
-															{`Tất cả sách chủ đề "	${
-																categoryInfo.name ? categoryInfo.name.toLowerCase() : ''
-															} " (${categoryInfo.numberBooks})`}
-														</h4>
-														<div className='books'>
-															{bookList.map((item, index) => (
-																<BookThumbnail
-																	key={index}
-																	{...item}
-																	source={item.source}
-																	size='lg'
-																	data={item}
-																	handleClick={handleViewBookDetail}
-																/>
-															))}
-														</div>
-													</>
-												) : (
-													<p
-														style={{
-															textAlign: 'center',
-															fontSize: '18px',
-														}}
-													>
-														Chưa có cuốn sách nào thuộc chủ đề này
-													</p>
-												)}
-											</div>
-										</>
-									)}
-									{isFetchingBookList && <LoadingIndicator />}
-									{hasMore && (
-										<button className='get-more-books-btn' onClick={handleViewMore}>
-											<img src={caretIcon} alt='caret-icon' />
-											<span>Xem thêm</span>
-										</button>
-									)}
-								</>
-							</div>
-
-							{!!postsByCategory.length > 0 && (
-								<FilterPane
-									title='Bài viết hay nhất'
-									handleSortFilter={handleSortPost}
-									hasHeaderLine={true}
+			<Circle loading={isFetchingBookDetail} />
+			<>
+				{_.isEmpty(categoryInfo) ? (
+					<>
+						<div className='main-category-detail__header'>
+							<BackButton destination='/category' />
+						</div>
+						<p className='main-category-detail__intro'>Không tìm thấy chủ đề</p>
+					</>
+				) : (
+					<>
+						<div className='main-category-detail__header'>
+							<BackButton destination='/category' />
+							<h4>{categoryInfo.name}</h4>
+							{isLike !== null && (
+								<Button
+									className={classNames('btn-like', { 'active': isLike })}
+									isOutline={true}
+									onClick={handleLikeCategory}
 								>
-									<div className='main-category-detail__posts'>
-										<InfiniteScroll
-											dataLength={postsByCategory.length}
-											next={handleGetPostsByCategory}
-											hasMore={hasMorePost}
-											loader={<LoadingIndicator />}
-										>
-											{postsByCategory.map(item => (
-												<Fragment key={item.id}>
-													<Post
-														className='post__container--category'
-														postInformations={item}
-														type={POST_TYPE}
-													/>
-												</Fragment>
-											))}
-										</InfiniteScroll>
-									</div>
-									<Modal
-										show={showModal}
-										onHide={() => setShowModal(false)}
-										className='main-category-detail__modal'
-										keyboard={false}
-										centered
-									>
-										<ModalBody className='main-category-detail__modal__content'>
-											<div className='main-category-detail__modal__group'>
-												<h6 className='main-category-detail__modal__title'>Mặc định</h6>
-												<FormCheckGroup
-													data={radioOptions[0]}
-													name='custom'
-													type='radio'
-													defaultValue='default'
-													handleChange={handleChange}
-													checked={radioOptions[0].value === sortValueTemp}
-												/>
-												<h6
-													style={{ marginTop: '24px' }}
-													className='main-category-detail__modal__title'
-												>
-													Theo thời gian tạo
-												</h6>
-												<FormCheckGroup
-													data={radioOptions[1]}
-													name='custom'
-													type='radio'
-													defaultValue='default'
-													handleChange={handleChange}
-													checked={radioOptions[1].value === sortValueTemp}
-												/>
-												<FormCheckGroup
-													data={radioOptions[2]}
-													name='custom'
-													type='radio'
-													defaultValue='default'
-													handleChange={handleChange}
-													checked={radioOptions[2].value === sortValueTemp}
-												/>
-											</div>
-											<Button
-												className='main-category-detail__modal__btn'
-												onClick={handleSortQuotes}
-											>
-												Xác nhận
-											</Button>
-										</ModalBody>
-									</Modal>
-								</FilterPane>
+									<span className='heart-icon'>
+										<Heart />
+									</span>
+									<span>{isLike ? 'Đã yêu thích' : 'Yêu thích'}</span>
+								</Button>
 							)}
-						</>
-					)}
-				</>
-			)}
+						</div>
+
+						{categoryInfo.description && (
+							<p className='main-category-detail__intro'>{categoryInfo.description}</p>
+						)}
+
+						<div className='main-category-detail__container'>
+							<SearchField
+								placeholder={`Tìm kiếm sách trong chủ đề ${categoryInfo.name}`}
+								handleChange={handleSearch}
+								value={inputSearch}
+							/>
+
+							<>
+								{filter !== '[]' ? (
+									<SearchBook
+										list={bookList}
+										handleViewBookDetail={handleViewBookDetail}
+										inputSearch={inputSearch}
+									/>
+								) : (
+									<>
+										{!!categoryInfo?.topBookReads.length && (
+											<CategoryGroup
+												key={`category-group`}
+												list={categoryInfo.topBookReads}
+												title='Đọc nhiều nhất tuần này'
+												handleViewBookDetail={handleViewBookDetail}
+												handleViewCategoryDetail={handleViewTopBooksOfWeek}
+												inCategoryDetail={true}
+											/>
+										)}
+
+										<div className='main-category-detail__allbook'>
+											{bookList.length > 0 ? (
+												<>
+													<h4>
+														{`Tất cả sách chủ đề "	${
+															categoryInfo.name ? categoryInfo.name.toLowerCase() : ''
+														} " (${categoryInfo.numberBooks})`}
+													</h4>
+													<div className='books'>
+														{bookList.map((item, index) => (
+															<BookThumbnail
+																key={index}
+																{...item}
+																source={item.source}
+																size='lg'
+																data={item}
+																handleClick={handleViewBookDetail}
+															/>
+														))}
+													</div>
+												</>
+											) : (
+												<p
+													style={{
+														textAlign: 'center',
+														fontSize: '18px',
+													}}
+												>
+													Chưa có cuốn sách nào thuộc chủ đề này
+												</p>
+											)}
+										</div>
+									</>
+								)}
+								{isFetchingBookList && <LoadingIndicator />}
+								{hasMore && (
+									<button className='get-more-books-btn' onClick={handleViewMore}>
+										<img src={caretIcon} alt='caret-icon' />
+										<span>Xem thêm</span>
+									</button>
+								)}
+							</>
+						</div>
+
+						{!!postsByCategory.length && (
+							<FilterPane
+								title='Bài viết hay nhất'
+								handleSortFilter={handleSortPost}
+								hasHeaderLine={true}
+							>
+								<div className='main-category-detail__posts'>
+									<InfiniteScroll
+										dataLength={postsByCategory.length}
+										next={handleGetPostsByCategory}
+										hasMore={hasMorePost}
+										loader={<LoadingIndicator />}
+									>
+										{postsByCategory.map(item => (
+											<Fragment key={item.id}>
+												<Post
+													className='post__container--category'
+													postInformations={item}
+													type={POST_TYPE}
+												/>
+											</Fragment>
+										))}
+									</InfiniteScroll>
+								</div>
+								<Modal
+									show={showModal}
+									onHide={() => setShowModal(false)}
+									className='main-category-detail__modal'
+									keyboard={false}
+									centered
+								>
+									<ModalBody className='main-category-detail__modal__content'>
+										<div className='main-category-detail__modal__group'>
+											<h6 className='main-category-detail__modal__title'>Mặc định</h6>
+											<FormCheckGroup
+												data={radioOptions[0]}
+												name='custom'
+												type='radio'
+												defaultValue='default'
+												handleChange={handleChange}
+												checked={radioOptions[0].value === sortValueTemp}
+											/>
+											<h6
+												style={{ marginTop: '24px' }}
+												className='main-category-detail__modal__title'
+											>
+												Theo thời gian tạo
+											</h6>
+											<FormCheckGroup
+												data={radioOptions[1]}
+												name='custom'
+												type='radio'
+												defaultValue='default'
+												handleChange={handleChange}
+												checked={radioOptions[1].value === sortValueTemp}
+											/>
+											<FormCheckGroup
+												data={radioOptions[2]}
+												name='custom'
+												type='radio'
+												defaultValue='default'
+												handleChange={handleChange}
+												checked={radioOptions[2].value === sortValueTemp}
+											/>
+										</div>
+										<Button className='main-category-detail__modal__btn' onClick={handleSortQuotes}>
+											Xác nhận
+										</Button>
+									</ModalBody>
+								</Modal>
+							</FilterPane>
+						)}
+					</>
+				)}
+			</>
 		</div>
 	);
 };

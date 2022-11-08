@@ -47,6 +47,7 @@ import ShareTarget from 'shared/share-target';
 import { handleMentionCommentId, handleCheckIfMentionFromGroup } from 'reducers/redux-utils/notification';
 import { getMiniPostComments, getGroupPostComments } from 'reducers/redux-utils/post';
 import defaultAvatar from 'assets/icons/defaultLogoAvatar.svg';
+import vector from 'assets/images/Vector.png';
 import SeeMoreComments from 'shared/see-more-comments/SeeMoreComments';
 
 const urlRegex =
@@ -422,7 +423,7 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 					data-testid='post__user-avatar'
 					className='post__user-status__avatar'
 					source={postData?.createdBy?.avatarImage || postData.user?.avatarImage}
-					handleClick={() => navigate(`/profile/${postData.createdBy.id}`)}
+					handleClick={() => navigate(`/profile/${postData.createdBy?.id || postData.user?.id}`)}
 				/>
 				<div className='post__user-status__name-and-post-time-status'>
 					<div data-testid='post__user-name' className='post__user-status__name'>
@@ -458,7 +459,13 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 								{postData.book && (
 									<div className='post__user-status__subtitle'>
 										{postData.isUpdateProgress && (
-											<span style={{ marginRight: '12px' }}>Cập nhật tiến độ đọc sách</span>
+											<>
+												<img src={vector} />
+												<span style={{ marginRight: '12px', marginLeft: '5px' }}>
+													{' '}
+													Cập nhật tiến độ đọc sách
+												</span>
+											</>
 										)}
 										{postInformations?.book?.actorRating !== null ? (
 											<>
@@ -482,19 +489,19 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 				</div>
 			</div>
 			{(postData.message || postData.content) && (
-				<>
+				<div className='post__content-wrapper'>
 					<div
-						className={readMore ? 'post__description--readmore' : 'post__description'}
+						className={readMore ? 'post__content--readmore' : 'post__content'}
 						dangerouslySetInnerHTML={{
 							__html: generateContent(postData.message || postData.content),
 						}}
 					></div>
 					{(postData?.message?.length > 500 || postData.content?.length > 500) && (
-						<span className='read-more-post' onClick={() => setReadMore(!readMore)}>
+						<div className='read-more-post' onClick={() => setReadMore(!readMore)}>
 							{readMore ? 'Rút gọn' : 'Xem thêm'}
-						</span>
+						</div>
 					)}
-				</>
+				</div>
 			)}
 			{!!postData?.mentionsAuthors?.length > 0 && (
 				<ul className='tagged'>

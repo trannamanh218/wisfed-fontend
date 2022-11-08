@@ -24,10 +24,6 @@ function ReadingBook({ bookData }) {
 		navigate('/');
 	};
 
-	const onMouseEnterImgBook = e => {
-		e.target.style.cursor = 'pointer';
-	};
-
 	const onClickImgBook = bookData => {
 		navigate(`/book/detail/${bookData.id}`);
 	};
@@ -47,12 +43,10 @@ function ReadingBook({ bookData }) {
 				<h4 className='reading-book__title'>Sách đang đọc</h4>
 				<div className='reading-book__content'>
 					<div className='reading-book__box'>
-						<div
-							className='reading-book__thumbnail'
-							onMouseEnter={onMouseEnterImgBook}
-							onClick={() => onClickImgBook(bookData)}
-						>
+						<div className='reading-book__thumbnail'>
 							<img
+								style={{ cursor: 'pointer' }}
+								onClick={() => onClickImgBook(bookData)}
 								data-testid='reading-book__book-img'
 								src={bookData?.images?.length > 0 ? bookData.images[0] : ''}
 								alt='image'

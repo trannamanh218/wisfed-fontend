@@ -14,6 +14,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import Play from 'assets/images/play.png';
 import { GROUP_POST_VERB_SHARE } from 'constants/index';
 import { Modal } from 'react-bootstrap';
+import vector from 'assets/images/Vector.png';
 import defaultAvatar from 'assets/icons/defaultLogoAvatar.svg';
 
 const urlRegex =
@@ -201,10 +202,9 @@ const PostShare = ({ postData, inCreatePost = false }) => {
 								{inCreatePost ? (
 									<span>{postData?.group?.name || postData?.sharePost?.groupInfo?.name || ''}</span>
 								) : (
-									// <Link to={`/group/${postData?.group?.id || postData?.sharePost?.groupInfo.id}`}>
-									// 	{postData?.group?.name || postData?.sharePost?.groupInfo.name || ''}
-									// </Link>
-									<></>
+									<Link to={`/group/${postData?.group?.id || postData?.sharePost?.groupInfo?.id}`}>
+										{postData?.group?.name || postData?.sharePost?.groupInfo?.name || ''}
+									</Link>
 								)}
 							</>
 						)}
@@ -215,7 +215,12 @@ const PostShare = ({ postData, inCreatePost = false }) => {
 							{postData.sharePost?.book && (
 								<div className='post__user-status__subtitle'>
 									{postData.sharePost.isUpdateProgress && (
-										<span style={{ marginRight: '12px' }}>Cập nhật tiến độ đọc sách</span>
+										<>
+											<img src={vector} />
+											<span style={{ marginRight: '12px', marginLeft: '5px' }}>
+												Cập nhật tiến độ đọc sách
+											</span>
+										</>
 									)}
 									{postData.sharePost.book.actorRating !== null && (
 										<>
@@ -234,23 +239,19 @@ const PostShare = ({ postData, inCreatePost = false }) => {
 				</div>
 			</div>
 			{postData.sharePost?.message && (
-				<>
+				<div className='post__content-wrapper'>
 					<div
-						className={readMore ? 'post__description--readmore' : 'post__description'}
+						className={readMore ? 'post__content--readmore' : 'post__content'}
 						dangerouslySetInnerHTML={{
 							__html: generateContent(postData.sharePost.message),
 						}}
 					></div>
 					{postData?.sharePost?.message?.length > 500 && (
-						<span
-							className='read-more-post'
-							style={{ cursor: 'pointer', display: 'block', marginBottom: '15px' }}
-							onClick={() => setReadMore(!readMore)}
-						>
+						<div className='read-more-post' onClick={() => setReadMore(!readMore)}>
 							{readMore ? 'Rút gọn' : 'Xem thêm'}
-						</span>
+						</div>
 					)}
-				</>
+				</div>
 			)}
 			{postData.sharePost.mentionsAuthors && !!postData.sharePost?.mentionsAuthors.length > 0 && (
 				<ul className='tagged'>
