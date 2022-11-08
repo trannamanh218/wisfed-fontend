@@ -43,7 +43,7 @@
 	}
 
 	&__authors {
-		font-size: 1rem;
+		font-size: 15px;
 		line-height: 1.5;
 		color: $ash-label;
 		margin-top: 8px;
@@ -62,7 +62,7 @@
 	}
 
 	&__stats {
-		font-size: 1.25rem;
+		font-size: 18px;
 		font-weight: 600;
 		line-height: 1.5;
 		color: $blue;
@@ -77,6 +77,13 @@
 	.btn-status {
 		align-self: flex-end;
 		width: fit-content;
+	}
+	.author-book__info {
+		.author-book__rating {
+			.author-book__rating__number {
+				font-size: 18px;
+			}
+		}
 	}
 }
 .author-book-custom {

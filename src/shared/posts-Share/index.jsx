@@ -14,6 +14,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import Play from 'assets/images/play.png';
 import { GROUP_POST_VERB_SHARE } from 'constants/index';
 import { Modal } from 'react-bootstrap';
+import vector from 'assets/images/Vector.png';
 import defaultAvatar from 'assets/icons/defaultLogoAvatar.svg';
 
 const urlRegex =
@@ -214,7 +215,12 @@ const PostShare = ({ postData, inCreatePost = false }) => {
 							{postData.sharePost?.book && (
 								<div className='post__user-status__subtitle'>
 									{postData.sharePost.isUpdateProgress && (
-										<span style={{ marginRight: '12px' }}>Cập nhật tiến độ đọc sách</span>
+										<>
+											<img src={vector} />
+											<span style={{ marginRight: '12px', marginLeft: '5px' }}>
+												Cập nhật tiến độ đọc sách
+											</span>
+										</>
 									)}
 									{postData.sharePost.book.actorRating !== null && (
 										<>

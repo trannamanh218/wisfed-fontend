@@ -106,7 +106,7 @@
 	display: flex;
 	align-items: center;
 	p {
-		font-size: 1.15rem;
+		font-size: 18px;
 		font-weight: 600;
 		color: $ash;
 		line-height: 1.5rem;
@@ -462,7 +462,7 @@
 	border-radius: 12px;
 	width: 100%;
 	padding: 16px 0;
-	font-size: 1rem;
+	font-size: 18px;
 	font-weight: 600;
 	line-height: 1.5rem;
 	color: #a0a3bd;
@@ -778,7 +778,7 @@
 	flex-direction: column;
 	align-items: center;
 	background-color: $ash-background;
-	font-size: 1rem;
+	font-size: 18px;
 	&__wrapper {
 		width: 100%;
 		border-radius: 12px;

@@ -4,7 +4,7 @@
 	width: 100%;
 	border-radius: 16px;
 	overflow: hidden;
-	font-size: 0.825rem;
+	font-size: 13px;
 	span {
 		display: flex;
 		align-items: center;
@@ -39,7 +39,7 @@
 		min-width: 30%;
 		&.no-page-text {
 			color: $ash;
-			font-size: 15px;
+			font-size: 18px;
 			font-weight: 600;
 		}
 	}
@@ -51,6 +51,9 @@
 	// padding: 0 1em;
 	color: $ash;
 	margin-top: 1.25rem;
+	span {
+		font-size: 13px;
+	}
 	.view-caret {
 		margin-right: 15px;
 		transition: all 0.2s linear;

@@ -28,7 +28,7 @@ $wallpaper-height: 350px;
 			padding: 0.825rem 1.25rem;
 			background-color: $white;
 			border-radius: 12px;
-			font-size: 1rem;
+			font-size: 18px;
 			font-weight: 600;
 			color: $ash;
 			display: flex;
@@ -124,6 +124,9 @@ $wallpaper-height: 350px;
 			span {
 				display: block;
 			}
+			button {
+				font-size: 13px;
+			}
 		}
 	}
 
@@ -161,7 +164,7 @@ $wallpaper-height: 350px;
 			display: flex;
 			align-items: center;
 			gap: 1.25rem;
-			font-size: 1rem;
+			font-size: 18px;
 			font-weight: 600;
 			color: $ash-body;
 			cursor: pointer;
@@ -192,7 +195,7 @@ $wallpaper-height: 350px;
 	}
 
 	&__item {
-		font-size: 0.875rem;
+		font-size: 13px;
 		font-weight: 500;
 		line-height: 1.5;
 		color: $ash-label;
@@ -371,6 +374,9 @@ $wallpaper-height: 350px;
 			padding: 2rem 0;
 			border-top: 1px solid #f1f1f5;
 			text-align: center;
+			.personal-info__btn__submit {
+				font-size: 18px;
+			}
 		}
 	}
 
@@ -442,7 +448,7 @@ $wallpaper-height: 350px;
 }
 
 .form-field__no-data {
-	font-size: 14px;
+	font-size: 15px;
 	height: 56px;
 	display: flex;
 	align-items: center;

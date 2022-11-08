@@ -51,6 +51,7 @@
 
 	button {
 		color: #0576f0;
+		font-size: 13px;
 	}
 }
 .under-title {
@@ -67,10 +68,18 @@
 		object-fit: cover;
 		border-radius: 50%;
 	}
+	.group-sibar-left__people-admin {
+		b {
+			font-size: 15px;
+		}
+	}
 }
 
 .group-sibar-left__people-friends {
 	margin-top: 15px;
+	b {
+		font-size: 15px;
+	}
 }
 
 .group-sibar-left__people-folowers {
@@ -92,7 +101,7 @@
 			font-family: 'Montserrat';
 			font-style: normal;
 			font-weight: 600;
-			font-size: 15px;
+			font-size: 18px;
 			line-height: 24px;
 			display: -webkit-box;
 			-webkit-line-clamp: 1;
