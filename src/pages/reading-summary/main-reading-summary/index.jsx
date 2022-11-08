@@ -8,14 +8,14 @@ import PropTypes from 'prop-types';
 import { BackArrow } from 'components/svg';
 
 const MainReadingSummary = ({ setErrorLoadPage }) => {
-	const [showReadBookTab, setShowReadBookTab] = useState(true);
+	const [disabledReadBookTab, setDisabledReadBookTab] = useState(false);
 	const [activeKey, setActiveKey] = useState('books');
 
 	useEffect(() => {
-		if (!showReadBookTab) {
+		if (disabledReadBookTab) {
 			setActiveKey('page-charts');
 		}
-	}, [showReadBookTab]);
+	}, [disabledReadBookTab]);
 
 	return (
 		<div className='main-reading-summary'>
@@ -30,17 +30,20 @@ const MainReadingSummary = ({ setErrorLoadPage }) => {
 				<Row>
 					<Col sm={12}>
 						<Nav className='main-reading-summary__nav'>
-							{showReadBookTab && (
-								<>
-									<Nav.Item>
-										<Nav.Link eventKey='books'>Các sách đã đọc</Nav.Link>
-									</Nav.Item>
-									<Nav.Item>
-										<Nav.Link eventKey='book-charts'>Số sách đã đọc</Nav.Link>
-									</Nav.Item>
-								</>
-							)}
-
+							<Nav.Item
+								className={`main-reading-summary__nav__title ${disabledReadBookTab && 'disabled'}`}
+							>
+								<Nav.Link eventKey='books' disabled={disabledReadBookTab}>
+									Các sách đã đọc
+								</Nav.Link>
+							</Nav.Item>
+							<Nav.Item
+								className={`main-reading-summary__nav__title ${disabledReadBookTab && 'disabled'}`}
+							>
+								<Nav.Link eventKey='book-charts' disabled={disabledReadBookTab}>
+									Số sách đã đọc
+								</Nav.Link>
+							</Nav.Item>
 							<Nav.Item>
 								<Nav.Link eventKey='page-charts'>Số trang đã đọc</Nav.Link>
 							</Nav.Item>
@@ -50,7 +53,7 @@ const MainReadingSummary = ({ setErrorLoadPage }) => {
 					<Col sm={12}>
 						<Tab.Content>
 							<Tab.Pane eventKey='books'>
-								<ReadBookTab setShowReadBookTab={setShowReadBookTab} />
+								<ReadBookTab setDisabledReadBookTab={setDisabledReadBookTab} />
 							</Tab.Pane>
 							<Tab.Pane eventKey='book-charts'>
 								<BookTab setErrorLoadPage={setErrorLoadPage} />

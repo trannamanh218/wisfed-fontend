@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getRatingBook } from 'reducers/redux-utils/book';
 import { NotificationError } from 'helpers/Error';
 import _ from 'lodash';
+import { blockInvalidChar } from 'constants';
 
 const PostEditBook = ({ data, handleAddToPost, handleChangeStar, valueStar }) => {
 	const [listRatingStar, setListRatingStar] = useState(null);
@@ -43,8 +44,6 @@ const PostEditBook = ({ data, handleAddToPost, handleChangeStar, valueStar }) =>
 			});
 		}
 	}, [data]);
-
-	const blockInvalidChar = e => ['e', 'E', '+', '-'].includes(e.key) && e.preventDefault();
 
 	const handleChange = e => {
 		const { value } = e.target;

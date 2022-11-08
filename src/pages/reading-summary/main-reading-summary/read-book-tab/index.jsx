@@ -9,7 +9,7 @@ import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
-const ReadBookTab = ({ setShowReadBookTab }) => {
+const ReadBookTab = ({ setDisabledReadBookTab }) => {
 	const [booksRead, setBooksRead] = useState([]);
 	const { userId } = useParams();
 	const dispatch = useDispatch();
@@ -42,7 +42,7 @@ const ReadBookTab = ({ setShowReadBookTab }) => {
 					setBooksRead(prev => [...prev, data]);
 				}
 			} else {
-				setShowReadBookTab(false);
+				setDisabledReadBookTab(true);
 			}
 		} catch (err) {
 			NotificationError(err);
@@ -75,7 +75,7 @@ const ReadBookTab = ({ setShowReadBookTab }) => {
 };
 
 ReadBookTab.propTypes = {
-	setShowReadBookTab: PropTypes.func,
+	setDisabledReadBookTab: PropTypes.func,
 };
 
 export default ReadBookTab;
