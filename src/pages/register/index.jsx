@@ -51,15 +51,15 @@ function Register() {
 					setIsShow(true);
 					localStorage.setItem('registerEmailFill', newData.email);
 				}
-			} catch {
+			} catch (err) {
 				setIsLoading(false);
 				setIsShow(true);
 				const newdata = {
 					title: 'Tạo tài khoản',
 					title2: 'thất bại',
 					isShowIcon: false,
-					scribe: 'vui lòng kiểm tra lại thông tin và',
-					scribe2: 'thử lại',
+					scribe: `${err.errorCode === 305 ? 'Email đã được đăng ký' : 'vui lòng kiểm tra lại thông tin và'}`,
+					scribe2: `${err.errorCode === 305 ? '' : 'thử lại'}`,
 				};
 				setDataModal(newdata);
 			}

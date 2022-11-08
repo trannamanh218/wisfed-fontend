@@ -26,7 +26,6 @@ import { useVisible } from 'shared/hooks';
 import SearchAllModal from 'shared/search-all';
 import Storage from 'helpers/Storage';
 import { handleResetValue } from 'reducers/redux-utils/search';
-import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { updateTargetReading } from 'reducers/redux-utils/chart';
 import defaultAvatar from 'assets/icons/defaultLogoAvatar.svg';
@@ -38,6 +37,7 @@ import Request from 'helpers/Request';
 import HeaderSearchMobile from './header-search-mobile';
 
 const Header = () => {
+	const { valueInputSearchRedux } = useSelector(state => state.search);
 	const { ref: showRef, isVisible: isShow, setIsVisible: setIsShow } = useVisible(false);
 	const {
 		ref: searchMobileWrapper,
@@ -56,7 +56,6 @@ const Header = () => {
 	const buttonModal = useRef(null);
 	const userOptions = useRef(null);
 
-	const { value } = useParams();
 	const navigate = useNavigate();
 	const location = useLocation();
 	const { pathname } = location;
@@ -68,12 +67,6 @@ const Header = () => {
 	useEffect(() => {
 		setActiveLink(pathname);
 	}, [pathname]);
-
-	useEffect(() => {
-		if (value) {
-			setGetSlugResult(value);
-		}
-	}, [value]);
 
 	useEffect(() => {
 		if (isShowModal) {
@@ -232,6 +225,11 @@ const Header = () => {
 		navigate(`/profile/${userInfo.id}`);
 	};
 
+	useEffect(() => {
+		// Điền vào ô search
+		setGetSlugResult(valueInputSearchRedux);
+	}, [valueInputSearchRedux]);
+
 	return (
 		<div className='header'>
 			<div className='header__left'>
@@ -257,6 +255,7 @@ const Header = () => {
 								placeholder='Tìm kiếm trên Wisfeed'
 								disabled={isShow}
 								value={getSlugResult}
+								readOnly
 							/>
 						</>
 					)}

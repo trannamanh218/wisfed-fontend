@@ -46,7 +46,7 @@ const TopicColumn = ({ topics, className, title, handleViewCategoryDetail, inCat
 
 	return (
 		<>
-			{!!topics.length && (
+			{!!topics.length > 0 && (
 				<div className={classNames('topic-column', { [`${className}`]: className })}>
 					<h4 className='topic-column__header'>{title}</h4>
 					<div className='topic-column__container'>

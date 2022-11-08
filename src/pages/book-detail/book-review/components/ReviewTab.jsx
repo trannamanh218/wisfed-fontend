@@ -3,7 +3,7 @@ import FilterPane from 'shared/filter-pane';
 import SearchField from 'shared/search-field';
 import Post from 'shared/post';
 import FitlerOptions from 'shared/filter-options';
-import { getReviewsBook, getReviewsBookByFollowers, getReviewsBookByFriends } from 'reducers/redux-utils/book';
+import book, { getReviewsBook, getReviewsBookByFollowers, getReviewsBookByFriends } from 'reducers/redux-utils/book';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
@@ -90,7 +90,7 @@ const ReviewTab = ({ currentTab }) => {
 	useEffect(() => {
 		const cloneObj = { ...bookInfo, progress: null, status: null };
 		setBookInfoProp(cloneObj);
-	}, []);
+	}, [bookInfo]);
 
 	useEffect(() => {
 		if (currentTab === 'reviews') {
@@ -98,7 +98,7 @@ const ReviewTab = ({ currentTab }) => {
 			callApiStart.current = initialCallApiStartValue.current;
 			getReviewListFirstTime();
 		}
-	}, [currentOption, currentTab, sort, topUser, inputSearchUpdated]);
+	}, [currentOption, currentTab, sort, topUser, inputSearchUpdated, bookId]);
 
 	const getReviewListFirstTime = async () => {
 		setIsLoading(true);
@@ -117,14 +117,14 @@ const ReviewTab = ({ currentTab }) => {
 			let response;
 			if (currentOption.value === 'allReviews') {
 				response = await dispatch(getReviewsBook({ bookId, params })).unwrap();
-				if (response.count) {
-					dispatch(updateCurrentBookReviewsNumber(response.count));
-				}
+				// Lấy số đếm tổng review
+				dispatch(updateCurrentBookReviewsNumber(response.count || 0));
 			} else if (currentOption.value === 'friendReviews') {
 				response = await dispatch(getReviewsBookByFriends({ bookId, params })).unwrap();
 			} else {
 				response = await dispatch(getReviewsBookByFollowers({ bookId, params })).unwrap();
 			}
+
 			setReviewList(response.rows);
 			setReviewCount(response.count);
 			if (!response.count || response.count < callApiPerPage.current) {

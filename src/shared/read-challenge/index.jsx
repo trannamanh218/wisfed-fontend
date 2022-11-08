@@ -13,6 +13,7 @@ import { toast } from 'react-toastify';
 import { NotificationError } from 'helpers/Error';
 import { checkUserLogin } from 'reducers/redux-utils/auth';
 import Storage from 'helpers/Storage';
+import { blockInvalidChar } from 'constants';
 
 function ReadChallenge({ modalOpen, setModalOpen }) {
 	const [inputValue, setInputValue] = useState(0);
@@ -110,6 +111,7 @@ function ReadChallenge({ modalOpen, setModalOpen }) {
 							onChange={e => setInputValue(e.target.value)}
 							onFocus={() => setInputValue('')}
 							onBlur={inputOnBlur}
+							onKeyDown={blockInvalidChar}
 						/>
 						<button
 							data-testid='read-challenge__increase-btn'

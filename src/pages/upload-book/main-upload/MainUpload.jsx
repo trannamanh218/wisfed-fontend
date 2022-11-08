@@ -17,6 +17,7 @@ import { NotificationError } from 'helpers/Error';
 import classNames from 'classnames';
 import _ from 'lodash';
 import Circle from 'shared/loading/circle';
+import { blockInvalidChar } from 'constants';
 const ModalSeries = lazy(() => import('shared/modal-series/ModalSeries'));
 const AddAndSearchAuthorUploadBook = lazy(() => import('./AddAndSearchAuthorUploadBook/AddAndSearchAuthorUploadBook'));
 const AddAndSearchCategoriesUploadBook = lazy(() =>
@@ -48,10 +49,6 @@ export default function MainUpload() {
 	// const [inputTranslatorValue, setInputTranslatorValue] = useState('');
 	const [inputCategoryValue, setInputCategoryValue] = useState('');
 	const [inputPublisherValue, setInputPublisherValue] = useState('');
-
-	const blockInvalidChar = e => {
-		return ['e', 'E', '+', '-'].includes(e.key) && e.preventDefault();
-	};
 
 	const initialState = {
 		name: '',

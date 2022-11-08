@@ -68,10 +68,11 @@ function SearchLayout({ dataGroup }) {
 	return (
 		<>
 			{_.isEmpty(dataGroup?.usersData) && _.isEmpty(dataGroup?.postData) ? (
-				<div style={{ marginTop: '54px', padding: '24px' }}>
+				<div className='search-group__not-found'>
 					<ResultNotFound />
 				</div>
 			) : (
+				// </div>
 				<div className='search-group__container'>
 					{!_.isEmpty(dataGroup?.usersData) && (
 						<div className='searh-group__member'>

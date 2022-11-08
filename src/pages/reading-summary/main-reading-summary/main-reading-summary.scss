@@ -4,13 +4,19 @@
 	&__nav {
 		background-color: white;
 		margin-bottom: 2rem !important;
-		padding: 12px 54px !important;
+		padding: 12px 0px !important;
 		border-radius: 16px;
 
 		display: flex;
 		flex-wrap: wrap;
-		justify-content: space-between;
+		justify-content: space-around;
 		align-items: center;
+
+		&__title.disabled {
+			a {
+				color: gray !important;
+			}
+		}
 	}
 
 	.nav-item {
@@ -39,8 +45,6 @@
 			.main-reading-summary {
 				.main-reading-summary__nav {
 					padding: 12px 10px !important;
-					display: flex;
-					justify-content: space-around;
 				}
 				.tab-content {
 					margin-right: 0;

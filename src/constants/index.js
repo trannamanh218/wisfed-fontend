@@ -58,3 +58,8 @@ export const MY_BOOK_VERB_SHARE = 'shareMyBook';
 export const TOP_QUOTE_VERB_SHARE = 'shareTopQuoteRanking';
 export const TOP_USER_VERB_SHARE = 'shareTopUserRanking';
 export const REVIEW_VERB_SHARE = 'shareReview';
+
+// input type number
+export const blockInvalidChar = e => {
+	return ['e', 'E', '+', '-', '.', ','].includes(e.key) && e.preventDefault();
+};

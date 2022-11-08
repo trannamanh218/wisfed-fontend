@@ -6,6 +6,7 @@ import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 import { NotificationError } from 'helpers/Error';
 import Frame from 'assets/images/Frame.png';
+import { blockInvalidChar } from 'constants';
 
 const GoalsNotSetYet = ({ userInfo }) => {
 	const [inputValue, setInputValue] = useState(0);
@@ -51,6 +52,7 @@ const GoalsNotSetYet = ({ userInfo }) => {
 			}
 		}
 	};
+
 	return (
 		<>
 			<div className='reading-target__process reading-target__custom'>
@@ -74,6 +76,7 @@ const GoalsNotSetYet = ({ userInfo }) => {
 							onChange={e => setInputValue(e.target.value)}
 							onFocus={() => setInputValue('')}
 							onBlur={inputOnBlur}
+							onKeyDown={blockInvalidChar}
 						/>
 						<button
 							data-testid='read-challenge__increase-btn'

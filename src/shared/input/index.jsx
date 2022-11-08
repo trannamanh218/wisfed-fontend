@@ -14,7 +14,7 @@ const Input = ({
 }) => {
 	const blockInvalidChar = e => {
 		if (type === 'number') {
-			return ['e', 'E', '+', '-'].includes(e.key) && e.preventDefault();
+			return ['e', 'E', '+', '-', '.', ','].includes(e.key) && e.preventDefault();
 		}
 	};
 

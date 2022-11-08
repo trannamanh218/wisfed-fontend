@@ -25,7 +25,7 @@ const BookSlider = ({
 
 	return (
 		<div className='main'>
-			{!!list.length && (
+			{!!list.length > 0 && (
 				<div className={classNames('book-slider', { [`${className}`]: className })}>
 					<h4 className='book-slider__title'>
 						{title}

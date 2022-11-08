@@ -63,26 +63,24 @@ const SidebarQuote = ({ listHashtags, inMyQuote, hasCountQuotes }) => {
 		<div className='sidebar-quote'>
 			<>
 				{!inMyQuote && hasCountQuotes ? (
-					<>
-						<div className='sidebar-quote__category-list'>
-							<h4>Chủ đề Quotes</h4>
-							<SearchField
-								placeholder='Tìm kiếm danh mục'
-								className='sidebar-quote__category-list__search'
-								handleChange={handleSearchCategories}
-								value={inputSearch}
-							/>
-							<DualColumn
-								list={categoryList}
-								pageText={true}
-								inQuotes={true}
-								filterQuotesByCategory={filterQuotesByCategory}
-							/>
-						</div>
-					</>
+					<div className='sidebar-quote__category-list'>
+						<h4>Chủ đề Quotes</h4>
+						<SearchField
+							placeholder='Tìm kiếm danh mục'
+							className='sidebar-quote__category-list__search'
+							handleChange={handleSearchCategories}
+							value={inputSearch}
+						/>
+						<DualColumn
+							list={categoryList}
+							pageText={true}
+							inQuotes={true}
+							filterQuotesByCategory={filterQuotesByCategory}
+						/>
+					</div>
 				) : (
 					<>
-						{!!listHashtags.length && (
+						{!!listHashtags.length > 0 && (
 							<TopicColumn
 								className='sidebar-category__topics'
 								title='Hashtag từ Quotes'

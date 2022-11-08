@@ -3,7 +3,7 @@ import { useFetchQuotes } from 'api/quote.hooks';
 import { useFetchTargetReading } from 'api/readingTarget.hooks';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
-import { useState, useCallback } from 'react';
+import { useCallback } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import BookSlider from 'shared/book-slider';
 import ChartsReading from 'shared/charts-Reading';
@@ -24,8 +24,6 @@ const SidebarShelves = ({ shelveGroupName, isMyShelve, handleViewBookDetail, all
 		JSON.stringify([{ operator: 'eq', value: userId, property: 'createdBy' }])
 	);
 
-	const [showChartReading, setShowChartReading] = useState(true);
-
 	const handleRenderTargetReading = useCallback(() => {
 		if (isMyShelve) {
 			return <RenderProgress userIdParams={userId} />;
@@ -38,7 +36,7 @@ const SidebarShelves = ({ shelveGroupName, isMyShelve, handleViewBookDetail, all
 
 	return (
 		<div className='sidebar-shelves'>
-			{!_.isEmpty(allLibrary) && !!allLibrary.default.length && (
+			{!_.isEmpty(allLibrary) && !!allLibrary.default.length > 0 && (
 				<StatisticList
 					className='sidebar-shelves__reading__status'
 					title='Trạng thái đọc'
@@ -51,9 +49,9 @@ const SidebarShelves = ({ shelveGroupName, isMyShelve, handleViewBookDetail, all
 
 			<MyShelvesList list={allLibrary.custom} />
 
-			{!!quoteData.length && <QuotesLinks list={quoteData} title={`Quotes của ${shelveGroupName}`} />}
+			{!!quoteData.length > 0 && <QuotesLinks list={quoteData} title={`Quotes của ${shelveGroupName}`} />}
 
-			{!!booksAuthor.length && (
+			{!!booksAuthor.length > 0 && (
 				<div className='my-compose'>
 					<BookSlider
 						className='book-reference__slider'
@@ -67,7 +65,7 @@ const SidebarShelves = ({ shelveGroupName, isMyShelve, handleViewBookDetail, all
 				</div>
 			)}
 			{handleRenderTargetReading()}
-			{showChartReading && <ChartsReading setShowChartReading={setShowChartReading} />}
+			<ChartsReading />
 		</div>
 	);
 };

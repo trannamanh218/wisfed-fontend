@@ -39,6 +39,7 @@ const ReadingSummaryChartAuthor = () => {
 	const [localStorage, setLocalStorage] = useState([]);
 	const [checkRenderStorage, setCheckRenderStorage] = useState(false);
 	const [directClick, setDirectClick] = useState(false);
+	const [errorLoadPage, setErrorLoadPage] = useState(false);
 
 	useEffect(() => {
 		fetchData();
@@ -73,6 +74,7 @@ const ReadingSummaryChartAuthor = () => {
 			}
 			setNameBook(data.book.name);
 		} catch (err) {
+			setErrorLoadPage(true);
 			return;
 		}
 	};
@@ -230,7 +232,7 @@ const ReadingSummaryChartAuthor = () => {
 
 	return (
 		<>
-			{!_.isEmpty(chartsData) ? (
+			{!errorLoadPage ? (
 				<NormalContainer>
 					<div className='book__author__charts'>
 						<Circle loading={loading} />

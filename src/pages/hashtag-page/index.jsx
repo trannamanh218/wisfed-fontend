@@ -9,10 +9,13 @@ import LoadingIndicator from 'shared/loading-indicator';
 import { POST_TYPE } from 'constants/index';
 import { getListPostByHashtag, getListPostByHashtagGroup } from 'reducers/redux-utils/hashtag-page';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import Circle from 'shared/loading/circle';
 
 export default function HashtagPage() {
 	const dispatch = useDispatch();
 	const { hashtag, groupId } = useParams();
+
+	const [isFetching, setIsFetching] = useState(true);
 
 	const [postList, setPostList] = useState([]);
 	const [hasMore, setHasMore] = useState(true);
@@ -21,6 +24,7 @@ export default function HashtagPage() {
 	const callApiPerPage = useRef(10);
 
 	const getPostsByHashtagFromGroup = async () => {
+		setIsFetching(true);
 		const data = {
 			groupId: groupId,
 			params: {
@@ -37,10 +41,13 @@ export default function HashtagPage() {
 			}
 		} catch (error) {
 			NotificationError(error);
+		} finally {
+			setIsFetching(false);
 		}
 	};
 
 	const getPostsByHashtag = async () => {
+		setIsFetching(true);
 		const params = {
 			q: hashtag,
 			start: callApiStart.current,
@@ -57,25 +64,38 @@ export default function HashtagPage() {
 			}
 		} catch (error) {
 			NotificationError(error);
+		} finally {
+			setIsFetching(false);
 		}
 	};
 
 	useEffect(() => {
-		if (groupId) {
-			getPostsByHashtagFromGroup();
-		} else {
-			getPostsByHashtag();
+		callApiStart.current = 0;
+		setIsFetching(true);
+		setHasMore(true);
+		setPostList([]);
+		window.scrollTo(0, 0);
+	}, [hashtag, groupId]);
+
+	useEffect(() => {
+		if (postList.length === 0 && isFetching) {
+			if (groupId) {
+				getPostsByHashtagFromGroup();
+			} else {
+				getPostsByHashtag();
+			}
 		}
-	}, [groupId, hashtag]);
+	}, [isFetching]);
 
 	return (
 		<NormalContainer>
+			<Circle loading={isFetching} />
 			<div className='hashtag-page'>
 				<h4>Kết quả tìm kiếm cho "#{hashtag}"</h4>
-				{postList.length ? (
+				{postList.length > 0 ? (
 					<InfiniteScroll
 						dataLength={postList.length}
-						next={getListPostByHashtag}
+						next={groupId ? getPostsByHashtagFromGroup : getPostsByHashtag}
 						hasMore={hasMore}
 						loader={<LoadingIndicator />}
 					>
