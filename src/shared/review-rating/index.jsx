@@ -10,7 +10,7 @@ const ReviewRating = props => {
 		<div className={classNames('review-rating', { [`${className}`]: className })}>
 			<div className='review-rating__left'>
 				<ReactRating readonly={true} initialRating={ratingLevel} />
-				<p>{ratingLevel?.toFixed(1)} sao</p>
+				<p>{ratingLevel !== 0 ? ratingLevel?.toFixed(1) : ratingLevel?.toFixed()} sao</p>
 				<p>{ratingTotal} đánh giá</p>
 			</div>
 			<div className='review-rating__right'>

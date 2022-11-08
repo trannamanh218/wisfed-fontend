@@ -6,7 +6,6 @@ import { changeToggleFollows } from 'reducers/redux-utils/friends';
 import { getTopUser } from 'reducers/redux-utils/ranks';
 import { getRecommendFriend } from 'reducers/redux-utils/user';
 import FriendsItem from 'shared/friends';
-import LoadingIndicator from 'shared/loading-indicator';
 
 const SuggestFriend = ({ activeTabs }) => {
 	const [list, setList] = useState([]);
