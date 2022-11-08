@@ -18,7 +18,8 @@ export const register = createAsyncThunk('auth/register', async (params, { rejec
 		const response = await Request.makePost(registerAPI, params);
 		return response;
 	} catch (err) {
-		return rejectWithValue(err.response);
+		const error = JSON.parse(err.response);
+		return rejectWithValue(error);
 	}
 });
 
