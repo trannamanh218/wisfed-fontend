@@ -53,7 +53,6 @@ export const useFetchOtherCategories = (current, perPage, name) => {
 		return {
 			start: current,
 			limit: perPage,
-			// filter: JSON.stringify([{ 'operator': 'ne', 'value': name, 'property': 'name' }]),
 			filter: JSON.stringify([{ 'operator': 'ne', 'value': 0, 'property': 'numberBooks' }]),
 			sort: JSON.stringify([{ 'direction': 'DESC', 'property': 'createdAt' }]),
 		};

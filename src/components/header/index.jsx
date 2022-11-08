@@ -190,7 +190,7 @@ const Header = () => {
 		if (!_.isEmpty(userInfoJwt)) {
 			const client = stream.connect('p77uwpux9zwu', null, '1169912');
 			const notificationFeed = client.feed('notification', userInfoJwt.id, userInfoJwt.userToken);
-
+			console.log('realtime', notificationFeed);
 			const callback = data => {
 				dispatch(depenRenderNotification(true));
 				const params = {
@@ -205,7 +205,7 @@ const Header = () => {
 			};
 			notificationFeed.subscribe(callback);
 		}
-	}, [userInfoJwt]);
+	});
 
 	const updateNewNotificaionFalse = params => {
 		if (userInfoJwt.isNewNotification) {

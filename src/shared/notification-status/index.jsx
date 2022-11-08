@@ -282,7 +282,7 @@ const NotificationStatus = ({ item, setNotificationsList, notificationsList }) =
 									}}
 									className='notification__main__all__accept'
 								>
-									{item.verb === 'browse' ? 'Duyệt' : 'Chấp nhận'}
+									Chấp nhận
 								</div>
 								<div
 									onClick={e => {

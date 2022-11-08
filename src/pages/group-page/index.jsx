@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { NotificationError } from 'helpers/Error';
 import './index.scss';
 import './mainGroup.scss';
 import SubContainer from 'components/layout/sub-container';

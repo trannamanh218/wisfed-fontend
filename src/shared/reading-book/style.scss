@@ -12,7 +12,7 @@
 .reading-book__box {
 	display: flex;
 	justify-content: space-between;
-	gap: 1px;
+	gap: 18px;
 }
 
 .reading-book__thumbnail {
@@ -26,7 +26,7 @@
 }
 
 .reading-book__information {
-	width: 50%;
+	flex-grow: 1;
 	padding-top: 8px;
 	font-size: 13px;
 	display: flex;
@@ -79,10 +79,12 @@
 	color: #b38c64;
 }
 
-// Giữ cho đoạn 'Cập nhật tiến độ' luôn chỉ nằm trên 1 dòng
-@media only screen and (max-width: 1398px) {
+@media only screen and (max-width: 1366px) {
 	.reading-book__update-progress {
 		font-size: 12px;
+	}
+	.reading-book__box {
+		gap: 12px;
 	}
 }
 
@@ -106,6 +108,7 @@
 	.reading-book__information {
 		margin-left: 0;
 	}
+	.reading-book__box {
+		gap: 8px;
+	}
 }
-
-// End Giữ cho đoạn 'Cập nhật tiến độ' luôn chỉ nằm trên 1 dòng

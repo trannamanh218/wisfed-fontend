@@ -314,11 +314,7 @@ function CreatePostModalContent({
 		if (imagesUpload.length) {
 			try {
 				const imagesUploaded = await dispatch(uploadMultiFile(imagesUpload)).unwrap();
-				const imagesArray = [];
-				imagesUploaded.forEach(item => {
-					imagesArray.push(item.streamPath.medium);
-				});
-				params.image = imagesArray;
+				params.image = imagesUploaded.map(item => item.streamPath.medium);
 			} catch {
 				const customId = 'custom-id-CreatePostModalContent-generateData';
 				toast.error('Đăng ảnh không thành công', { toastId: customId });
