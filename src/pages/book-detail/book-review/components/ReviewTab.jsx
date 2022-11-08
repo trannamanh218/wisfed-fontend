@@ -123,7 +123,9 @@ const ReviewTab = ({ currentTab }) => {
 				response = await dispatch(getReviewsBookByFollowers({ bookId, params })).unwrap();
 			}
 
-			dispatch(updateCurrentBookReviewsNumber(response.count || 0));
+			if (response.count) {
+				dispatch(updateCurrentBookReviewsNumber(response.count));
+			}
 
 			setReviewList(response.rows);
 			setReviewCount(response.count);
