@@ -6,7 +6,7 @@ import './page-tab.scss';
 import { useDispatch } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
 import { useParams } from 'react-router-dom';
-import { getChartsByid, updateImg } from 'reducers/redux-utils/chart';
+import chart, { getChartsByid, updateImg } from 'reducers/redux-utils/chart';
 import { useNavigate } from 'react-router-dom';
 import Circle from 'shared/loading/circle';
 import { useCurrentPng } from 'recharts-to-png';
@@ -65,6 +65,8 @@ const PageTab = () => {
 					userId: userId,
 				};
 				const data = await dispatch(getChartsByid(params)).unwrap();
+				// Vì count đang là string nên chuyển sang định dạng số
+				data.forEach(item => (item.count = Number(item.count)));
 				setChartsData(data);
 			}
 		} catch (err) {
@@ -126,11 +128,12 @@ const PageTab = () => {
 
 	const handleTickYCount = () => {
 		let max = 1;
-		chartsData.forEach(item => {
-			if (item.count > max) {
-				max = item.count;
-			}
-		});
+		max = Math.max(...chartsData.map(item => item.count));
+		// chartsData.forEach(item => {
+		// 	if (item.count > max) {
+		// 		max = item.count;
+		// 	}
+		// });
 		if (max < 10) {
 			return max + 1;
 		} else {
