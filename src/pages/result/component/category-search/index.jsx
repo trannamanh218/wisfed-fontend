@@ -93,7 +93,6 @@ const CategorySearch = ({ value, isFetching, setIsFetching, searchResultInput, a
 
 	return (
 		<div className='category__search__container'>
-			{/* {!isFetching && ( */}
 			<>
 				{listArrayCategory.length && activeKeyDefault === 'categories' ? (
 					<InfiniteScroll
@@ -118,7 +117,6 @@ const CategorySearch = ({ value, isFetching, setIsFetching, searchResultInput, a
 					<ResultNotFound />
 				)}
 			</>
-			{/* )} */}
 		</div>
 	);
 };

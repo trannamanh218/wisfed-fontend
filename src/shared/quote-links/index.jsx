@@ -25,7 +25,7 @@ const QuotesLinks = ({ title, list, className, linkClickSeeAll }) => {
 
 	return (
 		<>
-			{!!list.length && (
+			{!!list.length > 0 && (
 				<div className={classNames('quote-links', { [`${className}`]: className })}>
 					<h4>{title}</h4>
 					<div className='quote-links__card'>

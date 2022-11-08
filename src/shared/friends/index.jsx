@@ -7,7 +7,7 @@ import {
 	makeFriendRequest,
 	addFollower,
 	unFollower,
-	ReplyFriendRequest,
+	replyFriendRequest,
 	unFriendRequest,
 } from 'reducers/redux-utils/user';
 import { NotificationError } from 'helpers/Error';
@@ -134,7 +134,7 @@ const FriendsItem = ({
 		const params = { id: data.id, data: { reply: true } };
 		try {
 			setToggleAcceptButton(false);
-			dispatch(ReplyFriendRequest(params)).unwrap();
+			dispatch(replyFriendRequest(params)).unwrap();
 		} catch (err) {
 			NotificationError(err);
 		}
@@ -232,13 +232,13 @@ const FriendsItem = ({
 				}
 			}
 		} else if (keyTabs === 'suggest' || suggestions || recommend) {
-			if (!data.isFollow) {
-				return toggleUnFollow ? buttonFollow() : buttonUnfollow();
+			if (data.isFollow) {
+				return toggleUnFollow ? buttonUnfollow() : buttonFollow();
 			} else {
 				if ((toggleUnFollow && getListSuggest) || suggestions) {
 					return toggleAddFollow ? buttonFollow() : buttonUnfollow();
 				} else {
-					return toggleUnFollow ? buttonUnfollow() : buttonFollow();
+					return toggleAddFollow ? buttonFollow() : buttonUnfollow();
 				}
 			}
 		} else if (keyTabs === 'addfriend' || invitation) {

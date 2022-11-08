@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import AuthorSlider from 'shared/author-slider';
 import GroupLinks from 'shared/group-links';
-// import NewsLinks from 'shared/news-links';
+// import NewsLinks from 'shared/news-links'; // k xóa
 import QuotesLinks from 'shared/quote-links';
 import TopicColumn from 'shared/topic-column';
 import PropTypes from 'prop-types';

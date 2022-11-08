@@ -6,7 +6,7 @@ import './connect-buttons.scss';
 import { makeFriendRequest, addFollower, unFollower, unFriendRequest } from 'reducers/redux-utils/user';
 import { useDispatch } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
-import { ReplyFriendRequest } from 'reducers/redux-utils/user';
+import { replyFriendRequest } from 'reducers/redux-utils/user';
 import ModalUnFriend from 'pages/friends/component/modalUnFriends';
 import _ from 'lodash';
 import Storage from 'helpers/Storage';
@@ -59,7 +59,7 @@ const ConnectButtons = ({ direction, item }) => {
 	const handleAcces = () => {
 		try {
 			const params = { id: item.friendRequest.id, data: { reply: true } };
-			dispatch(ReplyFriendRequest(params)).unwrap();
+			dispatch(replyFriendRequest(params)).unwrap();
 			setFriendStatusBtn('friend');
 			setFollowStatusBtn(true);
 		} catch (err) {

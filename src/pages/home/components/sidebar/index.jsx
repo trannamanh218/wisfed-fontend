@@ -19,7 +19,7 @@ const Sidebar = () => {
 	useEffect(() => {
 		if (!_.isEmpty(myAllLibraryRedux) && myAllLibraryRedux.default.length > 0) {
 			const readingLibrary = myAllLibraryRedux?.default?.filter(item => item.defaultType === 'reading');
-			if (readingLibrary.length && readingLibrary[0]?.books.length) {
+			if (readingLibrary.length > 0 && readingLibrary[0]?.books.length) {
 				const readingBooks = readingLibrary[0]?.books;
 				setBookReading(readingBooks[0].book);
 			}

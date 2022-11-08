@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import './style.scss';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import ResultNotFound from 'pages/result/component/result-not-found';
 import LoadingIndicator from 'shared/loading-indicator';
 import InfiniteScroll from 'react-infinite-scroll-component';
@@ -11,6 +11,8 @@ import defaultAvatar from 'assets/images/Rectangle 17435.png';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import _ from 'lodash';
+import Storage from 'helpers/Storage';
+import { checkUserLogin } from 'reducers/redux-utils/auth';
 
 const MainLayout = ({ listMyGroup, listAdminMyGroup }) => {
 	const [list, setList] = useState([]);
@@ -20,6 +22,8 @@ const MainLayout = ({ listMyGroup, listAdminMyGroup }) => {
 	const callApiStart = useRef(9);
 	const callApiPerPage = useRef(9);
 	const dispatch = useDispatch();
+
+	const navigate = useNavigate();
 
 	const resetGroupList = useSelector(state => state.group.resetGroupList);
 
@@ -119,6 +123,13 @@ const MainLayout = ({ listMyGroup, listAdminMyGroup }) => {
 		}
 	}, [resetGroupList, userInfo]);
 
+	const handleUserLogin = item => {
+		if (!Storage.getAccessToken()) {
+			dispatch(checkUserLogin(true));
+		} else {
+			navigate(`/group/${item.id}`);
+		}
+	};
 	return (
 		<>
 			{loading ? (
@@ -150,34 +161,36 @@ const MainLayout = ({ listMyGroup, listAdminMyGroup }) => {
 									>
 										{list.map((item, index) => {
 											return (
-												<Link key={index} to={`/group/${item.id}`}>
-													<div className='item-group'>
-														<img
-															src={item.avatar}
-															onError={e => e.target.setAttribute('src', defaultAvatar)}
-															alt=''
-														/>
-														<div className='item-group__text'>
-															<div className='item-group__name'>
-																<span>{item.name}</span>
-															</div>
-															<div className='item-group__description'>
-																<span>
-																	{item?.countMember < 10
-																		? `0${item.countMember}`
-																		: item.countMember}{' '}
-																	thành viên
-																</span>
-															</div>
-															<div className='item-group__count-post'>
-																<span>{item.countPost} bài viết/ngày</span>
-															</div>
-															<div className='item-group-btn'>
-																<button>Truy cập vào nhóm </button>
-															</div>
+												<div
+													key={index}
+													className='item-group'
+													onClick={() => handleUserLogin(item)}
+												>
+													<img
+														src={item.avatar}
+														onError={e => e.target.setAttribute('src', defaultAvatar)}
+														alt=''
+													/>
+													<div className='item-group__text'>
+														<div className='item-group__name'>
+															<span>{item.name}</span>
+														</div>
+														<div className='item-group__description'>
+															<span>
+																{item?.countMember < 10
+																	? `0${item.countMember}`
+																	: item.countMember}{' '}
+																thành viên
+															</span>
+														</div>
+														<div className='item-group__count-post'>
+															<span>{item.countPost} bài viết/ngày</span>
+														</div>
+														<div className='item-group-btn'>
+															<button>Truy cập vào nhóm </button>
 														</div>
 													</div>
-												</Link>
+												</div>
 											);
 										})}
 									</div>

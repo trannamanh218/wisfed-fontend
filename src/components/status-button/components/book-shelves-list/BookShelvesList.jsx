@@ -51,7 +51,7 @@ const BookShelvesList = ({ list, onChangeShelves, customLibrariesContainCurrentB
 	return (
 		<div className='status-book-wrapper'>
 			<h4 className='status-book__title'>Giá sách của tôi</h4>
-			{!!list.length && (
+			{!!list.length > 0 && (
 				<>
 					<SearchField
 						placeholder='Tìm kiếm giá sách'

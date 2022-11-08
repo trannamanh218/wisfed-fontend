@@ -5,16 +5,20 @@ import { useState, useCallback, useEffect } from 'react';
 import SearchField from 'shared/search-field';
 import _ from 'lodash';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import { getFilterSearch } from 'reducers/redux-utils/search';
+import { useDispatch, useSelector } from 'react-redux';
+import { getFilterSearch, handleUpdateValueInputSearchRedux } from 'reducers/redux-utils/search';
 import { NotificationError } from 'helpers/Error';
 
 const SearchAllModal = ({ showRef, setIsShow }) => {
+	const hashtagRegex =
+		/#(?![0-9_]+\b)[0-9a-z_ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễếệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ]+/gi;
+
 	const [valueInputSearch, setValueInputSearch] = useState('');
 	const [resultSearch, setResultSearch] = useState([]);
 	const [filter, setFilter] = useState('');
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
+	const { valueInputSearchRedux } = useSelector(state => state.search);
 
 	const updateInputSearch = value => {
 		if (value) {
@@ -44,12 +48,30 @@ const SearchAllModal = ({ showRef, setIsShow }) => {
 	const handleSearch = e => {
 		debounceSearch(e.target.value);
 		setValueInputSearch(e.target.value);
+		// Lưu giá trị vào redux
+		dispatch(handleUpdateValueInputSearchRedux(e.target.value.trim()));
 	};
 
+	useEffect(() => {
+		// Điền vào ô search
+		setValueInputSearch(valueInputSearchRedux);
+	}, [valueInputSearchRedux]);
+
 	const handleKeyDown = e => {
-		if (e.key === 'Enter' && valueInputSearch.trim().length) {
+		const value = valueInputSearch?.trim();
+		if (e.key === 'Enter' && value.length) {
 			setIsShow(false);
-			navigate(`/result/q=${valueInputSearch.trim()}`);
+			if (hashtagRegex.test(value)) {
+				const formatedInpSearchValue = value
+					.normalize('NFD')
+					.replace(/[\u0300-\u036f]/g, '')
+					.replace(/đ/g, 'd')
+					.replace(/Đ/g, 'D')
+					.replace(/#/g, '');
+				navigate(`/hashtag/${formatedInpSearchValue}`);
+			} else {
+				navigate(`/result/q=${value}`);
+			}
 		}
 	};
 

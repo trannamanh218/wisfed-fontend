@@ -85,7 +85,7 @@ const GroupSearch = ({ value, setIsFetching, searchResultInput, activeKeyDefault
 
 	return (
 		<div className='group__search__container'>
-			{listArrayGroup.length && activeKeyDefault === 'groups' ? (
+			{listArrayGroup.length > 0 && activeKeyDefault === 'groups' ? (
 				<InfiniteScroll
 					next={handleGetGroupSearch}
 					dataLength={listArrayGroup.length}

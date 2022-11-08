@@ -20,13 +20,12 @@ import classNames from 'classnames';
 import './header.scss';
 import NotificationModal from 'pages/notification/';
 import { useDispatch, useSelector } from 'react-redux';
-import { backgroundToggle, depenRenderNotificaion } from 'reducers/redux-utils/notification';
+import { backgroundToggle, depenRenderNotification } from 'reducers/redux-utils/notification';
 import { checkUserLogin, deleteUserInfo } from 'reducers/redux-utils/auth';
 import { useVisible } from 'shared/hooks';
 import SearchAllModal from 'shared/search-all';
 import Storage from 'helpers/Storage';
 import { handleResetValue } from 'reducers/redux-utils/search';
-import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { updateTargetReading } from 'reducers/redux-utils/chart';
 import defaultAvatar from 'assets/icons/defaultLogoAvatar.svg';
@@ -38,6 +37,7 @@ import Request from 'helpers/Request';
 import HeaderSearchMobile from './header-search-mobile';
 
 const Header = () => {
+	const { valueInputSearchRedux } = useSelector(state => state.search);
 	const { ref: showRef, isVisible: isShow, setIsVisible: setIsShow } = useVisible(false);
 	const {
 		ref: searchMobileWrapper,
@@ -56,7 +56,6 @@ const Header = () => {
 	const buttonModal = useRef(null);
 	const userOptions = useRef(null);
 
-	const { value } = useParams();
 	const navigate = useNavigate();
 	const location = useLocation();
 	const { pathname } = location;
@@ -68,12 +67,6 @@ const Header = () => {
 	useEffect(() => {
 		setActiveLink(pathname);
 	}, [pathname]);
-
-	useEffect(() => {
-		if (value) {
-			setGetSlugResult(value);
-		}
-	}, [value]);
 
 	useEffect(() => {
 		if (isShowModal) {
@@ -190,9 +183,9 @@ const Header = () => {
 		if (!_.isEmpty(userInfoJwt)) {
 			const client = stream.connect('p77uwpux9zwu', null, '1169912');
 			const notificationFeed = client.feed('notification', userInfoJwt.id, userInfoJwt.userToken);
-
+			console.log('realtime', notificationFeed);
 			const callback = data => {
-				dispatch(depenRenderNotificaion(true));
+				dispatch(depenRenderNotification(true));
 				const params = {
 					isNewNotification: true,
 				};
@@ -205,13 +198,13 @@ const Header = () => {
 			};
 			notificationFeed.subscribe(callback);
 		}
-	}, [userInfoJwt]);
+	});
 
 	const updateNewNotificaionFalse = params => {
 		if (userInfoJwt.isNewNotification) {
 			dispatch(patchNewNotification(params)).unwrap();
 			const dataNewNoti = { ...userInfoJwt, isNewNotification: false };
-			dispatch(depenRenderNotificaion(false));
+			dispatch(depenRenderNotification(false));
 			dispatch(updateIsNewNotificationUserInfo(dataNewNoti));
 		}
 	};
@@ -231,6 +224,11 @@ const Header = () => {
 		setModalInforUser(false);
 		navigate(`/profile/${userInfo.id}`);
 	};
+
+	useEffect(() => {
+		// Điền vào ô search
+		setGetSlugResult(valueInputSearchRedux);
+	}, [valueInputSearchRedux]);
 
 	return (
 		<div className='header'>
@@ -257,6 +255,7 @@ const Header = () => {
 								placeholder='Tìm kiếm trên Wisfeed'
 								disabled={isShow}
 								value={getSlugResult}
+								readOnly
 							/>
 						</>
 					)}

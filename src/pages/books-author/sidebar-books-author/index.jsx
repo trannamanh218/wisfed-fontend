@@ -37,7 +37,7 @@ const SidebarBooksAuthor = ({ shelveGroupName, isMine, allLibrary }) => {
 		<div className='sidebar-books-author'>
 			{!_.isEmpty(allLibrary) && (
 				<>
-					{!!allLibrary.default.length && (
+					{!!allLibrary.default.length > 0 && (
 						<StatisticList
 							className='sidebar-books-author__reading__status'
 							title='Trạng thái đọc'
@@ -47,11 +47,11 @@ const SidebarBooksAuthor = ({ shelveGroupName, isMine, allLibrary }) => {
 							pageText={false}
 						/>
 					)}
-					{!!allLibrary.custom.length && <MyShelvesList list={allLibrary.custom} />}
+					{!!allLibrary.custom.length > 0 && <MyShelvesList list={allLibrary.custom} />}
 				</>
 			)}
 
-			{!!quoteData.length && (
+			{!!quoteData.length > 0 && (
 				<QuotesLinks
 					list={quoteData}
 					title={userId === userInfo.id ? 'Quotes của tôi' : `Quotes của ${shelveGroupName}`}

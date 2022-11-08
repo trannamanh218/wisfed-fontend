@@ -91,7 +91,7 @@ const BookSearch = ({ isFetching, value, setIsFetching, searchResultInput, activ
 				</div>
 			)}
 			<>
-				{listArrayBooks.length && activeKeyDefault === 'books' ? (
+				{listArrayBooks.length > 0 && activeKeyDefault === 'books' ? (
 					<InfiniteScroll
 						next={handleGetBooksSearch}
 						dataLength={listArrayBooks.length}

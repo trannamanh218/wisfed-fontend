@@ -90,7 +90,7 @@ const notificationSlice = createSlice({
 		handleListNotification: (state, action) => {
 			state.listNotifcaiton = action.payload;
 		},
-		depenRenderNotificaion: (state, action) => {
+		depenRenderNotification: (state, action) => {
 			state.isRealTime = action.payload;
 		},
 		updateReviewIdFromNoti: (state, action) => {
@@ -124,7 +124,7 @@ export const {
 	backgroundToggle,
 	activeKeyTabsNotification,
 	handleListNotification,
-	depenRenderNotificaion,
+	depenRenderNotification,
 	updateReviewIdFromNoti,
 	handleMentionCommentId,
 	handleCheckIfMentionFromGroup,

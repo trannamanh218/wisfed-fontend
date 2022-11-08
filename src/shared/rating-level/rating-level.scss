@@ -5,13 +5,19 @@
 	font-size: 0.825rem;
 	font-weight: 600;
 	line-height: 1.5;
+	justify-content: flex-end;
 	.linear-progress {
-		flex-grow: 1;
+		// flex-grow: 1;
+		width: 468.37px;
 		margin-right: 1.4em;
 	}
 
 	&__icon {
 		display: inline-block;
 		margin: 0 0.875em;
+	}
+	.rating-percent {
+		width: 75px;
+		display: block;
 	}
 }

@@ -67,7 +67,7 @@ const SidebarProfile = ({ currentUserInfo, handleViewBookDetail }) => {
 			library.current = data;
 
 			const reading = library.current.default.filter(item => item.defaultType === 'reading');
-			if (reading.length && reading[0].books.length) {
+			if (reading.length > 0 && reading[0].books.length) {
 				const books = reading[0].books;
 				setBookReading(books[0].book);
 			}
@@ -80,7 +80,7 @@ const SidebarProfile = ({ currentUserInfo, handleViewBookDetail }) => {
 		if (userInfo.id === userId) {
 			if (!_.isEmpty(myAllLibraryRedux)) {
 				const readingLibrary = myAllLibraryRedux.default.filter(item => item.defaultType === 'reading');
-				if (readingLibrary.length && readingLibrary[0].books.length) {
+				if (readingLibrary.length > 0 && readingLibrary[0].books.length) {
 					const books = readingLibrary[0].books;
 					setBookReading(books[0].book);
 				}

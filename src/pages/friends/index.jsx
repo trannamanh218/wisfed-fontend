@@ -6,9 +6,11 @@ import MyFollow from './component/my-follow';
 import InvitationFriend from './component/invitation-friend';
 import SuggestFriend from './component/suggest-friend';
 import SearchButton from 'shared/search-button';
+import { useSelector } from 'react-redux';
 
 const Friends = () => {
-	const [activeTabs, setActiveTabs] = useState('friend');
+	const isFriend = useSelector(state => state.user.isFriend);
+	const [activeTabs, setActiveTabs] = useState(isFriend ? 'suggest' : 'friend');
 	const [toggleSearch, setToggleSearch] = useState(true);
 	const [inputSearch, setInputSearch] = useState('');
 	const [filter, setFilter] = useState('[]');
@@ -88,7 +90,12 @@ const Friends = () => {
 
 					<div className='friend__radio'>
 						<p onClick={() => handleActiveTabs('friend')}>
-							<input type='radio' id='friend' name='radio-group' defaultChecked />
+							<input
+								type='radio'
+								id='friend'
+								name='radio-group'
+								defaultChecked={activeTabs === 'friend'}
+							/>
 							<label htmlFor='friend'>Tất cả bạn bè</label>
 						</p>
 						<p onClick={() => handleActiveTabs('follow')}>
@@ -100,7 +107,12 @@ const Friends = () => {
 							<label htmlFor='addfriend'>Lời mời kết bạn</label>
 						</p>
 						<p onClick={() => handleActiveTabs('suggest')}>
-							<input type='radio' id='suggest' name='radio-group' />
+							<input
+								type='radio'
+								id='suggest'
+								name='radio-group'
+								defaultChecked={activeTabs === 'suggest'}
+							/>
 							<label htmlFor='suggest'>Gợi ý</label>
 						</p>
 					</div>

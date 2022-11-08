@@ -1,6 +1,6 @@
 import './my-friends.scss';
 import FriendsItem from 'shared/friends';
-import { getFriendList } from 'reducers/redux-utils/user';
+import { checkListFriend, getFriendList } from 'reducers/redux-utils/user';
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
@@ -12,6 +12,8 @@ const MyFriends = ({ activeTabs, inputSearch, filter }) => {
 	const { userInfo } = useSelector(state => state.auth);
 	const [getMyListFriend, setGetMyListFriend] = useState([]);
 	const dispatch = useDispatch();
+
+	const isFriend = useSelector(state => state.user.isFriend);
 
 	useEffect(async () => {
 		const query = generateQuery(0, 10, filter);
@@ -31,6 +33,14 @@ const MyFriends = ({ activeTabs, inputSearch, filter }) => {
 		}
 	}, [userInfo, dispatch, filter]);
 
+	useEffect(() => {
+		if (!getMyListFriend.length) {
+			dispatch(checkListFriend(true));
+		} else {
+			dispatch(checkListFriend(false));
+		}
+	}, [getMyListFriend, isFriend]);
+
 	return (
 		<div className='myfriends__container'>
 			<div className='myfriends__title'>
@@ -44,6 +54,7 @@ const MyFriends = ({ activeTabs, inputSearch, filter }) => {
 					</>
 				)}
 			</div>
+
 			<div className='myfriends__layout__container'>
 				{getMyListFriend?.map(item => (
 					<FriendsItem key={item.id} data={item} keyTabs={activeTabs} />
