@@ -59,7 +59,7 @@ function Register() {
 					title2: 'thất bại',
 					isShowIcon: false,
 					scribe: `${err.errorCode === 305 ? 'Email đã được đăng ký' : 'vui lòng kiểm tra lại thông tin và'}`,
-					scribe2: `${err.errorCode === 305 ? '' : 'thử lại'}`,
+					scribe2: `${err.errorCode === 305 ? ' ' : 'thử lại'}`,
 				};
 				setDataModal(newdata);
 			}
