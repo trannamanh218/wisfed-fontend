@@ -56,7 +56,7 @@ const BookTab = ({ currentTab }) => {
 				<LoadingIndicator />
 			) : (
 				<>
-					{!!booksOfAuthor.length > 0 && currentTab === 'books' ? (
+					{!!booksOfAuthor.length && currentTab === 'books' ? (
 						<InfiniteScroll
 							dataLength={booksOfAuthor.length}
 							next={getBookListByAuthor}

@@ -80,7 +80,7 @@ const SidebarQuote = ({ listHashtags, inMyQuote, hasCountQuotes }) => {
 					</div>
 				) : (
 					<>
-						{!!listHashtags.length > 0 && (
+						{!!listHashtags.length && (
 							<TopicColumn
 								className='sidebar-category__topics'
 								title='Hashtag từ Quotes'

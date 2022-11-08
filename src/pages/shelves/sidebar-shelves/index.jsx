@@ -36,7 +36,7 @@ const SidebarShelves = ({ shelveGroupName, isMyShelve, handleViewBookDetail, all
 
 	return (
 		<div className='sidebar-shelves'>
-			{!_.isEmpty(allLibrary) && !!allLibrary.default.length > 0 && (
+			{!_.isEmpty(allLibrary) && !!allLibrary.default.length && (
 				<StatisticList
 					className='sidebar-shelves__reading__status'
 					title='Trạng thái đọc'
@@ -49,9 +49,9 @@ const SidebarShelves = ({ shelveGroupName, isMyShelve, handleViewBookDetail, all
 
 			<MyShelvesList list={allLibrary.custom} />
 
-			{!!quoteData.length > 0 && <QuotesLinks list={quoteData} title={`Quotes của ${shelveGroupName}`} />}
+			{!!quoteData.length && <QuotesLinks list={quoteData} title={`Quotes của ${shelveGroupName}`} />}
 
-			{!!booksAuthor.length > 0 && (
+			{!!booksAuthor.length && (
 				<div className='my-compose'>
 					<BookSlider
 						className='book-reference__slider'

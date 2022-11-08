@@ -5,7 +5,7 @@ const StatusItem = ({ item, onChangeShelves, customLibrariesContainCurrentBookId
 	const [isChecked, setIschecked] = useState(false);
 
 	useEffect(() => {
-		if (!!customLibrariesContainCurrentBookId.length > 0 && customLibrariesContainCurrentBookId.includes(item.id)) {
+		if (!!customLibrariesContainCurrentBookId.length && customLibrariesContainCurrentBookId.includes(item.id)) {
 			setIschecked(true);
 		}
 	}, []);
