@@ -117,14 +117,15 @@ const ReviewTab = ({ currentTab }) => {
 			let response;
 			if (currentOption.value === 'allReviews') {
 				response = await dispatch(getReviewsBook({ bookId, params })).unwrap();
+				if (response.count) {
+					dispatch(updateCurrentBookReviewsNumber(response.count));
+				} else {
+					dispatch(updateCurrentBookReviewsNumber(0));
+				}
 			} else if (currentOption.value === 'friendReviews') {
 				response = await dispatch(getReviewsBookByFriends({ bookId, params })).unwrap();
 			} else {
 				response = await dispatch(getReviewsBookByFollowers({ bookId, params })).unwrap();
-			}
-
-			if (response.count) {
-				dispatch(updateCurrentBookReviewsNumber(response.count));
 			}
 
 			setReviewList(response.rows);
