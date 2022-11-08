@@ -52,8 +52,8 @@ const MainCategoryDetail = ({ setErrorLoadPage }) => {
 	const [sortDirection, setSortDirection] = useState('DESC');
 	const [sortValueTemp, setSortValueTemp] = useState('default');
 
-	const callApiStart = useRef(16);
-	const callApiPerPage = useRef(16);
+	const callApiStart = useRef(8);
+	const callApiPerPage = useRef(8);
 	const callApiStartGetPosts = useRef(10);
 	const callApiPerPageGetPosts = useRef(10);
 	const favoriteCategories = useRef([]);
@@ -102,7 +102,7 @@ const MainCategoryDetail = ({ setErrorLoadPage }) => {
 
 	useEffect(() => {
 		setHasMore(true);
-		callApiStart.current = 16;
+		callApiStart.current = 8;
 		getBooksByCategoryFirstTime();
 	}, [filter, id]);
 

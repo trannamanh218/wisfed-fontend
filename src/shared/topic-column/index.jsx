@@ -4,8 +4,17 @@ import PropTypes from 'prop-types';
 import caretIcon from 'assets/images/caret.png';
 import './topic-column.scss';
 import { useLocation, useNavigate } from 'react-router-dom';
+import LoadingIndicator from 'shared/loading-indicator';
 
-const TopicColumn = ({ topics, className, title, handleViewCategoryDetail, inCategory = false }) => {
+const TopicColumn = ({
+	topics,
+	className,
+	title,
+	handleViewCategoryDetail,
+	inCategory = false,
+	hasMore,
+	onClickViewMore,
+}) => {
 	const [isExpand, setIsExpand] = useState(false);
 
 	const location = useLocation();
@@ -14,7 +23,7 @@ const TopicColumn = ({ topics, className, title, handleViewCategoryDetail, inCat
 	let defaultItems;
 	let maxItems;
 	if (inCategory) {
-		defaultItems = 12;
+		defaultItems = Infinity;
 		maxItems = 30;
 	} else {
 		defaultItems = 6;
@@ -63,6 +72,7 @@ const TopicColumn = ({ topics, className, title, handleViewCategoryDetail, inCat
 							</div>
 						))}
 					</div>
+
 					{topics.length > defaultItems && (
 						<button className='topic-column__btn' onClick={handleViewMore}>
 							<img
@@ -71,6 +81,13 @@ const TopicColumn = ({ topics, className, title, handleViewCategoryDetail, inCat
 								alt='caret-icon'
 							/>
 							<span>{isExpand ? 'Rút gọn' : 'Xem thêm'}</span>
+						</button>
+					)}
+
+					{inCategory && hasMore && (
+						<button className='dualColumn-btn' onClick={onClickViewMore}>
+							<img className='view-caret' src={caretIcon} alt='caret-icon' />
+							<span>Xem thêm</span>
 						</button>
 					)}
 				</div>
@@ -84,6 +101,9 @@ TopicColumn.defaultProps = {
 	className: '',
 	title: 'Chủ đề khác',
 	handleViewCategoryDetail: () => {},
+	hasMore: false,
+	onClickViewMore: () => {},
+	isFetching: false,
 };
 
 TopicColumn.propTypes = {
@@ -92,6 +112,9 @@ TopicColumn.propTypes = {
 	title: PropTypes.string,
 	handleViewCategoryDetail: PropTypes.func,
 	inCategory: PropTypes.bool,
+	hasMore: PropTypes.bool,
+	onClickViewMore: PropTypes.func,
+	isFetching: PropTypes.bool,
 };
 
 export default TopicColumn;

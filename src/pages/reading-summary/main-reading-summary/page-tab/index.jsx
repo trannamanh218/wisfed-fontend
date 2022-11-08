@@ -129,11 +129,6 @@ const PageTab = () => {
 	const handleTickYCount = () => {
 		let max = 1;
 		max = Math.max(...chartsData.map(item => item.count));
-		// chartsData.forEach(item => {
-		// 	if (item.count > max) {
-		// 		max = item.count;
-		// 	}
-		// });
 		if (max < 10) {
 			return max + 1;
 		} else {
