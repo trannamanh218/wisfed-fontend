@@ -25,7 +25,7 @@ import { checkUserLogin, deleteUserInfo } from 'reducers/redux-utils/auth';
 import { useVisible } from 'shared/hooks';
 import SearchAllModal from 'shared/search-all';
 import Storage from 'helpers/Storage';
-import { handleResetValue } from 'reducers/redux-utils/search';
+import { handleResetValue, handleUpdateValueInputSearchRedux } from 'reducers/redux-utils/search';
 import { toast } from 'react-toastify';
 import { updateTargetReading } from 'reducers/redux-utils/chart';
 import defaultAvatar from 'assets/icons/defaultLogoAvatar.svg';
@@ -37,6 +37,9 @@ import Request from 'helpers/Request';
 import HeaderSearchMobile from './header-search-mobile';
 
 const Header = () => {
+	const hashtagRegex =
+		/#(?![0-9_]+\b)[0-9a-z_ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễếệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ]+/gi;
+
 	const { valueInputSearchRedux } = useSelector(state => state.search);
 	const { ref: showRef, isVisible: isShow, setIsVisible: setIsShow } = useVisible(false);
 	const {
@@ -225,6 +228,24 @@ const Header = () => {
 		navigate(`/profile/${userInfo.id}`);
 	};
 
+	const handleKeyDown = e => {
+		const value = getSlugResult?.trim();
+		if (e.key === 'Enter' && value.length) {
+			setIsShow(false);
+			if (hashtagRegex.test(value)) {
+				const formatedInpSearchValue = value
+					.normalize('NFD')
+					.replace(/[\u0300-\u036f]/g, '')
+					.replace(/đ/g, 'd')
+					.replace(/Đ/g, 'D')
+					.replace(/#/g, '');
+				navigate(`/hashtag/${formatedInpSearchValue}`);
+			} else {
+				navigate(`/result/q=${value}`);
+			}
+		}
+	};
+
 	useEffect(() => {
 		// Điền vào ô search
 		setGetSlugResult(valueInputSearchRedux);
@@ -255,7 +276,8 @@ const Header = () => {
 								placeholder='Tìm kiếm trên Wisfeed'
 								disabled={isShow}
 								value={getSlugResult}
-								readOnly
+								onChange={e => dispatch(handleUpdateValueInputSearchRedux(e.target.value.trim()))}
+								onKeyDown={handleKeyDown}
 							/>
 						</>
 					)}

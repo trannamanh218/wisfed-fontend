@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import caretIcon from 'assets/images/caret.png';
 import './topic-column.scss';
 import { useLocation, useNavigate } from 'react-router-dom';
-import LoadingIndicator from 'shared/loading-indicator';
 
 const TopicColumn = ({
 	topics,
@@ -66,9 +65,7 @@ const TopicColumn = ({
 								title={topic.name}
 								onClick={() => handleViewCategoryDetail(topic)}
 							>
-								{/* <Link to={`/quotes/hashtag/${topic.name?.slice(1) || topic.tag?.name?.slice(1)}`}> */}
 								<span onClick={() => handleDirect(topic)}>{topic.name || topic.tag?.name}</span>
-								{/* </Link> */}
 							</div>
 						))}
 					</div>

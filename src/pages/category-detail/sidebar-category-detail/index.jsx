@@ -51,10 +51,8 @@ const SidebarCategoryDetail = ({ handleViewCategoryDetail }) => {
 		// Lọc ra danh sách quotes từ quoteData mà không có trong listQuotesByCategory
 		const newArr = quoteData.filter(item => !listQuotesByCategory.some(quote => quote.id === item.id));
 
-		// Lấy ra một danh sách chỉ có 3 quotes để hiển thị
-		if (quotesList) {
-			setQuotesList(listQuotesByCategory.concat(newArr).slice(0, 3));
-		}
+		// Tạo ra một danh sách chỉ có 3 quotes để hiển thị
+		setQuotesList(listQuotesByCategory.concat(newArr).slice(0, 3));
 	}, [listQuotesByCategory, quoteData]);
 
 	const {
