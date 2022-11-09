@@ -229,20 +229,25 @@ const Header = () => {
 	};
 
 	const handleKeyDown = e => {
-		const value = getSlugResult?.trim();
-		if (e.key === 'Enter' && value.length) {
-			setIsShow(false);
-			if (hashtagRegex.test(value)) {
-				const formatedInpSearchValue = value
-					.normalize('NFD')
-					.replace(/[\u0300-\u036f]/g, '')
-					.replace(/đ/g, 'd')
-					.replace(/Đ/g, 'D')
-					.replace(/#/g, '');
-				navigate(`/hashtag/${formatedInpSearchValue}`);
-			} else {
-				navigate(`/result/q=${value}`);
+		if (e.key === 'Enter') {
+			const value = getSlugResult?.trim();
+			if (e.key === 'Enter' && value.length) {
+				setIsShow(false);
+				if (hashtagRegex.test(value)) {
+					const formatedInpSearchValue = value
+						.normalize('NFD')
+						.replace(/[\u0300-\u036f]/g, '')
+						.replace(/đ/g, 'd')
+						.replace(/Đ/g, 'D')
+						.replace(/#/g, '');
+					navigate(`/hashtag/${formatedInpSearchValue}`);
+				} else {
+					navigate(`/result/q=${value}`);
+				}
 			}
+		} else if (e.key !== 'Escape') {
+			dispatch(handleUpdateValueInputSearchRedux(''));
+			setIsShow(true);
 		}
 	};
 
@@ -276,7 +281,7 @@ const Header = () => {
 								placeholder='Tìm kiếm trên Wisfeed'
 								disabled={isShow}
 								value={getSlugResult}
-								onChange={e => dispatch(handleUpdateValueInputSearchRedux(e.target.value.trim()))}
+								readOnly
 								onKeyDown={handleKeyDown}
 							/>
 						</>
