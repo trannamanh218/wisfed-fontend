@@ -1,5 +1,5 @@
 import './creat-quotes-modal.scss';
-import { CloseX, WeatherStars, BackChevron, Search, CloseIconX } from 'components/svg';
+import { CloseX, WeatherStars, BackChevron, Search } from 'components/svg';
 import { useEffect, useState, useRef, useCallback } from 'react';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
@@ -13,14 +13,10 @@ import { toast } from 'react-toastify';
 import { handleAfterCreatQuote } from 'reducers/redux-utils/quote';
 import { NotificationError } from 'helpers/Error';
 import AddAndSearchCategories from 'shared/add-and-search-categories';
-import Input from 'shared/input';
+// import Input from 'shared/input';
+import InputHashtag from 'shared/input/inputHashtag/inputHashtag';
 
 function CreatQuotesModal({ hideCreatQuotesModal }) {
-	const dataRef = useRef('');
-	const [inputHashtag, setInputHashtag] = useState('');
-	const [justAddedFirstOneHashTag, setJustAddedFirstOneHashTag] = useState(false);
-	const hashtagInputWrapper = useRef(null);
-	const inputRefHashtag = useRef('');
 	const [showTextFieldEditPlaceholder, setShowTextFieldEditPlaceholder] = useState(true);
 	const [showTextFieldBackgroundSelect, setShowTextFieldBackgroundSelect] = useState(false);
 	const [backgroundColor, setBackgroundColor] = useState('');
@@ -38,11 +34,8 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 	const categoryInputWrapper = useRef(null);
 	const categoryInput = useRef(null);
 	const [listHashtags, setListHashtags] = useState([]);
-	const [show, setShow] = useState(false);
 	const [hasMoreEllipsis, setHasMoreEllipsis] = useState(false);
-
-	const hashtagRegex =
-		/#(?![0-9_]+\b)[0-9a-z_ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễếệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ]+/gi;
+	const [lastTag, setLastTag] = useState('');
 
 	const dispatch = useDispatch();
 	const colorData = [
@@ -54,53 +47,6 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 		'100deg, #FFD42A, #FFFC49',
 		'100deg, #C5FFAA, #00BAC6',
 	];
-
-	useEffect(() => {
-		const hastagElement = document.getElementById('hashtag');
-		const handleHashtag = e => {
-			if (e.keyCode === 32 && hashtagRegex.test(inputHashtag)) {
-				dataRef.current = inputHashtag.trim();
-				inputRefHashtag.current.value = '';
-			}
-		};
-		hastagElement.addEventListener('keydown', handleHashtag);
-
-		return () => hastagElement.removeEventListener('keydown', handleHashtag);
-	}, [inputHashtag]);
-
-	useEffect(() => {
-		if (justAddedFirstOneHashTag && listHashtags.length === 1) {
-			inputRefHashtag.current.focus();
-		}
-	}, [justAddedFirstOneHashTag, listHashtags]);
-
-	const handleChangeHashtag = e => {
-		const value = e.target.value;
-		setInputHashtag(value);
-		if (!hashtagRegex.test(value) && value.trim()) {
-			setShow(true);
-		} else {
-			setShow(false);
-		}
-		if (hashtagInputWrapper.current) {
-			hashtagInputWrapper.current.style.width = inputRefHashtag.current.value.length + 0.5 + 'ch';
-		}
-	};
-
-	useEffect(() => {
-		const dataCheck = listHashtags.filter(item => dataRef.current === item);
-		if (dataRef.current !== '' && dataCheck.length < 1) {
-			const check = dataRef.current
-				.normalize('NFD')
-				.replace(/[\u0300-\u036f]/g, '')
-				.replace(/đ/g, 'd')
-				.replace(/Đ/g, 'D');
-			const newList = [...listHashtags, check];
-			setShow(false);
-			setListHashtags(newList);
-			setJustAddedFirstOneHashTag(true);
-		}
-	}, [dataRef.current]);
 
 	useEffect(() => {
 		textFieldEdit.current.focus();
@@ -167,10 +113,6 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 		_.debounce((inputValue, option) => getSuggestionForCreatQuotes(inputValue, option), 700),
 		[]
 	);
-	const handleRemoveTag = e => {
-		const newList = listHashtags.filter(item => item !== e);
-		setListHashtags(newList);
-	};
 
 	const searchBook = e => {
 		setGetDataFinish(false);
@@ -242,12 +184,20 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 	};
 
 	const creatQuotesFnc = async () => {
+		const newListHastag = listHashtags.map(item => `${item}`);
+		let newList;
+		if (lastTag.includes('#') && lastTag !== '#') {
+			newList = [...newListHastag, lastTag];
+		} else {
+			newList = newListHastag;
+		}
+
 		try {
 			const data = {
 				quote: textFieldEdit.current.innerText,
 				bookId: bookAdded.id,
 				categories: categoryAddedIdList,
-				tags: listHashtags,
+				tags: newList,
 				background: backgroundColor,
 			};
 			const response = await dispatch(creatQuotes(data)).unwrap();
@@ -416,49 +366,11 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 						/>
 					</div>
 
-					<div className='creat-quotes-modal__body__option-item'>
-						<div className='creat-quotes-modal__body__option-item__title'>Từ khóa</div>
-						<div
-							className='creat-quotes-modal__body__option-item__search-container list__tags'
-							onClick={() => inputRefHashtag.current.focus()}
-						>
-							{listHashtags.length > 0 ? (
-								<div className='input__tag'>
-									{listHashtags.map(item => (
-										<span key={item}>
-											<span>{item}</span>
-											<button
-												className='close__author'
-												onClick={() => {
-													handleRemoveTag(item);
-												}}
-											>
-												<CloseIconX />
-											</button>
-										</span>
-									))}
-									<div ref={hashtagInputWrapper} style={{ width: '80px' }}>
-										<input
-											id='hashtag'
-											className='add-and-search-categories__input'
-											onChange={handleChangeHashtag}
-											ref={inputRefHashtag}
-										/>
-									</div>
-								</div>
-							) : (
-								<Input
-									className='input-keyword'
-									id='hashtag'
-									isBorder={false}
-									placeholder='Nhập hashtag'
-									handleChange={handleChangeHashtag}
-									inputRef={inputRefHashtag}
-								/>
-							)}
-						</div>
-						{show && inputHashtag && <span style={{ color: '#e61b00' }}>Vui lòng nhập đúng định dạng</span>}
-					</div>
+					<InputHashtag
+						listHashtags={listHashtags}
+						setListHashtags={setListHashtags}
+						setLastTag={setLastTag}
+					/>
 				</div>
 			</div>
 			<div className='creat-quotes-modal__footer'>

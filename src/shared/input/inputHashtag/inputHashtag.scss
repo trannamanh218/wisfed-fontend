@@ -1,0 +1,64 @@
+.input-hashtag {
+	margin-top: 32px;
+	input {
+		font-size: 14px;
+		line-height: inherit;
+		background-color: transparent;
+		width: 100%;
+		height: 43px;
+		&:focus {
+			outline: none;
+		}
+	}
+	&__label {
+		font-size: 14px;
+		font-weight: 600;
+		line-height: 1.25rem;
+		margin-bottom: 16px;
+	}
+	&__list {
+		display: flex;
+		align-items: center;
+		background-color: #f7f7fc;
+		border-radius: 12px;
+		flex-wrap: wrap;
+		min-height: 57px;
+		padding: 7px 24px;
+		&__cards {
+			flex-wrap: wrap;
+			display: flex;
+			cursor: pointer;
+			align-items: center;
+			gap: 8px;
+			max-width: 100%;
+			> span {
+				width: max-content;
+				color: #b38c64;
+				background-color: #f5e7d8;
+				padding: 0 1.25rem;
+				height: 43px;
+				border-radius: 10px;
+				overflow: hidden;
+				display: flex;
+				align-items: center;
+				span {
+					height: 100%;
+					align-items: center;
+					display: flex;
+					font-size: 13px;
+					font-weight: 600;
+					overflow: hidden;
+					text-overflow: ellipsis;
+				}
+				button {
+					z-index: 2;
+				}
+			}
+		}
+	}
+
+	.input-hashtag-warning {
+		color: #e61b00;
+		margin-top: 24px;
+	}
+}

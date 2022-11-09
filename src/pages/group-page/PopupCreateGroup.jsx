@@ -15,13 +15,12 @@ import AddAndSearchCategories from 'shared/add-and-search-categories';
 import { getSuggestionForPost } from 'reducers/redux-utils/activity';
 import { handleResetGroupList } from 'reducers/redux-utils/group';
 import { getFilterSearch } from 'reducers/redux-utils/search';
+import InputHashtag from 'shared/input/inputHashtag/inputHashtag';
 
 const PopupCreateGroup = ({ handleClose }) => {
 	const groupNameInput = useRef('');
 	const [inputNameGroup, setInputNameGroup] = useState('');
 	const [inputDiscription, setInputDiscription] = useState('');
-	const [inputHashtag, setInputHashtag] = useState('');
-	const [justAddedFirstOneHashTag, setJustAddedFirstOneHashTag] = useState(false);
 	const [listHashtags, setListHashtags] = useState([]);
 	const [image, setImage] = useState(null);
 	const [isShowBtn, setIsShowBtn] = useState(false);
@@ -48,12 +47,6 @@ const PopupCreateGroup = ({ handleClose }) => {
 
 	const [getDataFinish, setGetDataFinish] = useState(false);
 
-	const [show, setShow] = useState(false);
-
-	const dataRef = useRef('');
-	const inputRefHashtag = useRef(null);
-	const hashtagInputWrapper = useRef(null);
-
 	const authorInputContainer = useRef(null);
 	const authorInputWrapper = useRef(null);
 	const authorInput = useRef(null);
@@ -65,9 +58,6 @@ const PopupCreateGroup = ({ handleClose }) => {
 	const bookInputContainer = useRef(null);
 	const bookInputWrapper = useRef(null);
 	const bookInput = useRef(null);
-
-	const hashtagRegex =
-		/#(?![0-9_]+\b)[0-9a-z_ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễếệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ]+/gi;
 
 	const dispatch = useDispatch();
 
@@ -259,58 +249,9 @@ const PopupCreateGroup = ({ handleClose }) => {
 		return imageUploadedData?.streamPath.default;
 	};
 
-	useEffect(() => {
-		setLastTag(
-			inputHashtag
-				.normalize('NFD')
-				.replace(/[\u0300-\u036f]/g, '')
-				.replace(/đ/g, 'd')
-				.replace(/Đ/g, 'D')
-		);
-
-		const hashtagElement = document.getElementById('hashtag');
-		const handleHashtag = e => {
-			if (e.keyCode === 32 && hashtagRegex.test(inputHashtag)) {
-				dataRef.current = inputHashtag.trim();
-				inputRefHashtag.current.value = '';
-			}
-		};
-		hashtagElement.addEventListener('keydown', handleHashtag);
-
-		return () => hashtagElement.removeEventListener('keydown', handleHashtag);
-	}, [inputHashtag]);
-
-	useEffect(() => {
-		if (justAddedFirstOneHashTag && listHashtags.length === 1) {
-			inputRefHashtag.current.focus();
-		}
-	}, [justAddedFirstOneHashTag, listHashtags]);
-
-	useEffect(() => {
-		const dataCheck = listHashtags.filter(item => dataRef.current === item);
-		if (dataRef.current !== '' && dataCheck.length < 1) {
-			const check = dataRef.current
-				.normalize('NFD')
-				.replace(/[\u0300-\u036f]/g, '')
-				.replace(/đ/g, 'd')
-				.replace(/Đ/g, 'D');
-			const newList = [...listHashtags, check];
-			setListHashtags(newList);
-			setJustAddedFirstOneHashTag(true);
-		}
-	}, [dataRef.current]);
-
 	const onInputChange = f => e => {
 		const value = e.target.value.trim();
 		f(value);
-		if (!hashtagRegex.test(value)) {
-			setShow(true);
-		} else {
-			setShow(false);
-		}
-		if (hashtagInputWrapper.current) {
-			hashtagInputWrapper.current.style.width = inputRefHashtag.current.value.length + 0.5 + 'ch';
-		}
 	};
 
 	useEffect(() => {
@@ -420,11 +361,6 @@ const PopupCreateGroup = ({ handleClose }) => {
 	useEffect(() => {
 		setKindOfGroup(kindOfGroupRef.current);
 	}, [kindOfGroupRef.current]);
-
-	const handleRemoveTag = e => {
-		const newList = listHashtags.filter(item => item !== e);
-		setListHashtags(newList);
-	};
 
 	useEffect(() => {
 		groupNameInput.current.focus();
@@ -595,50 +531,9 @@ const PopupCreateGroup = ({ handleClose }) => {
 						onChange={onInputChange(setInputDiscription)}
 					/>
 				</div>
-				<div className='form-field-hashtag'>
-					<label>Hashtags</label>
-					<span style={{ color: 'red', marginLeft: '4px' }}>*</span>
-					<div className='list__author-tags' onClick={() => inputRefHashtag.current.focus()}>
-						{listHashtags.length > 0 ? (
-							<div className='input__authors'>
-								{listHashtags.map((item, index) => (
-									<span key={index}>
-										<span>{item}</span>
-										<button
-											className='close__author'
-											onClick={() => {
-												handleRemoveTag(item);
-											}}
-										>
-											<CloseIconX />
-										</button>
-									</span>
-								))}
-								<div ref={hashtagInputWrapper} style={{ width: '8px' }}>
-									<input
-										id='hashtag'
-										className='add-and-search-categories__input'
-										onChange={onInputChange(setInputHashtag)}
-										ref={inputRefHashtag}
-									/>
-								</div>
-							</div>
-						) : (
-							<Input
-								id='hashtag'
-								isBorder={false}
-								placeholder='Nhập hashtag'
-								handleChange={onInputChange(setInputHashtag)}
-								inputRef={inputRefHashtag}
-							/>
-						)}
-					</div>
-					{show && !!inputHashtag ? (
-						<span style={{ color: '#e61b00' }}>Vui lòng nhập đúng định dạng</span>
-					) : (
-						''
-					)}
-				</div>
+
+				<InputHashtag listHashtags={listHashtags} setListHashtags={setListHashtags} setLastTag={setLastTag} />
+
 				<div className={!isShowBtn ? 'disable-btn' : `form-button`} onClick={createGroup}>
 					<button>Tạo nhóm</button>
 				</div>
