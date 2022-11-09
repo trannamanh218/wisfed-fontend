@@ -6,7 +6,7 @@ import './page-tab.scss';
 import { useDispatch } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
 import { useParams } from 'react-router-dom';
-import chart, { getChartsByid, updateImg } from 'reducers/redux-utils/chart';
+import { getChartsByid, updateImg } from 'reducers/redux-utils/chart';
 import { useNavigate } from 'react-router-dom';
 import Circle from 'shared/loading/circle';
 import { useCurrentPng } from 'recharts-to-png';

@@ -94,6 +94,7 @@ const SidebarCategory = ({ isFetching, handleViewCategoryDetail }) => {
 SidebarCategory.propTypes = {
 	status: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
 	handleViewCategoryDetail: PropTypes.func,
+	isFetching: PropTypes.bool,
 };
 
 export default SidebarCategory;
