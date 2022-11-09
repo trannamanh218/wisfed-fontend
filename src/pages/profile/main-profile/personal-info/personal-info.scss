@@ -145,6 +145,10 @@ $wallpaper-height: 350px;
 			background-color: rgba($primary-light, 0.4);
 			margin-left: auto;
 		}
+		.setting-list {
+			max-width: 370px;
+			width: 370px;
+		}
 
 		&-list {
 			position: absolute;

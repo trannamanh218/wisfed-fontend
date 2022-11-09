@@ -176,7 +176,7 @@
 		font-size: 13px;
 		line-height: 1.4rem;
 		color: #a0a3bd;
-		gap: 8px;
+		gap: 6px;
 		font-weight: 500;
 
 		&__online-dot {
@@ -193,7 +193,6 @@
 		align-items: center;
 		color: $ash-placeholder;
 		font-weight: 500;
-		margin-left: 4px;
 		svg {
 			width: 12px;
 		}

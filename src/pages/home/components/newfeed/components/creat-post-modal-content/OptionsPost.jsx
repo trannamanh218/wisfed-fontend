@@ -62,7 +62,8 @@ const OptionsPost = ({ list, addOptionsToPost, taggedData, postDataShare }) => {
 						'show': itemOnMouseHover === index,
 					})}
 				>
-					{item.title.charAt(0).toUpperCase() + item.title.slice(1)}
+					{item.title.charAt(0).toUpperCase() + item.title.slice(1)}{' '}
+					{item.value !== 'addFriends' && ' (Bắt buộc)'}
 				</div>
 				{item.icon}
 			</span>

@@ -455,12 +455,12 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 
 						<div className='post__user-status__post-time-status'>
 							<span>{calculateDurationTime(postData.time || postData.createdAt)}</span>
+							<img src={vector} />
 							<>
 								{postData.book && (
 									<div className='post__user-status__subtitle'>
 										{postData.isUpdateProgress && (
 											<>
-												<img src={vector} />
 												<span style={{ marginRight: '12px', marginLeft: '5px' }}>
 													{' '}
 													Cập nhật tiến độ đọc sách
