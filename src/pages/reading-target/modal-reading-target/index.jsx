@@ -27,34 +27,31 @@ const ModalReadTarget = ({ toggleModal, modalOpen, setModalOpen, deleteModal }) 
 	};
 
 	return (
-		<div className='Modal__Read__Target__main'>
-			<Modal size='md' show={modalOpen} onHide={toggleModal} className='Modal__Read__Target'>
-				{deleteModal ? (
+		<Modal size='md' show={modalOpen} onHide={toggleModal} centered className='main-shelves__modal'>
+			{deleteModal ? (
+				<>
+					<span className='btn-closeX' onClick={toggleModal}>
+						<CloseX />
+					</span>
 					<ModalBody>
-						<span className='btn-closeX' onClick={toggleModal}>
-							<CloseX />
-						</span>
-						<ModalBody>
-							<h4 className='main-shelves__modal__title'>Bạn có muốn xóa mục tiêu </h4>
-							<p className='main-shelves__modal__subtitle'>Bạn sẽ không thể thấy mục tiêu của năm nay</p>
-							<button
-								className='btn main-shelves__modal__btn-delete btn-danger'
-								onClick={handleDeleteTarget}
-							>
-								Xóa
-							</button>
-							<button className='btn-cancel' onClick={toggleModal}>
-								Không
-							</button>
-						</ModalBody>
+						<h4 className='main-shelves__modal__title'>Bạn có muốn xóa mục tiêu?</h4>
+						<p className='main-shelves__modal__subtitle'>
+							Bạn sẽ không thể thấy mục tiêu <p>của năm nay</p>
+						</p>
+						<button className='btn main-shelves__modal__btn-delete btn-danger' onClick={handleDeleteTarget}>
+							Xóa
+						</button>
+						<button className='btn-cancel' onClick={toggleModal}>
+							Không
+						</button>
 					</ModalBody>
-				) : (
-					<ModalBody>
-						<ReadChallenge modalOpen={modalOpen} setModalOpen={setModalOpen} />
-					</ModalBody>
-				)}
-			</Modal>
-		</div>
+				</>
+			) : (
+				<ModalBody>
+					<ReadChallenge modalOpen={modalOpen} setModalOpen={setModalOpen} />
+				</ModalBody>
+			)}
+		</Modal>
 	);
 };
 ModalReadTarget.propTypes = {
