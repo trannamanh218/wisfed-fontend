@@ -275,9 +275,15 @@ function RichTextEditor({
 		setEditorState(EditorState.createWithContent(contentState));
 	};
 
+	const keyDown = e => {
+		if (e.keyCode === 33 || e.keyCode === 34) {
+			e.preventDefault();
+		}
+	};
+
 	return (
 		<>
-			<div className={className ? `rich-text-editor ${className}` : 'rich-text-editor'}>
+			<div className={className ? `rich-text-editor ${className}` : 'rich-text-editor'} onKeyDown={keyDown}>
 				<Editor
 					editorState={editorState}
 					onChange={onChange}
