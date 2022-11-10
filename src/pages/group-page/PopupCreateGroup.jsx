@@ -400,9 +400,9 @@ const PopupCreateGroup = ({ handleClose }) => {
 										<Image />
 									</div>
 									<br />
-									<p className='upload-image__description'>Thêm ảnh từ thiết bị</p>
-									<span>hoặc kéo thả</span>
-									<span style={{ color: 'red', paddingTop: '5px' }}>(bắt buộc)</span>
+									<span className='upload-image__description'>Thêm ảnh bìa từ thiết bị</span>
+									hoặc kéo thả
+									<div style={{ color: 'red', paddingTop: '5px' }}>(bắt buộc)</div>
 								</div>
 							</>
 						)}

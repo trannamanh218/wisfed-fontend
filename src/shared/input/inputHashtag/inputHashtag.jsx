@@ -1,10 +1,10 @@
 import PropTypes from 'prop-types';
 import { useRef, useState, useEffect } from 'react';
-import { CloseIconX } from 'components/svg';
+import { CloseX } from 'components/svg';
 import Input from 'shared/input';
 import './inputHashtag.scss';
 
-const InputHashtag = ({ listHashtags, setListHashtags, setLastTag }) => {
+const InputHashtag = ({ listHashtags, setListHashtags, setLastTag, label, isRequired }) => {
 	const hashtagRegex =
 		/#(?![0-9_]+\b)[0-9a-z_ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễếệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ]+/gi;
 
@@ -77,11 +77,14 @@ const InputHashtag = ({ listHashtags, setListHashtags, setLastTag }) => {
 	}, [justAddedFirstOneHashTag, listHashtags]);
 
 	return (
-		<div className='input-hashtag'>
-			<div className='input-hashtag__label'>Hashtag</div>
-			<div className='input-hashtag__list' onClick={() => inputRefHashtag.current.focus()}>
+		<div className='input-form-group'>
+			<div className='input-form-group__label'>
+				{label}
+				{isRequired && <span style={{ marginLeft: '4px', color: 'red' }}>*</span>}
+			</div>
+			<div className='input-form-group__list' onClick={() => inputRefHashtag.current.focus()}>
 				{listHashtags.length > 0 ? (
-					<div className='input-hashtag__list__cards'>
+					<div className='input-form-group__list__cards'>
 						{listHashtags.map(item => (
 							<span key={item}>
 								<span>{item}</span>
@@ -91,11 +94,11 @@ const InputHashtag = ({ listHashtags, setListHashtags, setLastTag }) => {
 										handleRemoveTag(item);
 									}}
 								>
-									<CloseIconX />
+									<CloseX />
 								</button>
 							</span>
 						))}
-						<div ref={hashtagInputWrapper} style={{ width: '80px' }}>
+						<div ref={hashtagInputWrapper} style={{ width: '8px' }}>
 							<input
 								id='hashtag'
 								className='input-hashtag-input-element'
@@ -124,12 +127,16 @@ InputHashtag.defaultProps = {
 	listHashtags: [],
 	setListHashtags: () => {},
 	setLastTag: () => {},
+	label: 'Hashtag',
+	isRequired: false,
 };
 
 InputHashtag.propTypes = {
 	listHashtags: PropTypes.array,
 	setListHashtags: PropTypes.func,
 	setLastTag: PropTypes.func,
+	label: PropTypes.string,
+	isRequired: PropTypes.bool,
 };
 
 export default InputHashtag;

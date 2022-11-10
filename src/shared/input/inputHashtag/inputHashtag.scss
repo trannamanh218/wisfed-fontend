@@ -1,20 +1,24 @@
-.input-hashtag {
+.input-form-group {
 	margin-top: 32px;
 	input {
 		font-size: 14px;
 		line-height: inherit;
 		background-color: transparent;
 		width: 100%;
-		height: 43px;
+		min-height: 43px;
+		padding: 0 17px;
 		&:focus {
 			outline: none;
 		}
 	}
+	.input-hashtag-input-element {
+		height: 43px;
+	}
 	&__label {
 		font-size: 14px;
 		font-weight: 600;
-		line-height: 1.25rem;
-		margin-bottom: 16px;
+		line-height: 22px;
+		margin-bottom: 24px;
 	}
 	&__list {
 		display: flex;
@@ -32,19 +36,15 @@
 			gap: 8px;
 			max-width: 100%;
 			> span {
-				width: max-content;
 				color: #b38c64;
 				background-color: #f5e7d8;
-				padding: 0 1.25rem;
+				padding: 0 18px;
 				height: 43px;
 				border-radius: 10px;
 				overflow: hidden;
 				display: flex;
 				align-items: center;
 				span {
-					height: 100%;
-					align-items: center;
-					display: flex;
 					font-size: 13px;
 					font-weight: 600;
 					overflow: hidden;

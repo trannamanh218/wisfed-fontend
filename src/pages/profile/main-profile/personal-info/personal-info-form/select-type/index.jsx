@@ -79,7 +79,7 @@ function SelectType({ dataAdded, setDataAdded, editStatus, cancelEdit, enableEdi
 		<div className='form-field-group'>
 			<label className='form-field-label'>Chủ đề yêu thích</label>
 			<div className='form-field-wrapper'>
-				<div className='form-field'>
+				<div className={`form-field ${editStatus && 'editStatus'}`}>
 					{editStatus ? (
 						<AddAndSearchCategories
 							categoryAddedList={dataAdded}
@@ -94,6 +94,7 @@ function SelectType({ dataAdded, setDataAdded, editStatus, cancelEdit, enableEdi
 							categoryInput={categoryInput}
 							hasSearchIcon={false}
 							hasMoreEllipsis={hasMoreEllipsis}
+							autoFocus
 						/>
 					) : (
 						<>

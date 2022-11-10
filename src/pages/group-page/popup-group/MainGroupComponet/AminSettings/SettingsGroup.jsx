@@ -373,7 +373,7 @@ function SettingsGroup({ handleChange, data, fetchData }) {
 					<h3>Thiết lập nhóm</h3>
 				</div>
 				<div className='form-field-wrapper'>
-					<div className='form-field-name'>
+					<div className='form-field-group'>
 						<label>Tên nhóm</label>
 						<Input
 							inputRef={groupNameInput}
@@ -384,15 +384,16 @@ function SettingsGroup({ handleChange, data, fetchData }) {
 							autoFocus
 						/>
 					</div>
-					<div className='form-field-select__kind-of-group'>
-						<h4>
+
+					<div className='form-field-group'>
+						<span style={{ fontWeight: '600' }}>
 							Kiểu nội dung:{' '}
 							{data.groupType === 'book' ? 'Sách' : data.groupType === 'author' ? 'Tác giả' : 'Chia sẻ'}
-						</h4>
+						</span>
 					</div>
 
 					{data.groupType === 'book' && (
-						<div className='form-field-select__kind-of-group'>
+						<div className='form-field-group'>
 							<label>Chủ đề sách</label>
 							<span className='form-field-authors__asterisk'>*</span>
 							<SelectBox
@@ -405,7 +406,7 @@ function SettingsGroup({ handleChange, data, fetchData }) {
 					)}
 
 					{data.groupType !== 'book' && (
-						<div className='form-field-select__kind-of-group'>
+						<div className='form-field-group'>
 							<label>Chủ đề </label>
 							{data.groupType === 'author' ? '' : <span className='form-field-authors__asterisk'>*</span>}
 							<AddAndSearchCategories
@@ -425,7 +426,7 @@ function SettingsGroup({ handleChange, data, fetchData }) {
 						</div>
 					)}
 
-					<div className='form-field-authors'>
+					<div className='form-field-group'>
 						<label>Tên tác giả</label>
 						{data.groupType === 'category' ? '' : <span className='form-field-authors__asterisk'>*</span>}
 						<AddAndSearchCategories
@@ -444,7 +445,7 @@ function SettingsGroup({ handleChange, data, fetchData }) {
 						/>
 					</div>
 
-					<div className='form-field-authors'>
+					<div className='form-field-group'>
 						<label>Tên sách</label>
 						{data.groupType === 'category' || data.groupType === 'author' ? (
 							''
@@ -467,8 +468,8 @@ function SettingsGroup({ handleChange, data, fetchData }) {
 						/>
 					</div>
 
-					<div className='form-field-description'>
-						<label style={{ marginTop: '0px', marginBottom: '23px' }}>Giới thiệu</label>
+					<div className='form-field-group'>
+						<label>Giới thiệu</label>
 						<span style={{ color: 'red', marginLeft: '4px' }}>*</span>
 						<textarea
 							ref={textArea}
