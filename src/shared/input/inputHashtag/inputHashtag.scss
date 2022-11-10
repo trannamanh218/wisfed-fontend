@@ -5,15 +5,18 @@
 		line-height: inherit;
 		background-color: transparent;
 		width: 100%;
-		min-height: 43px;
-		padding: 0 17px;
 		&:focus {
 			outline: none;
 		}
 	}
+	.input-keyword {
+		padding: 0 0 0 17px;
+		min-height: 43px;
+	}
 	.input-hashtag-input-element {
 		height: 43px;
 	}
+
 	&__label {
 		font-size: 14px;
 		font-weight: 600;
