@@ -116,6 +116,7 @@ export const handleClickNotificationItemHook = (paramUserInfo, paramItem) => {
 				navigate(`/Group/${paramItem.originId.groupId}`);
 				break;
 			case 'replyComment':
+				// case 'replyCommentMiniPost':
 				dispatch(handleMentionCommentId(paramItem.originId.replyId));
 				navigate(`/detail-feed/mini-post/${paramItem.originId.minipostId}`);
 				break;
@@ -173,6 +174,10 @@ export const handleClickNotificationItemHook = (paramUserInfo, paramItem) => {
 				dispatch(updateReviewIdFromNoti(paramItem.originId.reviewId));
 				navigate(`/review/${paramItem.originId.bookId}/${paramUserInfo.id}`);
 				break;
+			// case 'replyCommentReview':
+			// 	dispatch(handleMentionCommentId(paramItem.originId.replyId));
+			// 	navigate(`/review/${paramItem.originId.bookId}/${paramUserInfo.id}`);
+			// 	break;
 			case 'likeCommentMiniPost':
 			case 'sharePost':
 				navigate(`/detail-feed/mini-post/${paramItem.originId.minipostId}`);

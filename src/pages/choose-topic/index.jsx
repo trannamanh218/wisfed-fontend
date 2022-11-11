@@ -168,7 +168,7 @@ function ChooseTopic() {
 						updateUser();
 					}}
 				>
-					<button>TIếp tục</button>
+					<button>Tiếp tục</button>
 				</div>
 			</div>
 		</div>
