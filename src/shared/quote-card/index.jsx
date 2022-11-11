@@ -66,8 +66,9 @@ const QuoteCard = ({ data, isDetail = false, isShare = false }) => {
 			style={quoteData.background !== '' ? { backgroundImage: `linear-gradient(${quoteData.background})` } : {}}
 		>
 			<div className='quote-card__quote-content'>
-				<p>{`"${quoteData.quote}"`}</p>
+				<p className='quote-card__quote-content__quote'>{`"${quoteData.quote}"`}</p>
 				<p
+					className='quote-card__quote-content__author-and-book'
 					onMouseEnter={e => (e.target.style.cursor = 'pointer')}
 					onClick={() => onClickRedirectToBook(quoteData)}
 					style={{ textDecoration: 'underline' }}
