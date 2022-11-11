@@ -103,7 +103,27 @@
 		gap: 0;
 	}
 }
-
+@media only screen and (max-width: 1024px) {
+	.post-book {
+		&__name {
+			font-size: 18px;
+		}
+		&__ratio {
+			font-size: 16px;
+			& + * {
+				font-size: 13px;
+			}
+		}
+		.btn-status {
+			height: 46px;
+			&.btn {
+				> span {
+					font-size: 15px;
+				}
+			}
+		}
+	}
+}
 @media only screen and (max-width: 820px) {
 	.newfeed__creat-post__modal {
 		.post-book {

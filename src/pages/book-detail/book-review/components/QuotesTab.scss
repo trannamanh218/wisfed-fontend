@@ -36,6 +36,9 @@
 			}
 		}
 	}
+	.form-check-input.is-valid ~ .form-check-label {
+		font-size: 18px;
+	}
 }
 
 @media only screen and (max-width: 1024px) {
