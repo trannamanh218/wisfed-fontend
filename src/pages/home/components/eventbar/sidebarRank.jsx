@@ -18,7 +18,7 @@ export default function SidebarRank() {
 
 	const getTopUserData = async () => {
 		const params = {
-			reportType: 'topFollow',
+			reportType: 'topRead',
 			by: 'week',
 		};
 		try {

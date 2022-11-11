@@ -14,6 +14,7 @@ import { buttonReqFriend } from 'helpers/HandleShare';
 import { useParams, useNavigate } from 'react-router-dom';
 import ModalUnFriend from 'pages/friends/component/modalUnFriends';
 import _ from 'lodash';
+import ConnectButtonsFollower from '../modal-followers/ConnectButtonsFollower';
 
 const ModalWatching = ({ setModalFollowing, modalFollowing, userInfoDetail }) => {
 	const navigate = useNavigate();
@@ -206,17 +207,7 @@ const ModalWatching = ({ setModalFollowing, modalFollowing, userInfoDetail }) =>
 									</div>
 									<div className='author-card__right'>
 										{item.relation !== 'isMe' && (
-											<div className='connect-buttons row'>
-												<Button
-													onClick={() => {
-														unFolow(item.userIdTwo);
-													}}
-													className='connect-button follow'
-												>
-													<span className='connect-button__content'>Bỏ theo dõi </span>
-												</Button>
-												{renderButtonFriend(item)}
-											</div>
+											<ConnectButtonsFollower direction='row' item={item} isFollower={false} />
 										)}
 									</div>
 								</div>
@@ -225,12 +216,12 @@ const ModalWatching = ({ setModalFollowing, modalFollowing, userInfoDetail }) =>
 					</div>
 				</Modal.Body>
 			</Modal>
-			<ModalUnFriend
+			{/* <ModalUnFriend
 				showModalUnfriends={showModalUnfriends}
 				toggleModal={toggleModalUnfriend}
 				handleUnfriend={handleUnfriend}
 				data={userFriendRequest}
-			/>
+			/> */}
 		</>
 	);
 };

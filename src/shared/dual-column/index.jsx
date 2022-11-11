@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import caretIcon from 'assets/images/caret.png';
 import { DEFAULT_TOGGLE_ROWS, NUMBER_ROWS } from 'constants/index';
 import './dual-column.scss';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import RouteLink from 'helpers/RouteLink';
 
 const DualColumn = props => {
@@ -33,6 +33,8 @@ const DualColumn = props => {
 
 	const navigate = useNavigate();
 
+	const { userId } = useParams();
+
 	const handleViewMore = () => {
 		const length = list.length;
 		let maxLength;
@@ -54,7 +56,9 @@ const DualColumn = props => {
 
 	const handleOnClick = data => {
 		if (inCategory) {
-			navigate(RouteLink.categoryDetail(data.id, data.name));
+			navigate(RouteLink.categoryDetail(data.category.id, data.category.name));
+		} else {
+			navigate(`/shelves/${userId}`);
 		}
 	};
 
@@ -73,7 +77,7 @@ const DualColumn = props => {
 									onClick={
 										pageText
 											? () => filterQuotesByCategory(item.id, item.name)
-											: () => handleOnClick(item.category)
+											: () => handleOnClick(item)
 									}
 									style={inCategory ? { cursor: 'pointer' } : {}}
 								>

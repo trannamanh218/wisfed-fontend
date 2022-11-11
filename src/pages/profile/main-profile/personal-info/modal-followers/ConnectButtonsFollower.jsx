@@ -7,7 +7,7 @@ import { useDispatch } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
 import ModalUnFriend from 'pages/friends/component/modalUnFriends';
 
-const ConnectButtonsFollower = ({ direction, item }) => {
+const ConnectButtonsFollower = ({ direction, item, isFollower }) => {
 	const dispatch = useDispatch();
 	const [unFriend, setUnFriend] = useState(true);
 	const [toggleUnFollow, setToggleUnFollow] = useState(true);
@@ -62,43 +62,84 @@ const ConnectButtonsFollower = ({ direction, item }) => {
 	};
 
 	const handleAddFriend = () => {
-		try {
-			const param = {
-				userId: item.userIdOne,
-			};
-			dispatch(makeFriendRequest(param)).unwrap();
-			setTogglePendingFriend(false);
-		} catch (err) {
-			NotificationError(err);
+		if (isFollower) {
+			try {
+				const param = {
+					userId: item.userIdOne,
+				};
+				dispatch(makeFriendRequest(param)).unwrap();
+				setTogglePendingFriend(false);
+			} catch (err) {
+				NotificationError(err);
+			}
+		} else {
+			try {
+				const param = {
+					userId: item.userIdTwo,
+				};
+				dispatch(makeFriendRequest(param)).unwrap();
+				setTogglePendingFriend(false);
+			} catch (err) {
+				NotificationError(err);
+			}
 		}
 	};
 
 	const handleUnfriend = () => {
 		setShowModalUnfriends(false);
-		try {
-			dispatch(unFriendRequest(item.userIdOne)).unwrap();
-			setUnFriend(false);
-		} catch (err) {
-			NotificationError(err);
+		if (isFollower) {
+			try {
+				dispatch(unFriendRequest(item.userIdOne)).unwrap();
+				setUnFriend(false);
+			} catch (err) {
+				NotificationError(err);
+			}
+		} else {
+			try {
+				dispatch(unFriendRequest(item.userIdTwo)).unwrap();
+				setUnFriend(false);
+			} catch (err) {
+				NotificationError(err);
+			}
 		}
 	};
 
 	const handleFollow = () => {
-		try {
-			dispatch(addFollower({ userId: item.userIdOne }));
-			setToggleAddFollow(false);
-			setToggleUnFollow(true);
-		} catch (err) {
-			NotificationError(err);
+		if (isFollower) {
+			try {
+				dispatch(addFollower({ userId: item.userIdOne }));
+				setToggleAddFollow(false);
+				setToggleUnFollow(true);
+			} catch (err) {
+				NotificationError(err);
+			}
+		} else {
+			try {
+				dispatch(addFollower({ userId: item.userIdTwo }));
+				setToggleAddFollow(false);
+				setToggleUnFollow(true);
+			} catch (err) {
+				NotificationError(err);
+			}
 		}
 	};
 	const handleUnFollow = () => {
-		try {
-			dispatch(unFollower(item.userIdOne)).unwrap();
-			setToggleAddFollow(true);
-			setToggleUnFollow(false);
-		} catch (err) {
-			NotificationError(err);
+		if (isFollower) {
+			try {
+				dispatch(unFollower(item.userIdOne)).unwrap();
+				setToggleAddFollow(true);
+				setToggleUnFollow(false);
+			} catch (err) {
+				NotificationError(err);
+			}
+		} else {
+			try {
+				dispatch(unFollower(item.userIdTwo)).unwrap();
+				setToggleAddFollow(true);
+				setToggleUnFollow(false);
+			} catch (err) {
+				NotificationError(err);
+			}
 		}
 	};
 
@@ -136,6 +177,7 @@ const ConnectButtonsFollower = ({ direction, item }) => {
 						toggleModal={toggleModal}
 						handleUnfriend={handleUnfriend}
 						data={item}
+						isFollower={isFollower}
 					/>
 				</>
 			)}
@@ -158,6 +200,7 @@ ConnectButtonsFollower.propTypes = {
 	}),
 	item: PropTypes.object,
 	direction: PropTypes.oneOf(['row', 'column']),
+	isFollower: PropTypes.bool,
 };
 
 export default ConnectButtonsFollower;

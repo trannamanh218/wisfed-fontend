@@ -4,12 +4,17 @@ import { Modal } from 'react-bootstrap';
 import './modalUnfriend.scss';
 import Button from 'shared/button';
 
-const ModalUnFriend = ({ showModalUnfriends, toggleModal, handleUnfriend, data, type }) => {
+const ModalUnFriend = ({ showModalUnfriends, toggleModal, handleUnfriend, data, type, isFollower }) => {
 	const renderName = () => {
-		if (type === 'following') {
-			return data?.userTwo?.fullName;
+		if (isFollower || type === 'following') {
+			return data?.userOne?.fullName;
 		} else {
-			return data?.fullName || data?.userOne?.fullName || data?.firstName + ' ' + data?.lastName;
+			return (
+				data?.userTwo?.fullName ||
+				data?.userOne?.fullName ||
+				data?.fullName ||
+				data?.firstName + ' ' + data?.lastName
+			);
 		}
 	};
 

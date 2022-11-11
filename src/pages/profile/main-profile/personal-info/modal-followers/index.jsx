@@ -97,7 +97,7 @@ const ModalFollowers = ({ modalFollower, setModalFollower, userInfoDetail }) => 
 									</div>
 								</div>
 								<div className='author-card__right'>
-									<ConnectButtonsFollower direction='row' item={item} />
+									<ConnectButtonsFollower direction='row' item={item} isFollower={true} />
 								</div>
 							</div>
 						))}
