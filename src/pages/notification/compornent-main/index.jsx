@@ -181,8 +181,6 @@ const Notification = () => {
 												<NotificationStatus
 													key={item.id}
 													item={item}
-													setNotificationsList={setNotificationsList}
-													notificationsList={notificationsList}
 													handleReplyFriendRequest={handleReplyFriendRequest}
 												/>
 											))}
@@ -207,8 +205,6 @@ const Notification = () => {
 												<NotificationStatus
 													key={item.id}
 													item={item}
-													setNotificationsList={setNotificationsList}
-													notificationsList={notificationsList}
 													handleReplyFriendRequest={handleReplyFriendRequest}
 												/>
 											))}
@@ -234,8 +230,6 @@ const Notification = () => {
 														<NotificationStatus
 															key={item.id}
 															item={item}
-															setNotificationsList={setNotificationsList}
-															notificationsList={notificationsList}
 															handleReplyFriendRequest={handleReplyFriendRequest}
 														/>
 													)
@@ -258,8 +252,6 @@ const Notification = () => {
 										<NotificationStatus
 											key={item.id}
 											item={item}
-											setNotificationsList={setListAddFriendReqToMe}
-											notificationsList={listAddFriendReqToMe}
 											handleReplyFriendRequest={handleReplyFriendRequest}
 										/>
 									))}
