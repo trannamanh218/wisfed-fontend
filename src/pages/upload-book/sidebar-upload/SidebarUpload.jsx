@@ -78,7 +78,7 @@ const SidebarUpload = ({ userInfo, currentUserInfo, handleViewBookDetail }) => {
 				)}
 				<AuthorSlider title='Tác giả nổi bật' list={authorList} size='lg' inUpload={true} />
 				<div className='sibar-pop-authors'>
-					{!!quoteData.length > 0 && <QuotesLinks list={quoteData} title={`Quotes của tôi`} />}
+					{!!quoteData.length && <QuotesLinks list={quoteData} title={`Quotes của tôi`} />}
 				</div>
 				<GroupLinks list={groupList.slice(0, 3)} title='Group' />
 			</div>

@@ -27,7 +27,7 @@
 	.top__user__ranks {
 		transform: scale(0.5);
 		position: absolute;
-		align-items: unset;
+		left: 23px;
 		&__one {
 			position: relative;
 			bottom: 40px;
@@ -61,14 +61,7 @@
 	font-weight: 500;
 }
 
-@media only screen and (max-width: 1127px) {
-	.event-and-rank-bar__block__title {
-		font-size: 1rem;
-		margin-top: 29px;
-	}
-}
-
-@media only screen and (max-width: 1367px) {
+@media only screen and (max-width: 1366px) {
 	.event-and-rank-bar__content {
 		.top__user__ranks {
 			transform: scale(0.45);
@@ -77,32 +70,16 @@
 	}
 }
 
-@media only screen and (max-width: 1281px) {
-	.event-and-rank-bar__content {
-		padding: 10px;
-		.top__user__ranks {
-			transform: scale(0.3);
-			top: -30px;
-			&__two {
-				top: 10px;
-			}
-		}
+@media only screen and (max-width: 1024px) {
+	.event-and-rank-bar__block__title {
+		font-size: 18px;
 	}
-}
-
-@media only screen and (max-width: 1025px) {
 	.event-and-rank-bar__content {
 		.top__user__ranks {
 			transform: scale(0.25);
-			top: -17px;
+			top: -21px;
 			&__two {
-				top: 36px;
-			}
-			.top__user__ranks__one__title {
-				display: none;
-			}
-			.top__user__ranks__two__title {
-				display: none;
+				top: 100px;
 			}
 		}
 	}

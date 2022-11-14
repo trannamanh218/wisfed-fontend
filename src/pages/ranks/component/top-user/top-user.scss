@@ -16,6 +16,7 @@
 			.select-box__value {
 				flex: 1;
 				text-align: center;
+				font-size: 18px;
 			}
 		}
 		.select-box__list {
@@ -42,15 +43,16 @@
 			margin-bottom: 8px;
 		}
 	}
-
 	.top__user__ranks {
 		display: flex;
-		margin: 30px auto 40px auto;
-		width: 80%;
-		justify-content: center;
-		align-items: center;
-		gap: 43px;
+		margin: 80px auto 40px auto;
+		width: 70%;
+		justify-content: space-around;
+		align-items: flex-start;
+		gap: 0px;
 		.top__user__ranks__two {
+			width: 28%;
+			margin-top: 20px;
 			.top__user__ranks__two__avatar {
 				padding: 5px;
 				background-color: #f4f4f4;
@@ -95,6 +97,13 @@
 					font-weight: 600;
 					font-size: 15px;
 					line-height: 24px;
+					display: -webkit-box;
+					-webkit-box-orient: vertical;
+					-webkit-line-clamp: 2;
+					max-height: 3rem;
+					overflow: hidden;
+					text-overflow: ellipsis;
+					margin-bottom: 3px;
 				}
 				.number__books,
 				span {
@@ -109,6 +118,7 @@
 			}
 		}
 		.top__user__ranks__one {
+			width: 30%;
 			.top__user__ranks__one__avatar {
 				padding: 5px;
 				background-color: #ffca28;
@@ -147,7 +157,14 @@
 				p {
 					font-weight: 600;
 					font-size: 18px;
-					line-height: 32px;
+					line-height: 20px;
+					display: -webkit-box;
+					-webkit-box-orient: vertical;
+					-webkit-line-clamp: 2;
+					max-height: 3rem;
+					overflow: hidden;
+					text-overflow: ellipsis;
+					margin-bottom: 3px;
 				}
 				.number__books,
 				span {

@@ -10,12 +10,12 @@ const ReadBook = ({ items }) => {
 				<div className='read-book__image'>
 					<img
 						src={items.book.images[0] || bookImage}
-						alt={name}
+						alt='image-book-cover'
 						onError={e => e.target.setAttribute('src', `${bookImage}`)}
 					/>
 				</div>
 				<h5 className='read-book__name' dangerouslySetInnerHTML={{ __html: items.book.name }}></h5>
-				<ReactRating initialRating={4} readonly={true} />
+				<ReactRating initialRating={items.book.avgRating || 4} readonly />
 			</div>
 		</>
 	);

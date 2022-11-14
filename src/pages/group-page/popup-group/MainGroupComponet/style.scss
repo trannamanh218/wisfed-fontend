@@ -52,10 +52,13 @@
 	margin-top: 25px;
 	display: flex;
 	justify-content: space-between;
+	gap: 12px;
 }
 .group-name__content {
+	width: 45%;
 	margin-top: 8px;
 	h2 {
+		width: 100%;
 		font-family: 'Montserrat';
 		font-style: normal;
 		font-weight: 700;
@@ -63,6 +66,12 @@
 		line-height: 32px;
 		letter-spacing: 1px;
 		color: #2d2c42;
+		word-break: break-word;
+		display: -webkit-box;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp: 2;
+		max-height: 4rem;
+		overflow: hidden;
 	}
 }
 .group-name__member {
@@ -81,6 +90,11 @@
 	.groupPublic {
 		span {
 			font-size: 13px;
+		}
+		.imgPani {
+			display: flex;
+			align-items: center;
+			margin: 0px 4px 0px 6px;
 		}
 	}
 }
@@ -275,18 +289,67 @@
 		align-items: flex-start;
 	}
 }
-.imgPani {
-	& img {
-		width: 6px;
-		height: 4px;
-		margin-top: 6px;
-		margin-left: 8px;
-		margin-right: 8px;
-	}
-}
 
 @media only screen and (max-width: 1024px) {
-	.main__title {
-		font-size: 15px;
+	.group-main-component__container {
+		.main__title {
+			font-size: 15px;
+		}
+		.group-name__content {
+			h2 {
+				font-size: 20px;
+				margin-bottom: 5px;
+			}
+		}
+		.group-name__member {
+			span {
+				font-size: 11px;
+			}
+		}
+
+		.group-name__join-group {
+			width: 180px;
+			height: 47px;
+			button {
+				font-weight: 600;
+				font-size: 12px;
+			}
+			svg {
+				width: 18px;
+				height: 18px;
+				margin-right: 10px;
+			}
+		}
+		.group-name__joined-group {
+			height: 47px;
+		}
+		.group-name__invite-group {
+			padding: 16px 20px;
+			width: 90px;
+			height: 47px;
+			border-radius: 12px;
+			margin-left: 10px;
+			button {
+				font-size: 12px;
+				svg {
+					margin-right: 10px;
+					width: 18px;
+					height: 18px;
+				}
+			}
+		}
+		.search-field {
+			height: 47px;
+			border-radius: 10px;
+			&__icon {
+				width: 18px;
+				height: 18px;
+				margin-right: 20px;
+			}
+
+			&__input {
+				font-size: 12px;
+			}
+		}
 	}
 }

@@ -182,7 +182,7 @@
 	}
 }
 
-@media only screen and (max-width: 1025px) {
+@media only screen and (max-width: 1024px) {
 	.newfeed {
 		.post__container {
 			.post__user-status {
@@ -198,6 +198,13 @@
 		}
 		.btn-status.btn {
 			padding: 8px;
+		}
+		.newfeed__creat-post {
+			.newfeed__creat-post__options__item {
+				span {
+					font-size: 16px;
+				}
+			}
 		}
 	}
 }

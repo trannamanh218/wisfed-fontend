@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import ConnectButtons from 'shared/connect-buttons';
 import UserAvatar from 'shared/user-avatar';
 import './author-card.scss';
@@ -11,6 +11,12 @@ import { checkUserLogin } from 'reducers/redux-utils/auth';
 import { useDispatch } from 'react-redux';
 
 const AuthorCard = ({ direction, size, item, setModalShow, checkAuthors }) => {
+	const [follow, setFollow] = useState(0);
+	useEffect(() => {
+		if (item?.numberFollowing >= 0 || item?.countFollow >= 0 || item?.userCounting?.follower >= 0) {
+			setFollow(item?.numberFollowing || item?.countFollow || item?.userCounting?.follower);
+		}
+	}, [item]);
 	const navigate = useNavigate();
 
 	const dispatch = useDispatch();
@@ -21,8 +27,8 @@ const AuthorCard = ({ direction, size, item, setModalShow, checkAuthors }) => {
 				<div className='author-card__info'>
 					<h5>{item.fullName || `${item.firstName} ${item.lastName}`}</h5>
 					<p className='author-card__subtitle'>
-						{item?.numberFollowing || item?.countFollow || item?.userCounting?.follower || 0} người theo
-						dõi, {item?.numFriends || item?.countFriend || item.userCounting?.friend || 0} bạn bè
+						{follow} người theo dõi,{' '}
+						{item?.numFriends || item?.countFriend || item.userCounting?.friend || 0} bạn bè
 					</p>
 					{checkAuthors && item?.bookAuthor.length > 0 && (
 						<>
@@ -35,8 +41,8 @@ const AuthorCard = ({ direction, size, item, setModalShow, checkAuthors }) => {
 			{item.relation === 'isMe' ? (
 				<div className={`connect-buttons ${'column'}`}>
 					<Button className='connect-button' onClick={() => navigate(`/profile/${item.id}`)}>
-						<span className='connect-button__content' style={{ fontSize: 'smaller' }}>
-							Xem trang cá nhân
+						<span className='connect-button__content' style={{ fontSize: '18px' }}>
+							Trang cá nhân
 						</span>
 					</Button>
 				</div>

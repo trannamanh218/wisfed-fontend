@@ -161,7 +161,7 @@ const MainQuoteDetail = ({ quoteData, setQuoteData, onCreateComment, setMentionU
 											type={QUOTE_TYPE}
 										/>
 										<div className='comment-reply-container'>
-											{comment.reply && !!comment.reply.length > 0 && (
+											{comment.reply && !!comment.reply.length && (
 												<>
 													{showReplyArrayState.includes(comment.id) ? (
 														<div className='reply-comment-item'>
@@ -221,7 +221,7 @@ const MainQuoteDetail = ({ quoteData, setQuoteData, onCreateComment, setMentionU
 												type={QUOTE_TYPE}
 											/>
 											<div className='comment-reply-container'>
-												{comment.reply && !!comment.reply.length > 0 && (
+												{comment.reply && !!comment.reply.length && (
 													<>
 														{showReplyArrayState.includes(comment.id) ? (
 															<div className='reply-comment-item'>

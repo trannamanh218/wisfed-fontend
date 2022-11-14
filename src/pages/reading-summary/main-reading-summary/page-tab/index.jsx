@@ -65,6 +65,8 @@ const PageTab = () => {
 					userId: userId,
 				};
 				const data = await dispatch(getChartsByid(params)).unwrap();
+				// Vì count đang là string nên chuyển sang định dạng số
+				data.forEach(item => (item.count = Number(item.count)));
 				setChartsData(data);
 			}
 		} catch (err) {
@@ -126,11 +128,7 @@ const PageTab = () => {
 
 	const handleTickYCount = () => {
 		let max = 1;
-		chartsData.forEach(item => {
-			if (item.count > max) {
-				max = item.count;
-			}
-		});
+		max = Math.max(...chartsData.map(item => item.count));
 		if (max < 10) {
 			return max + 1;
 		} else {

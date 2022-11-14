@@ -5,7 +5,15 @@ import caretIcon from 'assets/images/caret.png';
 import './topic-column.scss';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-const TopicColumn = ({ topics, className, title, handleViewCategoryDetail, inCategory = false }) => {
+const TopicColumn = ({
+	topics,
+	className,
+	title,
+	handleViewCategoryDetail,
+	inCategory = false,
+	hasMore,
+	onClickViewMore,
+}) => {
 	const [isExpand, setIsExpand] = useState(false);
 
 	const location = useLocation();
@@ -14,7 +22,7 @@ const TopicColumn = ({ topics, className, title, handleViewCategoryDetail, inCat
 	let defaultItems;
 	let maxItems;
 	if (inCategory) {
-		defaultItems = 12;
+		defaultItems = Infinity;
 		maxItems = 30;
 	} else {
 		defaultItems = 6;
@@ -46,7 +54,7 @@ const TopicColumn = ({ topics, className, title, handleViewCategoryDetail, inCat
 
 	return (
 		<>
-			{!!topics.length > 0 && (
+			{!!topics.length && (
 				<div className={classNames('topic-column', { [`${className}`]: className })}>
 					<h4 className='topic-column__header'>{title}</h4>
 					<div className='topic-column__container'>
@@ -57,12 +65,11 @@ const TopicColumn = ({ topics, className, title, handleViewCategoryDetail, inCat
 								title={topic.name}
 								onClick={() => handleViewCategoryDetail(topic)}
 							>
-								{/* <Link to={`/quotes/hashtag/${topic.name?.slice(1) || topic.tag?.name?.slice(1)}`}> */}
 								<span onClick={() => handleDirect(topic)}>{topic.name || topic.tag?.name}</span>
-								{/* </Link> */}
 							</div>
 						))}
 					</div>
+
 					{topics.length > defaultItems && (
 						<button className='topic-column__btn' onClick={handleViewMore}>
 							<img
@@ -71,6 +78,13 @@ const TopicColumn = ({ topics, className, title, handleViewCategoryDetail, inCat
 								alt='caret-icon'
 							/>
 							<span>{isExpand ? 'Rút gọn' : 'Xem thêm'}</span>
+						</button>
+					)}
+
+					{inCategory && hasMore && (
+						<button className='dualColumn-btn' onClick={onClickViewMore}>
+							<img className='view-caret' src={caretIcon} alt='caret-icon' />
+							<span>Xem thêm</span>
 						</button>
 					)}
 				</div>
@@ -84,6 +98,9 @@ TopicColumn.defaultProps = {
 	className: '',
 	title: 'Chủ đề khác',
 	handleViewCategoryDetail: () => {},
+	hasMore: false,
+	onClickViewMore: () => {},
+	isFetching: false,
 };
 
 TopicColumn.propTypes = {
@@ -92,6 +109,9 @@ TopicColumn.propTypes = {
 	title: PropTypes.string,
 	handleViewCategoryDetail: PropTypes.func,
 	inCategory: PropTypes.bool,
+	hasMore: PropTypes.bool,
+	onClickViewMore: PropTypes.func,
+	isFetching: PropTypes.bool,
 };
 
 export default TopicColumn;

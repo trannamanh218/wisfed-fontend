@@ -45,6 +45,9 @@
 			}
 		}
 	}
+	.form-check-input.is-valid ~ .form-check-label {
+		font-size: 18px;
+	}
 }
 
 .search-review {

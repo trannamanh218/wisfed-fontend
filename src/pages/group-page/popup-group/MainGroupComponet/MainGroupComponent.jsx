@@ -269,7 +269,7 @@ function MainGroupComponent({
 								<img src={vector} />
 								<span>Nhóm công khai</span>
 								<div className='imgPani'>
-									<img src={pani} />
+									<div className='post__user-status__post-time-status__online-dot'></div>
 								</div>
 							</div>
 						)}

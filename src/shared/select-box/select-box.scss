@@ -4,6 +4,7 @@
 	position: relative;
 	font-size: 13px;
 	line-height: 1.5;
+	height: 57px;
 	svg {
 		margin-right: 17px;
 	}
@@ -15,9 +16,10 @@
 		padding: 1rem 1.5rem;
 		border-radius: 12px;
 		background-color: $ash-background;
+		height: 57px;
 		cursor: pointer;
 		.select-box__value {
-			font-size: 15px;
+			font-size: 18px;
 		}
 	}
 

@@ -23,7 +23,6 @@ import { getBookDetail } from 'reducers/redux-utils/book';
 import RouteLink from 'helpers/RouteLink';
 import Circle from 'shared/loading/circle';
 import LoadingIndicator from 'shared/loading-indicator';
-import { STATUS_LOADING } from 'constants/index';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import FormCheckGroup from 'shared/form-check-group';
 import { getFavoriteCategories } from 'reducers/redux-utils/category';
@@ -52,8 +51,8 @@ const MainCategoryDetail = ({ setErrorLoadPage }) => {
 	const [sortDirection, setSortDirection] = useState('DESC');
 	const [sortValueTemp, setSortValueTemp] = useState('default');
 
-	const callApiStart = useRef(16);
-	const callApiPerPage = useRef(16);
+	const callApiStart = useRef(8);
+	const callApiPerPage = useRef(8);
 	const callApiStartGetPosts = useRef(10);
 	const callApiPerPageGetPosts = useRef(10);
 	const favoriteCategories = useRef([]);
@@ -102,7 +101,7 @@ const MainCategoryDetail = ({ setErrorLoadPage }) => {
 
 	useEffect(() => {
 		setHasMore(true);
-		callApiStart.current = 16;
+		callApiStart.current = 8;
 		getBooksByCategoryFirstTime();
 	}, [filter, id]);
 

@@ -112,6 +112,7 @@ function ReadChallenge({ modalOpen, setModalOpen }) {
 							onFocus={() => setInputValue('')}
 							onBlur={inputOnBlur}
 							onKeyDown={blockInvalidChar}
+							onWheel={e => e.target.blur()}
 						/>
 						<button
 							data-testid='read-challenge__increase-btn'

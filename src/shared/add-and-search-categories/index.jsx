@@ -19,6 +19,7 @@ function AddAndSearchCategories({
 	placeholder,
 	hasMoreEllipsis,
 	acceptValueText,
+	autoFocus,
 }) {
 	const [firstTimeFocus, setFirstTimeFocus] = useState(false);
 	const [show, setShow] = useState(true);
@@ -42,6 +43,12 @@ function AddAndSearchCategories({
 			return () => {
 				categoryInputContainer?.current?.removeEventListener('click', focusCategoryInput);
 			};
+		}
+	}, []);
+
+	useEffect(() => {
+		if (autoFocus) {
+			focusCategoryInput();
 		}
 	}, []);
 
@@ -147,6 +154,7 @@ AddAndSearchCategories.defaultProps = {
 	placeholder: 'Tìm kiếm và thêm chủ đề',
 	hasMoreEllipsis: false,
 	acceptValueText: false,
+	autoFocus: false,
 };
 
 AddAndSearchCategories.propTypes = {
@@ -164,6 +172,7 @@ AddAndSearchCategories.propTypes = {
 	placeholder: PropTypes.string,
 	hasMoreEllipsis: PropTypes.bool,
 	acceptValueText: PropTypes.bool,
+	autoFocus: PropTypes.bool,
 };
 
 export default AddAndSearchCategories;

@@ -73,7 +73,12 @@ const TopRanks = ({ getListTopBooks, valueDataSort }) => {
 					<div className='number__ranks'>2</div>
 				</div>
 				<div className='top__user__ranks__two__title'>
-					<p>
+					<p
+						title={
+							getListTopBooks[1].fullName ||
+							`${getListTopBooks[1].firstName}  ${getListTopBooks[1].lastName}`
+						}
+					>
 						{getListTopBooks[1].fullName ||
 							`${getListTopBooks[1].firstName}  ${getListTopBooks[1].lastName}`}
 					</p>
@@ -90,7 +95,12 @@ const TopRanks = ({ getListTopBooks, valueDataSort }) => {
 					<div className='number__ranks'>1</div>
 				</div>
 				<div className='top__user__ranks__one__title'>
-					<p>
+					<p
+						title={
+							getListTopBooks[0].fullName ||
+							`${getListTopBooks[0].firstName}  ${getListTopBooks[0].lastName}`
+						}
+					>
 						{getListTopBooks[0].fullName ||
 							`${getListTopBooks[0].firstName}  ${getListTopBooks[0].lastName}`}
 					</p>
@@ -107,7 +117,12 @@ const TopRanks = ({ getListTopBooks, valueDataSort }) => {
 					<div className='number__ranks three'>3</div>
 				</div>
 				<div className='top__user__ranks__two__title'>
-					<p>
+					<p
+						title={
+							getListTopBooks[2].fullName ||
+							`${getListTopBooks[2].firstName}  ${getListTopBooks[2].lastName}`
+						}
+					>
 						{getListTopBooks[2].fullName ||
 							`${getListTopBooks[2].firstName}  ${getListTopBooks[2].lastName}`}{' '}
 					</p>

@@ -5,7 +5,6 @@ import { BackArrow } from 'components/svg';
 import './group-settings.scss';
 import PropTypes from 'prop-types';
 import AddAndSearchCategories from 'shared/add-and-search-categories';
-import { CloseIconX } from 'components/svg';
 import { toast } from 'react-toastify';
 import { NotificationError } from 'helpers/Error';
 import _ from 'lodash';
@@ -13,6 +12,7 @@ import { useDispatch } from 'react-redux';
 import { getSuggestionForPost } from 'reducers/redux-utils/activity';
 import { getFilterSearch } from 'reducers/redux-utils/search';
 import { editGroup } from 'reducers/redux-utils/group';
+import InputHashtag from 'shared/input/inputHashtag/inputHashtag';
 
 function SettingsGroup({ handleChange, data, fetchData }) {
 	const listIdBook = [
@@ -29,8 +29,6 @@ function SettingsGroup({ handleChange, data, fetchData }) {
 
 	const [inputNameGroup, setInputNameGroup] = useState(data.name);
 	const [inputDescription, setInputDescription] = useState(data.description);
-	const [inputHashtag, setInputHashtag] = useState('');
-	const [justAddedFirstOneHashTag, setJustAddedFirstOneHashTag] = useState(false);
 	const [listHashtags, setListHashtags] = useState([]);
 	const [isShowBtn, setIsShowBtn] = useState(false);
 	const [lastTag, setLastTag] = useState('');
@@ -55,12 +53,6 @@ function SettingsGroup({ handleChange, data, fetchData }) {
 
 	const [getDataFinish, setGetDataFinish] = useState(false);
 
-	const [show, setShow] = useState(false);
-
-	const dataRef = useRef('');
-	const inputRefHashtag = useRef(null);
-	const hashtagInputWrapper = useRef(null);
-
 	const authorInputContainer = useRef(null);
 	const authorInputWrapper = useRef(null);
 	const authorInput = useRef(null);
@@ -73,20 +65,9 @@ function SettingsGroup({ handleChange, data, fetchData }) {
 	const bookInputWrapper = useRef(null);
 	const bookInput = useRef(null);
 
-	const hashtagRegex =
-		/#(?![0-9_]+\b)[0-9a-z_ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễếệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ]+/gi;
-
 	const onInputChange = f => e => {
 		const value = e.target.value.trim();
 		f(value);
-		if (!hashtagRegex.test(value)) {
-			setShow(true);
-		} else {
-			setShow(false);
-		}
-		if (hashtagInputWrapper.current) {
-			hashtagInputWrapper.current.style.width = inputRefHashtag.current.value.length + 0.5 + 'ch';
-		}
 	};
 
 	const onchangeBookCategory = data => {
@@ -197,11 +178,6 @@ function SettingsGroup({ handleChange, data, fetchData }) {
 		if (bookInputWrapper.current) {
 			bookInputWrapper.current.style.width = bookInput.current.value.length + 0.5 + 'ch';
 		}
-	};
-
-	const handleRemoveTag = e => {
-		const newList = listHashtags.filter(item => item !== e);
-		setListHashtags(newList);
 	};
 
 	const debounceSearch = useCallback(
@@ -319,31 +295,6 @@ function SettingsGroup({ handleChange, data, fetchData }) {
 	}, []);
 
 	useEffect(() => {
-		const dataCheck = listHashtags.filter(item => dataRef.current === item);
-
-		if (dataRef.current !== '' && dataCheck.length < 1) {
-			const check = dataRef.current
-				.normalize('NFD')
-				.replace(/[\u0300-\u036f]/g, '')
-				.replace(/đ/g, 'd')
-				.replace(/Đ/g, 'D');
-			const newList = [...listHashtags, check];
-			setListHashtags(newList);
-			setJustAddedFirstOneHashTag(true);
-		}
-	}, [dataRef.current]);
-
-	useEffect(() => {
-		setLastTag(
-			inputHashtag
-				.normalize('NFD')
-				.replace(/[\u0300-\u036f]/g, '')
-				.replace(/đ/g, 'd')
-				.replace(/Đ/g, 'D')
-		);
-	}, [inputHashtag]);
-
-	useEffect(() => {
 		if (
 			(lastTag.includes('#') || !_.isEmpty(listHashtags)) &&
 			lastTag !== '#' &&
@@ -376,27 +327,6 @@ function SettingsGroup({ handleChange, data, fetchData }) {
 			setIsShowBtn(false);
 		}
 	}, [listAuthors, lastTag, inputDescription, inputNameGroup, listHashtags, listBookAdd, categoryIdBook]);
-
-	useEffect(() => {
-		const hashtagElement = document.getElementById('hashtag');
-		const handleHashtag = e => {
-			if (e.keyCode === 32 && hashtagRegex.test(inputHashtag)) {
-				inputRefHashtag.current.value = '';
-				if (!listHashtags.includes(inputHashtag)) {
-					dataRef.current = inputHashtag.trim();
-				}
-			}
-		};
-		hashtagElement.addEventListener('keydown', handleHashtag);
-
-		return () => hashtagElement.removeEventListener('keydown', handleHashtag);
-	}, [inputHashtag]);
-
-	useEffect(() => {
-		if (justAddedFirstOneHashTag && listHashtags.length === 1) {
-			inputRefHashtag.current.focus();
-		}
-	}, [justAddedFirstOneHashTag, listHashtags]);
 
 	useEffect(() => {
 		const authorIdArr = [];
@@ -443,7 +373,7 @@ function SettingsGroup({ handleChange, data, fetchData }) {
 					<h3>Thiết lập nhóm</h3>
 				</div>
 				<div className='form-field-wrapper'>
-					<div className='form-field-name'>
+					<div className='form-field-group'>
 						<label>Tên nhóm</label>
 						<Input
 							inputRef={groupNameInput}
@@ -454,15 +384,16 @@ function SettingsGroup({ handleChange, data, fetchData }) {
 							autoFocus
 						/>
 					</div>
-					<div className='form-field-select__kind-of-group'>
-						<h4>
+
+					<div className='form-field-group'>
+						<span style={{ fontWeight: '600' }}>
 							Kiểu nội dung:{' '}
 							{data.groupType === 'book' ? 'Sách' : data.groupType === 'author' ? 'Tác giả' : 'Chia sẻ'}
-						</h4>
+						</span>
 					</div>
 
 					{data.groupType === 'book' && (
-						<div className='form-field-select__kind-of-group'>
+						<div className='form-field-group'>
 							<label>Chủ đề sách</label>
 							<span className='form-field-authors__asterisk'>*</span>
 							<SelectBox
@@ -475,7 +406,7 @@ function SettingsGroup({ handleChange, data, fetchData }) {
 					)}
 
 					{data.groupType !== 'book' && (
-						<div className='form-field-select__kind-of-group'>
+						<div className='form-field-group'>
 							<label>Chủ đề </label>
 							{data.groupType === 'author' ? '' : <span className='form-field-authors__asterisk'>*</span>}
 							<AddAndSearchCategories
@@ -495,7 +426,7 @@ function SettingsGroup({ handleChange, data, fetchData }) {
 						</div>
 					)}
 
-					<div className='form-field-authors'>
+					<div className='form-field-group'>
 						<label>Tên tác giả</label>
 						{data.groupType === 'category' ? '' : <span className='form-field-authors__asterisk'>*</span>}
 						<AddAndSearchCategories
@@ -514,7 +445,7 @@ function SettingsGroup({ handleChange, data, fetchData }) {
 						/>
 					</div>
 
-					<div className='form-field-authors'>
+					<div className='form-field-group'>
 						<label>Tên sách</label>
 						{data.groupType === 'category' || data.groupType === 'author' ? (
 							''
@@ -537,8 +468,8 @@ function SettingsGroup({ handleChange, data, fetchData }) {
 						/>
 					</div>
 
-					<div className='form-field-description'>
-						<label style={{ marginTop: '0px', marginBottom: '23px' }}>Giới thiệu</label>
+					<div className='form-field-group'>
+						<label>Giới thiệu</label>
 						<span style={{ color: 'red', marginLeft: '4px' }}>*</span>
 						<textarea
 							ref={textArea}
@@ -549,53 +480,12 @@ function SettingsGroup({ handleChange, data, fetchData }) {
 						/>
 					</div>
 
-					<div className='form-field-hashtag'>
-						<label>Hashtags</label>
-						<span style={{ color: 'red', marginLeft: '4px' }}>*</span>
-						<div className='list__author-tags' onClick={() => inputRefHashtag.current.focus()}>
-							{listHashtags.length > 0 ? (
-								<div className='input__authors'>
-									{listHashtags.map((item, index) => (
-										<>
-											<span key={index}>
-												<span>{item}</span>
-												<button
-													className='close__author'
-													onClick={() => {
-														handleRemoveTag(item);
-													}}
-												>
-													<CloseIconX />
-												</button>
-											</span>
-										</>
-									))}
-									<div ref={hashtagInputWrapper} style={{ width: '8px' }}>
-										<input
-											id='hashtag'
-											className='add-and-search-categories__input'
-											onChange={onInputChange(setInputHashtag)}
-											ref={inputRefHashtag}
-										/>
-									</div>
-								</div>
-							) : (
-								<Input
-									id='hashtag'
-									isBorder={false}
-									placeholder='Nhập hashtag'
-									handleChange={onInputChange(setInputHashtag)}
-									inputRef={inputRefHashtag}
-								/>
-							)}
-						</div>
+					<InputHashtag
+						listHashtags={listHashtags}
+						setListHashtags={setListHashtags}
+						setLastTag={setLastTag}
+					/>
 
-						{show && !!inputHashtag ? (
-							<span style={{ color: '#e61b00' }}>Vui lòng nhập đúng định dạng</span>
-						) : (
-							''
-						)}
-					</div>
 					<div className={!isShowBtn ? 'disable-btn' : `form-button`} onClick={updateGroup}>
 						<button>Lưu thay đổi</button>
 					</div>

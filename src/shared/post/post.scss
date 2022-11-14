@@ -176,12 +176,12 @@
 		font-size: 13px;
 		line-height: 1.4rem;
 		color: #a0a3bd;
-		gap: 8px;
+		gap: 6px;
 		font-weight: 500;
 
 		&__online-dot {
-			width: 4px;
-			height: 4px;
+			width: 3px;
+			height: 3px;
 			border-radius: 50%;
 			background-color: $primary;
 			margin-right: 4px;
@@ -193,7 +193,6 @@
 		align-items: center;
 		color: $ash-placeholder;
 		font-weight: 500;
-		margin-left: 4px;
 		svg {
 			width: 12px;
 		}
@@ -308,7 +307,9 @@
 }
 
 @media only screen and (width: 1024px) {
-	.post__user-status__post-time-status {
-		font-size: 12px;
+	.post__container {
+		.post__user-status__post-time-status {
+			font-size: 10px;
+		}
 	}
 }

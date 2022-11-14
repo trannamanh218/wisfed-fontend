@@ -21,7 +21,7 @@ const UsersSearch = ({ isFetching, value, setIsFetching, searchResultInput, acti
 	const navigate = useNavigate();
 
 	const callApiStart = useRef(0);
-	const callApiPerPage = useRef(10);
+	const callApiPerPage = useRef(8);
 
 	useEffect(() => {
 		if (activeKeyDefault === 'users') {
