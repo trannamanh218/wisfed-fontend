@@ -111,7 +111,13 @@ const ConnectButtonsFriends = ({ direction, item }) => {
 	};
 
 	const handleRenderButtonFriend = () => {
-		return unFriend ? buttonUnFriend() : togglePendingFriend ? buttonAddFriend() : buttonPendingFriend();
+		if (item.relation === 'friend') {
+			return unFriend ? buttonUnFriend() : togglePendingFriend ? buttonAddFriend() : buttonPendingFriend();
+		} else if (item.relation === 'pending') {
+			return buttonPendingFriend();
+		} else if (item.relation === 'unknown') {
+			return togglePendingFriend ? buttonAddFriend() : buttonPendingFriend();
+		}
 	};
 
 	const toggleModal = () => {

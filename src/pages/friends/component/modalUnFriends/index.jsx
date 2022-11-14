@@ -55,6 +55,7 @@ ModalUnFriend.propTypes = {
 	toggleModal: PropTypes.func,
 	showModalUnfriends: PropTypes.bool,
 	type: PropTypes.string,
+	isFollower: PropTypes.bool,
 };
 
 export default ModalUnFriend;

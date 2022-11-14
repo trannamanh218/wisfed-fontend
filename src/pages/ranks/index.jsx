@@ -8,9 +8,16 @@ import TopBooks from './component/top-Books';
 import TopUser from './component/top-user';
 import TopQuotes from './component/top-quotes';
 import { useState } from 'react';
+import { useSelector } from 'react-redux';
+import { useEffect } from 'react';
 
 const Ranks = () => {
-	const [tabSelected, setTabSelected] = useState('books');
+	const isTopUser = useSelector(state => state.ranks.isTopUser);
+	const [tabSelected, setTabSelected] = useState(isTopUser ? 'User' : 'books');
+
+	useEffect(() => {
+		window.scrollTo(0, 0);
+	}, []);
 
 	const listYear = [
 		{ value: 'week', title: 'Tuần' },
@@ -32,7 +39,7 @@ const Ranks = () => {
 					<div className='ranks__container__main__title'>Bảng xếp hạng</div>
 				</div>
 				<div className='ranks__container__main'>
-					<Tabs defaultActiveKey='books' onSelect={onTabChange}>
+					<Tabs defaultActiveKey={isTopUser ? 'User' : 'books'} onSelect={onTabChange}>
 						<Tab eventKey='books' title='Sách'>
 							<TopBooks listYear={listYear} tabSelected={tabSelected} />
 						</Tab>

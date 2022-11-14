@@ -24,9 +24,9 @@ const TopBooks = ({ listYear, tabSelected }) => {
 	const [loadingState, setLoadingState] = useState(false);
 	const [hasMore, setHasMore] = useState(true);
 
-	const callApiStart = useRef(0);
+	const callApiStart = useRef(10);
 	const callApiPerPage = useRef(10);
-	const limit = 80;
+	const limit = 90;
 
 	const [modalSearchCategoriesShow, setModalSearchCategoriesShow] = useState(false);
 
@@ -42,7 +42,7 @@ const TopBooks = ({ listYear, tabSelected }) => {
 	const getTopBooksData = async () => {
 		setLoadingState(true);
 		const params = {
-			start: callApiStart.current,
+			start: 0,
 			limit: callApiPerPage.current,
 			categoryId: topBooksId,
 			by: valueDate,
@@ -116,7 +116,7 @@ const TopBooks = ({ listYear, tabSelected }) => {
 	useEffect(() => {
 		if (tabSelected === 'books' && !category) {
 			setHasMore(true);
-			callApiStart.current = 0;
+			callApiStart.current = 10;
 			getTopBooksData();
 		}
 	}, [topBooksId, valueDate, isAuth, tabSelected]);
