@@ -254,7 +254,9 @@ function MainConfirmMyBook({ setErrorLoadPage }) {
 								)}
 							</>
 							<button
-								className={`main-confirm-my-book__confirm__submit ${!checked && 'disabled-btn'}`}
+								className={`main-confirm-my-book__confirm__submit ${
+									(!checked || !images.length) && 'disabled-btn'
+								}`}
 								onClick={submitConfirm}
 							>
 								<CircleCheckIcon />
