@@ -35,10 +35,8 @@ function BookDetail() {
 			window.scroll(0, 0);
 		}, 300);
 		if (_.isEmpty(bookInfo.bookInfo) || bookInfo.bookInfo.id != bookId) {
-			// Gọi api
 			handleGetBookDetail();
 		} else {
-			// Dùng redux
 			setBookInformation(bookInfo.bookInfo);
 			setBookStatus('SUCCESS');
 		}

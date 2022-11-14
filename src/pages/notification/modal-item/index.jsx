@@ -3,6 +3,7 @@ import {
 	readNotification,
 	handleMentionCommentId,
 	handleCheckIfMentionFromGroup,
+	updateReviewIdFromNoti,
 } from 'reducers/redux-utils/notification';
 import UserAvatar from 'shared/user-avatar';
 import { calculateDurationTime } from 'helpers/Common';
@@ -14,10 +15,10 @@ import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
 import { useState } from 'react';
 import { updateUser } from 'reducers/redux-utils/user';
-import { updateReviewIdFromNoti } from 'reducers/redux-utils/notification';
 import LoadingIndicator from 'shared/loading-indicator';
 import logoNonText from 'assets/icons/logoNonText.svg';
 import { replyInviteGroup, handleToggleUpdate } from 'reducers/redux-utils/group';
+// import { handleClickNotificationItemHook } from 'constants';
 
 const ModalItem = ({ item, setModalNoti, getNotifications, setGetNotifications, selectKey }) => {
 	const navigate = useNavigate();
@@ -127,6 +128,8 @@ const ModalItem = ({ item, setModalNoti, getNotifications, setGetNotifications, 
 		}
 	};
 
+	// const { handleClickNotificationItem } = handleClickNotificationItemHook(userInfo, item);
+
 	const handleActiveIsRead = () => {
 		const params = {
 			notificationId: item.id,
@@ -135,6 +138,7 @@ const ModalItem = ({ item, setModalNoti, getNotifications, setGetNotifications, 
 		setModalNoti(false);
 		dispatch(readNotification(params)).unwrap();
 
+		// handleClickNotificationItem();
 		switch (item.verb) {
 			case 'likeMiniPost':
 			case 'commentMiniPost':

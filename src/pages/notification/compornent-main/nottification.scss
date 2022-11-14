@@ -1,127 +1,71 @@
 .notification__main {
-	width: 69%;
+	width: 936px;
 	margin: auto;
+	padding-bottom: 60px;
 	font-family: 'Montserrat';
 	font-style: normal;
 	min-height: 100vh;
-}
-.notification__main__container {
-	display: flex;
-	padding-top: 40px;
-	gap: 36px;
-	align-items: center;
-}
-.notification__main__back {
-	background: #eff0f7;
-	border-radius: 50%;
-	padding: 5px;
-	cursor: pointer;
-}
-.notification__main__title {
-	font-weight: 600;
-	font-size: 20px;
-	line-height: 32px;
-	letter-spacing: 0.75px;
-}
-.notification__tabs_main {
-	margin-top: 40px;
-	border-radius: 16px;
-	.nav-tabs .nav-link {
-		padding: 10px 10px !important;
-		margin: 30px 30px 0 40px;
-		font-weight: 700;
-		font-size: 24px;
-		line-height: 32px;
-		font-family: 'Montserrat';
-		font-style: normal;
-	}
-}
 
-.notification__all__main__title {
-	font-weight: 600;
-	font-size: 20px;
-	line-height: 32px;
-	letter-spacing: 0.75px;
-	padding: 32px 40px;
-}
-.notification__tabs__main__all__active:not(.notification__tabs__main__all__friend-request) {
-	opacity: 0.7;
-}
-.notification__tabs__main__all,
-.notification__tabs__main__all__seen,
-.notification__tabs__main__all__active {
-	margin: 0 32px 12px 32px;
-	cursor: pointer;
-	.notification__all__main__layout {
-		display: flex;
-		gap: 15px;
-		align-items: center;
+	.tab-content {
+		padding: 0 32px 32px;
+	}
+
+	.timeline-wrapper {
 		padding: 8px;
-		border-radius: 8px;
-		.notification__all__main__layout__image {
-			border-radius: 50%;
-		}
-		.notification__all__main__layout__status {
-			flex: 1;
-		}
-		.notification__main__all__infor {
-			font-weight: 500;
-			font-size: 15px;
-			line-height: 24px;
-			span {
-				font-weight: 600;
-			}
-		}
-		.notification__main__all__unseen {
-			width: 16px;
-			height: 16px;
-			border-radius: 50%;
-			background: #e0af7e;
-		}
-		.notification__main__all__seen {
-			width: 16px;
-			height: 16px;
-			border-radius: 50%;
-			background: #fff;
+		.timeline-item {
+			padding-bottom: 20px;
 		}
 	}
-}
 
-.notification__tabs__all__seen:hover {
-	background-color: #eaecec;
-}
+	.notification__main__container {
+		display: flex;
+		padding-top: 40px;
+		gap: 36px;
+		align-items: center;
+	}
 
-.notification__main__all__friend {
-	display: flex;
-	margin: 15px 70px;
-	gap: 20px;
-	min-width: 280px;
-	width: fit-content;
-	.notification__main__all__accept,
-	.notification__main__all__refuse {
-		padding: 12px;
-		border-radius: 12px;
+	.notification__main__title {
 		font-weight: 600;
-		font-size: 18px;
-		line-height: 22px;
-		letter-spacing: 0.25px;
-		text-align: center;
-		cursor: pointer;
-		width: 160px;
-		border: none;
+		font-size: 20px;
+		line-height: 32px;
+		letter-spacing: 0.75px;
 	}
-	.notification__main__all__accept {
-		background: #e0af7e;
-		color: #fcfcfc;
+
+	.notification__tabs__main {
+		margin-top: 40px;
+		border-radius: 16px;
+		.nav-tabs .nav-link {
+			padding: 10px 10px !important;
+			margin: 30px 30px 0 40px;
+			font-weight: 700;
+			font-size: 24px;
+			line-height: 32px;
+			font-family: 'Montserrat';
+			font-style: normal;
+		}
 	}
-	.notification__main__all__refuse {
-		background: #eff0f7;
-		color: #6e7191;
+
+	.notification__all__main__title {
+		font-weight: 600;
+		font-size: 20px;
+		line-height: 32px;
+		letter-spacing: 0.75px;
+		padding: 32px 8px 32px;
+	}
+
+	.notification-status {
+		margin-bottom: 20px;
 	}
 }
-.notification___main__all__status {
-	font-weight: 500;
-	font-size: 13px;
-	line-height: 22px;
-	color: #e0af7e;
+
+@media only screen and (max-width: 820px) {
+	.notification__main {
+		width: 772px;
+	}
+}
+
+@media only screen and (max-width: 768px) {
+	.notification__main {
+		width: 736px;
+	}
 }

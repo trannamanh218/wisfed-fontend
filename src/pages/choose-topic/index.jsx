@@ -2,20 +2,23 @@ import { useState, useEffect } from 'react';
 import './chooseTopic.scss';
 import Logo from 'assets/images/Logo 2.png';
 import { Form } from 'react-bootstrap';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { getCategoryList } from 'reducers/redux-utils/category';
 import { editUserInfo } from 'reducers/redux-utils/user';
 import { useNavigate } from 'react-router-dom';
 import SearchIcon from 'assets/icons/search.svg';
 import SearchCategoryChooseTopic from './searchCateChooseTopic';
 import { NotificationError } from 'helpers/Error';
+import _ from 'lodash';
 
 function ChooseTopic() {
+	const { userInfo } = useSelector(state => state.auth);
+	const dispatch = useDispatch();
+	const navigate = useNavigate();
+
 	const [listCategory, setListCategory] = useState([]);
 	const [listCategorySearched, setListCategorySearched] = useState([]);
 	const [addFavorite, setAddFavorite] = useState([]);
-	const dispatch = useDispatch();
-	const navigate = useNavigate();
 	const [inputValue, setInputValue] = useState('');
 
 	const getListCategory = async () => {
@@ -80,10 +83,12 @@ function ChooseTopic() {
 	};
 
 	useEffect(() => {
-		getListCategory();
-	}, []);
-
-	useEffect(() => {}, []);
+		if (!_.isEmpty(userInfo) && userInfo.favoriteCategory.length > 0) {
+			navigate('/');
+		} else {
+			getListCategory();
+		}
+	}, [userInfo]);
 
 	const handleChange = e => {
 		const keyData = Number(e.target.value);
@@ -158,7 +163,7 @@ function ChooseTopic() {
 				</div>
 
 				<div
-					className={'choose-topic__button ' + `${addFavorite.length >= 2 ? '' : 'disabled-bnt'}`}
+					className={'choose-topic__button ' + `${addFavorite.length >= 3 ? '' : 'disabled-bnt'}`}
 					onClick={() => {
 						updateUser();
 					}}

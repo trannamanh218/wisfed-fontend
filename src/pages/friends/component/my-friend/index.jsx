@@ -1,37 +1,56 @@
 import './my-friends.scss';
 import FriendsItem from 'shared/friends';
 import { checkListFriend, getFriendList } from 'reducers/redux-utils/user';
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import { generateQuery } from 'helpers/Common';
+import InfiniteScroll from 'react-infinite-scroll-component';
+import LoadingIndicator from 'shared/loading-indicator';
 
 const MyFriends = ({ activeTabs, inputSearch, filter }) => {
+	const callApiStart = useRef(0);
+	const callApiPerPage = useRef(9);
+
 	const { userInfo } = useSelector(state => state.auth);
-	const [getMyListFriend, setGetMyListFriend] = useState([]);
+	const isFriend = useSelector(state => state.user.isFriend);
 	const dispatch = useDispatch();
 
-	const isFriend = useSelector(state => state.user.isFriend);
+	const [getMyListFriend, setGetMyListFriend] = useState([]);
+	const [hasMore, setHasMore] = useState(true);
+	const [toggleCallAPI, setToggleCallAPI] = useState(true);
+	const [isLoading, setIsLoading] = useState(true);
+	const [listFriendCount, setListFriendcount] = useState(0);
+
+	useEffect(() => {
+		callApiStart.current = 0;
+		setIsLoading(true);
+		setGetMyListFriend([]);
+	}, [filter]);
 
 	useEffect(async () => {
-		const query = generateQuery(0, 10, filter);
+		const query = generateQuery(callApiStart.current, callApiPerPage.current, inputSearch.length > 0 ? filter : '');
 		const userId = userInfo.id;
 		try {
+			setHasMore(true);
 			if (!_.isEmpty(userInfo)) {
-				if (inputSearch.length > 0) {
-					const friendList = await dispatch(getFriendList({ userId, query })).unwrap();
-					setGetMyListFriend(friendList.rows);
-				} else {
-					const friendList = await dispatch(getFriendList({ userId })).unwrap();
-					setGetMyListFriend(friendList.rows);
+				const friendList = await dispatch(getFriendList({ userId, query })).unwrap();
+				setGetMyListFriend(prev => [...prev, ...friendList.rows]);
+				setListFriendcount(friendList.count);
+				callApiStart.current++;
+
+				if (friendList.rows?.length < callApiPerPage.current) {
+					setHasMore(false);
 				}
 			}
 		} catch (err) {
 			NotificationError(err);
+		} finally {
+			setIsLoading(false);
 		}
-	}, [userInfo, dispatch, filter]);
+	}, [userInfo, filter, toggleCallAPI]);
 
 	useEffect(() => {
 		if (!getMyListFriend.length) {
@@ -44,7 +63,7 @@ const MyFriends = ({ activeTabs, inputSearch, filter }) => {
 	return (
 		<div className='myfriends__container'>
 			<div className='myfriends__title'>
-				({getMyListFriend?.length}) Bạn bè của{' '}
+				({listFriendCount}) Bạn bè của{' '}
 				{userInfo.fullName ? (
 					userInfo.fullName
 				) : (
@@ -54,12 +73,30 @@ const MyFriends = ({ activeTabs, inputSearch, filter }) => {
 					</>
 				)}
 			</div>
-
-			<div className='myfriends__layout__container'>
-				{getMyListFriend?.map(item => (
-					<FriendsItem key={item.id} data={item} keyTabs={activeTabs} />
-				))}
-			</div>
+			{isLoading ? (
+				<LoadingIndicator />
+			) : (
+				<>
+					{getMyListFriend?.length > 0 ? (
+						<InfiniteScroll
+							dataLength={getMyListFriend.length}
+							next={() => {
+								setToggleCallAPI(!toggleCallAPI);
+							}}
+							hasMore={hasMore}
+							loader={<LoadingIndicator />}
+						>
+							<div className='myfriends__layout__container'>
+								{getMyListFriend.map(item => (
+									<FriendsItem key={item.id} data={item} keyTabs={activeTabs} />
+								))}
+							</div>
+						</InfiniteScroll>
+					) : (
+						<h5 style={{ margin: '22px' }}>Chưa có dữ liệu</h5>
+					)}
+				</>
+			)}
 		</div>
 	);
 };
@@ -67,6 +104,7 @@ MyFriends.propTypes = {
 	activeTabs: PropTypes.string,
 	inputSearch: PropTypes.string,
 	filter: PropTypes.string,
+	handleActiveTabs: PropTypes.func,
 };
 
 export default MyFriends;

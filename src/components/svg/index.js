@@ -84,6 +84,7 @@ import { ReactComponent as LikeComment } from 'assets/icons/LikeComment.svg';
 import { ReactComponent as Hamburger } from 'assets/icons/Hamburger.svg';
 import { ReactComponent as PlusIcon } from 'assets/icons/action-plus.svg';
 import { ReactComponent as TrashIcon } from 'assets/icons/trash-icon.svg';
+import { ReactComponent as Bell } from 'assets/icons/bell.svg';
 
 export {
 	CrowSmall,
@@ -172,4 +173,5 @@ export {
 	Hamburger,
 	PlusIcon,
 	TrashIcon,
+	Bell,
 };

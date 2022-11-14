@@ -23,7 +23,7 @@ const StatusModalContainer = ({
 	return (
 		<>
 			<StatusBookList currentStatus={currentStatus} handleChangeStatus={handleChangeStatus} />
-			{!!bookShelves.length > 0 && (
+			{!!bookShelves.length && (
 				<BookShelvesList
 					list={bookShelves}
 					onChangeShelves={onChangeShelves}

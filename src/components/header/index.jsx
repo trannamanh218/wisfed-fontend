@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, memo } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
 	LogoFull,
@@ -14,44 +14,51 @@ import {
 	FriendsIcon,
 	CategoryFillIcon,
 	LogoNonText,
+	Bell,
 } from 'components/svg';
 import SearchIcon from 'assets/icons/search.svg';
 import classNames from 'classnames';
 import './header.scss';
-import NotificationModal from 'pages/notification/';
+import NotificationModal from 'pages/notification/notification-modal';
 import { useDispatch, useSelector } from 'react-redux';
-import { backgroundToggle, depenRenderNotification } from 'reducers/redux-utils/notification';
+import { backgroundToggle, handleUpdateNewNotification, patchNewNotification } from 'reducers/redux-utils/notification';
 import { checkUserLogin, deleteUserInfo } from 'reducers/redux-utils/auth';
 import { useVisible } from 'shared/hooks';
 import SearchAllModal from 'shared/search-all';
 import Storage from 'helpers/Storage';
-import { handleResetValue } from 'reducers/redux-utils/search';
+import { handleResetValue, handleUpdateValueInputSearchRedux } from 'reducers/redux-utils/search';
 import { toast } from 'react-toastify';
 import { updateTargetReading } from 'reducers/redux-utils/chart';
 import defaultAvatar from 'assets/icons/defaultLogoAvatar.svg';
 import * as stream from 'getstream';
 import _ from 'lodash';
-import { patchNewNotification, updateIsNewNotificationUserInfo } from 'reducers/redux-utils/auth';
 import { handleRefreshNewfeed } from 'reducers/redux-utils/activity';
 import Request from 'helpers/Request';
 import HeaderSearchMobile from './header-search-mobile';
+import { NotificationError } from 'helpers/Error';
 
 const Header = () => {
+	const hashtagRegex =
+		/#(?![0-9_]+\b)[0-9a-z_ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễếệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ]+/gi;
+
 	const { valueInputSearchRedux } = useSelector(state => state.search);
+	const { isShowModal } = useSelector(state => state.search);
+	const { userInfo } = useSelector(state => state.auth);
+	const isNewNotificationByRealtime = useSelector(state => state.notificationReducer.isNewNotificationByRealtime);
+
 	const { ref: showRef, isVisible: isShow, setIsVisible: setIsShow } = useVisible(false);
 	const {
 		ref: searchMobileWrapper,
 		isVisible: isShowSearchMobile,
 		setIsVisible: setIsShowSearchMobile,
 	} = useVisible(false);
+
 	const [activeLink, setActiveLink] = useState('/');
 	const [modalNoti, setModalNoti] = useState(false);
 	const [modalInforUser, setModalInforUser] = useState(false);
 	const [getSlugResult, setGetSlugResult] = useState('');
-	const [userLogin, setUserLogin] = useState(false);
-	const [activeNotification, setActiveNotification] = useState(false);
-	const [realTime, setRealTime] = useState(false);
 	const [showNavIcon, setShowNavIcon] = useState(true);
+	const [notiPopover, setNotiPopover] = useState(true);
 
 	const buttonModal = useRef(null);
 	const userOptions = useRef(null);
@@ -61,11 +68,43 @@ const Header = () => {
 	const { pathname } = location;
 
 	const dispatch = useDispatch();
-	const { isShowModal } = useSelector(state => state.search);
-	const { userInfo, userInfoJwt } = useSelector(state => state.auth);
+
+	useEffect(() => {
+		if (userOptions.current) {
+			document.addEventListener('click', closeUserOptions);
+		}
+		return () => {
+			document.removeEventListener('click', closeUserOptions);
+		};
+	}, []);
+
+	useEffect(() => {
+		if (!_.isEmpty(userInfo)) {
+			if (pathname === '/notification') {
+				dispatch(handleUpdateNewNotification(false));
+			} else {
+				dispatch(handleUpdateNewNotification(userInfo.isNewNotification));
+			}
+			// bắt sự kiện khi có thông báo getStream trả về theo thời gian thực
+			const client = stream.connect('wmtg4f3vuuyh', null, '1196914');
+			const notificationFeed = client.feed('notification', userInfo.id, userInfo.userToken);
+			const callback = () => {
+				dispatch(handleUpdateNewNotification(true));
+			};
+			notificationFeed.subscribe(callback);
+		}
+	}, [userInfo]);
 
 	useEffect(() => {
 		setActiveLink(pathname);
+		if (pathname === '/notification') {
+			try {
+				dispatch(patchNewNotification({ isNewNotification: false })).unwrap();
+				dispatch(handleUpdateNewNotification(false));
+			} catch (err) {
+				NotificationError(err);
+			}
+		}
 	}, [pathname]);
 
 	useEffect(() => {
@@ -89,46 +128,6 @@ const Header = () => {
 		};
 	}, [isShowSearchMobile]);
 
-	useEffect(() => {
-		const params = {
-			isNewNotification: false,
-		};
-		if (pathname === '/notification') {
-			setActiveNotification(true);
-			setModalNoti(false);
-			updateNewNotificaionFalse(params);
-			setTimeout(() => setRealTime(false), 1500);
-		} else if (modalNoti && realTime) {
-			updateNewNotificaionFalse(params);
-			setTimeout(() => setRealTime(false), 1500);
-		}
-	}, [realTime]);
-
-	useEffect(() => {
-		if (!_.isEmpty(userInfoJwt)) {
-			if (userInfoJwt.isNewNotification) {
-				setRealTime(true);
-			} else {
-				setRealTime(false);
-			}
-		}
-	}, [userInfoJwt]);
-
-	useEffect(() => {
-		if (Storage.getAccessToken()) {
-			setUserLogin(true);
-		} else {
-			setUserLogin(false);
-		}
-
-		if (userOptions.current) {
-			document.addEventListener('click', closeUserOptions);
-		}
-		return () => {
-			document.removeEventListener('click', closeUserOptions);
-		};
-	}, []);
-
 	const closeUserOptions = e => {
 		if (userOptions.current && !userOptions.current.contains(e.target)) {
 			setModalInforUser(false);
@@ -136,19 +135,19 @@ const Header = () => {
 	};
 
 	const toglleModalNotify = () => {
-		const params = {
-			isNewNotification: false,
-		};
-		if (pathname === '/notification') {
-			setModalNoti(false);
-			setRealTime(false);
-			updateNewNotificaionFalse(params);
-		} else {
+		if (isNewNotificationByRealtime) {
+			try {
+				dispatch(patchNewNotification({ isNewNotification: false })).unwrap();
+				dispatch(handleUpdateNewNotification(false));
+			} catch (err) {
+				NotificationError(err);
+			}
+		}
+
+		if (pathname !== '/notification') {
 			if (Storage.getAccessToken()) {
 				setModalNoti(!modalNoti);
 				dispatch(backgroundToggle(modalNoti));
-				setRealTime(false);
-				updateNewNotificaionFalse(params);
 			} else {
 				dispatch(checkUserLogin(true));
 			}
@@ -179,36 +178,6 @@ const Header = () => {
 		toast.success('Đăng xuất thành công', { toastId: customId });
 	};
 
-	useEffect(() => {
-		if (!_.isEmpty(userInfoJwt)) {
-			const client = stream.connect('p77uwpux9zwu', null, '1169912');
-			const notificationFeed = client.feed('notification', userInfoJwt.id, userInfoJwt.userToken);
-			console.log('realtime', notificationFeed);
-			const callback = data => {
-				dispatch(depenRenderNotification(true));
-				const params = {
-					isNewNotification: true,
-				};
-				if (!userInfoJwt.isNewNotification && !_.isEmpty(data)) {
-					setRealTime(true);
-					dispatch(patchNewNotification(params)).unwrap();
-					const dataNewNoti = { ...userInfoJwt, isNewNotification: true };
-					dispatch(updateIsNewNotificationUserInfo(dataNewNoti));
-				}
-			};
-			notificationFeed.subscribe(callback);
-		}
-	});
-
-	const updateNewNotificaionFalse = params => {
-		if (userInfoJwt.isNewNotification) {
-			dispatch(patchNewNotification(params)).unwrap();
-			const dataNewNoti = { ...userInfoJwt, isNewNotification: false };
-			dispatch(depenRenderNotification(false));
-			dispatch(updateIsNewNotificationUserInfo(dataNewNoti));
-		}
-	};
-
 	const onClickReloadPosts = () => {
 		dispatch(handleRefreshNewfeed()); // Tải lại newfeed
 		window.scrollTo(0, 0);
@@ -223,6 +192,29 @@ const Header = () => {
 	const handleViewProfile = () => {
 		setModalInforUser(false);
 		navigate(`/profile/${userInfo.id}`);
+	};
+
+	const handleKeyDown = e => {
+		if (e.key === 'Enter') {
+			const value = getSlugResult?.trim();
+			if (e.key === 'Enter' && value.length) {
+				setIsShow(false);
+				if (hashtagRegex.test(value)) {
+					const formatedInpSearchValue = value
+						.normalize('NFD')
+						.replace(/[\u0300-\u036f]/g, '')
+						.replace(/đ/g, 'd')
+						.replace(/Đ/g, 'D')
+						.replace(/#/g, '');
+					navigate(`/hashtag/${formatedInpSearchValue}`);
+				} else {
+					navigate(`/result/q=${value}`);
+				}
+			}
+		} else if (e.key !== 'Escape') {
+			dispatch(handleUpdateValueInputSearchRedux(''));
+			setIsShow(true);
+		}
 	};
 
 	useEffect(() => {
@@ -256,6 +248,7 @@ const Header = () => {
 								disabled={isShow}
 								value={getSlugResult}
 								readOnly
+								onKeyDown={handleKeyDown}
 							/>
 						</>
 					)}
@@ -285,7 +278,7 @@ const Header = () => {
 						active: activeLink === `/shelves/${userInfo.id}`,
 					})}
 				>
-					<Link className='header__nav__link' to={userLogin && `/shelves/${userInfo.id}`}>
+					<Link className='header__nav__link' to={!_.isEmpty(userInfo) && `/shelves/${userInfo.id}`}>
 						{activeLink === `/shelves/${userInfo.id}` ? <BookFillIcon /> : <BookIcon />}
 					</Link>
 					<span className='header__nav__item--hover'>Tủ sách</span>
@@ -306,26 +299,35 @@ const Header = () => {
 					onClick={handleUserLogin}
 					className={classNames('header__nav__item', { active: activeLink === '/friends' })}
 				>
-					<Link className='header__nav__link' to={userLogin && '/friends'}>
+					<Link className='header__nav__link' to={!_.isEmpty(userInfo) && '/friends'}>
 						{activeLink === '/friends' ? <FriendsFillIcon /> : <FriendsIcon />}
 					</Link>
 					<span className='header__nav__item--hover'>Bạn bè</span>
 				</li>
 
-				<div className='notify-icon'>
-					<span className='header__notify__icon--hover'>Thông báo</span>
+				<li
+					className={classNames('header__nav__item', { 'active': modalNoti || pathname === '/notification' })}
+				>
 					<div
 						ref={buttonModal}
 						onClick={toglleModalNotify}
-						className={classNames('header__notify__icon', {
-							'active': modalNoti || activeNotification,
-							'header__notify__icon__active': realTime,
+						className={classNames('header__nav__link', {
+							'header__notify__icon--realtime__active':
+								isNewNotificationByRealtime &&
+								!modalNoti &&
+								pathname !== '/notification' &&
+								!_.isEmpty(userInfo),
 						})}
-					/>
+					>
+						<Bell className='header__nav__icon' />
+					</div>
 					{modalNoti && (
-						<NotificationModal setModalNoti={setModalNoti} buttonModal={buttonModal} realTime={realTime} />
+						<div onMouseOver={() => setNotiPopover(false)} onMouseLeave={() => setNotiPopover(true)}>
+							<NotificationModal setModalNoti={setModalNoti} buttonModal={buttonModal} />
+						</div>
 					)}
-				</div>
+					<span className={classNames('header__nav__item--hover', { 'hide': !notiPopover })}>Thông báo</span>
+				</li>
 			</ul>
 
 			<div className='header__userInfo' ref={userOptions}>
@@ -357,4 +359,4 @@ const Header = () => {
 	);
 };
 
-export default Header;
+export default memo(Header);

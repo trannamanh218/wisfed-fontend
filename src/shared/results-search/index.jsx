@@ -46,7 +46,7 @@ const ResultSearch = ({ valueInputSearch, resultSearch, setIsShow }) => {
 	};
 
 	useEffect(() => {
-		if (!!saveLocalSearch.length > 0 && directClick) {
+		if (!!saveLocalSearch.length && directClick) {
 			localStorage.setItem('result', JSON.stringify(saveLocalSearch));
 			directItem(saveLocalSearch[0]);
 		}

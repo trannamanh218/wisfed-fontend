@@ -1,14 +1,15 @@
 import RankBarImage from 'assets/images/sidebar-user-rank.png';
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { NotificationError } from 'helpers/Error';
-import { getTopUser } from 'reducers/redux-utils/ranks';
+import { getTopUser, handleIsCheckUser } from 'reducers/redux-utils/ranks';
 import { useDispatch } from 'react-redux';
 import { Crown } from 'components/svg';
 import UserAvatar from 'shared/user-avatar';
 
 export default function SidebarRank() {
 	const dispatch = useDispatch();
+	const navigate = useNavigate();
 
 	const [top3followedUsersByWeek, setTop3followedUsersByWeek] = useState([]);
 
@@ -18,7 +19,7 @@ export default function SidebarRank() {
 
 	const getTopUserData = async () => {
 		const params = {
-			reportType: 'topFollow',
+			reportType: 'topRead',
 			by: 'week',
 		};
 		try {
@@ -33,10 +34,15 @@ export default function SidebarRank() {
 		return <div className='number__books'>{top3followedUsersByWeek[number].numberFollowing}</div>;
 	};
 
+	const handleDirect = () => {
+		dispatch(handleIsCheckUser(true));
+		navigate('/top100');
+	};
+
 	return (
 		<div className='event-and-rank-bar__block'>
 			<h4 className='event-and-rank-bar__block__title'>Bảng xếp hạng</h4>
-			<Link to={`/top100`} className='event-and-rank-bar__content'>
+			<div onClick={handleDirect} className='event-and-rank-bar__content'>
 				<div className='top__user__ranks'>
 					<div className='top__user__ranks__two'>
 						<div className='top__user__ranks__two__avatar'>
@@ -103,7 +109,7 @@ export default function SidebarRank() {
 					</div>
 				</div>
 				<img src={RankBarImage} alt='' />
-			</Link>
+			</div>
 		</div>
 	);
 }

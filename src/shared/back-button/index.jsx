@@ -17,6 +17,10 @@ const BackButton = ({ destination }) => {
 	);
 };
 
+BackButton.defaultProps = {
+	destination: -1,
+};
+
 BackButton.propTypes = {
 	destination: PropTypes.any,
 };

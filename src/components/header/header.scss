@@ -55,7 +55,7 @@
 			background-color: inherit;
 			border: none;
 			outline: none;
-			font-size: 16px;
+			font-size: 15px;
 			&:focus {
 				border: none;
 			}
@@ -96,27 +96,34 @@
 			overflow: unset;
 		}
 
-		.notify-icon {
-			width: 15%;
-			max-width: 80px;
+		.header__nav__item {
 			position: relative;
 			display: flex;
 			justify-content: center;
 			align-items: center;
+			min-width: 37px;
 			cursor: pointer;
 
-			.header__notify__icon--hover {
+			&.active {
+				.header__nav__icon {
+					fill: $primary;
+					path {
+						stroke: $primary;
+						fill: $primary;
+					}
+				}
+			}
+
+			&--hover {
 				position: absolute;
 				top: 100%;
 				padding: 10px 7px;
 				background-color: rgba(0, 0, 0, 0.7);
 				border-radius: 4px;
 				color: #fcfcfc;
-				z-index: 500;
-				text-align: center;
+				z-index: 2000;
 				width: fit-content;
 				white-space: nowrap;
-				font-weight: 200;
 				font-size: 12px;
 				letter-spacing: 0.2px;
 				cursor: default;
@@ -125,60 +132,37 @@
 				transition: all 0.2s ease;
 			}
 
-			&:hover .header__notify__icon--hover {
+			&:hover .header__nav__item--hover {
 				opacity: 1;
 				transition: all 0.2s ease;
-			}
-		}
-
-		&__link {
-			svg {
-				height: 36px;
-			}
-		}
-	}
-
-	&__nav__item {
-		position: relative;
-		text-align: center;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		min-width: 37px;
-
-		&.active {
-			.header__nav__icon {
-				fill: $primary;
-				path {
-					stroke: $primary;
-					fill: $primary;
+				&:hover {
+					opacity: 0;
+				}
+				&.hide {
+					opacity: 0;
 				}
 			}
 		}
 
-		&--hover {
-			position: absolute;
-			top: 100%;
-			padding: 10px 7px;
-			background-color: rgba(0, 0, 0, 0.7);
-			border-radius: 4px;
-			color: #fcfcfc;
-			z-index: 500;
-			text-align: center;
-			width: fit-content;
-			white-space: nowrap;
-			font-weight: 200;
-			font-size: 12px;
-			letter-spacing: 0.2px;
-			cursor: default;
-			user-select: none;
-			opacity: 0;
-			transition: all 0.2s ease;
-		}
+		.header__nav__link {
+			svg {
+				height: 36px;
+			}
 
-		&:hover &--hover {
-			opacity: 1;
-			transition: all 0.2s ease;
+			&.header__notify__icon--realtime__active {
+				position: relative;
+				&::after {
+					position: absolute;
+					top: 0px;
+					right: -1px;
+					content: '';
+					display: inline-block;
+					width: 14px;
+					height: 14px;
+					border-radius: 50%;
+					background-color: $primary;
+				}
+			}
 		}
 	}
 
@@ -198,33 +182,6 @@
 			& svg {
 				transform: scale(0.8);
 			}
-		}
-	}
-
-	&__notify__icon {
-		position: relative;
-		background-image: url('../../assets/icons/bell.svg');
-		width: 28px;
-		height: 28px;
-		background-size: contain;
-		background-repeat: no-repeat;
-
-		&.active {
-			background-image: url('../../assets/icons/Notification.svg');
-		}
-	}
-
-	&__notify__icon__active {
-		&::after {
-			position: absolute;
-			top: -2px;
-			right: 0px;
-			content: '';
-			display: inline-block;
-			width: 14px;
-			height: 14px;
-			border-radius: 50%;
-			background-color: $primary;
 		}
 	}
 
@@ -285,7 +242,7 @@
 
 @media only screen and (max-width: 1024px) {
 	.header {
-		padding: 16px 32px;
+		padding: 16px;
 
 		&__logo {
 			height: 36px;
@@ -306,21 +263,6 @@
 
 		&__nav {
 			gap: 24px;
-			&__item {
-				svg {
-					width: 28px;
-					height: 28px;
-				}
-			}
-		}
-
-		&__notify__icon {
-			width: 24px;
-			height: 24px;
-			&::after {
-				width: 12px;
-				height: 12px;
-			}
 		}
 
 		&__userInfo {
@@ -353,26 +295,8 @@
 		&__nav {
 			margin-left: -20px;
 			gap: 32px;
-
-			&__item {
-				svg {
-					width: 28px;
-					height: 28px;
-				}
-			}
-			.notify-icon {
-				padding: 32px 0;
-			}
 		}
 
-		&__notify__icon {
-			width: 24px;
-			height: 24px;
-			&::after {
-				width: 12px;
-				height: 12px;
-			}
-		}
 		.header__userInfo {
 			margin-left: 40px;
 		}

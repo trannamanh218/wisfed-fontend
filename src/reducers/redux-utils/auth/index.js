@@ -8,7 +8,6 @@ import {
 	forgotPasswordAPIAdmin,
 	resetPasswordAPIAdmin,
 	checkJwt,
-	newNotification,
 } from 'constants/apiURL';
 import Request from 'helpers/Request';
 import _ from 'lodash';
@@ -94,19 +93,6 @@ export const resetPasswordAdmin = createAsyncThunk('auth/resetPasswordAdmin', as
 	}
 });
 
-export const patchNewNotification = createAsyncThunk(
-	'notification/patchNewNotification',
-	async (params, { rejectWithValue }) => {
-		try {
-			const response = await Request.makePatch(newNotification, params);
-			return response.data;
-		} catch (err) {
-			const error = JSON.parse(err.response);
-			throw rejectWithValue(error);
-		}
-	}
-);
-
 const authSlice = createSlice({
 	name: 'auth',
 	initialState: {
@@ -115,7 +101,6 @@ const authSlice = createSlice({
 		userInfo: {},
 		error: {},
 		routerLogin: false,
-		userInfoJwt: {},
 		dataToResetPassword: '',
 	},
 	reducers: {
@@ -131,9 +116,6 @@ const authSlice = createSlice({
 		updateUserInfo: (state, action) => {
 			state.userInfo = action.payload;
 		},
-		updateIsNewNotificationUserInfo: (state, action) => {
-			state.userInfoJwt = action.payload;
-		},
 		handleDataToResetPassword: (state, action) => {
 			state.dataToResetPassword = action.payload;
 		},
@@ -145,7 +127,6 @@ const authSlice = createSlice({
 		},
 		[login.fulfilled]: (state, action) => {
 			state.isFetching = false;
-
 			state.userInfo = action.payload;
 			state.error = {};
 		},
@@ -165,19 +146,16 @@ const authSlice = createSlice({
 		[getCheckJwt.pending]: (state, action) => {
 			state.isFetching = true;
 			state.userInfo = {};
-			state.userInfoJwt = {};
 			state.error = action.payload;
 		},
 		[getCheckJwt.fulfilled]: (state, action) => {
 			state.isFetching = false;
 			state.userInfo = action.payload;
-			state.userInfoJwt = action.payload;
 			state.error = {};
 		},
 		[getCheckJwt.rejected]: (state, action) => {
 			state.isFetching = false;
 			state.userInfo = {};
-			state.userInfoJwt = {};
 			state.error = action.payload;
 		},
 	},
@@ -185,13 +163,7 @@ const authSlice = createSlice({
 
 const auth = authSlice.reducer;
 
-export const {
-	checkLogin,
-	checkUserLogin,
-	deleteUserInfo,
-	updateUserInfo,
-	updateIsNewNotificationUserInfo,
-	handleDataToResetPassword,
-} = authSlice.actions;
+export const { checkLogin, checkUserLogin, deleteUserInfo, updateUserInfo, handleDataToResetPassword } =
+	authSlice.actions;
 
 export default auth;

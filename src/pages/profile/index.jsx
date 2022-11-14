@@ -25,19 +25,19 @@ const Profile = () => {
 	const navigate = useNavigate();
 
 	useEffect(() => {
-		window.scroll(0, 0);
-		getUserDetailData();
-	}, [userId, userInfo, isReload]);
+		if (userInfo.id === userId) {
+			setCurrentUserInfo(userInfo);
+			dispatch(checkGetUser(false));
+		} else {
+			getUserDetailData();
+			dispatch(checkGetUser(true));
+		}
+	}, [userId, isReload]);
 
 	const getUserDetailData = async () => {
 		try {
 			const userData = await dispatch(getUserDetail(userId)).unwrap();
 			setCurrentUserInfo(userData);
-			if (userInfo.id === userData.id) {
-				dispatch(checkGetUser(false));
-			} else {
-				dispatch(checkGetUser(true));
-			}
 		} catch (err) {
 			return;
 		} finally {
@@ -69,7 +69,7 @@ const Profile = () => {
 					}
 				/>
 			) : (
-				<>{renderNotFound ? <NotFound /> : <></>}</>
+				<>{renderNotFound && <NotFound />}</>
 			)}
 		</>
 	);

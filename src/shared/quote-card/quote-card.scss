@@ -16,14 +16,20 @@
 	gap: 16px;
 	p {
 		color: $ash-body;
-		font-size: 15px;
-		font-weight: 500;
 		line-height: 1.5rem;
 		text-align: center;
 		&:first-child {
 			max-width: 75%;
 			word-break: break-word;
 		}
+	}
+	&__quote {
+		font-size: 15px;
+		font-weight: 600;
+	}
+	&__author-and-book {
+		font-size: 13px;
+		font-weight: 400;
 	}
 }
 
@@ -103,6 +109,11 @@
 			max-width: 160px;
 			overflow: hidden;
 			text-overflow: ellipsis;
+		}
+	}
+	.quote-footer__left {
+		.quote-footer__badge {
+			font-size: 13px;
 		}
 	}
 }

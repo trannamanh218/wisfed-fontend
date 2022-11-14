@@ -1,4 +1,3 @@
-import clockIcon from 'assets/images/clock.png';
 import convertIcon from 'assets/images/convert.png';
 import featherIcon from 'assets/images/feather.png';
 import trashIcon from 'assets/images/trash.png';
@@ -233,7 +232,9 @@ const SettingMore = ({ bookData, handleUpdateBookList }) => {
 				</span>
 				<ModalBody>
 					<h4 className='main-shelves__modal__title'>Bạn có muốn xóa cuốn sách?</h4>
-					<p className='main-shelves__modal__subtitle'>Cuốn sách sẽ được xoá khỏi TOÀN BỘ giá sách</p>
+					<p className='main-shelves__modal__subtitle'>
+						Cuốn sách sẽ được xoá khỏi TOÀN BỘ <p>giá sách</p>
+					</p>
 					<button className='btn main-shelves__modal__btn-delete btn-danger' onClick={removeBook}>
 						Xóa
 					</button>

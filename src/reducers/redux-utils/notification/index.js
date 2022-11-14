@@ -6,6 +6,7 @@ import {
 	detailFeedPost,
 	detailFeedPostGroup,
 	notificationUnRead,
+	newNotification,
 } from 'constants/apiURL';
 
 export const getNotification = createAsyncThunk('notification/getNotification', async (params, { rejectWithValue }) => {
@@ -69,16 +70,29 @@ export const getListNotificationUnRead = createAsyncThunk(
 	}
 );
 
+export const patchNewNotification = createAsyncThunk(
+	'notification/patchNewNotification',
+	async (params, { rejectWithValue }) => {
+		try {
+			const response = await Request.makePatch(newNotification, params);
+			return response.data;
+		} catch (err) {
+			const error = JSON.parse(err.response);
+			throw rejectWithValue(error);
+		}
+	}
+);
+
 const notificationSlice = createSlice({
 	name: 'notification',
 	initialState: {
 		toggle: null,
 		activeKeyTabs: '',
 		listNotifcaiton: [],
-		isRealTime: null,
 		reviewIdFromNotification: null,
 		mentionCommentId: null,
 		checkIfMentionFromGroup: null,
+		isNewNotificationByRealtime: false,
 	},
 	reducers: {
 		backgroundToggle: (state, action) => {
@@ -90,9 +104,6 @@ const notificationSlice = createSlice({
 		handleListNotification: (state, action) => {
 			state.listNotifcaiton = action.payload;
 		},
-		depenRenderNotification: (state, action) => {
-			state.isRealTime = action.payload;
-		},
 		updateReviewIdFromNoti: (state, action) => {
 			state.reviewIdFromNotification = action.payload;
 		},
@@ -101,6 +112,9 @@ const notificationSlice = createSlice({
 		},
 		handleCheckIfMentionFromGroup: (state, action) => {
 			state.checkIfMentionFromGroup = action.payload;
+		},
+		handleUpdateNewNotification: (state, action) => {
+			state.isNewNotificationByRealtime = action.payload;
 		},
 	},
 	extraReducers: {
@@ -124,10 +138,10 @@ export const {
 	backgroundToggle,
 	activeKeyTabsNotification,
 	handleListNotification,
-	depenRenderNotification,
 	updateReviewIdFromNoti,
 	handleMentionCommentId,
 	handleCheckIfMentionFromGroup,
+	handleUpdateNewNotification,
 } = notificationSlice.actions;
 
 const notificationReducer = notificationSlice.reducer;

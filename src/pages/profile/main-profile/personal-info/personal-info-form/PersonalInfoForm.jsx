@@ -504,13 +504,15 @@ const PersonalInfoForm = ({ userData, toggleModal }) => {
 				enableEdit={enableEdit}
 			/>
 
-			<SelectType
-				dataAdded={userFavoriteCategories}
-				setDataAdded={setUserFavoriteCategories}
-				editStatus={editFavoriteCategories}
-				cancelEdit={cancelEdit}
-				enableEdit={enableEdit}
-			/>
+			<div className='personal-info-form__fixing-width'>
+				<SelectType
+					dataAdded={userFavoriteCategories}
+					setDataAdded={setUserFavoriteCategories}
+					editStatus={editFavoriteCategories}
+					cancelEdit={cancelEdit}
+					enableEdit={enableEdit}
+				/>
+			</div>
 
 			<InputType
 				option='interest'
