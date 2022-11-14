@@ -523,7 +523,7 @@ function CreatePostModalContent({
 
 	useEffect(() => {
 		checkActive();
-	}, [showMainModal, content, progressInputValue, imagesUpload]);
+	}, [showMainModal, content, progressInputValue, imagesUpload, taggedData.addAuthor, taggedData.addCategory]);
 
 	const checkActive = () => {
 		let isActive = false;
@@ -545,7 +545,7 @@ function CreatePostModalContent({
 			content &&
 			(taggedData.addAuthor.length ||
 				taggedData.addCategory.length ||
-				imagesUpload.length ||
+				// imagesUpload.length ||
 				!_.isEmpty(postDataShare))
 		) {
 			isActive = true;
@@ -810,7 +810,7 @@ function CreatePostModalContent({
 								/>
 								<span
 									className={classNames('creat-post-modal-content__main__options__item-add-to-post', {
-										'active': imagesUpload.length > 0 && _.isEmpty(taggedData.addBook),
+										'active': imagesUpload.length > 0,
 										'disabled':
 											(!_.isEmpty(postDataShare) &&
 												verbShareArray.indexOf(postDataShare.verb) !== -1) ||

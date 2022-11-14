@@ -56,7 +56,7 @@ const Sidebar = () => {
 				</div>
 			)}
 
-			{!_.isEmpty(userInfo) && <RenderProgress userIdParams={userInfo?.id} />}
+			{<RenderProgress userIdParams={userInfo?.id} />}
 
 			{wantToReadList.length > 0 && !_.isEmpty(userInfo) && <TheBooksWantsToRead list={wantToReadList} />}
 

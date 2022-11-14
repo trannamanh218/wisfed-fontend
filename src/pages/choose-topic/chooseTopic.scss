@@ -11,6 +11,10 @@
 		background-size: 10px;
 		border: none;
 	}
+	.form-check-input:checked + .form-check-label--custom {
+		font-weight: 600;
+		font-size: 18px;
+	}
 }
 .choose-topic__header {
 	background-color: #fbf7f2;
