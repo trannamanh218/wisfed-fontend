@@ -17,7 +17,7 @@ const MyFriends = ({ activeTabs, inputSearch, filter, handleActiveTabs }) => {
 
 	const isFriend = useSelector(state => state.user.isFriend);
 
-	useEffect(async () => {
+	const getFriendListData = async () => {
 		const query = generateQuery(0, 10, filter);
 		const userId = userInfo.id;
 		setIsLoading(true);
@@ -36,6 +36,10 @@ const MyFriends = ({ activeTabs, inputSearch, filter, handleActiveTabs }) => {
 		} finally {
 			setIsLoading(false);
 		}
+	};
+
+	useEffect(async () => {
+		getFriendListData();
 	}, [userInfo, dispatch, filter]);
 
 	useEffect(() => {
