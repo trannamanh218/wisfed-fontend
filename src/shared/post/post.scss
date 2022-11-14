@@ -307,7 +307,9 @@
 }
 
 @media only screen and (width: 1024px) {
-	.post__user-status__post-time-status {
-		font-size: 12px;
+	.post__container {
+		.post__user-status__post-time-status {
+			font-size: 10px;
+		}
 	}
 }
