@@ -45,6 +45,13 @@ export const getSuggestionForPost = createAsyncThunk(
 			filter.push({ 'operator': 'search', 'value': 'author', 'property': 'role' });
 		}
 
+		if (input && option.value === 'addCategory') {
+			filter.push(
+				{ 'operator': 'search', 'value': input, 'property': property },
+				{ 'operator': 'ne', 'value': 0, 'property': 'numberBooks' }
+			);
+		}
+
 		if (input) {
 			filter.push({ 'operator': 'search', 'value': input, 'property': property });
 		}

@@ -90,7 +90,7 @@ export const handleShelvesGroup = currentUserShelveId => {
 							setShelveGroupName('tôi');
 							setAllLibrary(myAllLibraryRedux);
 						}
-						dispatch(setCurrentUserInShelves(data));
+						// dispatch(setCurrentUserInShelves(data));
 					}
 				}
 			}

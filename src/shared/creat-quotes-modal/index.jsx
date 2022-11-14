@@ -14,6 +14,7 @@ import { handleAfterCreatQuote } from 'reducers/redux-utils/quote';
 import { NotificationError } from 'helpers/Error';
 import AddAndSearchCategories from 'shared/add-and-search-categories';
 import Input from 'shared/input';
+import bookImage from 'assets/images/default-book.png';
 
 function CreatQuotesModal({ hideCreatQuotesModal }) {
 	const dataRef = useRef('');
@@ -383,6 +384,7 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 												<img
 													className='creat-quotes-modal__book__image'
 													src={item?.frontBookCover || item?.images[0] || bookSample}
+													onError={e => e.target.setAttribute('src', bookImage)}
 													alt='book'
 												/>
 												<div className='creat-quotes-modal__book__name'>{item?.name}</div>

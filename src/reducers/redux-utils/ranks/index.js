@@ -34,10 +34,16 @@ export const getTopUser = createAsyncThunk('ranks/getFilterTopUser', async (para
 
 const ranksSlice = createSlice({
 	name: 'ranks',
-	initialState: {},
-	reducers: {},
+	initialState: {
+		isTopUser: false,
+	},
+	reducers: {
+		handleIsCheckUser: (state, action) => {
+			state.isTopUser = action.payload;
+		},
+	},
 	extraReducers: {},
 });
-
+export const { handleIsCheckUser } = ranksSlice.actions;
 const ranks = ranksSlice.reducer;
 export default ranks;

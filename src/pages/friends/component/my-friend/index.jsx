@@ -7,10 +7,12 @@ import { NotificationError } from 'helpers/Error';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import { generateQuery } from 'helpers/Common';
+import LoadingIndicator from 'shared/loading-indicator';
 
-const MyFriends = ({ activeTabs, inputSearch, filter }) => {
+const MyFriends = ({ activeTabs, inputSearch, filter, handleActiveTabs }) => {
 	const { userInfo } = useSelector(state => state.auth);
 	const [getMyListFriend, setGetMyListFriend] = useState([]);
+	const [isLoading, setIsLoading] = useState(false);
 	const dispatch = useDispatch();
 
 	const isFriend = useSelector(state => state.user.isFriend);
@@ -18,6 +20,7 @@ const MyFriends = ({ activeTabs, inputSearch, filter }) => {
 	useEffect(async () => {
 		const query = generateQuery(0, 10, filter);
 		const userId = userInfo.id;
+		setIsLoading(true);
 		try {
 			if (!_.isEmpty(userInfo)) {
 				if (inputSearch.length > 0) {
@@ -30,6 +33,8 @@ const MyFriends = ({ activeTabs, inputSearch, filter }) => {
 			}
 		} catch (err) {
 			NotificationError(err);
+		} finally {
+			setIsLoading(false);
 		}
 	}, [userInfo, dispatch, filter]);
 
@@ -54,12 +59,26 @@ const MyFriends = ({ activeTabs, inputSearch, filter }) => {
 					</>
 				)}
 			</div>
-
-			<div className='myfriends__layout__container'>
-				{getMyListFriend?.map(item => (
-					<FriendsItem key={item.id} data={item} keyTabs={activeTabs} />
-				))}
-			</div>
+			{isLoading ? (
+				<LoadingIndicator />
+			) : (
+				<>
+					{getMyListFriend.length > 0 ? (
+						<div className='myfriends__layout__container'>
+							{getMyListFriend?.map(item => (
+								<FriendsItem key={item.id} data={item} keyTabs={activeTabs} />
+							))}
+						</div>
+					) : (
+						<div className='myFriend__blank'>
+							<p>Bạn chưa có bạn bè nào, hãy thêm thật nhiều bạn bè nhé</p>
+							<button className='btn btn-primary' onClick={() => handleActiveTabs('suggest')}>
+								Thêm bạn bè
+							</button>
+						</div>
+					)}
+				</>
+			)}
 		</div>
 	);
 };
@@ -67,6 +86,7 @@ MyFriends.propTypes = {
 	activeTabs: PropTypes.string,
 	inputSearch: PropTypes.string,
 	filter: PropTypes.string,
+	handleActiveTabs: PropTypes.func,
 };
 
 export default MyFriends;

@@ -33,7 +33,14 @@ const Friends = () => {
 
 	const contentTabFriends = () => {
 		if (activeTabs === 'friend') {
-			return <MyFriends activeTabs={activeTabs} filter={filter} inputSearch={inputSearch} />;
+			return (
+				<MyFriends
+					activeTabs={activeTabs}
+					filter={filter}
+					inputSearch={inputSearch}
+					handleActiveTabs={handleActiveTabs}
+				/>
+			);
 		} else if (activeTabs === 'follow') {
 			return <MyFollow activeTabs={activeTabs} />;
 		} else if (activeTabs === 'addfriend') {
@@ -112,6 +119,7 @@ const Friends = () => {
 								id='suggest'
 								name='radio-group'
 								defaultChecked={activeTabs === 'suggest'}
+								checked={activeTabs === 'suggest'}
 							/>
 							<label htmlFor='suggest'>Gợi ý</label>
 						</p>
