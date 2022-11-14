@@ -25,6 +25,7 @@ function MainConfirmMyBook({ setErrorLoadPage }) {
 	const { bookInfo, errorFetch } = useFetchBookDetail(bookId);
 	const userInfo = useSelector(state => state.auth.userInfo);
 	const [textLength, setTextLength] = useState(450);
+	const [checked, setChecked] = useState(false);
 
 	useEffect(() => {
 		if (window.innerWidth <= 1024 && window.innerWidth > 800) {
@@ -190,7 +191,11 @@ function MainConfirmMyBook({ setErrorLoadPage }) {
 							housing
 						</div>
 						<div className='main-confirm-my-book__terms__footer'>
-							<CircleCheckIcon />
+							{checked ? (
+								<CircleCheckIcon onClick={() => setChecked(false)} />
+							) : (
+								<div className='checkbox-circle' onClick={() => setChecked(true)}></div>
+							)}
 							<span>Tôi đồng ý với các điều khoản</span>
 						</div>
 					</div>
@@ -248,7 +253,10 @@ function MainConfirmMyBook({ setErrorLoadPage }) {
 									</div>
 								)}
 							</>
-							<button className='main-confirm-my-book__confirm__submit' onClick={submitConfirm}>
+							<button
+								className={`main-confirm-my-book__confirm__submit ${!checked && 'disabled-btn'}`}
+								onClick={submitConfirm}
+							>
 								<CircleCheckIcon />
 								<span>Gửi xác thực</span>
 							</button>

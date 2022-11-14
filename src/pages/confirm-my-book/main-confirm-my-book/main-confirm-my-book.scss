@@ -111,6 +111,16 @@
 	align-items: center;
 	justify-content: flex-end;
 	gap: 16px;
+	svg {
+		cursor: pointer;
+	}
+	.checkbox-circle {
+		width: 24px;
+		height: 24px;
+		border: 2.5px solid;
+		border-radius: 50%;
+		cursor: pointer;
+	}
 }
 
 .main-confirm-my-book__confirm {

@@ -163,7 +163,7 @@ function ChooseTopic() {
 				</div>
 
 				<div
-					className={'choose-topic__button ' + `${addFavorite.length >= 3 ? '' : 'disabled-bnt'}`}
+					className={'choose-topic__button ' + `${addFavorite.length >= 3 ? '' : 'disabled-btn'}`}
 					onClick={() => {
 						updateUser();
 					}}
