@@ -195,8 +195,6 @@ const NotificationModal = ({ setModalNoti, buttonModal }) => {
 							<NotificationStatus
 								key={item.id}
 								item={item}
-								setNotificationsList={setNotificationsList}
-								notificationsList={notificationsList}
 								handleReplyFriendRequest={handleReplyFriendRequest}
 							/>
 						))}
@@ -205,8 +203,6 @@ const NotificationModal = ({ setModalNoti, buttonModal }) => {
 							<NotificationStatus
 								key={item.id}
 								item={item}
-								setNotificationsList={setNotificationsList}
-								notificationsList={notificationsList}
 								handleReplyFriendRequest={handleReplyFriendRequest}
 							/>
 						))}
@@ -216,23 +212,16 @@ const NotificationModal = ({ setModalNoti, buttonModal }) => {
 					</Tab>
 
 					<Tab eventKey='unread' title='Chưa đọc'>
-						{notificationsList.length > 0 ? (
+						{notificationsUnreadList.length > 0 ? (
 							<>
 								<div className='notification-modal__content__title'>Thông báo chưa đọc</div>
-								{notificationsList
-									.slice(0, 6)
-									.map(
-										item =>
-											!item.isRead && (
-												<NotificationStatus
-													key={item.id}
-													item={item}
-													setNotificationsList={setNotificationsList}
-													notificationsList={notificationsList}
-													handleReplyFriendRequest={handleReplyFriendRequest}
-												/>
-											)
-									)}
+								{notificationsUnreadList.slice(0, 6).map(item => (
+									<NotificationStatus
+										key={item.id}
+										item={item}
+										handleReplyFriendRequest={handleReplyFriendRequest}
+									/>
+								))}
 								<Link
 									to={`/notification`}
 									onClick={handleNotification}
@@ -256,8 +245,6 @@ const NotificationModal = ({ setModalNoti, buttonModal }) => {
 									<NotificationStatus
 										key={item.id}
 										item={item}
-										setNotificationsList={setNotificationsList}
-										notificationsList={notificationsList}
 										handleReplyFriendRequest={handleReplyFriendRequest}
 									/>
 								))}

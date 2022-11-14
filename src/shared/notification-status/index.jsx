@@ -9,6 +9,7 @@ import {
 	updateReviewIdFromNoti,
 	handleMentionCommentId,
 	handleCheckIfMentionFromGroup,
+	backgroundToggle,
 } from 'reducers/redux-utils/notification';
 import { useDispatch, useSelector } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
@@ -19,7 +20,7 @@ import LoadingIndicator from 'shared/loading-indicator';
 import logoNonText from 'assets/icons/logoNonText.svg';
 import { replyInviteGroup } from 'reducers/redux-utils/group';
 
-const NotificationStatus = ({ item, handleReplyFriendRequest, inFriendRequestTab }) => {
+const NotificationStatus = ({ item, handleReplyFriendRequest }) => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
@@ -31,9 +32,6 @@ const NotificationStatus = ({ item, handleReplyFriendRequest, inFriendRequestTab
 
 	const appectRequest = async (requestId, option) => {
 		setIsLoading(true);
-		if (inFriendRequestTab) {
-			option = 'inFriendRequestTab';
-		}
 		try {
 			if (option === 'addFriend') {
 				const params = { id: requestId, data: { reply: true } };
@@ -76,6 +74,7 @@ const NotificationStatus = ({ item, handleReplyFriendRequest, inFriendRequestTab
 			};
 			dispatch(readNotification(params)).unwrap();
 		}
+		dispatch(backgroundToggle(true));
 
 		switch (item.verb) {
 			case 'likeMiniPost':
@@ -299,12 +298,10 @@ const NotificationStatus = ({ item, handleReplyFriendRequest, inFriendRequestTab
 NotificationStatus.defaultProps = {
 	item: {},
 	handleReplyFriendRequest: () => {},
-	inFriendRequestTab: false,
 };
 
 NotificationStatus.propTypes = {
 	item: PropTypes.object,
 	handleReplyFriendRequest: PropTypes.func,
-	inFriendRequestTab: PropTypes.bool,
 };
 export default NotificationStatus;
