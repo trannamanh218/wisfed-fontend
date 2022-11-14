@@ -41,7 +41,7 @@ const MyFriends = ({ activeTabs, inputSearch, filter }) => {
 				setListFriendcount(friendList.count);
 				callApiStart.current++;
 
-				if (friendList.rows?.length < callApiPerPage.current) {
+				if (friendList.rows?.length === friendList.count || friendList.rows?.length < callApiPerPage.current) {
 					setHasMore(false);
 				}
 			}
