@@ -1,4 +1,3 @@
-import { NotificationError } from 'helpers/Error';
 import Storage from 'helpers/Storage';
 import PropTypes from 'prop-types';
 import { useEffect, useRef, useState } from 'react';
@@ -69,7 +68,7 @@ const BookSearch = ({ isFetching, value, setIsFetching, searchResultInput, activ
 				setHasMore(false);
 			}
 		} catch (err) {
-			NotificationError(err);
+			return;
 		} finally {
 			setIsFetching(false);
 		}
@@ -90,40 +89,39 @@ const BookSearch = ({ isFetching, value, setIsFetching, searchResultInput, activ
 					Có khoảng {resultInformations.count} kết quả ({resultInformations.time} giây)
 				</div>
 			)}
-			<>
-				{listArrayBooks.length > 0 && activeKeyDefault === 'books' ? (
-					<InfiniteScroll
-						next={handleGetBooksSearch}
-						dataLength={listArrayBooks.length}
-						hasMore={hasMore}
-						loader={<LoadingIndicator />}
-					>
-						{listArrayBooks.map((item, index) => (
-							<>
-								<div key={item.id} className='bookSearch__main'>
-									<AuthorBook data={item} checkStar={true} saveLocalStorage={true} />
-								</div>
-								{index === 9 && (
-									<div className='btn-goTo-upload-book has-background'>
-										<h6>Vui lòng thêm sách nếu bạn không tìm thấy trên hệ thống</h6>
-										<br />
-										<Button onClick={handleDiect}>Thêm sách</Button>
-									</div>
-								)}
-							</>
-						))}
-					</InfiniteScroll>
-				) : (
-					isFetching === false && (
+
+			{!!listArrayBooks.length && activeKeyDefault === 'books' ? (
+				<InfiniteScroll
+					next={handleGetBooksSearch}
+					dataLength={listArrayBooks.length}
+					hasMore={hasMore}
+					loader={<LoadingIndicator />}
+				>
+					{listArrayBooks.map((item, index) => (
 						<>
-							<ResultNotFound />
-							<div className='btn-goTo-upload-book'>
-								<Button onClick={handleDiect}>Tạo sách mới</Button>
+							<div key={item.id} className='bookSearch__main'>
+								<AuthorBook data={item} checkStar={true} saveLocalStorage={true} />
 							</div>
+							{index === 9 && (
+								<div className='btn-goTo-upload-book has-background'>
+									<h6>Vui lòng thêm sách nếu bạn không tìm thấy trên hệ thống</h6>
+									<br />
+									<Button onClick={handleDiect}>Thêm sách</Button>
+								</div>
+							)}
 						</>
-					)
-				)}
-			</>
+					))}
+				</InfiniteScroll>
+			) : (
+				isFetching === false && (
+					<>
+						<ResultNotFound />
+						<div className='btn-goTo-upload-book'>
+							<Button onClick={handleDiect}>Tạo sách mới</Button>
+						</div>
+					</>
+				)
+			)}
 		</div>
 	);
 };

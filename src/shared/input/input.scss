@@ -2,13 +2,14 @@
 
 .input {
 	width: 100%;
-	padding: 0.75em 1em;
+	min-height: 57px;
+	padding: 16px 24px;
 	font-size: 0.94rem;
 	line-height: 1.5;
 	color: $ash;
 	outline: none;
 	border: none;
-	border-radius: 15px;
+	border-radius: 12px;
 	background-color: #f7f7fc;
 	&:focus {
 		outline: none;

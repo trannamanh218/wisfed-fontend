@@ -117,7 +117,7 @@ const BookReference = ({ bookInfo, handleGetBookDetail }) => {
 			<Suspense fallback={<div>Loading...</div>}>
 				<Circle loading={status === STATUS_LOADING} />
 				{/* sách của tác giả */}
-				{!!bookInfo.authors.length > 0 && (
+				{!!bookInfo.authors.length && (
 					<BookSlider
 						className='book-reference__slider'
 						title={`Sách của ${bookInfo.authors[0]?.authorName} `}

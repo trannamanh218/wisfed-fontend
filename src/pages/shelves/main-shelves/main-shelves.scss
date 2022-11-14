@@ -52,7 +52,13 @@
 			border-radius: 24px;
 		}
 
+		.main-shelves__modal__subtitle {
+			line-height: 32px;
+			font-weight: 600;
+		}
+
 		.btn-closeX {
+			cursor: pointer;
 			display: inline-block;
 			margin-left: auto;
 			svg {

@@ -106,12 +106,18 @@
 	.add-and-search-categories__categories-added__item {
 		max-width: 95%;
 	}
+	.input-form-group__label {
+		margin-bottom: 23px;
+		font-size: 16px;
+		// font-weight: 500;
+	}
 }
 
 .form-field-name {
 	label {
 		margin-bottom: 23px;
-		font-size: 18px;
+		font-size: 16px;
+		font-weight: 600;
 	}
 	input {
 		font-size: 15px;
@@ -180,6 +186,7 @@
 	label {
 		margin-top: 39px;
 		margin-bottom: 23px;
+		font-weight: 600;
 	}
 }
 
@@ -246,6 +253,9 @@
 				transform: scale(1.2);
 			}
 		}
+	}
+	&__description {
+		margin-bottom: 5px;
 	}
 }
 
