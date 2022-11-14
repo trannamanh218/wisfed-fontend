@@ -42,7 +42,6 @@ const QuotesTab = ({ currentTab }) => {
 	};
 
 	const [currentOption, setCurrentOption] = useState(filterOptions[0]);
-
 	const [quoteList, setQuoteList] = useState([]);
 	const [hasMore, setHasMore] = useState(true);
 	const { modalOpen, toggleModal } = useModal(false);

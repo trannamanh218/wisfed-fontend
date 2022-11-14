@@ -60,7 +60,7 @@ const SidebarReadingTarget = () => {
 							pageText={false}
 						/>
 					)}
-					{!!allLibrary.custom.length > 0 && <MyShelvesList list={allLibrary.custom} />}
+					{!!allLibrary.custom.length && <MyShelvesList list={allLibrary.custom} />}
 				</>
 			)}
 			<QuotesLinks list={quoteData} title={`Quotes của ${shelveGroupName}`} />

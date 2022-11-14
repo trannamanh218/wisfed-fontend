@@ -31,7 +31,7 @@ const AddAndSearchPublisherUploadBook = lazy(() =>
 export default function MainUpload() {
 	const [publishDate, setPublishDate] = useState(null);
 	const dispatch = useDispatch();
-	const { userInfoJwt } = useSelector(state => state.auth);
+	const { userInfo } = useSelector(state => state.auth);
 
 	const [image, setImage] = useState(null);
 	const [categoryAddedList, setCategoryAddedList] = useState([]);
@@ -416,7 +416,7 @@ export default function MainUpload() {
 						</div>
 					</div>
 
-					{(userInfoJwt?.role === 'tecinus' || userInfoJwt?.role === 'author') && (
+					{(userInfo?.role === 'tecinus' || userInfo?.role === 'author') && (
 						<div className='inp-book inp-series' style={{ position: 'relative' }}>
 							<label>Sê-ri</label>
 							<input
