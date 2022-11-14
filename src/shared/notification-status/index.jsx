@@ -75,7 +75,7 @@ const NotificationStatus = ({ item, handleReplyFriendRequest }) => {
 			dispatch(readNotification(params)).unwrap();
 		}
 		dispatch(backgroundToggle(true));
-
+		console.log(item);
 		switch (item.verb) {
 			case 'likeMiniPost':
 			case 'commentMiniPost':
@@ -114,6 +114,7 @@ const NotificationStatus = ({ item, handleReplyFriendRequest }) => {
 				navigate(`/Group/${item.originId.groupId}`);
 				break;
 			case 'replyComment':
+				// case 'replyCommentMiniPost':
 				dispatch(handleMentionCommentId(item.originId.replyId));
 				navigate(`/detail-feed/mini-post/${item.originId.minipostId}`);
 				break;
@@ -135,7 +136,7 @@ const NotificationStatus = ({ item, handleReplyFriendRequest }) => {
 			case 'mention':
 				switch (item.originId.type) {
 					case 'commentQuote':
-						dispatch(handleMentionCommentId(item.originId.commentQuoteId));
+						dispatch(handleMentionCommentId(item.originId.replyId));
 						navigate(`/quotes/detail/${item.originId.quoteId}`);
 						break;
 					case 'groupPost':
@@ -143,7 +144,7 @@ const NotificationStatus = ({ item, handleReplyFriendRequest }) => {
 						break;
 					case 'mentionMiniPost':
 					case 'commentMiniPost':
-						dispatch(handleMentionCommentId(item.originId.commentMiniPostId));
+						dispatch(handleMentionCommentId(item.originId.replyId));
 						navigate(`/detail-feed/mini-post/${item.originId.minipostId}`);
 						break;
 					case 'commentReview':
@@ -171,6 +172,10 @@ const NotificationStatus = ({ item, handleReplyFriendRequest }) => {
 				dispatch(updateReviewIdFromNoti(item.originId.reviewId));
 				navigate(`/review/${item.originId.bookId}/${userInfo.id}`);
 				break;
+			// case 'replyCommentReview':
+			// 	dispatch(handleMentionCommentId(paramItem.originId.replyId));
+			// 	navigate(`/review/${paramItem.originId.bookId}/${paramUserInfo.id}`);
+			// 	break;
 			case 'likeCommentMiniPost':
 			case 'sharePost':
 				navigate(`/detail-feed/mini-post/${item.originId.minipostId}`);
