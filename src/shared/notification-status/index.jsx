@@ -172,6 +172,9 @@ const NotificationStatus = ({ item, handleReplyFriendRequest }) => {
 			case 'acceptedGroup':
 				navigate(`/group/${item.originId.groupId}`);
 				break;
+			case 'rejectGroup':
+				navigate(`/group/${item.originId.groupId}`);
+				break;
 			case 'likeReview':
 			case 'commentReview':
 				dispatch(updateReviewIdFromNoti(item.originId.reviewId));
