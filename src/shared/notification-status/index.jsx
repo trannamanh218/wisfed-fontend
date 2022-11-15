@@ -76,7 +76,7 @@ const NotificationStatus = ({ item, handleReplyFriendRequest }) => {
 			dispatch(readNotification(params)).unwrap();
 		}
 		dispatch(backgroundToggle(true));
-		console.log(item);
+		// console.log(item);
 		switch (item.verb) {
 			case 'likeMiniPost':
 			case 'commentMiniPost':

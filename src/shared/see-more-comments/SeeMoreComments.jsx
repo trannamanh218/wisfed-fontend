@@ -104,6 +104,19 @@ const SeeMoreComments = ({
 				cloneObj.usersComments = [];
 			}
 		}
+		// Đảo ngược cả các comment reply nữa
+		for (let i = 0; i < paramRows.length; i++) {
+			if (paramRows[i].reply.length > 0) {
+				const commentsChildReverse = [...paramRows[i].reply];
+				commentsChildReverse.reverse();
+
+				const newCloneObj = { ...paramRows[i] };
+				newCloneObj.reply = commentsChildReverse;
+
+				paramRows[i] = newCloneObj;
+			}
+		}
+
 		paramRows.forEach(item => cloneObj.usersComments.unshift(item));
 		setData(cloneObj);
 		callApiStart.current += callApiPerPage.current;
