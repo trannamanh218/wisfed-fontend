@@ -85,13 +85,16 @@ const Header = () => {
 			} else {
 				dispatch(handleUpdateNewNotification(userInfo.isNewNotification));
 			}
-			// bắt sự kiện khi có thông báo getStream trả về theo thời gian thực
-			const client = stream.connect('wmtg4f3vuuyh', null, '1196914');
-			const notificationFeed = client.feed('notification', userInfo.id, userInfo.userToken);
-			const callback = () => {
-				dispatch(handleUpdateNewNotification(true));
-			};
-			notificationFeed.subscribe(callback);
+
+			if (userInfo.userToken) {
+				// bắt sự kiện khi có thông báo getStream trả về theo thời gian thực
+				const client = stream.connect('wmtg4f3vuuyh', null, '1196914');
+				const notificationFeed = client.feed('notification', userInfo.id, userInfo.userToken);
+				const callback = () => {
+					dispatch(handleUpdateNewNotification(true));
+				};
+				notificationFeed.subscribe(callback);
+			}
 		}
 	}, [userInfo]);
 
