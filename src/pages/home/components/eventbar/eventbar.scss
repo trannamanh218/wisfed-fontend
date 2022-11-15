@@ -9,13 +9,16 @@
 		transform: scale(2);
 		width: 70%;
 		margin: auto;
-		display: -webkit-box;
-		-webkit-box-orient: vertical;
-		-webkit-line-clamp: 2;
-		max-height: 3rem;
-		overflow: hidden;
-		text-overflow: ellipsis;
-		word-break: break-all;
+		p {
+			line-height: 11px;
+			display: -webkit-box;
+			-webkit-box-orient: vertical;
+			-webkit-line-clamp: 2;
+			max-height: 4rem;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			word-break: break-all;
+		}
 	}
 }
 
@@ -40,7 +43,8 @@
 	.top__user__ranks {
 		transform: scale(0.5);
 		position: absolute;
-		left: 23px;
+		left: 24px;
+		top: 10px;
 		&__one {
 			position: relative;
 			bottom: 40px;
