@@ -215,44 +215,41 @@ function MainConfirmMyBook({ setErrorLoadPage }) {
 								<Attach />
 								<span>Tải ảnh lên</span>
 							</button>
-							<>
-								{images.length > 0 && (
-									<div className='main-confirm-my-book__confirm__images-uploaded'>
-										{images.map((image, index) => {
-											if (index < 2) {
-												return (
-													<div
-														key={index}
-														className='main-confirm-my-book__confirm__image-item'
-													>
-														{status ? (
-															<img src={image} alt='image' />
-														) : (
-															<img src={URL.createObjectURL(image)} alt='image' />
-														)}
-													</div>
-												);
-											}
-										})}
-										{images.length >= 3 && (
-											<div className='main-confirm-my-book__confirm__image-item'>
-												{status ? (
-													<img src={images[2]} alt='image' />
-												) : (
-													<img src={URL.createObjectURL(images[2])} alt='image' />
-												)}
-												<div
-													className={classNames('main-confirm-my-book__confirm__image-over', {
-														'show': images.length > 3,
-													})}
-												>
-													+{images.length - 3}
+
+							{images.length > 0 && (
+								<div className='main-confirm-my-book__confirm__images-uploaded'>
+									{images.map((image, index) => {
+										if (index < 2) {
+											return (
+												<div key={index} className='main-confirm-my-book__confirm__image-item'>
+													{status ? (
+														<img src={image} alt='image' />
+													) : (
+														<img src={URL.createObjectURL(image)} alt='image' />
+													)}
 												</div>
+											);
+										}
+									})}
+									{images.length >= 3 && (
+										<div className='main-confirm-my-book__confirm__image-item'>
+											{status ? (
+												<img src={images[2]} alt='image' />
+											) : (
+												<img src={URL.createObjectURL(images[2])} alt='image' />
+											)}
+											<div
+												className={classNames('main-confirm-my-book__confirm__image-over', {
+													'show': images.length > 3,
+												})}
+											>
+												+{images.length - 3}
 											</div>
-										)}
-									</div>
-								)}
-							</>
+										</div>
+									)}
+								</div>
+							)}
+
 							<button
 								className={`main-confirm-my-book__confirm__submit ${
 									(!checked || !images.length) && 'disabled-btn'

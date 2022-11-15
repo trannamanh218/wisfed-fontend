@@ -11,6 +11,7 @@ import {
 	handleCheckIfMentionFromGroup,
 	backgroundToggle,
 } from 'reducers/redux-utils/notification';
+import { handleIsCheckUser } from 'reducers/redux-utils/ranks';
 import { useDispatch, useSelector } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
 import { useNavigate } from 'react-router-dom';
@@ -75,7 +76,7 @@ const NotificationStatus = ({ item, handleReplyFriendRequest }) => {
 			dispatch(readNotification(params)).unwrap();
 		}
 		dispatch(backgroundToggle(true));
-		console.log(item);
+
 		switch (item.verb) {
 			case 'likeMiniPost':
 			case 'commentMiniPost':
@@ -99,6 +100,7 @@ const NotificationStatus = ({ item, handleReplyFriendRequest }) => {
 				navigate(`/profile/${item.createdBy?.id || item.originId.userId}`);
 				break;
 			case 'topUserRanking':
+				dispatch(handleIsCheckUser(true));
 				navigate(`/top100`);
 				break;
 			case 'topBookRanking':
