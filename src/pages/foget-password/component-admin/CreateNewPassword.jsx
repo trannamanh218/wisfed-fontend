@@ -204,7 +204,7 @@ function CreateNewPasswordAdminForm() {
 						className={
 							isShowBtn
 								? 'forgetPassword__form__btn-otp'
-								: 'forgetPassword__form__btn-otp disabled-bnt-forgot'
+								: 'forgetPassword__form__btn-otp disabled-btn-forgot'
 						}
 					>
 						Lấy lại mật khẩu

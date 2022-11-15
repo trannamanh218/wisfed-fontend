@@ -11,6 +11,7 @@ import {
 	handleCheckIfMentionFromGroup,
 	backgroundToggle,
 } from 'reducers/redux-utils/notification';
+import { handleIsCheckUser } from 'reducers/redux-utils/ranks';
 import { useDispatch, useSelector } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
 import { useNavigate } from 'react-router-dom';
@@ -99,6 +100,7 @@ const NotificationStatus = ({ item, handleReplyFriendRequest }) => {
 				navigate(`/profile/${item.createdBy?.id || item.originId.userId}`);
 				break;
 			case 'topUserRanking':
+				dispatch(handleIsCheckUser(true));
 				navigate(`/top100`);
 				break;
 			case 'topBookRanking':
@@ -114,6 +116,7 @@ const NotificationStatus = ({ item, handleReplyFriendRequest }) => {
 				navigate(`/Group/${item.originId.groupId}`);
 				break;
 			case 'replyComment':
+				// case 'replyCommentMiniPost':
 				dispatch(handleMentionCommentId(item.originId.replyId));
 				navigate(`/detail-feed/mini-post/${item.originId.minipostId}`);
 				break;
@@ -135,7 +138,7 @@ const NotificationStatus = ({ item, handleReplyFriendRequest }) => {
 			case 'mention':
 				switch (item.originId.type) {
 					case 'commentQuote':
-						dispatch(handleMentionCommentId(item.originId.commentQuoteId));
+						dispatch(handleMentionCommentId(item.originId.replyId));
 						navigate(`/quotes/detail/${item.originId.quoteId}`);
 						break;
 					case 'groupPost':
@@ -143,7 +146,7 @@ const NotificationStatus = ({ item, handleReplyFriendRequest }) => {
 						break;
 					case 'mentionMiniPost':
 					case 'commentMiniPost':
-						dispatch(handleMentionCommentId(item.originId.commentMiniPostId));
+						dispatch(handleMentionCommentId(item.originId.replyId));
 						navigate(`/detail-feed/mini-post/${item.originId.minipostId}`);
 						break;
 					case 'commentReview':
@@ -171,6 +174,10 @@ const NotificationStatus = ({ item, handleReplyFriendRequest }) => {
 				dispatch(updateReviewIdFromNoti(item.originId.reviewId));
 				navigate(`/review/${item.originId.bookId}/${userInfo.id}`);
 				break;
+			// case 'replyCommentReview':
+			// 	dispatch(handleMentionCommentId(paramItem.originId.replyId));
+			// 	navigate(`/review/${paramItem.originId.bookId}/${paramUserInfo.id}`);
+			// 	break;
 			case 'likeCommentMiniPost':
 			case 'sharePost':
 				navigate(`/detail-feed/mini-post/${item.originId.minipostId}`);

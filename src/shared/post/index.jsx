@@ -655,7 +655,7 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 														) : (
 															<div
 																className='reply-see-more'
-																onClick={onClickSeeMoreReply}
+																onClick={() => onClickSeeMoreReply(comment.id)}
 															>
 																Xem phản hồi
 															</div>
