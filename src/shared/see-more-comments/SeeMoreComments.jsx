@@ -86,7 +86,7 @@ const SeeMoreComments = ({
 					res = await dispatch(getListCommentsReview(sentData)).unwrap();
 				}
 			} catch (err) {
-				NotificationError(err);
+				return;
 			} finally {
 				if (res?.count) {
 					setFatherCommentsCount(res.count);
