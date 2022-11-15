@@ -131,12 +131,22 @@ const FriendsItem = ({
 	};
 
 	const handleReplyFriendReq = () => {
-		const params = { id: data.id, data: { reply: true } };
-		try {
-			setToggleAcceptButton(false);
-			dispatch(replyFriendRequest(params)).unwrap();
-		} catch (err) {
-			NotificationError(err);
+		if (keyTabs === 'addfriend' || invitation) {
+			const params = { id: data.id, data: { reply: true } };
+			try {
+				setToggleAcceptButton(false);
+				dispatch(replyFriendRequest(params)).unwrap();
+			} catch (err) {
+				NotificationError(err);
+			}
+		} else {
+			const params = { id: data.friendRequest.id, data: { reply: true } };
+			try {
+				setToggleAcceptButton(false);
+				dispatch(replyFriendRequest(params)).unwrap();
+			} catch (err) {
+				NotificationError(err);
+			}
 		}
 	};
 
@@ -204,6 +214,8 @@ const FriendsItem = ({
 		} else if (keyTabs === 'suggest' || suggestions || recommend) {
 			if (data.relation === 'unknown' || data.relation === undefined) {
 				return togglePendingFriend ? buttonAddFriend() : buttonPending();
+			} else if (data.friendRequest.type === 'requestToMe') {
+				return buttonAcceptfriend();
 			} else {
 				return buttonPending();
 			}

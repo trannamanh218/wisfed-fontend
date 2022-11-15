@@ -96,7 +96,7 @@ const NotificationModal = ({ setModalNoti, buttonModal }) => {
 		try {
 			const params = {
 				start: 0,
-				limit: 5,
+				limit: 6,
 			};
 			const res = await dispatch(getNotification(params)).unwrap();
 			const newArr = res.filter(item => !item.isCheck);
@@ -112,7 +112,7 @@ const NotificationModal = ({ setModalNoti, buttonModal }) => {
 		try {
 			const params = {
 				start: 0,
-				limit: 5,
+				limit: 6,
 			};
 			const res = await dispatch(getListNotificationUnRead(params)).unwrap();
 			const newArr = res.filter(item => !item.isCheck);

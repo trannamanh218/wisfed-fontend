@@ -31,7 +31,7 @@ export default function SidebarRank() {
 	};
 
 	const handleNumber = number => {
-		return <div className='number__books'>{top3followedUsersByWeek[number].numberFollowing}</div>;
+		return <div className='number__books'>{top3followedUsersByWeek[number].bookRead}</div>;
 	};
 
 	const handleDirect = () => {
