@@ -14,13 +14,16 @@ import LoadingTimeLine from 'shared/loading-timeline';
 import BackButton from 'shared/back-button';
 
 const Notification = () => {
+	const keyTabsActive = useSelector(state => state.notificationReducer.activeKeyTabs);
+	const isNewNotificationByRealtime = useSelector(state => state.notificationReducer.isNewNotificationByRealtime);
+
 	const [notificationsList, setNotificationsList] = useState([]);
 	const [listAddFriendReqToMe, setListAddFriendReqToMe] = useState([]);
 	const [friendReqToMeCount, setFriendReqToMeCount] = useState(0);
 	const [isLoading, setIsLoading] = useState(true);
 	const [hasMore, setHasMore] = useState(true);
 	const [isLoadingTimeline, setIsLoadingTimeline] = useState(false);
-	const [currentTab, setCurrentTab] = useState('all');
+	const [currentTab, setCurrentTab] = useState(keyTabsActive);
 	const [hasMoreFriendReq, setHasMoreFriendReq] = useState(true);
 
 	const callApiStart = useRef(10);
@@ -30,16 +33,16 @@ const Notification = () => {
 	const notiArrTemp = useRef(notificationsList);
 	const friendRequestArrTemp = useRef(listAddFriendReqToMe);
 
-	const keyTabsActive = useSelector(state => state.notificationReducer.activeKeyTabs);
-	const isNewNotificationByRealtime = useSelector(state => state.notificationReducer.isNewNotificationByRealtime);
-
 	const dispatch = useDispatch();
 
 	useEffect(() => {
+		setCurrentTab(keyTabsActive);
 		window.history.scrollRestoration = 'manual';
 		getMyNotificationFirstTime();
 		getListRequestFriendToMe();
 	}, []);
+
+	console.log(currentTab, '-', keyTabsActive);
 
 	useEffect(() => {
 		if (isNewNotificationByRealtime) {
@@ -217,7 +220,9 @@ const Notification = () => {
 							{currentTab === 'unread' && (
 								<>
 									<div className='notification__all__main__title'>Thông báo chưa đọc</div>
-									{!isLoading && (
+									{isLoading ? (
+										<LoadingTimeLine numberItems={5} isTwoLines={false} />
+									) : (
 										<InfiniteScroll
 											dataLength={notificationsList.length}
 											next={getMyNotification}
