@@ -53,6 +53,49 @@ const SeeMoreComments = ({
 				}
 			}
 		}
+
+		// Lấy giá trị cho fatherCommentsCount
+		const getFetchData = async () => {
+			let sentData = {};
+			let res = {};
+
+			try {
+				if (postType === 'quote') {
+					sentData = {
+						quoteId: data.id,
+						params: params,
+					};
+					res = await dispatch(getQuoteComments(sentData)).unwrap();
+				} else if (postType === 'post') {
+					sentData = {
+						postId: data.minipostId || data.id,
+						params: params,
+					};
+					res = await dispatch(getMiniPostComments(sentData)).unwrap();
+				} else if (postType === 'group') {
+					sentData = {
+						postId: data.id,
+						params: params,
+					};
+					res = await dispatch(getGroupPostComments(sentData)).unwrap();
+				} else if (postType === 'review') {
+					sentData = {
+						reviewId: data.id,
+						params: params,
+					};
+					res = await dispatch(getListCommentsReview(sentData)).unwrap();
+				}
+			} catch (err) {
+				NotificationError(err);
+			} finally {
+				if (res?.count) {
+					setFatherCommentsCount(res.count);
+				}
+			}
+		};
+		if (isInDetail) {
+			getFetchData();
+		}
 	}, [data]);
 
 	const onClickSeeMore = async () => {
@@ -88,7 +131,6 @@ const SeeMoreComments = ({
 		} catch (err) {
 			NotificationError(err);
 		} finally {
-			setFatherCommentsCount(res.count);
 			if (res.rows?.length > 0) {
 				handleAddMoreComments(data, res.rows);
 			}
