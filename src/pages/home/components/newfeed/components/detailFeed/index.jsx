@@ -48,25 +48,28 @@ const DetailFeed = () => {
 				<NotFound />
 			) : (
 				<NormalContainer>
-					<Circle loading={isLoading} />
-					<div className='detail_feed_container'>
-						{type === 'mini-post' ? (
-							<Post
-								postInformations={detailFeed}
-								type={POST_TYPE}
-								reduxMentionCommentId={reduxMentionCommentId}
-								isInDetail={true}
-							/>
-						) : (
-							<Post
-								postInformations={detailFeed}
-								type={GROUP_TYPE}
-								reduxMentionCommentId={reduxMentionCommentId}
-								reduxCheckIfMentionCmtFromGroup={reduxCheckIfMentionCmtFromGroup}
-								isInDetail={true}
-							/>
-						)}
-					</div>
+					{isLoading ? (
+						<Circle loading={true} />
+					) : (
+						<div className='detail_feed_container'>
+							{type === 'mini-post' ? (
+								<Post
+									postInformations={detailFeed}
+									type={POST_TYPE}
+									reduxMentionCommentId={reduxMentionCommentId}
+									isInDetail={true}
+								/>
+							) : (
+								<Post
+									postInformations={detailFeed}
+									type={GROUP_TYPE}
+									reduxMentionCommentId={reduxMentionCommentId}
+									reduxCheckIfMentionCmtFromGroup={reduxCheckIfMentionCmtFromGroup}
+									isInDetail={true}
+								/>
+							)}
+						</div>
+					)}
 				</NormalContainer>
 			)}
 		</>
