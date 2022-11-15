@@ -221,8 +221,7 @@ $wallpaper-height: 350px;
 			}
 
 			&--custom {
-				width: 100%;
-				display: block;
+				width: 87%;
 			}
 
 			&-wrapper {
@@ -240,10 +239,6 @@ $wallpaper-height: 350px;
 						}
 					}
 				}
-			}
-
-			&-wrapper--custom {
-				display: block;
 			}
 
 			&-label {
@@ -354,6 +349,10 @@ $wallpaper-height: 350px;
 			.add-and-search-categories__categories-added__item {
 				font-size: 12px;
 			}
+
+			.select-box__btn .select-box__value {
+				font-size: 15px;
+			}
 		}
 
 		.btn-icon {
@@ -386,9 +385,6 @@ $wallpaper-height: 350px;
 		}
 
 		&__fixing-width {
-			.form-field {
-				width: 87%;
-			}
 			.editStatus {
 				.add-and-search-categories__main-content {
 					border: 1px solid #d9dbe9;
