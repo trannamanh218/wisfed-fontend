@@ -9,6 +9,7 @@ import { getListCommentsReview } from 'reducers/redux-utils/book';
 import { useState } from 'react';
 import LoadingIndicator from 'shared/loading-indicator';
 import { useEffect } from 'react';
+import _ from 'lodash';
 
 const SeeMoreComments = ({
 	data = {},
@@ -86,14 +87,14 @@ const SeeMoreComments = ({
 					res = await dispatch(getListCommentsReview(sentData)).unwrap();
 				}
 			} catch (err) {
-				return;
+				NotificationError(err);
 			} finally {
 				if (res?.count) {
 					setFatherCommentsCount(res.count);
 				}
 			}
 		};
-		if (isInDetail) {
+		if (isInDetail && !_.isEmpty(data)) {
 			getFetchData();
 		}
 	}, [data]);
