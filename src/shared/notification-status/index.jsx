@@ -76,7 +76,7 @@ const NotificationStatus = ({ item, handleReplyFriendRequest }) => {
 			dispatch(readNotification(params)).unwrap();
 		}
 		dispatch(backgroundToggle(true));
-
+		console.log(item);
 		switch (item.verb) {
 			case 'likeMiniPost':
 			case 'commentMiniPost':
@@ -167,6 +167,9 @@ const NotificationStatus = ({ item, handleReplyFriendRequest }) => {
 				navigate(`/review/${item.originId.bookId}/${userInfo.id}`);
 				break;
 			case 'requestGroup':
+				navigate(`/group/${item.originId.groupId}`);
+				break;
+			case 'acceptedGroup':
 				navigate(`/group/${item.originId.groupId}`);
 				break;
 			case 'likeReview':
