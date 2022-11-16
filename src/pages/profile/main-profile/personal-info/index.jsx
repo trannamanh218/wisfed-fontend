@@ -36,6 +36,10 @@ const PersonalInfo = ({ currentUserInfo, setCurrentTab }) => {
 	const navigate = useNavigate();
 
 	useEffect(() => {
+		window.scroll(0, 0);
+	}, []);
+
+	useEffect(() => {
 		setModalOpen(false);
 	}, [userInfo]);
 
