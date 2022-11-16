@@ -177,13 +177,10 @@ const NotificationStatus = ({ item, handleReplyFriendRequest }) => {
 				break;
 			case 'likeReview':
 			case 'commentReview':
+			case 'replyCommentReview':
 				dispatch(updateReviewIdFromNoti(item.originId.reviewId));
 				navigate(`/review/${item.originId.bookId}/${userInfo.id}`);
 				break;
-			// case 'replyCommentReview':
-			// 	dispatch(handleMentionCommentId(paramItem.originId.replyId));
-			// 	navigate(`/review/${paramItem.originId.bookId}/${paramUserInfo.id}`);
-			// 	break;
 			case 'likeCommentMiniPost':
 			case 'sharePost':
 				navigate(`/detail-feed/mini-post/${item.originId.minipostId}`);

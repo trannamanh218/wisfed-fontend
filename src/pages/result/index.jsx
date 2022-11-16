@@ -36,7 +36,8 @@ const Result = () => {
 
 	const handleDirectParam = () => {
 		if (searchResultInput) {
-			dispatch(handleUpdateValueInputSearchRedux(searchResultInput));
+			dispatch(handleUpdateValueInputSearchRedux(searchResultInput.trim()));
+
 			// Kiểm tra xem có kí tự hashtag # không
 			if (hashtagRegex.test(searchResultInput)) {
 				const formatedInpSearchValue = searchResultInput
