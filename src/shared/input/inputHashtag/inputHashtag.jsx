@@ -19,7 +19,7 @@ const InputHashtag = ({ listHashtags, setListHashtags, setLastTag, label, isRequ
 	const handleChangeHashtag = e => {
 		const value = e.target.value;
 		setInputHashtag(value);
-		if (!hashtagRegex.test(value) && value.trim().length > 1) {
+		if (!hashtagRegex.test(value) && value.trim().length) {
 			setShow(true);
 		} else {
 			setShow(false);

@@ -49,7 +49,7 @@ const MyFriends = ({ activeTabs, inputSearch, filter, handleActiveTabs }) => {
 		}
 	};
 
-	useEffect(async () => {
+	useEffect(() => {
 		getListFriendData();
 	}, [userInfo, filter, toggleCallAPI]);
 
@@ -62,22 +62,23 @@ const MyFriends = ({ activeTabs, inputSearch, filter, handleActiveTabs }) => {
 	}, [getMyListFriend, isFriend]);
 
 	return (
-		<div className='myfriends__container'>
-			<div className='myfriends__title'>
-				({listFriendCount}) Bạn bè của{' '}
-				{userInfo.fullName ? (
-					userInfo.fullName
-				) : (
-					<>
-						{userInfo.firstName}
-						<span>{userInfo.lastName}</span>
-					</>
-				)}
-			</div>
+		<>
 			{isLoading ? (
 				<LoadingIndicator />
 			) : (
-				<>
+				<div className='myfriends__container'>
+					<div className='myfriends__title'>
+						({listFriendCount}) Bạn bè của{' '}
+						{userInfo.fullName ? (
+							userInfo.fullName
+						) : (
+							<>
+								{userInfo.firstName}
+								<span>{userInfo.lastName}</span>
+							</>
+						)}
+					</div>
+
 					{getMyListFriend?.length > 0 ? (
 						<InfiniteScroll
 							dataLength={getMyListFriend.length}
@@ -101,9 +102,9 @@ const MyFriends = ({ activeTabs, inputSearch, filter, handleActiveTabs }) => {
 							</button>
 						</div>
 					)}
-				</>
+				</div>
 			)}
-		</div>
+		</>
 	);
 };
 MyFriends.propTypes = {

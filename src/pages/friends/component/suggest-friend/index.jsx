@@ -6,6 +6,7 @@ import { changeToggleFollows } from 'reducers/redux-utils/friends';
 import { getTopUser } from 'reducers/redux-utils/ranks';
 import { getRecommendFriend } from 'reducers/redux-utils/user';
 import FriendsItem from 'shared/friends';
+import PropTypes from 'prop-types';
 
 const SuggestFriend = ({ activeTabs }) => {
 	const [list, setList] = useState([]);
@@ -136,6 +137,10 @@ const SuggestFriend = ({ activeTabs }) => {
 			</div>
 		</div>
 	);
+};
+
+SuggestFriend.propTypes = {
+	activeTabs: PropTypes.string,
 };
 
 export default SuggestFriend;
