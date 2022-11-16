@@ -36,11 +36,11 @@ const Result = () => {
 
 	const handleDirectParam = () => {
 		if (searchResultInput) {
-			dispatch(handleUpdateValueInputSearchRedux(searchResultInput.trim()));
+			const trimmedValue = searchResultInput.trim();
 
 			// Kiểm tra xem có kí tự hashtag # không
-			if (hashtagRegex.test(searchResultInput)) {
-				const formatedInpSearchValue = searchResultInput
+			if (hashtagRegex.test(trimmedValue)) {
+				const formatedInpSearchValue = trimmedValue
 					.normalize('NFD')
 					.replace(/[\u0300-\u036f]/g, '')
 					.replace(/đ/g, 'd')
@@ -48,7 +48,7 @@ const Result = () => {
 					.replace(/#/g, '');
 				navigate(`/hashtag/${formatedInpSearchValue}`);
 			} else {
-				navigate(`/result/q=${searchResultInput}`);
+				navigate(`/result/q=${trimmedValue}`);
 			}
 		}
 	};

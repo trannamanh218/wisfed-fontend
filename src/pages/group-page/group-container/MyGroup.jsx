@@ -94,34 +94,34 @@ const ListMyGroupComp = () => {
 						<div className='list-group-container--none'>
 							{adminGroup.map((item, index) => {
 								return (
-									<Link key={index} to={`/group/${item.id}`}>
-										<div className='item-group'>
+									<div className='item-group' key={index}>
+										<Link key={index} to={`/group/${item.id}`}>
 											<img
 												src={item.avatar}
 												onError={e => e.target.setAttribute('src', defaultAvatar)}
 												alt=''
 											/>
-											<div className='item-group__text'>
-												<div className='item-group__name'>
-													<span>{item.name}</span>
-												</div>
-												<div className='item-group__description'>
-													<span>
-														{item?.countMember < 10
-															? `0${item.countMember}`
-															: item.countMember}{' '}
-														thành viên
-													</span>
-												</div>
-												<div className='item-group__count-post'>
-													<span>{item.countPost} bài viết/ngày</span>
-												</div>
-												<div className='item-group-btn'>
+										</Link>
+										<div className='item-group__text'>
+											<div className='item-group__name'>
+												<span>{item.name}</span>
+											</div>
+											<div className='item-group__description'>
+												<span>
+													{item?.countMember < 10 ? `0${item.countMember}` : item.countMember}{' '}
+													thành viên
+												</span>
+											</div>
+											<div className='item-group__count-post'>
+												<span>{item.countPost} bài viết/ngày</span>
+											</div>
+											<div className='item-group-btn'>
+												<Link key={index} to={`/group/${item.id}`}>
 													<button>Truy cập vào nhóm </button>
-												</div>
+												</Link>
 											</div>
 										</div>
-									</Link>
+									</div>
 								);
 							})}
 						</div>
@@ -142,34 +142,36 @@ const ListMyGroupComp = () => {
 							<div className='list-group-container--none'>
 								{myGroup.map((item, index) => {
 									return (
-										<Link key={index} to={`/group/${item.id}`}>
-											<div className='item-group'>
+										<div className='item-group' key={index}>
+											<Link key={index} to={`/group/${item.id}`}>
 												<img
 													src={item.avatar}
 													onError={e => e.target.setAttribute('src', defaultAvatar)}
 													alt=''
 												/>
-												<div className='item-group__text'>
-													<div className='item-group__name'>
-														<span>{item.name}</span>
-													</div>
-													<div className='item-group__description'>
-														<span>
-															{item?.countMember < 10
-																? `0${item.countMember}`
-																: item.countMember}{' '}
-															thành viên
-														</span>
-													</div>
-													<div className='item-group__count-post'>
-														<span>{item.countPost} bài viết/ngày</span>
-													</div>
-													<div className='item-group-btn'>
+											</Link>
+											<div className='item-group__text'>
+												<div className='item-group__name'>
+													<span>{item.name}</span>
+												</div>
+												<div className='item-group__description'>
+													<span>
+														{item?.countMember < 10
+															? `0${item.countMember}`
+															: item.countMember}{' '}
+														thành viên
+													</span>
+												</div>
+												<div className='item-group__count-post'>
+													<span>{item.countPost} bài viết/ngày</span>
+												</div>
+												<div className='item-group-btn'>
+													<Link key={index} to={`/group/${item.id}`}>
 														<button>Truy cập vào nhóm </button>
-													</div>
+													</Link>
 												</div>
 											</div>
-										</Link>
+										</div>
 									);
 								})}
 							</div>

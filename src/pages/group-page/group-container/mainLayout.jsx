@@ -161,15 +161,13 @@ const MainLayout = ({ listMyGroup, listAdminMyGroup }) => {
 									>
 										{list.map((item, index) => {
 											return (
-												<div
-													key={index}
-													className='item-group'
-													onClick={() => handleUserLogin(item)}
-												>
+												<div key={index} className='item-group'>
 													<img
 														src={item.avatar}
 														onError={e => e.target.setAttribute('src', defaultAvatar)}
 														alt=''
+														onClick={() => handleUserLogin(item)}
+														style={{ cursor: 'pointer' }}
 													/>
 													<div className='item-group__text'>
 														<div className='item-group__name'>
@@ -187,7 +185,9 @@ const MainLayout = ({ listMyGroup, listAdminMyGroup }) => {
 															<span>{item.countPost} bài viết/ngày</span>
 														</div>
 														<div className='item-group-btn'>
-															<button>Truy cập vào nhóm </button>
+															<button onClick={() => handleUserLogin(item)}>
+																Truy cập vào nhóm
+															</button>
 														</div>
 													</div>
 												</div>
