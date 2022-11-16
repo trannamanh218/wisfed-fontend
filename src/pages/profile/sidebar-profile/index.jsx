@@ -4,7 +4,7 @@ import ReadingBook from 'shared/reading-book';
 import './sidebar-profile.scss';
 import classNames from 'classnames';
 import caretIcon from 'assets/images/caret.png';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 import { useFetchAuthorBooks } from 'api/book.hooks';
 import { useSelector } from 'react-redux';
@@ -15,7 +15,6 @@ import { DEFAULT_TOGGLE_ROWS } from 'constants/index';
 import { useDispatch } from 'react-redux';
 import { getAllLibraryList } from 'reducers/redux-utils/library';
 import { NotificationError } from 'helpers/Error';
-import { useRef } from 'react';
 import { checkUserLogin } from 'reducers/redux-utils/auth';
 import Storage from 'helpers/Storage';
 
@@ -26,11 +25,11 @@ const SidebarProfile = ({ currentUserInfo, handleViewBookDetail }) => {
 	const [isExpand, setIsExpand] = useState(false);
 	const [rows, setRows] = useState(DEFAULT_TOGGLE_ROWS);
 	const [booksSliderTitle, setBooksSliderTitle] = useState('');
+	const [libraryShown, setLibraryShown] = useState([]);
 
 	const { userInfo } = useSelector(state => state.auth);
 	const myAllLibraryRedux = useSelector(state => state.library.myAllLibrary);
 
-	const library = useRef([]);
 	const dispatch = useDispatch();
 
 	const navigate = useNavigate();
@@ -64,9 +63,9 @@ const SidebarProfile = ({ currentUserInfo, handleViewBookDetail }) => {
 				};
 			}
 			const data = await dispatch(getAllLibraryList(body)).unwrap();
-			library.current = data;
+			setLibraryShown(data.custom);
 
-			const reading = library.current.default.filter(item => item.defaultType === 'reading');
+			const reading = data.default.filter(item => item.defaultType === 'reading');
 			if (reading.length > 0 && reading[0].books.length) {
 				const books = reading[0].books;
 				setBookReading(books[0].book);
@@ -79,6 +78,7 @@ const SidebarProfile = ({ currentUserInfo, handleViewBookDetail }) => {
 	useEffect(async () => {
 		if (userInfo.id === userId) {
 			if (!_.isEmpty(myAllLibraryRedux)) {
+				setLibraryShown(myAllLibraryRedux.custom);
 				const readingLibrary = myAllLibraryRedux.default.filter(item => item.defaultType === 'reading');
 				if (readingLibrary.length > 0 && readingLibrary[0].books.length) {
 					const books = readingLibrary[0].books;
@@ -91,22 +91,13 @@ const SidebarProfile = ({ currentUserInfo, handleViewBookDetail }) => {
 	}, [myAllLibraryRedux, userId]);
 
 	const handleViewMore = () => {
-		const length = myAllLibraryRedux?.custom?.length;
-		const lengthNew = library.current?.custom?.length;
+		const length = libraryShown.length;
 		let maxLength;
 
-		if (userInfo.id === userId) {
-			if (length <= 20) {
-				maxLength = length;
-			} else {
-				maxLength = 20;
-			}
+		if (length <= 20) {
+			maxLength = length;
 		} else {
-			if (length <= 20) {
-				maxLength = lengthNew;
-			} else {
-				maxLength = 20;
-			}
+			maxLength = 20;
 		}
 
 		const newRows = isExpand ? DEFAULT_TOGGLE_ROWS : maxLength;
@@ -131,70 +122,53 @@ const SidebarProfile = ({ currentUserInfo, handleViewBookDetail }) => {
 	};
 
 	return (
-		<>
-			<div className='sidebar-profile'>
-				<ReadingBook bookData={bookReading} />
-				{booksAuthor.length > 0 && (
-					<BookSlider
-						className='book-reference__slider'
-						title={booksSliderTitle}
-						list={booksAuthor}
-						handleViewBookDetail={handleViewBookDetail}
-					/>
-				)}
+		<div className='sidebar-profile'>
+			<ReadingBook bookData={bookReading} />
+			{booksAuthor.length > 0 && (
+				<BookSlider
+					className='book-reference__slider'
+					title={booksSliderTitle}
+					list={booksAuthor}
+					handleViewBookDetail={handleViewBookDetail}
+				/>
+			)}
 
-				{handleRenderTargetReading()}
+			{handleRenderTargetReading()}
 
-				{(!_.isEmpty(myAllLibraryRedux.custom) || !_.isEmpty(library.current?.custom)) && (
-					<div className='sidebar-profile__personal__category'>
-						<h4>Giá sách cá nhân</h4>
-						<div className='dualColumn'>
-							<ul className={classNames('dualColumn-list', { [`bg-light`]: false })}>
-								{userInfo.id === userId
-									? myAllLibraryRedux?.custom?.slice(0, rows).map((item, index) => (
-											<li
-												className={classNames('dualColumn-item', {
-													'has-background': false,
-												})}
-												key={index}
-											>
-												<span className='dualColumn-item__title'>{item.name}</span>
-												<span className='dualColumn-item__number'>
-													{item.books.length} cuốn
-												</span>
-											</li>
-									  ))
-									: library.current?.custom?.slice(0, rows).map((item, index) => (
-											<li
-												className={classNames('dualColumn-item', {
-													'has-background': false,
-												})}
-												key={index}
-											>
-												<span className='dualColumn-item__title'>{item?.name}</span>
-												<span className='dualColumn-item__number'>
-													{item?.books.length} cuốn
-												</span>
-											</li>
-									  ))}
-							</ul>
+			{libraryShown.length > 0 && (
+				<div className='sidebar-profile__personal__category'>
+					<h4>Giá sách cá nhân</h4>
+					<div className='dualColumn'>
+						<ul className={classNames('dualColumn-list', { [`bg-light`]: false })}>
+							{libraryShown.slice(0, rows).map((item, index) => (
+								<li
+									className={classNames('dualColumn-item', {
+										'has-background': false,
+									})}
+									key={index}
+								>
+									<span className='dualColumn-item__title'>{item.name}</span>
+									<span className='dualColumn-item__number'>{item.books.length} cuốn</span>
+								</li>
+							))}
+						</ul>
 
-							{!isExpand && (library.current?.custom?.length > 0 || myAllLibraryRedux.custom.length > 0) && (
-								<button className='dualColumn-btn' onClick={handleViewMore}>
-									<img className='view-caret' src={caretIcon} alt='caret-icon' />
-									<span>Xem thêm</span>
-								</button>
-							)}
-							{isExpand && (
+						{!isExpand && libraryShown.length > DEFAULT_TOGGLE_ROWS && (
+							<button className='dualColumn-btn' onClick={handleViewMore}>
+								<img className='view-caret' src={caretIcon} alt='caret-icon' />
+								<span>Xem thêm</span>
+							</button>
+						)}
+						{isExpand ||
+							(libraryShown.length <= DEFAULT_TOGGLE_ROWS && (
 								<button onClick={handleDirect} className='sidebar__view-more-btn--blue'>
 									Xem thêm
 								</button>
-							)}
-						</div>
+							))}
 					</div>
-				)}
-			</div>
-		</>
+				</div>
+			)}
+		</div>
 	);
 };
 

@@ -25,6 +25,7 @@ function MainConfirmMyBook({ setErrorLoadPage }) {
 	const { bookInfo, errorFetch } = useFetchBookDetail(bookId);
 	const userInfo = useSelector(state => state.auth.userInfo);
 	const [textLength, setTextLength] = useState(450);
+	const [checked, setChecked] = useState(false);
 
 	useEffect(() => {
 		if (window.innerWidth <= 1024 && window.innerWidth > 800) {
@@ -190,7 +191,11 @@ function MainConfirmMyBook({ setErrorLoadPage }) {
 							housing
 						</div>
 						<div className='main-confirm-my-book__terms__footer'>
-							<CircleCheckIcon />
+							{checked ? (
+								<CircleCheckIcon onClick={() => setChecked(false)} />
+							) : (
+								<div className='checkbox-circle' onClick={() => setChecked(true)}></div>
+							)}
 							<span>Tôi đồng ý với các điều khoản</span>
 						</div>
 					</div>
@@ -210,45 +215,47 @@ function MainConfirmMyBook({ setErrorLoadPage }) {
 								<Attach />
 								<span>Tải ảnh lên</span>
 							</button>
-							<>
-								{images.length > 0 && (
-									<div className='main-confirm-my-book__confirm__images-uploaded'>
-										{images.map((image, index) => {
-											if (index < 2) {
-												return (
-													<div
-														key={index}
-														className='main-confirm-my-book__confirm__image-item'
-													>
-														{status ? (
-															<img src={image} alt='image' />
-														) : (
-															<img src={URL.createObjectURL(image)} alt='image' />
-														)}
-													</div>
-												);
-											}
-										})}
-										{images.length >= 3 && (
-											<div className='main-confirm-my-book__confirm__image-item'>
-												{status ? (
-													<img src={images[2]} alt='image' />
-												) : (
-													<img src={URL.createObjectURL(images[2])} alt='image' />
-												)}
-												<div
-													className={classNames('main-confirm-my-book__confirm__image-over', {
-														'show': images.length > 3,
-													})}
-												>
-													+{images.length - 3}
+
+							{images.length > 0 && (
+								<div className='main-confirm-my-book__confirm__images-uploaded'>
+									{images.map((image, index) => {
+										if (index < 2) {
+											return (
+												<div key={index} className='main-confirm-my-book__confirm__image-item'>
+													{status ? (
+														<img src={image} alt='image' />
+													) : (
+														<img src={URL.createObjectURL(image)} alt='image' />
+													)}
 												</div>
+											);
+										}
+									})}
+									{images.length >= 3 && (
+										<div className='main-confirm-my-book__confirm__image-item'>
+											{status ? (
+												<img src={images[2]} alt='image' />
+											) : (
+												<img src={URL.createObjectURL(images[2])} alt='image' />
+											)}
+											<div
+												className={classNames('main-confirm-my-book__confirm__image-over', {
+													'show': images.length > 3,
+												})}
+											>
+												+{images.length - 3}
 											</div>
-										)}
-									</div>
-								)}
-							</>
-							<button className='main-confirm-my-book__confirm__submit' onClick={submitConfirm}>
+										</div>
+									)}
+								</div>
+							)}
+
+							<button
+								className={`main-confirm-my-book__confirm__submit ${
+									(!checked || !images.length) && 'disabled-btn'
+								}`}
+								onClick={submitConfirm}
+							>
 								<CircleCheckIcon />
 								<span>Gửi xác thực</span>
 							</button>

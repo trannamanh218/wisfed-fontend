@@ -112,7 +112,7 @@ const MainQuoteDetail = ({ quoteData, setQuoteData, onCreateComment, setMentionU
 				dispatch(handleMentionCommentId(null));
 			}
 		}
-	}, [quoteData]);
+	}, [quoteData, mentionCommentId]);
 
 	return (
 		<div className='main-quote-detail'>
