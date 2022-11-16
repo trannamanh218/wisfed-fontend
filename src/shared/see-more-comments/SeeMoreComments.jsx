@@ -78,7 +78,7 @@ const SeeMoreComments = ({
 						postId: data.id,
 						params: params,
 					};
-					res = await dispatch(getGroupPostComments(sentData)).unwrap();
+					// res = await dispatch(getGroupPostComments(sentData)).unwrap();
 				} else if (postType === 'review') {
 					sentData = {
 						reviewId: data.id,
@@ -103,6 +103,7 @@ const SeeMoreComments = ({
 		setIsLoading(true);
 		let sentData = {};
 		let res = {};
+
 		try {
 			if (postType === 'quote') {
 				sentData = {
@@ -118,7 +119,7 @@ const SeeMoreComments = ({
 				res = await dispatch(getMiniPostComments(sentData)).unwrap();
 			} else if (postType === 'group') {
 				sentData = {
-					postId: data.id,
+					postId: data.groupPostId || data.id,
 					params: params,
 				};
 				res = await dispatch(getGroupPostComments(sentData)).unwrap();
