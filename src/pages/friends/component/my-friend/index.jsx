@@ -30,6 +30,7 @@ const MyFriends = ({ activeTabs, inputSearch, filter, handleActiveTabs }) => {
 
 	const getListFriendData = async () => {
 		const query = generateQuery(callApiStart.current, callApiPerPage.current, inputSearch.length > 0 ? filter : '');
+
 		const userId = userInfo.id;
 		try {
 			setHasMore(true);
@@ -38,7 +39,8 @@ const MyFriends = ({ activeTabs, inputSearch, filter, handleActiveTabs }) => {
 				setGetMyListFriend(prev => [...prev, ...friendList.rows]);
 				setListFriendcount(friendList.count);
 				callApiStart.current++;
-				if (friendList.rows?.length < callApiPerPage.current) {
+
+				if (friendList.rows?.length === friendList.count || friendList.rows?.length < callApiPerPage.current) {
 					setHasMore(false);
 				}
 			}

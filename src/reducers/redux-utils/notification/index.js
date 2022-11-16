@@ -87,7 +87,7 @@ const notificationSlice = createSlice({
 	name: 'notification',
 	initialState: {
 		toggle: null,
-		activeKeyTabs: '',
+		activeKeyTabs: 'all',
 		listNotifcaiton: [],
 		reviewIdFromNotification: null,
 		mentionCommentId: null,

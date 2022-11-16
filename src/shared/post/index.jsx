@@ -49,6 +49,7 @@ import { getMiniPostComments, getGroupPostComments } from 'reducers/redux-utils/
 import defaultAvatar from 'assets/icons/defaultLogoAvatar.svg';
 import vector from 'assets/images/Vector.png';
 import SeeMoreComments from 'shared/see-more-comments/SeeMoreComments';
+import { extractLinks } from '@draft-js-plugins/linkify';
 
 const urlRegex =
 	/(http(s)?:\/\/)?(www(\.))?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}([-a-zA-Z0-9()@:%_\+.~#?&//=]*)([^"<\s]+)(?![^<>]*>|[^"]*?<\/a)/g;
@@ -326,13 +327,16 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 	const generateContent = content => {
 		if (content.match(urlRegex) || content.match(hashtagRegex)) {
 			const newContent = content
-				.replace(
-					urlRegex,
-					data =>
-						`<a class="url-class" href=${
+				.replace(urlRegex, data => {
+					const urlMatched = extractLinks(data);
+					if (urlMatched) {
+						return `<a class="url-class" href=${
 							data.includes('https://') ? data : `https://${data}`
-						} target="_blank">${data.length <= 50 ? data : data.slice(0, 50) + '...'}</a>`
-				)
+						} target="_blank">${data.length <= 50 ? data : data.slice(0, 50) + '...'}</a>`;
+					} else {
+						return data;
+					}
+				})
 				.replace(hashtagRegex, data => {
 					const newData = data
 						.normalize('NFD')
@@ -651,7 +655,7 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 														) : (
 															<div
 																className='reply-see-more'
-																onClick={onClickSeeMoreReply}
+																onClick={() => onClickSeeMoreReply(comment.id)}
 															>
 																Xem phản hồi
 															</div>

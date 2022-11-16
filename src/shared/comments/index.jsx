@@ -14,6 +14,7 @@ import { POST_TYPE, QUOTE_TYPE, REVIEW_TYPE } from 'constants/index';
 import { Link, useNavigate } from 'react-router-dom';
 import { LikeComment } from 'components/svg';
 import { likeAndUnlikeGroupComment } from 'reducers/redux-utils/group';
+import { extractLinks } from '@draft-js-plugins/linkify';
 
 const urlRegex =
 	/(http(s)?:\/\/)?(www(\.))?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}([-a-zA-Z0-9()@:%_\+.~#?&//=]*)([^"<\s]+)(?![^<>]*>|[^"]*?<\/a)/g;
@@ -57,13 +58,16 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 	const generateContent = content => {
 		if (content.match(urlRegex) || content.match(hashtagRegex)) {
 			const newContent = content
-				.replace(
-					urlRegex,
-					data =>
-						`<a class="url-class" href=${
+				.replace(urlRegex, data => {
+					const urlMatched = extractLinks(data);
+					if (urlMatched) {
+						return `<a class="url-class" href=${
 							data.includes('https://') ? data : `https://${data}`
-						} target="_blank">${data.length <= 50 ? data : data.slice(0, 50) + '...'}</a>`
-				)
+						} target="_blank">${data.length <= 50 ? data : data.slice(0, 50) + '...'}</a>`;
+					} else {
+						return data;
+					}
+				})
 				.replace(hashtagRegex, data => {
 					const newData = data
 						.normalize('NFD')
