@@ -32,7 +32,7 @@ const Profile = () => {
 			getUserDetailData();
 			dispatch(checkGetUser(true));
 		}
-	}, [userId, isReload]);
+	}, [userId, isReload, userInfo]);
 
 	const getUserDetailData = async () => {
 		try {

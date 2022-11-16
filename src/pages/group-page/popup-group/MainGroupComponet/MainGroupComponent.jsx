@@ -105,7 +105,12 @@ function MainGroupComponent({
 			setShowSelect(false);
 			setIsFetching(false);
 		} catch (err) {
-			NotificationError(err);
+			if (err.errorCode === 760) {
+				const customId = 'custom-id-PersonalInfo-handleDrop-warning';
+				toast.warning('Bạn đang là Admin bạn không thể rời nhóm', { toastId: customId });
+			}
+		} finally {
+			setIsFetching(false);
 		}
 	};
 
