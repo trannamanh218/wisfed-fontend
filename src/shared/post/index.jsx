@@ -50,6 +50,7 @@ import defaultAvatar from 'assets/icons/defaultLogoAvatar.svg';
 import vector from 'assets/images/Vector.png';
 import SeeMoreComments from 'shared/see-more-comments/SeeMoreComments';
 import { extractLinks } from '@draft-js-plugins/linkify';
+import DirectLinkALertModal from 'shared/direct-link-alert-modal';
 
 const urlRegex =
 	/(http(s)?:\/\/)?(www(\.))?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}([-a-zA-Z0-9()@:%_\+.~#?&//=]*)([^"<\s]+)(?![^<>]*>|[^"]*?<\/a)/g;
@@ -73,30 +74,59 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 	const [replyingCommentId, setReplyingCommentId] = useState(-1);
 	const [mentionUsersArr, setMentionUsersArr] = useState([]);
 	const [readMore, setReadMore] = useState(false);
-
 	const [mentionCommentId, setMentionCommentId] = useState(null);
 	const [checkIfMentionCmtFromGroup, setCheckIfMentionCmtFromGroup] = useState(null);
 	const [firstPlaceComment, setFirstPlaceComment] = useState([]);
 	const [firstPlaceCommentId, setFirstPlaceCommentId] = useState(null);
-
+	const [modalShow, setModalShow] = useState(false);
 	const [haveNotClickedSeeMoreOnce, setHaveNotClickedSeeMoreOnce] = useState(true);
-
 	const [showModalOthers, setShowModalOthers] = useState(false);
-
-	const handleCloseModalOthers = () => setShowModalOthers(false);
-	const handleShowModalOthers = () => setShowModalOthers(true);
-
 	const [showReplyArrayState, setShowReplyArrayState] = useState([]);
+
 	const clickReply = useRef(null);
 	const doneGetPostData = useRef(false);
 	const isLikeTemp = useRef(postInformations.isLike);
+	const urlToDirect = useRef('');
 
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
-	const onClickUserInModalOthers = paramItem => {
-		handleCloseModalOthers();
-		navigate(`/profile/${paramItem.userId}`);
+	useEffect(() => {
+		if (!_.isEmpty(postInformations)) {
+			handleAddEventClickToUrlTags();
+			handleAddEventClickToHashtagTags();
+		}
+	});
+
+	const handleAddEventClickToUrlTags = useCallback(() => {
+		const arr = document.querySelectorAll('.url-class');
+		for (let i = 0; i < arr.length; i++) {
+			const dataUrl = arr[i].getAttribute('data-url');
+			arr[i].onclick = () => directUrl(dataUrl);
+		}
+	}, [postInformations]);
+
+	const handleAddEventClickToHashtagTags = useCallback(() => {
+		const arr = document.querySelectorAll('.hashtag-class');
+		for (let i = 0; i < arr.length; i++) {
+			const dataHashtagNavigate = arr[i].getAttribute('data-hashtag-navigate');
+			arr[i].onclick = () => handleClickHashtag(dataHashtagNavigate);
+		}
+	}, [postInformations]);
+
+	const directUrl = url => {
+		setModalShow(true);
+		let urlFormated = '';
+		if (url.includes('https://')) {
+			urlFormated = url;
+		} else {
+			urlFormated = `https://${url}`;
+		}
+		urlToDirect.current = urlFormated;
+	};
+
+	const handleClickHashtag = dataHashtagNavigate => {
+		navigate(dataHashtagNavigate);
 	};
 
 	useEffect(() => {
@@ -119,10 +149,6 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 			doneGetPostData.current = true;
 		}
 	}, [postInformations]);
-
-	const directUrl = url => {
-		window.open(url);
-	};
 
 	const onCreateComment = async (content, replyId) => {
 		if (content) {
@@ -181,6 +207,14 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 			}
 		}
 	};
+
+	const onClickUserInModalOthers = paramItem => {
+		handleCloseModalOthers();
+		navigate(`/profile/${paramItem.userId}`);
+	};
+
+	const handleCloseModalOthers = () => setShowModalOthers(false);
+	const handleShowModalOthers = () => setShowModalOthers(true);
 
 	const handleLikeAction = async () => {
 		if (!Storage.getAccessToken()) {
@@ -330,9 +364,9 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 				.replace(urlRegex, data => {
 					const urlMatched = extractLinks(data);
 					if (urlMatched) {
-						return `<a class="url-class" href=${
-							data.includes('https://') ? data : `https://${data}`
-						} target="_blank">${data.length <= 50 ? data : data.slice(0, 50) + '...'}</a>`;
+						return `<a class="url-class" data-url=${data}>${
+							data.length <= 50 ? data : data.slice(0, 50) + '...'
+						}</a>`;
 					} else {
 						return data;
 					}
@@ -344,11 +378,13 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 						.replace(/đ/g, 'd')
 						.replace(/Đ/g, 'D');
 					if (postInformations.groupId) {
-						return `<a class="hashtag-class" href="/hashtag-group/${
+						return `<a class="hashtag-class" data-hashtag-navigate="/hashtag-group/${
 							postInformations.groupId
 						}/${newData.slice(1)}">${newData}</a>`;
 					} else {
-						return `<a class="hashtag-class" href="/hashtag/${newData.slice(1)}">${newData}</a>`;
+						return `<a class="hashtag-class" data-hashtag-navigate="/hashtag/${newData.slice(
+							1
+						)}">${newData}</a>`;
 					}
 				});
 			return newContent;
@@ -419,6 +455,16 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 			}
 		}
 	}, [postData]);
+
+	const handleAcept = () => {
+		setModalShow(false);
+		window.open(urlToDirect.current);
+	};
+
+	const handleCancel = () => {
+		setModalShow(false);
+		urlToDirect.current = '';
+	};
 
 	return (
 		<div className='post__container'>
@@ -569,14 +615,14 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 			)}
 			{verbShareArray.indexOf(postData.verb) !== -1 && (
 				<div className='creat-post-modal-content__main__share-container'>
-					{postData.verb === POST_VERB_SHARE && <PostShare postData={postData} />}
+					{postData.verb === POST_VERB_SHARE && <PostShare postData={postData} directUrl={directUrl} />}
 					{postData.verb === QUOTE_VERB_SHARE && <QuoteCard data={postData.sharePost} isShare={true} />}
-					{postData.verb === GROUP_POST_VERB_SHARE && <PostShare postData={postData} />}
+					{postData.verb === GROUP_POST_VERB_SHARE && <PostShare postData={postData} directUrl={directUrl} />}
 					{(postData.verb === TOP_BOOK_VERB_SHARE || postData.verb === MY_BOOK_VERB_SHARE) && (
 						<AuthorBook data={postData} inPost={true} />
 					)}
 					{postData.verb === TOP_QUOTE_VERB_SHARE && <QuoteCard data={postData.info} isShare={true} />}
-					{postData.verb === REVIEW_VERB_SHARE && <PostShare postData={postData} />}
+					{postData.verb === REVIEW_VERB_SHARE && <PostShare postData={postData} directUrl={directUrl} />}
 				</div>
 			)}
 			{postData.verb === TOP_USER_VERB_SHARE && <ShareUsers postData={postData} />}
@@ -598,12 +644,7 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 								allowFullScreen={true}
 							></iframe>
 						) : (
-							<div onClick={() => directUrl(postData?.sharePost.url)}>
-								<PreviewLink
-									isFetching={false}
-									urlData={postData.sharePost?.preview || postData.preview}
-								/>
-							</div>
+							<PreviewLink isFetching={false} urlData={postData.preview} driectToUrl={directUrl} />
 						)}
 					</>
 				))}
@@ -875,6 +916,7 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 				mentionUsersArr={mentionUsersArr}
 				setMentionUsersArr={setMentionUsersArr}
 			/>
+			<DirectLinkALertModal modalShow={modalShow} handleAcept={handleAcept} handleCancel={handleCancel} />
 		</div>
 	);
 }

@@ -23,7 +23,7 @@ const urlRegex =
 const hashtagRegex =
 	/#(?![0-9_]+\b)[0-9a-z_ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễếệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ]+/gi;
 
-const PostShare = ({ postData, inCreatePost = false }) => {
+const PostShare = ({ postData, inCreatePost, directUrl }) => {
 	const [videoId, setVideoId] = useState('');
 
 	const [showModalOthers, setShowModalOthers] = useState(false);
@@ -31,10 +31,6 @@ const PostShare = ({ postData, inCreatePost = false }) => {
 	const handleCloseModalOthers = () => setShowModalOthers(false);
 	const handleShowModalOthers = () => setShowModalOthers(true);
 	const [readMore, setReadMore] = useState(false);
-
-	const directUrl = url => {
-		window.open(url);
-	};
 
 	const navigate = useNavigate();
 
@@ -146,9 +142,9 @@ const PostShare = ({ postData, inCreatePost = false }) => {
 				.replace(urlRegex, data => {
 					const urlMatched = extractLinks(data);
 					if (urlMatched) {
-						return `<a class="url-class" href=${
-							data.includes('https://') ? data : `https://${data}`
-						} target="_blank">${data.length <= 50 ? data : data.slice(0, 50) + '...'}</a>`;
+						return `<a class="url-class" data-url=${data}>${
+							data.length <= 50 ? data : data.slice(0, 50) + '...'
+						}</a>`;
 					} else {
 						return data;
 					}
@@ -159,12 +155,14 @@ const PostShare = ({ postData, inCreatePost = false }) => {
 						.replace(/[\u0300-\u036f]/g, '')
 						.replace(/đ/g, 'd')
 						.replace(/Đ/g, 'D');
-					if (postData.groupId) {
-						return `<a class="hashtag-class" href="/hashtag-group/${postData.groupId}/${newData.slice(
+					if (postData?.sharePost?.groupInfo?.id) {
+						return `<a class="hashtag-class" data-hashtag-navigate="/hashtag-group/${
+							postData?.sharePost?.groupInfo?.id
+						}/${newData.slice(1)}">${newData}</a>`;
+					} else {
+						return `<a class="hashtag-class" data-hashtag-navigate="/hashtag/${newData.slice(
 							1
 						)}">${newData}</a>`;
-					} else {
-						return `<a class="hashtag-class" href="/hashtag/${newData.slice(1)}">${newData}</a>`;
 					}
 				});
 			return newContent;
@@ -325,8 +323,12 @@ const PostShare = ({ postData, inCreatePost = false }) => {
 								allowFullScreen={true}
 							></iframe>
 						) : (
-							<div onClick={() => directUrl(postData.sharePost.url)}>
-								<PreviewLink isFetching={false} urlData={postData.sharePost.preview} />
+							<div className='post-share__preview-link-container'>
+								<PreviewLink
+									isFetching={false}
+									urlData={postData.sharePost.preview}
+									driectToUrl={directUrl}
+								/>
 							</div>
 						)}
 					</>
@@ -335,11 +337,17 @@ const PostShare = ({ postData, inCreatePost = false }) => {
 	);
 };
 
+PostShare.defaultProps = {
+	inCreatePost: false,
+	directUrl: () => {},
+};
+
 PostShare.propTypes = {
 	postData: PropTypes.object,
 	likeAction: PropTypes.func,
 	className: PropTypes.string,
 	inCreatePost: PropTypes.bool,
+	directUrl: PropTypes.func,
 };
 
 export default PostShare;
