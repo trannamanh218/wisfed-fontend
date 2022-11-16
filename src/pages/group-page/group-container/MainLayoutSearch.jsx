@@ -173,6 +173,7 @@ const MainLayoutSearch = ({ valueGroupSearch, filterSearch }) => {
 
 MainLayoutSearch.propTypes = {
 	valueGroupSearch: PropTypes.string,
+	filterSearch: PropTypes.array,
 };
 
 export default MainLayoutSearch;

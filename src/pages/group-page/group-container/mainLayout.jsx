@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import './style.scss';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import ResultNotFound from 'pages/result/component/result-not-found';
 import LoadingIndicator from 'shared/loading-indicator';
 import InfiniteScroll from 'react-infinite-scroll-component';
