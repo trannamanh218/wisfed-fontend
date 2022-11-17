@@ -10,14 +10,12 @@ import { generateQuery } from 'helpers/Common';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import LoadingIndicator from 'shared/loading-indicator';
 
-const MyFriends = ({ activeTabs, inputSearch, filter }) => {
+const MyFriends = ({ activeTabs, inputSearch, filter, handleActiveTabs }) => {
 	const callApiStart = useRef(0);
 	const callApiPerPage = useRef(9);
-
 	const { userInfo } = useSelector(state => state.auth);
 	const isFriend = useSelector(state => state.user.isFriend);
 	const dispatch = useDispatch();
-
 	const [getMyListFriend, setGetMyListFriend] = useState([]);
 	const [hasMore, setHasMore] = useState(true);
 	const [toggleCallAPI, setToggleCallAPI] = useState(true);
@@ -30,8 +28,9 @@ const MyFriends = ({ activeTabs, inputSearch, filter }) => {
 		setGetMyListFriend([]);
 	}, [filter]);
 
-	useEffect(async () => {
+	const getListFriendData = async () => {
 		const query = generateQuery(callApiStart.current, callApiPerPage.current, inputSearch.length > 0 ? filter : '');
+
 		const userId = userInfo.id;
 		try {
 			setHasMore(true);
@@ -50,6 +49,10 @@ const MyFriends = ({ activeTabs, inputSearch, filter }) => {
 		} finally {
 			setIsLoading(false);
 		}
+	};
+
+	useEffect(() => {
+		getListFriendData();
 	}, [userInfo, filter, toggleCallAPI]);
 
 	useEffect(() => {
@@ -61,22 +64,23 @@ const MyFriends = ({ activeTabs, inputSearch, filter }) => {
 	}, [getMyListFriend, isFriend]);
 
 	return (
-		<div className='myfriends__container'>
-			<div className='myfriends__title'>
-				({listFriendCount}) Bạn bè của{' '}
-				{userInfo.fullName ? (
-					userInfo.fullName
-				) : (
-					<>
-						{userInfo.firstName}
-						<span>{userInfo.lastName}</span>
-					</>
-				)}
-			</div>
+		<>
 			{isLoading ? (
 				<LoadingIndicator />
 			) : (
-				<>
+				<div className='myfriends__container'>
+					<div className='myfriends__title'>
+						({listFriendCount}) Bạn bè của{' '}
+						{userInfo.fullName ? (
+							userInfo.fullName
+						) : (
+							<>
+								{userInfo.firstName}
+								<span>{userInfo.lastName}</span>
+							</>
+						)}
+					</div>
+
 					{getMyListFriend?.length > 0 ? (
 						<InfiniteScroll
 							dataLength={getMyListFriend.length}
@@ -93,11 +97,16 @@ const MyFriends = ({ activeTabs, inputSearch, filter }) => {
 							</div>
 						</InfiniteScroll>
 					) : (
-						<h5 style={{ margin: '22px' }}>Chưa có dữ liệu</h5>
+						<div style={{ textAlign: 'center', margin: '15px 0' }}>
+							<p style={{ margin: '20px 0' }}>Bạn chưa có bạn bè nào, hãy thêm thật nhiều bạn bè nhé</p>
+							<button className='btn btn-primary' onClick={() => handleActiveTabs('suggest')}>
+								Thêm bạn bè
+							</button>
+						</div>
 					)}
-				</>
+				</div>
 			)}
-		</div>
+		</>
 	);
 };
 MyFriends.propTypes = {

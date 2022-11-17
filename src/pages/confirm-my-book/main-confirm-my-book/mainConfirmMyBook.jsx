@@ -28,12 +28,12 @@ function MainConfirmMyBook({ setErrorLoadPage }) {
 	const [checked, setChecked] = useState(false);
 
 	useEffect(() => {
-		if (window.innerWidth <= 1024 && window.innerWidth > 800) {
-			setTextLength(150);
-		} else if (window.innerWidth < 770) {
-			setTextLength(150);
+		if (window.innerWidth <= 820) {
+			setTextLength(400);
+		} else if (window.innerWidth <= 1024) {
+			setTextLength(600);
 		} else if (window.innerWidth <= 1280) {
-			setTextLength(300);
+			setTextLength(650);
 		}
 	}, []);
 
@@ -102,7 +102,7 @@ function MainConfirmMyBook({ setErrorLoadPage }) {
 				'content': '',
 				'documents': imagesUploaded,
 				'phone': '',
-				'address': userInfo.address,
+				'address': userInfo.address || '',
 				'status': 'pending',
 			};
 			const creatBookCopyrightsResponse = await dispatch(creatBookCopyrights(dataCopyrights)).unwrap();
@@ -114,8 +114,15 @@ function MainConfirmMyBook({ setErrorLoadPage }) {
 		} catch {
 			const customId = 'custom-id-MainConfirmMyBook-error';
 			toast.error('Gửi yêu cầu không thành công', { toastId: customId });
+		} finally {
+			setImages([]);
+			setChecked(false);
 		}
 	};
+
+	useEffect(() => {
+		setImages([]);
+	}, []);
 
 	return (
 		<>

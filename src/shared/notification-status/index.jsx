@@ -76,7 +76,7 @@ const NotificationStatus = ({ item, handleReplyFriendRequest }) => {
 			dispatch(readNotification(params)).unwrap();
 		}
 		dispatch(backgroundToggle(true));
-
+		// console.log(item);
 		switch (item.verb) {
 			case 'likeMiniPost':
 			case 'commentMiniPost':
@@ -169,15 +169,18 @@ const NotificationStatus = ({ item, handleReplyFriendRequest }) => {
 			case 'requestGroup':
 				navigate(`/group/${item.originId.groupId}`);
 				break;
+			case 'acceptedGroup':
+				navigate(`/group/${item.originId.groupId}`);
+				break;
+			case 'rejectGroup':
+				navigate(`/group/${item.originId.groupId}`);
+				break;
 			case 'likeReview':
 			case 'commentReview':
+			case 'replyCommentReview':
 				dispatch(updateReviewIdFromNoti(item.originId.reviewId));
 				navigate(`/review/${item.originId.bookId}/${userInfo.id}`);
 				break;
-			// case 'replyCommentReview':
-			// 	dispatch(handleMentionCommentId(paramItem.originId.replyId));
-			// 	navigate(`/review/${paramItem.originId.bookId}/${paramUserInfo.id}`);
-			// 	break;
 			case 'likeCommentMiniPost':
 			case 'sharePost':
 				navigate(`/detail-feed/mini-post/${item.originId.minipostId}`);

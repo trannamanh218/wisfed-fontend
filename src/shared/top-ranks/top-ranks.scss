@@ -87,6 +87,9 @@
 			.author-card__avatar {
 				margin: 0;
 			}
+			&:hover {
+				cursor: pointer;
+			}
 		}
 		.number__ranks {
 			position: absolute;

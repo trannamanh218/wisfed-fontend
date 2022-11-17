@@ -94,7 +94,7 @@ const NotificationModal = ({ setModalNoti, buttonModal }) => {
 		try {
 			const params = {
 				start: 0,
-				limit: 6,
+				limit: 7,
 			};
 			const res = await dispatch(getNotification(params)).unwrap();
 			const newArr = res.filter(item => !item.isCheck);
@@ -110,7 +110,7 @@ const NotificationModal = ({ setModalNoti, buttonModal }) => {
 		try {
 			const params = {
 				start: 0,
-				limit: 6,
+				limit: 7,
 			};
 			const res = await dispatch(getListNotificationUnRead(params)).unwrap();
 			const newArr = res.filter(item => !item.isCheck);
@@ -126,7 +126,7 @@ const NotificationModal = ({ setModalNoti, buttonModal }) => {
 		try {
 			const params = {
 				start: 0,
-				limit: 5,
+				limit: 7,
 				sort: JSON.stringify([{ property: 'createdAt', direction: 'DESC' }]),
 			};
 			const res = await dispatch(getListReqFriendsToMe(params)).unwrap();

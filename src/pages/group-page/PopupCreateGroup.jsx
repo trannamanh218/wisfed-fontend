@@ -255,13 +255,7 @@ const PopupCreateGroup = ({ handleClose }) => {
 	};
 
 	useEffect(() => {
-		if (
-			image !== undefined &&
-			(lastTag.includes('#') || !_.isEmpty(listHashtags)) &&
-			lastTag !== '#' &&
-			inputDiscription !== '' &&
-			inputNameGroup !== ''
-		) {
+		if (image !== undefined && inputDiscription !== '' && inputNameGroup !== '') {
 			switch (kindOfGroup.value) {
 				case 'book':
 					if (listBookAdd.length > 0 && categoryIdBook.length > 0) {
@@ -287,17 +281,7 @@ const PopupCreateGroup = ({ handleClose }) => {
 		} else {
 			setIsShowBtn(false);
 		}
-	}, [
-		image,
-		listAuthors,
-		lastTag,
-		kindOfGroup,
-		inputDiscription,
-		inputNameGroup,
-		listHashtags,
-		listBookAdd,
-		categoryIdBook,
-	]);
+	}, [image, listAuthors, kindOfGroup, inputDiscription, inputNameGroup, listBookAdd, categoryIdBook]);
 
 	const createGroup = async () => {
 		if (isShowBtn) {

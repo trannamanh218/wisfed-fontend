@@ -2,6 +2,24 @@
 	.notification__main__container {
 		padding-top: 36px;
 		gap: 20px;
+		display: flex;
+		align-items: center;
+
+		.notification__main__back {
+			width: 48px;
+			height: 48px;
+			background-color: #eff0f7;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			border-radius: 50%;
+			cursor: pointer;
+		}
+
+		.notification__main__title {
+			font-size: 24px;
+			font-weight: 700;
+		}
 	}
 	.friends__detail__header {
 		background: #ffffff;

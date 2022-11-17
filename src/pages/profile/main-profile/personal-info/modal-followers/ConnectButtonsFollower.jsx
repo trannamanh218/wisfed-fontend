@@ -56,7 +56,7 @@ const ConnectButtonsFollower = ({ direction, item, isFollower }) => {
 	const buttonPendingFriend = () => {
 		return (
 			<Button className='connect-button' isOutline={true}>
-				<span className='connect-button__content'>─&nbsp;&nbsp; Đã gửi lời mời</span>
+				<span className='connect-button__content'>&nbsp;&nbsp; Đã gửi lời mời</span>
 			</Button>
 		);
 	};

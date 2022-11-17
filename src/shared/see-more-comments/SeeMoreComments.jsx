@@ -9,6 +9,7 @@ import { getListCommentsReview } from 'reducers/redux-utils/book';
 import { useState } from 'react';
 import LoadingIndicator from 'shared/loading-indicator';
 import { useEffect } from 'react';
+import _ from 'lodash';
 
 const SeeMoreComments = ({
 	data = {},
@@ -53,12 +54,56 @@ const SeeMoreComments = ({
 				}
 			}
 		}
+
+		// Lấy giá trị cho fatherCommentsCount
+		const getFetchData = async () => {
+			let sentData = {};
+			let res = {};
+
+			try {
+				if (postType === 'quote') {
+					sentData = {
+						quoteId: data.id,
+						params: params,
+					};
+					res = await dispatch(getQuoteComments(sentData)).unwrap();
+				} else if (postType === 'post') {
+					sentData = {
+						postId: data.minipostId || data.id,
+						params: params,
+					};
+					res = await dispatch(getMiniPostComments(sentData)).unwrap();
+				} else if (postType === 'group') {
+					sentData = {
+						postId: data.groupPostId || data.id,
+						params: params,
+					};
+					res = await dispatch(getGroupPostComments(sentData)).unwrap();
+				} else if (postType === 'review') {
+					sentData = {
+						reviewId: data.id,
+						params: params,
+					};
+					res = await dispatch(getListCommentsReview(sentData)).unwrap();
+				}
+			} catch (err) {
+				NotificationError(err);
+			} finally {
+				if (res.count) {
+					setFatherCommentsCount(res.count);
+				}
+			}
+		};
+		if (isInDetail && !_.isEmpty(data)) {
+			getFetchData();
+		}
 	}, [data]);
 
 	const onClickSeeMore = async () => {
 		setIsLoading(true);
 		let sentData = {};
 		let res = {};
+
 		try {
 			if (postType === 'quote') {
 				sentData = {
@@ -74,7 +119,7 @@ const SeeMoreComments = ({
 				res = await dispatch(getMiniPostComments(sentData)).unwrap();
 			} else if (postType === 'group') {
 				sentData = {
-					postId: data.id,
+					postId: data.groupPostId || data.id,
 					params: params,
 				};
 				res = await dispatch(getGroupPostComments(sentData)).unwrap();
@@ -88,7 +133,9 @@ const SeeMoreComments = ({
 		} catch (err) {
 			NotificationError(err);
 		} finally {
-			setFatherCommentsCount(res.count);
+			if (res.count) {
+				setFatherCommentsCount(res.count);
+			}
 			if (res.rows?.length > 0) {
 				handleAddMoreComments(data, res.rows);
 			}
@@ -104,6 +151,19 @@ const SeeMoreComments = ({
 				cloneObj.usersComments = [];
 			}
 		}
+		// Đảo ngược cả các comment reply nữa
+		for (let i = 0; i < paramRows.length; i++) {
+			if (paramRows[i].reply.length > 0) {
+				const commentsChildReverse = [...paramRows[i].reply];
+				commentsChildReverse.reverse();
+
+				const newCloneObj = { ...paramRows[i] };
+				newCloneObj.reply = commentsChildReverse;
+
+				paramRows[i] = newCloneObj;
+			}
+		}
+
 		paramRows.forEach(item => cloneObj.usersComments.unshift(item));
 		setData(cloneObj);
 		callApiStart.current += callApiPerPage.current;

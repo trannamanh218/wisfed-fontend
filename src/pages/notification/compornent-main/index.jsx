@@ -42,8 +42,6 @@ const Notification = () => {
 		getListRequestFriendToMe();
 	}, []);
 
-	console.log(currentTab, '-', keyTabsActive);
-
 	useEffect(() => {
 		if (isNewNotificationByRealtime) {
 			callApiStart.current = 10;

@@ -2,9 +2,9 @@ import { generateQuery } from 'helpers/Common';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { useCallback, useEffect, useState, useRef } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { getAllBookInLirary, getListBookLibrary } from 'reducers/redux-utils/library';
+import { getAllBookInLirary, getListBookLibrary, handleSetDefaultLibrary } from 'reducers/redux-utils/library';
 import PaginationGroup from 'shared/pagination-group';
 import SearchField from 'shared/search-field';
 import SelectBox from 'shared/select-box';
@@ -18,7 +18,7 @@ const DEFAULT_LIBRARY = { value: 'all', title: 'Tất cả', id: 'all' };
 
 const MainShelves = ({ allLibraryList, shelveGroupName, isMyShelve, handleViewBookDetail, setRenderNotFound }) => {
 	const [currentBooks, setCurrentBooks] = useState([]);
-	const [currentLibrary, setCurrentLibrary] = useState(DEFAULT_LIBRARY);
+	const [currentLibrary, setCurrentLibrary] = useState({});
 	const [filter, setFilter] = useState('[]');
 	const [inputSearch, setInputSearch] = useState('');
 	const [currentPage, setCurrentPage] = useState(0);
@@ -29,12 +29,9 @@ const MainShelves = ({ allLibraryList, shelveGroupName, isMyShelve, handleViewBo
 
 	const { userId } = useParams();
 	const dispatch = useDispatch();
+	const { defaultLibraryRedux } = useSelector(state => state.library);
 
 	const libraryList = !_.isEmpty(allLibraryList) ? [DEFAULT_LIBRARY].concat(allLibraryList) : [];
-
-	useEffect(() => {
-		getBooksInCurrentLibrary();
-	}, [currentLibrary, userId, filter, currentPage]);
 
 	const getBooksInCurrentLibrary = async () => {
 		setIsLoading(true);
@@ -89,6 +86,26 @@ const MainShelves = ({ allLibraryList, shelveGroupName, isMyShelve, handleViewBo
 		getBooksInCurrentLibrary();
 	}, [currentBooks]);
 
+	useEffect(() => {
+		if (!_.isEmpty(defaultLibraryRedux)) {
+			setCurrentLibrary(defaultLibraryRedux);
+		} else {
+			setCurrentLibrary(DEFAULT_LIBRARY);
+		}
+	}, [defaultLibraryRedux]);
+
+	useEffect(() => {
+		if (!_.isEmpty(currentLibrary)) {
+			getBooksInCurrentLibrary();
+		}
+	}, [currentLibrary, userId, filter, currentPage]);
+
+	useEffect(() => {
+		return () => {
+			dispatch(handleSetDefaultLibrary({}));
+		};
+	}, []);
+
 	return (
 		<>
 			<div className='main-shelves'>
@@ -102,50 +119,52 @@ const MainShelves = ({ allLibraryList, shelveGroupName, isMyShelve, handleViewBo
 					/>
 				</div>
 				<div className='main-shelves__pane'>
-					{isLoading ? (
-						<LoadingIndicator />
-					) : (
-						<>
-							<div className='main-shelves__filters'>
-								<SelectBox
-									name='library'
-									list={libraryList}
-									defaultOption={currentLibrary}
-									onChangeOption={onChangeLibrary}
-								/>
-							</div>
+					<>
+						<div className='main-shelves__filters'>
+							<SelectBox
+								name='library'
+								list={libraryList}
+								defaultOption={currentLibrary}
+								onChangeOption={onChangeLibrary}
+							/>
+						</div>
 
-							{isMyShelve !== undefined && (
-								<>
-									{filter !== '[]' ? (
-										<SearchBook
-											inputSearch={inputSearch}
-											list={currentBooks}
-											isMyShelve={isMyShelve}
-											handleUpdateBookList={handleUpdateBookList}
-											handleViewBookDetail={handleViewBookDetail}
-										/>
-									) : (
-										<Shelf
-											list={currentBooks}
-											isMyShelve={isMyShelve}
-											handleUpdateBookList={handleUpdateBookList}
-											handleViewBookDetail={handleViewBookDetail}
-											shelveGroupName={shelveGroupName}
-										/>
-									)}
+						{isLoading ? (
+							<LoadingIndicator />
+						) : (
+							<>
+								{isMyShelve !== undefined && (
+									<>
+										{filter !== '[]' ? (
+											<SearchBook
+												inputSearch={inputSearch}
+												list={currentBooks}
+												isMyShelve={isMyShelve}
+												handleUpdateBookList={handleUpdateBookList}
+												handleViewBookDetail={handleViewBookDetail}
+											/>
+										) : (
+											<Shelf
+												list={currentBooks}
+												isMyShelve={isMyShelve}
+												handleUpdateBookList={handleUpdateBookList}
+												handleViewBookDetail={handleViewBookDetail}
+												shelveGroupName={shelveGroupName}
+											/>
+										)}
 
-									{totalPage > 1 && (
-										<PaginationGroup
-											totalPage={totalPage}
-											currentPage={currentPage + 1}
-											changePage={changePage}
-										/>
-									)}
-								</>
-							)}
-						</>
-					)}
+										{totalPage > 1 && (
+											<PaginationGroup
+												totalPage={totalPage}
+												currentPage={currentPage + 1}
+												changePage={changePage}
+											/>
+										)}
+									</>
+								)}
+							</>
+						)}
+					</>
 				</div>
 			</div>
 		</>
