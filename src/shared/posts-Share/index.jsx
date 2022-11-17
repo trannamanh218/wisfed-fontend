@@ -47,41 +47,39 @@ const PostShare = ({ postData, inCreatePost = false }) => {
 		if (paramInfo.length === 1) {
 			return (
 				<span>
-					<span style={{ fontWeight: '500' }}> cùng với </span>
+					<span style={{ fontWeight: '500', color: '#6E7191' }}> cùng với </span>
 					<Link to={`/profile/${paramInfo[0].userId}`}>
 						{paramInfo[0].users.fullName ||
 							paramInfo[0].users.firstName + ' ' + paramInfo[0].users.lastName}
 					</Link>
-					<span style={{ fontWeight: '500' }}>.</span>
 				</span>
 			);
 		} else if (paramInfo.length === 2) {
 			return (
 				<span>
-					<span style={{ fontWeight: '500' }}> cùng với </span>
+					<span style={{ fontWeight: '500', color: '#6E7191' }}> cùng với </span>
 					<Link to={`/profile/${paramInfo[0].userId}`}>
 						{paramInfo[0].users.fullName ||
 							paramInfo[0].users.firstName + ' ' + paramInfo[0].users.lastName}
 					</Link>
-					<span style={{ fontWeight: '500' }}> và </span>
+					<span style={{ fontWeight: '500', color: '#6E7191' }}> và </span>
 					<Link to={`/profile/${paramInfo[1].userId}`}>
 						{paramInfo[1].users.fullName ||
 							paramInfo[1].users.firstName + ' ' + paramInfo[1].users.lastName}
 					</Link>
-					<span style={{ fontWeight: '500' }}>.</span>
 				</span>
 			);
 		} else {
 			return (
 				<span>
-					<span style={{ fontWeight: '500' }}> cùng với </span>
+					<span style={{ fontWeight: '500', color: '#6E7191' }}> cùng với </span>
 					<Link to={`/profile/${paramInfo[0].users.id}`}>
 						{paramInfo[0].users.fullName ||
 							paramInfo[0].users.firstName + ' ' + paramInfo[0].users.lastName}
 					</Link>
-					<span style={{ fontWeight: '500' }}> và </span>
+					<span style={{ fontWeight: '500', color: '#6E7191' }}> và </span>
 					<span className='post__user__container__mention-users-plus' onClick={() => handleShowModalOthers()}>
-						{paramInfo.length - 1} người khác.
+						{paramInfo.length - 1} người khác
 						<div className='post__user__container__list-mention-users'>
 							{!!paramInfo.length && (
 								<>

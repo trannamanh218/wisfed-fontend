@@ -37,8 +37,6 @@ const NotificationModal = ({ setModalNoti, buttonModal }) => {
 
 	if (window.innerWidth >= 1280 && window.innerWidth <= 1366) {
 		loadingItemsNumber.current = 6;
-	} else if (window.innerWidth > 1440) {
-		loadingItemsNumber.current = 9;
 	} else {
 		loadingItemsNumber.current = 8;
 	}

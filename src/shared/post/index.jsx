@@ -50,6 +50,7 @@ import defaultAvatar from 'assets/icons/defaultLogoAvatar.svg';
 import vector from 'assets/images/Vector.png';
 import SeeMoreComments from 'shared/see-more-comments/SeeMoreComments';
 import { extractLinks } from '@draft-js-plugins/linkify';
+import { toast } from 'react-toastify';
 
 const urlRegex =
 	/(http(s)?:\/\/)?(www(\.))?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}([-a-zA-Z0-9()@:%_\+.~#?&//=]*)([^"<\s]+)(?![^<>]*>|[^"]*?<\/a)/g;
@@ -69,7 +70,6 @@ const verbShareArray = [
 function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMentionCmtFromGroup, isInDetail = false }) {
 	const [postData, setPostData] = useState({});
 	const [videoId, setVideoId] = useState('');
-	const { userInfo } = useSelector(state => state.auth);
 	const [replyingCommentId, setReplyingCommentId] = useState(-1);
 	const [mentionUsersArr, setMentionUsersArr] = useState([]);
 	const [readMore, setReadMore] = useState(false);
@@ -80,13 +80,16 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 	const [firstPlaceCommentId, setFirstPlaceCommentId] = useState(null);
 
 	const [haveNotClickedSeeMoreOnce, setHaveNotClickedSeeMoreOnce] = useState(true);
+	const [showReplyArrayState, setShowReplyArrayState] = useState([]);
 
 	const [showModalOthers, setShowModalOthers] = useState(false);
+
+	const { userInfo } = useSelector(state => state.auth);
+	const isJoinedGroup = useSelector(state => state.group.isJoinedGroup);
 
 	const handleCloseModalOthers = () => setShowModalOthers(false);
 	const handleShowModalOthers = () => setShowModalOthers(true);
 
-	const [showReplyArrayState, setShowReplyArrayState] = useState([]);
 	const clickReply = useRef(null);
 	const doneGetPostData = useRef(false);
 	const isLikeTemp = useRef(postInformations.isLike);
@@ -177,7 +180,7 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 				}
 				onClickSeeMoreReply(replyId);
 			} catch (err) {
-				NotificationError(err);
+				toast.warning('Bạn chưa tham gia nhóm');
 			}
 		}
 	};
@@ -186,10 +189,14 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 		if (!Storage.getAccessToken()) {
 			dispatch(checkUserLogin(true));
 		} else {
-			const setLike = !postData.isLike;
-			const numberOfLike = setLike ? postData.like + 1 : postData.like - 1;
-			setPostData(prev => ({ ...prev, isLike: !prev.isLike, like: numberOfLike }));
-			handleCallLikeUnlikeApi(setLike);
+			if (window.location.pathname.includes('/group/') && !isJoinedGroup) {
+				toast.warning('Bạn chưa tham gia nhóm');
+			} else {
+				const setLike = !postData.isLike;
+				const numberOfLike = setLike ? postData.like + 1 : postData.like - 1;
+				setPostData(prev => ({ ...prev, isLike: !prev.isLike, like: numberOfLike }));
+				handleCallLikeUnlikeApi(setLike);
+			}
 		}
 	};
 
@@ -231,41 +238,39 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 		if (paramInfo.length === 1) {
 			return (
 				<span>
-					{' cùng với '}
+					<span style={{ fontWeight: '500', color: '#6E7191' }}> cùng với </span>
 					<Link to={`/profile/${paramInfo[0].userId}`}>
 						{paramInfo[0].users.fullName ||
 							paramInfo[0].users.firstName + ' ' + paramInfo[0].users.lastName}
 					</Link>
-					<span style={{ fontWeight: '500' }}>.</span>
 				</span>
 			);
 		} else if (paramInfo.length === 2) {
 			return (
 				<span>
-					{' cùng với '}
+					<span style={{ fontWeight: '500', color: '#6E7191' }}> cùng với </span>
 					<Link to={`/profile/${paramInfo[0].userId}`}>
 						{paramInfo[0].users.fullName ||
 							paramInfo[0].users.firstName + ' ' + paramInfo[0].users.lastName}
 					</Link>
-					{' và '}
+					<span style={{ fontWeight: '500', color: '#6E7191' }}> và </span>
 					<Link to={`/profile/${paramInfo[1].userId}`}>
 						{paramInfo[1].users.fullName ||
 							paramInfo[1].users.firstName + ' ' + paramInfo[1].users.lastName}
 					</Link>
-					<span style={{ fontWeight: '500' }}>.</span>
 				</span>
 			);
 		} else {
 			return (
 				<span>
-					{' cùng với '}
+					<span style={{ fontWeight: '500', color: '#6E7191' }}> cùng với </span>
 					<Link to={`/profile/${paramInfo[0].users.id}`}>
 						{paramInfo[0].users.fullName ||
 							paramInfo[0].users.firstName + ' ' + paramInfo[0].users.lastName}
 					</Link>
-					{' và '}
+					<span style={{ fontWeight: '500', color: '#6E7191' }}> và </span>
 					<span className='post__user__container__mention-users-plus' onClick={() => handleShowModalOthers()}>
-						{paramInfo.length - 1} người khác.
+						{paramInfo.length - 1} người khác
 						<div className='post__user__container__list-mention-users'>
 							{!!paramInfo.length && (
 								<>
