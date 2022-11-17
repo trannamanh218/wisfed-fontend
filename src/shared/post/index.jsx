@@ -105,17 +105,17 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 			commentsReverse.reverse();
 
 			// Đảo ngược cả các comment reply nữa
-			// for (let i = 0; i < commentsReverse.length; i++) {
-			// 	if (commentsReverse[i].reply.length > 0) {
-			// 		const commentsChildReverse = [...commentsReverse[i].reply];
-			// 		commentsChildReverse.reverse();
+			for (let i = 0; i < commentsReverse.length; i++) {
+				if (commentsReverse[i].reply?.length > 0) {
+					const commentsChildReverse = [...commentsReverse[i].reply];
+					commentsChildReverse.reverse();
 
-			// 		const newCloneObj = { ...commentsReverse[i] };
-			// 		newCloneObj.reply = commentsChildReverse;
+					const newCloneObj = { ...commentsReverse[i] };
+					newCloneObj.reply = commentsChildReverse;
 
-			// 		commentsReverse[i] = newCloneObj;
-			// 	}
-			// }
+					commentsReverse[i] = newCloneObj;
+				}
+			}
 
 			setPostData({ ...postInformations, usersComments: commentsReverse });
 		} else {
@@ -139,6 +139,7 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 	};
 
 	const onCreateComment = async (content, replyId) => {
+		console.log('yo');
 		if (content) {
 			const newArr = [];
 			mentionUsersArr.forEach(item => newArr.push(item.id));
@@ -380,7 +381,7 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 			if (!_.isEmpty(mentionedCommentAPI)) {
 				if (mentionedCommentAPI[0].replyId === null) {
 					// Đảo thứ tự replies
-					const reverseReplies = mentionedCommentAPI[0].reply.reverse();
+					const reverseReplies = mentionedCommentAPI[0].reply?.reverse();
 					const obj = { ...mentionedCommentAPI[0], reply: reverseReplies };
 					setFirstPlaceComment([obj]);
 					setFirstPlaceCommentId(mentionCommentId);
@@ -395,7 +396,7 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 						paramAPI({ postId: postData.id, params: params2 })
 					).unwrap();
 					// Đảo thứ tự replies
-					const reverseRepliesFather = fatherOfMentionedCommentAPI[0].reply.reverse();
+					const reverseRepliesFather = fatherOfMentionedCommentAPI[0].reply?.reverse();
 					const objFather = { ...fatherOfMentionedCommentAPI[0], reply: reverseRepliesFather };
 					setFirstPlaceComment([objFather]);
 					setFirstPlaceCommentId(mentionedCommentAPI[0].replyId);
@@ -433,7 +434,7 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 			}
 		}
 	}, [postData]);
-	console.log(postInformations);
+
 	return (
 		<div className='post__container'>
 			<div className='post__user-status'>
@@ -650,11 +651,11 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 												type={type}
 											/>
 											<div className='comment-reply-container'>
-												{comment.reply && !!comment.reply.length && (
+												{comment.reply && !!comment.reply?.length && (
 													<>
 														{showReplyArrayState.includes(comment.id) ? (
 															<div className='reply-comment-item'>
-																{comment.reply.map(commentChild => (
+																{comment.reply?.map(commentChild => (
 																	<div key={commentChild.id}>
 																		<Comment
 																			commentLv1Id={comment.id}
@@ -711,11 +712,11 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 												/>
 
 												<div className='comment-reply-container'>
-													{comment.reply && !!comment.reply.length && (
+													{comment.reply && !!comment.reply?.length && (
 														<>
 															{showReplyArrayState.includes(comment.id) ? (
 																<div className='reply-comment-item'>
-																	{comment.reply.map(commentChild => (
+																	{comment.reply?.map(commentChild => (
 																		<div key={commentChild.id}>
 																			<Comment
 																				commentLv1Id={comment.id}
@@ -838,11 +839,11 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 										type={type}
 									/>
 									<div className='comment-reply-container'>
-										{comment.reply && !!comment.reply.length && (
+										{comment.reply && !!comment.reply?.length && (
 											<>
 												{showReplyArrayState.includes(comment.id) ? (
 													<>
-														{comment.reply.map(commentChild => (
+														{comment.reply?.map(commentChild => (
 															<div key={commentChild.id}>
 																<Comment
 																	commentLv1Id={comment.id}
