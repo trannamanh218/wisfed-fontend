@@ -37,7 +37,6 @@ import camera from 'assets/images/camera.png';
 import { useRef } from 'react';
 import { toast } from 'react-toastify';
 import vector from 'assets/images/Vector.png';
-import pani from 'assets/images/pani.png';
 import LoadingIndicator from 'shared/loading-indicator';
 
 function MainGroupComponent({
@@ -195,17 +194,6 @@ function MainGroupComponent({
 		}
 	});
 
-	useEffect(() => {
-		if (!_.isEmpty(data) && !_.isEmpty(userInfo)) {
-			const checkIsGroupMember = data?.memberGroups?.some(item => item?.userId === userInfo?.id);
-			if (checkIsGroupMember) {
-				setShow(true);
-				setEventKey('post');
-			}
-			setIsFetching(false);
-		}
-	}, [data, userInfo]);
-
 	const handleSelect = () => {
 		setEventKey(keyRedux);
 	};
@@ -213,6 +201,17 @@ function MainGroupComponent({
 	useEffect(() => {
 		handleSelect();
 	}, [keyRedux]);
+
+	useEffect(() => {
+		if (!_.isEmpty(data) && !_.isEmpty(userInfo)) {
+			const checkIsGroupMember = data?.memberGroups?.some(item => item?.userId === userInfo?.id);
+			if (checkIsGroupMember) {
+				setEventKey('post');
+				setShow(true);
+			}
+			setIsFetching(false);
+		}
+	}, [data]);
 
 	const handleChangeGroupImage = imgFile => {
 		if (imgFile.length) {
@@ -409,6 +408,10 @@ MainGroupComponent.propTypes = {
 	member: PropTypes.array,
 	handleUpdate: PropTypes.func,
 	fetchData: PropTypes.func,
+	eventKey: PropTypes.string,
+	setEventKey: PropTypes.func,
+	toggleClickSeeMore: PropTypes.bool,
+	setToggleClickSeeMore: PropTypes.func,
 };
 
 export default MainGroupComponent;

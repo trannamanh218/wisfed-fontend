@@ -6,7 +6,6 @@ import {
 	previewLink,
 	getPostsByUserAPI,
 	shareInternalAPI,
-	shareApiAuthorBook,
 	shareApiMyBook,
 	getMiniPostCommentsAPI,
 	getGroupPostCommentsAPI,
