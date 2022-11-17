@@ -1,0 +1,21 @@
+.show-time {
+	position: relative;
+	.show-time-modal {
+		display: none;
+		position: absolute;
+		top: 25px;
+		width: max-content;
+		opacity: 0.6;
+		background-color: #454545;
+		border-radius: 5px;
+		color: white;
+		padding: 3px 7px;
+		font-size: 12px;
+	}
+}
+
+.show-time:hover {
+	.show-time-modal {
+		display: block;
+	}
+}
