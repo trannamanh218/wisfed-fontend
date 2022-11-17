@@ -247,7 +247,7 @@ const PostShare = ({ postData, inCreatePost, directUrl }) => {
 							__html: generateContent(postData.sharePost.message),
 						}}
 					></div>
-					{postData?.sharePost?.message?.length > 500 && (
+					{postData?.sharePost?.message?.length > 500 && _.isEmpty(postData?.sharePost?.preview) && (
 						<div className='read-more-post' onClick={() => setReadMore(!readMore)}>
 							{readMore ? 'Rút gọn' : 'Xem thêm'}
 						</div>

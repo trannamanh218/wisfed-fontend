@@ -76,6 +76,8 @@
 
 	.author-card {
 		padding: 2.25rem;
+		margin: 16px 0;
+
 		.author-card {
 			&__left {
 				margin-right: 10px;
@@ -103,6 +105,10 @@
 			line-height: 22px;
 			letter-spacing: 0.25px;
 		}
+	}
+	.data__blank {
+		text-align: center;
+		display: block;
 	}
 }
 

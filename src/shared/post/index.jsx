@@ -546,11 +546,12 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 							__html: generateContent(postData.message || postData.content),
 						}}
 					></div>
-					{(postData?.message?.length > 500 || postData.content?.length > 500) && (
-						<div className='read-more-post' onClick={() => setReadMore(!readMore)}>
-							{readMore ? 'Rút gọn' : 'Xem thêm'}
-						</div>
-					)}
+					{(postData?.message?.length > 500 || postData.content?.length > 500) &&
+						_.isEmpty(postData.preview) && (
+							<div className='read-more-post' onClick={() => setReadMore(!readMore)}>
+								{readMore ? 'Rút gọn' : 'Xem thêm'}
+							</div>
+						)}
 				</div>
 			)}
 			{!!postData?.mentionsAuthors?.length && (
