@@ -179,7 +179,6 @@ const SeeMoreComments = ({
 						</div>
 					) : (
 						<div className='see-more-comment'>
-							{fatherCommentsCount}
 							<span className='see-more-comment__button' onClick={onClickSeeMore}>
 								Xem thêm
 							</span>
