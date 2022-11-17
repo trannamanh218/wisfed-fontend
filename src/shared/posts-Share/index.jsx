@@ -17,6 +17,7 @@ import { Modal } from 'react-bootstrap';
 import vector from 'assets/images/Vector.png';
 import defaultAvatar from 'assets/icons/defaultLogoAvatar.svg';
 import { extractLinks } from '@draft-js-plugins/linkify';
+import ShowTime from 'shared/showTimeOfPostWhenHover/showTime';
 
 const urlRegex =
 	/(http(s)?:\/\/)?(www(\.))?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}([-a-zA-Z0-9()@:%_\+.~#?&//=]*)([^"<\s]+)(?![^<>]*>|[^"]*?<\/a)/g;
@@ -213,7 +214,13 @@ const PostShare = ({ postData, inCreatePost = false }) => {
 						)}
 					</div>
 					<div className='post__user-status__post-time-status'>
-						<span>{calculateDurationTime(postData.sharePost.time || postData.sharePost.createdAt)}</span>
+						<div className='show-time'>
+							<span>
+								{calculateDurationTime(postData.sharePost.time || postData.sharePost.createdAt)}
+							</span>
+							{/* Hiển thị ngày giờ chính xác khi hover  */}
+							<ShowTime dataTime={postData.sharePost.time || postData.sharePost.createdAt} />
+						</div>
 						<>
 							{postData.sharePost?.book && (
 								<div className='post__user-status__subtitle'>

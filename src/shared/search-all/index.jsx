@@ -25,8 +25,8 @@ const SearchAllModal = ({ showRef, setIsShow }) => {
 			const filterValue = value.toLowerCase().trim();
 			setFilter(JSON.stringify(filterValue));
 
-			// Lưu lại giá trị vào redux sau khi đã được trim();
-			dispatch(handleUpdateValueInputSearchRedux(filterValue));
+			// Lưu lại giá trị vào redux
+			dispatch(handleUpdateValueInputSearchRedux(value.trim()));
 		} else {
 			setFilter('');
 		}

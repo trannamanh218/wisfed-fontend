@@ -50,6 +50,7 @@ import defaultAvatar from 'assets/icons/defaultLogoAvatar.svg';
 import vector from 'assets/images/Vector.png';
 import SeeMoreComments from 'shared/see-more-comments/SeeMoreComments';
 import { extractLinks } from '@draft-js-plugins/linkify';
+import ShowTime from 'shared/showTimeOfPostWhenHover/showTime';
 
 const urlRegex =
 	/(http(s)?:\/\/)?(www(\.))?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}([-a-zA-Z0-9()@:%_\+.~#?&//=]*)([^"<\s]+)(?![^<>]*>|[^"]*?<\/a)/g;
@@ -472,7 +473,11 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 						</div>
 
 						<div className='post__user-status__post-time-status'>
-							<span>{calculateDurationTime(postData.time || postData.createdAt)}</span>
+							<div className='show-time'>
+								<span>{calculateDurationTime(postData.time || postData.createdAt)}</span>
+								{/* Hiển thị ngày giờ chính xác khi hover  */}
+								<ShowTime dataTime={postData.time || postData.createdAt} />
+							</div>
 							<img src={vector} />
 							<>
 								{postData.book && (
