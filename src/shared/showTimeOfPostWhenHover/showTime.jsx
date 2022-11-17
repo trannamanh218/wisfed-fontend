@@ -22,5 +22,5 @@ export default function ShowTime({ dataTime }) {
 		}
 	}, [dataTime]);
 
-	return <div className='show-time-modal'>{`Ngày ${day} tháng ${month + 1} năm ${year} lúc ${hour}`}</div>;
+	return <div className='show-time-modal'>{`${day} tháng ${month + 1}, ${year} lúc ${hour}`}</div>;
 }
