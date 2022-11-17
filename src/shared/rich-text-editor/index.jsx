@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, useCallback, memo } from 'react';
 import { EditorState, convertToRaw, convertFromRaw } from 'draft-js';
 import Editor from '@draft-js-plugins/editor';
-import createLinkifyPlugin from '@draft-js-plugins/linkify';
+// import createLinkifyPlugin from '@draft-js-plugins/linkify';
 import './rich-text-editor.scss';
 import '@draft-js-plugins/linkify/lib/plugin.css';
 import { extractLinks } from '@draft-js-plugins/linkify';
@@ -15,12 +15,12 @@ import { getFriendList } from 'reducers/redux-utils/user';
 import { useDispatch, useSelector } from 'react-redux';
 import defaultAvatar from 'assets/icons/defaultLogoAvatar.svg';
 import { NotificationError } from 'helpers/Error';
-import { hashtagRegex } from 'constants';
+import { hashtagRegex, urlRegex } from 'constants';
 
 const generatePlugins = () => {
-	const linkifyPlugin = createLinkifyPlugin({ target: '_blank' });
+	// const linkifyPlugin = createLinkifyPlugin({ target: '_blank' });
 	const mentionPlugin = createMentionPlugin();
-	const plugins = [linkifyPlugin, mentionPlugin];
+	const plugins = [mentionPlugin];
 	const MentionSuggestions = mentionPlugin.MentionSuggestions;
 	return {
 		plugins,
@@ -80,12 +80,11 @@ function RichTextEditor({
 			}, 200);
 		}
 	}, [createCmt]);
-
 	useEffect(() => {
 		const editorStateRaws = convertToRaw(editorState.getCurrentContent());
 		const textValue = editorStateRaws.blocks[0].text;
 		const urlDetected = extractLinks(textValue);
-		if (urlDetected && urlDetected.length) {
+		if (urlDetected && urlDetected.length && urlRegex.test(textValue)) {
 			detectUrl(urlDetected);
 		} else {
 			if (hasUrl === false) {
@@ -105,13 +104,14 @@ function RichTextEditor({
 		setMentionUsersArr(newArr);
 	}, [editorState]);
 
+	// decorator hashtags draft-js
 	const hashtagStrategy = (contentBlock, callback) => {
 		if (commentLv1Id === undefined) {
-			findWithRegex(hashtagRegex, contentBlock, callback);
+			findWithHashtagRegex(hashtagRegex, contentBlock, callback);
 		}
 	};
 
-	const findWithRegex = (regex, contentBlock, callback) => {
+	const findWithHashtagRegex = (regex, contentBlock, callback) => {
 		const text = contentBlock.getText();
 		let matchArr, start;
 		while ((matchArr = regex.exec(text)) !== null) {
@@ -132,11 +132,44 @@ function RichTextEditor({
 			</span>
 		);
 	};
+	//------------------------------------------------------------------
+
+	// decorator url draft-js
+	const urlStrategy = (contentBlock, callback) => {
+		findWithUrlRegex(urlRegex, contentBlock, callback);
+	};
+
+	const findWithUrlRegex = (regex, contentBlock, callback) => {
+		const text = contentBlock.getText();
+		let matchArr, start;
+		while ((matchArr = regex.exec(text)) !== null) {
+			start = matchArr.index;
+			callback(start, start + matchArr[0].length);
+		}
+	};
+
+	const UrlSpan = ({ offsetKey, children }) => {
+		return (
+			<span
+				style={{
+					color: '#0576f0',
+				}}
+				data-offset-key={offsetKey}
+			>
+				{children}
+			</span>
+		);
+	};
+	//-----------------------------------------------------------------
 
 	const customDecorators = [
 		{
 			strategy: hashtagStrategy,
 			component: HashtagSpan,
+		},
+		{
+			strategy: urlStrategy,
+			component: UrlSpan,
 		},
 	];
 
