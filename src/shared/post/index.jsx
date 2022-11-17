@@ -133,6 +133,20 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 		if (!_.isEmpty(postInformations) && postInformations.usersComments?.length) {
 			const commentsReverse = [...postInformations.usersComments];
 			commentsReverse.reverse();
+
+			// Đảo ngược cả các comment reply nữa
+			for (let i = 0; i < commentsReverse.length; i++) {
+				if (commentsReverse[i].reply.length > 0) {
+					const commentsChildReverse = [...commentsReverse[i].reply];
+					commentsChildReverse.reverse();
+
+					const newCloneObj = { ...commentsReverse[i] };
+					newCloneObj.reply = commentsChildReverse;
+
+					commentsReverse[i] = newCloneObj;
+				}
+			}
+
 			setPostData({ ...postInformations, usersComments: commentsReverse });
 		} else {
 			setPostData(postInformations);

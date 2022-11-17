@@ -13,8 +13,6 @@ import { useEffect, useState } from 'react';
 import Circle from 'shared/loading/circle';
 import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-import { handleUpdateValueInputSearchRedux } from 'reducers/redux-utils/search';
-import { useDispatch } from 'react-redux';
 
 const Result = () => {
 	const hashtagRegex =
@@ -27,7 +25,6 @@ const Result = () => {
 	const [isFetching, setIsFetching] = useState(false);
 	const [firstTimeRender, setFirstTimeRender] = useState(true);
 
-	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
 	const handleChange = e => {
@@ -36,10 +33,11 @@ const Result = () => {
 
 	const handleDirectParam = () => {
 		if (searchResultInput) {
-			dispatch(handleUpdateValueInputSearchRedux(searchResultInput));
+			const trimmedValue = searchResultInput.trim();
+
 			// Kiểm tra xem có kí tự hashtag # không
-			if (hashtagRegex.test(searchResultInput)) {
-				const formatedInpSearchValue = searchResultInput
+			if (hashtagRegex.test(trimmedValue)) {
+				const formatedInpSearchValue = trimmedValue
 					.normalize('NFD')
 					.replace(/[\u0300-\u036f]/g, '')
 					.replace(/đ/g, 'd')
@@ -47,7 +45,7 @@ const Result = () => {
 					.replace(/#/g, '');
 				navigate(`/hashtag/${formatedInpSearchValue}`);
 			} else {
-				navigate(`/result/q=${searchResultInput}`);
+				navigate(`/result/q=${trimmedValue}`);
 			}
 		}
 	};

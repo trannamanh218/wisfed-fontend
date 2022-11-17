@@ -43,6 +43,11 @@
 			font-weight: 600;
 		}
 	}
+
+	.link:hover {
+		cursor: pointer;
+		text-decoration: underline;
+	}
 }
 
 .dualColumn-btn {

@@ -6,6 +6,8 @@ import { DEFAULT_TOGGLE_ROWS, NUMBER_ROWS } from 'constants/index';
 import './dual-column.scss';
 import { useNavigate, useParams } from 'react-router-dom';
 import RouteLink from 'helpers/RouteLink';
+import { handleSetDefaultLibrary } from 'reducers/redux-utils/library';
+import { useDispatch } from 'react-redux';
 
 const DualColumn = props => {
 	const {
@@ -32,7 +34,7 @@ const DualColumn = props => {
 	const [rows, setRows] = useState(defaultItems);
 
 	const navigate = useNavigate();
-
+	const dispatch = useDispatch();
 	const { userId } = useParams();
 
 	const handleViewMore = () => {
@@ -58,6 +60,7 @@ const DualColumn = props => {
 		if (inCategory) {
 			navigate(RouteLink.categoryDetail(data.category.id, data.category.name));
 		} else {
+			dispatch(handleSetDefaultLibrary(data));
 			navigate(`/shelves/${userId}`);
 		}
 	};
@@ -73,13 +76,12 @@ const DualColumn = props => {
 								key={index}
 							>
 								<span
-									className='dualColumn-item__title'
+									className='dualColumn-item__title link'
 									onClick={
 										pageText
 											? () => filterQuotesByCategory(item.id, item.name)
 											: () => handleOnClick(item)
 									}
-									style={inCategory ? { cursor: 'pointer' } : {}}
 								>
 									{inCategory ? item.category.name : item.name}
 								</span>
@@ -87,7 +89,10 @@ const DualColumn = props => {
 								{pageText ? (
 									<span className='dualColumn-item__number'>{item?.countQuote} Quotes</span>
 								) : (
-									<span className='dualColumn-item__number no-page-text'>
+									<span
+										className='dualColumn-item__number no-page-text link'
+										onClick={() => handleOnClick(item)}
+									>
 										{inCategory ? item.category.numberBooks : item.books.length}
 									</span>
 								)}

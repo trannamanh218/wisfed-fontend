@@ -4,14 +4,17 @@ import TheBooksWantsToRead from './components/the-books-wants-to-read';
 import GroupShortcuts from './components/group-shortcuts';
 import { useFetchQuoteRandom } from 'api/quote.hooks';
 import _ from 'lodash';
-import { Link } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
 import { useState, useEffect } from 'react';
 import RenderProgress from 'shared/render-progress';
+import { handleSetDefaultLibrary } from 'reducers/redux-utils/library';
 
 const Sidebar = () => {
 	const { quoteRandom } = useFetchQuoteRandom();
 	const { userInfo } = useSelector(state => state.auth);
+	const dispatch = useDispatch();
+	const navigate = useNavigate();
 	const [bookReading, setBookReading] = useState({});
 	const [wantToReadList, setWantToReadList] = useState([]);
 	const myAllLibraryRedux = useSelector(state => state.library.myAllLibrary);
@@ -30,6 +33,11 @@ const Sidebar = () => {
 		}
 	}, [myAllLibraryRedux]);
 
+	const handleDirectToBookShelves = paramItem => {
+		dispatch(handleSetDefaultLibrary(paramItem));
+		navigate(`/shelves/${userInfo.id}`);
+	};
+
 	return (
 		<div className='sidebar'>
 			{!_.isEmpty(userInfo) && !_.isEmpty(bookReading) && <ReadingBook bookData={bookReading} />}
@@ -40,8 +48,18 @@ const Sidebar = () => {
 						<ul className='dualColumn-list'>
 							{myAllLibraryRedux.default.map(item => (
 								<li className='dualColumn-item' key={item.id}>
-									<span className='dualColumn-item__title'>{item.name}</span>
-									<span className='dualColumn-item__number'>{item.books.length} cuốn</span>
+									<span
+										onClick={() => handleDirectToBookShelves(item)}
+										className='dualColumn-item__title link'
+									>
+										{item.name}
+									</span>
+									<span
+										onClick={() => handleDirectToBookShelves(item)}
+										className='dualColumn-item__number link'
+									>
+										{item.books.length} cuốn
+									</span>
 								</li>
 							))}
 						</ul>

@@ -18,6 +18,7 @@
 			height: calc(100vh - 96px);
 			overflow-x: hidden;
 			overflow-y: scroll;
+			overscroll-behavior: contain;
 			padding: 40px 14px 0 40px;
 			&::-webkit-scrollbar {
 				width: 6px;
