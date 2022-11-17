@@ -591,29 +591,27 @@ function CreatePostModalContent({
 		if (paramInfo.length === 1) {
 			return (
 				<span>
-					{' cùng với '}
+					<span style={{ fontWeight: '500', color: '#6E7191' }}> cùng với </span>
 					{paramInfo[0].fullName || paramInfo[0].firstName + ' ' + paramInfo[0].lastName}
-					<span style={{ fontWeight: '500' }}>.</span>
 				</span>
 			);
 		} else if (paramInfo.length === 2) {
 			return (
 				<span>
-					{' cùng với '}
+					<span style={{ fontWeight: '500', color: '#6E7191' }}> cùng với </span>
 					{paramInfo[0].fullName || paramInfo[0].firstName + ' ' + paramInfo[0].lastName}
-					{' và '}
+					<span style={{ fontWeight: '500', color: '#6E7191' }}> và </span>
 					{paramInfo[1].fullName || paramInfo[1].firstName + ' ' + paramInfo[1].lastName}
-					<span style={{ fontWeight: '500' }}>.</span>
 				</span>
 			);
 		} else {
 			return (
 				<span>
-					{' cùng với '}
+					<span style={{ fontWeight: '500', color: '#6E7191' }}> cùng với </span>
 					{paramInfo[0].fullName || paramInfo[0].firstName + ' ' + paramInfo[0].lastName}
-					{' và '}
+					<span style={{ fontWeight: '500', color: '#6E7191' }}> và </span>
 					{paramInfo.length - 1}
-					{' người khác.'}
+					{' người khác '}
 				</span>
 			);
 		}

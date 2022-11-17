@@ -21,6 +21,7 @@ import {
 	unFollowGroupUser,
 	followGroupUser,
 	updateKey,
+	checkIsJoinedGroup,
 } from 'reducers/redux-utils/group';
 import { NotificationError } from 'helpers/Error';
 import { useDispatch } from 'react-redux';
@@ -86,6 +87,7 @@ function MainGroupComponent({
 		setIsFetching(true);
 		try {
 			await dispatch(getEnjoyGroup(data?.id)).unwrap();
+			dispatch(checkIsJoinedGroup(true));
 			setShow(true);
 			setIsFetching(false);
 		} catch (err) {
@@ -103,8 +105,14 @@ function MainGroupComponent({
 			setShow(false);
 			setShowSelect(false);
 			setIsFetching(false);
+			dispatch(checkIsJoinedGroup(false));
 		} catch (err) {
-			NotificationError(err);
+			if (err.errorCode === 760) {
+				const customId = 'custom-id-PersonalInfo-handleDrop-warning';
+				toast.warning('Bạn đang là Admin bạn không thể rời nhóm', { toastId: customId });
+			}
+		} finally {
+			setIsFetching(false);
 		}
 	};
 

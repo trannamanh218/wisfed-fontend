@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import _ from 'lodash';
 import { CloseX } from 'components/svg';
 import PropTypes from 'prop-types';
-function PreviewLink({ urlData, isFetching, removeUrlPreview, inCreatePost }) {
+function PreviewLink({ urlData, isFetching, removeUrlPreview, driectToUrl }) {
 	const [domain, setDomain] = useState('');
 
 	useEffect(() => {
@@ -16,12 +16,6 @@ function PreviewLink({ urlData, isFetching, removeUrlPreview, inCreatePost }) {
 			}
 		}
 	}, [urlData]);
-
-	const driectToUrl = url => {
-		if (!inCreatePost) {
-			window.open(url);
-		}
-	};
 
 	return (
 		<div className='preview-link'>
@@ -60,14 +54,14 @@ PreviewLink.defaultProps = {
 	urlData: {},
 	isFetching: false,
 	removeUrlPreview: () => {},
-	inCreatePost: false,
+	driectToUrl: () => {},
 };
 
 PreviewLink.propTypes = {
 	urlData: PropTypes.object,
 	isFetching: PropTypes.bool,
 	removeUrlPreview: PropTypes.func,
-	inCreatePost: PropTypes.bool,
+	driectToUrl: PropTypes.func,
 };
 
 export default PreviewLink;

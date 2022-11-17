@@ -135,7 +135,7 @@ const DetailFriend = () => {
 					}
 				} else if (invitation) {
 					if (inputSearch.length > 0) {
-						const friendReq = await dispatch(getListReqFriendsToMe()).unwrap();
+						const friendReq = await dispatch(getListReqFriendsToMe({ ...query })).unwrap();
 						setGetListFollowings(friendReq.rows);
 					} else {
 						const friendReq = await dispatch(getListReqFriendsToMe()).unwrap();

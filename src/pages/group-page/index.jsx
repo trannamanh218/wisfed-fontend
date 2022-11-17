@@ -5,7 +5,7 @@ import './index.scss';
 import './mainGroup.scss';
 import SubContainer from 'components/layout/sub-container';
 import SidebarGroupLef from './sidebar-left';
-import { getGroupDettail, getMember } from 'reducers/redux-utils/group';
+import { getGroupDettail, getMember, checkIsJoinedGroup } from 'reducers/redux-utils/group';
 import MainGroupComponent from './popup-group/MainGroupComponet/MainGroupComponent';
 import RightSidebarGroup from './sidebar-right/RightSidebarGroup';
 import { updateKey, handleToggleUpdate } from 'reducers/redux-utils/group';
@@ -28,6 +28,7 @@ const Group = () => {
 		try {
 			const res = await dispatch(getGroupDettail(id)).unwrap();
 			setDetailGroup(res);
+			dispatch(checkIsJoinedGroup(res.isJoined));
 		} catch (err) {
 			setRenderNotFound(true);
 		}

@@ -86,27 +86,29 @@ export default function HashtagPage() {
 			}
 		}
 	}, [isFetching]);
-
 	return (
 		<NormalContainer>
-			<Circle loading={isFetching} />
-			<div className='hashtag-page'>
-				<h4>Kết quả tìm kiếm cho "#{hashtag}"</h4>
-				{postList.length > 0 ? (
-					<InfiniteScroll
-						dataLength={postList.length}
-						next={groupId ? getPostsByHashtagFromGroup : getPostsByHashtag}
-						hasMore={hasMore}
-						loader={<LoadingIndicator />}
-					>
-						{postList.map(post => (
-							<Post key={post.id} postInformations={post} type={POST_TYPE} isInDetail={true} />
-						))}
-					</InfiniteScroll>
-				) : (
-					<h6>Chưa có dữ liệu</h6>
-				)}
-			</div>
+			{isFetching ? (
+				<Circle loading={true} />
+			) : (
+				<div className='hashtag-page'>
+					<h4>Kết quả tìm kiếm cho "#{hashtag}"</h4>
+					{postList.length > 0 ? (
+						<InfiniteScroll
+							dataLength={postList.length}
+							next={groupId ? getPostsByHashtagFromGroup : getPostsByHashtag}
+							hasMore={hasMore}
+							loader={<LoadingIndicator />}
+						>
+							{postList.map(post => (
+								<Post key={post.id} postInformations={post} type={POST_TYPE} isInDetail={true} />
+							))}
+						</InfiniteScroll>
+					) : (
+						<h6>Chưa có dữ liệu</h6>
+					)}
+				</div>
+			)}
 		</NormalContainer>
 	);
 }

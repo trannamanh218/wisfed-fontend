@@ -24,7 +24,7 @@ const urlRegex =
 const hashtagRegex =
 	/#(?![0-9_]+\b)[0-9a-z_ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễếệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ]+/gi;
 
-const PostShare = ({ postData, inCreatePost = false }) => {
+const PostShare = ({ postData, inCreatePost, directUrl }) => {
 	const [videoId, setVideoId] = useState('');
 
 	const [showModalOthers, setShowModalOthers] = useState(false);
@@ -32,10 +32,6 @@ const PostShare = ({ postData, inCreatePost = false }) => {
 	const handleCloseModalOthers = () => setShowModalOthers(false);
 	const handleShowModalOthers = () => setShowModalOthers(true);
 	const [readMore, setReadMore] = useState(false);
-
-	const directUrl = url => {
-		window.open(url);
-	};
 
 	const navigate = useNavigate();
 
@@ -48,41 +44,39 @@ const PostShare = ({ postData, inCreatePost = false }) => {
 		if (paramInfo.length === 1) {
 			return (
 				<span>
-					<span style={{ fontWeight: '500' }}> cùng với </span>
+					<span style={{ fontWeight: '500', color: '#6E7191' }}> cùng với </span>
 					<Link to={`/profile/${paramInfo[0].userId}`}>
 						{paramInfo[0].users.fullName ||
 							paramInfo[0].users.firstName + ' ' + paramInfo[0].users.lastName}
 					</Link>
-					<span style={{ fontWeight: '500' }}>.</span>
 				</span>
 			);
 		} else if (paramInfo.length === 2) {
 			return (
 				<span>
-					<span style={{ fontWeight: '500' }}> cùng với </span>
+					<span style={{ fontWeight: '500', color: '#6E7191' }}> cùng với </span>
 					<Link to={`/profile/${paramInfo[0].userId}`}>
 						{paramInfo[0].users.fullName ||
 							paramInfo[0].users.firstName + ' ' + paramInfo[0].users.lastName}
 					</Link>
-					<span style={{ fontWeight: '500' }}> và </span>
+					<span style={{ fontWeight: '500', color: '#6E7191' }}> và </span>
 					<Link to={`/profile/${paramInfo[1].userId}`}>
 						{paramInfo[1].users.fullName ||
 							paramInfo[1].users.firstName + ' ' + paramInfo[1].users.lastName}
 					</Link>
-					<span style={{ fontWeight: '500' }}>.</span>
 				</span>
 			);
 		} else {
 			return (
 				<span>
-					<span style={{ fontWeight: '500' }}> cùng với </span>
+					<span style={{ fontWeight: '500', color: '#6E7191' }}> cùng với </span>
 					<Link to={`/profile/${paramInfo[0].users.id}`}>
 						{paramInfo[0].users.fullName ||
 							paramInfo[0].users.firstName + ' ' + paramInfo[0].users.lastName}
 					</Link>
-					<span style={{ fontWeight: '500' }}> và </span>
+					<span style={{ fontWeight: '500', color: '#6E7191' }}> và </span>
 					<span className='post__user__container__mention-users-plus' onClick={() => handleShowModalOthers()}>
-						{paramInfo.length - 1} người khác.
+						{paramInfo.length - 1} người khác
 						<div className='post__user__container__list-mention-users'>
 							{!!paramInfo.length && (
 								<>
@@ -147,9 +141,9 @@ const PostShare = ({ postData, inCreatePost = false }) => {
 				.replace(urlRegex, data => {
 					const urlMatched = extractLinks(data);
 					if (urlMatched) {
-						return `<a class="url-class" href=${
-							data.includes('https://') ? data : `https://${data}`
-						} target="_blank">${data.length <= 50 ? data : data.slice(0, 50) + '...'}</a>`;
+						return `<a class="url-class" data-url=${data}>${
+							data.length <= 50 ? data : data.slice(0, 50) + '...'
+						}</a>`;
 					} else {
 						return data;
 					}
@@ -160,12 +154,14 @@ const PostShare = ({ postData, inCreatePost = false }) => {
 						.replace(/[\u0300-\u036f]/g, '')
 						.replace(/đ/g, 'd')
 						.replace(/Đ/g, 'D');
-					if (postData.groupId) {
-						return `<a class="hashtag-class" href="/hashtag-group/${postData.groupId}/${newData.slice(
+					if (postData?.sharePost?.groupInfo?.id) {
+						return `<a class="hashtag-class" data-hashtag-navigate="/hashtag-group/${
+							postData?.sharePost?.groupInfo?.id
+						}/${newData.slice(1)}">${newData}</a>`;
+					} else {
+						return `<a class="hashtag-class" data-hashtag-navigate="/hashtag/${newData.slice(
 							1
 						)}">${newData}</a>`;
-					} else {
-						return `<a class="hashtag-class" href="/hashtag/${newData.slice(1)}">${newData}</a>`;
 					}
 				});
 			return newContent;
@@ -256,7 +252,7 @@ const PostShare = ({ postData, inCreatePost = false }) => {
 							__html: generateContent(postData.sharePost.message),
 						}}
 					></div>
-					{postData?.sharePost?.message?.length > 500 && (
+					{postData?.sharePost?.message?.length > 500 && _.isEmpty(postData?.sharePost?.preview) && (
 						<div className='read-more-post' onClick={() => setReadMore(!readMore)}>
 							{readMore ? 'Rút gọn' : 'Xem thêm'}
 						</div>
@@ -332,8 +328,12 @@ const PostShare = ({ postData, inCreatePost = false }) => {
 								allowFullScreen={true}
 							></iframe>
 						) : (
-							<div onClick={() => directUrl(postData.sharePost.url)}>
-								<PreviewLink isFetching={false} urlData={postData.sharePost.preview} />
+							<div className='post-share__preview-link-container'>
+								<PreviewLink
+									isFetching={false}
+									urlData={postData.sharePost.preview}
+									driectToUrl={directUrl}
+								/>
 							</div>
 						)}
 					</>
@@ -342,11 +342,17 @@ const PostShare = ({ postData, inCreatePost = false }) => {
 	);
 };
 
+PostShare.defaultProps = {
+	inCreatePost: false,
+	directUrl: () => {},
+};
+
 PostShare.propTypes = {
 	postData: PropTypes.object,
 	likeAction: PropTypes.func,
 	className: PropTypes.string,
 	inCreatePost: PropTypes.bool,
+	directUrl: PropTypes.func,
 };
 
 export default PostShare;

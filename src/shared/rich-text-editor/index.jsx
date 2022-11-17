@@ -108,7 +108,9 @@ function RichTextEditor({
 	}, [editorState]);
 
 	const hashtagStrategy = (contentBlock, callback) => {
-		findWithRegex(hashtagRegex, contentBlock, callback);
+		if (commentLv1Id === undefined) {
+			findWithRegex(hashtagRegex, contentBlock, callback);
+		}
 	};
 
 	const findWithRegex = (regex, contentBlock, callback) => {
@@ -150,8 +152,8 @@ function RichTextEditor({
 					return {
 						element: 'a',
 						attributes: {
-							class: 'mention-class',
-							href: data.mention.link,
+							'class': 'mention-class',
+							'data-user-id': data.mention.id,
 						},
 						style: {
 							color: '#222',
@@ -209,7 +211,6 @@ function RichTextEditor({
 			suggestionsResponse.rows.forEach(item => {
 				const mentionData = {
 					name: item.fullName || item.firstName + item.lastName,
-					link: `/profile/${item.id}`,
 					avatar: item.avatarImage || defaultAvatar,
 					id: item.id,
 				};
@@ -248,7 +249,6 @@ function RichTextEditor({
 						'data': {
 							'mention': {
 								'name': `${mentionUsersArr[0].name}`,
-								'link': `${mentionUsersArr[0].link}`,
 								'avatar': `${mentionUsersArr[0].avatar}`,
 								'id': `${mentionUsersArr[0].id}`,
 							},
@@ -321,7 +321,7 @@ RichTextEditor.defaultProps = {
 	createCmt: false,
 	mentionUsersArr: [],
 	setMentionUsersArr: () => {},
-	commentLv1Id: null,
+	commentLv1Id: undefined,
 	replyingCommentId: -1,
 };
 

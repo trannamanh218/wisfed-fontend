@@ -107,7 +107,7 @@ const PersonalInfoForm = ({ userData, toggleModal }) => {
 			genderRef.current = { value: 'other', title: 'Không xác định' };
 		}
 
-		if (userData.favoriteCategory.length > 0) {
+		if (userData?.favoriteCategory?.length > 0) {
 			const newArray = [];
 			userData.favoriteCategory.forEach(item => {
 				newArray.push(item.category);

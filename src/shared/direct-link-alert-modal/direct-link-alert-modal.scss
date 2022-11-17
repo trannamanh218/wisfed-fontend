@@ -1,0 +1,42 @@
+@import 'src/scss/abstracts/_variables.scss';
+
+.direct-link-alert-modal {
+	.modal-content {
+		padding: 1.5rem;
+		text-align: center;
+		border-radius: 24px;
+	}
+
+	.modal-body {
+		padding: 0;
+	}
+
+	p {
+		color: $ash;
+		font-size: 18px;
+		font-weight: 600;
+		line-height: 25px;
+	}
+
+	.direct-link-alert-modal__buttons {
+		display: flex;
+		justify-content: center;
+		gap: 28px;
+		margin-top: 20px;
+	}
+
+	.direct-link-alert-modal__button {
+		width: 100px;
+		padding: 12px;
+		text-align: center;
+		border-radius: 8px;
+		font-weight: 600;
+		color: white;
+		&.acept {
+			background-color: $red;
+		}
+		&.cancel {
+			background-color: $ash-placeholder;
+		}
+	}
+}

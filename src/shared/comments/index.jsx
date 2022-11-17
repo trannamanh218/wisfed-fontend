@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import classNames from 'classnames';
 import { calculateDurationTime } from 'helpers/Common';
 import PropTypes from 'prop-types';
@@ -15,20 +15,83 @@ import { Link, useNavigate } from 'react-router-dom';
 import { LikeComment } from 'components/svg';
 import { likeAndUnlikeGroupComment } from 'reducers/redux-utils/group';
 import { extractLinks } from '@draft-js-plugins/linkify';
+import DirectLinkALertModal from 'shared/direct-link-alert-modal';
+import _ from 'lodash';
 import ShowTime from 'shared/showTimeOfPostWhenHover/showTime';
 
 const urlRegex =
 	/(http(s)?:\/\/)?(www(\.))?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}([-a-zA-Z0-9()@:%_\+.~#?&//=]*)([^"<\s]+)(?![^<>]*>|[^"]*?<\/a)/g;
-const hashtagRegex =
-	/#(?![0-9_]+\b)[0-9a-z_ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễếệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ]+/gi;
+// const hashtagRegex =
+// 	/#(?![0-9_]+\b)[0-9a-z_ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễếệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ]+/gi; không xóa
 
 const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 	const [isLiked, setIsLiked] = useState(false);
 	const [isAuthor, setIsAuthor] = useState(false);
 	const [data, setData] = useState(dataProp);
+	const [modalShow, setModalShow] = useState(false);
+
+	const urlToDirect = useRef('');
 
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
+
+	useEffect(() => {
+		if (!_.isEmpty(dataProp)) {
+			handleAddEventClickToUrlTags();
+			handleAddEventClickMentionTags();
+			// handleAddEventClickToHashtagTags(); // không xóa
+		}
+	});
+
+	const handleAddEventClickToUrlTags = useCallback(() => {
+		const arr = document.querySelectorAll('.url-class');
+		for (let i = 0; i < arr.length; i++) {
+			const dataUrl = arr[i].getAttribute('data-url');
+			arr[i].onclick = () => directUrl(dataUrl);
+		}
+	}, [dataProp]);
+
+	const handleAddEventClickMentionTags = useCallback(() => {
+		const arr = document.querySelectorAll('.mention-class');
+		for (let i = 0; i < arr.length; i++) {
+			const mentionUserId = arr[i].getAttribute('data-user-id');
+			arr[i].onclick = () => navigate(`/profile/${mentionUserId}`);
+		}
+	}, [dataProp]);
+
+	// không xóa
+	// 	const handleAddEventClickToHashtagTags = useCallback(() => {
+	// 		const arr = document.querySelectorAll('.hashtag-class');
+	// 		for (let i = 0; i < arr.length; i++) {
+	// 			const dataHashtagNavigate = arr[i].getAttribute('data-hashtag-navigate');
+	// 			arr[i].onclick = () => handleClickHashtag(dataHashtagNavigate);
+	// 		}
+	// 	}, [dataProp]);
+	//
+	// 	const handleClickHashtag = dataHashtagNavigate => {
+	// 		navigate(dataHashtagNavigate);
+	// 	};
+
+	const directUrl = url => {
+		setModalShow(true);
+		let urlFormated = '';
+		if (url.includes('https://')) {
+			urlFormated = url;
+		} else {
+			urlFormated = `https://${url}`;
+		}
+		urlToDirect.current = urlFormated;
+	};
+
+	const handleAcept = () => {
+		setModalShow(false);
+		window.open(urlToDirect.current);
+	};
+
+	const handleCancel = () => {
+		setModalShow(false);
+		urlToDirect.current = '';
+	};
 
 	const handleLikeUnlikeCmt = async () => {
 		const newCloneData = { ...data };
@@ -57,32 +120,36 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 	};
 
 	const generateContent = content => {
-		if (content.match(urlRegex) || content.match(hashtagRegex)) {
-			const newContent = content
-				.replace(urlRegex, data => {
-					const urlMatched = extractLinks(data);
-					if (urlMatched) {
-						return `<a class="url-class" href=${
-							data.includes('https://') ? data : `https://${data}`
-						} target="_blank">${data.length <= 50 ? data : data.slice(0, 50) + '...'}</a>`;
-					} else {
-						return data;
-					}
-				})
-				.replace(hashtagRegex, data => {
-					const newData = data
-						.normalize('NFD')
-						.replace(/[\u0300-\u036f]/g, '')
-						.replace(/đ/g, 'd')
-						.replace(/Đ/g, 'D');
-					if (postData.groupId) {
-						return `<a class="hashtag-class" href="/hashtag-group/${postData.groupId}/${newData.slice(
-							1
-						)}">${newData}</a>`;
-					} else {
-						return `<a class="hashtag-class" href="/hashtag/${newData.slice(1)}">${newData}</a>`;
-					}
-				});
+		// if (content.match(urlRegex) || content.match(hashtagRegex)) { // k xóa
+		if (content.match(urlRegex)) {
+			const newContent = content.replace(urlRegex, data => {
+				const urlMatched = extractLinks(data);
+				if (urlMatched) {
+					return `<a class="url-class" data-url=${data}>${
+						data.length <= 50 ? data : data.slice(0, 50) + '...'
+					}</a>`;
+				} else {
+					return data;
+				}
+			});
+
+			// không xóa
+			// .replace(hashtagRegex, data => {
+			// 	const newData = data
+			// 		.normalize('NFD')
+			// 		.replace(/[\u0300-\u036f]/g, '')
+			// 		.replace(/đ/g, 'd')
+			// 		.replace(/Đ/g, 'D');
+			// 	if (postData.groupId) {
+			// 		return `<a class="hashtag-class" data-hashtag-navigate="/hashtag-group/${
+			// 			postData.groupId
+			// 		}/${newData.slice(1)}">${newData}</a>`;
+			// 	} else {
+			// 		return `<a class="hashtag-class" data-hashtag-navigate="/hashtag/${newData.slice(
+			// 			1
+			// 		)}">${newData}</a>`;
+			// 	}
+			// });
 			return newContent;
 		} else {
 			return content;
@@ -162,7 +229,6 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 								id: data.user.id,
 								name: data.user.fullName || data.user.firstName + ' ' + data.user.lastName,
 								avatar: data.user.avatarImage,
-								link: `/profile/${data.user.id}`,
 							})
 						}
 					>
@@ -176,6 +242,7 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 					</li>
 				</ul>
 			</div>
+			<DirectLinkALertModal modalShow={modalShow} handleAcept={handleAcept} handleCancel={handleCancel} />
 		</div>
 	);
 };

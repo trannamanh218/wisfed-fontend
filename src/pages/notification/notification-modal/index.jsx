@@ -37,8 +37,6 @@ const NotificationModal = ({ setModalNoti, buttonModal }) => {
 
 	if (window.innerWidth >= 1280 && window.innerWidth <= 1366) {
 		loadingItemsNumber.current = 6;
-	} else if (window.innerWidth > 1440) {
-		loadingItemsNumber.current = 9;
 	} else {
 		loadingItemsNumber.current = 8;
 	}
@@ -96,7 +94,7 @@ const NotificationModal = ({ setModalNoti, buttonModal }) => {
 		try {
 			const params = {
 				start: 0,
-				limit: 6,
+				limit: 7,
 			};
 			const res = await dispatch(getNotification(params)).unwrap();
 			const newArr = res.filter(item => !item.isCheck);
@@ -112,7 +110,7 @@ const NotificationModal = ({ setModalNoti, buttonModal }) => {
 		try {
 			const params = {
 				start: 0,
-				limit: 6,
+				limit: 7,
 			};
 			const res = await dispatch(getListNotificationUnRead(params)).unwrap();
 			const newArr = res.filter(item => !item.isCheck);
@@ -128,7 +126,7 @@ const NotificationModal = ({ setModalNoti, buttonModal }) => {
 		try {
 			const params = {
 				start: 0,
-				limit: 5,
+				limit: 7,
 				sort: JSON.stringify([{ property: 'createdAt', direction: 'DESC' }]),
 			};
 			const res = await dispatch(getListReqFriendsToMe(params)).unwrap();
@@ -183,85 +181,108 @@ const NotificationModal = ({ setModalNoti, buttonModal }) => {
 	return (
 		<div className='notification-modal' ref={notifymodal}>
 			<div className='notification-modal__header'>Thông báo</div>
-			{isLoading ? (
-				<div className='notification-modal__loading-container'>
-					<LoadingTimeLine numberItems={loadingItemsNumber.current} />
-				</div>
-			) : (
-				<Tabs onSelect={eventKey => setCurrentTab(eventKey)} defaultActiveKey='all' activeKey={currentTab}>
-					<Tab eventKey='all' title='Tất cả'>
-						<div className='notification-modal__content__title'>Mới nhất</div>
-						{notificationsList.slice(0, 1).map(item => (
-							<NotificationStatus
-								key={item.id}
-								item={item}
-								handleReplyFriendRequest={handleReplyFriendRequest}
-							/>
-						))}
-						<div className='notification-modal__content__title'>Gần đây</div>
-						{notificationsList.slice(1, 6).map(item => (
-							<NotificationStatus
-								key={item.id}
-								item={item}
-								handleReplyFriendRequest={handleReplyFriendRequest}
-							/>
-						))}
-						<Link to={`/notification`} onClick={handleNotification} className='notification__tab__button'>
-							Xem tất cả
-						</Link>
-					</Tab>
 
-					<Tab eventKey='unread' title='Chưa đọc'>
-						{notificationsUnreadList.length > 0 ? (
-							<>
-								<div className='notification-modal__content__title'>Thông báo chưa đọc</div>
-								{notificationsUnreadList.slice(0, 6).map(item => (
-									<NotificationStatus
-										key={item.id}
-										item={item}
-										handleReplyFriendRequest={handleReplyFriendRequest}
-									/>
-								))}
-								<Link
-									to={`/notification`}
-									onClick={handleNotification}
-									className='notification__tab__button'
-								>
-									Xem tất cả
-								</Link>
-							</>
-						) : (
-							<span className='no__notificaion'>Bạn không có thông báo nào</span>
-						)}
-					</Tab>
+			<Tabs onSelect={eventKey => setCurrentTab(eventKey)} defaultActiveKey='all' activeKey={currentTab}>
+				<Tab eventKey='all' title='Tất cả'>
+					{isLoading ? (
+						<div className='notification-modal__loading-container'>
+							<LoadingTimeLine numberItems={loadingItemsNumber.current} />
+						</div>
+					) : (
+						<>
+							<div className='notification-modal__content__title'>Mới nhất</div>
+							{notificationsList.slice(0, 1).map(item => (
+								<NotificationStatus
+									key={item.id}
+									item={item}
+									handleReplyFriendRequest={handleReplyFriendRequest}
+								/>
+							))}
+							<div className='notification-modal__content__title'>Gần đây</div>
+							{notificationsList.slice(1, 6).map(item => (
+								<NotificationStatus
+									key={item.id}
+									item={item}
+									handleReplyFriendRequest={handleReplyFriendRequest}
+								/>
+							))}
+							<Link
+								to={`/notification`}
+								onClick={handleNotification}
+								className='notification__tab__button'
+							>
+								Xem tất cả
+							</Link>
+						</>
+					)}
+				</Tab>
 
-					<Tab eventKey='friendrequest' title='Lời mời kết bạn'>
-						{friendReqToMeCount ? (
-							<>
-								<div className='notification-modal__content__title'>
-									{friendReqToMeCount} lời mời kết bạn
-								</div>
-								{listAddFriendReqToMe.map(item => (
-									<NotificationStatus
-										key={item.id}
-										item={item}
-										handleReplyFriendRequest={handleReplyFriendRequest}
-									/>
-								))}
-								<Link
-									to={`/notification`}
-									onClick={handleNotification}
-									className='notification__tab__button'
-								>
-									Xem tất cả
-								</Link>
-							</>
-						) : (
-							<span className='no__notificaion'>Bạn chưa có lời mời kết bạn nào</span>
-						)}
-					</Tab>
-				</Tabs>
-			)}
+				<Tab eventKey='unread' title='Chưa đọc'>
+					{isLoading ? (
+						<div className='notification-modal__loading-container'>
+							<LoadingTimeLine numberItems={loadingItemsNumber.current} />
+						</div>
+					) : (
+						<>
+							{notificationsUnreadList.length > 0 ? (
+								<>
+									<div className='notification-modal__content__title'>Thông báo chưa đọc</div>
+									{notificationsUnreadList.slice(0, 6).map(item => (
+										<NotificationStatus
+											key={item.id}
+											item={item}
+											handleReplyFriendRequest={handleReplyFriendRequest}
+										/>
+									))}
+									<Link
+										to={`/notification`}
+										onClick={handleNotification}
+										className='notification__tab__button'
+									>
+										Xem tất cả
+									</Link>
+								</>
+							) : (
+								<span className='no__notificaion'>Bạn không có thông báo nào</span>
+							)}
+						</>
+					)}
+				</Tab>
+
+				<Tab eventKey='friendrequest' title='Lời mời kết bạn'>
+					{isLoading ? (
+						<div className='notification-modal__loading-container'>
+							<LoadingTimeLine numberItems={loadingItemsNumber.current} />
+						</div>
+					) : (
+						<>
+							{friendReqToMeCount ? (
+								<>
+									<div className='notification-modal__content__title'>
+										{friendReqToMeCount} lời mời kết bạn
+									</div>
+									{listAddFriendReqToMe.map(item => (
+										<NotificationStatus
+											key={item.id}
+											item={item}
+											handleReplyFriendRequest={handleReplyFriendRequest}
+										/>
+									))}
+									<Link
+										to={`/notification`}
+										onClick={handleNotification}
+										className='notification__tab__button'
+									>
+										Xem tất cả
+									</Link>
+								</>
+							) : (
+								<span className='no__notificaion'>Bạn chưa có lời mời kết bạn nào</span>
+							)}
+						</>
+					)}
+				</Tab>
+			</Tabs>
 		</div>
 	);
 };
