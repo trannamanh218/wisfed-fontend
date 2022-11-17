@@ -15,6 +15,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { LikeComment } from 'components/svg';
 import { likeAndUnlikeGroupComment } from 'reducers/redux-utils/group';
 import { extractLinks } from '@draft-js-plugins/linkify';
+import ShowTime from 'shared/showTimeOfPostWhenHover/showTime';
 
 const urlRegex =
 	/(http(s)?:\/\/)?(www(\.))?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}([-a-zA-Z0-9()@:%_\+.~#?&//=]*)([^"<\s]+)(?![^<>]*>|[^"]*?<\/a)/g;
@@ -167,8 +168,11 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 					>
 						Phản hồi
 					</li>
-					<li className='comment__item comment__item--timeline'>
-						{`${calculateDurationTime(data.createdAt)}`}
+					<li className='comment__item--timeline'>
+						<div className='show-time'>
+							{`${calculateDurationTime(data.createdAt)}`}
+							<ShowTime dataTime={data.createdAt} />
+						</div>
 					</li>
 				</ul>
 			</div>
