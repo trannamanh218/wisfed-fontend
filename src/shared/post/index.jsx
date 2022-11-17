@@ -105,17 +105,17 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 			commentsReverse.reverse();
 
 			// Đảo ngược cả các comment reply nữa
-			for (let i = 0; i < commentsReverse.length; i++) {
-				if (commentsReverse[i].reply.length > 0) {
-					const commentsChildReverse = [...commentsReverse[i].reply];
-					commentsChildReverse.reverse();
+			// for (let i = 0; i < commentsReverse.length; i++) {
+			// 	if (commentsReverse[i].reply.length > 0) {
+			// 		const commentsChildReverse = [...commentsReverse[i].reply];
+			// 		commentsChildReverse.reverse();
 
-					const newCloneObj = { ...commentsReverse[i] };
-					newCloneObj.reply = commentsChildReverse;
+			// 		const newCloneObj = { ...commentsReverse[i] };
+			// 		newCloneObj.reply = commentsChildReverse;
 
-					commentsReverse[i] = newCloneObj;
-				}
-			}
+			// 		commentsReverse[i] = newCloneObj;
+			// 	}
+			// }
 
 			setPostData({ ...postInformations, usersComments: commentsReverse });
 		} else {
@@ -433,7 +433,7 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 			}
 		}
 	}, [postData]);
-
+	console.log(postInformations);
 	return (
 		<div className='post__container'>
 			<div className='post__user-status'>
