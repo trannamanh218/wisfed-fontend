@@ -58,6 +58,7 @@ const MainShelves = ({ allLibraryList, shelveGroupName, isMyShelve, handleViewBo
 		setCurrentPage(0);
 		setCurrentBooks([]);
 		setCurrentLibrary(data);
+		dispatch(handleSetDefaultLibrary(data));
 	};
 
 	const updateInputSearch = value => {
