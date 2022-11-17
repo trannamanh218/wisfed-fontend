@@ -10,7 +10,7 @@ import { likeQuoteComment } from 'reducers/redux-utils/quote';
 import { NotificationError } from 'helpers/Error';
 import { likeAndUnlikeCommentPost } from 'reducers/redux-utils/activity';
 import { likeAndUnlikeCommentReview } from 'reducers/redux-utils/book';
-import { POST_TYPE, QUOTE_TYPE, REVIEW_TYPE } from 'constants/index';
+import { POST_TYPE, QUOTE_TYPE, REVIEW_TYPE, urlRegex, hashtagRegex } from 'constants/index';
 import { Link, useNavigate } from 'react-router-dom';
 import { LikeComment } from 'components/svg';
 import { likeAndUnlikeGroupComment } from 'reducers/redux-utils/group';
@@ -18,11 +18,6 @@ import { extractLinks } from '@draft-js-plugins/linkify';
 import DirectLinkALertModal from 'shared/direct-link-alert-modal';
 import _ from 'lodash';
 import ShowTime from 'shared/showTimeOfPostWhenHover/showTime';
-
-const urlRegex =
-	/(http(s)?:\/\/)?(www(\.))?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}([-a-zA-Z0-9()@:%_\+.~#?&//=]*)([^"<\s]+)(?![^<>]*>|[^"]*?<\/a)/g;
-// const hashtagRegex =
-// 	/#(?![0-9_]+\b)[0-9a-z_ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễếệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ]+/gi; không xóa
 
 const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 	const [isLiked, setIsLiked] = useState(false);
@@ -236,7 +231,7 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 					</li>
 					<li className='comment__item--timeline'>
 						<div className='show-time'>
-							{`${calculateDurationTime(data.createdAt)}`}
+							<span>{`${calculateDurationTime(data.createdAt)}`}</span>
 							<ShowTime dataTime={data.createdAt} />
 						</div>
 					</li>

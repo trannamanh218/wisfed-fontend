@@ -37,6 +37,8 @@ import {
 	TOP_USER_VERB_SHARE,
 	MY_BOOK_VERB_SHARE,
 	REVIEW_VERB_SHARE,
+	urlRegex,
+	hashtagRegex,
 } from 'constants';
 import { IconRanks } from 'components/svg';
 import AuthorBook from 'shared/author-book';
@@ -53,11 +55,6 @@ import { extractLinks } from '@draft-js-plugins/linkify';
 import { toast } from 'react-toastify';
 import DirectLinkALertModal from 'shared/direct-link-alert-modal';
 import ShowTime from 'shared/showTimeOfPostWhenHover/showTime';
-
-const urlRegex =
-	/(http(s)?:\/\/)?(www(\.))?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}([-a-zA-Z0-9()@:%_\+.~#?&//=]*)([^"<\s]+)(?![^<>]*>|[^"]*?<\/a)/g;
-const hashtagRegex =
-	/#(?![0-9_]+\b)[0-9a-z_ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễếệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ]+/gi;
 
 const verbShareArray = [
 	POST_VERB_SHARE,

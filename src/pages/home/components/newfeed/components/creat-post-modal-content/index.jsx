@@ -51,6 +51,7 @@ import {
 	TOP_QUOTE_VERB_SHARE,
 	MY_BOOK_VERB_SHARE,
 	REVIEW_VERB_SHARE,
+	hashtagRegex,
 } from 'constants';
 import { handleClickCreateNewPostForBook } from 'reducers/redux-utils/activity';
 // import ShareModeComponent from './ShareModeComponent';
@@ -65,9 +66,6 @@ const verbShareArray = [
 	TOP_USER_VERB_SHARE,
 	REVIEW_VERB_SHARE,
 ];
-
-const hashtagRegex =
-	/#(?![0-9_]+\b)[0-9a-z_ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễếệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ]+/gi;
 
 function CreatePostModalContent({
 	hideCreatePostModal,
