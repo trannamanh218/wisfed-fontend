@@ -75,10 +75,10 @@ const SeeMoreComments = ({
 					res = await dispatch(getMiniPostComments(sentData)).unwrap();
 				} else if (postType === 'group') {
 					sentData = {
-						postId: data.id,
+						postId: data.groupPostId || data.id,
 						params: params,
 					};
-					// res = await dispatch(getGroupPostComments(sentData)).unwrap();
+					res = await dispatch(getGroupPostComments(sentData)).unwrap();
 				} else if (postType === 'review') {
 					sentData = {
 						reviewId: data.id,
@@ -89,7 +89,7 @@ const SeeMoreComments = ({
 			} catch (err) {
 				NotificationError(err);
 			} finally {
-				if (res?.count) {
+				if (res.count) {
 					setFatherCommentsCount(res.count);
 				}
 			}
@@ -133,6 +133,9 @@ const SeeMoreComments = ({
 		} catch (err) {
 			NotificationError(err);
 		} finally {
+			if (res.count) {
+				setFatherCommentsCount(res.count);
+			}
 			if (res.rows?.length > 0) {
 				handleAddMoreComments(data, res.rows);
 			}
@@ -176,6 +179,7 @@ const SeeMoreComments = ({
 						</div>
 					) : (
 						<div className='see-more-comment'>
+							{fatherCommentsCount}
 							<span className='see-more-comment__button' onClick={onClickSeeMore}>
 								Xem thêm
 							</span>
