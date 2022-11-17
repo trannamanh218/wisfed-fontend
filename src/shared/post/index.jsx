@@ -139,7 +139,6 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 	};
 
 	const onCreateComment = async (content, replyId) => {
-		console.log('yo');
 		if (content) {
 			const newArr = [];
 			mentionUsersArr.forEach(item => newArr.push(item.id));
