@@ -180,6 +180,7 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 				}
 				onClickSeeMoreReply(replyId);
 			} catch (err) {
+				console.log('nnnnn');
 				toast.warning('Bạn chưa tham gia nhóm');
 			}
 		}
