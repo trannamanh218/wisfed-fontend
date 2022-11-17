@@ -233,7 +233,7 @@ function MainGroupComponent({
 				/>
 
 				{/* Chỉ quản trị viên mới có thể thay đổi ảnh bìa */}
-				{data.createdBy?.id === userInfo.id ? (
+				{data.createdBy?.id === userInfo.id && (
 					<Dropzone
 						onDrop={acceptedFiles => handleChangeGroupImage(acceptedFiles)}
 						multiple={false}
@@ -250,7 +250,7 @@ function MainGroupComponent({
 							</div>
 						)}
 					</Dropzone>
-				) : null}
+				)}
 
 				<div className='group__title-name'>
 					<span>
