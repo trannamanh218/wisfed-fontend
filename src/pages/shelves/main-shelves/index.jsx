@@ -92,7 +92,7 @@ const MainShelves = ({ allLibraryList, shelveGroupName, isMyShelve, handleViewBo
 		} else {
 			setCurrentLibrary(DEFAULT_LIBRARY);
 		}
-	}, [defaultLibraryRedux, currentLibrary]);
+	}, [defaultLibraryRedux]);
 
 	useEffect(() => {
 		if (!_.isEmpty(currentLibrary)) {
