@@ -9,7 +9,6 @@ import { getListCommentsReview } from 'reducers/redux-utils/book';
 import { useState } from 'react';
 import LoadingIndicator from 'shared/loading-indicator';
 import { useEffect } from 'react';
-import _ from 'lodash';
 
 const SeeMoreComments = ({
 	data = {},
@@ -25,7 +24,6 @@ const SeeMoreComments = ({
 	const callApiPerPage = useRef(10);
 
 	const [isLoading, setIsLoading] = useState(false);
-	const [fatherCommentsCount, setFatherCommentsCount] = useState(11);
 	const [show, setShow] = useState(false);
 
 	const params = {
@@ -35,69 +33,40 @@ const SeeMoreComments = ({
 	};
 
 	useEffect(() => {
-		// Cái if ngoài cùng này để ngăn code chạy lại mỗi khi bấm Xem thêm
-		if (haveNotClickedSeeMoreOnce) {
-			// Nếu không ở trong màn detail và chưa bấm xem thêm thì dữ liệu số comment ban đầu là 1 cho nên bắt đầu gọi từ 0
-			if (!isInDetail && data.usersComments?.length > 0 && haveNotClickedSeeMoreOnce) {
-				callApiStart.current = 0;
-			}
+		// Kiểm tra xem nếu bài viết đã hiển thị đủ comment rồi thì không hiện nút Xem thêm nữa
+		checkShow();
 
-			// Kiểm tra xem nếu bài viết đã hiển thị đủ comment rồi thì không hiện nút Xem thêm nữa
-			if (data.usersComments?.length > 0) {
-				let fatherCommentsFirstCount = 1;
-				if (isInDetail) {
-					fatherCommentsFirstCount = data.usersComments?.length;
-				}
-				data.usersComments?.forEach(item => (fatherCommentsFirstCount += item.reply?.length));
-				if (fatherCommentsFirstCount < data.comment) {
-					setShow(true);
-				}
-			}
-		}
-
-		// Lấy giá trị cho fatherCommentsCount
-		const getFetchData = async () => {
-			let sentData = {};
-			let res = {};
-
-			try {
-				if (postType === 'quote') {
-					sentData = {
-						quoteId: data.id,
-						params: params,
-					};
-					res = await dispatch(getQuoteComments(sentData)).unwrap();
-				} else if (postType === 'post') {
-					sentData = {
-						postId: data.minipostId || data.id,
-						params: params,
-					};
-					res = await dispatch(getMiniPostComments(sentData)).unwrap();
-				} else if (postType === 'group') {
-					sentData = {
-						postId: data.groupPostId || data.id,
-						params: params,
-					};
-					res = await dispatch(getGroupPostComments(sentData)).unwrap();
-				} else if (postType === 'review') {
-					sentData = {
-						reviewId: data.id,
-						params: params,
-					};
-					res = await dispatch(getListCommentsReview(sentData)).unwrap();
-				}
-			} catch (err) {
-				NotificationError(err);
-			} finally {
-				if (res.count) {
-					setFatherCommentsCount(res.count);
-				}
-			}
-		};
-		if (isInDetail && !_.isEmpty(data)) {
-			getFetchData();
+		// Nếu không ở trong màn detail và chưa bấm xem thêm thì dữ liệu số comment ban đầu là 1 cho nên bắt đầu gọi từ 0
+		if (!isInDetail && data.usersComments?.length > 0 && haveNotClickedSeeMoreOnce) {
+			callApiStart.current = 0;
 		}
 	}, [data]);
+
+	const checkShow = () => {
+		let totalShownComment = data.usersComments?.length;
+		for (let i = 0; i < data.usersComments?.length; i++) {
+			totalShownComment += data.usersComments[i].reply?.length;
+		}
+		if (isInDetail) {
+			if (totalShownComment < data.comment) {
+				setShow(true);
+			} else {
+				setShow(false);
+			}
+		} else {
+			if (haveNotClickedSeeMoreOnce) {
+				if (data.usersComments?.length > 1) {
+					setShow(true);
+				}
+			} else {
+				if (totalShownComment < data.comment) {
+					setShow(true);
+				} else {
+					setShow(false);
+				}
+			}
+		}
+	};
 
 	const onClickSeeMore = async () => {
 		setIsLoading(true);
@@ -133,9 +102,6 @@ const SeeMoreComments = ({
 		} catch (err) {
 			NotificationError(err);
 		} finally {
-			if (res.count) {
-				setFatherCommentsCount(res.count);
-			}
 			if (res.rows?.length > 0) {
 				handleAddMoreComments(data, res.rows);
 			}
@@ -171,7 +137,7 @@ const SeeMoreComments = ({
 
 	return (
 		<>
-			{show && data.usersComments?.length < fatherCommentsCount && (
+			{show && (
 				<>
 					{isLoading ? (
 						<div className='loading-more-comments'>

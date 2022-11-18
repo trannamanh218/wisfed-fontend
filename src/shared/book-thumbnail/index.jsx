@@ -38,7 +38,7 @@ BookThumbnail.propTypes = {
 	size: PropTypes.oneOf(['sm', 'md', 'lg']),
 	handleClick: PropTypes.func,
 	className: PropTypes.string,
-	data: PropTypes.object,
+	data: PropTypes.any,
 };
 
 export default BookThumbnail;
