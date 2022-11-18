@@ -158,7 +158,7 @@ export default function MainUpload() {
 
 		const bookInfo = {
 			frontBookCover: imgSrc,
-			images: [imgSrc],
+			images: [],
 			name: name,
 			subName: subName,
 			originalName: originalName,

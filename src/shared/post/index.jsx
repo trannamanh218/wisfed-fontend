@@ -21,7 +21,6 @@ import { createCommentReview } from 'reducers/redux-utils/book';
 import Comment from 'shared/comments';
 import QuoteCard from 'shared/quote-card';
 import PostShare from 'shared/posts-Share';
-import { Modal } from 'react-bootstrap';
 import Play from 'assets/images/play.png';
 import { likeAndUnlikeReview } from 'reducers/redux-utils/book';
 import {
@@ -48,12 +47,12 @@ import ShareUsers from 'pages/home/components/newfeed/components/modal-share-use
 import ShareTarget from 'shared/share-target';
 import { handleMentionCommentId, handleCheckIfMentionFromGroup } from 'reducers/redux-utils/notification';
 import { getMiniPostComments, getGroupPostComments } from 'reducers/redux-utils/post';
-import defaultAvatar from 'assets/icons/defaultLogoAvatar.svg';
 import vector from 'assets/images/Vector.png';
 import SeeMoreComments from 'shared/see-more-comments/SeeMoreComments';
 import { toast } from 'react-toastify';
 import DirectLinkALertModal from 'shared/direct-link-alert-modal';
 import ShowTime from 'shared/showTimeOfPostWhenHover/showTime';
+import WithFriends from './withFriends/WithFriends';
 
 const verbShareArray = [
 	POST_VERB_SHARE,
@@ -79,13 +78,8 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 	const [haveNotClickedSeeMoreOnce, setHaveNotClickedSeeMoreOnce] = useState(true);
 	const [showReplyArrayState, setShowReplyArrayState] = useState([]);
 
-	const [showModalOthers, setShowModalOthers] = useState(false);
-
 	const { userInfo } = useSelector(state => state.auth);
 	const isJoinedGroup = useSelector(state => state.group.isJoinedGroup);
-
-	const handleCloseModalOthers = () => setShowModalOthers(false);
-	const handleShowModalOthers = () => setShowModalOthers(true);
 
 	const clickReply = useRef(null);
 	const doneGetPostData = useRef(false);
@@ -226,11 +220,6 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 		}
 	};
 
-	const onClickUserInModalOthers = paramItem => {
-		handleCloseModalOthers();
-		navigate(`/profile/${paramItem.userId}`);
-	};
-
 	const handleLikeAction = async () => {
 		if (!Storage.getAccessToken()) {
 			dispatch(checkUserLogin(true));
@@ -278,88 +267,6 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 		setMentionUsersArr(arr);
 		setReplyingCommentId(cmtLv1Id);
 		clickReply.current = !clickReply.current;
-	};
-
-	const withFriends = paramInfo => {
-		if (paramInfo.length === 1) {
-			return (
-				<span>
-					<span style={{ fontWeight: '500', color: '#6E7191' }}> cùng với </span>
-					<Link to={`/profile/${paramInfo[0].userId}`}>
-						{paramInfo[0].users.fullName ||
-							paramInfo[0].users.firstName + ' ' + paramInfo[0].users.lastName}
-					</Link>
-				</span>
-			);
-		} else if (paramInfo.length === 2) {
-			return (
-				<span>
-					<span style={{ fontWeight: '500', color: '#6E7191' }}> cùng với </span>
-					<Link to={`/profile/${paramInfo[0].userId}`}>
-						{paramInfo[0].users.fullName ||
-							paramInfo[0].users.firstName + ' ' + paramInfo[0].users.lastName}
-					</Link>
-					<span style={{ fontWeight: '500', color: '#6E7191' }}> và </span>
-					<Link to={`/profile/${paramInfo[1].userId}`}>
-						{paramInfo[1].users.fullName ||
-							paramInfo[1].users.firstName + ' ' + paramInfo[1].users.lastName}
-					</Link>
-				</span>
-			);
-		} else {
-			return (
-				<span>
-					<span style={{ fontWeight: '500', color: '#6E7191' }}> cùng với </span>
-					<Link to={`/profile/${paramInfo[0].users.id}`}>
-						{paramInfo[0].users.fullName ||
-							paramInfo[0].users.firstName + ' ' + paramInfo[0].users.lastName}
-					</Link>
-					<span style={{ fontWeight: '500', color: '#6E7191' }}> và </span>
-					<span className='post__user__container__mention-users-plus' onClick={() => handleShowModalOthers()}>
-						<span>{paramInfo.length - 1} người khác</span>
-						<div className='post__user__container__list-mention-users'>
-							{!!paramInfo.length && (
-								<>
-									{paramInfo.slice(1).map((item, index) => (
-										<div className='post__user__container__list-mention-users__name' key={index}>
-											{item.users.fullName || item.users.firstName + ' ' + item.users.lastName}
-										</div>
-									))}
-								</>
-							)}
-						</div>
-					</span>
-					<Modal show={showModalOthers} onHide={handleCloseModalOthers} className='modal-tagged-others'>
-						<Modal.Header closeButton>
-							<Modal.Title>Mọi người</Modal.Title>
-						</Modal.Header>
-						<Modal.Body>
-							{!!paramInfo.length && (
-								<>
-									{paramInfo.slice(1).map((item, index) => (
-										<div key={index} style={{ marginBottom: '1rem' }}>
-											<img
-												onClick={() => onClickUserInModalOthers(item)}
-												className='modal-tagged-others__avatar'
-												src={item.users.avatarImage || defaultAvatar}
-												onError={e => e.target.setAttribute('src', defaultAvatar)}
-											></img>
-											<span
-												onClick={() => onClickUserInModalOthers(item)}
-												className='modal-tagged-others__name'
-											>
-												{item.users.fullName ||
-													item.users.firstName + ' ' + item.users.lastName}
-											</span>
-										</div>
-									))}
-								</>
-							)}
-						</Modal.Body>
-					</Modal>
-				</span>
-			);
-		}
 	};
 
 	const handleTime = () => {
@@ -504,9 +411,9 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 							</Link>
 
 							{/* tagged people */}
-							{postData.mentionsUsers &&
-								!!postData.mentionsUsers.length &&
-								withFriends(postData.mentionsUsers)}
+							{postData.mentionsUsers && !!postData.mentionsUsers.length && (
+								<WithFriends data={postData.mentionsUsers} />
+							)}
 							{postData.verb === GROUP_POST_VERB && (
 								<>
 									<img className='post__user-icon' src={Play} alt='arrow' />

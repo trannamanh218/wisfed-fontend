@@ -39,6 +39,7 @@ BookThumbnail.propTypes = {
 	handleClick: PropTypes.func,
 	className: PropTypes.string,
 	data: PropTypes.any,
+	frontBookCover: PropTypes.array,
 };
 
 export default BookThumbnail;

@@ -43,12 +43,12 @@ const SeeMoreComments = ({
 	}, [data]);
 
 	const checkShow = () => {
-		let totalShownComment = data.usersComments?.length;
+		let totalComments = data.usersComments?.length;
 		for (let i = 0; i < data.usersComments?.length; i++) {
-			totalShownComment += data.usersComments[i].reply?.length;
+			totalComments += data.usersComments[i].reply?.length;
 		}
 		if (isInDetail) {
-			if (totalShownComment < data.comment) {
+			if (totalComments < data.comment) {
 				setShow(true);
 			} else {
 				setShow(false);
@@ -59,7 +59,7 @@ const SeeMoreComments = ({
 					setShow(true);
 				}
 			} else {
-				if (totalShownComment < data.comment) {
+				if (totalComments < data.comment) {
 					setShow(true);
 				} else {
 					setShow(false);

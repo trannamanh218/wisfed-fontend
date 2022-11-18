@@ -4,7 +4,6 @@ import Editor from '@draft-js-plugins/editor';
 // import createLinkifyPlugin from '@draft-js-plugins/linkify';
 import './rich-text-editor.scss';
 import '@draft-js-plugins/linkify/lib/plugin.css';
-import { extractLinks } from '@draft-js-plugins/linkify';
 import 'draft-js/dist/Draft.css';
 import createMentionPlugin from '@draft-js-plugins/mention';
 import '@draft-js-plugins/mention/lib/plugin.css';
@@ -373,6 +372,8 @@ RichTextEditor.propTypes = {
 	mentionUsersArr: PropTypes.array,
 	setMentionUsersArr: PropTypes.func,
 	hasUrl: PropTypes.bool,
+	offsetKey: PropTypes.any,
+	children: PropTypes.any,
 };
 
 export default memo(RichTextEditor);
