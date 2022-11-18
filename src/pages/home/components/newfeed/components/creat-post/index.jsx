@@ -25,7 +25,7 @@ function CreatePost({ onChangeNewPost }) {
 	const { updateImgPost } = useSelector(state => state.chart);
 	const isWarning = useSelector(state => state.post.isWarning);
 
-	const message = 'Bạn đang có bài viết chưa hoàn thành.Bạn có chắc muốn rời khỏi khi chưa đăng không?';
+	const message = 'Bạn đang có bài viết chưa hoàn thành. Bạn có chắc muốn rời khỏi khi chưa đăng không?';
 
 	const {
 		auth: { userInfo },
