@@ -18,7 +18,11 @@ const ReviewBookInfo = ({ bookInfo }) => {
 
 	return (
 		<div className='review-book-info'>
-			<BookThumbnail className='review-book-info__image' size='lg' source={bookInfo.images[0]} />
+			<BookThumbnail
+				className='review-book-info__image'
+				size='lg'
+				source={bookInfo.frontBookCover || bookInfo.images[0]}
+			/>
 			<div className='review-book-info__content'>
 				<div className='review-book-info__name-author'>
 					<h1 className='review-book-info__name'>{bookInfo.name}</h1>

@@ -20,7 +20,7 @@ function PostBook({ data, inCreatePost, bookProgress }) {
 		<div className='post-book'>
 			{data.images?.length > 0 && (
 				<Link to={`/book/detail/${data.id}`}>
-					<BookThumbnail source={data?.images[0]} />
+					<BookThumbnail source={data?.frontBookCover || data?.images[0]} />
 				</Link>
 			)}
 

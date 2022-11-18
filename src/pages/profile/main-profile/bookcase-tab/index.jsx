@@ -151,7 +151,7 @@ function Bookcase({ currentUserInfo, currentTab }) {
 											<div className='bookcase__item__book'>
 												<BookThumbnail
 													data={item.bookId}
-													source={item.book?.images[0]}
+													source={item?.book?.frontBookCover || item.book?.images[0]}
 													size='lg'
 													handleClick={directToBookDetail}
 												/>
@@ -214,7 +214,7 @@ function Bookcase({ currentUserInfo, currentTab }) {
 											<div className='bookcase__item__book'>
 												<BookThumbnail
 													data={item.bookId}
-													source={item.book?.images[0]}
+													source={item?.book?.frontBookCover || item.book?.images[0]}
 													size='lg'
 													handleClick={directToBookDetail}
 												/>

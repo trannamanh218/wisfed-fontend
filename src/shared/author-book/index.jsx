@@ -54,7 +54,9 @@ const AuthorBook = ({
 	};
 
 	const generateBookThumbnailSrc = data => {
-		if (data?.info && data.info?.images.length > 0) {
+		if (data?.book?.frontBookCover) {
+			return data.book.frontBookCover;
+		} else if (data?.info && data.info?.images.length > 0) {
 			return data.info.images[0];
 		} else if (data?.book && data.book?.images.length > 0) {
 			return data.book.images[0];
