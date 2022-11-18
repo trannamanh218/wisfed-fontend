@@ -90,6 +90,10 @@ const PostActionBar = ({ postData, handleLikeAction }) => {
 						id: postData.info.id,
 						trueRank: postData.originId.rank,
 						verb: TOP_USER_VERB_SHARE,
+						sharePost: {
+							...postData.info,
+							...postData,
+						},
 						...postData.info,
 					};
 				} else if (postData.verb === QUOTE_VERB_SHARE) {
@@ -105,13 +109,9 @@ const PostActionBar = ({ postData, handleLikeAction }) => {
 						booksReadCount: postData.currentRead || postData?.sharePost?.current,
 						percent: percentTemp > 100 ? 100 : percentTemp,
 						verb: READ_TARGET_VERB_SHARE,
-						userId: postData?.readingGoalBy?.dataValues?.id || postData?.metaData?.readingGoalBy?.id,
-						fullName:
-							postData?.readingGoalBy?.dataValues?.fullName ||
-							postData?.metaData?.readingGoalBy?.fullName,
-						avatarImage:
-							postData?.readingGoalBy?.dataValues?.avatarImage ||
-							postData?.metaData?.readingGoalBy?.avatarImage,
+						sharePost: {
+							...postData,
+						},
 					};
 				} else if (postData.verb === TOP_BOOK_VERB_SHARE) {
 					dataToShare = {
@@ -121,6 +121,9 @@ const PostActionBar = ({ postData, handleLikeAction }) => {
 						type: postData.originId.type,
 						id: postData.info.id,
 						verb: TOP_BOOK_VERB_SHARE,
+						sharePost: {
+							...postData,
+						},
 						trueRank: postData.originId.rank,
 						...postData.info,
 					};
@@ -132,6 +135,9 @@ const PostActionBar = ({ postData, handleLikeAction }) => {
 						type: postData.originId.type,
 						id: postData.info.id,
 						verb: TOP_QUOTE_VERB_SHARE,
+						sharePost: {
+							...postData,
+						},
 						trueRank: postData.originId.rank,
 						...postData.info,
 					};

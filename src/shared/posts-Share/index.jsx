@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { Feather } from 'components/svg';
+import { Feather, IconRanks } from 'components/svg';
 import { calculateDurationTime } from 'helpers/Common';
 import _ from 'lodash';
 import './posts-Share.scss';
@@ -12,11 +12,15 @@ import PreviewLink from 'shared/preview-link/PreviewLink';
 import ReactRating from 'shared/react-rating';
 import { Link, useNavigate } from 'react-router-dom';
 import Play from 'assets/images/play.png';
-import { GROUP_POST_VERB_SHARE } from 'constants/index';
+import { GROUP_POST_VERB_SHARE, READ_TARGET_VERB_SHARE } from 'constants/index';
 import { Modal } from 'react-bootstrap';
 import vector from 'assets/images/Vector.png';
 import defaultAvatar from 'assets/icons/defaultLogoAvatar.svg';
 import { extractLinks } from '@draft-js-plugins/linkify';
+import ShareUsers from 'pages/home/components/newfeed/components/modal-share-users';
+import AuthorBook from 'shared/author-book';
+import QuoteCard from 'shared/quote-card';
+import ShareTarget from 'shared/share-target';
 
 const urlRegex =
 	/(http(s)?:\/\/)?(www(\.))?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}([-a-zA-Z0-9()@:%_\+.~#?&//=]*)([^"<\s]+)(?![^<>]*>|[^"]*?<\/a)/g;
@@ -172,6 +176,20 @@ const PostShare = ({ postData, inCreatePost = false }) => {
 			return content;
 		}
 	};
+
+	const handleTime = () => {
+		if (!_.isEmpty(postData.sharePost?.originId)) {
+			switch (postData.sharePost?.originId.by) {
+				case 'week':
+					return 'tuần';
+				case 'month':
+					return 'tháng';
+				case 'year':
+					return 'năm';
+			}
+		}
+	};
+
 	return (
 		<div className='post__container'>
 			<div className='post__user-status'>
@@ -296,7 +314,6 @@ const PostShare = ({ postData, inCreatePost = false }) => {
 					))}
 				</ul>
 			)}
-
 			{postData.sharePost?.book && (
 				<PostBook
 					data={{
@@ -307,6 +324,49 @@ const PostShare = ({ postData, inCreatePost = false }) => {
 					bookProgress={postData.sharePost.book.progress}
 					inCreatePost={inCreatePost}
 				/>
+			)}
+
+			{postData.sharePost?.originId?.type === 'topUser' && <ShareUsers postData={postData.sharePost} />}
+			{(postData.verb === READ_TARGET_VERB_SHARE || postData.sharePost.type === 'shareTargetRead') && (
+				<ShareTarget postData={postData} />
+			)}
+
+			{postData.sharePost?.originId?.type === 'topQuote' && (
+				<>
+					<div className='post__title__share__rank'>
+						<span className='number__title__rank'># Top {postData.sharePost?.originId.rank} quotes </span>
+						<span className='title__rank'>
+							{postData.sharePost?.info.category
+								? `  được like nhiều nhất thuộc ${
+										postData.sharePost?.info.category.name
+								  } theo ${handleTime()} `
+								: `  được like nhiều nhất theo ${handleTime()} `}
+						</span>
+						<IconRanks />
+					</div>
+					<div className='creat-post-modal-content__main__share-container'>
+						<QuoteCard data={postData.sharePost.info} isShare={true} />
+					</div>
+				</>
+			)}
+
+			{postData.sharePost?.originId?.type === 'topBook' && (
+				<>
+					<div className='post__title__share__rank'>
+						<span className='number__title__rank'># Top {postData.sharePost?.originId.rank} </span>
+						<span className='title__rank'>
+							{`  cuốn sách tốt nhất ${
+								postData.sharePost?.info.category
+									? ` thuộc ${postData.sharePost?.info.category.name}`
+									: ''
+							} theo ${handleTime()}`}
+						</span>
+						<IconRanks />
+					</div>
+					<div className='creat-post-modal-content__main__share-container'>
+						<AuthorBook data={postData.sharePost} />
+					</div>
+				</>
 			)}
 
 			{postData.sharePost?.image?.length > 0 && (

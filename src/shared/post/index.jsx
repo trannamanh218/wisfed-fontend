@@ -50,6 +50,7 @@ import defaultAvatar from 'assets/icons/defaultLogoAvatar.svg';
 import vector from 'assets/images/Vector.png';
 import SeeMoreComments from 'shared/see-more-comments/SeeMoreComments';
 import { extractLinks } from '@draft-js-plugins/linkify';
+import { TOP_USER_VERB_SHARE_LV1 } from 'constants';
 
 const urlRegex =
 	/(http(s)?:\/\/)?(www(\.))?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}([-a-zA-Z0-9()@:%_\+.~#?&//=]*)([^"<\s]+)(?![^<>]*>|[^"]*?<\/a)/g;
@@ -581,6 +582,7 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 				</div>
 			)}
 			{postData.verb === TOP_USER_VERB_SHARE && <ShareUsers postData={postData} />}
+
 			{postData.book && (
 				<PostBook data={postData.book} bookProgress={postData.metaData?.progress || postData.book.progress} />
 			)}
