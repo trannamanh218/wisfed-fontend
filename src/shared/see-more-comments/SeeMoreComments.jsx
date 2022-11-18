@@ -33,7 +33,7 @@ const SeeMoreComments = ({
 	};
 
 	useEffect(() => {
-		// Kiểm tra xem nếu bài viết đã hiển thị đủ comment rồi thì không hiện nút Xem thêm nữa
+		// Kiểm tra xem nếu bài viết chưa hiển thị đủ comment thì hiện nút Xem thêm
 		checkShow();
 
 		// Nếu không ở trong màn detail và chưa bấm xem thêm thì dữ liệu số comment ban đầu là 1 cho nên bắt đầu gọi từ 0
@@ -43,12 +43,12 @@ const SeeMoreComments = ({
 	}, [data]);
 
 	const checkShow = () => {
-		let totalComments = data.usersComments?.length;
+		let totalShownComments = data.usersComments?.length;
 		for (let i = 0; i < data.usersComments?.length; i++) {
-			totalComments += data.usersComments[i].reply?.length;
+			totalShownComments += data.usersComments[i].reply?.length;
 		}
 		if (isInDetail) {
-			if (totalComments < data.comment) {
+			if (totalShownComments < data.comment) {
 				setShow(true);
 			} else {
 				setShow(false);
@@ -59,7 +59,7 @@ const SeeMoreComments = ({
 					setShow(true);
 				}
 			} else {
-				if (totalComments < data.comment) {
+				if (totalShownComments < data.comment) {
 					setShow(true);
 				} else {
 					setShow(false);
