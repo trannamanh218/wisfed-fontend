@@ -84,8 +84,8 @@ function RichTextEditor({
 	useEffect(() => {
 		const editorStateRaws = convertToRaw(editorState.getCurrentContent());
 		const textValue = editorStateRaws.blocks[0].text;
-		const urlDetected = extractLinks(textValue);
-		if (urlDetected && urlDetected.length && urlRegex.test(textValue)) {
+		const urlDetected = textValue.match(urlRegex);
+		if (urlDetected) {
 			detectUrl(urlDetected);
 		} else {
 			if (hasUrl === false) {
@@ -205,7 +205,7 @@ function RichTextEditor({
 	const detectUrl = useCallback(
 		_.debounce(urlDetected => {
 			if (urlDetected && urlDetected.length) {
-				setUrlAdded(urlDetected[urlDetected.length - 1].url);
+				setUrlAdded(urlDetected[urlDetected.length - 1]);
 			} else {
 				setUrlAdded('');
 			}

@@ -9,7 +9,7 @@ function PreviewLink({ urlData, isFetching, removeUrlPreview, driectToUrl }) {
 	useEffect(() => {
 		if (!_.isEmpty(urlData)) {
 			const urlDomain = urlData.url.split('/')[2];
-			if (urlDomain.includes('www')) {
+			if (urlDomain && urlDomain.includes('www')) {
 				setDomain(urlDomain.split('www.')[1]);
 			} else {
 				setDomain(urlDomain);

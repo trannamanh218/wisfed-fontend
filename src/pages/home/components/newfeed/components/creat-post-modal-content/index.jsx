@@ -191,7 +191,7 @@ function CreatePostModalContent({
 	const getPreviewUrlFnc = async url => {
 		if (url) {
 			setFetchingUrlInfo(true);
-			const data = { 'url': url };
+			const data = { 'url': url.includes('http') ? url : `http://${url}` };
 			try {
 				const res = await dispatch(getPreviewUrl(data)).unwrap();
 				setUrlPreviewData(res);
