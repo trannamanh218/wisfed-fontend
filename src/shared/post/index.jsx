@@ -51,7 +51,6 @@ import { getMiniPostComments, getGroupPostComments } from 'reducers/redux-utils/
 import defaultAvatar from 'assets/icons/defaultLogoAvatar.svg';
 import vector from 'assets/images/Vector.png';
 import SeeMoreComments from 'shared/see-more-comments/SeeMoreComments';
-import { extractLinks } from '@draft-js-plugins/linkify';
 import { toast } from 'react-toastify';
 import DirectLinkALertModal from 'shared/direct-link-alert-modal';
 import ShowTime from 'shared/showTimeOfPostWhenHover/showTime';
@@ -317,7 +316,7 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 					</Link>
 					<span style={{ fontWeight: '500', color: '#6E7191' }}> và </span>
 					<span className='post__user__container__mention-users-plus' onClick={() => handleShowModalOthers()}>
-						{paramInfo.length - 1} người khác
+						<span>{paramInfo.length - 1} người khác</span>
 						<div className='post__user__container__list-mention-users'>
 							{!!paramInfo.length && (
 								<>
@@ -380,8 +379,8 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 		if (content.match(urlRegex) || content.match(hashtagRegex)) {
 			const newContent = content
 				.replace(urlRegex, data => {
-					const urlMatched = extractLinks(data);
-					if (urlMatched) {
+					const urlMatched = urlRegex.exec(data);
+					if (urlMatched[0]) {
 						return `<a class="url-class" data-url=${data}>${
 							data.length <= 50 ? data : data.slice(0, 50) + '...'
 						}</a>`;

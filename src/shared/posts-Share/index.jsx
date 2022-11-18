@@ -16,7 +16,6 @@ import { GROUP_POST_VERB_SHARE, urlRegex, hashtagRegex } from 'constants/index';
 import { Modal } from 'react-bootstrap';
 import vector from 'assets/images/Vector.png';
 import defaultAvatar from 'assets/icons/defaultLogoAvatar.svg';
-import { extractLinks } from '@draft-js-plugins/linkify';
 import ShowTime from 'shared/showTimeOfPostWhenHover/showTime';
 
 const PostShare = ({ postData, inCreatePost, directUrl }) => {
@@ -71,7 +70,7 @@ const PostShare = ({ postData, inCreatePost, directUrl }) => {
 					</Link>
 					<span style={{ fontWeight: '500', color: '#6E7191' }}> và </span>
 					<span className='post__user__container__mention-users-plus' onClick={() => handleShowModalOthers()}>
-						{paramInfo.length - 1} người khác
+						<span>{paramInfo.length - 1} người khác</span>
 						<div className='post__user__container__list-mention-users'>
 							{!!paramInfo.length && (
 								<>
@@ -134,8 +133,8 @@ const PostShare = ({ postData, inCreatePost, directUrl }) => {
 		if (content.match(urlRegex) || content.match(hashtagRegex)) {
 			const newContent = content
 				.replace(urlRegex, data => {
-					const urlMatched = extractLinks(data);
-					if (urlMatched) {
+					const urlMatched = urlRegex.exec(data);
+					if (urlMatched[0]) {
 						return `<a class="url-class" data-url=${data}>${
 							data.length <= 50 ? data : data.slice(0, 50) + '...'
 						}</a>`;

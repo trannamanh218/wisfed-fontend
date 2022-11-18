@@ -80,6 +80,7 @@ function RichTextEditor({
 			}, 200);
 		}
 	}, [createCmt]);
+
 	useEffect(() => {
 		const editorStateRaws = convertToRaw(editorState.getCurrentContent());
 		const textValue = editorStateRaws.blocks[0].text;

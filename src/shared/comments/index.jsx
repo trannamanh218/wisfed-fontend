@@ -14,7 +14,6 @@ import { POST_TYPE, QUOTE_TYPE, REVIEW_TYPE, urlRegex } from 'constants/index';
 import { Link, useNavigate } from 'react-router-dom';
 import { LikeComment } from 'components/svg';
 import { likeAndUnlikeGroupComment } from 'reducers/redux-utils/group';
-import { extractLinks } from '@draft-js-plugins/linkify';
 import DirectLinkALertModal from 'shared/direct-link-alert-modal';
 import _ from 'lodash';
 import ShowTime from 'shared/showTimeOfPostWhenHover/showTime';
@@ -118,8 +117,8 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 		// if (content.match(urlRegex) || content.match(hashtagRegex)) { // k xóa
 		if (content.match(urlRegex)) {
 			const newContent = content.replace(urlRegex, data => {
-				const urlMatched = extractLinks(data);
-				if (urlMatched) {
+				const urlMatched = urlRegex.exec(data);
+				if (urlMatched[0]) {
 					return `<a class="url-class" data-url=${data}>${
 						data.length <= 50 ? data : data.slice(0, 50) + '...'
 					}</a>`;
