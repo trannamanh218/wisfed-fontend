@@ -226,7 +226,7 @@ function MainGroupComponent({
 				setShow(true);
 			}
 		}
-	}, [data]);
+	}, [data, userInfo]);
 
 	const handleChangeGroupImage = imgFile => {
 		if (imgFile.length) {

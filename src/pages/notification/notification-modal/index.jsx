@@ -196,6 +196,7 @@ const NotificationModal = ({ setModalNoti, buttonModal }) => {
 									key={item.id}
 									item={item}
 									handleReplyFriendRequest={handleReplyFriendRequest}
+									setModalNoti={setModalNoti}
 								/>
 							))}
 							<div className='notification-modal__content__title'>Gần đây</div>
@@ -204,6 +205,7 @@ const NotificationModal = ({ setModalNoti, buttonModal }) => {
 									key={item.id}
 									item={item}
 									handleReplyFriendRequest={handleReplyFriendRequest}
+									setModalNoti={setModalNoti}
 								/>
 							))}
 							<Link
@@ -232,6 +234,7 @@ const NotificationModal = ({ setModalNoti, buttonModal }) => {
 											key={item.id}
 											item={item}
 											handleReplyFriendRequest={handleReplyFriendRequest}
+											setModalNoti={setModalNoti}
 										/>
 									))}
 									<Link
@@ -266,6 +269,7 @@ const NotificationModal = ({ setModalNoti, buttonModal }) => {
 											key={item.id}
 											item={item}
 											handleReplyFriendRequest={handleReplyFriendRequest}
+											setModalNoti={setModalNoti}
 										/>
 									))}
 									<Link
