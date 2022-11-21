@@ -115,7 +115,7 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 	const directUrl = url => {
 		setModalShow(true);
 		let urlFormated = '';
-		if (url.includes('https://')) {
+		if (url.includes('https://') || url.includes('http://')) {
 			urlFormated = url;
 		} else {
 			urlFormated = `https://${url}`;
