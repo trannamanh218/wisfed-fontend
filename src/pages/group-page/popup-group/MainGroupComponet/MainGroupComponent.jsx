@@ -96,7 +96,6 @@ function MainGroupComponent({
 	};
 
 	const leaveGroup = async () => {
-		setIsFetching(true);
 		const params = {
 			id: data?.id,
 		};
@@ -104,15 +103,12 @@ function MainGroupComponent({
 			await dispatch(leaveGroupUser(params)).unwrap();
 			setShow(false);
 			setShowSelect(false);
-			setIsFetching(false);
 			dispatch(checkIsJoinedGroup(false));
 		} catch (err) {
 			if (err.errorCode === 760) {
 				const customId = 'custom-id-PersonalInfo-handleDrop-warning';
 				toast.warning('Bạn đang là Admin bạn không thể rời nhóm', { toastId: customId });
 			}
-		} finally {
-			setIsFetching(false);
 		}
 	};
 
