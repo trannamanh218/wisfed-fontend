@@ -1,7 +1,11 @@
 .search-group-container {
 	padding: 40px 84px 0;
 }
-
+.list-group__container {
+	.sidebar__view-more-btn--blue {
+		margin: 15px 0px 10px 0px;
+	}
+}
 .group-btn-back {
 	display: flex;
 	margin-bottom: 32px;

@@ -105,6 +105,7 @@ function MainGroupComponent({
 			setShowSelect(false);
 			dispatch(checkIsJoinedGroup(false));
 		} catch (err) {
+			setShowSelect(false);
 			if (err.errorCode === 760) {
 				const customId = 'custom-id-PersonalInfo-handleDrop-warning';
 				toast.warning('Bạn đang là Admin bạn không thể rời nhóm', { toastId: customId });
