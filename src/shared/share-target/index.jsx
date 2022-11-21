@@ -1,5 +1,4 @@
 import { IconRanks } from 'components/svg';
-import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';

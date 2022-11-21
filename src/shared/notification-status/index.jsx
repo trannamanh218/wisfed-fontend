@@ -318,5 +318,6 @@ NotificationStatus.defaultProps = {
 NotificationStatus.propTypes = {
 	item: PropTypes.object,
 	handleReplyFriendRequest: PropTypes.func,
+	setModalNoti: PropTypes.func,
 };
 export default NotificationStatus;
