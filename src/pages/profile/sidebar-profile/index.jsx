@@ -13,7 +13,7 @@ import PropTypes from 'prop-types';
 import _ from 'lodash';
 import { DEFAULT_TOGGLE_ROWS } from 'constants/index';
 import { useDispatch } from 'react-redux';
-import { getAllLibraryList } from 'reducers/redux-utils/library';
+import { getAllLibraryList, handleSetDefaultLibrary } from 'reducers/redux-utils/library';
 import { NotificationError } from 'helpers/Error';
 import { checkUserLogin } from 'reducers/redux-utils/auth';
 import Storage from 'helpers/Storage';
@@ -121,6 +121,11 @@ const SidebarProfile = ({ currentUserInfo, handleViewBookDetail }) => {
 		}
 	};
 
+	const handleDirectToBookShelves = paramItem => {
+		dispatch(handleSetDefaultLibrary(paramItem));
+		navigate(`/shelves/${userInfo.id}`);
+	};
+
 	return (
 		<div className='sidebar-profile'>
 			<ReadingBook bookData={bookReading} />
@@ -147,8 +152,18 @@ const SidebarProfile = ({ currentUserInfo, handleViewBookDetail }) => {
 									})}
 									key={index}
 								>
-									<span className='dualColumn-item__title'>{item.name}</span>
-									<span className='dualColumn-item__number'>{item.books.length} cuốn</span>
+									<span
+										onClick={() => handleDirectToBookShelves(item)}
+										className='dualColumn-item__title link'
+									>
+										{item.name}
+									</span>
+									<span
+										onClick={() => handleDirectToBookShelves(item)}
+										className='dualColumn-item__number link'
+									>
+										{item.books.length} cuốn
+									</span>
 								</li>
 							))}
 						</ul>

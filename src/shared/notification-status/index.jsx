@@ -19,9 +19,9 @@ import { useState } from 'react';
 import classNames from 'classnames';
 import LoadingIndicator from 'shared/loading-indicator';
 import logoNonText from 'assets/icons/logoNonText.svg';
-import { replyInviteGroup } from 'reducers/redux-utils/group';
+import { replyInviteGroup, handleToggleUpdate } from 'reducers/redux-utils/group';
 
-const NotificationStatus = ({ item, handleReplyFriendRequest }) => {
+const NotificationStatus = ({ item, handleReplyFriendRequest, setModalNoti }) => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
@@ -31,7 +31,7 @@ const NotificationStatus = ({ item, handleReplyFriendRequest }) => {
 
 	const { userInfo } = useSelector(state => state.auth);
 
-	const appectRequest = async (requestId, option) => {
+	const acceptRequest = async (requestId, option) => {
 		setIsLoading(true);
 		try {
 			if (option === 'addFriend') {
@@ -40,6 +40,7 @@ const NotificationStatus = ({ item, handleReplyFriendRequest }) => {
 			} else if (option === 'inviteGroup') {
 				const params = { id: requestId, data: { accept: true } };
 				await dispatch(replyInviteGroup(params)).unwrap();
+				dispatch(handleToggleUpdate());
 			}
 			handleReplyFriendRequest(requestId, option, true);
 		} catch (err) {
@@ -75,6 +76,7 @@ const NotificationStatus = ({ item, handleReplyFriendRequest }) => {
 			};
 			dispatch(readNotification(params)).unwrap();
 		}
+		setModalNoti(false);
 		dispatch(backgroundToggle(true));
 
 		switch (item.verb) {
@@ -84,6 +86,7 @@ const NotificationStatus = ({ item, handleReplyFriendRequest }) => {
 			case 'commentGroupPost':
 			case 'likeCommentGroupPost':
 			case 'shareGroupPost':
+			case 'groupPost':
 				navigate(
 					`/detail-feed/${
 						item.verb === 'commentMiniPost' ||
@@ -144,6 +147,7 @@ const NotificationStatus = ({ item, handleReplyFriendRequest }) => {
 						navigate(`/quotes/detail/${item.originId.quoteId}`);
 						break;
 					case 'groupPost':
+						dispatch(handleMentionCommentId(item.originId.replyId));
 						navigate(`/detail-feed/group-post/${item.originId.groupPostId}`);
 						break;
 					case 'mentionMiniPost':
@@ -173,6 +177,9 @@ const NotificationStatus = ({ item, handleReplyFriendRequest }) => {
 				break;
 			case 'acceptedGroup':
 				navigate(`/group/${item.originId.groupId}`);
+				if (window.location.pathname.includes('group/')) {
+					dispatch(handleToggleUpdate());
+				}
 				break;
 			case 'rejectGroup':
 				navigate(`/group/${item.originId.groupId}`);
@@ -274,7 +281,7 @@ const NotificationStatus = ({ item, handleReplyFriendRequest }) => {
 							<div
 								onClick={e => {
 									e.stopPropagation();
-									appectRequest(
+									acceptRequest(
 										item.verb === 'addFriend' ? item.originId?.requestId : item.originId?.inviteId,
 										item.verb
 									);
@@ -315,5 +322,6 @@ NotificationStatus.defaultProps = {
 NotificationStatus.propTypes = {
 	item: PropTypes.object,
 	handleReplyFriendRequest: PropTypes.func,
+	setModalNoti: PropTypes.func,
 };
 export default NotificationStatus;
