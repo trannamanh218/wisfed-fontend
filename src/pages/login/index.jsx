@@ -96,8 +96,7 @@ function Login() {
 				<div className='login__body'>
 					<div>
 						<span className='login__body-text1'>
-							Khám phá mạng xã hội chia sẻ sách và sáng tạo nội dung
-							<br /> đầu tiên tại Việt Nam
+							Khám phá mạng xã hội chia sẻ sách và sáng tạo nội dung đầu tiên tại Việt Nam
 						</span>
 					</div>
 					<div>
