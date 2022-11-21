@@ -4,12 +4,13 @@ import Logo from 'assets/images/Logo 2.png';
 import { Form } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { getCategoryList } from 'reducers/redux-utils/category';
-import { editUserInfo } from 'reducers/redux-utils/user';
+import { editUserInfo, getUserDetail } from 'reducers/redux-utils/user';
 import { useNavigate } from 'react-router-dom';
 import SearchIcon from 'assets/icons/search.svg';
 import SearchCategoryChooseTopic from './searchCateChooseTopic';
 import { NotificationError } from 'helpers/Error';
 import _ from 'lodash';
+import { updateUserInfo } from 'reducers/redux-utils/auth';
 
 function ChooseTopic() {
 	const { userInfo } = useSelector(state => state.auth);
@@ -75,7 +76,11 @@ function ChooseTopic() {
 			const params = {
 				favoriteCategory: addFavorite,
 			};
-			await dispatch(editUserInfo(params)).unwrap();
+			const userDataChanged = await dispatch(editUserInfo(params)).unwrap();
+			const user = await dispatch(getUserDetail(userInfo.id)).unwrap();
+			const cloneObj = { ...userDataChanged };
+			cloneObj.favoriteCategory = user.favoriteCategory;
+			dispatch(updateUserInfo(cloneObj));
 		} catch (err) {
 			NotificationError(err);
 		} finally {
@@ -84,7 +89,7 @@ function ChooseTopic() {
 	};
 
 	useEffect(() => {
-		if (!_.isEmpty(userInfo) && userInfo.favoriteCategory.length > 0) {
+		if (!_.isEmpty(userInfo) && userInfo.favoriteCategory?.length > 0) {
 			navigate('/');
 		} else {
 			getListCategory();
@@ -133,24 +138,22 @@ function ChooseTopic() {
 						<>
 							{listCategory.map(item => {
 								return (
-									<>
-										<div key={item.id} className='form-check-wrapper'>
-											<Form.Check className='form-check-custom' type={'checkbox'} id={item.id}>
-												<Form.Check.Input
-													className={`form-check-custom--'checkbox'`}
-													type={'checkbox'}
-													name={item.name}
-													checked={addFavorite.includes(item.id)}
-													value={item.id}
-													onClick={handleChange}
-													readOnly
-												/>
-												<Form.Check.Label className='form-check-label--custom'>
-													{item.name}
-												</Form.Check.Label>
-											</Form.Check>
-										</div>
-									</>
+									<label key={item.id} className='form-check-wrapper'>
+										<Form.Check className='form-check-custom' type={'checkbox'} id={item.id}>
+											<Form.Check.Input
+												className={`form-check-custom--'checkbox'`}
+												type={'checkbox'}
+												name={item.name}
+												checked={addFavorite.includes(item.id)}
+												value={item.id}
+												onClick={handleChange}
+												readOnly
+											/>
+											<Form.Check.Label className='form-check-label--custom'>
+												{item.name}
+											</Form.Check.Label>
+										</Form.Check>
+									</label>
 								);
 							})}
 						</>
