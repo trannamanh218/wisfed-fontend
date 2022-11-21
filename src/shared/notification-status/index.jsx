@@ -86,6 +86,7 @@ const NotificationStatus = ({ item, handleReplyFriendRequest, setModalNoti }) =>
 			case 'commentGroupPost':
 			case 'likeCommentGroupPost':
 			case 'shareGroupPost':
+			case 'groupPost':
 				navigate(
 					`/detail-feed/${
 						item.verb === 'commentMiniPost' ||
@@ -144,6 +145,7 @@ const NotificationStatus = ({ item, handleReplyFriendRequest, setModalNoti }) =>
 						navigate(`/quotes/detail/${item.originId.quoteId}`);
 						break;
 					case 'groupPost':
+						dispatch(handleMentionCommentId(item.originId.replyId));
 						navigate(`/detail-feed/group-post/${item.originId.groupPostId}`);
 						break;
 					case 'mentionMiniPost':
