@@ -92,7 +92,7 @@ const BookIntro = ({ bookInfo, listRatingStar }) => {
 							<span onClick={viewAuthorProfile}>
 								{!_.isEmpty(bookInfo.authors) ? (
 									<span>
-										Bời{' '}
+										Bởi{' '}
 										<span
 											className={classNames({
 												'verified': bookInfo.verify,

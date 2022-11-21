@@ -354,7 +354,7 @@ function CreatePostModalContent({
 			}
 			setTimeout(() => {
 				dispatch(updateMyAllLibraryRedux());
-			}, 150);
+			}, 500);
 		} catch (error) {
 			NotificationError(error);
 		}
