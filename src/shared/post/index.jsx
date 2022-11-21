@@ -414,7 +414,8 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 							{postData.mentionsUsers && !!postData.mentionsUsers.length && (
 								<WithFriends data={postData.mentionsUsers} />
 							)}
-							{postData.verb === GROUP_POST_VERB && (
+							{(postData.verb === GROUP_POST_VERB ||
+								window.location.pathname.includes('/hashtag-group/')) && (
 								<>
 									<img className='post__user-icon' src={Play} alt='arrow' />
 									<Link

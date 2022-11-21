@@ -36,14 +36,18 @@ const ranksSlice = createSlice({
 	name: 'ranks',
 	initialState: {
 		isTopUser: false,
+		isTopQuote: false,
 	},
 	reducers: {
 		handleIsCheckUser: (state, action) => {
 			state.isTopUser = action.payload;
 		},
+		handleIsCheckQuote: (state, action) => {
+			state.isTopQuote = action.payload;
+		},
 	},
 	extraReducers: {},
 });
-export const { handleIsCheckUser } = ranksSlice.actions;
+export const { handleIsCheckUser, handleIsCheckQuote } = ranksSlice.actions;
 const ranks = ranksSlice.reducer;
 export default ranks;
