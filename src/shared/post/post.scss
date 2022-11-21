@@ -111,6 +111,7 @@
 	}
 
 	.post__content-wrapper {
+		z-index: 2;
 		margin-bottom: 20px;
 		.post__content,
 		.post__content--readmore {
@@ -180,8 +181,8 @@
 		font-weight: 500;
 
 		&__online-dot {
-			width: 3px;
-			height: 3px;
+			width: 2.67px;
+			height: 2.67px;
 			border-radius: 50%;
 			background-color: $primary;
 			margin-right: 4px;
@@ -260,10 +261,13 @@
 	}
 
 	&__mention-users-plus {
-		font-weight: 600 !important;
 		position: relative;
-		cursor: pointer;
-		position: relative;
+		> span {
+			font-weight: 600 !important;
+			position: relative;
+			cursor: pointer;
+			position: relative;
+		}
 
 		::before {
 			content: '';
@@ -274,9 +278,10 @@
 			height: 20px;
 			background-color: transparent;
 		}
-		&:hover {
-			.post__user__container__list-mention-users {
-				display: block;
+		& > span:hover {
+			+ .post__user__container__list-mention-users {
+				opacity: 0.7;
+				transition: opacity 0.2s ease;
 			}
 		}
 	}
@@ -284,10 +289,9 @@
 	&__list-mention-users {
 		font-weight: 500;
 		font-size: 12px;
-		display: none;
 		position: absolute;
-		opacity: 0.6;
-		background-color: #454545;
+		opacity: 0;
+		background-color: black;
 		border-radius: 5px;
 		padding: 0 5px;
 		color: white;
@@ -296,6 +300,7 @@
 		width: fit-content;
 		max-width: 150px;
 		z-index: 3;
+		transition: opacity 0.2s ease;
 		&__name {
 			white-space: nowrap;
 			text-overflow: ellipsis;

@@ -828,6 +828,12 @@
 	padding: 16px;
 	border-radius: 12px;
 	background-color: #eff0f6;
+
+	.share__users__container {
+		border-radius: 10px;
+		margin-bottom: 0;
+	}
+
 	.post__container,
 	.post__quotes__container {
 		margin-bottom: 0;

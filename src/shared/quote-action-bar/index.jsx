@@ -9,7 +9,7 @@ import { useDispatch } from 'react-redux';
 import { saveDataShare } from 'reducers/redux-utils/post';
 import { useNavigate } from 'react-router-dom';
 import { checkUserLogin } from 'reducers/redux-utils/auth';
-import { QUOTE_VERB_SHARE, TOP_QUOTE_VERB_SHARE } from 'constants/index';
+import { QUOTE_VERB_SHARE, TOP_QUOTE_VERB_SHARE, TOP_QUOTE_VERB_SHARE_LV1 } from 'constants/index';
 
 const QuoteActionBar = ({ data, isDetail, likeUnlikeQuoteFnc, trueRank }) => {
 	const dispatch = useDispatch();
@@ -22,7 +22,7 @@ const QuoteActionBar = ({ data, isDetail, likeUnlikeQuoteFnc, trueRank }) => {
 			let dataToShare;
 			if (data.type === 'topQuote') {
 				dataToShare = {
-					verb: TOP_QUOTE_VERB_SHARE,
+					verb: TOP_QUOTE_VERB_SHARE_LV1,
 					trueRank: trueRank,
 					...data,
 				};

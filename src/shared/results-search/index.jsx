@@ -101,7 +101,7 @@ const ResultSearch = ({ valueInputSearch, resultSearch, setIsShow }) => {
 							<div className='result__search__main__left'>
 								<div className='result__search__icon__time'>
 									<img
-										src={item?.images[0] || bookImage}
+										src={item?.frontBookCover || item?.images[0] || bookImage}
 										className='result__search__img'
 										onError={e => e.target.setAttribute('src', `${bookImage}`)}
 									/>

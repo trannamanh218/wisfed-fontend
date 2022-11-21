@@ -36,11 +36,9 @@ import { handleRefreshNewfeed } from 'reducers/redux-utils/activity';
 import Request from 'helpers/Request';
 import HeaderSearchMobile from './header-search-mobile';
 import { NotificationError } from 'helpers/Error';
+import { hashtagRegex } from 'constants';
 
 const Header = () => {
-	const hashtagRegex =
-		/#(?![0-9_]+\b)[0-9a-z_ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễếệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ]+/gi;
-
 	const { valueInputSearchRedux } = useSelector(state => state.search);
 	const { isShowModal } = useSelector(state => state.search);
 	const { userInfo } = useSelector(state => state.auth);

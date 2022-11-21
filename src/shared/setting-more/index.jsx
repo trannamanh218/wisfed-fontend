@@ -155,7 +155,7 @@ const SettingMore = ({ bookData, handleUpdateBookList }) => {
 			dispatch(updateCurrentBook({ ...bookData, status: currentStatus }));
 			setTimeout(() => {
 				dispatch(updateMyAllLibraryRedux());
-			}, 150);
+			}, 500);
 			navigate('/');
 		} catch (err) {
 			NotificationError(err);

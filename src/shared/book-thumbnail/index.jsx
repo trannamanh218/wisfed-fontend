@@ -3,7 +3,7 @@ import bookImage from 'assets/images/default-book.png';
 import './book-thumbnail.scss';
 import classNames from 'classnames';
 
-const BookThumbnail = ({ images, source, name, size, handleClick, className, data }) => {
+const BookThumbnail = ({ frontBookCover, images, source, name, size, handleClick, className, data }) => {
 	return (
 		<div
 			className={classNames(`book-thumbnail book-thumbnail-${size}`, { [`${className}`]: className })}
@@ -13,7 +13,7 @@ const BookThumbnail = ({ images, source, name, size, handleClick, className, dat
 			title={name}
 		>
 			<img
-				src={images[0] || source || bookImage}
+				src={frontBookCover || images[0] || source || bookImage}
 				alt={name}
 				onError={e => e.target.setAttribute('src', `${bookImage}`)}
 			/>
@@ -38,7 +38,8 @@ BookThumbnail.propTypes = {
 	size: PropTypes.oneOf(['sm', 'md', 'lg']),
 	handleClick: PropTypes.func,
 	className: PropTypes.string,
-	data: PropTypes.object,
+	data: PropTypes.any,
+	frontBookCover: PropTypes.array,
 };
 
 export default BookThumbnail;

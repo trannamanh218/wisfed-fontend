@@ -6,17 +6,21 @@ import 'moment/locale/vi';
 moment.locale('vi');
 
 export default function ShowTime({ dataTime }) {
-	const [start, setStart] = useState('');
+	const [day, setDay] = useState('');
+	const [month, setMonth] = useState('');
+	const [year, setYear] = useState('');
+	const [hour, setHour] = useState('');
 
 	useEffect(() => {
 		if (dataTime) {
-			setStart(new Date(dataTime));
+			const time = new Date(dataTime);
+
+			setDay(time.getDate());
+			setMonth(time.getMonth());
+			setYear(time.getFullYear());
+			setHour(`${moment(time).format('kk:mm')}`);
 		}
 	}, [dataTime]);
 
-	return (
-		<div className='show-time-modal'>{`${moment(start).format('DD MMM')} lúc ${moment(start).format(
-			'kk:mm'
-		)}`}</div>
-	);
+	return <div className='show-time-modal'>{`${day} tháng ${month + 1}, ${year} lúc ${hour}`}</div>;
 }

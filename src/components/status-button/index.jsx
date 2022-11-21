@@ -115,7 +115,7 @@ const StatusButton = ({ className, bookData, inCreatePost, bookStatus }) => {
 			await dispatch(createLibrary(params)).unwrap();
 			setTimeout(() => {
 				dispatch(updateMyAllLibraryRedux());
-			}, 150);
+			}, 500);
 		} catch (err) {
 			NotificationError(err);
 		}
@@ -161,7 +161,7 @@ const StatusButton = ({ className, bookData, inCreatePost, bookStatus }) => {
 				dispatch(updateCurrentBook({ ...bookData, status: currentStatus }));
 				setTimeout(() => {
 					dispatch(updateMyAllLibraryRedux());
-				}, 150);
+				}, 500);
 				navigate('/');
 			} catch (err) {
 				NotificationError(err);
