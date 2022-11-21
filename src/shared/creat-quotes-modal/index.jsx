@@ -4,7 +4,7 @@ import { useEffect, useState, useRef, useCallback } from 'react';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 // import avatarTest from 'assets/images/avatar2.png';
-import bookSample from 'assets/images/sample-book-img.jpg';
+import bookDefault from 'assets/images/default-book.png';
 import { getSuggestionForPost } from 'reducers/redux-utils/activity';
 import { useDispatch } from 'react-redux';
 import _ from 'lodash';
@@ -331,8 +331,8 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 											>
 												<img
 													className='creat-quotes-modal__book__image'
-													src={item?.frontBookCover || item?.images[0] || bookSample}
-													onError={e => e.target.setAttribute('src', bookSample)}
+													src={item?.frontBookCover || item?.images[0] || bookDefault}
+													onError={e => e.target.setAttribute('src', bookDefault)}
 													alt='book'
 												/>
 												<div className='creat-quotes-modal__book__name'>{item?.name}</div>
