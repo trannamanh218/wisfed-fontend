@@ -55,7 +55,8 @@ function ChooseTopic() {
 					]),
 				};
 				const result = await dispatch(getCategoryList({ option: false, params })).unwrap();
-				listCategoryActionArray = listCategoryActionArray.concat(result.rows);
+				const haveBook = result.rows.filter(item => item.numberBooks > 0);
+				listCategoryActionArray = listCategoryActionArray.concat(haveBook);
 			}
 		}
 
