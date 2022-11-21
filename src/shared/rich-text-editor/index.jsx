@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState, useCallback, memo } from 'react';
 import { EditorState, convertToRaw, convertFromRaw } from 'draft-js';
 import Editor from '@draft-js-plugins/editor';
-// import createLinkifyPlugin from '@draft-js-plugins/linkify';
 import './rich-text-editor.scss';
 import '@draft-js-plugins/linkify/lib/plugin.css';
 import 'draft-js/dist/Draft.css';
@@ -17,7 +16,6 @@ import { NotificationError } from 'helpers/Error';
 import { hashtagRegex, urlRegex } from 'constants';
 
 const generatePlugins = () => {
-	// const linkifyPlugin = createLinkifyPlugin({ target: '_blank' });
 	const mentionPlugin = createMentionPlugin();
 	const plugins = [mentionPlugin];
 	const MentionSuggestions = mentionPlugin.MentionSuggestions;
@@ -81,9 +79,9 @@ function RichTextEditor({
 	}, [createCmt]);
 
 	useEffect(() => {
-		const editorStateRaws = convertToRaw(editorState.getCurrentContent());
-		const textValue = editorStateRaws.blocks[0].text;
+		const textValue = editorState.getCurrentContent().getPlainText().trim();
 		const urlDetected = textValue.match(urlRegex);
+
 		if (urlDetected) {
 			detectUrl(urlDetected);
 		} else {
@@ -91,7 +89,7 @@ function RichTextEditor({
 				detectUrl('');
 			}
 		}
-		if (editorState.getCurrentContent().getPlainText().trim().length) {
+		if (textValue.length) {
 			const html = convertContentToHTML();
 			setContent(html);
 		} else {
@@ -99,6 +97,7 @@ function RichTextEditor({
 		}
 
 		// tags mention user khi nhan @
+		const editorStateRaws = convertToRaw(editorState.getCurrentContent());
 		const entytiMap = editorStateRaws.entityMap;
 		const newArr = Object.keys(entytiMap).map(key => entytiMap[key].data.mention);
 		setMentionUsersArr(newArr);

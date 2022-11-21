@@ -295,12 +295,7 @@ function SettingsGroup({ handleChange, data, fetchData }) {
 	}, []);
 
 	useEffect(() => {
-		if (
-			(lastTag.includes('#') || !_.isEmpty(listHashtags)) &&
-			lastTag !== '#' &&
-			inputDescription !== '' &&
-			inputNameGroup !== ''
-		) {
+		if (lastTag !== '#' && inputDescription !== '' && inputNameGroup !== '') {
 			switch (data.groupType) {
 				case 'book':
 					if (listBookAdd.length > 0 && categoryIdBook.length > 0) {

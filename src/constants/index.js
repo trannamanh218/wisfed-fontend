@@ -1,11 +1,4 @@
 import { CoffeeCupIcon, CircleCheckIcon, TargetIcon } from 'components/svg';
-import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import {
-	handleMentionCommentId,
-	updateReviewIdFromNoti,
-	handleCheckIfMentionFromGroup,
-} from 'reducers/redux-utils/notification';
 
 export const STATUS_BOOK = {
 	reading: 'reading',
