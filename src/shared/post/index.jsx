@@ -286,14 +286,9 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 		if (content.match(urlRegex) || content.match(hashtagRegex)) {
 			const newContent = content
 				.replace(urlRegex, data => {
-					const urlMatched = urlRegex.exec(data);
-					if (urlMatched[0]) {
-						return `<a class="url-class" data-url=${data}>${
-							data.length <= 50 ? data : data.slice(0, 50) + '...'
-						}</a>`;
-					} else {
-						return data;
-					}
+					return `<a class="url-class" data-url=${data}>${
+						data.length <= 50 ? data : data.slice(0, 50) + '...'
+					}</a>`;
 				})
 				.replace(hashtagRegex, data => {
 					const newData = data
