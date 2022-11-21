@@ -34,6 +34,7 @@
 		padding: 12px 6px 20px 12px;
 		max-height: 69vh;
 		margin-right: 2px;
+		overflow: auto;
 		background-color: transparent;
 		&::-webkit-scrollbar {
 			width: 4px;
@@ -111,6 +112,11 @@
 		.timeline-item {
 			background-color: transparent;
 			padding: 0 20px 20px;
+		}
+	}
+	.overflow-unset {
+		+ div {
+			overflow: unset;
 		}
 	}
 }
