@@ -103,7 +103,7 @@ const MainReadingTarget = ({ setErrorLoadPage }) => {
 					<div className='book-row' key={item.id}>
 						<div className='book-row__container'>
 							<Link to={`/book/detail/${item.book.id}`}>
-								<BookThumbnail size='sm' source={item.book?.images[0]} />
+								<BookThumbnail size='sm' source={item?.book?.frontBookCover || item.book?.images[0]} />
 							</Link>
 						</div>
 						<div className='book-row__container'>

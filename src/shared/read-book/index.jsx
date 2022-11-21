@@ -9,7 +9,7 @@ const ReadBook = ({ items }) => {
 			<div className='read-book'>
 				<div className='read-book__image'>
 					<img
-						src={items.book.images[0] || bookImage}
+						src={items.book.frontBookCover || items.book.images[0] || bookImage}
 						alt='image-book-cover'
 						onError={e => e.target.setAttribute('src', `${bookImage}`)}
 					/>

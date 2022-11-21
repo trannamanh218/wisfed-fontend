@@ -59,6 +59,7 @@ import {
 	REVIEW_VERB_SHARE,
 	TOP_USER_VERB_SHARE_LV1,
 	TOP_BOOK_VERB_SHARE_LV1,
+	hashtagRegex,
 } from 'constants';
 import { handleClickCreateNewPostForBook } from 'reducers/redux-utils/activity';
 // import ShareModeComponent from './ShareModeComponent';
@@ -73,9 +74,6 @@ const verbShareArray = [
 	TOP_USER_VERB_SHARE,
 	REVIEW_VERB_SHARE,
 ];
-
-const hashtagRegex =
-	/#(?![0-9_]+\b)[0-9a-z_ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễếệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ]+/gi;
 
 function CreatePostModalContent({
 	hideCreatePostModal,
@@ -201,7 +199,7 @@ function CreatePostModalContent({
 	const getPreviewUrlFnc = async url => {
 		if (url) {
 			setFetchingUrlInfo(true);
-			const data = { 'url': url };
+			const data = { 'url': url.includes('http') ? url : `http://${url}` };
 			try {
 				const res = await dispatch(getPreviewUrl(data)).unwrap();
 				setUrlPreviewData(res);

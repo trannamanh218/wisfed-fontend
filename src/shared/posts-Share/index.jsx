@@ -12,21 +12,15 @@ import PreviewLink from 'shared/preview-link/PreviewLink';
 import ReactRating from 'shared/react-rating';
 import { Link, useNavigate } from 'react-router-dom';
 import Play from 'assets/images/play.png';
-import { GROUP_POST_VERB_SHARE, READ_TARGET_VERB_SHARE } from 'constants/index';
+import { GROUP_POST_VERB_SHARE, READ_TARGET_VERB_SHARE, urlRegex, hashtagRegex } from 'constants/index';
 import { Modal } from 'react-bootstrap';
 import vector from 'assets/images/Vector.png';
 import defaultAvatar from 'assets/icons/defaultLogoAvatar.svg';
-import { extractLinks } from '@draft-js-plugins/linkify';
 import ShowTime from 'shared/showTimeOfPostWhenHover/showTime';
 import ShareUsers from 'pages/home/components/newfeed/components/modal-share-users';
 import AuthorBook from 'shared/author-book';
 import QuoteCard from 'shared/quote-card';
 import ShareTarget from 'shared/share-target';
-
-const urlRegex =
-	/(http(s)?:\/\/)?(www(\.))?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}([-a-zA-Z0-9()@:%_\+.~#?&//=]*)([^"<\s]+)(?![^<>]*>|[^"]*?<\/a)/g;
-const hashtagRegex =
-	/#(?![0-9_]+\b)[0-9a-z_ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễếệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ]+/gi;
 
 const PostShare = ({ postData, inCreatePost, directUrl }) => {
 	const [videoId, setVideoId] = useState('');
@@ -80,7 +74,7 @@ const PostShare = ({ postData, inCreatePost, directUrl }) => {
 					</Link>
 					<span style={{ fontWeight: '500', color: '#6E7191' }}> và </span>
 					<span className='post__user__container__mention-users-plus' onClick={() => handleShowModalOthers()}>
-						{paramInfo.length - 1} người khác
+						<span>{paramInfo.length - 1} người khác</span>
 						<div className='post__user__container__list-mention-users'>
 							{!!paramInfo.length && (
 								<>
@@ -143,8 +137,8 @@ const PostShare = ({ postData, inCreatePost, directUrl }) => {
 		if (content.match(urlRegex) || content.match(hashtagRegex)) {
 			const newContent = content
 				.replace(urlRegex, data => {
-					const urlMatched = extractLinks(data);
-					if (urlMatched) {
+					const urlMatched = urlRegex.exec(data);
+					if (urlMatched[0]) {
 						return `<a class="url-class" data-url=${data}>${
 							data.length <= 50 ? data : data.slice(0, 50) + '...'
 						}</a>`;

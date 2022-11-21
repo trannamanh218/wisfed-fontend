@@ -3,11 +3,9 @@ import { useRef, useState, useEffect } from 'react';
 import { CloseX } from 'components/svg';
 import Input from 'shared/input';
 import './inputHashtag.scss';
+import { hashtagRegex } from 'constants';
 
 const InputHashtag = ({ listHashtags, setListHashtags, setLastTag, label, isRequired }) => {
-	const hashtagRegex =
-		/#(?![0-9_]+\b)[0-9a-z_ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễếệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ]+/gi;
-
 	const dataRef = useRef('');
 	const hashtagInputWrapper = useRef(null);
 	const inputRefHashtag = useRef('');

@@ -13,11 +13,9 @@ import { useEffect, useState } from 'react';
 import Circle from 'shared/loading/circle';
 import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import { hashtagRegex } from 'constants';
 
 const Result = () => {
-	const hashtagRegex =
-		/#(?![0-9_]+\b)[0-9a-z_ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễếệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ]+/gi;
-
 	const { value } = useParams();
 	const [activeKeyDefault, setActiveKeyDefault] = useState('books');
 	const [searchResultInput, setSearchResultInput] = useState('');

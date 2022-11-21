@@ -48,7 +48,13 @@ function ReadingBook({ bookData }) {
 								style={{ cursor: 'pointer' }}
 								onClick={() => onClickImgBook(bookData)}
 								data-testid='reading-book__book-img'
-								src={bookData?.images?.length > 0 ? bookData.images[0] : ''}
+								src={
+									bookData?.frontBookCover
+										? bookData?.frontBookCover
+										: bookData?.images?.length > 0
+										? bookData.images[0]
+										: ''
+								}
 								alt='image'
 							/>
 						</div>

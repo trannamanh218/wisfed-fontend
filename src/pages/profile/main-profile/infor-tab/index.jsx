@@ -237,7 +237,7 @@ const InforTab = ({ userInfo, currentTab }) => {
 							<div className='col-6'>
 								<div className='form-field-group'>
 									<label className='form-field-label '>Chủ đề yêu thích</label>
-									{userInfo?.favoriteCategory.length > 0 ? (
+									{userInfo?.favoriteCategory?.length > 0 ? (
 										<div className='form-field form-field-flex'>
 											<BadgeList list={userInfo.favoriteCategory} className='form-field-badge' />
 										</div>
