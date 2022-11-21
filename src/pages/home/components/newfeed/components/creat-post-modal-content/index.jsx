@@ -1,7 +1,13 @@
 /* eslint-disable max-lines */
 import classNames from 'classnames';
 import { CloseX, Image, IconRanks, WorldNet } from 'components/svg'; // k xóa WorldNet
-import { STATUS_IDLE, STATUS_LOADING, STATUS_SUCCESS } from 'constants/index';
+import {
+	READ_TARGET_VERB_SHARE_LV1,
+	STATUS_IDLE,
+	STATUS_LOADING,
+	STATUS_SUCCESS,
+	TOP_QUOTE_VERB_SHARE_LV1,
+} from 'constants/index';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
@@ -51,6 +57,8 @@ import {
 	TOP_QUOTE_VERB_SHARE,
 	MY_BOOK_VERB_SHARE,
 	REVIEW_VERB_SHARE,
+	TOP_USER_VERB_SHARE_LV1,
+	TOP_BOOK_VERB_SHARE_LV1,
 	hashtagRegex,
 } from 'constants';
 import { handleClickCreateNewPostForBook } from 'reducers/redux-utils/activity';
@@ -352,7 +360,7 @@ function CreatePostModalContent({
 			}
 			setTimeout(() => {
 				dispatch(updateMyAllLibraryRedux());
-			}, 150);
+			}, 500);
 		} catch (error) {
 			NotificationError(error);
 		}
@@ -367,6 +375,21 @@ function CreatePostModalContent({
 				if (postDataShare.verb === POST_VERB_SHARE) {
 					const query = {
 						id: postDataShare.type === 'post' ? postDataShare.minipostId : Number(postDataShare.shareId),
+						type: 'post',
+						...params,
+					};
+					await dispatch(getSharePostInternal(query)).unwrap();
+				} else if (
+					postDataShare.verb === TOP_USER_VERB_SHARE ||
+					postDataShare.verb === TOP_BOOK_VERB_SHARE ||
+					postDataShare.verb === TOP_QUOTE_VERB_SHARE ||
+					postDataShare.verb === READ_TARGET_VERB_SHARE
+				) {
+					const query = {
+						id:
+							postDataShare.minipostId ||
+							postDataShare.sharePost.minipostId ||
+							postDataShare.sharePost.id,
 						type: 'post',
 						...params,
 					};
@@ -390,7 +413,7 @@ function CreatePostModalContent({
 						...params,
 					};
 					await dispatch(getSharePostInternal(query)).unwrap();
-				} else if (postDataShare.verb === READ_TARGET_VERB_SHARE) {
+				} else if (postDataShare.verb === READ_TARGET_VERB_SHARE_LV1) {
 					const data = {
 						msg: content,
 						current: postDataShare.booksReadCount,
@@ -403,7 +426,7 @@ function CreatePostModalContent({
 							data,
 						})
 					).unwrap();
-				} else if (postDataShare.verb === TOP_USER_VERB_SHARE) {
+				} else if (postDataShare.verb === TOP_USER_VERB_SHARE_LV1) {
 					const query = {
 						msg: content,
 						by: postDataShare.by,
@@ -415,7 +438,7 @@ function CreatePostModalContent({
 						tags: params.tags,
 					};
 					await dispatch(getSharePostRanks(query)).unwrap();
-				} else if (postDataShare.verb === TOP_BOOK_VERB_SHARE) {
+				} else if (postDataShare.verb === TOP_BOOK_VERB_SHARE_LV1) {
 					const query = {
 						msg: content,
 						by: postDataShare.by,
@@ -435,7 +458,7 @@ function CreatePostModalContent({
 						tags: params.tags,
 					};
 					await dispatch(shareMyBook(query)).unwrap();
-				} else if (postDataShare.verb === TOP_QUOTE_VERB_SHARE) {
+				} else if (postDataShare.verb === TOP_QUOTE_VERB_SHARE_LV1) {
 					const query = {
 						msg: content,
 						by: postDataShare.by,
@@ -624,6 +647,7 @@ function CreatePostModalContent({
 			hideCreatePostModal();
 		}
 	};
+
 	return (
 		<div className='creat-post-modal-content'>
 			<Circle loading={status === STATUS_LOADING} />
@@ -696,7 +720,7 @@ function CreatePostModalContent({
 								removeTaggedItem={removeTaggedItem}
 								type='addCategory'
 							/>
-							{postDataShare.type === 'topQuote' && (
+							{postDataShare.type === 'topQuote' && postDataShare.verb === TOP_QUOTE_VERB_SHARE_LV1 && (
 								<div className='post__title__share__rank'>
 									<span className='number__title__rank'># Top {postDataShare.trueRank} quotes </span>{' '}
 									<span className='title__rank'>
@@ -709,7 +733,7 @@ function CreatePostModalContent({
 									<IconRanks />
 								</div>
 							)}
-							{postDataShare.type === 'topBook' && (
+							{postDataShare.type === 'topBook' && postDataShare.verb === TOP_BOOK_VERB_SHARE_LV1 && (
 								<div className='post__title__share__rank'>
 									<span className='number__title__rank'># Top {postDataShare.trueRank}</span>
 									<span className='title__rank'>
@@ -731,8 +755,8 @@ function CreatePostModalContent({
 							{!_.isEmpty(postDataShare) && (
 								<div
 									className={
-										postDataShare.verb !== TOP_USER_VERB_SHARE &&
-										postDataShare.verb !== READ_TARGET_VERB_SHARE
+										postDataShare.verb !== TOP_USER_VERB_SHARE_LV1 &&
+										postDataShare.verb !== READ_TARGET_VERB_SHARE_LV1
 											? 'creat-post-modal-content__main__share-container'
 											: ''
 									}
@@ -741,23 +765,37 @@ function CreatePostModalContent({
 										<PostShare postData={postDataShare} inCreatePost={true} />
 									)}
 									{(postDataShare.verb === QUOTE_VERB_SHARE ||
-										postDataShare.verb === TOP_QUOTE_VERB_SHARE) && (
+										postDataShare.verb === TOP_QUOTE_VERB_SHARE_LV1) && (
 										<QuoteCard data={postDataShare} isShare={true} />
 									)}
 									{postDataShare.verb === GROUP_POST_VERB_SHARE && (
 										<PostShare postData={postDataShare} inCreatePost={true} />
 									)}
-									{(postDataShare.verb === TOP_BOOK_VERB_SHARE ||
+									{(postDataShare.verb === TOP_BOOK_VERB_SHARE_LV1 ||
 										postDataShare.verb === MY_BOOK_VERB_SHARE) && (
 										<AuthorBook data={postDataShare} checkStar={true} inCreatePost={true} />
 									)}
 									{postDataShare.verb === REVIEW_VERB_SHARE && (
 										<PostShare postData={postDataShare} inCreatePost={true} />
 									)}
+									{postDataShare.verb === TOP_USER_VERB_SHARE && (
+										<PostShare postData={postDataShare} inCreatePost={true} />
+									)}
+									{postDataShare.verb === TOP_BOOK_VERB_SHARE && (
+										<PostShare postData={postDataShare} inCreatePost={true} />
+									)}
+									{postDataShare.verb === TOP_QUOTE_VERB_SHARE && (
+										<PostShare postData={postDataShare} inCreatePost={true} />
+									)}
+									{postDataShare.verb === READ_TARGET_VERB_SHARE && (
+										<PostShare postData={postDataShare} inCreatePost={true} />
+									)}
 								</div>
 							)}
-							{postDataShare.verb === READ_TARGET_VERB_SHARE && <ShareTarget postData={postDataShare} />}
-							{postDataShare.verb === TOP_USER_VERB_SHARE && <ShareUsers postData={postDataShare} />}
+							{postDataShare.verb === READ_TARGET_VERB_SHARE_LV1 && (
+								<ShareTarget postData={postDataShare} />
+							)}
+							{postDataShare.verb === TOP_USER_VERB_SHARE_LV1 && <ShareUsers postData={postDataShare} />}
 
 							{!_.isEmpty(taggedData.addBook) || showUpload ? (
 								<>

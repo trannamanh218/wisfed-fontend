@@ -12,8 +12,18 @@ function ShareTarget({ postData, inPost = false }) {
 	const [percent, setPercent] = useState(0);
 
 	useEffect(() => {
-		if (inPost && !_.isEmpty(postData)) {
+		if (inPost) {
 			const percentTemp = ((postData?.sharePost.current / postData?.sharePost.target) * 100).toFixed();
+			if (percentTemp > 100) {
+				setPercent(100);
+			} else {
+				setPercent(percentTemp);
+			}
+		} else {
+			const percentTemp = (
+				(postData?.sharePost?.metaData?.currentRead / postData?.sharePost?.metaData?.totalTarget) *
+				100
+			).toFixed();
 			if (percentTemp > 100) {
 				setPercent(100);
 			} else {
@@ -29,18 +39,14 @@ function ShareTarget({ postData, inPost = false }) {
 	const renderName = () => {
 		if (inPost) {
 			if (
-				userInfo.id === postData?.readingGoalBy?.dataValues?.id ||
+				userInfo.id === postData?.sharePost?.createdBy?.id ||
 				userInfo.id === postData?.metaData?.readingGoalBy?.id
 			) {
 				return (
 					<span
 						className='share-target__content-user'
 						onClick={() =>
-							navigate(
-								`/profile/${
-									postData?.readingGoalBy?.dataValues?.id || postData?.metaData?.readingGoalBy?.id
-								}`
-							)
+							navigate(`/profile/${postData?.readingGoalBy?.id || postData?.metaData?.readingGoalBy?.id}`)
 						}
 					>
 						Bạn
@@ -51,22 +57,25 @@ function ShareTarget({ postData, inPost = false }) {
 					<span
 						className='share-target__content-user'
 						onClick={() =>
-							navigate(
-								`/profile/${
-									postData?.readingGoalBy?.dataValues?.id || postData?.metaData?.readingGoalBy?.id
-								}`
-							)
+							navigate(`/profile/${postData?.readingGoalBy?.id || postData?.metaData?.readingGoalBy?.id}`)
 						}
 					>
-						{postData?.readingGoalBy?.dataValues?.fullName || postData?.metaData?.readingGoalBy?.fullName}
+						{postData?.readingGoalBy?.fullName || postData?.metaData?.readingGoalBy?.fullName}
 					</span>
 				);
 			}
 		} else {
-			if (userInfo.id === postData?.userId) {
+			if (userInfo.id === postData?.sharePost?.createdBy?.id || userInfo.id === postData.userId) {
 				return <span className='share-target__content-user'>Bạn</span>;
 			} else {
-				return <span className='share-target__content-user'>{postData.fullName}</span>;
+				return (
+					<span
+						className='share-target__content-user'
+						onClick={() => navigate(`/profile/${postData.sharePost.metaData.readingGoalBy?.id}`)}
+					>
+						{postData?.sharePost?.createdBy.fullName || postData.sharePost.metaData.readingGoalBy.fullName}
+					</span>
+				);
 			}
 		}
 	};
@@ -76,8 +85,14 @@ function ShareTarget({ postData, inPost = false }) {
 			<div className='share-target__content__top'>
 				<p>
 					{renderName()} đã đọc được{' '}
-					{inPost ? postData.currentRead || postData?.sharePost.current : postData?.booksReadCount} trên{' '}
-					{inPost ? postData.totalTarget || postData?.sharePost.target : postData?.numberBook} cuốn
+					{inPost
+						? postData.currentRead || postData?.sharePost.current
+						: postData?.booksReadCount || postData?.sharePost?.metaData.currentRead}{' '}
+					trên{' '}
+					{inPost
+						? postData.totalTarget || postData?.sharePost.target
+						: postData?.numberBook || postData?.sharePost?.metaData.totalTarget}{' '}
+					cuốn
 				</p>
 			</div>
 		);
@@ -89,17 +104,19 @@ function ShareTarget({ postData, inPost = false }) {
 				className='share-target__user'
 				source={
 					inPost
-						? postData?.readingGoalBy?.dataValues?.avatarImage ||
-						  postData?.metaData?.readingGoalBy?.avatarImage
-						: postData.avatarImage
+						? postData?.readingGoalBy?.avatarImage || postData?.metaData?.readingGoalBy?.avatarImage
+						: postData.avatarImage || postData.sharePost.createdBy.avatarImage
 				}
 				size='lg'
 			/>
 			<div className='share-target__progress'>
 				{renderContentTop()}
-				<LinearProgressBar percent={inPost ? percent : postData?.percent} variant='share-target-gradient' />
+				<LinearProgressBar
+					percent={inPost ? percent : postData.percent || percent}
+					variant='share-target-gradient'
+				/>
 				<div className='share-target__progress__percent-number'>{`${
-					inPost ? percent : postData.percent
+					inPost ? percent : postData.percent || percent
 				}%`}</div>
 			</div>
 			<IconRanks />

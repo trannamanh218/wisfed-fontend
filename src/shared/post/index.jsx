@@ -115,7 +115,7 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 	const directUrl = url => {
 		setModalShow(true);
 		let urlFormated = '';
-		if (url.includes('https://') || url.includes('http://')) {
+		if (url.includes('http')) {
 			urlFormated = url;
 		} else {
 			urlFormated = `https://${url}`;
@@ -555,6 +555,7 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 				</div>
 			)}
 			{postData.verb === TOP_USER_VERB_SHARE && <ShareUsers postData={postData} />}
+
 			{postData.book && (
 				<PostBook data={postData.book} bookProgress={postData.metaData?.progress || postData.book.progress} />
 			)}

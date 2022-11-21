@@ -14,7 +14,7 @@ import ModalCheckLogin from 'shared/modal-check-login';
 import Storage from 'helpers/Storage';
 import { saveDataShare } from 'reducers/redux-utils/post';
 import { useNavigate } from 'react-router-dom';
-import { TOP_USER_VERB_SHARE } from 'constants/index';
+import { TOP_USER_VERB_SHARE_LV1 } from 'constants/index';
 import ModalSearchCategories from '../modal-search-categories/ModalSearchCategories';
 import LoadingIndicator from 'shared/loading-indicator';
 
@@ -100,7 +100,7 @@ const TopUser = ({ listYear, tabSelected }) => {
 			type: 'topUser',
 			id: data.id,
 			trueRank: index + 1,
-			verb: TOP_USER_VERB_SHARE,
+			verb: TOP_USER_VERB_SHARE_LV1,
 			...data,
 		};
 		if (Storage.getAccessToken()) {

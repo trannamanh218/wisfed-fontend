@@ -123,6 +123,7 @@ const ConnectButtonsFollower = ({ direction, item, isFollower }) => {
 			}
 		}
 	};
+
 	const handleUnFollow = () => {
 		if (isFollower) {
 			try {

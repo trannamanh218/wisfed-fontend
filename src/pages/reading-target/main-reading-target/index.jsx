@@ -1,26 +1,23 @@
-import { useState } from 'react';
-import SearchField from 'shared/search-field';
-import UserAvatar from 'shared/user-avatar';
-import LinearProgressBar from 'shared/linear-progress-bar';
+import { useFetchTargetReading } from 'api/readingTarget.hooks';
+import { useFetchUserParams } from 'api/user.hook';
+import { READ_TARGET_VERB_SHARE_LV1, STATUS_LOADING } from 'constants/index';
+import Storage from 'helpers/Storage';
 import _ from 'lodash';
 import moment from 'moment';
-import './main-reading-target.scss';
-import BookThumbnail from 'shared/book-thumbnail';
-import ModalReadTarget from '../modal-reading-target';
-import { useModal } from 'shared/hooks';
-import { Link, useParams, useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { useFetchUserParams } from 'api/user.hook';
-import { useFetchTargetReading } from 'api/readingTarget.hooks';
-import GoalsNotSetYet from './goals-not-set';
-import Circle from 'shared/loading/circle';
-import { STATUS_LOADING } from 'constants/index';
-import { useDispatch } from 'react-redux';
-import { saveDataShare } from 'reducers/redux-utils/post';
-import Storage from 'helpers/Storage';
-import { READ_TARGET_VERB_SHARE } from 'constants/index';
-import { useEffect } from 'react';
 import PropTypes from 'prop-types';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import { saveDataShare } from 'reducers/redux-utils/post';
+import BookThumbnail from 'shared/book-thumbnail';
+import { useModal } from 'shared/hooks';
+import LinearProgressBar from 'shared/linear-progress-bar';
+import Circle from 'shared/loading/circle';
+import SearchField from 'shared/search-field';
+import UserAvatar from 'shared/user-avatar';
+import ModalReadTarget from '../modal-reading-target';
+import GoalsNotSetYet from './goals-not-set';
+import './main-reading-target.scss';
 
 const MainReadingTarget = ({ setErrorLoadPage }) => {
 	const dispatch = useDispatch();
@@ -137,7 +134,7 @@ const MainReadingTarget = ({ setErrorLoadPage }) => {
 				numberBook: booksReadYear[0].numberBook,
 				booksReadCount: booksReadYear[0].booksReadCount,
 				percent: percentTemp > 100 ? 100 : percentTemp,
-				verb: READ_TARGET_VERB_SHARE,
+				verb: READ_TARGET_VERB_SHARE_LV1,
 				userId: userId,
 				avatarImage: userInfo.avatarImage,
 			};

@@ -54,10 +54,14 @@ export const QUOTE_VERB_SHARE = 'shareQuote';
 export const GROUP_POST_VERB = 'groupPost';
 export const GROUP_POST_VERB_SHARE = 'shareGroupPost';
 export const READ_TARGET_VERB_SHARE = 'shareTargetRead';
+export const READ_TARGET_VERB_SHARE_LV1 = 'shareTargetReadLv1';
 export const TOP_BOOK_VERB_SHARE = 'shareTopBookRanking';
+export const TOP_BOOK_VERB_SHARE_LV1 = 'shareTopBookLv1';
 export const MY_BOOK_VERB_SHARE = 'shareMyBook';
 export const TOP_QUOTE_VERB_SHARE = 'shareTopQuoteRanking';
+export const TOP_QUOTE_VERB_SHARE_LV1 = 'shareTopQuoteLv1';
 export const TOP_USER_VERB_SHARE = 'shareTopUserRanking';
+export const TOP_USER_VERB_SHARE_LV1 = 'shareTopUserLv1';
 export const REVIEW_VERB_SHARE = 'shareReview';
 
 // input type number

@@ -69,7 +69,7 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 	const directUrl = url => {
 		setModalShow(true);
 		let urlFormated = '';
-		if (url.includes('https://')) {
+		if (url.includes('http')) {
 			urlFormated = url;
 		} else {
 			urlFormated = `https://${url}`;
