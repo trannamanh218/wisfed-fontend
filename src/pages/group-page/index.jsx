@@ -23,23 +23,30 @@ const Group = () => {
 	const [eventKey, setEventKey] = useState('intro');
 	const [toggleClickSeeMore, setToggleClickSeeMore] = useState(false);
 	const [renderNotFound, setRenderNotFound] = useState(false);
+	const [isFetching, setIsFetching] = useState(false);
 
 	const fetchData = async () => {
+		setIsFetching(true);
 		try {
 			const res = await dispatch(getGroupDettail(id)).unwrap();
 			setDetailGroup(res);
 			dispatch(checkIsJoinedGroup(res.isJoined));
 		} catch (err) {
 			setRenderNotFound(true);
+		} finally {
+			setIsFetching(false);
 		}
 	};
 
 	const getListMember = async () => {
+		setIsFetching(true);
 		try {
 			const actionGetList = await dispatch(getMember(id)).unwrap();
 			setListMember(actionGetList);
 		} catch (err) {
 			return;
+		} finally {
+			setIsFetching(false);
 		}
 	};
 
@@ -49,7 +56,7 @@ const Group = () => {
 
 	useEffect(() => {
 		getListMember();
-	}, []);
+	}, [toggleUpdate]);
 
 	useEffect(() => {
 		fetchData();
@@ -89,6 +96,8 @@ const Group = () => {
 							setEventKey={setEventKey}
 							toggleClickSeeMore={toggleClickSeeMore}
 							setToggleClickSeeMore={setToggleClickSeeMore}
+							isFetching={isFetching}
+							setIsFetching={setIsFetching}
 						/>
 					}
 					right={<RightSidebarGroup update={toggleUpdate} />}

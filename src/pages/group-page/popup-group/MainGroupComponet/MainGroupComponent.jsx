@@ -51,13 +51,14 @@ function MainGroupComponent({
 	setEventKey,
 	toggleClickSeeMore,
 	setToggleClickSeeMore,
+	isFetching,
+	setIsFetching,
 }) {
 	const [valueGroupSearch, setValueGroupSearch] = useState('');
 	const [filter, setFilter] = useState('[]');
 	const [getData, setGetData] = useState({});
 	const [toggleFollowGroup, setToggleFollowGroup] = useState(false);
 	const [showSelect, setShowSelect] = useState(false);
-	const [isFetching, setIsFetching] = useState(true);
 	const [isFetchingSearchInFroup, setIsFetchingSearchInGroup] = useState(false);
 	const [show, setShow] = useState(false);
 
@@ -92,6 +93,8 @@ function MainGroupComponent({
 			setIsFetching(false);
 		} catch (err) {
 			NotificationError(err);
+		} finally {
+			setIsFetching(false);
 		}
 	};
 
@@ -99,6 +102,7 @@ function MainGroupComponent({
 		const params = {
 			id: data?.id,
 		};
+		setIsFetching(true);
 		try {
 			await dispatch(leaveGroupUser(params)).unwrap();
 			setShow(false);
@@ -109,26 +113,34 @@ function MainGroupComponent({
 				const customId = 'custom-id-PersonalInfo-handleDrop-warning';
 				toast.warning('Bạn đang là Admin bạn không thể rời nhóm', { toastId: customId });
 			}
+		} finally {
+			setIsFetching(false);
 		}
 	};
 
 	const unFollowGroup = async () => {
 		setToggleFollowGroup(true);
+		setIsFetching(true);
 		try {
 			await dispatch(unFollowGroupUser(data?.id)).unwrap();
 			setShowSelect(false);
 		} catch (err) {
 			NotificationError(err);
+		} finally {
+			setIsFetching(false);
 		}
 	};
 
 	const handleFollowGroup = async () => {
 		setToggleFollowGroup(false);
+		setIsFetching(true);
 		try {
 			await dispatch(followGroupUser(data?.id)).unwrap();
 			setShowSelect(false);
 		} catch (err) {
 			NotificationError(err);
+		} finally {
+			setIsFetching(false);
 		}
 	};
 
@@ -213,7 +225,6 @@ function MainGroupComponent({
 				setEventKey('post');
 				setShow(true);
 			}
-			setIsFetching(false);
 		}
 	}, [data]);
 
@@ -416,6 +427,8 @@ MainGroupComponent.propTypes = {
 	setEventKey: PropTypes.func,
 	toggleClickSeeMore: PropTypes.bool,
 	setToggleClickSeeMore: PropTypes.func,
+	isFetching: PropTypes.bool,
+	setIsFetching: PropTypes.func,
 };
 
 export default MainGroupComponent;

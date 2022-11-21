@@ -19,7 +19,7 @@ import { useState } from 'react';
 import classNames from 'classnames';
 import LoadingIndicator from 'shared/loading-indicator';
 import logoNonText from 'assets/icons/logoNonText.svg';
-import { replyInviteGroup } from 'reducers/redux-utils/group';
+import { replyInviteGroup, handleToggleUpdate } from 'reducers/redux-utils/group';
 
 const NotificationStatus = ({ item, handleReplyFriendRequest }) => {
 	const dispatch = useDispatch();
@@ -171,6 +171,9 @@ const NotificationStatus = ({ item, handleReplyFriendRequest }) => {
 				break;
 			case 'acceptedGroup':
 				navigate(`/group/${item.originId.groupId}`);
+				if (window.location.pathname.includes('group')) {
+					handleToggleUpdate();
+				}
 				break;
 			case 'rejectGroup':
 				navigate(`/group/${item.originId.groupId}`);
