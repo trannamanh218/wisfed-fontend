@@ -1,6 +1,6 @@
 import { lazy, Suspense } from 'react';
 import Dropzone from 'react-dropzone';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { BackArrow, Calendar, Image, CloseX } from 'components/svg';
 import './MainUpload.scss';
 import { useState, useRef, useEffect } from 'react';
@@ -29,6 +29,8 @@ const AddAndSearchPublisherUploadBook = lazy(() =>
 // import AddAndSearchTranslatorsUploadBook from './AddAndSearchTranslatorsUploadBook/AddAndSearchTranslatorsUploadBook';
 
 export default function MainUpload() {
+	const navigate = useNavigate();
+
 	const [publishDate, setPublishDate] = useState(null);
 	const dispatch = useDispatch();
 	const { userInfo } = useSelector(state => state.auth);
@@ -118,6 +120,7 @@ export default function MainUpload() {
 
 			// Xử lý hiển thị kết quả
 			toast.success('Đang chờ xét duyệt sách. Chúng tôi sẽ thông báo cho bạn sau.');
+			navigate('/');
 		} catch (err) {
 			NotificationError(err);
 		}
