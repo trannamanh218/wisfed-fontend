@@ -63,6 +63,7 @@ import {
 } from 'constants';
 import { handleClickCreateNewPostForBook } from 'reducers/redux-utils/activity';
 // import ShareModeComponent from './ShareModeComponent';
+import DirectLinkALertModal from 'shared/direct-link-alert-modal';
 
 const verbShareArray = [
 	POST_VERB_SHARE,
@@ -109,6 +110,8 @@ function CreatePostModalContent({
 	const [content, setContent] = useState('');
 	const [hashtagsAdded, setHashtagsAdded] = useState([]);
 	const [optionListState, setOptionListState] = useState([]);
+
+	const [modalShow, setModalShow] = useState(false);
 
 	const dispatch = useDispatch();
 	const location = useLocation();
@@ -638,15 +641,29 @@ function CreatePostModalContent({
 		}
 	};
 
+	const handleAccept = () => {
+		setModalShow(false);
+		hideCreatePostModal();
+	};
+
+	const handleCancel = () => {
+		setModalShow(false);
+	};
+
 	const handleClose = () => {
 		if (isWarning) {
-			if (confirm(message) === true) {
-				hideCreatePostModal();
-			}
+			setModalShow(true);
 		} else {
 			hideCreatePostModal();
 		}
 	};
+
+	useEffect(() => {
+		if (modalShow) {
+			const modalBackground = document.querySelector('.modal-backdrop');
+			modalBackground.style.backgroundColor = 'initial';
+		}
+	}, [modalShow]);
 
 	return (
 		<div className='creat-post-modal-content'>
@@ -664,6 +681,16 @@ function CreatePostModalContent({
 					<button className='creat-post-modal-content__main__close' onClick={handleClose}>
 						<CloseX />
 					</button>
+					<DirectLinkALertModal
+						className={'creat-post-modal-content__modal-confirm'}
+						modalShow={modalShow}
+						handleAccept={handleAccept}
+						handleCancel={handleCancel}
+						message={message}
+						yesBtnMsg={'Có'}
+						noBtnMsg={'Không'}
+						centered={false}
+					/>
 				</div>
 				<form
 					onSubmit={e => {

@@ -12,6 +12,7 @@ import { updateImg } from 'reducers/redux-utils/chart';
 import Storage from 'helpers/Storage';
 import { checkUserLogin } from 'reducers/redux-utils/auth';
 import { handleClickCreateNewPostForBook } from 'reducers/redux-utils/activity';
+import DirectLinkALertModal from 'shared/direct-link-alert-modal';
 
 function CreatePost({ onChangeNewPost }) {
 	const [showModalCreatPost, setShowModalCreatPost] = useState(false);
@@ -20,6 +21,7 @@ function CreatePost({ onChangeNewPost }) {
 	const creatPostModalContainer = useRef(null);
 	const scrollBlocked = useRef(false);
 	const location = useLocation();
+	const [modalShow, setModalShow] = useState(false);
 
 	const { postDataShare } = useSelector(state => state.post);
 	const { updateImgPost } = useSelector(state => state.chart);
@@ -97,14 +99,19 @@ function CreatePost({ onChangeNewPost }) {
 	const handleHideCreatePost = e => {
 		if (e.target === creatPostModalContainer.current) {
 			if (isWarning) {
-				if (confirm(message) === true) {
-					hideCreatePostModal();
-				}
+				setModalShow(true);
 			} else {
 				hideCreatePostModal();
 			}
 		}
 	};
+
+	useEffect(() => {
+		if (modalShow) {
+			const modalBackground = document.querySelector('.modal-backdrop');
+			modalBackground.style.backgroundColor = 'initial';
+		}
+	}, [modalShow]);
 
 	useEffect(() => {
 		if (showModalCreatPost) {
@@ -184,6 +191,15 @@ function CreatePost({ onChangeNewPost }) {
 		}
 	};
 
+	const handleAccept = () => {
+		setModalShow(false);
+		hideCreatePostModal();
+	};
+
+	const handleCancel = () => {
+		setModalShow(false);
+	};
+
 	return (
 		<div className='newfeed__creat-post'>
 			<div className='newfeed__creat-post__avatar-and-input'>
@@ -194,6 +210,7 @@ function CreatePost({ onChangeNewPost }) {
 					onClick={() => {
 						handleUserLogin();
 					}}
+					readOnly
 				/>
 			</div>
 			<div
@@ -216,6 +233,16 @@ function CreatePost({ onChangeNewPost }) {
 						showSubModal={showSubModal}
 						bookForCreatePost={bookForCreatePost}
 						message={message}
+					/>
+					<DirectLinkALertModal
+						className={'creat-post-modal-content__modal-confirm'}
+						modalShow={modalShow}
+						handleAccept={handleAccept}
+						handleCancel={handleCancel}
+						message={message}
+						yesBtnMsg={'Có'}
+						noBtnMsg={'Không'}
+						centered={false}
 					/>
 				</div>
 			)}
