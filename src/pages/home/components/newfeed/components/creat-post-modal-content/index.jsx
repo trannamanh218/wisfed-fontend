@@ -116,7 +116,6 @@ function CreatePostModalContent({
 	const dispatch = useDispatch();
 	const location = useLocation();
 
-	const UpdateImg = useSelector(state => state.chart.updateImgPost);
 	const chartImgShare = useSelector(state => state.chart.updateImgPost);
 	const { postDataShare } = useSelector(state => state.post);
 	const isWarning = useSelector(state => state.post.isWarning);
@@ -141,9 +140,9 @@ function CreatePostModalContent({
 			}, 200);
 		}
 
-		if (UpdateImg.length > 0) {
+		if (chartImgShare.length > 0) {
 			setShowUpload(true);
-			setImagesUpload(UpdateImg);
+			setImagesUpload(chartImgShare);
 		}
 
 		if (!_.isEmpty(bookForCreatePost)) {
@@ -566,11 +565,8 @@ function CreatePostModalContent({
 				}
 			}
 		} else if (
-			content &&
-			(taggedData.addAuthor.length ||
-				taggedData.addCategory.length ||
-				// imagesUpload.length ||
-				!_.isEmpty(postDataShare))
+			(content && (taggedData.addAuthor.length || taggedData.addCategory.length || !_.isEmpty(postDataShare))) ||
+			chartImgShare.length
 		) {
 			isActive = true;
 		}
