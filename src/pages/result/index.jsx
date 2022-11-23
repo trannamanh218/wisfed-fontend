@@ -78,7 +78,6 @@ const Result = () => {
 
 	return (
 		<NormalContainer>
-			<Circle loading={isFetching} />
 			<div className='result__container'>
 				<div className='result__header'>
 					<div className='result__header__content'>Kết quả tìm kiếm cho "{value}"</div>
@@ -101,10 +100,12 @@ const Result = () => {
 					>
 						<Tab eventKey='books' title='Sách'>
 							<BookSearch
+								setIsFetching={setIsFetching}
 								activeKeyDefault={activeKeyDefault}
 								searchResultInput={searchResultInput}
 								value={value}
 								updateBooks={updateBooks}
+								isFetching={isFetching}
 							/>
 						</Tab>
 						<Tab eventKey='authors' title='Tác giả'>
