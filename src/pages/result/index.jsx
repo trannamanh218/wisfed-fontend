@@ -14,9 +14,13 @@ import Circle from 'shared/loading/circle';
 import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { hashtagRegex } from 'constants';
+import { handleUpdateValueInputSearchRedux } from 'reducers/redux-utils/search';
+import { useDispatch } from 'react-redux';
 
 const Result = () => {
 	const { value } = useParams();
+	const dispatch = useDispatch();
+
 	const [activeKeyDefault, setActiveKeyDefault] = useState('books');
 	const [searchResultInput, setSearchResultInput] = useState('');
 	const [updateBooks, setUpdateBooks] = useState(false);
@@ -58,6 +62,7 @@ const Result = () => {
 
 	const handleKeyDown = e => {
 		if (e.key === 'Enter' && e.target.value.trim().length) {
+			dispatch(handleUpdateValueInputSearchRedux(''));
 			handleDirectParam();
 		}
 	};
@@ -96,12 +101,10 @@ const Result = () => {
 					>
 						<Tab eventKey='books' title='Sách'>
 							<BookSearch
-								setIsFetching={setIsFetching}
 								activeKeyDefault={activeKeyDefault}
 								searchResultInput={searchResultInput}
 								value={value}
 								updateBooks={updateBooks}
-								isFetching={isFetching}
 							/>
 						</Tab>
 						<Tab eventKey='authors' title='Tác giả'>
