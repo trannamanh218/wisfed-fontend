@@ -12,7 +12,7 @@ import LoadingIndicator from 'shared/loading-indicator';
 import ResultNotFound from '../result-not-found';
 import './books-search.scss';
 
-const BookSearch = ({ isFetching, setIsFetching, value, searchResultInput, activeKeyDefault, updateBooks }) => {
+const BookSearch = ({ value, searchResultInput, activeKeyDefault, updateBooks }) => {
 	const dispatch = useDispatch();
 	const callApiStartBooks = useRef(0);
 	const callApiPerPage = useRef(10);
@@ -21,6 +21,8 @@ const BookSearch = ({ isFetching, setIsFetching, value, searchResultInput, activ
 	const { isShowModal } = useSelector(state => state.search);
 	const [resultInformations, setResultInformations] = useState({ count: 0, time: 0 });
 	const [hasMore, setHasMore] = useState(true);
+	const [isFetching, setIsFetching] = useState(false);
+	const [isLoadingFirstTime, setIsLoadingFirstTime] = useState(false);
 
 	const navigate = useNavigate();
 	useEffect(() => {
@@ -47,6 +49,9 @@ const BookSearch = ({ isFetching, setIsFetching, value, searchResultInput, activ
 	}, [callApiStartBooks.current, value, isShowModal, listArrayBooks]);
 
 	const handleGetBooksSearch = async () => {
+		if (listArrayBooks.length === 0) {
+			setIsLoadingFirstTime(true);
+		}
 		setIsFetching(true);
 		try {
 			const params = {
@@ -72,6 +77,7 @@ const BookSearch = ({ isFetching, setIsFetching, value, searchResultInput, activ
 			return;
 		} finally {
 			setIsFetching(false);
+			setIsLoadingFirstTime(false);
 		}
 	};
 
@@ -85,43 +91,49 @@ const BookSearch = ({ isFetching, setIsFetching, value, searchResultInput, activ
 
 	return (
 		<div className='bookSearch__container'>
-			{!!resultInformations.count && (
-				<div className='bookSearch__title'>
-					Có khoảng {resultInformations.count} kết quả ({resultInformations.time} giây)
-				</div>
-			)}
-
-			{!!listArrayBooks.length && activeKeyDefault === 'books' ? (
-				<InfiniteScroll
-					next={handleGetBooksSearch}
-					dataLength={listArrayBooks.length}
-					hasMore={hasMore}
-					loader={<LoadingIndicator />}
-				>
-					{listArrayBooks.map((item, index) => (
-						<>
-							<div key={item.id} className='bookSearch__main'>
-								<AuthorBook data={item} checkStar={true} saveLocalStorage={true} />
-							</div>
-							{index === 9 && (
-								<div className='btn-goTo-upload-book has-background'>
-									<h6>Vui lòng thêm sách nếu bạn không tìm thấy trên hệ thống</h6>
-									<br />
-									<Button onClick={handleDiect}>Thêm sách</Button>
-								</div>
-							)}
-						</>
-					))}
-				</InfiniteScroll>
+			{isLoadingFirstTime ? (
+				<LoadingIndicator />
 			) : (
-				isFetching === false && (
-					<>
-						<ResultNotFound />
-						<div className='btn-goTo-upload-book'>
-							<Button onClick={handleDiect}>Tạo sách mới</Button>
+				<>
+					{!!resultInformations.count && (
+						<div className='bookSearch__title'>
+							Có khoảng {resultInformations.count} kết quả ({resultInformations.time} giây)
 						</div>
-					</>
-				)
+					)}
+
+					{!!listArrayBooks.length && activeKeyDefault === 'books' ? (
+						<InfiniteScroll
+							next={handleGetBooksSearch}
+							dataLength={listArrayBooks.length}
+							hasMore={hasMore}
+							loader={<LoadingIndicator />}
+						>
+							{listArrayBooks.map((item, index) => (
+								<>
+									<div key={item.id} className='bookSearch__main'>
+										<AuthorBook data={item} checkStar={true} saveLocalStorage={true} />
+									</div>
+									{index === 9 && (
+										<div className='btn-goTo-upload-book has-background'>
+											<h6>Vui lòng thêm sách nếu bạn không tìm thấy trên hệ thống</h6>
+											<br />
+											<Button onClick={handleDiect}>Thêm sách</Button>
+										</div>
+									)}
+								</>
+							))}
+						</InfiniteScroll>
+					) : (
+						isFetching === false && (
+							<>
+								<ResultNotFound />
+								<div className='btn-goTo-upload-book'>
+									<Button onClick={handleDiect}>Tạo sách mới</Button>
+								</div>
+							</>
+						)
+					)}
+				</>
 			)}
 		</div>
 	);
@@ -135,6 +147,7 @@ BookSearch.propTypes = {
 	value: PropTypes.string,
 	updateBooks: PropTypes.bool,
 	isFetching: PropTypes.bool,
+	setIsLoadingFirstTime: PropTypes.func,
 };
 
 export default BookSearch;

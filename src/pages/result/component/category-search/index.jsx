@@ -13,10 +13,11 @@ import LoadingIndicator from 'shared/loading-indicator';
 import { getCategoryDetail } from 'reducers/redux-utils/category';
 import ResultNotFound from '../result-not-found';
 
-const CategorySearch = ({ value, isFetching, setIsFetching, searchResultInput, activeKeyDefault, updateBooks }) => {
+const CategorySearch = ({ value, searchResultInput, activeKeyDefault, updateBooks }) => {
 	const [listArrayCategory, setListArrayCategory] = useState([]);
 	const { isShowModal } = useSelector(state => state.search);
 	const [hasMore, setHasMore] = useState(true);
+	const [isLoadingFirstTime, setIsLoadingFirstTime] = useState(false);
 
 	const callApiStartCategory = useRef(0);
 	const callApiPerPage = useRef(3);
@@ -44,7 +45,9 @@ const CategorySearch = ({ value, isFetching, setIsFetching, searchResultInput, a
 	}, [callApiStartCategory.current, value, isShowModal, listArrayCategory]);
 
 	const handleGetGroupSearch = async () => {
-		setIsFetching(true);
+		if (listArrayCategory.length === 0) {
+			setIsLoadingFirstTime(true);
+		}
 		try {
 			const params = {
 				q: searchResultInput,
@@ -65,15 +68,13 @@ const CategorySearch = ({ value, isFetching, setIsFetching, searchResultInput, a
 		} catch (err) {
 			NotificationError(err);
 		} finally {
-			setIsFetching(false);
+			setIsLoadingFirstTime(false);
 		}
 	};
 
 	const handleViewBookDetail = useCallback(async data => {
-		setIsFetching(true);
 		try {
 			await dispatch(getBookDetail(data.id)).unwrap();
-			setIsFetching(false);
 			navigate(RouteLink.bookDetail(data.id, data.name));
 		} catch (err) {
 			NotificationError(err);
@@ -81,11 +82,9 @@ const CategorySearch = ({ value, isFetching, setIsFetching, searchResultInput, a
 	}, []);
 
 	const handleViewCategoryDetail = async data => {
-		setIsFetching(true);
 		try {
 			await dispatch(getCategoryDetail(data.id)).unwrap();
 			navigate(RouteLink.categoryDetail(data.id, data.name));
-			setIsFetching(false);
 		} catch (err) {
 			NotificationError(err);
 		}
@@ -93,30 +92,34 @@ const CategorySearch = ({ value, isFetching, setIsFetching, searchResultInput, a
 
 	return (
 		<div className='category__search__container'>
-			<>
-				{listArrayCategory.length && activeKeyDefault === 'categories' ? (
-					<InfiniteScroll
-						dataLength={listArrayCategory.length}
-						next={handleGetGroupSearch}
-						hasMore={hasMore}
-						loader={<LoadingIndicator />}
-					>
-						{listArrayCategory.map(category => (
-							<CategoryGroup
-								key={`category-group-${category.id}`}
-								list={category.books}
-								title={category.name}
-								data={category}
-								handleViewBookDetail={handleViewBookDetail}
-								handleViewCategoryDetail={handleViewCategoryDetail}
-								inResult={true}
-							/>
-						))}
-					</InfiniteScroll>
-				) : (
-					<ResultNotFound />
-				)}
-			</>
+			{isLoadingFirstTime ? (
+				<LoadingIndicator />
+			) : (
+				<>
+					{listArrayCategory.length && activeKeyDefault === 'categories' ? (
+						<InfiniteScroll
+							dataLength={listArrayCategory.length}
+							next={handleGetGroupSearch}
+							hasMore={hasMore}
+							loader={<LoadingIndicator />}
+						>
+							{listArrayCategory.map(category => (
+								<CategoryGroup
+									key={`category-group-${category.id}`}
+									list={category.books}
+									title={category.name}
+									data={category}
+									handleViewBookDetail={handleViewBookDetail}
+									handleViewCategoryDetail={handleViewCategoryDetail}
+									inResult={true}
+								/>
+							))}
+						</InfiniteScroll>
+					) : (
+						<ResultNotFound />
+					)}
+				</>
+			)}
 		</div>
 	);
 };
@@ -129,6 +132,7 @@ CategorySearch.propTypes = {
 	value: PropTypes.string,
 	updateBooks: PropTypes.bool,
 	isFetching: PropTypes.bool,
+	setIsLoadingFirstTime: PropTypes.func,
 };
 
 export default CategorySearch;

@@ -36,7 +36,7 @@ const DetailFriend = () => {
 	const [listRecommendFriend, setListRecommendFriend] = useState([]);
 
 	const { isAuth } = useSelector(state => state.auth);
-	const result = userInfo?.favoriteCategory.map(item => item.categoryId);
+	const result = userInfo?.favoriteCategory?.map(item => item.categoryId);
 
 	const updateInputSearch = value => {
 		if (value) {
@@ -270,7 +270,7 @@ const DetailFriend = () => {
 				<div className='myfriends__container'>
 					<div className='myfriends__container__content'>
 						<div className='myfriends__title__addfriend'>
-							{renderLength()} người {renderTitleContainer()}
+							{renderLength()} {renderTitleContainer()}
 						</div>
 					</div>
 					<div className='myfriends__layout__container'>{renderListMap()}</div>

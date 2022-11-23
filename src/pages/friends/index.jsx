@@ -1,5 +1,5 @@
 import NormalContainer from 'components/layout/normal-container';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './friend.scss';
 import MyFriends from './component/my-friend';
 import MyFollow from './component/my-follow';
@@ -9,11 +9,12 @@ import SearchButton from 'shared/search-button';
 import { useSelector } from 'react-redux';
 
 const Friends = () => {
-	const isFriend = useSelector(state => state.user.isFriend);
-	const [activeTabs, setActiveTabs] = useState(isFriend ? 'suggest' : 'friend');
+	const [activeTabs, setActiveTabs] = useState('');
 	const [toggleSearch, setToggleSearch] = useState(true);
 	const [inputSearch, setInputSearch] = useState('');
 	const [filter, setFilter] = useState('[]');
+
+	const { userInfo } = useSelector(state => state.auth);
 
 	const handleActiveTabs = string => {
 		setInputSearch('');
@@ -81,6 +82,14 @@ const Friends = () => {
 		}
 	};
 
+	useEffect(() => {
+		if (userInfo.friends > 0) {
+			handleActiveTabs('friend');
+		} else {
+			handleActiveTabs('suggest');
+		}
+	}, [userInfo]);
+
 	return (
 		<NormalContainer>
 			<div className='friends__container'>
@@ -101,7 +110,8 @@ const Friends = () => {
 								type='radio'
 								id='friend'
 								name='radio-group'
-								defaultChecked={activeTabs === 'friend'}
+								checked={activeTabs === 'friend'}
+								readOnly
 							/>
 							<label htmlFor='friend'>Tất cả bạn bè</label>
 						</p>
@@ -118,8 +128,8 @@ const Friends = () => {
 								type='radio'
 								id='suggest'
 								name='radio-group'
-								defaultChecked={activeTabs === 'suggest'}
 								checked={activeTabs === 'suggest'}
+								readOnly
 							/>
 							<label htmlFor='suggest'>Gợi ý</label>
 						</p>
