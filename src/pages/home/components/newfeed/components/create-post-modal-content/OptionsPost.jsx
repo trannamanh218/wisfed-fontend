@@ -45,7 +45,7 @@ const OptionsPost = ({ list, addOptionsToPost, taggedData, postDataShare }) => {
 
 		return (
 			<span
-				className={classNames('creat-post-modal-content__main__options__item-add-to-post', {
+				className={classNames('create-post-modal-content__main__options__item-add-to-post', {
 					'active': isActive,
 					'disabled': isDisabled,
 				})}
@@ -58,7 +58,7 @@ const OptionsPost = ({ list, addOptionsToPost, taggedData, postDataShare }) => {
 				key={index}
 			>
 				<div
-					className={classNames('creat-post-modal-content__main__options__item-add-to-post__popover', {
+					className={classNames('create-post-modal-content__main__options__item-add-to-post__popover', {
 						'show': itemOnMouseHover === index,
 					})}
 				>

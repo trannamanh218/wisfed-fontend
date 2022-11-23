@@ -12,14 +12,15 @@ import LoadingIndicator from 'shared/loading-indicator';
 import ResultNotFound from '../result-not-found';
 import './books-search.scss';
 
-const BookSearch = ({ isFetching, value, setIsFetching, searchResultInput, activeKeyDefault, updateBooks }) => {
+const BookSearch = ({ isFetching, setIsFetching, value, searchResultInput, activeKeyDefault, updateBooks }) => {
+	const dispatch = useDispatch();
+	const callApiStartBooks = useRef(0);
+	const callApiPerPage = useRef(10);
+
 	const [listArrayBooks, setListArrayBooks] = useState([]);
 	const { isShowModal } = useSelector(state => state.search);
 	const [resultInformations, setResultInformations] = useState({ count: 0, time: 0 });
 	const [hasMore, setHasMore] = useState(true);
-	const dispatch = useDispatch();
-	const callApiStartBooks = useRef(0);
-	const callApiPerPage = useRef(10);
 
 	const navigate = useNavigate();
 	useEffect(() => {

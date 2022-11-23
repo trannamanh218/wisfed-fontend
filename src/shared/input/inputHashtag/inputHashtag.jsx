@@ -15,9 +15,10 @@ const InputHashtag = ({ listHashtags, setListHashtags, setLastTag, label, isRequ
 	const [justAddedFirstOneHashTag, setJustAddedFirstOneHashTag] = useState(false);
 
 	const handleChangeHashtag = e => {
-		const value = e.target.value;
-		setInputHashtag(value);
-		if (!hashtagRegex.test(value) && value.trim().length) {
+		setInputHashtag(e.target.value);
+		const hashtagsMatched = e.target.value.match(hashtagRegex);
+
+		if (!hashtagsMatched && e.target.value.trim().length) {
 			setShow(true);
 		} else {
 			setShow(false);
@@ -40,17 +41,6 @@ const InputHashtag = ({ listHashtags, setListHashtags, setLastTag, label, isRequ
 				.replace(/đ/g, 'd')
 				.replace(/Đ/g, 'D')
 		);
-
-		const hastagElement = document.getElementById('hashtag');
-		const handleHashtag = e => {
-			if (e.keyCode === 32 && hashtagRegex.test(inputHashtag)) {
-				dataRef.current = inputHashtag.trim();
-				inputRefHashtag.current.value = '';
-			}
-		};
-		hastagElement.addEventListener('keydown', handleHashtag);
-
-		return () => hastagElement.removeEventListener('keydown', handleHashtag);
 	}, [inputHashtag]);
 
 	useEffect(() => {
@@ -73,6 +63,23 @@ const InputHashtag = ({ listHashtags, setListHashtags, setLastTag, label, isRequ
 			inputRefHashtag.current.focus();
 		}
 	}, [justAddedFirstOneHashTag, listHashtags]);
+
+	const handleCreateHashtags = e => {
+		// if (e.keyCode === 32 && hashtagRegex.test(inputHashtag)) {
+		// 	dataRef.current = inputHashtag.trim();
+		// 	inputRefHashtag.current.value = '';
+		// }
+
+		if (e.keyCode === 32) {
+			console.log('text', inputRefHashtag.current.value);
+			const value = inputRefHashtag.current.value;
+			if (hashtagRegex.test(value)) {
+				if (!listHashtags.length) {
+					setListHashtags([value]);
+				}
+			}
+		}
+	};
 
 	return (
 		<div className='input-form-group'>
@@ -98,21 +105,21 @@ const InputHashtag = ({ listHashtags, setListHashtags, setLastTag, label, isRequ
 						))}
 						<div ref={hashtagInputWrapper} style={{ width: '8px' }}>
 							<input
-								id='hashtag'
 								className='input-hashtag-input-element'
 								onChange={handleChangeHashtag}
 								ref={inputRefHashtag}
+								onKeyDown={handleCreateHashtags}
 							/>
 						</div>
 					</div>
 				) : (
 					<Input
 						className='input-keyword'
-						id='hashtag'
 						isBorder={false}
 						placeholder='Nhập hashtag'
 						handleChange={handleChangeHashtag}
 						inputRef={inputRefHashtag}
+						onKeyDown={handleCreateHashtags}
 					/>
 				)}
 			</div>

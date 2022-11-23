@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import ConnectButtonsSearch from './ConnectButtonsSearch';
 import { useNavigate } from 'react-router-dom';
 import Button from 'shared/button';
+import LoadingIndicator from 'shared/loading-indicator';
 
 const UsersSearch = ({ isFetching, value, setIsFetching, searchResultInput, activeKeyDefault, updateBooks }) => {
 	const [listArrayUsers, setListArrayUsers] = useState([]);
@@ -86,7 +87,12 @@ const UsersSearch = ({ isFetching, value, setIsFetching, searchResultInput, acti
 		<div className='user__search__container'>
 			{listArrayUsers?.length > 0 && activeKeyDefault === 'users' ? (
 				<>
-					<InfiniteScroll next={handleGetUserSearch} dataLength={listArrayUsers.length} hasMore={hasMore}>
+					<InfiniteScroll
+						next={handleGetUserSearch}
+						dataLength={listArrayUsers.length}
+						hasMore={hasMore}
+						loader={<LoadingIndicator />}
+					>
 						<div className='myfriends__layout__container'>
 							{listArrayUsers.map((item, index) => {
 								return (

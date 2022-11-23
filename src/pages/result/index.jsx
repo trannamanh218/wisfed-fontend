@@ -14,9 +14,13 @@ import Circle from 'shared/loading/circle';
 import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { hashtagRegex } from 'constants';
+import { handleUpdateValueInputSearchRedux } from 'reducers/redux-utils/search';
+import { useDispatch } from 'react-redux';
 
 const Result = () => {
 	const { value } = useParams();
+	const dispatch = useDispatch();
+
 	const [activeKeyDefault, setActiveKeyDefault] = useState('books');
 	const [searchResultInput, setSearchResultInput] = useState('');
 	const [updateBooks, setUpdateBooks] = useState(false);
@@ -58,6 +62,7 @@ const Result = () => {
 
 	const handleKeyDown = e => {
 		if (e.key === 'Enter' && e.target.value.trim().length) {
+			dispatch(handleUpdateValueInputSearchRedux(''));
 			handleDirectParam();
 		}
 	};
@@ -73,7 +78,6 @@ const Result = () => {
 
 	return (
 		<NormalContainer>
-			<Circle loading={isFetching} />
 			<div className='result__container'>
 				<div className='result__header'>
 					<div className='result__header__content'>Kết quả tìm kiếm cho "{value}"</div>

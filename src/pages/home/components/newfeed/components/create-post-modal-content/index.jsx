@@ -63,6 +63,7 @@ import {
 } from 'constants';
 import { handleClickCreateNewPostForBook } from 'reducers/redux-utils/activity';
 // import ShareModeComponent from './ShareModeComponent';
+import DirectLinkALertModal from 'shared/direct-link-alert-modal';
 
 const verbShareArray = [
 	POST_VERB_SHARE,
@@ -110,6 +111,8 @@ function CreatePostModalContent({
 	const [hashtagsAdded, setHashtagsAdded] = useState([]);
 	const [optionListState, setOptionListState] = useState([]);
 
+	const [modalShow, setModalShow] = useState(false);
+
 	const dispatch = useDispatch();
 	const location = useLocation();
 
@@ -130,7 +133,7 @@ function CreatePostModalContent({
 	const { optionList, shareModeList } = setting; // k xóa shareModeList
 
 	useEffect(() => {
-		const textFieldEdit = document.querySelector('.creat-post-modal-content__main__body__text-field-edit-wrapper');
+		const textFieldEdit = document.querySelector('.create-post-modal-content__main__body__text-field-edit-wrapper');
 		const editor = textFieldEdit.querySelector('.public-DraftEditor-content');
 		if (editor) {
 			setTimeout(() => {
@@ -638,32 +641,56 @@ function CreatePostModalContent({
 		}
 	};
 
+	const handleAccept = () => {
+		setModalShow(false);
+		hideCreatePostModal();
+	};
+
+	const handleCancel = () => {
+		setModalShow(false);
+	};
+
 	const handleClose = () => {
 		if (isWarning) {
-			if (confirm(message) === true) {
-				hideCreatePostModal();
-			}
+			setModalShow(true);
 		} else {
 			hideCreatePostModal();
 		}
 	};
 
+	useEffect(() => {
+		if (modalShow) {
+			const modalBackground = document.querySelector('.modal-backdrop');
+			modalBackground.style.backgroundColor = 'initial';
+		}
+	}, [modalShow]);
+
 	return (
-		<div className='creat-post-modal-content'>
+		<div className='create-post-modal-content'>
 			<Circle loading={status === STATUS_LOADING} />
 			<div
-				className={classNames('creat-post-modal-content__main', {
+				className={classNames('create-post-modal-content__main', {
 					'hide': option.value !== 'addImages' && !showMainModal,
 				})}
 			>
-				<div className='creat-post-modal-content__main__header'>
-					<div style={{ visibility: 'hidden' }} className='creat-post-modal-content__main__close'>
+				<div className='create-post-modal-content__main__header'>
+					<div style={{ visibility: 'hidden' }} className='create-post-modal-content__main__close'>
 						<CloseX />
 					</div>
 					<h5>{postDataShare && !_.isEmpty(postDataShare) ? 'Chia sẻ bài viết' : 'Tạo bài viết'}</h5>
-					<button className='creat-post-modal-content__main__close' onClick={handleClose}>
+					<button className='create-post-modal-content__main__close' onClick={handleClose}>
 						<CloseX />
 					</button>
+					<DirectLinkALertModal
+						className={'creat-post-modal-content__modal-confirm'}
+						modalShow={modalShow}
+						handleAccept={handleAccept}
+						handleCancel={handleCancel}
+						message={message}
+						yesBtnMsg={'Có'}
+						noBtnMsg={'Không'}
+						centered={false}
+					/>
 				</div>
 				<form
 					onSubmit={e => {
@@ -672,12 +699,12 @@ function CreatePostModalContent({
 					}}
 					id='formCreatePost'
 				>
-					<div className='creat-post-modal-content__main__body'>
-						<div className='creat-post-modal-content__main__body__user-info'>
-							<div className='creat-post-modal-content__main__body__user-info__block-left'>
-								<UserAvatar className='newfeed__creat-post__avatar' source={userInfo?.avatarImage} />
+					<div className='create-post-modal-content__main__body'>
+						<div className='create-post-modal-content__main__body__user-info'>
+							<div className='create-post-modal-content__main__body__user-info__block-left'>
+								<UserAvatar className='newfeed__create-post__avatar' source={userInfo?.avatarImage} />
 							</div>
-							<div className='creat-post-modal-content__main__body__user-info__block-right'>
+							<div className='create-post-modal-content__main__body__user-info__block-right'>
 								<p>
 									{userInfo?.fullName ||
 										userInfo?.lastName ||
@@ -698,7 +725,7 @@ function CreatePostModalContent({
 							</div>
 						</div>
 						<div
-							className={classNames('creat-post-modal-content__main__body__text-field-edit-wrapper', {
+							className={classNames('create-post-modal-content__main__body__text-field-edit-wrapper', {
 								'height-higher': showUpload || hasUrl,
 							})}
 						>
@@ -757,7 +784,7 @@ function CreatePostModalContent({
 									className={
 										postDataShare.verb !== TOP_USER_VERB_SHARE_LV1 &&
 										postDataShare.verb !== READ_TARGET_VERB_SHARE_LV1
-											? 'creat-post-modal-content__main__share-container'
+											? 'create-post-modal-content__main__share-container'
 											: ''
 									}
 								>
@@ -832,10 +859,10 @@ function CreatePostModalContent({
 							)}
 						</div>
 					</div>
-					<div className='creat-post-modal-content__main__options-and-submit'>
-						<div className='creat-post-modal-content__main__options'>
-							<span className='creat-post-modal-content__title'>Thêm vào bài viết</span>
-							<div className='creat-post-modal-content__main__options__items'>
+					<div className='create-post-modal-content__main__options-and-submit'>
+						<div className='create-post-modal-content__main__options'>
+							<span className='create-post-modal-content__title'>Thêm vào bài viết</span>
+							<div className='create-post-modal-content__main__options__items'>
 								<OptionsPost
 									list={optionListState}
 									addOptionsToPost={addOptionsToPost}
@@ -843,20 +870,23 @@ function CreatePostModalContent({
 									postDataShare={postDataShare}
 								/>
 								<span
-									className={classNames('creat-post-modal-content__main__options__item-add-to-post', {
-										'active': imagesUpload.length > 0,
-										'disabled':
-											(!_.isEmpty(postDataShare) &&
-												verbShareArray.indexOf(postDataShare.verb) !== -1) ||
-											chartImgShare.length,
-									})}
+									className={classNames(
+										'create-post-modal-content__main__options__item-add-to-post',
+										{
+											'active': imagesUpload.length > 0,
+											'disabled':
+												(!_.isEmpty(postDataShare) &&
+													verbShareArray.indexOf(postDataShare.verb) !== -1) ||
+												chartImgShare.length,
+										}
+									)}
 									onMouseOver={() => setShowImagePopover(true)}
 									onMouseLeave={() => setShowImagePopover(false)}
 									onClick={handleOpenUploadImage}
 								>
 									<div
 										className={classNames(
-											'creat-post-modal-content__main__options__item-add-to-post__popover',
+											'create-post-modal-content__main__options__item-add-to-post__popover',
 											{
 												'show': showImagePopover,
 											}
@@ -869,7 +899,7 @@ function CreatePostModalContent({
 							</div>
 						</div>
 						<button
-							className={classNames('creat-post-modal-content__main__submit', {
+							className={classNames('create-post-modal-content__main__submit', {
 								'active': buttonActive,
 							})}
 							onClick={onCreatePost}
@@ -882,7 +912,7 @@ function CreatePostModalContent({
 			</div>
 			{/* sub modal */}
 			<div
-				className={classNames('creat-post-modal-content__substitute', {
+				className={classNames('create-post-modal-content__substitute', {
 					'show': option.value !== 'addImages' && !showMainModal,
 				})}
 			>

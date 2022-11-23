@@ -1,6 +1,7 @@
 .sb-show-main {
 	padding-top: 50px !important;
 }
+
 .top__user__ranks {
 	display: flex;
 	margin: 30px auto 40px auto;
@@ -49,19 +50,27 @@
 			justify-content: center;
 			align-items: center;
 		}
+
 		.top__user__ranks__two__title {
-			padding-top: 22px;
+			margin-top: 11px;
 			text-align: center;
-			word-wrap: break-word;
 			p {
-				font-weight: 500;
-				font-size: 11px;
-				line-height: 11px;
+				font-weight: 600;
+				font-size: 15px;
+				line-height: 24px;
+				display: -webkit-box;
+				-webkit-box-orient: vertical;
+				-webkit-line-clamp: 2;
+				max-height: 3rem;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				margin-bottom: 3px;
+				word-break: break-word;
 			}
 			.number__books,
 			span {
 				font-weight: 600;
-				font-size: 8px;
+				font-size: 13px;
 				line-height: 22px;
 				color: #e0af7e;
 			}
@@ -70,6 +79,7 @@
 			}
 		}
 	}
+
 	.top__user__ranks__one {
 		.top__user__ranks__one__avatar {
 			padding: 5px;
@@ -108,25 +118,35 @@
 			justify-content: center;
 			align-items: center;
 		}
+
 		.top__user__ranks__one__title {
-			padding-top: 22px;
+			padding-top: 14px;
 			text-align: center;
 			p {
-				font-weight: 500;
-				font-size: 11px;
-				line-height: 11px;
+				font-weight: 600;
+				font-size: 18px;
+				line-height: 20px;
+				display: -webkit-box;
+				-webkit-box-orient: vertical;
+				-webkit-line-clamp: 2;
+				max-height: 3rem;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				margin-bottom: 3px;
+				word-break: break-all;
 			}
 			.number__books,
 			span {
 				font-weight: 600;
-				font-size: 11px;
-				line-height: 20px;
+				font-size: 15px;
+				line-height: 24px;
 				color: #e0af7e;
 			}
 			span {
 				color: #a0a3bd;
 			}
 		}
+
 		.Crown {
 			position: absolute;
 			top: -53%;
@@ -134,6 +154,7 @@
 		}
 	}
 }
+
 @media only screen and (max-width: 1024px) {
 	.top__user__ranks {
 		gap: 80px;

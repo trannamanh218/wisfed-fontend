@@ -7,6 +7,7 @@ import { useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import ResultNotFound from '../result-not-found';
+import LoadingIndicator from 'shared/loading-indicator';
 
 const AuthorSearch = ({ value, setIsFetching, searchResultInput, activeKeyDefault, updateBooks, isFetching }) => {
 	const [listArrayAuthors, setListArrayAuthors] = useState([]);
@@ -64,7 +65,12 @@ const AuthorSearch = ({ value, setIsFetching, searchResultInput, activeKeyDefaul
 	return (
 		<div className='authors__search__container'>
 			{listArrayAuthors?.length > 0 && activeKeyDefault === 'authors' ? (
-				<InfiniteScroll next={handleGetAuthorsSearch} dataLength={listArrayAuthors.length} hasMore={hasMore}>
+				<InfiniteScroll
+					next={handleGetAuthorsSearch}
+					dataLength={listArrayAuthors.length}
+					hasMore={hasMore}
+					loader={<LoadingIndicator />}
+				>
 					<div className='myfriends__layout__container'>
 						{listArrayAuthors.map((item, index) => (
 							<div key={index} className='myfriends__layout__container__top'>

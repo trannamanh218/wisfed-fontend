@@ -4,7 +4,7 @@ import Button from 'shared/button';
 import FitlerOptions from 'shared/filter-options';
 import { Add, ArrowsDownUp } from 'components/svg';
 import './filter-quote-pane.scss';
-import CreatQuotesModal from 'shared/creat-quotes-modal';
+import CreatQuotesModal from 'shared/create-quotes-modal';
 import FormCheckGroup from 'shared/form-check-group';
 import classNames from 'classnames';
 import Storage from 'helpers/Storage';
@@ -190,7 +190,7 @@ const FilterQuotePane = ({
 				<div className='filter-quote-pane__content'>{children}</div>
 			</div>
 			{showCreatQuotesModal && (
-				<div className='creat-quotes-modal-container' ref={creatQuotesModalContainer}>
+				<div className='create-quotes-modal-container' ref={creatQuotesModalContainer}>
 					<CreatQuotesModal hideCreatQuotesModal={hideCreatQuotesModal} />
 				</div>
 			)}

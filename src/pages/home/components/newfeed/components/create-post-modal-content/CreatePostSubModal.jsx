@@ -86,30 +86,30 @@ function CreatPostSubModal({
 
 	return (
 		<>
-			<div className='creat-post-modal-content__substitute__header'>
-				<button className='creat-post-modal-content__substitute__back' onClick={handleComplete}>
+			<div className='create-post-modal-content__substitute__header'>
+				<button className='create-post-modal-content__substitute__back' onClick={handleComplete}>
 					<BackArrow />
 				</button>
 				<h5>{option.value === 'modifyImages' ? option.title : `Thêm ${option.title} vào bài viết`}</h5>
-				<button style={{ visibility: 'hidden' }} className='creat-post-modal-content__substitute__back'>
+				<button style={{ visibility: 'hidden' }} className='create-post-modal-content__substitute__back'>
 					<BackArrow />
 				</button>
 			</div>
 
 			{option.value === 'modifyImages' ? (
 				<>
-					<div className='creat-post-modal-content__substitute__body__modifyImages-container'>
+					<div className='create-post-modal-content__substitute__body__modifyImages-container'>
 						<div
-							className={classNames('creat-post-modal-content__substitute__body__modifyImages-box', {
+							className={classNames('create-post-modal-content__substitute__body__modifyImages-box', {
 								'one-or-two-images': images.length <= 2,
 								'more-two-images': images.length > 2,
 							})}
 						>
 							{images.map((image, index) => (
-								<div key={index} className='creat-post-modal-content__substitute__modify-image-item'>
+								<div key={index} className='create-post-modal-content__substitute__modify-image-item'>
 									<img src={URL.createObjectURL(image)} alt='image' />
 									<button
-										className='creat-post-modal-content__substitute__modify-image-item-delete'
+										className='create-post-modal-content__substitute__modify-image-item-delete'
 										onClick={() => deleteImage(index)}
 									>
 										<CloseX />
@@ -118,30 +118,30 @@ function CreatPostSubModal({
 							))}
 						</div>
 					</div>
-					<div className='creat-post-modal-content__substitute__body__modifyImages-confirm'>
+					<div className='create-post-modal-content__substitute__body__modifyImages-confirm'>
 						<button onClick={handleComplete}>Xong</button>
 					</div>
 				</>
 			) : (
-				<div className='creat-post-modal-content__substitute__body'>
-					<div className='creat-post-modal-content__substitute__search-container'>
-						<div className='creat-post-modal-content__substitute__search-bar'>
+				<div className='create-post-modal-content__substitute__body'>
+					<div className='create-post-modal-content__substitute__search-container'>
+						<div className='create-post-modal-content__substitute__search-bar'>
 							<Search />
 							<input
 								ref={inputRef}
-								className='creat-post-modal-content__substitute__search-bar__input'
+								className='create-post-modal-content__substitute__search-bar__input'
 								placeholder={`Tìm kiếm ${option.title} để thêm vào bài viết`}
 								onChange={updateInputSearchValue}
 							/>
 						</div>
 						<button
-							className='creat-post-modal-content__substitute__search-bar__button'
+							className='create-post-modal-content__substitute__search-bar__button'
 							onClick={handleComplete}
 						>
 							Xong
 						</button>
 					</div>
-					<div className='creat-post-modal-content__substitute__search-result'>
+					<div className='create-post-modal-content__substitute__search-result'>
 						{isFetchingSuggestions ? (
 							<LoadingIndicator />
 						) : (

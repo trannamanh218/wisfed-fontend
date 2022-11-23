@@ -4,20 +4,23 @@
 	margin: 24px 0 60px;
 	display: block;
 	cursor: pointer;
-	.top__user__ranks__one__title,
-	.top__user__ranks__two__title {
-		transform: scale(2);
-		width: 70%;
-		margin: auto;
-		p {
-			line-height: 11px;
-			display: -webkit-box;
-			-webkit-box-orient: vertical;
-			-webkit-line-clamp: 2;
-			max-height: 4rem;
-			overflow: hidden;
-			text-overflow: ellipsis;
-			word-break: break-all;
+	.event-and-rank-bar__block.top__user__ranks {
+		.top__user__ranks__one__title,
+		.top__user__ranks__two__title {
+			width: 92%;
+			margin: auto;
+			padding: 14px 0;
+			p {
+				font-size: 20px;
+				line-height: 20px;
+				display: -webkit-box;
+				-webkit-box-orient: vertical;
+				-webkit-line-clamp: 2;
+				max-height: 4rem;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				word-break: break-word;
+			}
 		}
 	}
 }

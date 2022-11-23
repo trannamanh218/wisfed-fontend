@@ -27,7 +27,6 @@ const TopUser = ({ listYear, tabSelected }) => {
 	const [valueDate, setValueDate] = useState('week');
 	const [valueDataSort, setValueDataSort] = useState('topRead');
 	const [getListTopBooks, setGetListTopBooks] = useState([]);
-	const [checkSelectBox, setCheckSelectBox] = useState(false);
 	const [modalShow, setModalShow] = useState(false);
 	const [modalSearchCategoriesShow, setModalSearchCategoriesShow] = useState(false);
 	const [loading, setLoading] = useState(false);
@@ -50,19 +49,17 @@ const TopUser = ({ listYear, tabSelected }) => {
 				reportType: valueDataSort,
 				by: valueDate,
 			};
-			setCheckSelectBox(true);
 		} else {
 			params = {
 				reportType: valueDataSort,
 				by: valueDate,
 				categoryId: topUserFilter,
 			};
-			setCheckSelectBox(false);
 		}
 
 		try {
 			const topUser = await dispatch(getTopUser(params)).unwrap();
-			setGetListTopBooks(topUser);
+			setGetListTopBooks(topUser.rows);
 		} catch (err) {
 			NotificationError(err);
 		} finally {

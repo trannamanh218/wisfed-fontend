@@ -1,7 +1,7 @@
 // import { Configure } from 'components/svg';
 import { useState, useRef, useEffect } from 'react';
 import Post from 'shared/post';
-import CreatePost from './components/creat-post';
+import CreatePost from './components/create-post';
 import './newfeed.scss';
 // import ModalfilterHome from './components/modal-filter-home';
 import InfiniteScroll from 'react-infinite-scroll-component';

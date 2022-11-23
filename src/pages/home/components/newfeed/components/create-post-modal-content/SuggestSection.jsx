@@ -14,15 +14,15 @@ const SuggestSection = props => {
 			case 'addAuthor':
 				return (
 					<div>
-						<div className='creat-post-modal-content__substitute__suggest-author-container'>
+						<div className='create-post-modal-content__substitute__suggest-author-container'>
 							{list.map(item => (
 								<div
-									className='creat-post-modal-content__substitute__suggest-author-item'
+									className='create-post-modal-content__substitute__suggest-author-item'
 									key={item.id}
 									onClick={() => handleAddToPost(item)}
 								>
 									<UserAvatar size='lg' {...item} />
-									<div className='creat-post-modal-content__substitute__suggest-author__name'>
+									<div className='create-post-modal-content__substitute__suggest-author__name'>
 										{item.fullName || item.lastName || item.firstName || 'Không xác định'}
 									</div>
 								</div>
@@ -33,10 +33,10 @@ const SuggestSection = props => {
 
 			case 'addCategory':
 				return (
-					<div className='creat-post-modal-content__substitute__suggest-topic-container'>
+					<div className='create-post-modal-content__substitute__suggest-topic-container'>
 						{list.map(item => (
 							<button
-								className='creat-post-modal-content__substitute__suggest-topic-item'
+								className='create-post-modal-content__substitute__suggest-topic-item'
 								key={`${item.name}-${item.id}`}
 								onClick={() => handleAddToPost(item)}
 							>
@@ -47,12 +47,12 @@ const SuggestSection = props => {
 				);
 			case 'addFriends':
 				return (
-					<div className='creat-post-modal-content__substitute__suggest-author-container'>
+					<div className='create-post-modal-content__substitute__suggest-author-container'>
 						{list.map((item, index) => {
 							const friendInfo = item;
 							return (
 								<div
-									className='creat-post-modal-content__substitute__suggest-author-item'
+									className='create-post-modal-content__substitute__suggest-author-item'
 									key={item.id}
 									onClick={() => {
 										handleAddToPost(friendInfo);
@@ -60,7 +60,7 @@ const SuggestSection = props => {
 									}}
 								>
 									<UserAvatar size='lg' {...friendInfo} />
-									<div className='creat-post-modal-content__substitute__suggest-author__name'>
+									<div className='create-post-modal-content__substitute__suggest-author__name'>
 										{friendInfo?.fullName ||
 											friendInfo?.firstName + ' ' + friendInfo.lastName ||
 											'Không xác định'}
@@ -78,7 +78,7 @@ const SuggestSection = props => {
 
 	if (option.value !== 'modifyImages' || !list.length)
 		return (
-			<div className='creat-post-modal-content__substitute__no-search-result'>
+			<div className='create-post-modal-content__substitute__no-search-result'>
 				<img src={noSearchResult} alt='no search result' />
 				<span>{option.message}</span>
 			</div>

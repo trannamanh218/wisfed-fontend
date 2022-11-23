@@ -76,7 +76,7 @@ const DetailFriend = () => {
 		try {
 			if (isAuth) {
 				const data = await dispatch(getTopUser(params)).unwrap();
-				return data;
+				return data.rows;
 			}
 		} catch (err) {
 			NotificationError(err);
@@ -92,7 +92,7 @@ const DetailFriend = () => {
 		try {
 			if (isAuth) {
 				const data = await dispatch(getTopUser(params)).unwrap();
-				return data;
+				return data.rows;
 			}
 		} catch (err) {
 			NotificationError(err);
@@ -270,7 +270,7 @@ const DetailFriend = () => {
 				<div className='myfriends__container'>
 					<div className='myfriends__container__content'>
 						<div className='myfriends__title__addfriend'>
-							{renderLength()} người {renderTitleContainer()}
+							{renderLength()} {renderTitleContainer()}
 						</div>
 					</div>
 					<div className='myfriends__layout__container'>{renderListMap()}</div>

@@ -26,7 +26,11 @@ import { checkUserLogin, deleteUserInfo } from 'reducers/redux-utils/auth';
 import { useVisible } from 'shared/hooks';
 import SearchAllModal from 'shared/search-all';
 import Storage from 'helpers/Storage';
-import { handleResetValue, handleUpdateValueInputSearchRedux } from 'reducers/redux-utils/search';
+import {
+	handleResetValue,
+	handleUpdateValueInputSearchRedux,
+	handleUpdateIsInResult,
+} from 'reducers/redux-utils/search';
 import { toast } from 'react-toastify';
 import { updateTargetReading } from 'reducers/redux-utils/chart';
 import defaultAvatar from 'assets/icons/defaultLogoAvatar.svg';
@@ -43,6 +47,7 @@ const Header = () => {
 	const { isShowModal } = useSelector(state => state.search);
 	const { userInfo } = useSelector(state => state.auth);
 	const isNewNotificationByRealtime = useSelector(state => state.notificationReducer.isNewNotificationByRealtime);
+	const { isInResult } = useSelector(state => state.search);
 
 	const { ref: showRef, isVisible: isShow, setIsVisible: setIsShow } = useVisible(false);
 	const {
@@ -222,6 +227,16 @@ const Header = () => {
 		// Điền vào ô search
 		setGetSlugResult(valueInputSearchRedux);
 	}, [valueInputSearchRedux]);
+
+	useEffect(() => {
+		// Khi tìm kiếm rồi thì xóa dữ liệu ô input
+		if (window.location.pathname.includes('/result/')) {
+			dispatch(handleUpdateIsInResult(true));
+		} else if (isInResult) {
+			dispatch(handleUpdateValueInputSearchRedux(''));
+			dispatch(handleUpdateIsInResult(false));
+		}
+	}, [window.location.pathname]);
 
 	return (
 		<div className='header'>
