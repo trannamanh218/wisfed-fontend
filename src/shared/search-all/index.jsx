@@ -22,9 +22,6 @@ const SearchAllModal = ({ showRef, setIsShow }) => {
 		if (value) {
 			const filterValue = value.toLowerCase().trim();
 			setFilter(JSON.stringify(filterValue));
-
-			// Lưu lại giá trị vào redux
-			dispatch(handleUpdateValueInputSearchRedux(value.trim()));
 		} else {
 			setFilter('');
 		}
@@ -61,6 +58,7 @@ const SearchAllModal = ({ showRef, setIsShow }) => {
 	const handleKeyDown = e => {
 		const value = valueInputSearch?.trim();
 		if (e.key === 'Enter' && value.length) {
+			dispatch(handleUpdateValueInputSearchRedux(value));
 			setIsShow(false);
 			if (hashtagRegex.test(value)) {
 				const formatedInpSearchValue = value

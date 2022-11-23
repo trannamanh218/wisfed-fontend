@@ -77,7 +77,7 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 		urlToDirect.current = urlFormated;
 	};
 
-	const handleAcept = () => {
+	const handleAccept = () => {
 		setModalShow(false);
 		window.open(urlToDirect.current);
 	};
@@ -231,7 +231,7 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 					</li>
 				</ul>
 			</div>
-			<DirectLinkALertModal modalShow={modalShow} handleAcept={handleAcept} handleCancel={handleCancel} />
+			<DirectLinkALertModal modalShow={modalShow} handleAccept={handleAccept} handleCancel={handleCancel} />
 		</div>
 	);
 };

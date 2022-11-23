@@ -375,7 +375,7 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 		}
 	}, [postData]);
 
-	const handleAcept = () => {
+	const handleAccept = () => {
 		setModalShow(false);
 		window.open(urlToDirect.current);
 	};
@@ -842,7 +842,7 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 				mentionUsersArr={mentionUsersArr}
 				setMentionUsersArr={setMentionUsersArr}
 			/>
-			<DirectLinkALertModal modalShow={modalShow} handleAcept={handleAcept} handleCancel={handleCancel} />
+			<DirectLinkALertModal modalShow={modalShow} handleAccept={handleAccept} handleCancel={handleCancel} />
 		</div>
 	);
 }
