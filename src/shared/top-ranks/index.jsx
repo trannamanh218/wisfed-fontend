@@ -124,7 +124,7 @@ const TopRanks = ({ getListTopBooks, valueDataSort }) => {
 						}
 					>
 						{getListTopBooks[2].fullName ||
-							`${getListTopBooks[2].firstName}  ${getListTopBooks[2].lastName}`}{' '}
+							`${getListTopBooks[2].firstName}  ${getListTopBooks[2].lastName}`}
 					</p>
 					{handleNumber(2)}
 					{handleRenderTitle()}

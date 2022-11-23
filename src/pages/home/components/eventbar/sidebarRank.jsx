@@ -43,7 +43,7 @@ export default function SidebarRank() {
 		<div className='event-and-rank-bar__block'>
 			<h4 className='event-and-rank-bar__block__title'>Bảng xếp hạng</h4>
 			<div onClick={handleDirect} className='event-and-rank-bar__content'>
-				<div className='top__user__ranks'>
+				<div className='event-and-rank-bar__block top__user__ranks'>
 					<div className='top__user__ranks__two'>
 						<div className='top__user__ranks__two__avatar'>
 							<UserAvatar
