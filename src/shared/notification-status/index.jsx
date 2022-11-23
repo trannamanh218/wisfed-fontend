@@ -195,6 +195,9 @@ const NotificationStatus = ({ item, handleReplyFriendRequest, setModalNoti }) =>
 			case 'finishReadingGoal':
 				navigate(`/reading-target/${item.originId.userId}`);
 				break;
+			case 'confirmBook':
+				navigate(`book/detail/${item.originId.bookId}`);
+				break;
 			default:
 				return;
 		}
