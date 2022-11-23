@@ -7,14 +7,23 @@ import InvitationFriend from './component/invitation-friend';
 import SuggestFriend from './component/suggest-friend';
 import SearchButton from 'shared/search-button';
 import { useSelector } from 'react-redux';
+import _ from 'lodash';
 
 const Friends = () => {
-	const [activeTabs, setActiveTabs] = useState('');
+	const [activeTabs, setActiveTabs] = useState('friend');
 	const [toggleSearch, setToggleSearch] = useState(true);
 	const [inputSearch, setInputSearch] = useState('');
 	const [filter, setFilter] = useState('[]');
 
 	const { userInfo } = useSelector(state => state.auth);
+
+	useEffect(() => {
+		if (userInfo.friends > 0) {
+			handleActiveTabs('friend');
+		} else {
+			handleActiveTabs('suggest');
+		}
+	}, [userInfo]);
 
 	const handleActiveTabs = string => {
 		setInputSearch('');
@@ -82,60 +91,56 @@ const Friends = () => {
 		}
 	};
 
-	useEffect(() => {
-		if (userInfo.friends > 0) {
-			handleActiveTabs('friend');
-		} else {
-			handleActiveTabs('suggest');
-		}
-	}, [userInfo]);
-
 	return (
 		<NormalContainer>
 			<div className='friends__container'>
 				<div className='friends__content'>Bạn bè</div>
-				<div className='friends__header'>
-					{toggleSearch && (
-						<SearchButton
-							handleClickSearch={onClickSearchBtn}
-							handleChange={handleSearch}
-							value={inputSearch}
-							onKeyDown={onBtnEnterPress}
-						/>
-					)}
+				{!_.isEmpty(userInfo) && (
+					<>
+						<div className='friends__header'>
+							{toggleSearch && (
+								<SearchButton
+									handleClickSearch={onClickSearchBtn}
+									handleChange={handleSearch}
+									value={inputSearch}
+									onKeyDown={onBtnEnterPress}
+								/>
+							)}
 
-					<div className='friend__radio'>
-						<p onClick={() => handleActiveTabs('friend')}>
-							<input
-								type='radio'
-								id='friend'
-								name='radio-group'
-								checked={activeTabs === 'friend'}
-								readOnly
-							/>
-							<label htmlFor='friend'>Tất cả bạn bè</label>
-						</p>
-						<p onClick={() => handleActiveTabs('follow')}>
-							<input type='radio' id='follow' name='radio-group' />
-							<label htmlFor='follow'>Tất cả Follow</label>
-						</p>
-						<p onClick={() => handleActiveTabs('addfriend')}>
-							<input type='radio' id='addfriend' name='radio-group' />
-							<label htmlFor='addfriend'>Lời mời kết bạn</label>
-						</p>
-						<p onClick={() => handleActiveTabs('suggest')}>
-							<input
-								type='radio'
-								id='suggest'
-								name='radio-group'
-								checked={activeTabs === 'suggest'}
-								readOnly
-							/>
-							<label htmlFor='suggest'>Gợi ý</label>
-						</p>
-					</div>
-				</div>
-				<div className='friends__main'>{contentTabFriends()}</div>
+							<div className='friend__radio'>
+								<p onClick={() => handleActiveTabs('friend')}>
+									<input
+										type='radio'
+										id='friend'
+										name='radio-group'
+										checked={activeTabs === 'friend'}
+										readOnly
+									/>
+									<label htmlFor='friend'>Tất cả bạn bè</label>
+								</p>
+								<p onClick={() => handleActiveTabs('follow')}>
+									<input type='radio' id='follow' name='radio-group' />
+									<label htmlFor='follow'>Tất cả Follow</label>
+								</p>
+								<p onClick={() => handleActiveTabs('addfriend')}>
+									<input type='radio' id='addfriend' name='radio-group' />
+									<label htmlFor='addfriend'>Lời mời kết bạn</label>
+								</p>
+								<p onClick={() => handleActiveTabs('suggest')}>
+									<input
+										type='radio'
+										id='suggest'
+										name='radio-group'
+										checked={activeTabs === 'suggest'}
+										readOnly
+									/>
+									<label htmlFor='suggest'>Gợi ý</label>
+								</p>
+							</div>
+						</div>
+						<div className='friends__main'>{contentTabFriends()}</div>
+					</>
+				)}
 			</div>
 		</NormalContainer>
 	);

@@ -37,10 +37,12 @@ const SuggestFriend = ({ activeTabs }) => {
 			}
 		} catch (err) {
 			NotificationError(err);
+			setIsLoading(false);
 		}
 	};
 
 	const getSuggestFriendByCategory = async () => {
+		setIsLoading(true);
 		const params = {
 			reportType: 'topRead',
 			by: 'month',
@@ -53,6 +55,7 @@ const SuggestFriend = ({ activeTabs }) => {
 			}
 		} catch (err) {
 			NotificationError(err);
+			setIsLoading(false);
 		}
 	};
 
@@ -84,8 +87,8 @@ const SuggestFriend = ({ activeTabs }) => {
 			}, []);
 			const newListNotFriend = newList.filter(item => item.relation !== 'friend');
 			setList(newListNotFriend.slice(0, 6));
+			setIsLoading(false);
 		});
-		setIsLoading(false);
 		getRecommendFriendData();
 	}, [changeFollow, dispatch]);
 
