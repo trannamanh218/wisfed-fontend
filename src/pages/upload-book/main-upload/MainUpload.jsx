@@ -148,7 +148,7 @@ export default function MainUpload() {
 			});
 		}
 
-		const imgSrc = await uploadImageFile(image);
+		const imgSrc = uploadImageFile(image);
 
 		let dataDate = publishDate;
 		if (publishDate) {
@@ -158,7 +158,7 @@ export default function MainUpload() {
 
 		const bookInfo = {
 			frontBookCover: imgSrc,
-			images: [],
+			images: [imgSrc],
 			name: name,
 			subName: subName,
 			originalName: originalName,
@@ -461,7 +461,7 @@ export default function MainUpload() {
 						<div className='inp-book-col'>
 							<button
 								onClick={onBtnSaveClick}
-								className={classNames('creat-post-modal-content__main__submit', 'btn-upload', {
+								className={classNames('create-post-modal-content__main__submit', 'btn-upload', {
 									'active': buttonActive,
 								})}
 								disabled={!buttonActive}

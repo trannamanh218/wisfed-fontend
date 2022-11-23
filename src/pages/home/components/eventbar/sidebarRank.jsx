@@ -24,7 +24,7 @@ export default function SidebarRank() {
 		};
 		try {
 			const topUsers = await dispatch(getTopUser(params)).unwrap();
-			setTop3followedUsersByWeek(topUsers);
+			setTop3followedUsersByWeek(topUsers.rows);
 		} catch (err) {
 			NotificationError(err);
 		}

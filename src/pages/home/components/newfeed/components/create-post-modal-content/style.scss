@@ -1,6 +1,6 @@
 @import 'src/scss/abstracts/_global.scss';
 
-.creat-post-modal-content {
+.create-post-modal-content {
 	width: 600px;
 	background-color: white;
 	border-radius: 16px;
@@ -8,7 +8,7 @@
 	overflow: hidden;
 }
 // main modal
-.creat-post-modal-content__main {
+.create-post-modal-content__main {
 	transition: transform 0.2s ease-in;
 	transform: translateX(0%);
 	visibility: visible;
@@ -19,8 +19,8 @@
 	}
 }
 // main-header
-.creat-post-modal-content__main__header,
-.creat-post-modal-content__substitute__header {
+.create-post-modal-content__main__header,
+.create-post-modal-content__substitute__header {
 	padding: 16px 24px;
 	display: flex;
 	align-items: center;
@@ -34,8 +34,8 @@
 	}
 }
 
-.creat-post-modal-content__main__close,
-.creat-post-modal-content__substitute__back {
+.create-post-modal-content__main__close,
+.create-post-modal-content__substitute__back {
 	padding: 8px;
 	background-color: #eff0f6;
 	border-radius: 50%;
@@ -46,7 +46,7 @@
 }
 
 // main-body
-.creat-post-modal-content__main__body {
+.create-post-modal-content__main__body {
 	padding: 24px 10px 24px 24px;
 	border-top: #f1f1f5 1px solid;
 	border-bottom: #f1f1f5 1px solid;
@@ -87,12 +87,12 @@
 	}
 }
 
-.creat-post-modal-content__main__body__user-info {
+.create-post-modal-content__main__body__user-info {
 	display: flex;
 	margin-bottom: 28px;
 }
 
-.creat-post-modal-content__main__body__user-info__block-left {
+.create-post-modal-content__main__body__user-info__block-left {
 	margin-right: 16px;
 	img {
 		width: 100%;
@@ -101,7 +101,7 @@
 	}
 }
 
-.creat-post-modal-content__main__body__user-info__block-right {
+.create-post-modal-content__main__body__user-info__block-right {
 	position: relative;
 	display: flex;
 	align-items: center;
@@ -114,13 +114,13 @@
 	}
 }
 
-.creat-post-modal-content__main__body__user-info__share-mode-container {
+.create-post-modal-content__main__body__user-info__share-mode-container {
 	position: absolute;
 	min-width: 150px;
 	z-index: 1100;
 }
 
-.creat-post-modal-content__main__body__user-info__share-mode {
+.create-post-modal-content__main__body__user-info__share-mode {
 	width: fit-content;
 	background-color: #eff0f6;
 	border-radius: 8px;
@@ -146,8 +146,8 @@
 	}
 }
 
-.creat-post-modal-content__main__body__user-info__share-mode__selected,
-.creat-post-modal-content__main__body__user-info__share-mode__select-item {
+.create-post-modal-content__main__body__user-info__share-mode__selected,
+.create-post-modal-content__main__body__user-info__share-mode__select-item {
 	display: flex;
 	align-items: center;
 	// cursor: pointer;
@@ -167,11 +167,11 @@
 	}
 }
 
-.creat-post-modal-content__main__body__user-info__share-mode__select-item {
+.create-post-modal-content__main__body__user-info__share-mode__select-item {
 	margin-top: 8px;
 }
 
-.creat-post-modal-content__main__body__user-info__share-mode__list {
+.create-post-modal-content__main__body__user-info__share-mode__list {
 	overflow: hidden;
 	top: 100%;
 	left: 0;
@@ -187,7 +187,7 @@
 	}
 }
 
-.creat-post-modal-content__main__body__text-field-edit-wrapper {
+.create-post-modal-content__main__body__text-field-edit-wrapper {
 	width: 100%;
 	max-height: 350px;
 	overflow-y: scroll;
@@ -208,21 +208,21 @@
 	}
 }
 
-.creat-post-modal-content__main__body__text-field-edit-wrapper::-webkit-scrollbar {
+.create-post-modal-content__main__body__text-field-edit-wrapper::-webkit-scrollbar {
 	width: 8px;
 	background-color: #f5f5f5;
 }
 
-.creat-post-modal-content__main__body__text-field-edit-wrapper::-webkit-scrollbar-thumb {
+.create-post-modal-content__main__body__text-field-edit-wrapper::-webkit-scrollbar-thumb {
 	border-radius: 10px;
 	background-color: #cfcfcf;
 }
 
-.creat-post-modal-content__main__body__text-field-edit-wrapper::-webkit-scrollbar-track {
+.create-post-modal-content__main__body__text-field-edit-wrapper::-webkit-scrollbar-track {
 	background-color: white;
 }
 
-.creat-post-modal-content__main__body__text-field-edit {
+.create-post-modal-content__main__body__text-field-edit {
 	width: 100%;
 	min-height: 50px;
 	outline: none;
@@ -237,7 +237,7 @@
 	}
 }
 
-.creat-post-modal-content__main__body__text-field-placeholder {
+.create-post-modal-content__main__body__text-field-placeholder {
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -249,7 +249,7 @@
 	}
 }
 
-.creat-post-modal-content__main__body__image-container {
+.create-post-modal-content__main__body__image-container {
 	width: 100%;
 	border-radius: 12px;
 	border: #f1f1f5 1px solid;
@@ -265,18 +265,18 @@
 	}
 }
 
-.creat-post-modal-content__main__body__image-box {
+.create-post-modal-content__main__body__image-box {
 	width: 100%;
 	height: 100%;
 	position: relative;
 	border-radius: 8px;
 	overflow: hidden;
-	&:hover .creat-post-modal-content__main__body__image-options {
+	&:hover .create-post-modal-content__main__body__image-options {
 		display: flex;
 	}
 }
 
-.creat-post-modal-content__main__body__image {
+.create-post-modal-content__main__body__image {
 	padding: 1px;
 	position: absolute;
 	overflow: hidden;
@@ -290,7 +290,7 @@
 	}
 }
 
-.creat-post-modal-content__main__body__image-over {
+.create-post-modal-content__main__body__image-over {
 	position: absolute;
 	inset: 1px;
 	background-color: rgba(0, 0, 0, 0.4);
@@ -304,7 +304,7 @@
 	user-select: none;
 }
 
-.creat-post-modal-content__main__body__image-options {
+.create-post-modal-content__main__body__image-options {
 	position: absolute;
 	inset: 0;
 	background-color: rgba(0, 0, 0, 0.1);
@@ -313,12 +313,12 @@
 	justify-content: space-between;
 }
 
-.creat-post-modal-content__main__body__image-options__block-left {
+.create-post-modal-content__main__body__image-options__block-left {
 	display: flex;
 	gap: 12px;
 }
 
-.creat-post-modal-content__main__body__image-options__button {
+.create-post-modal-content__main__body__image-options__button {
 	border-radius: 12px;
 	background-color: white;
 	padding: 12px 20px;
@@ -341,7 +341,7 @@
 	}
 }
 
-.creat-post-modal-content__main__body__image-options__delete-image {
+.create-post-modal-content__main__body__image-options__delete-image {
 	border-radius: 50%;
 	width: 32px;
 	height: 32px;
@@ -358,11 +358,11 @@
 }
 
 // main-options and submit
-.creat-post-modal-content__main__options-and-submit {
+.create-post-modal-content__main__options-and-submit {
 	padding: 24px;
 }
 
-.creat-post-modal-content__main__options {
+.create-post-modal-content__main__options {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
@@ -371,7 +371,7 @@
 		font-weight: 600;
 		color: $ash;
 	}
-	.creat-post-modal-content__title {
+	.create-post-modal-content__title {
 		position: relative;
 		&::after {
 			content: '*';
@@ -382,7 +382,7 @@
 	}
 }
 
-.creat-post-modal-content__main__options__items {
+.create-post-modal-content__main__options__items {
 	display: flex;
 	align-items: center;
 	gap: 16px;
@@ -391,7 +391,7 @@
 	}
 }
 
-.creat-post-modal-content__main__options__item-add-to-post {
+.create-post-modal-content__main__options__item-add-to-post {
 	padding: 12px;
 	background-color: #eff0f6;
 	border-radius: 50%;
@@ -444,7 +444,7 @@
 	}
 }
 
-.creat-post-modal-content__main__options__item-add-to-post__popover {
+.create-post-modal-content__main__options__item-add-to-post__popover {
 	position: absolute;
 	top: -70%;
 	left: 50%;
@@ -465,7 +465,7 @@
 	}
 }
 
-.creat-post-modal-content__main__submit {
+.create-post-modal-content__main__submit {
 	margin-top: 24px;
 	background-color: $ash-line;
 	border-radius: 12px;
@@ -485,7 +485,7 @@
 }
 
 // sub modal
-.creat-post-modal-content__substitute {
+.create-post-modal-content__substitute {
 	transition: transform 0.2s ease-in;
 	transform: translateX(100%);
 	visibility: hidden;
@@ -497,21 +497,21 @@
 	}
 }
 
-.creat-post-modal-content__substitute__body {
+.create-post-modal-content__substitute__body {
 	padding: 1.5rem;
 	border-top: #f1f1f5 1px solid;
 	border-bottom: #f1f1f5 1px solid;
 }
 
 //sub-search
-.creat-post-modal-content__substitute__search-container {
+.create-post-modal-content__substitute__search-container {
 	width: 100%;
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
 }
 
-.creat-post-modal-content__substitute__search-bar {
+.create-post-modal-content__substitute__search-bar {
 	width: 87%;
 	background-color: #f7f7fc;
 	border-radius: 12px;
@@ -520,7 +520,7 @@
 	align-items: center;
 }
 
-.creat-post-modal-content__substitute__search-bar__input {
+.create-post-modal-content__substitute__search-bar__input {
 	background-color: unset;
 	width: 100%;
 	margin-left: 1.25rem;
@@ -529,14 +529,14 @@
 	outline: none;
 }
 
-.creat-post-modal-content__substitute__search-bar__button {
+.create-post-modal-content__substitute__search-bar__button {
 	font-weight: 600;
 	color: #0576f0;
 	line-height: 1.5rem;
 	outline: none;
 }
 
-.creat-post-modal-content__substitute__search-result {
+.create-post-modal-content__substitute__search-result {
 	margin: 2.5rem 0;
 	min-height: 220px;
 	h5 {
@@ -585,7 +585,7 @@
 	}
 }
 
-.creat-post-modal-content__substitute__suggest-book-container {
+.create-post-modal-content__substitute__suggest-book-container {
 	.slick-arrow {
 		display: flex !important;
 		justify-content: center;
@@ -617,12 +617,12 @@
 	}
 }
 
-.creat-post-modal-content__substitute__suggest-book-item {
+.create-post-modal-content__substitute__suggest-book-item {
 	margin: 1.25rem 1.5rem 0 0;
 	max-width: 160px;
 }
 
-.creat-post-modal-content__substitute__suggest-book-infomations {
+.create-post-modal-content__substitute__suggest-book-infomations {
 	padding: 8px;
 	line-height: 1.5rem;
 	display: flex;
@@ -630,7 +630,7 @@
 	align-items: center;
 }
 
-.creat-post-modal-content__substitute__suggest-book-infomations__name {
+.create-post-modal-content__substitute__suggest-book-infomations__name {
 	font-size: 1rem;
 	color: $ash;
 	font-weight: 600;
@@ -641,7 +641,7 @@
 	overflow: hidden;
 }
 
-.creat-post-modal-content__substitute__suggest-book-infomations__author {
+.create-post-modal-content__substitute__suggest-book-infomations__author {
 	font-size: 0.82rem;
 	color: $ash-label;
 	margin-top: 4px;
@@ -651,7 +651,7 @@
 	overflow: hidden;
 }
 
-.creat-post-modal-content__substitute__no-search-result {
+.create-post-modal-content__substitute__no-search-result {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -666,18 +666,18 @@
 	}
 }
 
-.creat-post-modal-content__substitute__suggest-author-container {
+.create-post-modal-content__substitute__suggest-author-container {
 	display: flex;
 	margin-top: 32px;
 	gap: 1rem;
 }
 
-.creat-post-modal-content__substitute__suggest-author-item {
+.create-post-modal-content__substitute__suggest-author-item {
 	max-width: 100px;
 	cursor: pointer;
 }
 
-.creat-post-modal-content__substitute__suggest-author__name {
+.create-post-modal-content__substitute__suggest-author__name {
 	margin-top: 12px;
 	text-align: center;
 	font-weight: 600;
@@ -686,13 +686,13 @@
 	color: $ash-label;
 }
 
-.creat-post-modal-content__substitute__suggest-topic-container {
+.create-post-modal-content__substitute__suggest-topic-container {
 	display: flex;
 	margin-top: 32px;
 	flex-wrap: wrap;
 }
 
-.creat-post-modal-content__substitute__suggest-topic-item {
+.create-post-modal-content__substitute__suggest-topic-item {
 	color: $primary-dark;
 	padding: 16px 24px;
 	border-radius: 12px;
@@ -702,13 +702,13 @@
 }
 
 // sub-modifyImages
-.creat-post-modal-content__substitute__body__modifyImages-container {
+.create-post-modal-content__substitute__body__modifyImages-container {
 	padding: 15px 6px 16px 22px;
 	border-top: #f1f1f5 1px solid;
 	border-bottom: #f1f1f5 1px solid;
 }
 
-.creat-post-modal-content__substitute__body__modifyImages-box {
+.create-post-modal-content__substitute__body__modifyImages-box {
 	display: grid;
 	grid-gap: 4px;
 	max-height: 400px;
@@ -722,21 +722,21 @@
 	}
 }
 
-.creat-post-modal-content__substitute__body__modifyImages-box::-webkit-scrollbar {
+.create-post-modal-content__substitute__body__modifyImages-box::-webkit-scrollbar {
 	width: 8px;
 	background-color: #f5f5f5;
 }
 
-.creat-post-modal-content__substitute__body__modifyImages-box::-webkit-scrollbar-thumb {
+.create-post-modal-content__substitute__body__modifyImages-box::-webkit-scrollbar-thumb {
 	border-radius: 10px;
 	background-color: #cfcfcf;
 }
 
-.creat-post-modal-content__substitute__body__modifyImages-box::-webkit-scrollbar-track {
+.create-post-modal-content__substitute__body__modifyImages-box::-webkit-scrollbar-track {
 	background-color: white;
 }
 
-.creat-post-modal-content__substitute__modify-image-item {
+.create-post-modal-content__substitute__modify-image-item {
 	border-radius: 12px;
 	overflow: hidden;
 	display: flex;
@@ -747,12 +747,12 @@
 	img {
 		height: 100%;
 	}
-	&:hover .creat-post-modal-content__substitute__modify-image-item-delete {
+	&:hover .create-post-modal-content__substitute__modify-image-item-delete {
 		display: block;
 	}
 }
 
-.creat-post-modal-content__substitute__modify-image-item-delete {
+.create-post-modal-content__substitute__modify-image-item-delete {
 	position: absolute;
 	top: 12px;
 	right: 12px;
@@ -766,7 +766,7 @@
 	}
 }
 
-.creat-post-modal-content__substitute__body__modifyImages-confirm {
+.create-post-modal-content__substitute__body__modifyImages-confirm {
 	padding: 20px 28px;
 	display: flex;
 	justify-content: flex-end;
@@ -824,7 +824,7 @@
 	}
 }
 
-.creat-post-modal-content__main__share-container {
+.create-post-modal-content__main__share-container {
 	padding: 16px;
 	border-radius: 12px;
 	background-color: #eff0f6;
@@ -843,8 +843,8 @@
 	}
 }
 
-.newfeed__creat-post__modal {
-	.creat-post-modal-content__main__share-container {
+.newfeed__create-post__modal {
+	.create-post-modal-content__main__share-container {
 		padding: 16px;
 		border-radius: 12px;
 		background-color: #eff0f6;
@@ -905,28 +905,28 @@
 }
 
 @media only screen and (max-width: 1366px) {
-	.creat-post-modal-content__main__header,
-	.creat-post-modal-content__substitute__header {
+	.create-post-modal-content__main__header,
+	.create-post-modal-content__substitute__header {
 		h5 {
 			font-size: 1rem;
 		}
 	}
-	.creat-post-modal-content__main__header {
+	.create-post-modal-content__main__header {
 		padding: 12px 20px;
 	}
-	.creat-post-modal-content__main__body__user-info__block-right p {
+	.create-post-modal-content__main__body__user-info__block-right p {
 		font-size: 16px;
 	}
 
 	#formCreatePost {
-		.creat-post-modal-content__main__submit {
+		.create-post-modal-content__main__submit {
 			font-size: 16px;
 			padding: 14px 0px;
 		}
 	}
 
-	.creat-post-modal-content__main__close,
-	.creat-post-modal-content__substitute__back {
+	.create-post-modal-content__main__close,
+	.create-post-modal-content__substitute__back {
 		svg {
 			width: 18px;
 			height: 18px;

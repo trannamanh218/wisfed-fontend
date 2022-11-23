@@ -1,10 +1,10 @@
 import { render } from '@testing-library/react';
-import CreatePost from 'pages/home/components/newfeed/components/creat-post';
+import CreatePost from 'pages/home/components/newfeed/components/create-post';
 
 describe('check giao diện tạo bài viết', () => {
 	it('check source user avatar', () => {
 		const { getByTestId } = render(<CreatePost />);
-		const avatar = getByTestId('creat-post__user-avatar');
+		const avatar = getByTestId('create-post__user-avatar');
 		expect(avatar.getAttribute('src').length).toBeGreaterThan(0);
 	});
 

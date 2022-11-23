@@ -213,4 +213,5 @@ const MainReadingTarget = ({ setErrorLoadPage }) => {
 MainReadingTarget.propTypes = {
 	setErrorLoadPage: PropTypes.func,
 };
+
 export default MainReadingTarget;

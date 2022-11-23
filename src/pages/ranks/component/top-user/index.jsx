@@ -62,7 +62,7 @@ const TopUser = ({ listYear, tabSelected }) => {
 
 		try {
 			const topUser = await dispatch(getTopUser(params)).unwrap();
-			setGetListTopBooks(topUser);
+			setGetListTopBooks(topUser.rows);
 		} catch (err) {
 			NotificationError(err);
 		} finally {

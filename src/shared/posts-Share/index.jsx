@@ -336,7 +336,7 @@ const PostShare = ({ postData, inCreatePost, directUrl }) => {
 						</span>
 						<IconRanks />
 					</div>
-					<div className='creat-post-modal-content__main__share-container'>
+					<div className='create-post-modal-content__main__share-container'>
 						<QuoteCard data={postData.sharePost.info} isShare={true} />
 					</div>
 				</>
@@ -355,7 +355,7 @@ const PostShare = ({ postData, inCreatePost, directUrl }) => {
 						</span>
 						<IconRanks />
 					</div>
-					<div className='creat-post-modal-content__main__share-container'>
+					<div className='create-post-modal-content__main__share-container'>
 						<AuthorBook data={postData.sharePost} />
 					</div>
 				</>

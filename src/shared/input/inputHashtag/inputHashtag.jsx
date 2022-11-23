@@ -15,9 +15,10 @@ const InputHashtag = ({ listHashtags, setListHashtags, setLastTag, label, isRequ
 	const [justAddedFirstOneHashTag, setJustAddedFirstOneHashTag] = useState(false);
 
 	const handleChangeHashtag = e => {
-		const value = e.target.value;
-		setInputHashtag(value);
-		if (!hashtagRegex.test(value) && value.trim().length) {
+		setInputHashtag(e.target.value);
+		const hashtagsMatched = e.target.value.match(hashtagRegex);
+
+		if (!hashtagsMatched && e.target.value.trim().length) {
 			setShow(true);
 		} else {
 			setShow(false);

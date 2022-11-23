@@ -32,7 +32,7 @@ const SuggestFriend = ({ activeTabs }) => {
 		try {
 			if (isAuth) {
 				const data = await dispatch(getTopUser(params)).unwrap();
-				return data;
+				return data.rows;
 			}
 		} catch (err) {
 			NotificationError(err);
@@ -51,7 +51,7 @@ const SuggestFriend = ({ activeTabs }) => {
 		try {
 			if (isAuth) {
 				const data = await dispatch(getTopUser(params)).unwrap();
-				return data;
+				return data.rows;
 			}
 		} catch (err) {
 			NotificationError(err);

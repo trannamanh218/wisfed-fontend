@@ -6,15 +6,15 @@ const ShareModeComponent = ({ list, shareMode, setShareMode }) => {
 	const [show, setShow] = useState(false);
 
 	return (
-		<div className='creat-post-modal-content__main__body__user-info__share-mode-container'>
+		<div className='create-post-modal-content__main__body__user-info__share-mode-container'>
 			<div
-				className={classNames('creat-post-modal-content__main__body__user-info__share-mode', {
+				className={classNames('create-post-modal-content__main__body__user-info__share-mode', {
 					'show': show,
 					'hide': !show,
 				})}
 				onClick={() => setShow(!show)}
 			>
-				<div className='creat-post-modal-content__main__body__user-info__share-mode__selected'>
+				<div className='create-post-modal-content__main__body__user-info__share-mode__selected'>
 					{shareMode.icon}
 					<span>{shareMode.title}</span>
 					<div>
@@ -22,7 +22,7 @@ const ShareModeComponent = ({ list, shareMode, setShareMode }) => {
 					</div>
 				</div>
 				<div
-					className={classNames('creat-post-modal-content__main__body__user-info__share-mode__list', {
+					className={classNames('create-post-modal-content__main__body__user-info__share-mode__list', {
 						'show': show,
 						'hide': !show,
 					})}
@@ -33,7 +33,7 @@ const ShareModeComponent = ({ list, shareMode, setShareMode }) => {
 								<div
 									key={item.value}
 									className={classNames(
-										'creat-post-modal-content__main__body__user-info__share-mode__select-item',
+										'create-post-modal-content__main__body__user-info__share-mode__select-item',
 										{
 											'show': shareMode.value !== item.value,
 											'hide': shareMode === item.value,
