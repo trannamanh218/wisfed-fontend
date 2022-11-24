@@ -1,7 +1,6 @@
 .group-settings__container {
 	background-color: #fcfcfc;
 	border-radius: 24px;
-	width: 710px;
 	margin-top: 32px;
 	.form-field-group {
 		margin-bottom: 39px;
@@ -29,6 +28,13 @@
 		justify-content: center;
 		align-items: center;
 		border-radius: 12px;
+		&.disabled-btn {
+			background-color: #d9dbe9;
+			button {
+				color: #a0a3bd;
+				font-weight: 600;
+			}
+		}
 	}
 
 	.input-hashtag {

@@ -3,6 +3,7 @@ import { CloseX, Search, CheckIcon } from 'components/svg';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { useEffect, useState } from 'react';
+import LoadingIndicator from 'shared/loading-indicator';
 
 function AddAndSearchCategories({
 	categoryAddedList,
@@ -101,6 +102,12 @@ function AddAndSearchCategories({
 					</>
 				)}
 			</div>
+
+			{/* Loading gọi dữ liệu  */}
+			<div className='add-and-search-categories__loading'>
+				{!getDataFinish && inputCategoryValue && <LoadingIndicator />}
+			</div>
+
 			{inputCategoryValue.trim() !== '' && getDataFinish && (
 				<>
 					{categorySearchedList.length > 0 ? (

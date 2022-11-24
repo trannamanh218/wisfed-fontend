@@ -13,6 +13,7 @@ import { handleAfterCreatQuote } from 'reducers/redux-utils/quote';
 import { NotificationError } from 'helpers/Error';
 import AddAndSearchCategories from 'shared/add-and-search-categories';
 import InputHashtag from 'shared/input/inputHashtag/inputHashtag';
+import LoadingIndicator from 'shared/loading-indicator';
 
 function CreatQuotesModal({ hideCreatQuotesModal }) {
 	const [showTextFieldEditPlaceholder, setShowTextFieldEditPlaceholder] = useState(true);
@@ -25,7 +26,8 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 	const [bookAdded, setBookAdded] = useState({});
 	const [categorySearchedList, setCategorySearchedList] = useState([]);
 	const [categoryAddedList, setCategoryAddedList] = useState([]);
-	const [getDataFinish, setGetDataFinish] = useState(false);
+	const [getDataFinishBooks, setGetDataFinishBooks] = useState(false);
+	const [getDataFinishCategories, setGetDataFinishCategories] = useState(false);
 	const [categoryAddedIdList, setCategoryAddedIdList] = useState([]);
 	const [listHashtags, setListHashtags] = useState([]);
 	const [hasMoreEllipsis, setHasMoreEllipsis] = useState(false);
@@ -101,16 +103,23 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 		setColorActiveIndex(index);
 	};
 
-	const getSuggestionForCreatQuotes = async (input, option) => {
+	const getSuggestionBooks = async input => {
+		const option = { value: 'addBook' };
 		try {
 			const data = await dispatch(getSuggestionForPost({ input, option })).unwrap();
+			setBookSearchedList(data.rows.slice(0, 3));
+		} catch (err) {
+			NotificationError(err);
+		} finally {
+			setGetDataFinishBooks(true);
+		}
+	};
 
-			if (option.value === 'addBook') {
-				setBookSearchedList(data.rows.slice(0, 3));
-			} else if (option.value === 'addCategory') {
-				setCategorySearchedList(data.rows);
-			}
-
+	const getSuggestionCategories = async input => {
+		const option = { value: 'addCategory' };
+		try {
+			const data = await dispatch(getSuggestionForPost({ input, option })).unwrap();
+			setCategorySearchedList(data.rows);
 			if (data.count > data.rows.length) {
 				setHasMoreEllipsis(true);
 			} else {
@@ -119,21 +128,26 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 		} catch (err) {
 			NotificationError(err);
 		} finally {
-			setGetDataFinish(true);
+			setGetDataFinishCategories(true);
 		}
 	};
 
-	const debounceSearch = useCallback(
-		_.debounce((inputValue, option) => getSuggestionForCreatQuotes(inputValue, option), 700),
+	const debounceSearchBooks = useCallback(
+		_.debounce(inputValue => getSuggestionBooks(inputValue), 700),
+		[]
+	);
+
+	const debounceSearchCategories = useCallback(
+		_.debounce(inputValue => getSuggestionCategories(inputValue), 700),
 		[]
 	);
 
 	const searchBook = e => {
-		setGetDataFinish(false);
+		setGetDataFinishBooks(false);
 		setBookSearchedList([]);
 		setInputBookValue(e.target.value);
 		if (e.target.value) {
-			debounceSearch(e.target.value, { value: 'addBook' });
+			debounceSearchBooks(e.target.value);
 		}
 	};
 
@@ -144,11 +158,11 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 	};
 
 	const searchCategory = e => {
-		setGetDataFinish(false);
+		setGetDataFinishCategories(false);
 		setCategorySearchedList([]);
 		setInputCategoryValue(e.target.value);
 		if (e.target.value) {
-			debounceSearch(e.target.value, { value: 'addCategory' });
+			debounceSearchCategories(e.target.value);
 		}
 		if (categoryInputWrapper.current) {
 			categoryInputWrapper.current.style.width = categoryInput.current.value.length + 0.5 + 'ch';
@@ -191,10 +205,6 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 		}
 		setCategoryAddedIdList(categoryIdArr);
 	}, [categoryAddedList]);
-
-	const renderNoSearchResult = () => {
-		return <div className='create-quotes-modal__no-search-result'>Không có kết quả phù hợp</div>;
-	};
 
 	const creatQuotesFnc = async () => {
 		const newListHastag = listHashtags.map(item => `${item}`);
@@ -333,7 +343,13 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 								</>
 							)}
 						</div>
-						{inputBookValue.trim() !== '' && getDataFinish && (
+
+						{/* Loading gọi dữ liệu  */}
+						<div className='add-and-search-categories__loading'>
+							{!getDataFinishBooks && inputBookValue && <LoadingIndicator />}
+						</div>
+
+						{inputBookValue.trim() !== '' && getDataFinishBooks && (
 							<>
 								{bookSearchedList.length > 0 ? (
 									<div className='create-quotes-modal__body__option-item__search-result book'>
@@ -357,7 +373,9 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 										))}
 									</div>
 								) : (
-									<>{renderNoSearchResult()}</>
+									<div className='create-quotes-modal__no-search-result'>
+										Không có kết quả phù hợp
+									</div>
 								)}
 							</>
 						)}
@@ -369,7 +387,7 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 							categorySearchedList={categorySearchedList}
 							addCategory={addCategory}
 							removeCategory={removeCategory}
-							getDataFinish={getDataFinish}
+							getDataFinish={getDataFinishCategories}
 							searchCategory={searchCategory}
 							inputCategoryValue={inputCategoryValue}
 							categoryInputContainer={categoryInputContainer}

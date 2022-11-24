@@ -21,36 +21,14 @@ const TopRanks = ({ getListTopBooks, valueDataSort }) => {
 
 	const handleNumber = number => {
 		if (valueDataSort === 'topFollow') {
-			return (
-				<div className='number__books'>
-					{getListTopBooks[number].numFollowingOfWeek ||
-						getListTopBooks[number].numFollowingOfMonth ||
-						getListTopBooks[number].numberFollowing}
-				</div>
-			);
+			return <div className='number__books'>{getListTopBooks[number].numberFollow}</div>;
 		} else if (valueDataSort === 'topRead') {
-			return (
-				<div className='number__books'>
-					{getListTopBooks[number].bookRead || getListTopBooks[number].bookReadOfMonth}
-				</div>
-			);
+			return <div className='number__books'>{getListTopBooks[number].numberBookRead}</div>;
 		} else if (valueDataSort === 'topLike') {
-			return (
-				<div className='number__books'>
-					{getListTopBooks[number].sumLikeOfWeek ||
-						getListTopBooks[number].sumLikeOfMonth ||
-						getListTopBooks[number].sumLikeOfYear ||
-						0}
-				</div>
-			);
-		} else if (valueDataSort === 'topReview') {
-			return (
-				<div className='number__books'>
-					{getListTopBooks[number].numReviewOfWeek ||
-						getListTopBooks[number].numReviewOfMonth ||
-						getListTopBooks[number].numReviewOfYear}
-				</div>
-			);
+			return <div className='number__books'>{getListTopBooks[number].numberLike}</div>;
+		} else {
+			// valueDataSort === 'topReview'
+			return <div className='number__books'>{getListTopBooks[number].numberReview}</div>;
 		}
 	};
 
