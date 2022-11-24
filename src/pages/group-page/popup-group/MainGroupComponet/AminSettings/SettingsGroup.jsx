@@ -1,4 +1,4 @@
-import React, { useRef, useState, useCallback, useEffect } from 'react';
+import { useRef, useState, useCallback, useEffect } from 'react';
 import Input from 'shared/input';
 import SelectBox from 'shared/select-box';
 import { BackArrow } from 'components/svg';
@@ -21,13 +21,7 @@ function SettingsGroup({ handleChange, data, fetchData }) {
 		{ value: 30, title: 'Thử thách đọc sách' },
 	];
 
-	const textArea = useRef(null);
-	const groupNameInput = useRef('');
-	const groupSettingContainer = useRef(null);
-	const dispatch = useDispatch();
-
 	const [defaultCategoryOption, setDefaultCategoryOption] = useState({ value: 'default', title: 'Chọn chủ đề' });
-
 	const [inputNameGroup, setInputNameGroup] = useState(data.name);
 	const [inputDescription, setInputDescription] = useState(data.description);
 	const [listHashtags, setListHashtags] = useState([]);
@@ -35,26 +29,23 @@ function SettingsGroup({ handleChange, data, fetchData }) {
 	const [lastTag, setLastTag] = useState('');
 	const [newListTag, setNewListTag] = useState([]);
 	const [intialState, setIntialState] = useState({});
-
 	const [listAuthors, setListAuthors] = useState([]);
 	const [inputAuthorValue, setInputAuthorValue] = useState('');
 	const [authorAddedList, setAuthorAddedList] = useState([]);
 	const [authorSearchedList, setAuthorSearchedList] = useState([]);
 	const [hasMoreAuthorsEllipsis, setHasMoreAuthorsEllipsis] = useState(false);
-
 	const [categoryIdBook, setCategoryIdBook] = useState([]);
 	const [inputCategoryValue, setInputCategoryValue] = useState('');
 	const [categoryAddedList, setCategoryAddedList] = useState([]);
 	const [categorySearchedList, setCategorySearchedList] = useState([]);
 	const [hasMoreCategoriesEllipsis, setHasMoreCategoriesEllipsis] = useState(false);
-
 	const [listBookAdd, setListBookAdd] = useState([]);
 	const [inputBookValue, setInputBookValue] = useState('');
 	const [bookAddedList, setBookAddedList] = useState([]);
 	const [bookSearchedList, setBookSearchedList] = useState([]);
 	const [hasMoreBooksEllipsis, setHasMoreBooksEllipsis] = useState(false);
-
 	const [getDataFinish, setGetDataFinish] = useState(false);
+	const [showError, setShowError] = useState(false);
 
 	const authorInputContainer = useRef(null);
 	const authorInputWrapper = useRef(null);
@@ -68,10 +59,14 @@ function SettingsGroup({ handleChange, data, fetchData }) {
 	const bookInputWrapper = useRef(null);
 	const bookInput = useRef(null);
 
+	const textArea = useRef(null);
+	const groupNameInput = useRef('');
+	const groupSettingContainer = useRef(null);
+	const dispatch = useDispatch();
+
 	useEffect(() => {
 		// Điền dữ liệu ban đầu vào form
-		const cloneArr1 = [];
-		data.groupTags.forEach(item => cloneArr1.push(item.tag.name));
+		const cloneArr1 = data.groupTags.map(item => item.tag.name);
 		setListHashtags(cloneArr1);
 
 		const cloneArr2 = [];
@@ -133,7 +128,7 @@ function SettingsGroup({ handleChange, data, fetchData }) {
 					flag = true;
 				}
 		}
-		if (flag === true && lastTag !== '#' && inputNameGroup !== '' && inputDescription !== '') {
+		if (flag === true && lastTag !== '#' && inputNameGroup !== '' && inputDescription !== '' && !showError) {
 			const params = {
 				name: inputNameGroup,
 				description: inputDescription,
@@ -155,6 +150,7 @@ function SettingsGroup({ handleChange, data, fetchData }) {
 		listBookAdd,
 		categoryIdBook,
 		intialState,
+		showError,
 	]);
 
 	useEffect(() => {
@@ -508,6 +504,8 @@ function SettingsGroup({ handleChange, data, fetchData }) {
 						listHashtags={listHashtags}
 						setListHashtags={setListHashtags}
 						setLastTag={setLastTag}
+						showError={showError}
+						setShowError={setShowError}
 					/>
 
 					<div className={`form-button ${!isShowBtn && 'disabled-btn'}`} onClick={updateGroup}>
