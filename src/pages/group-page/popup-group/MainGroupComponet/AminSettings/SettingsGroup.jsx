@@ -44,7 +44,9 @@ function SettingsGroup({ handleChange, data, fetchData }) {
 	const [bookAddedList, setBookAddedList] = useState([]);
 	const [bookSearchedList, setBookSearchedList] = useState([]);
 	const [hasMoreBooksEllipsis, setHasMoreBooksEllipsis] = useState(false);
-	const [getDataFinish, setGetDataFinish] = useState(false);
+	const [getDataFinishCategories, setGetDataFinishCategories] = useState(false);
+	const [getDataFinishAuthors, setGetDataFinishAuthors] = useState(false);
+	const [getDataFinishBooks, setGetDataFinishBooks] = useState(false);
 	const [showError, setShowError] = useState(false);
 
 	const authorInputContainer = useRef(null);
@@ -216,11 +218,11 @@ function SettingsGroup({ handleChange, data, fetchData }) {
 	};
 
 	const searchCategory = e => {
-		setGetDataFinish(false);
+		setGetDataFinishCategories(false);
 		setCategorySearchedList([]);
 		setInputCategoryValue(e.target.value);
 		if (e.target.value) {
-			debounceSearch(e.target.value, { value: 'addCategory' });
+			debounceSearchCategories(e.target.value, { value: 'addCategory' });
 		}
 		if (categoryInputWrapper.current) {
 			categoryInputWrapper.current.style.width = categoryInput.current.value.length + 0.5 + 'ch';
@@ -254,11 +256,11 @@ function SettingsGroup({ handleChange, data, fetchData }) {
 	};
 
 	const searchAuthor = e => {
-		setGetDataFinish(false);
+		setGetDataFinishAuthors(false);
 		setAuthorSearchedList([]);
 		setInputAuthorValue(e.target.value);
 		if (e.target.value) {
-			debounceSearch(e.target.value, { value: 'addAuthor' });
+			debounceSearchAuthors(e.target.value);
 		}
 		if (authorInputWrapper.current) {
 			authorInputWrapper.current.style.width = authorInput.current.value.length + 0.5 + 'ch';
@@ -288,19 +290,29 @@ function SettingsGroup({ handleChange, data, fetchData }) {
 	};
 
 	const searchBook = e => {
-		setGetDataFinish(false);
+		setGetDataFinishBooks(false);
 		setBookSearchedList([]);
 		setInputBookValue(e.target.value);
 		if (e.target.value) {
-			debounceSearch(e.target.value, { value: 'addBook' });
+			debounceSearchBooks(e.target.value);
 		}
 		if (bookInputWrapper.current) {
 			bookInputWrapper.current.style.width = bookInput.current.value.length + 0.5 + 'ch';
 		}
 	};
 
-	const debounceSearch = useCallback(
-		_.debounce((inputValue, option) => getSuggestionForCreatQuotes(inputValue, option), 700),
+	const debounceSearchAuthors = useCallback(
+		_.debounce(inputValue => getSuggestionAuthors(inputValue), 700),
+		[]
+	);
+
+	const debounceSearchCategories = useCallback(
+		_.debounce(inputValue => getSuggestionCategories(inputValue), 700),
+		[]
+	);
+
+	const debounceSearchBooks = useCallback(
+		_.debounce(inputValue => getSuggestionBooks(inputValue), 700),
 		[]
 	);
 
@@ -330,52 +342,64 @@ function SettingsGroup({ handleChange, data, fetchData }) {
 		}
 	};
 
-	const getSuggestionForCreatQuotes = async (input, option) => {
+	const getSuggestionAuthors = async input => {
 		try {
-			if (option.value === 'addCategory') {
-				const result = await dispatch(getSuggestionForPost({ input, option })).unwrap();
-				setCategorySearchedList(result.rows);
-				if (result.count > result.rows.length) {
-					setHasMoreCategoriesEllipsis(true);
-				} else {
-					setHasMoreCategoriesEllipsis(false);
-				}
-			}
-			if (option.value === 'addBook') {
-				const params = {
-					q: input,
-					type: 'books',
-					start: 0,
-					limit: 10,
-				};
-				const result = await dispatch(getFilterSearch(params)).unwrap();
-				setBookSearchedList(result.rows);
-				if (result.count > result.rows.length) {
-					setHasMoreBooksEllipsis(true);
-				} else {
-					setHasMoreBooksEllipsis(false);
-				}
-			}
-			if (option.value === 'addAuthor') {
-				const params = {
-					q: input,
-					type: 'authors',
-					start: 0,
-					limit: 10,
-				};
-
-				const result = await dispatch(getFilterSearch(params)).unwrap();
-				setAuthorSearchedList(result.rows);
-				if (result.count > result.rows.length) {
-					setHasMoreAuthorsEllipsis(true);
-				} else {
-					setHasMoreAuthorsEllipsis(false);
-				}
+			const params = {
+				q: input,
+				type: 'authors',
+				start: 0,
+				limit: 10,
+			};
+			const result = await dispatch(getFilterSearch(params)).unwrap();
+			setAuthorSearchedList(result.rows);
+			if (result.count > result.rows.length) {
+				setHasMoreAuthorsEllipsis(true);
+			} else {
+				setHasMoreAuthorsEllipsis(false);
 			}
 		} catch (err) {
 			NotificationError(err);
 		} finally {
-			setGetDataFinish(true);
+			setGetDataFinishAuthors(true);
+		}
+	};
+
+	const getSuggestionCategories = async input => {
+		const option = { value: 'addCategory' };
+		try {
+			const result = await dispatch(getSuggestionForPost({ input, option })).unwrap();
+			setCategorySearchedList(result.rows);
+			if (result.count > result.rows.length) {
+				setHasMoreCategoriesEllipsis(true);
+			} else {
+				setHasMoreCategoriesEllipsis(false);
+			}
+		} catch (err) {
+			NotificationError(err);
+		} finally {
+			setGetDataFinishCategories(true);
+		}
+	};
+
+	const getSuggestionBooks = async input => {
+		try {
+			const params = {
+				q: input,
+				type: 'books',
+				start: 0,
+				limit: 10,
+			};
+			const result = await dispatch(getFilterSearch(params)).unwrap();
+			setBookSearchedList(result.rows);
+			if (result.count > result.rows.length) {
+				setHasMoreBooksEllipsis(true);
+			} else {
+				setHasMoreBooksEllipsis(false);
+			}
+		} catch (err) {
+			NotificationError(err);
+		} finally {
+			setGetDataFinishBooks(true);
 		}
 	};
 
@@ -434,7 +458,7 @@ function SettingsGroup({ handleChange, data, fetchData }) {
 								categorySearchedList={categorySearchedList}
 								addCategory={addCategory}
 								removeCategory={removeCategory}
-								getDataFinish={getDataFinish}
+								getDataFinish={getDataFinishCategories}
 								searchCategory={searchCategory}
 								inputCategoryValue={inputCategoryValue}
 								categoryInputContainer={categoryInputContainer}
@@ -454,7 +478,7 @@ function SettingsGroup({ handleChange, data, fetchData }) {
 							categorySearchedList={authorSearchedList}
 							addCategory={addAuthor}
 							removeCategory={removeAuthor}
-							getDataFinish={getDataFinish}
+							getDataFinish={getDataFinishAuthors}
 							searchCategory={searchAuthor}
 							inputCategoryValue={inputAuthorValue}
 							categoryInputContainer={authorInputContainer}
@@ -477,7 +501,7 @@ function SettingsGroup({ handleChange, data, fetchData }) {
 							categorySearchedList={bookSearchedList}
 							addCategory={addBook}
 							removeCategory={removeBook}
-							getDataFinish={getDataFinish}
+							getDataFinish={getDataFinishBooks}
 							searchCategory={searchBook}
 							inputCategoryValue={inputBookValue}
 							categoryInputContainer={bookInputContainer}
