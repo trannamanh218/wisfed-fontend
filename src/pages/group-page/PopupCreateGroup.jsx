@@ -255,7 +255,7 @@ const PopupCreateGroup = ({ handleClose }) => {
 	};
 
 	useEffect(() => {
-		if (!!image.length && inputDiscription !== '' && inputNameGroup !== '') {
+		if (image && !!image.length && inputDiscription !== '' && inputNameGroup !== '') {
 			switch (kindOfGroup.value) {
 				case 'book':
 					if (listBookAdd.length > 0 && categoryIdBook.length > 0) {
