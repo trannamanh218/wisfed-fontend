@@ -13,6 +13,7 @@ import { getSuggestionForPost } from 'reducers/redux-utils/activity';
 import { getFilterSearch } from 'reducers/redux-utils/search';
 import { editGroup } from 'reducers/redux-utils/group';
 import InputHashtag from 'shared/input/inputHashtag/inputHashtag';
+import { hashtagRegex } from 'constants';
 
 function SettingsGroup({ handleChange, data, fetchData }) {
 	const listIdBook = [
@@ -107,7 +108,7 @@ function SettingsGroup({ handleChange, data, fetchData }) {
 
 	useEffect(() => {
 		const newListHastag = listHashtags.map(item => `${item}`);
-		if (lastTag.includes('#') && lastTag !== '#') {
+		if (lastTag.includes('#') && lastTag !== '#' && hashtagRegex.test(lastTag)) {
 			setNewListTag([...newListHastag, lastTag]);
 		} else {
 			setNewListTag(newListHastag);
@@ -509,7 +510,7 @@ function SettingsGroup({ handleChange, data, fetchData }) {
 						setLastTag={setLastTag}
 					/>
 
-					<div className={!isShowBtn ? 'disable-btn' : `form-button`} onClick={updateGroup}>
+					<div className={`form-button ${!isShowBtn && 'disabled-btn'}`} onClick={updateGroup}>
 						<button>Lưu thay đổi</button>
 					</div>
 				</div>

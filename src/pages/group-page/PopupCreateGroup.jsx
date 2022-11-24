@@ -255,7 +255,7 @@ const PopupCreateGroup = ({ handleClose }) => {
 	};
 
 	useEffect(() => {
-		if (image !== undefined && inputDiscription !== '' && inputNameGroup !== '') {
+		if (!!image.length && inputDiscription !== '' && inputNameGroup !== '') {
 			switch (kindOfGroup.value) {
 				case 'book':
 					if (listBookAdd.length > 0 && categoryIdBook.length > 0) {
@@ -518,7 +518,7 @@ const PopupCreateGroup = ({ handleClose }) => {
 
 				<InputHashtag listHashtags={listHashtags} setListHashtags={setListHashtags} setLastTag={setLastTag} />
 
-				<div className={!isShowBtn ? 'disable-btn' : `form-button`} onClick={createGroup}>
+				<div className={`popup-create-group form-button ${!isShowBtn && 'disabled-btn'}`} onClick={createGroup}>
 					<button>Tạo nhóm</button>
 				</div>
 			</div>

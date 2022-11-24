@@ -219,6 +219,10 @@
 	}
 }
 
+.popup-create-group {
+	height: 56px;
+}
+
 .form-button {
 	margin-top: 57px;
 	display: flex;
@@ -230,6 +234,13 @@
 	cursor: pointer;
 	button {
 		color: #fcfcfc;
+	}
+	&.disabled-btn {
+		background-color: #d9dbe9;
+		button {
+			color: #a0a3bd;
+			font-weight: 600;
+		}
 	}
 }
 
