@@ -132,10 +132,7 @@ const TopUser = ({ listYear, tabSelected }) => {
 				/>
 			</div>
 			<div className='topbooks__container__sort'>
-				<div
-					className={`topbooks__container__sort__left ${checkSelectBox && 'disabled-btn'}`}
-					onClick={() => setModalSearchCategoriesShow(true)}
-				>
+				<div className={`topbooks__container__sort__left`} onClick={() => setModalSearchCategoriesShow(true)}>
 					<div className='select-box'>
 						<div className='select-box__btn'>
 							<span className='select-box__value'>{kindOfGroupRef.current.name || 'Chủ đề'}</span>
