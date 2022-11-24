@@ -32,6 +32,8 @@ function SettingsGroup({ handleChange, data, fetchData }) {
 	const [listHashtags, setListHashtags] = useState([]);
 	const [isShowBtn, setIsShowBtn] = useState(false);
 	const [lastTag, setLastTag] = useState('');
+	const [newListTag, setNewListTag] = useState([]);
+	const [intialState, setIntialState] = useState({});
 
 	const [listAuthors, setListAuthors] = useState([]);
 	const [inputAuthorValue, setInputAuthorValue] = useState('');
@@ -64,6 +66,126 @@ function SettingsGroup({ handleChange, data, fetchData }) {
 	const bookInputContainer = useRef(null);
 	const bookInputWrapper = useRef(null);
 	const bookInput = useRef(null);
+
+	useEffect(() => {
+		// Điền dữ liệu ban đầu vào form
+		const cloneArr1 = [];
+		data.groupTags.forEach(item => cloneArr1.push(item.tag.name));
+		setListHashtags(cloneArr1);
+
+		const cloneArr2 = [];
+		data.groupCategories.forEach(item => cloneArr2.push(item.category));
+		setCategoryAddedList(cloneArr2);
+
+		const cloneArr3 = [];
+		data.groupAuthors.forEach(item => cloneArr3.push(item.author));
+		setAuthorAddedList(cloneArr3);
+
+		const cloneArr4 = [];
+		data.groupBooks.forEach(item => cloneArr4.push(item.book));
+		setBookAddedList(cloneArr4);
+
+		if (data.groupType === 'book') {
+			const obj = listIdBook.find(item => item.value === data.groupCategories[0]?.category?.id);
+			if (!_.isEmpty(obj)) {
+				setDefaultCategoryOption(obj);
+			}
+		}
+
+		// Lưu dữ liệu ban đầu, còn dùng để so sánh
+		const categoryIdArray = [];
+		data.groupCategories.forEach(item => categoryIdArray.push(item.category.id));
+		setIntialState({
+			name: data.name,
+			description: data.description,
+			authorIds: cloneArr3,
+			tags: cloneArr1,
+			categoryIds: categoryIdArray,
+			bookIds: cloneArr4,
+		});
+	}, []);
+
+	useEffect(() => {
+		const newListHastag = listHashtags.map(item => `${item}`);
+		if (lastTag.includes('#') && lastTag !== '#') {
+			setNewListTag([...newListHastag, lastTag]);
+		} else {
+			setNewListTag(newListHastag);
+		}
+	}, [listHashtags, lastTag]);
+
+	useEffect(() => {
+		let flag = false;
+		switch (data.groupType) {
+			case 'book':
+				if (listBookAdd.length > 0 && categoryIdBook.length > 0) {
+					flag = true;
+				}
+				break;
+			case 'author':
+				if (listAuthors.length > 0) {
+					flag = true;
+				}
+				break;
+			default: // case 'category'
+				if (categoryIdBook.length > 0) {
+					flag = true;
+				}
+		}
+		if (flag === true && lastTag !== '#' && inputNameGroup !== '' && inputDescription !== '') {
+			const params = {
+				name: inputNameGroup,
+				description: inputDescription,
+				authorIds: listAuthors,
+				tags: newListTag,
+				categoryIds: categoryIdBook,
+				bookIds: listBookAdd,
+			};
+			!_.isEqual(intialState, params) ? setIsShowBtn(true) : setIsShowBtn(false);
+		} else {
+			setIsShowBtn(false);
+		}
+	}, [
+		listAuthors,
+		newListTag,
+		inputDescription,
+		inputNameGroup,
+		listHashtags,
+		listBookAdd,
+		categoryIdBook,
+		intialState,
+	]);
+
+	useEffect(() => {
+		const authorIdArr = [];
+		for (let i = 0; i < authorAddedList.length; i++) {
+			authorIdArr.push(authorAddedList[i].id);
+		}
+		setListAuthors(authorIdArr);
+	}, [authorAddedList]);
+
+	useEffect(() => {
+		const bookIdArr = [];
+		for (let i = 0; i < bookAddedList.length; i++) {
+			bookIdArr.push(bookAddedList[i].id);
+		}
+		setListBookAdd(bookIdArr);
+	}, [bookAddedList]);
+
+	useEffect(() => {
+		const categoryIdArr = [];
+		for (let i = 0; i < categoryAddedList.length; i++) {
+			categoryIdArr.push(categoryAddedList[i].id);
+		}
+		setCategoryIdBook(categoryIdArr);
+	}, [categoryAddedList]);
+
+	useEffect(() => {
+		window.scroll({
+			top: groupSettingContainer.current.offsetTop,
+			behavior: 'smooth',
+		});
+	}, []);
 
 	const onInputChange = f => e => {
 		const value = e.target.value.trim();
@@ -187,21 +309,13 @@ function SettingsGroup({ handleChange, data, fetchData }) {
 
 	const updateGroup = async () => {
 		if (isShowBtn) {
-			const newListHastag = listHashtags.map(item => `${item}`);
-			let newList;
-			if (lastTag.includes('#') && lastTag !== '#') {
-				newList = [...newListHastag, lastTag];
-			} else {
-				newList = newListHastag;
-			}
-
 			const params = {
 				id: data.id,
 				param: {
 					name: inputNameGroup,
 					description: inputDescription,
 					authorIds: listAuthors,
-					tags: newList,
+					tags: newListTag,
 					categoryIds: categoryIdBook,
 					bookIds: listBookAdd,
 				},
@@ -267,92 +381,6 @@ function SettingsGroup({ handleChange, data, fetchData }) {
 			setGetDataFinish(true);
 		}
 	};
-
-	useEffect(() => {
-		// Điền dữ liệu ban đầu vào form
-		const cloneArr1 = [];
-		data.groupTags.forEach(item => cloneArr1.push(item.tag.name));
-		setListHashtags(cloneArr1);
-
-		const cloneArr2 = [];
-		data.groupCategories.forEach(item => cloneArr2.push(item.category));
-		setCategoryAddedList(cloneArr2);
-
-		const cloneArr3 = [];
-		data.groupAuthors.forEach(item => cloneArr3.push(item.author));
-		setAuthorAddedList(cloneArr3);
-
-		const cloneArr4 = [];
-		data.groupBooks.forEach(item => cloneArr4.push(item.book));
-		setBookAddedList(cloneArr4);
-
-		if (data.groupType === 'book') {
-			const obj = listIdBook.find(item => item.value === data.groupCategories[0]?.category?.id);
-			if (!_.isEmpty(obj)) {
-				setDefaultCategoryOption(obj);
-			}
-		}
-	}, []);
-
-	useEffect(() => {
-		if (lastTag !== '#' && inputDescription !== '' && inputNameGroup !== '') {
-			switch (data.groupType) {
-				case 'book':
-					if (listBookAdd.length > 0 && categoryIdBook.length > 0) {
-						setIsShowBtn(true);
-					} else {
-						setIsShowBtn(false);
-					}
-					break;
-				case 'author':
-					if (listAuthors.length > 0) {
-						setIsShowBtn(true);
-					} else {
-						setIsShowBtn(false);
-					}
-					break;
-				default: // case 'category'
-					if (categoryIdBook.length > 0) {
-						setIsShowBtn(true);
-					} else {
-						setIsShowBtn(false);
-					}
-			}
-		} else {
-			setIsShowBtn(false);
-		}
-	}, [listAuthors, lastTag, inputDescription, inputNameGroup, listHashtags, listBookAdd, categoryIdBook]);
-
-	useEffect(() => {
-		const authorIdArr = [];
-		for (let i = 0; i < authorAddedList.length; i++) {
-			authorIdArr.push(authorAddedList[i].id);
-		}
-		setListAuthors(authorIdArr);
-	}, [authorAddedList]);
-
-	useEffect(() => {
-		const bookIdArr = [];
-		for (let i = 0; i < bookAddedList.length; i++) {
-			bookIdArr.push(bookAddedList[i].id);
-		}
-		setListBookAdd(bookIdArr);
-	}, [bookAddedList]);
-
-	useEffect(() => {
-		const categoryIdArr = [];
-		for (let i = 0; i < categoryAddedList.length; i++) {
-			categoryIdArr.push(categoryAddedList[i].id);
-		}
-		setCategoryIdBook(categoryIdArr);
-	}, [categoryAddedList]);
-
-	useEffect(() => {
-		window.scroll({
-			top: groupSettingContainer.current.offsetTop,
-			behavior: 'smooth',
-		});
-	}, []);
 
 	return (
 		<div className='group-settings__container' ref={groupSettingContainer}>
