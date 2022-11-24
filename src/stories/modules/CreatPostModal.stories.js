@@ -1,7 +1,7 @@
-import CreatePostModalContent from 'pages/home/components/newfeed/components/creat-post-modal-content';
+import CreatePostModalContent from 'pages/home/components/newfeed/components/create-post-modal-content';
 
 export default {
-	title: 'Components/Modules/Creat post modal',
+	title: 'Components/Modules/Create post modal',
 	component: CreatePostModalContent,
 };
 

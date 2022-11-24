@@ -50,22 +50,11 @@ const SidebarProfile = ({ currentUserInfo, handleViewBookDetail }) => {
 
 	const getAllLibraryListUser = async () => {
 		try {
-			let body = {
-				userId: '',
-			};
-			if (userId) {
-				body = {
-					userId: userId,
-				};
-			} else {
-				body = {
-					userId: userInfo.id,
-				};
-			}
-			const data = await dispatch(getAllLibraryList(body)).unwrap();
-			setLibraryShown(data.custom);
+			const data = { userId: userId };
+			const res = await dispatch(getAllLibraryList(data)).unwrap();
+			setLibraryShown(res.custom);
 
-			const reading = data.default.filter(item => item.defaultType === 'reading');
+			const reading = res.default.filter(item => item.defaultType === 'reading');
 			if (reading.length > 0 && reading[0].books.length) {
 				const books = reading[0].books;
 				setBookReading(books[0].book);

@@ -1,6 +1,6 @@
 @import 'src/scss/abstracts/_global.scss';
 
-.creat-quotes-modal-container {
+.create-quotes-modal-container {
 	width: 100%;
 	height: 100%;
 	position: fixed;
@@ -32,7 +32,7 @@
 	}
 }
 
-.creat-quotes-modal-content {
+.create-quotes-modal-content {
 	width: 636px;
 	height: fit-content;
 	background-color: white;
@@ -40,8 +40,8 @@
 	overflow: hidden;
 }
 
-// creat quotes header
-.creat-quotes-modal__header {
+// create quotes header
+.create-quotes-modal__header {
 	padding: 16px 24px;
 	display: flex;
 	align-items: center;
@@ -55,7 +55,7 @@
 	}
 }
 
-.creat-quotes-modal__header__close {
+.create-quotes-modal__header__close {
 	padding: 8px;
 	background-color: #eff0f6;
 	border-radius: 50%;
@@ -65,13 +65,13 @@
 	}
 }
 
-// creat quotes body
-.creat-quotes-modal__body {
+// create quotes body
+.create-quotes-modal__body {
 	border-top: #f1f1f5 1px solid;
 	border-bottom: #f1f1f5 1px solid;
 }
 
-.creat-quotes-modal__body__text-field-edit-wrapper {
+.create-quotes-modal__body__text-field-edit-wrapper {
 	width: 100%;
 	position: relative;
 	&.default {
@@ -88,7 +88,7 @@
 	}
 }
 
-.creat-quotes-modal__body__text-field-edit {
+.create-quotes-modal__body__text-field-edit {
 	width: 100%;
 	outline: none;
 	z-index: 1000;
@@ -112,20 +112,20 @@
 	}
 }
 
-.creat-quotes-modal__body__text-field-edit::-webkit-scrollbar {
+.create-quotes-modal__body__text-field-edit::-webkit-scrollbar {
 	width: 8px;
 }
 
-.creat-quotes-modal__body__text-field-edit::-webkit-scrollbar-thumb {
+.create-quotes-modal__body__text-field-edit::-webkit-scrollbar-thumb {
 	border-radius: 10px;
 	background-color: #cfcfcf;
 }
 
-.creat-quotes-modal__body__text-field-edit::-webkit-scrollbar-track {
+.create-quotes-modal__body__text-field-edit::-webkit-scrollbar-track {
 	background-color: transparent;
 }
 
-.creat-quotes-modal__body__text-field-placeholder {
+.create-quotes-modal__body__text-field-placeholder {
 	position: absolute;
 	z-index: 1;
 	&.default {
@@ -155,12 +155,12 @@
 
 //-----------------------------------------------------------------------------
 
-.creat-quotes-modal__body__select-background-container {
+.create-quotes-modal__body__select-background-container {
 	position: relative;
 	margin: 16px 24px 0 24px;
 }
 
-.creat-quotes-modal__body__select-background-button-box {
+.create-quotes-modal__body__select-background-button-box {
 	z-index: 1500;
 	background-color: white;
 	position: absolute;
@@ -169,7 +169,7 @@
 	padding: 4px 0 4px 24px;
 }
 
-.creat-quotes-modal__body__select-background {
+.create-quotes-modal__body__select-background {
 	border-radius: 50%;
 	padding: 12px;
 
@@ -185,7 +185,7 @@
 	}
 }
 
-.creat-quotes-modal__body__select-background-box {
+.create-quotes-modal__body__select-background-box {
 	display: flex;
 	align-items: center;
 	gap: 24px;
@@ -201,7 +201,7 @@
 	}
 }
 
-.creat-quotes-modal__body__select-background-box-item {
+.create-quotes-modal__body__select-background-box-item {
 	width: 44px;
 	height: 44px;
 	outline: transparent 4px solid !important;
@@ -213,22 +213,22 @@
 
 //-----------------------------------------------------------------------------
 
-.creat-quotes-modal__body__add-options {
+.create-quotes-modal__body__add-options {
 	padding: 0 24px 24px;
 }
 
-.creat-quotes-modal__body__option-item {
+.create-quotes-modal__body__option-item {
 	margin-top: 32px;
 }
 
-.creat-quotes-modal__body__option-item__title {
+.create-quotes-modal__body__option-item__title {
 	font-size: 14px;
 	font-weight: 600;
 	line-height: 1.25rem;
 	margin-bottom: 24px;
 }
 
-.creat-quotes-modal__body__option-item__search-container.list__tags {
+.create-quotes-modal__body__option-item__search-container.list__tags {
 	padding: 8px 24px;
 	border-radius: 12px;
 	background-color: $ash-background;
@@ -238,7 +238,7 @@
 	height: fit-content;
 }
 
-.creat-quotes-modal__body__option-item__search-container {
+.create-quotes-modal__body__option-item__search-container {
 	height: 57px;
 	margin-bottom: 24px;
 	padding: 0px 24px;
@@ -265,7 +265,7 @@
 	margin-left: -14px !important;
 }
 
-.creat-quotes-modal__body__option-item-added {
+.create-quotes-modal__body__option-item-added {
 	width: 100%;
 	display: flex;
 	justify-content: space-between;
@@ -282,7 +282,7 @@
 	}
 }
 
-.creat-quotes-modal__body__option-item__search-result {
+.create-quotes-modal__body__option-item__search-result {
 	display: flex;
 	margin-top: 24px;
 	&.author {
@@ -293,7 +293,7 @@
 	}
 }
 
-.creat-quotes-modal__searched-item {
+.create-quotes-modal__searched-item {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -307,14 +307,14 @@
 	}
 }
 
-.creat-quotes-modal__author__avatar {
+.create-quotes-modal__author__avatar {
 	border-radius: 50%;
 	width: 80px;
 	height: 80px;
 	object-fit: cover;
 }
 
-.creat-quotes-modal__author__name {
+.create-quotes-modal__author__name {
 	font-size: 14px;
 	line-height: 20px;
 	text-align: center;
@@ -323,14 +323,14 @@
 	margin-top: 8px;
 }
 
-.creat-quotes-modal__book__image {
+.create-quotes-modal__book__image {
 	width: 100%;
 	height: 240px;
 	border-radius: 8px;
 	object-fit: cover;
 }
 
-.creat-quotes-modal__book__name {
+.create-quotes-modal__book__name {
 	font-weight: 600;
 	line-height: 23px;
 	text-align: center;
@@ -343,7 +343,7 @@
 	color: $ash;
 }
 
-.creat-quotes-modal__book__author {
+.create-quotes-modal__book__author {
 	font-weight: 500;
 	line-height: 19px;
 	text-align: center;
@@ -351,14 +351,14 @@
 	color: $ash-label;
 }
 
-.creat-quotes-modal__no-search-result {
+.create-quotes-modal__no-search-result {
 	margin-top: 24px;
 	color: $ash;
 	font-size: 15px;
 }
 
-// creat quotes footer
-.creat-quotes-modal__footer {
+// create quotes footer
+.create-quotes-modal__footer {
 	padding: 24px;
 	button {
 		width: 100%;

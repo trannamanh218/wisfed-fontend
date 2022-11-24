@@ -3,7 +3,7 @@ import FilterPane from 'shared/filter-pane';
 import SearchField from 'shared/search-field';
 import Post from 'shared/post';
 import FitlerOptions from 'shared/filter-options';
-import book, { getReviewsBook, getReviewsBookByFollowers, getReviewsBookByFriends } from 'reducers/redux-utils/book';
+import { getReviewsBook, getReviewsBookByFollowers, getReviewsBookByFriends } from 'reducers/redux-utils/book';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
@@ -19,7 +19,7 @@ import FormCheckGroup from 'shared/form-check-group';
 import Button from 'shared/button';
 import { REVIEW_TYPE } from 'constants/index';
 import searchreview from 'assets/images/search-review.png';
-import CreatePostModalContent from 'pages/home/components/newfeed/components/creat-post-modal-content';
+import CreatePostModalContent from 'pages/home/components/newfeed/components/create-post-modal-content';
 import Storage from 'helpers/Storage';
 import { checkUserLogin } from 'reducers/redux-utils/auth';
 
@@ -80,7 +80,7 @@ const ReviewTab = ({ currentTab }) => {
 	const initialCallApiStartValue = useRef(10);
 	const callApiStart = useRef(initialCallApiStartValue.current);
 	const callApiPerPage = useRef(10);
-	const creatPostModalContainer = useRef(null);
+	const createPostModalContainer = useRef(null);
 
 	const dispatch = useDispatch();
 	const { bookId } = useParams();
@@ -241,8 +241,8 @@ const ReviewTab = ({ currentTab }) => {
 	// xử lý tắt modal tạo review
 	useEffect(() => {
 		if (showModalCreatPost) {
-			creatPostModalContainer.current.addEventListener('mousedown', e => {
-				if (e.target === creatPostModalContainer.current) {
+			createPostModalContainer.current.addEventListener('mousedown', e => {
+				if (e.target === createPostModalContainer.current) {
 					hideCreatePostModal();
 				}
 			});
@@ -403,7 +403,7 @@ const ReviewTab = ({ currentTab }) => {
 				</Modal.Body>
 			</Modal>
 			{showModalCreatPost && (
-				<div className='newfeed__creat-post__modal' ref={creatPostModalContainer}>
+				<div className='newfeed__create-post__modal' ref={createPostModalContainer}>
 					<CreatePostModalContent
 						hideCreatePostModal={hideCreatePostModal}
 						showModalCreatPost={showModalCreatPost}

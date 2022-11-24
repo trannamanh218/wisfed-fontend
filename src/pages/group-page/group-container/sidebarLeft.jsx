@@ -31,12 +31,12 @@ const SidebarLeft = ({ listMyGroup, listAdminMyGroup }) => {
 								</Link>
 							);
 						})}
+						{listAdminMyGroup.length > defaultItems && (
+							<Link className='sidebar__view-more-btn--blue' to='/my-group'>
+								Xem thêm
+							</Link>
+						)}
 					</div>
-					{listAdminMyGroup.length > defaultItems && (
-						<Link className='sidebar__view-more-btn--blue' to='/my-group'>
-							Xem thêm
-						</Link>
-					)}
 				</>
 			)}
 
@@ -64,12 +64,12 @@ const SidebarLeft = ({ listMyGroup, listAdminMyGroup }) => {
 								</Link>
 							);
 						})}
+						{listMyGroup.length > defaultItems && (
+							<Link className='sidebar__view-more-btn--blue' to='/my-group'>
+								Xem thêm
+							</Link>
+						)}
 					</div>
-					{listMyGroup.length > defaultItems && (
-						<Link className='sidebar__view-more-btn--blue' to='/my-group'>
-							Xem thêm
-						</Link>
-					)}
 				</>
 			)}
 		</div>

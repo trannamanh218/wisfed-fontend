@@ -409,7 +409,8 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 							{postData.mentionsUsers && !!postData.mentionsUsers.length && (
 								<WithFriends data={postData.mentionsUsers} />
 							)}
-							{postData.verb === GROUP_POST_VERB && (
+							{(postData.verb === GROUP_POST_VERB ||
+								window.location.pathname.includes('/hashtag-group/')) && (
 								<>
 									<img className='post__user-icon' src={Play} alt='arrow' />
 									<Link
@@ -538,7 +539,7 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 				</div>
 			)}
 			{verbShareArray.indexOf(postData.verb) !== -1 && (
-				<div className='creat-post-modal-content__main__share-container'>
+				<div className='create-post-modal-content__main__share-container'>
 					{postData.verb === POST_VERB_SHARE && <PostShare postData={postData} directUrl={directUrl} />}
 					{postData.verb === QUOTE_VERB_SHARE && <QuoteCard data={postData.sharePost} isShare={true} />}
 					{postData.verb === GROUP_POST_VERB_SHARE && <PostShare postData={postData} directUrl={directUrl} />}

@@ -16,14 +16,14 @@
 	}
 }
 
-.newfeed__creat-post {
+.newfeed__create-post {
 	padding: 24px;
 	background-color: white;
 	border-radius: 12px;
 	margin-bottom: 24px;
 }
 
-.newfeed__creat-post__avatar-and-input {
+.newfeed__create-post__avatar-and-input {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
@@ -34,12 +34,12 @@
 	}
 }
 
-.newfeed__creat-post__avatar {
+.newfeed__create-post__avatar {
 	width: 40px;
 	height: 40px;
 }
 
-.newfeed__creat-post__input {
+.newfeed__create-post__input {
 	flex-grow: 1;
 	height: 100%;
 	border: none;
@@ -48,17 +48,17 @@
 	line-height: 1.5rem;
 }
 
-.newfeed__creat-post__input::placeholder {
+.newfeed__create-post__input::placeholder {
 	color: #a0a3bd;
 }
 
-.newfeed__creat-post__options {
+.newfeed__create-post__options {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
 }
 
-.newfeed__creat-post__options__item {
+.newfeed__create-post__options__item {
 	display: flex;
 	align-items: center;
 	gap: 16px;
@@ -70,7 +70,7 @@
 	}
 }
 
-.newfeed__creat-post__options__item__logo {
+.newfeed__create-post__options__item__logo {
 	svg {
 		width: 24px;
 		height: 24px;
@@ -98,7 +98,7 @@
 	}
 }
 
-.newfeed__creat-post__modal {
+.newfeed__create-post__modal {
 	position: fixed;
 	top: 0;
 	left: 0;
@@ -131,16 +131,16 @@
 
 @media only screen and (max-width: 1366px) {
 	.newfeed {
-		.creat-post-modal-content__main__body {
+		.create-post-modal-content__main__body {
 			padding: 13px 10px 13px 24px;
 		}
-		.creat-post-modal-content__main__header {
+		.create-post-modal-content__main__header {
 			padding: 12px 24px;
 		}
-		.creat-post-modal-content__main__options-and-submit {
+		.create-post-modal-content__main__options-and-submit {
 			padding: 17px;
 		}
-		.creat-post-modal-content__main__body__text-field-edit-wrapper {
+		.create-post-modal-content__main__body__text-field-edit-wrapper {
 			max-height: 290px;
 
 			.book-thumbnail.book-thumbnail-md {
@@ -163,16 +163,16 @@
 
 @media only screen and (max-width: 1280px) {
 	.newfeed {
-		.creat-post-modal-content__main__body {
+		.create-post-modal-content__main__body {
 			padding: 24px 10px 24px 24px;
 		}
-		.creat-post-modal-content__main__header {
+		.create-post-modal-content__main__header {
 			padding: 16px 24px;
 		}
-		.creat-post-modal-content__main__options-and-submit {
+		.create-post-modal-content__main__options-and-submit {
 			padding: 24px;
 		}
-		.creat-post-modal-content__main__body__text-field-edit-wrapper {
+		.create-post-modal-content__main__body__text-field-edit-wrapper {
 			max-height: 350px;
 
 			.book-thumbnail.book-thumbnail-md {
@@ -199,8 +199,8 @@
 		.btn-status.btn {
 			padding: 8px;
 		}
-		.newfeed__creat-post {
-			.newfeed__creat-post__options__item {
+		.newfeed__create-post {
+			.newfeed__create-post__options__item {
 				span {
 					font-size: 16px;
 				}

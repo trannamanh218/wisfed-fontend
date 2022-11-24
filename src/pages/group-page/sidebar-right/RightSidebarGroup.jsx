@@ -106,7 +106,7 @@ export default function RightSidebarGroup({ update }) {
 							})}
 						</>
 					) : (
-						<div className='hastag__group'>Không có kết quả</div>
+						<div className='hastag__group'>Không có dữ liệu</div>
 					)}
 				</>
 			)}

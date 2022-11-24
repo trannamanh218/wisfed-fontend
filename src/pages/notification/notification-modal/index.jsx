@@ -182,7 +182,12 @@ const NotificationModal = ({ setModalNoti, buttonModal }) => {
 		<div className='notification-modal' ref={notifymodal}>
 			<div className='notification-modal__header'>Thông báo</div>
 
-			<Tabs onSelect={eventKey => setCurrentTab(eventKey)} defaultActiveKey='all' activeKey={currentTab}>
+			<Tabs
+				onSelect={eventKey => setCurrentTab(eventKey)}
+				defaultActiveKey='all'
+				activeKey={currentTab}
+				className={isLoading && 'overflow-unset'}
+			>
 				<Tab eventKey='all' title='Tất cả'>
 					{isLoading ? (
 						<div className='notification-modal__loading-container'>

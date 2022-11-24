@@ -26,7 +26,7 @@ export const getQuoteList = createAsyncThunk('quote/get quote list', async (para
 	}
 });
 
-export const creatQuotes = createAsyncThunk('quote/creat quotes', async (data, { rejectWithValue }) => {
+export const creatQuotes = createAsyncThunk('quote/create quotes', async (data, { rejectWithValue }) => {
 	try {
 		const response = await Request.makePost(quoteAPI, data);
 		return response.data;
@@ -60,7 +60,7 @@ export const getlistQuotesLikedById = createAsyncThunk(
 	}
 );
 
-export const creatQuotesComment = createAsyncThunk('quote/creat quotes comment', async (data, { rejectWithValue }) => {
+export const creatQuotesComment = createAsyncThunk('quote/create quotes comment', async (data, { rejectWithValue }) => {
 	try {
 		const response = await Request.makePost(quoteCommentAPI, data);
 		return response.data;

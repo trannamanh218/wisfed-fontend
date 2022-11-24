@@ -1,4 +1,4 @@
-import CreatePost from 'pages/home/components/newfeed/components/creat-post';
+import CreatePost from 'pages/home/components/newfeed/components/create-post';
 import Post from 'shared/post';
 import './mainPostGroup.scss';
 import { getListPost } from 'reducers/redux-utils/group';

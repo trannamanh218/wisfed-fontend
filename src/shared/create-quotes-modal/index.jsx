@@ -1,4 +1,4 @@
-import './creat-quotes-modal.scss';
+import './create-quotes-modal.scss';
 import { CloseX, WeatherStars, BackChevron, Search } from 'components/svg';
 import { useEffect, useState, useRef, useCallback } from 'react';
 import classNames from 'classnames';
@@ -179,7 +179,7 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 	}, [categoryAddedList]);
 
 	const renderNoSearchResult = () => {
-		return <div className='creat-quotes-modal__no-search-result'>Không có kết quả phù hợp</div>;
+		return <div className='create-quotes-modal__no-search-result'>Không có kết quả phù hợp</div>;
 	};
 
 	const creatQuotesFnc = async () => {
@@ -212,29 +212,29 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 	};
 
 	return (
-		<div className='creat-quotes-modal-content'>
-			<div className='creat-quotes-modal__header'>
-				<div style={{ visibility: 'hidden' }} className='creat-quotes-modal__header__close'>
+		<div className='create-quotes-modal-content'>
+			<div className='create-quotes-modal__header'>
+				<div style={{ visibility: 'hidden' }} className='create-quotes-modal__header__close'>
 					<CloseX />
 				</div>
 				<h5>Tạo Quotes</h5>
-				<button className='creat-quotes-modal__header__close' onClick={hideCreatQuotesModal}>
+				<button className='create-quotes-modal__header__close' onClick={hideCreatQuotesModal}>
 					<CloseX />
 				</button>
 			</div>
-			<div className='creat-quotes-modal__body'>
+			<div className='create-quotes-modal__body'>
 				{backgroundColor ? (
 					<div
-						className='creat-quotes-modal__body__text-field-edit-wrapper has-background'
+						className='create-quotes-modal__body__text-field-edit-wrapper has-background'
 						style={{ backgroundImage: `linear-gradient(${backgroundColor})` }}
 					>
 						<div
-							className='creat-quotes-modal__body__text-field-edit has-background'
+							className='create-quotes-modal__body__text-field-edit has-background'
 							contentEditable={true}
 							ref={textFieldEdit}
 						></div>
 						<div
-							className={classNames('creat-quotes-modal__body__text-field-placeholder has-background', {
+							className={classNames('create-quotes-modal__body__text-field-placeholder has-background', {
 								'hide': !showTextFieldEditPlaceholder,
 							})}
 						>
@@ -242,14 +242,14 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 						</div>
 					</div>
 				) : (
-					<div className='creat-quotes-modal__body__text-field-edit-wrapper default'>
+					<div className='create-quotes-modal__body__text-field-edit-wrapper default'>
 						<div
-							className='creat-quotes-modal__body__text-field-edit default'
+							className='create-quotes-modal__body__text-field-edit default'
 							contentEditable={true}
 							ref={textFieldEdit}
 						></div>
 						<div
-							className={classNames('creat-quotes-modal__body__text-field-placeholder default', {
+							className={classNames('create-quotes-modal__body__text-field-placeholder default', {
 								'hide': !showTextFieldEditPlaceholder,
 							})}
 						>
@@ -258,10 +258,10 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 					</div>
 				)}
 
-				<div className='creat-quotes-modal__body__select-background-container'>
-					<div className='creat-quotes-modal__body__select-background-button-box'>
+				<div className='create-quotes-modal__body__select-background-container'>
+					<div className='create-quotes-modal__body__select-background-button-box'>
 						<button
-							className={classNames('creat-quotes-modal__body__select-background', {
+							className={classNames('create-quotes-modal__body__select-background', {
 								'open-button': !showTextFieldBackgroundSelect,
 								'close-button': showTextFieldBackgroundSelect,
 							})}
@@ -272,12 +272,12 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 					</div>
 
 					<div
-						className={classNames('creat-quotes-modal__body__select-background-box', {
+						className={classNames('create-quotes-modal__body__select-background-box', {
 							'show': showTextFieldBackgroundSelect,
 						})}
 					>
 						<button
-							className='creat-quotes-modal__body__select-background-box-item'
+							className='create-quotes-modal__body__select-background-box-item'
 							style={{
 								border: '#d9dbe9 4px solid',
 								background: 'white',
@@ -290,19 +290,19 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 								key={index}
 								style={{ backgroundImage: `linear-gradient(${item})` }}
 								onClick={() => changeBackground(item, index)}
-								className={classNames('creat-quotes-modal__body__select-background-box-item', {
+								className={classNames('create-quotes-modal__body__select-background-box-item', {
 									'active': index === colorActiveIndex,
 								})}
 							></button>
 						))}
 					</div>
 				</div>
-				<div className='creat-quotes-modal__body__add-options'>
-					<div className='creat-quotes-modal__body__option-item'>
-						<div className='creat-quotes-modal__body__option-item__title'>*Sách (Bắt buộc)</div>
-						<div className='creat-quotes-modal__body__option-item__search-container'>
+				<div className='create-quotes-modal__body__add-options'>
+					<div className='create-quotes-modal__body__option-item'>
+						<div className='create-quotes-modal__body__option-item__title'>*Sách (Bắt buộc)</div>
+						<div className='create-quotes-modal__body__option-item__search-container'>
 							{!_.isEmpty(bookAdded) ? (
-								<div className='creat-quotes-modal__body__option-item-added'>
+								<div className='create-quotes-modal__body__option-item-added'>
 									<span>{bookAdded.name}</span>
 									<button onClick={() => setBookAdded({})}>
 										<CloseX />
@@ -322,21 +322,21 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 						{inputBookValue.trim() !== '' && getDataFinish && (
 							<>
 								{bookSearchedList.length > 0 ? (
-									<div className='creat-quotes-modal__body__option-item__search-result book'>
+									<div className='create-quotes-modal__body__option-item__search-result book'>
 										{bookSearchedList.map(item => (
 											<div
-												className='creat-quotes-modal__searched-item book'
+												className='create-quotes-modal__searched-item book'
 												key={item.id}
 												onClick={() => addBook(item)}
 											>
 												<img
-													className='creat-quotes-modal__book__image'
+													className='create-quotes-modal__book__image'
 													src={item?.frontBookCover || item?.images[0] || bookDefault}
 													onError={e => e.target.setAttribute('src', bookDefault)}
 													alt='book'
 												/>
-												<div className='creat-quotes-modal__book__name'>{item?.name}</div>
-												<div className='creat-quotes-modal__book__author'>
+												<div className='create-quotes-modal__book__name'>{item?.name}</div>
+												<div className='create-quotes-modal__book__author'>
 													{item?.authors[0]?.authorName}
 												</div>
 											</div>
@@ -348,8 +348,8 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 							</>
 						)}
 					</div>
-					<div className='creat-quotes-modal__body__option-item'>
-						<div className='creat-quotes-modal__body__option-item__title'>Chủ đề</div>
+					<div className='create-quotes-modal__body__option-item'>
+						<div className='create-quotes-modal__body__option-item__title'>Chủ đề</div>
 						<AddAndSearchCategories
 							categoryAddedList={categoryAddedList}
 							categorySearchedList={categorySearchedList}
@@ -373,7 +373,7 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 					/>
 				</div>
 			</div>
-			<div className='creat-quotes-modal__footer'>
+			<div className='create-quotes-modal__footer'>
 				<button
 					className={!showTextFieldEditPlaceholder && !_.isEmpty(bookAdded) ? 'active' : ''}
 					disabled={!showTextFieldEditPlaceholder && !_.isEmpty(bookAdded) ? false : true}

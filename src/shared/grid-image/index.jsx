@@ -115,8 +115,8 @@ const GridImage = ({ images, inPost, postId }) => {
 								<div
 									className={
 										inPost
-											? `creat-post-modal-content__main__body__image img-${index}-${postId}`
-											: `creat-post-modal-content__main__body__image img-${index}`
+											? `create-post-modal-content__main__body__image img-${index}-${postId}`
+											: `create-post-modal-content__main__body__image img-${index}`
 									}
 									key={index}
 									onClick={() => {
@@ -154,8 +154,8 @@ const GridImage = ({ images, inPost, postId }) => {
 												<div
 													className={
 														inPost
-															? `creat-post-modal-content__main__body__image img-${index}-${postId}`
-															: `creat-post-modal-content__main__body__image img-${index}`
+															? `create-post-modal-content__main__body__image img-${index}-${postId}`
+															: `create-post-modal-content__main__body__image img-${index}`
 													}
 													key={index}
 													onClick={() => {
@@ -175,8 +175,8 @@ const GridImage = ({ images, inPost, postId }) => {
 									<div
 										className={
 											inPost
-												? `creat-post-modal-content__main__body__image img-4-${postId}`
-												: `creat-post-modal-content__main__body__image img-4`
+												? `create-post-modal-content__main__body__image img-4-${postId}`
+												: `create-post-modal-content__main__body__image img-4`
 										}
 										onClick={() => {
 											setIsOpen(true);
@@ -188,7 +188,7 @@ const GridImage = ({ images, inPost, postId }) => {
 										) : (
 											<img src={URL.createObjectURL(images[4])} alt='image' />
 										)}
-										<div className='creat-post-modal-content__main__body__image-over'>
+										<div className='create-post-modal-content__main__body__image-over'>
 											+{images.length - 4}
 										</div>
 									</div>

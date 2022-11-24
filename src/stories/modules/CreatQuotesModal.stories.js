@@ -1,7 +1,7 @@
-import CreatQuotesModal from 'shared/creat-quotes-modal';
+import CreatQuotesModal from 'shared/create-quotes-modal';
 
 export default {
-	title: 'Components/Modules/Creat quotes modal',
+	title: 'Components/Modules/Create quotes modal',
 	component: CreatQuotesModal,
 };
 

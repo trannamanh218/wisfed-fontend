@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
 import { BookIcon, Feather, CategoryIcon, GroupIcon } from 'components/svg';
-import CreatePostModalContent from '../creat-post-modal-content';
+import CreatePostModalContent from '../create-post-modal-content';
 import { useDispatch, useSelector } from 'react-redux';
 import UserAvatar from 'shared/user-avatar';
 import PropTypes from 'prop-types';
@@ -18,7 +18,7 @@ function CreatePost({ onChangeNewPost }) {
 	const [showModalCreatPost, setShowModalCreatPost] = useState(false);
 	const [option, setOption] = useState({});
 	const [showSubModal, setShowSubModal] = useState(false);
-	const creatPostModalContainer = useRef(null);
+	const createPostModalContainer = useRef(null);
 	const scrollBlocked = useRef(false);
 	const location = useLocation();
 	const [modalShow, setModalShow] = useState(false);
@@ -45,7 +45,7 @@ function CreatePost({ onChangeNewPost }) {
 			{
 				value: 'addBook',
 				title: 'Sách',
-				icon: <BookIcon className='newfeed__creat-post__options__item__logo--book' />,
+				icon: <BookIcon className='newfeed__create-post__options__item__logo--book' />,
 				message: 'Không tìm thấy cuốn sách nào',
 			},
 			{
@@ -57,7 +57,7 @@ function CreatePost({ onChangeNewPost }) {
 			{
 				value: 'addCategory',
 				title: 'Chủ đề',
-				icon: <CategoryIcon className='newfeed__creat-post__options__item__logo--category' />,
+				icon: <CategoryIcon className='newfeed__create-post__options__item__logo--category' />,
 				message: 'Không tìm thấy chủ đề',
 			},
 		];
@@ -66,7 +66,7 @@ function CreatePost({ onChangeNewPost }) {
 			{
 				value: 'addBook',
 				title: 'Sách',
-				icon: <BookIcon className='newfeed__creat-post__options__item__logo--book' />,
+				icon: <BookIcon className='newfeed__create-post__options__item__logo--book' />,
 				message: 'Không tìm thấy cuốn sách nào',
 			},
 			{
@@ -78,13 +78,13 @@ function CreatePost({ onChangeNewPost }) {
 			{
 				value: 'addCategory',
 				title: 'Chủ đề',
-				icon: <CategoryIcon className='newfeed__creat-post__options__item__logo--category' />,
+				icon: <CategoryIcon className='newfeed__create-post__options__item__logo--category' />,
 				message: 'Không tìm thấy chủ đề',
 			},
 			{
 				value: 'addFriends',
 				title: 'Bạn bè',
-				icon: <GroupIcon className='newfeed__creat-post__options__item__logo--friend' />,
+				icon: <GroupIcon className='newfeed__create-post__options__item__logo--friend' />,
 				message: 'Không tìm thấy bạn bè',
 			},
 		];
@@ -97,7 +97,7 @@ function CreatePost({ onChangeNewPost }) {
 	}, [bookForCreatePost, postDataShare, updateImgPost]);
 
 	const handleHideCreatePost = e => {
-		if (e.target === creatPostModalContainer.current) {
+		if (e.target === createPostModalContainer.current) {
 			if (isWarning) {
 				setModalShow(true);
 			} else {
@@ -115,14 +115,14 @@ function CreatePost({ onChangeNewPost }) {
 
 	useEffect(() => {
 		if (showModalCreatPost) {
-			creatPostModalContainer.current.addEventListener('mousedown', handleHideCreatePost);
+			createPostModalContainer.current.addEventListener('mousedown', handleHideCreatePost);
 			blockScroll();
 		} else {
 			allowScroll();
 		}
 		return () => {
-			if (creatPostModalContainer.current) {
-				creatPostModalContainer.current.removeEventListener('mousedown', handleHideCreatePost);
+			if (createPostModalContainer.current) {
+				createPostModalContainer.current.removeEventListener('mousedown', handleHideCreatePost);
 			}
 		};
 	}, [showModalCreatPost, isWarning]);
@@ -176,8 +176,8 @@ function CreatePost({ onChangeNewPost }) {
 
 	const renderOptionList = () => {
 		return optionList.map(item => (
-			<div className='newfeed__creat-post__options__item' key={item.title} onClick={() => handleCheck(item)}>
-				<div className='newfeed__creat-post__options__item__logo'>{item.icon}</div>
+			<div className='newfeed__create-post__options__item' key={item.title} onClick={() => handleCheck(item)}>
+				<div className='newfeed__create-post__options__item__logo'>{item.icon}</div>
 				<span className='text-'>{item.title.charAt(0).toUpperCase() + item.title.slice(1)}</span>
 			</div>
 		));
@@ -201,11 +201,11 @@ function CreatePost({ onChangeNewPost }) {
 	};
 
 	return (
-		<div className='newfeed__creat-post'>
-			<div className='newfeed__creat-post__avatar-and-input'>
-				<UserAvatar className='newfeed__creat-post__avatar' source={userInfo?.avatarImage} />
+		<div className='newfeed__create-post'>
+			<div className='newfeed__create-post__avatar-and-input'>
+				<UserAvatar className='newfeed__create-post__avatar' source={userInfo?.avatarImage} />
 				<input
-					className='newfeed__creat-post__input'
+					className='newfeed__create-post__input'
 					placeholder='Tạo bài viết của bạn ...'
 					onClick={() => {
 						handleUserLogin();
@@ -214,7 +214,7 @@ function CreatePost({ onChangeNewPost }) {
 				/>
 			</div>
 			<div
-				className='newfeed__creat-post__options'
+				className='newfeed__create-post__options'
 				onClick={() => {
 					handleUserLogin();
 				}}
@@ -222,7 +222,7 @@ function CreatePost({ onChangeNewPost }) {
 				{renderOptionList()}
 			</div>
 			{showModalCreatPost && (
-				<div className='newfeed__creat-post__modal' ref={creatPostModalContainer}>
+				<div className='newfeed__create-post__modal' ref={createPostModalContainer}>
 					<CreatePostModalContent
 						hideCreatePostModal={hideCreatePostModal}
 						showModalCreatPost={showModalCreatPost}
