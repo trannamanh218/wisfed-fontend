@@ -1,28 +1,25 @@
 import PropTypes from 'prop-types';
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState, useEffect, useCallback } from 'react';
 import { CloseX } from 'components/svg';
 import Input from 'shared/input';
 import './inputHashtag.scss';
 import { hashtagRegex } from 'constants';
+import _ from 'lodash';
 
-const InputHashtag = ({ listHashtags, setListHashtags, setLastTag, label, isRequired }) => {
-	const dataRef = useRef('');
+// tạo hashtag regex loại bỏ cờ 'g' để sử dụng hàm test()
+const hashtagRegexRemoveGFlag = new RegExp(hashtagRegex, 'i');
+
+const InputHashtag = ({ listHashtags, setListHashtags, setLastTag, label, showError, setShowError }) => {
 	const hashtagInputWrapper = useRef(null);
 	const inputRefHashtag = useRef('');
 
 	const [inputHashtag, setInputHashtag] = useState('');
-	const [show, setShow] = useState(false);
-	const [justAddedFirstOneHashTag, setJustAddedFirstOneHashTag] = useState(false);
+
+	console.log('err', showError);
 
 	const handleChangeHashtag = e => {
 		setInputHashtag(e.target.value);
-		const hashtagsMatched = e.target.value.match(hashtagRegex);
-
-		if (!hashtagsMatched && e.target.value.trim().length) {
-			setShow(true);
-		} else {
-			setShow(false);
-		}
+		debounceFnc(e.target.value);
 		if (hashtagInputWrapper.current) {
 			hashtagInputWrapper.current.style.width = inputRefHashtag.current.value.length + 0.5 + 'ch';
 		}
@@ -34,64 +31,56 @@ const InputHashtag = ({ listHashtags, setListHashtags, setLastTag, label, isRequ
 	};
 
 	useEffect(() => {
-		setLastTag(
-			inputHashtag
-				.normalize('NFD')
-				.replace(/[\u0300-\u036f]/g, '')
-				.replace(/đ/g, 'd')
-				.replace(/Đ/g, 'D')
-		);
-	}, [inputHashtag]);
-
-	useEffect(() => {
-		const dataCheck = listHashtags.filter(item => dataRef.current === item);
-		if (dataRef.current !== '' && dataCheck.length < 1) {
-			const check = dataRef.current
-				.normalize('NFD')
-				.replace(/[\u0300-\u036f]/g, '')
-				.replace(/đ/g, 'd')
-				.replace(/Đ/g, 'D');
-			const newList = [...listHashtags, check];
-			setShow(false);
-			setListHashtags(newList);
-			setJustAddedFirstOneHashTag(true);
-		}
-	}, [dataRef.current]);
-
-	useEffect(() => {
-		if (justAddedFirstOneHashTag && listHashtags.length === 1) {
-			inputRefHashtag.current.focus();
-		}
-	}, [justAddedFirstOneHashTag, listHashtags]);
+		inputRefHashtag.current.focus();
+	}, [listHashtags]);
 
 	const handleCreateHashtags = e => {
-		// if (e.keyCode === 32 && hashtagRegex.test(inputHashtag)) {
-		// 	dataRef.current = inputHashtag.trim();
-		// 	inputRefHashtag.current.value = '';
-		// }
-
 		if (e.keyCode === 32) {
-			console.log('text', inputRefHashtag.current.value);
-			const value = inputRefHashtag.current.value;
-			if (hashtagRegex.test(value)) {
-				if (!listHashtags.length) {
-					setListHashtags([value]);
-				}
+			e.preventDefault();
+			const value = e.target.value;
+			if (hashtagRegexRemoveGFlag.test(value) && !listHashtags.includes(value)) {
+				const newValue = value
+					.normalize('NFD')
+					.replace(/[\u0300-\u036f]/g, '')
+					.replace(/đ/g, 'd')
+					.replace(/Đ/g, 'D');
+				setListHashtags([...listHashtags, newValue]);
 			}
+			inputRefHashtag.current.value = '';
+			setLastTag('');
 		}
 	};
 
+	const debounceFnc = useCallback(
+		_.debounce(textValue => {
+			if (textValue.trim().length) {
+				if (!hashtagRegexRemoveGFlag.test(textValue)) {
+					setShowError(true);
+				} else {
+					setShowError(false);
+					setLastTag(
+						textValue
+							.normalize('NFD')
+							.replace(/[\u0300-\u036f]/g, '')
+							.replace(/đ/g, 'd')
+							.replace(/Đ/g, 'D')
+					);
+				}
+			} else {
+				setShowError(false);
+			}
+		}, 200),
+		[]
+	);
+
 	return (
 		<div className='input-form-group'>
-			<div className='input-form-group__label'>
-				{label}
-				{isRequired && <span style={{ marginLeft: '4px', color: 'red' }}>*</span>}
-			</div>
+			<div className='input-form-group__label'>{label}</div>
 			<div className='input-form-group__list' onClick={() => inputRefHashtag.current.focus()}>
 				{listHashtags.length > 0 ? (
 					<div className='input-form-group__list__cards'>
-						{listHashtags.map(item => (
-							<span key={item}>
+						{listHashtags.map((item, index) => (
+							<span key={index}>
 								<span>{item}</span>
 								<button
 									className='close__author'
@@ -123,7 +112,7 @@ const InputHashtag = ({ listHashtags, setListHashtags, setLastTag, label, isRequ
 					/>
 				)}
 			</div>
-			{show && inputHashtag && <div className='input-hashtag-warning'>Vui lòng nhập đúng định dạng</div>}
+			{showError && inputHashtag && <div className='input-hashtag-warning'>Vui lòng nhập đúng định dạng</div>}
 		</div>
 	);
 };
@@ -133,7 +122,8 @@ InputHashtag.defaultProps = {
 	setListHashtags: () => {},
 	setLastTag: () => {},
 	label: 'Hashtag',
-	isRequired: false,
+	showError: false,
+	setShowError: () => {},
 };
 
 InputHashtag.propTypes = {
@@ -141,7 +131,8 @@ InputHashtag.propTypes = {
 	setListHashtags: PropTypes.func,
 	setLastTag: PropTypes.func,
 	label: PropTypes.string,
-	isRequired: PropTypes.bool,
+	showError: PropTypes.bool,
+	setShowError: PropTypes.func,
 };
 
 export default InputHashtag;

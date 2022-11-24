@@ -26,26 +26,23 @@ const PopupCreateGroup = ({ handleClose }) => {
 	const [isShowBtn, setIsShowBtn] = useState(false);
 	const [kindOfGroup, setKindOfGroup] = useState({});
 	const [lastTag, setLastTag] = useState('');
-
 	const [listAuthors, setListAuthors] = useState([]);
 	const [inputAuthorValue, setInputAuthorValue] = useState('');
 	const [authorAddedList, setAuthorAddedList] = useState([]);
 	const [authorSearchedList, setAuthorSearchedList] = useState([]);
 	const [hasMoreAuthorsEllipsis, setHasMoreAuthorsEllipsis] = useState(false);
-
 	const [categoryIdBook, setCategoryIdBook] = useState([]);
 	const [inputCategoryValue, setInputCategoryValue] = useState('');
 	const [categoryAddedList, setCategoryAddedList] = useState([]);
 	const [categorySearchedList, setCategorySearchedList] = useState([]);
 	const [hasMoreCategoriesEllipsis, setHasMoreCategoriesEllipsis] = useState(false);
-
 	const [listBookAdd, setListBookAdd] = useState([]);
 	const [inputBookValue, setInputBookValue] = useState('');
 	const [bookAddedList, setBookAddedList] = useState([]);
 	const [bookSearchedList, setBookSearchedList] = useState([]);
 	const [hasMoreBooksEllipsis, setHasMoreBooksEllipsis] = useState(false);
-
 	const [getDataFinish, setGetDataFinish] = useState(false);
+	const [showError, setShowError] = useState(false);
 
 	const authorInputContainer = useRef(null);
 	const authorInputWrapper = useRef(null);
@@ -255,7 +252,7 @@ const PopupCreateGroup = ({ handleClose }) => {
 	};
 
 	useEffect(() => {
-		if (image !== undefined && inputDiscription !== '' && inputNameGroup !== '') {
+		if (image !== undefined && inputDiscription !== '' && inputNameGroup !== '' && !showError) {
 			switch (kindOfGroup.value) {
 				case 'book':
 					if (listBookAdd.length > 0 && categoryIdBook.length > 0) {
@@ -281,7 +278,7 @@ const PopupCreateGroup = ({ handleClose }) => {
 		} else {
 			setIsShowBtn(false);
 		}
-	}, [image, listAuthors, kindOfGroup, inputDiscription, inputNameGroup, listBookAdd, categoryIdBook]);
+	}, [image, listAuthors, kindOfGroup, inputDiscription, inputNameGroup, listBookAdd, categoryIdBook, showError]);
 
 	const createGroup = async () => {
 		if (isShowBtn) {
@@ -516,7 +513,13 @@ const PopupCreateGroup = ({ handleClose }) => {
 					/>
 				</div>
 
-				<InputHashtag listHashtags={listHashtags} setListHashtags={setListHashtags} setLastTag={setLastTag} />
+				<InputHashtag
+					listHashtags={listHashtags}
+					setListHashtags={setListHashtags}
+					setLastTag={setLastTag}
+					showError={showError}
+					setShowError={setShowError}
+				/>
 
 				<div className={!isShowBtn ? 'disable-btn' : `form-button`} onClick={createGroup}>
 					<button>Tạo nhóm</button>

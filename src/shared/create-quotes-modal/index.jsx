@@ -3,7 +3,6 @@ import { CloseX, WeatherStars, BackChevron, Search } from 'components/svg';
 import { useEffect, useState, useRef, useCallback } from 'react';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
-// import avatarTest from 'assets/images/avatar2.png';
 import bookDefault from 'assets/images/default-book.png';
 import { getSuggestionForPost } from 'reducers/redux-utils/activity';
 import { useDispatch } from 'react-redux';
@@ -28,13 +27,17 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 	const [categoryAddedList, setCategoryAddedList] = useState([]);
 	const [getDataFinish, setGetDataFinish] = useState(false);
 	const [categoryAddedIdList, setCategoryAddedIdList] = useState([]);
+	const [listHashtags, setListHashtags] = useState([]);
+	const [hasMoreEllipsis, setHasMoreEllipsis] = useState(false);
+	const [lastTag, setLastTag] = useState('');
+	const [showError, setShowError] = useState(false);
+	const [checkActiveButton, setCheckActiveButton] = useState(false);
+
 	const textFieldEdit = useRef(null);
 	const categoryInputContainer = useRef(null);
 	const categoryInputWrapper = useRef(null);
 	const categoryInput = useRef(null);
-	const [listHashtags, setListHashtags] = useState([]);
-	const [hasMoreEllipsis, setHasMoreEllipsis] = useState(false);
-	const [lastTag, setLastTag] = useState('');
+	const limitedValue = useRef(5);
 
 	const dispatch = useDispatch();
 	const colorData = [
@@ -73,13 +76,25 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 	};
 
 	useEffect(() => {
-		textFieldEdit.current.addEventListener('input', handleTextFieldEditEvents);
-		textFieldEdit.current.addEventListener('keypress', handleTextFieldEditEvents);
-		return () => {
-			textFieldEdit.current.removeEventListener('input', handleTextFieldEditEvents);
-			textFieldEdit.current.removeEventListener('keypress', handleTextFieldEditEvents);
-		};
+		if (textFieldEdit.current) {
+			textFieldEdit.current.addEventListener('input', handleTextFieldEditEvents);
+			textFieldEdit.current.addEventListener('keypress', handleTextFieldEditEvents);
+			return () => {
+				if (textFieldEdit.current) {
+					textFieldEdit.current.removeEventListener('input', handleTextFieldEditEvents);
+					textFieldEdit.current.removeEventListener('keypress', handleTextFieldEditEvents);
+				}
+			};
+		}
 	}, [showTextFieldEditPlaceholder]);
+
+	useEffect(() => {
+		if (!showTextFieldEditPlaceholder && !_.isEmpty(bookAdded) && !showError) {
+			setCheckActiveButton(true);
+		} else {
+			setCheckActiveButton(false);
+		}
+	}, [showTextFieldEditPlaceholder, bookAdded, showError]);
 
 	const changeBackground = (item, index) => {
 		setBackgroundColor(item);
@@ -140,17 +155,16 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 		}
 	};
 
-	const limitedValue = 5;
 	const addCategory = category => {
 		if (categoryAddedList.filter(categoryAdded => categoryAdded.id === category.id).length > 0) {
 			removeCategory(category.id);
 		} else {
 			const categoryArrayTemp = [...categoryAddedList];
-			if (categoryArrayTemp.length < limitedValue) {
+			if (categoryArrayTemp.length < limitedValue.current) {
 				categoryArrayTemp.push(category);
 			} else {
 				const customId = 'custom-id-handleAddToQuotes-addAuthor';
-				toast.warning(`Chỉ được chọn tối đa ${limitedValue} chủ đề trong 1 lần tạo quotes`, {
+				toast.warning(`Chỉ được chọn tối đa ${limitedValue.current} chủ đề trong 1 lần tạo quotes`, {
 					toastId: customId,
 				});
 			}
@@ -370,13 +384,15 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 						listHashtags={listHashtags}
 						setListHashtags={setListHashtags}
 						setLastTag={setLastTag}
+						showError={showError}
+						setShowError={setShowError}
 					/>
 				</div>
 			</div>
 			<div className='create-quotes-modal__footer'>
 				<button
-					className={!showTextFieldEditPlaceholder && !_.isEmpty(bookAdded) ? 'active' : ''}
-					disabled={!showTextFieldEditPlaceholder && !_.isEmpty(bookAdded) ? false : true}
+					className={checkActiveButton ? 'active' : ''}
+					disabled={checkActiveButton ? false : true}
 					onClick={creatQuotesFnc}
 				>
 					Tạo Quotes

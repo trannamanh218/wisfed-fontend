@@ -935,13 +935,12 @@ CreatePostModalContent.propTypes = {
 	hideCreatePostModal: PropTypes.func,
 	showModalCreatPost: PropTypes.bool,
 	option: PropTypes.object,
-	setOption: PropTypes.func,
 	onChangeOption: PropTypes.func,
 	onChangeNewPost: PropTypes.func,
-	renderBookReading: PropTypes.object,
 	setShowModalCreatPost: PropTypes.func,
 	showSubModal: PropTypes.bool,
-	bookInfoProp: PropTypes.object,
+	bookForCreatePost: PropTypes.object,
+	message: PropTypes.string,
 };
 
 export default CreatePostModalContent;

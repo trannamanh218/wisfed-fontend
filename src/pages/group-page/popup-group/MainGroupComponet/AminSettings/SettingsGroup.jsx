@@ -1,4 +1,4 @@
-import React, { useRef, useState, useCallback, useEffect } from 'react';
+import { useRef, useState, useCallback, useEffect } from 'react';
 import Input from 'shared/input';
 import SelectBox from 'shared/select-box';
 import { BackArrow } from 'components/svg';
@@ -20,38 +20,29 @@ function SettingsGroup({ handleChange, data, fetchData }) {
 		{ value: 30, title: 'Thử thách đọc sách' },
 	];
 
-	const textArea = useRef(null);
-	const groupNameInput = useRef('');
-	const groupSettingContainer = useRef(null);
-	const dispatch = useDispatch();
-
 	const [defaultCategoryOption, setDefaultCategoryOption] = useState({ value: 'default', title: 'Chọn chủ đề' });
-
 	const [inputNameGroup, setInputNameGroup] = useState(data.name);
 	const [inputDescription, setInputDescription] = useState(data.description);
 	const [listHashtags, setListHashtags] = useState([]);
 	const [isShowBtn, setIsShowBtn] = useState(false);
 	const [lastTag, setLastTag] = useState('');
-
 	const [listAuthors, setListAuthors] = useState([]);
 	const [inputAuthorValue, setInputAuthorValue] = useState('');
 	const [authorAddedList, setAuthorAddedList] = useState([]);
 	const [authorSearchedList, setAuthorSearchedList] = useState([]);
 	const [hasMoreAuthorsEllipsis, setHasMoreAuthorsEllipsis] = useState(false);
-
 	const [categoryIdBook, setCategoryIdBook] = useState([]);
 	const [inputCategoryValue, setInputCategoryValue] = useState('');
 	const [categoryAddedList, setCategoryAddedList] = useState([]);
 	const [categorySearchedList, setCategorySearchedList] = useState([]);
 	const [hasMoreCategoriesEllipsis, setHasMoreCategoriesEllipsis] = useState(false);
-
 	const [listBookAdd, setListBookAdd] = useState([]);
 	const [inputBookValue, setInputBookValue] = useState('');
 	const [bookAddedList, setBookAddedList] = useState([]);
 	const [bookSearchedList, setBookSearchedList] = useState([]);
 	const [hasMoreBooksEllipsis, setHasMoreBooksEllipsis] = useState(false);
-
 	const [getDataFinish, setGetDataFinish] = useState(false);
+	const [showError, setShowError] = useState(false);
 
 	const authorInputContainer = useRef(null);
 	const authorInputWrapper = useRef(null);
@@ -64,6 +55,11 @@ function SettingsGroup({ handleChange, data, fetchData }) {
 	const bookInputContainer = useRef(null);
 	const bookInputWrapper = useRef(null);
 	const bookInput = useRef(null);
+
+	const textArea = useRef(null);
+	const groupNameInput = useRef('');
+	const groupSettingContainer = useRef(null);
+	const dispatch = useDispatch();
 
 	const onInputChange = f => e => {
 		const value = e.target.value.trim();
@@ -295,7 +291,7 @@ function SettingsGroup({ handleChange, data, fetchData }) {
 	}, []);
 
 	useEffect(() => {
-		if (lastTag !== '#' && inputDescription !== '' && inputNameGroup !== '') {
+		if (lastTag !== '#' && inputDescription !== '' && inputNameGroup !== '' && !showError) {
 			switch (data.groupType) {
 				case 'book':
 					if (listBookAdd.length > 0 && categoryIdBook.length > 0) {
@@ -321,7 +317,7 @@ function SettingsGroup({ handleChange, data, fetchData }) {
 		} else {
 			setIsShowBtn(false);
 		}
-	}, [listAuthors, lastTag, inputDescription, inputNameGroup, listHashtags, listBookAdd, categoryIdBook]);
+	}, [listAuthors, lastTag, inputDescription, inputNameGroup, listHashtags, listBookAdd, categoryIdBook, showError]);
 
 	useEffect(() => {
 		const authorIdArr = [];
@@ -479,6 +475,8 @@ function SettingsGroup({ handleChange, data, fetchData }) {
 						listHashtags={listHashtags}
 						setListHashtags={setListHashtags}
 						setLastTag={setLastTag}
+						showError={showError}
+						setShowError={setShowError}
 					/>
 
 					<div className={!isShowBtn ? 'disable-btn' : `form-button`} onClick={updateGroup}>
