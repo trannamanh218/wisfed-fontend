@@ -8,7 +8,7 @@ import { Route, Routes, useLocation } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import { checkLogin, getCheckJwt } from 'reducers/redux-utils/auth';
 import { changeKey } from 'reducers/redux-utils/forget-password';
-import { getAllLibraryList, getAllMyLibraryRedux } from 'reducers/redux-utils/library';
+import { getAllLibraryList, setAllMyLibraryRedux } from 'reducers/redux-utils/library';
 import 'scss/main.scss';
 
 // pages and components
@@ -76,7 +76,7 @@ function App({ children }) {
 	const getAllMyLibrary = async userId => {
 		try {
 			const data = await dispatch(getAllLibraryList({ userId })).unwrap();
-			dispatch(getAllMyLibraryRedux(data));
+			dispatch(setAllMyLibraryRedux(data));
 		} catch (err) {
 			NotificationError(err);
 		}
@@ -130,7 +130,7 @@ function App({ children }) {
 				<Route path='/quotes/all' element={<QuoteAll />} />
 				<Route path='/quotes/category/:categoryId' element={<QuotesByCategory />} />
 				<Route path='/quotes/hashtag/:hashtag' element={<QuotesByHashTag />} />
-				<Route path='/quotes/detail/:id' element={<QuoteDetail />} />
+				<Route path='/quotes/detail/:id/:userId' element={<QuoteDetail />} />
 				<Route path='/confirm-my-book/:bookId' element={<ConfirmMyBook />} />
 				<Route path='/login' element={<Login />} />
 				<Route path='/register' element={<Register />} />

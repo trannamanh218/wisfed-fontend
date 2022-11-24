@@ -34,7 +34,7 @@ const QuotesLinks = ({ title, list, className, linkClickSeeAll }) => {
 								className='quote-links__item'
 								key={item.id}
 								title={'Xem chi tiết quote'}
-								onClick={() => navigate(`/quotes/detail/${item.id}`)}
+								onClick={() => navigate(`/quotes/detail/${item.id}/${item.createdBy}`)}
 							>
 								<p className='quote-links__item__content'>{`\"${item?.quote}\"`}</p>
 								<span className='quote-links__item__sub'>{`${

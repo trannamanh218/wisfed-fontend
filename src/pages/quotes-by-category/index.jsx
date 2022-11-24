@@ -12,7 +12,7 @@ const QuotesByCategory = () => {
 			{!errorLoadPage ? (
 				<MainContainer
 					main={<MainQuotesByCategory setErrorLoadPage={setErrorLoadPage} />}
-					right={<SidebarQuote inMyQuote={false} hasCountQuotes={true} />}
+					right={<SidebarQuote />}
 				/>
 			) : (
 				<NotFound />

@@ -130,21 +130,21 @@ const NotificationStatus = ({ item, handleReplyFriendRequest, setModalNoti }) =>
 				break;
 			case 'commentQuote':
 			case 'likeQuote':
-				navigate(`/quotes/detail/${item.originId.quoteId}`);
+				navigate(`/quotes/detail/${item.originId.quoteId}/${item.originId.createdBy}`);
 				break;
 			case 'likeCommentQuote':
 				dispatch(handleMentionCommentId(item.originId.commentQuoteId));
-				navigate(`/quotes/detail/${item.originId.quoteId}`);
+				navigate(`/quotes/detail/${item.originId.quoteId}/${item.originId.createdBy}`);
 				break;
 			case 'replyCommentQuote':
 				dispatch(handleMentionCommentId(item.originId.replyId));
-				navigate(`/quotes/detail/${item.originId.quoteId}`);
+				navigate(`/quotes/detail/${item.originId.quoteId}/${item.originId.createdBy}`);
 				break;
 			case 'mention':
 				switch (item.originId.type) {
 					case 'commentQuote':
 						dispatch(handleMentionCommentId(item.originId.replyId));
-						navigate(`/quotes/detail/${item.originId.quoteId}`);
+						navigate(`/quotes/detail/${item.originId.quoteId}/${item.originId.createdBy}`);
 						break;
 					case 'groupPost':
 						dispatch(handleMentionCommentId(item.originId.replyId));

@@ -23,7 +23,6 @@ const QuoteDetail = () => {
 	const userInfo = useSelector(state => state.auth.userInfo);
 
 	useEffect(() => {
-		window.scrollTo(0, 0);
 		getQuoteData();
 	}, [id]);
 
@@ -90,10 +89,16 @@ const QuoteDetail = () => {
 							mentionUsersArr={mentionUsersArr}
 						/>
 					}
-					right={<SidebarQuote listHashtags={listHashtags} inMyQuote={false} hasCountQuotes={false} />}
+					right={
+						<SidebarQuote
+							listHashtags={listHashtags}
+							firstStyleQuotesSidebar={true}
+							createdByOfCurrentQuote={quoteData.createdBy}
+						/>
+					}
 				/>
 			) : (
-				<>{renderNotFound ? <NotFound /> : <></>}</>
+				<>{renderNotFound && <NotFound />}</>
 			)}
 		</>
 	);

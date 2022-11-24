@@ -72,7 +72,7 @@ const QuoteActionBar = ({ data, isDetail, likeUnlikeQuoteFnc, trueRank }) => {
 						<span className='quote-action__name'>{data.share} Chia sẻ</span>
 					</div>
 				) : (
-					<Link to={`/quotes/detail/${data.id}`}>
+					<Link to={`/quotes/detail/${data.id}/${data.createdBy}`}>
 						<span className='quote-action__name'>Chi tiết</span>
 						<RightArrow className='quote-action__right-arrow' />
 					</Link>

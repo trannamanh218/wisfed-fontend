@@ -3,7 +3,7 @@ import MainAllQuotes from '../main-all-quote';
 import SidebarQuote from 'shared/sidebar-quote';
 
 const QuoteAll = () => {
-	return <MainContainer main={<MainAllQuotes />} right={<SidebarQuote inMyQuote={false} hasCountQuotes={true} />} />;
+	return <MainContainer main={<MainAllQuotes />} right={<SidebarQuote />} />;
 };
 
 export default QuoteAll;

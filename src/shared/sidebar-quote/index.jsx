@@ -1,7 +1,6 @@
 import MyShelvesList from 'shared/my-shelves-list';
 import StatisticList from 'shared/statistic-list';
 import './sidebar-quote.scss';
-import { useSelector } from 'react-redux';
 import TopicColumn from 'shared/topic-column';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
@@ -9,23 +8,34 @@ import SearchField from 'shared/search-field';
 import { useState, useEffect, useCallback } from 'react';
 import DualColumn from 'shared/dual-column';
 import { getCountQuotesByCategory } from 'reducers/redux-utils/quote';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { NotificationError } from 'helpers/Error';
 import { handleCategoryByQuotesName } from 'reducers/redux-utils/quote';
+import { getAllLibraryList } from 'reducers/redux-utils/library';
 
-const SidebarQuote = ({ listHashtags, inMyQuote, hasCountQuotes }) => {
+const SidebarQuote = ({ listHashtags, firstStyleQuotesSidebar, hasCountQuotes, createdByOfCurrentQuote }) => {
 	const [inputSearch, setInputSearch] = useState('');
 	const [categoryList, setCategoryList] = useState([]);
+	const [libraries, setLibraries] = useState({});
 
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
 	const myAllLibrary = useSelector(state => state.library.myAllLibrary);
+	const userInfo = useSelector(state => state.auth.userInfo);
 
 	useEffect(() => {
-		if (!inMyQuote && hasCountQuotes) {
+		if (!firstStyleQuotesSidebar && hasCountQuotes) {
 			getCountQuotesByCategoryData('');
+		}
+
+		if (createdByOfCurrentQuote && firstStyleQuotesSidebar) {
+			if (userInfo.id === createdByOfCurrentQuote) {
+				setLibraries(myAllLibrary);
+			} else {
+				getAllLibrariesByUser();
+			}
 		}
 	}, []);
 
@@ -37,6 +47,16 @@ const SidebarQuote = ({ listHashtags, inMyQuote, hasCountQuotes }) => {
 			};
 			const res = await dispatch(getCountQuotesByCategory({ params: params })).unwrap();
 			setCategoryList(res);
+		} catch (err) {
+			NotificationError(err);
+		}
+	};
+
+	const getAllLibrariesByUser = async () => {
+		try {
+			const data = { userId: createdByOfCurrentQuote };
+			const res = await dispatch(getAllLibraryList(data)).unwrap();
+			setLibraries(res);
 		} catch (err) {
 			NotificationError(err);
 		}
@@ -62,7 +82,7 @@ const SidebarQuote = ({ listHashtags, inMyQuote, hasCountQuotes }) => {
 	return (
 		<div className='sidebar-quote'>
 			<>
-				{!inMyQuote && hasCountQuotes ? (
+				{!firstStyleQuotesSidebar && hasCountQuotes ? (
 					<div className='sidebar-quote__category-list'>
 						<h4>Chủ đề Quotes</h4>
 						<SearchField
@@ -87,17 +107,17 @@ const SidebarQuote = ({ listHashtags, inMyQuote, hasCountQuotes }) => {
 								topics={listHashtags}
 							/>
 						)}
-						{!_.isEmpty(myAllLibrary) && (
+						{!_.isEmpty(libraries) && (
 							<>
 								<StatisticList
 									className='sidebar-quote__reading__status'
 									title='Trạng thái đọc'
 									background='light'
 									isBackground={true}
-									list={myAllLibrary.default}
+									list={libraries.default}
 									pageText={false}
 								/>
-								<MyShelvesList list={myAllLibrary.custom} />
+								<MyShelvesList list={libraries.custom} />
 							</>
 						)}
 					</>
@@ -107,10 +127,18 @@ const SidebarQuote = ({ listHashtags, inMyQuote, hasCountQuotes }) => {
 	);
 };
 
+SidebarQuote.defaultProps = {
+	listHashtags: [],
+	firstStyleQuotesSidebar: false,
+	hasCountQuotes: true,
+	createdByOfCurrentQuote: null,
+};
+
 SidebarQuote.propTypes = {
 	listHashtags: PropTypes.array,
-	inMyQuote: PropTypes.bool,
+	firstStyleQuotesSidebar: PropTypes.bool,
 	hasCountQuotes: PropTypes.bool,
+	createdByOfCurrentQuote: PropTypes.string,
 };
 
 export default SidebarQuote;

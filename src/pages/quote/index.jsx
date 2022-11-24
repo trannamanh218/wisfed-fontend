@@ -46,8 +46,8 @@ const Quote = () => {
 					right={
 						<SidebarQuote
 							listHashtags={listHashtag}
-							inMyQuote={userInfo.id === userId}
-							hasCountQuotes={true}
+							firstStyleQuotesSidebar={userInfo.id === userId}
+							createdByOfCurrentQuote={userId}
 						/>
 					}
 				/>

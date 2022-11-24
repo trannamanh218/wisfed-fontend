@@ -20,18 +20,16 @@ import SeeMoreComments from 'shared/see-more-comments/SeeMoreComments';
 
 const MainQuoteDetail = ({ quoteData, setQuoteData, onCreateComment, setMentionUsersArr, mentionUsersArr }) => {
 	const [replyingCommentId, setReplyingCommentId] = useState(0);
-
 	const [haveNotClickedSeeMoreOnce, setHaveNotClickedSeeMoreOnce] = useState(true);
 	const [firstPlaceComment, setFirstPlaceComment] = useState([]);
 	const [firstPlaceCommentId, setFirstPlaceCommentId] = useState(null);
-
 	const [showReplyArrayState, setShowReplyArrayState] = useState([]);
+	const [mentionCommentId, setMentionCommentId] = useState(null);
 
 	const clickReply = useRef(null);
 
 	const userInfo = useSelector(state => state.auth.userInfo);
 	const reduxMentionCommentId = useSelector(state => state.notificationReducer.mentionCommentId);
-	const [mentionCommentId, setMentionCommentId] = useState(null);
 
 	const dispatch = useDispatch();
 
@@ -121,12 +119,14 @@ const MainQuoteDetail = ({ quoteData, setQuoteData, onCreateComment, setMentionU
 					<BackButton destination={-1} />
 					<h4>Chi tiết Quote</h4>
 					{quoteData?.user?.fullName || (quoteData?.user?.firstName && quoteData?.user?.lastName) ? (
-						<Link to={`/quotes/${quoteData.user.id}`} className='main-quote-detail__link'>
+						<Link to={`/quotes/${quoteData.createdBy}`} className='main-quote-detail__link'>
 							<div className='main-quote-detail__link__row'>
 								<>
 									Xem tất cả Quotes của{' '}
-									{quoteData.user.fullName ||
-										quoteData.user.firstName + ' ' + quoteData.user.lastName}{' '}
+									{quoteData.createdBy === userInfo.id
+										? 'tôi'
+										: quoteData.user.fullName ||
+										  quoteData.user.firstName + ' ' + quoteData.user.lastName}
 								</>
 								<Forward />
 							</div>
