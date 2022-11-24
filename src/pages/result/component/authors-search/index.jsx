@@ -9,8 +9,11 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import ResultNotFound from '../result-not-found';
 import LoadingIndicator from 'shared/loading-indicator';
 
-const AuthorSearch = ({ value, setIsFetching, searchResultInput, activeKeyDefault, updateBooks, isFetching }) => {
+const AuthorSearch = ({ value, searchResultInput, activeKeyDefault, updateBooks }) => {
 	const [listArrayAuthors, setListArrayAuthors] = useState([]);
+	const [isFetching, setIsFetching] = useState(false);
+	const [isLoadingFirstTime, setIsLoadingFirstTime] = useState(false);
+
 	const { isShowModal } = useSelector(state => state.search);
 	const [hasMore, setHasMore] = useState(true);
 	const dispatch = useDispatch();
@@ -37,6 +40,9 @@ const AuthorSearch = ({ value, setIsFetching, searchResultInput, activeKeyDefaul
 	}, [callApiStart.current, value, isShowModal, listArrayAuthors]);
 
 	const handleGetAuthorsSearch = async () => {
+		if (listArrayAuthors.length === 0) {
+			setIsLoadingFirstTime(true);
+		}
 		setIsFetching(true);
 		try {
 			const params = {
@@ -59,28 +65,35 @@ const AuthorSearch = ({ value, setIsFetching, searchResultInput, activeKeyDefaul
 			NotificationError(err);
 		} finally {
 			setIsFetching(false);
+			setIsLoadingFirstTime(false);
 		}
 	};
 
 	return (
 		<div className='authors__search__container'>
-			{listArrayAuthors?.length > 0 && activeKeyDefault === 'authors' ? (
-				<InfiniteScroll
-					next={handleGetAuthorsSearch}
-					dataLength={listArrayAuthors.length}
-					hasMore={hasMore}
-					loader={<LoadingIndicator />}
-				>
-					<div className='myfriends__layout__container'>
-						{listArrayAuthors.map((item, index) => (
-							<div key={index} className='myfriends__layout__container__top'>
-								<AuthorCard item={item} size={'lg'} checkAuthors={true} />
-							</div>
-						))}
-					</div>
-				</InfiniteScroll>
+			{isLoadingFirstTime ? (
+				<LoadingIndicator />
 			) : (
-				isFetching === false && <ResultNotFound />
+				<>
+					{listArrayAuthors?.length > 0 && activeKeyDefault === 'authors' ? (
+						<InfiniteScroll
+							next={handleGetAuthorsSearch}
+							dataLength={listArrayAuthors.length}
+							hasMore={hasMore}
+							loader={<LoadingIndicator />}
+						>
+							<div className='myfriends__layout__container'>
+								{listArrayAuthors.map((item, index) => (
+									<div key={index} className='myfriends__layout__container__top'>
+										<AuthorCard item={item} size={'lg'} checkAuthors={true} />
+									</div>
+								))}
+							</div>
+						</InfiniteScroll>
+					) : (
+						isFetching === false && <ResultNotFound />
+					)}
+				</>
 			)}
 		</div>
 	);
@@ -92,5 +105,6 @@ AuthorSearch.propTypes = {
 	value: PropTypes.string,
 	updateBooks: PropTypes.bool,
 	isFetching: PropTypes.bool,
+	setIsLoadingFirstTime: PropTypes.func,
 };
 export default AuthorSearch;

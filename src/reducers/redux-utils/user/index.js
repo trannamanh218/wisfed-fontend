@@ -185,14 +185,10 @@ const userSlice = createSlice({
 		categoriesData: {},
 		error: {},
 		isReload: false,
-		isFriend: false,
 	},
 	reducers: {
 		updateUser: (state, action) => {
 			state.isReload = action.payload;
-		},
-		checkListFriend: (state, action) => {
-			state.isFriend = action.payload;
 		},
 	},
 

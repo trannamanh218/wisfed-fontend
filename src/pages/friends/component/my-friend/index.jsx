@@ -1,6 +1,6 @@
 import './my-friends.scss';
 import FriendsItem from 'shared/friends';
-import { checkListFriend, getFriendList } from 'reducers/redux-utils/user';
+import { getFriendList } from 'reducers/redux-utils/user';
 import { useState, useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
@@ -14,7 +14,6 @@ const MyFriends = ({ activeTabs, inputSearch, filter, handleActiveTabs }) => {
 	const callApiStart = useRef(0);
 	const callApiPerPage = useRef(9);
 	const { userInfo } = useSelector(state => state.auth);
-	const isFriend = useSelector(state => state.user.isFriend);
 	const dispatch = useDispatch();
 	const [getMyListFriend, setGetMyListFriend] = useState([]);
 	const [hasMore, setHasMore] = useState(true);
@@ -54,14 +53,6 @@ const MyFriends = ({ activeTabs, inputSearch, filter, handleActiveTabs }) => {
 	useEffect(() => {
 		getListFriendData();
 	}, [userInfo, filter, toggleCallAPI]);
-
-	useEffect(() => {
-		if (!getMyListFriend.length) {
-			dispatch(checkListFriend(true));
-		} else {
-			dispatch(checkListFriend(false));
-		}
-	}, [getMyListFriend, isFriend]);
 
 	return (
 		<>

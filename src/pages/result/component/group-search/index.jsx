@@ -15,10 +15,13 @@ import { toast } from 'react-toastify';
 import { checkUserLogin } from 'reducers/redux-utils/auth';
 import { Link } from 'react-router-dom';
 
-const GroupSearch = ({ value, setIsFetching, searchResultInput, activeKeyDefault, updateBooks, isFetching }) => {
+const GroupSearch = ({ value, searchResultInput, activeKeyDefault, updateBooks }) => {
 	const [listArrayGroup, setListArrayGroup] = useState([]);
-	const { isShowModal } = useSelector(state => state.search);
 	const [hasMore, setHasMore] = useState(true);
+	const [isFetching, setIsFetching] = useState(false);
+	const [isLoadingFirstTime, setIsLoadingFirstTime] = useState(false);
+
+	const { isShowModal } = useSelector(state => state.search);
 	const dispatch = useDispatch();
 	const callApiStart = useRef(0);
 	const callApiPerPage = useRef(10);
@@ -43,6 +46,9 @@ const GroupSearch = ({ value, setIsFetching, searchResultInput, activeKeyDefault
 	}, [callApiStart.current, value, isShowModal, listArrayGroup]);
 
 	const handleGetGroupSearch = async () => {
+		if (listArrayGroup.length === 0) {
+			setIsLoadingFirstTime(true);
+		}
 		setIsFetching(true);
 		try {
 			const params = {
@@ -65,6 +71,7 @@ const GroupSearch = ({ value, setIsFetching, searchResultInput, activeKeyDefault
 			NotificationError(err);
 		} finally {
 			setIsFetching(false);
+			setIsLoadingFirstTime(false);
 		}
 	};
 
@@ -85,49 +92,58 @@ const GroupSearch = ({ value, setIsFetching, searchResultInput, activeKeyDefault
 
 	return (
 		<div className='group__search__container'>
-			{listArrayGroup.length > 0 && activeKeyDefault === 'groups' ? (
-				<InfiniteScroll
-					next={handleGetGroupSearch}
-					dataLength={listArrayGroup.length}
-					hasMore={hasMore}
-					loader={<LoadingIndicator />}
-				>
-					{listArrayGroup.map(item => (
-						<div key={item.id} className='group__search__main'>
-							<div className='group__search__left'>
-								<Link to={`/group/${item.id}`}>
-									<button>
-										<img src={item.avatar || DefaultImageGroup} className='group__search__img' />
-									</button>
-								</Link>
-
-								<div className='group__search__content'>
-									<Link to={`/group/${item.id}`}>
-										<button>
-											<div className='group__search__title'>{item.name}</div>
-										</button>
-									</Link>
-
-									<div className='group__search__info'>
-										Nhóm công khai ({item.countMember} thành viên) <br />
-										{item.countPostPerMonth} bài viết/tháng
-									</div>
-								</div>
-							</div>
-							{item.isJoined ? (
-								<Link to={`/group/${item.id}`}>
-									<Button className='group__search__button'>Truy cập nhóm</Button>
-								</Link>
-							) : (
-								<Button onClick={() => enjoyGroup(item.id)} className='group__search__button'>
-									Tham gia
-								</Button>
-							)}
-						</div>
-					))}
-				</InfiniteScroll>
+			{isLoadingFirstTime ? (
+				<LoadingIndicator />
 			) : (
-				isFetching === false && <ResultNotFound />
+				<>
+					{listArrayGroup.length > 0 && activeKeyDefault === 'groups' ? (
+						<InfiniteScroll
+							next={handleGetGroupSearch}
+							dataLength={listArrayGroup.length}
+							hasMore={hasMore}
+							loader={<LoadingIndicator />}
+						>
+							{listArrayGroup.map(item => (
+								<div key={item.id} className='group__search__main'>
+									<div className='group__search__left'>
+										<Link to={`/group/${item.id}`}>
+											<button>
+												<img
+													src={item.avatar || DefaultImageGroup}
+													className='group__search__img'
+												/>
+											</button>
+										</Link>
+
+										<div className='group__search__content'>
+											<Link to={`/group/${item.id}`}>
+												<button>
+													<div className='group__search__title'>{item.name}</div>
+												</button>
+											</Link>
+
+											<div className='group__search__info'>
+												Nhóm công khai ({item.countMember} thành viên) <br />
+												{item.countPostPerMonth} bài viết/tháng
+											</div>
+										</div>
+									</div>
+									{item.isJoined ? (
+										<Link to={`/group/${item.id}`}>
+											<Button className='group__search__button'>Truy cập nhóm</Button>
+										</Link>
+									) : (
+										<Button onClick={() => enjoyGroup(item.id)} className='group__search__button'>
+											Tham gia
+										</Button>
+									)}
+								</div>
+							))}
+						</InfiniteScroll>
+					) : (
+						isFetching === false && <ResultNotFound />
+					)}
+				</>
 			)}
 		</div>
 	);
@@ -140,5 +156,6 @@ GroupSearch.propTypes = {
 	value: PropTypes.string,
 	updateBooks: PropTypes.bool,
 	isFetching: PropTypes.bool,
+	setIsLoadingFirstTime: PropTypes.func,
 };
 export default GroupSearch;

@@ -10,12 +10,12 @@ import AuthorSearch from './component/authors-search';
 import UsersSearch from './component/users-search';
 import CategorySearch from './component/category-search';
 import { useEffect, useState } from 'react';
-import Circle from 'shared/loading/circle';
 import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { hashtagRegex } from 'constants';
 import { handleUpdateValueInputSearchRedux } from 'reducers/redux-utils/search';
 import { useDispatch } from 'react-redux';
+import Circle from 'shared/loading/circle';
 
 const Result = () => {
 	const { value } = useParams();
@@ -24,7 +24,6 @@ const Result = () => {
 	const [activeKeyDefault, setActiveKeyDefault] = useState('books');
 	const [searchResultInput, setSearchResultInput] = useState('');
 	const [updateBooks, setUpdateBooks] = useState(false);
-	const [isFetching, setIsFetching] = useState(false);
 	const [firstTimeRender, setFirstTimeRender] = useState(true);
 
 	const navigate = useNavigate();
@@ -100,62 +99,50 @@ const Result = () => {
 					>
 						<Tab eventKey='books' title='Sách'>
 							<BookSearch
-								setIsFetching={setIsFetching}
 								activeKeyDefault={activeKeyDefault}
 								searchResultInput={searchResultInput}
 								value={value}
 								updateBooks={updateBooks}
-								isFetching={isFetching}
 							/>
 						</Tab>
 						<Tab eventKey='authors' title='Tác giả'>
 							<AuthorSearch
-								setIsFetching={setIsFetching}
 								activeKeyDefault={activeKeyDefault}
 								searchResultInput={searchResultInput}
 								value={value}
 								updateBooks={updateBooks}
-								isFetching={isFetching}
 							/>
 						</Tab>
 						<Tab eventKey='users' title='Mọi người'>
 							<UsersSearch
-								setIsFetching={setIsFetching}
 								activeKeyDefault={activeKeyDefault}
 								searchResultInput={searchResultInput}
 								value={value}
 								updateBooks={updateBooks}
-								isFetching={isFetching}
 							/>
 						</Tab>
 						<Tab eventKey='categories' title='Chủ đề'>
 							<CategorySearch
-								setIsFetching={setIsFetching}
 								activeKeyDefault={activeKeyDefault}
 								searchResultInput={searchResultInput}
 								value={value}
 								updateBooks={updateBooks}
-								isFetching={isFetching}
 							/>
 						</Tab>
 						<Tab eventKey='quotes' title='Quotes'>
 							<QuoteSearch
-								setIsFetching={setIsFetching}
 								activeKeyDefault={activeKeyDefault}
 								searchResultInput={searchResultInput}
 								value={value}
 								updateBooks={updateBooks}
-								isFetching={isFetching}
 							/>
 						</Tab>
 						<Tab eventKey='groups' title='Nhóm'>
 							<GroupSearch
-								setIsFetching={setIsFetching}
 								activeKeyDefault={activeKeyDefault}
 								searchResultInput={searchResultInput}
 								value={value}
 								updateBooks={updateBooks}
-								isFetching={isFetching}
 							/>
 						</Tab>
 					</Tabs>

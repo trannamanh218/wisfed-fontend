@@ -136,4 +136,19 @@
 		margin-left: 0;
 		gap: 20px;
 	}
+
+	.top-users-slt-box {
+		.select-box__list {
+			max-height: fit-content;
+			overflow-y: auto;
+		}
+	}
+}
+
+.topbooks__container__sort__left.disabled-btn-select {
+	opacity: 0.7;
+	.select-box__btn {
+		cursor: not-allowed;
+		background-color: #f7f7fc;
+	}
 }

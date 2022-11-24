@@ -15,8 +15,6 @@ const InputHashtag = ({ listHashtags, setListHashtags, setLastTag, label, showEr
 
 	const [inputHashtag, setInputHashtag] = useState('');
 
-	console.log('err', showError);
-
 	const handleChangeHashtag = e => {
 		setInputHashtag(e.target.value);
 		debounceFnc(e.target.value);

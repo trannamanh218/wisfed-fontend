@@ -7,6 +7,7 @@ import { getTopUser } from 'reducers/redux-utils/ranks';
 import { getRecommendFriend } from 'reducers/redux-utils/user';
 import FriendsItem from 'shared/friends';
 import PropTypes from 'prop-types';
+import LoadingIndicator from 'shared/loading-indicator';
 
 const SuggestFriend = ({ activeTabs }) => {
 	const [list, setList] = useState([]);
@@ -19,7 +20,7 @@ const SuggestFriend = ({ activeTabs }) => {
 
 	const LIMIT_RECOMMEND = 6;
 
-	const result = userInfo?.favoriteCategory.map(item => item.categoryId);
+	const result = userInfo?.favoriteCategory?.map(item => item.categoryId);
 
 	const dispatch = useDispatch();
 
@@ -36,7 +37,6 @@ const SuggestFriend = ({ activeTabs }) => {
 			}
 		} catch (err) {
 			NotificationError(err);
-		} finally {
 			setIsLoading(false);
 		}
 	};
@@ -55,13 +55,11 @@ const SuggestFriend = ({ activeTabs }) => {
 			}
 		} catch (err) {
 			NotificationError(err);
-		} finally {
 			setIsLoading(false);
 		}
 	};
 
 	const getRecommendFriendData = async () => {
-		setIsLoading(true);
 		const params = {
 			start: 0,
 			limit: LIMIT_RECOMMEND,
@@ -72,8 +70,6 @@ const SuggestFriend = ({ activeTabs }) => {
 			dispatch(changeToggleFollows(''));
 		} catch (err) {
 			NotificationError(err);
-		} finally {
-			setIsLoading(false);
 		}
 	};
 
@@ -91,6 +87,7 @@ const SuggestFriend = ({ activeTabs }) => {
 			}, []);
 			const newListNotFriend = newList.filter(item => item.relation !== 'friend');
 			setList(newListNotFriend.slice(0, 6));
+			setIsLoading(false);
 		});
 		getRecommendFriendData();
 	}, [changeFollow, dispatch]);
@@ -105,12 +102,18 @@ const SuggestFriend = ({ activeTabs }) => {
 			</div>
 
 			<div className='myfriends__layout__container'>
-				{list.length > 0 ? (
-					list.map(item => (
-						<FriendsItem key={item.id} data={item} keyTabs={activeTabs} getListSuggest={list} />
-					))
+				{isLoading ? (
+					<LoadingIndicator />
 				) : (
-					<p style={{ textAlign: 'center' }}>Không có dữ liệu</p>
+					<>
+						{list.length > 0 ? (
+							list.map(item => (
+								<FriendsItem key={item.id} data={item} keyTabs={activeTabs} getListSuggest={list} />
+							))
+						) : (
+							<p style={{ textAlign: 'center' }}>Không có dữ liệu</p>
+						)}
+					</>
 				)}
 			</div>
 			<div className='myfriends__line'></div>
@@ -122,17 +125,23 @@ const SuggestFriend = ({ activeTabs }) => {
 			</div>
 
 			<div className='myfriends__layout__container'>
-				{listRecommendFriend.length > 0 ? (
-					listRecommendFriend.map(item => (
-						<FriendsItem
-							key={item.id}
-							data={item}
-							keyTabs={activeTabs}
-							getListRecommend={listRecommendFriend}
-						/>
-					))
+				{isLoading ? (
+					<LoadingIndicator />
 				) : (
-					<p style={{ textAlign: 'center' }}>Không có dữ liệu</p>
+					<>
+						{listRecommendFriend.length > 0 ? (
+							listRecommendFriend.map(item => (
+								<FriendsItem
+									key={item.id}
+									data={item}
+									keyTabs={activeTabs}
+									getListRecommend={listRecommendFriend}
+								/>
+							))
+						) : (
+							<p style={{ textAlign: 'center' }}>Không có dữ liệu</p>
+						)}
+					</>
 				)}
 			</div>
 		</div>

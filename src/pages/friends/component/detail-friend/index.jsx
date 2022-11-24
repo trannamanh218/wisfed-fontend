@@ -36,7 +36,7 @@ const DetailFriend = () => {
 	const [listRecommendFriend, setListRecommendFriend] = useState([]);
 
 	const { isAuth } = useSelector(state => state.auth);
-	const result = userInfo?.favoriteCategory.map(item => item.categoryId);
+	const result = userInfo?.favoriteCategory?.map(item => item.categoryId);
 
 	const updateInputSearch = value => {
 		if (value) {

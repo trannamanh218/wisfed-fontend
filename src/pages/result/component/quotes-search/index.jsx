@@ -9,10 +9,13 @@ import { useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import LoadingIndicator from 'shared/loading-indicator';
 
-const QuoteSearch = ({ isFetching, value, setIsFetching, searchResultInput, activeKeyDefault, updateBooks }) => {
+const QuoteSearch = ({ value, searchResultInput, activeKeyDefault, updateBooks }) => {
 	const [listArrayQuotes, setListArrayQuotes] = useState([]);
-	const { isShowModal } = useSelector(state => state.search);
+	const [isFetching, setIsFetching] = useState(false);
 	const [hasMore, setHasMore] = useState(true);
+	const [isLoadingFirstTime, setIsLoadingFirstTime] = useState(false);
+
+	const { isShowModal } = useSelector(state => state.search);
 	const dispatch = useDispatch();
 	const callApiStartQuotes = useRef(0);
 	const callApiPerPage = useRef(10);
@@ -37,6 +40,9 @@ const QuoteSearch = ({ isFetching, value, setIsFetching, searchResultInput, acti
 	}, [callApiStartQuotes.current, listArrayQuotes, value, isShowModal]);
 
 	const handleGetQuotesSearch = async () => {
+		if (listArrayQuotes.length === 0) {
+			setIsLoadingFirstTime(true);
+		}
 		setIsFetching(true);
 		try {
 			const params = {
@@ -58,26 +64,33 @@ const QuoteSearch = ({ isFetching, value, setIsFetching, searchResultInput, acti
 			NotificationError(err);
 		} finally {
 			setIsFetching(false);
+			setIsLoadingFirstTime(false);
 		}
 	};
 
 	return (
 		<div className='quoteSearch__container'>
-			{listArrayQuotes?.length > 0 && activeKeyDefault === 'quotes' ? (
-				<InfiniteScroll
-					next={handleGetQuotesSearch}
-					dataLength={listArrayQuotes.length}
-					hasMore={hasMore}
-					loader={<LoadingIndicator />}
-				>
-					{listArrayQuotes.map(item => (
-						<div key={item.id} className='quoteSearch__container__main'>
-							<QuoteCard data={item} />
-						</div>
-					))}
-				</InfiniteScroll>
+			{isLoadingFirstTime ? (
+				<LoadingIndicator />
 			) : (
-				isFetching === false && <ResultNotFound />
+				<>
+					{listArrayQuotes?.length > 0 && activeKeyDefault === 'quotes' ? (
+						<InfiniteScroll
+							next={handleGetQuotesSearch}
+							dataLength={listArrayQuotes.length}
+							hasMore={hasMore}
+							loader={<LoadingIndicator />}
+						>
+							{listArrayQuotes.map(item => (
+								<div key={item.id} className='quoteSearch__container__main'>
+									<QuoteCard data={item} />
+								</div>
+							))}
+						</InfiniteScroll>
+					) : (
+						isFetching === false && <ResultNotFound />
+					)}
+				</>
 			)}
 		</div>
 	);
@@ -89,5 +102,6 @@ QuoteSearch.propTypes = {
 	value: PropTypes.string,
 	updateBooks: PropTypes.bool,
 	isFetching: PropTypes.bool,
+	setIsLoadingFirstTime: PropTypes.func,
 };
 export default QuoteSearch;

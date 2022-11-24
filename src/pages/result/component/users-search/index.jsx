@@ -12,11 +12,13 @@ import { useNavigate } from 'react-router-dom';
 import Button from 'shared/button';
 import LoadingIndicator from 'shared/loading-indicator';
 
-const UsersSearch = ({ isFetching, value, setIsFetching, searchResultInput, activeKeyDefault, updateBooks }) => {
+const UsersSearch = ({ value, searchResultInput, activeKeyDefault, updateBooks }) => {
 	const [listArrayUsers, setListArrayUsers] = useState([]);
 	const { isShowModal } = useSelector(state => state.search);
 	const [hasMore, setHasMore] = useState(true);
 	const [saveLocalSearch, setSaveLocalSearch] = useState([]);
+	const [isFetching, setIsFetching] = useState(false);
+	const [isLoadingFirstTime, setIsLoadingFirstTime] = useState(false);
 
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
@@ -44,6 +46,9 @@ const UsersSearch = ({ isFetching, value, setIsFetching, searchResultInput, acti
 	}, [callApiStart.current, value, isShowModal, listArrayUsers]);
 
 	const handleGetUserSearch = async () => {
+		if (listArrayUsers.length === 0) {
+			setIsLoadingFirstTime(true);
+		}
 		setIsFetching(true);
 		try {
 			const params = {
@@ -65,6 +70,7 @@ const UsersSearch = ({ isFetching, value, setIsFetching, searchResultInput, acti
 			NotificationError(err);
 		} finally {
 			setIsFetching(false);
+			setIsLoadingFirstTime(false);
 		}
 	};
 
@@ -85,54 +91,68 @@ const UsersSearch = ({ isFetching, value, setIsFetching, searchResultInput, acti
 
 	return (
 		<div className='user__search__container'>
-			{listArrayUsers?.length > 0 && activeKeyDefault === 'users' ? (
-				<>
-					<InfiniteScroll
-						next={handleGetUserSearch}
-						dataLength={listArrayUsers.length}
-						hasMore={hasMore}
-						loader={<LoadingIndicator />}
-					>
-						<div className='myfriends__layout__container'>
-							{listArrayUsers.map((item, index) => {
-								return (
-									<div key={index} className='myfriends__layout'>
-										<img
-											className='myfriends__layout__img'
-											src={item.avatarImage ? item.avatarImage : defaultAvatar}
-											onError={e => e.target.setAttribute('src', defaultAvatar)}
-											alt='img'
-											onClick={() => onUserClick(item)}
-										/>
-										<div className='myfriends__star'>
-											<div className='myfriends__star__name' onClick={() => onUserClick(item)}>
-												{item.fullName ? item.fullName : `${item.firstName} ${item.lastName}`}
-											</div>
-										</div>
-										{item.relation !== 'isMe' ? (
-											<div className='myfriends__button__container'>
-												<ConnectButtonsSearch item={item} />
-											</div>
-										) : (
-											<div className='myfriends__button__container' style={{ margin: 'auto 0' }}>
-												<Button
-													className='myfriends__button'
-													onClick={() => navigate(`/profile/${item.id}`)}
-												>
-													<span style={{ fontSize: 'smaller' }}>
-														<p>Xem trang</p>cá nhân<p></p>
-													</span>
-												</Button>
-											</div>
-										)}
-									</div>
-								);
-							})}
-						</div>
-					</InfiniteScroll>
-				</>
+			{isLoadingFirstTime ? (
+				<LoadingIndicator />
 			) : (
-				isFetching === false && <ResultNotFound />
+				<>
+					{listArrayUsers?.length > 0 && activeKeyDefault === 'users' ? (
+						<>
+							<InfiniteScroll
+								next={handleGetUserSearch}
+								dataLength={listArrayUsers.length}
+								hasMore={hasMore}
+								loader={<LoadingIndicator />}
+							>
+								<div className='myfriends__layout__container'>
+									{listArrayUsers.map((item, index) => {
+										return (
+											<div key={index} className='myfriends__layout'>
+												<img
+													className='myfriends__layout__img'
+													src={item.avatarImage ? item.avatarImage : defaultAvatar}
+													onError={e => e.target.setAttribute('src', defaultAvatar)}
+													alt='img'
+													onClick={() => onUserClick(item)}
+												/>
+												<div className='myfriends__star'>
+													<div
+														className='myfriends__star__name'
+														onClick={() => onUserClick(item)}
+													>
+														{item.fullName
+															? item.fullName
+															: `${item.firstName} ${item.lastName}`}
+													</div>
+												</div>
+												{item.relation !== 'isMe' ? (
+													<div className='myfriends__button__container'>
+														<ConnectButtonsSearch item={item} />
+													</div>
+												) : (
+													<div
+														className='myfriends__button__container'
+														style={{ margin: 'auto 0' }}
+													>
+														<Button
+															className='myfriends__button'
+															onClick={() => navigate(`/profile/${item.id}`)}
+														>
+															<span style={{ fontSize: 'smaller' }}>
+																<p>Xem trang</p>cá nhân<p></p>
+															</span>
+														</Button>
+													</div>
+												)}
+											</div>
+										);
+									})}
+								</div>
+							</InfiniteScroll>
+						</>
+					) : (
+						isFetching === false && <ResultNotFound />
+					)}
+				</>
 			)}
 		</div>
 	);
@@ -145,6 +165,7 @@ UsersSearch.propTypes = {
 	value: PropTypes.string,
 	updateBooks: PropTypes.bool,
 	isFetching: PropTypes.bool,
+	setIsLoadingFirstTime: PropTypes.func,
 };
 
 export default UsersSearch;

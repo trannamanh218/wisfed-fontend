@@ -24,6 +24,7 @@ const TopUser = ({ listYear, tabSelected }) => {
 	const listRead = useRef({ value: 'default', title: 'Đọc nhiều nhất' });
 	const { isAuth } = useSelector(state => state.auth);
 	const [topUserFilter, setTopUserFilter] = useState(null);
+	const [disableSelectBox, setDisableSelectBox] = useState(false);
 	const [valueDate, setValueDate] = useState('week');
 	const [valueDataSort, setValueDataSort] = useState('topRead');
 	const [getListTopBooks, setGetListTopBooks] = useState([]);
@@ -44,17 +45,19 @@ const TopUser = ({ listYear, tabSelected }) => {
 	const getTopUserData = async () => {
 		setLoading(true);
 		let params = {};
-		if (valueDataSort === 'topFollow') {
+		if (valueDataSort === 'topFollow' || valueDataSort === 'topLike') {
 			params = {
 				reportType: valueDataSort,
 				by: valueDate,
 			};
+			setDisableSelectBox(true);
 		} else {
 			params = {
 				reportType: valueDataSort,
 				by: valueDate,
 				categoryId: topUserFilter,
 			};
+			setDisableSelectBox(false);
 		}
 
 		try {
@@ -84,6 +87,10 @@ const TopUser = ({ listYear, tabSelected }) => {
 	};
 
 	const onchangeSortType = data => {
+		if (['topLike', 'topFollow'].includes(data.value)) {
+			kindOfGroupRef.current = { value: 'default', name: 'Chủ đề' };
+			setTopUserFilter(null);
+		}
 		listRead.current = data;
 		setValueDataSort(data.value);
 	};
@@ -91,8 +98,9 @@ const TopUser = ({ listYear, tabSelected }) => {
 	const handleShare = (data, index) => {
 		const newData = {
 			by: valueDate,
-			categoryId: valueDataSort !== 'topFollow' ? topUserFilter : null,
-			categoryName: valueDataSort !== 'topFollow' ? kindOfGroupRef.current.name : null,
+			categoryId: topUserFilter,
+			categoryName:
+				valueDataSort !== 'topFollow' && valueDataSort !== 'topLike' ? kindOfGroupRef.current.name : null,
 			userType: valueDataSort,
 			type: 'topUser',
 			id: data.id,
@@ -126,10 +134,16 @@ const TopUser = ({ listYear, tabSelected }) => {
 					list={listDataSortType}
 					defaultOption={listRead.current}
 					onChangeOption={onchangeSortType}
+					className='top-users-slt-box'
 				/>
 			</div>
 			<div className='topbooks__container__sort'>
-				<div className='topbooks__container__sort__left' onClick={() => setModalSearchCategoriesShow(true)}>
+				<div
+					className={`topbooks__container__sort__left ${disableSelectBox && 'disabled-btn-select'}`}
+					onClick={() => {
+						!disableSelectBox && setModalSearchCategoriesShow(true);
+					}}
+				>
 					<div className='select-box'>
 						<div className='select-box__btn'>
 							<span className='select-box__value'>{kindOfGroupRef.current.name || 'Chủ đề'}</span>
@@ -149,14 +163,16 @@ const TopUser = ({ listYear, tabSelected }) => {
 				</div>
 			</div>
 
-			{getListTopBooks.length > 2 && <TopRanks getListTopBooks={getListTopBooks} valueDataSort={valueDataSort} />}
+			{getListTopBooks?.length > 2 && (
+				<TopRanks getListTopBooks={getListTopBooks} valueDataSort={valueDataSort} />
+			)}
 			{loading ? (
 				<LoadingIndicator />
 			) : (
 				<>
-					{getListTopBooks.length > 0 ? (
+					{getListTopBooks?.length > 0 ? (
 						getListTopBooks.map((item, index) => (
-							<div key={item.id} className='topbooks__container__main top__user'>
+							<div key={index} className='topbooks__container__main top__user'>
 								<StarRanking index={index} />
 								<div className='topbooks__container__main__layout'>
 									<AuthorCard size='lg' item={item} setModalShow={setModalShow} />
