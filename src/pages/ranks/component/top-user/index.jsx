@@ -134,6 +134,7 @@ const TopUser = ({ listYear, tabSelected }) => {
 					list={listDataSortType}
 					defaultOption={listRead.current}
 					onChangeOption={onchangeSortType}
+					className='top-users-slt-box'
 				/>
 			</div>
 			<div className='topbooks__container__sort'>
