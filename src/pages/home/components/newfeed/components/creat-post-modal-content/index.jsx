@@ -644,6 +644,8 @@ function CreatePostModalContent({
 
 	const handleCancel = () => {
 		setModalShow(false);
+		// const textFieldEdit = document.querySelector('.creat-post-modal-content__main__body__text-field-edit-wrapper');
+		// const editor = textFieldEdit.querySelector('.public-DraftEditor-content');
 	};
 
 	const handleClose = () => {

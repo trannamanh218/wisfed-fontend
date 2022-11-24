@@ -45,7 +45,7 @@ const TopUser = ({ listYear, tabSelected }) => {
 	const getTopUserData = async () => {
 		setLoading(true);
 		let params = {};
-		if (valueDataSort === 'topFollow') {
+		if (['topLike', 'topFollow'].includes(valueDataSort)) {
 			params = {
 				reportType: valueDataSort,
 				by: valueDate,
@@ -89,6 +89,9 @@ const TopUser = ({ listYear, tabSelected }) => {
 	const onchangeSortType = data => {
 		listRead.current = data;
 		setValueDataSort(data.value);
+		// ['topLike', 'topFollow'].includes(data.value)
+		// 	? (kindOfGroupRef.current = { value: 'default', name: 'Chủ đề' })
+		// 	: '';
 	};
 
 	const handleShare = (data, index) => {
@@ -132,7 +135,10 @@ const TopUser = ({ listYear, tabSelected }) => {
 				/>
 			</div>
 			<div className='topbooks__container__sort'>
-				<div className='topbooks__container__sort__left' onClick={() => setModalSearchCategoriesShow(true)}>
+				<div
+					className={`topbooks__container__sort__left ${checkSelectBox && 'disabled-btn'}`}
+					onClick={() => setModalSearchCategoriesShow(true)}
+				>
 					<div className='select-box'>
 						<div className='select-box__btn'>
 							<span className='select-box__value'>{kindOfGroupRef.current.name || 'Chủ đề'}</span>
@@ -159,7 +165,7 @@ const TopUser = ({ listYear, tabSelected }) => {
 				<>
 					{getListTopBooks.length > 0 ? (
 						getListTopBooks.map((item, index) => (
-							<div key={item.id} className='topbooks__container__main top__user'>
+							<div key={index} className='topbooks__container__main top__user'>
 								<StarRanking index={index} />
 								<div className='topbooks__container__main__layout'>
 									<AuthorCard size='lg' item={item} setModalShow={setModalShow} />
