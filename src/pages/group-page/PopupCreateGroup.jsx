@@ -17,7 +17,7 @@ import { handleResetGroupList } from 'reducers/redux-utils/group';
 import { getFilterSearch } from 'reducers/redux-utils/search';
 import InputHashtag from 'shared/input/inputHashtag/inputHashtag';
 
-const PopupCreateGroup = ({ handleClose }) => {
+const PopupCreateGroup = ({ handleClose, handleRefreshData = () => {} }) => {
 	const groupNameInput = useRef('');
 	const [inputNameGroup, setInputNameGroup] = useState('');
 	const [inputDiscription, setInputDiscription] = useState('');
@@ -333,6 +333,8 @@ const PopupCreateGroup = ({ handleClose }) => {
 				const customId = 'custom-id-PopupCreateGroup';
 				toast.success('Tạo nhóm thành công', { toastId: customId });
 				dispatch(handleResetGroupList());
+				// Tải lại dữ liệu hiển thị Nhóm do bạn quản lý
+				handleRefreshData();
 			} catch (err) {
 				NotificationError(err);
 			} finally {
@@ -557,6 +559,7 @@ const PopupCreateGroup = ({ handleClose }) => {
 PopupCreateGroup.propTypes = {
 	handleClose: PropTypes.func,
 	showRef: PropTypes.object,
+	handleRefreshData: PropTypes.func,
 };
 
 export default PopupCreateGroup;
