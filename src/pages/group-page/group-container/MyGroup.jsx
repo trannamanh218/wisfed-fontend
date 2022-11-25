@@ -17,18 +17,28 @@ import { useRef } from 'react';
 import LoadingIndicator from 'shared/loading-indicator';
 import InfiniteScroll from 'react-infinite-scroll-component';
 
-const ListMyGroupComp = () => {
+function MyGroup() {
 	const [adminGroup, setAdminGroup] = useState([]);
 	const [myGroup, setMyGroup] = useState([]);
 	const [hasMore, setHasMore] = useState(true);
+	const [inputSearchValue, setInputSearchValue] = useState('');
+	const [valueGroupSearch, setValueGroupSearch] = useState('');
+	const [show, setShow] = useState(false);
+	const [filterSearch, setFilterSearch] = useState();
 
-	const callApiStart = useRef(8);
-	const callApiPerPage = useRef(8);
+	const userInfo = useSelector(state => state.auth.userInfo);
+	const resetGroupList = useSelector(state => state.group.resetGroupList);
 
 	const dispatch = useDispatch();
-	const userInfo = useSelector(state => state.auth.userInfo);
+	const callApiStart = useRef(8);
+	const callApiPerPage = useRef(8);
+	const { ref: showRef } = useVisible(false);
 
-	const resetGroupList = useSelector(state => state.group.resetGroupList);
+	useEffect(() => {
+		setHasMore(true);
+		listAdminMyGroup();
+		listMyGroup();
+	}, [resetGroupList]);
 
 	const listAdminMyGroup = async () => {
 		try {
@@ -77,120 +87,6 @@ const ListMyGroupComp = () => {
 		}
 	};
 
-	useEffect(() => {
-		setHasMore(true);
-		listAdminMyGroup();
-		listMyGroup();
-	}, [resetGroupList]);
-
-	return (
-		!_.isEmpty(userInfo) && (
-			<>
-				{adminGroup.length > 0 && (
-					<div>
-						<h2 className='main__title' style={{ marginBottom: '20px', fontSize: '20px' }}>
-							Nhóm do bạn quản lý
-						</h2>
-						<div className='list-group-container--none'>
-							{adminGroup.map((item, index) => {
-								return (
-									<div className='item-group' key={index}>
-										<Link key={index} to={`/group/${item.id}`}>
-											<img
-												src={item.avatar}
-												onError={e => e.target.setAttribute('src', defaultAvatar)}
-												alt=''
-											/>
-										</Link>
-										<div className='item-group__text'>
-											<div className='item-group__name'>
-												<span>{item.name}</span>
-											</div>
-											<div className='item-group__description'>
-												<span>
-													{item?.countMember < 10 ? `0${item.countMember}` : item.countMember}{' '}
-													thành viên
-												</span>
-											</div>
-											<div className='item-group__count-post'>
-												<span>{item.countPost} bài viết/ngày</span>
-											</div>
-											<div className='item-group-btn'>
-												<Link key={index} to={`/group/${item.id}`}>
-													<button>Truy cập vào nhóm </button>
-												</Link>
-											</div>
-										</div>
-									</div>
-								);
-							})}
-						</div>
-					</div>
-				)}
-
-				{myGroup.length > 0 && (
-					<div>
-						<h2 className='main__title' style={{ marginBottom: '20px', fontSize: '20px' }}>
-							Nhóm bạn đã tham gia
-						</h2>
-						<InfiniteScroll
-							dataLength={myGroup.length}
-							next={getGroupListNextTimes}
-							hasMore={hasMore}
-							loader={<LoadingIndicator />}
-						>
-							<div className='list-group-container--none'>
-								{myGroup.map((item, index) => {
-									return (
-										<div className='item-group' key={index}>
-											<Link key={index} to={`/group/${item.id}`}>
-												<img
-													src={item.avatar}
-													onError={e => e.target.setAttribute('src', defaultAvatar)}
-													alt=''
-												/>
-											</Link>
-											<div className='item-group__text'>
-												<div className='item-group__name'>
-													<span>{item.name}</span>
-												</div>
-												<div className='item-group__description'>
-													<span>
-														{item?.countMember < 10
-															? `0${item.countMember}`
-															: item.countMember}{' '}
-														thành viên
-													</span>
-												</div>
-												<div className='item-group__count-post'>
-													<span>{item.countPost} bài viết/ngày</span>
-												</div>
-												<div className='item-group-btn'>
-													<Link key={index} to={`/group/${item.id}`}>
-														<button>Truy cập vào nhóm </button>
-													</Link>
-												</div>
-											</div>
-										</div>
-									);
-								})}
-							</div>
-						</InfiniteScroll>
-					</div>
-				)}
-			</>
-		)
-	);
-};
-
-function MyGroup() {
-	const [inputSearchValue, setInputSearchValue] = useState('');
-	const [valueGroupSearch, setValueGroupSearch] = useState('');
-	const [show, setShow] = useState(false);
-	const [filterSearch, setFilterSearch] = useState();
-
-	const { ref: showRef } = useVisible(false);
-
 	const handleChange = e => {
 		setInputSearchValue(e.target.value);
 		debounceSearch(e.target.value);
@@ -228,7 +124,121 @@ function MyGroup() {
 								handleShowModal={() => setShow(true)}
 							/>
 						}
-						main={<ListMyGroupComp />}
+						main={
+							<>
+								{!_.isEmpty(userInfo) && (
+									<>
+										{adminGroup.length > 0 && (
+											<div>
+												<h2
+													className='main__title'
+													style={{ marginBottom: '20px', fontSize: '20px' }}
+												>
+													Nhóm do bạn quản lý
+												</h2>
+												<div className='list-group-container--none'>
+													{adminGroup.map((item, index) => {
+														return (
+															<div className='item-group' key={index}>
+																<Link key={index} to={`/group/${item.id}`}>
+																	<img
+																		src={item.avatar}
+																		onError={e =>
+																			e.target.setAttribute('src', defaultAvatar)
+																		}
+																		alt=''
+																	/>
+																</Link>
+																<div className='item-group__text'>
+																	<div className='item-group__name'>
+																		<span>{item.name}</span>
+																	</div>
+																	<div className='item-group__description'>
+																		<span>
+																			{item?.countMember < 10
+																				? `0${item.countMember}`
+																				: item.countMember}{' '}
+																			thành viên
+																		</span>
+																	</div>
+																	<div className='item-group__count-post'>
+																		<span>{item.countPost} bài viết/ngày</span>
+																	</div>
+																	<div className='item-group-btn'>
+																		<Link key={index} to={`/group/${item.id}`}>
+																			<button>Truy cập vào nhóm </button>
+																		</Link>
+																	</div>
+																</div>
+															</div>
+														);
+													})}
+												</div>
+											</div>
+										)}
+
+										{myGroup.length > 0 && (
+											<div>
+												<h2
+													className='main__title'
+													style={{ marginBottom: '20px', fontSize: '20px' }}
+												>
+													Nhóm bạn đã tham gia
+												</h2>
+												<InfiniteScroll
+													dataLength={myGroup.length}
+													next={getGroupListNextTimes}
+													hasMore={hasMore}
+													loader={<LoadingIndicator />}
+												>
+													<div className='list-group-container--none'>
+														{myGroup.map((item, index) => {
+															return (
+																<div className='item-group' key={index}>
+																	<Link key={index} to={`/group/${item.id}`}>
+																		<img
+																			src={item.avatar}
+																			onError={e =>
+																				e.target.setAttribute(
+																					'src',
+																					defaultAvatar
+																				)
+																			}
+																			alt=''
+																		/>
+																	</Link>
+																	<div className='item-group__text'>
+																		<div className='item-group__name'>
+																			<span>{item.name}</span>
+																		</div>
+																		<div className='item-group__description'>
+																			<span>
+																				{item?.countMember < 10
+																					? `0${item.countMember}`
+																					: item.countMember}{' '}
+																				thành viên
+																			</span>
+																		</div>
+																		<div className='item-group__count-post'>
+																			<span>{item.countPost} bài viết/ngày</span>
+																		</div>
+																		<div className='item-group-btn'>
+																			<Link key={index} to={`/group/${item.id}`}>
+																				<button>Truy cập vào nhóm </button>
+																			</Link>
+																		</div>
+																	</div>
+																</div>
+															);
+														})}
+													</div>
+												</InfiniteScroll>
+											</div>
+										)}
+									</>
+								)}
+							</>
+						}
 					/>
 				) : (
 					<div className='result-search'>
@@ -247,7 +257,14 @@ function MyGroup() {
 				)}
 				<Modal className='create-group-modal' show={show} onHide={handleCloseModal}>
 					<Modal.Body>
-						<PopupCreateGroup handleClose={handleCloseModal} showRef={showRef} />
+						<PopupCreateGroup
+							handleClose={handleCloseModal}
+							showRef={showRef}
+							handleRefreshData={() => {
+								listAdminMyGroup();
+								listMyGroup();
+							}}
+						/>
 					</Modal.Body>
 				</Modal>
 			</div>

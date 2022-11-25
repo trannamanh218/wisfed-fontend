@@ -148,7 +148,14 @@ const LayoutGroup = () => {
 
 				<Modal className='create-group-modal' show={show} onHide={handleCloseModal}>
 					<Modal.Body>
-						<PopupCreateGroup handleClose={handleCloseModal} showRef={showRef} />
+						<PopupCreateGroup
+							handleClose={handleCloseModal}
+							showRef={showRef}
+							handleRefreshData={() => {
+								listAdminMyGroup();
+								listMyGroup();
+							}}
+						/>
 					</Modal.Body>
 				</Modal>
 			</div>

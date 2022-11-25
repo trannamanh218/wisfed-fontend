@@ -25,22 +25,26 @@ const Profile = () => {
 	const navigate = useNavigate();
 
 	useEffect(() => {
-		if (userInfo.id === userId) {
-			setCurrentUserInfo(userInfo);
-			dispatch(checkGetUser(false));
-		} else {
-			getUserDetailData();
-			dispatch(checkGetUser(true));
+		if (!_.isEmpty(userInfo)) {
+			if (userInfo.id === userId) {
+				setCurrentUserInfo(userInfo);
+				dispatch(checkGetUser(false));
+			} else {
+				getUserDetailData();
+				dispatch(checkGetUser(true));
+			}
 		}
 	}, [userId, isReload, userInfo]);
 
 	const getUserDetailData = async () => {
+		setStatus(true);
 		try {
 			const userData = await dispatch(getUserDetail(userId)).unwrap();
 			setCurrentUserInfo(userData);
 		} catch (err) {
 			return;
 		} finally {
+			setStatus(false);
 			setRenderNotFound(true);
 		}
 	};
