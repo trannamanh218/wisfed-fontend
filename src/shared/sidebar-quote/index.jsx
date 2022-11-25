@@ -9,15 +9,21 @@ import { useState, useEffect, useCallback } from 'react';
 import DualColumn from 'shared/dual-column';
 import { getCountQuotesByCategory } from 'reducers/redux-utils/quote';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { NotificationError } from 'helpers/Error';
 import { handleCategoryByQuotesName } from 'reducers/redux-utils/quote';
 import { getAllLibraryList } from 'reducers/redux-utils/library';
+// import BookSlider from 'shared/book-slider';
+import { getBookDetail, getBookAuthorList } from 'reducers/redux-utils/book';
+import RouteLink from 'helpers/RouteLink';
+import Circle from 'shared/loading/circle';
 
-const SidebarQuote = ({ listHashtags, firstStyleQuotesSidebar, hasCountQuotes, createdByOfCurrentQuote }) => {
+const SidebarQuote = ({ listHashtags, firstStyleQuotesSidebar, createdByOfCurrentQuote }) => {
 	const [inputSearch, setInputSearch] = useState('');
 	const [categoryList, setCategoryList] = useState([]);
 	const [libraries, setLibraries] = useState({});
+	const [booksAuthor, setBooksAuthor] = useState([]);
+	const [isViewBookDetailLoading, setIsViewBookDetailLoading] = useState(false);
 
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
@@ -26,15 +32,19 @@ const SidebarQuote = ({ listHashtags, firstStyleQuotesSidebar, hasCountQuotes, c
 	const userInfo = useSelector(state => state.auth.userInfo);
 
 	useEffect(() => {
-		if (!firstStyleQuotesSidebar && hasCountQuotes) {
+		if (!firstStyleQuotesSidebar) {
 			getCountQuotesByCategoryData('');
 		}
 
-		if (createdByOfCurrentQuote && firstStyleQuotesSidebar) {
-			if (userInfo.id === createdByOfCurrentQuote) {
-				setLibraries(myAllLibrary);
+		if (createdByOfCurrentQuote) {
+			if (firstStyleQuotesSidebar) {
+				if (userInfo.id === createdByOfCurrentQuote) {
+					setLibraries(myAllLibrary);
+				} else {
+					getAllLibrariesByUser();
+				}
 			} else {
-				getAllLibrariesByUser();
+				getlistBooksByAuthor();
 			}
 		}
 	}, []);
@@ -62,6 +72,19 @@ const SidebarQuote = ({ listHashtags, firstStyleQuotesSidebar, hasCountQuotes, c
 		}
 	};
 
+	const getlistBooksByAuthor = async () => {
+		try {
+			const data = {
+				id: createdByOfCurrentQuote,
+				limit: 10,
+			};
+			const res = await dispatch(getBookAuthorList(data)).unwrap();
+			setBooksAuthor(res);
+		} catch (error) {
+			NotificationError(error);
+		}
+	};
+
 	const debouncSearch = useCallback(
 		_.debounce(inputValue => {
 			getCountQuotesByCategoryData(inputValue);
@@ -79,10 +102,23 @@ const SidebarQuote = ({ listHashtags, firstStyleQuotesSidebar, hasCountQuotes, c
 		navigate(`/quotes/category/${categoryId}`);
 	};
 
+	const handleViewBookDetail = useCallback(async data => {
+		setIsViewBookDetailLoading(true);
+		try {
+			await dispatch(getBookDetail(data.id)).unwrap();
+			navigate(RouteLink.bookDetail(data.id, data.name));
+		} catch (err) {
+			NotificationError(err);
+		} finally {
+			setIsViewBookDetailLoading(false);
+		}
+	}, []);
+
 	return (
 		<div className='sidebar-quote'>
+			<Circle loading={isViewBookDetailLoading} />
 			<>
-				{!firstStyleQuotesSidebar && hasCountQuotes ? (
+				{!firstStyleQuotesSidebar ? (
 					<div className='sidebar-quote__category-list'>
 						<h4>Chủ đề Quotes</h4>
 						<SearchField
@@ -97,6 +133,17 @@ const SidebarQuote = ({ listHashtags, firstStyleQuotesSidebar, hasCountQuotes, c
 							inQuotes={true}
 							filterQuotesByCategory={filterQuotesByCategory}
 						/>
+						{/* <div className='my-compose'>
+							<BookSlider
+								className='book-reference__slider'
+								title={`Sách của ${''}`}
+								list={booksAuthor}
+								handleViewBookDetail={handleViewBookDetail}
+							/>
+							<Link className='view-all-link' to={`/books-author/${createdByOfCurrentQuote}`}>
+								Xem thêm
+							</Link>
+						</div> */}
 					</div>
 				) : (
 					<>
@@ -130,14 +177,12 @@ const SidebarQuote = ({ listHashtags, firstStyleQuotesSidebar, hasCountQuotes, c
 SidebarQuote.defaultProps = {
 	listHashtags: [],
 	firstStyleQuotesSidebar: false,
-	hasCountQuotes: true,
 	createdByOfCurrentQuote: null,
 };
 
 SidebarQuote.propTypes = {
 	listHashtags: PropTypes.array,
 	firstStyleQuotesSidebar: PropTypes.bool,
-	hasCountQuotes: PropTypes.bool,
 	createdByOfCurrentQuote: PropTypes.string,
 };
 

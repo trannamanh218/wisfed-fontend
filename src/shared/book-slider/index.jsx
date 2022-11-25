@@ -10,13 +10,13 @@ import pencil from 'assets/images/pencil.png';
 
 const BookSlider = ({
 	list,
-	title = '',
+	title,
 	className,
-	size = 'sm',
+	size,
 	handleViewBookDetail,
-	inCategory = false,
-	inResult = false,
-	inCategoryDetail = false,
+	inCategory,
+	inResult,
+	inCategoryDetail,
 	handleShowModalSeries,
 	editSeriesRole,
 	...rest
@@ -181,8 +181,13 @@ BookSlider.defaultProps = {
 	list: [],
 	title: '',
 	className: '',
+	size: 'sm',
 	handleViewBookDetail: () => {},
 	editSeriesRole: false,
+	inCategory: false,
+	inResult: false,
+	inCategoryDetail: false,
+	handleShowModalSeries: () => {},
 };
 
 BookSlider.propTypes = {

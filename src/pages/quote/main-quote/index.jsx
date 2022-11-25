@@ -12,7 +12,6 @@ import _ from 'lodash';
 import { useParams } from 'react-router-dom';
 import { getUserDetail } from 'reducers/redux-utils/user';
 import LoadingIndicator from 'shared/loading-indicator';
-import PropTypes from 'prop-types';
 
 const MainQuote = () => {
 	const filterOptions = [
