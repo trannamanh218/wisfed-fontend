@@ -22,7 +22,7 @@ import './header.scss';
 import NotificationModal from 'pages/notification/notification-modal';
 import { useDispatch, useSelector } from 'react-redux';
 import { backgroundToggle, handleUpdateNewNotification, patchNewNotification } from 'reducers/redux-utils/notification';
-import { checkUserLogin, deleteUserInfo } from 'reducers/redux-utils/auth';
+import { checkUserLogin, deleteUserInfo, updateUserInfo } from 'reducers/redux-utils/auth';
 import { useVisible } from 'shared/hooks';
 import SearchAllModal from 'shared/search-all';
 import Storage from 'helpers/Storage';
@@ -107,6 +107,7 @@ const Header = () => {
 			try {
 				dispatch(patchNewNotification({ isNewNotification: false })).unwrap();
 				dispatch(handleUpdateNewNotification(false));
+				dispatch(updateUserInfo({ ...userInfo, isNewNotification: false }));
 			} catch (err) {
 				NotificationError(err);
 			}
@@ -145,6 +146,7 @@ const Header = () => {
 			try {
 				dispatch(patchNewNotification({ isNewNotification: false })).unwrap();
 				dispatch(handleUpdateNewNotification(false));
+				dispatch(updateUserInfo({ ...userInfo, isNewNotification: false }));
 			} catch (err) {
 				NotificationError(err);
 			}

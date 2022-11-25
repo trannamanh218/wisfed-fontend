@@ -5,19 +5,20 @@
 	font-family: 'Montserrat';
 	font-style: normal;
 	margin-bottom: 30px;
+
 	.CircularProgressbar {
-		max-width: 240px;
+		display: block;
+		max-width: 214px;
+		margin: auto;
 	}
-	.CircularProgressbar-path {
-		width: 214px;
-	}
+
 	.CircularProgressbar-trail {
 		stroke: #e3feff;
 	}
+
 	.CircularProgressbar-text {
 		fill: #2d2c42;
 		font-weight: 700;
-		font-size: 22px;
 		line-height: 48px;
 	}
 	&__title {

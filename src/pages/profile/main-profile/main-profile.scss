@@ -4,6 +4,11 @@
 	width: 100%;
 	.tab-content {
 		padding-bottom: 0;
+		border-bottom-right-radius: 16px;
+		border-bottom-left-radius: 16px;
+		background-color: white;
+		overflow: hidden;
+		min-height: 300px;
 		.active {
 			border-radius: 0;
 		}
@@ -12,11 +17,9 @@
 	.tab-pane {
 		&.active {
 			padding: 2.5rem;
-			background-color: #fff;
 		}
 		&.post-tab-active {
 			padding: 0;
-			background-color: $secondary;
 		}
 	}
 

@@ -11,6 +11,7 @@ const ProgressBarCircle = ({ booksReadYear }) => {
 	const { userId } = useParams();
 	const { userInfo } = useSelector(state => state.auth);
 	const idCSS = 'library';
+
 	const SVG = () => {
 		const gradientTransform = `rotate(90)`;
 		return (
