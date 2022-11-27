@@ -64,7 +64,7 @@ const verbShareArray = [
 	REVIEW_VERB_SHARE,
 ];
 
-function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMentionCmtFromGroup, isInDetail = false }) {
+function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMentionCmtFromGroup, isInDetail }) {
 	const [postData, setPostData] = useState({});
 	const [videoId, setVideoId] = useState('');
 	const [replyingCommentId, setReplyingCommentId] = useState(-1);
@@ -852,6 +852,7 @@ Post.defaultProps = {
 	type: POST_TYPE,
 	reduxMentionCommentId: null,
 	reduxCheckIfMentionCmtFromGroup: null,
+	isInDetail: false,
 };
 
 Post.propTypes = {

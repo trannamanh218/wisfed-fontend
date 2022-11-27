@@ -12,10 +12,11 @@ import { useNavigate } from 'react-router-dom';
 import Circle from 'shared/loading/circle';
 import _ from 'lodash';
 import NotFound from 'pages/not-found';
+import { NotificationError } from 'helpers/Error';
 
 const Profile = () => {
 	const [currentUserInfo, setCurrentUserInfo] = useState({});
-	const [status, setStatus] = useState(false);
+	const [isLoading, setIsLoading] = useState(false);
 	const [renderNotFound, setRenderNotFound] = useState(false);
 
 	const dispatch = useDispatch();
@@ -37,34 +38,33 @@ const Profile = () => {
 	}, [userId, isReload, userInfo]);
 
 	const getUserDetailData = async () => {
-		setStatus(true);
+		setIsLoading(true);
 		try {
 			const userData = await dispatch(getUserDetail(userId)).unwrap();
 			setCurrentUserInfo(userData);
 		} catch (err) {
 			return;
 		} finally {
-			setStatus(false);
+			setIsLoading(false);
 			setRenderNotFound(true);
 		}
 	};
 
 	const handleViewBookDetail = async data => {
-		setStatus(true);
+		setIsLoading(true);
 		try {
 			await dispatch(getBookDetail(data.id)).unwrap();
 			navigate(RouteLink.bookDetail(data.id, data.name));
 		} catch (err) {
-			const statusCode = err?.statusCode || 500;
-			setStatus(statusCode);
+			NotificationError(err);
 		} finally {
-			setStatus(false);
+			setIsLoading(false);
 		}
 	};
 
 	return (
 		<>
-			<Circle loading={status} />
+			<Circle loading={isLoading} />
 			{!_.isEmpty(currentUserInfo) ? (
 				<MainContainer
 					main={<MainProfile currentUserInfo={currentUserInfo} />}

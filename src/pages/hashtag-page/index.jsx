@@ -9,7 +9,7 @@ import LoadingIndicator from 'shared/loading-indicator';
 import { POST_TYPE } from 'constants/index';
 import { getListPostByHashtag, getListPostByHashtagGroup } from 'reducers/redux-utils/hashtag-page';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import Circle from 'shared/loading/circle';
+import LoadingTimeLine from 'shared/loading-timeline';
 
 export default function HashtagPage() {
 	const dispatch = useDispatch();
@@ -20,95 +20,119 @@ export default function HashtagPage() {
 	const [postList, setPostList] = useState([]);
 	const [hasMore, setHasMore] = useState(true);
 
-	const callApiStart = useRef(0);
-	const callApiPerPage = useRef(10);
-
-	const getPostsByHashtagFromGroup = async () => {
-		setIsFetching(true);
-		const data = {
-			groupId: groupId,
-			params: {
-				tag: hashtag,
-			},
-		};
-		try {
-			const res = await dispatch(getListPostByHashtagGroup(data)).unwrap();
-			setPostList(postList.concat(res));
-			if (res.length === 0 || res.length < callApiPerPage.current) {
-				setHasMore(false);
-			} else {
-				callApiStart.current += callApiPerPage.current;
-			}
-		} catch (error) {
-			NotificationError(error);
-		} finally {
-			setIsFetching(false);
-		}
-	};
-
-	const getPostsByHashtag = async () => {
-		setIsFetching(true);
-		const params = {
-			q: hashtag,
-			start: callApiStart.current,
-			limit: callApiPerPage.current,
-			sort: JSON.stringify([{ property: 'createdAt', direction: 'DESC' }]),
-		};
-		try {
-			const res = await dispatch(getListPostByHashtag(params)).unwrap();
-			setPostList(postList.concat(res));
-			if (res.length === 0 || res.length < callApiPerPage.current) {
-				setHasMore(false);
-			} else {
-				callApiStart.current += callApiPerPage.current;
-			}
-		} catch (error) {
-			NotificationError(error);
-		} finally {
-			setIsFetching(false);
-		}
-	};
+	const callApiStart = useRef(5);
+	const callApiPerPage = useRef(5);
 
 	useEffect(() => {
-		callApiStart.current = 0;
+		callApiStart.current = 5;
 		setIsFetching(true);
 		setHasMore(true);
 		setPostList([]);
 		window.scrollTo(0, 0);
-	}, [hashtag, groupId]);
+		getDataFirstTime();
+	}, [hashtag]);
 
-	useEffect(() => {
-		if (postList.length === 0 && isFetching) {
-			if (groupId) {
-				getPostsByHashtagFromGroup();
+	const getDataFirstTime = async () => {
+		setIsFetching(true);
+		try {
+			let res;
+			if (window.location.pathname.includes('/hashtag-group/')) {
+				const data = {
+					groupId: groupId,
+					params: {
+						tag: hashtag,
+						start: 0,
+						limit: callApiPerPage.current,
+						sort: JSON.stringify([{ property: 'createdAt', direction: 'DESC' }]),
+					},
+				};
+				res = await dispatch(getListPostByHashtagGroup(data)).unwrap();
 			} else {
-				getPostsByHashtag();
+				const params = {
+					q: hashtag,
+					start: 0,
+					limit: callApiPerPage.current,
+					sort: JSON.stringify([{ property: 'createdAt', direction: 'DESC' }]),
+				};
+				res = await dispatch(getListPostByHashtag(params)).unwrap();
 			}
+			setPostList(res);
+			if (res.length < callApiPerPage.current) {
+				setHasMore(false);
+			}
+		} catch (error) {
+			NotificationError(error);
+		} finally {
+			setIsFetching(false);
 		}
-	}, [isFetching]);
+	};
+
+	const getDataNextTimes = async () => {
+		try {
+			let res;
+			if (window.location.pathname.includes('/hashtag-group/')) {
+				const data = {
+					groupId: groupId,
+					params: {
+						tag: hashtag,
+						start: callApiStart.current,
+						limit: callApiPerPage.current,
+						sort: JSON.stringify([{ property: 'createdAt', direction: 'DESC' }]),
+					},
+				};
+				res = await dispatch(getListPostByHashtagGroup(data)).unwrap();
+			} else {
+				const params = {
+					q: hashtag,
+					start: callApiStart.current,
+					limit: callApiPerPage.current,
+					sort: JSON.stringify([{ property: 'createdAt', direction: 'DESC' }]),
+				};
+				res = await dispatch(getListPostByHashtag(params)).unwrap();
+			}
+
+			if (res.length) {
+				setPostList(postList.concat(res));
+				if (res.length < callApiPerPage.current) {
+					setHasMore(false);
+				} else {
+					callApiStart.current += callApiPerPage.current;
+				}
+			} else {
+				setHasMore(false);
+			}
+		} catch (error) {
+			NotificationError(error);
+		}
+	};
+
 	return (
 		<NormalContainer>
-			{isFetching ? (
-				<Circle loading={true} />
-			) : (
-				<div className='hashtag-page'>
-					<h4>Kết quả tìm kiếm cho "#{hashtag}"</h4>
-					{postList.length > 0 ? (
-						<InfiniteScroll
-							dataLength={postList.length}
-							next={groupId ? getPostsByHashtagFromGroup : getPostsByHashtag}
-							hasMore={hasMore}
-							loader={<LoadingIndicator />}
-						>
-							{postList.map(post => (
-								<Post key={post.id} postInformations={post} type={POST_TYPE} isInDetail={true} />
-							))}
-						</InfiniteScroll>
-					) : (
-						<h6>Chưa có dữ liệu</h6>
-					)}
-				</div>
-			)}
+			<div className='hashtag-page'>
+				<h4>Kết quả tìm kiếm cho "#{hashtag}"</h4>
+				{isFetching ? (
+					<div className='hashtag-page__loading'>
+						<LoadingTimeLine numberItems={1} />
+					</div>
+				) : (
+					<>
+						{postList.length > 0 ? (
+							<InfiniteScroll
+								dataLength={postList.length}
+								next={getDataNextTimes}
+								hasMore={hasMore}
+								loader={<LoadingIndicator />}
+							>
+								{postList.map(post => (
+									<Post key={post.id} postInformations={post} type={POST_TYPE} isInDetail={true} />
+								))}
+							</InfiniteScroll>
+						) : (
+							<h6>Chưa có dữ liệu</h6>
+						)}
+					</>
+				)}
+			</div>
 		</NormalContainer>
 	);
 }

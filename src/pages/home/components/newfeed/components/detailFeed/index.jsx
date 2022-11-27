@@ -5,9 +5,9 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import './detail-feed.scss';
-import Circle from 'shared/loading/circle';
 import { POST_TYPE, GROUP_TYPE } from 'constants/index';
 import NotFound from 'pages/not-found';
+import LoadingTimeLine from 'shared/loading-timeline';
 
 const DetailFeed = () => {
 	const dispatch = useDispatch();
@@ -48,28 +48,32 @@ const DetailFeed = () => {
 				<NotFound />
 			) : (
 				<NormalContainer>
-					{isLoading ? (
-						<Circle loading={true} />
-					) : (
-						<div className='detail_feed_container'>
-							{type === 'mini-post' ? (
-								<Post
-									postInformations={detailFeed}
-									type={POST_TYPE}
-									reduxMentionCommentId={reduxMentionCommentId}
-									isInDetail={true}
-								/>
-							) : (
-								<Post
-									postInformations={detailFeed}
-									type={GROUP_TYPE}
-									reduxMentionCommentId={reduxMentionCommentId}
-									reduxCheckIfMentionCmtFromGroup={reduxCheckIfMentionCmtFromGroup}
-									isInDetail={true}
-								/>
-							)}
-						</div>
-					)}
+					<div className='detail-feed-container'>
+						{isLoading ? (
+							<div className='detail-feed__loading'>
+								<LoadingTimeLine numberItems={1} />
+							</div>
+						) : (
+							<>
+								{type === 'mini-post' ? (
+									<Post
+										postInformations={detailFeed}
+										type={POST_TYPE}
+										reduxMentionCommentId={reduxMentionCommentId}
+										isInDetail={true}
+									/>
+								) : (
+									<Post
+										postInformations={detailFeed}
+										type={GROUP_TYPE}
+										reduxMentionCommentId={reduxMentionCommentId}
+										reduxCheckIfMentionCmtFromGroup={reduxCheckIfMentionCmtFromGroup}
+										isInDetail={true}
+									/>
+								)}
+							</>
+						)}
+					</div>
 				</NormalContainer>
 			)}
 		</>

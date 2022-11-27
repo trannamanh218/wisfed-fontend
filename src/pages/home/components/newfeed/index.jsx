@@ -41,7 +41,6 @@ const NewFeed = () => {
 				sort: JSON.stringify([{ property: 'createdAt', direction: 'DESC' }]),
 			};
 			const posts = await dispatch(getActivityList(params)).unwrap();
-
 			setPostList(posts);
 		} catch (err) {
 			NotificationError(err);

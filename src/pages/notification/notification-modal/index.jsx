@@ -36,7 +36,7 @@ const NotificationModal = ({ setModalNoti, buttonModal }) => {
 	const isNewNotificationByRealtime = useSelector(state => state.notificationReducer.isNewNotificationByRealtime);
 
 	if (window.innerWidth >= 1280 && window.innerWidth <= 1366) {
-		loadingItemsNumber.current = 6;
+		loadingItemsNumber.current = 5;
 	} else {
 		loadingItemsNumber.current = 8;
 	}

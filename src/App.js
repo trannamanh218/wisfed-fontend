@@ -49,6 +49,7 @@ import UploadBook from 'pages/upload-book/UploadBook';
 import PropTypes from 'prop-types';
 import ModalCheckLogin from 'shared/modal-check-login';
 import QuotesByHashTag from 'pages/quotes-by-hashtag/QuotesByHashTag';
+import Header from 'components/header';
 
 function App({ children }) {
 	const dispatch = useDispatch();
@@ -102,6 +103,9 @@ function App({ children }) {
 				pauseOnHover
 			/>
 			<ModalCheckLogin routerLogin={routerLogin} />
+			<div style={{ margin: 'auto', maxWidth: '1440px' }}>
+				<Header />
+			</div>
 			<Routes>
 				{Storage.getAccessToken() !== null && (
 					<>

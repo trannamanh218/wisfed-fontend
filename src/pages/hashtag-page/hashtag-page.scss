@@ -2,4 +2,11 @@
 	max-width: 700px;
 	margin: auto;
 	padding-top: 40px;
+	.hashtag-page__loading {
+		min-height: 50vh;
+		background-color: white;
+		border-radius: 16px;
+		overflow: hidden;
+		padding: 8px 0;
+	}
 }

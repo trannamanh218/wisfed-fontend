@@ -1,4 +1,3 @@
-import Header from 'components/header';
 import PropTypes from 'prop-types';
 import './layout.scss';
 import { useSelector } from 'react-redux';
@@ -13,11 +12,8 @@ const Layout = ({ children }) => {
 
 	return (
 		<div className='layout'>
-			<Header />
-			<div className='layout__container'>
-				{handleBackgroundToggle === false && <div className='header__dard'></div>}
-				{children}
-			</div>
+			{handleBackgroundToggle === false && <div className='header__dard'></div>}
+			{children}
 		</div>
 	);
 };
