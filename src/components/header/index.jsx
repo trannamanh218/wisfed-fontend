@@ -29,7 +29,7 @@ import Storage from 'helpers/Storage';
 import {
 	handleResetValue,
 	handleUpdateValueInputSearchRedux,
-	handleUpdateIsInResult,
+	handleUpdateWentInResult,
 } from 'reducers/redux-utils/search';
 import { toast } from 'react-toastify';
 import { updateTargetReading } from 'reducers/redux-utils/chart';
@@ -47,7 +47,7 @@ const Header = () => {
 	const { isShowModal } = useSelector(state => state.search);
 	const { userInfo } = useSelector(state => state.auth);
 	const isNewNotificationByRealtime = useSelector(state => state.notificationReducer.isNewNotificationByRealtime);
-	const { isInResult } = useSelector(state => state.search);
+	const { wentInResult } = useSelector(state => state.search);
 
 	const { ref: showRef, isVisible: isShow, setIsVisible: setIsShow } = useVisible(false);
 	const {
@@ -231,10 +231,10 @@ const Header = () => {
 	useEffect(() => {
 		// Khi tìm kiếm rồi thì xóa dữ liệu ô input
 		if (window.location.pathname.includes('/result/')) {
-			dispatch(handleUpdateIsInResult(true));
-		} else if (isInResult) {
+			dispatch(handleUpdateWentInResult(true));
+		} else if (wentInResult) {
 			dispatch(handleUpdateValueInputSearchRedux(''));
-			dispatch(handleUpdateIsInResult(false));
+			dispatch(handleUpdateWentInResult(false));
 		}
 	}, [window.location.pathname]);
 
