@@ -16,7 +16,7 @@ const searchSlice = createSlice({
 	initialState: {
 		isShowModal: false,
 		valueInputSearchRedux: '',
-		isInResult: false,
+		wentInResult: false,
 	},
 	reducers: {
 		handleResetValue: (state, action) => {
@@ -25,13 +25,13 @@ const searchSlice = createSlice({
 		handleUpdateValueInputSearchRedux: (state, action) => {
 			state.valueInputSearchRedux = action.payload;
 		},
-		handleUpdateIsInResult: (state, action) => {
-			state.isInResult = action.payload;
+		handleUpdateWentInResult: (state, action) => {
+			state.wentInResult = action.payload;
 		},
 	},
 });
 
-export const { handleResetValue, handleUpdateValueInputSearchRedux, handleUpdateIsInResult } = searchSlice.actions;
+export const { handleResetValue, handleUpdateValueInputSearchRedux, handleUpdateWentInResult } = searchSlice.actions;
 
 const search = searchSlice.reducer;
 export default search;
