@@ -89,6 +89,29 @@ const BookSearch = ({ value, searchResultInput, activeKeyDefault, updateBooks })
 		}
 	};
 
+	const renderUploadButton = index => {
+		let allowRender = false;
+		if (listArrayBooks.length < callApiPerPage.current) {
+			if (index === listArrayBooks.length - 1) {
+				allowRender = true;
+			}
+		} else {
+			if (index === 9) {
+				allowRender = true;
+			}
+		}
+
+		if (allowRender) {
+			return (
+				<div className='btn-goTo-upload-book has-background'>
+					<h6>Vui lòng thêm sách nếu bạn không tìm thấy trên hệ thống</h6>
+					<br />
+					<Button onClick={handleDiect}>Thêm sách</Button>
+				</div>
+			);
+		}
+	};
+
 	return (
 		<div className='bookSearch__container'>
 			{isLoadingFirstTime ? (
@@ -113,13 +136,7 @@ const BookSearch = ({ value, searchResultInput, activeKeyDefault, updateBooks })
 									<div key={item.id} className='bookSearch__main'>
 										<AuthorBook data={item} checkStar={true} saveLocalStorage={true} />
 									</div>
-									{index === 9 && (
-										<div className='btn-goTo-upload-book has-background'>
-											<h6>Vui lòng thêm sách nếu bạn không tìm thấy trên hệ thống</h6>
-											<br />
-											<Button onClick={handleDiect}>Thêm sách</Button>
-										</div>
-									)}
+									{renderUploadButton(index)}
 								</>
 							))}
 						</InfiniteScroll>

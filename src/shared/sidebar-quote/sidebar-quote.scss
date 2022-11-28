@@ -11,11 +11,14 @@
 			margin-bottom: 1.5rem;
 		}
 	}
+
 	.topic-column__container {
 		grid-template-columns: 1fr;
 	}
+
 	.topic-column__item {
 		font-weight: 700;
+		width: fit-content;
 	}
 
 	.sidebar-quote__category-list {

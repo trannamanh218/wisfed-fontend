@@ -10,6 +10,7 @@ import { POST_TYPE } from 'constants/index';
 import { getListPostByHashtag, getListPostByHashtagGroup } from 'reducers/redux-utils/hashtag-page';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import LoadingTimeLine from 'shared/loading-timeline';
+import BackButton from 'shared/back-button';
 
 export default function HashtagPage() {
 	const dispatch = useDispatch();
@@ -109,7 +110,10 @@ export default function HashtagPage() {
 	return (
 		<NormalContainer>
 			<div className='hashtag-page'>
-				<h4>Kết quả tìm kiếm cho "#{hashtag}"</h4>
+				<div className='hashtag-page__header'>
+					<BackButton destination={-1} />
+					<h4>Kết quả tìm kiếm cho "#{hashtag}"</h4>
+				</div>
 				{isFetching ? (
 					<div className='hashtag-page__loading'>
 						<LoadingTimeLine numberItems={1} />
@@ -124,7 +128,7 @@ export default function HashtagPage() {
 								loader={<LoadingIndicator />}
 							>
 								{postList.map(post => (
-									<Post key={post.id} postInformations={post} type={POST_TYPE} isInDetail={true} />
+									<Post key={post.id} postInformations={post} type={POST_TYPE} />
 								))}
 							</InfiniteScroll>
 						) : (

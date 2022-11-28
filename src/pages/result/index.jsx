@@ -15,7 +15,6 @@ import { useNavigate } from 'react-router-dom';
 import { hashtagRegex } from 'constants';
 import { handleUpdateValueInputSearchRedux } from 'reducers/redux-utils/search';
 import { useDispatch } from 'react-redux';
-import Circle from 'shared/loading/circle';
 
 const Result = () => {
 	const { value } = useParams();
@@ -27,6 +26,10 @@ const Result = () => {
 	const [firstTimeRender, setFirstTimeRender] = useState(true);
 
 	const navigate = useNavigate();
+
+	useEffect(() => {
+		window.scroll(0, 0);
+	}, [value]);
 
 	const handleChange = e => {
 		setSearchResultInput(e.target.value);

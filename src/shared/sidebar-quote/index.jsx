@@ -15,7 +15,7 @@ import { handleCategoryByQuotesName } from 'reducers/redux-utils/quote';
 import { getAllLibraryList } from 'reducers/redux-utils/library';
 // import BookSlider from 'shared/book-slider';
 import { getBookDetail, getBookAuthorList } from 'reducers/redux-utils/book';
-import RouteLink from 'helpers/RouteLink';
+// import RouteLink from 'helpers/RouteLink';
 import Circle from 'shared/loading/circle';
 
 const SidebarQuote = ({ listHashtags, firstStyleQuotesSidebar, createdByOfCurrentQuote }) => {
@@ -47,7 +47,7 @@ const SidebarQuote = ({ listHashtags, firstStyleQuotesSidebar, createdByOfCurren
 				getlistBooksByAuthor();
 			}
 		}
-	}, []);
+	}, [myAllLibrary]);
 
 	const getCountQuotesByCategoryData = async inputValue => {
 		try {
@@ -102,17 +102,17 @@ const SidebarQuote = ({ listHashtags, firstStyleQuotesSidebar, createdByOfCurren
 		navigate(`/quotes/category/${categoryId}`);
 	};
 
-	const handleViewBookDetail = useCallback(async data => {
-		setIsViewBookDetailLoading(true);
-		try {
-			await dispatch(getBookDetail(data.id)).unwrap();
-			navigate(RouteLink.bookDetail(data.id, data.name));
-		} catch (err) {
-			NotificationError(err);
-		} finally {
-			setIsViewBookDetailLoading(false);
-		}
-	}, []);
+	// const handleViewBookDetail = useCallback(async data => {
+	// 	setIsViewBookDetailLoading(true);
+	// 	try {
+	// 		await dispatch(getBookDetail(data.id)).unwrap();
+	// 		navigate(RouteLink.bookDetail(data.id, data.name));
+	// 	} catch (err) {
+	// 		NotificationError(err);
+	// 	} finally {
+	// 		setIsViewBookDetailLoading(false);
+	// 	}
+	// }, []);
 
 	return (
 		<div className='sidebar-quote'>

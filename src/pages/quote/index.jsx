@@ -10,12 +10,11 @@ import SidebarQuote from 'shared/sidebar-quote';
 
 const Quote = () => {
 	const [listHashtag, setListHashtag] = useState([]);
+	const [foundUser, setFoundUser] = useState(true);
 
 	const { userId } = useParams();
 	const userInfo = useSelector(state => state.auth.userInfo);
 	const dispatch = useDispatch();
-
-	const [foundUser, setFoundUser] = useState(true);
 
 	useEffect(() => {
 		window.scrollTo(0, 0);
