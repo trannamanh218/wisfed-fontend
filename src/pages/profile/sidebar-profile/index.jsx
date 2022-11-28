@@ -48,24 +48,8 @@ const SidebarProfile = ({ currentUserInfo, handleViewBookDetail }) => {
 		}
 	}, [userInfo, currentUserInfo]);
 
-	const getAllLibraryListUser = async () => {
-		try {
-			const data = { userId: userId };
-			const res = await dispatch(getAllLibraryList(data)).unwrap();
-			setLibraryShown(res.custom);
-
-			const reading = res.default.filter(item => item.defaultType === 'reading');
-			if (reading.length > 0 && reading[0].books.length) {
-				const books = reading[0].books;
-				setBookReading(books[0].book);
-			}
-		} catch (err) {
-			NotificationError(err);
-		}
-	};
-
 	useEffect(async () => {
-		if (userInfo.id === userId) {
+		if (userInfo.id === userId || window.location.pathname.includes('/confirm-my-book')) {
 			if (!_.isEmpty(myAllLibraryRedux)) {
 				setLibraryShown(myAllLibraryRedux.custom);
 				const readingLibrary = myAllLibraryRedux.default.filter(item => item.defaultType === 'reading');
@@ -78,6 +62,21 @@ const SidebarProfile = ({ currentUserInfo, handleViewBookDetail }) => {
 			getAllLibraryListUser();
 		}
 	}, [myAllLibraryRedux, userId]);
+
+	const getAllLibraryListUser = async () => {
+		try {
+			const data = { userId: userId };
+			const res = await dispatch(getAllLibraryList(data)).unwrap();
+			setLibraryShown(res.custom);
+			const reading = res.default.filter(item => item.defaultType === 'reading');
+			if (reading.length > 0 && reading[0].books.length) {
+				const books = reading[0].books;
+				setBookReading(books[0].book);
+			}
+		} catch (err) {
+			NotificationError(err);
+		}
+	};
 
 	const handleViewMore = () => {
 		const length = libraryShown.length;

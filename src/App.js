@@ -89,6 +89,22 @@ function App({ children }) {
 		}
 	}, [location]);
 
+	const renderHeader = () => {
+		if (
+			!location.pathname.includes('/login') &&
+			!location.pathname.includes('/register') &&
+			!location.pathname.includes('/forget-password') &&
+			!location.pathname.includes('/forget-password-admin') &&
+			!location.pathname.includes('/create-newpassword-admin') &&
+			!location.pathname.includes('/choose-topic')
+		)
+			return (
+				<div style={{ margin: 'auto', maxWidth: '1440px' }}>
+					<Header />
+				</div>
+			);
+	};
+
 	return (
 		<div>
 			<ToastContainer
@@ -103,9 +119,7 @@ function App({ children }) {
 				pauseOnHover
 			/>
 			<ModalCheckLogin routerLogin={routerLogin} />
-			<div style={{ margin: 'auto', maxWidth: '1440px' }}>
-				<Header />
-			</div>
+			{renderHeader()}
 			<Routes>
 				{Storage.getAccessToken() !== null && (
 					<>
@@ -115,6 +129,7 @@ function App({ children }) {
 						<Route path='/friends/:slug' element={<DetailFriend />} />
 						<Route path='/notification' element={<Notification />} />
 						<Route path='/group/:id' element={<Group />} />
+						<Route path='/confirm-my-book/:bookId' element={<ConfirmMyBook />} />
 					</>
 				)}
 
@@ -135,7 +150,6 @@ function App({ children }) {
 				<Route path='/quotes/category/:categoryId' element={<QuotesByCategory />} />
 				<Route path='/quotes/hashtag/:hashtag' element={<QuotesByHashTag />} />
 				<Route path='/quotes/detail/:id/:userId' element={<QuoteDetail />} />
-				<Route path='/confirm-my-book/:bookId' element={<ConfirmMyBook />} />
 				<Route path='/login' element={<Login />} />
 				<Route path='/register' element={<Register />} />
 				<Route path='/forget-password' element={<ForgetPassWordComponent />} />
