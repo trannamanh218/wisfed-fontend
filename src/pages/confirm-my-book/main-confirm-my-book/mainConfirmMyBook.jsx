@@ -10,7 +10,7 @@ import classNames from 'classnames';
 import { uploadMultiFile, creatBookCopyrights, getListCopyrights } from 'reducers/redux-utils/common';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useFetchBookDetail } from 'api/book.hooks';
 import { NotificationError } from 'helpers/Error';
 import PropTypes from 'prop-types';
@@ -18,10 +18,10 @@ import PropTypes from 'prop-types';
 function MainConfirmMyBook({ setErrorLoadPage }) {
 	const [images, setImages] = useState([]);
 	const [status, setStatus] = useState('');
-	const [refreshPage, setRefreshPage] = useState(false);
 
 	const dispatch = useDispatch();
 	const { bookId } = useParams();
+	const navigate = useNavigate();
 	const { bookInfo, errorFetch } = useFetchBookDetail(bookId);
 	const userInfo = useSelector(state => state.auth.userInfo);
 	const [textLength, setTextLength] = useState(450);
@@ -47,7 +47,7 @@ function MainConfirmMyBook({ setErrorLoadPage }) {
 		if (!_.isEmpty(userInfo)) {
 			getCopyrightsData();
 		}
-	}, [userInfo, refreshPage]);
+	}, [userInfo]);
 
 	const getCopyrightsData = async () => {
 		try {
@@ -109,7 +109,7 @@ function MainConfirmMyBook({ setErrorLoadPage }) {
 			if (creatBookCopyrightsResponse) {
 				const customId = 'custom-id-MainConfirmMyBook-success';
 				toast.success('Gửi Yêu cầu thành công', { toastId: customId });
-				setRefreshPage(!refreshPage);
+				navigate('/');
 			}
 		} catch {
 			const customId = 'custom-id-MainConfirmMyBook-error';

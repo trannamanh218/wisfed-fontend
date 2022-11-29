@@ -50,7 +50,7 @@ const SidebarProfile = ({ currentUserInfo, handleViewBookDetail }) => {
 
 	const getAllLibraryListUser = async () => {
 		try {
-			const data = { userId: userId };
+			const data = { userId: userId || userInfo.id };
 			const res = await dispatch(getAllLibraryList(data)).unwrap();
 			setLibraryShown(res.custom);
 
@@ -106,7 +106,7 @@ const SidebarProfile = ({ currentUserInfo, handleViewBookDetail }) => {
 		if (!Storage.getAccessToken()) {
 			dispatch(checkUserLogin(true));
 		} else {
-			return navigate(`/shelves/${userId}`);
+			return navigate(`/shelves/${userId || userInfo.id}`);
 		}
 	};
 
