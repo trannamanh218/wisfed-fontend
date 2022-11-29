@@ -9,6 +9,7 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import LoadingIndicator from 'shared/loading-indicator';
 import PropTypes from 'prop-types';
 import { POST_TYPE } from 'constants/index';
+import classNames from 'classnames';
 
 function PostTab({ currentTab }) {
 	const [postList, setPostList] = useState([]);
@@ -61,7 +62,7 @@ function PostTab({ currentTab }) {
 	};
 
 	return (
-		<div className='post-tab'>
+		<div className={classNames('post-tab', { 'loading': loading })}>
 			{loading ? (
 				<LoadingIndicator />
 			) : (

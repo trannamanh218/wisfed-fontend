@@ -41,7 +41,9 @@ const BookReference = ({ bookInfo, handleGetBookDetail }) => {
 	const handleShowModalSeries = () => setShowModalSeries(true);
 
 	useEffect(() => {
-		getBooksByCategory();
+		if (bookInfo.categories.length) {
+			getBooksByCategory();
+		}
 		getAllCategories();
 		if (bookInfo.series) {
 			getListBookSeries();

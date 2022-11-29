@@ -266,13 +266,15 @@ const NotificationStatus = ({ item, handleReplyFriendRequest, setModalNoti }) =>
 						</>
 					)}
 				</div>
-				{item.verb !== 'addFriend' && item.verb !== 'inviteGroup' && (
-					<div
-						className={classNames('notification-status__read-status', {
-							'readed': isRead || item.isRead,
-						})}
-					></div>
-				)}
+				{!window.location.pathname.includes('/notification') &&
+					item.verb !== 'addFriend' &&
+					item.verb !== 'inviteGroup' && (
+						<div
+							className={classNames('notification-status__read-status', {
+								'readed': isRead || item.isRead,
+							})}
+						></div>
+					)}
 			</div>
 
 			{item.isAccept === undefined && (item.verb === 'addFriend' || item.verb === 'inviteGroup') && (
@@ -320,6 +322,7 @@ const NotificationStatus = ({ item, handleReplyFriendRequest, setModalNoti }) =>
 NotificationStatus.defaultProps = {
 	item: {},
 	handleReplyFriendRequest: () => {},
+	setModalNoti: () => {},
 };
 
 NotificationStatus.propTypes = {

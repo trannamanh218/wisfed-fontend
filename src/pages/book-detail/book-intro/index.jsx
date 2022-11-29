@@ -8,24 +8,25 @@ import BookThumbnail from 'shared/book-thumbnail';
 import ReactRating from 'shared/react-rating';
 import ReadMore from 'shared/read-more';
 import './book-intro.scss';
-import { useSelector } from 'react-redux';
 import _ from 'lodash';
 import { convertToPlainString } from 'helpers/Common';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { FacebookShareButton } from 'react-share';
 import Storage from 'helpers/Storage';
 import { checkUserLogin } from 'reducers/redux-utils/auth';
 import classNames from 'classnames';
 
 const BookIntro = ({ bookInfo, listRatingStar }) => {
-	const reviewsNumber = useSelector(state => state.book.currentBookReviewsNumber);
+	const [urlShare, seturlShare] = useState('');
+	const [textLength, setTextLength] = useState(500);
+
 	const userInfo = useSelector(state => state.auth.userInfo);
+	const reviewsNumber = useSelector(state => state.book.currentBookReviewsNumber);
+
 	const location = useLocation();
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
-	const [urlShare, seturlShare] = useState('');
-	const [textLength, setTextLength] = useState(500);
 	const [isLink, setIsLink] = useState(false);
 
 	useEffect(() => {
@@ -62,8 +63,12 @@ const BookIntro = ({ bookInfo, listRatingStar }) => {
 	};
 
 	const handleConfirmMyBook = () => {
-		if (isLink) {
-			navigate(`/confirm-my-book/${bookInfo.id}`);
+		if (!_.isEmpty(userInfo)) {
+			if (!bookInfo.verify) {
+				navigate(`/confirm-my-book/${bookInfo.id}`);
+			}
+		} else {
+			dispatch(checkUserLogin(true));
 		}
 	};
 

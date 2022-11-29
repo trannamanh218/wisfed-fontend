@@ -15,6 +15,7 @@ const SubContainer = ({ left, main, right }) => {
 			</div>
 		);
 	}
+
 	return (
 		<Layout>
 			<div className='subContainer'>

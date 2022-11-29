@@ -151,7 +151,7 @@ export default function MainUpload() {
 			});
 		}
 
-		const imgSrc = uploadImageFile(image);
+		const imgSrc = await uploadImageFile(image);
 
 		let dataDate = publishDate;
 		if (publishDate) {
@@ -174,7 +174,12 @@ export default function MainUpload() {
 								authorName: inputAuthorValue,
 							},
 					  ],
-			translators: translators,
+			translators: [
+				{
+					isUser: false,
+					translatorName: translators,
+				},
+			],
 			publisherId: publisher[0].id,
 			isbn: isbn,
 			publishDate: dataDate,
@@ -324,7 +329,7 @@ export default function MainUpload() {
 							className='input input--non-border'
 							placeholder='Dịch giả'
 							value={translators}
-							onChange={e => setTranslators([e.target.value])}
+							onChange={e => setTranslators(e.target.value)}
 						></input>
 					</div>
 					<div className='inp-book'>

@@ -29,11 +29,13 @@ function MainConfirmMyBook({ setErrorLoadPage }) {
 
 	useEffect(() => {
 		if (window.innerWidth <= 820) {
-			setTextLength(400);
+			setTextLength(320);
 		} else if (window.innerWidth <= 1024) {
-			setTextLength(600);
+			setTextLength(690);
 		} else if (window.innerWidth <= 1280) {
-			setTextLength(650);
+			setTextLength(600);
+		} else {
+			setTextLength(635);
 		}
 	}, []);
 
@@ -150,9 +152,11 @@ function MainConfirmMyBook({ setErrorLoadPage }) {
 						</div>
 						<div className='main-confirm-my-book__book-info-content'>
 							<div className='main-confirm-my-book__hash-tags'>
-								<div className='main-confirm-my-book__hash-tag-item'>
-									#{bookInfo.categories[0].category.name}
-								</div>
+								{!!bookInfo.categories.length && (
+									<div className='main-confirm-my-book__hash-tag-item'>
+										#{bookInfo.categories[0].category.name}
+									</div>
+								)}
 							</div>
 							<div className='main-confirm-my-book__book-name'>{bookInfo.name}</div>
 							<div className='main-confirm-my-book__author-name'>

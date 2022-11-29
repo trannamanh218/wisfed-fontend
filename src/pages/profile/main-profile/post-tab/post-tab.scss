@@ -3,6 +3,11 @@
 .post-tab {
 	margin-top: 0.5px;
 	position: relative;
+	background-color: $secondary;
+	&.loading {
+		background-color: $white;
+	}
+
 	&::before {
 		content: '';
 		display: block;
@@ -11,6 +16,7 @@
 		background-color: white;
 		position: absolute;
 	}
+
 	.post__container {
 		padding: 40px;
 		.share-target {
