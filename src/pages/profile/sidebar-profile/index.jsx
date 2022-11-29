@@ -65,7 +65,7 @@ const SidebarProfile = ({ currentUserInfo, handleViewBookDetail }) => {
 
 	const getAllLibraryListUser = async () => {
 		try {
-			const data = { userId: userId || userInfo.id };
+			const data = { userId: userId };
 			const res = await dispatch(getAllLibraryList(data)).unwrap();
 			setLibraryShown(res.custom);
 			const reading = res.default.filter(item => item.defaultType === 'reading');
