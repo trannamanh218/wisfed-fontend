@@ -177,7 +177,7 @@ export default function MainUpload() {
 			translators: [
 				{
 					isUser: false,
-					authorName: translators,
+					translatorName: translators,
 				},
 			],
 			publisherId: publisher[0].id,
