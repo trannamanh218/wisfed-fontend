@@ -1,22 +1,54 @@
 @import 'src/scss/abstracts/_global.scss';
 
 .mainContainer {
-	padding: 40px 84px;
+	padding: 0 84px;
 	display: flex;
 	justify-content: space-between;
 	overflow: hidden;
 	gap: 60px;
-}
 
-.mainContainer__right {
-	max-width: 276px;
-	flex-grow: 1;
-}
+	.mainContainer__main {
+		padding: 40px 0;
+		max-width: 936px;
+		width: 65%;
+		flex-grow: 1;
+	}
 
-.mainContainer__main {
-	max-width: 936px;
-	width: 65%;
-	flex-grow: 1;
+	.mainContainer__sidebar-wrapper {
+		max-width: 294px;
+		flex-grow: 1;
+		.mainContainer__right {
+			width: 100%;
+			max-width: inherit;
+			position: fixed;
+			height: fit-content;
+			max-height: calc(100vh - 96px);
+			overflow-x: hidden;
+			overflow-y: scroll;
+			overscroll-behavior: contain;
+			padding: 40px 14px 40px 0;
+
+			&::-webkit-scrollbar {
+				width: 4px;
+			}
+			/* track */
+			&::-webkit-scrollbar-track {
+				background: transparent;
+				border-radius: 8px;
+			}
+			/* thumb */
+			&::-webkit-scrollbar-thumb {
+				background: transparent;
+				border-radius: 8px;
+			}
+
+			&.show-scrollbar {
+				&::-webkit-scrollbar-thumb {
+					background: rgba(#606060, 0.2);
+				}
+			}
+		}
+	}
 }
 
 @media only screen and (max-width: 1366px) {
