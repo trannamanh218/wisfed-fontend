@@ -12,12 +12,14 @@ import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import dayjs from 'dayjs';
 import Circle from 'shared/loading/circle';
+import LoadingIndicator from 'shared/loading-indicator';
 import { useNavigate } from 'react-router-dom';
 import _ from 'lodash';
 import { getFilterSearch } from 'reducers/redux-utils/search';
 import Storage from 'helpers/Storage';
 import NotFound from 'pages/not-found';
 import BackButton from 'shared/back-button';
+import bookImage from 'assets/images/default-book.png';
 
 const ReadingSummaryChartAuthor = () => {
 	const [chartsData, setChartsData] = useState({});
@@ -32,6 +34,7 @@ const ReadingSummaryChartAuthor = () => {
 	const dispatch = useDispatch();
 	const { bookId } = useParams();
 	const [loading, setLoading] = useState(false);
+	const [loadingBooksList, setLoadingBooksList] = useState(false);
 	const navigate = useNavigate();
 	const [filter, setFilter] = useState('[]');
 	const [resultSearch, setResultSearch] = useState([]);
@@ -42,7 +45,7 @@ const ReadingSummaryChartAuthor = () => {
 
 	useEffect(() => {
 		fetchData();
-	}, [changeValue, booksId]);
+	}, [changeValue, booksId, bookId]);
 
 	const fetchData = async () => {
 		setLoading(true);
@@ -61,6 +64,7 @@ const ReadingSummaryChartAuthor = () => {
 				by: by,
 				id: searchValue ? booksId : bookId,
 			};
+			console.log(params);
 
 			const data = await dispatch(getChartsBooks(params)).unwrap();
 			if (sortValue === 'day') {
@@ -149,6 +153,7 @@ const ReadingSummaryChartAuthor = () => {
 	const handleChange = e => {
 		setSearchValue(e.target.value);
 		debounceSearch(e.target.value);
+		e.target.value ? setLoadingBooksList(true) : setLoadingBooksList(false);
 	};
 
 	useEffect(async () => {
@@ -164,6 +169,8 @@ const ReadingSummaryChartAuthor = () => {
 			}
 		} catch (err) {
 			return;
+		} finally {
+			setLoadingBooksList(false);
 		}
 	}, [filter]);
 
@@ -181,7 +188,7 @@ const ReadingSummaryChartAuthor = () => {
 		navigate(`/book-author-charts/${item.id}`);
 		const newArr = localStorage?.filter(data => data.id === item.id);
 		if (!newArr.length) {
-			setLocalStorage(prev => [...prev, item]);
+			setLocalStorage(prev => [item, ...prev]);
 			setCheckRenderStorage(!checkRenderStorage);
 			setDirectClick(true);
 		}
@@ -190,6 +197,7 @@ const ReadingSummaryChartAuthor = () => {
 	useEffect(() => {
 		const getDataLocal = JSON.parse(Storage.getItem('result-book-author'));
 		if (getDataLocal) {
+			getDataLocal.reverse();
 			setLocalStorage(getDataLocal);
 		}
 	}, [checkRenderStorage]);
@@ -251,41 +259,56 @@ const ReadingSummaryChartAuthor = () => {
 										handleChange={handleChange}
 										value={searchValue}
 									/>
-									{searchValue.length > 0 ? (
-										<div className='book__author__charts__search'>
-											{resultSearch.slice(0, 3).map(item => (
-												<div
-													key={item.id}
-													onClick={() => handleClickBooks(item)}
-													className='result__search__main__left'
-												>
-													<div className='result__search__icon__time'>
-														<TimeIcon />
-													</div>
-
-													<div className='result__search__name'>{item.name}</div>
-												</div>
-											))}
-										</div>
-									) : localStorage.length ? (
-										<div className='book__author__charts__search'>
-											<div className='chart__history__title'>Tìm kiếm gần đây</div>
-											{localStorage.map(item => (
-												<div
-													key={item.id}
-													onClick={() => handleClickBooks(item)}
-													className='result__search__main__left'
-												>
-													<div className='result__search__icon__time'>
-														<TimeIcon />
-													</div>
-
-													<div className='result__search__name'>{item.name}</div>
-												</div>
-											))}
+									{loadingBooksList ? (
+										<div style={{ marginTop: '15px' }}>
+											<LoadingIndicator />
 										</div>
 									) : (
-										<div className='chart__history__titles'>Không có tìm kiếm nào gần đây</div>
+										<>
+											{searchValue.length > 0 ? (
+												<div className='book__author__charts__search'>
+													{resultSearch.slice(0, 3).map(item => (
+														<div
+															key={item.id}
+															onClick={() => handleClickBooks(item)}
+															className='result__search__main__left'
+														>
+															<img
+																className='result__search__book-cover'
+																src={item.frontBookCover || item.images[0]}
+																alt='book-cover'
+																onError={e =>
+																	e.target.setAttribute('src', `${bookImage}`)
+																}
+															/>
+
+															<div className='result__search__name'>{item.name}</div>
+														</div>
+													))}
+												</div>
+											) : localStorage.length ? (
+												<div className='book__author__charts__search'>
+													<div className='chart__history__title'>Tìm kiếm gần đây</div>
+													{localStorage.map(item => (
+														<div
+															key={item.id}
+															onClick={() => handleClickBooks(item)}
+															className='result__search__main__left'
+														>
+															<div className='result__search__icon__time'>
+																<TimeIcon />
+															</div>
+
+															<div className='result__search__name'>{item.name}</div>
+														</div>
+													))}
+												</div>
+											) : (
+												<div className='chart__history__titles'>
+													Không có tìm kiếm nào gần đây
+												</div>
+											)}
+										</>
 									)}
 								</div>
 							</div>
