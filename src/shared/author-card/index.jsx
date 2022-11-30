@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState, memo } from 'react';
 import ConnectButtons from 'shared/connect-buttons';
 import UserAvatar from 'shared/user-avatar';
 import './author-card.scss';
@@ -10,16 +10,18 @@ import { useNavigate } from 'react-router-dom';
 import { checkUserLogin } from 'reducers/redux-utils/auth';
 import { useDispatch } from 'react-redux';
 
-const AuthorCard = ({ direction, size, item, setModalShow, checkAuthors }) => {
+const AuthorCard = ({ direction, size, item, checkAuthors }) => {
 	const [follow, setFollow] = useState(0);
+
+	const navigate = useNavigate();
+	const dispatch = useDispatch();
+
 	useEffect(() => {
 		if (item?.numberFollowing >= 0 || item?.countFollow >= 0 || item?.userCounting?.follower >= 0) {
 			setFollow(item?.numberFollowing || item?.countFollow || item?.userCounting?.follower);
 		}
 	}, [item]);
-	const navigate = useNavigate();
 
-	const dispatch = useDispatch();
 	return (
 		<div className='author-card'>
 			<div className='author-card__left' onClick={() => navigate(`/profile/${item.id}`)}>
@@ -57,8 +59,6 @@ const AuthorCard = ({ direction, size, item, setModalShow, checkAuthors }) => {
 								onClick={() => {
 									if (!Storage.getAccessToken()) {
 										dispatch(checkUserLogin(true));
-									} else {
-										setModalShow(true);
 									}
 								}}
 							>
@@ -73,8 +73,6 @@ const AuthorCard = ({ direction, size, item, setModalShow, checkAuthors }) => {
 								onClick={() => {
 									if (!Storage.getAccessToken()) {
 										dispatch(checkUserLogin(true));
-									} else {
-										setModalShow(true);
 									}
 								}}
 							>
@@ -92,8 +90,7 @@ AuthorCard.propTypes = {
 	direction: PropTypes.string,
 	size: PropTypes.string,
 	item: PropTypes.object,
-	setModalShow: PropTypes.func,
 	checkAuthors: PropTypes.bool,
 };
 
-export default React.memo(AuthorCard);
+export default memo(AuthorCard);

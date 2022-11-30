@@ -1,8 +1,6 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import NormalContainer from 'components/layout/normal-container';
 import './reading-summary-author.scss';
-import { BackArrow } from 'components/svg';
-import { Link } from 'react-router-dom';
 import SearchField from 'shared/search-field';
 import { TimeIcon } from 'components/svg';
 import { Bar, BarChart, Tooltip, XAxis, YAxis, CartesianGrid } from 'recharts';
@@ -19,6 +17,7 @@ import _ from 'lodash';
 import { getFilterSearch } from 'reducers/redux-utils/search';
 import Storage from 'helpers/Storage';
 import NotFound from 'pages/not-found';
+import BackButton from 'shared/back-button';
 
 const ReadingSummaryChartAuthor = () => {
 	const [chartsData, setChartsData] = useState({});
@@ -46,6 +45,7 @@ const ReadingSummaryChartAuthor = () => {
 	}, [changeValue, booksId]);
 
 	const fetchData = async () => {
+		setLoading(true);
 		try {
 			let by = '';
 			if (sortValue === 'day') {
@@ -75,7 +75,8 @@ const ReadingSummaryChartAuthor = () => {
 			setNameBook(data.book.name);
 		} catch (err) {
 			setErrorLoadPage(true);
-			return;
+		} finally {
+			setLoading(false);
 		}
 	};
 
@@ -104,20 +105,20 @@ const ReadingSummaryChartAuthor = () => {
 		}
 	}, [getAreaPng]);
 
-	const renderHoverColumn = payload => {
+	const renderHoverColumn = data => {
 		switch (sortValueKey) {
 			case 'read':
-				return ` Lượt đọc ${payload || ''}`;
+				return ` Lượt đọc ${data !== undefined ? `: ${data}` : ''}`;
 			case 'addToLibrary':
-				return ` Lượt thêm vào thư viện ${payload || ''}`;
+				return ` Lượt thêm vào thư viện ${data !== undefined ? `: ${data}` : ''}`;
 			case 'likeBook':
-				return ` Lượt like ${payload || ''}`;
+				return ` Lượt like ${data !== undefined ? `: ${data}` : ''}`;
 			case 'rate':
-				return ` Lượt Đánh giá ${payload || ''}`;
+				return ` Lượt Đánh giá ${data !== undefined ? `: ${data}` : ''}`;
 			case 'eeview':
-				return ` Lượt Review ${payload || ''}`;
+				return ` Lượt Review ${data !== undefined ? `: ${data}` : ''}`;
 			case 'quote':
-				return ` Lượt Quote ${payload || ''}`;
+				return ` Lượt Quote ${data !== undefined ? `: ${data}` : ''}`;
 			default:
 				return;
 		}
@@ -237,9 +238,7 @@ const ReadingSummaryChartAuthor = () => {
 					<div className='book__author__charts'>
 						<Circle loading={loading} />
 						<div className='notification__main__container'>
-							<Link to={'/'} className='notification__main__back'>
-								<BackArrow />
-							</Link>
+							<BackButton destination={-1} />
 							<div className='notification__main__title'>
 								Biểu đồ tăng trưởng cuốn sách “{`${nameBook}`}”
 							</div>
@@ -327,7 +326,6 @@ const ReadingSummaryChartAuthor = () => {
 										></XAxis>
 										<YAxis
 											label={{
-												// value: sortValueKey.charAt(0).toUpperCase() + sortValueKey.slice(1),
 												position: 'top',
 												offset: 30,
 												value: renderHoverColumn(),

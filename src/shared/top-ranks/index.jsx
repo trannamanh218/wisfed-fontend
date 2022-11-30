@@ -4,7 +4,7 @@ import './top-ranks.scss';
 import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
-const TopRanks = ({ getListTopBooks, valueDataSort }) => {
+const TopUserRanks = ({ topUserList, valueDataSort }) => {
 	const navigate = useNavigate();
 
 	const handleRenderTitle = () => {
@@ -21,14 +21,13 @@ const TopRanks = ({ getListTopBooks, valueDataSort }) => {
 
 	const handleNumber = number => {
 		if (valueDataSort === 'topFollow') {
-			return <div className='number__books'>{getListTopBooks[number].numberFollow}</div>;
+			return <div className='number__books'>{topUserList[number].numberFollow}</div>;
 		} else if (valueDataSort === 'topRead') {
-			return <div className='number__books'>{getListTopBooks[number].numberBookRead}</div>;
+			return <div className='number__books'>{topUserList[number].numberBookRead}</div>;
 		} else if (valueDataSort === 'topLike') {
-			return <div className='number__books'>{getListTopBooks[number].numberLike}</div>;
+			return <div className='number__books'>{topUserList[number].numberLike}</div>;
 		} else {
-			// valueDataSort === 'topReview'
-			return <div className='number__books'>{getListTopBooks[number].numberReview}</div>;
+			return <div className='number__books'>{topUserList[number].numberReview}</div>;
 		}
 	};
 
@@ -43,44 +42,33 @@ const TopRanks = ({ getListTopBooks, valueDataSort }) => {
 	const onClickRedirectThree = data => {
 		return navigate(`/profile/${data.id}`);
 	};
+
 	return (
 		<div className='top__user__ranks'>
 			<div className='top__user__ranks__two'>
-				<div className='top__user__ranks__two__avatar' onClick={() => onClickRedirectTwo(getListTopBooks[1])}>
-					<UserAvatar className='author-card__avatar' source={getListTopBooks[1].avatarImage} />
+				<div className='top__user__ranks__two__avatar' onClick={() => onClickRedirectTwo(topUserList[1])}>
+					<UserAvatar className='author-card__avatar' source={topUserList[1].avatarImage} />
 					<div className='number__ranks'>2</div>
 				</div>
 				<div className='top__user__ranks__two__title'>
-					<p
-						title={
-							getListTopBooks[1].fullName ||
-							`${getListTopBooks[1].firstName}  ${getListTopBooks[1].lastName}`
-						}
-					>
-						{getListTopBooks[1].fullName ||
-							`${getListTopBooks[1].firstName}  ${getListTopBooks[1].lastName}`}
+					<p title={topUserList[1].fullName || `${topUserList[1].firstName}  ${topUserList[1].lastName}`}>
+						{topUserList[1].fullName || `${topUserList[1].firstName}  ${topUserList[1].lastName}`}
 					</p>
 					{handleNumber(1)}
 					{handleRenderTitle()}
 				</div>
 			</div>
 			<div className='top__user__ranks__one'>
-				<div className='top__user__ranks__one__avatar' onClick={() => onClickRedirectOne(getListTopBooks[0])}>
+				<div className='top__user__ranks__one__avatar' onClick={() => onClickRedirectOne(topUserList[0])}>
 					<div className='Crown'>
 						<Crown />
 					</div>
-					<UserAvatar className='author-card__avatar' source={getListTopBooks[0].avatarImage} />
+					<UserAvatar className='author-card__avatar' source={topUserList[0].avatarImage} />
 					<div className='number__ranks'>1</div>
 				</div>
 				<div className='top__user__ranks__one__title'>
-					<p
-						title={
-							getListTopBooks[0].fullName ||
-							`${getListTopBooks[0].firstName}  ${getListTopBooks[0].lastName}`
-						}
-					>
-						{getListTopBooks[0].fullName ||
-							`${getListTopBooks[0].firstName}  ${getListTopBooks[0].lastName}`}
+					<p title={topUserList[0].fullName || `${topUserList[0].firstName}  ${topUserList[0].lastName}`}>
+						{topUserList[0].fullName || `${topUserList[0].firstName}  ${topUserList[0].lastName}`}
 					</p>
 					{handleNumber(0)}
 					{handleRenderTitle()}
@@ -89,20 +77,14 @@ const TopRanks = ({ getListTopBooks, valueDataSort }) => {
 			<div className='top__user__ranks__two'>
 				<div
 					className='top__user__ranks__two__avatar three'
-					onClick={() => onClickRedirectThree(getListTopBooks[2])}
+					onClick={() => onClickRedirectThree(topUserList[2])}
 				>
-					<UserAvatar className='author-card__avatar' source={getListTopBooks[2].avatarImage} />
+					<UserAvatar className='author-card__avatar' source={topUserList[2].avatarImage} />
 					<div className='number__ranks three'>3</div>
 				</div>
 				<div className='top__user__ranks__two__title'>
-					<p
-						title={
-							getListTopBooks[2].fullName ||
-							`${getListTopBooks[2].firstName}  ${getListTopBooks[2].lastName}`
-						}
-					>
-						{getListTopBooks[2].fullName ||
-							`${getListTopBooks[2].firstName}  ${getListTopBooks[2].lastName}`}
+					<p title={topUserList[2].fullName || `${topUserList[2].firstName}  ${topUserList[2].lastName}`}>
+						{topUserList[2].fullName || `${topUserList[2].firstName}  ${topUserList[2].lastName}`}
 					</p>
 					{handleNumber(2)}
 					{handleRenderTitle()}
@@ -111,8 +93,10 @@ const TopRanks = ({ getListTopBooks, valueDataSort }) => {
 		</div>
 	);
 };
-TopRanks.propTypes = {
-	getListTopBooks: PropTypes.array,
+
+TopUserRanks.propTypes = {
+	topUserList: PropTypes.array,
 	valueDataSort: PropTypes.string,
 };
-export default TopRanks;
+
+export default TopUserRanks;

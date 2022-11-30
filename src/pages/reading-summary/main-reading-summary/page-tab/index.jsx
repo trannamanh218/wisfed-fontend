@@ -1,9 +1,9 @@
 import PropTypes from 'prop-types';
-import React, { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { Bar, BarChart, Tooltip, XAxis, YAxis, CartesianGrid } from 'recharts';
 import SelectBox from 'shared/select-box';
 import './page-tab.scss';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
 import { useParams } from 'react-router-dom';
 import { getChartsByid, updateImg } from 'reducers/redux-utils/chart';
@@ -17,6 +17,8 @@ const PageTab = () => {
 	const { userId } = useParams();
 	const [chartsData, setChartsData] = useState([]);
 	const [width, setWidth] = useState(880);
+
+	const userInfo = useSelector(state => state.auth.userInfo);
 
 	const dispatch = useDispatch();
 	const [getAreaPng, { ref: areaRef }] = useCurrentPng();
@@ -208,9 +210,11 @@ const PageTab = () => {
 						</BarChart>
 					</div>
 
-					<button className='btn reading-summary-page-tab__btn' onClick={handleAreaDownload}>
-						Chia sẻ
-					</button>
+					{userInfo.id === userId && (
+						<button className='btn reading-summary-page-tab__btn' onClick={handleAreaDownload}>
+							Chia sẻ
+						</button>
+					)}
 				</>
 			) : (
 				<h4 style={{ marginTop: '28px' }}>Không có dữ liệu</h4>

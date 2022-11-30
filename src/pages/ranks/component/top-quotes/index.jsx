@@ -9,28 +9,45 @@ import PropTypes from 'prop-types';
 import ModalSearchCategories from '../modal-search-categories/ModalSearchCategories';
 import dropdownIcon from 'assets/images/dropdown.png';
 import LoadingIndicator from 'shared/loading-indicator';
+import InfiniteScroll from 'react-infinite-scroll-component';
 
 const TopQuotes = ({ listYear, tabSelected }) => {
 	const [topQuotesId, setTopQuotesId] = useState(null);
 	const [valueDate, setValueData] = useState('week');
-	const [getListTopQuotes, setGetListTopQuotes] = useState([]);
+	const [topQuotesList, setTopQuotesList] = useState([]);
 	const [modalSearchCategoriesShow, setModalSearchCategoriesShow] = useState(false);
 	const [loading, setLoading] = useState(false);
+	const [hasMore, setHasMore] = useState(true);
 
+	const callApiStart = useRef(10);
+	const callApiPerPage = useRef(10);
 	const kindOfGroupRef = useRef({ value: 'default', title: 'Chủ đề' });
 	const listYearRef = useRef({ value: 'default', title: 'Tuần' });
 
 	const dispatch = useDispatch();
 
-	const getTopQuotesData = async () => {
+	useEffect(() => {
+		if (tabSelected === 'quotes') {
+			callApiStart.current = callApiPerPage.current;
+			setHasMore(true);
+			getTopQuotesDataFirstTime();
+		}
+	}, [topQuotesId, valueDate, tabSelected]);
+
+	const getTopQuotesDataFirstTime = async () => {
 		setLoading(true);
 		const params = {
+			start: 0,
+			limit: callApiPerPage.current,
 			categoryId: topQuotesId,
 			by: valueDate,
 		};
 		try {
 			const topQuotes = await dispatch(getTopQuotes(params)).unwrap();
-			setGetListTopQuotes(topQuotes.rows);
+			setTopQuotesList(topQuotes.rows);
+			if (topQuotes.rows.length < callApiPerPage.current) {
+				setHasMore(false);
+			}
 		} catch (err) {
 			NotificationError(err);
 		} finally {
@@ -38,11 +55,25 @@ const TopQuotes = ({ listYear, tabSelected }) => {
 		}
 	};
 
-	useEffect(() => {
-		if (tabSelected === 'quotes') {
-			getTopQuotesData();
+	const getTopQuotesData = async () => {
+		try {
+			const params = {
+				start: callApiStart.current,
+				limit: callApiPerPage.current,
+				categoryId: topQuotesId,
+				by: valueDate,
+			};
+
+			const topQuotes = await dispatch(getTopQuotes(params)).unwrap();
+			setTopQuotesList(topQuotesList.concat(topQuotes.rows));
+			callApiStart.current += callApiPerPage.current;
+			if (topQuotes.rows.length < callApiPerPage.current) {
+				setHasMore(false);
+			}
+		} catch (err) {
+			NotificationError(err);
 		}
-	}, [topQuotesId, valueDate, tabSelected]);
+	};
 
 	const onchangeKindOfGroup = data => {
 		kindOfGroupRef.current = data;
@@ -90,20 +121,27 @@ const TopQuotes = ({ listYear, tabSelected }) => {
 				<LoadingIndicator />
 			) : (
 				<>
-					{getListTopQuotes.length > 0 ? (
-						getListTopQuotes.map((item, index) => (
-							<div key={item.id} className='topbooks__container__main'>
-								<StarRanking index={index} />
-								<div className='topbooks__container__main__layout'>
-									<TopQuotesComponent
-										item={item}
-										valueDate={valueDate}
-										categoryItem={kindOfGroupRef.current}
-										trueRank={index + 1}
-									/>
+					{topQuotesList.length > 0 ? (
+						<InfiniteScroll
+							dataLength={topQuotesList.length}
+							next={getTopQuotesData}
+							hasMore={hasMore}
+							loader={<LoadingIndicator />}
+						>
+							{topQuotesList.map((item, index) => (
+								<div key={item.id} className='topbooks__container__main'>
+									<StarRanking index={index} />
+									<div className='topbooks__container__main__layout'>
+										<TopQuotesComponent
+											item={item}
+											valueDate={valueDate}
+											categoryItem={kindOfGroupRef.current}
+											trueRank={index + 1}
+										/>
+									</div>
 								</div>
-							</div>
-						))
+							))}
+						</InfiniteScroll>
 					) : (
 						<div className='topbooks__notthing'>Không có dữ liệu</div>
 					)}
@@ -112,9 +150,11 @@ const TopQuotes = ({ listYear, tabSelected }) => {
 		</div>
 	);
 };
+
 TopQuotes.propTypes = {
 	rows: PropTypes.array,
 	listYear: PropTypes.array,
 	tabSelected: PropTypes.string,
 };
+
 export default TopQuotes;

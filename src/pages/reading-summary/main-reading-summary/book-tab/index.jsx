@@ -4,7 +4,7 @@ import { Bar, BarChart, Tooltip, XAxis, YAxis, CartesianGrid } from 'recharts';
 import SelectBox from 'shared/select-box';
 import './book-tab.scss';
 import { getChartsByid, updateImg } from 'reducers/redux-utils/chart';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { useCurrentPng } from 'recharts-to-png';
 import { useNavigate } from 'react-router-dom';
@@ -15,6 +15,8 @@ const BookTab = ({ setErrorLoadPage }) => {
 	const [chartsData, setChartsData] = useState({});
 	const [loading, setLoading] = useState(false);
 	const [width, setWidth] = useState(880);
+
+	const userInfo = useSelector(state => state.auth.userInfo);
 
 	const dispatch = useDispatch();
 	const options = [
@@ -219,16 +221,21 @@ const BookTab = ({ setErrorLoadPage }) => {
 							/>
 						</BarChart>
 					</div>
-
-					<button className='btn reading-summary-book-tab__btn' onClick={handleAreaDownload}>
-						Chia sẻ
-					</button>
+					{userInfo.id === userId && (
+						<button className='btn reading-summary-book-tab__btn' onClick={handleAreaDownload}>
+							Chia sẻ
+						</button>
+					)}
 				</>
 			) : (
 				<h4 style={{ marginTop: '28px' }}>Không có dữ liệu</h4>
 			)}
 		</div>
 	);
+};
+
+BookTab.propTypes = {
+	setErrorLoadPage: PropTypes.bool,
 };
 
 export default BookTab;
