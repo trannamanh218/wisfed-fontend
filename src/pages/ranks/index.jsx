@@ -14,7 +14,7 @@ import { useEffect } from 'react';
 const Ranks = () => {
 	const isTopUser = useSelector(state => state.ranks.isTopUser);
 	const isTopQuote = useSelector(state => state.ranks.isTopQuote);
-	const [tabSelected, setTabSelected] = useState(isTopUser ? 'User' : isTopQuote ? 'quotes' : 'books');
+	const [tabSelected, setTabSelected] = useState(isTopUser ? 'user' : isTopQuote ? 'quotes' : 'books');
 
 	useEffect(() => {
 		window.scrollTo(0, 0);
@@ -41,14 +41,14 @@ const Ranks = () => {
 				</div>
 				<div className='ranks__container__main'>
 					<Tabs
-						defaultActiveKey={isTopUser ? 'User' : isTopQuote ? 'quotes' : 'books'}
+						defaultActiveKey={isTopUser ? 'user' : isTopQuote ? 'quotes' : 'books'}
 						onSelect={onTabChange}
 					>
 						<Tab eventKey='books' title='Sách'>
 							<TopBooks listYear={listYear} tabSelected={tabSelected} />
 						</Tab>
 
-						<Tab eventKey='User' title='Người dùng'>
+						<Tab eventKey='user' title='Người dùng'>
 							<TopUser listYear={listYear} tabSelected={tabSelected} />
 						</Tab>
 

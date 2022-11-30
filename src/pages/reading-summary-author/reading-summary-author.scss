@@ -1,8 +1,11 @@
 .book__author__charts {
+	padding: 64px 50px 40px;
 	.notification__main__container {
+		display: flex;
 		justify-content: center;
-		max-width: 850px;
+		align-items: center;
 		margin: auto;
+		gap: 20px;
 		.notification__main__title {
 			font-weight: 700;
 			font-size: 23.3342px;
@@ -12,9 +15,10 @@
 			letter-spacing: 0.729195px;
 		}
 	}
+
 	.book__author__charts__main {
 		display: flex;
-		padding: 20px 50px;
+		margin-top: 20px;
 		gap: 15px;
 		.book__author__charts__search__main {
 			.book__author__charts__search__main__container {
@@ -71,14 +75,13 @@
 			line-height: 18px;
 		}
 	}
-	.reading-summary-book-tab__btn {
-		margin-right: 50px;
-	}
 }
+
 .chart__history__titles {
-	padding-top: 20px;
-	padding-left: 13px;
+	margin-top: 20px;
+	text-align: center;
 }
+
 .filter-quote-pane__setting > {
 	.filter-quote-pane__setting__group {
 		.form-check-label--custom {

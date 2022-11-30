@@ -1,11 +1,11 @@
-import TopRanks from 'shared/top-ranks';
+import TopUserRanks from 'shared/top-ranks';
 
 export default {
-	title: 'Components/Modules/TopRanks',
-	component: TopRanks,
+	title: 'Components/Modules/TopUserRanks',
+	component: TopUserRanks,
 };
 
-const Template = args => <TopRanks {...args} />;
+const Template = args => <TopUserRanks {...args} />;
 
 export const Custom = Template.bind({});
 const fakeData = [...Array(5)].fill({
