@@ -12,7 +12,7 @@ import PropTypes from 'prop-types';
 
 export default function BookAuthorChartSearch({ searchValue, setSearchValue, setBooksId, setShow }) {
 	const [resultSearch, setResultSearch] = useState([]);
-	const [filter, setFilter] = useState('[]');
+	const [filter, setFilter] = useState('');
 	const [localStorage, setLocalStorage] = useState([]);
 	const [checkRenderStorage, setCheckRenderStorage] = useState(false);
 	const [loadingBooksList, setLoadingBooksList] = useState(false);
@@ -48,8 +48,12 @@ export default function BookAuthorChartSearch({ searchValue, setSearchValue, set
 
 	const handleChange = e => {
 		setSearchValue(e.target.value);
-		debounceSearch(e.target.value);
-		e.target.value ? setLoadingBooksList(true) : setLoadingBooksList(false);
+		if (e.target.value && JSON.stringify(e.target.value) !== filter) {
+			setLoadingBooksList(true);
+			debounceSearch(e.target.value);
+		} else {
+			setLoadingBooksList(false);
+		}
 	};
 
 	const updateInputSearch = value => {
@@ -57,11 +61,11 @@ export default function BookAuthorChartSearch({ searchValue, setSearchValue, set
 			const filterValue = value.toLowerCase().trim();
 			setFilter(JSON.stringify(filterValue));
 		} else {
-			setFilter('[]');
+			setFilter('');
 		}
 	};
 
-	const debounceSearch = useCallback(_.debounce(updateInputSearch, 1000), []);
+	const debounceSearch = useCallback(_.debounce(updateInputSearch, 700), []);
 
 	const handleClickBooks = item => {
 		setBooksId(item.id);
@@ -71,13 +75,10 @@ export default function BookAuthorChartSearch({ searchValue, setSearchValue, set
 			const getDataLocal = JSON.parse(Storage.getItem('result-book-author'));
 			if (getDataLocal && !getDataLocal.some(data => data.id === item.id)) {
 				getDataLocal.unshift(item);
-				const cloneSliceArr = getDataLocal.slice(0, 5);
-				Storage.setItem('result-book-author', JSON.stringify(cloneSliceArr));
+				Storage.setItem('result-book-author', JSON.stringify(getDataLocal.slice(0, 5)));
 			}
 		} else {
-			let newArr = [];
-			newArr.unshift(item);
-			Storage.setItem('result-book-author', JSON.stringify(newArr));
+			Storage.setItem('result-book-author', JSON.stringify([item]));
 		}
 		setSearchValue('');
 		setCheckRenderStorage(!checkRenderStorage);
@@ -151,6 +152,13 @@ export default function BookAuthorChartSearch({ searchValue, setSearchValue, set
 		</div>
 	);
 }
+
+BookAuthorChartSearch.defaultProps = {
+	searchValue: '',
+	setSearchValue: () => {},
+	setBooksId: () => {},
+	setShow: () => {},
+};
 
 BookAuthorChartSearch.propTypes = {
 	searchValue: PropTypes.string,

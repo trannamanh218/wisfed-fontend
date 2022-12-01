@@ -196,7 +196,6 @@ const ReadingSummaryChartAuthor = () => {
 									setBooksId={setBooksId}
 									searchValue={searchValue}
 									setSearchValue={setSearchValue}
-									setShow={() => {}}
 								/>
 							</div>
 
