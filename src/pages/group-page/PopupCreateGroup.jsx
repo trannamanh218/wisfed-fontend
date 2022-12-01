@@ -390,7 +390,7 @@ const PopupCreateGroup = ({ handleClose, handleRefreshData = () => {} }) => {
 			toast.warning('Chỉ được chọn ảnh PNG, JPG, JPEG và không được quá 3MB', { toastId: toastId });
 		}
 	}, [image]);
-	console.log(categoryIdBook);
+
 	return (
 		<>
 			<div className='popup-group__header'>
