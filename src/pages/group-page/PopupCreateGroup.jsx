@@ -360,6 +360,16 @@ const PopupCreateGroup = ({ handleClose, handleRefreshData = () => {} }) => {
 
 	const onchangeKindOfGroup = data => {
 		setKindOfGroup(data);
+
+		// Xóa dữ liệu ở các ô input khác mỗi lần thay đổi kiểu nội dung
+		setInputAuthorValue('');
+		setAuthorAddedList([]);
+
+		setInputBookValue('');
+		setBookAddedList([]);
+
+		setInputCategoryValue('');
+		setCategoryAddedList([]);
 	};
 
 	const onchangeBookCategory = data => {
@@ -380,7 +390,7 @@ const PopupCreateGroup = ({ handleClose, handleRefreshData = () => {} }) => {
 			toast.warning('Chỉ được chọn ảnh PNG, JPG, JPEG và không được quá 3MB', { toastId: toastId });
 		}
 	}, [image]);
-
+	console.log(categoryIdBook);
 	return (
 		<>
 			<div className='popup-group__header'>

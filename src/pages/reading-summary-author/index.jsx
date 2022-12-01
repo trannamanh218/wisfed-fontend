@@ -53,6 +53,13 @@ const ReadingSummaryChartAuthor = () => {
 		};
 	}, [smallScreenSearchModal]);
 
+	useEffect(() => {
+		if (!show) {
+			const arr = document.getElementsByClassName('search-field__input');
+			arr[1].focus();
+		}
+	}, [show]);
+
 	const fetchData = async () => {
 		setLoading(true);
 		try {
