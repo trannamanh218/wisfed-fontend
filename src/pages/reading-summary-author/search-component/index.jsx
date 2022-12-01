@@ -16,7 +16,6 @@ export default function BookAuthorChartSearch({ searchValue, setSearchValue, set
 	const [localStorage, setLocalStorage] = useState([]);
 	const [checkRenderStorage, setCheckRenderStorage] = useState(false);
 	const [loadingBooksList, setLoadingBooksList] = useState(false);
-	const [directClick, setDirectClick] = useState(false);
 
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
@@ -43,20 +42,7 @@ export default function BookAuthorChartSearch({ searchValue, setSearchValue, set
 		const dataLocal = Storage.getItem('result-book-author');
 		if (dataLocal) {
 			const getDataLocal = JSON.parse(Storage.getItem('result-book-author'));
-			getDataLocal.reverse();
 			setLocalStorage(getDataLocal);
-		}
-	}, [checkRenderStorage]);
-
-	useEffect(() => {
-		if (directClick) {
-			if (localStorage.length < 4) {
-				Storage.setItem('result-book-author', JSON.stringify(localStorage));
-			} else {
-				const filterData = localStorage.filter((item, index) => index !== 0);
-				setLocalStorage(filterData);
-				Storage.setItem('result-book-author', JSON.stringify(filterData));
-			}
 		}
 	}, [checkRenderStorage]);
 
@@ -79,13 +65,23 @@ export default function BookAuthorChartSearch({ searchValue, setSearchValue, set
 
 	const handleClickBooks = item => {
 		setBooksId(item.id);
-		navigate(`/book-author-charts/${item.id}`);
-		const newArr = localStorage?.filter(data => data.id === item.id);
-		if (!newArr.length) {
-			setLocalStorage(prev => [item, ...prev]);
-			setCheckRenderStorage(!checkRenderStorage);
-			setDirectClick(true);
+		// Thay đổi localStorage
+		const dataLocal = Storage.getItem('result-book-author');
+		if (dataLocal) {
+			const getDataLocal = JSON.parse(Storage.getItem('result-book-author'));
+			if (getDataLocal && !getDataLocal.some(data => data.id === item.id)) {
+				getDataLocal.unshift(item);
+				const cloneSliceArr = getDataLocal.slice(0, 5);
+				Storage.setItem('result-book-author', JSON.stringify(cloneSliceArr));
+			}
+		} else {
+			let newArr = [];
+			newArr.unshift(item);
+			Storage.setItem('result-book-author', JSON.stringify(newArr));
 		}
+		setSearchValue('');
+		setCheckRenderStorage(!checkRenderStorage);
+		navigate(`/book-author-charts/${item.id}`);
 		setShow(true);
 	};
 
