@@ -19,7 +19,7 @@ const TopBooks = ({ listYear, tabSelected }) => {
 	const { isAuth } = useSelector(state => state.auth);
 	const [topBooksId, setTopBooksId] = useState(null);
 	const [valueDate, setValueData] = useState('week');
-	const [getListTopBooks, setGetListTopBooks] = useState([]);
+	const [topBooksList, setTopBooksList] = useState([]);
 	const [modalShow, setModalShow] = useState(false);
 	const [loadingState, setLoadingState] = useState(false);
 	const [hasMore, setHasMore] = useState(true);
@@ -34,12 +34,25 @@ const TopBooks = ({ listYear, tabSelected }) => {
 
 	const category = JSON.parse(localStorage.getItem('category'));
 
-	const onchangeKindOfGroup = data => {
-		kindOfGroupRef.current = data;
-		setTopBooksId(data.id);
-	};
+	useEffect(() => {
+		if (category) {
+			kindOfGroupRef.current = { value: category.value, title: category.title };
+			setTopBooksId(category.value);
+			getTopBooksDataWhenAccessFromCategory(category);
+			localStorage.removeItem('category');
+		}
+	}, []);
 
-	const getTopBooksData = async () => {
+	useEffect(() => {
+		if (tabSelected === 'books' && !category) {
+			window.scrollTo(0, 0);
+			setHasMore(true);
+			callApiStart.current = 10;
+			getTopBooksDataFirstTime();
+		}
+	}, [topBooksId, valueDate, isAuth, tabSelected]);
+
+	const getTopBooksDataFirstTime = async () => {
 		setLoadingState(true);
 		const params = {
 			start: 0,
@@ -49,10 +62,10 @@ const TopBooks = ({ listYear, tabSelected }) => {
 		};
 		try {
 			const topBooks = await dispatch(getTopBooks(params)).unwrap();
+			setTopBooksList(topBooks);
 			if (topBooks.length < callApiPerPage.current) {
 				setHasMore(false);
 			}
-			setGetListTopBooks(topBooks);
 		} catch (err) {
 			NotificationError(err);
 		} finally {
@@ -69,18 +82,9 @@ const TopBooks = ({ listYear, tabSelected }) => {
 		};
 		try {
 			const topBooks = await dispatch(getTopBooks(params)).unwrap();
-			if (callApiStart.current === limit) {
-				setHasMore(false);
-			}
-
-			if (topBooks.length) {
-				if (topBooks.length < callApiPerPage.current) {
-					setHasMore(false);
-				} else {
-					callApiStart.current += callApiPerPage.current;
-				}
-				setGetListTopBooks(getListTopBooks.concat(topBooks));
-			} else {
+			setTopBooksList(topBooksList.concat(topBooks));
+			callApiStart.current += callApiPerPage.current;
+			if (callApiStart.current === limit || topBooks.length < callApiPerPage.current) {
 				setHasMore(false);
 			}
 		} catch (err) {
@@ -96,7 +100,7 @@ const TopBooks = ({ listYear, tabSelected }) => {
 		};
 		try {
 			const topBooks = await dispatch(getTopBooks(params)).unwrap();
-			setGetListTopBooks(topBooks);
+			setTopBooksList(topBooks);
 		} catch (err) {
 			NotificationError(err);
 		} finally {
@@ -104,27 +108,14 @@ const TopBooks = ({ listYear, tabSelected }) => {
 		}
 	};
 
-	useEffect(() => {
-		if (category) {
-			kindOfGroupRef.current = { value: category.value, title: category.title };
-			setTopBooksId(category.value);
-			getTopBooksDataWhenAccessFromCategory(category);
-			localStorage.removeItem('category');
-		}
-	}, []);
-
-	useEffect(() => {
-		if (tabSelected === 'books' && !category) {
-			setHasMore(true);
-			callApiStart.current = 10;
-			getTopBooksData();
-		}
-	}, [topBooksId, valueDate, isAuth, tabSelected]);
-
 	const onchangeKindOfDate = data => {
-		window.scrollTo(0, 0);
 		listYearRef.current = data;
 		setValueData(data.value);
+	};
+
+	const onchangeKindOfGroup = data => {
+		kindOfGroupRef.current = data;
+		setTopBooksId(data.id);
 	};
 
 	return (
@@ -166,15 +157,15 @@ const TopBooks = ({ listYear, tabSelected }) => {
 				<LoadingIndicator />
 			) : (
 				<>
-					{getListTopBooks.length > 0 && tabSelected === 'books' ? (
+					{topBooksList.length > 0 && tabSelected === 'books' ? (
 						<InfiniteScroll
-							dataLength={getListTopBooks.length}
+							dataLength={topBooksList.length}
 							next={getTopBooksDataNext}
 							hasMore={hasMore}
 							loader={<LoadingIndicator />}
 						>
 							<>
-								{getListTopBooks.map((item, index) => (
+								{topBooksList.map((item, index) => (
 									<div key={index} className='topbooks__container__main top__book'>
 										<StarRanking index={index} />
 										<div className='topbooks__container__main__layout'>

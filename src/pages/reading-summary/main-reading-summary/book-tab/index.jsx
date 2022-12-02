@@ -3,7 +3,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { Bar, BarChart, Tooltip, XAxis, YAxis, CartesianGrid } from 'recharts';
 import SelectBox from 'shared/select-box';
 import './book-tab.scss';
-import { getChartsByid, updateImg } from 'reducers/redux-utils/chart';
+import { getChartsByid, handleSetImageToShare } from 'reducers/redux-utils/chart';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { useCurrentPng } from 'recharts-to-png';
@@ -103,7 +103,7 @@ const BookTab = ({ setErrorLoadPage }) => {
 				if (imageUploadedData) {
 					setLoading(false);
 					navigate('/');
-					return dispatch(updateImg(imgUploadder));
+					return dispatch(handleSetImageToShare(imgUploadder));
 				}
 			}
 		}
@@ -151,8 +151,8 @@ const BookTab = ({ setErrorLoadPage }) => {
 	};
 
 	CustomTooltip.propTypes = {
-		label: PropTypes.string,
-		payload: PropTypes.object,
+		label: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+		payload: PropTypes.array,
 	};
 
 	CustomizedAxisXTick.propTypes = {
@@ -235,7 +235,7 @@ const BookTab = ({ setErrorLoadPage }) => {
 };
 
 BookTab.propTypes = {
-	setErrorLoadPage: PropTypes.bool,
+	setErrorLoadPage: PropTypes.func,
 };
 
 export default BookTab;

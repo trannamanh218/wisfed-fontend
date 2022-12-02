@@ -8,7 +8,7 @@ import _ from 'lodash';
 import { updateCurrentBook } from 'reducers/redux-utils/book';
 import { saveDataShare } from 'reducers/redux-utils/post';
 import { useLocation } from 'react-router-dom';
-import { updateImg } from 'reducers/redux-utils/chart';
+import { handleSetImageToShare } from 'reducers/redux-utils/chart';
 import Storage from 'helpers/Storage';
 import { checkUserLogin } from 'reducers/redux-utils/auth';
 import { handleClickCreateNewPostForBook } from 'reducers/redux-utils/activity';
@@ -24,7 +24,7 @@ function CreatePost({ onChangeNewPost }) {
 	const [modalShow, setModalShow] = useState(false);
 
 	const { postDataShare } = useSelector(state => state.post);
-	const { updateImgPost } = useSelector(state => state.chart);
+	const { imageToShareData } = useSelector(state => state.chart);
 	const isWarning = useSelector(state => state.post.isWarning);
 
 	const message = 'Bạn đang có bài viết chưa hoàn thành. Bạn có chắc muốn rời khỏi khi chưa đăng không?';
@@ -91,10 +91,10 @@ function CreatePost({ onChangeNewPost }) {
 	}
 
 	useEffect(() => {
-		if (!_.isEmpty(bookForCreatePost) || !_.isEmpty(postDataShare) || !_.isEmpty(updateImgPost)) {
+		if (!_.isEmpty(bookForCreatePost) || !_.isEmpty(postDataShare) || !_.isEmpty(imageToShareData)) {
 			setShowModalCreatPost(true);
 		}
-	}, [bookForCreatePost, postDataShare, updateImgPost]);
+	}, [bookForCreatePost, postDataShare, imageToShareData]);
 
 	const handleHideCreatePost = e => {
 		if (e.target === createPostModalContainer.current) {
@@ -149,7 +149,7 @@ function CreatePost({ onChangeNewPost }) {
 
 	const hideCreatePostModal = () => {
 		dispatch(saveDataShare({}));
-		dispatch(updateImg([]));
+		dispatch(handleSetImageToShare([]));
 		dispatch(updateCurrentBook({}));
 		dispatch(handleClickCreateNewPostForBook(false));
 		setOption({});

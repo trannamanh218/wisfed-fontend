@@ -5,7 +5,6 @@ import { useState, useEffect } from 'react';
 import { getUserDetail } from 'reducers/redux-utils/user';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { checkGetUser } from 'reducers/redux-utils/profile';
 import RouteLink from 'helpers/RouteLink';
 import { getBookDetail } from 'reducers/redux-utils/book';
 import { useNavigate } from 'react-router-dom';
@@ -28,10 +27,8 @@ const Profile = () => {
 	useEffect(() => {
 		if (!_.isEmpty(userInfo) && userInfo.id === userId) {
 			setCurrentUserInfo(userInfo);
-			dispatch(checkGetUser(false));
 		} else {
 			getUserDetailData();
-			dispatch(checkGetUser(true));
 		}
 	}, [userId, isReload, userInfo]);
 

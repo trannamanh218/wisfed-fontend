@@ -7,7 +7,7 @@ import { Bar, BarChart, Tooltip, XAxis, YAxis, CartesianGrid } from 'recharts';
 import PropTypes from 'prop-types';
 import { useCurrentPng } from 'recharts-to-png';
 import ModalChart from './modal-sort';
-import { updateImg, getChartsBooks } from 'reducers/redux-utils/chart';
+import { handleSetImageToShare, getChartsBooks } from 'reducers/redux-utils/chart';
 import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import dayjs from 'dayjs';
@@ -99,7 +99,7 @@ const ReadingSummaryChartAuthor = () => {
 				if (imageUploadedData) {
 					setLoading(false);
 					navigate('/');
-					return dispatch(updateImg(imgUploadder));
+					return dispatch(handleSetImageToShare(imgUploadder));
 				}
 			}
 		}
@@ -221,8 +221,8 @@ const ReadingSummaryChartAuthor = () => {
 	}
 
 	CustomTooltip.propTypes = {
-		label: PropTypes.string,
-		payload: PropTypes.object,
+		label: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+		payload: PropTypes.array,
 	};
 
 	CustomizedAxisXTick.propTypes = {

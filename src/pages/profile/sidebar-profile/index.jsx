@@ -17,6 +17,8 @@ import { getAllLibraryList, handleSetDefaultLibrary } from 'reducers/redux-utils
 import { NotificationError } from 'helpers/Error';
 import { checkUserLogin } from 'reducers/redux-utils/auth';
 import Storage from 'helpers/Storage';
+import ProgressBarCircle from 'shared/progress-circle';
+import { getListBooksTargetReading } from 'reducers/redux-utils/chart';
 
 const SidebarProfile = ({ currentUserInfo, handleViewBookDetail }) => {
 	const { userId } = useParams();
@@ -26,6 +28,7 @@ const SidebarProfile = ({ currentUserInfo, handleViewBookDetail }) => {
 	const [rows, setRows] = useState(DEFAULT_TOGGLE_ROWS);
 	const [booksSliderTitle, setBooksSliderTitle] = useState('');
 	const [libraryShown, setLibraryShown] = useState([]);
+	const [booksReadYear, setBookReadYear] = useState([]);
 
 	const { userInfo } = useSelector(state => state.auth);
 	const myAllLibraryRedux = useSelector(state => state.library.myAllLibrary);
@@ -34,8 +37,12 @@ const SidebarProfile = ({ currentUserInfo, handleViewBookDetail }) => {
 
 	const navigate = useNavigate();
 
-	useEffect(() => {
+	useEffect(async () => {
 		if (!_.isEmpty(userInfo)) {
+			if (userInfo.id !== userId) {
+				getTargetReadingByUser();
+			}
+
 			if (window.location.pathname.includes('profile')) {
 				if (userInfo.id === userId) {
 					setBooksSliderTitle('Sách tôi là tác giả');
@@ -45,8 +52,10 @@ const SidebarProfile = ({ currentUserInfo, handleViewBookDetail }) => {
 			} else {
 				setBooksSliderTitle('Sách tôi là tác giả');
 			}
+		} else {
+			getTargetReadingByUser();
 		}
-	}, [userInfo, currentUserInfo]);
+	}, [userInfo, currentUserInfo, userId]);
 
 	useEffect(async () => {
 		if (userInfo.id === userId || window.location.pathname.includes('/confirm-my-book')) {
@@ -94,10 +103,19 @@ const SidebarProfile = ({ currentUserInfo, handleViewBookDetail }) => {
 	};
 
 	const handleRenderTargetReading = () => {
-		if (userId) {
-			return <RenderProgress userIdParams={userId} />;
-		} else if (!_.isEmpty(userInfo)) {
+		if (!_.isEmpty(userInfo) && userInfo.id === userId) {
 			return <RenderProgress userIdParams={userInfo.id} />;
+		} else {
+			return <ProgressBarCircle booksReadYear={booksReadYear} />;
+		}
+	};
+
+	const getTargetReadingByUser = async () => {
+		try {
+			const res = await dispatch(getListBooksTargetReading(userId)).unwrap();
+			setBookReadYear(res);
+		} catch (error) {
+			NotificationError(error);
 		}
 	};
 

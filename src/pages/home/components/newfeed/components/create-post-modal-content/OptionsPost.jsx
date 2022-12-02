@@ -28,7 +28,7 @@ const verbShareArray = [
 const OptionsPost = ({ list, addOptionsToPost, taggedData, postDataShare }) => {
 	const [itemOnMouseHover, setItemOnMouseHover] = useState(null);
 
-	const chartImgShare = useSelector(state => state.chart.updateImgPost);
+	const chartImgShare = useSelector(state => state.chart.imageToShareData);
 
 	return list.map((item, index) => {
 		let isActive = false;

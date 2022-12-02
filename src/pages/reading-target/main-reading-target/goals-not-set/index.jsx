@@ -1,7 +1,7 @@
 import UserAvatar from 'shared/user-avatar';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
-import { createTargetRead, renderTargetReadingProgress } from 'reducers/redux-utils/chart';
+import { createTargetRead, handleResetMyTargetReading } from 'reducers/redux-utils/chart';
 import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 import { NotificationError } from 'helpers/Error';
@@ -17,10 +17,12 @@ const GoalsNotSetYet = ({ userInfo }) => {
 			setInputValue(0);
 		}
 		if (inputValue.length > 3) {
-			setInputValue(inputValue.slice(0, 3));
-		}
-		if (inputValue % 1 !== 0) {
-			setInputValue(Math.floor(inputValue));
+			if (inputValue === 0) {
+				setInputValue(0);
+			} else {
+				const newValue = inputValue.replace(/\b0+/g, '').slice(0, 3);
+				setInputValue(newValue);
+			}
 		}
 	}, [inputValue]);
 
@@ -48,7 +50,7 @@ const GoalsNotSetYet = ({ userInfo }) => {
 			} catch (err) {
 				NotificationError(err);
 			} finally {
-				dispatch(renderTargetReadingProgress(true));
+				dispatch(handleResetMyTargetReading());
 			}
 		}
 	};
@@ -63,14 +65,13 @@ const GoalsNotSetYet = ({ userInfo }) => {
 						<button
 							data-testid='read-challenge__decrease-btn'
 							className='read-challenge__input__button-element'
-							onClick={() => setInputValue(Number(inputValue) - 1)}
+							onClick={() => setInputValue((Number(inputValue) - 1).toString())}
 						>
 							&#8722;
 						</button>
 						<input
 							data-testid='read-challenge__input'
 							type='number'
-							min='0'
 							value={inputValue}
 							className='read-challenge__input__input-element'
 							onChange={e => setInputValue(e.target.value)}
@@ -81,7 +82,7 @@ const GoalsNotSetYet = ({ userInfo }) => {
 						<button
 							data-testid='read-challenge__increase-btn'
 							className='read-challenge__input__button-element'
-							onClick={() => setInputValue(Number(inputValue) + 1)}
+							onClick={() => setInputValue((Number(inputValue) + 1).toString())}
 						>
 							&#43;
 						</button>

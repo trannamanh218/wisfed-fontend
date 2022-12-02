@@ -29,7 +29,8 @@ const MainReadingTarget = ({ setErrorLoadPage }) => {
 	const [deleteModal, setDeleteModal] = useState(false);
 	const [inputSearch, setInputSearch] = useState('');
 	const [newArrSearch, setNewArrSearch] = useState([]);
-	const { booksReadYear, year, status } = useFetchTargetReading(userId, modalOpen, deleteModal);
+
+	const { booksReadYear, year, status } = useFetchTargetReading(userId, modalOpen);
 
 	const renderLinearProgressBar = item => {
 		let percent = 0;
@@ -155,57 +156,57 @@ const MainReadingTarget = ({ setErrorLoadPage }) => {
 					value={inputSearch}
 				/>
 			</div>
-			{booksReadYear.length > 0
-				? booksReadYear.map(item => (
-						<>
-							<div className='reading-target__process'>
-								<UserAvatar
-									className='reading-target__user'
-									source={userData.avatarImage || userInfo?.avatarImage}
-									size='lg'
-								/>
-								<div className='reading-target__content'>
-									{renderContentTop(item)}
-									<div className='reading-target__content__bottom'>
-										{renderLinearProgressBar(item)}
-										{userInfo.id === userId && (
-											<button
-												className='btn btn-share btn-primary-light'
-												onClick={handleShareTargetReading}
-											>
-												Chia sẻ
-											</button>
-										)}
-									</div>
-								</div>
+			{booksReadYear.length > 0 ? (
+				<>
+					<div className='reading-target__process'>
+						<UserAvatar
+							className='reading-target__user'
+							source={userData.avatarImage || userInfo?.avatarImage}
+							size='lg'
+						/>
+						<div className='reading-target__content'>
+							{renderContentTop(booksReadYear[0])}
+							<div className='reading-target__content__bottom'>
+								{renderLinearProgressBar(booksReadYear[0])}
+								{userInfo.id === userId && (
+									<button
+										className='btn btn-share btn-primary-light'
+										onClick={handleShareTargetReading}
+									>
+										Chia sẻ
+									</button>
+								)}
 							</div>
-							<ModalReadTarget
-								modalOpen={modalOpen}
-								toggleModal={toggleModal}
-								setModalOpen={setModalOpen}
-								deleteModal={deleteModal}
-							/>
-							{!_.isEmpty(item.booksRead) && (
-								<div className='reading-target__table'>
-									<div className='reading-target__table__header'>
-										<div className='reading-target__table__header-column'></div>
-										<div className='reading-target__table__header-column'>Tên sách</div>
-										<div className='reading-target__table__header-column'>Tác giả</div>
-										<div className='reading-target__table__header-column'>Ngày thêm</div>
-										<div className='reading-target__table__header-column'>Ngày đọc</div>
-										<div className='reading-target__table__header-column'>Ngày hoàn thành</div>
-										<div className='empty-row' />
-									</div>
-									<div className='reading-target__table__body'>
-										{inputSearch.length > 0
-											? handleRenderUseSearch(newArrSearch)
-											: handleRenderUseSearch(item)}
-									</div>
-								</div>
-							)}
-						</>
-				  ))
-				: userId === userInfo.id && status === 'SUCCESS' && <GoalsNotSetYet userInfo={userInfo} />}
+						</div>
+					</div>
+					<ModalReadTarget
+						modalOpen={modalOpen}
+						toggleModal={toggleModal}
+						setModalOpen={setModalOpen}
+						deleteModal={deleteModal}
+					/>
+					{!_.isEmpty(booksReadYear[0].booksRead) && (
+						<div className='reading-target__table'>
+							<div className='reading-target__table__header'>
+								<div className='reading-target__table__header-column'></div>
+								<div className='reading-target__table__header-column'>Tên sách</div>
+								<div className='reading-target__table__header-column'>Tác giả</div>
+								<div className='reading-target__table__header-column'>Ngày thêm</div>
+								<div className='reading-target__table__header-column'>Ngày đọc</div>
+								<div className='reading-target__table__header-column'>Ngày hoàn thành</div>
+								<div className='empty-row' />
+							</div>
+							<div className='reading-target__table__body'>
+								{inputSearch.length > 0
+									? handleRenderUseSearch(newArrSearch)
+									: handleRenderUseSearch(booksReadYear[0])}
+							</div>
+						</div>
+					)}
+				</>
+			) : (
+				userId === userInfo.id && status === 'SUCCESS' && <GoalsNotSetYet userInfo={userInfo} />
+			)}
 		</div>
 	);
 };

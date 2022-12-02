@@ -48,6 +48,7 @@ const TopUser = ({ listYear, tabSelected }) => {
 
 	useEffect(() => {
 		if (tabSelected === 'user') {
+			window.scrollTo(0, 0);
 			callApiStart.current = callApiPerPage.current;
 			setHasMore(true);
 			getTopUserDataFirstTime();

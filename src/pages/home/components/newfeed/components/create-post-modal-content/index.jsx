@@ -116,7 +116,7 @@ function CreatePostModalContent({
 	const dispatch = useDispatch();
 	const location = useLocation();
 
-	const chartImgShare = useSelector(state => state.chart.updateImgPost);
+	const chartImgShare = useSelector(state => state.chart.imageToShareData);
 	const { postDataShare } = useSelector(state => state.post);
 	const isWarning = useSelector(state => state.post.isWarning);
 
@@ -728,7 +728,7 @@ function CreatePostModalContent({
 							})}
 						>
 							<RichTextEditor
-								placeholder='Hãy chia sẻ cảm nhận của bạn về cuốn sách'
+								placeholder='Hãy chia sẻ cảm nhận của bạn ...'
 								setUrlAdded={setUrlAdded}
 								setContent={setContent}
 								hasMentionsUser={false}

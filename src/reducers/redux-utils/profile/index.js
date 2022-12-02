@@ -16,19 +16,15 @@ const profileSlice = createSlice({
 	name: 'profile',
 	initialState: {
 		toggle: '',
-		checkUser: false,
 	},
 	reducers: {
 		changeToggle: (state, action) => {
 			state.toggle = action.payload;
 		},
-		checkGetUser: (state, action) => {
-			state.checkUser = action.payload;
-		},
 	},
 });
 
-export const { changeToggle, checkGetUser } = profileSlice.actions;
+export const { changeToggle } = profileSlice.actions;
 
 const profile = profileSlice.reducer;
 export default profile;

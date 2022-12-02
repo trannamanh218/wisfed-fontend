@@ -28,6 +28,7 @@ const TopQuotes = ({ listYear, tabSelected }) => {
 
 	useEffect(() => {
 		if (tabSelected === 'quotes') {
+			window.scrollTo(0, 0);
 			callApiStart.current = callApiPerPage.current;
 			setHasMore(true);
 			getTopQuotesDataFirstTime();

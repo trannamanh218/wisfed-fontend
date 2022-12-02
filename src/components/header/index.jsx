@@ -32,7 +32,7 @@ import {
 	handleUpdateWentInResult,
 } from 'reducers/redux-utils/search';
 import { toast } from 'react-toastify';
-import { updateTargetReading } from 'reducers/redux-utils/chart';
+import { setMyTargetReading } from 'reducers/redux-utils/chart';
 import defaultAvatar from 'assets/icons/defaultLogoAvatar.svg';
 import * as stream from 'getstream';
 import _ from 'lodash';
@@ -180,7 +180,7 @@ const Header = () => {
 		localStorage.removeItem('refreshToken');
 		Request.clearToken();
 		dispatch(deleteUserInfo());
-		dispatch(updateTargetReading([]));
+		dispatch(setMyTargetReading([]));
 		navigate('/login');
 		const customId = 'custom-id-Header';
 		toast.success('Đăng xuất thành công', { toastId: customId });

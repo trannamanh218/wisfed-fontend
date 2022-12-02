@@ -5,7 +5,7 @@ import { memo } from 'react';
 import { useFetchTargetReading } from 'api/readingTarget.hooks';
 
 const RenderProgress = ({ userIdParams }) => {
-	const { booksReadYear, status } = useFetchTargetReading(userIdParams);
+	const { booksReadYear } = useFetchTargetReading(userIdParams);
 
 	const renderProgressBar = () => {
 		if (booksReadYear.length > 0) {

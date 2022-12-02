@@ -6,7 +6,7 @@ import './page-tab.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
 import { useParams } from 'react-router-dom';
-import { getChartsByid, updateImg } from 'reducers/redux-utils/chart';
+import { getChartsByid, handleSetImageToShare } from 'reducers/redux-utils/chart';
 import { useNavigate } from 'react-router-dom';
 import Circle from 'shared/loading/circle';
 import { useCurrentPng } from 'recharts-to-png';
@@ -95,7 +95,7 @@ const PageTab = () => {
 				if (imageUploadedData) {
 					setLoading(false);
 					navigate('/');
-					return dispatch(updateImg(imgUploadder));
+					return dispatch(handleSetImageToShare(imgUploadder));
 				}
 			}
 		}
@@ -139,8 +139,8 @@ const PageTab = () => {
 	};
 
 	CustomTooltip.propTypes = {
-		label: PropTypes.string,
-		payload: PropTypes.object,
+		label: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+		payload: PropTypes.array,
 	};
 
 	CustomizedAxisXTick.propTypes = {

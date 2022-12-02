@@ -105,44 +105,26 @@ export const deleteTargetRead = createAsyncThunk(
 const chartSlice = createSlice({
 	name: 'chart',
 	initialState: {
-		updateImgPost: [],
+		imageToShareData: [],
 		isFetching: false,
 		error: {},
-		targetReading: [],
-		renderTarget: false,
-		checkRenderTarget: false,
+		myTargetReading: [],
+		resetMyTargetReading: false,
 	},
 	reducers: {
-		updateImg: (state, action) => {
-			state.updateImgPost = action.payload;
+		handleSetImageToShare: (state, action) => {
+			state.imageToShareData = action.payload;
 		},
-		updateTargetReading: (state, action) => {
-			state.targetReading = action.payload;
+		setMyTargetReading: (state, action) => {
+			state.myTargetReading = action.payload;
 		},
-		renderTargetReadingProgress: (state, action) => {
-			state.renderTarget = action.payload;
-		},
-		checkRenderTargetReading: (state, action) => {
-			state.checkRenderTarget = action.payload;
-		},
-	},
-	extraReducers: {
-		[getListBooksTargetReading.pending]: state => {
-			state.isFetching = true;
-		},
-		[getListBooksTargetReading.fulfilled]: (state, action) => {
-			state.isFetching = false;
-			state.targetReading = action.payload;
-			state.error = {};
-		},
-		[getListBooksTargetReading.rejected]: (state, action) => {
-			state.isFetching = false;
-			state.targetReading = [];
-			state.error = action.payload;
+		handleResetMyTargetReading: state => {
+			state.resetMyTargetReading = !state.resetMyTargetReading;
 		},
 	},
 });
-export const { updateImg, updateTargetReading, renderTargetReadingProgress, checkRenderTargetReading } =
-	chartSlice.actions;
+
+export const { handleSetImageToShare, setMyTargetReading, handleResetMyTargetReading } = chartSlice.actions;
 const chart = chartSlice.reducer;
+
 export default chart;

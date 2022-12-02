@@ -5,8 +5,8 @@ import PropTypes from 'prop-types';
 import {
 	updateTargetRead,
 	createTargetRead,
-	renderTargetReadingProgress,
-	checkRenderTargetReading,
+	setMyTargetReading,
+	handleResetMyTargetReading,
 } from 'reducers/redux-utils/chart';
 import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
@@ -24,10 +24,12 @@ function ReadChallenge({ modalOpen, setModalOpen }) {
 			setInputValue(0);
 		}
 		if (inputValue.length > 3) {
-			setInputValue(inputValue.slice(0, 3));
-		}
-		if (inputValue % 1 !== 0) {
-			setInputValue(Math.floor(inputValue));
+			if (inputValue === 0) {
+				setInputValue(0);
+			} else {
+				const newValue = inputValue.replace(/\b0+/g, '').slice(0, 3);
+				setInputValue(newValue);
+			}
 		}
 	}, [inputValue]);
 
@@ -40,6 +42,7 @@ function ReadChallenge({ modalOpen, setModalOpen }) {
 				toast.error('Mục tiêu phải lớn hơn 0', { toastId: customId });
 			} else {
 				if (modalOpen) {
+					dispatch(setMyTargetReading([]));
 					try {
 						const dob = new Date();
 						const year = dob.getFullYear();
@@ -50,15 +53,13 @@ function ReadChallenge({ modalOpen, setModalOpen }) {
 							year: year,
 							...query,
 						};
-						dispatch(checkRenderTargetReading(true));
-						return await dispatch(updateTargetRead(params)).unwrap();
+						await dispatch(updateTargetRead(params)).unwrap();
+						const customId = 'custom-id-ReadChallenge-handleChangeTarget';
+						toast.success('Sửa mục tiêu thành công', { toastId: customId });
 					} catch (err) {
 						NotificationError(err);
 					} finally {
-						const customId = 'custom-id-ReadChallenge-handleChangeTarget';
-						toast.success('Sửa mục tiêu thành công', { toastId: customId });
 						setModalOpen(false);
-						dispatch(checkRenderTargetReading(false));
 					}
 				} else {
 					try {
@@ -74,7 +75,7 @@ function ReadChallenge({ modalOpen, setModalOpen }) {
 					} catch (err) {
 						NotificationError(err);
 					} finally {
-						dispatch(renderTargetReadingProgress(true));
+						dispatch(handleResetMyTargetReading());
 					}
 				}
 			}
@@ -98,14 +99,13 @@ function ReadChallenge({ modalOpen, setModalOpen }) {
 						<button
 							data-testid='read-challenge__decrease-btn'
 							className='read-challenge__input__button-element'
-							onClick={() => setInputValue(Number(inputValue) - 1)}
+							onClick={() => setInputValue((Number(inputValue) - 1).toString())}
 						>
 							&#8722;
 						</button>
 						<input
 							data-testid='read-challenge__input'
 							type='number'
-							min='0'
 							value={inputValue}
 							className='read-challenge__input__input-element'
 							onChange={e => setInputValue(e.target.value)}
@@ -117,7 +117,7 @@ function ReadChallenge({ modalOpen, setModalOpen }) {
 						<button
 							data-testid='read-challenge__increase-btn'
 							className='read-challenge__input__button-element'
-							onClick={() => setInputValue(Number(inputValue) + 1)}
+							onClick={() => setInputValue((Number(inputValue) + 1).toString())}
 						>
 							&#43;
 						</button>

@@ -38,7 +38,7 @@ export default function MainUpload() {
 	const [image, setImage] = useState(null);
 	const [categoryAddedList, setCategoryAddedList] = useState([]);
 	const [authors, setAuthors] = useState([]);
-	const [translators, setTranslators] = useState([]);
+	const [translators, setTranslators] = useState('');
 	const [publisher, setPublisher] = useState([]);
 	const [language, setLanguage] = useState('');
 	const [series, setSeries] = useState({});

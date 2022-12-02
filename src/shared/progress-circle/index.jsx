@@ -38,7 +38,7 @@ const ProgressBarCircle = ({ booksReadYear }) => {
 	};
 
 	return (
-		<div>
+		<>
 			<div className='progress__circle__title'>Mục tiêu đọc sách</div>
 			{!_.isEmpty(booksReadYear) && (
 				<div className='progress__circle__container'>
@@ -67,7 +67,7 @@ const ProgressBarCircle = ({ booksReadYear }) => {
 					))}
 				</div>
 			)}
-		</div>
+		</>
 	);
 };
 
