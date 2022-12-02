@@ -56,9 +56,6 @@ const LeftSidebarGroup = ({ handleChange, data, member, onClickSeeMore }) => {
 			<div className='group__intro'>
 				<h3 className='group-sibar-left__title'>Giới thiệu</h3>
 				<div className='group-sibar-left__description'>
-					{/* <span>
-					<img src='' alt='' /> Nhóm kín
-				</span> */}
 					<div className='group-sibar-left__text1'>
 						<span>
 							<strong>Kiểu nội dung: </strong>
