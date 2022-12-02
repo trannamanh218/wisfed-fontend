@@ -64,6 +64,7 @@ import {
 import { handleClickCreateNewPostForBook } from 'reducers/redux-utils/activity';
 // import ShareModeComponent from './ShareModeComponent';
 import DirectLinkALertModal from 'shared/direct-link-alert-modal';
+import { handleResetMyTargetReading, setMyTargetReading } from 'reducers/redux-utils/chart';
 
 const verbShareArray = [
 	POST_VERB_SHARE,
@@ -531,6 +532,8 @@ function CreatePostModalContent({
 			hideCreatePostModal();
 			onChangeOption({});
 			setShowModalCreatPost(false);
+			dispatch(setMyTargetReading([]));
+			dispatch(handleResetMyTargetReading());
 		}
 	};
 

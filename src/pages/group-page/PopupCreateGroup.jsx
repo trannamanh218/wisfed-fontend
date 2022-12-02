@@ -35,7 +35,6 @@ const PopupCreateGroup = ({ handleClose, handleRefreshData = () => {} }) => {
 	const [inputCategoryValue, setInputCategoryValue] = useState('');
 	const [categoryAddedList, setCategoryAddedList] = useState([]);
 	const [categorySearchedList, setCategorySearchedList] = useState([]);
-	const [hasMoreCategoriesEllipsis, setHasMoreCategoriesEllipsis] = useState(false);
 	const [listBookAdd, setListBookAdd] = useState([]);
 	const [inputBookValue, setInputBookValue] = useState('');
 	const [bookAddedList, setBookAddedList] = useState([]);
@@ -83,15 +82,16 @@ const PopupCreateGroup = ({ handleClose, handleRefreshData = () => {} }) => {
 	};
 
 	const getSuggestionCategories = async input => {
-		const option = { value: 'addCategory' };
 		try {
-			const result = await dispatch(getSuggestionForPost({ input, option })).unwrap();
-			setCategorySearchedList(result.rows);
-			if (result.count > result.rows.length) {
-				setHasMoreCategoriesEllipsis(true);
-			} else {
-				setHasMoreCategoriesEllipsis(false);
-			}
+			const params = {
+				q: input,
+				type: 'categories',
+				start: 0,
+				limit: 10,
+			};
+			const result = await dispatch(getFilterSearch(params)).unwrap();
+			const categoriesThatHaveBook = result.rows.filter(item => item.numberBooks > 0);
+			setCategorySearchedList(categoriesThatHaveBook);
 		} catch (err) {
 			NotificationError(err);
 		} finally {
@@ -486,7 +486,6 @@ const PopupCreateGroup = ({ handleClose, handleRefreshData = () => {} }) => {
 									categoryInputWrapper={categoryInputWrapper}
 									categoryInput={categoryInput}
 									hasSearchIcon={true}
-									hasMoreEllipsis={hasMoreCategoriesEllipsis}
 								/>
 							</div>
 						)}

@@ -20,6 +20,7 @@ import {
 import './setting-more.scss';
 import { NotificationError } from 'helpers/Error';
 import { updateCurrentBook } from 'reducers/redux-utils/book';
+import { handleResetMyTargetReading, setMyTargetReading } from 'reducers/redux-utils/chart';
 
 const SettingMore = ({ bookData, handleUpdateBookList }) => {
 	const [showLibrariesModal, setShowLibrariesModal] = useState(false);
@@ -184,6 +185,8 @@ const SettingMore = ({ bookData, handleUpdateBookList }) => {
 			dispatch(updateMyAllLibraryRedux());
 			const customId = 'custom-id-SettingMore-success';
 			toast.success('Xoá sách thành công', { toastId: customId });
+			dispatch(setMyTargetReading([]));
+			dispatch(handleResetMyTargetReading());
 		} catch (err) {
 			const customId = 'custom-id-SettingMore-warn';
 			toast.warn('Lỗi không xóa được sách trong thư viện', { toastId: customId });

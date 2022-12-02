@@ -42,7 +42,7 @@ const Group = () => {
 		setIsFetching(true);
 		try {
 			const actionGetList = await dispatch(getMember(id)).unwrap();
-			setListMember(actionGetList);
+			setListMember(actionGetList.rows);
 		} catch (err) {
 			return;
 		} finally {

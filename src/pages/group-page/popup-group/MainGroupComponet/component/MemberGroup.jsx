@@ -26,7 +26,7 @@ function MemberGroup({ memberGroupsProp = [] }) {
 	const getListMember = async () => {
 		try {
 			const actionGetList = await dispatch(getMember(id)).unwrap();
-			setMemberGroups(actionGetList);
+			setMemberGroups(actionGetList.rows);
 		} catch (err) {
 			NotificationError(err);
 		}

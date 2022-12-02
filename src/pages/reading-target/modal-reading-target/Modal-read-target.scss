@@ -1,15 +1,13 @@
-.Modal__Read__Target {
-	.main-category-detail__modal .modal-content {
-		max-width: 500px;
-	}
-	.read-challenge {
-		margin-bottom: 0;
-	}
-	.btn-closeX {
-		display: flex;
-		justify-content: right;
-	}
-	.modal-body {
-		text-align: center;
+.main-shelves__modal {
+	&.read-target {
+		.modal-content {
+			padding: 1rem 0px 0px 0px;
+			.read-challenge {
+				margin-bottom: 0;
+				&__title {
+					margin-bottom: 0px;
+				}
+			}
+		}
 	}
 }
