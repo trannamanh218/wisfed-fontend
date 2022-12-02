@@ -233,7 +233,7 @@ function CreatePostModalContent({
 
 	const handleOpenUploadImage = () => {
 		if (!imagesUpload.length) {
-			setShowUpload(true);
+			setShowUpload(!showUpload);
 			addOptionsToPost({ value: 'addImages', title: 'chỉnh sửa ảnh', icon: <Image />, message: '' });
 		}
 	};
@@ -644,8 +644,6 @@ function CreatePostModalContent({
 
 	const handleCancel = () => {
 		setModalShow(false);
-		// const textFieldEdit = document.querySelector('.creat-post-modal-content__main__body__text-field-edit-wrapper');
-		// const editor = textFieldEdit.querySelector('.public-DraftEditor-content');
 	};
 
 	const handleClose = () => {
