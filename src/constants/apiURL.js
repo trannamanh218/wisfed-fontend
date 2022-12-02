@@ -22,6 +22,7 @@ export const getQuoteCommentsAPI = id => `/api/v1/quotes/listCommentQuote/${id}/
 export const listQuotesLikedByIdAPI = id => `/api/v1/quotes/listQuotesLikedById/${id}`;
 export const listHasgTagByUserAPI = '/api/v1/tags';
 export const listQuotesByTagAPI = '/api/v1/quotes/listQuoteByTag';
+export const listHashtagsOfUserQuotesAPI = id => `/api/v1/quotes/hashtag/${id}`;
 
 // post
 export const postAPI = '/api/v1/posts';
