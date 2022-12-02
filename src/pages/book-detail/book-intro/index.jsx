@@ -31,7 +31,7 @@ const BookIntro = ({ bookInfo, listRatingStar }) => {
 
 	useEffect(() => {
 		if (window.innerWidth <= 768) {
-			setTextLength(290);
+			setTextLength(280);
 		} else if (window.innerWidth <= 820) {
 			setTextLength(320);
 		} else if (window.innerWidth <= 1024) {
@@ -64,7 +64,7 @@ const BookIntro = ({ bookInfo, listRatingStar }) => {
 
 	const handleConfirmMyBook = () => {
 		if (!_.isEmpty(userInfo)) {
-			if (!bookInfo.verify) {
+			if (isLink) {
 				navigate(`/confirm-my-book/${bookInfo.id}`);
 			}
 		} else {

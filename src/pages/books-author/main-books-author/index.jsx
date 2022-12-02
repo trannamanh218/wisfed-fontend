@@ -60,7 +60,7 @@ const MainBooksAuthor = ({ shelveGroupName }) => {
 				start: callApiStart.current,
 				limit: callApiPerPage.current,
 				filter: filter,
-				sort: JSON.stringify([{ 'created_at': { 'order': 'desc' } }]),
+				sort: JSON.stringify([{ 'direction': 'DESC', 'property': 'createdAt' }]),
 			};
 			const data = await dispatch(getBookAuthorList({ id: userId, params: params })).unwrap();
 			if (data.length) {
@@ -75,6 +75,7 @@ const MainBooksAuthor = ({ shelveGroupName }) => {
 			}
 		} catch (err) {
 			NotificationError(err);
+			setHasMore(false);
 		}
 	};
 

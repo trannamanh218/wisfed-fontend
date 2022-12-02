@@ -1,13 +1,13 @@
-import SidebarGroupLef from 'pages/group-page/sidebar-left';
+import LeftSidebarGroup from 'pages/group-page/sidebar-left';
 
 export default {
 	title: 'Components/Modules/SibarleftGroup',
-	component: SidebarGroupLef,
+	component: LeftSidebarGroup,
 	argTypes: {
 		handleClick: { action: 'onClick' },
 	},
 };
 
-const Template = args => <SidebarGroupLef {...args} />;
+const Template = args => <LeftSidebarGroup {...args} />;
 
 export const Default = Template.bind({});

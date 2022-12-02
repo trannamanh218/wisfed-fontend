@@ -39,6 +39,8 @@ import { useRef } from 'react';
 import { toast } from 'react-toastify';
 import vector from 'assets/images/Vector.png';
 import LoadingIndicator from 'shared/loading-indicator';
+import Storage from 'helpers/Storage';
+import { checkUserLogin } from 'reducers/redux-utils/auth';
 
 function MainGroupComponent({
 	handleChange,
@@ -85,16 +87,20 @@ function MainGroupComponent({
 	}, []);
 
 	const enjoyGroup = async () => {
-		setIsFetching(true);
-		try {
-			await dispatch(getEnjoyGroup(data?.id)).unwrap();
-			dispatch(checkIsJoinedGroup(true));
-			setShow(true);
-			setIsFetching(false);
-		} catch (err) {
-			NotificationError(err);
-		} finally {
-			setIsFetching(false);
+		if (!Storage.getAccessToken()) {
+			dispatch(checkUserLogin(true));
+		} else {
+			setIsFetching(true);
+			try {
+				await dispatch(getEnjoyGroup(data?.id)).unwrap();
+				dispatch(checkIsJoinedGroup(true));
+				setShow(true);
+				setIsFetching(false);
+			} catch (err) {
+				NotificationError(err);
+			} finally {
+				setIsFetching(false);
+			}
 		}
 	};
 
@@ -327,7 +333,16 @@ function MainGroupComponent({
 								</button>
 							</div>
 						)}
-						<div className='group-name__invite-group' onClick={() => setIsShow(!isShow)}>
+						<div
+							className='group-name__invite-group'
+							onClick={() => {
+								if (!Storage.getAccessToken()) {
+									dispatch(checkUserLogin(true));
+								} else {
+									setIsShow(!isShow);
+								}
+							}}
+						>
 							<button>
 								<ActionPlusGroup />
 								Mời

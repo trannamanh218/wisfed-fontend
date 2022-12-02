@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 import './index.scss';
 import './mainGroup.scss';
 import SubContainer from 'components/layout/sub-container';
-import SidebarGroupLef from './sidebar-left';
+import LeftSidebarGroup from './sidebar-left';
 import { getGroupDettail, getMember, checkIsJoinedGroup } from 'reducers/redux-utils/group';
 import MainGroupComponent from './popup-group/MainGroupComponet/MainGroupComponent';
 import RightSidebarGroup from './sidebar-right/RightSidebarGroup';
@@ -56,9 +56,6 @@ const Group = () => {
 
 	useEffect(() => {
 		getListMember();
-	}, [toggleUpdate]);
-
-	useEffect(() => {
 		fetchData();
 	}, [toggleUpdate, id]);
 
@@ -77,7 +74,7 @@ const Group = () => {
 			{!_.isEmpty(detailGroup) ? (
 				<SubContainer
 					left={
-						<SidebarGroupLef
+						<LeftSidebarGroup
 							handleChange={handleChange}
 							data={detailGroup}
 							member={listMember}
