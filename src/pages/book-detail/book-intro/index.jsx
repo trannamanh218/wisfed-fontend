@@ -23,15 +23,11 @@ const BookIntro = ({ bookInfo, listRatingStar }) => {
 
 	const userInfo = useSelector(state => state.auth.userInfo);
 	const reviewsNumber = useSelector(state => state.book.currentBookReviewsNumber);
+
 	const location = useLocation();
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
-
-	const handleClick = () => {
-		if (location.pathname !== '/' || location.pathname !== '/home') {
-			navigate('/');
-		}
-	};
+	const [isLink, setIsLink] = useState(false);
 
 	useEffect(() => {
 		if (window.innerWidth <= 768) {
@@ -44,6 +40,18 @@ const BookIntro = ({ bookInfo, listRatingStar }) => {
 			setTextLength(400);
 		}
 	}, []);
+
+	useEffect(() => {
+		if (!_.isEmpty(userInfo) && !bookInfo.verify && ['admin', 'author', 'tecinus'].includes(userInfo.role)) {
+			setIsLink(true);
+		}
+	}, [userInfo]);
+
+	const handleClick = () => {
+		if (location.pathname !== '/' || location.pathname !== '/home') {
+			navigate('/');
+		}
+	};
 
 	const handleShareFaceBook = () => {
 		if (Storage.getAccessToken()) {
@@ -86,7 +94,7 @@ const BookIntro = ({ bookInfo, listRatingStar }) => {
 					<div className='book-intro__content__infomations__block-up'>
 						<h1
 							className={classNames('book-intro__name', {
-								'not-verify': !bookInfo.verify,
+								'not-verify': isLink,
 							})}
 							onClick={handleConfirmMyBook}
 							title={bookInfo.name}

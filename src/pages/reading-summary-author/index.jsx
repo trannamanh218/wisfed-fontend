@@ -1,9 +1,7 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import NormalContainer from 'components/layout/normal-container';
 import './reading-summary-author.scss';
-import SearchField from 'shared/search-field';
-import { TimeIcon } from 'components/svg';
-import { Bar, BarChart, Tooltip, XAxis, YAxis, CartesianGrid } from 'recharts';
+import { Bar, BarChart, Tooltip, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from 'recharts';
 import PropTypes from 'prop-types';
 import { useCurrentPng } from 'recharts-to-png';
 import ModalChart from './modal-sort';
@@ -13,11 +11,10 @@ import { useParams } from 'react-router-dom';
 import dayjs from 'dayjs';
 import Circle from 'shared/loading/circle';
 import { useNavigate } from 'react-router-dom';
-import _ from 'lodash';
-import { getFilterSearch } from 'reducers/redux-utils/search';
-import Storage from 'helpers/Storage';
 import NotFound from 'pages/not-found';
 import BackButton from 'shared/back-button';
+import BookAuthorChartSearch from './search-component';
+import SearchIcon from 'assets/icons/search.svg';
 
 const ReadingSummaryChartAuthor = () => {
 	const [chartsData, setChartsData] = useState({});
@@ -33,16 +30,35 @@ const ReadingSummaryChartAuthor = () => {
 	const { bookId } = useParams();
 	const [loading, setLoading] = useState(false);
 	const navigate = useNavigate();
-	const [filter, setFilter] = useState('[]');
-	const [resultSearch, setResultSearch] = useState([]);
-	const [localStorage, setLocalStorage] = useState([]);
-	const [checkRenderStorage, setCheckRenderStorage] = useState(false);
-	const [directClick, setDirectClick] = useState(false);
 	const [errorLoadPage, setErrorLoadPage] = useState(false);
+	const [show, setShow] = useState(true);
+
+	const smallScreenSearchModal = useRef(null);
 
 	useEffect(() => {
 		fetchData();
-	}, [changeValue, booksId]);
+	}, [changeValue, booksId, bookId]);
+
+	useEffect(() => {
+		function handleClickOutside(event) {
+			if (smallScreenSearchModal.current && !smallScreenSearchModal.current.contains(event.target)) {
+				setShow(true);
+			}
+		}
+		// Bind the event listener
+		document.addEventListener('mousedown', handleClickOutside);
+		return () => {
+			// Unbind the event listener on clean up
+			document.removeEventListener('mousedown', handleClickOutside);
+		};
+	}, [smallScreenSearchModal]);
+
+	useEffect(() => {
+		if (!show) {
+			const arr = document.getElementsByClassName('search-field__input');
+			arr[1].focus();
+		}
+	}, [show]);
 
 	const fetchData = async () => {
 		setLoading(true);
@@ -115,7 +131,7 @@ const ReadingSummaryChartAuthor = () => {
 				return ` Lượt like ${data !== undefined ? `: ${data}` : ''}`;
 			case 'rate':
 				return ` Lượt Đánh giá ${data !== undefined ? `: ${data}` : ''}`;
-			case 'eeview':
+			case 'review':
 				return ` Lượt Review ${data !== undefined ? `: ${data}` : ''}`;
 			case 'quote':
 				return ` Lượt Quote ${data !== undefined ? `: ${data}` : ''}`;
@@ -145,68 +161,6 @@ const ReadingSummaryChartAuthor = () => {
 			}
 		}
 	};
-
-	const handleChange = e => {
-		setSearchValue(e.target.value);
-		debounceSearch(e.target.value);
-	};
-
-	useEffect(async () => {
-		const params = {
-			q: filter,
-		};
-		try {
-			if (searchValue.length > 0) {
-				const result = await dispatch(getFilterSearch({ ...params })).unwrap();
-				setResultSearch(result.books);
-			} else {
-				setResultSearch([]);
-			}
-		} catch (err) {
-			return;
-		}
-	}, [filter]);
-
-	const updateInputSearch = value => {
-		if (value) {
-			const filterValue = value.toLowerCase().trim();
-			setFilter(JSON.stringify(filterValue));
-		} else {
-			setFilter('[]');
-		}
-	};
-
-	const handleClickBooks = item => {
-		setBooksId(item.id);
-		navigate(`/book-author-charts/${item.id}`);
-		const newArr = localStorage?.filter(data => data.id === item.id);
-		if (!newArr.length) {
-			setLocalStorage(prev => [...prev, item]);
-			setCheckRenderStorage(!checkRenderStorage);
-			setDirectClick(true);
-		}
-	};
-
-	useEffect(() => {
-		const getDataLocal = JSON.parse(Storage.getItem('result-book-author'));
-		if (getDataLocal) {
-			setLocalStorage(getDataLocal);
-		}
-	}, [checkRenderStorage]);
-
-	useEffect(() => {
-		if (directClick) {
-			if (localStorage.length < 4) {
-				Storage.setItem('result-book-author', JSON.stringify(localStorage));
-			} else {
-				const filterData = localStorage.filter((item, index) => index !== 0);
-				setLocalStorage(filterData);
-				Storage.setItem('result-book-author', JSON.stringify(filterData));
-			}
-		}
-	}, [checkRenderStorage]);
-
-	const debounceSearch = useCallback(_.debounce(updateInputSearch, 1000), []);
 
 	function CustomizedAxisXTick(props) {
 		const { x, y, payload } = props;
@@ -244,53 +198,42 @@ const ReadingSummaryChartAuthor = () => {
 							</div>
 						</div>
 						<div className='book__author__charts__main'>
-							<div className='book__author__charts__search__main'>
-								<div className='book__author__charts__search__main__container'>
-									<SearchField
-										placeholder='Tìm kiếm tên sách'
-										handleChange={handleChange}
-										value={searchValue}
-									/>
-									{searchValue.length > 0 ? (
-										<div className='book__author__charts__search'>
-											{resultSearch.slice(0, 3).map(item => (
-												<div
-													key={item.id}
-													onClick={() => handleClickBooks(item)}
-													className='result__search__main__left'
-												>
-													<div className='result__search__icon__time'>
-														<TimeIcon />
-													</div>
-
-													<div className='result__search__name'>{item.name}</div>
-												</div>
-											))}
-										</div>
-									) : localStorage.length ? (
-										<div className='book__author__charts__search'>
-											<div className='chart__history__title'>Tìm kiếm gần đây</div>
-											{localStorage.map(item => (
-												<div
-													key={item.id}
-													onClick={() => handleClickBooks(item)}
-													className='result__search__main__left'
-												>
-													<div className='result__search__icon__time'>
-														<TimeIcon />
-													</div>
-
-													<div className='result__search__name'>{item.name}</div>
-												</div>
-											))}
-										</div>
-									) : (
-										<div className='chart__history__titles'>Không có tìm kiếm nào gần đây</div>
-									)}
-								</div>
+							<div className='book__author__charts__main__small-screen-hide'>
+								<BookAuthorChartSearch
+									setBooksId={setBooksId}
+									searchValue={searchValue}
+									setSearchValue={setSearchValue}
+								/>
 							</div>
 
-							<div className='book__author__recharts '>
+							<div className='book__author__recharts'>
+								{/* this search component appears when screen is 1024 */}
+								<div className='book__author__recharts__small-search-button'>
+									<div style={{ position: 'relative' }}>
+										<div
+											className={`book__author__recharts__small-search-button__icon ${
+												show && 'show'
+											}`}
+											onClick={() => setShow(false)}
+										>
+											<img className='search-field__icon' src={SearchIcon} alt='search-icon' />
+										</div>
+										<div
+											className={`book__author__recharts__small-search-button__modal ${
+												!show && 'show'
+											}`}
+											ref={smallScreenSearchModal}
+										>
+											<BookAuthorChartSearch
+												setBooksId={setBooksId}
+												searchValue={searchValue}
+												setSearchValue={setSearchValue}
+												setShow={setShow}
+											/>
+										</div>
+									</div>
+								</div>
+
 								<ModalChart
 									setSortValue={setSortValue}
 									sortValueKey={sortValueKey}
@@ -302,51 +245,51 @@ const ReadingSummaryChartAuthor = () => {
 									setShowDropdownMenu={setShowDropdownMenu}
 								/>
 								<div className='reading-summary-book-tab__chart-wrapper'>
-									<BarChart
-										width={880}
-										height={500}
-										data={chartsData}
-										ref={areaRef}
-										margin={{
-											top: 50,
-											left: 30,
-										}}
-									>
-										<defs>
-											<linearGradient id='colorUv-book-tab' x1='0' y1='0' x2='0' y2='1'>
-												<stop offset='70%' stopColor='#FFA933' />
-												<stop offset='100%' stopColor='#FFDDAE' />
-											</linearGradient>
-										</defs>
-										<CartesianGrid strokeDasharray='3 3' />
-										<XAxis
-											stroke='#6E7191'
-											dataKey={sortValue === 'day' ? 'time' : 'month'}
-											tick={<CustomizedAxisXTick />}
-										></XAxis>
-										<YAxis
-											label={{
-												position: 'top',
-												offset: 30,
-												value: renderHoverColumn(),
+									<ResponsiveContainer width='100%' height={500}>
+										<BarChart
+											data={chartsData}
+											ref={areaRef}
+											margin={{
+												top: 50,
+												left: 30,
 											}}
-											tickCount={10}
-											domain={['dataMin', `dataMax + 9`]}
-										/>
-										<Bar dataKey='count' fill='url(#colorUv-book-tab)' barSize={36} />
-										<Tooltip
-											cursor={false}
-											content={<CustomTooltip />}
-											wrapperStyle={{
-												backgroundColor: 'white',
-												borderRadius: '10px',
-												padding: '12px 16px',
-												border: '#ccc 1px solid',
-												fontWeight: 600,
-												fontSize: '0.875rem',
-											}}
-										/>
-									</BarChart>
+										>
+											<defs>
+												<linearGradient id='colorUv-book-tab' x1='0' y1='0' x2='0' y2='1'>
+													<stop offset='70%' stopColor='#FFA933' />
+													<stop offset='100%' stopColor='#FFDDAE' />
+												</linearGradient>
+											</defs>
+											<CartesianGrid strokeDasharray='3 3' />
+											<XAxis
+												stroke='#6E7191'
+												dataKey={sortValue === 'day' ? 'time' : 'month'}
+												tick={<CustomizedAxisXTick />}
+											></XAxis>
+											<YAxis
+												label={{
+													position: 'top',
+													offset: 30,
+													value: renderHoverColumn(),
+												}}
+												tickCount={10}
+												domain={['dataMin', `dataMax + 9`]}
+											/>
+											<Bar dataKey='count' fill='url(#colorUv-book-tab)' barSize={36} />
+											<Tooltip
+												cursor={false}
+												content={<CustomTooltip />}
+												wrapperStyle={{
+													backgroundColor: 'white',
+													borderRadius: '10px',
+													padding: '12px 16px',
+													border: '#ccc 1px solid',
+													fontWeight: 600,
+													fontSize: '0.875rem',
+												}}
+											/>
+										</BarChart>
+									</ResponsiveContainer>
 								</div>
 							</div>
 						</div>

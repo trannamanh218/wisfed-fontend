@@ -90,14 +90,15 @@ function App({ children }) {
 	}, [location]);
 
 	const renderHeader = () => {
-		if (
-			!location.pathname.includes('/login') &&
-			!location.pathname.includes('/register') &&
-			!location.pathname.includes('/forget-password') &&
-			!location.pathname.includes('/forget-password-admin') &&
-			!location.pathname.includes('/create-newpassword-admin') &&
-			!location.pathname.includes('/choose-topic')
-		)
+		const excludePaths = [
+			'/login',
+			'/register',
+			'/forget-password',
+			'/forget-password-admin',
+			'/create-newpassword-admin',
+			'/choose-topic',
+		];
+		if (!excludePaths.some(path => location.pathname.includes(path)))
 			return (
 				<div style={{ margin: 'auto', maxWidth: '1440px' }}>
 					<Header />

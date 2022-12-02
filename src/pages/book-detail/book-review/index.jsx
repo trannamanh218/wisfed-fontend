@@ -1,13 +1,24 @@
 import PropTypes from 'prop-types';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Tab, Tabs } from 'react-bootstrap';
 import ReviewRating from 'shared/review-rating';
 import QuotesTab from './components/QuotesTab';
 import ReviewTab from './components/ReviewTab';
 import './book-review.scss';
+import { useSelector, useDispatch } from 'react-redux';
+import { handleDirectToQuoteTabOfBookDetail } from 'reducers/redux-utils/book';
 
 const BookReview = ({ listRatingStar }) => {
 	const [currentTab, setCurrentTab] = useState('reviews');
+	const { directToQuoteTabOfBookDetail } = useSelector(state => state.book);
+	const dispatch = useDispatch();
+
+	useEffect(() => {
+		if (directToQuoteTabOfBookDetail) {
+			setCurrentTab('quotes');
+			dispatch(handleDirectToQuoteTabOfBookDetail(false));
+		}
+	}, []);
 
 	const listRating = [
 		{
@@ -60,7 +71,7 @@ const BookReview = ({ listRatingStar }) => {
 				ratingTotal={listRatingStar?.count}
 				className='book-review__rating'
 			/>
-			<Tabs className='book-review__tabs' onSelect={activeKey => setCurrentTab(activeKey)}>
+			<Tabs className='book-review__tabs' activeKey={currentTab} onSelect={activeKey => setCurrentTab(activeKey)}>
 				<Tab eventKey='reviews' title='Reviews'>
 					<ReviewTab currentTab={currentTab} />
 				</Tab>

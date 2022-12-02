@@ -232,7 +232,7 @@ const Header = () => {
 
 	useEffect(() => {
 		// Khi tìm kiếm rồi thì xóa dữ liệu ô input
-		if (window.location.pathname.includes('/result/')) {
+		if (['/result/', 'hashtag'].some(path => window.location.pathname.includes(path))) {
 			dispatch(handleUpdateWentInResult(true));
 		} else if (wentInResult) {
 			dispatch(handleUpdateValueInputSearchRedux(''));

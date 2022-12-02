@@ -3,7 +3,7 @@ import MainQuote from './main-quote';
 import NotFound from 'pages/not-found';
 import { useDispatch, useSelector } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
-import { getListHasgTagByUser } from 'reducers/redux-utils/quote';
+import { listHashtagsOfUserQuotes } from 'reducers/redux-utils/quote';
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import SidebarQuote from 'shared/sidebar-quote';
@@ -20,21 +20,17 @@ const Quote = () => {
 		window.scrollTo(0, 0);
 	}, []);
 
-	const getDataHasgTagByUser = async () => {
+	const getListHashtagsOfUserQuotes = async () => {
 		try {
-			const params = {
-				filter: JSON.stringify([{ 'operator': 'eq', 'value': userId, 'property': 'createdBy' }]),
-				sort: JSON.stringify([{ 'direction': 'DESC', 'property': 'createdAt' }]),
-			};
-			const res = await dispatch(getListHasgTagByUser(params)).unwrap();
-			setListHashtag(res.rows);
+			const res = await dispatch(listHashtagsOfUserQuotes(userId)).unwrap();
+			setListHashtag(res);
 		} catch (err) {
 			NotificationError(err);
 		}
 	};
 
 	useEffect(() => {
-		getDataHasgTagByUser();
+		getListHashtagsOfUserQuotes();
 	}, [userId]);
 
 	return (

@@ -22,6 +22,15 @@ function QuotesByHashTag() {
 
 	const dispatch = useDispatch();
 
+	useEffect(() => {
+		window.scrollTo(0, 0);
+	}, []);
+
+	useEffect(() => {
+		setHasMore(true);
+		getQuotesByTag();
+	}, [hashtag]);
+
 	const getQuotesByTag = async () => {
 		setIsLoading(true);
 		const params = {
@@ -64,11 +73,6 @@ function QuotesByHashTag() {
 			NotificationError(err);
 		}
 	};
-
-	useEffect(() => {
-		setHasMore(true);
-		getQuotesByTag();
-	}, [hashtag]);
 
 	return (
 		<NormalContainer>

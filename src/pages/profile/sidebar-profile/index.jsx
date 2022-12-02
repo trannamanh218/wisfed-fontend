@@ -123,7 +123,7 @@ const SidebarProfile = ({ currentUserInfo, handleViewBookDetail }) => {
 		if (!Storage.getAccessToken()) {
 			dispatch(checkUserLogin(true));
 		} else {
-			return navigate(`/shelves/${userId}`);
+			return navigate(`/shelves/${userId || userInfo.id}`);
 		}
 	};
 

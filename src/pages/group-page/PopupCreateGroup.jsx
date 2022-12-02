@@ -360,6 +360,16 @@ const PopupCreateGroup = ({ handleClose, handleRefreshData = () => {} }) => {
 
 	const onchangeKindOfGroup = data => {
 		setKindOfGroup(data);
+
+		// Xóa dữ liệu ở các ô input khác mỗi lần thay đổi kiểu nội dung
+		setInputAuthorValue('');
+		setAuthorAddedList([]);
+
+		setInputBookValue('');
+		setBookAddedList([]);
+
+		setInputCategoryValue('');
+		setCategoryAddedList([]);
 	};
 
 	const onchangeBookCategory = data => {

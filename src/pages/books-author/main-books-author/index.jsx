@@ -2,7 +2,7 @@ import SearchField from 'shared/search-field';
 import './books-author.scss';
 import { StarAuthor, ShareAuthor } from 'components/svg';
 import { useParams } from 'react-router-dom';
-import { getBookAuthorList } from 'reducers/redux-utils/book';
+import { getBookAuthorList, handleDirectToQuoteTabOfBookDetail } from 'reducers/redux-utils/book';
 import { NotificationError } from 'helpers/Error';
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useDispatch } from 'react-redux';
@@ -126,6 +126,11 @@ const MainBooksAuthor = ({ shelveGroupName }) => {
 		}
 	};
 
+	const onClickDirectToQuoteTabOfBookDetail = id => {
+		dispatch(handleDirectToQuoteTabOfBookDetail(true));
+		navigate(`/book/detail/${id} `);
+	};
+
 	return (
 		<div className='main-reading-author__container'>
 			<div className='main-reading-author__header'>
@@ -208,12 +213,12 @@ const MainBooksAuthor = ({ shelveGroupName }) => {
 										<div className='main-reading-author__books__item__top'>
 											<span className='underline-and-gold-color'>{item.countQuote}</span>
 										</div>
-										<Link
-											to={`/book/detail/${item.id} `}
+										<div
+											onClick={() => onClickDirectToQuoteTabOfBookDetail(item.id)}
 											className='main-reading-author__books__item__under'
 										>
 											{item.newQuote} lượt quote mới
-										</Link>
+										</div>
 									</div>
 									<div
 										className='main-reading-author__books__item__column'

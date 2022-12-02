@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { useEffect, useState, useCallback } from 'react';
-import { Bar, BarChart, Tooltip, XAxis, YAxis, CartesianGrid } from 'recharts';
+import { Bar, BarChart, Tooltip, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from 'recharts';
 import SelectBox from 'shared/select-box';
 import './book-tab.scss';
 import { getChartsByid, handleSetImageToShare } from 'reducers/redux-utils/chart';
@@ -14,7 +14,6 @@ const BookTab = ({ setErrorLoadPage }) => {
 	const [currentOption, setCurrentOption] = useState({ value: 'month', title: 'Theo tháng' });
 	const [chartsData, setChartsData] = useState({});
 	const [loading, setLoading] = useState(false);
-	const [width, setWidth] = useState(880);
 
 	const userInfo = useSelector(state => state.auth.userInfo);
 
@@ -30,24 +29,6 @@ const BookTab = ({ setErrorLoadPage }) => {
 	useEffect(() => {
 		fetchData();
 	}, [currentOption]);
-
-	useEffect(() => {
-		const handleResize = () => {
-			if (window.innerWidth < 1366 && window.innerWidth > 1280) {
-				setWidth(730);
-			} else if (window.innerWidth < 1280 && window.innerWidth > 1024) {
-				setWidth(540);
-			} else if (window.innerWidth < 1024 && window.innerWidth > 915) {
-				setWidth(700);
-			} else if (window.innerWidth < 915) {
-				setWidth(560);
-			} else {
-				setWidth(880);
-			}
-		};
-		window.addEventListener('resize', handleResize);
-		return () => window.removeEventListener('resize', handleResize);
-	}, []);
 
 	const fetchData = async () => {
 		try {
@@ -175,51 +156,51 @@ const BookTab = ({ setErrorLoadPage }) => {
 			{chartsData.length > 0 ? (
 				<>
 					<div className='reading-summary-book-tab__chart-wrapper'>
-						<BarChart
-							width={width}
-							height={500}
-							data={chartsData}
-							ref={areaRef}
-							margin={{
-								top: 50,
-								left: 30,
-							}}
-						>
-							<defs>
-								<linearGradient id='colorUv-book-tab' x1='0' y1='0' x2='0' y2='1'>
-									<stop offset='70%' stopColor='#FFA933' />
-									<stop offset='100%' stopColor='#FFDDAE' />
-								</linearGradient>
-							</defs>
-							<CartesianGrid strokeDasharray='3 3' />
-							<XAxis
-								stroke='#6E7191'
-								dataKey={currentOption.value === 'month' ? 'month' : 'year'}
-								tick={<CustomizedAxisXTick />}
-							></XAxis>
-							<YAxis
-								label={{ value: 'Lượt đọc', position: 'top', offset: 30 }}
-								tickCount={handleTickYCount()}
-							/>
-							<Bar
-								dataKey='count'
-								fill='url(#colorUv-book-tab)'
-								name={currentOption.value === 'month' ? 'Tháng' : 'Năm'}
-								barSize={36}
-							/>
-							<Tooltip
-								cursor={false}
-								content={<CustomTooltip />}
-								wrapperStyle={{
-									backgroundColor: 'white',
-									borderRadius: '10px',
-									padding: '12px 16px',
-									border: '#ccc 1px solid',
-									fontWeight: 600,
-									fontSize: '0.875rem',
+						<ResponsiveContainer width='100%' height={500}>
+							<BarChart
+								data={chartsData}
+								ref={areaRef}
+								margin={{
+									top: 50,
+									left: 30,
 								}}
-							/>
-						</BarChart>
+							>
+								<defs>
+									<linearGradient id='colorUv-book-tab' x1='0' y1='0' x2='0' y2='1'>
+										<stop offset='70%' stopColor='#FFA933' />
+										<stop offset='100%' stopColor='#FFDDAE' />
+									</linearGradient>
+								</defs>
+								<CartesianGrid strokeDasharray='3 3' />
+								<XAxis
+									stroke='#6E7191'
+									dataKey={currentOption.value === 'month' ? 'month' : 'year'}
+									tick={<CustomizedAxisXTick />}
+								></XAxis>
+								<YAxis
+									label={{ value: 'Lượt đọc', position: 'top', offset: 30 }}
+									tickCount={handleTickYCount()}
+								/>
+								<Bar
+									dataKey='count'
+									fill='url(#colorUv-book-tab)'
+									name={currentOption.value === 'month' ? 'Tháng' : 'Năm'}
+									barSize={36}
+								/>
+								<Tooltip
+									cursor={false}
+									content={<CustomTooltip />}
+									wrapperStyle={{
+										backgroundColor: 'white',
+										borderRadius: '10px',
+										padding: '12px 16px',
+										border: '#ccc 1px solid',
+										fontWeight: 600,
+										fontSize: '0.875rem',
+									}}
+								/>
+							</BarChart>
+						</ResponsiveContainer>
 					</div>
 					{userInfo.id === userId && (
 						<button className='btn reading-summary-book-tab__btn' onClick={handleAreaDownload}>

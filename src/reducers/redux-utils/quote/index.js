@@ -13,6 +13,7 @@ import {
 	listQuotesLikedByIdAPI,
 	listHasgTagByUserAPI,
 	listQuotesByTagAPI,
+	listHashtagsOfUserQuotesAPI,
 } from 'constants/apiURL';
 import Request from 'helpers/Request';
 
@@ -157,6 +158,19 @@ export const getListHasgTagByUser = createAsyncThunk(
 		} catch (err) {
 			const error = JSON.parse(err.response);
 			return rejectWithValue(error);
+		}
+	}
+);
+
+export const listHashtagsOfUserQuotes = createAsyncThunk(
+	"quote/get hashtags of user's quotes",
+	async (userId, { rejectWithValue }) => {
+		try {
+			const response = await Request.makeGet(listHashtagsOfUserQuotesAPI(userId));
+			return response.data;
+		} catch (err) {
+			const error = JSON.parse(err.response);
+			throw rejectWithValue(error);
 		}
 	}
 );
