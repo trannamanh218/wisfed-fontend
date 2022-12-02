@@ -7,7 +7,7 @@ import { updateKey } from 'reducers/redux-utils/group';
 import defaultAvatar from 'assets/icons/defaultLogoAvatar.svg';
 import { Link } from 'react-router-dom';
 
-const SidebarGroupLef = ({ handleChange, data, member, onClickSeeMore }) => {
+const LeftSidebarGroup = ({ handleChange, data, member, onClickSeeMore }) => {
 	const [listFriend, setListFriend] = useState([]);
 	const [listFolow, setListFolow] = useState([]);
 	const [listAdmin, setListAdmin] = useState([]);
@@ -202,11 +202,11 @@ const SidebarGroupLef = ({ handleChange, data, member, onClickSeeMore }) => {
 	);
 };
 
-SidebarGroupLef.propTypes = {
+LeftSidebarGroup.propTypes = {
 	handleChange: PropTypes.func,
 	data: PropTypes.object,
 	member: PropTypes.any,
 	onClickSeeMore: PropTypes.func,
 };
 
-export default SidebarGroupLef;
+export default LeftSidebarGroup;

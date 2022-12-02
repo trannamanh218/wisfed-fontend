@@ -553,7 +553,10 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 			{postData.verb === TOP_USER_VERB_SHARE && <ShareUsers postData={postData} />}
 
 			{postData.book && (
-				<PostBook data={postData.book} bookProgress={postData.metaData?.progress || postData.book.progress} />
+				<PostBook
+					data={postData.book}
+					bookProgress={postData.metaData?.progress || postData.book.progress || 0}
+				/>
 			)}
 			{postData.verb === READ_TARGET_VERB_SHARE && <ShareTarget postData={postData} inPost={true} />}
 			{postData?.image?.length > 0 && <GridImage images={postData.image} inPost={true} postId={postData.id} />}

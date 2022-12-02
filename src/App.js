@@ -129,7 +129,6 @@ function App({ children }) {
 						<Route path='/friends' element={<Friends />} />
 						<Route path='/friends/:slug' element={<DetailFriend />} />
 						<Route path='/notification' element={<Notification />} />
-						<Route path='/group/:id' element={<Group />} />
 						<Route path='/confirm-my-book/:bookId' element={<ConfirmMyBook />} />
 					</>
 				)}
@@ -167,6 +166,7 @@ function App({ children }) {
 				<Route path='/hashtag-group/:groupId/:hashtag' element={<HashtagPage />} />
 				<Route path='/' element={<Home />} />
 				<Route path='*' element={<NotFound />} />
+				<Route path='/group/:id' element={<Group />} />
 				{children}
 			</Routes>
 		</div>

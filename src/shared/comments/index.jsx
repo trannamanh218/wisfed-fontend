@@ -17,6 +17,8 @@ import { likeAndUnlikeGroupComment } from 'reducers/redux-utils/group';
 import DirectLinkALertModal from 'shared/direct-link-alert-modal';
 import _ from 'lodash';
 import ShowTime from 'shared/showTimeOfPostWhenHover/showTime';
+import Storage from 'helpers/Storage';
+import { checkUserLogin } from 'reducers/redux-utils/auth';
 
 const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 	const [isLiked, setIsLiked] = useState(false);
@@ -88,28 +90,32 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 	};
 
 	const handleLikeUnlikeCmt = async () => {
-		const newCloneData = { ...data };
-		if (isLiked) {
-			newCloneData.like -= 1;
-			setData(newCloneData);
+		if (!Storage.getAccessToken()) {
+			dispatch(checkUserLogin(true));
 		} else {
-			newCloneData.like += 1;
-			setData(newCloneData);
-		}
-
-		try {
-			if (type === POST_TYPE) {
-				await dispatch(likeAndUnlikeCommentPost(data.id)).unwrap();
-			} else if (type === QUOTE_TYPE) {
-				await dispatch(likeQuoteComment(data.id)).unwrap();
-			} else if (type === REVIEW_TYPE) {
-				await dispatch(likeAndUnlikeCommentReview(data.id)).unwrap();
+			const newCloneData = { ...data };
+			if (isLiked) {
+				newCloneData.like -= 1;
+				setData(newCloneData);
 			} else {
-				await dispatch(likeAndUnlikeGroupComment(data.id)).unwrap();
+				newCloneData.like += 1;
+				setData(newCloneData);
 			}
-			setIsLiked(!isLiked);
-		} catch (err) {
-			NotificationError(err);
+
+			try {
+				if (type === POST_TYPE) {
+					await dispatch(likeAndUnlikeCommentPost(data.id)).unwrap();
+				} else if (type === QUOTE_TYPE) {
+					await dispatch(likeQuoteComment(data.id)).unwrap();
+				} else if (type === REVIEW_TYPE) {
+					await dispatch(likeAndUnlikeCommentReview(data.id)).unwrap();
+				} else {
+					await dispatch(likeAndUnlikeGroupComment(data.id)).unwrap();
+				}
+				setIsLiked(!isLiked);
+			} catch (err) {
+				NotificationError(err);
+			}
 		}
 	};
 
