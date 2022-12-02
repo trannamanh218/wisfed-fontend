@@ -180,12 +180,11 @@ const SidebarProfile = ({ currentUserInfo, handleViewBookDetail }) => {
 								<span>Xem thêm</span>
 							</button>
 						)}
-						{isExpand ||
-							(libraryShown.length <= DEFAULT_TOGGLE_ROWS && (
-								<button onClick={handleDirect} className='sidebar__view-more-btn--blue'>
-									Xem thêm
-								</button>
-							))}
+						{isExpand && (
+							<button onClick={handleDirect} className='sidebar__view-more-btn--blue'>
+								Xem thêm
+							</button>
+						)}
 					</div>
 				</div>
 			)}
