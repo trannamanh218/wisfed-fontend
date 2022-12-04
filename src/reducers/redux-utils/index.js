@@ -16,7 +16,6 @@ import chart from './chart';
 import common from './common';
 import ranks from './ranks';
 import search from './search';
-import shelves from './shelves';
 import target from './target';
 import series from './series';
 import hashtagPage from './hashtag-page';
@@ -41,7 +40,6 @@ const rootReducer = {
 	common,
 	ranks,
 	search,
-	shelves,
 	target,
 	series,
 	hashtagPage,

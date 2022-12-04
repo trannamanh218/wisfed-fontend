@@ -113,9 +113,9 @@ const MainReadingTarget = ({ setErrorLoadPage }) => {
 							</span>
 						</div>
 						<div className='book-row__container'>{generateAuthorName(item?.book.authors)}</div>
-						<div className='book-row__container'>{moment(item?.book.createdAt).format('DD/MM/YYYY')}</div>
-						<div className='book-row__container'>{moment(item.createdAt).format('DD/MM/YYYY')}</div>
-						<div className='book-row__container'>{moment(item.updatedAt).format('DD/MM/YYYY')}</div>
+						<div className='book-row__container'>{moment(item?.createdAt).format('DD/MM/YYYY')}</div>
+						<div className='book-row__container'>{moment(item.startRead).format('DD/MM/YYYY')}</div>
+						<div className='book-row__container'>{moment(item.endRead).format('DD/MM/YYYY')}</div>
 					</div>
 				</>
 			))
@@ -194,7 +194,6 @@ const MainReadingTarget = ({ setErrorLoadPage }) => {
 								<div className='reading-target__table__header-column'>Ngày thêm</div>
 								<div className='reading-target__table__header-column'>Ngày đọc</div>
 								<div className='reading-target__table__header-column'>Ngày hoàn thành</div>
-								<div className='empty-row' />
 							</div>
 							<div className='reading-target__table__body'>
 								{inputSearch.length > 0

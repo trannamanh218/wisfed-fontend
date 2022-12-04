@@ -21,7 +21,7 @@ const BookShelves = () => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
-	const { isLoading, shelveGroupName, isMine, allLibrary } = handleShelvesGroup(userId);
+	const { shelveGroupName, isMine, allLibrary } = handleShelvesGroup(userId);
 
 	useEffect(() => {
 		if (!_.isEmpty(allLibrary)) {
@@ -43,7 +43,7 @@ const BookShelves = () => {
 
 	return (
 		<>
-			<Circle loading={isLoading || isViewBookDetailLoading} />
+			<Circle loading={isViewBookDetailLoading} />
 			{!renderNotFound ? (
 				<MainContainer
 					main={

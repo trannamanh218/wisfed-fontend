@@ -1,11 +1,10 @@
 @import 'src/scss/abstracts/_global.scss';
 
 .mainContainer {
-	padding: 0 84px;
+	padding: 0 74px 0 92px;
 	display: flex;
 	justify-content: space-between;
 	overflow: hidden;
-	gap: 60px;
 
 	.mainContainer__main {
 		padding: 40px 0;
@@ -53,22 +52,22 @@
 
 @media only screen and (max-width: 1366px) {
 	.mainContainer {
-		padding: 40px 56px;
+		padding: 0 38px 0 56px;
 		gap: 40px;
 	}
 }
 
 @media only screen and (max-width: 1280px) {
 	.mainContainer {
-		padding: 40px;
-		gap: 32px;
+		padding: 0 22px 0 40px;
 	}
 }
 
 @media only screen and (max-width: 1024px) {
 	.mainContainer {
+		padding: 0 56px;
 		.mainContainer__main {
-			margin-right: 0px;
+			width: 100%;
 			max-width: none;
 			.main-shelves {
 				.main-shelves__header {
@@ -93,22 +92,15 @@
 			}
 		}
 	}
-	.mainContainer {
-		padding: 40px 32px;
-	}
 }
 
 @media only screen and (max-width: 820px) {
 	.mainContainer {
-		padding: 40px 28px;
+		padding: 0 28px;
 	}
 
 	.mainContainer__right {
 		display: none;
-	}
-
-	& .mainContainer__main {
-		margin-right: 0;
 	}
 }
 

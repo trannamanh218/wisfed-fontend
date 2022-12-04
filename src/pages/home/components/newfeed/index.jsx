@@ -86,13 +86,17 @@ const NewFeed = () => {
 							hasMore={hasMore}
 							loader={<LoadingIndicator />}
 						>
-							{postList.map((item, index) => (
-								<Post
-									key={index}
-									postInformations={item}
-									type={item.verb === 'groupPost' ? GROUP_TYPE : POST_TYPE}
-								/>
-							))}
+							{postList.map((item, index) => {
+								if (!item.isDeleted) {
+									return (
+										<Post
+											key={index}
+											postInformations={item}
+											type={item.verb === 'groupPost' ? GROUP_TYPE : POST_TYPE}
+										/>
+									);
+								}
+							})}
 						</InfiniteScroll>
 					)}
 				</>

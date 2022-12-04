@@ -1,13 +1,6 @@
 /* eslint-disable max-lines */
 import classNames from 'classnames';
 import { CloseX, Image, IconRanks, WorldNet } from 'components/svg'; // k xóa WorldNet
-import {
-	READ_TARGET_VERB_SHARE_LV1,
-	STATUS_IDLE,
-	STATUS_LOADING,
-	STATUS_SUCCESS,
-	TOP_QUOTE_VERB_SHARE_LV1,
-} from 'constants/index';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
@@ -60,6 +53,11 @@ import {
 	TOP_USER_VERB_SHARE_LV1,
 	TOP_BOOK_VERB_SHARE_LV1,
 	hashtagRegex,
+	READ_TARGET_VERB_SHARE_LV1,
+	STATUS_IDLE,
+	STATUS_LOADING,
+	STATUS_SUCCESS,
+	TOP_QUOTE_VERB_SHARE_LV1,
 } from 'constants';
 import { handleClickCreateNewPostForBook } from 'reducers/redux-utils/activity';
 // import ShareModeComponent from './ShareModeComponent';
@@ -74,6 +72,10 @@ const verbShareArray = [
 	TOP_QUOTE_VERB_SHARE,
 	TOP_USER_VERB_SHARE,
 	REVIEW_VERB_SHARE,
+	READ_TARGET_VERB_SHARE_LV1,
+	TOP_BOOK_VERB_SHARE_LV1,
+	TOP_USER_VERB_SHARE_LV1,
+	TOP_QUOTE_VERB_SHARE_LV1,
 ];
 
 function CreatePostModalContent({

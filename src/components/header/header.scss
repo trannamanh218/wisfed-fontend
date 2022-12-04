@@ -167,7 +167,7 @@
 	}
 
 	&__userInfo {
-		margin-left: 5.5rem;
+		margin-left: auto;
 		display: flex;
 		align-items: center;
 		cursor: pointer;
@@ -263,6 +263,7 @@
 
 		&__nav {
 			gap: 24px;
+			margin-left: 32px;
 		}
 
 		&__userInfo {

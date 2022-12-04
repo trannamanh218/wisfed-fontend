@@ -7,6 +7,7 @@ import classNames from 'classnames';
 
 const SubContainer = ({ left, main, right }) => {
 	const [showLeftScrollbar, setShowLeftScrollbar] = useState(false);
+	const [showRightScrollbar, setShowRightScrollbar] = useState(false);
 
 	function ErrorFallback() {
 		return (
@@ -30,7 +31,13 @@ const SubContainer = ({ left, main, right }) => {
 				</div>
 				<div className='subContainer__main'>{main}</div>
 				<div className='subContainer__sidebar-wrapper right'>
-					<div className='subContainer__right'>{right}</div>
+					<div
+						className={classNames('subContainer__right', { 'show-scrollbar': showRightScrollbar })}
+						onMouseOver={() => setShowRightScrollbar(true)}
+						onMouseLeave={() => setShowRightScrollbar(false)}
+					>
+						{right}
+					</div>
 				</div>
 			</div>
 		</Layout>
