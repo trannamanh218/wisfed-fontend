@@ -27,7 +27,7 @@ const ProgressBarCircle = ({ booksReadYear }) => {
 	};
 	const renderLinearProgressBar = item => {
 		let percent = 0;
-		if (item.booksReadCount > item.numberBook) {
+		if (item.booksReadCount >= item.numberBook) {
 			return (percent = 100);
 		} else if (0 < item.booksReadCount !== undefined < item.numberBook) {
 			percent = ((item.booksReadCount / item.numberBook) * 100).toFixed();

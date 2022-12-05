@@ -34,7 +34,7 @@ const MainReadingTarget = ({ setErrorLoadPage }) => {
 
 	const renderLinearProgressBar = item => {
 		let percent = 0;
-		if (item.booksReadCount > item.numberBook) {
+		if (item.booksReadCount >= item.numberBook) {
 			percent = 100;
 		} else if (0 < item.booksReadCount < item.numberBook) {
 			percent = ((item.booksReadCount / item.numberBook) * 100).toFixed();
@@ -99,8 +99,8 @@ const MainReadingTarget = ({ setErrorLoadPage }) => {
 	const handleRenderUseSearch = newArr => {
 		const newData = newArr.booksRead || newArr;
 		return newData.length ? (
-			newData.map(item => (
-				<>
+			newData.map((item, index) => (
+				<div key={index}>
 					<div className='book-row' key={item.id}>
 						<div className='book-row__container'>
 							<Link to={`/book/detail/${item.book.id}`}>
@@ -117,7 +117,7 @@ const MainReadingTarget = ({ setErrorLoadPage }) => {
 						<div className='book-row__container'>{moment(item.startRead).format('DD/MM/YYYY')}</div>
 						<div className='book-row__container'>{moment(item.endRead).format('DD/MM/YYYY')}</div>
 					</div>
-				</>
+				</div>
 			))
 		) : (
 			<div className='highlight'>

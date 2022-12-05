@@ -26,7 +26,13 @@ const ModalReadTarget = ({ toggleModal, modalOpen, setModalOpen, deleteModal }) 
 	};
 
 	return (
-		<Modal size='md' show={modalOpen} onHide={toggleModal} centered className='main-shelves__modal'>
+		<Modal
+			size='md'
+			show={modalOpen}
+			onHide={toggleModal}
+			centered
+			className={`main-shelves__modal ${!deleteModal && 'read-target'}`}
+		>
 			{deleteModal ? (
 				<>
 					<span className='btn-closeX' onClick={toggleModal}>
