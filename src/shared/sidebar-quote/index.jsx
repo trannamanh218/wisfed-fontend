@@ -13,9 +13,9 @@ import { useNavigate, Link } from 'react-router-dom';
 import { NotificationError } from 'helpers/Error';
 import { handleCategoryByQuotesName } from 'reducers/redux-utils/quote';
 import { getAllLibraryList } from 'reducers/redux-utils/library';
-// import BookSlider from 'shared/book-slider';
+import BookSlider from 'shared/book-slider';
 import { getBookDetail, getBookAuthorList } from 'reducers/redux-utils/book';
-// import RouteLink from 'helpers/RouteLink';
+import RouteLink from 'helpers/RouteLink';
 import Circle from 'shared/loading/circle';
 
 const SidebarQuote = ({ listHashtags, firstStyleQuotesSidebar, createdByOfCurrentQuote }) => {
@@ -30,6 +30,7 @@ const SidebarQuote = ({ listHashtags, firstStyleQuotesSidebar, createdByOfCurren
 
 	const myAllLibrary = useSelector(state => state.library.myAllLibrary);
 	const userInfo = useSelector(state => state.auth.userInfo);
+	const userDetail = useSelector(state => state.user.userDetail);
 
 	useEffect(() => {
 		if (!firstStyleQuotesSidebar) {
@@ -102,17 +103,17 @@ const SidebarQuote = ({ listHashtags, firstStyleQuotesSidebar, createdByOfCurren
 		navigate(`/quotes/category/${categoryId}`);
 	};
 
-	// const handleViewBookDetail = useCallback(async data => {
-	// 	setIsViewBookDetailLoading(true);
-	// 	try {
-	// 		await dispatch(getBookDetail(data.id)).unwrap();
-	// 		navigate(RouteLink.bookDetail(data.id, data.name));
-	// 	} catch (err) {
-	// 		NotificationError(err);
-	// 	} finally {
-	// 		setIsViewBookDetailLoading(false);
-	// 	}
-	// }, []);
+	const handleViewBookDetail = useCallback(async data => {
+		setIsViewBookDetailLoading(true);
+		try {
+			await dispatch(getBookDetail(data.id)).unwrap();
+			navigate(RouteLink.bookDetail(data.id, data.name));
+		} catch (err) {
+			NotificationError(err);
+		} finally {
+			setIsViewBookDetailLoading(false);
+		}
+	}, []);
 
 	return (
 		<div className='sidebar-quote'>
@@ -133,17 +134,17 @@ const SidebarQuote = ({ listHashtags, firstStyleQuotesSidebar, createdByOfCurren
 							inQuotes={true}
 							filterQuotesByCategory={filterQuotesByCategory}
 						/>
-						{/* <div className='my-compose'>
+						<div className='sidebar-quote__author-books'>
 							<BookSlider
 								className='book-reference__slider'
-								title={`Sách của ${''}`}
+								title={`Sách của ${userDetail.fullName || userDetail.firstName + userDetail.lastName}`}
 								list={booksAuthor}
 								handleViewBookDetail={handleViewBookDetail}
 							/>
 							<Link className='view-all-link' to={`/books-author/${createdByOfCurrentQuote}`}>
 								Xem thêm
 							</Link>
-						</div> */}
+						</div>
 					</div>
 				) : (
 					<>

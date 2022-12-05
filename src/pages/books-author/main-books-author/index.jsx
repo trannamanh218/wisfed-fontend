@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom';
 import { getBookAuthorList, handleDirectToQuoteTabOfBookDetail } from 'reducers/redux-utils/book';
 import { NotificationError } from 'helpers/Error';
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import LoadingIndicator from 'shared/loading-indicator';
 import PropTypes from 'prop-types';
@@ -16,6 +16,7 @@ import bookImage from 'assets/images/default-book.png';
 import { saveDataShare } from 'reducers/redux-utils/post';
 import Storage from 'helpers/Storage';
 import { MY_BOOK_VERB_SHARE } from 'constants';
+import { toast } from 'react-toastify';
 
 const MainBooksAuthor = ({ shelveGroupName }) => {
 	const [booksByAuthor, setBooksByAuthor] = useState([]);
@@ -23,6 +24,8 @@ const MainBooksAuthor = ({ shelveGroupName }) => {
 	const [filter, setFilter] = useState('[]');
 	const [inputSearch, setInputSearch] = useState('');
 	const { userId } = useParams();
+
+	const userInfo = useSelector(state => state.auth.userInfo);
 
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
@@ -115,15 +118,20 @@ const MainBooksAuthor = ({ shelveGroupName }) => {
 	const debounceSearch = useCallback(_.debounce(updateFilter, 1000), []);
 
 	const handleShare = data => {
-		const newData = {
-			type: 'topBookAuthor',
-			verb: MY_BOOK_VERB_SHARE,
-			...data,
-		};
+		if (userInfo.id === userId) {
+			const newData = {
+				type: 'topBookAuthor',
+				verb: MY_BOOK_VERB_SHARE,
+				...data,
+			};
 
-		if (Storage.getAccessToken()) {
-			navigate('/');
-			dispatch(saveDataShare(newData));
+			if (Storage.getAccessToken()) {
+				navigate('/');
+				dispatch(saveDataShare(newData));
+			}
+		} else {
+			const customId = 'custom-id-share-author-books';
+			toast.warning('Chỉ tác giả có quyền chia sẻ', { toastId: customId });
 		}
 	};
 
