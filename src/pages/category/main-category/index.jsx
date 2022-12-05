@@ -74,7 +74,6 @@ const MainCategory = ({ isFetching, handleViewBookDetail, handleViewCategoryDeta
 					start: callApiStart.current,
 					limit: callApiPerPage.current,
 					filter: JSON.stringify(filter),
-					must_not: { 'numberBook': '0' },
 				};
 				const fetch = await dispatch(getCategoryList({ option: true, params })).unwrap();
 				categoryListData = fetch.rows;
@@ -83,6 +82,7 @@ const MainCategory = ({ isFetching, handleViewBookDetail, handleViewCategoryDeta
 					q: filter,
 					start: callApiStart.current,
 					limit: callApiPerPage.current,
+					must_not: { 'numberBook': '0' },
 				};
 				const fetch = await dispatch(getFilterSearch(params)).unwrap();
 				categoryListData = fetch.categories.filter(item => item.numberBooks > 0);
