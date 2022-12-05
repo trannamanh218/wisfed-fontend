@@ -129,7 +129,7 @@ const SidebarProfile = ({ currentUserInfo, handleViewBookDetail }) => {
 
 	const handleDirectToBookShelves = paramItem => {
 		dispatch(handleSetDefaultLibrary(paramItem));
-		navigate(`/shelves/${userInfo.id}`);
+		navigate(`/shelves/${userId || userInfo.id}`);
 	};
 
 	return (
