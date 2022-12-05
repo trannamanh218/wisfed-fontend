@@ -87,9 +87,11 @@ function MainPostGroup({ handleUpdate, show }) {
 							hasMore={hasMore}
 							loader={<LoadingIndicator />}
 						>
-							{listPost.map((item, index) => (
-								<Post key={index} postInformations={item} type={GROUP_TYPE} />
-							))}
+							{listPost.map((item, index) => {
+								if (!item.isDeleted) {
+									return <Post key={index} postInformations={item} type={GROUP_TYPE} />;
+								}
+							})}
 						</InfiniteScroll>
 					) : (
 						<p className='post-data__blank'>Nhóm chưa có bài viết nào</p>

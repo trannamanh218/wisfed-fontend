@@ -74,9 +74,11 @@ function PostTab({ currentTab }) {
 							hasMore={hasMore}
 							loader={<LoadingIndicator />}
 						>
-							{postList.map(item => (
-								<Post key={item.id} postInformations={item} type={POST_TYPE} />
-							))}
+							{postList.map(item => {
+								if (!item.isDeleted) {
+									return <Post key={item.id} postInformations={item} type={POST_TYPE} />;
+								}
+							})}
 						</InfiniteScroll>
 					) : (
 						<p className='post-data__blank'>Không có bài viết nào</p>

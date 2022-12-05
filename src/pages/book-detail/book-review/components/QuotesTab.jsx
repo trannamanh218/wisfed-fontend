@@ -161,9 +161,11 @@ const QuotesTab = ({ currentTab }) => {
 						hasMore={hasMore}
 						loader={<LoadingIndicator />}
 					>
-						{quoteList.map(item => (
-							<QuoteCard key={item.id} data={item} isDetail={false} />
-						))}
+						{quoteList.map(item => {
+							if (!item.isDeleted) {
+								return <QuoteCard key={item.id} data={item} isDetail={false} />;
+							}
+						})}
 					</InfiniteScroll>
 				) : (
 					<h5>Chưa có dữ liệu</h5>
