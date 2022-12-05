@@ -13,7 +13,7 @@ const list = [
 ];
 
 const SidebarGroup = () => (
-	<div className='group-sibar-right'>
+	<div className='group-sidebar-right'>
 		<h2>Hashtag</h2>
 		<div style={{ width: 300 }}>
 			<SearchField
