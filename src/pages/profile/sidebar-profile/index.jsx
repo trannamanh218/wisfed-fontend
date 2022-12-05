@@ -174,18 +174,24 @@ const SidebarProfile = ({ currentUserInfo, handleViewBookDetail }) => {
 							))}
 						</ul>
 
-						{!isExpand && libraryShown.length > DEFAULT_TOGGLE_ROWS && (
-							<button className='dualColumn-btn' onClick={handleViewMore}>
-								<img className='view-caret' src={caretIcon} alt='caret-icon' />
-								<span>Xem thêm</span>
+						{libraryShown.length <= DEFAULT_TOGGLE_ROWS ? (
+							<button onClick={handleDirect} className='sidebar__view-more-btn--blue'>
+								Xem thêm
 							</button>
+						) : (
+							<>
+								{isExpand ? (
+									<button onClick={handleDirect} className='sidebar__view-more-btn--blue'>
+										Xem thêm
+									</button>
+								) : (
+									<button className='dualColumn-btn' onClick={handleViewMore}>
+										<img className='view-caret' src={caretIcon} alt='caret-icon' />
+										<span>Xem thêm</span>
+									</button>
+								)}
+							</>
 						)}
-						{isExpand ||
-							(libraryShown.length <= DEFAULT_TOGGLE_ROWS && (
-								<button onClick={handleDirect} className='sidebar__view-more-btn--blue'>
-									Xem thêm
-								</button>
-							))}
 					</div>
 				</div>
 			)}
