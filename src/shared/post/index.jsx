@@ -38,6 +38,7 @@ import {
 	REVIEW_VERB_SHARE,
 	urlRegex,
 	hashtagRegex,
+	BASE_URL,
 } from 'constants';
 import { IconRanks } from 'components/svg';
 import AuthorBook from 'shared/author-book';
@@ -113,14 +114,20 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 	}, [postInformations]);
 
 	const directUrl = url => {
-		setModalShow(true);
 		let urlFormated = '';
 		if (url.includes('http')) {
 			urlFormated = url;
 		} else {
 			urlFormated = `https://${url}`;
 		}
-		urlToDirect.current = urlFormated;
+
+		if (urlFormated.includes(BASE_URL)) {
+			const domain = new URL(urlFormated);
+			navigate(domain.pathname);
+		} else {
+			setModalShow(true);
+			urlToDirect.current = urlFormated;
+		}
 	};
 
 	const handleClickHashtag = dataHashtagNavigate => {

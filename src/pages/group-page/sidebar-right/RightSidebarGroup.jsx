@@ -71,7 +71,7 @@ export default function RightSidebarGroup({ update }) {
 	}, [update, valueSearch]);
 
 	return (
-		<div className='group-sibar-right'>
+		<div className='group-sidebar-right'>
 			<h2>Hashtag</h2>
 			<SearchField placeholder='Tìm kiếm hashtag' value={inputSearch} handleChange={onChangeInputSearch} />
 

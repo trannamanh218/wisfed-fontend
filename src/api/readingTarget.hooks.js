@@ -21,30 +21,6 @@ export const useFetchTargetReading = (userIdParams, modalOpen) => {
 		let isMount = true;
 		if (isMount) {
 			setStatus(STATUS_LOADING);
-			const fetchData = async () => {
-				try {
-					if (userIdParams) {
-						let newData = [];
-						if (userInfo.id === userIdParams) {
-							if (myTargetReading.length) {
-								newData = [...myTargetReading];
-							} else {
-								const data = await dispatch(getListBooksTargetReading(userIdParams)).unwrap();
-								newData = data.filter(item => item.year === year);
-								dispatch(setMyTargetReading(newData));
-							}
-						} else {
-							const data = await dispatch(getListBooksTargetReading(userIdParams)).unwrap();
-							newData = data.filter(item => item.year === year);
-						}
-						setBooksReadYear(newData);
-						setStatus(STATUS_SUCCESS);
-					}
-				} catch (err) {
-					const statusCode = err?.statusCode || 500;
-					setStatus(statusCode);
-				}
-			};
 			fetchData();
 		}
 
@@ -52,6 +28,31 @@ export const useFetchTargetReading = (userIdParams, modalOpen) => {
 			isMount = false;
 		};
 	}, [userIdParams, modalOpen, resetMyTargetReading]);
+
+	const fetchData = async () => {
+		try {
+			if (userIdParams) {
+				let newData = [];
+				if (userInfo.id === userIdParams) {
+					if (myTargetReading.length) {
+						newData = [...myTargetReading];
+					} else {
+						const data = await dispatch(getListBooksTargetReading(userIdParams)).unwrap();
+						newData = data.filter(item => item.year === year);
+						dispatch(setMyTargetReading(newData));
+					}
+				} else {
+					const data = await dispatch(getListBooksTargetReading(userIdParams)).unwrap();
+					newData = data.filter(item => item.year === year);
+				}
+				setBooksReadYear(newData);
+				setStatus(STATUS_SUCCESS);
+			}
+		} catch (err) {
+			const statusCode = err?.statusCode || 500;
+			setStatus(statusCode);
+		}
+	};
 
 	return { status, booksReadYear, setBooksReadYear, year };
 };

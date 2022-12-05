@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import _ from 'lodash';
 import { getUserDetail } from 'reducers/redux-utils/user';
-import { setCurrentUserInShelves } from 'reducers/redux-utils/shelves';
 import { getAllLibraryList } from 'reducers/redux-utils/library';
+import { NotificationError } from 'helpers/Error';
 
 export const handleShelvesGroup = currentUserShelveId => {
 	const [isLoading, setIsLoading] = useState(false);
@@ -15,78 +15,47 @@ export const handleShelvesGroup = currentUserShelveId => {
 	const dispatch = useDispatch();
 
 	const userInfo = useSelector(state => state.auth.userInfo);
-	const currentUserShelveRedux = useSelector(state => state.shelves.currentUserInShelves);
 	const myAllLibraryRedux = useSelector(state => state.library.myAllLibrary);
 
-	const url = window.location.pathname;
-
 	useEffect(() => {
-		check();
+		if (!_.isEmpty(userInfo) && currentUserShelveId && !_.isEmpty(myAllLibraryRedux)) {
+			getShelveInfo();
+		}
 	}, [userInfo, currentUserShelveId, myAllLibraryRedux]);
 
-	const check = async () => {
-		let data;
+	const handleGetUserInfo = async () => {
 		try {
-			if (url.includes('/shelves/')) {
-				if (currentUserShelveId !== userInfo.id) {
-					setIsLoading(true);
-					const user = await dispatch(getUserDetail(currentUserShelveId)).unwrap();
-					const allLibraryData = await dispatch(getAllLibraryList({ userId: currentUserShelveId })).unwrap();
-					data = {
-						userId: user.id,
-						userFullName: user.fullName,
-						isMine: false,
-						allLibrary: allLibraryData,
-					};
+			const user = await dispatch(getUserDetail(currentUserShelveId)).unwrap();
+			return user;
+		} catch (err) {
+			NotificationError(err);
+		}
+	};
+
+	const handleGetLibrariesInfo = async () => {
+		try {
+			const allLibraryData = await dispatch(getAllLibraryList({ userId: currentUserShelveId })).unwrap();
+			return allLibraryData;
+		} catch (err) {
+			NotificationError(err);
+		}
+	};
+
+	const getShelveInfo = async () => {
+		try {
+			if (currentUserShelveId !== userInfo.id) {
+				setIsLoading(true);
+				Promise.all([handleGetUserInfo(), handleGetLibrariesInfo()]).then(data => {
+					const user = data[0];
+					const allLibraryData = data[1];
 					setShelveGroupName(user.fullName);
 					setIsMine(false);
 					setAllLibrary(allLibraryData);
-				} else {
-					data = {
-						userId: userInfo.id,
-						userFullName: 'tôi',
-						isMine: true,
-						allLibrary: myAllLibraryRedux,
-					};
-					setIsMine(true);
-					setShelveGroupName('tôi');
-					setAllLibrary(myAllLibraryRedux);
-				}
-				dispatch(setCurrentUserInShelves(data));
+				});
 			} else {
-				if (!_.isEmpty(currentUserShelveRedux)) {
-					setShelveGroupName(currentUserShelveRedux.userFullName);
-					setIsMine(currentUserShelveRedux.isMine);
-					setAllLibrary(currentUserShelveRedux.allLibrary);
-				} else {
-					if (currentUserShelveId !== userInfo.id) {
-						setIsLoading(true);
-						const user = await dispatch(getUserDetail(currentUserShelveId)).unwrap();
-						const allLibraryData = await dispatch(
-							getAllLibraryList({ userId: currentUserShelveId })
-						).unwrap();
-						data = {
-							userId: user.id,
-							userFullName: user.fullName,
-							isMine: false,
-							allLibrary: allLibraryData,
-						};
-						setShelveGroupName(user.fullName);
-						setIsMine(false);
-						setAllLibrary(allLibraryData);
-					} else {
-						data = {
-							userId: userInfo.id,
-							userFullName: 'tôi',
-							isMine: true,
-							allLibrary: myAllLibraryRedux,
-						};
-						setIsMine(true);
-						setShelveGroupName('tôi');
-						setAllLibrary(myAllLibraryRedux);
-					}
-					// dispatch(setCurrentUserInShelves(data));
-				}
+				setIsMine(true);
+				setShelveGroupName('tôi');
+				setAllLibrary(myAllLibraryRedux);
 			}
 		} catch (err) {
 			setRenderNotFound(true);

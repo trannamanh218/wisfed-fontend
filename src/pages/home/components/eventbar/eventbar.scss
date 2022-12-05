@@ -12,11 +12,10 @@
 			padding: 14px 0;
 			p {
 				font-size: 20px;
-				line-height: 20px;
+				line-height: 1.25;
 				display: -webkit-box;
 				-webkit-box-orient: vertical;
 				-webkit-line-clamp: 2;
-				max-height: 4rem;
 				overflow: hidden;
 				text-overflow: ellipsis;
 				word-break: break-word;
@@ -95,7 +94,7 @@
 	.event-and-rank-bar__content {
 		.top__user__ranks {
 			transform: scale(0.45);
-			top: 14px;
+			top: 0;
 		}
 	}
 }
@@ -107,15 +106,11 @@
 	.event-and-rank-bar__content {
 		.top__user__ranks {
 			transform: scale(0.25);
-			top: -21px;
+			left: 16px;
+			top: -38px;
 			&__two {
 				top: 100px;
 			}
-		}
-	}
-	.event-and-rank-bar__content {
-		.top__user__ranks {
-			left: 20px;
 		}
 	}
 }

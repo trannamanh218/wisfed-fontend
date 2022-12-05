@@ -125,7 +125,6 @@
 @media only screen and (max-width: 1366px) {
 	.mainContainer {
 		.mainContainer__main {
-			margin-right: 2.5rem;
 			.main-shelves__pane {
 				.shelf {
 					.book-item {
@@ -197,11 +196,7 @@
 
 @media only screen and (max-width: 1024px) {
 	.mainContainer {
-		padding: 20px 40px;
 		.mainContainer__main {
-			width: 100%;
-			max-width: none;
-			margin-right: 0;
 			.main-shelves {
 				.main-shelves__header {
 					h4 {

@@ -25,6 +25,10 @@ const Profile = () => {
 	const navigate = useNavigate();
 
 	useEffect(() => {
+		window.scroll(0, 0);
+	}, [userId]);
+
+	useEffect(() => {
 		if (!_.isEmpty(userInfo) && userInfo.id === userId) {
 			setCurrentUserInfo(userInfo);
 		} else {

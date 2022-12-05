@@ -11,6 +11,10 @@ import {
 	TOP_QUOTE_VERB_SHARE,
 	TOP_USER_VERB_SHARE,
 	REVIEW_VERB_SHARE,
+	READ_TARGET_VERB_SHARE_LV1,
+	TOP_BOOK_VERB_SHARE_LV1,
+	TOP_QUOTE_VERB_SHARE_LV1,
+	TOP_USER_VERB_SHARE_LV1,
 } from 'constants';
 import { useSelector } from 'react-redux';
 
@@ -23,6 +27,10 @@ const verbShareArray = [
 	TOP_QUOTE_VERB_SHARE,
 	TOP_USER_VERB_SHARE,
 	REVIEW_VERB_SHARE,
+	READ_TARGET_VERB_SHARE_LV1,
+	TOP_BOOK_VERB_SHARE_LV1,
+	TOP_QUOTE_VERB_SHARE_LV1,
+	TOP_USER_VERB_SHARE_LV1,
 ];
 
 const OptionsPost = ({ list, addOptionsToPost, taggedData, postDataShare }) => {
