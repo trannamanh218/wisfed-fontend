@@ -65,12 +65,14 @@ const SidebarProfile = ({ currentUserInfo, handleViewBookDetail }) => {
 				if (readingLibrary.length > 0 && readingLibrary[0].books.length) {
 					const books = readingLibrary[0].books;
 					setBookReading(books[0].book);
+				} else {
+					setBookReading({});
 				}
 			}
 		} else {
 			getAllLibraryListUser();
 		}
-	}, [myAllLibraryRedux, userId]);
+	}, [myAllLibraryRedux, userId, window.location.pathname]);
 
 	const getAllLibraryListUser = async () => {
 		try {
@@ -81,6 +83,8 @@ const SidebarProfile = ({ currentUserInfo, handleViewBookDetail }) => {
 			if (reading.length > 0 && reading[0].books.length) {
 				const books = reading[0].books;
 				setBookReading(books[0].book);
+			} else {
+				setBookReading({});
 			}
 		} catch (err) {
 			NotificationError(err);
@@ -103,7 +107,7 @@ const SidebarProfile = ({ currentUserInfo, handleViewBookDetail }) => {
 	};
 
 	const handleRenderTargetReading = () => {
-		if (!_.isEmpty(userInfo) && userInfo.id === userId) {
+		if (!_.isEmpty(userInfo) && userInfo.id === userId && userId) {
 			return <RenderProgress userIdParams={userInfo.id} />;
 		} else {
 			return <ProgressBarCircle booksReadYear={booksReadYear} />;
@@ -112,8 +116,13 @@ const SidebarProfile = ({ currentUserInfo, handleViewBookDetail }) => {
 
 	const getTargetReadingByUser = async () => {
 		try {
-			const res = await dispatch(getListBooksTargetReading(userId)).unwrap();
-			setBookReadYear(res);
+			if (userId) {
+				const res = await dispatch(getListBooksTargetReading(userId)).unwrap();
+				setBookReadYear(res);
+			} else if (!_.isEmpty(userInfo)) {
+				const res = await dispatch(getListBooksTargetReading(userInfo.id)).unwrap();
+				setBookReadYear(res);
+			}
 		} catch (error) {
 			NotificationError(error);
 		}

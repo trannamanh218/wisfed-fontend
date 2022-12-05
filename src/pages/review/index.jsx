@@ -115,12 +115,16 @@ const Review = () => {
 						<div className='review__items'>
 							<h4>Bài Review</h4>
 							{listReview?.length > 0 ? (
-								listReview.map((item, index) => (
-									<div key={item.id}>
-										<Post postInformations={item} type={REVIEW_TYPE} />
-										{listReview.length > 1 && index < listReview.length - 1 && <hr />}
-									</div>
-								))
+								listReview.map((item, index) => {
+									if (!item.isDeleted) {
+										return (
+											<div key={item.id}>
+												<Post postInformations={item} type={REVIEW_TYPE} />
+												{listReview.length > 1 && index < listReview.length - 1 && <hr />}
+											</div>
+										);
+									}
+								})
 							) : (
 								<div className='review__no-data'>Chưa có bài review nào</div>
 							)}

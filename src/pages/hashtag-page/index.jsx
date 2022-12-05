@@ -127,9 +127,11 @@ export default function HashtagPage() {
 								hasMore={hasMore}
 								loader={<LoadingIndicator />}
 							>
-								{postList.map(post => (
-									<Post key={post.id} postInformations={post} type={POST_TYPE} />
-								))}
+								{postList.map(post => {
+									if (!post.isDeleted) {
+										return <Post key={post.id} postInformations={post} type={POST_TYPE} />;
+									}
+								})}
 							</InfiniteScroll>
 						) : (
 							<h6>Chưa có dữ liệu</h6>

@@ -303,16 +303,20 @@ const ReviewTab = ({ currentTab }) => {
 								loader={<LoadingIndicator />}
 								className='review-tab__list'
 							>
-								{reviewList.map(item => (
-									<Fragment key={`post-${item.id}`}>
-										<Post
-											className='post-container--review'
-											postInformations={item}
-											type={REVIEW_TYPE}
-										/>
-										<hr />
-									</Fragment>
-								))}
+								{reviewList.map(item => {
+									if (!item.isDeleted) {
+										return (
+											<Fragment key={`post-${item.id}`}>
+												<Post
+													className='post-container--review'
+													postInformations={item}
+													type={REVIEW_TYPE}
+												/>
+												<hr />
+											</Fragment>
+										);
+									}
+								})}
 							</InfiniteScroll>
 						) : (
 							<h5 className='review-tab__no-data'>Chưa có bài Review nào</h5>
