@@ -174,12 +174,15 @@ export default function MainUpload() {
 								authorName: inputAuthorValue,
 							},
 					  ],
-			translators: [
-				{
-					isUser: false,
-					translatorName: translators,
-				},
-			],
+			translators:
+				translators.length > 0
+					? [
+							{
+								isUser: false,
+								translatorName: translators,
+							},
+					  ]
+					: [],
 			publisherId: publisher[0].id,
 			isbn: isbn,
 			publishDate: dataDate,
