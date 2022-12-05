@@ -79,6 +79,13 @@ const GroupSearch = ({ value, searchResultInput, activeKeyDefault, updateBooks }
 		try {
 			if (Storage.getAccessToken()) {
 				await dispatch(getEnjoyGroup(id)).unwrap();
+
+				// Đổi nút từ "Tham gia" thành "Truy cập nhóm"
+				const cloneArr = [...listArrayGroup];
+				const clickedGroup = cloneArr.find(item => item.id === id);
+				clickedGroup.isJoined = true;
+				setListArrayGroup(cloneArr);
+
 				const customId = 'custom-Id-GroupSearch';
 				toast.success('Tham gia nhóm thành công', { toastId: customId });
 				dispatch(checkUserLogin(false));
