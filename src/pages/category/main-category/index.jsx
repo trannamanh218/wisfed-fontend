@@ -11,6 +11,7 @@ import './main-category.scss';
 import { getCategoryList } from 'reducers/redux-utils/category';
 import { useDispatch } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
+import { getFilterSearch } from 'reducers/redux-utils/search';
 
 const MainCategory = ({ isFetching, handleViewBookDetail, handleViewCategoryDetail }) => {
 	const [inputValue, setInputValue] = useState('');
@@ -32,14 +33,31 @@ const MainCategory = ({ isFetching, handleViewBookDetail, handleViewCategoryDeta
 
 	const getCategoryListDataFirstTime = async () => {
 		try {
-			const params = {
-				start: 0,
-				limit: callApiPerPage.current,
-				filter: JSON.stringify(filter),
-			};
-			const categoryListData = await dispatch(getCategoryList({ option: true, params })).unwrap();
-			setCategoryList(categoryListData.rows);
-			if (!categoryListData.rows.length || categoryListData.rows.length < callApiPerPage.current) {
+			let params = {};
+			let categoryListData = [];
+			let limit = callApiPerPage.current;
+
+			// Nếu ô tìm kiếm trống thì dùng api cũ, nếu có gõ tìm kiếm thì dùng elastic search
+			if (filter[0].operator) {
+				params = {
+					start: 0,
+					limit: limit,
+					filter: JSON.stringify(filter),
+				};
+				const fetch = await dispatch(getCategoryList({ option: true, params })).unwrap();
+				categoryListData = fetch.rows;
+			} else {
+				limit = 10;
+				params = {
+					q: filter,
+					start: 0,
+					limit: limit,
+				};
+				const fetch = await dispatch(getFilterSearch(params)).unwrap();
+				categoryListData = fetch.categories.filter(item => item.numberBooks > 0);
+			}
+			setCategoryList(categoryListData);
+			if (categoryListData.length < limit) {
 				setHasMore(false);
 			}
 		} catch (err) {
@@ -49,19 +67,35 @@ const MainCategory = ({ isFetching, handleViewBookDetail, handleViewCategoryDeta
 
 	const getCategoryListData = async () => {
 		try {
-			const params = {
-				start: callApiStart.current,
-				limit: callApiPerPage.current,
-				filter: JSON.stringify(filter),
-			};
-			const categoryListData = await dispatch(getCategoryList({ option: true, params })).unwrap();
-			if (categoryListData.rows.length) {
-				if (categoryListData.rows.length < callApiPerPage.current) {
+			let params = {};
+			let categoryListData = [];
+			let limit = callApiPerPage.current;
+
+			if (filter[0].operator) {
+				params = {
+					start: callApiStart.current,
+					limit: limit,
+					filter: JSON.stringify(filter),
+				};
+				const fetch = await dispatch(getCategoryList({ option: true, params })).unwrap();
+				categoryListData = fetch.rows;
+			} else {
+				limit = 10;
+				params = {
+					q: filter,
+					start: callApiStart.current,
+					limit: limit,
+				};
+				const fetch = await dispatch(getFilterSearch(params)).unwrap();
+				categoryListData = fetch.categories.filter(item => item.numberBooks > 0);
+			}
+			if (categoryListData.length) {
+				if (categoryListData.length < limit) {
 					setHasMore(false);
 				} else {
-					callApiStart.current += callApiPerPage.current;
+					callApiStart.current += limit;
 				}
-				setCategoryList(categoryList.concat(categoryListData.rows));
+				setCategoryList(categoryList.concat(categoryListData));
 			} else {
 				setHasMore(false);
 			}
@@ -72,10 +106,7 @@ const MainCategory = ({ isFetching, handleViewBookDetail, handleViewCategoryDeta
 
 	const updateFilter = value => {
 		if (value) {
-			setFilter([
-				{ 'operator': 'ne', 'value': 0, 'property': 'numberBooks' },
-				{ 'operator': 'search', 'value': value.trim(), 'property': 'name' },
-			]);
+			setFilter(value.trim());
 		} else {
 			setFilter([{ 'operator': 'ne', 'value': 0, 'property': 'numberBooks' }]);
 		}
