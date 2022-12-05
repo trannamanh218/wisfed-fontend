@@ -16,7 +16,7 @@ function ConfirmMyBook() {
 
 	useEffect(() => {
 		if (!_.isEmpty(userInfo)) {
-			if (!['admin', 'author', 'tecinus'].includes(userInfo.role)) {
+			if (['reader'].includes(userInfo.role)) {
 				navigate('/');
 			}
 			setCurrentUserInfo(userInfo);

@@ -8,6 +8,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import RouteLink from 'helpers/RouteLink';
 import { handleSetDefaultLibrary } from 'reducers/redux-utils/library';
 import { useDispatch } from 'react-redux';
+import Storage from 'helpers/Storage';
+import { checkUserLogin } from 'reducers/redux-utils/auth';
 
 const DualColumn = props => {
 	const {
@@ -60,8 +62,12 @@ const DualColumn = props => {
 		if (inCategory) {
 			navigate(RouteLink.categoryDetail(data.category.id, data.category.name));
 		} else {
-			dispatch(handleSetDefaultLibrary(data));
-			navigate(`/shelves/${userId}`);
+			if (!Storage.getAccessToken()) {
+				dispatch(checkUserLogin(true));
+			} else {
+				dispatch(handleSetDefaultLibrary(data));
+				navigate(`/shelves/${userId}`);
+			}
 		}
 	};
 

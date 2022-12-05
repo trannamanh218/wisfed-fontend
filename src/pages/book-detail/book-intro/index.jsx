@@ -42,7 +42,7 @@ const BookIntro = ({ bookInfo, listRatingStar }) => {
 	}, []);
 
 	useEffect(() => {
-		if (!_.isEmpty(userInfo) && !bookInfo.verify && ['admin', 'author', 'tecinus'].includes(userInfo.role)) {
+		if (!_.isEmpty(userInfo) && !bookInfo.verify && !['reader'].includes(userInfo.role)) {
 			setIsLink(true);
 		}
 	}, [userInfo]);

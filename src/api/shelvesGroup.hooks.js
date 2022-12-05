@@ -18,9 +18,7 @@ export const handleShelvesGroup = currentUserShelveId => {
 	const myAllLibraryRedux = useSelector(state => state.library.myAllLibrary);
 
 	useEffect(() => {
-		if (!_.isEmpty(userInfo) && currentUserShelveId && !_.isEmpty(myAllLibraryRedux)) {
-			getShelveInfo();
-		}
+		getShelveInfo();
 	}, [userInfo, currentUserShelveId, myAllLibraryRedux]);
 
 	const handleGetUserInfo = async () => {

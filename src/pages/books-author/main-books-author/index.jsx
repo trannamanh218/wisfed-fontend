@@ -16,6 +16,7 @@ import bookImage from 'assets/images/default-book.png';
 import { saveDataShare } from 'reducers/redux-utils/post';
 import Storage from 'helpers/Storage';
 import { MY_BOOK_VERB_SHARE } from 'constants';
+import { checkUserLogin } from 'reducers/redux-utils/auth';
 
 const MainBooksAuthor = ({ shelveGroupName }) => {
 	const [booksByAuthor, setBooksByAuthor] = useState([]);
@@ -115,13 +116,14 @@ const MainBooksAuthor = ({ shelveGroupName }) => {
 	const debounceSearch = useCallback(_.debounce(updateFilter, 1000), []);
 
 	const handleShare = data => {
-		const newData = {
-			type: 'topBookAuthor',
-			verb: MY_BOOK_VERB_SHARE,
-			...data,
-		};
-
-		if (Storage.getAccessToken()) {
+		if (!Storage.getAccessToken()) {
+			dispatch(checkUserLogin(true));
+		} else {
+			const newData = {
+				type: 'topBookAuthor',
+				verb: MY_BOOK_VERB_SHARE,
+				...data,
+			};
 			navigate('/');
 			dispatch(saveDataShare(newData));
 		}
