@@ -7,7 +7,7 @@ import bookDefault from 'assets/images/default-book.png';
 import { getSuggestionForPost } from 'reducers/redux-utils/activity';
 import { useDispatch } from 'react-redux';
 import _ from 'lodash';
-import { creatQuotes } from 'reducers/redux-utils/quote/index';
+import { creatQuotes, handleToggleUpdateHashtagOfQuotes } from 'reducers/redux-utils/quote/index';
 import { toast } from 'react-toastify';
 import { handleAfterCreatQuote } from 'reducers/redux-utils/quote';
 import { NotificationError } from 'helpers/Error';
@@ -227,6 +227,7 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 			if (response) {
 				const customId = 'custom-Id-CreatQuotesModal';
 				toast.success('Tạo quotes thành công', { toastId: customId });
+				dispatch(handleToggleUpdateHashtagOfQuotes());
 			}
 			hideCreatQuotesModal();
 			dispatch(handleAfterCreatQuote());

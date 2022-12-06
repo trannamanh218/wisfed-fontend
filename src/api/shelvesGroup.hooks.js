@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import _ from 'lodash';
 import { getUserDetail } from 'reducers/redux-utils/user';
 import { getAllLibraryList } from 'reducers/redux-utils/library';
 import { NotificationError } from 'helpers/Error';

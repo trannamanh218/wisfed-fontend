@@ -18,10 +18,6 @@ const ModalChart = ({ setChangeValue, changeValue, setSortValue, setSortValueKey
 			value: 'month',
 			title: 'Tháng',
 		},
-		{
-			value: 'year',
-			title: 'Năm',
-		},
 	];
 
 	const radioOptionsValue = [

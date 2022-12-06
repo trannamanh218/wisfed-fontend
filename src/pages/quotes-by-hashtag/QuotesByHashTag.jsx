@@ -3,7 +3,7 @@ import { NotificationError } from 'helpers/Error';
 import { useRef } from 'react';
 import { useState, useEffect } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { getlistQuotesByTag } from 'reducers/redux-utils/quote';
 import LoadingIndicator from 'shared/loading-indicator';
@@ -19,8 +19,8 @@ function QuotesByHashTag() {
 	const callApiPerPage = useRef(3);
 
 	const { hashtag } = useParams();
-
 	const dispatch = useDispatch();
+	const { userInfo } = useSelector(state => state.auth);
 
 	useEffect(() => {
 		window.scrollTo(0, 0);
@@ -37,7 +37,11 @@ function QuotesByHashTag() {
 			start: 0,
 			limit: callApiPerPage.current,
 			tag: hashtag,
+			filter: window.location.pathname.includes('/quotes/hashtag/me') && [
+				{ 'operator': 'eq', 'value': userInfo.id, 'property': 'createdBy' },
+			],
 		};
+
 		try {
 			const response = await dispatch(getlistQuotesByTag(params)).unwrap();
 			if (response.rows.length < callApiPerPage.current) {
@@ -77,7 +81,10 @@ function QuotesByHashTag() {
 	return (
 		<NormalContainer>
 			<div className='hashtag-quotes'>
-				<h4>Quotes có hashtag "#{hashtag}"</h4>
+				<h4>
+					Quotes {window.location.pathname.includes('/quotes/hashtag/me') && 'của tôi'} có hashtag "#{hashtag}
+					"
+				</h4>
 				{loading ? (
 					<LoadingIndicator />
 				) : (
