@@ -60,6 +60,8 @@ const AuthorBook = ({
 			return data.info.images[0];
 		} else if (data?.book && data.book?.images.length > 0) {
 			return data.book.images[0];
+		} else if (data?.frontBookCover) {
+			return data.frontBookCover;
 		} else if (data?.images && data.images.length > 0) {
 			return data.images[0];
 		} else {

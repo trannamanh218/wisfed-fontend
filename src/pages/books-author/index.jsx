@@ -12,10 +12,6 @@ const BooksAuthor = () => {
 
 	const { isLoading, shelveGroupName, isMine, allLibrary, renderNotFound } = handleShelvesGroup(userId);
 
-	useEffect(() => {
-		window.scroll(0, 0);
-	}, []);
-
 	return (
 		<>
 			<Circle loading={isLoading} />

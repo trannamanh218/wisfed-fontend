@@ -18,7 +18,6 @@ export default function UploadBook() {
 	const { shelveGroupName } = handleShelvesGroup(userInfo.id);
 
 	useEffect(() => {
-		window.scroll(0, 0);
 		setCurrentUserInfo(userInfo);
 	}, [userInfo]);
 

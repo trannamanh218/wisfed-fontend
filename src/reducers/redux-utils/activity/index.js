@@ -63,7 +63,6 @@ export const getSuggestionForPost = createAsyncThunk(
 				option.value === 'addFriends'
 					? null
 					: JSON.stringify([{ 'direction': 'DESC', 'property': 'createdAt' }]),
-			// sort: JSON.stringify([{ 'direction': 'DESC', 'property': 'createdAt' }]),
 			filter: JSON.stringify(filter),
 		};
 

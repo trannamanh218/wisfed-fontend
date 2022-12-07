@@ -1,6 +1,9 @@
 .bg-primary-light {
 	background-color: $primary-light;
 	color: $primary-dark;
+	.badge__close-btn {
+		cursor: pointer;
+	}
 }
 
 .badge {

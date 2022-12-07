@@ -37,7 +37,6 @@ const Notification = () => {
 
 	useEffect(() => {
 		setCurrentTab(keyTabsActive);
-		window.history.scrollRestoration = 'manual';
 		getMyNotificationFirstTime();
 		getListRequestFriendToMe();
 	}, []);

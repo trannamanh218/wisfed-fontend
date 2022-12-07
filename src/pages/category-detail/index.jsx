@@ -16,10 +16,6 @@ const CategoryDetail = () => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
-	useEffect(() => {
-		window.scroll(0, 0);
-	}, []);
-
 	const handleViewCategoryDetail = async data => {
 		setIsFetching(true);
 		try {

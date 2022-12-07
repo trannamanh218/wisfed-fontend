@@ -573,12 +573,15 @@
 
 .create-post-modal-content__substitute__search-result {
 	margin: 2.5rem 0;
-	min-height: 220px;
 	h5 {
 		font-weight: 600;
 		line-height: 1.5rem;
 		font-size: 1rem;
 		color: $ash;
+	}
+
+	.create-post-modal-content__substitute__search-result__content {
+		min-height: 215px;
 	}
 
 	.tagged {
@@ -701,10 +704,17 @@
 	}
 }
 
-.create-post-modal-content__substitute__suggest-author-container {
-	display: flex;
+.create-post-modal-content__substitute__suggest-user-container {
+	display: grid;
+	grid-template-columns: repeat(5, 1fr);
+	max-height: 165px;
+	overflow: hidden;
 	margin-top: 32px;
 	gap: 1rem;
+	padding-top: 1px; // k xoa
+	.user-avatar {
+		width: 100%;
+	}
 }
 
 .create-post-modal-content__substitute__suggest-author-item {

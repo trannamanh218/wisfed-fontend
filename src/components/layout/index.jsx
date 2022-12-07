@@ -5,7 +5,7 @@ import { useEffect } from 'react';
 
 const Layout = ({ children }) => {
 	useEffect(() => {
-		window.history.scrollRestoration = 'manual';
+		window.scroll(0, 0);
 	}, []);
 
 	const handleBackgroundToggle = useSelector(state => state.notificationReducer.toggle);

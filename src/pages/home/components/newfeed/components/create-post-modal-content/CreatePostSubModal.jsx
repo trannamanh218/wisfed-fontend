@@ -25,8 +25,11 @@ function CreatPostSubModal({
 }) {
 	const [suggestionData, setSuggestionData] = useState([]);
 	const [isFetchingSuggestions, setIsFetchingSuggestions] = useState(true);
+	const [inputSearchValue, setInputSearchValue] = useState('');
+	const [sugesstionTitle, setSuggestionTitle] = useState(true);
 
-	const inputRef = useRef();
+	const initialSuggestions = useRef([]);
+
 	const dispatch = useDispatch();
 
 	useEffect(() => {
@@ -40,48 +43,51 @@ function CreatPostSubModal({
 		fetchSuggestion('', option);
 	}, [option]);
 
+	useEffect(() => {
+		setSuggestionData(initialSuggestions.current);
+		setInputSearchValue('');
+		setSuggestionTitle(true);
+	}, [taggedData]);
+
 	const fetchSuggestion = async (input, option) => {
 		setIsFetchingSuggestions(true);
 		try {
-			if ((option.value === 'addBook' || option.value === 'addAuthor') && input.length > 0) {
+			let data;
+			if ((option.value === 'addBook' || option.value === 'addAuthor') && input.length) {
 				const params = {
 					q: input,
 					type: option.value === 'addBook' ? 'books' : 'authors',
 				};
-				const data = await dispatch(getFilterSearch({ ...params })).unwrap();
-				setSuggestionData(data.rows);
+				data = await dispatch(getFilterSearch({ ...params })).unwrap();
 			} else {
-				const data = await dispatch(getSuggestionForPost({ input, option, userInfo })).unwrap();
-				setSuggestionData(data.rows);
+				data = await dispatch(getSuggestionForPost({ input, option, userInfo })).unwrap();
+			}
+			setSuggestionData(data.rows);
+			if (!input) {
+				initialSuggestions.current = data.rows;
 			}
 		} catch (err) {
 			NotificationError(err);
 		} finally {
 			setIsFetchingSuggestions(false);
+			if (input.length) {
+				setSuggestionTitle(false);
+			} else {
+				setSuggestionTitle(true);
+			}
 		}
 	};
 
 	const debounceSearch = useCallback(_.debounce(fetchSuggestion, 1000), []);
 
 	const updateInputSearchValue = e => {
+		setInputSearchValue(e.target.value);
 		debounceSearch(e.target.value, option);
 	};
 
 	const handleComplete = () => {
 		backToMainModal();
-		inputRef.current.value = '';
-	};
-
-	const handleFriend = (item, index, option) => {
-		if (option === 'add') {
-			const arr = [...suggestionData];
-			arr.splice(index, 1);
-			setSuggestionData(arr);
-		} else {
-			const arr = [...suggestionData];
-			arr.unshift(item);
-			setSuggestionData(arr);
-		}
+		setInputSearchValue('');
 	};
 
 	return (
@@ -128,9 +134,9 @@ function CreatPostSubModal({
 						<div className='create-post-modal-content__substitute__search-bar'>
 							<Search />
 							<input
-								ref={inputRef}
 								className='create-post-modal-content__substitute__search-bar__input'
 								placeholder={`Tìm kiếm ${option.title} để thêm vào bài viết`}
+								value={inputSearchValue}
 								onChange={updateInputSearchValue}
 							/>
 						</div>
@@ -142,43 +148,41 @@ function CreatPostSubModal({
 						</button>
 					</div>
 					<div className='create-post-modal-content__substitute__search-result'>
-						{isFetchingSuggestions ? (
-							<LoadingIndicator />
-						) : (
-							<>
-								{option.value === 'addBook' && !_.isEmpty(taggedData.addBook) && (
-									<span
-										className='badge bg-primary-light badge-book'
-										onClick={() => removeTaggedItem(taggedData.addBook, 'addBook')}
-									>
-										<span>{taggedData.addBook.name}</span>
-										<CloseX />
-									</span>
-								)}
-								<TaggedList
-									list={suggestionData}
-									taggedData={taggedData}
-									removeTaggedItem={removeTaggedItem}
-									type={option.value}
-									handleFriend={handleFriend}
-								/>
+						<>
+							{option.value === 'addBook' && !_.isEmpty(taggedData.addBook) && (
+								<span
+									className='badge bg-primary-light badge-book'
+									onClick={() => removeTaggedItem(taggedData.addBook, 'addBook')}
+								>
+									<span>{taggedData.addBook.name}</span>
+									<CloseX className='badge__close-btn' />
+								</span>
+							)}
+							<TaggedList
+								list={suggestionData}
+								taggedData={taggedData}
+								removeTaggedItem={removeTaggedItem}
+								type={option.value}
+							/>
+							<div className='create-post-modal-content__substitute__search-result__content'>
+								{isFetchingSuggestions ? (
+									<LoadingIndicator />
+								) : (
+									<>
+										{suggestionData && suggestionData.length !== 0 && (
+											<>{sugesstionTitle ? <h5>Gợi ý</h5> : <h5>Kết quả tìm kiếm</h5>}</>
+										)}
 
-								{suggestionData && suggestionData.length !== 0 && !inputRef.current.value && (
-									<h5>Gợi ý</h5>
+										<SuggestSection
+											option={option}
+											list={suggestionData}
+											handleAddToPost={handleAddToPost}
+											taggedData={taggedData}
+										/>
+									</>
 								)}
-								{suggestionData && suggestionData.length !== 0 && inputRef.current.value && (
-									<h5>Kết quả tìm kiếm</h5>
-								)}
-
-								<SuggestSection
-									option={option}
-									list={suggestionData}
-									handleAddToPost={handleAddToPost}
-									taggedData={taggedData}
-									handleFriend={handleFriend}
-								/>
-							</>
-						)}
+							</div>
+						</>
 					</div>
 				</div>
 			)}

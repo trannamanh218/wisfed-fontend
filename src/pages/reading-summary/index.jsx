@@ -6,9 +6,6 @@ import SidebarReadingSummary from './sidebar-reading-summary';
 
 const ReadingSummary = () => {
 	const [errorLoadPage, setErrorLoadPage] = useState(false);
-	useEffect(() => {
-		window.scroll(0, 0);
-	}, []);
 
 	return (
 		<>

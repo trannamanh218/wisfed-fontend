@@ -13,6 +13,12 @@
 		font-size: 12px;
 		transition: opacity 0.2s ease;
 	}
+	& > span {
+		&:hover {
+			cursor: pointer;
+			text-decoration: underline;
+		}
+	}
 }
 
 .show-time > span:hover {
