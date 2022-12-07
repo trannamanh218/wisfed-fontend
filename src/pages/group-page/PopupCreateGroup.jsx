@@ -12,7 +12,6 @@ import { NotificationError } from 'helpers/Error';
 import _ from 'lodash';
 import { toast } from 'react-toastify';
 import AddAndSearchCategories from 'shared/add-and-search-categories';
-import { getSuggestionForPost } from 'reducers/redux-utils/activity';
 import { handleResetGroupList } from 'reducers/redux-utils/group';
 import { getFilterSearch } from 'reducers/redux-utils/search';
 import InputHashtag from 'shared/input/inputHashtag/inputHashtag';

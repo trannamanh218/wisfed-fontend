@@ -45,7 +45,7 @@ export const getSuggestionForPost = createAsyncThunk(
 			filter.push({ 'operator': 'search', 'value': 'author', 'property': 'role' });
 		}
 
-		if (input && option.value === 'addCategory') {
+		if (option.value === 'addCategory') {
 			filter.push(
 				{ 'operator': 'search', 'value': input, 'property': property },
 				{ 'operator': 'ne', 'value': 0, 'property': 'numberBooks' }
@@ -63,7 +63,6 @@ export const getSuggestionForPost = createAsyncThunk(
 				option.value === 'addFriends'
 					? null
 					: JSON.stringify([{ 'direction': 'DESC', 'property': 'createdAt' }]),
-			// sort: JSON.stringify([{ 'direction': 'DESC', 'property': 'createdAt' }]),
 			filter: JSON.stringify(filter),
 		};
 
