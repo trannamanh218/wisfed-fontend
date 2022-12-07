@@ -13,7 +13,7 @@
 		font-size: 12px;
 		transition: opacity 0.2s ease;
 	}
-	& > span {
+	&:not(.not-event) > span {
 		&:hover {
 			cursor: pointer;
 			text-decoration: underline;

@@ -168,6 +168,14 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 		setIsLiked(data.isLike);
 	}, [data]);
 
+	const handleViewPostDetail = () => {
+		if (postData.minipostId) {
+			navigate(`/detail-feed/mini-post/${postData.minipostId}`);
+		} else {
+			navigate(`/detail-feed/group-post/${postData.groupPostId}`);
+		}
+	};
+
 	return (
 		<div className='comment'>
 			<UserAvatar
@@ -231,7 +239,7 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 					</li>
 					<li className='comment__item--timeline'>
 						<div className='show-time'>
-							<span>{`${calculateDurationTime(data.createdAt)}`}</span>
+							<span onClick={handleViewPostDetail}>{`${calculateDurationTime(data.createdAt)}`}</span>
 							<ShowTime dataTime={data.createdAt} />
 						</div>
 					</li>

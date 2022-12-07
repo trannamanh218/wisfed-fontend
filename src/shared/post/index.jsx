@@ -392,6 +392,14 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 		urlToDirect.current = '';
 	};
 
+	const handleViewPostDetail = () => {
+		if (postData.minipostId) {
+			navigate(`/detail-feed/mini-post/${postData.minipostId}`);
+		} else {
+			navigate(`/detail-feed/group-post/${postData.groupPostId}`);
+		}
+	};
+
 	return (
 		<div className='post__container'>
 			<div className='post__user-status'>
@@ -402,70 +410,69 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 					handleClick={() => navigate(`/profile/${postData.createdBy?.id || postData.user?.id}`)}
 				/>
 				<div className='post__user-status__name-and-post-time-status'>
-					<div data-testid='post__user-name' className='post__user-status__name'>
-						<div className='post__user__container'>
-							<Link
-								to={`/profile/${postData.createdBy?.id || postData.user?.id}`}
-								data-testid='post__user-name'
-								className='post__user-status__name'
-							>
-								{postData?.createdBy?.fullName || postData?.user?.fullName || 'Ẩn danh'}
-							</Link>
+					<div className='post__user-status__name'>
+						<Link
+							to={`/profile/${postData.createdBy?.id || postData.user?.id}`}
+							data-testid='post__user-name'
+						>
+							{postData?.createdBy?.fullName || postData?.user?.fullName || 'Ẩn danh'}
+						</Link>
 
-							{/* tagged people */}
-							{postData.mentionsUsers && !!postData.mentionsUsers.length && (
-								<WithFriends data={postData.mentionsUsers} />
-							)}
-							{(postData.verb === GROUP_POST_VERB ||
-								window.location.pathname.includes('/hashtag-group/')) && (
-								<>
-									<img className='post__user-icon' src={Play} alt='arrow' />
-									<Link
-										to={`/group/${postData.group?.id || postData.groupInfo?.id}`}
-										className='post__name__group'
-									>
-										{postData.group?.name || postData.groupInfo?.name}
-									</Link>
-								</>
-							)}
-						</div>
-
-						<div className='post__user-status__post-time-status'>
-							<div className='show-time'>
-								<span>{calculateDurationTime(postData.time || postData.createdAt)}</span>
-								{/* Hiển thị ngày giờ chính xác khi hover  */}
-								<ShowTime dataTime={postData.time || postData.createdAt} />
-							</div>
-							<img src={vector} />
+						{/* tagged people */}
+						{postData.mentionsUsers && !!postData.mentionsUsers.length && (
+							<WithFriends data={postData.mentionsUsers} />
+						)}
+						{(postData.verb === GROUP_POST_VERB ||
+							window.location.pathname.includes('/hashtag-group/')) && (
 							<>
-								{postData.book && (
-									<div className='post__user-status__subtitle'>
-										{postData.isUpdateProgress && (
-											<>
-												<span style={{ marginRight: '12px', marginLeft: '5px' }}>
-													{' '}
-													Cập nhật tiến độ đọc sách
-												</span>
-											</>
-										)}
-										{postInformations?.book?.actorRating !== null ? (
-											<>
-												<div className='post__user-status__post-time-status__online-dot'></div>
-												<span>Xếp hạng</span>
-												<ReactRating
-													readonly={true}
-													initialRating={
-														postInformations?.book?.actorRating
-															? postInformations?.book?.actorRating?.star
-															: 0
-													}
-												/>
-											</>
-										) : null}
-									</div>
-								)}
+								<img className='post__user-icon' src={Play} alt='arrow' />
+								<Link
+									to={`/group/${postData.group?.id || postData.groupInfo?.id}`}
+									className='post__name__group'
+								>
+									{postData.group?.name || postData.groupInfo?.name}
+								</Link>
 							</>
+						)}
+					</div>
+
+					<div className='post__user-status__post-time-status'>
+						<div className='show-time'>
+							<span onClick={handleViewPostDetail}>
+								{calculateDurationTime(postData.time || postData.createdAt)}
+							</span>
+							{/* Hiển thị ngày giờ chính xác khi hover  */}
+							<ShowTime dataTime={postData.time || postData.createdAt} />
 						</div>
+						<img src={vector} />
+						<>
+							{postData.book && (
+								<div className='post__user-status__subtitle'>
+									{postData.isUpdateProgress && (
+										<>
+											<span style={{ marginRight: '12px', marginLeft: '5px' }}>
+												{' '}
+												Cập nhật tiến độ đọc sách
+											</span>
+										</>
+									)}
+									{postInformations?.book?.actorRating !== null ? (
+										<>
+											<div className='post__user-status__post-time-status__online-dot'></div>
+											<span>Xếp hạng</span>
+											<ReactRating
+												readonly={true}
+												initialRating={
+													postInformations?.book?.actorRating
+														? postInformations?.book?.actorRating?.star
+														: 0
+												}
+											/>
+										</>
+									) : null}
+								</div>
+							)}
+						</>
 					</div>
 				</div>
 			</div>

@@ -176,6 +176,16 @@ const PostShare = ({ postData, inCreatePost, directUrl }) => {
 		}
 	};
 
+	const handleViewPostDetail = () => {
+		if (!inCreatePost) {
+			if (postData.sharePost.minipostId) {
+				navigate(`/detail-feed/mini-post/${postData.sharePost.minipostId}`);
+			} else {
+				navigate(`/detail-feed/group-post/${postData.sharePost.groupPostId}`);
+			}
+		}
+	};
+
 	return (
 		<div className='post__container'>
 			<div className='post__user-status'>
@@ -217,8 +227,12 @@ const PostShare = ({ postData, inCreatePost, directUrl }) => {
 						)}
 					</div>
 					<div className='post__user-status__post-time-status'>
-						<div className='show-time'>
-							<span>
+						<div
+							className={classNames('show-time', {
+								'not-event': inCreatePost,
+							})}
+						>
+							<span onClick={handleViewPostDetail}>
 								{calculateDurationTime(postData.sharePost.time || postData.sharePost.createdAt)}
 							</span>
 							{/* Hiển thị ngày giờ chính xác khi hover  */}
