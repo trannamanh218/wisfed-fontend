@@ -53,17 +53,11 @@ function CreatPostSubModal({
 		setIsFetchingSuggestions(true);
 		try {
 			let data;
-			if (input.length) {
+			if (input.length && option.value !== 'addFriends') {
 				const params = {
 					q: input,
 					type:
-						option.value === 'addBook'
-							? 'books'
-							: option.value === 'addAuthor'
-							? 'authors'
-							: option.value === 'addCategory'
-							? 'categories'
-							: 'users',
+						option.value === 'addBook' ? 'books' : option.value === 'addAuthor' ? 'authors' : 'categories',
 					must_not: { 'numberBook': '0' },
 				};
 				data = await dispatch(getFilterSearch({ ...params })).unwrap();
