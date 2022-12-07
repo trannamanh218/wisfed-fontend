@@ -222,7 +222,7 @@ function SettingsGroup({ handleChange, data, fetchData }) {
 		setCategorySearchedList([]);
 		setInputCategoryValue(e.target.value);
 		if (e.target.value) {
-			debounceSearchCategories(e.target.value, { value: 'addCategory' });
+			debounceSearchCategories(e.target.value);
 		}
 		if (categoryInputWrapper.current) {
 			categoryInputWrapper.current.style.width = categoryInput.current.value.length + 0.5 + 'ch';
@@ -365,9 +365,15 @@ function SettingsGroup({ handleChange, data, fetchData }) {
 	};
 
 	const getSuggestionCategories = async input => {
-		const option = { value: 'addCategory' };
 		try {
-			const result = await dispatch(getSuggestionForPost({ input, option })).unwrap();
+			const params = {
+				q: input,
+				start: 0,
+				limit: 10,
+				type: 'categories',
+				must_not: { 'numberBook': '0' },
+			};
+			const result = await dispatch(getFilterSearch(params)).unwrap();
 			setCategorySearchedList(result.rows);
 			if (result.count > result.rows.length) {
 				setHasMoreCategoriesEllipsis(true);

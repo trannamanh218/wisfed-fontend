@@ -55,7 +55,11 @@ const PostEditBook = ({ data, handleAddToPost, handleChangeStar, valueStar }) =>
 		if (value > data.page) {
 			handleAddToPost({ ...data, progress: data.page });
 		} else {
-			handleAddToPost({ ...data, progress: value });
+			if (data.status === 'reading' && (value < 2 || !value)) {
+				handleAddToPost({ ...data, progress: 1 });
+			} else {
+				handleAddToPost({ ...data, progress: value });
+			}
 		}
 	};
 

@@ -14,6 +14,7 @@ import { NotificationError } from 'helpers/Error';
 import AddAndSearchCategories from 'shared/add-and-search-categories';
 import InputHashtag from 'shared/input/inputHashtag/inputHashtag';
 import LoadingIndicator from 'shared/loading-indicator';
+import { getFilterSearch } from 'reducers/redux-utils/search';
 
 function CreatQuotesModal({ hideCreatQuotesModal }) {
 	const [showTextFieldEditPlaceholder, setShowTextFieldEditPlaceholder] = useState(true);
@@ -116,9 +117,15 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 	};
 
 	const getSuggestionCategories = async input => {
-		const option = { value: 'addCategory' };
 		try {
-			const data = await dispatch(getSuggestionForPost({ input, option })).unwrap();
+			const params = {
+				q: input,
+				type: 'categories',
+				start: 0,
+				limit: 10,
+				must_not: { 'numberBook': '0' },
+			};
+			const data = await dispatch(getFilterSearch(params)).unwrap();
 			setCategorySearchedList(data.rows);
 			if (data.count > data.rows.length) {
 				setHasMoreEllipsis(true);

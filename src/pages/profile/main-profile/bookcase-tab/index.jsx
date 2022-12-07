@@ -75,7 +75,7 @@ function Bookcase({ currentUserInfo, currentTab }) {
 
 	const progressBarPercenNumber = item => {
 		if (item.book) {
-			const progress = ((item.book.bookProgress[0]?.progress / item.book.page) * 100).toFixed();
+			const progress = ((item.book.bookProgress[0]?.progress / item.book.page || 0) * 100).toFixed();
 			return (
 				<div className='bookcase__item__book-progress'>
 					<ProgressBar

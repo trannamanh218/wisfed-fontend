@@ -5,8 +5,8 @@ import { useState, useRef, useCallback } from 'react';
 // import ShareModeDropdown from 'shared/share-mode-dropdown';
 import _ from 'lodash';
 import { useDispatch } from 'react-redux';
-import { getSuggestionForPost } from 'reducers/redux-utils/activity';
 import { NotificationError } from 'helpers/Error';
+import { getFilterSearch } from 'reducers/redux-utils/search';
 
 function SelectType({ dataAdded, setDataAdded, editStatus, cancelEdit, enableEdit }) {
 	const [categorySearchedList, setCategorySearchedList] = useState([]);
@@ -25,7 +25,7 @@ function SelectType({ dataAdded, setDataAdded, editStatus, cancelEdit, enableEdi
 		setCategorySearchedList([]);
 		setInputCategoryValue(e.target.value);
 		if (e.target.value) {
-			debounceSearch(e.target.value, { value: 'addCategory' });
+			debounceSearch(e.target.value);
 		}
 		if (categoryInputWrapper.current) {
 			categoryInputWrapper.current.style.width = categoryInput.current.value.length + 0.5 + 'ch';
@@ -54,9 +54,16 @@ function SelectType({ dataAdded, setDataAdded, editStatus, cancelEdit, enableEdi
 		setDataAdded(categoryArr);
 	};
 
-	const getSuggestion = async (input, option) => {
+	const getSuggestion = async input => {
 		try {
-			const data = await dispatch(getSuggestionForPost({ input, option })).unwrap();
+			const params = {
+				q: input,
+				start: 0,
+				limit: 10,
+				type: 'categories',
+				must_not: { 'numberBook': '0' },
+			};
+			const data = await dispatch(getFilterSearch(params)).unwrap();
 			setCategorySearchedList(data.rows);
 			if (data.count > data.rows.length) {
 				setHasMoreEllipsis(true);
@@ -71,7 +78,7 @@ function SelectType({ dataAdded, setDataAdded, editStatus, cancelEdit, enableEdi
 	};
 
 	const debounceSearch = useCallback(
-		_.debounce((inputValue, option) => getSuggestion(inputValue, option), 700),
+		_.debounce(inputValue => getSuggestion(inputValue), 700),
 		[]
 	);
 

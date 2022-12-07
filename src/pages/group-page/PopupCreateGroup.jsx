@@ -88,10 +88,10 @@ const PopupCreateGroup = ({ handleClose, handleRefreshData = () => {} }) => {
 				type: 'categories',
 				start: 0,
 				limit: 10,
+				must_not: { 'numberBook': '0' },
 			};
 			const result = await dispatch(getFilterSearch(params)).unwrap();
-			const categoriesThatHaveBook = result.rows.filter(item => item.numberBooks > 0);
-			setCategorySearchedList(categoriesThatHaveBook);
+			setCategorySearchedList(result.rows);
 		} catch (err) {
 			NotificationError(err);
 		} finally {
