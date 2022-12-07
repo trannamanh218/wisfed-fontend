@@ -53,10 +53,18 @@ function CreatPostSubModal({
 		setIsFetchingSuggestions(true);
 		try {
 			let data;
-			if ((option.value === 'addBook' || option.value === 'addAuthor') && input.length) {
+			if (input.length) {
 				const params = {
 					q: input,
-					type: option.value === 'addBook' ? 'books' : 'authors',
+					type:
+						option.value === 'addBook'
+							? 'books'
+							: option.value === 'addAuthor'
+							? 'authors'
+							: option.value === 'addCategory'
+							? 'categories'
+							: 'users',
+					must_not: { 'numberBook': '0' },
 				};
 				data = await dispatch(getFilterSearch({ ...params })).unwrap();
 			} else {

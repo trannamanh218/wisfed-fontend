@@ -17,6 +17,7 @@ import { saveDataShare } from 'reducers/redux-utils/post';
 import Storage from 'helpers/Storage';
 import { MY_BOOK_VERB_SHARE } from 'constants';
 import { toast } from 'react-toastify';
+import { checkUserLogin } from 'reducers/redux-utils/auth';
 
 const MainBooksAuthor = ({ shelveGroupName }) => {
 	const [booksByAuthor, setBooksByAuthor] = useState([]);
@@ -118,20 +119,21 @@ const MainBooksAuthor = ({ shelveGroupName }) => {
 	const debounceSearch = useCallback(_.debounce(updateFilter, 1000), []);
 
 	const handleShare = data => {
-		if (userInfo.id === userId) {
-			const newData = {
-				type: 'topBookAuthor',
-				verb: MY_BOOK_VERB_SHARE,
-				...data,
-			};
-
-			if (Storage.getAccessToken()) {
+		if (!Storage.getAccessToken()) {
+			dispatch(checkUserLogin(true));
+		} else {
+			if (userInfo.id === userId) {
+				const newData = {
+					type: 'topBookAuthor',
+					verb: MY_BOOK_VERB_SHARE,
+					...data,
+				};
 				navigate('/');
 				dispatch(saveDataShare(newData));
+			} else {
+				const customId = 'custom-id-share-author-books';
+				toast.warning('Chỉ tác giả có quyền chia sẻ', { toastId: customId });
 			}
-		} else {
-			const customId = 'custom-id-share-author-books';
-			toast.warning('Chỉ tác giả có quyền chia sẻ', { toastId: customId });
 		}
 	};
 

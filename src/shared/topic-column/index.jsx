@@ -3,7 +3,8 @@ import { useState } from 'react';
 import PropTypes from 'prop-types';
 import caretIcon from 'assets/images/caret.png';
 import './topic-column.scss';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 const TopicColumn = ({
 	topics,
@@ -18,6 +19,8 @@ const TopicColumn = ({
 
 	const location = useLocation();
 	const navigate = useNavigate();
+	const { userId } = useParams();
+	const userInfo = useSelector(state => state.auth.userInfo);
 
 	let defaultItems;
 	let maxItems;
@@ -48,7 +51,9 @@ const TopicColumn = ({
 
 	const handleDirect = topic => {
 		if (location.pathname.includes('/quotes/') || location.pathname.includes('/quotes/detail/')) {
-			return navigate(`/quotes/hashtag/${topic.name?.slice(1) || topic.tag?.name?.slice(1)}`);
+			if (userId === userInfo.id) {
+				navigate(`/quotes/hashtag/me/${topic.name?.slice(1) || topic.tag?.name?.slice(1)}`);
+			} else navigate(`/quotes/hashtag/${topic.name?.slice(1) || topic.tag?.name?.slice(1)}`);
 		}
 	};
 

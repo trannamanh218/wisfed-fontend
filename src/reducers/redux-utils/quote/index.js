@@ -7,7 +7,6 @@ import {
 	likeQuoteCommentAPI,
 	getMyLikedQuotesAPI,
 	getQuotesByFriendsOrFollowersAPI,
-	countQuotesByCategoryWithUserIdAPI,
 	countAllQuotesByCategorydAPI,
 	getQuoteCommentsAPI,
 	listQuotesLikedByIdAPI,
@@ -183,6 +182,7 @@ const quoteSlice = createSlice({
 		error: {},
 		resetQuoteList: false,
 		categoryByQuotesName: '',
+		toggleUpdateHashtagOfQuotes: false,
 	},
 
 	reducers: {
@@ -191,6 +191,9 @@ const quoteSlice = createSlice({
 		},
 		handleCategoryByQuotesName: (state, action) => {
 			state.categoryByQuotesName = action.payload;
+		},
+		handleToggleUpdateHashtagOfQuotes: state => {
+			state.toggleUpdateHashtagOfQuotes = !state.toggleUpdateHashtagOfQuotes;
 		},
 	},
 
@@ -211,5 +214,6 @@ const quoteSlice = createSlice({
 	},
 });
 
-export const { handleAfterCreatQuote, handleCategoryByQuotesName } = quoteSlice.actions;
+export const { handleAfterCreatQuote, handleCategoryByQuotesName, handleToggleUpdateHashtagOfQuotes } =
+	quoteSlice.actions;
 export default quoteSlice.reducer;

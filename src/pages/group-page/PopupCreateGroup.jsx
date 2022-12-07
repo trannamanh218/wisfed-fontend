@@ -12,7 +12,6 @@ import { NotificationError } from 'helpers/Error';
 import _ from 'lodash';
 import { toast } from 'react-toastify';
 import AddAndSearchCategories from 'shared/add-and-search-categories';
-import { getSuggestionForPost } from 'reducers/redux-utils/activity';
 import { handleResetGroupList } from 'reducers/redux-utils/group';
 import { getFilterSearch } from 'reducers/redux-utils/search';
 import InputHashtag from 'shared/input/inputHashtag/inputHashtag';
@@ -88,10 +87,10 @@ const PopupCreateGroup = ({ handleClose, handleRefreshData = () => {} }) => {
 				type: 'categories',
 				start: 0,
 				limit: 10,
+				must_not: { 'numberBook': '0' },
 			};
 			const result = await dispatch(getFilterSearch(params)).unwrap();
-			const categoriesThatHaveBook = result.rows.filter(item => item.numberBooks > 0);
-			setCategorySearchedList(categoriesThatHaveBook);
+			setCategorySearchedList(result.rows);
 		} catch (err) {
 			NotificationError(err);
 		} finally {

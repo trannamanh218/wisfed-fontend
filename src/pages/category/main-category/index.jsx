@@ -33,31 +33,29 @@ const MainCategory = ({ isFetching, handleViewBookDetail, handleViewCategoryDeta
 
 	const getCategoryListDataFirstTime = async () => {
 		try {
-			let params = {};
 			let categoryListData = [];
-			let limit = callApiPerPage.current;
-
 			// Nếu ô tìm kiếm trống thì dùng api cũ, nếu có gõ tìm kiếm thì dùng elastic search
 			if (filter[0].operator) {
-				params = {
+				const params = {
 					start: 0,
-					limit: limit,
+					limit: callApiPerPage.current,
 					filter: JSON.stringify(filter),
 				};
 				const fetch = await dispatch(getCategoryList({ option: true, params })).unwrap();
 				categoryListData = fetch.rows;
 			} else {
-				limit = 10;
-				params = {
+				const params = {
 					q: filter,
 					start: 0,
-					limit: limit,
+					limit: callApiPerPage.current,
+					type: 'categories',
+					must_not: { 'numberBook': '0' },
 				};
 				const fetch = await dispatch(getFilterSearch(params)).unwrap();
-				categoryListData = fetch.categories.filter(item => item.numberBooks > 0);
+				categoryListData = fetch.rows;
 			}
 			setCategoryList(categoryListData);
-			if (categoryListData.length < limit) {
+			if (categoryListData.length < callApiPerPage.current) {
 				setHasMore(false);
 			}
 		} catch (err) {
@@ -67,33 +65,31 @@ const MainCategory = ({ isFetching, handleViewBookDetail, handleViewCategoryDeta
 
 	const getCategoryListData = async () => {
 		try {
-			let params = {};
 			let categoryListData = [];
-			let limit = callApiPerPage.current;
-
 			if (filter[0].operator) {
-				params = {
+				const params = {
 					start: callApiStart.current,
-					limit: limit,
+					limit: callApiPerPage.current,
 					filter: JSON.stringify(filter),
 				};
 				const fetch = await dispatch(getCategoryList({ option: true, params })).unwrap();
 				categoryListData = fetch.rows;
 			} else {
-				limit = 10;
-				params = {
+				const params = {
 					q: filter,
+					type: 'categories',
 					start: callApiStart.current,
-					limit: limit,
+					limit: callApiPerPage.current,
+					must_not: { 'numberBook': '0' },
 				};
 				const fetch = await dispatch(getFilterSearch(params)).unwrap();
-				categoryListData = fetch.categories.filter(item => item.numberBooks > 0);
+				categoryListData = fetch.rows;
 			}
 			if (categoryListData.length) {
-				if (categoryListData.length < limit) {
+				if (categoryListData.length < callApiPerPage.current) {
 					setHasMore(false);
 				} else {
-					callApiStart.current += limit;
+					callApiStart.current += callApiPerPage.current;
 				}
 				setCategoryList(categoryList.concat(categoryListData));
 			} else {

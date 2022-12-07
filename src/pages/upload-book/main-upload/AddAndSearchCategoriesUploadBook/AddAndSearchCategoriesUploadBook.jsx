@@ -2,10 +2,10 @@ import AddAndSearchCategories from 'shared/add-and-search-categories';
 import { useState, useRef, useCallback } from 'react';
 import _ from 'lodash';
 import { useDispatch } from 'react-redux';
-import { getSuggestionForPost } from 'reducers/redux-utils/activity';
 import { NotificationError } from 'helpers/Error';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
+import { getFilterSearch } from 'reducers/redux-utils/search';
 
 function AddAndSearchCategoriesUploadBook({
 	inputCategoryValue,
@@ -50,9 +50,15 @@ function AddAndSearchCategoriesUploadBook({
 		setCategoryAddedList(categoryArr);
 	};
 
-	const getSuggestionForCreatQuotes = async (input, option) => {
+	const getSuggestionForCreatQuotes = async input => {
 		try {
-			const data = await dispatch(getSuggestionForPost({ input, option })).unwrap();
+			const params = {
+				q: input,
+				start: 0,
+				limit: 10,
+				type: 'categories',
+			};
+			const data = await dispatch(getFilterSearch(params)).unwrap();
 			setCategorySearchedList(data.rows);
 			if (data.count > data.rows.length) {
 				setHasMoreEllipsis(true);
@@ -67,7 +73,7 @@ function AddAndSearchCategoriesUploadBook({
 	};
 
 	const debounceSearch = useCallback(
-		_.debounce((inputValue, option) => getSuggestionForCreatQuotes(inputValue, option), 700),
+		_.debounce(inputValue => getSuggestionForCreatQuotes(inputValue), 700),
 		[]
 	);
 
@@ -76,7 +82,7 @@ function AddAndSearchCategoriesUploadBook({
 		setCategorySearchedList([]);
 		setInputCategoryValue(e.target.value);
 		if (e.target.value) {
-			debounceSearch(e.target.value, { value: 'addCategory' });
+			debounceSearch(e.target.value);
 		}
 		if (categoryInputWrapper.current) {
 			categoryInputWrapper.current.style.width = categoryInput.current.value?.length + 0.5 + 'ch';

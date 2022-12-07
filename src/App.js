@@ -130,6 +130,7 @@ function App({ children }) {
 						<Route path='/friends/:slug' element={<DetailFriend />} />
 						<Route path='/notification' element={<Notification />} />
 						<Route path='/confirm-my-book/:bookId' element={<ConfirmMyBook />} />
+						<Route path='/quotes/hashtag/me/:hashtag' element={<QuotesByHashTag />} />
 					</>
 				)}
 

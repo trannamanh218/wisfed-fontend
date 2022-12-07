@@ -23,7 +23,7 @@ function ChooseTopic() {
 	const [inputValue, setInputValue] = useState('');
 
 	const getListCategory = async () => {
-		let listCategoryActionArray = [];
+		let listCategoriesFetched = [];
 
 		const params = {
 			start: 0,
@@ -36,12 +36,12 @@ function ChooseTopic() {
 				},
 			]),
 		};
-		const listCategoryAction = await dispatch(getCategoryList({ option: false, params })).unwrap();
-		listCategoryActionArray = listCategoryAction.rows;
+		const fetchResult = await dispatch(getCategoryList({ option: false, params })).unwrap();
+		listCategoriesFetched = fetchResult.rows;
 
-		const totalCount = listCategoryAction.count;
+		const totalCount = fetchResult.count;
 
-		if (listCategoryAction.rows.length < totalCount) {
+		if (fetchResult.rows.length < totalCount) {
 			// Chạy vòng lặp gọi toàn bộ chủ đề thuộc top
 			for (let i = 10; i < totalCount; i += 10) {
 				const params = {
@@ -56,12 +56,11 @@ function ChooseTopic() {
 					]),
 				};
 				const result = await dispatch(getCategoryList({ option: false, params })).unwrap();
-				const haveBook = result.rows.filter(item => item.numberBooks > 0);
-				listCategoryActionArray = listCategoryActionArray.concat(haveBook);
+				listCategoriesFetched = listCategoriesFetched.concat(result.rows);
 			}
 		}
 
-		setListCategory(listCategoryActionArray);
+		setListCategory(listCategoriesFetched.filter(item => item.numberBooks > 0));
 	};
 
 	const handleSearchCategory = e => {

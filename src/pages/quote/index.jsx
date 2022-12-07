@@ -15,6 +15,7 @@ const Quote = () => {
 	const { userId } = useParams();
 	const userInfo = useSelector(state => state.auth.userInfo);
 	const dispatch = useDispatch();
+	const { toggleUpdateHashtagOfQuotes } = useSelector(state => state.quote);
 
 	useEffect(() => {
 		window.scrollTo(0, 0);
@@ -31,7 +32,7 @@ const Quote = () => {
 
 	useEffect(() => {
 		getListHashtagsOfUserQuotes();
-	}, [userId]);
+	}, [userId, toggleUpdateHashtagOfQuotes]);
 
 	return (
 		<>
