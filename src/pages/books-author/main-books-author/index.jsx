@@ -177,13 +177,16 @@ const MainBooksAuthor = ({ shelveGroupName }) => {
 								<div key={item.id} className='main-reading-author__books__item'>
 									<div className='main-reading-author__books__item__column book-image'>
 										<img
-											src={item.images[1] || bookImage}
+											src={item.frontBookCover || item.images[0] || bookImage}
 											alt='book-image'
 											onError={e => e.target.setAttribute('src', `${bookImage}`)}
 										/>
 									</div>
-									<div className='main-reading-author__books__item__column book-name'>
-										<span>{item.name}</span>
+									<div
+										className='main-reading-author__books__item__column book-name'
+										title={item.name}
+									>
+										{item.name}
 									</div>
 									<div className='main-reading-author__books__item__column'>
 										<div className='main-reading-author__books__item__top'>
