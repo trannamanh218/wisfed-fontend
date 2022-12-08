@@ -160,7 +160,7 @@ function CreatePostModalContent({
 	useEffect(() => {
 		if (!_.isEmpty(bookForCreatePost)) {
 			const newData = { ...taggedData };
-			const pages = { read: bookForCreatePost.page, reading: '1', wantToRead: '' };
+			const pages = { read: bookForCreatePost.page, reading: '', wantToRead: '' };
 			newData.addBook = { ...bookForCreatePost, progress: pages[bookForCreatePost.status] };
 			setTaggedData(newData);
 			setShowUpload(false);
@@ -552,7 +552,7 @@ function CreatePostModalContent({
 	useEffect(() => {
 		checkActive();
 	}, [showMainModal, content, progressInputValue, imagesUpload, taggedData.addAuthor, taggedData.addCategory]);
-	taggedData;
+
 	const checkActive = () => {
 		let isActive = false;
 		if (!_.isEmpty(taggedData.addBook)) {
@@ -563,6 +563,11 @@ function CreatePostModalContent({
 			} else {
 				if (taggedData.addBook.status === 'read' || taggedData.addBook.page === progressInputValue) {
 					if (content) {
+						isActive = true;
+					}
+				}
+				if (taggedData.addBook.status === 'reading') {
+					if (progressInputValue > 0) {
 						isActive = true;
 					}
 				} else {

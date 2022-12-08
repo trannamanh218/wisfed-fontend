@@ -169,10 +169,16 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 	}, [data]);
 
 	const handleViewPostDetail = () => {
-		if (postData.minipostId) {
-			navigate(`/detail-feed/mini-post/${postData.minipostId}`);
-		} else {
-			navigate(`/detail-feed/group-post/${postData.groupPostId}`);
+		if (!window.location.pathname.includes('/detail-feed/')) {
+			if (postData.minipostId) {
+				navigate(`/detail-feed/mini-post/${postData.minipostId}`);
+			} else if (postData.groupPostId) {
+				navigate(`/detail-feed/group-post/${postData.groupPostId}`);
+			} else if (postData.groupId) {
+				navigate(`/detail-feed/group-post/${postData.id}`);
+			} else {
+				navigate(`/detail-feed/mini-post/${postData.id}`);
+			}
 		}
 	};
 
