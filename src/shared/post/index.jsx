@@ -449,12 +449,9 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 							{postData.book && (
 								<div className='post__user-status__subtitle'>
 									{postData.isUpdateProgress && (
-										<>
-											<span style={{ marginRight: '12px', marginLeft: '5px' }}>
-												{' '}
-												Cập nhật tiến độ đọc sách
-											</span>
-										</>
+										<span style={{ marginRight: '12px', marginLeft: '5px' }}>
+											Cập nhật tiến độ đọc sách
+										</span>
 									)}
 									{postInformations?.book?.actorRating !== null ? (
 										<>
