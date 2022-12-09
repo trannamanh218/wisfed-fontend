@@ -27,7 +27,6 @@ const BookIntro = ({ bookInfo, listRatingStar }) => {
 	const location = useLocation();
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
-	const [isLink, setIsLink] = useState(false);
 
 	useEffect(() => {
 		if (window.innerWidth <= 768) {
@@ -40,12 +39,6 @@ const BookIntro = ({ bookInfo, listRatingStar }) => {
 			setTextLength(400);
 		}
 	}, []);
-
-	useEffect(() => {
-		if (!_.isEmpty(userInfo) && !bookInfo.verify && !['reader'].includes(userInfo.role)) {
-			setIsLink(true);
-		}
-	}, [userInfo]);
 
 	const handleClick = () => {
 		if (location.pathname !== '/' || location.pathname !== '/home') {
@@ -64,7 +57,7 @@ const BookIntro = ({ bookInfo, listRatingStar }) => {
 
 	const handleConfirmMyBook = () => {
 		if (!_.isEmpty(userInfo)) {
-			if (isLink) {
+			if (!bookInfo.verify) {
 				navigate(`/confirm-my-book/${bookInfo.id}`);
 			}
 		} else {
@@ -94,7 +87,7 @@ const BookIntro = ({ bookInfo, listRatingStar }) => {
 					<div className='book-intro__content__infomations__block-up'>
 						<h1
 							className={classNames('book-intro__name', {
-								'not-verify': isLink,
+								'not-verify': !bookInfo.verify,
 							})}
 							onClick={handleConfirmMyBook}
 							title={bookInfo.name}

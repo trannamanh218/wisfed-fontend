@@ -474,16 +474,16 @@ const PopupCreateGroup = ({ handleClose, handleRefreshData = () => {} }) => {
 									<span className='form-field-authors__asterisk'>*</span>
 								)}
 								<AddAndSearchItems
-									categoryAddedList={categoryAddedList}
-									categorySearchedList={categorySearchedList}
-									addCategory={addCategory}
-									removeCategory={removeCategory}
+									itemAddedList={categoryAddedList}
+									itemSearchedList={categorySearchedList}
+									addItem={addCategory}
+									removeItem={removeCategory}
 									getDataFinish={getDataFinishCategories}
-									searchCategory={searchCategory}
-									inputCategoryValue={inputCategoryValue}
-									categoryInputContainer={categoryInputContainer}
-									categoryInputWrapper={categoryInputWrapper}
-									categoryInput={categoryInput}
+									searchItem={searchCategory}
+									inputItemValue={inputCategoryValue}
+									itemInputContainer={categoryInputContainer}
+									itemInputWrapper={categoryInputWrapper}
+									itemInput={categoryInput}
 									hasSearchIcon={true}
 								/>
 							</div>
@@ -497,16 +497,16 @@ const PopupCreateGroup = ({ handleClose, handleRefreshData = () => {} }) => {
 								<span className='form-field-authors__asterisk'>*</span>
 							)}
 							<AddAndSearchItems
-								categoryAddedList={authorAddedList}
-								categorySearchedList={authorSearchedList}
-								addCategory={addAuthor}
-								removeCategory={removeAuthor}
+								itemAddedList={authorAddedList}
+								itemSearchedList={authorSearchedList}
+								addItem={addAuthor}
+								removeItem={removeAuthor}
 								getDataFinish={getDataFinishAuthors}
-								searchCategory={searchAuthor}
-								inputCategoryValue={inputAuthorValue}
-								categoryInputContainer={authorInputContainer}
-								categoryInputWrapper={authorInputWrapper}
-								categoryInput={authorInput}
+								searchItem={searchAuthor}
+								inputItemValue={inputAuthorValue}
+								itemInputContainer={authorInputContainer}
+								itemInputWrapper={authorInputWrapper}
+								itemInput={authorInput}
 								hasMoreEllipsis={hasMoreAuthorsEllipsis}
 								placeholder={'Tìm kiếm và thêm tác giả'}
 							/>
@@ -520,16 +520,16 @@ const PopupCreateGroup = ({ handleClose, handleRefreshData = () => {} }) => {
 								<span className='form-field-authors__asterisk'>*</span>
 							)}
 							<AddAndSearchItems
-								categoryAddedList={bookAddedList}
-								categorySearchedList={bookSearchedList}
-								addCategory={addBook}
-								removeCategory={removeBook}
+								itemAddedList={bookAddedList}
+								itemSearchedList={bookSearchedList}
+								addItem={addBook}
+								removeItem={removeBook}
 								getDataFinish={getDataFinishBooks}
-								searchCategory={searchBook}
-								inputCategoryValue={inputBookValue}
-								categoryInputContainer={bookInputContainer}
-								categoryInputWrapper={bookInputWrapper}
-								categoryInput={bookInput}
+								searchItem={searchBook}
+								inputItemValue={inputBookValue}
+								itemInputContainer={bookInputContainer}
+								itemInputWrapper={bookInputWrapper}
+								itemInput={bookInput}
 								hasMoreEllipsis={hasMoreBooksEllipsis}
 								placeholder={'Tìm kiếm và thêm sách'}
 							/>

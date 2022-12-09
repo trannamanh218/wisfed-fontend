@@ -14,28 +14,28 @@ function AddAndSearchPublisherUploadBook({
 	setPublisher,
 	maxAddedValue,
 }) {
-	const [categorySearchedList, setCategorySearchedList] = useState([]);
+	const [publisherSearchedList, setPublisherSearchedList] = useState([]);
 	const [getDataFinish, setGetDataFinish] = useState(false);
 	const [hasMoreEllipsis, setHasMoreEllipsis] = useState(false);
 
-	const categoryInputContainer = useRef(null);
-	const categoryInputWrapper = useRef(null);
-	const categoryInput = useRef(null);
+	const publisherInputContainer = useRef(null);
+	const publisherInputWrapper = useRef(null);
+	const publisherInput = useRef(null);
 
 	const dispatch = useDispatch();
 
-	const addCategory = category => {
-		if (publisher.filter(categoryAdded => categoryAdded.id === category.id).length > 0) {
-			removeCategory(category.id);
+	const addPublisher = publisher => {
+		if (publisher.filter(publisherAdded => publisherAdded.id === publisher.id).length > 0) {
+			removePublisher(publisher.id);
 		} else {
 			if (publisher.length < maxAddedValue) {
-				const categoryArrayTemp = [...publisher];
-				categoryArrayTemp.push(category);
-				setPublisher(categoryArrayTemp);
+				const publisherArrayTemp = [...publisher];
+				publisherArrayTemp.push(publisher);
+				setPublisher(publisherArrayTemp);
 				setInputPublisherValue('');
-				setCategorySearchedList([]);
-				if (categoryInputWrapper.current) {
-					categoryInputWrapper.current.style.width = '0.5ch';
+				setPublisherSearchedList([]);
+				if (publisherInputWrapper.current) {
+					publisherInputWrapper.current.style.width = '0.5ch';
 				}
 			} else {
 				toast.warning(`Chỉ được chọn tối đa ${maxAddedValue} nhà xuất bản`);
@@ -43,11 +43,11 @@ function AddAndSearchPublisherUploadBook({
 		}
 	};
 
-	const removeCategory = categoryId => {
-		const categoryArr = [...publisher];
-		const index = categoryArr.findIndex(item => item.id === categoryId);
-		categoryArr.splice(index, 1);
-		setPublisher(categoryArr);
+	const removePublisher = publisherId => {
+		const publisherArr = [...publisher];
+		const index = publisherArr.findIndex(item => item.id === publisherId);
+		publisherArr.splice(index, 1);
+		setPublisher(publisherArr);
 	};
 
 	const getSuggestionForCreatQuotes = async input => {
@@ -56,7 +56,7 @@ function AddAndSearchPublisherUploadBook({
 				filter: JSON.stringify([{ operator: 'search', value: input, property: 'name' }]),
 			};
 			const data = await dispatch(getPublishers(params)).unwrap();
-			setCategorySearchedList(data.rows);
+			setPublisherSearchedList(data.rows);
 			if (data.count > data.rows.length) {
 				setHasMoreEllipsis(true);
 			} else {
@@ -71,15 +71,15 @@ function AddAndSearchPublisherUploadBook({
 
 	const debounceSearch = useCallback(_.debounce(getSuggestionForCreatQuotes, 700), []);
 
-	const searchCategory = e => {
+	const searchPublisher = e => {
 		setGetDataFinish(false);
-		setCategorySearchedList([]);
+		setPublisherSearchedList([]);
 		setInputPublisherValue(e.target.value);
 		if (e.target.value) {
 			debounceSearch(e.target.value);
 		}
-		if (categoryInputWrapper.current) {
-			categoryInputWrapper.current.style.width = categoryInput.current.value?.length + 0.5 + 'ch';
+		if (publisherInputWrapper.current) {
+			publisherInputWrapper.current.style.width = publisherInput.current.value?.length + 0.5 + 'ch';
 		}
 	};
 
@@ -89,16 +89,16 @@ function AddAndSearchPublisherUploadBook({
 				Nhà xuất bản<span className='upload-text-danger'>*</span>
 			</label>
 			<AddAndSearchItems
-				categoryAddedList={publisher}
-				categorySearchedList={categorySearchedList}
-				addCategory={addCategory}
-				removeCategory={removeCategory}
+				itemAddedList={publisher}
+				itemSearchedList={publisherSearchedList}
+				addItem={addPublisher}
+				removeItem={removePublisher}
 				getDataFinish={getDataFinish}
-				searchCategory={searchCategory}
-				inputCategoryValue={inputPublisherValue}
-				categoryInputContainer={categoryInputContainer}
-				categoryInputWrapper={categoryInputWrapper}
-				categoryInput={categoryInput}
+				searchItem={searchPublisher}
+				inputItemValue={inputPublisherValue}
+				itemInputContainer={publisherInputContainer}
+				itemInputWrapper={publisherInputWrapper}
+				itemInput={publisherInput}
 				hasSearchIcon={true}
 				hasMoreEllipsis={hasMoreEllipsis}
 				placeholder={'Tìm kiếm và chọn một nhà xuất bản'}

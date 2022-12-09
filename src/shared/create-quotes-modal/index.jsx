@@ -391,16 +391,16 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 					<div className='create-quotes-modal__body__option-item'>
 						<div className='create-quotes-modal__body__option-item__title'>Chủ đề</div>
 						<AddAndSearchItems
-							categoryAddedList={categoryAddedList}
-							categorySearchedList={categorySearchedList}
-							addCategory={addCategory}
-							removeCategory={removeCategory}
+							itemAddedList={categoryAddedList}
+							itemSearchedList={categorySearchedList}
+							addItem={addCategory}
+							removeItem={removeCategory}
 							getDataFinish={getDataFinishCategories}
-							searchCategory={searchCategory}
-							inputCategoryValue={inputCategoryValue}
-							categoryInputContainer={categoryInputContainer}
-							categoryInputWrapper={categoryInputWrapper}
-							categoryInput={categoryInput}
+							searchItem={searchCategory}
+							inputItemValue={inputCategoryValue}
+							itemInputContainer={categoryInputContainer}
+							itemInputWrapper={categoryInputWrapper}
+							itemInput={categoryInput}
 							hasSearchIcon={true}
 							hasMoreEllipsis={hasMoreEllipsis}
 						/>

@@ -15,43 +15,43 @@ function AddAndSearchAuthorUploadBook({
 	authors,
 	setAuthors,
 }) {
-	const [categorySearchedList, setCategorySearchedList] = useState([]);
+	const [authorSearchedList, setAuthorSearchedList] = useState([]);
 	const [getDataFinish, setGetDataFinish] = useState(false);
 	const [hasMoreEllipsis, setHasMoreEllipsis] = useState(false);
 
-	const categoryInputContainer = useRef(null);
-	const categoryInputWrapper = useRef(null);
-	const categoryInput = useRef(null);
+	const authorInputContainer = useRef(null);
+	const authorInputWrapper = useRef(null);
+	const authorInput = useRef(null);
 
 	const dispatch = useDispatch();
 
-	const addCategory = category => {
-		if (authors.filter(categoryAdded => categoryAdded.id === category.id).length > 0) {
-			removeCategory(category.id);
+	const addAuthor = author => {
+		if (authors.filter(authorAdded => authorAdded.id === author.id).length > 0) {
+			removeAuthor(author.id);
 		} else {
-			const categoryArrayTemp = [...authors];
-			categoryArrayTemp.push(category);
-			setAuthors(categoryArrayTemp);
+			const authorArrayTemp = [...authors];
+			authorArrayTemp.push(author);
+			setAuthors(authorArrayTemp);
 			setInputAuthorValue('');
-			setCategorySearchedList([]);
-			if (categoryInputWrapper.current) {
-				categoryInputWrapper.current.style.width = '0.5ch';
+			setAuthorSearchedList([]);
+			if (authorInputWrapper.current) {
+				authorInputWrapper.current.style.width = '0.5ch';
 			}
 		}
 	};
 
-	const removeCategory = categoryId => {
-		const categoryArr = [...authors];
-		const index = categoryArr.findIndex(item => item.id === categoryId);
-		categoryArr.splice(index, 1);
-		setAuthors(categoryArr);
+	const removeAuthor = authorId => {
+		const authorArr = [...authors];
+		const index = authorArr.findIndex(item => item.id === authorId);
+		authorArr.splice(index, 1);
+		setAuthors(authorArr);
 	};
 
 	const fetchSuggestion = async input => {
 		const params = { q: input, type: 'authors' };
 		try {
 			const data = await dispatch(getFilterSearch(params)).unwrap();
-			setCategorySearchedList(data.rows);
+			setAuthorSearchedList(data.rows);
 			if (data.count > data.rows.length) {
 				setHasMoreEllipsis(true);
 			} else {
@@ -66,15 +66,15 @@ function AddAndSearchAuthorUploadBook({
 
 	const debounceSearch = useCallback(_.debounce(fetchSuggestion, 1000), []);
 
-	const searchCategory = e => {
+	const searchAuthor = e => {
 		setGetDataFinish(false);
-		setCategorySearchedList([]);
+		setAuthorSearchedList([]);
 		setInputAuthorValue(e.target.value);
 		if (e.target.value) {
 			debounceSearch(e.target.value, 'addAuthor');
 		}
-		if (categoryInputWrapper.current) {
-			categoryInputWrapper.current.style.width = categoryInput.current.value?.length + 0.5 + 'ch';
+		if (authorInputWrapper.current) {
+			authorInputWrapper.current.style.width = authorInput.current.value?.length + 0.5 + 'ch';
 		}
 	};
 
@@ -85,16 +85,16 @@ function AddAndSearchAuthorUploadBook({
 				{require && <span className='upload-text-danger'>*</span>}
 			</label>
 			<AddAndSearchItems
-				categoryAddedList={authors}
-				categorySearchedList={categorySearchedList}
-				addCategory={addCategory}
-				removeCategory={removeCategory}
+				itemAddedList={authors}
+				itemSearchedList={authorSearchedList}
+				addItem={addAuthor}
+				removeItem={removeAuthor}
 				getDataFinish={getDataFinish}
-				searchCategory={searchCategory}
-				inputCategoryValue={inputAuthorValue}
-				categoryInputContainer={categoryInputContainer}
-				categoryInputWrapper={categoryInputWrapper}
-				categoryInput={categoryInput}
+				searchItem={searchAuthor}
+				inputItemValue={inputAuthorValue}
+				itemInputContainer={authorInputContainer}
+				itemInputWrapper={authorInputWrapper}
+				itemInput={authorInput}
 				hasSearchIcon={true}
 				hasMoreEllipsis={hasMoreEllipsis}
 				placeholder={placeholder}

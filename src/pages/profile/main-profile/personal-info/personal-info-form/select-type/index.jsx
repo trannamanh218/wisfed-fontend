@@ -89,16 +89,16 @@ function SelectType({ dataAdded, setDataAdded, editStatus, cancelEdit, enableEdi
 				<div className={`form-field ${editStatus && 'editStatus'}`}>
 					{editStatus ? (
 						<AddAndSearchItems
-							categoryAddedList={dataAdded}
-							categorySearchedList={categorySearchedList}
-							addCategory={addCategory}
-							removeCategory={removeCategory}
+							itemAddedList={dataAdded}
+							itemSearchedList={categorySearchedList}
+							addItem={addCategory}
+							removeItem={removeCategory}
 							getDataFinish={getDataFinish}
-							searchCategory={searchCategory}
-							inputCategoryValue={inputCategoryValue}
-							categoryInputContainer={categoryInputContainer}
-							categoryInputWrapper={categoryInputWrapper}
-							categoryInput={categoryInput}
+							searchItem={searchCategory}
+							inputItemValue={inputCategoryValue}
+							itemInputContainer={categoryInputContainer}
+							itemInputWrapper={categoryInputWrapper}
+							itemInput={categoryInput}
 							hasSearchIcon={false}
 							hasMoreEllipsis={hasMoreEllipsis}
 							autoFocus
