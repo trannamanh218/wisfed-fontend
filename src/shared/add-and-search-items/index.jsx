@@ -1,11 +1,11 @@
-import './add-and-search-categories.scss';
+import './add-and-search-items.scss';
 import { CloseX, Search, CheckIcon } from 'components/svg';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { useEffect, useState } from 'react';
 import LoadingIndicator from 'shared/loading-indicator';
 
-function AddAndSearchCategories({
+function AddAndSearchItems({
 	categoryAddedList,
 	categorySearchedList,
 	addCategory,
@@ -25,7 +25,7 @@ function AddAndSearchCategories({
 	const [firstTimeFocus, setFirstTimeFocus] = useState(false);
 	const [show, setShow] = useState(true);
 
-	const focusCategoryInput = () => {
+	const focusInput = () => {
 		if (categoryInput.current) {
 			categoryInput.current.focus();
 			setFirstTimeFocus(true);
@@ -40,16 +40,16 @@ function AddAndSearchCategories({
 
 	useEffect(() => {
 		if (categoryInputContainer.current) {
-			categoryInputContainer.current.addEventListener('click', focusCategoryInput);
+			categoryInputContainer.current.addEventListener('click', focusInput);
 			return () => {
-				categoryInputContainer?.current?.removeEventListener('click', focusCategoryInput);
+				categoryInputContainer?.current?.removeEventListener('click', focusInput);
 			};
 		}
 	}, []);
 
 	useEffect(() => {
 		if (autoFocus) {
-			focusCategoryInput();
+			focusInput();
 		}
 	}, []);
 
@@ -157,14 +157,14 @@ function AddAndSearchCategories({
 	);
 }
 
-AddAndSearchCategories.defaultProps = {
+AddAndSearchItems.defaultProps = {
 	placeholder: 'Tìm kiếm và thêm chủ đề',
 	hasMoreEllipsis: false,
 	acceptValueText: false,
 	autoFocus: false,
 };
 
-AddAndSearchCategories.propTypes = {
+AddAndSearchItems.propTypes = {
 	categoryAddedList: PropTypes.array,
 	categorySearchedList: PropTypes.array,
 	addCategory: PropTypes.func,
@@ -182,4 +182,4 @@ AddAndSearchCategories.propTypes = {
 	autoFocus: PropTypes.bool,
 };
 
-export default AddAndSearchCategories;
+export default AddAndSearchItems;

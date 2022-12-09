@@ -4,7 +4,7 @@ import SelectBox from 'shared/select-box';
 import { BackArrow } from 'components/svg';
 import './group-settings.scss';
 import PropTypes from 'prop-types';
-import AddAndSearchCategories from 'shared/add-and-search-categories';
+import AddAndSearchItems from 'shared/add-and-search-items';
 import { toast } from 'react-toastify';
 import { NotificationError } from 'helpers/Error';
 import _ from 'lodash';
@@ -459,7 +459,7 @@ function SettingsGroup({ handleChange, data, fetchData }) {
 						<div className='form-field-group'>
 							<label>Chủ đề </label>
 							{data.groupType === 'author' ? '' : <span className='form-field-authors__asterisk'>*</span>}
-							<AddAndSearchCategories
+							<AddAndSearchItems
 								categoryAddedList={categoryAddedList}
 								categorySearchedList={categorySearchedList}
 								addCategory={addCategory}
@@ -479,7 +479,7 @@ function SettingsGroup({ handleChange, data, fetchData }) {
 					<div className='form-field-group'>
 						<label>Tên tác giả</label>
 						{data.groupType === 'category' ? '' : <span className='form-field-authors__asterisk'>*</span>}
-						<AddAndSearchCategories
+						<AddAndSearchItems
 							categoryAddedList={authorAddedList}
 							categorySearchedList={authorSearchedList}
 							addCategory={addAuthor}
@@ -502,7 +502,7 @@ function SettingsGroup({ handleChange, data, fetchData }) {
 						) : (
 							<span className='form-field-authors__asterisk'>*</span>
 						)}
-						<AddAndSearchCategories
+						<AddAndSearchItems
 							categoryAddedList={bookAddedList}
 							categorySearchedList={bookSearchedList}
 							addCategory={addBook}
