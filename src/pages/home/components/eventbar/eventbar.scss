@@ -3,7 +3,6 @@
 .event-and-rank-bar__block {
 	margin: 24px 0 60px;
 	display: block;
-	cursor: pointer;
 	.event-and-rank-bar__block.top__user__ranks {
 		.top__user__ranks__one__title,
 		.top__user__ranks__two__title {
@@ -48,6 +47,7 @@
 	border-radius: 16px;
 	position: relative;
 	justify-content: center;
+	cursor: pointer;
 	img {
 		width: 100%;
 	}
