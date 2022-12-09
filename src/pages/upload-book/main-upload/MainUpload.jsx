@@ -1,7 +1,7 @@
 import { lazy, Suspense } from 'react';
 import Dropzone from 'react-dropzone';
-import { Link, useNavigate } from 'react-router-dom';
-import { BackArrow, Calendar, Image, CloseX } from 'components/svg';
+import { useNavigate } from 'react-router-dom';
+import { Calendar, Image, CloseX } from 'components/svg';
 import './MainUpload.scss';
 import { useState, useRef, useEffect } from 'react';
 const Button = lazy(() => import('shared/button'));
@@ -22,6 +22,7 @@ const ModalSeries = lazy(() => import('shared/modal-series/ModalSeries'));
 const AddAndSearchAuthorUploadBook = lazy(() => import('./AddAndSearchAuthorUploadBook'));
 const AddAndSearchCategoriesUploadBook = lazy(() => import('./AddAndSearchCategoriesUploadBook'));
 const AddAndSearchPublisherUploadBook = lazy(() => import('./AddAndSearchPublisherUploadBook'));
+import BackButton from 'shared/back-button';
 
 export default function MainUpload() {
 	const navigate = useNavigate();
@@ -241,12 +242,8 @@ export default function MainUpload() {
 
 	return (
 		<Suspense fallback={<Circle />}>
-			<div className='group-btn-back'>
-				<Link to='/'>
-					<button style={{ width: '48px', height: '48px' }}>
-						<BackArrow />
-					</button>
-				</Link>
+			<div className='upload-book__header'>
+				<BackButton destination={-1} />
 				<span style={{ fontWeight: '700', fontSize: '24px', lineHeight: '32px', letterSpacing: '1px' }}>
 					Thêm sách
 				</span>
