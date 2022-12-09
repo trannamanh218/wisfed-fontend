@@ -139,8 +139,8 @@ const MainLayoutSearch = ({ valueGroupSearch, filterSearch }) => {
 												/>
 											</Link>
 											<div className='item-group__text'>
-												<div className='item-group__name'>
-													<span>{item.name}</span>
+												<div className='item-group__name' title={item.name}>
+													{item.name}
 												</div>
 												<div className='item-group__description'>
 													<span>

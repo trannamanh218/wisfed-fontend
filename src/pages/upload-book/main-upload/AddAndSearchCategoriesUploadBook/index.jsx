@@ -1,17 +1,17 @@
-import AddAndSearchCategories from 'shared/add-and-search-categories';
+import AddAndSearchItems from 'shared/add-and-search-items';
 import { useState, useRef, useCallback } from 'react';
 import _ from 'lodash';
 import { useDispatch } from 'react-redux';
-import { getPublishers } from 'reducers/redux-utils/publishers';
 import { NotificationError } from 'helpers/Error';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
+import { getFilterSearch } from 'reducers/redux-utils/search';
 
-function AddAndSearchPublisherUploadBook({
-	inputPublisherValue,
-	setInputPublisherValue,
-	publisher,
-	setPublisher,
+function AddAndSearchCategoriesUploadBook({
+	inputCategoryValue,
+	setInputCategoryValue,
+	categoryAddedList,
+	setCategoryAddedList,
 	maxAddedValue,
 }) {
 	const [categorySearchedList, setCategorySearchedList] = useState([]);
@@ -25,37 +25,40 @@ function AddAndSearchPublisherUploadBook({
 	const dispatch = useDispatch();
 
 	const addCategory = category => {
-		if (publisher.filter(categoryAdded => categoryAdded.id === category.id).length > 0) {
+		if (categoryAddedList.filter(categoryAdded => categoryAdded.id === category.id).length > 0) {
 			removeCategory(category.id);
 		} else {
-			if (publisher.length < maxAddedValue) {
-				const categoryArrayTemp = [...publisher];
+			if (categoryAddedList.length < maxAddedValue) {
+				const categoryArrayTemp = [...categoryAddedList];
 				categoryArrayTemp.push(category);
-				setPublisher(categoryArrayTemp);
-				setInputPublisherValue('');
+				setCategoryAddedList(categoryArrayTemp);
+				setInputCategoryValue('');
 				setCategorySearchedList([]);
 				if (categoryInputWrapper.current) {
 					categoryInputWrapper.current.style.width = '0.5ch';
 				}
 			} else {
-				toast.warning(`Chỉ được chọn tối đa ${maxAddedValue} nhà xuất bản`);
+				toast.warning(`Chỉ được chọn tối đa ${maxAddedValue} chủ đề`);
 			}
 		}
 	};
 
 	const removeCategory = categoryId => {
-		const categoryArr = [...publisher];
+		const categoryArr = [...categoryAddedList];
 		const index = categoryArr.findIndex(item => item.id === categoryId);
 		categoryArr.splice(index, 1);
-		setPublisher(categoryArr);
+		setCategoryAddedList(categoryArr);
 	};
 
 	const getSuggestionForCreatQuotes = async input => {
 		try {
 			const params = {
-				filter: JSON.stringify([{ operator: 'search', value: input, property: 'name' }]),
+				q: input,
+				start: 0,
+				limit: 10,
+				type: 'categories',
 			};
-			const data = await dispatch(getPublishers(params)).unwrap();
+			const data = await dispatch(getFilterSearch(params)).unwrap();
 			setCategorySearchedList(data.rows);
 			if (data.count > data.rows.length) {
 				setHasMoreEllipsis(true);
@@ -69,12 +72,15 @@ function AddAndSearchPublisherUploadBook({
 		}
 	};
 
-	const debounceSearch = useCallback(_.debounce(getSuggestionForCreatQuotes, 700), []);
+	const debounceSearch = useCallback(
+		_.debounce(inputValue => getSuggestionForCreatQuotes(inputValue), 700),
+		[]
+	);
 
 	const searchCategory = e => {
 		setGetDataFinish(false);
 		setCategorySearchedList([]);
-		setInputPublisherValue(e.target.value);
+		setInputCategoryValue(e.target.value);
 		if (e.target.value) {
 			debounceSearch(e.target.value);
 		}
@@ -86,33 +92,32 @@ function AddAndSearchPublisherUploadBook({
 	return (
 		<div className='form-field-group'>
 			<label className='form-field-label'>
-				Nhà xuất bản<span className='upload-text-danger'>*</span>
+				Chủ đề<span className='upload-text-danger'>*</span>
 			</label>
-			<AddAndSearchCategories
-				categoryAddedList={publisher}
+			<AddAndSearchItems
+				categoryAddedList={categoryAddedList}
 				categorySearchedList={categorySearchedList}
 				addCategory={addCategory}
 				removeCategory={removeCategory}
 				getDataFinish={getDataFinish}
 				searchCategory={searchCategory}
-				inputCategoryValue={inputPublisherValue}
+				inputCategoryValue={inputCategoryValue}
 				categoryInputContainer={categoryInputContainer}
 				categoryInputWrapper={categoryInputWrapper}
 				categoryInput={categoryInput}
 				hasSearchIcon={true}
 				hasMoreEllipsis={hasMoreEllipsis}
-				placeholder={'Tìm kiếm và chọn một nhà xuất bản'}
 			/>
 		</div>
 	);
 }
 
-AddAndSearchPublisherUploadBook.propTypes = {
-	publisher: PropTypes.array,
-	setPublisher: PropTypes.func,
-	inputPublisherValue: PropTypes.string,
-	setInputPublisherValue: PropTypes.func,
+AddAndSearchCategoriesUploadBook.propTypes = {
+	categoryAddedList: PropTypes.array,
+	setCategoryAddedList: PropTypes.func,
+	inputCategoryValue: PropTypes.string,
+	setInputCategoryValue: PropTypes.func,
 	maxAddedValue: PropTypes.number,
 };
 
-export default AddAndSearchPublisherUploadBook;
+export default AddAndSearchCategoriesUploadBook;

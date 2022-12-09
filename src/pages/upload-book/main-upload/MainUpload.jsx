@@ -1,7 +1,7 @@
 import { lazy, Suspense } from 'react';
 import Dropzone from 'react-dropzone';
-import { Link, useNavigate } from 'react-router-dom';
-import { BackArrow, Calendar, Image, CloseX } from 'components/svg';
+import { useNavigate } from 'react-router-dom';
+import { Calendar, Image, CloseX } from 'components/svg';
 import './MainUpload.scss';
 import { useState, useRef, useEffect } from 'react';
 const Button = lazy(() => import('shared/button'));
@@ -19,14 +19,10 @@ import _ from 'lodash';
 import Circle from 'shared/loading/circle';
 import { blockInvalidChar } from 'constants';
 const ModalSeries = lazy(() => import('shared/modal-series/ModalSeries'));
-const AddAndSearchAuthorUploadBook = lazy(() => import('./AddAndSearchAuthorUploadBook/AddAndSearchAuthorUploadBook'));
-const AddAndSearchCategoriesUploadBook = lazy(() =>
-	import('./AddAndSearchCategoriesUploadBook/AddAndSearchCategoriesUploadBook')
-);
-const AddAndSearchPublisherUploadBook = lazy(() =>
-	import('./AddAndSearchPublisherUploadBook/AddAndSearchPublisherUploadBook')
-);
-// import AddAndSearchTranslatorsUploadBook from './AddAndSearchTranslatorsUploadBook/AddAndSearchTranslatorsUploadBook';
+const AddAndSearchAuthorUploadBook = lazy(() => import('./AddAndSearchAuthorUploadBook'));
+const AddAndSearchCategoriesUploadBook = lazy(() => import('./AddAndSearchCategoriesUploadBook'));
+const AddAndSearchPublisherUploadBook = lazy(() => import('./AddAndSearchPublisherUploadBook'));
+import BackButton from 'shared/back-button';
 
 export default function MainUpload() {
 	const navigate = useNavigate();
@@ -38,7 +34,7 @@ export default function MainUpload() {
 	const [image, setImage] = useState(null);
 	const [categoryAddedList, setCategoryAddedList] = useState([]);
 	const [authors, setAuthors] = useState([]);
-	const [translators, setTranslators] = useState('');
+	const [translators, setTranslators] = useState([]);
 	const [publisher, setPublisher] = useState([]);
 	const [language, setLanguage] = useState('');
 	const [series, setSeries] = useState({});
@@ -48,7 +44,7 @@ export default function MainUpload() {
 	const [temporarySeries, setTemporarySeries] = useState({});
 
 	const [inputAuthorValue, setInputAuthorValue] = useState('');
-	// const [inputTranslatorValue, setInputTranslatorValue] = useState('');
+	const [inputTranslatorValue, setInputTranslatorValue] = useState('');
 	const [inputCategoryValue, setInputCategoryValue] = useState('');
 	const [inputPublisherValue, setInputPublisherValue] = useState('');
 
@@ -76,7 +72,7 @@ export default function MainUpload() {
 		setTemporarySeries({});
 		setInputAuthorValue('');
 		setAuthors([]);
-		// setInputTranslatorValue('');
+		setInputTranslatorValue('');
 		setTranslators([]);
 		setPublisher([]);
 		setInputCategoryValue('');
@@ -142,14 +138,21 @@ export default function MainUpload() {
 		}
 
 		// Tạo danh sách tác giả
-		const authorsArr = [];
-		for (let i = 0; i < authors.length; i++) {
-			authorsArr.push({
+		const authorsArr = authors.map(item => {
+			return {
 				'isUser': true,
-				'authorId': authors[i].id,
-				'authorName': authors[i].name,
-			});
-		}
+				'authorId': item.id,
+				'authorName': item.name,
+			};
+		});
+
+		const translatorsArr = translators.map(item => {
+			return {
+				'isUser': true,
+				'translatorId': item.id,
+				'translatorName': item.name,
+			};
+		});
 
 		const imgSrc = await uploadImageFile(image);
 
@@ -175,14 +178,14 @@ export default function MainUpload() {
 							},
 					  ],
 			translators:
-				translators.length > 0
-					? [
+				translatorsArr.length > 0
+					? translatorsArr
+					: [
 							{
 								isUser: false,
-								translatorName: translators,
+								translatorName: inputTranslatorValue,
 							},
-					  ]
-					: [],
+					  ],
 			publisherId: publisher[0].id,
 			isbn: isbn,
 			publishDate: dataDate,
@@ -239,12 +242,8 @@ export default function MainUpload() {
 
 	return (
 		<Suspense fallback={<Circle />}>
-			<div className='group-btn-back'>
-				<Link to='/'>
-					<button style={{ width: '48px', height: '48px' }}>
-						<BackArrow />
-					</button>
-				</Link>
+			<div className='upload-book__header'>
+				<BackButton destination={-1} />
 				<span style={{ fontWeight: '700', fontSize: '24px', lineHeight: '32px', letterSpacing: '1px' }}>
 					Thêm sách
 				</span>
@@ -314,6 +313,8 @@ export default function MainUpload() {
 					</div>
 					<div className='inp-book'>
 						<AddAndSearchAuthorUploadBook
+							title='Tác giả'
+							placeholder='Tìm kiếm và thêm tác giả'
 							inputAuthorValue={inputAuthorValue}
 							setInputAuthorValue={setInputAuthorValue}
 							authors={authors}
@@ -321,19 +322,15 @@ export default function MainUpload() {
 						/>
 					</div>
 					<div className='inp-book'>
-						{/* <AddAndSearchTranslatorsUploadBook
-							inputTranslatorValue={inputTranslatorValue}
-							setInputTranslatorValue={setInputTranslatorValue}
-							translators={translators}
-							setTranslators={setTranslators}
-						/> */}
-						<label>Dịch giả</label>
-						<input
-							className='input input--non-border'
-							placeholder='Dịch giả'
-							value={translators}
-							onChange={e => setTranslators(e.target.value)}
-						></input>
+						<AddAndSearchAuthorUploadBook
+							title='Dịch giả'
+							placeholder='Tìm kiếm và thêm dịch giả'
+							require={false}
+							inputAuthorValue={inputTranslatorValue}
+							setInputAuthorValue={setInputTranslatorValue}
+							authors={translators}
+							setAuthors={setTranslators}
+						/>
 					</div>
 					<div className='inp-book'>
 						<AddAndSearchCategoriesUploadBook

@@ -1,7 +1,10 @@
 @import 'src/scss/abstracts/_variables.scss';
 
-.upload-icon-goback {
-	margin-left: 15px;
+.upload-book__header {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	margin-bottom: 30px;
 }
 
 .upload-book-form {

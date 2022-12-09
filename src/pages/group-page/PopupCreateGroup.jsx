@@ -11,7 +11,7 @@ import { uploadImage } from 'reducers/redux-utils/common';
 import { NotificationError } from 'helpers/Error';
 import _ from 'lodash';
 import { toast } from 'react-toastify';
-import AddAndSearchCategories from 'shared/add-and-search-categories';
+import AddAndSearchItems from 'shared/add-and-search-items';
 import { handleResetGroupList } from 'reducers/redux-utils/group';
 import { getFilterSearch } from 'reducers/redux-utils/search';
 import InputHashtag from 'shared/input/inputHashtag/inputHashtag';
@@ -473,7 +473,7 @@ const PopupCreateGroup = ({ handleClose, handleRefreshData = () => {} }) => {
 								) : (
 									<span className='form-field-authors__asterisk'>*</span>
 								)}
-								<AddAndSearchCategories
+								<AddAndSearchItems
 									categoryAddedList={categoryAddedList}
 									categorySearchedList={categorySearchedList}
 									addCategory={addCategory}
@@ -496,7 +496,7 @@ const PopupCreateGroup = ({ handleClose, handleRefreshData = () => {} }) => {
 							) : (
 								<span className='form-field-authors__asterisk'>*</span>
 							)}
-							<AddAndSearchCategories
+							<AddAndSearchItems
 								categoryAddedList={authorAddedList}
 								categorySearchedList={authorSearchedList}
 								addCategory={addAuthor}
@@ -519,7 +519,7 @@ const PopupCreateGroup = ({ handleClose, handleRefreshData = () => {} }) => {
 							) : (
 								<span className='form-field-authors__asterisk'>*</span>
 							)}
-							<AddAndSearchCategories
+							<AddAndSearchItems
 								categoryAddedList={bookAddedList}
 								categorySearchedList={bookSearchedList}
 								addCategory={addBook}

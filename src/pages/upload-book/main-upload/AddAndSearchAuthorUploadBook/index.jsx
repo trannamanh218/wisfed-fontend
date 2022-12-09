@@ -1,4 +1,4 @@
-import AddAndSearchCategories from 'shared/add-and-search-categories';
+import AddAndSearchItems from 'shared/add-and-search-items';
 import { useState, useRef, useCallback } from 'react';
 import _ from 'lodash';
 import { useDispatch } from 'react-redux';
@@ -6,7 +6,15 @@ import { NotificationError } from 'helpers/Error';
 import PropTypes from 'prop-types';
 import { getFilterSearch } from 'reducers/redux-utils/search';
 
-function AddAndSearchAuthorUploadBook({ inputAuthorValue, setInputAuthorValue, authors, setAuthors }) {
+function AddAndSearchAuthorUploadBook({
+	title,
+	placeholder,
+	require,
+	inputAuthorValue,
+	setInputAuthorValue,
+	authors,
+	setAuthors,
+}) {
 	const [categorySearchedList, setCategorySearchedList] = useState([]);
 	const [getDataFinish, setGetDataFinish] = useState(false);
 	const [hasMoreEllipsis, setHasMoreEllipsis] = useState(false);
@@ -73,9 +81,10 @@ function AddAndSearchAuthorUploadBook({ inputAuthorValue, setInputAuthorValue, a
 	return (
 		<div className='form-field-group'>
 			<label className='form-field-label'>
-				Tác giả<span className='upload-text-danger'>*</span>
+				{title}
+				{require && <span className='upload-text-danger'>*</span>}
 			</label>
-			<AddAndSearchCategories
+			<AddAndSearchItems
 				categoryAddedList={authors}
 				categorySearchedList={categorySearchedList}
 				addCategory={addCategory}
@@ -88,14 +97,27 @@ function AddAndSearchAuthorUploadBook({ inputAuthorValue, setInputAuthorValue, a
 				categoryInput={categoryInput}
 				hasSearchIcon={true}
 				hasMoreEllipsis={hasMoreEllipsis}
-				placeholder={'Tìm kiếm hoặc nhập tên tác giả'}
+				placeholder={placeholder}
 				acceptValueText
 			/>
 		</div>
 	);
 }
 
+AddAndSearchAuthorUploadBook.defaultProps = {
+	title: '',
+	placeholder: '',
+	require: true,
+	authors: [],
+	setAuthors: () => {},
+	inputAuthorValue: '',
+	setInputAuthorValue: () => {},
+};
+
 AddAndSearchAuthorUploadBook.propTypes = {
+	title: PropTypes.string,
+	placeholder: PropTypes.string,
+	require: PropTypes.bool,
 	authors: PropTypes.array,
 	setAuthors: PropTypes.func,
 	inputAuthorValue: PropTypes.string,

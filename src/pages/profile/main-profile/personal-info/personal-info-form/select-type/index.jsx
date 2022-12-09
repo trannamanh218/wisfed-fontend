@@ -1,5 +1,5 @@
 import { Pencil } from 'components/svg';
-import AddAndSearchCategories from 'shared/add-and-search-categories';
+import AddAndSearchItems from 'shared/add-and-search-items';
 import PropTypes from 'prop-types';
 import { useState, useRef, useCallback } from 'react';
 // import ShareModeDropdown from 'shared/share-mode-dropdown';
@@ -88,7 +88,7 @@ function SelectType({ dataAdded, setDataAdded, editStatus, cancelEdit, enableEdi
 			<div className='form-field-wrapper'>
 				<div className={`form-field ${editStatus && 'editStatus'}`}>
 					{editStatus ? (
-						<AddAndSearchCategories
+						<AddAndSearchItems
 							categoryAddedList={dataAdded}
 							categorySearchedList={categorySearchedList}
 							addCategory={addCategory}

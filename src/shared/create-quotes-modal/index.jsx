@@ -11,7 +11,7 @@ import { creatQuotes, handleToggleUpdateHashtagOfQuotes } from 'reducers/redux-u
 import { toast } from 'react-toastify';
 import { handleAfterCreatQuote } from 'reducers/redux-utils/quote';
 import { NotificationError } from 'helpers/Error';
-import AddAndSearchCategories from 'shared/add-and-search-categories';
+import AddAndSearchItems from 'shared/add-and-search-items';
 import InputHashtag from 'shared/input/inputHashtag/inputHashtag';
 import LoadingIndicator from 'shared/loading-indicator';
 import { getFilterSearch } from 'reducers/redux-utils/search';
@@ -390,7 +390,7 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 					</div>
 					<div className='create-quotes-modal__body__option-item'>
 						<div className='create-quotes-modal__body__option-item__title'>Chủ đề</div>
-						<AddAndSearchCategories
+						<AddAndSearchItems
 							categoryAddedList={categoryAddedList}
 							categorySearchedList={categorySearchedList}
 							addCategory={addCategory}
