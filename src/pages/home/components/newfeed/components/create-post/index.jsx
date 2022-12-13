@@ -33,6 +33,7 @@ function CreatePost({ onChangeNewPost }) {
 		auth: { userInfo },
 		book: { bookForCreatePost },
 	} = useSelector(state => state);
+
 	const dispatch = useDispatch();
 
 	const safeDocument = typeof document !== 'undefined' ? document : {};

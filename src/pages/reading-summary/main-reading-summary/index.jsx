@@ -6,6 +6,7 @@ import PageTab from './page-tab';
 import ReadBookTab from './read-book-tab';
 import PropTypes from 'prop-types';
 import { BackArrow } from 'components/svg';
+import BackButton from 'shared/back-button';
 
 const MainReadingSummary = ({ setErrorLoadPage }) => {
 	const [disabledReadBookTab, setDisabledReadBookTab] = useState(false);
@@ -20,10 +21,8 @@ const MainReadingSummary = ({ setErrorLoadPage }) => {
 	return (
 		<div className='main-reading-summary'>
 			<TabContainer activeKey={activeKey} onSelect={k => setActiveKey(k)}>
-				<div className='group-btn-back'>
-					<button onClick={() => history.back()}>
-						<BackArrow />
-					</button>
+				<div className='main-reading-summary__btn-back'>
+					<BackButton destination={-1} />
 					<span>Biểu đồ đọc sách</span>
 				</div>
 
