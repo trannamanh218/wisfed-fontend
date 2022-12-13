@@ -10,11 +10,13 @@ import LoadingIndicator from 'shared/loading-indicator';
 import PropTypes from 'prop-types';
 import { POST_TYPE } from 'constants/index';
 import classNames from 'classnames';
+import CreatePost from 'pages/home/components/newfeed/components/create-post';
 
 function PostTab({ currentTab }) {
 	const [postList, setPostList] = useState([]);
 	const [hasMore, setHasMore] = useState(true);
 	const [loading, setLoading] = useState(true);
+	const [isNewPost, setIsNewPost] = useState(false);
 
 	const { userId } = useParams();
 	const dispatch = useDispatch();
@@ -29,7 +31,7 @@ function PostTab({ currentTab }) {
 			setHasMore(true);
 			setPostList([]);
 		}
-	}, [userId]);
+	}, [userId, isNewPost]);
 
 	useEffect(() => {
 		if (!postList.length > 0 && currentTab === 'post') {
@@ -61,8 +63,13 @@ function PostTab({ currentTab }) {
 		}
 	};
 
+	const onChangeNewPost = () => {
+		setIsNewPost(!isNewPost);
+	};
+
 	return (
 		<div className={classNames('post-tab', { 'loading': loading })}>
+			<CreatePost onChangeNewPost={onChangeNewPost} />
 			{loading ? (
 				<LoadingIndicator />
 			) : (

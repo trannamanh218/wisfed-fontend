@@ -429,7 +429,7 @@
 .create-post-modal-content__main__options__item-add-to-post {
 	padding: 12px;
 	background-color: #eff0f6;
-	border-radius: 50%;
+	border-radius: 50% !important;
 	cursor: pointer;
 	position: relative;
 	svg {
@@ -503,7 +503,7 @@
 .create-post-modal-content__main__submit {
 	margin-top: 24px;
 	background-color: $ash-line;
-	border-radius: 12px;
+	border-radius: 12px !important;
 	width: 100%;
 	padding: 16px 0;
 	font-size: 18px;
