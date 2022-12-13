@@ -11,6 +11,7 @@ import SearchCategoryChooseTopic from './searchCateChooseTopic';
 import { NotificationError } from 'helpers/Error';
 import _ from 'lodash';
 import { updateUserInfo } from 'reducers/redux-utils/auth';
+import LoadingIndicator from 'shared/loading-indicator';
 
 function ChooseTopic() {
 	const { userInfo } = useSelector(state => state.auth);
@@ -22,7 +23,10 @@ function ChooseTopic() {
 	const [addFavorite, setAddFavorite] = useState([]);
 	const [inputValue, setInputValue] = useState('');
 
+	const [isLoading, setIsLoading] = useState(false);
+
 	const getListCategory = async () => {
+		setIsLoading(true);
 		let listCategoriesFetched = [];
 
 		const params = {
@@ -36,31 +40,36 @@ function ChooseTopic() {
 				},
 			]),
 		};
-		const fetchResult = await dispatch(getCategoryList({ option: false, params })).unwrap();
-		listCategoriesFetched = fetchResult.rows;
 
-		const totalCount = fetchResult.count;
+		try {
+			const fetchResult = await dispatch(getCategoryList({ option: false, params })).unwrap();
+			listCategoriesFetched = fetchResult.rows;
 
-		if (fetchResult.rows.length < totalCount) {
-			// Chạy vòng lặp gọi toàn bộ chủ đề thuộc top
-			for (let i = 10; i < totalCount; i += 10) {
-				const params = {
-					start: i,
-					limit: 10,
-					filter: JSON.stringify([
-						{
-							operator: 'eq',
-							value: true,
-							property: 'isTopCategory',
-						},
-					]),
-				};
-				const result = await dispatch(getCategoryList({ option: false, params })).unwrap();
-				listCategoriesFetched = listCategoriesFetched.concat(result.rows);
+			const totalCount = fetchResult.count;
+			if (fetchResult.rows.length < totalCount) {
+				// Chạy vòng lặp gọi toàn bộ chủ đề thuộc top
+				for (let i = 10; i < totalCount; i += 10) {
+					const params = {
+						start: i,
+						limit: 10,
+						filter: JSON.stringify([
+							{
+								operator: 'eq',
+								value: true,
+								property: 'isTopCategory',
+							},
+						]),
+					};
+					const result = await dispatch(getCategoryList({ option: false, params })).unwrap();
+					listCategoriesFetched = listCategoriesFetched.concat(result.rows);
+				}
 			}
+			setListCategory(listCategoriesFetched.filter(item => item.numberBooks > 0));
+		} catch (err) {
+			return;
+		} finally {
+			setIsLoading(false);
 		}
-
-		setListCategory(listCategoriesFetched.filter(item => item.numberBooks > 0));
 	};
 
 	const handleSearchCategory = e => {
@@ -132,38 +141,44 @@ function ChooseTopic() {
 						/>
 					</div>
 				</div>
-				<div className='choose-topic__box'>
-					{inputValue === '' ? (
-						<>
-							{listCategory.map(item => {
-								return (
-									<label key={item.id} className='form-check-wrapper'>
-										<Form.Check className='form-check-custom' type={'checkbox'} id={item.id}>
-											<Form.Check.Input
-												className={`form-check-custom--'checkbox'`}
-												type={'checkbox'}
-												name={item.name}
-												checked={addFavorite.includes(item.id)}
-												value={item.id}
-												onClick={handleChange}
-												readOnly
-											/>
-											<Form.Check.Label className='form-check-label--custom'>
-												{item.name}
-											</Form.Check.Label>
-										</Form.Check>
-									</label>
-								);
-							})}
-						</>
-					) : (
-						<SearchCategoryChooseTopic
-							searchCategories={listCategorySearched}
-							addFavorite={addFavorite}
-							handleChange={handleChange}
-						/>
-					)}
-				</div>
+				{isLoading ? (
+					<div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
+						<LoadingIndicator />
+					</div>
+				) : (
+					<div className='choose-topic__box'>
+						{inputValue === '' ? (
+							<>
+								{listCategory.map(item => {
+									return (
+										<label key={item.id} className='form-check-wrapper'>
+											<Form.Check className='form-check-custom' type={'checkbox'} id={item.id}>
+												<Form.Check.Input
+													className={`form-check-custom--'checkbox'`}
+													type={'checkbox'}
+													name={item.name}
+													checked={addFavorite.includes(item.id)}
+													value={item.id}
+													onClick={handleChange}
+													readOnly
+												/>
+												<Form.Check.Label className='form-check-label--custom'>
+													{item.name}
+												</Form.Check.Label>
+											</Form.Check>
+										</label>
+									);
+								})}
+							</>
+						) : (
+							<SearchCategoryChooseTopic
+								searchCategories={listCategorySearched}
+								addFavorite={addFavorite}
+								handleChange={handleChange}
+							/>
+						)}
+					</div>
+				)}
 
 				<div
 					className={'choose-topic__button ' + `${addFavorite.length >= 3 ? '' : 'disabled-btn'}`}
