@@ -34,10 +34,10 @@ export const SearchGroup = ({ valueInput, handleChange, handleShowModal, title }
 	return (
 		<div className='search-group-container'>
 			<div className='group-btn-back'>
-				<button onClick={() => handleClick()}>
+				<button className='back-btn' onClick={() => handleClick()}>
 					<BackArrow />
 				</button>
-				<span>{title}</span>
+				<h4>{title}</h4>
 			</div>
 			<div className='search'>
 				<SearchField placeholder='Tìm kiếm group' handleChange={handleChange} value={valueInput} />
