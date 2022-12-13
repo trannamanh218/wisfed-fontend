@@ -50,7 +50,7 @@ function AddAndSearchCategoriesUploadBook({
 		setCategoryAddedList(categoryArr);
 	};
 
-	const getSuggestionForCreatQuotes = async input => {
+	const handleSearchCategory = async input => {
 		try {
 			const params = {
 				q: input,
@@ -73,7 +73,7 @@ function AddAndSearchCategoriesUploadBook({
 	};
 
 	const debounceSearch = useCallback(
-		_.debounce(inputValue => getSuggestionForCreatQuotes(inputValue), 700),
+		_.debounce(inputValue => handleSearchCategory(inputValue), 700),
 		[]
 	);
 

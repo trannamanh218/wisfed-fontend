@@ -132,25 +132,21 @@ export default function MainUpload() {
 
 	const onBtnSaveClick = async () => {
 		// Lấy danh sách categoryIds
-		const categoryIds = [];
-		for (let i = 0; i < categoryAddedList.length; i++) {
-			categoryIds.push(categoryAddedList[i].id);
-		}
+		const categoryIds = categoryAddedList.map(item => item.id);
 
 		// Tạo danh sách tác giả
 		const authorsArr = authors.map(item => {
 			return {
 				'isUser': true,
 				'authorId': item.id,
-				'authorName': item.name,
 			};
 		});
 
+		// Tạo danh sách dịch giả
 		const translatorsArr = translators.map(item => {
 			return {
 				'isUser': true,
 				'translatorId': item.id,
-				'translatorName': item.name,
 			};
 		});
 
@@ -194,7 +190,6 @@ export default function MainUpload() {
 			description: description,
 			categoryIds: categoryIds,
 			tags: [],
-			series: series,
 		};
 
 		handleCreateBook(bookInfo);

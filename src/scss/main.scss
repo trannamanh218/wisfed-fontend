@@ -27,3 +27,14 @@ input:-webkit-autofill:active {
 .public-DraftEditorPlaceholder-root {
 	left: 1px;
 }
+
+// hide arrow input number
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+	-webkit-appearance: none;
+	margin: 0;
+}
+
+input[type='number'] {
+	-moz-appearance: textfield;
+}
