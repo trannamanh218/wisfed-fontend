@@ -95,16 +95,16 @@ function AddAndSearchCategoriesUploadBook({
 				Chủ đề<span className='upload-text-danger'>*</span>
 			</label>
 			<AddAndSearchItems
-				categoryAddedList={categoryAddedList}
-				categorySearchedList={categorySearchedList}
-				addCategory={addCategory}
-				removeCategory={removeCategory}
+				itemAddedList={categoryAddedList}
+				itemSearchedList={categorySearchedList}
+				addItem={addCategory}
+				removeItem={removeCategory}
 				getDataFinish={getDataFinish}
-				searchCategory={searchCategory}
-				inputCategoryValue={inputCategoryValue}
-				categoryInputContainer={categoryInputContainer}
-				categoryInputWrapper={categoryInputWrapper}
-				categoryInput={categoryInput}
+				searchItem={searchCategory}
+				inputItemValue={inputCategoryValue}
+				itemInputContainer={categoryInputContainer}
+				itemInputWrapper={categoryInputWrapper}
+				itemInput={categoryInput}
 				hasSearchIcon={true}
 				hasMoreEllipsis={hasMoreEllipsis}
 			/>

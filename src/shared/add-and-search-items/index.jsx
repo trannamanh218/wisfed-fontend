@@ -6,16 +6,16 @@ import { useEffect, useState } from 'react';
 import LoadingIndicator from 'shared/loading-indicator';
 
 function AddAndSearchItems({
-	categoryAddedList,
-	categorySearchedList,
-	addCategory,
-	removeCategory,
+	itemAddedList,
+	itemSearchedList,
+	addItem,
+	removeItem,
 	getDataFinish,
-	searchCategory,
-	inputCategoryValue,
-	categoryInputContainer,
-	categoryInputWrapper,
-	categoryInput,
+	searchItem,
+	inputItemValue,
+	itemInputContainer,
+	itemInputWrapper,
+	itemInput,
 	hasSearchIcon,
 	placeholder,
 	hasMoreEllipsis,
@@ -26,23 +26,23 @@ function AddAndSearchItems({
 	const [show, setShow] = useState(true);
 
 	const focusInput = () => {
-		if (categoryInput.current) {
-			categoryInput.current.focus();
+		if (itemInput.current) {
+			itemInput.current.focus();
 			setFirstTimeFocus(true);
 		}
 	};
 
 	useEffect(() => {
-		if (categoryInput.current && firstTimeFocus) {
-			categoryInput.current.focus();
+		if (itemInput.current && firstTimeFocus) {
+			itemInput.current.focus();
 		}
-	}, [categoryAddedList]);
+	}, [itemAddedList]);
 
 	useEffect(() => {
-		if (categoryInputContainer.current) {
-			categoryInputContainer.current.addEventListener('click', focusInput);
+		if (itemInputContainer.current) {
+			itemInputContainer.current.addEventListener('click', focusInput);
 			return () => {
-				categoryInputContainer?.current?.removeEventListener('click', focusInput);
+				itemInputContainer?.current?.removeEventListener('click', focusInput);
 			};
 		}
 	}, []);
@@ -54,39 +54,39 @@ function AddAndSearchItems({
 	}, []);
 
 	useEffect(() => {
-		if (!inputCategoryValue) {
+		if (!inputItemValue) {
 			setShow(true);
 		}
-	}, [inputCategoryValue]);
+	}, [inputItemValue]);
 
 	return (
 		<div className='add-and-search-categories'>
 			<div
 				className={classNames('add-and-search-categories__main-content', {
-					'added-categories': categoryAddedList.length > 0,
+					'added-categories': itemAddedList.length > 0,
 				})}
-				ref={categoryInputContainer}
+				ref={itemInputContainer}
 			>
-				{categoryAddedList.length > 0 ? (
+				{itemAddedList.length > 0 ? (
 					<div className='add-and-search-categories__categories-added'>
-						{categoryAddedList.map(item => (
+						{itemAddedList.map(item => (
 							<div key={item.id} className='add-and-search-categories__categories-added__item'>
 								<div>{item.name || item.fullName || item.firstName + ' ' + item.lastName}</div>
-								<button onClick={() => removeCategory(item.id)}>
+								<button onClick={() => removeItem(item.id)}>
 									<CloseX />
 								</button>
 							</div>
 						))}
 						<div
-							ref={categoryInputWrapper}
+							ref={itemInputWrapper}
 							className='add-and-search-categories__input-wrapper'
 							style={{ width: '8px' }}
 						>
 							<input
 								className='add-and-search-categories__input'
-								value={inputCategoryValue}
-								onChange={searchCategory}
-								ref={categoryInput}
+								value={inputItemValue}
+								onChange={searchItem}
+								ref={itemInput}
 							/>
 						</div>
 					</div>
@@ -95,8 +95,8 @@ function AddAndSearchItems({
 						{hasSearchIcon && show && <Search className='add-and-search-categories__search-icon' />}
 						<input
 							placeholder={placeholder}
-							value={inputCategoryValue}
-							onChange={searchCategory}
+							value={inputItemValue}
+							onChange={searchItem}
 							onClick={() => setFirstTimeFocus(true)}
 						/>
 					</>
@@ -105,23 +105,22 @@ function AddAndSearchItems({
 
 			{/* Loading gọi dữ liệu  */}
 			<div className='add-and-search-categories__loading'>
-				{!getDataFinish && inputCategoryValue && <LoadingIndicator />}
+				{!getDataFinish && inputItemValue && <LoadingIndicator />}
 			</div>
 
-			{inputCategoryValue.trim() !== '' && getDataFinish && (
+			{inputItemValue.trim() !== '' && getDataFinish && (
 				<>
-					{categorySearchedList.length > 0 ? (
+					{itemSearchedList.length > 0 ? (
 						<div className='add-and-search-categories__search-result'>
-							{categorySearchedList.map(item => (
+							{itemSearchedList.map(item => (
 								<div
 									className='add-and-search-categories__searched-item'
 									key={item.id}
-									onClick={() => addCategory(item)}
+									onClick={() => addItem(item)}
 								>
 									<span>{item.name || item.fullName || item.firstName + ' ' + item.lastName}</span>
 									<>
-										{categoryAddedList.filter(categoryAdded => categoryAdded.id === item.id)
-											.length > 0 && (
+										{itemAddedList.filter(itemAdded => itemAdded.id === item.id).length > 0 && (
 											<>
 												<div className='add-and-search-categories__checked-category'></div>
 												<CheckIcon />
@@ -165,16 +164,16 @@ AddAndSearchItems.defaultProps = {
 };
 
 AddAndSearchItems.propTypes = {
-	categoryAddedList: PropTypes.array,
-	categorySearchedList: PropTypes.array,
-	addCategory: PropTypes.func,
-	removeCategory: PropTypes.func,
+	itemAddedList: PropTypes.array,
+	itemSearchedList: PropTypes.array,
+	addItem: PropTypes.func,
+	removeItem: PropTypes.func,
 	getDataFinish: PropTypes.bool,
-	searchCategory: PropTypes.func,
-	inputCategoryValue: PropTypes.string,
-	categoryInputContainer: PropTypes.object,
-	categoryInputWrapper: PropTypes.object,
-	categoryInput: PropTypes.object,
+	searchItem: PropTypes.func,
+	inputItemValue: PropTypes.string,
+	itemInputContainer: PropTypes.object,
+	itemInputWrapper: PropTypes.object,
+	itemInput: PropTypes.object,
 	hasSearchIcon: PropTypes.bool,
 	placeholder: PropTypes.string,
 	hasMoreEllipsis: PropTypes.bool,
