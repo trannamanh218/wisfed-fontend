@@ -1,7 +1,7 @@
 import { NotificationError } from 'helpers/Error';
 import Storage from 'helpers/Storage';
 import _ from 'lodash';
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import 'react-datepicker/dist/react-datepicker.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { Route, Routes, useLocation } from 'react-router-dom';
@@ -61,7 +61,6 @@ function App({ children }) {
 	const safeDocument = typeof document !== 'undefined' ? document : {};
 	const { body } = safeDocument;
 	const html = safeDocument.documentElement;
-	const scrollBlocked = useRef(false);
 
 	useEffect(async () => {
 		const accsetToken = Storage.getAccessToken();
@@ -89,7 +88,6 @@ function App({ children }) {
 	};
 
 	useEffect(() => {
-		// console.log('run 2');
 		allowScroll();
 		if (location.pathname !== '/forget-password') {
 			dispatch(changeKey(false));
@@ -114,14 +112,11 @@ function App({ children }) {
 	};
 
 	const allowScroll = () => {
-		// console.log('run 1');
-		if (!body || !body.style || !scrollBlocked.current) return;
 		html.style.position = '';
 		html.style.overflow = '';
 		body.style.position = '';
 		body.style.overflow = '';
 		body.style.paddingRight = '';
-		scrollBlocked.current = false;
 	};
 
 	return (

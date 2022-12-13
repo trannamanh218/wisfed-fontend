@@ -5,7 +5,6 @@ import './main-reading-summary.scss';
 import PageTab from './page-tab';
 import ReadBookTab from './read-book-tab';
 import PropTypes from 'prop-types';
-import { BackArrow } from 'components/svg';
 import BackButton from 'shared/back-button';
 
 const MainReadingSummary = ({ setErrorLoadPage }) => {
