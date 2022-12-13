@@ -61,12 +61,14 @@ function ChooseTopic() {
 						]),
 					};
 					const result = await dispatch(getCategoryList({ option: false, params })).unwrap();
-					listCategoriesFetched = listCategoriesFetched.concat(result.rows);
+					if (result) {
+						listCategoriesFetched = listCategoriesFetched.concat(result.rows);
+					}
 				}
 			}
 			setListCategory(listCategoriesFetched.filter(item => item.numberBooks > 0));
 		} catch (err) {
-			return;
+			NotificationError(err);
 		} finally {
 			setIsLoading(false);
 		}
@@ -177,17 +179,16 @@ function ChooseTopic() {
 								handleChange={handleChange}
 							/>
 						)}
+						<div
+							className={'choose-topic__button ' + `${addFavorite.length >= 3 ? '' : 'disabled-btn'}`}
+							onClick={() => {
+								updateUser();
+							}}
+						>
+							<button>Tiếp tục</button>
+						</div>
 					</div>
 				)}
-
-				<div
-					className={'choose-topic__button ' + `${addFavorite.length >= 3 ? '' : 'disabled-btn'}`}
-					onClick={() => {
-						updateUser();
-					}}
-				>
-					<button>Tiếp tục</button>
-				</div>
 			</div>
 		</div>
 	);
