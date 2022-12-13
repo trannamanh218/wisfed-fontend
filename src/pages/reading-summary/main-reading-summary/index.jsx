@@ -21,10 +21,10 @@ const MainReadingSummary = ({ setErrorLoadPage }) => {
 		<div className='main-reading-summary'>
 			<TabContainer activeKey={activeKey} onSelect={k => setActiveKey(k)}>
 				<div className='group-btn-back'>
-					<button onClick={() => history.back()}>
+					<button className='back-btn' onClick={() => history.back()}>
 						<BackArrow />
 					</button>
-					<span>Biểu đồ đọc sách</span>
+					<h4>Biểu đồ đọc sách</h4>
 				</div>
 
 				<Row>
