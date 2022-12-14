@@ -9,6 +9,7 @@ import { useDispatch } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
 import _ from 'lodash';
 import LoadingIndicator from 'shared/loading-indicator';
+import { hashtagRegex } from 'constants';
 
 export default function RightSidebarGroup({ update }) {
 	const [numberIndex, setNumberIndex] = useState(6);
@@ -21,6 +22,10 @@ export default function RightSidebarGroup({ update }) {
 	const { id = '' } = useParams();
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
+
+	useEffect(() => {
+		getListHashtags();
+	}, [update, valueSearch]);
 
 	const getListHashtags = async () => {
 		setIsFetching(true);
@@ -53,22 +58,18 @@ export default function RightSidebarGroup({ update }) {
 
 	const onChangeInputSearch = e => {
 		setInputSearch(e.target.value);
-		debounceSearch(e.target.value);
+		debounceSearch(e.target.value.trim());
 	};
 
 	const updateInputSearch = value => {
-		if (value) {
-			setValueSearch(value.trim());
+		if (value.slice(0, 1).includes('#')) {
+			setValueSearch(value.slice(1, value.length));
 		} else {
-			setValueSearch('');
+			setValueSearch(value);
 		}
 	};
 
 	const debounceSearch = useCallback(_.debounce(updateInputSearch, 700), []);
-
-	useEffect(() => {
-		getListHashtags();
-	}, [update, valueSearch]);
 
 	return (
 		<div className='group-sidebar-right'>
