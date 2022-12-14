@@ -14,6 +14,8 @@ import { checkUserLogin } from 'reducers/redux-utils/auth';
 import { handleClickCreateNewPostForBook } from 'reducers/redux-utils/activity';
 import DirectLinkALertModal from 'shared/direct-link-alert-modal';
 
+const message = 'Bạn đang có bài viết chưa hoàn thành. Bạn có chắc muốn rời khỏi khi chưa đăng không?';
+
 function CreatePost({ onChangeNewPost }) {
 	const [showModalCreatPost, setShowModalCreatPost] = useState(false);
 	const [option, setOption] = useState({});
@@ -26,8 +28,6 @@ function CreatePost({ onChangeNewPost }) {
 	const { postDataShare } = useSelector(state => state.post);
 	const { imageToShareData } = useSelector(state => state.chart);
 	const isWarning = useSelector(state => state.post.isWarning);
-
-	const message = 'Bạn đang có bài viết chưa hoàn thành. Bạn có chắc muốn rời khỏi khi chưa đăng không?';
 
 	const {
 		auth: { userInfo },
@@ -107,12 +107,12 @@ function CreatePost({ onChangeNewPost }) {
 		}
 	};
 
-	useEffect(() => {
-		if (modalShow) {
-			const modalBackground = document.querySelector('.modal-backdrop');
-			modalBackground.style.backgroundColor = 'initial';
-		}
-	}, [modalShow]);
+	// useEffect(() => {
+	// 	if (modalShow) {
+	// 		const modalBackground = document.querySelector('.modal-backdrop');
+	// 		modalBackground.style.backgroundColor = 'initial';
+	// 	}
+	// }, [modalShow]);
 
 	useEffect(() => {
 		if (showModalCreatPost) {
@@ -233,9 +233,8 @@ function CreatePost({ onChangeNewPost }) {
 						setShowModalCreatPost={setShowModalCreatPost}
 						showSubModal={showSubModal}
 						bookForCreatePost={bookForCreatePost}
-						message={message}
 					/>
-					<DirectLinkALertModal
+					{/* <DirectLinkALertModal
 						className={'creat-post-modal-content__modal-confirm'}
 						modalShow={modalShow}
 						handleAccept={handleAccept}
@@ -244,7 +243,7 @@ function CreatePost({ onChangeNewPost }) {
 						yesBtnMsg={'Có'}
 						noBtnMsg={'Không'}
 						centered={false}
-					/>
+					/> */}
 				</div>
 			)}
 		</div>

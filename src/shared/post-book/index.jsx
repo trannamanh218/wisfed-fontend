@@ -61,7 +61,7 @@ function PostBook({ data, inCreatePost, bookProgress }) {
 PostBook.propTypes = {
 	data: PropTypes.object.isRequired,
 	inCreatePost: PropTypes.bool,
-	bookProgress: PropTypes.number,
+	bookProgress: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 };
 
 export default PostBook;

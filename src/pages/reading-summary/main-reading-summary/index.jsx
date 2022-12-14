@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Col, Nav, Row, Tab, TabContainer } from 'react-bootstrap';
+import { Nav, Tab, TabContainer } from 'react-bootstrap';
 import BookTab from './book-tab';
 import './main-reading-summary.scss';
 import PageTab from './page-tab';
@@ -25,43 +25,33 @@ const MainReadingSummary = ({ setErrorLoadPage }) => {
 					<span>Biểu đồ đọc sách</span>
 				</div>
 
-				<Row>
-					<Col sm={12}>
-						<Nav className='main-reading-summary__nav'>
-							<Nav.Item
-								className={`main-reading-summary__nav__title ${disabledReadBookTab && 'disabled'}`}
-							>
-								<Nav.Link eventKey='books' disabled={disabledReadBookTab}>
-									Các sách đã đọc
-								</Nav.Link>
-							</Nav.Item>
-							<Nav.Item
-								className={`main-reading-summary__nav__title ${disabledReadBookTab && 'disabled'}`}
-							>
-								<Nav.Link eventKey='book-charts' disabled={disabledReadBookTab}>
-									Số sách đã đọc
-								</Nav.Link>
-							</Nav.Item>
-							<Nav.Item>
-								<Nav.Link eventKey='page-charts'>Số trang đã đọc</Nav.Link>
-							</Nav.Item>
-						</Nav>
-					</Col>
+				<Nav className='main-reading-summary__nav'>
+					<Nav.Item className={`main-reading-summary__nav__title ${disabledReadBookTab && 'disabled'}`}>
+						<Nav.Link eventKey='books' disabled={disabledReadBookTab}>
+							Các sách đã đọc
+						</Nav.Link>
+					</Nav.Item>
+					<Nav.Item className={`main-reading-summary__nav__title ${disabledReadBookTab && 'disabled'}`}>
+						<Nav.Link eventKey='book-charts' disabled={disabledReadBookTab}>
+							Số sách đã đọc
+						</Nav.Link>
+					</Nav.Item>
+					<Nav.Item>
+						<Nav.Link eventKey='page-charts'>Số trang đã đọc</Nav.Link>
+					</Nav.Item>
+				</Nav>
 
-					<Col sm={12}>
-						<Tab.Content>
-							<Tab.Pane eventKey='books'>
-								<ReadBookTab setDisabledReadBookTab={setDisabledReadBookTab} />
-							</Tab.Pane>
-							<Tab.Pane eventKey='book-charts'>
-								<BookTab setErrorLoadPage={setErrorLoadPage} />
-							</Tab.Pane>
-							<Tab.Pane eventKey='page-charts'>
-								<PageTab />
-							</Tab.Pane>
-						</Tab.Content>
-					</Col>
-				</Row>
+				<Tab.Content>
+					<Tab.Pane eventKey='books'>
+						<ReadBookTab setDisabledReadBookTab={setDisabledReadBookTab} />
+					</Tab.Pane>
+					<Tab.Pane eventKey='book-charts'>
+						<BookTab setErrorLoadPage={setErrorLoadPage} />
+					</Tab.Pane>
+					<Tab.Pane eventKey='page-charts'>
+						<PageTab />
+					</Tab.Pane>
+				</Tab.Content>
 			</TabContainer>
 		</div>
 	);

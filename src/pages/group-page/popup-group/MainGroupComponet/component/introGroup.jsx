@@ -85,7 +85,7 @@ function IntroGroup({ groupType, description, createdAt, data, toggleClickSeeMor
 				<h3>Hoạt động của nhóm</h3>
 				<br />
 				<span>
-					hôm nay có <strong>{`${data?.countPost} bài viết mới`}</strong>
+					Hôm nay có <strong>{`${data?.countPost} bài viết mới`}</strong>
 				</span>
 				<div className='group-sibar-left__text1'>
 					<span>
