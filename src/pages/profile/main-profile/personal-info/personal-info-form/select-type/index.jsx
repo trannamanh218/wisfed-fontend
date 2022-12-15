@@ -1,7 +1,7 @@
 import { Pencil } from 'components/svg';
 import AddAndSearchItems from 'shared/add-and-search-items';
 import PropTypes from 'prop-types';
-import { useState, useRef, useCallback } from 'react';
+import { useState, useRef, useCallback, useEffect } from 'react';
 // import ShareModeDropdown from 'shared/share-mode-dropdown';
 import _ from 'lodash';
 import { useDispatch } from 'react-redux';
@@ -61,7 +61,6 @@ function SelectType({ dataAdded, setDataAdded, editStatus, cancelEdit, enableEdi
 				start: 0,
 				limit: 10,
 				type: 'categories',
-				must_not: { 'numberBook': '0' },
 			};
 			const data = await dispatch(getFilterSearch(params)).unwrap();
 			setCategorySearchedList(data.rows);

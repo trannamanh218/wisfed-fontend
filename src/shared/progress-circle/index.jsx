@@ -40,7 +40,7 @@ const ProgressBarCircle = ({ booksReadYear }) => {
 	return (
 		<>
 			{!_.isEmpty(booksReadYear) && (
-				<>
+				<div>
 					<div className='progress__circle__title'>Mục tiêu đọc sách</div>
 					<div className='progress__circle__container'>
 						{booksReadYear.map(item => (
@@ -67,7 +67,7 @@ const ProgressBarCircle = ({ booksReadYear }) => {
 							</div>
 						))}
 					</div>
-				</>
+				</div>
 			)}
 		</>
 	);

@@ -123,7 +123,6 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 				type: 'categories',
 				start: 0,
 				limit: 10,
-				must_not: { 'numberBook': '0' },
 			};
 			const data = await dispatch(getFilterSearch(params)).unwrap();
 			setCategorySearchedList(data.rows);

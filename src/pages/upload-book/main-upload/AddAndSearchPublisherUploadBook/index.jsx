@@ -10,7 +10,7 @@ import { toast } from 'react-toastify';
 function AddAndSearchPublisherUploadBook({
 	inputPublisherValue,
 	setInputPublisherValue,
-	publisher,
+	publisherAddedList,
 	setPublisher,
 	maxAddedValue,
 }) {
@@ -25,11 +25,11 @@ function AddAndSearchPublisherUploadBook({
 	const dispatch = useDispatch();
 
 	const addPublisher = publisher => {
-		if (publisher.filter(publisherAdded => publisherAdded.id === publisher.id).length > 0) {
+		if (publisherAddedList.filter(publisherAdded => publisherAdded.id === publisher.id).length > 0) {
 			removePublisher(publisher.id);
 		} else {
-			if (publisher.length < maxAddedValue) {
-				const publisherArrayTemp = [...publisher];
+			if (publisherAddedList.length < maxAddedValue) {
+				const publisherArrayTemp = [...publisherAddedList];
 				publisherArrayTemp.push(publisher);
 				setPublisher(publisherArrayTemp);
 				setInputPublisherValue('');
@@ -44,7 +44,7 @@ function AddAndSearchPublisherUploadBook({
 	};
 
 	const removePublisher = publisherId => {
-		const publisherArr = [...publisher];
+		const publisherArr = [...publisherAddedList];
 		const index = publisherArr.findIndex(item => item.id === publisherId);
 		publisherArr.splice(index, 1);
 		setPublisher(publisherArr);
@@ -89,7 +89,7 @@ function AddAndSearchPublisherUploadBook({
 				Nhà xuất bản<span className='upload-text-danger'>*</span>
 			</label>
 			<AddAndSearchItems
-				itemAddedList={publisher}
+				itemAddedList={publisherAddedList}
 				itemSearchedList={publisherSearchedList}
 				addItem={addPublisher}
 				removeItem={removePublisher}
@@ -108,7 +108,7 @@ function AddAndSearchPublisherUploadBook({
 }
 
 AddAndSearchPublisherUploadBook.propTypes = {
-	publisher: PropTypes.array,
+	publisherAddedList: PropTypes.array,
 	setPublisher: PropTypes.func,
 	inputPublisherValue: PropTypes.string,
 	setInputPublisherValue: PropTypes.func,
