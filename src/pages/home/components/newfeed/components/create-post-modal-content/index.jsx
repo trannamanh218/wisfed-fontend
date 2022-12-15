@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import { CloseX, Image, IconRanks, WorldNet } from 'components/svg'; // k xóa WorldNet
 import _ from 'lodash';
 import PropTypes from 'prop-types';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { createActivity } from 'reducers/redux-utils/activity';
@@ -13,13 +13,7 @@ import CreatPostSubModal from './CreatePostSubModal';
 import TaggedList from './TaggedList';
 import UploadImage from './UploadImage';
 import PreviewLink from 'shared/preview-link/PreviewLink';
-import {
-	getPreviewUrl,
-	getSharePostInternal,
-	getSharePostRanks,
-	shareMyBook,
-	warning,
-} from 'reducers/redux-utils/post';
+import { getPreviewUrl, getSharePostInternal, getSharePostRanks, shareMyBook } from 'reducers/redux-utils/post';
 import Circle from 'shared/loading/circle';
 import './style.scss';
 import { ratingUser } from 'reducers/redux-utils/book';
@@ -117,12 +111,13 @@ function CreatePostModalContent({
 
 	const [modalShow, setModalShow] = useState(false);
 
+	const createPostModalContainer = useRef(null);
+
 	const dispatch = useDispatch();
 	const location = useLocation();
 
 	const chartImgShare = useSelector(state => state.chart.imageToShareData);
 	const { postDataShare } = useSelector(state => state.post);
-	const isWarning = useSelector(state => state.post.isWarning);
 
 	const {
 		auth: { userInfo },
@@ -181,6 +176,7 @@ function CreatePostModalContent({
 	}, [urlAdded]);
 
 	useEffect(() => {
+		// generate hashtags added
 		const hashtagsTemp = content.match(hashtagRegex);
 		if (hashtagsTemp) {
 			const hashtagsFormated = hashtagsTemp.map(item =>
@@ -195,12 +191,37 @@ function CreatePostModalContent({
 			setHashtagsAdded([]);
 		}
 
-		if (content !== '') {
-			dispatch(warning(true));
-		} else {
-			dispatch(warning(false));
-		}
+		// add event click when turn off modal
+		createPostModalContainer.current.addEventListener('mousedown', handleHideCreatePost);
+		return () => {
+			if (createPostModalContainer.current) {
+				createPostModalContainer.current.removeEventListener('mousedown', handleHideCreatePost);
+			}
+		};
 	}, [content]);
+
+	useEffect(() => {
+		if (modalShow) {
+			const modalBackground = document.querySelector('.modal-backdrop');
+			modalBackground.style.backgroundColor = 'transparent';
+		}
+	}, [modalShow]);
+
+	// handle turn off modal
+	const handleClose = () => {
+		if (content) {
+			setModalShow(true);
+		} else {
+			hideCreatePostModal();
+		}
+	};
+
+	const handleHideCreatePost = e => {
+		if (e.target === createPostModalContainer.current) {
+			handleClose();
+		}
+	};
+	//-----------------------------------------------------------------------
 
 	const getPreviewUrlFnc = async url => {
 		if (url) {
@@ -648,6 +669,7 @@ function CreatePostModalContent({
 		}
 	};
 
+	//----------------------------------------------------------------------
 	const handleAccept = () => {
 		setModalShow(false);
 		hideCreatePostModal();
@@ -657,263 +679,262 @@ function CreatePostModalContent({
 		setModalShow(false);
 	};
 
-	const handleClose = () => {
-		if (isWarning) {
-			setModalShow(true);
-		} else {
-			hideCreatePostModal();
-		}
-	};
-
-	useEffect(() => {
-		if (modalShow) {
-			const modalBackground = document.querySelector('.modal-backdrop');
-			modalBackground.style.backgroundColor = 'initial';
-		}
-	}, [modalShow]);
-
 	return (
-		<div className='create-post-modal-content'>
-			<Circle loading={status === STATUS_LOADING} />
-			<div
-				className={classNames('create-post-modal-content__main', {
-					'hide': option.value !== 'addImages' && !showMainModal,
-				})}
-			>
-				<div className='create-post-modal-content__main__header'>
-					<div style={{ visibility: 'hidden' }} className='create-post-modal-content__main__close'>
-						<CloseX />
-					</div>
-					<h5>{postDataShare && !_.isEmpty(postDataShare) ? 'Chia sẻ bài viết' : 'Tạo bài viết'}</h5>
-					<button className='create-post-modal-content__main__close' onClick={handleClose}>
-						<CloseX />
-					</button>
-				</div>
-				<div className='create-post-modal-content__main__body'>
-					<div className='create-post-modal-content__main__body__user-info'>
-						<div className='create-post-modal-content__main__body__user-info__block-left'>
-							<UserAvatar className='newfeed__create-post__avatar' source={userInfo?.avatarImage} />
+		<div className='create-post-modal-content__container' ref={createPostModalContainer}>
+			<div className='create-post-modal-content'>
+				<Circle loading={status === STATUS_LOADING} />
+				<div
+					className={classNames('create-post-modal-content__main', {
+						'hide': option.value !== 'addImages' && !showMainModal,
+					})}
+				>
+					<div className='create-post-modal-content__main__header'>
+						<div style={{ visibility: 'hidden' }} className='create-post-modal-content__main__close'>
+							<CloseX />
 						</div>
-						<div className='create-post-modal-content__main__body__user-info__block-right'>
-							<p>
-								{userInfo?.fullName || userInfo?.lastName || userInfo?.firstName || 'Không xác định'}
+						<h5>{postDataShare && !_.isEmpty(postDataShare) ? 'Chia sẻ bài viết' : 'Tạo bài viết'}</h5>
+						<button className='create-post-modal-content__main__close' onClick={handleClose}>
+							<CloseX />
+						</button>
+					</div>
+					<div className='create-post-modal-content__main__body'>
+						<div className='create-post-modal-content__main__body__user-info'>
+							<div className='create-post-modal-content__main__body__user-info__block-left'>
+								<UserAvatar className='newfeed__create-post__avatar' source={userInfo?.avatarImage} />
+							</div>
+							<div className='create-post-modal-content__main__body__user-info__block-right'>
+								<p>
+									{userInfo?.fullName ||
+										userInfo?.lastName ||
+										userInfo?.firstName ||
+										'Không xác định'}
 
-								{/* tagged people */}
-								{taggedData.addFriends &&
-									!!taggedData.addFriends.length &&
-									withFriends(taggedData.addFriends)}
-							</p>
-							{/* k xóa ShareModeComponent */}
-							{/* <ShareModeComponent
+									{/* tagged people */}
+									{taggedData.addFriends &&
+										!!taggedData.addFriends.length &&
+										withFriends(taggedData.addFriends)}
+								</p>
+								{/* k xóa ShareModeComponent */}
+								{/* <ShareModeComponent
 									list={shareModeList}
 									shareMode={shareMode}
 									setShareMode={setShareMode}
 								/> */}
+							</div>
+						</div>
+						<div
+							className={classNames('create-post-modal-content__main__body__text-field-edit-wrapper', {
+								'height-higher': showUpload || hasUrl,
+							})}
+						>
+							<RichTextEditor
+								placeholder='Hãy chia sẻ cảm nhận của bạn ...'
+								setUrlAdded={setUrlAdded}
+								setContent={setContent}
+								hasMentionsUser={false}
+								hasUrl={hasUrl}
+							/>
+							{!_.isEmpty(taggedData.addBook) && (
+								<a href='#' className='tagged-book'>
+									{taggedData.addBook.name}
+								</a>
+							)}
+							<TaggedList taggedData={taggedData} removeTaggedItem={removeTaggedItem} type='addAuthor' />
+							<TaggedList
+								taggedData={taggedData}
+								removeTaggedItem={removeTaggedItem}
+								type='addCategory'
+							/>
+							{postDataShare.type === 'topQuote' && postDataShare.verb === TOP_QUOTE_VERB_SHARE_LV1 && (
+								<div className='post__title__share__rank'>
+									<span className='number__title__rank'># Top {postDataShare.trueRank} quotes </span>{' '}
+									<span className='title__rank'>
+										{postDataShare.categoryName?.length
+											? `  được like nhiều nhất thuộc ${
+													postDataShare.categoryName
+											  } theo ${handleTime()} `
+											: `  được like nhiều nhất theo ${handleTime()} `}
+									</span>
+									<IconRanks />
+								</div>
+							)}
+							{postDataShare.type === 'topBook' && postDataShare.verb === TOP_BOOK_VERB_SHARE_LV1 && (
+								<div className='post__title__share__rank'>
+									<span className='number__title__rank'># Top {postDataShare.trueRank}</span>
+									<span className='title__rank'>
+										{postDataShare.categoryName
+											? `  cuốn sách tốt nhất thuộc  ${
+													postDataShare.categoryName
+											  } theo ${handleTime()} `
+											: `  cuốn sách tốt nhất theo ${handleTime()} `}
+									</span>
+									<IconRanks />
+								</div>
+							)}
+							{postDataShare.type === 'topBookAuthor' && (
+								<div className='post__title__share__rank'>
+									<span className='number__title__rank'># Sách của tôi làm tác giả</span>
+								</div>
+							)}
+
+							{!_.isEmpty(postDataShare) && (
+								<div
+									className={
+										postDataShare.verb !== TOP_USER_VERB_SHARE_LV1 &&
+										postDataShare.verb !== READ_TARGET_VERB_SHARE_LV1
+											? 'create-post-modal-content__main__share-container'
+											: ''
+									}
+								>
+									{postDataShare.verb === POST_VERB_SHARE && (
+										<PostShare postData={postDataShare} inCreatePost={true} />
+									)}
+									{(postDataShare.verb === QUOTE_VERB_SHARE ||
+										postDataShare.verb === TOP_QUOTE_VERB_SHARE_LV1) && (
+										<QuoteCard data={postDataShare} isShare={true} />
+									)}
+									{postDataShare.verb === GROUP_POST_VERB_SHARE && (
+										<PostShare postData={postDataShare} inCreatePost={true} />
+									)}
+									{(postDataShare.verb === TOP_BOOK_VERB_SHARE_LV1 ||
+										postDataShare.verb === MY_BOOK_VERB_SHARE) && (
+										<AuthorBook data={postDataShare} checkStar={true} inCreatePost={true} />
+									)}
+									{postDataShare.verb === REVIEW_VERB_SHARE && (
+										<PostShare postData={postDataShare} inCreatePost={true} />
+									)}
+									{postDataShare.verb === TOP_USER_VERB_SHARE && (
+										<PostShare postData={postDataShare} inCreatePost={true} />
+									)}
+									{postDataShare.verb === TOP_BOOK_VERB_SHARE && (
+										<PostShare postData={postDataShare} inCreatePost={true} />
+									)}
+									{postDataShare.verb === TOP_QUOTE_VERB_SHARE && (
+										<PostShare postData={postDataShare} inCreatePost={true} />
+									)}
+									{postDataShare.verb === READ_TARGET_VERB_SHARE && (
+										<PostShare postData={postDataShare} inCreatePost={true} />
+									)}
+								</div>
+							)}
+							{postDataShare.verb === READ_TARGET_VERB_SHARE_LV1 && (
+								<ShareTarget postData={postDataShare} />
+							)}
+							{postDataShare.verb === TOP_USER_VERB_SHARE_LV1 && <ShareUsers postData={postDataShare} />}
+
+							{!_.isEmpty(taggedData.addBook) || showUpload ? (
+								<>
+									{!_.isEmpty(taggedData.addBook) && (
+										<PostEditBook
+											data={taggedData.addBook}
+											handleAddToPost={handleAddToPost}
+											handleChangeStar={handleChangeStar}
+											valueStar={valueStar}
+										/>
+									)}
+									{showUpload && (
+										<UploadImage
+											addOptionsToPost={addOptionsToPost}
+											images={imagesUpload}
+											setImages={setImagesUpload}
+											removeAllImages={removeAllImages}
+											maxFiles={100}
+											maxSize={104857600}
+										/>
+									)}
+								</>
+							) : (
+								<>
+									{hasUrl && !showUpload && (
+										<PreviewLink
+											urlData={urlPreviewData}
+											isFetching={fetchingUrlInfo}
+											removeUrlPreview={removeUrlPreview}
+											inCreatePost={true}
+										/>
+									)}
+								</>
+							)}
 						</div>
 					</div>
-					<div
-						className={classNames('create-post-modal-content__main__body__text-field-edit-wrapper', {
-							'height-higher': showUpload || hasUrl,
-						})}
-					>
-						<RichTextEditor
-							placeholder='Hãy chia sẻ cảm nhận của bạn ...'
-							setUrlAdded={setUrlAdded}
-							setContent={setContent}
-							hasMentionsUser={false}
-							hasUrl={hasUrl}
-						/>
-						{!_.isEmpty(taggedData.addBook) && (
-							<a href='#' className='tagged-book'>
-								{taggedData.addBook.name}
-							</a>
-						)}
-						<TaggedList taggedData={taggedData} removeTaggedItem={removeTaggedItem} type='addAuthor' />
-						<TaggedList taggedData={taggedData} removeTaggedItem={removeTaggedItem} type='addCategory' />
-						{postDataShare.type === 'topQuote' && postDataShare.verb === TOP_QUOTE_VERB_SHARE_LV1 && (
-							<div className='post__title__share__rank'>
-								<span className='number__title__rank'># Top {postDataShare.trueRank} quotes </span>{' '}
-								<span className='title__rank'>
-									{postDataShare.categoryName?.length
-										? `  được like nhiều nhất thuộc ${
-												postDataShare.categoryName
-										  } theo ${handleTime()} `
-										: `  được like nhiều nhất theo ${handleTime()} `}
-								</span>
-								<IconRanks />
-							</div>
-						)}
-						{postDataShare.type === 'topBook' && postDataShare.verb === TOP_BOOK_VERB_SHARE_LV1 && (
-							<div className='post__title__share__rank'>
-								<span className='number__title__rank'># Top {postDataShare.trueRank}</span>
-								<span className='title__rank'>
-									{postDataShare.categoryName
-										? `  cuốn sách tốt nhất thuộc  ${
-												postDataShare.categoryName
-										  } theo ${handleTime()} `
-										: `  cuốn sách tốt nhất theo ${handleTime()} `}
-								</span>
-								<IconRanks />
-							</div>
-						)}
-						{postDataShare.type === 'topBookAuthor' && (
-							<div className='post__title__share__rank'>
-								<span className='number__title__rank'># Sách của tôi làm tác giả</span>
-							</div>
-						)}
-
-						{!_.isEmpty(postDataShare) && (
-							<div
-								className={
-									postDataShare.verb !== TOP_USER_VERB_SHARE_LV1 &&
-									postDataShare.verb !== READ_TARGET_VERB_SHARE_LV1
-										? 'create-post-modal-content__main__share-container'
-										: ''
-								}
-							>
-								{postDataShare.verb === POST_VERB_SHARE && (
-									<PostShare postData={postDataShare} inCreatePost={true} />
-								)}
-								{(postDataShare.verb === QUOTE_VERB_SHARE ||
-									postDataShare.verb === TOP_QUOTE_VERB_SHARE_LV1) && (
-									<QuoteCard data={postDataShare} isShare={true} />
-								)}
-								{postDataShare.verb === GROUP_POST_VERB_SHARE && (
-									<PostShare postData={postDataShare} inCreatePost={true} />
-								)}
-								{(postDataShare.verb === TOP_BOOK_VERB_SHARE_LV1 ||
-									postDataShare.verb === MY_BOOK_VERB_SHARE) && (
-									<AuthorBook data={postDataShare} checkStar={true} inCreatePost={true} />
-								)}
-								{postDataShare.verb === REVIEW_VERB_SHARE && (
-									<PostShare postData={postDataShare} inCreatePost={true} />
-								)}
-								{postDataShare.verb === TOP_USER_VERB_SHARE && (
-									<PostShare postData={postDataShare} inCreatePost={true} />
-								)}
-								{postDataShare.verb === TOP_BOOK_VERB_SHARE && (
-									<PostShare postData={postDataShare} inCreatePost={true} />
-								)}
-								{postDataShare.verb === TOP_QUOTE_VERB_SHARE && (
-									<PostShare postData={postDataShare} inCreatePost={true} />
-								)}
-								{postDataShare.verb === READ_TARGET_VERB_SHARE && (
-									<PostShare postData={postDataShare} inCreatePost={true} />
-								)}
-							</div>
-						)}
-						{postDataShare.verb === READ_TARGET_VERB_SHARE_LV1 && <ShareTarget postData={postDataShare} />}
-						{postDataShare.verb === TOP_USER_VERB_SHARE_LV1 && <ShareUsers postData={postDataShare} />}
-
-						{!_.isEmpty(taggedData.addBook) || showUpload ? (
-							<>
-								{!_.isEmpty(taggedData.addBook) && (
-									<PostEditBook
-										data={taggedData.addBook}
-										handleAddToPost={handleAddToPost}
-										handleChangeStar={handleChangeStar}
-										valueStar={valueStar}
-									/>
-								)}
-								{showUpload && (
-									<UploadImage
-										addOptionsToPost={addOptionsToPost}
-										images={imagesUpload}
-										setImages={setImagesUpload}
-										removeAllImages={removeAllImages}
-										maxFiles={100}
-										maxSize={104857600}
-									/>
-								)}
-							</>
-						) : (
-							<>
-								{hasUrl && !showUpload && (
-									<PreviewLink
-										urlData={urlPreviewData}
-										isFetching={fetchingUrlInfo}
-										removeUrlPreview={removeUrlPreview}
-										inCreatePost={true}
-									/>
-								)}
-							</>
-						)}
-					</div>
-				</div>
-				<div className='create-post-modal-content__main__options-and-submit'>
-					<div className='create-post-modal-content__main__options'>
-						<span className='create-post-modal-content__title'>Thêm vào bài viết</span>
-						<div className='create-post-modal-content__main__options__items'>
-							<OptionsPost
-								list={optionListState}
-								addOptionsToPost={addOptionsToPost}
-								taggedData={taggedData}
-								postDataShare={postDataShare}
-							/>
-							<span
-								className={classNames('create-post-modal-content__main__options__item-add-to-post', {
-									'active': imagesUpload.length > 0,
-									'disabled':
-										(!_.isEmpty(postDataShare) &&
-											verbShareArray.indexOf(postDataShare.verb) !== -1) ||
-										chartImgShare.length,
-								})}
-								onMouseOver={() => setShowImagePopover(true)}
-								onMouseLeave={() => setShowImagePopover(false)}
-								onClick={handleOpenUploadImage}
-							>
-								<div
+					<div className='create-post-modal-content__main__options-and-submit'>
+						<div className='create-post-modal-content__main__options'>
+							<span className='create-post-modal-content__title'>Thêm vào bài viết</span>
+							<div className='create-post-modal-content__main__options__items'>
+								<OptionsPost
+									list={optionListState}
+									addOptionsToPost={addOptionsToPost}
+									taggedData={taggedData}
+									postDataShare={postDataShare}
+								/>
+								<span
 									className={classNames(
-										'create-post-modal-content__main__options__item-add-to-post__popover',
+										'create-post-modal-content__main__options__item-add-to-post',
 										{
-											'show': showImagePopover,
+											'active': imagesUpload.length > 0,
+											'disabled':
+												(!_.isEmpty(postDataShare) &&
+													verbShareArray.indexOf(postDataShare.verb) !== -1) ||
+												chartImgShare.length,
 										}
 									)}
+									onMouseOver={() => setShowImagePopover(true)}
+									onMouseLeave={() => setShowImagePopover(false)}
+									onClick={handleOpenUploadImage}
 								>
-									Ảnh
-								</div>
-								<Image />
-							</span>
+									<div
+										className={classNames(
+											'create-post-modal-content__main__options__item-add-to-post__popover',
+											{
+												'show': showImagePopover,
+											}
+										)}
+									>
+										Ảnh
+									</div>
+									<Image />
+								</span>
+							</div>
 						</div>
+						<button
+							className={classNames('create-post-modal-content__main__submit', {
+								'active': buttonActive,
+							})}
+							onClick={onCreatePost}
+							disabled={buttonActive ? false : true}
+						>
+							Đăng
+						</button>
 					</div>
-					<button
-						className={classNames('create-post-modal-content__main__submit', {
-							'active': buttonActive,
-						})}
-						onClick={onCreatePost}
-						disabled={buttonActive ? false : true}
-					>
-						Đăng
-					</button>
 				</div>
-			</div>
-			{/* sub modal */}
-			<div
-				className={classNames('create-post-modal-content__substitute', {
-					'show': option.value !== 'addImages' && !showMainModal,
-				})}
-			>
-				<CreatPostSubModal
-					option={option}
-					backToMainModal={backToMainModal}
-					deleteImage={deleteImage}
-					handleAddToPost={handleAddToPost}
-					taggedData={taggedData}
-					removeTaggedItem={removeTaggedItem}
-					images={imagesUpload}
-					userInfo={userInfo}
+				{/* sub modal */}
+				<div
+					className={classNames('create-post-modal-content__substitute', {
+						'show': option.value !== 'addImages' && !showMainModal,
+					})}
+				>
+					<CreatPostSubModal
+						option={option}
+						backToMainModal={backToMainModal}
+						deleteImage={deleteImage}
+						handleAddToPost={handleAddToPost}
+						taggedData={taggedData}
+						removeTaggedItem={removeTaggedItem}
+						images={imagesUpload}
+						userInfo={userInfo}
+					/>
+				</div>
+				<DirectLinkALertModal
+					className={'creat-post-modal-content__modal-confirm'}
+					modalShow={modalShow}
+					handleAccept={handleAccept}
+					handleCancel={handleCancel}
+					message={message}
+					yesBtnMsg={'Có'}
+					noBtnMsg={'Không'}
+					centered={false}
 				/>
 			</div>
-			<DirectLinkALertModal
-				className={'creat-post-modal-content__modal-confirm'}
-				modalShow={modalShow}
-				handleAccept={handleAccept}
-				handleCancel={handleCancel}
-				message={message}
-				yesBtnMsg={'Có'}
-				noBtnMsg={'Không'}
-				centered={false}
-			/>
 		</div>
 	);
 }

@@ -407,18 +407,16 @@ const ReviewTab = ({ currentTab }) => {
 				</Modal.Body>
 			</Modal>
 			{showModalCreatPost && (
-				<div className='newfeed__create-post__modal' ref={createPostModalContainer}>
-					<CreatePostModalContent
-						hideCreatePostModal={hideCreatePostModal}
-						showModalCreatPost={showModalCreatPost}
-						option={option}
-						onChangeOption={onChangeOption}
-						onChangeNewPost={getReviewListFirstTime}
-						setShowModalCreatPost={setShowModalCreatPost}
-						showSubModal={false}
-						bookForCreatePost={bookInfoProp}
-					/>
-				</div>
+				<CreatePostModalContent
+					hideCreatePostModal={hideCreatePostModal}
+					showModalCreatPost={showModalCreatPost}
+					option={option}
+					onChangeOption={onChangeOption}
+					onChangeNewPost={getReviewListFirstTime}
+					setShowModalCreatPost={setShowModalCreatPost}
+					showSubModal={false}
+					bookForCreatePost={bookInfoProp}
+				/>
 			)}
 		</div>
 	);

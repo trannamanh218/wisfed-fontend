@@ -73,7 +73,24 @@ function RichTextEditor({
 		if (content && hasMentionsUser) {
 			setEditorState(EditorState.createEmpty());
 			setTimeout(() => {
+				// console.log('22');
 				editor.current.focus();
+				// const data = {
+				// 	'blocks': [
+				// 		{
+				// 			'text': 'run 111',
+				// 			'type': 'unstyled',
+				// 			'depth': 0,
+				// 			'inlineStyleRanges': [],
+				// 			'entityRanges': [],
+				// 			'data': {},
+				// 		},
+				// 	],
+				// 	'entityMap': {},
+				// };
+
+				// const contentState = convertFromRaw(data);
+				// setEditorState(EditorState.createWithContent(contentState));
 			}, 200);
 		}
 	}, [createCmt]);
