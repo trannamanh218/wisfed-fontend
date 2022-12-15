@@ -340,7 +340,7 @@ export default function MainUpload() {
 						<AddAndSearchPublisherUploadBook
 							inputPublisherValue={inputPublisherValue}
 							setInputPublisherValue={setInputPublisherValue}
-							publisher={publisher}
+							publisherAddedList={publisher}
 							setPublisher={setPublisher}
 							maxAddedValue={1}
 						/>

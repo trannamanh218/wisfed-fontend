@@ -9,7 +9,6 @@ import { useDispatch } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
 import _ from 'lodash';
 import LoadingIndicator from 'shared/loading-indicator';
-import { hashtagRegex } from 'constants';
 
 export default function RightSidebarGroup({ update }) {
 	const [numberIndex, setNumberIndex] = useState(6);
