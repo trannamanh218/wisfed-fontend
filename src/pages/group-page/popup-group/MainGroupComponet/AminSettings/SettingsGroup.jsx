@@ -9,7 +9,6 @@ import { toast } from 'react-toastify';
 import { NotificationError } from 'helpers/Error';
 import _ from 'lodash';
 import { useDispatch } from 'react-redux';
-import { getSuggestionForPost } from 'reducers/redux-utils/activity';
 import { getFilterSearch } from 'reducers/redux-utils/search';
 import { editGroup } from 'reducers/redux-utils/group';
 import InputHashtag from 'shared/input/inputHashtag/inputHashtag';
@@ -371,7 +370,6 @@ function SettingsGroup({ handleChange, data, fetchData }) {
 				start: 0,
 				limit: 10,
 				type: 'categories',
-				must_not: { 'numberBook': '0' },
 			};
 			const result = await dispatch(getFilterSearch(params)).unwrap();
 			setCategorySearchedList(result.rows);

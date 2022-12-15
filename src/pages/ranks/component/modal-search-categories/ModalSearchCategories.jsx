@@ -9,6 +9,7 @@ import { useDispatch } from 'react-redux';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import LoadingIndicator from 'shared/loading-indicator';
+import { getFilterSearch } from 'reducers/redux-utils/search';
 
 const ModalSearchCategories = ({
 	modalSearchCategoriesShow,
@@ -18,48 +19,64 @@ const ModalSearchCategories = ({
 	tabSelected,
 	setTopQuotesId,
 	setTopUserFilter,
+	hasBook = false,
 }) => {
 	const dispatch = useDispatch();
 
 	const [inputSearch, setInputSearch] = useState('');
 	const [searchedList, setSearchedList] = useState([]);
-	const [filter, setFilter] = useState('[]');
 	const [loadingState, setLoadingState] = useState(false);
 
 	const defaultCate = { value: 'Tất cả chủ đề', name: 'Chủ đề' };
 
-	const updateFilter = value => {
-		if (value) {
-			setFilter(JSON.stringify([{ operator: 'search', value: value.toLowerCase().trim(), property: 'name' }]));
-		} else {
-			setFilter('[]');
-		}
-	};
+	useEffect(() => {
+		getSuggestionCategories('');
+	}, []);
 
-	const handleSearch = e => {
-		setInputSearch(e.target.value);
-		debounceSearch(e.target.value);
-	};
-
-	const debounceSearch = useCallback(_.debounce(updateFilter, 700), []);
-
-	useEffect(async () => {
+	const getSuggestionCategories = async paramInputSearch => {
 		setLoadingState(true);
-		const query = {
-			start: 0,
-			limit: 10,
-			sort: JSON.stringify([{ property: 'createdAt', direction: 'DESC' }]),
-			filter: filter,
-		};
 		try {
-			const result = await dispatch(getCategoryList({ option: false, params: query })).unwrap();
+			let query = {};
+			let result = {};
+
+			if (paramInputSearch === '') {
+				query = {
+					start: 0,
+					limit: 10,
+					sort: JSON.stringify([{ property: 'createdAt', direction: 'DESC' }]),
+					filter: JSON.stringify([
+						hasBook && {
+							operator: 'ne',
+							property: 'numberBooks',
+							value: 0,
+						},
+					]),
+				};
+				result = await dispatch(getCategoryList({ option: false, params: query })).unwrap();
+			} else {
+				query = {
+					q: paramInputSearch,
+					start: 0,
+					limit: 10,
+					type: 'categories',
+					must_not: hasBook ? { 'numberBook': '0' } : '',
+				};
+				result = await dispatch(getFilterSearch(query)).unwrap();
+			}
 			setSearchedList(result.rows);
 		} catch (err) {
 			NotificationError(err);
 		} finally {
 			setLoadingState(false);
 		}
-	}, [filter]);
+	};
+
+	const handleSearch = e => {
+		setInputSearch(e.target.value);
+		debounceSearch(e.target.value.trim());
+	};
+
+	const debounceSearch = useCallback(_.debounce(getSuggestionCategories, 700), []);
 
 	const handleDefault = () => {
 		if (tabSelected === 'books') {

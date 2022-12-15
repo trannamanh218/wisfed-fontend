@@ -128,6 +128,7 @@ const TopBooks = ({ listYear, tabSelected }) => {
 					onSelectCategory={onchangeKindOfGroup}
 					setTopBooksId={setTopBooksId}
 					tabSelected={tabSelected}
+					hasBook={true}
 				/>
 			)}
 			<div className='topbooks__container__title'>TOP 100 Cuốn sách tốt nhất</div>

@@ -66,7 +66,7 @@ function ChooseTopic() {
 					}
 				}
 			}
-			setListCategory(listCategoriesFetched.filter(item => item.numberBooks > 0));
+			setListCategory(listCategoriesFetched);
 		} catch (err) {
 			NotificationError(err);
 		} finally {

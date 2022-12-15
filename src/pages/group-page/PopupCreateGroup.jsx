@@ -87,7 +87,6 @@ const PopupCreateGroup = ({ handleClose, handleRefreshData = () => {} }) => {
 				type: 'categories',
 				start: 0,
 				limit: 10,
-				must_not: { 'numberBook': '0' },
 			};
 			const result = await dispatch(getFilterSearch(params)).unwrap();
 			setCategorySearchedList(result.rows);
