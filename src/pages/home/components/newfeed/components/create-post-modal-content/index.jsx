@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import { CloseX, Image, IconRanks, WorldNet } from 'components/svg'; // k xóa WorldNet
 import _ from 'lodash';
 import PropTypes from 'prop-types';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { createActivity } from 'reducers/redux-utils/activity';
@@ -13,13 +13,7 @@ import CreatPostSubModal from './CreatePostSubModal';
 import TaggedList from './TaggedList';
 import UploadImage from './UploadImage';
 import PreviewLink from 'shared/preview-link/PreviewLink';
-import {
-	getPreviewUrl,
-	getSharePostInternal,
-	getSharePostRanks,
-	shareMyBook,
-	warning,
-} from 'reducers/redux-utils/post';
+import { getPreviewUrl, getSharePostInternal, getSharePostRanks, shareMyBook } from 'reducers/redux-utils/post';
 import Circle from 'shared/loading/circle';
 import './style.scss';
 import { ratingUser } from 'reducers/redux-utils/book';
@@ -79,6 +73,8 @@ const verbShareArray = [
 	TOP_QUOTE_VERB_SHARE_LV1,
 ];
 
+const message = 'Bạn đang có bài viết chưa hoàn thành. Bạn có chắc muốn rời khỏi khi chưa đăng không?';
+
 function CreatePostModalContent({
 	hideCreatePostModal,
 	setShowModalCreatPost,
@@ -88,7 +84,6 @@ function CreatePostModalContent({
 	onChangeNewPost,
 	showSubModal,
 	bookForCreatePost,
-	message,
 }) {
 	// const [shareMode, setShareMode] = useState({ value: 'public', title: 'Mọi người', icon: <WorldNet /> }); // k xóa
 	const [showMainModal, setShowMainModal] = useState(showModalCreatPost);
@@ -116,12 +111,13 @@ function CreatePostModalContent({
 
 	const [modalShow, setModalShow] = useState(false);
 
+	const createPostModalContainer = useRef(null);
+
 	const dispatch = useDispatch();
 	const location = useLocation();
 
 	const chartImgShare = useSelector(state => state.chart.imageToShareData);
 	const { postDataShare } = useSelector(state => state.post);
-	const isWarning = useSelector(state => state.post.isWarning);
 
 	const {
 		auth: { userInfo },
@@ -180,6 +176,7 @@ function CreatePostModalContent({
 	}, [urlAdded]);
 
 	useEffect(() => {
+		// generate hashtags added
 		const hashtagsTemp = content.match(hashtagRegex);
 		if (hashtagsTemp) {
 			const hashtagsFormated = hashtagsTemp.map(item =>
@@ -194,12 +191,37 @@ function CreatePostModalContent({
 			setHashtagsAdded([]);
 		}
 
-		if (content !== '') {
-			dispatch(warning(true));
-		} else {
-			dispatch(warning(false));
-		}
+		// add event click when turn off modal
+		createPostModalContainer.current.addEventListener('mousedown', handleHideCreatePost);
+		return () => {
+			if (createPostModalContainer.current) {
+				createPostModalContainer.current.removeEventListener('mousedown', handleHideCreatePost);
+			}
+		};
 	}, [content]);
+
+	useEffect(() => {
+		if (modalShow) {
+			const modalBackground = document.querySelector('.modal-backdrop');
+			modalBackground.style.backgroundColor = 'transparent';
+		}
+	}, [modalShow]);
+
+	// handle turn off modal
+	const handleClose = () => {
+		if (content) {
+			setModalShow(true);
+		} else {
+			hideCreatePostModal();
+		}
+	};
+
+	const handleHideCreatePost = e => {
+		if (e.target === createPostModalContainer.current) {
+			handleClose();
+		}
+	};
+	//-----------------------------------------------------------------------
 
 	const getPreviewUrlFnc = async url => {
 		if (url) {
@@ -647,6 +669,7 @@ function CreatePostModalContent({
 		}
 	};
 
+	//----------------------------------------------------------------------
 	const handleAccept = () => {
 		setModalShow(false);
 		hideCreatePostModal();
@@ -656,55 +679,24 @@ function CreatePostModalContent({
 		setModalShow(false);
 	};
 
-	const handleClose = () => {
-		if (isWarning) {
-			setModalShow(true);
-		} else {
-			hideCreatePostModal();
-		}
-	};
-
-	useEffect(() => {
-		if (modalShow) {
-			const modalBackground = document.querySelector('.modal-backdrop');
-			modalBackground.style.backgroundColor = 'initial';
-		}
-	}, [modalShow]);
-
 	return (
-		<div className='create-post-modal-content'>
-			<Circle loading={status === STATUS_LOADING} />
-			<div
-				className={classNames('create-post-modal-content__main', {
-					'hide': option.value !== 'addImages' && !showMainModal,
-				})}
-			>
-				<div className='create-post-modal-content__main__header'>
-					<div style={{ visibility: 'hidden' }} className='create-post-modal-content__main__close'>
-						<CloseX />
-					</div>
-					<h5>{postDataShare && !_.isEmpty(postDataShare) ? 'Chia sẻ bài viết' : 'Tạo bài viết'}</h5>
-					<button className='create-post-modal-content__main__close' onClick={handleClose}>
-						<CloseX />
-					</button>
-					<DirectLinkALertModal
-						className={'creat-post-modal-content__modal-confirm'}
-						modalShow={modalShow}
-						handleAccept={handleAccept}
-						handleCancel={handleCancel}
-						message={message}
-						yesBtnMsg={'Có'}
-						noBtnMsg={'Không'}
-						centered={false}
-					/>
-				</div>
-				<form
-					onSubmit={e => {
-						e.preventDefault();
-						return false;
-					}}
-					id='formCreatePost'
+		<div className='create-post-modal-content__container' ref={createPostModalContainer}>
+			<div className='create-post-modal-content'>
+				<Circle loading={status === STATUS_LOADING} />
+				<div
+					className={classNames('create-post-modal-content__main', {
+						'hide': option.value !== 'addImages' && !showMainModal,
+					})}
 				>
+					<div className='create-post-modal-content__main__header'>
+						<div style={{ visibility: 'hidden' }} className='create-post-modal-content__main__close'>
+							<CloseX />
+						</div>
+						<h5>{postDataShare && !_.isEmpty(postDataShare) ? 'Chia sẻ bài viết' : 'Tạo bài viết'}</h5>
+						<button className='create-post-modal-content__main__close' onClick={handleClose}>
+							<CloseX />
+						</button>
+					</div>
 					<div className='create-post-modal-content__main__body'>
 						<div className='create-post-modal-content__main__body__user-info'>
 							<div className='create-post-modal-content__main__body__user-info__block-left'>
@@ -914,23 +906,33 @@ function CreatePostModalContent({
 							Đăng
 						</button>
 					</div>
-				</form>
-			</div>
-			{/* sub modal */}
-			<div
-				className={classNames('create-post-modal-content__substitute', {
-					'show': option.value !== 'addImages' && !showMainModal,
-				})}
-			>
-				<CreatPostSubModal
-					option={option}
-					backToMainModal={backToMainModal}
-					deleteImage={deleteImage}
-					handleAddToPost={handleAddToPost}
-					taggedData={taggedData}
-					removeTaggedItem={removeTaggedItem}
-					images={imagesUpload}
-					userInfo={userInfo}
+				</div>
+				{/* sub modal */}
+				<div
+					className={classNames('create-post-modal-content__substitute', {
+						'show': option.value !== 'addImages' && !showMainModal,
+					})}
+				>
+					<CreatPostSubModal
+						option={option}
+						backToMainModal={backToMainModal}
+						deleteImage={deleteImage}
+						handleAddToPost={handleAddToPost}
+						taggedData={taggedData}
+						removeTaggedItem={removeTaggedItem}
+						images={imagesUpload}
+						userInfo={userInfo}
+					/>
+				</div>
+				<DirectLinkALertModal
+					className={'creat-post-modal-content__modal-confirm'}
+					modalShow={modalShow}
+					handleAccept={handleAccept}
+					handleCancel={handleCancel}
+					message={message}
+					yesBtnMsg={'Có'}
+					noBtnMsg={'Không'}
+					centered={false}
 				/>
 			</div>
 		</div>
