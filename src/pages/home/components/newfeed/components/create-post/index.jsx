@@ -12,27 +12,22 @@ import { handleSetImageToShare } from 'reducers/redux-utils/chart';
 import Storage from 'helpers/Storage';
 import { checkUserLogin } from 'reducers/redux-utils/auth';
 import { handleClickCreateNewPostForBook } from 'reducers/redux-utils/activity';
-import DirectLinkALertModal from 'shared/direct-link-alert-modal';
 
 function CreatePost({ onChangeNewPost }) {
 	const [showModalCreatPost, setShowModalCreatPost] = useState(false);
 	const [option, setOption] = useState({});
 	const [showSubModal, setShowSubModal] = useState(false);
-	const createPostModalContainer = useRef(null);
 	const scrollBlocked = useRef(false);
 	const location = useLocation();
-	const [modalShow, setModalShow] = useState(false);
 
 	const { postDataShare } = useSelector(state => state.post);
 	const { imageToShareData } = useSelector(state => state.chart);
-	const isWarning = useSelector(state => state.post.isWarning);
-
-	const message = 'Bạn đang có bài viết chưa hoàn thành. Bạn có chắc muốn rời khỏi khi chưa đăng không?';
 
 	const {
 		auth: { userInfo },
 		book: { bookForCreatePost },
 	} = useSelector(state => state);
+
 	const dispatch = useDispatch();
 
 	const safeDocument = typeof document !== 'undefined' ? document : {};
@@ -96,36 +91,13 @@ function CreatePost({ onChangeNewPost }) {
 		}
 	}, [bookForCreatePost, postDataShare, imageToShareData]);
 
-	const handleHideCreatePost = e => {
-		if (e.target === createPostModalContainer.current) {
-			if (isWarning) {
-				setModalShow(true);
-			} else {
-				hideCreatePostModal();
-			}
-		}
-	};
-
-	useEffect(() => {
-		if (modalShow) {
-			const modalBackground = document.querySelector('.modal-backdrop');
-			modalBackground.style.backgroundColor = 'initial';
-		}
-	}, [modalShow]);
-
 	useEffect(() => {
 		if (showModalCreatPost) {
-			createPostModalContainer.current.addEventListener('mousedown', handleHideCreatePost);
 			blockScroll();
 		} else {
 			allowScroll();
 		}
-		return () => {
-			if (createPostModalContainer.current) {
-				createPostModalContainer.current.removeEventListener('mousedown', handleHideCreatePost);
-			}
-		};
-	}, [showModalCreatPost, isWarning]);
+	}, [showModalCreatPost]);
 
 	const blockScroll = () => {
 		if (!body || !body.style || scrollBlocked.current) return;
@@ -191,15 +163,6 @@ function CreatePost({ onChangeNewPost }) {
 		}
 	};
 
-	const handleAccept = () => {
-		setModalShow(false);
-		hideCreatePostModal();
-	};
-
-	const handleCancel = () => {
-		setModalShow(false);
-	};
-
 	return (
 		<div className='newfeed__create-post'>
 			<div className='newfeed__create-post__avatar-and-input'>
@@ -222,29 +185,16 @@ function CreatePost({ onChangeNewPost }) {
 				{renderOptionList()}
 			</div>
 			{showModalCreatPost && (
-				<div className='newfeed__create-post__modal' ref={createPostModalContainer}>
-					<CreatePostModalContent
-						hideCreatePostModal={hideCreatePostModal}
-						showModalCreatPost={showModalCreatPost}
-						option={option}
-						onChangeOption={onChangeOption}
-						onChangeNewPost={onChangeNewPost}
-						setShowModalCreatPost={setShowModalCreatPost}
-						showSubModal={showSubModal}
-						bookForCreatePost={bookForCreatePost}
-						message={message}
-					/>
-					<DirectLinkALertModal
-						className={'creat-post-modal-content__modal-confirm'}
-						modalShow={modalShow}
-						handleAccept={handleAccept}
-						handleCancel={handleCancel}
-						message={message}
-						yesBtnMsg={'Có'}
-						noBtnMsg={'Không'}
-						centered={false}
-					/>
-				</div>
+				<CreatePostModalContent
+					hideCreatePostModal={hideCreatePostModal}
+					showModalCreatPost={showModalCreatPost}
+					option={option}
+					onChangeOption={onChangeOption}
+					onChangeNewPost={onChangeNewPost}
+					setShowModalCreatPost={setShowModalCreatPost}
+					showSubModal={showSubModal}
+					bookForCreatePost={bookForCreatePost}
+				/>
 			)}
 		</div>
 	);

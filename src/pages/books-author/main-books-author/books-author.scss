@@ -66,13 +66,11 @@
 					}
 				}
 				&.book-name {
-					span {
-						display: -webkit-box;
-						-webkit-box-orient: vertical;
-						-webkit-line-clamp: 4;
-						line-height: 22px;
-						font-weight: 600;
-					}
+					display: -webkit-box;
+					-webkit-box-orient: vertical;
+					-webkit-line-clamp: 4;
+					line-height: 20px;
+					font-weight: 600;
 				}
 
 				.main-reading-author__books__item__top {
@@ -120,9 +118,7 @@
 	.main-reading-author__container {
 		.main-reading-author__books__item__column {
 			&.book-name {
-				span {
-					font-size: smaller;
-				}
+				font-size: smaller;
 			}
 		}
 	}

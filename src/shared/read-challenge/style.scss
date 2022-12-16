@@ -53,16 +53,6 @@
 	font-weight: 600;
 }
 
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
-	-webkit-appearance: none;
-	margin: 0;
-}
-
-input[type='number'] {
-	-moz-appearance: textfield;
-}
-
 .read-challenge__start-challenge-btn {
 	padding: 9px;
 	border: #e0af7e 2px solid;

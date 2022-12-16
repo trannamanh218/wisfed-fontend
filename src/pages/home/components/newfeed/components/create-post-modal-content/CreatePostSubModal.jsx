@@ -58,7 +58,6 @@ function CreatPostSubModal({
 					q: input,
 					type:
 						option.value === 'addBook' ? 'books' : option.value === 'addAuthor' ? 'authors' : 'categories',
-					must_not: { 'numberBook': '0' },
 				};
 				data = await dispatch(getFilterSearch({ ...params })).unwrap();
 			} else {

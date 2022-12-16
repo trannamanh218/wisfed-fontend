@@ -58,6 +58,10 @@ function App({ children }) {
 
 	const location = useLocation();
 
+	const safeDocument = typeof document !== 'undefined' ? document : {};
+	const { body } = safeDocument;
+	const html = safeDocument.documentElement;
+
 	useEffect(async () => {
 		const accsetToken = Storage.getAccessToken();
 		if (accsetToken) {
@@ -84,6 +88,7 @@ function App({ children }) {
 	};
 
 	useEffect(() => {
+		allowScroll();
 		if (location.pathname !== '/forget-password') {
 			dispatch(changeKey(false));
 		}
@@ -104,6 +109,14 @@ function App({ children }) {
 					<Header />
 				</div>
 			);
+	};
+
+	const allowScroll = () => {
+		html.style.position = '';
+		html.style.overflow = '';
+		body.style.position = '';
+		body.style.overflow = '';
+		body.style.paddingRight = '';
 	};
 
 	return (

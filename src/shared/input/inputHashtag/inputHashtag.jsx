@@ -14,6 +14,7 @@ const InputHashtag = ({ listHashtags, setListHashtags, setLastTag, label, showEr
 	const inputRefHashtag = useRef('');
 
 	const [inputHashtag, setInputHashtag] = useState('');
+	const [pressedSpace, setPressedSpace] = useState(false);
 
 	const handleChangeHashtag = e => {
 		setInputHashtag(e.target.value);
@@ -29,8 +30,8 @@ const InputHashtag = ({ listHashtags, setListHashtags, setLastTag, label, showEr
 	};
 
 	useEffect(() => {
-		inputRefHashtag.current.focus();
-	}, [listHashtags]);
+		pressedSpace && inputRefHashtag.current.focus();
+	}, [pressedSpace]);
 
 	const handleCreateHashtags = e => {
 		if (e.keyCode === 32) {
@@ -43,6 +44,7 @@ const InputHashtag = ({ listHashtags, setListHashtags, setLastTag, label, showEr
 					.replace(/đ/g, 'd')
 					.replace(/Đ/g, 'D');
 				setListHashtags([...listHashtags, newValue]);
+				setPressedSpace(true);
 			}
 			inputRefHashtag.current.value = '';
 			setLastTag('');

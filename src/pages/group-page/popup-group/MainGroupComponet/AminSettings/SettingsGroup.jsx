@@ -4,12 +4,11 @@ import SelectBox from 'shared/select-box';
 import { BackArrow } from 'components/svg';
 import './group-settings.scss';
 import PropTypes from 'prop-types';
-import AddAndSearchCategories from 'shared/add-and-search-categories';
+import AddAndSearchItems from 'shared/add-and-search-items';
 import { toast } from 'react-toastify';
 import { NotificationError } from 'helpers/Error';
 import _ from 'lodash';
 import { useDispatch } from 'react-redux';
-import { getSuggestionForPost } from 'reducers/redux-utils/activity';
 import { getFilterSearch } from 'reducers/redux-utils/search';
 import { editGroup } from 'reducers/redux-utils/group';
 import InputHashtag from 'shared/input/inputHashtag/inputHashtag';
@@ -371,7 +370,6 @@ function SettingsGroup({ handleChange, data, fetchData }) {
 				start: 0,
 				limit: 10,
 				type: 'categories',
-				must_not: { 'numberBook': '0' },
 			};
 			const result = await dispatch(getFilterSearch(params)).unwrap();
 			setCategorySearchedList(result.rows);
@@ -459,17 +457,17 @@ function SettingsGroup({ handleChange, data, fetchData }) {
 						<div className='form-field-group'>
 							<label>Chủ đề </label>
 							{data.groupType === 'author' ? '' : <span className='form-field-authors__asterisk'>*</span>}
-							<AddAndSearchCategories
-								categoryAddedList={categoryAddedList}
-								categorySearchedList={categorySearchedList}
-								addCategory={addCategory}
-								removeCategory={removeCategory}
+							<AddAndSearchItems
+								itemAddedList={categoryAddedList}
+								itemSearchedList={categorySearchedList}
+								addItem={addCategory}
+								removeItem={removeCategory}
 								getDataFinish={getDataFinishCategories}
-								searchCategory={searchCategory}
-								inputCategoryValue={inputCategoryValue}
-								categoryInputContainer={categoryInputContainer}
-								categoryInputWrapper={categoryInputWrapper}
-								categoryInput={categoryInput}
+								searchItem={searchCategory}
+								inputItemValue={inputCategoryValue}
+								itemInputContainer={categoryInputContainer}
+								itemInputWrapper={categoryInputWrapper}
+								itemInput={categoryInput}
 								hasSearchIcon={true}
 								hasMoreEllipsis={hasMoreCategoriesEllipsis}
 							/>
@@ -479,17 +477,17 @@ function SettingsGroup({ handleChange, data, fetchData }) {
 					<div className='form-field-group'>
 						<label>Tên tác giả</label>
 						{data.groupType === 'category' ? '' : <span className='form-field-authors__asterisk'>*</span>}
-						<AddAndSearchCategories
-							categoryAddedList={authorAddedList}
-							categorySearchedList={authorSearchedList}
-							addCategory={addAuthor}
-							removeCategory={removeAuthor}
+						<AddAndSearchItems
+							itemAddedList={authorAddedList}
+							itemSearchedList={authorSearchedList}
+							addItem={addAuthor}
+							removeItem={removeAuthor}
 							getDataFinish={getDataFinishAuthors}
-							searchCategory={searchAuthor}
-							inputCategoryValue={inputAuthorValue}
-							categoryInputContainer={authorInputContainer}
-							categoryInputWrapper={authorInputWrapper}
-							categoryInput={authorInput}
+							searchItem={searchAuthor}
+							inputItemValue={inputAuthorValue}
+							itemInputContainer={authorInputContainer}
+							itemInputWrapper={authorInputWrapper}
+							itemInput={authorInput}
 							hasMoreEllipsis={hasMoreAuthorsEllipsis}
 							placeholder={'Tìm kiếm và thêm tác giả'}
 						/>
@@ -502,17 +500,17 @@ function SettingsGroup({ handleChange, data, fetchData }) {
 						) : (
 							<span className='form-field-authors__asterisk'>*</span>
 						)}
-						<AddAndSearchCategories
-							categoryAddedList={bookAddedList}
-							categorySearchedList={bookSearchedList}
-							addCategory={addBook}
-							removeCategory={removeBook}
+						<AddAndSearchItems
+							itemAddedList={bookAddedList}
+							itemSearchedList={bookSearchedList}
+							addItem={addBook}
+							removeItem={removeBook}
 							getDataFinish={getDataFinishBooks}
-							searchCategory={searchBook}
-							inputCategoryValue={inputBookValue}
-							categoryInputContainer={bookInputContainer}
-							categoryInputWrapper={bookInputWrapper}
-							categoryInput={bookInput}
+							searchItem={searchBook}
+							inputItemValue={inputBookValue}
+							itemInputContainer={bookInputContainer}
+							itemInputWrapper={bookInputWrapper}
+							itemInput={bookInput}
 							hasMoreEllipsis={hasMoreBooksEllipsis}
 							placeholder={'Tìm kiếm và thêm sách'}
 						/>

@@ -115,14 +115,10 @@ const postSlice = createSlice({
 		postInfo: {},
 		error: {},
 		postDataShare: {},
-		isWarning: false,
 	},
 	reducers: {
 		saveDataShare: (state, action) => {
 			state.postDataShare = action.payload;
-		},
-		warning: (state, action) => {
-			state.isWarning = action.payload;
 		},
 	},
 	extraReducers: {
@@ -141,6 +137,6 @@ const postSlice = createSlice({
 	},
 });
 
-export const { saveDataShare, warning } = postSlice.actions;
+export const { saveDataShare } = postSlice.actions;
 const post = postSlice.reducer;
 export default post;

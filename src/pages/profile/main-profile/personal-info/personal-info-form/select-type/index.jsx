@@ -1,7 +1,7 @@
 import { Pencil } from 'components/svg';
-import AddAndSearchCategories from 'shared/add-and-search-categories';
+import AddAndSearchItems from 'shared/add-and-search-items';
 import PropTypes from 'prop-types';
-import { useState, useRef, useCallback } from 'react';
+import { useState, useRef, useCallback, useEffect } from 'react';
 // import ShareModeDropdown from 'shared/share-mode-dropdown';
 import _ from 'lodash';
 import { useDispatch } from 'react-redux';
@@ -61,7 +61,6 @@ function SelectType({ dataAdded, setDataAdded, editStatus, cancelEdit, enableEdi
 				start: 0,
 				limit: 10,
 				type: 'categories',
-				must_not: { 'numberBook': '0' },
 			};
 			const data = await dispatch(getFilterSearch(params)).unwrap();
 			setCategorySearchedList(data.rows);
@@ -88,17 +87,17 @@ function SelectType({ dataAdded, setDataAdded, editStatus, cancelEdit, enableEdi
 			<div className='form-field-wrapper'>
 				<div className={`form-field ${editStatus && 'editStatus'}`}>
 					{editStatus ? (
-						<AddAndSearchCategories
-							categoryAddedList={dataAdded}
-							categorySearchedList={categorySearchedList}
-							addCategory={addCategory}
-							removeCategory={removeCategory}
+						<AddAndSearchItems
+							itemAddedList={dataAdded}
+							itemSearchedList={categorySearchedList}
+							addItem={addCategory}
+							removeItem={removeCategory}
 							getDataFinish={getDataFinish}
-							searchCategory={searchCategory}
-							inputCategoryValue={inputCategoryValue}
-							categoryInputContainer={categoryInputContainer}
-							categoryInputWrapper={categoryInputWrapper}
-							categoryInput={categoryInput}
+							searchItem={searchCategory}
+							inputItemValue={inputCategoryValue}
+							itemInputContainer={categoryInputContainer}
+							itemInputWrapper={categoryInputWrapper}
+							itemInput={categoryInput}
 							hasSearchIcon={false}
 							hasMoreEllipsis={hasMoreEllipsis}
 							autoFocus

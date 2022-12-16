@@ -177,11 +177,15 @@ const PostShare = ({ postData, inCreatePost, directUrl }) => {
 	};
 
 	const handleViewPostDetail = () => {
-		if (!inCreatePost) {
+		if (!inCreatePost && !window.location.pathname.includes('/detail-feed/')) {
 			if (postData.sharePost.minipostId) {
 				navigate(`/detail-feed/mini-post/${postData.sharePost.minipostId}`);
-			} else {
+			} else if (postData.sharePost.groupPostId) {
 				navigate(`/detail-feed/group-post/${postData.sharePost.groupPostId}`);
+			} else if (postData.sharePost.groupId) {
+				navigate(`/detail-feed/group-post/${postData.sharePost.id}`);
+			} else {
+				navigate(`/detail-feed/mini-post/${postData.id}`);
 			}
 		}
 	};

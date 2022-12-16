@@ -5,10 +5,8 @@ import { useSelector } from 'react-redux';
 import _ from 'lodash';
 import { useEffect, useState } from 'react';
 import NotFound from 'pages/not-found';
-import { useNavigate } from 'react-router-dom';
 
 function ConfirmMyBook() {
-	const navigate = useNavigate();
 	const userInfo = useSelector(state => state.auth.userInfo);
 
 	const [currentUserInfo, setCurrentUserInfo] = useState({});
@@ -16,9 +14,6 @@ function ConfirmMyBook() {
 
 	useEffect(() => {
 		if (!_.isEmpty(userInfo)) {
-			if (['reader'].includes(userInfo.role)) {
-				navigate('/');
-			}
 			setCurrentUserInfo(userInfo);
 		}
 	}, [userInfo]);

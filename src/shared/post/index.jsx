@@ -393,10 +393,16 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 	};
 
 	const handleViewPostDetail = () => {
-		if (postData.minipostId) {
-			navigate(`/detail-feed/mini-post/${postData.minipostId}`);
-		} else {
-			navigate(`/detail-feed/group-post/${postData.groupPostId}`);
+		if (!window.location.pathname.includes('/detail-feed/')) {
+			if (postData.minipostId) {
+				navigate(`/detail-feed/mini-post/${postData.minipostId}`);
+			} else if (postData.groupPostId) {
+				navigate(`/detail-feed/group-post/${postData.groupPostId}`);
+			} else if (postData.groupId) {
+				navigate(`/detail-feed/group-post/${postData.id}`);
+			} else {
+				navigate(`/detail-feed/mini-post/${postData.id}`);
+			}
 		}
 	};
 
@@ -449,12 +455,9 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 							{postData.book && (
 								<div className='post__user-status__subtitle'>
 									{postData.isUpdateProgress && (
-										<>
-											<span style={{ marginRight: '12px', marginLeft: '5px' }}>
-												{' '}
-												Cập nhật tiến độ đọc sách
-											</span>
-										</>
+										<span style={{ marginRight: '12px', marginLeft: '5px' }}>
+											Cập nhật tiến độ đọc sách
+										</span>
 									)}
 									{postInformations?.book?.actorRating !== null ? (
 										<>
