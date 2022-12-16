@@ -132,12 +132,12 @@ const BookSearch = ({ value, searchResultInput, activeKeyDefault, updateBooks })
 							loader={<LoadingIndicator />}
 						>
 							{listArrayBooks.map((item, index) => (
-								<>
-									<div key={item.id} className='bookSearch__main'>
+								<div key={index}>
+									<div className='bookSearch__main'>
 										<AuthorBook data={item} checkStar={true} saveLocalStorage={true} />
 									</div>
 									{renderUploadButton(index)}
-								</>
+								</div>
 							))}
 						</InfiniteScroll>
 					) : (
