@@ -25,7 +25,7 @@ import './style.scss';
 import { ratingUser } from 'reducers/redux-utils/book';
 import UserAvatar from 'shared/user-avatar';
 import { updateCurrentBook, updateProgressReadingBook, createReviewBook } from 'reducers/redux-utils/book';
-import { STATUS_BOOK } from 'constants/index';
+import { STATUS_BOOK } from 'constants';
 import { addBookToDefaultLibrary, updateMyAllLibraryRedux } from 'reducers/redux-utils/library';
 import { setting } from './settings';
 import { NotificationError } from 'helpers/Error';
@@ -499,6 +499,8 @@ function CreatePostModalContent({
 									? valueStar
 									: 0,
 							tags: params.tags,
+							image: params.image,
+							preview: params.preview,
 						};
 						dispatch(createReviewBook(reviewData));
 					}
