@@ -80,7 +80,6 @@ const ReviewTab = ({ currentTab }) => {
 	const initialCallApiStartValue = useRef(10);
 	const callApiStart = useRef(initialCallApiStartValue.current);
 	const callApiPerPage = useRef(10);
-	const createPostModalContainer = useRef(null);
 
 	const dispatch = useDispatch();
 	const { bookId } = useParams();
@@ -237,17 +236,6 @@ const ReviewTab = ({ currentTab }) => {
 	const handleChange = data => {
 		setSortValue(data);
 	};
-
-	// xử lý tắt modal tạo review
-	useEffect(() => {
-		if (showModalCreatPost) {
-			createPostModalContainer.current.addEventListener('mousedown', e => {
-				if (e.target === createPostModalContainer.current) {
-					hideCreatePostModal();
-				}
-			});
-		}
-	}, [showModalCreatPost]);
 
 	const hideCreatePostModal = () => {
 		setShowModalCreatPost(false);
