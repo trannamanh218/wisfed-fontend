@@ -163,16 +163,14 @@ const PostShare = ({ postData, inCreatePost, directUrl }) => {
 		}
 	};
 
-	const handleTime = () => {
-		if (!_.isEmpty(postData.sharePost?.originId)) {
-			switch (postData.sharePost?.originId.by) {
-				case 'week':
-					return 'tuần';
-				case 'month':
-					return 'tháng';
-				case 'year':
-					return 'năm';
-			}
+	const handleTime = item => {
+		switch (item) {
+			case 'week':
+				return 'tuần';
+			case 'month':
+				return 'tháng';
+			case 'year':
+				return 'năm';
 		}
 	};
 
@@ -187,6 +185,18 @@ const PostShare = ({ postData, inCreatePost, directUrl }) => {
 			} else {
 				navigate(`/detail-feed/mini-post/${postData.id}`);
 			}
+		}
+	};
+
+	const renderChartTitle = () => {
+		if (postData?.sharePost?.metaData.type === 'readingChart') {
+			return `# Số ${
+				postData?.sharePost?.metaData?.isReadedChart ? 'sách' : 'trang sách'
+			} đã đọc nhiều nhất theo ${handleTime(postData?.sharePost?.metaData.chartType)}`;
+		} else if (postData?.sharePost?.metaData.type === 'growthChart') {
+			return `# Biểu đồ tăng trưởng của cuốn sách "${
+				postData?.sharePost?.metaData?.book?.name
+			}" của ${postData?.sharePost?.metaData?.book?.authors.map(name => name.authorName)} `;
 		}
 	};
 
@@ -336,6 +346,13 @@ const PostShare = ({ postData, inCreatePost, directUrl }) => {
 				/>
 			)}
 
+			{(postData?.sharePost?.metaData?.type === 'readingChart' ||
+				postData?.sharePost?.metaData?.type === 'growthChart') && (
+				<div className='post__title__share__rank'>
+					<span className='number__title__rank'>{renderChartTitle()}</span>
+				</div>
+			)}
+
 			{postData.sharePost?.originId?.type === 'topUser' && <ShareUsers postData={postData.sharePost} />}
 			{(postData.verb === READ_TARGET_VERB_SHARE || postData.sharePost.type === 'shareTargetRead') && (
 				<ShareTarget postData={postData} />
@@ -349,8 +366,8 @@ const PostShare = ({ postData, inCreatePost, directUrl }) => {
 							{postData.sharePost?.info.category
 								? `  được like nhiều nhất thuộc ${
 										postData.sharePost?.info.category.name
-								  } theo ${handleTime()} `
-								: `  được like nhiều nhất theo ${handleTime()} `}
+								  } theo ${handleTime(postData.sharePost?.originId?.by)} `
+								: `  được like nhiều nhất theo ${handleTime(postData.sharePost?.originId?.by)} `}
 						</span>
 						<IconRanks />
 					</div>
@@ -369,7 +386,7 @@ const PostShare = ({ postData, inCreatePost, directUrl }) => {
 								postData.sharePost?.info.category
 									? ` thuộc ${postData.sharePost?.info.category.name}`
 									: ''
-							} theo ${handleTime()}`}
+							} theo ${handleTime(postData.sharePost?.originId?.by)}`}
 						</span>
 						<IconRanks />
 					</div>

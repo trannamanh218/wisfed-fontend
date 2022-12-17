@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import { useCurrentPng } from 'recharts-to-png';
 import ModalChart from './modal-sort';
 import { handleSetImageToShare, getChartsBooks } from 'reducers/redux-utils/chart';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import dayjs from 'dayjs';
 import Circle from 'shared/loading/circle';
@@ -26,6 +26,7 @@ const ReadingSummaryChartAuthor = () => {
 	const [sortValue, setSortValue] = useState('day');
 	const [sortValueKey, setSortValueKey] = useState('read');
 	const [nameBook, setNameBook] = useState('');
+	const [authorName, setAuthorName] = useState('');
 	const [changeValue, setChangeValue] = useState(false);
 	const [getAreaPng, { ref: areaRef }] = useCurrentPng();
 	const dispatch = useDispatch();
@@ -91,6 +92,8 @@ const ReadingSummaryChartAuthor = () => {
 				setChartsData(data.data);
 			}
 			setNameBook(data.book.name);
+			const authorData = data.book.authors.map(item => item.authorName).join(', ');
+			setAuthorName(authorData);
 		} catch (err) {
 			setErrorLoadPage(true);
 		} finally {
@@ -120,6 +123,7 @@ const ReadingSummaryChartAuthor = () => {
 						type: 'growthChart',
 						verb: GROWTH_CHART_VERB_SHARE,
 						nameBook: nameBook,
+						authorName: authorName,
 						bookId: bookId,
 					};
 					dispatch(saveDataShare(dataToShare));
@@ -128,7 +132,7 @@ const ReadingSummaryChartAuthor = () => {
 				}
 			}
 		}
-	}, [getAreaPng, nameBook]);
+	}, [getAreaPng, nameBook, authorName]);
 
 	const renderHoverColumn = data => {
 		switch (sortValueKey) {

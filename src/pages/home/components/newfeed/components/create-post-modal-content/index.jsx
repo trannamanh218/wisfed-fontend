@@ -1,64 +1,67 @@
 /* eslint-disable max-lines */
 import classNames from 'classnames';
-import { CloseX, Image, IconRanks, WorldNet } from 'components/svg'; // k xóa WorldNet
-import _ from 'lodash';
-import PropTypes from 'prop-types';
-import { useEffect, useState, useRef } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { toast } from 'react-toastify';
-import { createActivity } from 'reducers/redux-utils/activity';
-import PostEditBook from 'shared/post-edit-book';
-import OptionsPost from './OptionsPost';
-import CreatPostSubModal from './CreatePostSubModal';
-import TaggedList from './TaggedList';
-import UploadImage from './UploadImage';
-import PreviewLink from 'shared/preview-link/PreviewLink';
-import { getPreviewUrl, getSharePostInternal, getSharePostRanks, shareMyBook } from 'reducers/redux-utils/post';
-import Circle from 'shared/loading/circle';
-import './style.scss';
-import { ratingUser } from 'reducers/redux-utils/book';
-import UserAvatar from 'shared/user-avatar';
-import { updateCurrentBook, updateProgressReadingBook, createReviewBook } from 'reducers/redux-utils/book';
-import { STATUS_BOOK } from 'constants';
-import { addBookToDefaultLibrary, updateMyAllLibraryRedux } from 'reducers/redux-utils/library';
-import { setting } from './settings';
-import { NotificationError } from 'helpers/Error';
-import { uploadMultiFile } from 'reducers/redux-utils/common';
-import { useLocation, useParams } from 'react-router-dom';
-import { creatNewPost } from 'reducers/redux-utils/group';
-import QuoteCard from 'shared/quote-card';
-import { saveDataShare } from 'reducers/redux-utils/post';
-import AuthorBook from 'shared/author-book';
-import ShareUsers from '../modal-share-users';
-import RichTextEditor from 'shared/rich-text-editor';
-import ShareTarget from 'shared/share-target';
-import PostShare from 'shared/posts-Share';
-import { shareTargetReadings } from 'reducers/redux-utils/target';
+import { CloseX, IconRanks, Image } from 'components/svg'; // k xóa WorldNet
 import {
+	CHART_VERB_SHARE,
+	GROUP_POST_VERB_SHARE,
+	GROWTH_CHART_VERB_SHARE,
+	hashtagRegex,
+	MY_BOOK_VERB_SHARE,
 	POST_VERB_SHARE,
 	QUOTE_VERB_SHARE,
-	GROUP_POST_VERB_SHARE,
 	READ_TARGET_VERB_SHARE,
-	TOP_USER_VERB_SHARE,
-	TOP_BOOK_VERB_SHARE,
-	TOP_QUOTE_VERB_SHARE,
-	MY_BOOK_VERB_SHARE,
-	REVIEW_VERB_SHARE,
-	TOP_USER_VERB_SHARE_LV1,
-	TOP_BOOK_VERB_SHARE_LV1,
-	hashtagRegex,
 	READ_TARGET_VERB_SHARE_LV1,
+	REVIEW_VERB_SHARE,
+	STATUS_BOOK,
 	STATUS_IDLE,
 	STATUS_LOADING,
 	STATUS_SUCCESS,
+	TOP_BOOK_VERB_SHARE,
+	TOP_BOOK_VERB_SHARE_LV1,
+	TOP_QUOTE_VERB_SHARE,
 	TOP_QUOTE_VERB_SHARE_LV1,
-	CHART_VERB_SHARE,
-	GROWTH_CHART_VERB_SHARE,
+	TOP_USER_VERB_SHARE,
+	TOP_USER_VERB_SHARE_LV1,
 } from 'constants';
-import { handleClickCreateNewPostForBook } from 'reducers/redux-utils/activity';
+import { NotificationError } from 'helpers/Error';
+import _ from 'lodash';
+import PropTypes from 'prop-types';
+import { useEffect, useRef, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useLocation, useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { createActivity, handleClickCreateNewPostForBook } from 'reducers/redux-utils/activity';
+import { createReviewBook, ratingUser, updateCurrentBook, updateProgressReadingBook } from 'reducers/redux-utils/book';
+import { uploadMultiFile } from 'reducers/redux-utils/common';
+import { creatNewPost } from 'reducers/redux-utils/group';
+import { addBookToDefaultLibrary, updateMyAllLibraryRedux } from 'reducers/redux-utils/library';
+import {
+	getPreviewUrl,
+	getSharePostInternal,
+	getSharePostRanks,
+	saveDataShare,
+	shareMyBook,
+} from 'reducers/redux-utils/post';
+import { shareTargetReadings } from 'reducers/redux-utils/target';
+import AuthorBook from 'shared/author-book';
+import Circle from 'shared/loading/circle';
+import PostEditBook from 'shared/post-edit-book';
+import PostShare from 'shared/posts-Share';
+import PreviewLink from 'shared/preview-link/PreviewLink';
+import QuoteCard from 'shared/quote-card';
+import RichTextEditor from 'shared/rich-text-editor';
+import ShareTarget from 'shared/share-target';
+import UserAvatar from 'shared/user-avatar';
+import ShareUsers from '../modal-share-users';
+import CreatPostSubModal from './CreatePostSubModal';
+import OptionsPost from './OptionsPost';
+import { setting } from './settings';
+import './style.scss';
+import TaggedList from './TaggedList';
+import UploadImage from './UploadImage';
 // import ShareModeComponent from './ShareModeComponent';
-import DirectLinkALertModal from 'shared/direct-link-alert-modal';
 import { handleResetMyTargetReading, setMyTargetReading } from 'reducers/redux-utils/chart';
+import DirectLinkALertModal from 'shared/direct-link-alert-modal';
 
 const verbShareArray = [
 	POST_VERB_SHARE,
@@ -705,6 +708,16 @@ function CreatePostModalContent({
 		setModalShow(false);
 	};
 
+	const renderChartTitle = () => {
+		if (postDataShare?.verb === CHART_VERB_SHARE) {
+			return `# Số ${
+				postDataShare?.isReadedChart ? 'sách' : 'trang sách'
+			} đã đọc nhiều nhất theo ${handleTime()}`;
+		} else if (postDataShare?.type === 'growthChart') {
+			return `# Biểu đồ tăng trưởng của cuốn sách "${postDataShare?.nameBook}" của ${postDataShare?.authorName}`;
+		}
+	};
+
 	return (
 		<div className='create-post-modal-content__container' ref={createPostModalContainer}>
 			<div className='create-post-modal-content'>
@@ -784,19 +797,10 @@ function CreatePostModalContent({
 									<IconRanks />
 								</div>
 							)}
-							{postDataShare?.verb === CHART_VERB_SHARE && (
+							{(postDataShare?.verb === CHART_VERB_SHARE ||
+								postDataShare?.verb === GROWTH_CHART_VERB_SHARE) && (
 								<div className='post__title__share__rank'>
-									<span className='number__title__rank'>
-										# Số {postDataShare?.isReadedChart ? 'sách' : 'trang sách'} đã đọc nhiều nhất
-										theo {handleTime()}
-									</span>
-								</div>
-							)}
-							{postDataShare?.verb === GROWTH_CHART_VERB_SHARE && (
-								<div className='post__title__share__rank'>
-									<span className='number__title__rank'>
-										# Biều đồ tăng trưởng cuốn sách " {postDataShare.nameBook} " của ...
-									</span>
+									<span className='number__title__rank'>{renderChartTitle()}</span>
 								</div>
 							)}
 							{postDataShare.type === 'topBook' && postDataShare.verb === TOP_BOOK_VERB_SHARE_LV1 && (
