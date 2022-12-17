@@ -52,6 +52,8 @@ import {
 	STATUS_LOADING,
 	STATUS_SUCCESS,
 	TOP_QUOTE_VERB_SHARE_LV1,
+	CHART_VERB_SHARE,
+	GROWTH_CHART_VERB_SHARE,
 } from 'constants';
 import { handleClickCreateNewPostForBook } from 'reducers/redux-utils/activity';
 // import ShareModeComponent from './ShareModeComponent';
@@ -504,6 +506,28 @@ function CreatePostModalContent({
 						...params,
 					};
 					await dispatch(getSharePostInternal(query)).unwrap();
+				} else if (postDataShare.verb === CHART_VERB_SHARE) {
+					const query = {
+						metaData: {
+							type: postDataShare.type,
+							chartBy: postDataShare.userId,
+							chartType: postDataShare.by,
+							isReadedChart: postDataShare.isReadedChart,
+						},
+						...params,
+					};
+					await dispatch(createActivity(query)).unwrap();
+				} else if (postDataShare.verb === GROWTH_CHART_VERB_SHARE) {
+					const query = {
+						metaData: {
+							type: postDataShare.type,
+							chartType: postDataShare.by,
+							reportType: 'addToLibrary',
+							bookId: postDataShare.bookId,
+						},
+						...params,
+					};
+					await dispatch(createActivity(query)).unwrap();
 				}
 			} else {
 				if (params.bookId) {
@@ -760,6 +784,21 @@ function CreatePostModalContent({
 									<IconRanks />
 								</div>
 							)}
+							{postDataShare?.verb === CHART_VERB_SHARE && (
+								<div className='post__title__share__rank'>
+									<span className='number__title__rank'>
+										# Số {postDataShare?.isReadedChart ? 'sách' : 'trang sách'} đã đọc nhiều nhất
+										theo {handleTime()}
+									</span>
+								</div>
+							)}
+							{postDataShare?.verb === GROWTH_CHART_VERB_SHARE && (
+								<div className='post__title__share__rank'>
+									<span className='number__title__rank'>
+										# Biều đồ tăng trưởng cuốn sách " {postDataShare.nameBook} " của ...
+									</span>
+								</div>
+							)}
 							{postDataShare.type === 'topBook' && postDataShare.verb === TOP_BOOK_VERB_SHARE_LV1 && (
 								<div className='post__title__share__rank'>
 									<span className='number__title__rank'># Top {postDataShare.trueRank}</span>
@@ -778,10 +817,11 @@ function CreatePostModalContent({
 									<span className='number__title__rank'># Sách của tôi làm tác giả</span>
 								</div>
 							)}
-
 							{!_.isEmpty(postDataShare) && (
 								<div
 									className={
+										postDataShare.verb !== GROWTH_CHART_VERB_SHARE &&
+										postDataShare.verb !== CHART_VERB_SHARE &&
 										postDataShare.verb !== TOP_USER_VERB_SHARE_LV1 &&
 										postDataShare.verb !== READ_TARGET_VERB_SHARE_LV1
 											? 'create-post-modal-content__main__share-container'
@@ -823,7 +863,6 @@ function CreatePostModalContent({
 								<ShareTarget postData={postDataShare} />
 							)}
 							{postDataShare.verb === TOP_USER_VERB_SHARE_LV1 && <ShareUsers postData={postDataShare} />}
-
 							{!_.isEmpty(taggedData.addBook) || showUpload ? (
 								<>
 									{!_.isEmpty(taggedData.addBook) && (

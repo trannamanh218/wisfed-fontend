@@ -406,6 +406,29 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 		}
 	};
 
+	const handleTimeChart = () => {
+		switch (postData?.metaData?.chartType) {
+			case 'week':
+				return 'tuần';
+			case 'month':
+				return 'tháng';
+			case 'year':
+				return 'năm';
+			default:
+				break;
+		}
+	};
+
+	const renderChartTitle = () => {
+		if (postData?.metaData?.type === 'readingChart') {
+			return `# Số ${
+				postData?.metaData?.isReadedChart ? 'sách' : 'trang sách'
+			} đã đọc nhiều nhất theo ${handleTimeChart()}`;
+		} else if (postData?.metaData?.type === 'growthChart') {
+			return `# Biểu đồ tăng trưởng của cuốn sách "${postData?.metaData?.book?.name}" của...`;
+		}
+	};
+
 	return (
 		<div className='post__container'>
 			<div className='post__user-status'>
@@ -441,7 +464,6 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 							</>
 						)}
 					</div>
-
 					<div className='post__user-status__post-time-status'>
 						<div className='show-time'>
 							<span onClick={handleViewPostDetail}>
@@ -479,6 +501,11 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 					</div>
 				</div>
 			</div>
+			{(postData?.metaData?.type === 'readingChart' || postData?.metaData?.type === 'growthChart') && (
+				<div className='post__title__share__rank'>
+					<span className='number__title__rank'>{renderChartTitle()}</span>
+				</div>
+			)}
 			{(postData.message || postData.content) && (
 				<div className='post__content-wrapper'>
 					<div

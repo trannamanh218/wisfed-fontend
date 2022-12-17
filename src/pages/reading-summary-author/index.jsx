@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import { useCurrentPng } from 'recharts-to-png';
 import ModalChart from './modal-sort';
 import { handleSetImageToShare, getChartsBooks } from 'reducers/redux-utils/chart';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import dayjs from 'dayjs';
 import Circle from 'shared/loading/circle';
@@ -15,6 +15,8 @@ import NotFound from 'pages/not-found';
 import BackButton from 'shared/back-button';
 import BookAuthorChartSearch from './search-component';
 import SearchIcon from 'assets/icons/search.svg';
+import { GROWTH_CHART_VERB_SHARE } from 'constants';
+import { saveDataShare } from 'reducers/redux-utils/post';
 
 const ReadingSummaryChartAuthor = () => {
 	const [chartsData, setChartsData] = useState({});
@@ -114,12 +116,19 @@ const ReadingSummaryChartAuthor = () => {
 				const imgUploadder = [imageUploadedData];
 				if (imageUploadedData) {
 					setLoading(false);
+					const dataToShare = {
+						type: 'growthChart',
+						verb: GROWTH_CHART_VERB_SHARE,
+						nameBook: nameBook,
+						bookId: bookId,
+					};
+					dispatch(saveDataShare(dataToShare));
+					dispatch(handleSetImageToShare(imgUploadder));
 					navigate('/');
-					return dispatch(handleSetImageToShare(imgUploadder));
 				}
 			}
 		}
-	}, [getAreaPng]);
+	}, [getAreaPng, nameBook]);
 
 	const renderHoverColumn = data => {
 		switch (sortValueKey) {
