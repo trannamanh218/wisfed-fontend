@@ -146,6 +146,10 @@
 			max-height: fit-content;
 		}
 	}
+	.box_post__user-status {
+		display: flex;
+		justify-content: space-between;
+	}
 }
 
 .post__user-status {
