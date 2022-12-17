@@ -563,7 +563,7 @@ function CreatePostModalContent({
 
 	useEffect(() => {
 		if (!_.isEmpty(taggedData.addBook)) {
-			if (taggedData.addBook.status === 'read') {
+			if (!_.isEmpty(bookForCreatePost) && taggedData.addBook.status === 'read') {
 				setProgressInputValue(taggedData.addBook.page);
 			} else {
 				setProgressInputValue(parseInt(taggedData.addBook.progress));
