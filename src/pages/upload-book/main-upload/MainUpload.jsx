@@ -175,7 +175,7 @@ export default function MainUpload() {
 					  ],
 			translators:
 				!translatorsArr.length && !inputTranslatorValue
-					? null
+					? []
 					: translatorsArr.length > 0
 					? translatorsArr
 					: [
