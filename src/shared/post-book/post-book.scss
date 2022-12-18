@@ -103,6 +103,7 @@
 		gap: 0;
 	}
 }
+
 @media only screen and (max-width: 1024px) {
 	.post-book {
 		&__name {
@@ -124,6 +125,7 @@
 		}
 	}
 }
+
 @media only screen and (max-width: 820px) {
 	.create-post-modal-content__container {
 		.post-book {

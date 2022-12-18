@@ -1,7 +1,7 @@
 import { Pencil } from 'components/svg';
 import AddAndSearchItems from 'shared/add-and-search-items';
 import PropTypes from 'prop-types';
-import { useState, useRef, useCallback, useEffect } from 'react';
+import { useState, useRef, useCallback } from 'react';
 // import ShareModeDropdown from 'shared/share-mode-dropdown';
 import _ from 'lodash';
 import { useDispatch } from 'react-redux';

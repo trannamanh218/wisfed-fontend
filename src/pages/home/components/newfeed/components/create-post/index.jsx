@@ -1,23 +1,21 @@
-import { useEffect, useState, useRef } from 'react';
-import { BookIcon, Feather, CategoryIcon, GroupIcon } from 'components/svg';
-import CreatePostModalContent from '../create-post-modal-content';
-import { useDispatch, useSelector } from 'react-redux';
-import UserAvatar from 'shared/user-avatar';
-import PropTypes from 'prop-types';
+import { BookIcon, CategoryIcon, Feather, GroupIcon } from 'components/svg';
 import _ from 'lodash';
-import { updateCurrentBook } from 'reducers/redux-utils/book';
-import { saveDataShare } from 'reducers/redux-utils/post';
+import PropTypes from 'prop-types';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
-import { handleSetImageToShare } from 'reducers/redux-utils/chart';
+import UserAvatar from 'shared/user-avatar';
+import CreatePostModalContent from '../create-post-modal-content';
 import Storage from 'helpers/Storage';
-import { checkUserLogin } from 'reducers/redux-utils/auth';
 import { handleClickCreateNewPostForBook } from 'reducers/redux-utils/activity';
+import { checkUserLogin } from 'reducers/redux-utils/auth';
+import { setOptionAddToPost } from 'reducers/redux-utils/common';
+import { blockAndAllowScroll } from 'api/blockAndAllowScroll.hook';
 
 function CreatePost({ onChangeNewPost }) {
-	const [showModalCreatPost, setShowModalCreatPost] = useState(false);
-	const [option, setOption] = useState({});
+	const [showModalCreatePost, setShowModalCreatePost] = useState(false);
 	const [showSubModal, setShowSubModal] = useState(false);
-	const scrollBlocked = useRef(false);
+
 	const location = useLocation();
 
 	const { postDataShare } = useSelector(state => state.post);
@@ -30,9 +28,6 @@ function CreatePost({ onChangeNewPost }) {
 
 	const dispatch = useDispatch();
 
-	const safeDocument = typeof document !== 'undefined' ? document : {};
-	const { body } = safeDocument;
-	const html = safeDocument.documentElement;
 	let optionList = null;
 
 	if (location.pathname.includes('group')) {
@@ -85,72 +80,36 @@ function CreatePost({ onChangeNewPost }) {
 		];
 	}
 
+	blockAndAllowScroll(showModalCreatePost);
+
 	useEffect(() => {
 		if (!_.isEmpty(bookForCreatePost) || !_.isEmpty(postDataShare) || !_.isEmpty(imageToShareData)) {
-			setShowModalCreatPost(true);
+			setShowModalCreatePost(true);
 		}
 	}, [bookForCreatePost, postDataShare, imageToShareData]);
 
-	useEffect(() => {
-		if (showModalCreatPost) {
-			blockScroll();
-		} else {
-			allowScroll();
-		}
-	}, [showModalCreatPost]);
-
-	const blockScroll = () => {
-		if (!body || !body.style || scrollBlocked.current) return;
-		const scrollBarWidth = window.innerWidth - html.clientWidth;
-		const bodyPaddingRight = parseInt(window.getComputedStyle(body).getPropertyValue('padding-right')) || 0;
-		body.style.position = 'relative';
-		body.style.overflow = 'hidden';
-		body.style.paddingRight = `${bodyPaddingRight + scrollBarWidth}px`;
-		scrollBlocked.current = true;
-	};
-
-	const allowScroll = () => {
-		if (!body || !body.style || !scrollBlocked.current) return;
-		html.style.position = '';
-		html.style.overflow = '';
-		body.style.position = '';
-		body.style.overflow = '';
-		body.style.paddingRight = '';
-		scrollBlocked.current = false;
-	};
-
-	const hideCreatePostModal = () => {
-		dispatch(saveDataShare({}));
-		dispatch(handleSetImageToShare([]));
-		dispatch(updateCurrentBook({}));
-		dispatch(handleClickCreateNewPostForBook(false));
-		setOption({});
-		setShowModalCreatPost(false);
-		setShowSubModal(false);
-	};
-
-	const onChangeOption = data => {
-		setOption(data);
-	};
-
-	const handleCheck = item => {
+	const handleClickToOption = item => {
 		if (!Storage.getAccessToken()) {
 			dispatch(checkUserLogin(true));
 		} else {
 			if (item.value === 'addBook') {
 				dispatch(handleClickCreateNewPostForBook(true));
 			}
-			onChangeOption(item);
-			setShowModalCreatPost(true);
+			dispatch(setOptionAddToPost(item));
+			setShowModalCreatePost(true);
 			setShowSubModal(true);
 		}
 	};
 
 	const renderOptionList = () => {
 		return optionList.map(item => (
-			<div className='newfeed__create-post__options__item' key={item.title} onClick={() => handleCheck(item)}>
+			<div
+				className='newfeed__create-post__options__item'
+				key={item.value}
+				onClick={() => handleClickToOption(item)}
+			>
 				<div className='newfeed__create-post__options__item__logo'>{item.icon}</div>
-				<span className='text-'>{item.title.charAt(0).toUpperCase() + item.title.slice(1)}</span>
+				<span>{item.title.charAt(0).toUpperCase() + item.title.slice(1)}</span>
 			</div>
 		));
 	};
@@ -159,40 +118,23 @@ function CreatePost({ onChangeNewPost }) {
 		if (!Storage.getAccessToken()) {
 			dispatch(checkUserLogin(true));
 		} else {
-			setShowModalCreatPost(true);
+			setShowModalCreatePost(true);
 		}
 	};
 
 	return (
 		<div className='newfeed__create-post'>
-			<div className='newfeed__create-post__avatar-and-input'>
+			<div className='newfeed__create-post__avatar-and-input' onClick={handleUserLogin}>
 				<UserAvatar className='newfeed__create-post__avatar' source={userInfo?.avatarImage} />
-				<input
-					className='newfeed__create-post__input'
-					placeholder='Tạo bài viết của bạn ...'
-					onClick={() => {
-						handleUserLogin();
-					}}
-					readOnly
-				/>
+				<input className='newfeed__create-post__input' placeholder='Tạo bài viết của bạn ...' readOnly />
 			</div>
-			<div
-				className='newfeed__create-post__options'
-				onClick={() => {
-					handleUserLogin();
-				}}
-			>
-				{renderOptionList()}
-			</div>
-			{showModalCreatPost && (
+			<div className='newfeed__create-post__options'>{renderOptionList()}</div>
+			{showModalCreatePost && (
 				<CreatePostModalContent
-					hideCreatePostModal={hideCreatePostModal}
-					showModalCreatPost={showModalCreatPost}
-					option={option}
-					onChangeOption={onChangeOption}
-					onChangeNewPost={onChangeNewPost}
-					setShowModalCreatPost={setShowModalCreatPost}
+					setShowModalCreatePost={setShowModalCreatePost}
 					showSubModal={showSubModal}
+					setShowSubModal={setShowSubModal}
+					onChangeNewPost={onChangeNewPost}
 					bookForCreatePost={bookForCreatePost}
 				/>
 			)}

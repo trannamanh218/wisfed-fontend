@@ -1,4 +1,3 @@
-/* eslint-disable max-lines */
 import classNames from 'classnames';
 import { CloseX, Image, IconRanks, WorldNet } from 'components/svg'; // k xóa WorldNet
 import _ from 'lodash';
@@ -23,7 +22,7 @@ import { STATUS_BOOK } from 'constants/index';
 import { addBookToDefaultLibrary, updateMyAllLibraryRedux } from 'reducers/redux-utils/library';
 import { setting } from './settings';
 import { NotificationError } from 'helpers/Error';
-import { uploadMultiFile } from 'reducers/redux-utils/common';
+import { uploadMultiFile, setOptionAddToPost } from 'reducers/redux-utils/common';
 import { useLocation, useParams } from 'react-router-dom';
 import { creatNewPost } from 'reducers/redux-utils/group';
 import QuoteCard from 'shared/quote-card';
@@ -57,6 +56,7 @@ import { handleClickCreateNewPostForBook } from 'reducers/redux-utils/activity';
 // import ShareModeComponent from './ShareModeComponent';
 import DirectLinkALertModal from 'shared/direct-link-alert-modal';
 import { handleResetMyTargetReading, setMyTargetReading } from 'reducers/redux-utils/chart';
+import { handleSetImageToShare } from 'reducers/redux-utils/chart';
 
 const verbShareArray = [
 	POST_VERB_SHARE,
@@ -76,17 +76,14 @@ const verbShareArray = [
 const message = 'Bạn đang có bài viết chưa hoàn thành. Bạn có chắc muốn rời khỏi khi chưa đăng không?';
 
 function CreatePostModalContent({
-	hideCreatePostModal,
-	setShowModalCreatPost,
-	showModalCreatPost,
-	option,
-	onChangeOption,
-	onChangeNewPost,
+	setShowModalCreatePost,
 	showSubModal,
+	setShowSubModal,
+	onChangeNewPost,
 	bookForCreatePost,
 }) {
 	// const [shareMode, setShareMode] = useState({ value: 'public', title: 'Mọi người', icon: <WorldNet /> }); // k xóa
-	const [showMainModal, setShowMainModal] = useState(showModalCreatPost);
+	const [showMainModal, setShowMainModal] = useState(true);
 	const [taggedData, setTaggedData] = useState({
 		'addBook': {},
 		'addAuthor': [],
@@ -108,7 +105,6 @@ function CreatePostModalContent({
 	const [content, setContent] = useState('');
 	const [hashtagsAdded, setHashtagsAdded] = useState([]);
 	const [optionListState, setOptionListState] = useState([]);
-
 	const [modalShow, setModalShow] = useState(false);
 
 	const createPostModalContainer = useRef(null);
@@ -118,6 +114,7 @@ function CreatePostModalContent({
 
 	const chartImgShare = useSelector(state => state.chart.imageToShareData);
 	const { postDataShare } = useSelector(state => state.post);
+	const option = useSelector(state => state.common.optionAddToPost);
 
 	const {
 		auth: { userInfo },
@@ -208,6 +205,16 @@ function CreatePostModalContent({
 	}, [modalShow]);
 
 	// handle turn off modal
+	const hideCreatePostModal = () => {
+		setShowModalCreatePost(false);
+		setShowSubModal(false);
+		dispatch(saveDataShare({}));
+		dispatch(handleSetImageToShare([]));
+		dispatch(updateCurrentBook({}));
+		dispatch(handleClickCreateNewPostForBook(false));
+		dispatch(setOptionAddToPost({}));
+	};
+
 	const handleClose = () => {
 		if (content) {
 			setModalShow(true);
@@ -245,14 +252,14 @@ function CreatePostModalContent({
 
 	const backToMainModal = () => {
 		setShowMainModal(true);
-		onChangeOption({});
+		dispatch(setOptionAddToPost({}));
 	};
 
 	const addOptionsToPost = param => {
 		if (param.value === 'addBook') {
 			dispatch(handleClickCreateNewPostForBook(true));
 		}
-		onChangeOption(param);
+		dispatch(setOptionAddToPost(param));
 		setShowMainModal(false);
 	};
 
@@ -550,12 +557,8 @@ function CreatePostModalContent({
 				toast.error('Tạo bài viết thất bại!', { toastId: customIdCreatePostFail });
 			}
 		} finally {
-			dispatch(updateCurrentBook({}));
-			dispatch(saveDataShare({}));
 			setStatus(STATUS_IDLE);
 			hideCreatePostModal();
-			onChangeOption({});
-			setShowModalCreatPost(false);
 			dispatch(setMyTargetReading([]));
 			dispatch(handleResetMyTargetReading());
 		}
@@ -940,15 +943,11 @@ function CreatePostModalContent({
 }
 
 CreatePostModalContent.propTypes = {
-	hideCreatePostModal: PropTypes.func,
-	showModalCreatPost: PropTypes.bool,
-	option: PropTypes.object,
-	onChangeOption: PropTypes.func,
 	onChangeNewPost: PropTypes.func,
-	setShowModalCreatPost: PropTypes.func,
+	setShowModalCreatePost: PropTypes.func,
 	showSubModal: PropTypes.bool,
+	setShowSubModal: PropTypes.func,
 	bookForCreatePost: PropTypes.object,
-	message: PropTypes.string,
 };
 
 export default CreatePostModalContent;

@@ -73,27 +73,14 @@ function RichTextEditor({
 		if (content && hasMentionsUser) {
 			setEditorState(EditorState.createEmpty());
 			setTimeout(() => {
-				// console.log('22');
+				editor.current.blur();
+			}, 10);
+			setTimeout(() => {
 				editor.current.focus();
-				// const data = {
-				// 	'blocks': [
-				// 		{
-				// 			'text': 'run 111',
-				// 			'type': 'unstyled',
-				// 			'depth': 0,
-				// 			'inlineStyleRanges': [],
-				// 			'entityRanges': [],
-				// 			'data': {},
-				// 		},
-				// 	],
-				// 	'entityMap': {},
-				// };
-
-				// const contentState = convertFromRaw(data);
-				// setEditorState(EditorState.createWithContent(contentState));
-			}, 200);
+			}, 50);
 		}
 	}, [createCmt]);
+	//-------------------------------------------------------
 
 	useEffect(() => {
 		const textValue = editorState.getCurrentContent().getPlainText().trim();
