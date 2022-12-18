@@ -255,13 +255,16 @@ const ReviewTab = ({ currentTab }) => {
 				key='Bài-review'
 				handleSortFilter={toggleModal}
 			>
-				<FitlerOptions
-					list={filterOptions}
-					currentOption={currentOption}
-					handleChangeOption={handleChangeOption}
-					name='filter-user'
-					className='review-tab__filter__options'
-				/>
+				{currentTab === 'reviews' && (
+					<FitlerOptions
+						list={filterOptions}
+						currentOption={currentOption}
+						handleChangeOption={handleChangeOption}
+						name='filter-user'
+						className='review-tab__filter__options'
+					/>
+				)}
+
 				<div className='review-tab__search'>
 					<SearchField
 						value={inputSearch}

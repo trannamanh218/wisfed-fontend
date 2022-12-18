@@ -10,6 +10,8 @@ import { getChartsByid, handleSetImageToShare } from 'reducers/redux-utils/chart
 import { useNavigate } from 'react-router-dom';
 import Circle from 'shared/loading/circle';
 import { useCurrentPng } from 'recharts-to-png';
+import { CHART_VERB_SHARE } from 'constants';
+import { saveDataShare } from 'reducers/redux-utils/post';
 
 const PageTab = () => {
 	const [currentOption, setCurrentOption] = useState({ value: 'month', title: 'Theo tháng' });
@@ -75,12 +77,20 @@ const PageTab = () => {
 				const imgUploadder = [imageUploadedData];
 				if (imageUploadedData) {
 					setLoading(false);
+					const dataToShare = {
+						type: 'readingChart',
+						verb: CHART_VERB_SHARE,
+						by: currentOption.value,
+						userId: userId,
+						isReadedChart: false,
+					};
+					dispatch(saveDataShare(dataToShare));
+					dispatch(handleSetImageToShare(imgUploadder));
 					navigate('/');
-					return dispatch(handleSetImageToShare(imgUploadder));
 				}
 			}
 		}
-	}, [getAreaPng]);
+	}, [getAreaPng, currentOption]);
 
 	const onChangeOption = item => {
 		setCurrentOption(item);

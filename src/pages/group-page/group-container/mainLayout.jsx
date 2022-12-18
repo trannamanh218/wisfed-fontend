@@ -123,13 +123,10 @@ const MainLayout = ({ listMyGroup, listAdminMyGroup }) => {
 		}
 	}, [resetGroupList, userInfo]);
 
-	const handleUserLogin = item => {
-		if (!Storage.getAccessToken()) {
-			dispatch(checkUserLogin(true));
-		} else {
-			navigate(`/group/${item.id}`);
-		}
+	const goToGroupDetail = item => {
+		navigate(`/group/${item.id}`);
 	};
+
 	return (
 		<>
 			{loading ? (
@@ -166,7 +163,7 @@ const MainLayout = ({ listMyGroup, listAdminMyGroup }) => {
 														src={item.avatar}
 														onError={e => e.target.setAttribute('src', defaultAvatar)}
 														alt=''
-														onClick={() => handleUserLogin(item)}
+														onClick={() => goToGroupDetail(item)}
 														style={{ cursor: 'pointer' }}
 													/>
 													<div className='item-group__text'>
@@ -184,10 +181,11 @@ const MainLayout = ({ listMyGroup, listAdminMyGroup }) => {
 														<div className='item-group__count-post'>
 															<span>{item.countPost} bài viết/ngày</span>
 														</div>
-														<div className='item-group-btn'>
-															<button onClick={() => handleUserLogin(item)}>
-																Truy cập vào nhóm
-															</button>
+														<div
+															className='item-group-btn'
+															onClick={() => goToGroupDetail(item)}
+														>
+															Truy cập vào nhóm
 														</div>
 													</div>
 												</div>

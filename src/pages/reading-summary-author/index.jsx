@@ -15,6 +15,8 @@ import NotFound from 'pages/not-found';
 import BackButton from 'shared/back-button';
 import BookAuthorChartSearch from './search-component';
 import SearchIcon from 'assets/icons/search.svg';
+import { GROWTH_CHART_VERB_SHARE } from 'constants';
+import { saveDataShare } from 'reducers/redux-utils/post';
 
 const ReadingSummaryChartAuthor = () => {
 	const [chartsData, setChartsData] = useState({});
@@ -24,6 +26,7 @@ const ReadingSummaryChartAuthor = () => {
 	const [sortValue, setSortValue] = useState('day');
 	const [sortValueKey, setSortValueKey] = useState('read');
 	const [nameBook, setNameBook] = useState('');
+	const [authorName, setAuthorName] = useState('');
 	const [changeValue, setChangeValue] = useState(false);
 	const [getAreaPng, { ref: areaRef }] = useCurrentPng();
 	const dispatch = useDispatch();
@@ -89,6 +92,8 @@ const ReadingSummaryChartAuthor = () => {
 				setChartsData(data.data);
 			}
 			setNameBook(data.book.name);
+			const authorData = data.book.authors.map(item => item.authorName).join(', ');
+			setAuthorName(authorData);
 		} catch (err) {
 			setErrorLoadPage(true);
 		} finally {
@@ -114,12 +119,20 @@ const ReadingSummaryChartAuthor = () => {
 				const imgUploadder = [imageUploadedData];
 				if (imageUploadedData) {
 					setLoading(false);
+					const dataToShare = {
+						type: 'growthChart',
+						verb: GROWTH_CHART_VERB_SHARE,
+						nameBook: nameBook,
+						authorName: authorName,
+						bookId: bookId,
+					};
+					dispatch(saveDataShare(dataToShare));
+					dispatch(handleSetImageToShare(imgUploadder));
 					navigate('/');
-					return dispatch(handleSetImageToShare(imgUploadder));
 				}
 			}
 		}
-	}, [getAreaPng]);
+	}, [getAreaPng, nameBook, authorName]);
 
 	const renderHoverColumn = data => {
 		switch (sortValueKey) {

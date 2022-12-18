@@ -63,6 +63,8 @@ export const TOP_QUOTE_VERB_SHARE_LV1 = 'shareTopQuoteLv1';
 export const TOP_USER_VERB_SHARE = 'shareTopUserRanking';
 export const TOP_USER_VERB_SHARE_LV1 = 'shareTopUserLv1';
 export const REVIEW_VERB_SHARE = 'shareReview';
+export const CHART_VERB_SHARE = 'shareChart';
+export const GROWTH_CHART_VERB_SHARE = 'growthChart';
 
 // input type number
 export const blockInvalidChar = e => {

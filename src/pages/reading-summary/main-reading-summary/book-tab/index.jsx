@@ -9,6 +9,8 @@ import { useParams } from 'react-router-dom';
 import { useCurrentPng } from 'recharts-to-png';
 import { useNavigate } from 'react-router-dom';
 import Circle from 'shared/loading/circle';
+import { CHART_VERB_SHARE } from 'constants';
+import { saveDataShare } from 'reducers/redux-utils/post';
 
 const BookTab = ({ setErrorLoadPage }) => {
 	const [currentOption, setCurrentOption] = useState({ value: 'month', title: 'Theo tháng' });
@@ -83,12 +85,20 @@ const BookTab = ({ setErrorLoadPage }) => {
 
 				if (imageUploadedData) {
 					setLoading(false);
+					const dataToShare = {
+						type: 'readingChart',
+						verb: CHART_VERB_SHARE,
+						by: currentOption.value,
+						userId: userId,
+						isReadedChart: true,
+					};
+					dispatch(saveDataShare(dataToShare));
+					dispatch(handleSetImageToShare(imgUploadder));
 					navigate('/');
-					return dispatch(handleSetImageToShare(imgUploadder));
 				}
 			}
 		}
-	}, [getAreaPng]);
+	}, [getAreaPng, currentOption]);
 
 	const onChangeOption = item => {
 		setCurrentOption(item);

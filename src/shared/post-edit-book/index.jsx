@@ -1,6 +1,6 @@
 import { STATUS_BOOK } from 'constants/index';
 import PropTypes from 'prop-types';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import BookThumbnail from 'shared/book-thumbnail';
 import LinearProgressBar from 'shared/linear-progress-bar';
 import ReactRating from 'shared/react-rating';
@@ -14,7 +14,6 @@ import { blockInvalidChar } from 'constants';
 const PostEditBook = ({ data, handleAddToPost, handleChangeStar, valueStar }) => {
 	const [listRatingStar, setListRatingStar] = useState(null);
 	const [showText, setShowText] = useState(true);
-	const inputRef = useRef(null);
 	const dispatch = useDispatch();
 
 	const createNewPostForBook = useSelector(state => state.activity.createNewPostForBook);
@@ -34,16 +33,7 @@ const PostEditBook = ({ data, handleAddToPost, handleChangeStar, valueStar }) =>
 		} else {
 			setListRatingStar({ count: data.countRating, avg: data.avgRating });
 		}
-
-		if (inputRef.current) {
-			inputRef.current.focus();
-			inputRef.current.addEventListener('keyup', event => {
-				if (event.keyCode === 13) {
-					event.preventDefault();
-				}
-			});
-		}
-	}, [data]);
+	}, [data.id]);
 
 	const handleChange = e => {
 		const { value } = e.target;
@@ -85,7 +75,6 @@ const PostEditBook = ({ data, handleAddToPost, handleChangeStar, valueStar }) =>
 								<span>{data.progress || 0}</span>
 							) : (
 								<input
-									ref={inputRef}
 									className='post-edit-book__input'
 									onKeyDown={blockInvalidChar}
 									onChange={handleChange}

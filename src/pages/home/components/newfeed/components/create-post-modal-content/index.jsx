@@ -5,20 +5,25 @@ import PropTypes from 'prop-types';
 import { useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-import { createActivity } from 'reducers/redux-utils/activity';
+import { createActivity, handleClickCreateNewPostForBook } from 'reducers/redux-utils/activity';
 import PostEditBook from 'shared/post-edit-book';
 import OptionsPost from './OptionsPost';
 import CreatPostSubModal from './CreatePostSubModal';
 import TaggedList from './TaggedList';
 import UploadImage from './UploadImage';
 import PreviewLink from 'shared/preview-link/PreviewLink';
-import { getPreviewUrl, getSharePostInternal, getSharePostRanks, shareMyBook } from 'reducers/redux-utils/post';
+import {
+	getPreviewUrl,
+	getSharePostInternal,
+	getSharePostRanks,
+	shareMyBook,
+	saveDataShare,
+} from 'reducers/redux-utils/post';
 import Circle from 'shared/loading/circle';
 import './style.scss';
 import { ratingUser } from 'reducers/redux-utils/book';
 import UserAvatar from 'shared/user-avatar';
 import { updateCurrentBook, updateProgressReadingBook, createReviewBook } from 'reducers/redux-utils/book';
-import { STATUS_BOOK } from 'constants/index';
 import { addBookToDefaultLibrary, updateMyAllLibraryRedux } from 'reducers/redux-utils/library';
 import { setting } from './settings';
 import { NotificationError } from 'helpers/Error';
@@ -26,7 +31,6 @@ import { uploadMultiFile, setOptionAddToPost } from 'reducers/redux-utils/common
 import { useLocation, useParams } from 'react-router-dom';
 import { creatNewPost } from 'reducers/redux-utils/group';
 import QuoteCard from 'shared/quote-card';
-import { saveDataShare } from 'reducers/redux-utils/post';
 import AuthorBook from 'shared/author-book';
 import ShareUsers from '../modal-share-users';
 import RichTextEditor from 'shared/rich-text-editor';
@@ -34,29 +38,32 @@ import ShareTarget from 'shared/share-target';
 import PostShare from 'shared/posts-Share';
 import { shareTargetReadings } from 'reducers/redux-utils/target';
 import {
+	CHART_VERB_SHARE,
+	GROUP_POST_VERB_SHARE,
+	GROWTH_CHART_VERB_SHARE,
+	hashtagRegex,
+	MY_BOOK_VERB_SHARE,
 	POST_VERB_SHARE,
 	QUOTE_VERB_SHARE,
-	GROUP_POST_VERB_SHARE,
 	READ_TARGET_VERB_SHARE,
-	TOP_USER_VERB_SHARE,
-	TOP_BOOK_VERB_SHARE,
-	TOP_QUOTE_VERB_SHARE,
-	MY_BOOK_VERB_SHARE,
-	REVIEW_VERB_SHARE,
-	TOP_USER_VERB_SHARE_LV1,
-	TOP_BOOK_VERB_SHARE_LV1,
-	hashtagRegex,
 	READ_TARGET_VERB_SHARE_LV1,
+	REVIEW_VERB_SHARE,
+	STATUS_BOOK,
 	STATUS_IDLE,
 	STATUS_LOADING,
 	STATUS_SUCCESS,
+	TOP_BOOK_VERB_SHARE,
+	TOP_BOOK_VERB_SHARE_LV1,
+	TOP_QUOTE_VERB_SHARE,
 	TOP_QUOTE_VERB_SHARE_LV1,
+	TOP_USER_VERB_SHARE,
+	TOP_USER_VERB_SHARE_LV1,
 } from 'constants';
-import { handleClickCreateNewPostForBook } from 'reducers/redux-utils/activity';
+import './style.scss';
 // import ShareModeComponent from './ShareModeComponent';
-import DirectLinkALertModal from 'shared/direct-link-alert-modal';
 import { handleResetMyTargetReading, setMyTargetReading } from 'reducers/redux-utils/chart';
 import { handleSetImageToShare } from 'reducers/redux-utils/chart';
+import DirectLinkALertModal from 'shared/direct-link-alert-modal';
 
 const verbShareArray = [
 	POST_VERB_SHARE,
@@ -511,6 +518,28 @@ function CreatePostModalContent({
 						...params,
 					};
 					await dispatch(getSharePostInternal(query)).unwrap();
+				} else if (postDataShare.verb === CHART_VERB_SHARE) {
+					const query = {
+						metaData: {
+							type: postDataShare.type,
+							chartBy: postDataShare.userId,
+							chartType: postDataShare.by,
+							isReadedChart: postDataShare.isReadedChart,
+						},
+						...params,
+					};
+					await dispatch(createActivity(query)).unwrap();
+				} else if (postDataShare.verb === GROWTH_CHART_VERB_SHARE) {
+					const query = {
+						metaData: {
+							type: postDataShare.type,
+							chartType: postDataShare.by,
+							reportType: 'addToLibrary',
+							bookId: postDataShare.bookId,
+						},
+						...params,
+					};
+					await dispatch(createActivity(query)).unwrap();
 				}
 			} else {
 				if (params.bookId) {
@@ -528,6 +557,8 @@ function CreatePostModalContent({
 									? valueStar
 									: 0,
 							tags: params.tags,
+							image: params.image,
+							preview: params.preview,
 						};
 						dispatch(createReviewBook(reviewData));
 					}
@@ -566,7 +597,7 @@ function CreatePostModalContent({
 
 	useEffect(() => {
 		if (!_.isEmpty(taggedData.addBook)) {
-			if (taggedData.addBook.status === 'read') {
+			if (!_.isEmpty(bookForCreatePost) && taggedData.addBook.status === 'read') {
 				setProgressInputValue(taggedData.addBook.page);
 			} else {
 				setProgressInputValue(parseInt(taggedData.addBook.progress));
@@ -682,6 +713,16 @@ function CreatePostModalContent({
 		setModalShow(false);
 	};
 
+	const renderChartTitle = () => {
+		if (postDataShare?.verb === CHART_VERB_SHARE) {
+			return `# Biểu đồ số ${
+				postDataShare?.isReadedChart ? 'sách' : 'trang sách'
+			} đã đọc nhiều nhất theo ${handleTime()}`;
+		} else if (postDataShare?.type === 'growthChart') {
+			return `# Biểu đồ tăng trưởng của cuốn sách "${postDataShare?.nameBook}" của ${postDataShare?.authorName}`;
+		}
+	};
+
 	return (
 		<div className='create-post-modal-content__container' ref={createPostModalContainer}>
 			<div className='create-post-modal-content'>
@@ -761,6 +802,12 @@ function CreatePostModalContent({
 									<IconRanks />
 								</div>
 							)}
+							{(postDataShare?.verb === CHART_VERB_SHARE ||
+								postDataShare?.verb === GROWTH_CHART_VERB_SHARE) && (
+								<div className='post__title__share__rank'>
+									<span className='number__title__rank'>{renderChartTitle()}</span>
+								</div>
+							)}
 							{postDataShare.type === 'topBook' && postDataShare.verb === TOP_BOOK_VERB_SHARE_LV1 && (
 								<div className='post__title__share__rank'>
 									<span className='number__title__rank'># Top {postDataShare.trueRank}</span>
@@ -779,10 +826,11 @@ function CreatePostModalContent({
 									<span className='number__title__rank'># Sách của tôi làm tác giả</span>
 								</div>
 							)}
-
 							{!_.isEmpty(postDataShare) && (
 								<div
 									className={
+										postDataShare.verb !== GROWTH_CHART_VERB_SHARE &&
+										postDataShare.verb !== CHART_VERB_SHARE &&
 										postDataShare.verb !== TOP_USER_VERB_SHARE_LV1 &&
 										postDataShare.verb !== READ_TARGET_VERB_SHARE_LV1
 											? 'create-post-modal-content__main__share-container'
@@ -824,7 +872,6 @@ function CreatePostModalContent({
 								<ShareTarget postData={postDataShare} />
 							)}
 							{postDataShare.verb === TOP_USER_VERB_SHARE_LV1 && <ShareUsers postData={postDataShare} />}
-
 							{!_.isEmpty(taggedData.addBook) || showUpload ? (
 								<>
 									{!_.isEmpty(taggedData.addBook) && (

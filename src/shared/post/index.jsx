@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { Feather } from 'components/svg';
+import { Feather, Pencil, QuoteIcon } from 'components/svg';
 import { calculateDurationTime } from 'helpers/Common';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
@@ -54,6 +54,7 @@ import { toast } from 'react-toastify';
 import DirectLinkALertModal from 'shared/direct-link-alert-modal';
 import ShowTime from 'shared/showTimeOfPostWhenHover/showTime';
 import WithFriends from './withFriends/WithFriends';
+// import dots from 'assets/images/dots.png';
 
 const verbShareArray = [
 	POST_VERB_SHARE,
@@ -78,6 +79,7 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 	const [modalShow, setModalShow] = useState(false);
 	const [haveNotClickedSeeMoreOnce, setHaveNotClickedSeeMoreOnce] = useState(true);
 	const [showReplyArrayState, setShowReplyArrayState] = useState([]);
+	// const [isSettingsVisible, setSettingsVisible] = useState(false);
 
 	const { userInfo } = useSelector(state => state.auth);
 	const isJoinedGroup = useSelector(state => state.group.isJoinedGroup);
@@ -276,16 +278,14 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 		clickReply.current = !clickReply.current;
 	};
 
-	const handleTime = () => {
-		if (!_.isEmpty(postData.originId)) {
-			switch (postData.originId.by) {
-				case 'week':
-					return 'tuần';
-				case 'month':
-					return 'tháng';
-				case 'year':
-					return 'năm';
-			}
+	const handleTime = item => {
+		switch (item) {
+			case 'week':
+				return 'tuần';
+			case 'month':
+				return 'tháng';
+			case 'year':
+				return 'năm';
 		}
 	};
 
@@ -406,78 +406,113 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 		}
 	};
 
+	const renderChartTitle = () => {
+		if (postData?.metaData?.type === 'readingChart') {
+			return `# Biểu đồ số ${
+				postData?.metaData?.isReadedChart ? 'sách' : 'trang sách'
+			} đã đọc nhiều nhất theo ${handleTime(postData?.metaData.chartType)}`;
+		} else if (postData?.metaData?.type === 'growthChart') {
+			return `# Biểu đồ tăng trưởng của cuốn sách "${
+				postData?.metaData?.book?.name
+			}" của ${postData?.metaData?.book?.authors.map(name => name.authorName).join(', ')} `;
+		}
+	};
+
+	// const handleSettings = () => {
+	// 	setSettingsVisible(prev => !prev);
+	// };
+
 	return (
 		<div className='post__container'>
-			<div className='post__user-status'>
-				<UserAvatar
-					data-testid='post__user-avatar'
-					className='post__user-status__avatar'
-					source={postData?.createdBy?.avatarImage || postData.user?.avatarImage}
-					handleClick={() => navigate(`/profile/${postData.createdBy?.id || postData.user?.id}`)}
-				/>
-				<div className='post__user-status__name-and-post-time-status'>
-					<div className='post__user-status__name'>
-						<Link
-							to={`/profile/${postData.createdBy?.id || postData.user?.id}`}
-							data-testid='post__user-name'
-						>
-							{postData?.createdBy?.fullName || postData?.user?.fullName || 'Ẩn danh'}
-						</Link>
+			<div className='box_post__user-status'>
+				<div className='post__user-status'>
+					<UserAvatar
+						data-testid='post__user-avatar'
+						className='post__user-status__avatar'
+						source={postData?.createdBy?.avatarImage || postData.user?.avatarImage}
+						handleClick={() => navigate(`/profile/${postData.createdBy?.id || postData.user?.id}`)}
+					/>
+					<div className='post__user-status__name-and-post-time-status'>
+						<div className='post__user-status__name'>
+							<Link
+								to={`/profile/${postData.createdBy?.id || postData.user?.id}`}
+								data-testid='post__user-name'
+							>
+								{postData?.createdBy?.fullName || postData?.user?.fullName || 'Ẩn danh'}
+							</Link>
 
-						{/* tagged people */}
-						{postData.mentionsUsers && !!postData.mentionsUsers.length && (
-							<WithFriends data={postData.mentionsUsers} />
-						)}
-						{(postData.verb === GROUP_POST_VERB ||
-							window.location.pathname.includes('/hashtag-group/')) && (
-							<>
-								<img className='post__user-icon' src={Play} alt='arrow' />
-								<Link
-									to={`/group/${postData.group?.id || postData.groupInfo?.id}`}
-									className='post__name__group'
-								>
-									{postData.group?.name || postData.groupInfo?.name}
-								</Link>
-							</>
-						)}
-					</div>
-
-					<div className='post__user-status__post-time-status'>
-						<div className='show-time'>
-							<span onClick={handleViewPostDetail}>
-								{calculateDurationTime(postData.time || postData.createdAt)}
-							</span>
-							{/* Hiển thị ngày giờ chính xác khi hover  */}
-							<ShowTime dataTime={postData.time || postData.createdAt} />
-						</div>
-						<img src={vector} />
-						<>
-							{postData.book && (
-								<div className='post__user-status__subtitle'>
-									{postData.isUpdateProgress && (
-										<span style={{ marginRight: '12px', marginLeft: '5px' }}>
-											Cập nhật tiến độ đọc sách
-										</span>
-									)}
-									{postInformations?.book?.actorRating !== null ? (
-										<>
-											<div className='post__user-status__post-time-status__online-dot'></div>
-											<span>Xếp hạng</span>
-											<ReactRating
-												readonly={true}
-												initialRating={
-													postInformations?.book?.actorRating
-														? postInformations?.book?.actorRating?.star
-														: 0
-												}
-											/>
-										</>
-									) : null}
-								</div>
+							{/* tagged people */}
+							{postData.mentionsUsers && !!postData.mentionsUsers.length && (
+								<WithFriends data={postData.mentionsUsers} />
 							)}
-						</>
+							{(postData.verb === GROUP_POST_VERB ||
+								window.location.pathname.includes('/hashtag-group/')) && (
+								<>
+									<img className='post__user-icon' src={Play} alt='arrow' />
+									<Link
+										to={`/group/${postData.group?.id || postData.groupInfo?.id}`}
+										className='post__name__group'
+									>
+										{postData.group?.name || postData.groupInfo?.name}
+									</Link>
+								</>
+							)}
+						</div>
+						<div className='post__user-status__post-time-status'>
+							<div className='show-time'>
+								<span onClick={handleViewPostDetail}>
+									{calculateDurationTime(postData.time || postData.createdAt)}
+								</span>
+								{/* Hiển thị ngày giờ chính xác khi hover  */}
+								<ShowTime dataTime={postData.time || postData.createdAt} />
+							</div>
+							<img src={vector} />
+							<>
+								{postData.book && (
+									<div className='post__user-status__subtitle'>
+										{postData.isUpdateProgress && (
+											<span style={{ marginRight: '12px', marginLeft: '5px' }}>
+												Cập nhật tiến độ đọc sách
+											</span>
+										)}
+										{postInformations?.book?.actorRating !== null ? (
+											<>
+												<div className='post__user-status__post-time-status__online-dot'></div>
+												<span>Xếp hạng</span>
+												<ReactRating
+													readonly={true}
+													initialRating={
+														postInformations?.book?.actorRating
+															? postInformations?.book?.actorRating?.star
+															: 0
+													}
+												/>
+											</>
+										) : null}
+									</div>
+								)}
+							</>
+						</div>
 					</div>
 				</div>
+				{/* <div className='setting'>
+					<button className='setting-btn' onClick={handleSettings}>
+						<img src={dots} alt='setting' />
+					</button>
+					{isSettingsVisible && (
+						<ul className='setting-list'>
+							<li className='setting-item'>
+								<Pencil />
+								<span className='setting-item__content'>Chỉnh sửa bài viết</span>
+							</li>
+
+							<li className='setting-item'>
+								<QuoteIcon />
+								<span className='setting-item__content'>xóa bài viết</span>
+							</li>
+						</ul>
+					)}
+				</div> */}
 			</div>
 			{(postData.message || postData.content) && (
 				<div className='post__content-wrapper'>
@@ -493,6 +528,11 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 								{readMore ? 'Rút gọn' : 'Xem thêm'}
 							</div>
 						)}
+				</div>
+			)}
+			{(postData?.metaData?.type === 'readingChart' || postData?.metaData?.type === 'growthChart') && (
+				<div className='post__title__share__rank'>
+					<span className='number__title__rank'>{renderChartTitle()}</span>
 				</div>
 			)}
 			{!!postData?.mentionsAuthors?.length && (
@@ -533,8 +573,10 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 					<span className='number__title__rank'># Top {postData.originId.rank} quotes </span>
 					<span className='title__rank'>
 						{postData.info.category
-							? `  được like nhiều nhất thuộc ${postData.info.category.name} theo ${handleTime()} `
-							: `  được like nhiều nhất theo ${handleTime()} `}
+							? `  được like nhiều nhất thuộc ${postData.info.category.name} theo ${handleTime(
+									postData?.originId?.by
+							  )} `
+							: `  được like nhiều nhất theo ${handleTime(postData?.originId?.by)} `}
 					</span>
 					<IconRanks />
 				</div>
@@ -545,7 +587,7 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 					<span className='title__rank'>
 						{`  cuốn sách tốt nhất ${
 							postData.info.category ? ` thuộc ${postData.info.category.name}` : ''
-						} theo ${handleTime()} `}
+						} theo ${handleTime(postData?.originId?.by)} `}
 					</span>
 					<IconRanks />
 				</div>

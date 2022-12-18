@@ -7,11 +7,10 @@ import { changeKey } from 'reducers/redux-utils/forget-password';
 import Circle from 'shared/loading/circle';
 import { emailValidate } from 'helpers/Validation';
 import Subtract from 'assets/images/Subtract.png';
-import { forgotPassword, handleDataToResetPassword, forgotPasswordAdmin } from 'reducers/redux-utils/auth';
-import PropTypes from 'prop-types';
+import { forgotPassword, handleDataToResetPassword } from 'reducers/redux-utils/auth';
 import { useRef } from 'react';
 
-function ForgetpasswordFormComponent({ type }) {
+function ForgetpasswordFormComponent() {
 	const [isShow, setIsShow] = useState(false);
 	const [dataModal, setDatamodal] = useState({});
 	const [showImagePopover, setShowImagePopover] = useState(0);
@@ -23,7 +22,7 @@ function ForgetpasswordFormComponent({ type }) {
 
 	const handleChangeModal = () => {
 		setIsShow(false);
-		if (type === 'default' && !isError.current) {
+		if (!isError.current) {
 			dispatch(changeKey(true));
 		}
 	};
@@ -34,12 +33,8 @@ function ForgetpasswordFormComponent({ type }) {
 		if (!isShow) {
 			setIsLoading(true);
 			try {
-				if (type === 'default') {
-					const dataToResetPassword = await dispatch(forgotPassword(dataSend)).unwrap();
-					dispatch(handleDataToResetPassword({ email: dataToResetPassword.userEmail }));
-				} else {
-					await dispatch(forgotPasswordAdmin(data)).unwrap();
-				}
+				const dataToResetPassword = await dispatch(forgotPassword(dataSend)).unwrap();
+				dispatch(handleDataToResetPassword({ email: dataToResetPassword.userEmail }));
 				setIsShow(true);
 				setDatamodal({
 					title: 'Đã gửi mã',
@@ -141,13 +136,5 @@ function ForgetpasswordFormComponent({ type }) {
 		</div>
 	);
 }
-
-ForgetpasswordFormComponent.defaultProps = {
-	type: 'default',
-};
-
-ForgetpasswordFormComponent.propTypes = {
-	type: PropTypes.string,
-};
 
 export default ForgetpasswordFormComponent;

@@ -146,7 +146,7 @@ function MyGroup() {
 																		onError={e =>
 																			e.target.setAttribute('src', defaultAvatar)
 																		}
-																		alt=''
+																		alt='image'
 																	/>
 																</Link>
 																<div className='item-group__text'>
@@ -164,11 +164,13 @@ function MyGroup() {
 																	<div className='item-group__count-post'>
 																		<span>{item.countPost} bài viết/ngày</span>
 																	</div>
-																	<div className='item-group-btn'>
-																		<Link key={index} to={`/group/${item.id}`}>
-																			<button>Truy cập vào nhóm </button>
-																		</Link>
-																	</div>
+																	<Link
+																		key={index}
+																		className='item-group-btn'
+																		to={`/group/${item.id}`}
+																	>
+																		Truy cập vào nhóm
+																	</Link>
 																</div>
 															</div>
 														);
@@ -225,11 +227,13 @@ function MyGroup() {
 																		<div className='item-group__count-post'>
 																			<span>{item.countPost} bài viết/ngày</span>
 																		</div>
-																		<div className='item-group-btn'>
-																			<Link key={index} to={`/group/${item.id}`}>
-																				<button>Truy cập vào nhóm </button>
-																			</Link>
-																		</div>
+																		<Link
+																			key={index}
+																			className='item-group-btn'
+																			to={`/group/${item.id}`}
+																		>
+																			Truy cập vào nhóm
+																		</Link>
 																	</div>
 																</div>
 															);

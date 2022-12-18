@@ -199,24 +199,20 @@
 
 		.item-group-btn {
 			background: #e0af7e;
-			border-radius: 11.7391px;
+			border-radius: 12px;
 			display: flex;
 			align-items: center;
 			justify-content: center;
 			padding: 9px 22px;
 			margin-top: 15.3px;
-			button {
-				font-family: 'Montserrat';
-				font-style: normal;
-				font-weight: 600;
-				font-size: 13px;
-				line-height: 22px;
-				display: flex;
-				align-items: center;
-				text-align: center;
-				letter-spacing: 0.25px;
-				color: #fcfcfc;
-			}
+			font-family: 'Montserrat';
+			font-style: normal;
+			font-weight: 600;
+			font-size: 13px;
+			line-height: 22px;
+			letter-spacing: 0.25px;
+			color: #fcfcfc;
+			cursor: pointer;
 		}
 	}
 }
@@ -407,20 +403,6 @@
 	}
 }
 
-@media only screen and (max-width: 768px) {
-	.groups-container {
-		.mainContainer__main-left {
-			.item-group {
-				.item-group-btn {
-					button {
-						font-size: 11px;
-					}
-				}
-			}
-		}
-	}
-}
-
 .group-btn-back {
 	display: flex;
 	align-items: center;
@@ -428,5 +410,17 @@
 	gap: 20px;
 	h4 {
 		margin-bottom: 0;
+	}
+}
+
+@media only screen and (max-width: 768px) {
+	.groups-container {
+		.mainContainer__main-left {
+			.item-group {
+				.item-group-btn {
+					font-size: 11px;
+				}
+			}
+		}
 	}
 }

@@ -3,7 +3,7 @@ import Post from 'shared/post';
 import './post-tab.scss';
 import { getPostsByUser } from 'reducers/redux-utils/post';
 import { useParams } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import LoadingIndicator from 'shared/loading-indicator';
@@ -20,6 +20,7 @@ function PostTab({ currentTab }) {
 
 	const { userId } = useParams();
 	const dispatch = useDispatch();
+	const { userInfo } = useSelector(state => state.auth);
 
 	const callApiStart = useRef(0);
 	const callApiPerPage = useRef(5);
@@ -69,7 +70,7 @@ function PostTab({ currentTab }) {
 
 	return (
 		<div className={classNames('post-tab', { 'loading': loading })}>
-			<CreatePost onChangeNewPost={onChangeNewPost} />
+			{userId === userInfo.id && <CreatePost onChangeNewPost={onChangeNewPost} />}
 			{loading ? (
 				<LoadingIndicator />
 			) : (
