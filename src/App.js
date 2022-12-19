@@ -89,20 +89,13 @@ function App({ children }) {
 
 	useEffect(() => {
 		allowScroll();
-		if (location.pathname !== '/forget-password') {
+		if (location.pathname !== '/forget-password/') {
 			dispatch(changeKey(false));
 		}
 	}, [location]);
 
 	const renderHeader = () => {
-		const excludePaths = [
-			'/login',
-			'/register',
-			'/forget-password',
-			'/forget-password-admin',
-			'/create-newpassword-admin',
-			'/choose-topic',
-		];
+		const excludePaths = ['/login', '/register', '/forget-password', '/create-newpassword-admin', '/choose-topic'];
 		if (!excludePaths.some(path => location.pathname.includes(path)))
 			return (
 				<div style={{ margin: 'auto', maxWidth: '1440px' }}>
@@ -167,7 +160,6 @@ function App({ children }) {
 				<Route path='/login' element={<Login />} />
 				<Route path='/register' element={<Register />} />
 				<Route path='/forget-password' element={<ForgetPassWordComponent />} />
-				<Route path='/forget-password-admin' element={<ForgetPassWordComponent type='admin' />} />
 				<Route path='/create-newpassword-admin' element={<AdminCreateNewPassword />} />
 				<Route path='/choose-topic' element={<ChooseTopic />} />
 				<Route path='direct' element={<Direct />} />

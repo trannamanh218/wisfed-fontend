@@ -2,15 +2,21 @@ import './style.scss';
 import ProgressBar from 'react-bootstrap/ProgressBar';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
-import { updateCurrentBook } from 'reducers/redux-utils/book';
+import { updateBookForCreatePost } from 'reducers/redux-utils/book';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import _ from 'lodash';
+import CreatePostModalContent from 'pages/home/components/newfeed/components/create-post-modal-content';
+import { blockAndAllowScroll } from 'api/blockAndAllowScroll.hook';
 
 function ReadingBook({ bookData }) {
-	const dispatch = useDispatch();
 	const [percent, setPercent] = useState(0);
+	const [showModalCreatePost, setShowModalCreatePost] = useState(false);
+
 	const navigate = useNavigate();
+	const dispatch = useDispatch();
+
+	blockAndAllowScroll(showModalCreatePost);
 
 	useEffect(() => {
 		if (!_.isEmpty(bookData)) {
@@ -20,8 +26,8 @@ function ReadingBook({ bookData }) {
 	}, [bookData, percent]);
 
 	const handleOpenModal = () => {
-		dispatch(updateCurrentBook({ ...bookData, status: 'reading' }));
-		navigate('/');
+		dispatch(updateBookForCreatePost({ ...bookData, status: 'reading' }));
+		setShowModalCreatePost(true);
 	};
 
 	const onClickImgBook = bookData => {
@@ -76,11 +82,14 @@ function ReadingBook({ bookData }) {
 						</div>
 					</div>
 				</div>
+				{showModalCreatePost && <CreatePostModalContent setShowModalCreatePost={setShowModalCreatePost} />}
 			</div>
 		)
 	);
 }
+
 ReadingBook.propTypes = {
 	bookData: PropTypes.object,
 };
+
 export default ReadingBook;

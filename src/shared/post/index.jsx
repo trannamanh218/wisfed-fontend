@@ -420,7 +420,7 @@ function Post({
 
 	const renderChartTitle = () => {
 		if (postData?.metaData?.type === 'readingChart') {
-			return `# Số ${
+			return `# Biểu đồ số ${
 				postData?.metaData?.isReadedChart ? 'sách' : 'trang sách'
 			} đã đọc nhiều nhất theo ${handleTime(postData?.metaData.chartType)}`;
 		} else if (postData?.metaData?.type === 'growthChart') {

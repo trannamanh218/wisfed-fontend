@@ -98,19 +98,6 @@
 	}
 }
 
-.create-post-modal-content__container {
-	position: fixed;
-	top: 0;
-	left: 0;
-	background-color: rgba(97, 97, 97, 0.5);
-	width: 100%;
-	height: 100vh;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	z-index: 1000;
-}
-
 .newfeed {
 	.post__user-status__subtitle {
 		.react-rating-container {
@@ -151,9 +138,6 @@
 				margin-bottom: 10px;
 			}
 
-			.tagged-book {
-				margin-bottom: 1.1rem;
-			}
 			.book-thumbnail.book-thumbnail-md {
 				height: 190px;
 			}

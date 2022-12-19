@@ -4,7 +4,6 @@ import SidebarBooksAuthor from './sidebar-books-author';
 import { useParams } from 'react-router-dom';
 import { handleShelvesGroup } from 'api/shelvesGroup.hooks';
 import Circle from 'shared/loading/circle';
-import { useEffect } from 'react';
 import NotFound from 'pages/not-found';
 
 const BooksAuthor = () => {
@@ -23,7 +22,7 @@ const BooksAuthor = () => {
 					}
 				/>
 			) : (
-				<>{renderNotFound ? <NotFound /> : <></>}</>
+				<>{renderNotFound && <NotFound />}</>
 			)}
 		</>
 	);

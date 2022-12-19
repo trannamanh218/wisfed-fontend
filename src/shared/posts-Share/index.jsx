@@ -190,7 +190,7 @@ const PostShare = ({ postData, inCreatePost, directUrl }) => {
 
 	const renderChartTitle = () => {
 		if (postData?.sharePost?.metaData.type === 'readingChart') {
-			return `# Số ${
+			return `# Biểu đồ số ${
 				postData?.sharePost?.metaData?.isReadedChart ? 'sách' : 'trang sách'
 			} đã đọc nhiều nhất theo ${handleTime(postData?.sharePost?.metaData.chartType)}`;
 		} else if (postData?.sharePost?.metaData.type === 'growthChart') {

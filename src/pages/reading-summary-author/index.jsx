@@ -10,13 +10,14 @@ import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import dayjs from 'dayjs';
 import Circle from 'shared/loading/circle';
-import { useNavigate } from 'react-router-dom';
 import NotFound from 'pages/not-found';
 import BackButton from 'shared/back-button';
 import BookAuthorChartSearch from './search-component';
 import SearchIcon from 'assets/icons/search.svg';
 import { GROWTH_CHART_VERB_SHARE } from 'constants';
 import { saveDataShare } from 'reducers/redux-utils/post';
+import CreatePostModalContent from 'pages/home/components/newfeed/components/create-post-modal-content';
+import { blockAndAllowScroll } from 'api/blockAndAllowScroll.hook';
 
 const ReadingSummaryChartAuthor = () => {
 	const [chartsData, setChartsData] = useState({});
@@ -28,15 +29,20 @@ const ReadingSummaryChartAuthor = () => {
 	const [nameBook, setNameBook] = useState('');
 	const [authorName, setAuthorName] = useState('');
 	const [changeValue, setChangeValue] = useState(false);
-	const [getAreaPng, { ref: areaRef }] = useCurrentPng();
-	const dispatch = useDispatch();
-	const { bookId } = useParams();
 	const [loading, setLoading] = useState(false);
-	const navigate = useNavigate();
 	const [errorLoadPage, setErrorLoadPage] = useState(false);
 	const [show, setShow] = useState(true);
+	const [showModalCreatePost, setShowModalCreatePost] = useState(false);
 
 	const smallScreenSearchModal = useRef(null);
+
+	const { bookId } = useParams();
+
+	const dispatch = useDispatch();
+
+	const [getAreaPng, { ref: areaRef }] = useCurrentPng();
+
+	blockAndAllowScroll(showModalCreatePost);
 
 	useEffect(() => {
 		fetchData();
@@ -128,7 +134,7 @@ const ReadingSummaryChartAuthor = () => {
 					};
 					dispatch(saveDataShare(dataToShare));
 					dispatch(handleSetImageToShare(imgUploadder));
-					navigate('/');
+					setShowModalCreatePost(true);
 				}
 			}
 		}
@@ -314,6 +320,7 @@ const ReadingSummaryChartAuthor = () => {
 			) : (
 				<NotFound />
 			)}
+			{showModalCreatePost && <CreatePostModalContent setShowModalCreatePost={setShowModalCreatePost} />}
 		</>
 	);
 };

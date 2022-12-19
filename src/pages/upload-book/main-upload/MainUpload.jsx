@@ -174,7 +174,9 @@ export default function MainUpload() {
 							},
 					  ],
 			translators:
-				translatorsArr.length > 0
+				!translatorsArr.length && !inputTranslatorValue
+					? []
+					: translatorsArr.length > 0
 					? translatorsArr
 					: [
 							{
@@ -264,7 +266,7 @@ export default function MainUpload() {
 										<br />
 										<p className='upload-image__description'>
 											Thêm ảnh bìa từ thiết bị
-											<span style={{ color: 'red' }}>*</span>
+											<span style={{ color: 'red', marginLeft: '2px' }}>*</span>
 										</p>
 										<span style={{ fontWeight: 500, marginTop: '5px' }}>(hoặc kéo thả)</span>
 									</div>

@@ -16,12 +16,14 @@ import {
 import './status-button.scss';
 import StatusModalContainer from 'shared/status-modal/StatusModalContainer';
 import Circle from 'shared/loading/circle';
-import { updateCurrentBook } from 'reducers/redux-utils/book';
+import { updateBookForCreatePost } from 'reducers/redux-utils/book';
 import { useNavigate } from 'react-router-dom';
 import { NotificationError } from 'helpers/Error';
 import Storage from 'helpers/Storage';
 import ModalCheckLogin from 'shared/modal-check-login';
 import { toast } from 'react-toastify';
+import CreatePostModalContent from 'pages/home/components/newfeed/components/create-post-modal-content';
+import { blockAndAllowScroll } from 'api/blockAndAllowScroll.hook';
 
 const STATUS_BOOK_OBJ = {
 	reading: {
@@ -46,6 +48,7 @@ const StatusButton = ({ className, bookData, inCreatePost, bookStatus }) => {
 	const [currentStatus, setCurrentStatus] = useState('');
 	const [fetchStatus, setFetchStatus] = useState(false);
 	const [customLibrariesContainCurrentBookId, setCustomLibrariesContainCurrentBookId] = useState([]);
+	const [showModalCreatePost, setShowModalCreatePost] = useState(false);
 
 	const addedArray = useRef([]);
 	const removedArray = useRef([]);
@@ -57,6 +60,8 @@ const StatusButton = ({ className, bookData, inCreatePost, bookStatus }) => {
 	const myAllLibraryReduxDefault = useSelector(state => state.library.myAllLibrary).default;
 
 	const dispatch = useDispatch();
+
+	blockAndAllowScroll(showModalCreatePost);
 
 	useEffect(() => {
 		if (Storage.getAccessToken()) {
@@ -158,11 +163,11 @@ const StatusButton = ({ className, bookData, inCreatePost, bookStatus }) => {
 					initalStatus.current = currentStatus;
 				}
 				handleAddAndRemoveBook();
-				dispatch(updateCurrentBook({ ...bookData, status: currentStatus }));
 				setTimeout(() => {
 					dispatch(updateMyAllLibraryRedux());
 				}, 500);
-				navigate('/');
+				dispatch(updateBookForCreatePost({ ...bookData, status: currentStatus }));
+				setShowModalCreatePost(true);
 			} catch (err) {
 				NotificationError(err);
 			} finally {
@@ -246,6 +251,7 @@ const StatusButton = ({ className, bookData, inCreatePost, bookStatus }) => {
 			) : (
 				<ModalCheckLogin modalShow={modalShow} setModalShow={setModalShow} />
 			)}
+			{showModalCreatePost && <CreatePostModalContent setShowModalCreatePost={setShowModalCreatePost} />}
 		</>
 	);
 };

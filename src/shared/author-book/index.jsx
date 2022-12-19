@@ -12,6 +12,8 @@ import { saveDataShare } from 'reducers/redux-utils/post';
 import BookThumbnail from 'shared/book-thumbnail';
 import ReactRating from 'shared/react-rating';
 import './author-book.scss';
+import CreatePostModalContent from 'pages/home/components/newfeed/components/create-post-modal-content';
+import { blockAndAllowScroll } from 'api/blockAndAllowScroll.hook';
 
 const AuthorBook = ({
 	data,
@@ -27,11 +29,14 @@ const AuthorBook = ({
 	saveLocalStorage,
 }) => {
 	const [saveLocalSearch, setSaveLocalSearch] = useState([]);
+	const [showModalCreatePost, setShowModalCreatePost] = useState(false);
 
 	const { userId } = useParams();
 	const userInfo = useSelector(state => state.auth.userInfo);
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
+
+	blockAndAllowScroll(showModalCreatePost);
 
 	const handleShare = data => {
 		const newData = {
@@ -46,8 +51,8 @@ const AuthorBook = ({
 		};
 
 		if (Storage.getAccessToken()) {
-			navigate('/');
 			dispatch(saveDataShare(newData));
+			setShowModalCreatePost(true);
 		} else {
 			setModalShow(true);
 		}
@@ -166,6 +171,7 @@ const AuthorBook = ({
 							)}
 						</div>
 					</div>
+					{showModalCreatePost && <CreatePostModalContent setShowModalCreatePost={setShowModalCreatePost} />}
 				</div>
 			)}
 		</>

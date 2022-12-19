@@ -19,7 +19,9 @@ import {
 } from 'reducers/redux-utils/library';
 import './setting-more.scss';
 import { NotificationError } from 'helpers/Error';
-import { updateCurrentBook } from 'reducers/redux-utils/book';
+import { updateBookForCreatePost } from 'reducers/redux-utils/book';
+import CreatePostModalContent from 'pages/home/components/newfeed/components/create-post-modal-content';
+import { blockAndAllowScroll } from 'api/blockAndAllowScroll.hook';
 
 const SettingMore = ({ bookData, handleUpdateBookList }) => {
 	const [showLibrariesModal, setShowLibrariesModal] = useState(false);
@@ -27,6 +29,7 @@ const SettingMore = ({ bookData, handleUpdateBookList }) => {
 	const [currentStatus, setCurrentStatus] = useState(bookData.status);
 	const [isVisible, setIsVisible] = useState(false);
 	const [customLibrariesContainCurrentBookId, setCustomLibrariesContainCurrentBookId] = useState([]);
+	const [showModalCreatePost, setShowModalCreatePost] = useState(false);
 
 	const addedArray = useRef([]);
 	const removedArray = useRef([]);
@@ -34,6 +37,8 @@ const SettingMore = ({ bookData, handleUpdateBookList }) => {
 	const initalStatus = useRef(bookData.status);
 
 	const myCustomLibraries = useSelector(state => state.library.myAllLibrary).custom;
+
+	blockAndAllowScroll(showModalCreatePost);
 
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
@@ -152,11 +157,11 @@ const SettingMore = ({ bookData, handleUpdateBookList }) => {
 				toast.success('Chuyển giá sách thành công', { toastId: customId });
 			}
 			handleAddAndRemoveBook();
-			dispatch(updateCurrentBook({ ...bookData, status: currentStatus }));
 			setTimeout(() => {
 				dispatch(updateMyAllLibraryRedux());
 			}, 500);
-			navigate('/');
+			dispatch(updateBookForCreatePost({ ...bookData, status: currentStatus }));
+			setShowModalCreatePost(true);
 		} catch (err) {
 			NotificationError(err);
 		} finally {
@@ -263,6 +268,7 @@ const SettingMore = ({ bookData, handleUpdateBookList }) => {
 					/>
 				</Modal.Body>
 			</Modal>
+			{showModalCreatePost && <CreatePostModalContent setShowModalCreatePost={setShowModalCreatePost} />}
 		</div>
 	);
 };

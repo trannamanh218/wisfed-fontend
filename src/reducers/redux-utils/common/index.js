@@ -52,14 +52,18 @@ const commonSlice = createSlice({
 	name: 'common',
 	initialState: {
 		titleReviewPage: '',
+		optionAddToPost: {},
 	},
 
 	reducers: {
 		updateTitleReviewPage: (state, action) => {
 			state.titleReviewPage = action.payload;
 		},
+		setOptionAddToPost: (state, action) => {
+			state.optionAddToPost = action.payload;
+		},
 	},
 });
 
-export const { updateTitleReviewPage } = commonSlice.actions;
+export const { updateTitleReviewPage, setOptionAddToPost } = commonSlice.actions;
 export default commonSlice.reducer;

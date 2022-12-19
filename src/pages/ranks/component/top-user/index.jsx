@@ -12,12 +12,13 @@ import { getTopUser } from 'reducers/redux-utils/ranks';
 import dropdownIcon from 'assets/images/dropdown.png';
 import Storage from 'helpers/Storage';
 import { saveDataShare } from 'reducers/redux-utils/post';
-import { useNavigate } from 'react-router-dom';
 import { TOP_USER_VERB_SHARE_LV1 } from 'constants/index';
 import ModalSearchCategories from '../modal-search-categories/ModalSearchCategories';
 import LoadingIndicator from 'shared/loading-indicator';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { checkLogin } from 'reducers/redux-utils/auth';
+import CreatePostModalContent from 'pages/home/components/newfeed/components/create-post-modal-content';
+import { blockAndAllowScroll } from 'api/blockAndAllowScroll.hook';
 
 const TopUser = ({ listYear, tabSelected }) => {
 	const kindOfGroupRef = useRef({ value: 'default', name: 'Chủ đề' });
@@ -32,12 +33,12 @@ const TopUser = ({ listYear, tabSelected }) => {
 	const [modalSearchCategoriesShow, setModalSearchCategoriesShow] = useState(false);
 	const [loading, setLoading] = useState(false);
 	const [hasMore, setHasMore] = useState(true);
+	const [showModalCreatePost, setShowModalCreatePost] = useState(false);
 
 	const callApiStart = useRef(10);
 	const callApiPerPage = useRef(10);
 
 	const dispatch = useDispatch();
-	const navigate = useNavigate();
 
 	const listDataSortType = [
 		{ value: 'topRead', title: 'Đọc nhiều nhất' },
@@ -45,6 +46,8 @@ const TopUser = ({ listYear, tabSelected }) => {
 		{ value: 'topLike', title: 'Được Like nhiều nhất ' },
 		{ value: 'topFollow', title: ' Được Follow nhiều nhất ' },
 	];
+
+	blockAndAllowScroll(showModalCreatePost);
 
 	useEffect(() => {
 		if (tabSelected === 'user') {
@@ -150,7 +153,7 @@ const TopUser = ({ listYear, tabSelected }) => {
 		};
 		if (Storage.getAccessToken()) {
 			dispatch(saveDataShare(newData));
-			navigate('/');
+			setShowModalCreatePost(true);
 		} else {
 			dispatch(checkLogin(true));
 		}
@@ -239,6 +242,7 @@ const TopUser = ({ listYear, tabSelected }) => {
 							)}
 						</>
 					)}
+					{showModalCreatePost && <CreatePostModalContent setShowModalCreatePost={setShowModalCreatePost} />}
 				</>
 			)}
 		</div>

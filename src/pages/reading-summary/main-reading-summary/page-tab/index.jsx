@@ -7,23 +7,28 @@ import { useDispatch, useSelector } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
 import { useParams } from 'react-router-dom';
 import { getChartsByid, handleSetImageToShare } from 'reducers/redux-utils/chart';
-import { useNavigate } from 'react-router-dom';
 import Circle from 'shared/loading/circle';
 import { useCurrentPng } from 'recharts-to-png';
 import { CHART_VERB_SHARE } from 'constants';
 import { saveDataShare } from 'reducers/redux-utils/post';
+import CreatePostModalContent from 'pages/home/components/newfeed/components/create-post-modal-content';
+import { blockAndAllowScroll } from 'api/blockAndAllowScroll.hook';
 
 const PageTab = () => {
 	const [currentOption, setCurrentOption] = useState({ value: 'month', title: 'Theo tháng' });
 	const [loading, setLoading] = useState(false);
 	const { userId } = useParams();
 	const [chartsData, setChartsData] = useState([]);
+	const [showModalCreatePost, setShowModalCreatePost] = useState(false);
 
 	const userInfo = useSelector(state => state.auth.userInfo);
 
 	const dispatch = useDispatch();
+
+	blockAndAllowScroll(showModalCreatePost);
+
 	const [getAreaPng, { ref: areaRef }] = useCurrentPng();
-	const navigate = useNavigate();
+
 	const options = [
 		{ value: 'month', title: 'Theo tháng' },
 		{ value: 'year', title: 'Theo năm' },
@@ -86,7 +91,7 @@ const PageTab = () => {
 					};
 					dispatch(saveDataShare(dataToShare));
 					dispatch(handleSetImageToShare(imgUploadder));
-					navigate('/');
+					setShowModalCreatePost(true);
 				}
 			}
 		}
@@ -210,6 +215,7 @@ const PageTab = () => {
 			) : (
 				<h4 style={{ marginTop: '28px' }}>Không có dữ liệu</h4>
 			)}
+			{showModalCreatePost && <CreatePostModalContent setShowModalCreatePost={setShowModalCreatePost} />}
 		</div>
 	);
 };

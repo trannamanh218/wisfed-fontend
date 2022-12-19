@@ -10,7 +10,10 @@ import QuoteList from 'shared/quote-list';
 const QuoteTab = ({ currentTab, currentUserInfo }) => {
 	const [myQuoteList, setMyQuoteList] = useState([]);
 	const [myFavoriteQuoteList, setMyFavoriteQuoteList] = useState([]);
-	const [loading, setLoading] = useState(false);
+	const [myQuotesLoading, setMyQuotesLoading] = useState(false);
+	const [myFavoriteQuotesLoadingFirstTime, setMyFavoriteQuotesLoadingFirstTime] = useState();
+	const [myFavoriteQuotesLoading, setMyFavoriteQuotesLoading] = useState(false);
+	const [hasMore, setHasMore] = useState(true);
 
 	const dispatch = useDispatch();
 	const { userId } = useParams();
@@ -18,6 +21,7 @@ const QuoteTab = ({ currentTab, currentUserInfo }) => {
 	const userInfo = useSelector(state => state.auth.userInfo);
 
 	const callApiStart = useRef(0);
+	const callApiPerPage = useRef(3);
 
 	useEffect(() => {
 		if (currentTab === 'quotes') {
@@ -27,10 +31,11 @@ const QuoteTab = ({ currentTab, currentUserInfo }) => {
 	}, [currentTab, userId]);
 
 	const getMyQuoteList = async () => {
-		setLoading(true);
+		setMyQuotesLoading(true);
 		try {
 			const params = {
 				start: 0,
+				limit: callApiPerPage.current,
 				sort: JSON.stringify([{ property: 'createdAt', direction: 'DESC' }]),
 				filter: JSON.stringify([{ operator: 'eq', value: userId, property: 'createdBy' }]),
 			};
@@ -39,27 +44,42 @@ const QuoteTab = ({ currentTab, currentUserInfo }) => {
 		} catch (err) {
 			NotificationError(err);
 		} finally {
-			setLoading(false);
+			setMyQuotesLoading(false);
 		}
 	};
 
 	const getMyFavoriteQuoteList = async () => {
-		setLoading(true);
 		try {
+			if (callApiStart.current === 0) {
+				setMyFavoriteQuotesLoadingFirstTime(true);
+			} else {
+				setMyFavoriteQuotesLoading(true);
+			}
 			const data = {
 				params: {
 					start: callApiStart.current,
+					limit: callApiPerPage.current,
 					sort: JSON.stringify([{ 'property': 'createdAt', 'direction': 'DESC' }]),
 				},
 				userId: userId,
 			};
 			const res = await dispatch(getlistQuotesLikedById(data)).unwrap();
-			setMyFavoriteQuoteList(res);
+			setMyFavoriteQuoteList(myFavoriteQuoteList.concat(res));
+			if (res.length >= callApiPerPage.current) {
+				callApiStart.current += callApiPerPage.current;
+			} else {
+				setHasMore(false);
+			}
 		} catch (err) {
 			NotificationError(err);
 		} finally {
-			setLoading(false);
+			setMyFavoriteQuotesLoadingFirstTime(false);
+			setMyFavoriteQuotesLoading(false);
 		}
+	};
+
+	const handleViewMore = () => {
+		getMyFavoriteQuoteList();
 	};
 
 	return (
@@ -78,7 +98,7 @@ const QuoteTab = ({ currentTab, currentUserInfo }) => {
 							</h4>
 						)}
 
-						{loading ? (
+						{myQuotesLoading ? (
 							<LoadingIndicator />
 						) : (
 							<QuoteList list={myQuoteList} userId={userId} type='myQuotes' />
@@ -86,7 +106,17 @@ const QuoteTab = ({ currentTab, currentUserInfo }) => {
 					</div>
 					<div className='favorite-quotes'>
 						<h4>Quote yêu thích</h4>
-						{loading ? <LoadingIndicator /> : <QuoteList list={myFavoriteQuoteList} userId={userId} />}
+						{myFavoriteQuotesLoadingFirstTime ? (
+							<LoadingIndicator />
+						) : (
+							<QuoteList
+								list={myFavoriteQuoteList}
+								userId={userId}
+								hasMore={hasMore}
+								handleViewMore={handleViewMore}
+								myFavoriteQuotesLoading={myFavoriteQuotesLoading}
+							/>
+						)}
 					</div>
 				</>
 			)}

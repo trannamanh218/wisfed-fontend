@@ -3,12 +3,17 @@ import FilterPane from 'shared/filter-pane';
 import SearchField from 'shared/search-field';
 import Post from 'shared/post';
 import FitlerOptions from 'shared/filter-options';
-import { getReviewsBook, getReviewsBookByFollowers, getReviewsBookByFriends } from 'reducers/redux-utils/book';
+import {
+	getReviewsBook,
+	getReviewsBookByFollowers,
+	getReviewsBookByFriends,
+	updateBookForCreatePost,
+	updateCurrentBookReviewsNumber,
+} from 'reducers/redux-utils/book';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { updateCurrentBookReviewsNumber } from 'reducers/redux-utils/book';
 import _ from 'lodash';
 import LoadingIndicator from 'shared/loading-indicator';
 import PropTypes from 'prop-types';
@@ -22,6 +27,7 @@ import searchreview from 'assets/images/search-review.png';
 import CreatePostModalContent from 'pages/home/components/newfeed/components/create-post-modal-content';
 import Storage from 'helpers/Storage';
 import { checkUserLogin } from 'reducers/redux-utils/auth';
+import { blockAndAllowScroll } from 'api/blockAndAllowScroll.hook';
 
 const ReviewTab = ({ currentTab }) => {
 	const filterOptions = [
@@ -69,8 +75,7 @@ const ReviewTab = ({ currentTab }) => {
 	const [checkedStarArr, setCheckedStarArr] = useState([]);
 	const [inputSearch, setInputSearch] = useState('');
 	const [topUser, setTopUser] = useState('');
-	const [showModalCreatPost, setShowModalCreatPost] = useState(false);
-	const [option, setOption] = useState({});
+	const [showModalCreatePost, setShowModalCreatePost] = useState(false);
 	const [bookInfoProp, setBookInfoProp] = useState({});
 	const [isLoading, setIsLoading] = useState(false);
 	const [inputSearchUpdated, setInputSearchUpdated] = useState(true);
@@ -80,12 +85,13 @@ const ReviewTab = ({ currentTab }) => {
 	const initialCallApiStartValue = useRef(10);
 	const callApiStart = useRef(initialCallApiStartValue.current);
 	const callApiPerPage = useRef(10);
-	const createPostModalContainer = useRef(null);
 
 	const dispatch = useDispatch();
 	const { bookId } = useParams();
 
 	const bookInfo = useSelector(state => state.book.bookInfo);
+
+	blockAndAllowScroll(showModalCreatePost);
 
 	useEffect(() => {
 		const cloneObj = { ...bookInfo, progress: null, status: null };
@@ -187,11 +193,6 @@ const ReviewTab = ({ currentTab }) => {
 		setCurrentOption(item);
 	};
 
-	// thêm các tùy chọn vào modal tạo review
-	const onChangeOption = data => {
-		setOption(data);
-	};
-
 	// xử lý khi tích chọn lọc theo số sao
 	const handleChangeStar = data => {
 		const arrTemp = [...checkedStarArr];
@@ -238,26 +239,12 @@ const ReviewTab = ({ currentTab }) => {
 		setSortValue(data);
 	};
 
-	// xử lý tắt modal tạo review
-	useEffect(() => {
-		if (showModalCreatPost) {
-			createPostModalContainer.current.addEventListener('mousedown', e => {
-				if (e.target === createPostModalContainer.current) {
-					hideCreatePostModal();
-				}
-			});
-		}
-	}, [showModalCreatPost]);
-
-	const hideCreatePostModal = () => {
-		setShowModalCreatPost(false);
-	};
-
 	const handleReview = () => {
 		if (!Storage.getAccessToken()) {
 			dispatch(checkUserLogin(true));
 		} else {
-			setShowModalCreatPost(true);
+			dispatch(updateBookForCreatePost({ ...bookInfo }));
+			setShowModalCreatePost(true);
 		}
 	};
 	//-----------------------------------------------------------
@@ -274,13 +261,16 @@ const ReviewTab = ({ currentTab }) => {
 				key='Bài-review'
 				handleSortFilter={toggleModal}
 			>
-				<FitlerOptions
-					list={filterOptions}
-					currentOption={currentOption}
-					handleChangeOption={handleChangeOption}
-					name='filter-user'
-					className='review-tab__filter__options'
-				/>
+				{currentTab === 'reviews' && (
+					<FitlerOptions
+						list={filterOptions}
+						currentOption={currentOption}
+						handleChangeOption={handleChangeOption}
+						name='filter-user'
+						className='review-tab__filter__options'
+					/>
+				)}
+
 				<div className='review-tab__search'>
 					<SearchField
 						value={inputSearch}
@@ -406,16 +396,11 @@ const ReviewTab = ({ currentTab }) => {
 					</div>
 				</Modal.Body>
 			</Modal>
-			{showModalCreatPost && (
+			{showModalCreatePost && (
 				<CreatePostModalContent
-					hideCreatePostModal={hideCreatePostModal}
-					showModalCreatPost={showModalCreatPost}
-					option={option}
-					onChangeOption={onChangeOption}
-					onChangeNewPost={getReviewListFirstTime}
-					setShowModalCreatPost={setShowModalCreatPost}
+					setShowModalCreatePost={setShowModalCreatePost}
 					showSubModal={false}
-					bookForCreatePost={bookInfoProp}
+					onChangeNewPost={getReviewListFirstTime}
 				/>
 			)}
 		</div>

@@ -1,6 +1,42 @@
-/* eslint-disable max-lines */
 import classNames from 'classnames';
-import { CloseX, IconRanks, Image } from 'components/svg'; // k xóa WorldNet
+import { CloseX, Image, IconRanks, WorldNet } from 'components/svg'; // k xóa WorldNet
+import _ from 'lodash';
+import PropTypes from 'prop-types';
+import { useEffect, useState, useRef } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
+import { createActivity, handleClickCreateNewPostForBook } from 'reducers/redux-utils/activity';
+import PostEditBook from 'shared/post-edit-book';
+import OptionsPost from './OptionsPost';
+import CreatPostSubModal from './CreatePostSubModal';
+import TaggedList from './TaggedList';
+import UploadImage from './UploadImage';
+import PreviewLink from 'shared/preview-link/PreviewLink';
+import {
+	getPreviewUrl,
+	getSharePostInternal,
+	getSharePostRanks,
+	shareMyBook,
+	saveDataShare,
+} from 'reducers/redux-utils/post';
+import Circle from 'shared/loading/circle';
+import './style.scss';
+import { ratingUser } from 'reducers/redux-utils/book';
+import UserAvatar from 'shared/user-avatar';
+import { updateProgressReadingBook, createReviewBook, updateBookForCreatePost } from 'reducers/redux-utils/book';
+import { addBookToDefaultLibrary, updateMyAllLibraryRedux } from 'reducers/redux-utils/library';
+import { setting } from './settings';
+import { NotificationError } from 'helpers/Error';
+import { uploadMultiFile, setOptionAddToPost } from 'reducers/redux-utils/common';
+import { useLocation, useParams } from 'react-router-dom';
+import { creatNewPost } from 'reducers/redux-utils/group';
+import QuoteCard from 'shared/quote-card';
+import AuthorBook from 'shared/author-book';
+import ShareUsers from '../modal-share-users';
+import RichTextEditor from 'shared/rich-text-editor';
+import ShareTarget from 'shared/share-target';
+import PostShare from 'shared/posts-Share';
+import { shareTargetReadings } from 'reducers/redux-utils/target';
 import {
 	CHART_VERB_SHARE,
 	GROUP_POST_VERB_SHARE,
@@ -23,44 +59,10 @@ import {
 	TOP_USER_VERB_SHARE,
 	TOP_USER_VERB_SHARE_LV1,
 } from 'constants';
-import { NotificationError } from 'helpers/Error';
-import _ from 'lodash';
-import PropTypes from 'prop-types';
-import { useEffect, useRef, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useLocation, useParams } from 'react-router-dom';
-import { toast } from 'react-toastify';
-import { createActivity, handleClickCreateNewPostForBook } from 'reducers/redux-utils/activity';
-import { createReviewBook, ratingUser, updateCurrentBook, updateProgressReadingBook } from 'reducers/redux-utils/book';
-import { uploadMultiFile } from 'reducers/redux-utils/common';
-import { creatNewPost } from 'reducers/redux-utils/group';
-import { addBookToDefaultLibrary, updateMyAllLibraryRedux } from 'reducers/redux-utils/library';
-import {
-	getPreviewUrl,
-	getSharePostInternal,
-	getSharePostRanks,
-	saveDataShare,
-	shareMyBook,
-} from 'reducers/redux-utils/post';
-import { shareTargetReadings } from 'reducers/redux-utils/target';
-import AuthorBook from 'shared/author-book';
-import Circle from 'shared/loading/circle';
-import PostEditBook from 'shared/post-edit-book';
-import PostShare from 'shared/posts-Share';
-import PreviewLink from 'shared/preview-link/PreviewLink';
-import QuoteCard from 'shared/quote-card';
-import RichTextEditor from 'shared/rich-text-editor';
-import ShareTarget from 'shared/share-target';
-import UserAvatar from 'shared/user-avatar';
-import ShareUsers from '../modal-share-users';
-import CreatPostSubModal from './CreatePostSubModal';
-import OptionsPost from './OptionsPost';
-import { setting } from './settings';
 import './style.scss';
-import TaggedList from './TaggedList';
-import UploadImage from './UploadImage';
 // import ShareModeComponent from './ShareModeComponent';
 import { handleResetMyTargetReading, setMyTargetReading } from 'reducers/redux-utils/chart';
+import { handleSetImageToShare } from 'reducers/redux-utils/chart';
 import DirectLinkALertModal from 'shared/direct-link-alert-modal';
 
 const verbShareArray = [
@@ -80,18 +82,9 @@ const verbShareArray = [
 
 const message = 'Bạn đang có bài viết chưa hoàn thành. Bạn có chắc muốn rời khỏi khi chưa đăng không?';
 
-function CreatePostModalContent({
-	hideCreatePostModal,
-	setShowModalCreatPost,
-	showModalCreatPost,
-	option,
-	onChangeOption,
-	onChangeNewPost,
-	showSubModal,
-	bookForCreatePost,
-}) {
+function CreatePostModalContent({ setShowModalCreatePost, showSubModal, setShowSubModal, onChangeNewPost }) {
 	// const [shareMode, setShareMode] = useState({ value: 'public', title: 'Mọi người', icon: <WorldNet /> }); // k xóa
-	const [showMainModal, setShowMainModal] = useState(showModalCreatPost);
+	const [showMainModal, setShowMainModal] = useState(true);
 	const [taggedData, setTaggedData] = useState({
 		'addBook': {},
 		'addAuthor': [],
@@ -113,7 +106,6 @@ function CreatePostModalContent({
 	const [content, setContent] = useState('');
 	const [hashtagsAdded, setHashtagsAdded] = useState([]);
 	const [optionListState, setOptionListState] = useState([]);
-
 	const [modalShow, setModalShow] = useState(false);
 
 	const createPostModalContainer = useRef(null);
@@ -123,6 +115,9 @@ function CreatePostModalContent({
 
 	const chartImgShare = useSelector(state => state.chart.imageToShareData);
 	const { postDataShare } = useSelector(state => state.post);
+	const option = useSelector(state => state.common.optionAddToPost);
+
+	const { bookForCreatePost } = useSelector(state => state.book);
 
 	const {
 		auth: { userInfo },
@@ -213,6 +208,17 @@ function CreatePostModalContent({
 	}, [modalShow]);
 
 	// handle turn off modal
+	const hideCreatePostModal = () => {
+		dispatch(saveDataShare({}));
+		dispatch(updateBookForCreatePost({}));
+		dispatch(handleSetImageToShare([]));
+		dispatch(setOptionAddToPost({}));
+		dispatch(handleClickCreateNewPostForBook(false));
+		// 2 dòng lệnh phía dưới luôn luôn ở dưới cùng
+		setShowSubModal(false);
+		setShowModalCreatePost(false);
+	};
+
 	const handleClose = () => {
 		if (content) {
 			setModalShow(true);
@@ -250,14 +256,14 @@ function CreatePostModalContent({
 
 	const backToMainModal = () => {
 		setShowMainModal(true);
-		onChangeOption({});
+		dispatch(setOptionAddToPost({}));
 	};
 
 	const addOptionsToPost = param => {
 		if (param.value === 'addBook') {
 			dispatch(handleClickCreateNewPostForBook(true));
 		}
-		onChangeOption(param);
+		dispatch(setOptionAddToPost(param));
 		setShowMainModal(false);
 	};
 
@@ -579,12 +585,8 @@ function CreatePostModalContent({
 				toast.error('Tạo bài viết thất bại!', { toastId: customIdCreatePostFail });
 			}
 		} finally {
-			dispatch(updateCurrentBook({}));
-			dispatch(saveDataShare({}));
 			setStatus(STATUS_IDLE);
 			hideCreatePostModal();
-			onChangeOption({});
-			setShowModalCreatPost(false);
 			dispatch(setMyTargetReading([]));
 			dispatch(handleResetMyTargetReading());
 		}
@@ -592,7 +594,7 @@ function CreatePostModalContent({
 
 	useEffect(() => {
 		if (!_.isEmpty(taggedData.addBook)) {
-			if (taggedData.addBook.status === 'read') {
+			if (!_.isEmpty(bookForCreatePost) && taggedData.addBook.status === 'read') {
 				setProgressInputValue(taggedData.addBook.page);
 			} else {
 				setProgressInputValue(parseInt(taggedData.addBook.progress));
@@ -710,7 +712,7 @@ function CreatePostModalContent({
 
 	const renderChartTitle = () => {
 		if (postDataShare?.verb === CHART_VERB_SHARE) {
-			return `# Số ${
+			return `# Biểu đồ số ${
 				postDataShare?.isReadedChart ? 'sách' : 'trang sách'
 			} đã đọc nhiều nhất theo ${handleTime()}`;
 		} else if (postDataShare?.type === 'growthChart') {
@@ -773,11 +775,6 @@ function CreatePostModalContent({
 								hasMentionsUser={false}
 								hasUrl={hasUrl}
 							/>
-							{!_.isEmpty(taggedData.addBook) && (
-								<a href='#' className='tagged-book'>
-									{taggedData.addBook.name}
-								</a>
-							)}
 							<TaggedList taggedData={taggedData} removeTaggedItem={removeTaggedItem} type='addAuthor' />
 							<TaggedList
 								taggedData={taggedData}
@@ -984,16 +981,18 @@ function CreatePostModalContent({
 	);
 }
 
+CreatePostModalContent.defaultProps = {
+	onChangeNewPost: () => {},
+	setShowModalCreatePost: () => {},
+	showSubModal: false,
+	setShowSubModal: () => {},
+};
+
 CreatePostModalContent.propTypes = {
-	hideCreatePostModal: PropTypes.func,
-	showModalCreatPost: PropTypes.bool,
-	option: PropTypes.object,
-	onChangeOption: PropTypes.func,
 	onChangeNewPost: PropTypes.func,
-	setShowModalCreatPost: PropTypes.func,
+	setShowModalCreatePost: PropTypes.func,
 	showSubModal: PropTypes.bool,
-	bookForCreatePost: PropTypes.object,
-	message: PropTypes.string,
+	setShowSubModal: PropTypes.func,
 };
 
 export default CreatePostModalContent;

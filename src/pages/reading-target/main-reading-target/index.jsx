@@ -7,7 +7,7 @@ import moment from 'moment';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { saveDataShare } from 'reducers/redux-utils/post';
 import BookThumbnail from 'shared/book-thumbnail';
 import { useModal } from 'shared/hooks';
@@ -18,10 +18,10 @@ import UserAvatar from 'shared/user-avatar';
 import ModalReadTarget from '../modal-reading-target';
 import GoalsNotSetYet from './goals-not-set';
 import './main-reading-target.scss';
+import CreatePostModalContent from 'pages/home/components/newfeed/components/create-post-modal-content';
+import { blockAndAllowScroll } from 'api/blockAndAllowScroll.hook';
 
 const MainReadingTarget = ({ setErrorLoadPage }) => {
-	const dispatch = useDispatch();
-	const navigate = useNavigate();
 	const { userId } = useParams();
 	const { userInfo } = useSelector(state => state.auth);
 	const { userData, errorFetch } = useFetchUserParams(userId);
@@ -29,8 +29,13 @@ const MainReadingTarget = ({ setErrorLoadPage }) => {
 	const [deleteModal, setDeleteModal] = useState(false);
 	const [inputSearch, setInputSearch] = useState('');
 	const [newArrSearch, setNewArrSearch] = useState([]);
+	const [showModalCreatePost, setShowModalCreatePost] = useState(false);
+
+	const dispatch = useDispatch();
 
 	const { booksReadYear, year, status } = useFetchTargetReading(userId, modalOpen);
+
+	blockAndAllowScroll(showModalCreatePost);
 
 	const renderLinearProgressBar = item => {
 		let percent = 0;
@@ -140,7 +145,7 @@ const MainReadingTarget = ({ setErrorLoadPage }) => {
 				avatarImage: userInfo.avatarImage,
 			};
 			dispatch(saveDataShare(target));
-			navigate('/');
+			setShowModalCreatePost(true);
 		}
 	};
 
@@ -206,6 +211,7 @@ const MainReadingTarget = ({ setErrorLoadPage }) => {
 			) : (
 				userId === userInfo.id && status === 'SUCCESS' && <GoalsNotSetYet userInfo={userInfo} />
 			)}
+			{showModalCreatePost && <CreatePostModalContent setShowModalCreatePost={setShowModalCreatePost} />}
 		</div>
 	);
 };

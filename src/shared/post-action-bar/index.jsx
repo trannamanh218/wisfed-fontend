@@ -20,8 +20,13 @@ import {
 	MY_BOOK_VERB_SHARE,
 	REVIEW_VERB_SHARE,
 } from 'constants';
+import { useState } from 'react';
+import CreatePostModalContent from 'pages/home/components/newfeed/components/create-post-modal-content';
+import { blockAndAllowScroll } from 'api/blockAndAllowScroll.hook';
 
 const PostActionBar = ({ postData, handleLikeAction }) => {
+	const [showModalCreatePost, setShowModalCreatePost] = useState(false);
+
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const location = useLocation();
@@ -29,6 +34,8 @@ const PostActionBar = ({ postData, handleLikeAction }) => {
 	const currentGroupArrived = useSelector(state => state.group.currentGroupArrived);
 	const currentBook = useSelector(state => state.book.bookInfo);
 	const isJoinedGroup = useSelector(state => state.group.isJoinedGroup);
+
+	blockAndAllowScroll(showModalCreatePost);
 
 	const handleShare = () => {
 		if (!Storage.getAccessToken()) {
@@ -210,11 +217,8 @@ const PostActionBar = ({ postData, handleLikeAction }) => {
 						};
 					}
 				}
-
 				dispatch(saveDataShare(dataToShare));
-				if (!location.pathname.includes('/group/')) {
-					navigate('/');
-				}
+				setShowModalCreatePost(true);
 			}
 		}
 	};
@@ -224,10 +228,16 @@ const PostActionBar = ({ postData, handleLikeAction }) => {
 			dispatch(checkUserLogin(true));
 		} else {
 			const commentEditField = document.querySelector(`.comment-editor-last-${postData.id}`);
+			let number = 400;
+			if (window.location.pathname.includes('profile/')) {
+				number = -100;
+			} else if (window.location.pathname.includes('category/detail/')) {
+				number = -600;
+			}
 			if (commentEditField) {
 				setTimeout(() => {
 					window.scroll({
-						top: commentEditField.offsetTop - 400,
+						top: commentEditField.offsetTop - number,
 						behavior: 'smooth',
 					});
 				}, 200);
@@ -264,6 +274,7 @@ const PostActionBar = ({ postData, handleLikeAction }) => {
 					<div className='post-action-bar__title'>Xem Review</div>
 				</div>
 			)}
+			{showModalCreatePost && <CreatePostModalContent setShowModalCreatePost={setShowModalCreatePost} />}
 		</div>
 	);
 };

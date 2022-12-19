@@ -2,6 +2,10 @@
 
 .radio-input {
 	&-container {
+		input,
+		label {
+			cursor: pointer;
+		}
 		&.form-check {
 			&:hover {
 				background-color: unset;

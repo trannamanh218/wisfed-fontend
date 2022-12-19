@@ -18,12 +18,19 @@ import Storage from 'helpers/Storage';
 import { MY_BOOK_VERB_SHARE } from 'constants';
 import { toast } from 'react-toastify';
 import { checkUserLogin } from 'reducers/redux-utils/auth';
+import CreatePostModalContent from 'pages/home/components/newfeed/components/create-post-modal-content';
+import { blockAndAllowScroll } from 'api/blockAndAllowScroll.hook';
 
 const MainBooksAuthor = ({ shelveGroupName }) => {
 	const [booksByAuthor, setBooksByAuthor] = useState([]);
 	const [hasMore, setHasMore] = useState(true);
 	const [filter, setFilter] = useState('[]');
 	const [inputSearch, setInputSearch] = useState('');
+	const [showModalCreatePost, setShowModalCreatePost] = useState(false);
+
+	const callApiStart = useRef(10);
+	const callApiPerPage = useRef(10);
+
 	const { userId } = useParams();
 
 	const userInfo = useSelector(state => state.auth.userInfo);
@@ -31,8 +38,7 @@ const MainBooksAuthor = ({ shelveGroupName }) => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
-	const callApiStart = useRef(10);
-	const callApiPerPage = useRef(10);
+	blockAndAllowScroll(showModalCreatePost);
 
 	useEffect(() => {
 		if (filter === '[]') {
@@ -91,6 +97,7 @@ const MainBooksAuthor = ({ shelveGroupName }) => {
 			setFilter('[]');
 		}
 	};
+
 	useEffect(() => {
 		if (inputSearch.length > 0) {
 			fetchDataSearch();
@@ -128,8 +135,8 @@ const MainBooksAuthor = ({ shelveGroupName }) => {
 					verb: MY_BOOK_VERB_SHARE,
 					...data,
 				};
-				navigate('/');
 				dispatch(saveDataShare(newData));
+				setShowModalCreatePost(true);
 			} else {
 				const customId = 'custom-id-share-author-books';
 				toast.warning('Chỉ tác giả có quyền chia sẻ', { toastId: customId });
@@ -249,6 +256,7 @@ const MainBooksAuthor = ({ shelveGroupName }) => {
 					)}
 				</div>
 			</div>
+			{showModalCreatePost && <CreatePostModalContent setShowModalCreatePost={setShowModalCreatePost} />}
 		</div>
 	);
 };

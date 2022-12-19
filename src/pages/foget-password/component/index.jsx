@@ -7,9 +7,8 @@ import { useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import Storage from 'helpers/Storage';
-import PropTypes from 'prop-types';
 
-function ForgetPassWordComponent({ type }) {
+function ForgetPassWordComponent() {
 	const key = useSelector(state => state.forgetPasswordSliceReducer.keyChange);
 	const navigate = useNavigate();
 
@@ -31,19 +30,11 @@ function ForgetPassWordComponent({ type }) {
 					<div className='forget__form__img'>
 						<img src={ImgForget} alt='' />
 					</div>
-					{key ? <CreateNewPasswordForm /> : <ForgetpasswordFormComponent type={type} />}
+					{key ? <CreateNewPasswordForm /> : <ForgetpasswordFormComponent />}
 				</div>
 			</div>
 		</div>
 	);
 }
-
-ForgetPassWordComponent.defaultProps = {
-	type: 'default',
-};
-
-ForgetPassWordComponent.propTypes = {
-	type: PropTypes.string,
-};
 
 export default ForgetPassWordComponent;

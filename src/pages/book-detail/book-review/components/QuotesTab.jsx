@@ -147,28 +147,33 @@ const QuotesTab = ({ currentTab }) => {
 	return (
 		<div className='quotes-tab'>
 			<FilterPane title='Quotes' handleSortFilter={toggleModal}>
-				<FitlerOptions
-					list={filterOptions}
-					currentOption={currentOption}
-					handleChangeOption={handleChangeOption}
-					name='filter-user'
-					className='quotes-tab__filter__options'
-				/>
-				{currentTab === 'quotes' && quoteList.length > 0 ? (
-					<InfiniteScroll
-						dataLength={quoteList.length}
-						next={getQuoteListData}
-						hasMore={hasMore}
-						loader={<LoadingIndicator />}
-					>
-						{quoteList.map(item => {
-							if (!item.isDeleted) {
-								return <QuoteCard key={item.id} data={item} isDetail={false} />;
-							}
-						})}
-					</InfiniteScroll>
-				) : (
-					<h5>Chưa có dữ liệu</h5>
+				{currentTab === 'quotes' && (
+					<>
+						<FitlerOptions
+							list={filterOptions}
+							currentOption={currentOption}
+							handleChangeOption={handleChangeOption}
+							name='filter-user'
+							className='quotes-tab__filter__options'
+						/>
+
+						{quoteList.length > 0 ? (
+							<InfiniteScroll
+								dataLength={quoteList.length}
+								next={getQuoteListData}
+								hasMore={hasMore}
+								loader={<LoadingIndicator />}
+							>
+								{quoteList.map(item => {
+									if (!item.isDeleted) {
+										return <QuoteCard key={item.id} data={item} isDetail={false} />;
+									}
+								})}
+							</InfiniteScroll>
+						) : (
+							<h5>Chưa có dữ liệu</h5>
+						)}
+					</>
 				)}
 			</FilterPane>
 

@@ -13,12 +13,16 @@ import _ from 'lodash';
 import Circle from 'shared/loading/circle';
 import { updateTitleReviewPage } from 'reducers/redux-utils/common';
 import PropTypes from 'prop-types';
-import { updateCurrentBook } from 'reducers/redux-utils/book';
+import { updateBookForCreatePost } from 'reducers/redux-utils/book';
 import { getAllLibraryList } from 'reducers/redux-utils/library';
+import CreatePostModalContent from 'pages/home/components/newfeed/components/create-post-modal-content';
+import { blockAndAllowScroll } from 'api/blockAndAllowScroll.hook';
+
 function Bookcase({ currentUserInfo, currentTab }) {
 	const [readingBooks, setReadingBooks] = useState([]);
 	const [readBooks, setReadBooks] = useState([]);
 	const [status, setStatus] = useState(STATUS_IDLE);
+	const [showModalCreatePost, setShowModalCreatePost] = useState(false);
 
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
@@ -27,6 +31,8 @@ function Bookcase({ currentUserInfo, currentTab }) {
 	const myAllLibraryDefault = useSelector(state => state.library.myAllLibrary).default;
 
 	const { userInfo } = useSelector(state => state.auth);
+
+	blockAndAllowScroll(showModalCreatePost);
 
 	useEffect(() => {
 		if (!_.isEmpty(userInfo)) {
@@ -119,8 +125,8 @@ function Bookcase({ currentUserInfo, currentTab }) {
 
 	const createReview = (book, status) => {
 		const newBook = { ...book, status: status };
-		dispatch(updateCurrentBook(newBook));
-		navigate('/');
+		dispatch(updateBookForCreatePost(newBook));
+		setShowModalCreatePost(true);
 	};
 
 	const generateAuthorName = author => {
@@ -272,6 +278,7 @@ function Bookcase({ currentUserInfo, currentTab }) {
 					) : (
 						<p className='none-data'>Chưa có cuốn sách nào</p>
 					)}
+					{showModalCreatePost && <CreatePostModalContent setShowModalCreatePost={setShowModalCreatePost} />}
 				</>
 			)}
 		</div>

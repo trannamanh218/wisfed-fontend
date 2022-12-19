@@ -25,8 +25,10 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 	const [isAuthor, setIsAuthor] = useState(false);
 	const [data, setData] = useState(dataProp);
 	const [modalShow, setModalShow] = useState(false);
+	const [showOptionsComment, setShowOptionsComment] = useState(false);
 
 	const urlToDirect = useRef('');
+	const optionsCommentList = useRef(null);
 
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
@@ -38,6 +40,18 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 			// handleAddEventClickToHashtagTags(); // không xóa
 		}
 	});
+
+	useEffect(() => {
+		function handleClickOutside(event) {
+			if (optionsCommentList.current && !optionsCommentList.current.contains(event.target)) {
+				setShowOptionsComment(false);
+			}
+		}
+		document.addEventListener('mousedown', handleClickOutside);
+		return () => {
+			document.removeEventListener('mousedown', handleClickOutside);
+		};
+	}, [optionsCommentList]);
 
 	const handleAddEventClickToUrlTags = useCallback(() => {
 		const arr = document.querySelectorAll('.url-class');
@@ -182,6 +196,10 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 		}
 	};
 
+	const onClickOptionsComment = () => {
+		setShowOptionsComment(!showOptionsComment);
+	};
+
 	return (
 		<div className='comment'>
 			<UserAvatar
@@ -191,35 +209,49 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 				handleClick={() => navigate(`/profile/${data.createdBy}`)}
 			/>
 			<div className='comment__wrapper'>
-				<div className='comment__container'>
-					<div className='comment__header'>
-						<Link to={`/profile/${data.user?.id}`}>
-							<span className='comment__author'>
-								{data.user?.fullName || data.user?.lastName || data.user?.firstName || 'Không xác định'}
-							</span>
-						</Link>
+				<div className='comment__wrapper__info'>
+					<div className='comment__container'>
+						<div className='comment__header'>
+							<Link to={`/profile/${data.user?.id}`}>
+								<span className='comment__author'>
+									{data.user?.fullName ||
+										data.user?.lastName ||
+										data.user?.firstName ||
+										'Không xác định'}
+								</span>
+							</Link>
 
-						{isAuthor && (
-							<Badge className='comment__badge' bg='primary-light'>
-								Tác giả
-							</Badge>
+							{isAuthor && (
+								<Badge className='comment__badge' bg='primary-light'>
+									Tác giả
+								</Badge>
+							)}
+						</div>
+						{data?.content && (
+							<p
+								className='comment__content'
+								dangerouslySetInnerHTML={{
+									__html: generateContent(data.content),
+								}}
+							></p>
+						)}
+						{data.like !== 0 ? (
+							<div className='cmt-like-number'>
+								<LikeComment />
+
+								{data.like}
+							</div>
+						) : null}
+					</div>
+					<div className='comment__wrapper__info__options' onClick={onClickOptionsComment}>
+						<div className='comment__wrapper__info__options__elipsis'>...</div>
+						{showOptionsComment && (
+							<div className='comment__wrapper__info__options__list' ref={optionsCommentList}>
+								<p>Sửa bình luận</p>
+								<p>Xóa</p>
+							</div>
 						)}
 					</div>
-					{data?.content && (
-						<p
-							className='comment__content'
-							dangerouslySetInnerHTML={{
-								__html: generateContent(data.content),
-							}}
-						></p>
-					)}
-					{data.like !== 0 ? (
-						<div className='cmt-like-number'>
-							<LikeComment />
-
-							{data.like}
-						</div>
-					) : null}
 				</div>
 
 				<ul className='comment__action'>
