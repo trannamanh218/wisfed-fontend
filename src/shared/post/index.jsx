@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { Feather, Pencil, QuoteIcon } from 'components/svg';
+import { Feather, Pencil, QuoteIcon, TrashIcon } from 'components/svg';
 import { calculateDurationTime } from 'helpers/Common';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
@@ -7,6 +7,8 @@ import { useCallback, useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateReactionActivity, updateReactionActivityGroup } from 'reducers/redux-utils/activity';
 import { createComment, createCommentGroup } from 'reducers/redux-utils/comment';
+import { Modal, ModalBody } from 'react-bootstrap';
+import { CloseX } from 'components/svg';
 import CommentEditor from 'shared/comment-editor';
 import GridImage from 'shared/grid-image';
 import PostActionBar from 'shared/post-action-bar';
@@ -47,14 +49,15 @@ import { checkUserLogin } from 'reducers/redux-utils/auth';
 import ShareUsers from 'pages/home/components/newfeed/components/modal-share-users';
 import ShareTarget from 'shared/share-target';
 import { handleMentionCommentId, handleCheckIfMentionFromGroup } from 'reducers/redux-utils/notification';
-import { getMiniPostComments, getGroupPostComments } from 'reducers/redux-utils/post';
+import { getMiniPostComments, getGroupPostComments, deleteMiniPost } from 'reducers/redux-utils/post';
 import vector from 'assets/images/Vector.png';
 import SeeMoreComments from 'shared/see-more-comments/SeeMoreComments';
 import { toast } from 'react-toastify';
 import DirectLinkALertModal from 'shared/direct-link-alert-modal';
 import ShowTime from 'shared/showTimeOfPostWhenHover/showTime';
 import WithFriends from './withFriends/WithFriends';
-// import dots from 'assets/images/dots.png';
+import dots from 'assets/images/dots.png';
+import { useVisible } from 'shared/hooks';
 
 const verbShareArray = [
 	POST_VERB_SHARE,
@@ -66,7 +69,14 @@ const verbShareArray = [
 	REVIEW_VERB_SHARE,
 ];
 
-function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMentionCmtFromGroup, isInDetail }) {
+function Post({
+	postInformations,
+	type,
+	reduxMentionCommentId,
+	reduxCheckIfMentionCmtFromGroup,
+	isInDetail,
+	handleUpdatePostArrWhenDeleted,
+}) {
 	const [postData, setPostData] = useState({});
 	const [videoId, setVideoId] = useState('');
 	const [replyingCommentId, setReplyingCommentId] = useState(-1);
@@ -79,7 +89,9 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 	const [modalShow, setModalShow] = useState(false);
 	const [haveNotClickedSeeMoreOnce, setHaveNotClickedSeeMoreOnce] = useState(true);
 	const [showReplyArrayState, setShowReplyArrayState] = useState([]);
-	// const [isSettingsVisible, setSettingsVisible] = useState(false);
+	const [showDeleteFeedModal, setShowDeleteFeedModal] = useState(false);
+
+	const { ref: settingsRef, isVisible: isSettingsVisible, setIsVisible: setSettingsVisible } = useVisible(false);
 
 	const { userInfo } = useSelector(state => state.auth);
 	const isJoinedGroup = useSelector(state => state.group.isJoinedGroup);
@@ -418,9 +430,32 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 		}
 	};
 
-	// const handleSettings = () => {
-	// 	setSettingsVisible(prev => !prev);
-	// };
+	const handleSettings = () => {
+		setSettingsVisible(prev => !prev);
+	};
+
+	const handleDelete = () => {
+		setSettingsVisible(prev => !prev);
+		setShowDeleteFeedModal(true);
+	};
+
+	const closeDeleteFeedModal = () => {
+		setShowDeleteFeedModal(false);
+		setSettingsVisible(prev => prev);
+	};
+
+	const removeFeed = async () => {
+		try {
+			await dispatch(deleteMiniPost(postData.minipostId)).unwrap();
+			handleUpdatePostArrWhenDeleted(postData.minipostId);
+			toast.success('Xoá bài viết thành công');
+		} catch (err) {
+			const customId = 'custom-id-SettingMore-error';
+			toast.error('Lỗi không xóa được bài viết', { toastId: customId });
+		} finally {
+			setShowDeleteFeedModal(false);
+		}
+	};
 
 	return (
 		<div className='post__container'>
@@ -495,24 +530,26 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 						</div>
 					</div>
 				</div>
-				{/* <div className='setting'>
-					<button className='setting-btn' onClick={handleSettings}>
-						<img src={dots} alt='setting' />
-					</button>
-					{isSettingsVisible && (
-						<ul className='setting-list'>
-							<li className='setting-item'>
-								<Pencil />
-								<span className='setting-item__content'>Chỉnh sửa bài viết</span>
-							</li>
+				{postData.actor === userInfo.id && (
+					<div ref={settingsRef} className='setting'>
+						<button className='setting-btn' onClick={handleSettings}>
+							<img src={dots} alt='setting' />
+						</button>
+						{isSettingsVisible && (
+							<ul className='setting-list'>
+								<li className='setting-item'>
+									<Pencil />
+									<span className='setting-item__content'>Chỉnh sửa bài viết</span>
+								</li>
 
-							<li className='setting-item'>
-								<QuoteIcon />
-								<span className='setting-item__content'>xóa bài viết</span>
-							</li>
-						</ul>
-					)}
-				</div> */}
+								<li className='setting-item' onClick={handleDelete}>
+									<TrashIcon />
+									<span className='setting-item__content'>Xóa bài viết</span>
+								</li>
+							</ul>
+						)}
+					</div>
+				)}
 			</div>
 			{(postData.message || postData.content) && (
 				<div className='post__content-wrapper'>
@@ -904,6 +941,26 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 				setMentionUsersArr={setMentionUsersArr}
 			/>
 			<DirectLinkALertModal modalShow={modalShow} handleAccept={handleAccept} handleCancel={handleCancel} />
+			<Modal
+				className='main-shelves__modal'
+				show={showDeleteFeedModal}
+				onHide={closeDeleteFeedModal}
+				keyboard={false}
+				centered
+			>
+				<span className='btn-closeX' onClick={closeDeleteFeedModal}>
+					<CloseX />
+				</span>
+				<ModalBody>
+					<h4 className='main-shelves__modal__title'>Bạn có muốn xóa bài viết này?</h4>
+					<button className='btn main-shelves__modal__btn-delete btn-danger' onClick={removeFeed}>
+						Xóa
+					</button>
+					<button className='btn-cancel' onClick={closeDeleteFeedModal}>
+						Không
+					</button>
+				</ModalBody>
+			</Modal>
 		</div>
 	);
 }
@@ -914,6 +971,7 @@ Post.defaultProps = {
 	reduxMentionCommentId: null,
 	reduxCheckIfMentionCmtFromGroup: null,
 	isInDetail: false,
+	handleUpdatePostArrWhenDeleted: () => {},
 };
 
 Post.propTypes = {
@@ -922,6 +980,7 @@ Post.propTypes = {
 	reduxMentionCommentId: PropTypes.any,
 	reduxCheckIfMentionCmtFromGroup: PropTypes.any,
 	isInDetail: PropTypes.bool,
+	handleUpdatePostArrWhenDeleted: PropTypes.func,
 };
 
 export default Post;
