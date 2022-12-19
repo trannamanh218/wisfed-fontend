@@ -9,6 +9,7 @@ import {
 	shareApiMyBook,
 	getMiniPostCommentsAPI,
 	getGroupPostCommentsAPI,
+	deleteMiniPostAPI,
 } from 'constants/apiURL';
 import Request from 'helpers/Request';
 
@@ -90,6 +91,16 @@ export const getMiniPostComments = createAsyncThunk('post/getMiniPostComments', 
 	try {
 		const { postId, params } = data;
 		const response = await Request.makeGet(getMiniPostCommentsAPI(postId), params);
+		return response.data;
+	} catch (err) {
+		const error = JSON.parse(err.response);
+		return rejectWithValue(error);
+	}
+});
+
+export const deleteMiniPost = createAsyncThunk('post/deleteMiniPost', async (id, { rejectWithValue }) => {
+	try {
+		const response = await Request.makeDelete(deleteMiniPostAPI(id));
 		return response.data;
 	} catch (err) {
 		const error = JSON.parse(err.response);
