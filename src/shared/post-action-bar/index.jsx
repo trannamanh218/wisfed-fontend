@@ -224,10 +224,16 @@ const PostActionBar = ({ postData, handleLikeAction }) => {
 			dispatch(checkUserLogin(true));
 		} else {
 			const commentEditField = document.querySelector(`.comment-editor-last-${postData.id}`);
+			let number = 400;
+			if (window.location.pathname.includes('profile/')) {
+				number = -100;
+			} else if (window.location.pathname.includes('category/detail/')) {
+				number = -600;
+			}
 			if (commentEditField) {
 				setTimeout(() => {
 					window.scroll({
-						top: commentEditField.offsetTop - 400,
+						top: commentEditField.offsetTop - number,
 						behavior: 'smooth',
 					});
 				}, 200);

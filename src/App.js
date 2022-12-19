@@ -95,13 +95,7 @@ function App({ children }) {
 	}, [location]);
 
 	const renderHeader = () => {
-		const excludePaths = [
-			'/login/',
-			'/register/',
-			'/forget-password/',
-			'/create-newpassword-admin/',
-			'/choose-topic/',
-		];
+		const excludePaths = ['/login', '/register', '/forget-password', '/create-newpassword-admin', '/choose-topic'];
 		if (!excludePaths.some(path => location.pathname.includes(path)))
 			return (
 				<div style={{ margin: 'auto', maxWidth: '1440px' }}>
