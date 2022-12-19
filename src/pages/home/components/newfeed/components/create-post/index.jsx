@@ -1,7 +1,6 @@
 import { BookIcon, CategoryIcon, Feather, GroupIcon } from 'components/svg';
-import _ from 'lodash';
 import PropTypes from 'prop-types';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import UserAvatar from 'shared/user-avatar';
@@ -18,13 +17,7 @@ function CreatePost({ onChangeNewPost }) {
 
 	const location = useLocation();
 
-	const { postDataShare } = useSelector(state => state.post);
-	const { imageToShareData } = useSelector(state => state.chart);
-
-	const {
-		auth: { userInfo },
-		book: { bookForCreatePost },
-	} = useSelector(state => state);
+	const { userInfo } = useSelector(state => state.auth);
 
 	const dispatch = useDispatch();
 
@@ -82,12 +75,6 @@ function CreatePost({ onChangeNewPost }) {
 
 	blockAndAllowScroll(showModalCreatePost);
 
-	useEffect(() => {
-		if (!_.isEmpty(bookForCreatePost) || !_.isEmpty(postDataShare) || !_.isEmpty(imageToShareData)) {
-			setShowModalCreatePost(true);
-		}
-	}, [bookForCreatePost, postDataShare, imageToShareData]);
-
 	const handleClickToOption = item => {
 		if (!Storage.getAccessToken()) {
 			dispatch(checkUserLogin(true));
@@ -135,7 +122,6 @@ function CreatePost({ onChangeNewPost }) {
 					showSubModal={showSubModal}
 					setShowSubModal={setShowSubModal}
 					onChangeNewPost={onChangeNewPost}
-					bookForCreatePost={bookForCreatePost}
 				/>
 			)}
 		</div>

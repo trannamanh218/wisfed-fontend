@@ -11,8 +11,6 @@ import defaultAvatar from 'assets/images/Rectangle 17435.png';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import _ from 'lodash';
-import Storage from 'helpers/Storage';
-import { checkUserLogin } from 'reducers/redux-utils/auth';
 
 const MainLayout = ({ listMyGroup, listAdminMyGroup }) => {
 	const [list, setList] = useState([]);

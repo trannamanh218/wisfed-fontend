@@ -23,7 +23,7 @@ import Circle from 'shared/loading/circle';
 import './style.scss';
 import { ratingUser } from 'reducers/redux-utils/book';
 import UserAvatar from 'shared/user-avatar';
-import { updateCurrentBook, updateProgressReadingBook, createReviewBook } from 'reducers/redux-utils/book';
+import { updateProgressReadingBook, createReviewBook, updateBookForCreatePost } from 'reducers/redux-utils/book';
 import { addBookToDefaultLibrary, updateMyAllLibraryRedux } from 'reducers/redux-utils/library';
 import { setting } from './settings';
 import { NotificationError } from 'helpers/Error';
@@ -82,13 +82,7 @@ const verbShareArray = [
 
 const message = 'Bạn đang có bài viết chưa hoàn thành. Bạn có chắc muốn rời khỏi khi chưa đăng không?';
 
-function CreatePostModalContent({
-	setShowModalCreatePost,
-	showSubModal,
-	setShowSubModal,
-	onChangeNewPost,
-	bookForCreatePost,
-}) {
+function CreatePostModalContent({ setShowModalCreatePost, showSubModal, setShowSubModal, onChangeNewPost }) {
 	// const [shareMode, setShareMode] = useState({ value: 'public', title: 'Mọi người', icon: <WorldNet /> }); // k xóa
 	const [showMainModal, setShowMainModal] = useState(true);
 	const [taggedData, setTaggedData] = useState({
@@ -122,6 +116,8 @@ function CreatePostModalContent({
 	const chartImgShare = useSelector(state => state.chart.imageToShareData);
 	const { postDataShare } = useSelector(state => state.post);
 	const option = useSelector(state => state.common.optionAddToPost);
+
+	const { bookForCreatePost } = useSelector(state => state.book);
 
 	const {
 		auth: { userInfo },
@@ -213,13 +209,14 @@ function CreatePostModalContent({
 
 	// handle turn off modal
 	const hideCreatePostModal = () => {
-		setShowModalCreatePost(false);
-		setShowSubModal(false);
 		dispatch(saveDataShare({}));
+		dispatch(updateBookForCreatePost({}));
 		dispatch(handleSetImageToShare([]));
-		dispatch(updateCurrentBook({}));
-		dispatch(handleClickCreateNewPostForBook(false));
 		dispatch(setOptionAddToPost({}));
+		dispatch(handleClickCreateNewPostForBook(false));
+		// 2 dòng lệnh phía dưới luôn luôn ở dưới cùng
+		setShowSubModal(false);
+		setShowModalCreatePost(false);
 	};
 
 	const handleClose = () => {
@@ -778,11 +775,6 @@ function CreatePostModalContent({
 								hasMentionsUser={false}
 								hasUrl={hasUrl}
 							/>
-							{!_.isEmpty(taggedData.addBook) && (
-								<a href='#' className='tagged-book'>
-									{taggedData.addBook.name}
-								</a>
-							)}
 							<TaggedList taggedData={taggedData} removeTaggedItem={removeTaggedItem} type='addAuthor' />
 							<TaggedList
 								taggedData={taggedData}
@@ -989,12 +981,18 @@ function CreatePostModalContent({
 	);
 }
 
+CreatePostModalContent.defaultProps = {
+	onChangeNewPost: () => {},
+	setShowModalCreatePost: () => {},
+	showSubModal: false,
+	setShowSubModal: () => {},
+};
+
 CreatePostModalContent.propTypes = {
 	onChangeNewPost: PropTypes.func,
 	setShowModalCreatePost: PropTypes.func,
 	showSubModal: PropTypes.bool,
 	setShowSubModal: PropTypes.func,
-	bookForCreatePost: PropTypes.object,
 };
 
 export default CreatePostModalContent;

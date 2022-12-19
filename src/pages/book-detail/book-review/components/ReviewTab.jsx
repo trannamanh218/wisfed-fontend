@@ -3,12 +3,17 @@ import FilterPane from 'shared/filter-pane';
 import SearchField from 'shared/search-field';
 import Post from 'shared/post';
 import FitlerOptions from 'shared/filter-options';
-import { getReviewsBook, getReviewsBookByFollowers, getReviewsBookByFriends } from 'reducers/redux-utils/book';
+import {
+	getReviewsBook,
+	getReviewsBookByFollowers,
+	getReviewsBookByFriends,
+	updateBookForCreatePost,
+	updateCurrentBookReviewsNumber,
+} from 'reducers/redux-utils/book';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { updateCurrentBookReviewsNumber } from 'reducers/redux-utils/book';
 import _ from 'lodash';
 import LoadingIndicator from 'shared/loading-indicator';
 import PropTypes from 'prop-types';
@@ -238,6 +243,7 @@ const ReviewTab = ({ currentTab }) => {
 		if (!Storage.getAccessToken()) {
 			dispatch(checkUserLogin(true));
 		} else {
+			dispatch(updateBookForCreatePost({ ...bookInfo }));
 			setShowModalCreatePost(true);
 		}
 	};
@@ -395,7 +401,6 @@ const ReviewTab = ({ currentTab }) => {
 					setShowModalCreatePost={setShowModalCreatePost}
 					showSubModal={false}
 					onChangeNewPost={getReviewListFirstTime}
-					bookForCreatePost={bookInfoProp}
 				/>
 			)}
 		</div>

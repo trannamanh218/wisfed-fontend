@@ -128,7 +128,6 @@
 			.main-shelves__pane {
 				.shelf {
 					.book-item {
-						max-width: 195px;
 						.book-item__container {
 							.book-thumbnail.book-thumbnail-lg {
 								height: 290px;
@@ -165,14 +164,6 @@
 					.shelf {
 						grid-template-columns: repeat(4, 1fr);
 						grid-gap: 1rem;
-						.book-item {
-							max-width: 190px;
-							.book-item__container {
-								.book-thumbnail.book-thumbnail-lg {
-									height: 250px;
-								}
-							}
-						}
 					}
 				}
 			}

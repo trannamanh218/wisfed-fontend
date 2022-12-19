@@ -38,7 +38,7 @@
 		display: flex;
 		gap: 0.8rem;
 
-		button {
+		& > button {
 			width: fit-content;
 		}
 	}

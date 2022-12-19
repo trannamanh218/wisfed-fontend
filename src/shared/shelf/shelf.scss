@@ -3,19 +3,19 @@
 .shelf {
 	display: grid;
 	grid-template-columns: repeat(4, 1fr);
-	grid-gap: 1rem;
+	grid-gap: 1.25rem;
 	.book-item {
 		margin-bottom: 2rem;
-	}
-
-	.book-thumbnail {
-		border: 1px solid $ash-line;
-		width: 100%;
-		height: 295px;
-		img {
-			&:hover {
-				transform: scale(1.1);
-				transition: all 0.2s ease-out;
+		.book-item__container {
+			& > .book-thumbnail {
+				border: 1px solid $ash-line;
+				width: 100%;
+				img {
+					&:hover {
+						transform: scale(1.1);
+						transition: all 0.2s ease-out;
+					}
+				}
 			}
 		}
 	}

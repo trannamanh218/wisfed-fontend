@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React, { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { Bar, BarChart, Tooltip, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from 'recharts';
 import SelectBox from 'shared/select-box';
 import './book-tab.scss';
@@ -7,26 +7,30 @@ import { getChartsByid, handleSetImageToShare } from 'reducers/redux-utils/chart
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { useCurrentPng } from 'recharts-to-png';
-import { useNavigate } from 'react-router-dom';
 import Circle from 'shared/loading/circle';
 import { CHART_VERB_SHARE } from 'constants';
 import { saveDataShare } from 'reducers/redux-utils/post';
+import CreatePostModalContent from 'pages/home/components/newfeed/components/create-post-modal-content';
+import { blockAndAllowScroll } from 'api/blockAndAllowScroll.hook';
 
 const BookTab = ({ setErrorLoadPage }) => {
 	const [currentOption, setCurrentOption] = useState({ value: 'month', title: 'Theo tháng' });
 	const [chartsData, setChartsData] = useState({});
 	const [loading, setLoading] = useState(false);
+	const [showModalCreatePost, setShowModalCreatePost] = useState(false);
 
 	const userInfo = useSelector(state => state.auth.userInfo);
 
 	const dispatch = useDispatch();
+
+	blockAndAllowScroll(showModalCreatePost);
+
 	const options = [
 		{ value: 'month', title: 'Theo tháng' },
 		{ value: 'year', title: 'Theo năm' },
 	];
 	const [getAreaPng, { ref: areaRef }] = useCurrentPng();
 	const { userId } = useParams();
-	const navigate = useNavigate();
 
 	useEffect(() => {
 		fetchData();
@@ -94,7 +98,7 @@ const BookTab = ({ setErrorLoadPage }) => {
 					};
 					dispatch(saveDataShare(dataToShare));
 					dispatch(handleSetImageToShare(imgUploadder));
-					navigate('/');
+					setShowModalCreatePost(true);
 				}
 			}
 		}
@@ -221,6 +225,7 @@ const BookTab = ({ setErrorLoadPage }) => {
 			) : (
 				<h4 style={{ marginTop: '28px' }}>Không có dữ liệu</h4>
 			)}
+			{showModalCreatePost && <CreatePostModalContent setShowModalCreatePost={setShowModalCreatePost} />}
 		</div>
 	);
 };

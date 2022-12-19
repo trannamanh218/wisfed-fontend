@@ -7,13 +7,18 @@ import { Link } from 'react-router-dom';
 import Storage from 'helpers/Storage';
 import { useDispatch } from 'react-redux';
 import { saveDataShare } from 'reducers/redux-utils/post';
-import { useNavigate } from 'react-router-dom';
 import { checkUserLogin } from 'reducers/redux-utils/auth';
 import { QUOTE_VERB_SHARE, TOP_QUOTE_VERB_SHARE_LV1 } from 'constants/index';
+import CreatePostModalContent from 'pages/home/components/newfeed/components/create-post-modal-content';
+import { useState } from 'react';
+import { blockAndAllowScroll } from 'api/blockAndAllowScroll.hook';
 
 const QuoteActionBar = ({ data, isDetail, likeUnlikeQuoteFnc, trueRank }) => {
+	const [showModalCreatePost, setShowModalCreatePost] = useState(false);
+
 	const dispatch = useDispatch();
-	const navigate = useNavigate();
+
+	blockAndAllowScroll(showModalCreatePost);
 
 	const handleShareQuote = async () => {
 		if (!Storage.getAccessToken()) {
@@ -34,7 +39,7 @@ const QuoteActionBar = ({ data, isDetail, likeUnlikeQuoteFnc, trueRank }) => {
 				};
 			}
 			dispatch(saveDataShare(dataToShare));
-			navigate('/');
+			setShowModalCreatePost(true);
 		}
 	};
 
@@ -47,12 +52,12 @@ const QuoteActionBar = ({ data, isDetail, likeUnlikeQuoteFnc, trueRank }) => {
 	};
 
 	return (
-		<ul className='quote-action-bar'>
-			<li className='quote-action__item' onClick={handleCheckLoginLike}>
+		<div className='quote-action-bar'>
+			<div className='quote-action__item' onClick={handleCheckLoginLike}>
 				{data.isLike ? <LikeFill /> : <Like />}
 				<span className='quote-action__name'>{data.like} Thích</span>
-			</li>
-			<li className='quote-action__item'>
+			</div>
+			<div className='quote-action__item'>
 				{isDetail ? (
 					<>
 						<CommentSvg className='quote-icon' />
@@ -64,8 +69,8 @@ const QuoteActionBar = ({ data, isDetail, likeUnlikeQuoteFnc, trueRank }) => {
 						<span className='quote-action__name'>{data.share} Chia sẻ</span>
 					</div>
 				)}
-			</li>
-			<li className='quote-action__item'>
+			</div>
+			<div className='quote-action__item'>
 				{isDetail ? (
 					<div onClick={handleShareQuote}>
 						<Share className='quote-icon' />
@@ -77,8 +82,9 @@ const QuoteActionBar = ({ data, isDetail, likeUnlikeQuoteFnc, trueRank }) => {
 						<RightArrow className='quote-action__right-arrow' />
 					</Link>
 				)}
-			</li>
-		</ul>
+			</div>
+			{showModalCreatePost && <CreatePostModalContent setShowModalCreatePost={setShowModalCreatePost} />}
+		</div>
 	);
 };
 
