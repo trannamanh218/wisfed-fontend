@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { commentActivityAPI, commentGroup } from 'constants/apiURL';
+import { commentActivityAPI, commentGroup, commentActivityDetailAPI } from 'constants/apiURL';
 import Request from 'helpers/Request';
 
 export const createComment = createAsyncThunk('comment/createComment', async (params, { rejectWithValue }) => {
@@ -34,6 +34,17 @@ export const createCommentGroup = createAsyncThunk(
 		}
 	}
 );
+
+export const updateCommentMinipost = createAsyncThunk('comment/createComment', async (params, { rejectWithValue }) => {
+	const { id, body } = params;
+	try {
+		const response = await Request.makePatch(commentActivityDetailAPI(id), body);
+		return response.data;
+	} catch (err) {
+		const error = JSON.stringify(err.response);
+		throw rejectWithValue(error);
+	}
+});
 
 const commentSlice = createSlice({
 	name: 'comment',

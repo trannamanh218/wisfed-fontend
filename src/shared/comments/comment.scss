@@ -2,8 +2,61 @@
 
 .comment {
 	display: flex;
-	width: fit-content;
 	margin-bottom: 1.25rem;
+
+	&__wrapper {
+		width: 100%;
+		&__info {
+			display: flex;
+			align-items: center;
+			// &:hover {
+			// 	.comment__wrapper__info__options {
+			// 		display: block;
+			// 	}
+			// }
+			&__options {
+				margin-left: 10px;
+				position: relative;
+				display: none;
+				&:hover {
+					.comment__wrapper__info__options__elipsis {
+						background-color: #f7f7fc;
+					}
+				}
+				&__elipsis {
+					cursor: pointer;
+					width: 25px;
+					height: 25px;
+					text-align: center;
+					border-radius: 50%;
+				}
+				&__list {
+					position: absolute;
+					font-size: 13px;
+					font-weight: 600;
+					width: max-content;
+					transform: translate(-50%, 0);
+					left: 50%;
+					margin-top: 8px;
+					padding: 8px;
+					background-color: $white;
+					box-shadow: 0 0 20px 2px rgba($ash-placeholder, 0.4);
+					border-radius: 8px;
+					z-index: 2;
+
+					p {
+						cursor: pointer;
+						padding: 8px;
+						border-radius: 5px;
+						&:hover {
+							background-color: $grey-border;
+						}
+					}
+				}
+			}
+		}
+	}
+
 	&__container {
 		position: relative;
 		max-width: 41.5rem;
