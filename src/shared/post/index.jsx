@@ -628,7 +628,6 @@ function Post({ postInformations, type, reduxMentionCommentId, reduxCheckIfMenti
 							<iframe
 								className='post__video-youtube'
 								src={`//www.youtube.com/embed/${videoId}`}
-								frameBorder={0}
 								allowFullScreen={true}
 							></iframe>
 						) : (
