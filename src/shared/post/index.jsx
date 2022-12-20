@@ -58,6 +58,7 @@ import ShowTime from 'shared/showTimeOfPostWhenHover/showTime';
 import WithFriends from './withFriends/WithFriends';
 import dots from 'assets/images/dots.png';
 import { useVisible } from 'shared/hooks';
+import CreatePostModalContent from 'pages/home/components/newfeed/components/create-post-modal-content';
 
 const verbShareArray = [
 	POST_VERB_SHARE,
@@ -90,6 +91,7 @@ function Post({
 	const [haveNotClickedSeeMoreOnce, setHaveNotClickedSeeMoreOnce] = useState(true);
 	const [showReplyArrayState, setShowReplyArrayState] = useState([]);
 	const [showDeleteFeedModal, setShowDeleteFeedModal] = useState(false);
+	const [showModalCreatePost, setShowModalCreatePost] = useState(false);
 
 	const { ref: settingsRef, isVisible: isSettingsVisible, setIsVisible: setSettingsVisible } = useVisible(false);
 
@@ -457,6 +459,11 @@ function Post({
 		}
 	};
 
+	const handleOpenModal = () => {
+		setSettingsVisible(prev => !prev);
+		setShowModalCreatePost(true);
+	};
+
 	return (
 		<div className='post__container'>
 			<div className='box_post__user-status'>
@@ -532,14 +539,16 @@ function Post({
 				</div>
 				{postData.actor === userInfo.id && (
 					<div ref={settingsRef} className='setting'>
-						<button className='setting-btn' onClick={handleSettings}>
+						<button className='setting-mini-post-btn' onClick={handleSettings}>
 							<img src={dots} alt='setting' />
 						</button>
 						{isSettingsVisible && (
 							<ul className='setting-list'>
 								<li className='setting-item'>
 									<Pencil />
-									<span className='setting-item__content'>Chỉnh sửa bài viết</span>
+									<span className='setting-item__content' onClick={handleOpenModal}>
+										Chỉnh sửa bài viết
+									</span>
 								</li>
 
 								<li className='setting-item' onClick={handleDelete}>
@@ -600,7 +609,7 @@ function Post({
 							className={classNames('badge bg-primary-light')}
 							onClick={() => navigate(`/category/detail/${item.categoryId}`)}
 						>
-							<span>{item.category.name}</span>
+							<span>{item?.category?.name}</span>
 						</li>
 					))}
 				</ul>
@@ -962,6 +971,9 @@ function Post({
 					</button>
 				</ModalBody>
 			</Modal>
+			{showModalCreatePost && (
+				<CreatePostModalContent dataEditMiniPost={postData} setShowModalCreatePost={setShowModalCreatePost} />
+			)}
 		</div>
 	);
 }
