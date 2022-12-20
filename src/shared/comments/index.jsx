@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import { calculateDurationTime } from 'helpers/Common';
 import PropTypes from 'prop-types';
 import { Badge } from 'react-bootstrap';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import UserAvatar from 'shared/user-avatar';
 import './comment.scss';
 import { likeQuoteComment } from 'reducers/redux-utils/quote';
@@ -19,16 +19,31 @@ import _ from 'lodash';
 import ShowTime from 'shared/showTimeOfPostWhenHover/showTime';
 import Storage from 'helpers/Storage';
 import { checkUserLogin } from 'reducers/redux-utils/auth';
+import CommentEditor from 'shared/comment-editor';
+import {
+	updateCommentGroupPost,
+	updateCommentMinipost,
+	updateCommentQuote,
+	updateCommentReview,
+} from 'reducers/redux-utils/comment';
+import { handleSetParamHandleEdit } from 'reducers/redux-utils/comment';
+import { useVisible } from 'shared/hooks';
 
 const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 	const [isLiked, setIsLiked] = useState(false);
 	const [isAuthor, setIsAuthor] = useState(false);
 	const [data, setData] = useState(dataProp);
 	const [modalShow, setModalShow] = useState(false);
-	const [showOptionsComment, setShowOptionsComment] = useState(false);
+	const [isEditingComment, setIsEditingComment] = useState(false);
 
 	const urlToDirect = useRef('');
-	const optionsCommentList = useRef(null);
+	const {
+		ref: optionsCommentList,
+		isVisible: showOptionsComment,
+		setIsVisible: setShowOptionsComment,
+	} = useVisible(false);
+
+	const { userInfo } = useSelector(state => state.auth);
 
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
@@ -42,16 +57,22 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 	});
 
 	useEffect(() => {
-		function handleClickOutside(event) {
-			if (optionsCommentList.current && !optionsCommentList.current.contains(event.target)) {
-				setShowOptionsComment(false);
-			}
+		if (isEditingComment) {
+			const commentEditField = document.querySelector(`.comment-editor-last-${data.id}`);
+			const editorChild = commentEditField.querySelector('.public-DraftEditor-content');
+
+			const handlePressEsc = e => {
+				if (document.activeElement === editorChild && e.key === 'Escape') {
+					// Khi nhấn Esc thì hủy bỏ chỉnh sửa comment
+					handleCancelEditing();
+				}
+			};
+			document.addEventListener('keydown', handlePressEsc);
+			return () => {
+				document.removeEventListener('keydown', handlePressEsc);
+			};
 		}
-		document.addEventListener('mousedown', handleClickOutside);
-		return () => {
-			document.removeEventListener('mousedown', handleClickOutside);
-		};
-	}, [optionsCommentList]);
+	}, [isEditingComment]);
 
 	const handleAddEventClickToUrlTags = useCallback(() => {
 		const arr = document.querySelectorAll('.url-class');
@@ -196,8 +217,46 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 		}
 	};
 
-	const onClickOptionsComment = () => {
-		setShowOptionsComment(!showOptionsComment);
+	const onClickEditComment = () => {
+		setIsEditingComment(true);
+	};
+
+	const handleCancelEditing = () => {
+		setIsEditingComment(false);
+	};
+
+	const handleEditComment = async (content, replyId) => {
+		if (content) {
+			const params = {
+				id: data.id,
+				body: {
+					content: content,
+				},
+			};
+			try {
+				if (type === 'post') {
+					await dispatch(updateCommentMinipost(params)).unwrap();
+				} else if (type === 'group') {
+					await dispatch(updateCommentGroupPost(params)).unwrap();
+				} else if (type === 'review') {
+					await dispatch(updateCommentReview(params)).unwrap();
+				} else if (type === 'quote') {
+					await dispatch(updateCommentQuote(params)).unwrap();
+				}
+			} catch (err) {
+				NotificationError(err);
+			} finally {
+				// Xử lí hiển thị
+				dispatch(
+					handleSetParamHandleEdit({
+						id: data.id,
+						content: content,
+						replyId: replyId,
+					})
+				);
+				handleCancelEditing();
+			}
+		}
 	};
 
 	return (
@@ -208,81 +267,103 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 				source={data.user?.avatarImage}
 				handleClick={() => navigate(`/profile/${data.createdBy}`)}
 			/>
-			<div className='comment__wrapper'>
-				<div className='comment__wrapper__info'>
-					<div className='comment__container'>
-						<div className='comment__header'>
-							<Link to={`/profile/${data.user?.id}`}>
-								<span className='comment__author'>
-									{data.user?.fullName ||
-										data.user?.lastName ||
-										data.user?.firstName ||
-										'Không xác định'}
-								</span>
-							</Link>
+			{isEditingComment ? (
+				<div className='comment__editing'>
+					<CommentEditor
+						hideAvatar
+						className={`comment-editor-last-${data.id}`}
+						commentLv1Id={data.replyId}
+						onCreateComment={handleEditComment}
+						initialContent={dataProp.content}
+					/>
 
-							{isAuthor && (
-								<Badge className='comment__badge' bg='primary-light'>
-									Tác giả
-								</Badge>
-							)}
-						</div>
-						{data?.content && (
-							<p
-								className='comment__content'
-								dangerouslySetInnerHTML={{
-									__html: generateContent(data.content),
-								}}
-							></p>
-						)}
-						{data.like !== 0 ? (
-							<div className='cmt-like-number'>
-								<LikeComment />
-
-								{data.like}
-							</div>
-						) : null}
-					</div>
-					<div className='comment__wrapper__info__options' onClick={onClickOptionsComment}>
-						<div className='comment__wrapper__info__options__elipsis'>...</div>
-						{showOptionsComment && (
-							<div className='comment__wrapper__info__options__list' ref={optionsCommentList}>
-								<p>Sửa bình luận</p>
-								<p>Xóa</p>
-							</div>
-						)}
+					<div className='comment__editing__cancel'>
+						Nhấn Esc để <span onClick={handleCancelEditing}>hủy bỏ</span>
 					</div>
 				</div>
+			) : (
+				<div className='comment__wrapper'>
+					<div className='comment__wrapper__info'>
+						<div className='comment__container'>
+							<div className='comment__header'>
+								<Link to={`/profile/${data.user?.id}`}>
+									<span className='comment__author'>
+										{data.user?.fullName ||
+											data.user?.lastName ||
+											data.user?.firstName ||
+											'Không xác định'}
+									</span>
+								</Link>
 
-				<ul className='comment__action'>
-					<li
-						className={classNames('comment__item', {
-							'liked': isLiked,
-						})}
-						onClick={() => handleLikeUnlikeCmt()}
-					>
-						Thích
-					</li>
-					<li
-						className='comment__item'
-						onClick={() =>
-							handleReply(commentLv1Id, {
-								id: data.user.id,
-								name: data.user.fullName || data.user.firstName + ' ' + data.user.lastName,
-								avatar: data.user.avatarImage,
-							})
-						}
-					>
-						Phản hồi
-					</li>
-					<li className='comment__item--timeline'>
-						<div className='show-time'>
-							<span onClick={handleViewPostDetail}>{`${calculateDurationTime(data.createdAt)}`}</span>
-							<ShowTime dataTime={data.createdAt} />
+								{isAuthor && (
+									<Badge className='comment__badge' bg='primary-light'>
+										Tác giả
+									</Badge>
+								)}
+							</div>
+							{data?.content && (
+								<p
+									className='comment__content'
+									dangerouslySetInnerHTML={{
+										__html: generateContent(data.content),
+									}}
+								></p>
+							)}
+							{data.like !== 0 ? (
+								<div className='cmt-like-number'>
+									<LikeComment />
+
+									{data.like}
+								</div>
+							) : null}
 						</div>
-					</li>
-				</ul>
-			</div>
+						{[data.user?.id, data.createdBy].includes(userInfo.id) && (
+							<div
+								className={`comment__wrapper__info__options ${showOptionsComment && 'isShowing'}`}
+								onClick={() => setShowOptionsComment(!showOptionsComment)}
+							>
+								<div className='comment__wrapper__info__options__elipsis'>...</div>
+								{showOptionsComment && (
+									<div className='comment__wrapper__info__options__list' ref={optionsCommentList}>
+										<p onClick={onClickEditComment}>Sửa bình luận</p>
+										<p>Xóa</p>
+									</div>
+								)}
+							</div>
+						)}
+					</div>
+
+					<ul className='comment__action'>
+						<li
+							className={classNames('comment__item', {
+								'liked': isLiked,
+							})}
+							onClick={() => handleLikeUnlikeCmt()}
+						>
+							Thích
+						</li>
+						<li
+							className='comment__item'
+							onClick={() =>
+								handleReply(commentLv1Id, {
+									id: data.user.id,
+									name: data.user.fullName || data.user.firstName + ' ' + data.user.lastName,
+									avatar: data.user.avatarImage,
+								})
+							}
+						>
+							Phản hồi
+						</li>
+						<li className='comment__item--timeline'>
+							<div className='show-time'>
+								<span onClick={handleViewPostDetail}>{`${calculateDurationTime(data.createdAt)}`}</span>
+								<ShowTime dataTime={data.createdAt} />
+							</div>
+						</li>
+					</ul>
+				</div>
+			)}
+
 			<DirectLinkALertModal modalShow={modalShow} handleAccept={handleAccept} handleCancel={handleCancel} />
 		</div>
 	);
@@ -294,6 +375,7 @@ Comment.defaultProps = {
 	postData: {},
 	commentLv1Id: null,
 	type: POST_TYPE,
+	handleUpdateCommentsListAfterEditing: () => {},
 };
 
 Comment.propTypes = {
@@ -302,6 +384,7 @@ Comment.propTypes = {
 	handleReply: PropTypes.func,
 	commentLv1Id: PropTypes.number,
 	type: PropTypes.string,
+	handleUpdateCommentsListAfterEditing: PropTypes.func,
 };
 
 export default Comment;

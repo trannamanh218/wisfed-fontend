@@ -15,6 +15,8 @@ const CommentEditor = ({
 	replyingCommentId,
 	clickReply,
 	setMentionUsersArr,
+	hideAvatar,
+	initialContent,
 }) => {
 	const [content, setContent] = useState('');
 	const [createCmt, setCreateCmt] = useState(true);
@@ -63,9 +65,11 @@ const CommentEditor = ({
 	return (
 		<>
 			<div className={`comment-editor ${className ? className : ''}`}>
-				<div className='comment-editor__avatar'>
-					<UserAvatar size='sm' source={userInfo.avatarImage} />
-				</div>
+				{!hideAvatar && (
+					<div className='comment-editor__avatar'>
+						<UserAvatar size='sm' source={userInfo.avatarImage} />
+					</div>
+				)}
 				<RichTextEditor
 					placeholder='Viết bình luận...'
 					className={commentLv1Id ? `rich-text-editor-${commentLv1Id}` : ''}
@@ -80,6 +84,7 @@ const CommentEditor = ({
 					commentLv1Id={commentLv1Id}
 					replyingCommentId={replyingCommentId}
 					clickReply={clickReply}
+					initialContent={initialContent}
 				/>
 			</div>
 		</>
@@ -94,6 +99,7 @@ CommentEditor.defaultProps = {
 	mentionUsersArr: [],
 	clickReply: false,
 	setMentionUsersArr: () => {},
+	hideAvatar: false,
 };
 
 CommentEditor.propTypes = {
@@ -104,6 +110,7 @@ CommentEditor.propTypes = {
 	mentionUsersArr: PropTypes.array,
 	clickReply: PropTypes.bool,
 	setMentionUsersArr: PropTypes.func,
+	hideAvatar: PropTypes.bool,
 };
 
 export default CommentEditor;
