@@ -92,6 +92,7 @@ function Post({
 	const [showReplyArrayState, setShowReplyArrayState] = useState([]);
 	const [showDeleteFeedModal, setShowDeleteFeedModal] = useState(false);
 	const [showModalCreatePost, setShowModalCreatePost] = useState(false);
+	const [isEdit, setIsEdit] = useState(false);
 
 	const { ref: settingsRef, isVisible: isSettingsVisible, setIsVisible: setSettingsVisible } = useVisible(false);
 
@@ -487,6 +488,7 @@ function Post({
 	const handleOpenModal = () => {
 		setSettingsVisible(prev => !prev);
 		setShowModalCreatePost(true);
+		setIsEdit(true);
 	};
 
 	return (
@@ -996,7 +998,11 @@ function Post({
 				</ModalBody>
 			</Modal>
 			{showModalCreatePost && (
-				<CreatePostModalContent dataEditMiniPost={postData} setShowModalCreatePost={setShowModalCreatePost} />
+				<CreatePostModalContent
+					dataEditMiniPost={postData}
+					setShowModalCreatePost={setShowModalCreatePost}
+					isEdit={isEdit}
+				/>
 			)}
 		</div>
 	);

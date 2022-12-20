@@ -88,6 +88,8 @@ function CreatePostModalContent({
 	showSubModal,
 	setShowSubModal,
 	onChangeNewPost,
+	isEdit,
+	setIsEdit,
 }) {
 	// const [shareMode, setShareMode] = useState({ value: 'public', title: 'Mọi người', icon: <WorldNet /> }); // k xóa
 	const [showMainModal, setShowMainModal] = useState(true);
@@ -115,25 +117,29 @@ function CreatePostModalContent({
 	const [modalShow, setModalShow] = useState(false);
 
 	useEffect(() => {
-		const editAuthors = dataEditMiniPost?.mentionsAuthors?.map(item => item.authors);
-		const editCategory = dataEditMiniPost?.mentionsCategories?.map(item => ({
-			...item,
-			name: `${item.category.name}`,
-		}));
-		const editUsers = dataEditMiniPost?.mentionsUsers?.map(item => item.users);
-		const editBook = dataEditMiniPost?.book;
-		if (dataEditMiniPost) {
-			setTaggedData({
-				'addBook': editBook,
-				'addAuthor': editAuthors,
-				'addFriends': editUsers,
-				'addCategory': editCategory,
-			});
+		if (isEdit) {
+			const editAuthors = dataEditMiniPost?.mentionsAuthors?.map(item => item.authors);
+			const editCategory = dataEditMiniPost?.mentionsCategories?.map(item => ({
+				id: item.categoryId,
+				name: item.category.name,
+			}));
+			const editUsers = dataEditMiniPost?.mentionsUsers?.map(item => item.users);
+			const editBook = dataEditMiniPost?.book;
+			console.log(dataEditMiniPost);
+			if (dataEditMiniPost) {
+				setTaggedData({
+					'addBook': editBook,
+					'addAuthor': editAuthors,
+					'addFriends': editUsers,
+					'addCategory': editCategory,
+				});
+			}
 		}
-		console.log(dataEditMiniPost);
 	}, []);
 
-	console.log(taggedData);
+	console.log(imagesUpload);
+
+	console.log(taggedData.addCategory);
 
 	const createPostModalContainer = useRef(null);
 
@@ -241,6 +247,7 @@ function CreatePostModalContent({
 		dispatch(handleSetImageToShare([]));
 		dispatch(setOptionAddToPost({}));
 		dispatch(handleClickCreateNewPostForBook(false));
+		setIsEdit(false);
 		// 2 dòng lệnh phía dưới luôn luôn ở dưới cùng
 		setShowSubModal(false);
 		setShowModalCreatePost(false);
@@ -801,6 +808,7 @@ function CreatePostModalContent({
 								setContent={setContent}
 								hasMentionsUser={false}
 								hasUrl={hasUrl}
+								initialContent={dataEditMiniPost?.message}
 							/>
 							<TaggedList taggedData={taggedData} removeTaggedItem={removeTaggedItem} type='addAuthor' />
 							<TaggedList
@@ -1013,6 +1021,7 @@ CreatePostModalContent.defaultProps = {
 	setShowModalCreatePost: () => {},
 	showSubModal: false,
 	setShowSubModal: () => {},
+	isEdit: false,
 };
 
 CreatePostModalContent.propTypes = {
@@ -1020,6 +1029,7 @@ CreatePostModalContent.propTypes = {
 	setShowModalCreatePost: PropTypes.func,
 	showSubModal: PropTypes.bool,
 	setShowSubModal: PropTypes.func,
+	isEdit: PropTypes.bool,
 };
 
 export default CreatePostModalContent;
