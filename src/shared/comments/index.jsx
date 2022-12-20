@@ -31,22 +31,19 @@ import {
 	updateCommentReview,
 } from 'reducers/redux-utils/comment';
 import { setParamHandleEdit } from 'reducers/redux-utils/comment';
-import { useVisible } from 'shared/hooks';
 
 const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 	const [isLiked, setIsLiked] = useState(false);
 	const [isAuthor, setIsAuthor] = useState(false);
 	const [data, setData] = useState(dataProp);
+	const [showOptionsComment, setShowOptionsComment] = useState(false);
 	const [modalDirectShow, setModalDirectShow] = useState(false);
 	const [modalDeleteShow, setModalDeleteShow] = useState(false);
 	const [isEditingComment, setIsEditingComment] = useState(false);
 
 	const urlToDirect = useRef('');
-	const {
-		ref: optionsCommentList,
-		isVisible: showOptionsComment,
-		setIsVisible: setShowOptionsComment,
-	} = useVisible(false);
+	const optionsCommentButton = useRef(null);
+	const optionsCommentList = useRef(null);
 
 	const { userInfo } = useSelector(state => state.auth);
 
@@ -95,6 +92,23 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 			};
 		}
 	}, [isEditingComment]);
+
+	useEffect(() => {
+		const handleClickOutside = e => {
+			if (
+				optionsCommentList.current &&
+				optionsCommentButton.current &&
+				![optionsCommentList.current, optionsCommentButton.current].some(obj => obj.contains(e.target))
+			) {
+				setShowOptionsComment(false);
+			}
+		};
+
+		document.addEventListener('click', handleClickOutside, true);
+		return () => {
+			document.removeEventListener('click', handleClickOutside, true);
+		};
+	}, []);
 
 	const handleAddEventClickToUrlTags = useCallback(() => {
 		const arr = document.querySelectorAll('.url-class');
@@ -349,11 +363,14 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 							) : null}
 						</div>
 						{[data.user?.id, data.createdBy].includes(userInfo.id) && (
-							<div
-								className={`comment__wrapper__info__options ${showOptionsComment && 'isShowing'}`}
-								onClick={() => setShowOptionsComment(!showOptionsComment)}
-							>
-								<div className='comment__wrapper__info__options__elipsis'>...</div>
+							<div className={`comment__wrapper__info__options ${showOptionsComment && 'isShowing'}`}>
+								<div
+									className='comment__wrapper__info__options__elipsis'
+									onClick={() => setShowOptionsComment(!showOptionsComment)}
+									ref={optionsCommentButton}
+								>
+									...
+								</div>
 								{showOptionsComment && (
 									<div className='comment__wrapper__info__options__list' ref={optionsCommentList}>
 										<p onClick={() => setIsEditingComment(true)}>Sửa bình luận</p>
