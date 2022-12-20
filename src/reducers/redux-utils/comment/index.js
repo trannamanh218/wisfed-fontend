@@ -92,12 +92,12 @@ const commentSlice = createSlice({
 		paramHandleEdit: {},
 	},
 	reducers: {
-		handleSetParamHandleEdit: (state, action) => {
+		setParamHandleEdit: (state, action) => {
 			state.paramHandleEdit = action.payload;
 		},
 	},
 });
 
-export const { handleSetParamHandleEdit } = commentSlice.actions;
+export const { setParamHandleEdit } = commentSlice.actions;
 const comment = commentSlice.reducer;
 export default comment;

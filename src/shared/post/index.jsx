@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import { useCallback, useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateReactionActivity, updateReactionActivityGroup } from 'reducers/redux-utils/activity';
-import { createComment, createCommentGroup, handleSetParamHandleEdit } from 'reducers/redux-utils/comment';
+import { createComment, createCommentGroup, setParamHandleEdit } from 'reducers/redux-utils/comment';
 import { Modal, ModalBody } from 'react-bootstrap';
 import { CloseX } from 'components/svg';
 import CommentEditor from 'shared/comment-editor';
@@ -171,7 +171,7 @@ function Post({
 
 	useEffect(() => {
 		// Thay đổi lại comment sau khi đã chỉnh sửa
-		if (!_.isEmpty(paramHandleEdit)) {
+		if (!_.isEmpty(paramHandleEdit) && type === paramHandleEdit.type) {
 			const cloneArr = [...postData.usersComments];
 			if (paramHandleEdit.replyId) {
 				const foundReplyObj = cloneArr.find(item => item.id === paramHandleEdit.replyId);
@@ -189,7 +189,7 @@ function Post({
 				}
 			}
 			setPostData({ ...postData, usersComments: cloneArr });
-			dispatch(handleSetParamHandleEdit({}));
+			dispatch(setParamHandleEdit({}));
 		}
 	}, [paramHandleEdit]);
 

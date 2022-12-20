@@ -26,7 +26,7 @@ import {
 	updateCommentQuote,
 	updateCommentReview,
 } from 'reducers/redux-utils/comment';
-import { handleSetParamHandleEdit } from 'reducers/redux-utils/comment';
+import { setParamHandleEdit } from 'reducers/redux-utils/comment';
 import { useVisible } from 'shared/hooks';
 
 const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
@@ -248,10 +248,11 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 			} finally {
 				// Xử lí hiển thị
 				dispatch(
-					handleSetParamHandleEdit({
+					setParamHandleEdit({
 						id: data.id,
 						content: content,
 						replyId: replyId,
+						type: type,
 					})
 				);
 				handleCancelEditing();
