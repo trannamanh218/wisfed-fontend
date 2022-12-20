@@ -21,6 +21,10 @@ import Storage from 'helpers/Storage';
 import { checkUserLogin } from 'reducers/redux-utils/auth';
 import CommentEditor from 'shared/comment-editor';
 import {
+	deleteCommentGroupPost,
+	deleteCommentMinipost,
+	deleteCommentQuote,
+	deleteCommentReview,
 	updateCommentGroupPost,
 	updateCommentMinipost,
 	updateCommentQuote,
@@ -33,7 +37,8 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 	const [isLiked, setIsLiked] = useState(false);
 	const [isAuthor, setIsAuthor] = useState(false);
 	const [data, setData] = useState(dataProp);
-	const [modalShow, setModalShow] = useState(false);
+	const [modalDirectShow, setModalDirectShow] = useState(false);
+	const [modalDeleteShow, setModalDeleteShow] = useState(false);
 	const [isEditingComment, setIsEditingComment] = useState(false);
 
 	const urlToDirect = useRef('');
@@ -54,7 +59,24 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 			handleAddEventClickMentionTags();
 			// handleAddEventClickToHashtagTags(); // không xóa
 		}
-	});
+	}, []);
+
+	useEffect(() => {
+		setData(dataProp);
+	}, [dataProp]);
+
+	useEffect(() => {
+		if (type === QUOTE_TYPE) {
+			if (data.createdBy === postData.createdBy) {
+				setIsAuthor(true);
+			}
+		} else {
+			if (data.createdBy === postData.actor) {
+				setIsAuthor(true);
+			}
+		}
+		setIsLiked(data.isLike);
+	}, [data]);
 
 	useEffect(() => {
 		if (isEditingComment) {
@@ -104,7 +126,7 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 	// 	};
 
 	const directUrl = url => {
-		setModalShow(true);
+		setModalDirectShow(true);
 		let urlFormated = '';
 		if (url.includes('http')) {
 			urlFormated = url;
@@ -114,13 +136,13 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 		urlToDirect.current = urlFormated;
 	};
 
-	const handleAccept = () => {
-		setModalShow(false);
+	const handleAcceptDirect = () => {
+		setModalDirectShow(false);
 		window.open(urlToDirect.current);
 	};
 
-	const handleCancel = () => {
-		setModalShow(false);
+	const handleCancelDirect = () => {
+		setModalDirectShow(false);
 		urlToDirect.current = '';
 	};
 
@@ -186,23 +208,6 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 		}
 	};
 
-	useEffect(() => {
-		setData(dataProp);
-	}, [dataProp]);
-
-	useEffect(() => {
-		if (type === QUOTE_TYPE) {
-			if (data.createdBy === postData.createdBy) {
-				setIsAuthor(true);
-			}
-		} else {
-			if (data.createdBy === postData.actor) {
-				setIsAuthor(true);
-			}
-		}
-		setIsLiked(data.isLike);
-	}, [data]);
-
 	const handleViewPostDetail = () => {
 		if (!window.location.pathname.includes('/detail-feed/')) {
 			if (postData.minipostId) {
@@ -215,10 +220,6 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 				navigate(`/detail-feed/mini-post/${postData.id}`);
 			}
 		}
-	};
-
-	const onClickEditComment = () => {
-		setIsEditingComment(true);
 	};
 
 	const handleCancelEditing = () => {
@@ -246,7 +247,6 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 			} catch (err) {
 				NotificationError(err);
 			} finally {
-				// Xử lí hiển thị
 				dispatch(
 					setParamHandleEdit({
 						id: data.id,
@@ -258,6 +258,36 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 				handleCancelEditing();
 			}
 		}
+	};
+
+	const handleAcceptDelete = async () => {
+		try {
+			if (type === 'post') {
+				await dispatch(deleteCommentMinipost(data.id)).unwrap();
+			} else if (type === 'group') {
+				await dispatch(deleteCommentGroupPost(data.id)).unwrap();
+			} else if (type === 'review') {
+				await dispatch(deleteCommentReview(data.id)).unwrap();
+			} else if (type === 'quote') {
+				await dispatch(deleteCommentQuote(data.id)).unwrap();
+			}
+		} catch (err) {
+			NotificationError(err);
+		} finally {
+			dispatch(
+				setParamHandleEdit({
+					id: data.id,
+					content: null,
+					replyId: data.replyId,
+					type: type,
+				})
+			);
+			setModalDeleteShow(false);
+		}
+	};
+
+	const handleCancelDelete = () => {
+		setModalDeleteShow(false);
 	};
 
 	return (
@@ -326,8 +356,8 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 								<div className='comment__wrapper__info__options__elipsis'>...</div>
 								{showOptionsComment && (
 									<div className='comment__wrapper__info__options__list' ref={optionsCommentList}>
-										<p onClick={onClickEditComment}>Sửa bình luận</p>
-										<p>Xóa</p>
+										<p onClick={() => setIsEditingComment(true)}>Sửa bình luận</p>
+										<p onClick={() => setModalDeleteShow(true)}>Xóa</p>
 									</div>
 								)}
 							</div>
@@ -365,7 +395,19 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 				</div>
 			)}
 
-			<DirectLinkALertModal modalShow={modalShow} handleAccept={handleAccept} handleCancel={handleCancel} />
+			<DirectLinkALertModal
+				modalShow={modalDirectShow}
+				handleAccept={handleAcceptDirect}
+				handleCancel={handleCancelDirect}
+			/>
+			<DirectLinkALertModal
+				modalShow={modalDeleteShow}
+				handleAccept={handleAcceptDelete}
+				handleCancel={handleCancelDelete}
+				message='Bạn có chắc chắn muốn xóa bình luận này không?'
+				yesBtnMsg='Xóa'
+				noBtnMsg='Không'
+			/>
 		</div>
 	);
 };

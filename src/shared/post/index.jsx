@@ -170,25 +170,38 @@ function Post({
 	}, [postData]);
 
 	useEffect(() => {
-		// Thay đổi lại comment sau khi đã chỉnh sửa
+		// Thay đổi lại comment sau khi đã chỉnh sửa hoặc xóa
 		if (!_.isEmpty(paramHandleEdit) && type === paramHandleEdit.type) {
 			const cloneArr = [...postData.usersComments];
+			let totalCommentNumber = postData.comment;
+
 			if (paramHandleEdit.replyId) {
 				const foundReplyObj = cloneArr.find(item => item.id === paramHandleEdit.replyId);
 				if (foundReplyObj) {
 					const cloneReplyArr = [...foundReplyObj.reply];
 					const foundObj = cloneReplyArr.find(item => item.id === paramHandleEdit.id);
 					if (!_.isEmpty(foundObj)) {
-						foundObj.content = paramHandleEdit.content;
+						if (paramHandleEdit.content) {
+							foundObj.content = paramHandleEdit.content;
+						} else {
+							cloneReplyArr.splice(cloneReplyArr.indexOf(foundObj), 1);
+							foundReplyObj.reply = cloneReplyArr;
+							totalCommentNumber = totalCommentNumber - 1;
+						}
 					}
 				}
 			} else {
 				const foundObj = cloneArr.find(item => item.id === paramHandleEdit.id);
 				if (!_.isEmpty(foundObj)) {
-					foundObj.content = paramHandleEdit.content;
+					if (paramHandleEdit.content) {
+						foundObj.content = paramHandleEdit.content;
+					} else {
+						cloneArr.splice(cloneArr.indexOf(foundObj), 1);
+						totalCommentNumber = totalCommentNumber - 1;
+					}
 				}
 			}
-			setPostData({ ...postData, usersComments: cloneArr });
+			setPostData({ ...postData, comment: totalCommentNumber, usersComments: cloneArr });
 			dispatch(setParamHandleEdit({}));
 		}
 	}, [paramHandleEdit]);
