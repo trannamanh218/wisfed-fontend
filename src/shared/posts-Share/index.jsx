@@ -334,6 +334,9 @@ const PostShare = ({ postData, inCreatePost, directUrl }) => {
 					))}
 				</ul>
 			)}
+			{postData.sharePost?.image?.length > 0 && (
+				<GridImage images={postData.sharePost.image} inPost={true} postId={postData?.id} />
+			)}
 			{postData.sharePost?.book && (
 				<PostBook
 					data={{
@@ -394,10 +397,6 @@ const PostShare = ({ postData, inCreatePost, directUrl }) => {
 						<AuthorBook data={postData.sharePost} />
 					</div>
 				</>
-			)}
-
-			{postData.sharePost?.image?.length > 0 && (
-				<GridImage images={postData.sharePost.image} inPost={true} postId={postData?.id} />
 			)}
 
 			{postData.sharePost?.image?.length === 0 &&

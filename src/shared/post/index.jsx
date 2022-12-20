@@ -405,7 +405,10 @@ function Post({
 	};
 
 	const handleViewPostDetail = () => {
-		if (!window.location.pathname.includes('/detail-feed/')) {
+		if (
+			!window.location.pathname.includes('/detail-feed/') &&
+			!window.location.pathname.includes('/book/detail/')
+		) {
 			if (postData.minipostId) {
 				navigate(`/detail-feed/mini-post/${postData.minipostId}`);
 			} else if (postData.groupPostId) {
@@ -647,7 +650,7 @@ function Post({
 				</div>
 			)}
 			{postData.verb === TOP_USER_VERB_SHARE && <ShareUsers postData={postData} />}
-
+			{postData?.image?.length > 0 && <GridImage images={postData.image} inPost={true} postId={postData.id} />}
 			{postData.book && (
 				<PostBook
 					data={postData.book}
@@ -655,7 +658,6 @@ function Post({
 				/>
 			)}
 			{postData.verb === READ_TARGET_VERB_SHARE && <ShareTarget postData={postData} inPost={true} />}
-			{postData?.image?.length > 0 && <GridImage images={postData.image} inPost={true} postId={postData.id} />}
 			{(postData?.image?.length === 0 &&
 				!_.isEmpty(postData.sharePost?.preview) &&
 				_.isEmpty(postData.sharePost?.book)) ||

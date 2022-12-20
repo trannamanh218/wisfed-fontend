@@ -243,7 +243,7 @@ const ReviewTab = ({ currentTab }) => {
 		if (!Storage.getAccessToken()) {
 			dispatch(checkUserLogin(true));
 		} else {
-			dispatch(updateBookForCreatePost({ ...bookInfo }));
+			dispatch(updateBookForCreatePost({ ...bookInfoProp }));
 			setShowModalCreatePost(true);
 		}
 	};
@@ -401,6 +401,7 @@ const ReviewTab = ({ currentTab }) => {
 					setShowModalCreatePost={setShowModalCreatePost}
 					showSubModal={false}
 					onChangeNewPost={getReviewListFirstTime}
+					isReview={true}
 				/>
 			)}
 		</div>

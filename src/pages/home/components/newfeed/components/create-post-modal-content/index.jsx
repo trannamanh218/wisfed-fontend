@@ -82,7 +82,7 @@ const verbShareArray = [
 
 const message = 'Bạn đang có bài viết chưa hoàn thành. Bạn có chắc muốn rời khỏi khi chưa đăng không?';
 
-function CreatePostModalContent({ setShowModalCreatePost, showSubModal, setShowSubModal, onChangeNewPost }) {
+function CreatePostModalContent({ setShowModalCreatePost, showSubModal, setShowSubModal, onChangeNewPost, isReview }) {
 	// const [shareMode, setShareMode] = useState({ value: 'public', title: 'Mọi người', icon: <WorldNet /> }); // k xóa
 	const [showMainModal, setShowMainModal] = useState(true);
 	const [taggedData, setTaggedData] = useState({
@@ -609,7 +609,7 @@ function CreatePostModalContent({ setShowModalCreatePost, showSubModal, setShowS
 	const checkActive = () => {
 		let isActive = false;
 		if (!_.isEmpty(taggedData.addBook)) {
-			if (window.location.pathname.includes('book/detail')) {
+			if (isReview) {
 				if (content && progressInputValue > 0) {
 					isActive = true;
 				}
@@ -866,14 +866,6 @@ function CreatePostModalContent({ setShowModalCreatePost, showSubModal, setShowS
 							{postDataShare.verb === TOP_USER_VERB_SHARE_LV1 && <ShareUsers postData={postDataShare} />}
 							{!_.isEmpty(taggedData.addBook) || showUpload ? (
 								<>
-									{!_.isEmpty(taggedData.addBook) && (
-										<PostEditBook
-											data={taggedData.addBook}
-											handleAddToPost={handleAddToPost}
-											handleChangeStar={handleChangeStar}
-											valueStar={valueStar}
-										/>
-									)}
 									{showUpload && (
 										<UploadImage
 											addOptionsToPost={addOptionsToPost}
@@ -882,6 +874,14 @@ function CreatePostModalContent({ setShowModalCreatePost, showSubModal, setShowS
 											removeAllImages={removeAllImages}
 											maxFiles={100}
 											maxSize={104857600}
+										/>
+									)}
+									{!_.isEmpty(taggedData.addBook) && (
+										<PostEditBook
+											data={taggedData.addBook}
+											handleAddToPost={handleAddToPost}
+											handleChangeStar={handleChangeStar}
+											valueStar={valueStar}
 										/>
 									)}
 								</>
@@ -986,6 +986,7 @@ CreatePostModalContent.defaultProps = {
 	setShowModalCreatePost: () => {},
 	showSubModal: false,
 	setShowSubModal: () => {},
+	isReview: false,
 };
 
 CreatePostModalContent.propTypes = {
@@ -993,6 +994,7 @@ CreatePostModalContent.propTypes = {
 	setShowModalCreatePost: PropTypes.func,
 	showSubModal: PropTypes.bool,
 	setShowSubModal: PropTypes.func,
+	isReview: PropTypes.bool,
 };
 
 export default CreatePostModalContent;
