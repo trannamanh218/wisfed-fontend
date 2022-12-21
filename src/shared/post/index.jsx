@@ -197,7 +197,11 @@ function Post({
 						foundObj.content = paramHandleEdit.content;
 					} else {
 						cloneArr.splice(cloneArr.indexOf(foundObj), 1);
-						totalCommentNumber = totalCommentNumber - 1 - foundObj.reply.length;
+						if (Array.isArray(foundObj.reply) && foundObj.reply.length) {
+							totalCommentNumber = totalCommentNumber - 1 - foundObj.reply.length;
+						} else {
+							totalCommentNumber = totalCommentNumber - 1;
+						}
 					}
 				}
 			}
