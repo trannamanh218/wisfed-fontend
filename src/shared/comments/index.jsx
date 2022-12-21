@@ -28,7 +28,6 @@ import { likeAndUnlikeGroupComment } from 'reducers/redux-utils/group';
 import { likeQuoteComment } from 'reducers/redux-utils/quote';
 import CommentEditor from 'shared/comment-editor';
 import DirectLinkALertModal from 'shared/direct-link-alert-modal';
-import LoadingIndicator from 'shared/loading-indicator';
 import ShowTime from 'shared/showTimeOfPostWhenHover/showTime';
 import UserAvatar from 'shared/user-avatar';
 import './comment.scss';
@@ -289,6 +288,7 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 	};
 
 	const handleAcceptDelete = async () => {
+		setModalDeleteShow(false);
 		try {
 			if (type === 'post') {
 				await dispatch(deleteCommentMinipost(data.id)).unwrap();
@@ -299,9 +299,6 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 			} else if (type === 'quote') {
 				await dispatch(deleteCommentQuote(data.id)).unwrap();
 			}
-		} catch (err) {
-			NotificationError(err);
-		} finally {
 			dispatch(
 				setParamHandleEdit({
 					id: data.id,
@@ -310,7 +307,8 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 					type: type,
 				})
 			);
-			setModalDeleteShow(false);
+		} catch (err) {
+			NotificationError(err);
 		}
 	};
 

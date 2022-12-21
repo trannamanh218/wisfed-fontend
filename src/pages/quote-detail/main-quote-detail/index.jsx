@@ -33,6 +33,29 @@ const MainQuoteDetail = ({ quoteData, setQuoteData, onCreateComment, setMentionU
 
 	const dispatch = useDispatch();
 
+	// Lấy comment nhắc đến bạn đặt trên đầu
+	useEffect(() => {
+		if (haveNotClickedSeeMoreOnce) {
+			if (reduxMentionCommentId && mentionCommentId === null) {
+				setMentionCommentId(reduxMentionCommentId);
+			}
+			if (!_.isEmpty(quoteData) && mentionCommentId) {
+				// Nếu bấm xem bình luận nhắc đến bạn từ thông báo thì sẽ đưa bình luận đó lên đầu
+				handleChangeOrderQuoteComments();
+				// Sau đó xóa mentionCommentId trong redux
+				dispatch(handleMentionCommentId(null));
+			}
+		}
+	}, [quoteData, mentionCommentId]);
+
+	// Sau khi bấm xem thêm thì không đặt comment nhắc đến bạn lên đầu nữa
+	useEffect(() => {
+		if (!haveNotClickedSeeMoreOnce) {
+			setFirstPlaceComment([]);
+			setFirstPlaceCommentId(null);
+		}
+	}, [haveNotClickedSeeMoreOnce]);
+
 	const handleReply = (cmtLv1Id, userData) => {
 		onClickSeeMoreReply(cmtLv1Id);
 		const arr = [];
@@ -89,29 +112,6 @@ const MainQuoteDetail = ({ quoteData, setQuoteData, onCreateComment, setMentionU
 			NotificationError(err);
 		}
 	};
-
-	// Sau khi bấm xem thêm thì không đặt comment nhắc đến bạn lên đầu nữa
-	useEffect(() => {
-		if (!haveNotClickedSeeMoreOnce) {
-			setFirstPlaceComment([]);
-			setFirstPlaceCommentId(null);
-		}
-	}, [haveNotClickedSeeMoreOnce]);
-
-	// Lấy comment nhắc đến bạn đặt trên đầu
-	useEffect(() => {
-		if (haveNotClickedSeeMoreOnce) {
-			if (reduxMentionCommentId && mentionCommentId === null) {
-				setMentionCommentId(reduxMentionCommentId);
-			}
-			if (!_.isEmpty(quoteData) && mentionCommentId) {
-				// Nếu bấm xem bình luận nhắc đến bạn từ thông báo thì sẽ đưa bình luận đó lên đầu
-				handleChangeOrderQuoteComments();
-				// Sau đó xóa mentionCommentId trong redux
-				dispatch(handleMentionCommentId(null));
-			}
-		}
-	}, [quoteData, mentionCommentId]);
 
 	return (
 		<div className='main-quote-detail'>
