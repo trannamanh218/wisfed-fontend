@@ -5,7 +5,6 @@ import { useParams } from 'react-router-dom';
 import { handleShelvesGroup } from 'api/shelvesGroup.hooks';
 import Circle from 'shared/loading/circle';
 import NotFound from 'pages/not-found';
-
 const BooksAuthor = () => {
 	const { userId } = useParams();
 

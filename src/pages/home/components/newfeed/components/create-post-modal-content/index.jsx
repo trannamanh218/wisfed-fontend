@@ -131,10 +131,7 @@ function CreatePostModalContent({
 				'addCategory': editCategory,
 			});
 		}
-		console.log(dataEditMiniPost);
 	}, []);
-
-	console.log(taggedData);
 
 	const createPostModalContainer = useRef(null);
 

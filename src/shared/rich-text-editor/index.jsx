@@ -48,7 +48,6 @@ function RichTextEditor({
 
 	const [editorState, setEditorState] = useState(editorDataState);
 
-	// const [editorState, setEditorState] = useState(EditorState.createEmpty());
 	const [open, setOpen] = useState(false);
 	const [suggestions, setSuggestions] = useState([]);
 	const [{ plugins, MentionSuggestions }] = useState(() => {
@@ -92,7 +91,7 @@ function RichTextEditor({
 			}, 10);
 			setTimeout(() => {
 				editor.current.focus();
-			}, 50);
+			}, 150);
 		}
 	}, [createCmt, editor]);
 	//-------------------------------------------------------
@@ -110,6 +109,7 @@ function RichTextEditor({
 		}
 		if (textValue.length) {
 			const html = convertContentToHTML();
+			// console.log(html);
 			setContent(html);
 		} else {
 			setContent('');
