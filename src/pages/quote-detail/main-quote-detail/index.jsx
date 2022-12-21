@@ -34,6 +34,7 @@ const MainQuoteDetail = ({ quoteData, setQuoteData, onCreateComment, setMentionU
 	const dispatch = useDispatch();
 
 	const handleReply = (cmtLv1Id, userData) => {
+		onClickSeeMoreReply(cmtLv1Id);
 		const arr = [];
 		if (userData.id !== userInfo.id) {
 			arr.push(userData);

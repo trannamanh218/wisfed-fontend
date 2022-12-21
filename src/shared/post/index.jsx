@@ -345,6 +345,7 @@ function Post({
 	);
 
 	const handleReply = (cmtLv1Id, userData) => {
+		onClickSeeMoreReply(cmtLv1Id);
 		const arr = [];
 		if (userData.id !== userInfo.id) {
 			arr.push(userData);
