@@ -48,6 +48,7 @@ const Header = () => {
 	const { userInfo } = useSelector(state => state.auth);
 	const isNewNotificationByRealtime = useSelector(state => state.notificationReducer.isNewNotificationByRealtime);
 	const { wentInResult } = useSelector(state => state.search);
+	const { bookForCreatePost } = useSelector(state => state.book);
 
 	const { ref: showRef, isVisible: isShow, setIsVisible: setIsShow } = useVisible(false);
 	const {
@@ -241,7 +242,11 @@ const Header = () => {
 	}, [window.location.pathname]);
 
 	return (
-		<div className='header'>
+		<div
+			className={classNames('header', {
+				'low-zIndex': !_.isEmpty(bookForCreatePost),
+			})}
+		>
 			<div className='header__left'>
 				<div className='header-logo-big'>
 					<Link to='/' onClick={onClickReloadPosts}>

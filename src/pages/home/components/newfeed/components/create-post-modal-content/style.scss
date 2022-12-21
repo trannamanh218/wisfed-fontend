@@ -218,13 +218,11 @@
 
 .create-post-modal-content__main__body__text-field-edit-wrapper {
 	width: 100%;
-	max-height: 350px;
+	max-height: 280px;
 	overflow-y: scroll;
 	position: relative;
 	padding-right: 6px;
-	&.height-higher {
-		height: 250px !important;
-	}
+
 	.rich-text-editor {
 		margin-bottom: 16px;
 		a {
@@ -965,6 +963,10 @@
 	}
 	.create-post-modal-content__main__body__user-info__block-right p {
 		font-size: 16px;
+	}
+
+	.create-post-modal-content__main__body__text-field-edit-wrapper {
+		max-height: 250px;
 	}
 
 	.create-post-modal-content__main__close,

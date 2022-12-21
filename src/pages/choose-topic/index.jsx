@@ -148,37 +148,43 @@ function ChooseTopic() {
 						<LoadingIndicator />
 					</div>
 				) : (
-					<div className='choose-topic__box'>
-						{inputValue === '' ? (
-							<>
-								{listCategory.map(item => {
-									return (
-										<label key={item.id} className='form-check-wrapper'>
-											<Form.Check className='form-check-custom' type={'checkbox'} id={item.id}>
-												<Form.Check.Input
-													className={`form-check-custom--'checkbox'`}
+					<>
+						<div className='choose-topic__box'>
+							{inputValue === '' ? (
+								<>
+									{listCategory.map(item => {
+										return (
+											<label key={item.id} className='form-check-wrapper'>
+												<Form.Check
+													className='form-check-custom'
 													type={'checkbox'}
-													name={item.name}
-													checked={addFavorite.includes(item.id)}
-													value={item.id}
-													onClick={handleChange}
-													readOnly
-												/>
-												<Form.Check.Label className='form-check-label--custom'>
-													{item.name}
-												</Form.Check.Label>
-											</Form.Check>
-										</label>
-									);
-								})}
-							</>
-						) : (
-							<SearchCategoryChooseTopic
-								searchCategories={listCategorySearched}
-								addFavorite={addFavorite}
-								handleChange={handleChange}
-							/>
-						)}
+													id={item.id}
+												>
+													<Form.Check.Input
+														className={`form-check-custom--'checkbox'`}
+														type={'checkbox'}
+														name={item.name}
+														checked={addFavorite.includes(item.id)}
+														value={item.id}
+														onClick={handleChange}
+														readOnly
+													/>
+													<Form.Check.Label className='form-check-label--custom'>
+														{item.name}
+													</Form.Check.Label>
+												</Form.Check>
+											</label>
+										);
+									})}
+								</>
+							) : (
+								<SearchCategoryChooseTopic
+									searchCategories={listCategorySearched}
+									addFavorite={addFavorite}
+									handleChange={handleChange}
+								/>
+							)}
+						</div>
 						<div
 							className={'choose-topic__button ' + `${addFavorite.length >= 3 ? '' : 'disabled-btn'}`}
 							onClick={() => {
@@ -187,7 +193,7 @@ function ChooseTopic() {
 						>
 							<button>Tiếp tục</button>
 						</div>
-					</div>
+					</>
 				)}
 			</div>
 		</div>

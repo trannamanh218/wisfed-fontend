@@ -562,12 +562,12 @@ function Post({
 							__html: generateContent(postData.message || postData.content),
 						}}
 					></div>
-					{(postData?.message?.length > 500 || postData.content?.length > 500) &&
-						_.isEmpty(postData.preview) && (
-							<div className='read-more-post' onClick={() => setReadMore(!readMore)}>
-								{readMore ? 'Rút gọn' : 'Xem thêm'}
-							</div>
-						)}
+					{(postData?.message?.replace(/(<([^>]+)>)/gi, '').length > 500 ||
+						postData.content?.replace(/(<([^>]+)>)/gi, '').length > 500) && (
+						<div className='read-more-post' onClick={() => setReadMore(!readMore)}>
+							{readMore ? 'Rút gọn' : 'Xem thêm'}
+						</div>
+					)}
 				</div>
 			)}
 			{(postData?.metaData?.type === 'readingChart' || postData?.metaData?.type === 'growthChart') && (
