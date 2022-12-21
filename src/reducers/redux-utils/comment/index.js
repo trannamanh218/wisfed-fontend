@@ -76,7 +76,7 @@ export const updateCommentGroupPost = createAsyncThunk('comment/createComment', 
 
 export const deleteCommentGroupPost = createAsyncThunk('comment/createComment', async (id, { rejectWithValue }) => {
 	try {
-		const response = await Request.makePatch(commentActivityGroupPostAPI(id));
+		const response = await Request.makeDelete(commentActivityGroupPostAPI(id));
 		return response.data;
 	} catch (err) {
 		const error = JSON.stringify(err.response);
@@ -97,7 +97,7 @@ export const updateCommentReview = createAsyncThunk('comment/createComment', asy
 
 export const deleteCommentReview = createAsyncThunk('comment/createComment', async (id, { rejectWithValue }) => {
 	try {
-		const response = await Request.makePatch(commentActivityReviewAPI(id));
+		const response = await Request.makeDelete(commentActivityReviewAPI(id));
 		return response.data;
 	} catch (err) {
 		const error = JSON.stringify(err.response);
@@ -118,7 +118,7 @@ export const updateCommentQuote = createAsyncThunk('comment/createComment', asyn
 
 export const deleteCommentQuote = createAsyncThunk('comment/createComment', async (id, { rejectWithValue }) => {
 	try {
-		const response = await Request.makePatch(commentActivityQuoteAPI(id));
+		const response = await Request.makeDelete(commentActivityQuoteAPI(id));
 		return response.data;
 	} catch (err) {
 		const error = JSON.stringify(err.response);
