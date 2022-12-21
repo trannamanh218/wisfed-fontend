@@ -82,7 +82,14 @@ const verbShareArray = [
 
 const message = 'Bạn đang có bài viết chưa hoàn thành. Bạn có chắc muốn rời khỏi khi chưa đăng không?';
 
-function CreatePostModalContent({ setShowModalCreatePost, showSubModal, setShowSubModal, onChangeNewPost, isReview }) {
+function CreatePostModalContent({
+	setShowModalCreatePost,
+	dataEditMiniPost,
+	showSubModal,
+	setShowSubModal,
+	onChangeNewPost,
+	isReview,
+}) {
 	// const [shareMode, setShareMode] = useState({ value: 'public', title: 'Mọi người', icon: <WorldNet /> }); // k xóa
 	const [showMainModal, setShowMainModal] = useState(true);
 	const [taggedData, setTaggedData] = useState({
@@ -107,6 +114,27 @@ function CreatePostModalContent({ setShowModalCreatePost, showSubModal, setShowS
 	const [hashtagsAdded, setHashtagsAdded] = useState([]);
 	const [optionListState, setOptionListState] = useState([]);
 	const [modalShow, setModalShow] = useState(false);
+
+	useEffect(() => {
+		const editAuthors = dataEditMiniPost?.mentionsAuthors?.map(item => item.authors);
+		const editCategory = dataEditMiniPost?.mentionsCategories?.map(item => ({
+			...item,
+			name: `${item.category.name}`,
+		}));
+		const editUsers = dataEditMiniPost?.mentionsUsers?.map(item => item.users);
+		const editBook = dataEditMiniPost?.book;
+		if (dataEditMiniPost) {
+			setTaggedData({
+				'addBook': editBook,
+				'addAuthor': editAuthors,
+				'addFriends': editUsers,
+				'addCategory': editCategory,
+			});
+		}
+		console.log(dataEditMiniPost);
+	}, []);
+
+	console.log(taggedData);
 
 	const createPostModalContainer = useRef(null);
 
