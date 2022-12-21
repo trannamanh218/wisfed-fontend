@@ -281,8 +281,6 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 						type: type,
 					})
 				);
-				setIsEditingComment(false);
-				setShowOptionsComment(false);
 			}
 		}
 	};

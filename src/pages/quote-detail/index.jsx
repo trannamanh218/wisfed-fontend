@@ -39,7 +39,7 @@ const QuoteDetail = () => {
 				if (foundReplyObj) {
 					const cloneReplyArr = [...foundReplyObj.reply];
 					const foundObj = cloneReplyArr.find(item => item.id === paramHandleEdit.id);
-					if (!_.isEmpty(foundObj)) {
+					if (foundObj) {
 						if (paramHandleEdit.content) {
 							foundObj.content = paramHandleEdit.content;
 						} else {
@@ -51,7 +51,7 @@ const QuoteDetail = () => {
 				}
 			} else {
 				const foundObj = cloneArr.find(item => item.id === paramHandleEdit.id);
-				if (!_.isEmpty(foundObj)) {
+				if (foundObj) {
 					if (paramHandleEdit.content) {
 						foundObj.content = paramHandleEdit.content;
 					} else {
