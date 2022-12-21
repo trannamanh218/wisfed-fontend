@@ -53,7 +53,9 @@ const QuoteDetail = () => {
 				const foundObj = cloneArr.find(item => item.id === paramHandleEdit.id);
 				if (foundObj) {
 					if (paramHandleEdit.content) {
-						foundObj.content = paramHandleEdit.content;
+						const cloneFoundObj = { ...foundObj };
+						cloneFoundObj.content = paramHandleEdit.content;
+						cloneArr[cloneArr.indexOf(foundObj)] = cloneFoundObj;
 					} else {
 						cloneArr.splice(cloneArr.indexOf(foundObj), 1);
 						if (Array.isArray(foundObj.reply) && foundObj.reply.length) {
