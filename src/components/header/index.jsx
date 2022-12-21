@@ -366,13 +366,12 @@ const Header = () => {
 						'show': modalInforUser && localStorage.getItem('accessToken'),
 					})}
 				>
-					<div onClick={handleViewProfile}>
-						<li>
-							<ProfileIcon />
-							&nbsp;Thông tin cá nhân
-						</li>
-					</div>
-					<li onClick={() => handleLogout()}>
+					<li onClick={handleViewProfile}>
+						<ProfileIcon />
+						&nbsp;Thông tin cá nhân
+					</li>
+
+					<li onClick={handleLogout}>
 						<LogOutIcon />
 						&nbsp;Đăng xuất
 					</li>

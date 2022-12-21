@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import { useCallback, useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateReactionActivity, updateReactionActivityGroup } from 'reducers/redux-utils/activity';
-import { createComment, createCommentGroup } from 'reducers/redux-utils/comment';
+import { createComment, createCommentGroup, setParamHandleEdit } from 'reducers/redux-utils/comment';
 import { Modal, ModalBody } from 'react-bootstrap';
 import { CloseX } from 'components/svg';
 import CommentEditor from 'shared/comment-editor';
@@ -96,6 +96,7 @@ function Post({
 	const { ref: settingsRef, isVisible: isSettingsVisible, setIsVisible: setSettingsVisible } = useVisible(false);
 
 	const { userInfo } = useSelector(state => state.auth);
+	const { paramHandleEdit } = useSelector(state => state.comment);
 	const isJoinedGroup = useSelector(state => state.group.isJoinedGroup);
 
 	const clickReply = useRef(null);
@@ -112,6 +113,104 @@ function Post({
 			handleAddEventClickToHashtagTags();
 		}
 	});
+
+	useEffect(() => {
+		if (!_.isEmpty(postInformations) && postInformations.usersComments?.length) {
+			const commentsReverse = [...postInformations.usersComments];
+			commentsReverse.reverse();
+
+			// Đảo ngược cả các comment reply nữa
+			for (let i = 0; i < commentsReverse.length; i++) {
+				if (commentsReverse[i].reply?.length > 0) {
+					const commentsChildReverse = [...commentsReverse[i].reply];
+					commentsChildReverse.reverse();
+
+					const newCloneObj = { ...commentsReverse[i] };
+					newCloneObj.reply = commentsChildReverse;
+
+					commentsReverse[i] = newCloneObj;
+				}
+			}
+
+			setPostData({ ...postInformations, usersComments: commentsReverse });
+		} else {
+			setPostData(postInformations);
+		}
+		if (!_.isEmpty(postInformations.preview) && postInformations.preview.url.includes('https://www.youtube.com/')) {
+			const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+			const match = postInformations.preview.url.match(regExp);
+			if (match && match[2].length === 11) {
+				setVideoId(match[2]);
+			}
+		}
+
+		if (!_.isEmpty(postInformations)) {
+			doneGetPostData.current = true;
+		}
+	}, [postInformations]);
+
+	useEffect(() => {
+		if (haveNotClickedSeeMoreOnce) {
+			if (reduxMentionCommentId && mentionCommentId === null) {
+				setMentionCommentId(reduxMentionCommentId);
+			}
+			if (reduxCheckIfMentionCmtFromGroup === 'group') {
+				setCheckIfMentionCmtFromGroup(reduxCheckIfMentionCmtFromGroup);
+			}
+			if (!_.isEmpty(postData) && mentionCommentId) {
+				// Nếu bấm xem bình luận nhắc đến bạn từ thông báo thì sẽ đưa bình luận đó lên đầu
+				if (checkIfMentionCmtFromGroup === 'group') {
+					handleChangeOrderMiniComments(getGroupPostComments);
+				} else {
+					handleChangeOrderMiniComments(getMiniPostComments);
+				}
+				// Sau đó xóa mentionCommentId trong redux
+				dispatch(handleMentionCommentId(null));
+				dispatch(handleCheckIfMentionFromGroup(null));
+			}
+		}
+	}, [postData]);
+
+	useEffect(() => {
+		// Thay đổi lại comment sau khi đã chỉnh sửa hoặc xóa
+		if (!_.isEmpty(paramHandleEdit) && type === paramHandleEdit.type) {
+			const cloneArr = [...postData.usersComments];
+			let totalCommentNumber = postData.comment;
+
+			if (paramHandleEdit.replyId) {
+				const foundReplyObj = cloneArr.find(item => item.id === paramHandleEdit.replyId);
+				if (foundReplyObj) {
+					const cloneReplyArr = [...foundReplyObj.reply];
+					const foundObj = cloneReplyArr.find(item => item.id === paramHandleEdit.id);
+					if (!_.isEmpty(foundObj)) {
+						if (paramHandleEdit.content) {
+							foundObj.content = paramHandleEdit.content;
+						} else {
+							cloneReplyArr.splice(cloneReplyArr.indexOf(foundObj), 1);
+							foundReplyObj.reply = cloneReplyArr;
+							totalCommentNumber = totalCommentNumber - 1;
+						}
+					}
+				}
+			} else {
+				const foundObj = cloneArr.find(item => item.id === paramHandleEdit.id);
+				if (!_.isEmpty(foundObj)) {
+					if (paramHandleEdit.content) {
+						foundObj.content = paramHandleEdit.content;
+					} else {
+						cloneArr.splice(cloneArr.indexOf(foundObj), 1);
+						if (Array.isArray(foundObj.reply) && foundObj.reply.length) {
+							totalCommentNumber = totalCommentNumber - 1 - foundObj.reply.length;
+						} else {
+							totalCommentNumber = totalCommentNumber - 1;
+						}
+					}
+				}
+			}
+			setPostData({ ...postData, comment: totalCommentNumber, usersComments: cloneArr });
+			dispatch(setParamHandleEdit({}));
+		}
+	}, [paramHandleEdit]);
 
 	const handleAddEventClickToUrlTags = useCallback(() => {
 		const arr = document.querySelectorAll('.url-class');
@@ -149,41 +248,6 @@ function Post({
 	const handleClickHashtag = dataHashtagNavigate => {
 		navigate(dataHashtagNavigate);
 	};
-
-	useEffect(() => {
-		if (!_.isEmpty(postInformations) && postInformations.usersComments?.length) {
-			const commentsReverse = [...postInformations.usersComments];
-			commentsReverse.reverse();
-
-			// Đảo ngược cả các comment reply nữa
-			for (let i = 0; i < commentsReverse.length; i++) {
-				if (commentsReverse[i].reply?.length > 0) {
-					const commentsChildReverse = [...commentsReverse[i].reply];
-					commentsChildReverse.reverse();
-
-					const newCloneObj = { ...commentsReverse[i] };
-					newCloneObj.reply = commentsChildReverse;
-
-					commentsReverse[i] = newCloneObj;
-				}
-			}
-
-			setPostData({ ...postInformations, usersComments: commentsReverse });
-		} else {
-			setPostData(postInformations);
-		}
-		if (!_.isEmpty(postInformations.preview) && postInformations.preview.url.includes('https://www.youtube.com/')) {
-			const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
-			const match = postInformations.preview.url.match(regExp);
-			if (match && match[2].length === 11) {
-				setVideoId(match[2]);
-			}
-		}
-
-		if (!_.isEmpty(postInformations)) {
-			doneGetPostData.current = true;
-		}
-	}, [postInformations]);
 
 	const onCreateComment = async (content, replyId) => {
 		if (content) {
@@ -283,6 +347,7 @@ function Post({
 	);
 
 	const handleReply = (cmtLv1Id, userData) => {
+		onClickSeeMoreReply(cmtLv1Id);
 		const arr = [];
 		if (userData.id !== userInfo.id) {
 			arr.push(userData);
@@ -373,28 +438,6 @@ function Post({
 		arr.push(paramId);
 		setShowReplyArrayState(arr);
 	};
-
-	useEffect(() => {
-		if (haveNotClickedSeeMoreOnce) {
-			if (reduxMentionCommentId && mentionCommentId === null) {
-				setMentionCommentId(reduxMentionCommentId);
-			}
-			if (reduxCheckIfMentionCmtFromGroup === 'group') {
-				setCheckIfMentionCmtFromGroup(reduxCheckIfMentionCmtFromGroup);
-			}
-			if (!_.isEmpty(postData) && mentionCommentId) {
-				// Nếu bấm xem bình luận nhắc đến bạn từ thông báo thì sẽ đưa bình luận đó lên đầu
-				if (checkIfMentionCmtFromGroup === 'group') {
-					handleChangeOrderMiniComments(getGroupPostComments);
-				} else {
-					handleChangeOrderMiniComments(getMiniPostComments);
-				}
-				// Sau đó xóa mentionCommentId trong redux
-				dispatch(handleMentionCommentId(null));
-				dispatch(handleCheckIfMentionFromGroup(null));
-			}
-		}
-	}, [postData]);
 
 	const handleAccept = () => {
 		setModalShow(false);

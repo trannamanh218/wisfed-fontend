@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, useCallback, memo } from 'react';
-import { EditorState, convertToRaw, convertFromRaw } from 'draft-js';
+import { EditorState, convertToRaw, convertFromRaw, ContentState, convertFromHTML } from 'draft-js';
 import Editor from '@draft-js-plugins/editor';
 import './rich-text-editor.scss';
 import '@draft-js-plugins/linkify/lib/plugin.css';
@@ -41,8 +41,14 @@ function RichTextEditor({
 	commentLv1Id,
 	replyingCommentId,
 	clickReply,
+	initialContent,
 }) {
-	const [editorState, setEditorState] = useState(EditorState.createEmpty());
+	const contentDataState = ContentState.createFromBlockArray(convertFromHTML(initialContent));
+	const editorDataState = EditorState.createWithContent(contentDataState);
+
+	const [editorState, setEditorState] = useState(editorDataState);
+
+	// const [editorState, setEditorState] = useState(EditorState.createEmpty());
 	const [open, setOpen] = useState(false);
 	const [suggestions, setSuggestions] = useState([]);
 	const [{ plugins, MentionSuggestions }] = useState(() => {
@@ -60,6 +66,15 @@ function RichTextEditor({
 	const dispatch = useDispatch();
 
 	useEffect(() => {
+		setTimeout(() => {
+			editor.current.blur();
+		}, 10);
+		setTimeout(() => {
+			editor.current.focus();
+		}, 50);
+	}, []);
+
+	useEffect(() => {
 		if (replyingCommentId === commentLv1Id) {
 			reply();
 			setTimeout(() => {
@@ -70,7 +85,7 @@ function RichTextEditor({
 
 	// refresh editor
 	useEffect(() => {
-		if (content && hasMentionsUser) {
+		if (content && hasMentionsUser && editor !== null) {
 			setEditorState(EditorState.createEmpty());
 			setTimeout(() => {
 				editor.current.blur();
@@ -79,7 +94,7 @@ function RichTextEditor({
 				editor.current.focus();
 			}, 50);
 		}
-	}, [createCmt]);
+	}, [createCmt, editor]);
 	//-------------------------------------------------------
 
 	useEffect(() => {
@@ -357,6 +372,7 @@ RichTextEditor.defaultProps = {
 	setMentionUsersArr: () => {},
 	commentLv1Id: undefined,
 	replyingCommentId: -1,
+	initialContent: '',
 };
 
 RichTextEditor.propTypes = {
@@ -377,6 +393,7 @@ RichTextEditor.propTypes = {
 	hasUrl: PropTypes.bool,
 	offsetKey: PropTypes.any,
 	children: PropTypes.any,
+	initialContent: PropTypes.string,
 };
 
 export default memo(RichTextEditor);

@@ -103,7 +103,7 @@ export const otherListBookInLibaries = id => `/api/v1/libraries/listBookBy/${id}
 // comment activity
 export const commentActivityAPI = '/api/v1/commentMiniposts';
 export const commentActivityDetailAPI = id => `/api/v1/commentMiniposts/${id}`;
-export const commentActivityGroupPostAPI = id => `/api/v1/commentGroupPost/${id}`;
+export const commentActivityGroupPostAPI = id => `/api/v1/groupPosts/commentGroupPost/${id}`;
 export const commentActivityReviewAPI = id => `/api/v1/commentReviews/${id}`;
 export const commentActivityQuoteAPI = id => `/api/v1/commentQuotes/${id}`;
 
