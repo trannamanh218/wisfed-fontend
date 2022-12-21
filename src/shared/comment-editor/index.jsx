@@ -29,8 +29,10 @@ const CommentEditor = ({
 			const commentEditField = document.querySelector(`.reply-comment-${commentLv1Id}`);
 
 			let number = 400;
-			if (window.location.pathname.includes('category/detail') || window.location.pathname.includes('profile/')) {
-				number = -360;
+			if (window.location.pathname.includes('profile/')) {
+				number = -100;
+			} else if (window.location.pathname.includes('category/detail/')) {
+				number = -600;
 			}
 			if (commentEditField) {
 				setTimeout(() => {

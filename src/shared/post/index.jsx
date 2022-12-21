@@ -180,7 +180,7 @@ function Post({
 				if (foundReplyObj) {
 					const cloneReplyArr = [...foundReplyObj.reply];
 					const foundObj = cloneReplyArr.find(item => item.id === paramHandleEdit.id);
-					if (!_.isEmpty(foundObj)) {
+					if (foundObj) {
 						if (paramHandleEdit.content) {
 							foundObj.content = paramHandleEdit.content;
 						} else {
@@ -192,7 +192,7 @@ function Post({
 				}
 			} else {
 				const foundObj = cloneArr.find(item => item.id === paramHandleEdit.id);
-				if (!_.isEmpty(foundObj)) {
+				if (foundObj) {
 					if (paramHandleEdit.content) {
 						foundObj.content = paramHandleEdit.content;
 					} else {
