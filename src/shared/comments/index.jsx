@@ -85,7 +85,7 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 			const handlePressEsc = e => {
 				if (document.activeElement === editorChild && e.key === 'Escape') {
 					// Khi nhấn Esc thì hủy bỏ chỉnh sửa comment
-					setIsEditingComment(false);
+					handleCancelEditing();
 				}
 			};
 			document.addEventListener('keydown', handlePressEsc);
@@ -259,8 +259,7 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 						type: type,
 					})
 				);
-				setIsEditingComment(false);
-				setShowOptionsComment(false);
+				handleCancelEditing();
 
 				if (type === 'post') {
 					await dispatch(updateCommentMinipost(params)).unwrap();
@@ -283,6 +282,11 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 				);
 			}
 		}
+	};
+
+	const handleCancelEditing = () => {
+		setIsEditingComment(false);
+		setShowOptionsComment(false);
 	};
 
 	const handleAcceptDelete = async () => {
@@ -328,7 +332,7 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 						initialContent={dataProp.content}
 					/>
 					<div className='comment__editing__cancel'>
-						Nhấn Esc để <span onClick={() => setIsEditingComment(false)}>hủy bỏ</span>
+						Nhấn Esc để <span onClick={handleCancelEditing}>hủy bỏ</span>
 					</div>
 				</div>
 			) : (
