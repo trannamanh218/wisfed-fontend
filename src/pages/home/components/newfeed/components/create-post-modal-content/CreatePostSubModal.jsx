@@ -114,7 +114,11 @@ function CreatPostSubModal({
 						>
 							{images.map((image, index) => (
 								<div key={index} className='create-post-modal-content__substitute__modify-image-item'>
-									<img src={URL.createObjectURL(image)} alt='image' />
+									{typeof image === 'string' ? (
+										<img src={image} alt='image' />
+									) : (
+										<img src={URL.createObjectURL(image)} alt='image' />
+									)}
 									<button
 										className='create-post-modal-content__substitute__modify-image-item-delete'
 										onClick={() => deleteImage(index)}

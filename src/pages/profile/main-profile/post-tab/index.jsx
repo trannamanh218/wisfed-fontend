@@ -40,6 +40,14 @@ function PostTab({ currentTab }) {
 		}
 	}, [postList, currentTab]);
 
+	const handleUpdatePostArrWhenDeleted = itemMinipostId => {
+		const index = postList.findIndex(item => item.id === itemMinipostId);
+		const newItem = { ...postList[index], isDeleted: true };
+		const newArr = [...postList];
+		newArr[index] = { ...newItem };
+		setPostList(newArr);
+	};
+
 	const getPostListByUser = async () => {
 		try {
 			const data = {
@@ -84,7 +92,14 @@ function PostTab({ currentTab }) {
 						>
 							{postList.map(item => {
 								if (!item.isDeleted) {
-									return <Post key={item.id} postInformations={item} type={POST_TYPE} />;
+									return (
+										<Post
+											key={item.id}
+											postInformations={item}
+											type={POST_TYPE}
+											handleUpdatePostArrWhenDeleted={handleUpdatePostArrWhenDeleted}
+										/>
+									);
 								}
 							})}
 						</InfiniteScroll>

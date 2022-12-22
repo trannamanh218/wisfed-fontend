@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import { useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-import { createActivity, handleClickCreateNewPostForBook } from 'reducers/redux-utils/activity';
+import { createActivity, handleClickCreateNewPostForBook, handleEditPost } from 'reducers/redux-utils/activity';
 import PostEditBook from 'shared/post-edit-book';
 import OptionsPost from './OptionsPost';
 import CreatPostSubModal from './CreatePostSubModal';
@@ -89,6 +89,9 @@ function CreatePostModalContent({
 	setShowSubModal,
 	onChangeNewPost,
 	isReview,
+	isEditPost,
+	setIsEdit,
+	handleUpdateMiniPost,
 }) {
 	// const [shareMode, setShareMode] = useState({ value: 'public', title: 'Mọi người', icon: <WorldNet /> }); // k xóa
 	const [showMainModal, setShowMainModal] = useState(true);
@@ -114,24 +117,6 @@ function CreatePostModalContent({
 	const [hashtagsAdded, setHashtagsAdded] = useState([]);
 	const [optionListState, setOptionListState] = useState([]);
 	const [modalShow, setModalShow] = useState(false);
-
-	useEffect(() => {
-		const editAuthors = dataEditMiniPost?.mentionsAuthors?.map(item => item.authors);
-		const editCategory = dataEditMiniPost?.mentionsCategories?.map(item => ({
-			...item,
-			name: `${item.category.name}`,
-		}));
-		const editUsers = dataEditMiniPost?.mentionsUsers?.map(item => item.users);
-		const editBook = dataEditMiniPost?.book;
-		if (dataEditMiniPost) {
-			setTaggedData({
-				'addBook': editBook,
-				'addAuthor': editAuthors,
-				'addFriends': editUsers,
-				'addCategory': editCategory,
-			});
-		}
-	}, []);
 
 	const createPostModalContainer = useRef(null);
 
@@ -176,6 +161,45 @@ function CreatePostModalContent({
 		} else {
 			setOptionListState(optionList);
 		}
+
+		// generate data for edit post
+		if (isEditPost) {
+			const editAuthors = dataEditMiniPost?.mentionsAuthors?.map(item => item.authors);
+			const editCategory = dataEditMiniPost?.mentionsCategories?.map(item => ({
+				id: item.categoryId,
+				name: item.category?.name,
+			}));
+			const editUsers = dataEditMiniPost?.mentionsUsers?.map(item => item.users);
+			const editBook = dataEditMiniPost?.book;
+
+			if (dataEditMiniPost) {
+				const objTemp = { ...taggedData };
+				if (editBook) {
+					objTemp['addBook'] = {
+						...editBook,
+						status: dataEditMiniPost?.status,
+					};
+				}
+				if (editAuthors) {
+					objTemp['addAuthor'] = editAuthors;
+				}
+				if (editCategory) {
+					objTemp['addCategory'] = editCategory;
+				}
+				if (editAuthors) {
+					objTemp['addFriends'] = editUsers;
+				}
+				setTaggedData(objTemp);
+				if (dataEditMiniPost.image.length) {
+					setImagesUpload([...dataEditMiniPost.image]);
+					setShowUpload(true);
+				}
+				setProgressInputValue(dataEditMiniPost?.book?.progress);
+				if (dataEditMiniPost.msg) {
+					setContent(dataEditMiniPost.msg);
+				}
+			}
+		}
 	}, []);
 
 	useEffect(() => {
@@ -202,7 +226,7 @@ function CreatePostModalContent({
 
 	useEffect(() => {
 		// generate hashtags added
-		const hashtagsTemp = content.match(hashtagRegex);
+		const hashtagsTemp = content?.match(hashtagRegex);
 		if (hashtagsTemp) {
 			const hashtagsFormated = hashtagsTemp.map(item =>
 				item
@@ -239,6 +263,7 @@ function CreatePostModalContent({
 		dispatch(handleSetImageToShare([]));
 		dispatch(setOptionAddToPost({}));
 		dispatch(handleClickCreateNewPostForBook(false));
+		setIsEdit(false);
 		// 2 dòng lệnh phía dưới luôn luôn ở dưới cùng
 		setShowSubModal(false);
 		setShowModalCreatePost(false);
@@ -382,18 +407,31 @@ function CreatePostModalContent({
 		params.mentionsUser = taggedData.addFriends.length ? taggedData.addFriends.map(item => item.id) : [];
 		params.mentionsAuthor = taggedData.addAuthor.length ? taggedData.addAuthor.map(item => item.id) : [];
 		if (imagesUpload.length) {
-			try {
-				const imagesUploaded = await dispatch(uploadMultiFile(imagesUpload)).unwrap();
-				params.image = imagesUploaded.map(item => item.streamPath.medium);
-			} catch {
-				const customId = 'custom-id-CreatePostModalContent-generateData';
-				toast.error('Đăng ảnh không thành công', { toastId: customId });
-				params.image = {};
+			if (isEditPost) {
+				const imgStringArr = imagesUpload.filter(item => typeof item === 'string');
+				const fileImageArr = imagesUpload.filter(item => typeof item !== 'string');
+				const imagesUploaded = await dispatch(uploadMultiFile(fileImageArr)).unwrap();
+				const imgSrc = imagesUploaded.map(item => item.streamPath.medium);
+				const imgArr = imgStringArr.concat(imgSrc);
+				params.image = imgArr;
+			} else {
+				try {
+					const imagesUploaded = await dispatch(uploadMultiFile(imagesUpload)).unwrap();
+					params.image = imagesUploaded.map(item => item.streamPath.medium);
+				} catch {
+					const customId = 'custom-id-CreatePostModalContent-generateData';
+					toast.error('Đăng ảnh không thành công', { toastId: customId });
+					params.image = {};
+				}
 			}
 		}
 		params.mentionsCategory = taggedData.addCategory.length ? taggedData.addCategory.map(item => item.id) : [];
 		if (!_.isEmpty(taggedData.addBook)) {
 			params.bookId = taggedData.addBook.id;
+		}
+		if (isEditPost) {
+			params['feedId'] = `${dataEditMiniPost.id}`;
+			params['minipostId'] = dataEditMiniPost.minipostId;
 		}
 		return params;
 	};
@@ -595,13 +633,40 @@ function CreatePostModalContent({
 					const newParams = { data: params, id: id };
 					await dispatch(creatNewPost(newParams)).unwrap();
 				} else {
-					await dispatch(createActivity(params)).unwrap();
+					if (isEditPost) {
+						await dispatch(handleEditPost(params)).unwrap();
+					} else {
+						await dispatch(createActivity(params)).unwrap();
+					}
 				}
 			}
 			setStatus(STATUS_SUCCESS);
 			const customId = 'custom-id-CreatePostModalContent-onCreatePost-success';
 			toast.success('Tạo bài viết thành công!', { toastId: customId });
-			onChangeNewPost();
+			if (isEditPost) {
+				const newCategoryArr = taggedData.addCategory.map(item => ({ category: item }));
+				const newUsers = taggedData.addFriends.map(item => ({ users: item }));
+				const newAuthors = taggedData.addAuthor.map(item => ({
+					activityId: null,
+					authorId: item.id,
+					authors: item,
+				}));
+
+				const data = {
+					book: !_.isEmpty(taggedData.addBook) ? taggedData.addBook : null,
+					image: params.image,
+					mentionsAuthors: newAuthors,
+					mentionsCategories: newCategoryArr,
+					mentionsUsers: newUsers,
+					message: params.msg,
+					minipostId: params.minipostId,
+					preview: urlPreviewData,
+					progress: params.progress,
+				};
+				handleUpdateMiniPost(data);
+			} else {
+				onChangeNewPost();
+			}
 		} catch (err) {
 			if (err.errorCode === 321) {
 				const customIdNotInGroup = 'custom-id-CreatePostModalContent-onCreatePost-not-in-group';
@@ -759,7 +824,13 @@ function CreatePostModalContent({
 						<div style={{ visibility: 'hidden' }} className='create-post-modal-content__main__close'>
 							<CloseX />
 						</div>
-						<h5>{postDataShare && !_.isEmpty(postDataShare) ? 'Chia sẻ bài viết' : 'Tạo bài viết'}</h5>
+						<h5>
+							{postDataShare && !_.isEmpty(postDataShare)
+								? 'Chia sẻ bài viết'
+								: isEditPost
+								? 'Chỉnh sửa bài viết'
+								: 'Tạo bài viết'}
+						</h5>
 						<button className='create-post-modal-content__main__close' onClick={handleClose}>
 							<CloseX />
 						</button>
@@ -796,6 +867,7 @@ function CreatePostModalContent({
 								setContent={setContent}
 								hasMentionsUser={false}
 								hasUrl={hasUrl}
+								initialContent={dataEditMiniPost?.message}
 							/>
 							<TaggedList taggedData={taggedData} removeTaggedItem={removeTaggedItem} type='addAuthor' />
 							<TaggedList
@@ -1002,6 +1074,10 @@ CreatePostModalContent.defaultProps = {
 	showSubModal: false,
 	setShowSubModal: () => {},
 	isReview: false,
+	dataEditMiniPost: {},
+	isEditPost: false,
+	setIsEdit: () => {},
+	handleUpdateMiniPost: () => {},
 };
 
 CreatePostModalContent.propTypes = {
@@ -1009,7 +1085,11 @@ CreatePostModalContent.propTypes = {
 	setShowModalCreatePost: PropTypes.func,
 	showSubModal: PropTypes.bool,
 	setShowSubModal: PropTypes.func,
+	dataEditMiniPost: PropTypes.object,
 	isReview: PropTypes.bool,
+	isEditPost: PropTypes.bool,
+	setIsEdit: PropTypes.func,
+	handleUpdateMiniPost: PropTypes.func,
 };
 
 export default CreatePostModalContent;

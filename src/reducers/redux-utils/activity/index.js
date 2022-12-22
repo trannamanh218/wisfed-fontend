@@ -31,6 +31,16 @@ export const getActivityList = createAsyncThunk('activity/getActivityList', asyn
 	}
 });
 
+export const handleEditPost = createAsyncThunk('activity/edit post', async (params, { rejectWithValue }) => {
+	try {
+		const response = await Request.makePatch(activityAPI, params);
+		return response.data;
+	} catch (err) {
+		const error = JSON.stringify(err.response);
+		throw rejectWithValue(error);
+	}
+});
+
 export const getSuggestionForPost = createAsyncThunk(
 	'activity/getSuggestionForPost',
 	async (params, { rejectWithValue }) => {

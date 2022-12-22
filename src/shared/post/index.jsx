@@ -60,6 +60,7 @@ import dots from 'assets/images/dots.png';
 import { useVisible } from 'shared/hooks';
 import CreatePostModalContent from 'pages/home/components/newfeed/components/create-post-modal-content';
 import { useHookUpdateCommentsAfterEditing } from 'api/comment.hook';
+import { blockAndAllowScroll } from 'api/blockAndAllowScroll.hook';
 
 const verbShareArray = [
 	POST_VERB_SHARE,
@@ -78,6 +79,7 @@ function Post({
 	reduxCheckIfMentionCmtFromGroup,
 	isInDetail,
 	handleUpdatePostArrWhenDeleted,
+	handleUpdateMiniPost,
 }) {
 	const [postData, setPostData] = useState({});
 	const [videoId, setVideoId] = useState('');
@@ -93,6 +95,7 @@ function Post({
 	const [showReplyArrayState, setShowReplyArrayState] = useState([]);
 	const [showDeleteFeedModal, setShowDeleteFeedModal] = useState(false);
 	const [showModalCreatePost, setShowModalCreatePost] = useState(false);
+	const [isEditPost, setIsEditPost] = useState(false);
 
 	const { ref: settingsRef, isVisible: isSettingsVisible, setIsVisible: setSettingsVisible } = useVisible(false);
 
@@ -115,6 +118,8 @@ function Post({
 		setPostData,
 		setParamHandleEdit
 	);
+
+	blockAndAllowScroll(showModalCreatePost);
 
 	useEffect(() => {
 		if (!_.isEmpty(postInformations)) {
@@ -467,8 +472,8 @@ function Post({
 
 	const removeFeed = async () => {
 		try {
-			await dispatch(deleteMiniPost(postData.minipostId)).unwrap();
-			handleUpdatePostArrWhenDeleted(postData.minipostId);
+			await dispatch(deleteMiniPost(postData.minipostId || postData.id)).unwrap();
+			handleUpdatePostArrWhenDeleted(postData.minipostId || postData.id);
 			toast.success('Xoá bài viết thành công');
 		} catch (err) {
 			const customId = 'custom-id-SettingMore-error';
@@ -481,6 +486,7 @@ function Post({
 	const handleOpenModal = () => {
 		setSettingsVisible(prev => !prev);
 		setShowModalCreatePost(true);
+		setIsEditPost(true);
 	};
 
 	return (
@@ -556,20 +562,17 @@ function Post({
 						</div>
 					</div>
 				</div>
-				{postData.actor === userInfo.id && (
+				{(postData.createdBy?.id === userInfo.id || postData.createdBy === userInfo.id) && (
 					<div ref={settingsRef} className='setting'>
 						<button className='setting-mini-post-btn' onClick={handleSettings}>
 							<img src={dots} alt='setting' />
 						</button>
 						{isSettingsVisible && (
 							<ul className='setting-list'>
-								<li className='setting-item'>
+								<li className='setting-item' onClick={handleOpenModal}>
 									<Pencil />
-									<span className='setting-item__content' onClick={handleOpenModal}>
-										Chỉnh sửa bài viết
-									</span>
+									<span className='setting-item__content'>Chỉnh sửa bài viết</span>
 								</li>
-
 								<li className='setting-item' onClick={handleDelete}>
 									<TrashIcon />
 									<span className='setting-item__content'>Xóa bài viết</span>
@@ -976,7 +979,7 @@ function Post({
 					<CloseX />
 				</span>
 				<ModalBody>
-					<h4 className='main-shelves__modal__title'>Bạn có muốn xóa bài viết này?</h4>
+					<h1 className='main-shelves__modal__title'>Bạn có muốn xóa bài viết này?</h1>
 					<button className='btn main-shelves__modal__btn-delete btn-danger' onClick={removeFeed}>
 						Xóa
 					</button>
@@ -986,7 +989,13 @@ function Post({
 				</ModalBody>
 			</Modal>
 			{showModalCreatePost && (
-				<CreatePostModalContent dataEditMiniPost={postData} setShowModalCreatePost={setShowModalCreatePost} />
+				<CreatePostModalContent
+					dataEditMiniPost={postData}
+					setShowModalCreatePost={setShowModalCreatePost}
+					isEditPost={isEditPost}
+					setIsEditPost={setIsEditPost}
+					handleUpdateMiniPost={handleUpdateMiniPost}
+				/>
 			)}
 		</div>
 	);
@@ -999,6 +1008,7 @@ Post.defaultProps = {
 	reduxCheckIfMentionCmtFromGroup: null,
 	isInDetail: false,
 	handleUpdatePostArrWhenDeleted: () => {},
+	handleUpdateMiniPost: () => {},
 };
 
 Post.propTypes = {
@@ -1008,6 +1018,7 @@ Post.propTypes = {
 	reduxCheckIfMentionCmtFromGroup: PropTypes.any,
 	isInDetail: PropTypes.bool,
 	handleUpdatePostArrWhenDeleted: PropTypes.func,
+	handleUpdateMiniPost: PropTypes.func,
 };
 
 export default Post;
