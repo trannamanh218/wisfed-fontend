@@ -134,17 +134,21 @@ const SidebarQuote = ({ listHashtags, firstStyleQuotesSidebar, createdByOfCurren
 							inQuotes={true}
 							filterQuotesByCategory={filterQuotesByCategory}
 						/>
-						<div className='sidebar-quote__author-books'>
-							<BookSlider
-								className='book-reference__slider'
-								title={`Sách của ${userDetail.fullName || userDetail.firstName + userDetail.lastName}`}
-								list={booksAuthor}
-								handleViewBookDetail={handleViewBookDetail}
-							/>
-							<Link className='view-all-link' to={`/books-author/${createdByOfCurrentQuote}`}>
-								Xem thêm
-							</Link>
-						</div>
+						{!!booksAuthor?.length && (
+							<div className='sidebar-quote__author-books'>
+								<BookSlider
+									className='book-reference__slider'
+									title={`Sách của ${
+										userDetail.fullName || userDetail.firstName + userDetail.lastName
+									}`}
+									list={booksAuthor}
+									handleViewBookDetail={handleViewBookDetail}
+								/>
+								<Link className='view-all-link' to={`/books-author/${createdByOfCurrentQuote}`}>
+									Xem thêm
+								</Link>
+							</div>
+						)}
 					</div>
 				) : (
 					<>

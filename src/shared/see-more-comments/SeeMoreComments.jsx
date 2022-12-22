@@ -43,9 +43,11 @@ const SeeMoreComments = ({
 	}, [data]);
 
 	const checkShow = () => {
-		let totalShownComments = data.usersComments?.length;
+		let totalShownComments = data.usersComments?.length || 0;
 		for (let i = 0; i < data.usersComments?.length; i++) {
-			totalShownComments += data.usersComments[i].reply?.length;
+			if (Array.isArray(data.usersComments[i].reply) && data.usersComments[i].reply.length) {
+				totalShownComments += data.usersComments[i].reply.length;
+			}
 		}
 		if (isInDetail) {
 			if (totalShownComments < data.comment) {
