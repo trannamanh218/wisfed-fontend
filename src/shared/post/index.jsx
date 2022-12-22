@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { Feather, Pencil, QuoteIcon, TrashIcon } from 'components/svg';
+import { Feather, Pencil, TrashIcon } from 'components/svg';
 import { calculateDurationTime } from 'helpers/Common';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
@@ -711,6 +711,19 @@ function Post({
 			)}
 			{postData.verb === TOP_USER_VERB_SHARE && <ShareUsers postData={postData} />}
 			{postData?.image?.length > 0 && <GridImage images={postData.image} inPost={true} postId={postData.id} />}
+			{!postData?.image?.length && !_.isEmpty(postData?.preview) && (
+				<>
+					{videoId ? (
+						<iframe
+							className='post__video-youtube'
+							src={`//www.youtube.com/embed/${videoId}`}
+							allowFullScreen={true}
+						></iframe>
+					) : (
+						<PreviewLink isFetching={false} urlData={postData.preview} driectToUrl={directUrl} />
+					)}
+				</>
+			)}
 			{postData.book && (
 				<PostBook
 					data={postData.book}
@@ -718,22 +731,6 @@ function Post({
 				/>
 			)}
 			{postData.verb === READ_TARGET_VERB_SHARE && <ShareTarget postData={postData} inPost={true} />}
-			{(postData?.image?.length === 0 &&
-				!_.isEmpty(postData.sharePost?.preview) &&
-				_.isEmpty(postData.sharePost?.book)) ||
-				(!_.isEmpty(postData.preview) && _.isEmpty(postData.book) && (
-					<>
-						{videoId ? (
-							<iframe
-								className='post__video-youtube'
-								src={`//www.youtube.com/embed/${videoId}`}
-								allowFullScreen={true}
-							></iframe>
-						) : (
-							<PreviewLink isFetching={false} urlData={postData.preview} driectToUrl={directUrl} />
-						)}
-					</>
-				))}
 			<PostActionBar postData={postData} handleLikeAction={handleLikeAction} />
 
 			<SeeMoreComments

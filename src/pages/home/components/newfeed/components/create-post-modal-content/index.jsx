@@ -277,6 +277,7 @@ function CreatePostModalContent({
 
 	const removeUrlPreview = () => {
 		setHasUrl(false);
+		setUrlPreviewData({});
 	};
 
 	const backToMainModal = () => {
@@ -885,38 +886,31 @@ function CreatePostModalContent({
 								<ShareTarget postData={postDataShare} />
 							)}
 							{postDataShare.verb === TOP_USER_VERB_SHARE_LV1 && <ShareUsers postData={postDataShare} />}
-							{!_.isEmpty(taggedData.addBook) || showUpload ? (
-								<>
-									{showUpload && (
-										<UploadImage
-											addOptionsToPost={addOptionsToPost}
-											images={imagesUpload}
-											setImages={setImagesUpload}
-											removeAllImages={removeAllImages}
-											maxFiles={100}
-											maxSize={104857600}
-										/>
-									)}
-									{!_.isEmpty(taggedData.addBook) && (
-										<PostEditBook
-											data={taggedData.addBook}
-											handleAddToPost={handleAddToPost}
-											handleChangeStar={handleChangeStar}
-											valueStar={valueStar}
-										/>
-									)}
-								</>
-							) : (
-								<>
-									{hasUrl && !showUpload && (
-										<PreviewLink
-											urlData={urlPreviewData}
-											isFetching={fetchingUrlInfo}
-											removeUrlPreview={removeUrlPreview}
-											inCreatePost={true}
-										/>
-									)}
-								</>
+							{showUpload && (
+								<UploadImage
+									addOptionsToPost={addOptionsToPost}
+									images={imagesUpload}
+									setImages={setImagesUpload}
+									removeAllImages={removeAllImages}
+									maxFiles={100}
+									maxSize={104857600}
+								/>
+							)}
+							{hasUrl && !showUpload && (
+								<PreviewLink
+									urlData={urlPreviewData}
+									isFetching={fetchingUrlInfo}
+									removeUrlPreview={removeUrlPreview}
+									inCreatePost={true}
+								/>
+							)}
+							{!_.isEmpty(taggedData.addBook) && (
+								<PostEditBook
+									data={taggedData.addBook}
+									handleAddToPost={handleAddToPost}
+									handleChangeStar={handleChangeStar}
+									valueStar={valueStar}
+								/>
 							)}
 						</div>
 					</div>

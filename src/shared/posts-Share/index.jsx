@@ -337,6 +337,25 @@ const PostShare = ({ postData, inCreatePost, directUrl }) => {
 			{postData.sharePost?.image?.length > 0 && (
 				<GridImage images={postData.sharePost.image} inPost={true} postId={postData?.id} />
 			)}
+			{!postData.sharePost?.image?.length && !_.isEmpty(postData?.sharePost?.preview) && (
+				<>
+					{videoId ? (
+						<iframe
+							className='post__video-youtube'
+							src={`//www.youtube.com/embed/${videoId}`}
+							allowFullScreen={true}
+						></iframe>
+					) : (
+						<div className='post-share__preview-link-container'>
+							<PreviewLink
+								isFetching={false}
+								urlData={postData.sharePost.preview}
+								driectToUrl={directUrl}
+							/>
+						</div>
+					)}
+				</>
+			)}
 			{postData.sharePost?.book && (
 				<PostBook
 					data={{
@@ -398,29 +417,6 @@ const PostShare = ({ postData, inCreatePost, directUrl }) => {
 					</div>
 				</>
 			)}
-
-			{postData.sharePost?.image?.length === 0 &&
-				!_.isEmpty(postData.sharePost.preview) &&
-				_.isEmpty(postData.sharePost.book) && (
-					<>
-						{videoId ? (
-							<iframe
-								className='post__video-youtube'
-								src={`//www.youtube.com/embed/${videoId}`}
-								frameBorder={0}
-								allowFullScreen={true}
-							></iframe>
-						) : (
-							<div className='post-share__preview-link-container'>
-								<PreviewLink
-									isFetching={false}
-									urlData={postData.sharePost.preview}
-									driectToUrl={directUrl}
-								/>
-							</div>
-						)}
-					</>
-				)}
 		</div>
 	);
 };

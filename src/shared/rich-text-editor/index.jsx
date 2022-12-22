@@ -2,7 +2,6 @@ import { useEffect, useRef, useState, useCallback, memo } from 'react';
 import { EditorState, convertToRaw, convertFromRaw, ContentState, convertFromHTML } from 'draft-js';
 import Editor from '@draft-js-plugins/editor';
 import './rich-text-editor.scss';
-import '@draft-js-plugins/linkify/lib/plugin.css';
 import 'draft-js/dist/Draft.css';
 import createMentionPlugin from '@draft-js-plugins/mention';
 import '@draft-js-plugins/mention/lib/plugin.css';
@@ -272,9 +271,8 @@ function RichTextEditor({
 	};
 
 	const reply = () => {
-		let data = {};
 		if (mentionUsersArr.length) {
-			data = {
+			const data = {
 				'blocks': [
 					{
 						'text': `${mentionUsersArr[0].name} `,
@@ -305,23 +303,11 @@ function RichTextEditor({
 					},
 				},
 			};
+			const contentState = convertFromRaw(data);
+			setEditorState(EditorState.createWithContent(contentState));
 		} else {
-			data = {
-				'blocks': [
-					{
-						'text': '',
-						'type': 'unstyled',
-						'depth': 0,
-						'inlineStyleRanges': [],
-						'entityRanges': [],
-						'data': {},
-					},
-				],
-				'entityMap': {},
-			};
+			setEditorState(EditorState.createEmpty());
 		}
-		const contentState = convertFromRaw(data);
-		setEditorState(EditorState.createWithContent(contentState));
 	};
 
 	const keyDown = e => {
