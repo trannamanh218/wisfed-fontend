@@ -24,10 +24,8 @@ const QuoteCard = ({ data, isDetail = false, isShare = false }) => {
 	}, [data]);
 
 	const renderAuthorAndbooksName = () => {
-		if (data.book?.name) {
-			return `${data.book?.name}`;
-		}
-		return ` ${data.bookName}`;
+		const authorsName = data.book?.authors.map(item => item.authorName).join(', ');
+		return `${authorsName && authorsName + ' - '}${data.book?.name}`;
 	};
 
 	const navigate = useNavigate();

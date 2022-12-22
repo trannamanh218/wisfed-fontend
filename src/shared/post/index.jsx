@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import { useCallback, useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateReactionActivity, updateReactionActivityGroup } from 'reducers/redux-utils/activity';
-import { createComment, createCommentGroup, handleSetParamHandleEdit } from 'reducers/redux-utils/comment';
+import { createComment, createCommentGroup, setParamHandleEdit } from 'reducers/redux-utils/comment';
 import { Modal, ModalBody } from 'react-bootstrap';
 import { CloseX } from 'components/svg';
 import CommentEditor from 'shared/comment-editor';
@@ -177,26 +177,51 @@ function Post({
 	}, [postData]);
 
 	useEffect(() => {
-		// Thay đổi lại comment sau khi đã chỉnh sửa
-		if (!_.isEmpty(paramHandleEdit)) {
+		// Thay đổi lại comment sau khi đã chỉnh sửa hoặc xóa
+		if (!_.isEmpty(paramHandleEdit) && type === paramHandleEdit.type) {
 			const cloneArr = [...postData.usersComments];
+			let totalCommentNumber = postData.comment;
+
 			if (paramHandleEdit.replyId) {
 				const foundReplyObj = cloneArr.find(item => item.id === paramHandleEdit.replyId);
 				if (foundReplyObj) {
 					const cloneReplyArr = [...foundReplyObj.reply];
 					const foundObj = cloneReplyArr.find(item => item.id === paramHandleEdit.id);
-					if (!_.isEmpty(foundObj)) {
-						foundObj.content = paramHandleEdit.content;
+					if (foundObj) {
+						if (paramHandleEdit.content) {
+							const cloneFoundObj = { ...foundObj };
+							cloneFoundObj.content = paramHandleEdit.content;
+							cloneReplyArr[cloneReplyArr.indexOf(foundObj)] = cloneFoundObj;
+
+							const cloneFoundReplyObj = { ...foundReplyObj };
+							cloneFoundReplyObj.reply = cloneReplyArr;
+							cloneArr[cloneArr.indexOf(foundReplyObj)] = cloneFoundReplyObj;
+						} else {
+							cloneReplyArr.splice(cloneReplyArr.indexOf(foundObj), 1);
+							foundReplyObj.reply = cloneReplyArr;
+							totalCommentNumber = totalCommentNumber - 1;
+						}
 					}
 				}
 			} else {
 				const foundObj = cloneArr.find(item => item.id === paramHandleEdit.id);
-				if (!_.isEmpty(foundObj)) {
-					foundObj.content = paramHandleEdit.content;
+				if (foundObj) {
+					if (paramHandleEdit.content) {
+						const cloneFoundObj = { ...foundObj };
+						cloneFoundObj.content = paramHandleEdit.content;
+						cloneArr[cloneArr.indexOf(foundObj)] = cloneFoundObj;
+					} else {
+						cloneArr.splice(cloneArr.indexOf(foundObj), 1);
+						if (Array.isArray(foundObj.reply) && foundObj.reply.length) {
+							totalCommentNumber = totalCommentNumber - 1 - foundObj.reply.length;
+						} else {
+							totalCommentNumber = totalCommentNumber - 1;
+						}
+					}
 				}
 			}
-			setPostData({ ...postData, usersComments: cloneArr });
-			dispatch(handleSetParamHandleEdit({}));
+			setPostData({ ...postData, comment: totalCommentNumber, usersComments: cloneArr });
+			dispatch(setParamHandleEdit({}));
 		}
 	}, [paramHandleEdit]);
 
@@ -335,6 +360,7 @@ function Post({
 	);
 
 	const handleReply = (cmtLv1Id, userData) => {
+		onClickSeeMoreReply(cmtLv1Id);
 		const arr = [];
 		if (userData.id !== userInfo.id) {
 			arr.push(userData);
@@ -599,12 +625,12 @@ function Post({
 							__html: generateContent(postData.message || postData.content),
 						}}
 					></div>
-					{(postData?.message?.length > 500 || postData.content?.length > 500) &&
-						_.isEmpty(postData.preview) && (
-							<div className='read-more-post' onClick={() => setReadMore(!readMore)}>
-								{readMore ? 'Rút gọn' : 'Xem thêm'}
-							</div>
-						)}
+					{(postData?.message?.replace(/(<([^>]+)>)/gi, '').length > 500 ||
+						postData.content?.replace(/(<([^>]+)>)/gi, '').length > 500) && (
+						<div className='read-more-post' onClick={() => setReadMore(!readMore)}>
+							{readMore ? 'Rút gọn' : 'Xem thêm'}
+						</div>
+					)}
 				</div>
 			)}
 			{(postData?.metaData?.type === 'readingChart' || postData?.metaData?.type === 'growthChart') && (

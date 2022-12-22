@@ -1,47 +1,51 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
 import classNames from 'classnames';
+import { LikeComment } from 'components/svg';
+import { POST_TYPE, QUOTE_TYPE, REVIEW_TYPE, urlRegex } from 'constants/index';
 import { calculateDurationTime } from 'helpers/Common';
+import { NotificationError } from 'helpers/Error';
+import Storage from 'helpers/Storage';
+import _ from 'lodash';
 import PropTypes from 'prop-types';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Badge } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
-import UserAvatar from 'shared/user-avatar';
-import './comment.scss';
-import { likeQuoteComment } from 'reducers/redux-utils/quote';
-import { NotificationError } from 'helpers/Error';
-import { likeAndUnlikeCommentPost } from 'reducers/redux-utils/activity';
-import { likeAndUnlikeCommentReview } from 'reducers/redux-utils/book';
-import { POST_TYPE, QUOTE_TYPE, REVIEW_TYPE, urlRegex } from 'constants/index';
 import { Link, useNavigate } from 'react-router-dom';
-import { LikeComment } from 'components/svg';
-import { likeAndUnlikeGroupComment } from 'reducers/redux-utils/group';
-import DirectLinkALertModal from 'shared/direct-link-alert-modal';
-import _ from 'lodash';
-import ShowTime from 'shared/showTimeOfPostWhenHover/showTime';
-import Storage from 'helpers/Storage';
+import { likeAndUnlikeCommentPost } from 'reducers/redux-utils/activity';
 import { checkUserLogin } from 'reducers/redux-utils/auth';
-import CommentEditor from 'shared/comment-editor';
+import { likeAndUnlikeCommentReview } from 'reducers/redux-utils/book';
 import {
+	deleteCommentGroupPost,
+	deleteCommentMinipost,
+	deleteCommentQuote,
+	deleteCommentReview,
+	setParamHandleEdit,
 	updateCommentGroupPost,
 	updateCommentMinipost,
 	updateCommentQuote,
 	updateCommentReview,
 } from 'reducers/redux-utils/comment';
-import { handleSetParamHandleEdit } from 'reducers/redux-utils/comment';
-import { useVisible } from 'shared/hooks';
+import { likeAndUnlikeGroupComment } from 'reducers/redux-utils/group';
+import { likeQuoteComment } from 'reducers/redux-utils/quote';
+import CommentEditor from 'shared/comment-editor';
+import DirectLinkALertModal from 'shared/direct-link-alert-modal';
+import ShowTime from 'shared/showTimeOfPostWhenHover/showTime';
+import UserAvatar from 'shared/user-avatar';
+import './comment.scss';
 
 const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 	const [isLiked, setIsLiked] = useState(false);
 	const [isAuthor, setIsAuthor] = useState(false);
 	const [data, setData] = useState(dataProp);
-	const [modalShow, setModalShow] = useState(false);
+	const [showOptionsComment, setShowOptionsComment] = useState(false);
+	const [modalDirectShow, setModalDirectShow] = useState(false);
+	const [modalDeleteShow, setModalDeleteShow] = useState(false);
 	const [isEditingComment, setIsEditingComment] = useState(false);
+	const [isFetchingLikeUnLike, setIsFetchingLikeUnLike] = useState(false);
 
 	const urlToDirect = useRef('');
-	const {
-		ref: optionsCommentList,
-		isVisible: showOptionsComment,
-		setIsVisible: setShowOptionsComment,
-	} = useVisible(false);
+	const initialContent = useRef('');
+	const optionsCommentButton = useRef(null);
+	const optionsCommentList = useRef(null);
 
 	const { userInfo } = useSelector(state => state.auth);
 
@@ -54,7 +58,24 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 			handleAddEventClickMentionTags();
 			// handleAddEventClickToHashtagTags(); // không xóa
 		}
-	});
+	}, []);
+
+	useEffect(() => {
+		setData(dataProp);
+	}, [dataProp]);
+
+	useEffect(() => {
+		if (type === QUOTE_TYPE) {
+			if (data.createdBy === postData.createdBy) {
+				setIsAuthor(true);
+			}
+		} else {
+			if (data.createdBy === postData.actor) {
+				setIsAuthor(true);
+			}
+		}
+		setIsLiked(data.isLike);
+	}, [data]);
 
 	useEffect(() => {
 		if (isEditingComment) {
@@ -64,7 +85,7 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 			const handlePressEsc = e => {
 				if (document.activeElement === editorChild && e.key === 'Escape') {
 					// Khi nhấn Esc thì hủy bỏ chỉnh sửa comment
-					handleCancelEditing();
+					setIsEditingComment(false);
 				}
 			};
 			document.addEventListener('keydown', handlePressEsc);
@@ -73,6 +94,23 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 			};
 		}
 	}, [isEditingComment]);
+
+	useEffect(() => {
+		const handleClickOutside = e => {
+			if (
+				optionsCommentList.current &&
+				optionsCommentButton.current &&
+				![optionsCommentList.current, optionsCommentButton.current].some(obj => obj.contains(e.target))
+			) {
+				setShowOptionsComment(false);
+			}
+		};
+
+		document.addEventListener('click', handleClickOutside, true);
+		return () => {
+			document.removeEventListener('click', handleClickOutside, true);
+		};
+	}, []);
 
 	const handleAddEventClickToUrlTags = useCallback(() => {
 		const arr = document.querySelectorAll('.url-class');
@@ -104,7 +142,7 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 	// 	};
 
 	const directUrl = url => {
-		setModalShow(true);
+		setModalDirectShow(true);
 		let urlFormated = '';
 		if (url.includes('http')) {
 			urlFormated = url;
@@ -114,20 +152,21 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 		urlToDirect.current = urlFormated;
 	};
 
-	const handleAccept = () => {
-		setModalShow(false);
+	const handleAcceptDirect = () => {
+		setModalDirectShow(false);
 		window.open(urlToDirect.current);
 	};
 
-	const handleCancel = () => {
-		setModalShow(false);
+	const handleCancelDirect = () => {
+		setModalDirectShow(false);
 		urlToDirect.current = '';
 	};
 
 	const handleLikeUnlikeCmt = async () => {
 		if (!Storage.getAccessToken()) {
 			dispatch(checkUserLogin(true));
-		} else {
+		} else if (!isFetchingLikeUnLike) {
+			setIsFetchingLikeUnLike(true);
 			const newCloneData = { ...data };
 			if (isLiked) {
 				newCloneData.like -= 1;
@@ -150,6 +189,8 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 				setIsLiked(!isLiked);
 			} catch (err) {
 				NotificationError(err);
+			} finally {
+				setIsFetchingLikeUnLike(false);
 			}
 		}
 	};
@@ -186,23 +227,6 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 		}
 	};
 
-	useEffect(() => {
-		setData(dataProp);
-	}, [dataProp]);
-
-	useEffect(() => {
-		if (type === QUOTE_TYPE) {
-			if (data.createdBy === postData.createdBy) {
-				setIsAuthor(true);
-			}
-		} else {
-			if (data.createdBy === postData.actor) {
-				setIsAuthor(true);
-			}
-		}
-		setIsLiked(data.isLike);
-	}, [data]);
-
 	const handleViewPostDetail = () => {
 		if (!window.location.pathname.includes('/detail-feed/')) {
 			if (postData.minipostId) {
@@ -217,14 +241,6 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 		}
 	};
 
-	const onClickEditComment = () => {
-		setIsEditingComment(true);
-	};
-
-	const handleCancelEditing = () => {
-		setIsEditingComment(false);
-	};
-
 	const handleEditComment = async (content, replyId) => {
 		if (content) {
 			const params = {
@@ -233,7 +249,19 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 					content: content,
 				},
 			};
+			initialContent.current = dataProp.content;
 			try {
+				dispatch(
+					setParamHandleEdit({
+						id: data.id,
+						content: content,
+						replyId: replyId,
+						type: type,
+					})
+				);
+				setIsEditingComment(false);
+				setShowOptionsComment(false);
+
 				if (type === 'post') {
 					await dispatch(updateCommentMinipost(params)).unwrap();
 				} else if (type === 'group') {
@@ -245,17 +273,40 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 				}
 			} catch (err) {
 				NotificationError(err);
-			} finally {
-				// Xử lí hiển thị
 				dispatch(
-					handleSetParamHandleEdit({
+					setParamHandleEdit({
 						id: data.id,
-						content: content,
+						content: initialContent.current,
 						replyId: replyId,
+						type: type,
 					})
 				);
-				handleCancelEditing();
 			}
+		}
+	};
+
+	const handleAcceptDelete = async () => {
+		setModalDeleteShow(false);
+		try {
+			if (type === 'post') {
+				await dispatch(deleteCommentMinipost(data.id)).unwrap();
+			} else if (type === 'group') {
+				await dispatch(deleteCommentGroupPost(data.id)).unwrap();
+			} else if (type === 'review') {
+				await dispatch(deleteCommentReview(data.id)).unwrap();
+			} else if (type === 'quote') {
+				await dispatch(deleteCommentQuote(data.id)).unwrap();
+			}
+			dispatch(
+				setParamHandleEdit({
+					id: data.id,
+					content: null,
+					replyId: data.replyId,
+					type: type,
+				})
+			);
+		} catch (err) {
+			NotificationError(err);
 		}
 	};
 
@@ -276,9 +327,8 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 						onCreateComment={handleEditComment}
 						initialContent={dataProp.content}
 					/>
-
 					<div className='comment__editing__cancel'>
-						Nhấn Esc để <span onClick={handleCancelEditing}>hủy bỏ</span>
+						Nhấn Esc để <span onClick={() => setIsEditingComment(false)}>hủy bỏ</span>
 					</div>
 				</div>
 			) : (
@@ -318,15 +368,18 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 							) : null}
 						</div>
 						{[data.user?.id, data.createdBy].includes(userInfo.id) && (
-							<div
-								className={`comment__wrapper__info__options ${showOptionsComment && 'isShowing'}`}
-								onClick={() => setShowOptionsComment(!showOptionsComment)}
-							>
-								<div className='comment__wrapper__info__options__elipsis'>...</div>
+							<div className={`comment__wrapper__info__options ${showOptionsComment && 'isShowing'}`}>
+								<div
+									className='comment__wrapper__info__options__elipsis'
+									onClick={() => setShowOptionsComment(!showOptionsComment)}
+									ref={optionsCommentButton}
+								>
+									...
+								</div>
 								{showOptionsComment && (
 									<div className='comment__wrapper__info__options__list' ref={optionsCommentList}>
-										<p onClick={onClickEditComment}>Sửa bình luận</p>
-										<p>Xóa</p>
+										<p onClick={() => setIsEditingComment(true)}>Sửa bình luận</p>
+										<p onClick={() => setModalDeleteShow(true)}>Xóa</p>
 									</div>
 								)}
 							</div>
@@ -338,7 +391,8 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 							className={classNames('comment__item', {
 								'liked': isLiked,
 							})}
-							onClick={() => handleLikeUnlikeCmt()}
+							style={{ cursor: isFetchingLikeUnLike ? 'progress' : 'pointer' }}
+							onClick={handleLikeUnlikeCmt}
 						>
 							Thích
 						</li>
@@ -364,7 +418,19 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 				</div>
 			)}
 
-			<DirectLinkALertModal modalShow={modalShow} handleAccept={handleAccept} handleCancel={handleCancel} />
+			<DirectLinkALertModal
+				modalShow={modalDirectShow}
+				handleAccept={handleAcceptDirect}
+				handleCancel={handleCancelDirect}
+			/>
+			<DirectLinkALertModal
+				modalShow={modalDeleteShow}
+				handleAccept={handleAcceptDelete}
+				handleCancel={() => setModalDeleteShow(false)}
+				message='Bạn có chắc chắn muốn xóa bình luận này không?'
+				yesBtnMsg='Xóa'
+				noBtnMsg='Không'
+			/>
 		</div>
 	);
 };

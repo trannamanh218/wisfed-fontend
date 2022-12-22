@@ -73,7 +73,6 @@ const BookTab = ({ setErrorLoadPage }) => {
 
 		if (png) {
 			const arr = png.split(',');
-
 			if (arr.length > 0) {
 				const mime = arr[0].match(/:(.*?);/)[1];
 				const bstr = atob(arr[1]);

@@ -81,7 +81,6 @@ const NewFeed = () => {
 		const newItem = Object.assign({ ...postList[index] }, data);
 		const newArr = [...postList];
 		newArr[index] = { ...newItem };
-		console.log('new', newItem);
 		setPostList(newArr);
 	};
 

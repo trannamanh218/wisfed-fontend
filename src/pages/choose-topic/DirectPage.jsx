@@ -1,12 +1,13 @@
 import { useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import Circle from 'shared/loading/circle';
 import Request from 'helpers/Request';
 import Storage from 'helpers/Storage';
 import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 import { checkTokenResetPassword, handleDataToResetPassword } from 'reducers/redux-utils/auth';
+import { getCheckJwt } from 'reducers/redux-utils/auth';
+import { NotificationError } from 'helpers/Error';
 
 export default function Direct() {
 	const search = useSearchParams();
@@ -43,12 +44,21 @@ export default function Direct() {
 		return JSON.parse(jsonPayload);
 	}
 
-	useEffect(() => {
+	useEffect(async () => {
 		if (newToken) {
 			if (location.pathname.includes('/login')) {
-				Request.setToken(newToken);
-				Storage.setAccessToken(newToken);
-				navigate('/');
+				try {
+					Request.setToken(newToken);
+					Storage.setAccessToken(newToken);
+					const jwtData = await dispatch(getCheckJwt()).unwrap();
+					if (!jwtData.favoriteCategory.length) {
+						navigate('/choose-topic');
+					} else {
+						navigate('/');
+					}
+				} catch (err) {
+					NotificationError(err);
+				}
 			} else {
 				checkToken();
 			}

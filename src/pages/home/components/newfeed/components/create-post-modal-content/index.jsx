@@ -859,11 +859,7 @@ function CreatePostModalContent({
 								/> */}
 							</div>
 						</div>
-						<div
-							className={classNames('create-post-modal-content__main__body__text-field-edit-wrapper', {
-								'height-higher': showUpload || hasUrl,
-							})}
-						>
+						<div className='create-post-modal-content__main__body__text-field-edit-wrapper'>
 							<RichTextEditor
 								placeholder='Hãy chia sẻ cảm nhận của bạn ...'
 								setUrlAdded={setUrlAdded}

@@ -11,6 +11,7 @@ import RightSidebarGroup from './sidebar-right/RightSidebarGroup';
 import { updateKey, handleToggleUpdate } from 'reducers/redux-utils/group';
 import NotFound from 'pages/not-found';
 import _ from 'lodash';
+import Circle from 'shared/loading/circle';
 
 const Group = () => {
 	const dispatch = useDispatch();
@@ -100,7 +101,7 @@ const Group = () => {
 					right={<RightSidebarGroup update={toggleUpdate} />}
 				/>
 			) : (
-				<>{renderNotFound ? <NotFound /> : <></>}</>
+				<>{renderNotFound ? <NotFound /> : <Circle loading={isFetching} />}</>
 			)}
 		</div>
 	);
