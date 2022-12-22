@@ -66,12 +66,14 @@ function RichTextEditor({
 	const dispatch = useDispatch();
 
 	useEffect(() => {
-		setTimeout(() => {
-			editor.current.blur();
-		}, 10);
-		setTimeout(() => {
-			editor.current.focus();
-		}, 50);
+		if (editor.current) {
+			setTimeout(() => {
+				editor.current.blur();
+			}, 10);
+			setTimeout(() => {
+				editor.current.focus();
+			}, 50);
+		}
 	}, []);
 
 	useEffect(() => {

@@ -7,7 +7,7 @@ import Lightbox from 'react-image-lightbox';
 import 'react-image-lightbox/style.css';
 import { useRef } from 'react';
 
-const GridImage = ({ images, inPost, postId }) => {
+const GridImage = ({ images, inPost, postId, isEditPost }) => {
 	const [photoIndex, setPhotoIndex] = useState(0);
 	const [isOpen, setIsOpen] = useState(false);
 
@@ -124,7 +124,7 @@ const GridImage = ({ images, inPost, postId }) => {
 										setPhotoIndex(index);
 									}}
 								>
-									{inPost ? (
+									{inPost || isEditPost ? (
 										<img src={image} alt='image' />
 									) : (
 										<img src={URL.createObjectURL(image)} alt='image' />
@@ -163,7 +163,7 @@ const GridImage = ({ images, inPost, postId }) => {
 														setPhotoIndex(index);
 													}}
 												>
-													{inPost ? (
+													{inPost || isEditPost ? (
 														<img src={image} alt='image' />
 													) : (
 														<img src={URL.createObjectURL(image)} alt='image' />
@@ -216,12 +216,14 @@ const GridImage = ({ images, inPost, postId }) => {
 
 GridImage.defaultProps = {
 	images: [],
+	isEditPost: false,
 };
 
 GridImage.propTypes = {
 	images: PropTypes.array,
 	inPost: PropTypes.bool,
 	postId: PropTypes.any,
+	isEditPost: PropTypes.bool,
 };
 
 export default GridImage;

@@ -153,20 +153,21 @@
 		.setting {
 			position: relative;
 			margin-left: auto;
-			.setting-btn {
+			.setting-mini-post-btn {
 				width: 32px;
 				height: 32px;
 				border-radius: 50%;
 				margin-left: auto;
+				transition: 0.25s;
 			}
-			.setting-btn:hover {
-				background-color: rgba(245, 231, 216, 0.4);
+			.setting-mini-post-btn:hover {
+				background-color: #f1f1f1;
 			}
 			.setting-list {
-				max-width: 275px;
-				width: 275px;
+				max-width: 230px;
+				width: 230px;
 				position: absolute;
-				top: 80%;
+				top: 70%;
 				right: 0;
 				border-radius: 10px;
 				background-color: #fcfcfc;
@@ -175,9 +176,10 @@
 				z-index: 10000;
 				padding: 8px;
 				.setting-item {
+					display: block;
 					display: flex;
 					align-items: center;
-					gap: 1.25rem;
+					gap: 1rem;
 					font-size: 18px;
 					font-weight: 600;
 					color: #4e4b66;
@@ -185,12 +187,15 @@
 					cursor: pointer;
 					transition: 0.25s;
 					svg {
-						width: 20px;
-						height: 20px;
+						width: 16px;
+						height: 16px;
+					}
+					.setting-item__content {
+						font-size: 16px;
 					}
 				}
 				.setting-item:hover {
-					background-color: rgba(245, 231, 216, 0.4);
+					background-color: #f1f1f1;
 					border-radius: 5px;
 				}
 			}

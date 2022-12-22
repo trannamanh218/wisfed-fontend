@@ -8,7 +8,7 @@ import GridImage from 'shared/grid-image';
 import { toast } from 'react-toastify';
 
 const UploadImage = props => {
-	const { addOptionsToPost, images, setImages, removeAllImages, maxFiles, maxSize } = props;
+	const { addOptionsToPost, images, setImages, removeAllImages, maxFiles, maxSize, isEditPost } = props;
 
 	const onDrop = useCallback(
 		acceptedFiles => {
@@ -54,7 +54,7 @@ const UploadImage = props => {
 		return (
 			<div className='create-post-modal-content__main__body__image-container'>
 				<div className='create-post-modal-content__main__body__image-box'>
-					<GridImage images={images} inPost={false} />
+					<GridImage images={images} inPost={false} isEditPost={isEditPost} />
 					<div className='create-post-modal-content__main__body__image-options'>
 						<div className='create-post-modal-content__main__body__image-options__block-left'>
 							<button
@@ -112,6 +112,7 @@ const UploadImage = props => {
 UploadImage.defaultProps = {
 	maxFiles: 10,
 	maxSize: 1024,
+	isEditPost: false,
 };
 
 UploadImage.propTypes = {
@@ -123,6 +124,7 @@ UploadImage.propTypes = {
 	removeAllImages: PropTypes.func,
 	maxFiles: PropTypes.number,
 	maxSize: PropTypes.number,
+	isEditPost: PropTypes.bool,
 };
 
 export default UploadImage;

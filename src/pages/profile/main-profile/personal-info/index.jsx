@@ -214,7 +214,7 @@ const PersonalInfo = ({ currentUserInfo, setCurrentTab }) => {
 								className='personal-info__item'
 							>
 								<span className='number'>{currentUserInfo.posts > 0 ? currentUserInfo.posts : 0}</span>
-								<span>Bài viết</span>
+								<span>Bài viết t</span>
 							</li>
 							<li
 								onClick={() => {

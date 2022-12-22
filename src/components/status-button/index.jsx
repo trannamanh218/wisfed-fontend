@@ -17,7 +17,6 @@ import './status-button.scss';
 import StatusModalContainer from 'shared/status-modal/StatusModalContainer';
 import Circle from 'shared/loading/circle';
 import { updateBookForCreatePost } from 'reducers/redux-utils/book';
-import { useNavigate } from 'react-router-dom';
 import { NotificationError } from 'helpers/Error';
 import Storage from 'helpers/Storage';
 import ModalCheckLogin from 'shared/modal-check-login';
@@ -54,7 +53,6 @@ const StatusButton = ({ className, bookData, inCreatePost, bookStatus }) => {
 	const removedArray = useRef([]);
 	const initalStatus = useRef('');
 
-	const navigate = useNavigate();
 	const { userInfo } = useSelector(state => state.auth);
 	const myCustomLibraries = useSelector(state => state.library.myAllLibrary).custom;
 	const myAllLibraryReduxDefault = useSelector(state => state.library.myAllLibrary).default;
