@@ -44,8 +44,7 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 
 	const urlToDirect = useRef('');
 	const initialContent = useRef('');
-	const optionsCommentButton = useRef(null);
-	const optionsCommentList = useRef(null);
+	const optionsCommentPopup = useRef(null);
 
 	const { userInfo } = useSelector(state => state.auth);
 
@@ -97,11 +96,7 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 
 	useEffect(() => {
 		const handleClickOutside = e => {
-			if (
-				optionsCommentList.current &&
-				optionsCommentButton.current &&
-				![optionsCommentList.current, optionsCommentButton.current].some(obj => obj.contains(e.target))
-			) {
+			if (optionsCommentPopup.current && !optionsCommentPopup.current.contains(e.target)) {
 				setShowOptionsComment(false);
 			}
 		};
@@ -372,16 +367,18 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 							) : null}
 						</div>
 						{[data.user?.id, data.createdBy].includes(userInfo.id) && (
-							<div className={`comment__wrapper__info__options ${showOptionsComment && 'isShowing'}`}>
+							<div
+								ref={optionsCommentPopup}
+								className={`comment__wrapper__info__options ${showOptionsComment && 'isShowing'}`}
+							>
 								<div
 									className='comment__wrapper__info__options__elipsis'
 									onClick={() => setShowOptionsComment(!showOptionsComment)}
-									ref={optionsCommentButton}
 								>
 									...
 								</div>
 								{showOptionsComment && (
-									<div className='comment__wrapper__info__options__list' ref={optionsCommentList}>
+									<div className='comment__wrapper__info__options__list'>
 										<p onClick={() => setIsEditingComment(true)}>Sửa bình luận</p>
 										<p onClick={() => setModalDeleteShow(true)}>Xóa</p>
 									</div>
