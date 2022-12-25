@@ -1,15 +1,14 @@
 import classNames from 'classnames';
 import { LikeComment } from 'components/svg';
-import { POST_TYPE, QUOTE_TYPE, REVIEW_TYPE, urlRegex } from 'constants/index';
+import { GROUP_TYPE, POST_TYPE, QUOTE_TYPE, REVIEW_TYPE, urlRegex } from 'constants/index';
 import { calculateDurationTime } from 'helpers/Common';
 import { NotificationError } from 'helpers/Error';
 import Storage from 'helpers/Storage';
-import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Badge } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { likeAndUnlikeCommentPost } from 'reducers/redux-utils/activity';
 import { checkUserLogin } from 'reducers/redux-utils/auth';
 import { likeAndUnlikeCommentReview } from 'reducers/redux-utils/book';
@@ -41,27 +40,53 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 	const [modalDeleteShow, setModalDeleteShow] = useState(false);
 	const [isEditingComment, setIsEditingComment] = useState(false);
 	const [isFetchingLikeUnLike, setIsFetchingLikeUnLike] = useState(false);
+	const [mentionUsersArray, setMentionUsersArray] = useState([]);
 
 	const urlToDirect = useRef('');
 	const initialContent = useRef('');
 	const optionsCommentButton = useRef(null);
 	const optionsCommentList = useRef(null);
+	const cmtContent = useRef(null);
 
 	const { userInfo } = useSelector(state => state.auth);
+	const { userId } = useParams();
 
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
 	useEffect(() => {
-		if (!_.isEmpty(dataProp)) {
+		const handleClickOutside = e => {
+			if (
+				optionsCommentList.current &&
+				optionsCommentButton.current &&
+				![optionsCommentList.current, optionsCommentButton.current].some(obj => obj.contains(e.target))
+			) {
+				setShowOptionsComment(false);
+			}
+		};
+
+		document.addEventListener('click', handleClickOutside, true);
+		return () => {
+			document.removeEventListener('click', handleClickOutside, true);
+		};
+	}, []);
+
+	useEffect(() => {
+		if (cmtContent.current) {
 			handleAddEventClickToUrlTags();
 			handleAddEventClickMentionTags();
 			// handleAddEventClickToHashtagTags(); // không xóa
 		}
-	}, []);
+	}, [cmtContent.current]);
 
 	useEffect(() => {
 		setData(dataProp);
+		// generate mention users in commnent data
+		const domFromStr = new DOMParser().parseFromString(dataProp.content, 'text/xml');
+		const aTags = domFromStr.querySelectorAll('.mention-class');
+		const mentionUsers = [];
+		aTags.forEach(item => mentionUsers.push({ name: item.innerHTML, id: item.getAttribute('data-user-id') }));
+		setMentionUsersArray(mentionUsers);
 	}, [dataProp]);
 
 	useEffect(() => {
@@ -85,7 +110,7 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 			const handlePressEsc = e => {
 				if (document.activeElement === editorChild && e.key === 'Escape') {
 					// Khi nhấn Esc thì hủy bỏ chỉnh sửa comment
-					handleCancelEditing();
+					handleHideEditing();
 				}
 			};
 			document.addEventListener('keydown', handlePressEsc);
@@ -95,25 +120,8 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 		}
 	}, [isEditingComment]);
 
-	useEffect(() => {
-		const handleClickOutside = e => {
-			if (
-				optionsCommentList.current &&
-				optionsCommentButton.current &&
-				![optionsCommentList.current, optionsCommentButton.current].some(obj => obj.contains(e.target))
-			) {
-				setShowOptionsComment(false);
-			}
-		};
-
-		document.addEventListener('click', handleClickOutside, true);
-		return () => {
-			document.removeEventListener('click', handleClickOutside, true);
-		};
-	}, []);
-
 	const handleAddEventClickToUrlTags = useCallback(() => {
-		const arr = document.querySelectorAll('.url-class');
+		const arr = cmtContent.current.querySelectorAll('.url-class');
 		for (let i = 0; i < arr.length; i++) {
 			const dataUrl = arr[i].getAttribute('data-url');
 			arr[i].onclick = () => directUrl(dataUrl);
@@ -121,25 +129,27 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 	}, [dataProp]);
 
 	const handleAddEventClickMentionTags = useCallback(() => {
-		const arr = document.querySelectorAll('.mention-class');
+		const arr = cmtContent.current.querySelectorAll('.mention-class');
 		for (let i = 0; i < arr.length; i++) {
 			const mentionUserId = arr[i].getAttribute('data-user-id');
-			arr[i].onclick = () => navigate(`/profile/${mentionUserId}`);
+			arr[i].onclick = () => {
+				if (mentionUserId !== userId) {
+					navigate(`/profile/${mentionUserId}`);
+				} else {
+					window.scroll(0, 0);
+				}
+			};
 		}
 	}, [dataProp]);
 
 	// không xóa
 	// 	const handleAddEventClickToHashtagTags = useCallback(() => {
-	// 		const arr = document.querySelectorAll('.hashtag-class');
+	// 		const arr = cmtContent.current.querySelectorAll('.hashtag-class');
 	// 		for (let i = 0; i < arr.length; i++) {
 	// 			const dataHashtagNavigate = arr[i].getAttribute('data-hashtag-navigate');
-	// 			arr[i].onclick = () => handleClickHashtag(dataHashtagNavigate);
+	// 			arr[i].onclick = () => navigate(dataHashtagNavigate);
 	// 		}
 	// 	}, [dataProp]);
-	//
-	// 	const handleClickHashtag = dataHashtagNavigate => {
-	// 		navigate(dataHashtagNavigate);
-	// 	};
 
 	const directUrl = url => {
 		setModalDirectShow(true);
@@ -241,50 +251,40 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 		}
 	};
 
-	const handleEditComment = async (content, replyId) => {
+	const handleEditComment = async content => {
 		if (content) {
-			const params = {
-				id: data.id,
-				body: {
-					content: content,
-				},
-			};
-			initialContent.current = dataProp.content;
 			try {
-				dispatch(
-					setParamHandleEdit({
-						id: data.id,
+				const params = {
+					id: data.id,
+					body: {
 						content: content,
-						replyId: replyId,
-						type: type,
-					})
-				);
-				handleCancelEditing();
-
-				if (type === 'post') {
+					},
+				};
+				if (type === POST_TYPE) {
 					await dispatch(updateCommentMinipost(params)).unwrap();
-				} else if (type === 'group') {
+				} else if (type === GROUP_TYPE) {
 					await dispatch(updateCommentGroupPost(params)).unwrap();
-				} else if (type === 'review') {
+				} else if (type === REVIEW_TYPE) {
 					await dispatch(updateCommentReview(params)).unwrap();
-				} else if (type === 'quote') {
+				} else if (type === QUOTE_TYPE) {
 					await dispatch(updateCommentQuote(params)).unwrap();
 				}
+
+				initialContent.current = dataProp.content;
+
+				setData({
+					...data,
+					content: content,
+				});
+
+				handleHideEditing();
 			} catch (err) {
 				NotificationError(err);
-				dispatch(
-					setParamHandleEdit({
-						id: data.id,
-						content: initialContent.current,
-						replyId: replyId,
-						type: type,
-					})
-				);
 			}
 		}
 	};
 
-	const handleCancelEditing = () => {
+	const handleHideEditing = () => {
 		setIsEditingComment(false);
 		setShowOptionsComment(false);
 	};
@@ -292,13 +292,13 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 	const handleAcceptDelete = async () => {
 		setModalDeleteShow(false);
 		try {
-			if (type === 'post') {
+			if (type === POST_TYPE) {
 				await dispatch(deleteCommentMinipost(data.id)).unwrap();
-			} else if (type === 'group') {
+			} else if (type === GROUP_TYPE) {
 				await dispatch(deleteCommentGroupPost(data.id)).unwrap();
-			} else if (type === 'review') {
+			} else if (type === REVIEW_TYPE) {
 				await dispatch(deleteCommentReview(data.id)).unwrap();
-			} else if (type === 'quote') {
+			} else if (type === QUOTE_TYPE) {
 				await dispatch(deleteCommentQuote(data.id)).unwrap();
 			}
 			dispatch(
@@ -329,10 +329,12 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 						className={`comment-editor-last-${data.id}`}
 						commentLv1Id={data.replyId}
 						onCreateComment={handleEditComment}
-						initialContent={dataProp.content}
+						initialContent={data.content}
+						isEditCmt={true}
+						mentionUsersArr={mentionUsersArray}
 					/>
 					<div className='comment__editing__cancel'>
-						Nhấn Esc để <span onClick={handleCancelEditing}>hủy bỏ</span>
+						Nhấn Esc để <span onClick={handleHideEditing}>hủy bỏ</span>
 					</div>
 				</div>
 			) : (
@@ -358,6 +360,7 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 							{data?.content && (
 								<p
 									className='comment__content'
+									ref={cmtContent}
 									dangerouslySetInnerHTML={{
 										__html: generateContent(data.content),
 									}}
@@ -366,7 +369,6 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 							{data.like !== 0 ? (
 								<div className='cmt-like-number'>
 									<LikeComment />
-
 									{data.like}
 								</div>
 							) : null}
@@ -406,7 +408,6 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 								handleReply(commentLv1Id, {
 									id: data.user.id,
 									name: data.user.fullName || data.user.firstName + ' ' + data.user.lastName,
-									avatar: data.user.avatarImage,
 								})
 							}
 						>

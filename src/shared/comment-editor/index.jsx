@@ -17,6 +17,7 @@ const CommentEditor = ({
 	setMentionUsersArr,
 	hideAvatar,
 	initialContent,
+	isEditCmt,
 }) => {
 	const [content, setContent] = useState('');
 	const [createCmt, setCreateCmt] = useState(true);
@@ -30,7 +31,7 @@ const CommentEditor = ({
 
 			let number = 400;
 			if (window.location.pathname.includes('profile/')) {
-				number = -100;
+				number = -400;
 			} else if (window.location.pathname.includes('category/detail/')) {
 				number = -600;
 			}
@@ -60,7 +61,9 @@ const CommentEditor = ({
 	const handleKeyPress = command => {
 		if (command === 'send-message') {
 			onCreateComment(content, commentLv1Id);
-			setCreateCmt(!createCmt);
+			if (!isEditCmt) {
+				setCreateCmt(!createCmt);
+			}
 		}
 	};
 
@@ -102,6 +105,7 @@ CommentEditor.defaultProps = {
 	clickReply: false,
 	setMentionUsersArr: () => {},
 	hideAvatar: false,
+	isEditCmt: false,
 };
 
 CommentEditor.propTypes = {
@@ -113,6 +117,8 @@ CommentEditor.propTypes = {
 	clickReply: PropTypes.bool,
 	setMentionUsersArr: PropTypes.func,
 	hideAvatar: PropTypes.bool,
+	initialContent: PropTypes.string,
+	isEditCmt: PropTypes.bool,
 };
 
 export default CommentEditor;
