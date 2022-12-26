@@ -129,15 +129,15 @@ export const deleteCommentQuote = createAsyncThunk('comment/createComment', asyn
 const commentSlice = createSlice({
 	name: 'comment',
 	initialState: {
-		paramHandleEdit: {},
+		dataDeleteCmt: {},
 	},
 	reducers: {
-		setParamHandleEdit: (state, action) => {
-			state.paramHandleEdit = action.payload;
+		setDataDeleteCmt: (state, action) => {
+			state.dataDeleteCmt = action.payload;
 		},
 	},
 });
 
-export const { setParamHandleEdit } = commentSlice.actions;
+export const { setDataDeleteCmt } = commentSlice.actions;
 const comment = commentSlice.reducer;
 export default comment;

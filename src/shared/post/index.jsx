@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import { useCallback, useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateReactionActivity, updateReactionActivityGroup } from 'reducers/redux-utils/activity';
-import { createComment, createCommentGroup, setParamHandleEdit } from 'reducers/redux-utils/comment';
+import { createComment, createCommentGroup, setDataDeleteCmt } from 'reducers/redux-utils/comment';
 import { Modal, ModalBody } from 'react-bootstrap';
 import { CloseX } from 'components/svg';
 import CommentEditor from 'shared/comment-editor';
@@ -59,7 +59,7 @@ import WithFriends from './withFriends/WithFriends';
 import dots from 'assets/images/dots.png';
 import { useVisible } from 'shared/hooks';
 import CreatePostModalContent from 'pages/home/components/newfeed/components/create-post-modal-content';
-import { useHookUpdateCommentsAfterEditing } from 'api/comment.hook';
+import { useHookUpdateCommentsAfterDelete } from 'api/comment.hook';
 import { blockAndAllowScroll } from 'api/blockAndAllowScroll.hook';
 
 const verbShareArray = [
@@ -110,13 +110,13 @@ function Post({
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
-	const { paramHandleEdit } = useSelector(state => state.comment);
-	const { handleUpdateCommentsAfterEditing } = useHookUpdateCommentsAfterEditing(
-		paramHandleEdit,
+	const { dataDeleteCmt } = useSelector(state => state.comment);
+	const { updateCommentsAfterDelete } = useHookUpdateCommentsAfterDelete(
+		dataDeleteCmt,
 		type,
 		postData,
 		setPostData,
-		setParamHandleEdit
+		setDataDeleteCmt
 	);
 
 	blockAndAllowScroll(showModalCreatePost);
@@ -185,10 +185,10 @@ function Post({
 		}
 	}, [postData]);
 
-	// Thay đổi lại comment sau khi đã chỉnh sửa hoặc xóa
+	// Thay đổi lại danh sách comment sau khi đã xóa một comment
 	useEffect(() => {
-		handleUpdateCommentsAfterEditing();
-	}, [paramHandleEdit]);
+		updateCommentsAfterDelete();
+	}, [dataDeleteCmt]);
 
 	const handleAddEventClickToUrlTags = useCallback(() => {
 		const arr = document.querySelectorAll('.url-class');

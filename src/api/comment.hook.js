@@ -1,57 +1,39 @@
 import { useDispatch } from 'react-redux';
 import _ from 'lodash';
 
-// Thay đổi lại comment sau khi đã chỉnh sửa hoặc xóa
-export const useHookUpdateCommentsAfterEditing = (paramHandleEdit, type, postData, setPostData, setParamHandleEdit) => {
+// Thay đổi lại danh sách comment sau khi đã xóa một comment
+export const useHookUpdateCommentsAfterDelete = (dataDeleteCmt, type, postData, setPostData, setDataDeleteCmt) => {
 	const dispatch = useDispatch();
 
-	const handleUpdateCommentsAfterEditing = () => {
-		if (!_.isEmpty(paramHandleEdit) && type === paramHandleEdit.type) {
-			const cloneArr = [...postData.usersComments];
+	const updateCommentsAfterDelete = () => {
+		if (!_.isEmpty(dataDeleteCmt) && type === dataDeleteCmt.type) {
+			const usersComments = postData.usersComments;
 			let totalCommentNumber = postData.comment;
 
-			if (paramHandleEdit.replyId) {
-				const foundReplyObj = cloneArr.find(item => item.id === paramHandleEdit.replyId);
-				if (foundReplyObj) {
-					const cloneReplyArr = [...foundReplyObj.reply];
-					const foundObj = cloneReplyArr.find(item => item.id === paramHandleEdit.id);
-					if (foundObj) {
-						if (paramHandleEdit.content) {
-							const cloneFoundObj = { ...foundObj };
-							cloneFoundObj.content = paramHandleEdit.content;
-							cloneReplyArr[cloneReplyArr.indexOf(foundObj)] = cloneFoundObj;
-
-							const cloneFoundReplyObj = { ...foundReplyObj };
-							cloneFoundReplyObj.reply = cloneReplyArr;
-							cloneArr[cloneArr.indexOf(foundReplyObj)] = cloneFoundReplyObj;
-						} else {
-							cloneReplyArr.splice(cloneReplyArr.indexOf(foundObj), 1);
-							foundReplyObj.reply = cloneReplyArr;
-							totalCommentNumber = totalCommentNumber - 1;
-						}
+			if (dataDeleteCmt.replyId) {
+				const foundCmtParent = usersComments.find(item => item.id === dataDeleteCmt.replyId);
+				if (foundCmtParent) {
+					const foundCmtDelete = foundCmtParent.reply.find(item => item.id === dataDeleteCmt.id);
+					if (foundCmtDelete) {
+						foundCmtParent.reply.splice(foundCmtParent.reply.indexOf(foundCmtDelete), 1);
+						totalCommentNumber = totalCommentNumber - 1;
 					}
 				}
 			} else {
-				const foundObj = cloneArr.find(item => item.id === paramHandleEdit.id);
-				if (foundObj) {
-					if (paramHandleEdit.content) {
-						const cloneFoundObj = { ...foundObj };
-						cloneFoundObj.content = paramHandleEdit.content;
-						cloneArr[cloneArr.indexOf(foundObj)] = cloneFoundObj;
+				const foundCmtDelete = usersComments.find(item => item.id === dataDeleteCmt.id);
+				if (foundCmtDelete) {
+					usersComments.splice(usersComments.indexOf(foundCmtDelete), 1);
+					if (Array.isArray(foundCmtDelete.reply) && foundCmtDelete.reply.length) {
+						totalCommentNumber = totalCommentNumber - 1 - foundCmtDelete.reply.length;
 					} else {
-						cloneArr.splice(cloneArr.indexOf(foundObj), 1);
-						if (Array.isArray(foundObj.reply) && foundObj.reply.length) {
-							totalCommentNumber = totalCommentNumber - 1 - foundObj.reply.length;
-						} else {
-							totalCommentNumber = totalCommentNumber - 1;
-						}
+						totalCommentNumber = totalCommentNumber - 1;
 					}
 				}
 			}
-			setPostData({ ...postData, comment: totalCommentNumber, usersComments: cloneArr });
-			dispatch(setParamHandleEdit({}));
+			setPostData({ ...postData, comment: totalCommentNumber });
+			dispatch(setDataDeleteCmt({}));
 		}
 	};
 
-	return { handleUpdateCommentsAfterEditing };
+	return { updateCommentsAfterDelete };
 };
