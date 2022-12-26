@@ -985,6 +985,7 @@ function CreatePostModalContent({
 									removeAllImages={removeAllImages}
 									maxFiles={100}
 									maxSize={104857600}
+									isEditPost={true}
 								/>
 							)}
 							{hasUrl && !showUpload && (

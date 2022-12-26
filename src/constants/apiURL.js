@@ -157,6 +157,7 @@ export const unFollowGroupAPI = id => `/api/v1/groups/unFollow/${id}`;
 export const followGroupAPI = id => `/api/v1/groups/follow/${id}`;
 export const recommendGroup = '/api/v1/groups/recommendGroup';
 export const replyInviteGroupAPI = id => `/api/v1/groups/replyInvite/${id}`;
+export const deleteMiniPostGroupAPI = id => `/api/v1/getstream/${id}`;
 
 // search
 export const getSearchAPI = `/api/v1/searchs`;
