@@ -126,7 +126,6 @@ function CreatePostModalContent({
 	const chartImgShare = useSelector(state => state.chart.imageToShareData);
 	const { postDataShare } = useSelector(state => state.post);
 	const option = useSelector(state => state.common.optionAddToPost);
-
 	const { bookForCreatePost } = useSelector(state => state.book);
 
 	const {
@@ -165,7 +164,7 @@ function CreatePostModalContent({
 		// generate data for edit post
 		if (isEditPost) {
 			const editAuthors = dataEditMiniPost?.mentionsAuthors?.map(item => item.authors);
-			const editCategory = dataEditMiniPost?.mentionsCategories?.map(item => ({
+			const editCategorys = dataEditMiniPost?.mentionsCategories?.map(item => ({
 				id: item.categoryId,
 				name: item.category?.name,
 			}));
@@ -183,20 +182,26 @@ function CreatePostModalContent({
 				if (editAuthors) {
 					objTemp['addAuthor'] = editAuthors;
 				}
-				if (editCategory) {
-					objTemp['addCategory'] = editCategory;
+				if (editCategorys) {
+					objTemp['addCategory'] = editCategorys;
 				}
 				if (editAuthors) {
 					objTemp['addFriends'] = editUsers;
 				}
 				setTaggedData(objTemp);
-				if (dataEditMiniPost.image.length) {
+				if (dataEditMiniPost?.image) {
 					setImagesUpload([...dataEditMiniPost.image]);
-					setShowUpload(true);
+					if (dataEditMiniPost?.image.length > 0) {
+						setShowUpload(true);
+					}
 				}
 				setProgressInputValue(dataEditMiniPost?.book?.progress);
 				if (dataEditMiniPost.msg) {
 					setContent(dataEditMiniPost.msg);
+				}
+
+				if (!_.isEmpty(dataEditMiniPost.sharePost)) {
+					dispatch(saveDataShare(dataEditMiniPost));
 				}
 			}
 		}
@@ -403,8 +408,6 @@ function CreatePostModalContent({
 			progress: progressInputValue ? progressInputValue : 0,
 		};
 
-		params.mentionsUser = taggedData.addFriends.length ? taggedData.addFriends.map(item => item.id) : [];
-		params.mentionsAuthor = taggedData.addAuthor.length ? taggedData.addAuthor.map(item => item.id) : [];
 		if (imagesUpload.length) {
 			if (isEditPost) {
 				const imgStringArr = imagesUpload.filter(item => typeof item === 'string');
@@ -424,13 +427,20 @@ function CreatePostModalContent({
 				}
 			}
 		}
+		params.mentionsUser = taggedData.addFriends.length ? taggedData.addFriends.map(item => item.id) : [];
+		params.mentionsAuthor = taggedData.addAuthor.length ? taggedData.addAuthor.map(item => item.id) : [];
 		params.mentionsCategory = taggedData.addCategory.length ? taggedData.addCategory.map(item => item.id) : [];
 		if (!_.isEmpty(taggedData.addBook)) {
 			params.bookId = taggedData.addBook.id;
 		}
 		if (isEditPost) {
-			params['feedId'] = `${dataEditMiniPost.id}`;
-			params['minipostId'] = dataEditMiniPost.minipostId;
+			if (window.location.pathname.includes('/profile/')) {
+				params['feedId'] = dataEditMiniPost.getstreamId;
+				params['minipostId'] = dataEditMiniPost.getstreamId;
+			} else {
+				params['feedId'] = dataEditMiniPost.id;
+				params['minipostId'] = dataEditMiniPost.minipostId;
+			}
 		}
 		return params;
 	};
@@ -473,133 +483,140 @@ function CreatePostModalContent({
 		setStatus(STATUS_LOADING);
 		try {
 			if (postDataShare && !_.isEmpty(postDataShare)) {
-				if (postDataShare.verb === POST_VERB_SHARE) {
-					const query = {
-						id: postDataShare.type === 'post' ? postDataShare.minipostId : Number(postDataShare.shareId),
-						type: 'post',
-						...params,
-					};
-					await dispatch(getSharePostInternal(query)).unwrap();
-				} else if (
-					postDataShare.verb === TOP_USER_VERB_SHARE ||
-					postDataShare.verb === TOP_BOOK_VERB_SHARE ||
-					postDataShare.verb === TOP_QUOTE_VERB_SHARE ||
-					postDataShare.verb === READ_TARGET_VERB_SHARE
-				) {
-					const query = {
-						id:
-							postDataShare.minipostId ||
-							postDataShare.sharePost.minipostId ||
-							postDataShare.sharePost.id,
-						type: 'post',
-						...params,
-					};
-					await dispatch(getSharePostInternal(query)).unwrap();
-				} else if (postDataShare.verb === QUOTE_VERB_SHARE) {
-					const query = {
-						id: postDataShare.sharePost ? Number(postDataShare.shareId) : postDataShare.id,
-						type: 'quote',
-						background: postDataShare.background,
-						...params,
-					};
-					await dispatch(getSharePostInternal(query)).unwrap();
-				} else if (postDataShare.verb === GROUP_POST_VERB_SHARE) {
-					const query = {
-						id: postDataShare.shareId
-							? Number(postDataShare.shareId)
-							: postDataShare.sharePost.groupPostId
-							? postDataShare.sharePost.groupPostId
-							: postDataShare.sharePost.id,
-						type: 'groupPost',
-						...params,
-					};
-					await dispatch(getSharePostInternal(query)).unwrap();
-				} else if (postDataShare.verb === READ_TARGET_VERB_SHARE_LV1) {
-					const data = {
-						msg: content,
-						current: postDataShare.booksReadCount,
-						mentionsUser: params.mentionsUser,
-						tags: params.tags,
-					};
-					await dispatch(
-						shareTargetReadings({
-							userId: postDataShare.userId,
-							data,
-						})
-					).unwrap();
-				} else if (postDataShare.verb === TOP_USER_VERB_SHARE_LV1) {
-					const query = {
-						msg: content,
-						by: postDataShare.by,
-						type: postDataShare.type,
-						categoryId: postDataShare.categoryId || null,
-						userType: postDataShare.userType,
-						id: postDataShare.id,
-						mentionsUser: params.mentionsUser,
-						tags: params.tags,
-					};
-					await dispatch(getSharePostRanks(query)).unwrap();
-				} else if (postDataShare.verb === TOP_BOOK_VERB_SHARE_LV1) {
-					const query = {
-						msg: content,
-						by: postDataShare.by,
-						type: postDataShare.type,
-						categoryId: postDataShare.categoryId || null,
-						id: postDataShare.id,
-						mentionsUser: params.mentionsUser,
-						tags: params.tags,
-					};
-					await dispatch(getSharePostRanks(query)).unwrap();
-				} else if (postDataShare.verb === MY_BOOK_VERB_SHARE) {
-					const query = {
-						id: postDataShare.id,
-						msg: content,
-						type: postDataShare.type,
-						mentionsUser: params.mentionsUser,
-						tags: params.tags,
-					};
-					await dispatch(shareMyBook(query)).unwrap();
-				} else if (postDataShare.verb === TOP_QUOTE_VERB_SHARE_LV1) {
-					const query = {
-						msg: content,
-						by: postDataShare.by,
-						type: postDataShare.type,
-						categoryId: postDataShare.categoryId || null,
-						id: postDataShare.id,
-						mentionsUser: params.mentionsUser,
-						tags: params.tags,
-					};
-					await dispatch(getSharePostRanks(query)).unwrap();
-				} else if (postDataShare.verb === REVIEW_VERB_SHARE) {
-					const query = {
-						id: postDataShare.reviewId,
-						type: 'review',
-						book: postDataShare.sharePost?.book,
-						...params,
-					};
-					await dispatch(getSharePostInternal(query)).unwrap();
-				} else if (postDataShare.verb === CHART_VERB_SHARE) {
-					const query = {
-						metaData: {
+				if (isEditPost && postDataShare && !_.isEmpty(postDataShare)) {
+					await dispatch(handleEditPost(params)).unwrap();
+				} else {
+					if (postDataShare.verb === POST_VERB_SHARE) {
+						const query = {
+							id:
+								postDataShare.type === 'post'
+									? postDataShare.minipostId
+									: Number(postDataShare.shareId),
+							type: 'post',
+							...params,
+						};
+						await dispatch(getSharePostInternal(query)).unwrap();
+					} else if (
+						postDataShare.verb === TOP_USER_VERB_SHARE ||
+						postDataShare.verb === TOP_BOOK_VERB_SHARE ||
+						postDataShare.verb === TOP_QUOTE_VERB_SHARE ||
+						postDataShare.verb === READ_TARGET_VERB_SHARE
+					) {
+						const query = {
+							id:
+								postDataShare.minipostId ||
+								postDataShare.sharePost.minipostId ||
+								postDataShare.sharePost.id,
+							type: 'post',
+							...params,
+						};
+						await dispatch(getSharePostInternal(query)).unwrap();
+					} else if (postDataShare.verb === QUOTE_VERB_SHARE) {
+						const query = {
+							id: postDataShare.sharePost ? Number(postDataShare.shareId) : postDataShare.id,
+							type: 'quote',
+							background: postDataShare.background,
+							...params,
+						};
+						await dispatch(getSharePostInternal(query)).unwrap();
+					} else if (postDataShare.verb === GROUP_POST_VERB_SHARE) {
+						const query = {
+							id: postDataShare.shareId
+								? Number(postDataShare.shareId)
+								: postDataShare.sharePost.groupPostId
+								? postDataShare.sharePost.groupPostId
+								: postDataShare.sharePost.id,
+							type: 'groupPost',
+							...params,
+						};
+						await dispatch(getSharePostInternal(query)).unwrap();
+					} else if (postDataShare.verb === READ_TARGET_VERB_SHARE_LV1) {
+						const data = {
+							msg: content,
+							current: postDataShare.booksReadCount,
+							mentionsUser: params.mentionsUser,
+							tags: params.tags,
+						};
+						await dispatch(
+							shareTargetReadings({
+								userId: postDataShare.userId,
+								data,
+							})
+						).unwrap();
+					} else if (postDataShare.verb === TOP_USER_VERB_SHARE_LV1) {
+						const query = {
+							msg: content,
+							by: postDataShare.by,
 							type: postDataShare.type,
-							chartBy: postDataShare.userId,
-							chartType: postDataShare.by,
-							isReadedChart: postDataShare.isReadedChart,
-						},
-						...params,
-					};
-					await dispatch(createActivity(query)).unwrap();
-				} else if (postDataShare.verb === GROWTH_CHART_VERB_SHARE) {
-					const query = {
-						metaData: {
+							categoryId: postDataShare.categoryId || null,
+							userType: postDataShare.userType,
+							id: postDataShare.id,
+							mentionsUser: params.mentionsUser,
+							tags: params.tags,
+						};
+						await dispatch(getSharePostRanks(query)).unwrap();
+					} else if (postDataShare.verb === TOP_BOOK_VERB_SHARE_LV1) {
+						const query = {
+							msg: content,
+							by: postDataShare.by,
 							type: postDataShare.type,
-							chartType: postDataShare.by,
-							reportType: 'addToLibrary',
-							bookId: postDataShare.bookId,
-						},
-						...params,
-					};
-					await dispatch(createActivity(query)).unwrap();
+							categoryId: postDataShare.categoryId || null,
+							id: postDataShare.id,
+							mentionsUser: params.mentionsUser,
+							tags: params.tags,
+						};
+						await dispatch(getSharePostRanks(query)).unwrap();
+					} else if (postDataShare.verb === MY_BOOK_VERB_SHARE) {
+						const query = {
+							id: postDataShare.id,
+							msg: content,
+							type: postDataShare.type,
+							mentionsUser: params.mentionsUser,
+							tags: params.tags,
+						};
+						await dispatch(shareMyBook(query)).unwrap();
+					} else if (postDataShare.verb === TOP_QUOTE_VERB_SHARE_LV1) {
+						const query = {
+							msg: content,
+							by: postDataShare.by,
+							type: postDataShare.type,
+							categoryId: postDataShare.categoryId || null,
+							id: postDataShare.id,
+							mentionsUser: params.mentionsUser,
+							tags: params.tags,
+						};
+						await dispatch(getSharePostRanks(query)).unwrap();
+					} else if (postDataShare.verb === REVIEW_VERB_SHARE) {
+						const query = {
+							id: postDataShare.reviewId,
+							type: 'review',
+							book: postDataShare.sharePost?.book,
+							...params,
+						};
+						await dispatch(getSharePostInternal(query)).unwrap();
+					} else if (postDataShare.verb === CHART_VERB_SHARE) {
+						const query = {
+							metaData: {
+								type: postDataShare.type,
+								chartBy: postDataShare.userId,
+								chartType: postDataShare.by,
+								isReadedChart: postDataShare.isReadedChart,
+							},
+							...params,
+						};
+						await dispatch(createActivity(query)).unwrap();
+					} else if (postDataShare.verb === GROWTH_CHART_VERB_SHARE) {
+						const query = {
+							metaData: {
+								type: postDataShare.type,
+								chartType: postDataShare.by,
+								reportType: 'addToLibrary',
+								bookId: postDataShare.bookId,
+							},
+							...params,
+						};
+						await dispatch(createActivity(query)).unwrap();
+					}
 				}
 			} else {
 				if (params.bookId) {
@@ -627,7 +644,6 @@ function CreatePostModalContent({
 					}
 					handleUpdateProgress();
 				}
-
 				if (location.pathname.includes('group')) {
 					const newParams = { data: params, id: id };
 					await dispatch(creatNewPost(newParams)).unwrap();
@@ -643,9 +659,12 @@ function CreatePostModalContent({
 			const customId = 'custom-id-CreatePostModalContent-onCreatePost-success';
 			toast.success('Tạo bài viết thành công!', { toastId: customId });
 			if (isEditPost) {
-				const newCategoryArr = taggedData.addCategory.map(item => ({ category: item }));
-				const newUsers = taggedData.addFriends.map(item => ({ users: item }));
-				const newAuthors = taggedData.addAuthor.map(item => ({
+				const newCategoryArr = taggedData.addCategory.map(item => ({
+					category: { name: item.name },
+					categoryId: item.id,
+				}));
+				const newUsersArr = taggedData.addFriends.map(item => ({ users: item }));
+				const newAuthorsArr = taggedData.addAuthor.map(item => ({
 					activityId: null,
 					authorId: item.id,
 					authors: item,
@@ -654,9 +673,9 @@ function CreatePostModalContent({
 				const data = {
 					book: !_.isEmpty(taggedData.addBook) ? taggedData.addBook : null,
 					image: params.image,
-					mentionsAuthors: newAuthors,
+					mentionsAuthors: newAuthorsArr,
 					mentionsCategories: newCategoryArr,
-					mentionsUsers: newUsers,
+					mentionsUsers: newUsersArr,
 					message: params.msg,
 					minipostId: params.minipostId,
 					preview: urlPreviewData,

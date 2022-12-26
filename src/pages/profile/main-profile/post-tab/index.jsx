@@ -40,14 +40,6 @@ function PostTab({ currentTab }) {
 		}
 	}, [postList, currentTab]);
 
-	const handleUpdatePostArrWhenDeleted = itemMinipostId => {
-		const index = postList.findIndex(item => item.id === itemMinipostId);
-		const newItem = { ...postList[index], isDeleted: true };
-		const newArr = [...postList];
-		newArr[index] = { ...newItem };
-		setPostList(newArr);
-	};
-
 	const getPostListByUser = async () => {
 		try {
 			const data = {
@@ -74,6 +66,14 @@ function PostTab({ currentTab }) {
 
 	const onChangeNewPost = () => {
 		setIsNewPost(!isNewPost);
+	};
+
+	const handleUpdatePostArrWhenDeleted = itemMinipostId => {
+		const index = postList.findIndex(item => item.id === itemMinipostId);
+		const newItem = { ...postList[index], isDeleted: true };
+		const newArr = [...postList];
+		newArr[index] = { ...newItem };
+		setPostList(newArr);
 	};
 
 	return (

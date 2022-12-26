@@ -324,7 +324,7 @@ const PostShare = ({ postData, inCreatePost, directUrl }) => {
 							onClick={() => navigate(`/category/detail/${item.categoryId}`)}
 						>
 							<span>
-								{item.category.name ||
+								{item.category?.name ||
 									item.category?.fullName ||
 									item.category?.lastName ||
 									item.category?.firstName ||

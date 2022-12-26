@@ -78,7 +78,6 @@ function Post({
 	reduxCheckIfMentionCmtFromGroup,
 	isInDetail,
 	handleUpdatePostArrWhenDeleted,
-	handleUpdateMiniPost,
 }) {
 	const [postData, setPostData] = useState({});
 	const [videoId, setVideoId] = useState('');
@@ -506,15 +505,15 @@ function Post({
 	};
 
 	const removeFeed = async () => {
+		setShowDeleteFeedModal(false);
 		try {
-			await dispatch(deleteMiniPost(postData.minipostId || postData.id)).unwrap();
-			handleUpdatePostArrWhenDeleted(postData.minipostId || postData.id);
+			const id = postData?.minipostId ? postData?.minipostId : postData?.id;
+			handleUpdatePostArrWhenDeleted(id);
+			await dispatch(deleteMiniPost(id)).unwrap();
 			toast.success('Xoá bài viết thành công');
 		} catch (err) {
 			const customId = 'custom-id-SettingMore-error';
 			toast.error('Lỗi không xóa được bài viết', { toastId: customId });
-		} finally {
-			setShowDeleteFeedModal(false);
 		}
 	};
 
@@ -522,6 +521,10 @@ function Post({
 		setSettingsVisible(prev => !prev);
 		setShowModalCreatePost(true);
 		setIsEditPost(true);
+	};
+
+	const handleUpdateMiniPost = data => {
+		setPostData({ ...postData, ...data });
 	};
 
 	return (
@@ -662,7 +665,7 @@ function Post({
 				<ul className='tagged'>
 					{postData.mentionsCategories?.map(item => (
 						<li
-							key={item.id}
+							key={item.categoryId}
 							className={classNames('badge bg-primary-light')}
 							onClick={() => navigate(`/category/detail/${item.categoryId}`)}
 						>
@@ -1046,7 +1049,6 @@ Post.defaultProps = {
 	reduxCheckIfMentionCmtFromGroup: null,
 	isInDetail: false,
 	handleUpdatePostArrWhenDeleted: () => {},
-	handleUpdateMiniPost: () => {},
 };
 
 Post.propTypes = {
@@ -1056,7 +1058,6 @@ Post.propTypes = {
 	reduxCheckIfMentionCmtFromGroup: PropTypes.any,
 	isInDetail: PropTypes.bool,
 	handleUpdatePostArrWhenDeleted: PropTypes.func,
-	handleUpdateMiniPost: PropTypes.func,
 };
 
 export default Post;
