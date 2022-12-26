@@ -76,14 +76,6 @@ const NewFeed = () => {
 		setPostList(newArr);
 	};
 
-	const handleUpdateMiniPost = data => {
-		const index = postList.findIndex(item => item.minipostId === data.minipostId);
-		const newItem = Object.assign({ ...postList[index] }, data);
-		const newArr = [...postList];
-		newArr[index] = { ...newItem };
-		setPostList(newArr);
-	};
-
 	return (
 		<div className='newfeed'>
 			<div className='newfeed__header'>
@@ -110,7 +102,6 @@ const NewFeed = () => {
 											postInformations={item}
 											type={item.verb === 'groupPost' ? GROUP_TYPE : POST_TYPE}
 											handleUpdatePostArrWhenDeleted={handleUpdatePostArrWhenDeleted}
-											handleUpdateMiniPost={handleUpdateMiniPost}
 										/>
 									);
 								}
