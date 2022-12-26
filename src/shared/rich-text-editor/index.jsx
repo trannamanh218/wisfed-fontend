@@ -2,7 +2,6 @@ import { useEffect, useRef, useState, useCallback, memo } from 'react';
 import { EditorState, convertToRaw, convertFromRaw, ContentState, convertFromHTML } from 'draft-js';
 import Editor from '@draft-js-plugins/editor';
 import './rich-text-editor.scss';
-import '@draft-js-plugins/linkify/lib/plugin.css';
 import 'draft-js/dist/Draft.css';
 import createMentionPlugin from '@draft-js-plugins/mention';
 import '@draft-js-plugins/mention/lib/plugin.css';
@@ -43,11 +42,76 @@ function RichTextEditor({
 	clickReply,
 	initialContent,
 }) {
-	const contentDataState = ContentState.createFromBlockArray(convertFromHTML(initialContent));
-	const editorDataState = EditorState.createWithContent(contentDataState);
+	// generate initial mentions data functions
+	const getIndicesOfMentions = (str, searchStr) => {
+		const tempStr = str.toLowerCase();
+		const tempSearchStr = searchStr.toLowerCase();
+		const searchStrLength = tempSearchStr.length;
+
+		if (searchStrLength === 0) {
+			return [];
+		}
+
+		let startIndex = 0;
+		let index;
+		const indices = [];
+
+		while ((index = tempStr.indexOf(tempSearchStr, startIndex)) > -1) {
+			indices.push(index);
+			startIndex = index + searchStrLength;
+		}
+
+		return indices;
+	};
+
+	const getEntityRanges = (text, mentionName, mentionKey) => {
+		const indices = getIndicesOfMentions(text, mentionName);
+		if (indices.length > 0) {
+			return indices.map(offset => ({
+				key: mentionKey,
+				length: mentionName.length,
+				offset,
+			}));
+		}
+
+		return null;
+	};
+
+	const createMentionEntities = (text, tags) => {
+		const rawContent = convertToRaw(ContentState.createFromText(text));
+
+		rawContent.blocks = rawContent.blocks.map(block => {
+			const ranges = [];
+			tags.forEach((tag, index) => {
+				const entityRanges = getEntityRanges(block.text, tag.name, index);
+				if (entityRanges) {
+					ranges.push(...entityRanges);
+				}
+			});
+			return { ...block, entityRanges: ranges };
+		});
+
+		const rawState = tags.map(tag => ({
+			type: 'mention',
+			mutability: 'IMMUTABLE',
+			data: {
+				mention: {
+					id: tag.id,
+					name: tag.name,
+				},
+			},
+		}));
+		rawContent.entityMap = [...rawState];
+
+		const contentState = convertFromRaw(rawContent);
+		return EditorState.createWithContent(contentState);
+	};
+	//--------------------------------------------------------------------------------------------------------------
+
+	const contentData = ContentState.createFromBlockArray(convertFromHTML(initialContent)).getPlainText();
+	const editorDataState = createMentionEntities(contentData, mentionUsersArr);
 
 	const [editorState, setEditorState] = useState(editorDataState);
-
 	const [open, setOpen] = useState(false);
 	const [suggestions, setSuggestions] = useState([]);
 	const [{ plugins, MentionSuggestions }] = useState(() => {
@@ -77,7 +141,13 @@ function RichTextEditor({
 
 	useEffect(() => {
 		if (replyingCommentId === commentLv1Id) {
-			reply();
+			if (mentionUsersArr.length) {
+				const dataState = createMentionEntities(mentionUsersArr[0].name, mentionUsersArr);
+				setEditorState(dataState);
+			} else {
+				setEditorState(EditorState.createEmpty());
+			}
+
 			setTimeout(() => {
 				editor.current.focus();
 			}, 200);
@@ -111,7 +181,6 @@ function RichTextEditor({
 		}
 		if (textValue.length) {
 			const html = convertContentToHTML();
-			// console.log(html);
 			setContent(html);
 		} else {
 			setContent('');
@@ -258,72 +327,18 @@ function RichTextEditor({
 				filter: JSON.stringify([{ operator: 'search', value: value, property: 'firstName,lastName' }]),
 			};
 			const suggestionsResponse = await dispatch(getFriendList({ userId: userInfo.id, query: params })).unwrap();
-			const suggestionData = [];
-			suggestionsResponse.rows.forEach(item => {
+			const suggestionData = suggestionsResponse.rows.map(item => {
 				const mentionData = {
 					name: item.fullName || item.firstName + item.lastName,
 					avatar: item.avatarImage || defaultAvatar,
 					id: item.id,
 				};
-				suggestionData.push(mentionData);
+				return mentionData;
 			});
 			setSuggestions(suggestionData);
 		} catch (err) {
 			NotificationError(err);
 		}
-	};
-
-	const reply = () => {
-		let data = {};
-		if (mentionUsersArr.length) {
-			data = {
-				'blocks': [
-					{
-						'text': `${mentionUsersArr[0].name} `,
-						'type': 'unstyled',
-						'depth': 0,
-						'inlineStyleRanges': [],
-						'entityRanges': [
-							{
-								'offset': 0,
-								'length': mentionUsersArr[0].name.length,
-								'key': 0,
-							},
-						],
-						'data': {},
-					},
-				],
-				'entityMap': {
-					0: {
-						'type': 'mention',
-						'mutability': 'SEGMENTED',
-						'data': {
-							'mention': {
-								'name': `${mentionUsersArr[0].name}`,
-								'avatar': `${mentionUsersArr[0].avatar}`,
-								'id': `${mentionUsersArr[0].id}`,
-							},
-						},
-					},
-				},
-			};
-		} else {
-			data = {
-				'blocks': [
-					{
-						'text': '',
-						'type': 'unstyled',
-						'depth': 0,
-						'inlineStyleRanges': [],
-						'entityRanges': [],
-						'data': {},
-					},
-				],
-				'entityMap': {},
-			};
-		}
-		const contentState = convertFromRaw(data);
-		setEditorState(EditorState.createWithContent(contentState));
 	};
 
 	const keyDown = e => {

@@ -230,7 +230,7 @@ const PostActionBar = ({ postData, handleLikeAction }) => {
 			const commentEditField = document.querySelector(`.comment-editor-last-${postData.id}`);
 			let number = 400;
 			if (window.location.pathname.includes('profile/')) {
-				number = -100;
+				number = -400;
 			} else if (window.location.pathname.includes('category/detail/')) {
 				number = -600;
 			}

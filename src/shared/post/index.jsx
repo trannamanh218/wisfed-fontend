@@ -59,6 +59,7 @@ import WithFriends from './withFriends/WithFriends';
 import dots from 'assets/images/dots.png';
 import { useVisible } from 'shared/hooks';
 import CreatePostModalContent from 'pages/home/components/newfeed/components/create-post-modal-content';
+import { useHookUpdateCommentsAfterEditing } from 'api/comment.hook';
 import { blockAndAllowScroll } from 'api/blockAndAllowScroll.hook';
 
 const verbShareArray = [
@@ -98,7 +99,6 @@ function Post({
 	const { ref: settingsRef, isVisible: isSettingsVisible, setIsVisible: setSettingsVisible } = useVisible(false);
 
 	const { userInfo } = useSelector(state => state.auth);
-	const { paramHandleEdit } = useSelector(state => state.comment);
 	const isJoinedGroup = useSelector(state => state.group.isJoinedGroup);
 
 	const clickReply = useRef(null);
@@ -108,6 +108,15 @@ function Post({
 
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
+
+	const { paramHandleEdit } = useSelector(state => state.comment);
+	const { handleUpdateCommentsAfterEditing } = useHookUpdateCommentsAfterEditing(
+		paramHandleEdit,
+		type,
+		postData,
+		setPostData,
+		setParamHandleEdit
+	);
 
 	blockAndAllowScroll(showModalCreatePost);
 
@@ -175,53 +184,9 @@ function Post({
 		}
 	}, [postData]);
 
+	// Thay đổi lại comment sau khi đã chỉnh sửa hoặc xóa
 	useEffect(() => {
-		// Thay đổi lại comment sau khi đã chỉnh sửa hoặc xóa
-		if (!_.isEmpty(paramHandleEdit) && type === paramHandleEdit.type) {
-			const cloneArr = [...postData.usersComments];
-			let totalCommentNumber = postData.comment;
-
-			if (paramHandleEdit.replyId) {
-				const foundReplyObj = cloneArr.find(item => item.id === paramHandleEdit.replyId);
-				if (foundReplyObj) {
-					const cloneReplyArr = [...foundReplyObj.reply];
-					const foundObj = cloneReplyArr.find(item => item.id === paramHandleEdit.id);
-					if (foundObj) {
-						if (paramHandleEdit.content) {
-							const cloneFoundObj = { ...foundObj };
-							cloneFoundObj.content = paramHandleEdit.content;
-							cloneReplyArr[cloneReplyArr.indexOf(foundObj)] = cloneFoundObj;
-
-							const cloneFoundReplyObj = { ...foundReplyObj };
-							cloneFoundReplyObj.reply = cloneReplyArr;
-							cloneArr[cloneArr.indexOf(foundReplyObj)] = cloneFoundReplyObj;
-						} else {
-							cloneReplyArr.splice(cloneReplyArr.indexOf(foundObj), 1);
-							foundReplyObj.reply = cloneReplyArr;
-							totalCommentNumber = totalCommentNumber - 1;
-						}
-					}
-				}
-			} else {
-				const foundObj = cloneArr.find(item => item.id === paramHandleEdit.id);
-				if (foundObj) {
-					if (paramHandleEdit.content) {
-						const cloneFoundObj = { ...foundObj };
-						cloneFoundObj.content = paramHandleEdit.content;
-						cloneArr[cloneArr.indexOf(foundObj)] = cloneFoundObj;
-					} else {
-						cloneArr.splice(cloneArr.indexOf(foundObj), 1);
-						if (Array.isArray(foundObj.reply) && foundObj.reply.length) {
-							totalCommentNumber = totalCommentNumber - 1 - foundObj.reply.length;
-						} else {
-							totalCommentNumber = totalCommentNumber - 1;
-						}
-					}
-				}
-			}
-			setPostData({ ...postData, comment: totalCommentNumber, usersComments: cloneArr });
-			dispatch(setParamHandleEdit({}));
-		}
+		handleUpdateCommentsAfterEditing();
 	}, [paramHandleEdit]);
 
 	const handleAddEventClickToUrlTags = useCallback(() => {
@@ -717,6 +682,19 @@ function Post({
 			)}
 			{postData.verb === TOP_USER_VERB_SHARE && <ShareUsers postData={postData} />}
 			{postData?.image?.length > 0 && <GridImage images={postData.image} inPost={true} postId={postData.id} />}
+			{!postData?.image?.length && !_.isEmpty(postData?.preview) && (
+				<>
+					{videoId ? (
+						<iframe
+							className='post__video-youtube'
+							src={`//www.youtube.com/embed/${videoId}`}
+							allowFullScreen={true}
+						></iframe>
+					) : (
+						<PreviewLink isFetching={false} urlData={postData.preview} driectToUrl={directUrl} />
+					)}
+				</>
+			)}
 			{postData.book && (
 				<PostBook
 					data={postData.book}
@@ -724,22 +702,6 @@ function Post({
 				/>
 			)}
 			{postData.verb === READ_TARGET_VERB_SHARE && <ShareTarget postData={postData} inPost={true} />}
-			{(postData?.image?.length === 0 &&
-				!_.isEmpty(postData.sharePost?.preview) &&
-				_.isEmpty(postData.sharePost?.book)) ||
-				(!_.isEmpty(postData.preview) && _.isEmpty(postData.book) && (
-					<>
-						{videoId ? (
-							<iframe
-								className='post__video-youtube'
-								src={`//www.youtube.com/embed/${videoId}`}
-								allowFullScreen={true}
-							></iframe>
-						) : (
-							<PreviewLink isFetching={false} urlData={postData.preview} driectToUrl={directUrl} />
-						)}
-					</>
-				))}
 			<PostActionBar postData={postData} handleLikeAction={handleLikeAction} />
 
 			<SeeMoreComments

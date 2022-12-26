@@ -17,6 +17,8 @@ import { NotificationError } from 'helpers/Error';
 import { handleMentionCommentId } from 'reducers/redux-utils/notification';
 import Circle from 'shared/loading/circle';
 import SeeMoreComments from 'shared/see-more-comments/SeeMoreComments';
+import { setParamHandleEdit } from 'reducers/redux-utils/comment';
+import { useHookUpdateCommentsAfterEditing } from 'api/comment.hook';
 
 const MainQuoteDetail = ({ quoteData, setQuoteData, onCreateComment, setMentionUsersArr, mentionUsersArr }) => {
 	const [replyingCommentId, setReplyingCommentId] = useState(0);
@@ -32,6 +34,15 @@ const MainQuoteDetail = ({ quoteData, setQuoteData, onCreateComment, setMentionU
 	const reduxMentionCommentId = useSelector(state => state.notificationReducer.mentionCommentId);
 
 	const dispatch = useDispatch();
+
+	const { paramHandleEdit } = useSelector(state => state.comment);
+	const { handleUpdateCommentsAfterEditing } = useHookUpdateCommentsAfterEditing(
+		paramHandleEdit,
+		'quote',
+		quoteData,
+		setQuoteData,
+		setParamHandleEdit
+	);
 
 	// Lấy comment nhắc đến bạn đặt trên đầu
 	useEffect(() => {
@@ -55,6 +66,11 @@ const MainQuoteDetail = ({ quoteData, setQuoteData, onCreateComment, setMentionU
 			setFirstPlaceCommentId(null);
 		}
 	}, [haveNotClickedSeeMoreOnce]);
+
+	// Thay đổi lại comment sau khi đã chỉnh sửa hoặc xóa
+	useEffect(() => {
+		handleUpdateCommentsAfterEditing();
+	}, [paramHandleEdit]);
 
 	const handleReply = (cmtLv1Id, userData) => {
 		onClickSeeMoreReply(cmtLv1Id);
