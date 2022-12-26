@@ -59,6 +59,8 @@ const SeeMoreComments = ({
 			if (haveNotClickedSeeMoreOnce) {
 				if (data.usersComments?.length > 1) {
 					setShow(true);
+				} else {
+					setShow(false);
 				}
 			} else {
 				if (totalShownComments < data.comment) {
