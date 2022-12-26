@@ -8,7 +8,7 @@ import TopUserRanks from 'shared/top-ranks';
 import PropTypes from 'prop-types';
 import { NotificationError } from 'helpers/Error';
 import { useDispatch, useSelector } from 'react-redux';
-import { getTopUser } from 'reducers/redux-utils/ranks';
+import { getTopUser, handleIsCheckUser } from 'reducers/redux-utils/ranks';
 import dropdownIcon from 'assets/images/dropdown.png';
 import Storage from 'helpers/Storage';
 import { saveDataShare } from 'reducers/redux-utils/post';
@@ -55,6 +55,7 @@ const TopUser = ({ listYear, tabSelected }) => {
 			callApiStart.current = callApiPerPage.current;
 			setHasMore(true);
 			getTopUserDataFirstTime();
+			dispatch(handleIsCheckUser(false));
 		}
 	}, [topUserFilter, valueDate, valueDataSort, isAuth, tabSelected]);
 

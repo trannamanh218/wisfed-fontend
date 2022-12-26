@@ -2,7 +2,7 @@ import SelectBox from 'shared/select-box';
 import { useRef, useEffect, useState } from 'react';
 import StarRanking from 'shared/starRanks';
 import TopQuotesComponent from 'shared/top-quotes';
-import { getTopQuotes } from 'reducers/redux-utils/ranks';
+import { getTopQuotes, handleIsCheckQuote } from 'reducers/redux-utils/ranks';
 import { useDispatch } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
 import PropTypes from 'prop-types';
@@ -32,6 +32,7 @@ const TopQuotes = ({ listYear, tabSelected }) => {
 			callApiStart.current = callApiPerPage.current;
 			setHasMore(true);
 			getTopQuotesDataFirstTime();
+			dispatch(handleIsCheckQuote(false));
 		}
 	}, [topQuotesId, valueDate, tabSelected]);
 

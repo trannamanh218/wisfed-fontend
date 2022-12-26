@@ -17,7 +17,7 @@ import {
 	deleteCommentMinipost,
 	deleteCommentQuote,
 	deleteCommentReview,
-	setParamHandleEdit,
+	setDataDeleteCmt,
 	updateCommentGroupPost,
 	updateCommentMinipost,
 	updateCommentQuote,
@@ -297,9 +297,8 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 				await dispatch(deleteCommentQuote(data.id)).unwrap();
 			}
 			dispatch(
-				setParamHandleEdit({
+				setDataDeleteCmt({
 					id: data.id,
-					content: null,
 					replyId: data.replyId,
 					type: type,
 				})
