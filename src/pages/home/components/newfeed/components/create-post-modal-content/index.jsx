@@ -200,8 +200,52 @@ function CreatePostModalContent({
 					setContent(dataEditMiniPost.msg);
 				}
 
-				if (!_.isEmpty(dataEditMiniPost.sharePost)) {
+				if (!_.isEmpty(dataEditMiniPost.sharePost) && dataEditMiniPost.verb === POST_VERB_SHARE) {
 					dispatch(saveDataShare(dataEditMiniPost));
+				} else if (dataEditMiniPost.verb === TOP_USER_VERB_SHARE) {
+					const data = {
+						avatarImage: dataEditMiniPost.info?.avatarImage,
+						by: dataEditMiniPost.originId?.by,
+						email: dataEditMiniPost.info?.email,
+						firstName: dataEditMiniPost.info?.firstName,
+						fullName: dataEditMiniPost.info?.fullName,
+						id: dataEditMiniPost.info?.id,
+						lastName: dataEditMiniPost.info.lastName,
+						// numberBookRead: 2,
+						relation: 'unknown',
+						trueRank: dataEditMiniPost.originId?.rank,
+						type: dataEditMiniPost.originId?.type,
+						userType: dataEditMiniPost.originId?.userType,
+						verb: TOP_USER_VERB_SHARE_LV1,
+					};
+					dispatch(saveDataShare(data));
+				} else if (dataEditMiniPost.verb === TOP_QUOTE_VERB_SHARE) {
+					const data = {
+						background: dataEditMiniPost.info?.background,
+						book: dataEditMiniPost.info.book,
+						by: dataEditMiniPost.originId?.by,
+						id: dataEditMiniPost.info?.id,
+						quote: dataEditMiniPost.info?.quote,
+						trueRank: dataEditMiniPost.originId.rank,
+						type: dataEditMiniPost.originId?.type,
+						user: {
+							avatarImage: dataEditMiniPost.info?.createdBy?.avatarImage,
+							firstName: dataEditMiniPost.info?.createdBy?.firstName,
+							fullName: dataEditMiniPost.info?.createdBy?.fullName,
+							lastName: dataEditMiniPost.info?.createdBy?.lastName,
+						},
+						verb: TOP_QUOTE_VERB_SHARE_LV1,
+					};
+					dispatch(saveDataShare(data));
+				} else if (dataEditMiniPost.verb === TOP_BOOK_VERB_SHARE) {
+					const data = {
+						by: dataEditMiniPost.originId?.by,
+						trueRank: dataEditMiniPost.originId.rank,
+						verb: TOP_BOOK_VERB_SHARE_LV1,
+						type: dataEditMiniPost.originId.type,
+						...dataEditMiniPost.info,
+					};
+					dispatch(saveDataShare(data));
 				}
 			}
 		}
@@ -406,7 +450,7 @@ function CreatePostModalContent({
 			image: [],
 			preview: urlPreviewData,
 			tags: hashtagsAdded,
-			progress: progressInputValue ? progressInputValue : 0,
+			progress: progressInputValue ? progressInputValue : null,
 		};
 
 		if (imagesUpload.length) {
@@ -437,10 +481,8 @@ function CreatePostModalContent({
 		if (isEditPost) {
 			if (window.location.pathname.includes('/profile/')) {
 				params['feedId'] = dataEditMiniPost.getstreamId;
-				params['minipostId'] = dataEditMiniPost.getstreamId;
 			} else {
 				params['feedId'] = dataEditMiniPost.id;
-				params['minipostId'] = dataEditMiniPost.minipostId;
 			}
 		}
 		return params;

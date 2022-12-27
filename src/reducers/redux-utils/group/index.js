@@ -17,6 +17,7 @@ import {
 	followGroupAPI,
 	recommendGroup,
 	replyInviteGroupAPI,
+	deleteMiniPostGroupAPI,
 } from 'constants/apiURL';
 import Request from 'helpers/Request';
 
@@ -24,6 +25,16 @@ export const getGroupList = createAsyncThunk('group/getGroupList', async (params
 	try {
 		const res = await Request.makeGet(groupAPI, params);
 		return res.data;
+	} catch (err) {
+		const error = JSON.parse(err.response);
+		return rejectWithValue(error);
+	}
+});
+
+export const deleteMiniGroupPost = createAsyncThunk('post/deleteMiniGroupPost', async (id, { rejectWithValue }) => {
+	try {
+		const response = await Request.makeDelete(deleteMiniPostGroupAPI(id));
+		return response.data;
 	} catch (err) {
 		const error = JSON.parse(err.response);
 		return rejectWithValue(error);
