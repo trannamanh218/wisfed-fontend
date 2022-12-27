@@ -61,6 +61,7 @@ import { useVisible } from 'shared/hooks';
 import CreatePostModalContent from 'pages/home/components/newfeed/components/create-post-modal-content';
 import { useHookUpdateCommentsAfterDelete } from 'api/comment.hook';
 import { blockAndAllowScroll } from 'api/blockAndAllowScroll.hook';
+import { deleteMiniGroupPost } from 'reducers/redux-utils/group';
 
 const verbShareArray = [
 	POST_VERB_SHARE,
@@ -472,9 +473,19 @@ function Post({
 	const removeFeed = async () => {
 		setShowDeleteFeedModal(false);
 		try {
-			const id = postData?.minipostId ? postData?.minipostId : postData?.id;
-			handleUpdatePostArrWhenDeleted(id);
-			await dispatch(deleteMiniPost(id)).unwrap();
+			let postId = postData.id;
+			if (postData.groupId) {
+				let feedId = window.location.pathname.includes('/group/') ? postData?.getstreamId : postData?.id;
+				const params = {
+					groupId: postData.group.id,
+					feedId: feedId,
+				};
+				await dispatch(deleteMiniGroupPost(params)).unwrap();
+			} else {
+				const id = postData?.minipostId ? postData?.minipostId : postData?.id;
+				await dispatch(deleteMiniPost(id)).unwrap();
+			}
+			handleUpdatePostArrWhenDeleted(postId);
 			toast.success('Xoá bài viết thành công');
 		} catch (err) {
 			const customId = 'custom-id-SettingMore-error';

@@ -29,7 +29,7 @@ import { setting } from './settings';
 import { NotificationError } from 'helpers/Error';
 import { uploadMultiFile, setOptionAddToPost } from 'reducers/redux-utils/common';
 import { useLocation, useParams } from 'react-router-dom';
-import { creatNewPost } from 'reducers/redux-utils/group';
+import { creatNewPost, handleEditGroupPost } from 'reducers/redux-utils/group';
 import QuoteCard from 'shared/quote-card';
 import AuthorBook from 'shared/author-book';
 import ShareUsers from '../modal-share-users';
@@ -479,7 +479,7 @@ function CreatePostModalContent({
 			params.bookId = taggedData.addBook.id;
 		}
 		if (isEditPost) {
-			if (window.location.pathname.includes('/profile/')) {
+			if (window.location.pathname.includes('/profile/') || window.location.pathname.includes('/group/')) {
 				params['feedId'] = dataEditMiniPost.getstreamId;
 			} else {
 				params['feedId'] = dataEditMiniPost.id;
@@ -526,7 +526,7 @@ function CreatePostModalContent({
 		setStatus(STATUS_LOADING);
 		try {
 			if (postDataShare && !_.isEmpty(postDataShare)) {
-				if (isEditPost && postDataShare && !_.isEmpty(postDataShare)) {
+				if (isEditPost) {
 					await dispatch(handleEditPost(params)).unwrap();
 				} else {
 					if (postDataShare.verb === POST_VERB_SHARE) {
@@ -688,8 +688,12 @@ function CreatePostModalContent({
 					handleUpdateProgress();
 				}
 				if (location.pathname.includes('group')) {
-					const newParams = { data: params, id: id };
-					await dispatch(creatNewPost(newParams)).unwrap();
+					if (isEditPost) {
+						await dispatch(handleEditGroupPost(params)).unwrap();
+					} else {
+						const newParams = { data: params, id: id };
+						await dispatch(creatNewPost(newParams)).unwrap();
+					}
 				} else {
 					if (isEditPost) {
 						await dispatch(handleEditPost(params)).unwrap();

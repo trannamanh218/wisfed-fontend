@@ -18,6 +18,7 @@ import {
 	recommendGroup,
 	replyInviteGroupAPI,
 	deleteMiniPostGroupAPI,
+	handleEditPostGroupAPI,
 } from 'constants/apiURL';
 import Request from 'helpers/Request';
 
@@ -31,15 +32,18 @@ export const getGroupList = createAsyncThunk('group/getGroupList', async (params
 	}
 });
 
-export const deleteMiniGroupPost = createAsyncThunk('post/deleteMiniGroupPost', async (id, { rejectWithValue }) => {
-	try {
-		const response = await Request.makeDelete(deleteMiniPostGroupAPI(id));
-		return response.data;
-	} catch (err) {
-		const error = JSON.parse(err.response);
-		return rejectWithValue(error);
+export const deleteMiniGroupPost = createAsyncThunk(
+	'post/deleteMiniGroupPost',
+	async (params = {}, { rejectWithValue }) => {
+		try {
+			const res = await Request.makeDelete(deleteMiniPostGroupAPI, params);
+			return res.data;
+		} catch (err) {
+			const error = JSON.parse(err.response);
+			return rejectWithValue(error);
+		}
 	}
-});
+);
 
 export const getRecommendGroup = createAsyncThunk(
 	'group/getRecommendGroup',
@@ -98,6 +102,19 @@ export const likeAndUnlikeGroupComment = createAsyncThunk(
 		} catch (err) {
 			const error = JSON.parse(err.response);
 			return rejectWithValue(error);
+		}
+	}
+);
+
+export const handleEditGroupPost = createAsyncThunk(
+	'groupPosts/editgroupPosts',
+	async (params, { rejectWithValue }) => {
+		try {
+			const response = await Request.makePatch(handleEditPostGroupAPI, params);
+			return response.data;
+		} catch (err) {
+			const error = JSON.stringify(err.response);
+			throw rejectWithValue(error);
 		}
 	}
 );
