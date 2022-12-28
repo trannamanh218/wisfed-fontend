@@ -42,6 +42,9 @@ const NewFeed = () => {
 			};
 			const posts = await dispatch(getActivityList(params)).unwrap();
 			setPostList(posts);
+			if (posts.length < callApiPerPage.current) {
+				setHasMore(false);
+			}
 		} catch (err) {
 			NotificationError(err);
 		} finally {
@@ -57,10 +60,9 @@ const NewFeed = () => {
 				sort: JSON.stringify([{ property: 'createdAt', direction: 'DESC' }]),
 			};
 			const posts = await dispatch(getActivityList(params)).unwrap();
-			if (posts.length) {
-				callApiStart.current += callApiPerPage.current;
-				setPostList(postList.concat(posts));
-			} else {
+			callApiStart.current += callApiPerPage.current;
+			setPostList(postList.concat(posts));
+			if (posts.length < callApiPerPage.current) {
 				setHasMore(false);
 			}
 		} catch (err) {

@@ -80,5 +80,6 @@ TopQuotesComponent.propTypes = {
 	item: PropTypes.any,
 	valueDate: PropTypes.string,
 	categoryItem: PropTypes.object,
+	trueRank: PropTypes.number,
 };
 export default TopQuotesComponent;

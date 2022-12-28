@@ -6,7 +6,7 @@ import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { NotificationError } from 'helpers/Error';
 import LoadingIndicator from 'shared/loading-indicator';
-import { POST_TYPE } from 'constants/index';
+import { GROUP_TYPE } from 'constants/index';
 import { getListPostByHashtag, getListPostByHashtagGroup } from 'reducers/redux-utils/hashtag-page';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import LoadingTimeLine from 'shared/loading-timeline';
@@ -129,7 +129,7 @@ export default function HashtagPage() {
 							>
 								{postList.map(post => {
 									if (!post.isDeleted) {
-										return <Post key={post.id} postInformations={post} type={POST_TYPE} />;
+										return <Post key={post.id} postInformations={post} type={GROUP_TYPE} />;
 									}
 								})}
 							</InfiniteScroll>

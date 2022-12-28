@@ -166,10 +166,10 @@ class Request {
 		return this.axios.get(url, config).catch(this._onError);
 	}
 
-	makeDelete(url, params = {}, config = {}) {
+	makeDelete(url, data = {}, config = {}) {
 		config = this._mapConfig(config);
 		Object.assign(config, {
-			params,
+			data,
 		});
 		return this.axios.delete(url, config).catch(this._onError);
 	}

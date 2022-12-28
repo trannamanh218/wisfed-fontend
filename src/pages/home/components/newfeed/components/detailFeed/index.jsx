@@ -10,13 +10,16 @@ import NotFound from 'pages/not-found';
 import LoadingTimeLine from 'shared/loading-timeline';
 
 const DetailFeed = () => {
-	const dispatch = useDispatch();
 	const [detailFeed, setDetailFeed] = useState([]);
 	const [renderNotFound, setRenderNotFound] = useState(false);
-	const { idPost, type } = useParams();
 	const [isLoading, setIsLoading] = useState(true);
+	const [noPostData, setNoPostData] = useState(false);
+
 	const reduxMentionCommentId = useSelector(state => state.notificationReducer.mentionCommentId);
 	const reduxCheckIfMentionCmtFromGroup = useSelector(state => state.notificationReducer.checkIfMentionFromGroup);
+
+	const { idPost, type } = useParams();
+	const dispatch = useDispatch();
 
 	useEffect(async () => {
 		const params = {
@@ -32,6 +35,9 @@ const DetailFeed = () => {
 			}
 			setDetailFeed(res);
 		} catch (err) {
+			if (err.errorCode === 404) {
+				setNoPostData(true);
+			}
 			setRenderNotFound(true);
 		} finally {
 			setIsLoading(false);
@@ -41,7 +47,7 @@ const DetailFeed = () => {
 	return (
 		<>
 			{renderNotFound ? (
-				<NotFound />
+				<NotFound noPostData={noPostData} />
 			) : (
 				<NormalContainer>
 					<div className='detail-feed-container'>

@@ -9,6 +9,7 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getBookDetail } from 'reducers/redux-utils/book';
 import NotFound from 'pages/not-found';
+import { Helmet } from 'react-helmet';
 
 function BookDetail() {
 	const dispatch = useDispatch();
@@ -41,6 +42,13 @@ function BookDetail() {
 
 	return (
 		<>
+			<Helmet>
+				<meta name='description' content='Nested component' />
+				<meta property='og:type' content='article' />
+				<meta property='og:title' content={bookInfo.name} />
+				<meta property='og:description' content={bookInfo.description} />
+				<meta property='og:image' content={bookInfo.frontBookCover} />
+			</Helmet>
 			{bookStatus === STATUS_LOADING ? (
 				<Circle loading={true} />
 			) : (
