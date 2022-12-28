@@ -696,7 +696,11 @@ function CreatePostModalContent({
 					}
 				} else {
 					if (isEditPost) {
-						await dispatch(handleEditPost(params)).unwrap();
+						if (dataEditMiniPost.groupPostId) {
+							await dispatch(handleEditGroupPost(params)).unwrap();
+						} else {
+							await dispatch(handleEditPost(params)).unwrap();
+						}
 					} else {
 						await dispatch(createActivity(params)).unwrap();
 					}
@@ -724,7 +728,7 @@ function CreatePostModalContent({
 					mentionsCategories: newCategoryArr,
 					mentionsUsers: newUsersArr,
 					message: params.msg,
-					minipostId: params.minipostId,
+					minipostId: dataEditMiniPost.minipostId,
 					preview: urlPreviewData,
 					progress: params.progress,
 				};

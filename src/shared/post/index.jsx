@@ -475,7 +475,7 @@ function Post({
 		try {
 			let postId = postData.id;
 			if (postData.groupId) {
-				let feedId = window.location.pathname.includes('/group/') ? postData?.getstreamId : postData?.id;
+				const feedId = window.location.pathname.includes('/group/') ? postData?.getstreamId : postData?.id;
 				const params = {
 					groupId: postData.group.id,
 					feedId: feedId,
