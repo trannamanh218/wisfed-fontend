@@ -29,7 +29,7 @@ import { setting } from './settings';
 import { NotificationError } from 'helpers/Error';
 import { uploadMultiFile, setOptionAddToPost } from 'reducers/redux-utils/common';
 import { useLocation, useParams } from 'react-router-dom';
-import { creatNewPost } from 'reducers/redux-utils/group';
+import { creatNewPost, handleEditGroupPost } from 'reducers/redux-utils/group';
 import QuoteCard from 'shared/quote-card';
 import AuthorBook from 'shared/author-book';
 import ShareUsers from '../modal-share-users';
@@ -200,8 +200,52 @@ function CreatePostModalContent({
 					setContent(dataEditMiniPost.msg);
 				}
 
-				if (!_.isEmpty(dataEditMiniPost.sharePost)) {
+				if (!_.isEmpty(dataEditMiniPost.sharePost) && dataEditMiniPost.verb === POST_VERB_SHARE) {
 					dispatch(saveDataShare(dataEditMiniPost));
+				} else if (dataEditMiniPost.verb === TOP_USER_VERB_SHARE) {
+					const data = {
+						avatarImage: dataEditMiniPost.info?.avatarImage,
+						by: dataEditMiniPost.originId?.by,
+						email: dataEditMiniPost.info?.email,
+						firstName: dataEditMiniPost.info?.firstName,
+						fullName: dataEditMiniPost.info?.fullName,
+						id: dataEditMiniPost.info?.id,
+						lastName: dataEditMiniPost.info.lastName,
+						// numberBookRead: 2,
+						relation: 'unknown',
+						trueRank: dataEditMiniPost.originId?.rank,
+						type: dataEditMiniPost.originId?.type,
+						userType: dataEditMiniPost.originId?.userType,
+						verb: TOP_USER_VERB_SHARE_LV1,
+					};
+					dispatch(saveDataShare(data));
+				} else if (dataEditMiniPost.verb === TOP_QUOTE_VERB_SHARE) {
+					const data = {
+						background: dataEditMiniPost.info?.background,
+						book: dataEditMiniPost.info.book,
+						by: dataEditMiniPost.originId?.by,
+						id: dataEditMiniPost.info?.id,
+						quote: dataEditMiniPost.info?.quote,
+						trueRank: dataEditMiniPost.originId.rank,
+						type: dataEditMiniPost.originId?.type,
+						user: {
+							avatarImage: dataEditMiniPost.info?.createdBy?.avatarImage,
+							firstName: dataEditMiniPost.info?.createdBy?.firstName,
+							fullName: dataEditMiniPost.info?.createdBy?.fullName,
+							lastName: dataEditMiniPost.info?.createdBy?.lastName,
+						},
+						verb: TOP_QUOTE_VERB_SHARE_LV1,
+					};
+					dispatch(saveDataShare(data));
+				} else if (dataEditMiniPost.verb === TOP_BOOK_VERB_SHARE) {
+					const data = {
+						by: dataEditMiniPost.originId?.by,
+						trueRank: dataEditMiniPost.originId.rank,
+						verb: TOP_BOOK_VERB_SHARE_LV1,
+						type: dataEditMiniPost.originId.type,
+						...dataEditMiniPost.info,
+					};
+					dispatch(saveDataShare(data));
 				}
 			}
 		}
@@ -406,7 +450,7 @@ function CreatePostModalContent({
 			image: [],
 			preview: urlPreviewData,
 			tags: hashtagsAdded,
-			progress: progressInputValue ? progressInputValue : 0,
+			progress: progressInputValue ? progressInputValue : null,
 		};
 
 		if (imagesUpload.length) {
@@ -435,12 +479,10 @@ function CreatePostModalContent({
 			params.bookId = taggedData.addBook.id;
 		}
 		if (isEditPost) {
-			if (window.location.pathname.includes('/profile/')) {
+			if (window.location.pathname.includes('/profile/') || window.location.pathname.includes('/group/')) {
 				params['feedId'] = dataEditMiniPost.getstreamId;
-				params['minipostId'] = dataEditMiniPost.getstreamId;
 			} else {
 				params['feedId'] = dataEditMiniPost.id;
-				params['minipostId'] = dataEditMiniPost.minipostId;
 			}
 		}
 		return params;
@@ -484,7 +526,7 @@ function CreatePostModalContent({
 		setStatus(STATUS_LOADING);
 		try {
 			if (postDataShare && !_.isEmpty(postDataShare)) {
-				if (isEditPost && postDataShare && !_.isEmpty(postDataShare)) {
+				if (isEditPost) {
 					await dispatch(handleEditPost(params)).unwrap();
 				} else {
 					if (postDataShare.verb === POST_VERB_SHARE) {
@@ -646,11 +688,19 @@ function CreatePostModalContent({
 					handleUpdateProgress();
 				}
 				if (location.pathname.includes('group')) {
-					const newParams = { data: params, id: id };
-					await dispatch(creatNewPost(newParams)).unwrap();
+					if (isEditPost) {
+						await dispatch(handleEditGroupPost(params)).unwrap();
+					} else {
+						const newParams = { data: params, id: id };
+						await dispatch(creatNewPost(newParams)).unwrap();
+					}
 				} else {
 					if (isEditPost) {
-						await dispatch(handleEditPost(params)).unwrap();
+						if (dataEditMiniPost.groupPostId) {
+							await dispatch(handleEditGroupPost(params)).unwrap();
+						} else {
+							await dispatch(handleEditPost(params)).unwrap();
+						}
 					} else {
 						await dispatch(createActivity(params)).unwrap();
 					}
@@ -678,7 +728,7 @@ function CreatePostModalContent({
 					mentionsCategories: newCategoryArr,
 					mentionsUsers: newUsersArr,
 					message: params.msg,
-					minipostId: params.minipostId,
+					minipostId: dataEditMiniPost.minipostId,
 					preview: urlPreviewData,
 					progress: params.progress,
 				};
@@ -985,6 +1035,7 @@ function CreatePostModalContent({
 									removeAllImages={removeAllImages}
 									maxFiles={100}
 									maxSize={104857600}
+									isEditPost={true}
 								/>
 							)}
 							{hasUrl && !showUpload && (

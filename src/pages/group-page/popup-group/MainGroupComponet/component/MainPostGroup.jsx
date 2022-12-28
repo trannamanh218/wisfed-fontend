@@ -73,6 +73,14 @@ function MainPostGroup({ handleUpdate, show }) {
 		getDataListPostFirstTime();
 	}, [isNewPost]);
 
+	const handleUpdatePostArrWhenDeleted = itemMinipostId => {
+		const index = listPost.findIndex(item => item.id === itemMinipostId);
+		const newItem = { ...listPost[index], isDeleted: true };
+		const newArr = [...listPost];
+		newArr[index] = { ...newItem };
+		setListPost(newArr);
+	};
+
 	return (
 		<div className='main-content__container'>
 			{show && <CreatePost onChangeNewPost={onChangeNewPost} />}
@@ -89,7 +97,14 @@ function MainPostGroup({ handleUpdate, show }) {
 						>
 							{listPost.map((item, index) => {
 								if (!item.isDeleted) {
-									return <Post key={index} postInformations={item} type={GROUP_TYPE} />;
+									return (
+										<Post
+											key={index}
+											postInformations={item}
+											type={GROUP_TYPE}
+											handleUpdatePostArrWhenDeleted={handleUpdatePostArrWhenDeleted}
+										/>
+									);
 								}
 							})}
 						</InfiniteScroll>

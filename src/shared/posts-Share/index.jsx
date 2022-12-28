@@ -334,6 +334,12 @@ const PostShare = ({ postData, inCreatePost, directUrl }) => {
 					))}
 				</ul>
 			)}
+			{(postData?.sharePost?.metaData?.type === 'readingChart' ||
+				postData?.sharePost?.metaData?.type === 'growthChart') && (
+				<div className='post__title__share__rank'>
+					<span className='number__title__rank'>{renderChartTitle()}</span>
+				</div>
+			)}
 			{postData.sharePost?.image?.length > 0 && (
 				<GridImage images={postData.sharePost.image} inPost={true} postId={postData?.id} />
 			)}
@@ -366,13 +372,6 @@ const PostShare = ({ postData, inCreatePost, directUrl }) => {
 					bookProgress={postData.sharePost.book.progress}
 					inCreatePost={inCreatePost}
 				/>
-			)}
-
-			{(postData?.sharePost?.metaData?.type === 'readingChart' ||
-				postData?.sharePost?.metaData?.type === 'growthChart') && (
-				<div className='post__title__share__rank'>
-					<span className='number__title__rank'>{renderChartTitle()}</span>
-				</div>
 			)}
 
 			{postData.sharePost?.originId?.type === 'topUser' && <ShareUsers postData={postData.sharePost} />}

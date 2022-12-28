@@ -71,7 +71,7 @@ const NewFeed = () => {
 	};
 
 	const handleUpdatePostArrWhenDeleted = itemMinipostId => {
-		const index = postList.findIndex(item => item.minipostId === itemMinipostId);
+		const index = postList.findIndex(item => item.id === itemMinipostId);
 		const newItem = { ...postList[index], isDeleted: true };
 		const newArr = [...postList];
 		newArr[index] = { ...newItem };
