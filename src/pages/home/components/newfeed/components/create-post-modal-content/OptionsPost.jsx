@@ -33,7 +33,7 @@ const verbShareArray = [
 	TOP_USER_VERB_SHARE_LV1,
 ];
 
-const OptionsPost = ({ list, addOptionsToPost, taggedData, postDataShare }) => {
+const OptionsPost = ({ list, addOptionsToPost, taggedData, postDataShare, isEditPost }) => {
 	const [itemOnMouseHover, setItemOnMouseHover] = useState(null);
 
 	const chartImgShare = useSelector(state => state.chart.imageToShareData);
@@ -46,6 +46,16 @@ const OptionsPost = ({ list, addOptionsToPost, taggedData, postDataShare }) => {
 			((!_.isEmpty(postDataShare) && verbShareArray.indexOf(postDataShare.verb) !== -1) ||
 				chartImgShare.length) &&
 			item.value !== 'addFriends'
+		) {
+			isDisabled = true;
+		}
+
+		if (
+			isEditPost &&
+			!_.isEmpty(taggedData.addBook) &&
+			item.value !== 'addFriends' &&
+			item.value !== 'addCategory' &&
+			item.value !== 'addAuthor'
 		) {
 			isDisabled = true;
 		}
@@ -85,6 +95,7 @@ OptionsPost.defaultProps = {
 	list: [],
 	addOptionsToPost: () => {},
 	postDataShare: {},
+	isEditPost: false,
 };
 
 OptionsPost.propTypes = {
@@ -92,6 +103,7 @@ OptionsPost.propTypes = {
 	list: PropTypes.array,
 	postDataShare: PropTypes.object,
 	addOptionsToPost: PropTypes.func,
+	isEditPost: PropTypes.bool,
 };
 
 export default OptionsPost;

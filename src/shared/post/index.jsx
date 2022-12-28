@@ -475,7 +475,15 @@ function Post({
 		try {
 			let postId = postData.id;
 			if (postData.groupId) {
-				const feedId = window.location.pathname.includes('/group/') ? postData?.getstreamId : postData?.id;
+				let feedId;
+				if (
+					window.location.pathname.includes('/group/') ||
+					window.location.pathname.includes('/hashtag-group/')
+				) {
+					feedId = postData?.getstreamId;
+				} else {
+					feedId = postData?.id;
+				}
 				const params = {
 					groupId: postData.group.id,
 					feedId: feedId,
