@@ -48,6 +48,7 @@ export const bookFollowReviewAPI = id => `/api/v1/books/${id}/followReviews`;
 export const bookFriendReviewAPI = id => `/api/v1/books/${id}/friendReviews`;
 export const progressBookAPI = id => `/api/v1/books/updateBookProgress/${id}`;
 export const bookAuthorAPI = id => `/api/v1/books/listBookByAuthor/${id}`;
+export const editReviewBookAPI = id => `/api/v1/reviews/${id}`;
 
 // category
 export const categoryAPI = option => `/api/v1/categories?include=${option}`;

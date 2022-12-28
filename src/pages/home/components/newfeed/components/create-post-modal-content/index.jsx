@@ -21,9 +21,14 @@ import {
 } from 'reducers/redux-utils/post';
 import Circle from 'shared/loading/circle';
 import './style.scss';
-import { ratingUser } from 'reducers/redux-utils/book';
 import UserAvatar from 'shared/user-avatar';
-import { updateProgressReadingBook, createReviewBook, updateBookForCreatePost } from 'reducers/redux-utils/book';
+import {
+	updateProgressReadingBook,
+	createReviewBook,
+	updateBookForCreatePost,
+	ratingUser,
+	handleEditReviewsBook,
+} from 'reducers/redux-utils/book';
 import { addBookToDefaultLibrary, updateMyAllLibraryRedux } from 'reducers/redux-utils/library';
 import { setting } from './settings';
 import { NotificationError } from 'helpers/Error';
@@ -119,6 +124,7 @@ function CreatePostModalContent({
 	const [modalShow, setModalShow] = useState(false);
 
 	const createPostModalContainer = useRef(null);
+	// const initialProgress = useRef(null);
 
 	const dispatch = useDispatch();
 	const location = useLocation();
@@ -211,7 +217,6 @@ function CreatePostModalContent({
 						fullName: dataEditMiniPost.info?.fullName,
 						id: dataEditMiniPost.info?.id,
 						lastName: dataEditMiniPost.info.lastName,
-						// numberBookRead: 2,
 						relation: 'unknown',
 						trueRank: dataEditMiniPost.originId?.rank,
 						type: dataEditMiniPost.originId?.type,
@@ -520,6 +525,49 @@ function CreatePostModalContent({
 		}
 	};
 
+	const handleCreateReview = async params => {
+		try {
+			const reviewData = {
+				bookId: params.bookId,
+				mediaUrl: [],
+				content: content,
+				curProgress: taggedData.addBook.status === 'read' ? taggedData.addBook.page : progressInputValue || 0,
+				rate:
+					taggedData.addBook.status === 'read' || progressInputValue === taggedData.addBook.page
+						? valueStar
+						: 0,
+				tags: params.tags,
+				image: params.image,
+				preview: params.preview,
+			};
+			await dispatch(createReviewBook(reviewData)).unwrap();
+		} catch (error) {
+			NotificationError(error);
+		}
+	};
+
+	// const handleEditReview = async params => {
+	// 	try {
+	// 		const reviewData = {
+	// 			bookId: params.bookId,
+	// 			mediaUrl: [],
+	// 			content: content,
+	// 			curProgress: taggedData.addBook.status === 'read' ? taggedData.addBook.page : progressInputValue || 0,
+	// 			rate:
+	// 				taggedData.addBook.status === 'read' || progressInputValue === taggedData.addBook.page
+	// 					? valueStar
+	// 					: 0,
+	// 			tags: params.tags,
+	// 			image: params.image,
+	// 			preview: params.preview,
+	// 		};
+	// 		const data = { id: 1225, data: reviewData };
+	// 		await dispatch(handleEditReviewsBook(data)).unwrap();
+	// 	} catch (error) {
+	// 		NotificationError(error);
+	// 	}
+	// };
+
 	const onCreatePost = async () => {
 		const params = await generateData();
 		// book, author , topic is required
@@ -663,24 +711,16 @@ function CreatePostModalContent({
 				}
 			} else {
 				if (params.bookId) {
+					// initialProgress.current = params.progress;
 					if (params.msg && params.progress > 0) {
-						const reviewData = {
-							bookId: params.bookId,
-							mediaUrl: [],
-							content: content,
-							curProgress:
-								taggedData.addBook.status === 'read'
-									? taggedData.addBook.page
-									: progressInputValue || 0,
-							rate:
-								taggedData.addBook.status === 'read' || progressInputValue === taggedData.addBook.page
-									? valueStar
-									: 0,
-							tags: params.tags,
-							image: params.image,
-							preview: params.preview,
-						};
-						dispatch(createReviewBook(reviewData));
+						// if (isEditPost) {
+						// 	if (initialProgress.current === 0) {
+						// 		handleCreateReview(params);
+						// 	} else {
+						// 		handleEditReview(params);
+						// 	}
+						// } else {
+						handleCreateReview(params);
 					}
 					if (valueStar > 0) {
 						userRating();
@@ -1065,6 +1105,7 @@ function CreatePostModalContent({
 									addOptionsToPost={addOptionsToPost}
 									taggedData={taggedData}
 									postDataShare={postDataShare}
+									isEditPost={isEditPost}
 								/>
 								<span
 									className={classNames(

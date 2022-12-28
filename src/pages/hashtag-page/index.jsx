@@ -107,6 +107,14 @@ export default function HashtagPage() {
 		}
 	};
 
+	const handleUpdatePostArrWhenDeleted = itemMinipostId => {
+		const index = postList.findIndex(item => item.id === itemMinipostId);
+		const newItem = { ...postList[index], isDeleted: true };
+		const newArr = [...postList];
+		newArr[index] = { ...newItem };
+		setPostList(newArr);
+	};
+
 	return (
 		<NormalContainer>
 			<div className='hashtag-page'>
@@ -129,7 +137,14 @@ export default function HashtagPage() {
 							>
 								{postList.map(post => {
 									if (!post.isDeleted) {
-										return <Post key={post.id} postInformations={post} type={POST_TYPE} />;
+										return (
+											<Post
+												key={post.id}
+												postInformations={post}
+												type={POST_TYPE}
+												handleUpdatePostArrWhenDeleted={handleUpdatePostArrWhenDeleted}
+											/>
+										);
 									}
 								})}
 							</InfiniteScroll>
