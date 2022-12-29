@@ -28,6 +28,7 @@ import {
 	updateBookForCreatePost,
 	ratingUser,
 	handleEditReviewsBook,
+	handleRefreshRatingData,
 } from 'reducers/redux-utils/book';
 import { addBookToDefaultLibrary, updateMyAllLibraryRedux } from 'reducers/redux-utils/library';
 import { setting } from './settings';
@@ -845,6 +846,9 @@ function CreatePostModalContent({
 		if (valueStar) {
 			try {
 				await dispatch(ratingUser(params)).unwrap();
+				if (window.location.pathname.includes('/book/detail/')) {
+					dispatch(handleRefreshRatingData());
+				}
 			} catch (err) {
 				NotificationError(err);
 			}
