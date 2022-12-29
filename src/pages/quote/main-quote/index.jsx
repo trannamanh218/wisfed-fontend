@@ -85,7 +85,8 @@ const MainQuote = () => {
 					sort: JSON.stringify([{ property: sortValue, direction: sortDirection }]),
 					filter: JSON.stringify(filterDefault.current.concat(filter)),
 				};
-				quoteListData = await dispatch(getQuoteList(params)).unwrap();
+				const res = await dispatch(getQuoteList(params)).unwrap();
+				quoteListData = res.rows;
 			} else {
 				const params = {
 					start: 0,
@@ -119,7 +120,8 @@ const MainQuote = () => {
 					sort: JSON.stringify([{ property: sortValue, direction: sortDirection }]),
 					filter: JSON.stringify(filterDefault.current.concat(filter)),
 				};
-				quoteListData = await dispatch(getQuoteList(params)).unwrap();
+				const res = await dispatch(getQuoteList(params)).unwrap();
+				quoteListData = res.rows;
 			} else {
 				const params = {
 					start: callApiStart.current,
