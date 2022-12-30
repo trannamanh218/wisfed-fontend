@@ -95,6 +95,7 @@ OptionsPost.defaultProps = {
 	addOptionsToPost: () => {},
 	postDataShare: {},
 	isEditPost: false,
+	dataEditMiniPost: {},
 };
 
 OptionsPost.propTypes = {
@@ -103,6 +104,7 @@ OptionsPost.propTypes = {
 	postDataShare: PropTypes.object,
 	addOptionsToPost: PropTypes.func,
 	isEditPost: PropTypes.bool,
+	dataEditMiniPost: PropTypes.object,
 };
 
 export default OptionsPost;
