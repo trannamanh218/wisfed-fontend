@@ -32,7 +32,8 @@ const Shelf = ({ list, isMyShelve, handleUpdateBookList, handleViewBookDetail, s
 	return (
 		<div style={{ textAlign: 'center' }}>
 			<p style={{ margin: '20px 0' }}>
-				{userInfo.id === userId ? 'Bạn' : shelveGroupName} chưa có cuốn sách nào, hãy thêm sách vào tủ nhé
+				{userInfo.id === userId ? 'Bạn' : shelveGroupName} chưa có cuốn sách nào
+				{userInfo.id === userId && ', hãy thêm sách vào tủ nhé'}
 			</p>
 			{userInfo.id === userId && (
 				<button onClick={() => navigate('/category')} className='btn btn-primary'>
