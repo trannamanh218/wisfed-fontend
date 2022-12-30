@@ -11,7 +11,7 @@ import moment from 'moment';
 import 'moment/locale/vi';
 moment.locale('vi');
 
-const generalInfoLabel = ['Nhà xuất bản', 'Công ty sách', 'Số trang', 'Khổ sách', 'ISBN', 'Ngày xuất bản'];
+const generalInfoLabel = ['NXB / Công ty sách', 'Số trang', 'Khổ sách', 'ISBN', 'Ngày xuất bản'];
 
 const BookInfo = ({ bookInfo }) => {
 	const dispatch = useDispatch();
@@ -104,7 +104,6 @@ const BookInfo = ({ bookInfo }) => {
 						))}
 					</div>
 					<div className='book-info__general-information__block'>
-						<div className='book-info__general-information__item'>{bookInfo?.publisher?.name}</div>
 						<div className='book-info__general-information__item'>{bookInfo?.publisher?.name}</div>
 						<div className='book-info__general-information__item'>{bookInfo?.page}</div>
 						<div className='book-info__general-information__item'>{bookInfo?.page}</div>

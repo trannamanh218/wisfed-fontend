@@ -40,7 +40,7 @@ const QuoteTab = ({ currentTab, currentUserInfo }) => {
 				filter: JSON.stringify([{ operator: 'eq', value: userId, property: 'createdBy' }]),
 			};
 			const quotesList = await dispatch(getQuoteList(params)).unwrap();
-			setMyQuoteList(quotesList);
+			setMyQuoteList(quotesList.rows);
 		} catch (err) {
 			NotificationError(err);
 		} finally {
