@@ -17,7 +17,6 @@ import {
 	TOP_USER_VERB_SHARE_LV1,
 } from 'constants';
 import { useSelector } from 'react-redux';
-
 const verbShareArray = [
 	POST_VERB_SHARE,
 	QUOTE_VERB_SHARE,
@@ -33,7 +32,7 @@ const verbShareArray = [
 	TOP_USER_VERB_SHARE_LV1,
 ];
 
-const OptionsPost = ({ list, addOptionsToPost, taggedData, postDataShare, isEditPost }) => {
+const OptionsPost = ({ list, addOptionsToPost, taggedData, postDataShare, isEditPost, dataEditMiniPost }) => {
 	const [itemOnMouseHover, setItemOnMouseHover] = useState(null);
 
 	const chartImgShare = useSelector(state => state.chart.imageToShareData);
@@ -52,7 +51,7 @@ const OptionsPost = ({ list, addOptionsToPost, taggedData, postDataShare, isEdit
 
 		if (
 			isEditPost &&
-			!_.isEmpty(taggedData.addBook) &&
+			!_.isEmpty(dataEditMiniPost.book) &&
 			item.value !== 'addFriends' &&
 			item.value !== 'addCategory' &&
 			item.value !== 'addAuthor'
@@ -96,6 +95,7 @@ OptionsPost.defaultProps = {
 	addOptionsToPost: () => {},
 	postDataShare: {},
 	isEditPost: false,
+	dataEditMiniPost: {},
 };
 
 OptionsPost.propTypes = {
@@ -104,6 +104,7 @@ OptionsPost.propTypes = {
 	postDataShare: PropTypes.object,
 	addOptionsToPost: PropTypes.func,
 	isEditPost: PropTypes.bool,
+	dataEditMiniPost: PropTypes.object,
 };
 
 export default OptionsPost;

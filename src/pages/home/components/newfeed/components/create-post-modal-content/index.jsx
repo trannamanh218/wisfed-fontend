@@ -27,7 +27,7 @@ import {
 	createReviewBook,
 	updateBookForCreatePost,
 	ratingUser,
-	handleEditReviewsBook,
+	// handleEditReviewsBook,
 	handleRefreshRatingData,
 } from 'reducers/redux-utils/book';
 import { addBookToDefaultLibrary, updateMyAllLibraryRedux } from 'reducers/redux-utils/library';
@@ -1079,7 +1079,7 @@ function CreatePostModalContent({
 									removeAllImages={removeAllImages}
 									maxFiles={100}
 									maxSize={104857600}
-									isEditPost={true}
+									isEditPost={isEditPost}
 								/>
 							)}
 							{hasUrl && !showUpload && (
@@ -1110,6 +1110,7 @@ function CreatePostModalContent({
 									taggedData={taggedData}
 									postDataShare={postDataShare}
 									isEditPost={isEditPost}
+									dataEditMiniPost={dataEditMiniPost}
 								/>
 								<span
 									className={classNames(

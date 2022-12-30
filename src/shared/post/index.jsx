@@ -476,16 +476,18 @@ function Post({
 			let postId = postData.id;
 			if (postData.groupId) {
 				let feedId;
+				let groupId = postData.groupInfo?.id ? postData.groupInfo?.id : postData.group?.id;
 				if (
 					window.location.pathname.includes('/group/') ||
-					window.location.pathname.includes('/hashtag-group/')
+					window.location.pathname.includes('/hashtag-group/') ||
+					window.location.pathname.includes('/detail-feed')
 				) {
 					feedId = postData?.getstreamId;
 				} else {
 					feedId = postData?.id;
 				}
 				const params = {
-					groupId: postData.group.id,
+					groupId: groupId,
 					feedId: feedId,
 				};
 				await dispatch(deleteMiniGroupPost(params)).unwrap();
@@ -495,6 +497,9 @@ function Post({
 			}
 			handleUpdatePostArrWhenDeleted(postId);
 			toast.success('Xoá bài viết thành công');
+			if (window.location.pathname.includes('/detail-feed/')) {
+				navigate(-1);
+			}
 		} catch (err) {
 			const customId = 'custom-id-SettingMore-error';
 			toast.error('Lỗi không xóa được bài viết', { toastId: customId });
@@ -584,25 +589,26 @@ function Post({
 						</div>
 					</div>
 				</div>
-				{(postData.createdBy?.id === userInfo.id || postData.createdBy === userInfo.id) && (
-					<div ref={settingsRef} className='setting'>
-						<button className='setting-mini-post-btn' onClick={handleSettings}>
-							<img src={dots} alt='setting' />
-						</button>
-						{isSettingsVisible && (
-							<ul className='setting-list'>
-								<li className='setting-item' onClick={handleOpenModal}>
-									<Pencil />
-									<span className='setting-item__content'>Chỉnh sửa bài viết</span>
-								</li>
-								<li className='setting-item' onClick={handleDelete}>
-									<TrashIcon />
-									<span className='setting-item__content'>Xóa bài viết</span>
-								</li>
-							</ul>
-						)}
-					</div>
-				)}
+				{(postData.createdBy?.id === userInfo.id || postData.createdBy === userInfo.id) &&
+					!window.location.pathname.includes('/book/detail/') && (
+						<div ref={settingsRef} className='setting'>
+							<button className='setting-mini-post-btn' onClick={handleSettings}>
+								<img src={dots} alt='setting' />
+							</button>
+							{isSettingsVisible && (
+								<ul className='setting-list'>
+									<li className='setting-item' onClick={handleOpenModal}>
+										<Pencil />
+										<span className='setting-item__content'>Chỉnh sửa bài viết</span>
+									</li>
+									<li className='setting-item' onClick={handleDelete}>
+										<TrashIcon />
+										<span className='setting-item__content'>Xóa bài viết</span>
+									</li>
+								</ul>
+							)}
+						</div>
+					)}
 			</div>
 			{(postData.message || postData.content) && (
 				<div className='post__content-wrapper'>
