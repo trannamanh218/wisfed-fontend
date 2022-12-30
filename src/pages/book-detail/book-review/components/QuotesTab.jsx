@@ -74,7 +74,8 @@ const QuotesTab = ({ currentTab }) => {
 			let quoteListData = [];
 
 			if (currentOption.value === 'allQuotes') {
-				quoteListData = await dispatch(getQuoteList(params)).unwrap();
+				const res = await dispatch(getQuoteList(params)).unwrap();
+				quoteListData = res.rows;
 			} else if (currentOption.value === 'friendsQuotes') {
 				params = { ...params, type: 'friend' };
 				quoteListData = await dispatch(getQuotesByFriendsOrFollowers(params)).unwrap();
@@ -103,7 +104,8 @@ const QuotesTab = ({ currentTab }) => {
 			let quoteListData = [];
 
 			if (currentOption.value === 'allQuotes') {
-				quoteListData = await dispatch(getQuoteList(params)).unwrap();
+				const res = await dispatch(getQuoteList(params)).unwrap();
+				quoteListData = res.rows;
 			} else if (currentOption.value === 'friendsQuotes') {
 				params = { ...params, type: 'friend' };
 				quoteListData = await dispatch(getQuotesByFriendsOrFollowers(params)).unwrap();

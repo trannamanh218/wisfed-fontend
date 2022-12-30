@@ -297,11 +297,7 @@ const ReviewTab = ({ currentTab }) => {
 									if (!item.isDeleted) {
 										return (
 											<Fragment key={`post-${item.id}`}>
-												<Post
-													className='post-container--review'
-													postInformations={item}
-													type={REVIEW_TYPE}
-												/>
+												<Post postInformations={item} type={REVIEW_TYPE} />
 												<hr />
 											</Fragment>
 										);

@@ -20,7 +20,8 @@ const Notification = () => {
 	const [notificationsList, setNotificationsList] = useState([]);
 	const [listAddFriendReqToMe, setListAddFriendReqToMe] = useState([]);
 	const [friendReqToMeCount, setFriendReqToMeCount] = useState(0);
-	const [isLoading, setIsLoading] = useState(true);
+	const [isLoadingAll, setIsLoadingAll] = useState(true);
+	const [isLoadingFriendRequest, setIsLoadingFriendRequest] = useState(true);
 	const [hasMore, setHasMore] = useState(true);
 	const [isLoadingTimeline, setIsLoadingTimeline] = useState(false);
 	const [currentTab, setCurrentTab] = useState(keyTabsActive);
@@ -36,7 +37,6 @@ const Notification = () => {
 	const dispatch = useDispatch();
 
 	useEffect(() => {
-		setCurrentTab(keyTabsActive);
 		getMyNotificationFirstTime();
 		getListRequestFriendToMe();
 	}, []);
@@ -73,7 +73,7 @@ const Notification = () => {
 		} catch (err) {
 			NotificationError(err);
 		} finally {
-			setIsLoading(false);
+			setIsLoadingAll(false);
 			setIsLoadingTimeline(false);
 		}
 	};
@@ -96,7 +96,7 @@ const Notification = () => {
 		} catch (err) {
 			NotificationError(err);
 		} finally {
-			setIsLoading(false);
+			setIsLoadingAll(false);
 		}
 	};
 
@@ -130,6 +130,8 @@ const Notification = () => {
 			}
 		} catch (error) {
 			NotificationError(error);
+		} finally {
+			setIsLoadingFriendRequest(false);
 		}
 	};
 
@@ -173,7 +175,7 @@ const Notification = () => {
 							{currentTab === 'all' && (
 								<>
 									<div className='notification__all__main__title'>Mới nhất</div>
-									{isLoading || (isLoadingTimeline && isNewNotificationByRealtime) ? (
+									{isLoadingAll || (isLoadingTimeline && isNewNotificationByRealtime) ? (
 										<LoadingTimeLine numberItems={1} isTwoLines={false} />
 									) : (
 										<>
@@ -192,7 +194,7 @@ const Notification = () => {
 									>
 										Gần đây
 									</div>
-									{isLoading ? (
+									{isLoadingAll ? (
 										<LoadingTimeLine numberItems={5} isTwoLines={false} />
 									) : (
 										<InfiniteScroll
@@ -217,7 +219,7 @@ const Notification = () => {
 							{currentTab === 'unread' && (
 								<>
 									<div className='notification__all__main__title'>Thông báo chưa đọc</div>
-									{isLoading ? (
+									{isLoadingAll ? (
 										<LoadingTimeLine numberItems={5} isTwoLines={false} />
 									) : (
 										<InfiniteScroll
@@ -241,25 +243,38 @@ const Notification = () => {
 								</>
 							)}
 						</Tab>
-						{friendReqToMeCount > 0 && (
-							<Tab eventKey='friendRequest' title='Lời mời kết bạn'>
-								<div className='notification__all__main__title'>{friendReqToMeCount} lời kết bạn</div>
-								<InfiniteScroll
-									dataLength={listAddFriendReqToMe.length}
-									next={getListRequestFriendToMe}
-									hasMore={hasMoreFriendReq}
-									loader={<LoadingIndicator />}
-								>
-									{listAddFriendReqToMe.map(item => (
-										<NotificationStatus
-											key={item.id}
-											item={item}
-											handleReplyFriendRequest={handleReplyFriendRequest}
-										/>
-									))}
-								</InfiniteScroll>
-							</Tab>
-						)}
+
+						<Tab eventKey='friendrequest' title='Lời mời kết bạn'>
+							{currentTab === 'friendrequest' && (
+								<>
+									{isLoadingFriendRequest ? (
+										<LoadingTimeLine numberItems={5} isTwoLines={false} />
+									) : (
+										<>
+											<div className='notification__all__main__title'>
+												{friendReqToMeCount} lời kết bạn
+											</div>
+											{friendReqToMeCount > 0 && (
+												<InfiniteScroll
+													dataLength={listAddFriendReqToMe.length}
+													next={getListRequestFriendToMe}
+													hasMore={hasMoreFriendReq}
+													loader={<LoadingIndicator />}
+												>
+													{listAddFriendReqToMe.map(item => (
+														<NotificationStatus
+															key={item.id}
+															item={item}
+															handleReplyFriendRequest={handleReplyFriendRequest}
+														/>
+													))}
+												</InfiniteScroll>
+											)}
+										</>
+									)}
+								</>
+							)}
+						</Tab>
 					</Tabs>
 				</div>
 			</div>

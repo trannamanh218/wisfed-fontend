@@ -28,6 +28,7 @@ const NotificationModal = ({ setModalNoti, buttonModal }) => {
 	const notifymodal = useRef(null);
 	const loadingItemsNumber = useRef(1);
 	const notiArrTemp = useRef(notificationsList);
+	const notiUnreadArrTemp = useRef(notificationsUnreadList);
 	const friendRequestArrTemp = useRef(listAddFriendReqToMe);
 	const tabOld = useRef(currentTab);
 
@@ -72,6 +73,10 @@ const NotificationModal = ({ setModalNoti, buttonModal }) => {
 	useEffect(() => {
 		notiArrTemp.current = [...notificationsList];
 	}, [notificationsList]);
+
+	useEffect(() => {
+		notiUnreadArrTemp.current = [...notificationsUnreadList];
+	}, [notificationsUnreadList]);
 
 	useEffect(() => {
 		friendRequestArrTemp.current = [...listAddFriendReqToMe];
@@ -176,6 +181,30 @@ const NotificationModal = ({ setModalNoti, buttonModal }) => {
 			return { ...noti };
 		});
 		setNotificationsList(newNotiArr);
+
+		const newNotiUnreadArrTemp = notiUnreadArrTemp.current.map(noti => {
+			if (option === 'addFriend') {
+				if (noti?.originId?.requestId === requestId) {
+					const data = { ...noti, isAccept: replyStatus };
+					return { ...data };
+				}
+			} else if (option === 'inviteGroup') {
+				if (noti?.originId?.inviteId === requestId) {
+					const data = { ...noti, isAccept: replyStatus };
+					return { ...data };
+				}
+			}
+			return { ...noti };
+		});
+		setNotificationUnreadList(newNotiUnreadArrTemp);
+
+		const newFriendRequestArrTemp = friendRequestArrTemp.current.map(addFriendRequest => {
+			if (addFriendRequest.originId?.requestId === requestId) {
+				const data = { ...addFriendRequest, isAccept: replyStatus };
+				return { ...data };
+			}
+		});
+		setListAddFriendReqToMe(newFriendRequestArrTemp);
 	};
 
 	return (

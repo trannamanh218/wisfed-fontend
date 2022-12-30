@@ -232,6 +232,7 @@ const bookSlice = createSlice({
 		ratingBookStart: null,
 		currentBookReviewsNumber: 0,
 		directToQuoteTabOfBookDetail: false,
+		refreshRatingData: false,
 	},
 	reducers: {
 		updateBookForCreatePost: (state, action) => {
@@ -242,6 +243,9 @@ const bookSlice = createSlice({
 		},
 		handleDirectToQuoteTabOfBookDetail: (state, action) => {
 			state.directToQuoteTabOfBookDetail = action.payload;
+		},
+		handleRefreshRatingData: state => {
+			state.refreshRatingData = !state.refreshRatingData;
 		},
 	},
 	extraReducers: {
@@ -261,8 +265,12 @@ const bookSlice = createSlice({
 	},
 });
 
-export const { updateCurrentBookReviewsNumber, handleDirectToQuoteTabOfBookDetail, updateBookForCreatePost } =
-	bookSlice.actions;
+export const {
+	updateCurrentBookReviewsNumber,
+	handleDirectToQuoteTabOfBookDetail,
+	updateBookForCreatePost,
+	handleRefreshRatingData,
+} = bookSlice.actions;
 
 const book = bookSlice.reducer;
 export default book;

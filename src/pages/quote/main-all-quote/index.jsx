@@ -23,7 +23,7 @@ const MainAllQuotes = () => {
 	const [sortDirection, setSortDirection] = useState('DESC');
 	const [currentOption, setCurrentOption] = useState(filterOptions[0]);
 	const [inputSearchValue, setInputSearchValue] = useState('');
-	const [isLoading, setIsLoading] = useState(true);
+	const [isLoading, setIsLoading] = useState(false);
 	const [filter, setFilter] = useState([]);
 	const [getDataFirstTimeStatus, setGetDataFirsttimeStatus] = useState(true);
 
@@ -49,9 +49,10 @@ const MainAllQuotes = () => {
 			callApiStart.current = 10;
 			getAllQuoteListFirstTime();
 		}
-	}, [filter, sortValue, sortDirection]);
+	}, [filter[0], sortValue, sortDirection]);
 
 	const getAllQuoteListFirstTime = async () => {
+		setIsLoading(true);
 		try {
 			let params = {
 				start: 0,
@@ -62,7 +63,8 @@ const MainAllQuotes = () => {
 			let quoteListData = [];
 
 			if (currentOption.value === 'all') {
-				quoteListData = await dispatch(getQuoteList(params)).unwrap();
+				const res = await dispatch(getQuoteList(params)).unwrap();
+				quoteListData = res.rows;
 			} else if (currentOption.value === 'friends') {
 				params = { ...params, type: 'friend' };
 				quoteListData = await dispatch(getQuotesByFriendsOrFollowers(params)).unwrap();
@@ -94,7 +96,8 @@ const MainAllQuotes = () => {
 			let quoteListData = [];
 
 			if (currentOption.value === 'all') {
-				quoteListData = await dispatch(getQuoteList(params)).unwrap();
+				const res = await dispatch(getQuoteList(params)).unwrap();
+				quoteListData = res.rows;
 			} else if (currentOption.value === 'friends') {
 				params = { ...params, type: 'friend' };
 				quoteListData = await dispatch(getQuotesByFriendsOrFollowers(params)).unwrap();

@@ -21,7 +21,8 @@ export const useFetchQuoteRandom = () => {
 	useEffect(async () => {
 		setStatus(STATUS_LOADING);
 		try {
-			const data = await dispatch(getQuoteList()).unwrap();
+			const res = await dispatch(getQuoteList()).unwrap();
+			const data = res.rows;
 			if (data && data.length > 0) {
 				const item = data[Math.floor(Math.random() * data.length)];
 				setQuoteRandom(item);
@@ -57,7 +58,7 @@ export const useFetchQuotes = (current = 0, perPage = 10, filter = '[]') => {
 			if (!_.isEmpty(userInfo)) {
 				try {
 					const data = await dispatch(getQuoteList(query)).unwrap();
-					setQuoteData(data);
+					setQuoteData(data.rows);
 					setStatus(STATUS_SUCCESS);
 				} catch (err) {
 					NotificationError(err);
@@ -96,7 +97,7 @@ export const useFetchQuotesByCategory = (categoryId = '', limit = 10) => {
 			if (categoryId) {
 				try {
 					const data = await dispatch(getQuoteList(query)).unwrap();
-					setListQuotesByCategory(data);
+					setListQuotesByCategory(data.rows);
 					setStatus(STATUS_SUCCESS);
 				} catch (err) {
 					NotificationError(err);

@@ -92,7 +92,7 @@ const Header = () => {
 
 			if (userInfo.userToken) {
 				// bắt sự kiện khi có thông báo getStream trả về theo thời gian thực
-				const client = stream.connect('wmtg4f3vuuyh', null, '1196914');
+				const client = stream.connect('kxtvs7pd3xfg', null, '1226763');
 				const notificationFeed = client.feed('notification', userInfo.id, userInfo.userToken);
 				const callback = () => {
 					dispatch(handleUpdateNewNotification(true));
