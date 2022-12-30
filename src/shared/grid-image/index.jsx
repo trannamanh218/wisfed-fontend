@@ -124,7 +124,7 @@ const GridImage = ({ images, inPost, postId, isEditPost }) => {
 										setPhotoIndex(index);
 									}}
 								>
-									{inPost || isEditPost ? (
+									{(inPost || isEditPost) && typeof image === 'string' ? (
 										<img src={image} alt='image' />
 									) : (
 										<img src={URL.createObjectURL(image)} alt='image' />
@@ -163,7 +163,7 @@ const GridImage = ({ images, inPost, postId, isEditPost }) => {
 														setPhotoIndex(index);
 													}}
 												>
-													{inPost || isEditPost ? (
+													{(inPost || isEditPost) && typeof image === 'string' ? (
 														<img src={image} alt='image' />
 													) : (
 														<img src={URL.createObjectURL(image)} alt='image' />

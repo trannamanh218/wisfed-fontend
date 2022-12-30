@@ -44,18 +44,35 @@ function Login() {
 					navigate('/choose-topic');
 				}
 			}
-		} catch {
-			const newdata = {
-				title: 'Đăng nhập',
-				title2: 'thất bại',
-				isShowIcon: false,
-				scribe: 'Vui lòng kiểm tra lại tài khoản,',
-				scribe2: 'mật khẩu và thử đăng nhập lại',
-			};
-			setDataModal(newdata);
-			setIsShow(true);
+		} catch (err) {
+			if (JSON.parse(err).errorCode === 306) {
+				const newdata = {
+					title: 'Đăng nhập',
+					title2: 'thất bại',
+					isShowIcon: false,
+					scribe: 'Tài khoản của bạn đã bị khóa',
+				};
+				setDataModal(newdata);
+				setIsShow(true);
+			} else {
+				const newdata = {
+					title: 'Đăng nhập',
+					title2: 'thất bại',
+					isShowIcon: false,
+					scribe: 'Vui lòng kiểm tra lại tài khoản,',
+					scribe2: 'mật khẩu và thử đăng nhập lại',
+				};
+				setDataModal(newdata);
+				setIsShow(true);
+			}
 		}
 	};
+
+	// {"responseBody":{
+	//  "message": "{{common.somethingWentWrong}}"},
+	// "statusCode":400,
+	// "errorCode":306,
+	// "timestamp":"2022-12-29T03:46:01.950Z"}
 
 	useEffect(() => {
 		if (Storage.getAccessToken()) {
