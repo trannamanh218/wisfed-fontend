@@ -104,7 +104,7 @@ function ShareTarget({ postData, inPost = false }) {
 				source={
 					inPost
 						? postData?.readingGoalBy?.avatarImage || postData?.metaData?.readingGoalBy?.avatarImage
-						: postData.avatarImage || postData.sharePost.createdBy.avatarImage
+						: postData.avatarImage || postData.sharePost?.createdBy?.avatarImage
 				}
 				size='lg'
 			/>
