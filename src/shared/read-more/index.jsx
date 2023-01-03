@@ -25,7 +25,7 @@ const ReadMore = ({ text, length = 450 }) => {
 			{showReadmore ? <>{showLess ? `${textFormated.slice(0, length)}...` : textFormated}</> : textFormated}
 			{showReadmore && (
 				<button className='read-more__btn' onClick={handleShow}>
-					{showLess ? 'Tiếp tục đọc' : 'Thu gọn'}
+					{showLess ? 'Xem Thêm' : 'Thu gọn'}
 				</button>
 			)}
 		</p>

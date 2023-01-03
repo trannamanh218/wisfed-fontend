@@ -30,6 +30,7 @@ const PersonalInfo = ({ currentUserInfo, setCurrentTab }) => {
 	const [modalFriend, setModalFriend] = useState(false);
 	const [modalFollower, setModalFollower] = useState(false);
 	const [modalFollowing, setModalFollowing] = useState(false);
+	const [textLength, setTextLength] = useState(120);
 	const [bgImage, setBgImage] = useState('');
 	const { userInfo } = useSelector(state => state.auth);
 	const dispatch = useDispatch();
@@ -281,7 +282,9 @@ const PersonalInfo = ({ currentUserInfo, setCurrentTab }) => {
 								/>
 							)}
 						</ul>
-						{currentUserInfo.descriptions && <ReadMore text={currentUserInfo.descriptions} />}
+						{currentUserInfo.descriptions && (
+							<ReadMore text={currentUserInfo.descriptions} length={textLength} />
+						)}
 					</div>
 				</div>
 			</div>

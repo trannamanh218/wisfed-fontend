@@ -1006,7 +1006,7 @@ function CreatePostModalContent({
 							<CloseX />
 						</div>
 						<h5>
-							{postDataShare && !_.isEmpty(postDataShare) && isEditPost
+							{isEditPost
 								? 'Chỉnh sửa bài viết'
 								: postDataShare && !_.isEmpty(postDataShare)
 								? 'Chia sẻ bài viết'
