@@ -548,7 +548,8 @@ function CreatePostModalContent({
 			if (
 				window.location.pathname.includes('/profile/') ||
 				window.location.pathname.includes('/group/') ||
-				window.location.pathname.includes('/category/detail/')
+				window.location.pathname.includes('/category/detail/') ||
+				window.location.pathname.includes('/detail-feed/')
 			) {
 				params['feedId'] = dataEditMiniPost.getstreamId;
 			} else {

@@ -280,7 +280,11 @@ function Post({
 				}
 				onClickSeeMoreReply(replyId);
 			} catch (err) {
-				toast.warning('Bạn chưa tham gia nhóm');
+				if (err.errorCode === 321 && location.pathname.includes('/group/')) {
+					toast.warning('Bạn chưa tham gia nhóm');
+				} else {
+					NotificationError(err);
+				}
 			}
 		}
 	};
@@ -480,7 +484,7 @@ function Post({
 				if (
 					window.location.pathname.includes('/group/') ||
 					window.location.pathname.includes('/hashtag-group/') ||
-					window.location.pathname.includes('/detail-feed')
+					window.location.pathname.includes('/detail-feed/')
 				) {
 					feedId = postData?.getstreamId;
 				} else {

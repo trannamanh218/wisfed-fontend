@@ -48,6 +48,18 @@ const PersonalInfo = ({ currentUserInfo, setCurrentTab }) => {
 		}
 	}, [currentUserInfo]);
 
+	useEffect(() => {
+		if (window.innerWidth <= 768) {
+			setTextLength(85);
+		} else if (window.innerWidth <= 820) {
+			setTextLength(95);
+		} else if (window.innerWidth <= 1024) {
+			setTextLength(120);
+		} else if (window.innerWidth <= 1280) {
+			setTextLength(400);
+		}
+	}, []);
+
 	const handleSettings = () => {
 		setSettingsVisible(prev => !prev);
 	};
