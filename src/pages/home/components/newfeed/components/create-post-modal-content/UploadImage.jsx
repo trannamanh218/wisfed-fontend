@@ -8,7 +8,8 @@ import GridImage from 'shared/grid-image';
 import { toast } from 'react-toastify';
 
 const UploadImage = props => {
-	const { addOptionsToPost, images, setImages, removeAllImages, maxFiles, maxSize, isEditPost } = props;
+	const { addOptionsToPost, images, setImages, removeAllImages, maxFiles, maxSize, isEditPost, dataEditMiniPost } =
+		props;
 
 	const onDrop = useCallback(
 		acceptedFiles => {
@@ -55,43 +56,47 @@ const UploadImage = props => {
 			<div className='create-post-modal-content__main__body__image-container'>
 				<div className='create-post-modal-content__main__body__image-box'>
 					<GridImage images={images} inPost={false} isEditPost={isEditPost} />
-					<div className='create-post-modal-content__main__body__image-options'>
-						<div className='create-post-modal-content__main__body__image-options__block-left'>
-							<button
-								className='create-post-modal-content__main__body__image-options__button'
-								onClick={e => {
-									e.stopPropagation();
-									addOptionsToPost({
-										value: 'modifyImages',
-										title: 'chỉnh sửa ảnh',
-									});
-								}}
-							>
-								<Pencil />
-								<span>Chỉnh sửa tất cả</span>
-							</button>
-							<div
-								{...getRootProps({
-									className: 'dropzone upload-image__options',
-								})}
-							>
-								<input {...getInputProps()} />
-								<label
-									htmlFor='image-upload'
+					{dataEditMiniPost?.metaData?.chartType ? (
+						<></>
+					) : (
+						<div className='create-post-modal-content__main__body__image-options'>
+							<div className='create-post-modal-content__main__body__image-options__block-left'>
+								<button
 									className='create-post-modal-content__main__body__image-options__button'
+									onClick={e => {
+										e.stopPropagation();
+										addOptionsToPost({
+											value: 'modifyImages',
+											title: 'chỉnh sửa ảnh',
+										});
+									}}
 								>
-									<Image />
-									<span>Thêm ảnh</span>
-								</label>
+									<Pencil />
+									<span>Chỉnh sửa tất cả</span>
+								</button>
+								<div
+									{...getRootProps({
+										className: 'dropzone upload-image__options',
+									})}
+								>
+									<input {...getInputProps()} />
+									<label
+										htmlFor='image-upload'
+										className='create-post-modal-content__main__body__image-options__button'
+									>
+										<Image />
+										<span>Thêm ảnh</span>
+									</label>
+								</div>
 							</div>
+							<button
+								className='create-post-modal-content__main__body__image-options__delete-image'
+								onClick={removeAllImages}
+							>
+								<CloseX />
+							</button>
 						</div>
-						<button
-							className='create-post-modal-content__main__body__image-options__delete-image'
-							onClick={removeAllImages}
-						>
-							<CloseX />
-						</button>
-					</div>
+					)}
 				</div>
 			</div>
 		);
@@ -113,6 +118,7 @@ UploadImage.defaultProps = {
 	maxFiles: 10,
 	maxSize: 1024,
 	isEditPost: false,
+	dataEditMiniPost: {},
 };
 
 UploadImage.propTypes = {
@@ -125,6 +131,7 @@ UploadImage.propTypes = {
 	maxFiles: PropTypes.number,
 	maxSize: PropTypes.number,
 	isEditPost: PropTypes.bool,
+	dataEditMiniPost: PropTypes.object,
 };
 
 export default UploadImage;

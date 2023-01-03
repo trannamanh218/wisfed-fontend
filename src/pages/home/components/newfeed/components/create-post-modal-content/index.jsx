@@ -64,6 +64,7 @@ import {
 	TOP_QUOTE_VERB_SHARE_LV1,
 	TOP_USER_VERB_SHARE,
 	TOP_USER_VERB_SHARE_LV1,
+	POST_VERB,
 } from 'constants';
 import './style.scss';
 // import ShareModeComponent from './ShareModeComponent';
@@ -218,7 +219,6 @@ function CreatePostModalContent({
 						fullName: dataEditMiniPost.info?.fullName,
 						id: dataEditMiniPost.info?.id,
 						lastName: dataEditMiniPost.info.lastName,
-						relation: 'unknown',
 						trueRank: dataEditMiniPost.originId?.rank,
 						type: dataEditMiniPost.originId?.type,
 						userType: dataEditMiniPost.originId?.userType,
@@ -250,6 +250,66 @@ function CreatePostModalContent({
 						verb: TOP_BOOK_VERB_SHARE_LV1,
 						type: dataEditMiniPost.originId.type,
 						...dataEditMiniPost.info,
+					};
+					dispatch(saveDataShare(data));
+				} else if (
+					dataEditMiniPost.verb === POST_VERB &&
+					!_.isEmpty(dataEditMiniPost.metaData) &&
+					dataEditMiniPost?.metaData?.chartType
+				) {
+					const data = {
+						by: dataEditMiniPost.metaData.chartType,
+						isReadedChart: dataEditMiniPost.metaData.isReadedChart,
+						type: dataEditMiniPost.metaData.type,
+						userId: dataEditMiniPost.metaData.chartBy.id,
+						verb: CHART_VERB_SHARE,
+					};
+					dispatch(saveDataShare(data));
+				} else if (dataEditMiniPost.verb === READ_TARGET_VERB_SHARE) {
+					const percentTemp = (
+						(dataEditMiniPost.sharePost.current / dataEditMiniPost.sharePost.target) *
+						100
+					).toFixed();
+					const data = {
+						avatarImage: dataEditMiniPost.readingGoalBy?.avatarImage,
+						booksReadCount: dataEditMiniPost.sharePost.current,
+						numberBook: dataEditMiniPost.totalTarget,
+						percent: percentTemp > 100 ? 100 : percentTemp,
+						userId: dataEditMiniPost?.readingGoalBy?.id,
+						verb: READ_TARGET_VERB_SHARE_LV1,
+					};
+					dispatch(saveDataShare(data));
+				} else if (dataEditMiniPost.verb === REVIEW_VERB_SHARE) {
+					const data = {
+						reviewId: dataEditMiniPost.sharePost.id,
+						sharePost: {
+							book: dataEditMiniPost.sharePost.book,
+							createdBy: dataEditMiniPost.sharePost.createdBy,
+						},
+						verb: REVIEW_VERB_SHARE,
+					};
+					dispatch(saveDataShare(data));
+				} else if (dataEditMiniPost.verb === QUOTE_VERB_SHARE) {
+					const data = {
+						background: dataEditMiniPost.sharePost.background,
+						book: dataEditMiniPost.sharePost.book,
+						bookId: dataEditMiniPost.sharePost.bookId,
+						quote: dataEditMiniPost.sharePost.quote,
+						user: dataEditMiniPost.sharePost.createdBy,
+						verb: QUOTE_VERB_SHARE,
+					};
+					dispatch(saveDataShare(data));
+				} else if (dataEditMiniPost.verb === GROUP_POST_VERB_SHARE) {
+					const data = {
+						group: dataEditMiniPost.sharePost.groupInfo,
+						sharePost: {
+							id: dataEditMiniPost.sharePost.progress,
+							message: dataEditMiniPost.sharePost.message,
+							bookId: dataEditMiniPost.sharePost.id,
+							isDeleted: false,
+						},
+						verb: GROUP_POST_VERB_SHARE,
+						...dataEditMiniPost,
 					};
 					dispatch(saveDataShare(data));
 				}
@@ -485,7 +545,11 @@ function CreatePostModalContent({
 			params.bookId = taggedData.addBook.id;
 		}
 		if (isEditPost) {
-			if (window.location.pathname.includes('/profile/') || window.location.pathname.includes('/group/')) {
+			if (
+				window.location.pathname.includes('/profile/') ||
+				window.location.pathname.includes('/group/') ||
+				window.location.pathname.includes('/category/detail/')
+			) {
 				params['feedId'] = dataEditMiniPost.getstreamId;
 			} else {
 				params['feedId'] = dataEditMiniPost.id;
@@ -749,7 +813,11 @@ function CreatePostModalContent({
 			}
 			setStatus(STATUS_SUCCESS);
 			const customId = 'custom-id-CreatePostModalContent-onCreatePost-success';
-			toast.success('Tạo bài viết thành công!', { toastId: customId });
+			if (isEditPost) {
+				toast.success('Chỉnh sửa bài viết thành công!', { toastId: customId });
+			} else {
+				toast.success('Tạo bài viết thành công!', { toastId: customId });
+			}
 			if (isEditPost) {
 				const newCategoryArr = taggedData.addCategory.map(item => ({
 					category: { name: item.name },
@@ -938,10 +1006,10 @@ function CreatePostModalContent({
 							<CloseX />
 						</div>
 						<h5>
-							{postDataShare && !_.isEmpty(postDataShare)
-								? 'Chia sẻ bài viết'
-								: isEditPost
+							{postDataShare && !_.isEmpty(postDataShare) && isEditPost
 								? 'Chỉnh sửa bài viết'
+								: postDataShare && !_.isEmpty(postDataShare)
+								? 'Chia sẻ bài viết'
 								: 'Tạo bài viết'}
 						</h5>
 						<button className='create-post-modal-content__main__close' onClick={handleClose}>
@@ -1080,6 +1148,7 @@ function CreatePostModalContent({
 									maxFiles={100}
 									maxSize={104857600}
 									isEditPost={isEditPost}
+									dataEditMiniPost={dataEditMiniPost}
 								/>
 							)}
 							{hasUrl && !showUpload && (
@@ -1120,7 +1189,8 @@ function CreatePostModalContent({
 											'disabled':
 												(!_.isEmpty(postDataShare) &&
 													verbShareArray.indexOf(postDataShare.verb) !== -1) ||
-												chartImgShare.length,
+												chartImgShare.length ||
+												dataEditMiniPost?.metaData?.chartType,
 										}
 									)}
 									onMouseOver={() => setShowImagePopover(true)}

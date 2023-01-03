@@ -29,6 +29,7 @@ function MainPostGroup({ handleUpdate, show }) {
 				start: 0,
 				limit: callApiPerPage.current,
 				sort: JSON.stringify([{ property: 'createdAt', direction: 'DESC' }]),
+				filter: JSON.stringify([{ operator: 'eq', value: false, property: 'isDeleted' }]),
 			},
 			id: id,
 		};
@@ -47,6 +48,7 @@ function MainPostGroup({ handleUpdate, show }) {
 				start: callApiStart.current,
 				limit: callApiPerPage.current,
 				sort: JSON.stringify([{ property: 'createdAt', direction: 'DESC' }]),
+				filter: JSON.stringify([{ operator: 'eq', value: false, property: 'isDeleted' }]),
 			},
 			id: id,
 		};
