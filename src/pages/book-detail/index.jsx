@@ -53,7 +53,7 @@ function BookDetail() {
 				<Circle loading={true} />
 			) : (
 				<>
-					{!_.isEmpty(bookInformation) ? (
+					{!_.isEmpty(bookInformation) && !bookInformation.isDeleted ? (
 						<MainContainer
 							main={<BookInfo bookInfo={bookInformation} />}
 							right={
