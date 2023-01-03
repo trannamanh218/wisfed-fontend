@@ -219,7 +219,6 @@ function CreatePostModalContent({
 						fullName: dataEditMiniPost.info?.fullName,
 						id: dataEditMiniPost.info?.id,
 						lastName: dataEditMiniPost.info.lastName,
-						relation: 'unknown',
 						trueRank: dataEditMiniPost.originId?.rank,
 						type: dataEditMiniPost.originId?.type,
 						userType: dataEditMiniPost.originId?.userType,
@@ -288,6 +287,29 @@ function CreatePostModalContent({
 							createdBy: dataEditMiniPost.sharePost.createdBy,
 						},
 						verb: REVIEW_VERB_SHARE,
+					};
+					dispatch(saveDataShare(data));
+				} else if (dataEditMiniPost.verb === QUOTE_VERB_SHARE) {
+					const data = {
+						background: dataEditMiniPost.sharePost.background,
+						book: dataEditMiniPost.sharePost.book,
+						bookId: dataEditMiniPost.sharePost.bookId,
+						quote: dataEditMiniPost.sharePost.quote,
+						user: dataEditMiniPost.sharePost.createdBy,
+						verb: QUOTE_VERB_SHARE,
+					};
+					dispatch(saveDataShare(data));
+				} else if (dataEditMiniPost.verb === GROUP_POST_VERB_SHARE) {
+					const data = {
+						group: dataEditMiniPost.sharePost.groupInfo,
+						sharePost: {
+							id: dataEditMiniPost.sharePost.progress,
+							message: dataEditMiniPost.sharePost.message,
+							bookId: dataEditMiniPost.sharePost.id,
+							isDeleted: false,
+						},
+						verb: GROUP_POST_VERB_SHARE,
+						...dataEditMiniPost,
 					};
 					dispatch(saveDataShare(data));
 				}
