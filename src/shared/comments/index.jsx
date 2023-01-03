@@ -41,11 +41,13 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 	const [isEditingComment, setIsEditingComment] = useState(false);
 	const [isFetchingLikeUnLike, setIsFetchingLikeUnLike] = useState(false);
 	const [mentionUsersArray, setMentionUsersArray] = useState([]);
+	const [moveElement, setMoveElement] = useState(false);
 
 	const urlToDirect = useRef('');
 	const initialContent = useRef('');
 	const cmtContent = useRef(null);
 	const optionsCommentPopup = useRef(null);
+	const optionsCommentList = useRef(null);
 
 	const { userInfo } = useSelector(state => state.auth);
 	const { userId } = useParams();
@@ -114,6 +116,19 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 			};
 		}
 	}, [isEditingComment]);
+
+	const handleMovingOptionCmt = () => {
+		const postContainerElement = document.querySelector('.post__container');
+
+		const y1 = postContainerElement.getBoundingClientRect().right;
+		const y2 = optionsCommentList.current.getBoundingClientRect().right;
+
+		if (y1 - y2 < 0) {
+			setMoveElement(true);
+		} else {
+			setMoveElement(false);
+		}
+	};
 
 	const handleAddEventClickToUrlTags = useCallback(() => {
 		const arr = cmtContent.current.querySelectorAll('.url-class');
@@ -308,6 +323,11 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 		}
 	};
 
+	const onClickShowOptionComment = () => {
+		setShowOptionsComment(!showOptionsComment);
+		handleMovingOptionCmt();
+	};
+
 	return (
 		<div className='comment'>
 			<UserAvatar
@@ -374,16 +394,19 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 							>
 								<div
 									className='comment__wrapper__info__options__elipsis'
-									onClick={() => setShowOptionsComment(!showOptionsComment)}
+									onClick={onClickShowOptionComment}
 								>
 									...
 								</div>
-								{showOptionsComment && (
-									<div className='comment__wrapper__info__options__list'>
-										<p onClick={() => setIsEditingComment(true)}>Sửa bình luận</p>
-										<p onClick={() => setModalDeleteShow(true)}>Xóa</p>
-									</div>
-								)}
+								<div
+									className={`comment__wrapper__info__options__list ${
+										moveElement && 'move-element'
+									} ${showOptionsComment && 'show'}`}
+									ref={optionsCommentList}
+								>
+									<p onClick={() => setIsEditingComment(true)}>Sửa bình luận</p>
+									<p onClick={() => setModalDeleteShow(true)}>Xóa</p>
+								</div>
 							</div>
 						)}
 					</div>
