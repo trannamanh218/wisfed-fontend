@@ -40,10 +40,10 @@ function MainConfirmMyBook({ setErrorLoadPage }) {
 	}, []);
 
 	useEffect(() => {
-		if (errorFetch) {
+		if (errorFetch || (bookInfo && bookInfo.isDeleted)) {
 			setErrorLoadPage(true);
 		}
-	}, [errorFetch]);
+	}, [errorFetch, bookInfo]);
 
 	useEffect(() => {
 		if (!_.isEmpty(userInfo)) {
