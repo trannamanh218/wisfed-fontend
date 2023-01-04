@@ -544,17 +544,7 @@ function CreatePostModalContent({
 		if (!_.isEmpty(taggedData.addBook)) {
 			params.bookId = taggedData.addBook.id;
 		}
-		if (isEditPost) {
-			if (
-				window.location.pathname.includes('/profile/') ||
-				window.location.pathname.includes('/group/') ||
-				window.location.pathname.includes('/category/detail/')
-			) {
-				params['feedId'] = dataEditMiniPost.getstreamId;
-			} else {
-				params['feedId'] = dataEditMiniPost.id;
-			}
-		}
+		params['feedId'] = dataEditMiniPost.getstreamId ? dataEditMiniPost.getstreamId : dataEditMiniPost.id;
 		return params;
 	};
 
@@ -1006,7 +996,7 @@ function CreatePostModalContent({
 							<CloseX />
 						</div>
 						<h5>
-							{postDataShare && !_.isEmpty(postDataShare) && isEditPost
+							{isEditPost
 								? 'Chỉnh sửa bài viết'
 								: postDataShare && !_.isEmpty(postDataShare)
 								? 'Chia sẻ bài viết'
