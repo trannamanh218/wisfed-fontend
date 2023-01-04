@@ -46,8 +46,12 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 	const urlToDirect = useRef('');
 	const initialContent = useRef('');
 	const cmtContent = useRef(null);
-	const optionsCommentPopup = useRef(null);
+
+	const cmtAvatarElement = useRef(null);
 	const optionsCommentList = useRef(null);
+	const commentContainerElement = useRef(null);
+	const optionsCommentPopup = useRef(null);
+	const cmtElement = useRef(null);
 
 	const { userInfo } = useSelector(state => state.auth);
 	const { userId } = useParams();
@@ -117,17 +121,38 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 		}
 	}, [isEditingComment]);
 
-	const handleMovingOptionCmt = () => {
+	const onClickShowOptionComment = () => {
 		const postContainerElement = document.querySelector('.post__container');
+		const postContainerPaddingRight = window
+			.getComputedStyle(postContainerElement)
+			.getPropertyValue('padding-right');
 
-		const y1 = postContainerElement.getBoundingClientRect().right;
-		const y2 = optionsCommentList.current.getBoundingClientRect().right;
+		const cmtElementWidth = cmtElement.current.offsetWidth;
+		const avatarWidth = cmtAvatarElement.current.offsetWidth;
+		const commentContainerWidth = commentContainerElement.current.offsetWidth;
+		const optionsCommentPopupWidth = optionsCommentPopup.current.offsetWidth;
+		const optionCommentListWidth = optionsCommentList.current.offsetWidth;
+		const optionsCommentPopupMarginLeft = window
+			.getComputedStyle(optionsCommentPopup.current)
+			.getPropertyValue('margin-left');
 
-		if (y1 - y2 < 0) {
+		const availableSpace =
+			cmtElementWidth -
+			avatarWidth -
+			commentContainerWidth -
+			optionsCommentPopupWidth -
+			parseFloat(optionsCommentPopupMarginLeft) +
+			parseFloat(postContainerPaddingRight);
+
+		const takenSpace = (optionCommentListWidth - optionsCommentPopupWidth) / 2;
+
+		if (availableSpace - takenSpace < 0) {
 			setMoveElement(true);
 		} else {
 			setMoveElement(false);
 		}
+
+		setShowOptionsComment(!showOptionsComment);
 	};
 
 	const handleAddEventClickToUrlTags = useCallback(() => {
@@ -323,19 +348,16 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 		}
 	};
 
-	const onClickShowOptionComment = () => {
-		setShowOptionsComment(!showOptionsComment);
-		handleMovingOptionCmt();
-	};
-
 	return (
-		<div className='comment'>
-			<UserAvatar
-				className='comment__avatar'
-				size='sm'
-				source={data.user?.avatarImage}
-				handleClick={() => navigate(`/profile/${data.createdBy}`)}
-			/>
+		<div className='comment' ref={cmtElement}>
+			<div ref={cmtAvatarElement}>
+				<UserAvatar
+					className='comment__avatar'
+					size='sm'
+					source={data.user?.avatarImage}
+					handleClick={() => navigate(`/profile/${data.createdBy}`)}
+				/>
+			</div>
 			{isEditingComment ? (
 				<div className='comment__editing'>
 					<CommentEditor
@@ -354,7 +376,7 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 			) : (
 				<div className='comment__wrapper'>
 					<div className='comment__wrapper__info'>
-						<div className='comment__container'>
+						<div className='comment__container' ref={commentContainerElement}>
 							<div className='comment__header'>
 								<Link to={`/profile/${data.user?.id}`}>
 									<span className='comment__author'>
