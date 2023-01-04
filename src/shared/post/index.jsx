@@ -477,10 +477,10 @@ function Post({
 	const removeFeed = async () => {
 		setShowDeleteFeedModal(false);
 		try {
-			let postId = postData.id;
+			const postId = postData.id;
 			if (postData.groupId) {
 				let feedId;
-				let groupId = postData.groupInfo?.id ? postData.groupInfo?.id : postData.group?.id;
+				const groupId = postData.groupInfo?.id ? postData.groupInfo?.id : postData.group?.id;
 				if (
 					window.location.pathname.includes('/group/') ||
 					window.location.pathname.includes('/hashtag-group/') ||

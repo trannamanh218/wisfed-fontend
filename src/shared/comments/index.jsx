@@ -42,11 +42,17 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 	const [isFetchingLikeUnLike, setIsFetchingLikeUnLike] = useState(false);
 	const [mentionUsersArray, setMentionUsersArray] = useState([]);
 	const [readMore, setReadMore] = useState(false);
+	const [moveElement, setMoveElement] = useState(false);
 
 	const urlToDirect = useRef('');
 	const initialContent = useRef('');
 	const cmtContent = useRef(null);
+
+	const cmtAvatarElement = useRef(null);
+	const optionsCommentList = useRef(null);
+	const commentContainerElement = useRef(null);
 	const optionsCommentPopup = useRef(null);
+	const cmtElement = useRef(null);
 
 	const { userInfo } = useSelector(state => state.auth);
 	const { userId } = useParams();
@@ -115,6 +121,40 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 			};
 		}
 	}, [isEditingComment]);
+
+	const onClickShowOptionComment = () => {
+		const postContainerElement = document.querySelector('.post__container');
+		const postContainerPaddingRight = window
+			.getComputedStyle(postContainerElement)
+			.getPropertyValue('padding-right');
+
+		const cmtElementWidth = cmtElement.current.offsetWidth;
+		const avatarWidth = cmtAvatarElement.current.offsetWidth;
+		const commentContainerWidth = commentContainerElement.current.offsetWidth;
+		const optionsCommentPopupWidth = optionsCommentPopup.current.offsetWidth;
+		const optionCommentListWidth = optionsCommentList.current.offsetWidth;
+		const optionsCommentPopupMarginLeft = window
+			.getComputedStyle(optionsCommentPopup.current)
+			.getPropertyValue('margin-left');
+
+		const availableSpace =
+			cmtElementWidth -
+			avatarWidth -
+			commentContainerWidth -
+			optionsCommentPopupWidth -
+			parseFloat(optionsCommentPopupMarginLeft) +
+			parseFloat(postContainerPaddingRight);
+
+		const takenSpace = (optionCommentListWidth - optionsCommentPopupWidth) / 2;
+
+		if (availableSpace - takenSpace < 0) {
+			setMoveElement(true);
+		} else {
+			setMoveElement(false);
+		}
+
+		setShowOptionsComment(!showOptionsComment);
+	};
 
 	const handleAddEventClickToUrlTags = useCallback(() => {
 		const arr = cmtContent.current.querySelectorAll('.url-class');
@@ -310,13 +350,15 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 	};
 
 	return (
-		<div className='comment'>
-			<UserAvatar
-				className='comment__avatar'
-				size='sm'
-				source={data.user?.avatarImage}
-				handleClick={() => navigate(`/profile/${data.createdBy}`)}
-			/>
+		<div className='comment' ref={cmtElement}>
+			<div ref={cmtAvatarElement}>
+				<UserAvatar
+					className='comment__avatar'
+					size='sm'
+					source={data.user?.avatarImage}
+					handleClick={() => navigate(`/profile/${data.createdBy}`)}
+				/>
+			</div>
 			{isEditingComment ? (
 				<div className='comment__editing'>
 					<CommentEditor
@@ -335,7 +377,7 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 			) : (
 				<div className='comment__wrapper'>
 					<div className='comment__wrapper__info'>
-						<div className='comment__container'>
+						<div className='comment__container' ref={commentContainerElement}>
 							<div className='comment__header'>
 								<Link to={`/profile/${data.user?.id}`}>
 									<span className='comment__author'>
@@ -385,16 +427,19 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 							>
 								<div
 									className='comment__wrapper__info__options__elipsis'
-									onClick={() => setShowOptionsComment(!showOptionsComment)}
+									onClick={onClickShowOptionComment}
 								>
 									...
 								</div>
-								{showOptionsComment && (
-									<div className='comment__wrapper__info__options__list'>
-										<p onClick={() => setIsEditingComment(true)}>Sửa bình luận</p>
-										<p onClick={() => setModalDeleteShow(true)}>Xóa</p>
-									</div>
-								)}
+								<div
+									className={`comment__wrapper__info__options__list ${
+										moveElement && 'move-element'
+									} ${showOptionsComment && 'show'}`}
+									ref={optionsCommentList}
+								>
+									<p onClick={() => setIsEditingComment(true)}>Sửa bình luận</p>
+									<p onClick={() => setModalDeleteShow(true)}>Xóa</p>
+								</div>
 							</div>
 						)}
 					</div>
