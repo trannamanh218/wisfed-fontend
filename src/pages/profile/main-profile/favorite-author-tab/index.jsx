@@ -4,9 +4,11 @@ import { getFavoriteAuthor } from 'reducers/redux-utils/profile';
 import { useState, useEffect, memo } from 'react';
 import { useDispatch } from 'react-redux';
 import { NotificationError } from 'helpers/Error';
+import { useParams } from 'react-router-dom';
 
 const FavoriteAuthorTab = ({ currentTab }) => {
 	const [favoriteAuthorList, setFavoriteAuthorList] = useState([]);
+	const { userId } = useParams();
 
 	const dispatch = useDispatch();
 
@@ -18,7 +20,10 @@ const FavoriteAuthorTab = ({ currentTab }) => {
 
 	const getFavoriteAuthorList = async () => {
 		try {
-			const res = await dispatch(getFavoriteAuthor()).unwrap();
+			const data = {
+				id: userId,
+			};
+			const res = await dispatch(getFavoriteAuthor(data)).unwrap();
 			setFavoriteAuthorList(res);
 		} catch (err) {
 			NotificationError(err);

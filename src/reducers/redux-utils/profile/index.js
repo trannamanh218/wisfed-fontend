@@ -2,9 +2,10 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import Request from 'helpers/Request';
 import { getFavoriteAuthorAPI } from 'constants/apiURL';
 
-export const getFavoriteAuthor = createAsyncThunk('common/getListCopyrights', async (params, { rejectWithValue }) => {
+export const getFavoriteAuthor = createAsyncThunk('common/getListCopyrights', async (data, { rejectWithValue }) => {
 	try {
-		const res = await Request.makeGet(getFavoriteAuthorAPI, params);
+		const { id, params } = data;
+		const res = await Request.makeGet(getFavoriteAuthorAPI(id), params);
 		return res.data.rows;
 	} catch (err) {
 		const error = err.response.message;
