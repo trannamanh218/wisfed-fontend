@@ -80,18 +80,19 @@ function ShareTarget({ postData, inPost = false }) {
 	};
 
 	const renderContentTop = () => {
+		let current;
+		let total;
+		if (inPost) {
+			current = postData.currentRead || postData.sharePost?.current;
+			total = postData.totalTarget || postData.sharePost?.target;
+		} else {
+			current = postData.booksReadCount || postData.sharePost?.metaData.currentRead;
+			total = postData.numberBook || postData.sharePost?.metaData.totalTarget;
+		}
 		return (
 			<div className='share-target__content__top'>
 				<p>
-					{renderName()} đã đọc được{' '}
-					{inPost
-						? postData.currentRead || postData?.sharePost.current
-						: postData?.booksReadCount || postData?.sharePost?.metaData.currentRead}{' '}
-					trên{' '}
-					{inPost
-						? postData.totalTarget || postData?.sharePost.target
-						: postData?.numberBook || postData?.sharePost?.metaData.totalTarget}{' '}
-					cuốn
+					{renderName()} đã đọc được {current || 0} trên {total || 1} cuốn
 				</p>
 			</div>
 		);

@@ -5,18 +5,35 @@
 		<link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<meta name="theme-color" content="#000000" />
-		<!-- <meta name="description" content="Mạng xã hội chia sẻ đọc sách" /> -->
+		<!-- <meta name="description" content="Wisfeed - Khẳng định bản thân bằng trí tuệ" /> -->
+
+		<!-- Google Tag Manager -->
+		<script>
+			(function (w, d, s, l, i) {
+				w[l] = w[l] || [];
+				w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
+				var f = d.getElementsByTagName(s)[0],
+					j = d.createElement(s),
+					dl = l != 'dataLayer' ? '&l=' + l : '';
+				j.async = true;
+				j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+				f.parentNode.insertBefore(j, f);
+			})(window, document, 'script', 'dataLayer', 'GTM-TH59NJF');
+		</script>
+		<!-- End Google Tag Manager -->
+		<!-- ------------------------------------------------------------------------------------ -->
 		<meta
 			property="og:url"
 			content="http://www.nytimes.com/2015/02/19/arts/international/when-great-minds-dont-think-alike.html"
 		/>
 		<meta property="og:type" content="article" />
 		<meta property="og:title" content="Wisfeed" />
-		<meta property="og:description" content="Mạng xã hội chia sẻ đọc sách" />
+		<meta property="og:description" content="Wisfeed - Khẳng định bản thân bằng trí tuệ" />
 		<meta
 			property="og:image"
-			content="http://static01.nyt.com/images/2015/02/19/arts/international/19iht-btnumbers19A/19iht-btnumbers19A-facebookJumbo-v2.jpg"
+			content="https://nghiendocvaviet.wisfeed.com/wp-content/uploads/2022/08/wisfeed-logo.jpg"
 		/>
+		<!-- ------------------------------------------------------------------------------------- -->
 		<link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
 		<!--
       manifest.json provides metadata used when your web app is installed on a
@@ -41,21 +58,34 @@
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
 		<title>Wisfeed</title>
+
+		<meta name="google-site-verification" content="WQXXuZRgQHrkXXLBZwmSuT8UaxhgLxbbnJrR_To3xEY" />
 		<script type="application/ld+json">
 			{
-				"@context": "http://schema.org",
-				"@type": "WebSite",
+				"@context": "https://schema.org/",
+				"@type": "Book",
 				"name": "Wisfeed",
 				"url": "https://beta.wisfeed.com/",
+				"sameAs": ["https://facebook.com/mypage", "https://instagram.com/site", "https://twitter.com/name"],
 				"potentialAction": {
 					"@type": "SearchAction",
-					"target": "http://elitesem.com/?s={search_term}",
+					"target": "https://beta.wisfeed.com/result/q={search_term}",
 					"query-input": "required name=search_term"
 				}
 			}
 		</script>
 	</head>
 	<body>
+		<!-- Google Tag Manager (noscript) -->
+		<noscript
+			><iframe
+				src="https://www.googletagmanager.com/ns.html?id=GTM-TH59NJF"
+				height="0"
+				width="0"
+				style="display: none; visibility: hidden"
+			></iframe
+		></noscript>
+		<!-- End Google Tag Manager (noscript) -->
 		<noscript>You need to enable JavaScript to run this app.</noscript>
 		<div id="root"></div>
 		<!--
