@@ -9,6 +9,8 @@ import _ from 'lodash';
 import { generateQuery } from 'helpers/Common';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import LoadingIndicator from 'shared/loading-indicator';
+import { BASE_URL } from 'constants';
+import { FaceBookIcon, GmailIcon } from 'components/svg';
 
 const MyFriends = ({ activeTabs, inputSearch, filter, handleActiveTabs }) => {
 	const callApiStart = useRef(0);
@@ -59,47 +61,78 @@ const MyFriends = ({ activeTabs, inputSearch, filter, handleActiveTabs }) => {
 			{isLoading ? (
 				<LoadingIndicator />
 			) : (
-				<div className='myfriends__container'>
-					<div className='myfriends__title'>
-						({listFriendCount}) Bạn bè của{' '}
-						{userInfo.fullName ? (
-							userInfo.fullName
+				<>
+					<div className='invite-friends-wrapper'>
+						<div className='invite-friends__title'>Mời bạn bè</div>
+						<div className='invite-friends__by-id'>
+							<span className='invite-friends__by-id__code'>1b4ade47-d03b-4a7a-98ea-27abd8f15a85</span>
+							<button className='invite-friends__by-id__copy-code-btn'>Sao chép ID</button>
+						</div>
+						<div className='invite-friends__by-external-link'>
+							<div className='invite-friends__by-external-link__text'>Hoặc mời bạn bè trên</div>
+							<div className='invite-friends__by-external-link__buttons'>
+								<a
+									// href={''}
+									className='invite-friends__by-external-link__button facebook-btn'
+								>
+									<FaceBookIcon />
+									<span>Facebook</span>
+								</a>
+								<a
+									// href={`${BASE_URL}/api/v1/auth/loginGetToken`}
+									className='invite-friends__by-external-link__button google-btn'
+								>
+									<GmailIcon />
+									<span>Google</span>
+								</a>
+							</div>
+						</div>
+					</div>
+					<div className='myfriends__container'>
+						<div className='myfriends__title'>
+							({listFriendCount}) Bạn bè của{' '}
+							{userInfo.fullName ? (
+								userInfo.fullName
+							) : (
+								<>
+									{userInfo.firstName}
+									<span>{userInfo.lastName}</span>
+								</>
+							)}
+						</div>
+
+						{getMyListFriend?.length > 0 ? (
+							<InfiniteScroll
+								dataLength={getMyListFriend.length}
+								next={() => {
+									setToggleCallAPI(!toggleCallAPI);
+								}}
+								hasMore={hasMore}
+								loader={<LoadingIndicator />}
+							>
+								<div className='myfriends__layout__container'>
+									{getMyListFriend.map(item => (
+										<FriendsItem key={item.id} data={item} keyTabs={activeTabs} />
+									))}
+								</div>
+							</InfiniteScroll>
 						) : (
-							<>
-								{userInfo.firstName}
-								<span>{userInfo.lastName}</span>
-							</>
+							<div style={{ textAlign: 'center', margin: '15px 0' }}>
+								<p style={{ margin: '20px 0' }}>
+									Bạn chưa có bạn bè nào, hãy thêm thật nhiều bạn bè nhé
+								</p>
+								<button className='btn btn-primary' onClick={() => handleActiveTabs('suggest')}>
+									Thêm bạn bè
+								</button>
+							</div>
 						)}
 					</div>
-
-					{getMyListFriend?.length > 0 ? (
-						<InfiniteScroll
-							dataLength={getMyListFriend.length}
-							next={() => {
-								setToggleCallAPI(!toggleCallAPI);
-							}}
-							hasMore={hasMore}
-							loader={<LoadingIndicator />}
-						>
-							<div className='myfriends__layout__container'>
-								{getMyListFriend.map(item => (
-									<FriendsItem key={item.id} data={item} keyTabs={activeTabs} />
-								))}
-							</div>
-						</InfiniteScroll>
-					) : (
-						<div style={{ textAlign: 'center', margin: '15px 0' }}>
-							<p style={{ margin: '20px 0' }}>Bạn chưa có bạn bè nào, hãy thêm thật nhiều bạn bè nhé</p>
-							<button className='btn btn-primary' onClick={() => handleActiveTabs('suggest')}>
-								Thêm bạn bè
-							</button>
-						</div>
-					)}
-				</div>
+				</>
 			)}
 		</>
 	);
 };
+
 MyFriends.propTypes = {
 	activeTabs: PropTypes.string,
 	inputSearch: PropTypes.string,

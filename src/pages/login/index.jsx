@@ -17,6 +17,7 @@ import Subtract from 'assets/images/Subtract.png';
 import _ from 'lodash';
 import { useEffect } from 'react';
 import Storage from 'helpers/Storage';
+import { BASE_URL } from 'constants';
 
 function Login() {
 	const [showImagePopover, setShowImagePopover] = useState(false);
@@ -133,13 +134,13 @@ function Login() {
 				<div>
 					<span className='login__login-box__title'>Đăng nhập và Khám phá</span>
 				</div>
-				<a href='https://beta.wisfeed.com/api/v1/auth/facebook'>
+				<a href={`${BASE_URL}/api/v1/auth/facebook`}>
 					<div className='login-facebook'>
 						<FaceBookIcon className='login__fbIcon' />
 						<button>Đăng nhập bằng Facebook</button>
 					</div>
 				</a>
-				<a href='https://beta.wisfeed.com/api/v1/auth/google'>
+				<a href={`${BASE_URL}/api/v1/auth/google`}>
 					<div className='login-gmail'>
 						<GmailIcon className='GmailIcon' />
 						<button>Đăng nhập bằng Gmail</button>

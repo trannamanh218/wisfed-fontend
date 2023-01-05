@@ -1,3 +1,71 @@
+@import 'src/scss/abstracts/_variables.scss';
+
+.invite-friends-wrapper {
+	background-color: white;
+	padding: 26px 28px;
+	border-radius: 14px;
+	margin-bottom: 28px;
+	.invite-friends__title {
+		font-weight: 700;
+		font-size: 1.5em;
+		line-height: 1.5;
+		letter-spacing: 1px;
+	}
+	.invite-friends__by-id {
+		margin-top: 24px;
+		padding: 14px 10px;
+		font-size: 13px;
+		line-height: 1.7em;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: 14px;
+		background-color: #eff0f6;
+		border-radius: 12px;
+	}
+	.invite-friends__by-id__code {
+		color: #14142b;
+	}
+	.invite-friends__by-id__copy-code-btn {
+		font-weight: 600;
+		color: #b38c64;
+		cursor: pointer;
+	}
+	.invite-friends__by-external-link {
+		margin-top: 1rem;
+	}
+	.invite-friends__by-external-link__text {
+		font-size: 0.94em;
+		line-height: 1.5;
+		color: #d9dbe9;
+	}
+	.invite-friends__by-external-link__buttons {
+		margin-top: 8px;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		gap: 1.1rem;
+	}
+	.invite-friends__by-external-link__button {
+		flex-grow: 1;
+		padding: 13px 0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 12px;
+		font-weight: 600;
+		border-radius: 12px;
+		&.facebook-btn {
+			background-color: #4666d5;
+			color: white;
+		}
+		&.google-btn {
+			color: $ash-body;
+			background: #eff0f7;
+		}
+	}
+}
+
 .myfriends__container {
 	background: #ffffff;
 	border-radius: 16px;
