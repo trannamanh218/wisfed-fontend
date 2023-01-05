@@ -122,34 +122,40 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 	}, [isEditingComment]);
 
 	const onClickShowOptionComment = () => {
-		const postContainerElement = document.querySelector('.post__container');
-		const postContainerPaddingRight = window
-			.getComputedStyle(postContainerElement)
-			.getPropertyValue('padding-right');
+		let postContainerElement = document.querySelector('.post__container');
+		if (!postContainerElement) {
+			postContainerElement = document.querySelector('.main-quote-detail__pane');
+		}
 
-		const cmtElementWidth = cmtElement.current.offsetWidth;
-		const avatarWidth = cmtAvatarElement.current.offsetWidth;
-		const commentContainerWidth = commentContainerElement.current.offsetWidth;
-		const optionsCommentPopupWidth = optionsCommentPopup.current.offsetWidth;
-		const optionCommentListWidth = optionsCommentList.current.offsetWidth;
-		const optionsCommentPopupMarginLeft = window
-			.getComputedStyle(optionsCommentPopup.current)
-			.getPropertyValue('margin-left');
+		if (postContainerElement) {
+			const postContainerPaddingRight = window
+				.getComputedStyle(postContainerElement)
+				.getPropertyValue('padding-right');
 
-		const availableSpace =
-			cmtElementWidth -
-			avatarWidth -
-			commentContainerWidth -
-			optionsCommentPopupWidth -
-			parseFloat(optionsCommentPopupMarginLeft) +
-			parseFloat(postContainerPaddingRight);
+			const cmtElementWidth = cmtElement.current.offsetWidth;
+			const avatarWidth = cmtAvatarElement.current.offsetWidth;
+			const commentContainerWidth = commentContainerElement.current.offsetWidth;
+			const optionsCommentPopupWidth = optionsCommentPopup.current.offsetWidth;
+			const optionCommentListWidth = optionsCommentList.current.offsetWidth;
+			const optionsCommentPopupMarginLeft = window
+				.getComputedStyle(optionsCommentPopup.current)
+				.getPropertyValue('margin-left');
 
-		const takenSpace = (optionCommentListWidth - optionsCommentPopupWidth) / 2;
+			const availableSpace =
+				cmtElementWidth -
+				avatarWidth -
+				commentContainerWidth -
+				optionsCommentPopupWidth -
+				parseFloat(optionsCommentPopupMarginLeft) +
+				parseFloat(postContainerPaddingRight);
 
-		if (availableSpace - takenSpace < 0) {
-			setMoveElement(true);
-		} else {
-			setMoveElement(false);
+			const takenSpace = (optionCommentListWidth - optionsCommentPopupWidth) / 2;
+
+			if (availableSpace - takenSpace < 0) {
+				setMoveElement(true);
+			} else {
+				setMoveElement(false);
+			}
 		}
 
 		setShowOptionsComment(!showOptionsComment);

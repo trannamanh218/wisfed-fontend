@@ -65,9 +65,9 @@ const BookIntro = ({ bookInfo, listRatingStar }) => {
 		}
 	};
 
-	const viewAuthorProfile = authorId => {
+	const onClickAuthorName = author => {
 		if (bookInfo.verify) {
-			navigate(`/profile/${authorId}`);
+			navigate(`/profile/${author.authorId}`);
 		}
 	};
 
@@ -104,7 +104,7 @@ const BookIntro = ({ bookInfo, listRatingStar }) => {
 												className={classNames({
 													'verified': bookInfo.verify,
 												})}
-												onClick={() => viewAuthorProfile(author.authorId)}
+												onClick={() => onClickAuthorName(author)}
 											>
 												{author.authorName}
 											</span>
