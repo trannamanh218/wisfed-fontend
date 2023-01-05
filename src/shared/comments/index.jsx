@@ -123,10 +123,6 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 
 	const onClickShowOptionComment = () => {
 		let postContainerElement = document.querySelector('.post__container');
-		if (!postContainerElement) {
-			postContainerElement = document.querySelector('.main-quote-detail__pane');
-		}
-
 		if (postContainerElement) {
 			const postContainerPaddingRight = window
 				.getComputedStyle(postContainerElement)
