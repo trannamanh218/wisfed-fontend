@@ -65,9 +65,9 @@ const BookIntro = ({ bookInfo, listRatingStar }) => {
 		}
 	};
 
-	const viewAuthorProfile = () => {
+	const viewAuthorProfile = authorId => {
 		if (bookInfo.verify) {
-			navigate(`/profile/${bookInfo.authors[0].authorId}`);
+			navigate(`/profile/${authorId}`);
 		}
 	};
 
@@ -95,22 +95,27 @@ const BookIntro = ({ bookInfo, listRatingStar }) => {
 							{bookInfo.name}
 						</h1>
 						<div className='book-intro__author'>
-							<span onClick={viewAuthorProfile}>
-								{!_.isEmpty(bookInfo.authors) ? (
-									<span>
-										Bởi{' '}
-										<span
-											className={classNames({
-												'verified': bookInfo.verify,
-											})}
-										>
-											{bookInfo.authors[0].authorName}
+							{Array.isArray(bookInfo.authors) && bookInfo.authors.length > 0 ? (
+								<>
+									Bởi{' '}
+									{bookInfo.authors.map((author, index) => (
+										<span key={index}>
+											<span
+												className={classNames({
+													'verified': bookInfo.verify,
+												})}
+												onClick={() => viewAuthorProfile(author.authorId)}
+											>
+												{author.authorName}
+											</span>
+											{index + 1 < bookInfo.authors.length && ', '}
 										</span>
-									</span>
-								) : (
-									'Chưa cập nhật tác giả'
-								)}
-							</span>
+									))}
+								</>
+							) : (
+								'Chưa cập nhật tác giả'
+							)}
+
 							{bookInfo.verify && <CircleCheckIcon className='book-intro__check' />}
 						</div>
 						<div className='book-intro__stars'>
