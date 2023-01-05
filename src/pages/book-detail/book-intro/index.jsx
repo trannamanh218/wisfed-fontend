@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import shareImg from 'assets/images/alert-circle-fill.png';
 import facebookImg from 'assets/images/facebook.png';
 import StatusButton from 'components/status-button';
@@ -10,7 +10,7 @@ import ReadMore from 'shared/read-more';
 import './book-intro.scss';
 import _ from 'lodash';
 import { convertToPlainString } from 'helpers/Common';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { FacebookShareButton } from 'react-share';
 import Storage from 'helpers/Storage';
@@ -18,15 +18,15 @@ import { checkUserLogin } from 'reducers/redux-utils/auth';
 import classNames from 'classnames';
 
 const BookIntro = ({ bookInfo, listRatingStar }) => {
-	const [urlShare, seturlShare] = useState('');
 	const [textLength, setTextLength] = useState(500);
 
 	const userInfo = useSelector(state => state.auth.userInfo);
 	const reviewsNumber = useSelector(state => state.book.currentBookReviewsNumber);
 
-	const location = useLocation();
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
+
+	const urlShare = useRef(`${window.location.hostname + window.location.pathname}`);
 
 	useEffect(() => {
 		if (window.innerWidth <= 768) {
@@ -49,7 +49,6 @@ const BookIntro = ({ bookInfo, listRatingStar }) => {
 	const handleShareFaceBook = () => {
 		if (Storage.getAccessToken()) {
 			dispatch(checkUserLogin(false));
-			seturlShare(`${window.location.hostname + location.pathname}`);
 		} else {
 			dispatch(checkUserLogin(true));
 		}
@@ -128,7 +127,7 @@ const BookIntro = ({ bookInfo, listRatingStar }) => {
 					</div>
 				</div>
 				<div onClick={handleShareFaceBook} className='book-intro__action'>
-					<FacebookShareButton url={urlShare}>
+					<FacebookShareButton url={urlShare.current}>
 						<div className='book-intro__share'>
 							<img src={shareImg} alt='share' />
 							<span className='book-intro__share__text'>Chia sẻ</span>
