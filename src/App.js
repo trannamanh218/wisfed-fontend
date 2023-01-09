@@ -17,7 +17,7 @@ import BooksAuthor from 'pages/books-author';
 import Category from 'pages/category';
 import CategoryDetail from 'pages/category-detail';
 import ChooseTopic from 'pages/choose-topic';
-import Direct from 'pages/choose-topic/DirectPage';
+import Direct from 'pages/direct-page/DirectPageDefault';
 import ConfirmMyBook from 'pages/confirm-my-book';
 import ForgetPassWordComponent from 'pages/foget-password/component';
 import AdminCreateNewPassword from 'pages/foget-password/component-admin/CreateNewPasswordAdmin';
@@ -50,6 +50,7 @@ import PropTypes from 'prop-types';
 import ModalCheckLogin from 'shared/modal-check-login';
 import QuotesByHashTag from 'pages/quotes-by-hashtag/QuotesByHashTag';
 import Header from 'components/header';
+import DirectPageInvite from 'pages/direct-page/DirectPageInvite';
 
 function App({ children }) {
 	const dispatch = useDispatch();
@@ -95,7 +96,14 @@ function App({ children }) {
 	}, [location]);
 
 	const renderHeader = () => {
-		const excludePaths = ['/login', '/register', '/forget-password', '/create-newpassword-admin', '/choose-topic'];
+		const excludePaths = [
+			'/login',
+			'/register',
+			'/forget-password',
+			'/create-newpassword-admin',
+			'/choose-topic',
+			'/api/v1/auth/direct',
+		];
 		if (!excludePaths.some(path => location.pathname.includes(path)))
 			return (
 				<div style={{ margin: 'auto', maxWidth: '1440px' }}>
@@ -164,6 +172,7 @@ function App({ children }) {
 				<Route path='/choose-topic' element={<ChooseTopic />} />
 				<Route path='/direct' element={<Direct />} />
 				<Route path='/direct/login' element={<Direct />} />
+				<Route path='/api/v1/auth/direct' element={<DirectPageInvite />} />
 				<Route path='/reading-summary/:userId' element={<ReadingSummary />} />
 				<Route path='/reading-target/:userId' element={<ReadingTarget />} />
 				<Route path='/group' element={<LayoutGroup />} />
