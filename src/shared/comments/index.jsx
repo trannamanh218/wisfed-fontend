@@ -123,34 +123,36 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 	}, [isEditingComment]);
 
 	const onClickShowOptionComment = () => {
-		const postContainerElement = document.querySelector('.post__container');
-		const postContainerPaddingRight = window
-			.getComputedStyle(postContainerElement)
-			.getPropertyValue('padding-right');
+		let postContainerElement = document.querySelector('.post__container');
+		if (postContainerElement) {
+			const postContainerPaddingRight = window
+				.getComputedStyle(postContainerElement)
+				.getPropertyValue('padding-right');
 
-		const cmtElementWidth = cmtElement.current.offsetWidth;
-		const avatarWidth = cmtAvatarElement.current.offsetWidth;
-		const commentContainerWidth = commentContainerElement.current.offsetWidth;
-		const optionsCommentPopupWidth = optionsCommentPopup.current.offsetWidth;
-		const optionCommentListWidth = optionsCommentList.current.offsetWidth;
-		const optionsCommentPopupMarginLeft = window
-			.getComputedStyle(optionsCommentPopup.current)
-			.getPropertyValue('margin-left');
+			const cmtElementWidth = cmtElement.current.offsetWidth;
+			const avatarWidth = cmtAvatarElement.current.offsetWidth;
+			const commentContainerWidth = commentContainerElement.current.offsetWidth;
+			const optionsCommentPopupWidth = optionsCommentPopup.current.offsetWidth;
+			const optionCommentListWidth = optionsCommentList.current.offsetWidth;
+			const optionsCommentPopupMarginLeft = window
+				.getComputedStyle(optionsCommentPopup.current)
+				.getPropertyValue('margin-left');
 
-		const availableSpace =
-			cmtElementWidth -
-			avatarWidth -
-			commentContainerWidth -
-			optionsCommentPopupWidth -
-			parseFloat(optionsCommentPopupMarginLeft) +
-			parseFloat(postContainerPaddingRight);
+			const availableSpace =
+				cmtElementWidth -
+				avatarWidth -
+				commentContainerWidth -
+				optionsCommentPopupWidth -
+				parseFloat(optionsCommentPopupMarginLeft) +
+				parseFloat(postContainerPaddingRight);
 
-		const takenSpace = (optionCommentListWidth - optionsCommentPopupWidth) / 2;
+			const takenSpace = (optionCommentListWidth - optionsCommentPopupWidth) / 2;
 
-		if (availableSpace - takenSpace < 0) {
-			setMoveElement(true);
-		} else {
-			setMoveElement(false);
+			if (availableSpace - takenSpace < 0) {
+				setMoveElement(true);
+			} else {
+				setMoveElement(false);
+			}
 		}
 
 		setShowOptionsComment(!showOptionsComment);
