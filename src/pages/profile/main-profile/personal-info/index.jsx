@@ -30,7 +30,7 @@ const PersonalInfo = ({ currentUserInfo, setCurrentTab }) => {
 	const [modalFriend, setModalFriend] = useState(false);
 	const [modalFollower, setModalFollower] = useState(false);
 	const [modalFollowing, setModalFollowing] = useState(false);
-	const [textLength, setTextLength] = useState(120);
+	const [textLength, setTextLength] = useState(165);
 	const [bgImage, setBgImage] = useState('');
 	const { userInfo } = useSelector(state => state.auth);
 	const dispatch = useDispatch();
