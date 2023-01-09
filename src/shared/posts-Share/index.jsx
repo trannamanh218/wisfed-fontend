@@ -21,6 +21,7 @@ import ShareUsers from 'pages/home/components/newfeed/components/modal-share-use
 import AuthorBook from 'shared/author-book';
 import QuoteCard from 'shared/quote-card';
 import ShareTarget from 'shared/share-target';
+import RouteLink from 'helpers/RouteLink';
 
 const PostShare = ({ postData, inCreatePost, directUrl }) => {
 	const [videoId, setVideoId] = useState('');
@@ -321,7 +322,7 @@ const PostShare = ({ postData, inCreatePost, directUrl }) => {
 						<li
 							key={item.id}
 							className={classNames('badge bg-primary-light')}
-							onClick={() => navigate(`/category/detail/${item.categoryId}`)}
+							onClick={() => navigate(RouteLink.categoryDetail(item.categoryId, item.category.name))}
 						>
 							<span>
 								{item.category?.name ||

@@ -62,6 +62,7 @@ import CreatePostModalContent from 'pages/home/components/newfeed/components/cre
 import { useHookUpdateCommentsAfterDelete } from 'api/comment.hook';
 import { blockAndAllowScroll } from 'api/blockAndAllowScroll.hook';
 import { deleteMiniGroupPost } from 'reducers/redux-utils/group';
+import RouteLink from 'helpers/RouteLink';
 
 const verbShareArray = [
 	POST_VERB_SHARE,
@@ -661,7 +662,7 @@ function Post({
 						<li
 							key={item.categoryId}
 							className={classNames('badge bg-primary-light')}
-							onClick={() => navigate(`/category/detail/${item.categoryId}`)}
+							onClick={() => navigate(RouteLink.categoryDetail(item.categoryId, item.category.name))}
 						>
 							<span>{item?.category?.name}</span>
 						</li>
