@@ -14,6 +14,7 @@ import ReactRating from 'shared/react-rating';
 import './author-book.scss';
 import CreatePostModalContent from 'pages/home/components/newfeed/components/create-post-modal-content';
 import { blockAndAllowScroll } from 'api/blockAndAllowScroll.hook';
+import RouteLink from 'helpers/RouteLink';
 
 const AuthorBook = ({
 	data,
@@ -105,7 +106,15 @@ const AuthorBook = ({
 				localStorage.setItem('result', JSON.stringify(saveLocalSearch.slice(0, 8)));
 			}
 		}
-		navigate(`/book/detail/${data.info?.id || data.bookId || data.id}`);
+		if (data.id && data.name) {
+			navigate(RouteLink.bookDetail(data.id, data.name));
+		} else if (data.info) {
+			navigate(RouteLink.bookDetail(data.info.id, data.info.name));
+		} else if (data.book) {
+			navigate(RouteLink.bookDetail(data.book.id, data.book.name));
+		} else {
+			navigate(`/book/detail/${data.info?.id || data.bookId || data.id}`);
+		}
 	};
 
 	return (

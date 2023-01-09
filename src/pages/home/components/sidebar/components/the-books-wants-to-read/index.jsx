@@ -4,6 +4,8 @@ import PropTypes from 'prop-types';
 import { useNavigate, Link } from 'react-router-dom';
 import { Row, Col } from 'react-bootstrap';
 import bookImage from 'assets/images/default-book.png';
+import RouteLink from 'helpers/RouteLink';
+
 function TheBooksWantsToRead(props) {
 	const { list } = props;
 	const navigate = useNavigate();
@@ -12,8 +14,9 @@ function TheBooksWantsToRead(props) {
 		e.target.style.cursor = 'pointer';
 	};
 
-	const onClickImgBook = item => {
-		navigate(`/book/detail/${item?.id}`);
+	const handleNavigateToBookDetail = (e, item) => {
+		e.preventDefault();
+		navigate(RouteLink.bookDetail(item.id, item.name));
 	};
 
 	return (
@@ -28,7 +31,7 @@ function TheBooksWantsToRead(props) {
 									key={index}
 									className='wants-to-read__thumbnail'
 									onMouseEnter={onMouseEnterImgBook}
-									onClick={() => onClickImgBook(item)}
+									onClick={() => handleNavigateToBookDetail(item)}
 								>
 									<img src={item?.frontBookCover || item?.images[0] || bookImage} alt='' />
 								</div>
@@ -38,7 +41,7 @@ function TheBooksWantsToRead(props) {
 						<Row>
 							{list.map((item, index) => (
 								<Col lg={6} md={12} key={index}>
-									<Link to={`/book/detail/${item?.id}`}>
+									<Link onClick={e => handleNavigateToBookDetail(e, item)} to='/'>
 										<div className='wants-to-read__thumbnail'>
 											<img src={item?.frontBookCover || item?.images[0] || bookImage} alt='' />
 										</div>

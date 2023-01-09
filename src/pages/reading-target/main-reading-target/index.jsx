@@ -20,6 +20,8 @@ import GoalsNotSetYet from './goals-not-set';
 import './main-reading-target.scss';
 import CreatePostModalContent from 'pages/home/components/newfeed/components/create-post-modal-content';
 import { blockAndAllowScroll } from 'api/blockAndAllowScroll.hook';
+import { navigate } from '@storybook/addon-links';
+import RouteLink from 'helpers/RouteLink';
 
 const MainReadingTarget = ({ setErrorLoadPage }) => {
 	const { userId } = useParams();
@@ -101,6 +103,11 @@ const MainReadingTarget = ({ setErrorLoadPage }) => {
 		}
 	};
 
+	const handleNavigateToBookDetail = (e, item) => {
+		e.preventDefault();
+		navigate(RouteLink.bookDetail.apply(item.book.id, item.book.name));
+	};
+
 	const handleRenderUseSearch = newArr => {
 		const newData = newArr.booksRead || newArr;
 		return newData.length ? (
@@ -108,12 +115,17 @@ const MainReadingTarget = ({ setErrorLoadPage }) => {
 				<div key={index}>
 					<div className='book-row' key={item.id}>
 						<div className='book-row__container'>
-							<Link to={`/book/detail/${item.book.id}`}>
+							<Link onClick={e => handleNavigateToBookDetail(e, item)} to='/'>
 								<BookThumbnail size='sm' source={item?.book?.frontBookCover || item.book?.images[0]} />
 							</Link>
 						</div>
 						<div className='book-row__container'>
-							<Link to={`/book/detail/${item.book.id}`} className='book-name' title={item.book.name}>
+							<Link
+								onClick={e => handleNavigateToBookDetail(e, item)}
+								to='/'
+								className='book-name'
+								title={item.book.name}
+							>
 								{item.book.name}
 							</Link>
 						</div>

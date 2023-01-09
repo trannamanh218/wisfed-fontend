@@ -17,6 +17,7 @@ import { updateBookForCreatePost } from 'reducers/redux-utils/book';
 import { getAllLibraryList } from 'reducers/redux-utils/library';
 import CreatePostModalContent from 'pages/home/components/newfeed/components/create-post-modal-content';
 import { blockAndAllowScroll } from 'api/blockAndAllowScroll.hook';
+import RouteLink from 'helpers/RouteLink';
 
 function Bookcase({ currentUserInfo, currentTab }) {
 	const [readingBooks, setReadingBooks] = useState([]);
@@ -138,8 +139,8 @@ function Bookcase({ currentUserInfo, currentTab }) {
 		}
 	};
 
-	const directToBookDetail = bookId => {
-		navigate(`/book/detail/${bookId}`);
+	const directToBookDetail = item => {
+		navigate(RouteLink.bookDetail(item.bookId, item.book.name));
 	};
 
 	return (
@@ -156,7 +157,7 @@ function Bookcase({ currentUserInfo, currentTab }) {
 										<div key={index} className='bookcase__item'>
 											<div className='bookcase__item__book'>
 												<BookThumbnail
-													data={item.bookId}
+													data={item}
 													source={item?.book?.frontBookCover || item.book?.images[0]}
 													size='lg'
 													handleClick={directToBookDetail}

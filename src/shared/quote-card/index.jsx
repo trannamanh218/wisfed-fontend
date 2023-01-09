@@ -9,6 +9,7 @@ import { NotificationError } from 'helpers/Error';
 import { useDispatch } from 'react-redux';
 import { likeUnlikeQuote } from 'reducers/redux-utils/quote';
 import _ from 'lodash';
+import RouteLink from 'helpers/RouteLink';
 
 const QuoteCard = ({ data, isDetail = false, isShare = false }) => {
 	const [quoteData, setQuoteData] = useState(data);
@@ -33,8 +34,9 @@ const QuoteCard = ({ data, isDetail = false, isShare = false }) => {
 		const id = data.createdBy.id || data.user.id || data.createdBy;
 		navigate(`/profile/${id}`);
 	};
+
 	const onClickRedirectToBook = data => {
-		navigate(`/book/detail/${data.bookId}`);
+		navigate(RouteLink.bookDetail(data.bookId, data.book.name));
 	};
 
 	const likeUnlikeQuoteFnc = id => {

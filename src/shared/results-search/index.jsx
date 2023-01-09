@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import bookImage from 'assets/images/default-book.png';
+import RouteLink from 'helpers/RouteLink';
 
 const ResultSearch = ({ valueInputSearch, resultSearch, setIsShow }) => {
 	const [checkRenderStorage, setCheckRenderStorage] = useState(false);
@@ -30,7 +31,7 @@ const ResultSearch = ({ valueInputSearch, resultSearch, setIsShow }) => {
 		if (item.fullName || item.firstName) {
 			navigate(`/profile/${item.id}`);
 		} else {
-			navigate(`/book/detail/${item.id}`);
+			navigate(RouteLink.bookDetail(item.id, item.name));
 		}
 		setIsShow(false);
 	};
