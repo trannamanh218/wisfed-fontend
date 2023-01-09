@@ -65,7 +65,7 @@ export const userRating = id => `api/v1/books/rating/${id}`;
 export const userAPI = '/api/v1/users';
 export const userDetailAPI = id => `/api/v1/users/${id}`;
 export const checkUserInfoAPI = '/api/v1/auth/jwt';
-export const getFavoriteAuthorAPI = '/api/v1/users/listAuthorsLiked ';
+export const getFavoriteAuthorAPI = id => `/api/v1/users/listAuthorsLiked/${id}`;
 export const userUpdateAPI = `/api/v1/users/update`;
 
 // friend

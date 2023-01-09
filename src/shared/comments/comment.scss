@@ -133,6 +133,25 @@
 		line-height: 1.5;
 		color: $ash-body;
 		word-break: break-word;
+		display: -webkit-box;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp: 2;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+	.box-comment__content {
+		font-weight: 500;
+		line-height: 1.5;
+		color: $ash-body;
+		word-break: break-word;
+		.comment__content__readMore {
+			cursor: pointer;
+			color: #000000 !important;
+			font-weight: 600;
+		}
+		.comment__content__readMore:hover {
+			text-decoration: underline;
+		}
 	}
 
 	&__action {

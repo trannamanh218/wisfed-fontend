@@ -30,6 +30,7 @@ const PersonalInfo = ({ currentUserInfo, setCurrentTab }) => {
 	const [modalFriend, setModalFriend] = useState(false);
 	const [modalFollower, setModalFollower] = useState(false);
 	const [modalFollowing, setModalFollowing] = useState(false);
+	const [textLength, setTextLength] = useState(165);
 	const [bgImage, setBgImage] = useState('');
 	const { userInfo } = useSelector(state => state.auth);
 	const dispatch = useDispatch();
@@ -46,6 +47,18 @@ const PersonalInfo = ({ currentUserInfo, setCurrentTab }) => {
 			setBgImage(backgroundImageDefault);
 		}
 	}, [currentUserInfo]);
+
+	useEffect(() => {
+		if (window.innerWidth <= 768) {
+			setTextLength(85);
+		} else if (window.innerWidth <= 820) {
+			setTextLength(95);
+		} else if (window.innerWidth <= 1024) {
+			setTextLength(120);
+		} else if (window.innerWidth <= 1280) {
+			setTextLength(400);
+		}
+	}, []);
 
 	const handleSettings = () => {
 		setSettingsVisible(prev => !prev);
@@ -281,7 +294,9 @@ const PersonalInfo = ({ currentUserInfo, setCurrentTab }) => {
 								/>
 							)}
 						</ul>
-						{currentUserInfo.descriptions && <ReadMore text={currentUserInfo.descriptions} />}
+						{currentUserInfo.descriptions && (
+							<ReadMore text={currentUserInfo.descriptions} length={textLength} />
+						)}
 					</div>
 				</div>
 			</div>

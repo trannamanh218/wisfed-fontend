@@ -280,7 +280,11 @@ function Post({
 				}
 				onClickSeeMoreReply(replyId);
 			} catch (err) {
-				toast.warning('Bạn chưa tham gia nhóm');
+				if (err.errorCode === 321 && location.pathname.includes('/group/')) {
+					toast.warning('Bạn chưa tham gia nhóm');
+				} else {
+					NotificationError(err);
+				}
 			}
 		}
 	};
@@ -473,14 +477,14 @@ function Post({
 	const removeFeed = async () => {
 		setShowDeleteFeedModal(false);
 		try {
-			let postId = postData.id;
+			const postId = postData.id;
 			if (postData.groupId) {
 				let feedId;
-				let groupId = postData.groupInfo?.id ? postData.groupInfo?.id : postData.group?.id;
+				const groupId = postData.groupInfo?.id ? postData.groupInfo?.id : postData.group?.id;
 				if (
 					window.location.pathname.includes('/group/') ||
 					window.location.pathname.includes('/hashtag-group/') ||
-					window.location.pathname.includes('/detail-feed')
+					window.location.pathname.includes('/detail-feed/')
 				) {
 					feedId = postData?.getstreamId;
 				} else {
@@ -723,7 +727,7 @@ function Post({
 			{postData.book && (
 				<PostBook
 					data={postData.book}
-					bookProgress={postData.metaData?.progress || postData.book.progress || 0}
+					bookProgress={postData.book.progress || postData.metaData?.progress || 0}
 				/>
 			)}
 			{postData.verb === READ_TARGET_VERB_SHARE && <ShareTarget postData={postData} inPost={true} />}

@@ -41,6 +41,7 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 	const [isEditingComment, setIsEditingComment] = useState(false);
 	const [isFetchingLikeUnLike, setIsFetchingLikeUnLike] = useState(false);
 	const [mentionUsersArray, setMentionUsersArray] = useState([]);
+	const [readMore, setReadMore] = useState(false);
 	const [moveElement, setMoveElement] = useState(false);
 
 	const urlToDirect = useRef('');
@@ -396,13 +397,23 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 								)}
 							</div>
 							{data?.content && (
-								<p
-									className='comment__content'
-									ref={cmtContent}
-									dangerouslySetInnerHTML={{
-										__html: generateContent(data.content),
-									}}
-								></p>
+								<div className='box-comment__content'>
+									<p
+										className={readMore ? '' : 'comment__content'}
+										ref={cmtContent}
+										dangerouslySetInnerHTML={{
+											__html: generateContent(data.content),
+										}}
+									></p>
+									{data.content?.replace(/(<([^>]+)>)/gi, '').length > 150 && (
+										<span
+											className='comment__content__readMore'
+											onClick={() => setReadMore(!readMore)}
+										>
+											{readMore ? 'Rút gọn' : 'Xem thêm'}
+										</span>
+									)}
+								</div>
 							)}
 							{data.like !== 0 ? (
 								<div className='cmt-like-number'>

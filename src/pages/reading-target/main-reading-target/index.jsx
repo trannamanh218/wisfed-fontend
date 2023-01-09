@@ -120,13 +120,16 @@ const MainReadingTarget = ({ setErrorLoadPage }) => {
 							</Link>
 						</div>
 						<div className='book-row__container'>
-							<span className='book-name' title={item.book.name}>
-								<Link onClick={e => handleNavigateToBookDetail(e, item)} to='/'>
-									{item.book.name}
-								</Link>
-							</span>
+							<Link
+								onClick={e => handleNavigateToBookDetail(e, item)}
+								to='/'
+								className='book-name'
+								title={item.book.name}
+							>
+								{item.book.name}
+							</Link>
 						</div>
-						<div className='book-row__container'>{generateAuthorName(item?.book.authors)}</div>
+						<div className='book-row__container author-name'>{generateAuthorName(item?.book.authors)}</div>
 						<div className='book-row__container'>{moment(item?.createdAt).format('DD/MM/YYYY')}</div>
 						<div className='book-row__container'>{moment(item.startRead).format('DD/MM/YYYY')}</div>
 						<div className='book-row__container'>{moment(item.endRead).format('DD/MM/YYYY')}</div>
