@@ -54,12 +54,6 @@
 		-webkit-line-clamp: 2;
 		text-overflow: ellipsis;
 		overflow: hidden;
-		&.not-verify {
-			cursor: pointer;
-			&:hover {
-				text-decoration: underline;
-			}
-		}
 	}
 
 	&__author {

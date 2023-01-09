@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import _ from 'lodash';
 import CreatePostModalContent from 'pages/home/components/newfeed/components/create-post-modal-content';
 import { blockAndAllowScroll } from 'api/blockAndAllowScroll.hook';
+import RouteLink from 'helpers/RouteLink';
 
 function ReadingBook({ bookData }) {
 	const [percent, setPercent] = useState(0);
@@ -31,7 +32,7 @@ function ReadingBook({ bookData }) {
 	};
 
 	const onClickImgBook = bookData => {
-		navigate(`/book/detail/${bookData.id}`);
+		navigate(RouteLink.bookDetail(bookData.id, bookData.name));
 	};
 
 	const generateAuthorName = authors => {

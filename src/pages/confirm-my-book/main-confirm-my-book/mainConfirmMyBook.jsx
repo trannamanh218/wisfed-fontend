@@ -10,10 +10,11 @@ import classNames from 'classnames';
 import { uploadMultiFile, creatBookCopyrights, getListCopyrights } from 'reducers/redux-utils/common';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useFetchBookDetail } from 'api/book.hooks';
 import { NotificationError } from 'helpers/Error';
 import PropTypes from 'prop-types';
+import RouteLink from 'helpers/RouteLink';
 
 function MainConfirmMyBook({ setErrorLoadPage }) {
 	const [images, setImages] = useState([]);
@@ -126,14 +127,18 @@ function MainConfirmMyBook({ setErrorLoadPage }) {
 		setImages([]);
 	}, []);
 
+	const handleNavigateToBookDetail = () => {
+		navigate(RouteLink.bookDetail(bookInfo.id, bookInfo.name));
+	};
+
 	return (
 		<>
 			{!_.isEmpty(bookInfo) && (
 				<div className='main-confirm-my-book'>
 					<div className='main-confirm-my-book__back-btn'>
-						<Link to={`/book/detail/${bookId}`} className='back-btn'>
+						<div className='back-btn' onClick={handleNavigateToBookDetail}>
 							<BackArrow />
-						</Link>
+						</div>
 						<span>Xác thực sách của tôi</span>
 					</div>
 					<div className='main-confirm-my-book__book-info'>
