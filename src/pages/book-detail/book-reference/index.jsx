@@ -114,6 +114,11 @@ const BookReference = ({ bookInfo, handleGetBookDetail }) => {
 		window.open('https://www.tecinus.vn');
 	};
 
+	const handleNavigateToBookDetail = (e, item) => {
+		e.preventDefault();
+		navigate(RouteLink.bookDetail(item.id, item.name));
+	};
+
 	return (
 		<div className='book-reference'>
 			<Suspense fallback={<div>Loading...</div>}>
@@ -153,7 +158,7 @@ const BookReference = ({ bookInfo, handleGetBookDetail }) => {
 								>
 									{listBookOfSeries.map((item, index) => (
 										<div style={{ width: '50%' }} key={index}>
-											<Link to={`/book/detail/${item.id}`}>
+											<Link onClick={e => handleNavigateToBookDetail(e, item)} to='/'>
 												<div className='wants-to-read__thumbnail'>
 													<img
 														src={item.frontBookCover || item.images[0] || bookImage}

@@ -4,9 +4,12 @@ import ReactRating from 'shared/react-rating';
 import PropTypes from 'prop-types';
 import BookThumbnail from 'shared/book-thumbnail';
 import LinearProgressBar from 'shared/linear-progress-bar';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import RouteLink from 'helpers/RouteLink';
 
 function PostBook({ data, inCreatePost, bookProgress }) {
+	const navigate = useNavigate();
+
 	const generateAuthorName = authorsInfo => {
 		if (authorsInfo && authorsInfo.length) {
 			const authorNameArr = authorsInfo.map(item => item.authorName);
@@ -16,15 +19,20 @@ function PostBook({ data, inCreatePost, bookProgress }) {
 		}
 	};
 
+	const handleNavigateToBookDetail = (e, data) => {
+		e.preventDefault();
+		navigate(RouteLink.bookDetail(data.id, data.name));
+	};
+
 	return (
 		<div className='post-book'>
-			<Link to={`/book/detail/${data.id}`}>
+			<Link onClick={e => handleNavigateToBookDetail(e, data)} to='/'>
 				<BookThumbnail source={data?.frontBookCover || data?.images[0]} />
 			</Link>
 
 			<div className='post-book__informations'>
 				<div className='post-book__name-and-author'>
-					<Link to={`/book/detail/${data.id}`}>
+					<Link onClick={e => handleNavigateToBookDetail(e, data)} to='/'>
 						<div className='post-book__name' title={data.name}>
 							{data.name}
 						</div>

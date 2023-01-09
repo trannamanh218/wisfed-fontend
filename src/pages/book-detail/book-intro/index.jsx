@@ -54,19 +54,15 @@ const BookIntro = ({ bookInfo, listRatingStar }) => {
 		}
 	};
 
-	const handleConfirmMyBook = () => {
+	const onClickAuthorName = author => {
 		if (!_.isEmpty(userInfo)) {
-			if (!bookInfo.verify) {
+			if (author.verify) {
+				navigate(`/profile/${author.authorId}`);
+			} else {
 				navigate(`/confirm-my-book/${bookInfo.id}`);
 			}
 		} else {
 			dispatch(checkUserLogin(true));
-		}
-	};
-
-	const onClickAuthorName = author => {
-		if (bookInfo.verify) {
-			navigate(`/profile/${author.authorId}`);
 		}
 	};
 
@@ -84,13 +80,7 @@ const BookIntro = ({ bookInfo, listRatingStar }) => {
 			<div className='book-intro__content'>
 				<div className='book-intro__content__infomations'>
 					<div className='book-intro__content__infomations__block-up'>
-						<h1
-							className={classNames('book-intro__name', {
-								'not-verify': !bookInfo.verify,
-							})}
-							onClick={handleConfirmMyBook}
-							title={bookInfo.name}
-						>
+						<h1 className='book-intro__name' title={bookInfo.name}>
 							{bookInfo.name}
 						</h1>
 						<div className='book-intro__author'>
@@ -99,12 +89,7 @@ const BookIntro = ({ bookInfo, listRatingStar }) => {
 									Bởi{' '}
 									{bookInfo.authors.map((author, index) => (
 										<span key={index}>
-											<span
-												className={classNames({
-													'verified': bookInfo.verify,
-												})}
-												onClick={() => onClickAuthorName(author)}
-											>
+											<span className='verified' onClick={() => onClickAuthorName(author)}>
 												{author.authorName}
 											</span>
 											{index + 1 < bookInfo.authors.length && ', '}

@@ -20,6 +20,7 @@ import { toast } from 'react-toastify';
 import { checkUserLogin } from 'reducers/redux-utils/auth';
 import CreatePostModalContent from 'pages/home/components/newfeed/components/create-post-modal-content';
 import { blockAndAllowScroll } from 'api/blockAndAllowScroll.hook';
+import RouteLink from 'helpers/RouteLink';
 
 const MainBooksAuthor = ({ shelveGroupName }) => {
 	const [booksByAuthor, setBooksByAuthor] = useState([]);
@@ -144,9 +145,14 @@ const MainBooksAuthor = ({ shelveGroupName }) => {
 		}
 	};
 
-	const onClickDirectToQuoteTabOfBookDetail = id => {
+	const onClickDirectToQuoteTabOfBookDetail = (id, name) => {
 		dispatch(handleDirectToQuoteTabOfBookDetail(true));
-		navigate(`/book/detail/${id} `);
+		navigate(RouteLink.bookDetail(id, name));
+	};
+
+	const handleClickToBookDetail = (e, item) => {
+		e.preventDefault();
+		navigate(RouteLink.bookDetail(item.id, item.name));
 	};
 
 	return (
@@ -213,7 +219,8 @@ const MainBooksAuthor = ({ shelveGroupName }) => {
 											<span className='underline-and-gold-color'>{item.countReview}</span>
 										</div>
 										<Link
-											to={`/book/detail/${item.id} `}
+											onClick={e => handleClickToBookDetail(e, item)}
+											to='/'
 											className='main-reading-author__books__item__under'
 										>
 											{item.newReview} lượt review mới
@@ -235,7 +242,7 @@ const MainBooksAuthor = ({ shelveGroupName }) => {
 											<span className='underline-and-gold-color'>{item.countQuote}</span>
 										</div>
 										<div
-											onClick={() => onClickDirectToQuoteTabOfBookDetail(item.id)}
+											onClick={() => onClickDirectToQuoteTabOfBookDetail(item.id, item.name)}
 											className='main-reading-author__books__item__under'
 										>
 											{item.newQuote} lượt quote mới

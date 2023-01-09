@@ -94,7 +94,7 @@ const BookInfo = ({ bookInfo }) => {
 				ratingTotal={listRatingStar?.count}
 			/>
 			<div className='book-info__general-information'>
-				<h4>Thông tin chi tiết</h4>
+				<h2>Thông tin chi tiết</h2>
 				<div className='book-info__general-information__content'>
 					<div className='book-info__general-information__block label-block'>
 						{generalInfoLabel.map((item, index) => (
