@@ -79,7 +79,7 @@ const MyFriends = ({ activeTabs, inputSearch, filter, handleActiveTabs }) => {
 									<span>Facebook</span>
 								</a>
 								<a
-									// href={`${BASE_URL}/api/v1/auth/loginGetToken`}
+									href={`${BASE_URL}/api/v1/auth/loginGetToken`}
 									className='invite-friends__by-external-link__button google-btn'
 								>
 									<GmailIcon />
