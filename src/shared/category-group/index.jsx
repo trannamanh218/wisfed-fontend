@@ -15,7 +15,7 @@ const CategoryGroup = ({
 }) => {
 	return (
 		<>
-			{list.length > 0 ? (
+			{list.length > 0 && (
 				<div className='category-group'>
 					<>
 						{list.length < 4 ? (
@@ -58,11 +58,6 @@ const CategoryGroup = ({
 							Xem tất cả
 						</button>
 					</>
-				</div>
-			) : (
-				<div className='data-blank'>
-					<h4>{title}</h4>
-					<p>chưa có sách thuộc chủ đề này</p>
 				</div>
 			)}
 		</>
