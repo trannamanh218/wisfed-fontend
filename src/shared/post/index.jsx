@@ -727,7 +727,7 @@ function Post({
 			{postData.book && (
 				<PostBook
 					data={postData.book}
-					bookProgress={postData.metaData?.progress || postData.book.progress || 0}
+					bookProgress={postData.book.progress || postData.metaData?.progress || 0}
 				/>
 			)}
 			{postData.verb === READ_TARGET_VERB_SHARE && <ShareTarget postData={postData} inPost={true} />}
