@@ -355,10 +355,6 @@ export default function MainUpload() {
 								</label>
 								<input
 									className='input input--non-border'
-									type='number'
-									min='0'
-									onWheel={e => e.target.blur()}
-									onKeyDown={blockInvalidChar}
 									placeholder='ISBN'
 									value={isbn}
 									name='isbn'
