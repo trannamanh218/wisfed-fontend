@@ -331,7 +331,7 @@ const MainCategoryDetail = ({ setErrorLoadPage }) => {
 					<>
 						<div className='main-category-detail__header'>
 							<BackButton destination='/category' />
-							<h4>{categoryInfo.name}</h4>
+							<div className='main-category-detail__header__name'>{categoryInfo.name}</div>
 							{isLike !== null && (
 								<Button
 									className={classNames('btn-like', { 'active': isLike })}
@@ -380,11 +380,11 @@ const MainCategoryDetail = ({ setErrorLoadPage }) => {
 										<div className='main-category-detail__allbook'>
 											{bookList.length > 0 ? (
 												<>
-													<h4>
+													<h3>
 														{`Tất cả sách chủ đề "	${
 															categoryInfo.name ? categoryInfo.name.toLowerCase() : ''
 														} " (${categoryInfo.numberBooks})`}
-													</h4>
+													</h3>
 													<div className='books'>
 														{bookList.map((item, index) => (
 															<BookThumbnail

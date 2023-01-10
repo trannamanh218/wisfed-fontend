@@ -138,7 +138,7 @@ const BookReference = ({ bookInfo, handleGetBookDetail }) => {
 					<>
 						{listBookOfSeries.length < 3 ? (
 							<>
-								<h4 className='book-slider__title'>
+								<h2 className='book-slider__title'>
 									{`Series ${bookInfo.series.name}`}
 									{userInfo.role === 'tecinus' || userInfo.role === 'author' ? (
 										<img
@@ -151,7 +151,7 @@ const BookReference = ({ bookInfo, handleGetBookDetail }) => {
 									) : (
 										''
 									)}
-								</h4>
+								</h2>
 								<div
 									className='book-reference__slider'
 									style={{ display: 'flex', flexDirection: 'row' }}
@@ -244,7 +244,7 @@ const BookReference = ({ bookInfo, handleGetBookDetail }) => {
 
 			{allCategories.length > 0 && (
 				<>
-					<h4 className='statistic-title'>Chủ đề</h4>
+					<h2 className='statistic-title'>Chủ đề</h2>
 					<div className='dualColumn'>
 						<ul className='dualColumn-list'>
 							{allCategories.length > 0 &&

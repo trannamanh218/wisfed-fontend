@@ -20,7 +20,7 @@ const CategoryGroup = ({
 					<>
 						{list.length < 4 ? (
 							<>
-								<h4>{title}</h4>
+								<h3>{title}</h3>
 								<div className='category-group__none-slider'>
 									{list.map(item => (
 										<BookThumbnail

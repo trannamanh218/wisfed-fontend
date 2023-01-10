@@ -6,10 +6,10 @@ const FilterPane = ({ children, title, subtitle, handleSortFilter, hasHeaderLine
 	return (
 		<div className='filter-pane'>
 			<div className='filter-pane__heading'>
-				<h4 className='filter-pane__title'>
+				<h3 className='filter-pane__title'>
 					{title}
 					<span className='filter-pane__subtitle'>{subtitle}</span>
-				</h4>
+				</h3>
 				<button className='filter-pane__btn' onClick={handleSortFilter}>
 					<ArrowsDownUp />
 				</button>

@@ -4,9 +4,11 @@
 	margin-top: 2.5rem;
 	text-align: right;
 	border-bottom: 1px solid $grey-border;
-	h4 {
+	h3 {
 		text-align: left;
-		margin-top: 20px;
+		margin: 20px 0 24px;
+		font-weight: 600;
+		font-size: 1.25em;
 	}
 	&__link {
 		display: inline-block;
