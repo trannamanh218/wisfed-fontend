@@ -1,40 +1,55 @@
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import './read-more.scss';
+import { useRef } from 'react';
 
-const ReadMore = ({ text, length = 450 }) => {
-	const [showLess, setShowLess] = useState(true);
+const ReadMore = ({ text, height }) => {
+	const [showLess, setShowLess] = useState(false);
 	const [showReadmore, setShowReadmore] = useState(false);
-	const [textFormated, setTextFormated] = useState('');
+
+	const readMore = useRef(null);
 
 	useEffect(() => {
-		if (text && text.length > length) {
-			setShowReadmore(true);
-		} else {
-			setShowReadmore(false);
+		if (readMore.current) {
+			if (readMore.current.offsetHeight - height > 0) {
+				setShowReadmore(true);
+			}
+			const element = readMore.current.querySelector('.read-more-container');
+			element.style.maxHeight = `${height - 22.5}px`;
+			// 22.5 là chiều cao của read-more__btn
 		}
-		setTextFormated(text.replace(/<[^>]+>/g, ''));
-	}, [text]);
+	}, [height]);
 
 	const handleShow = () => {
+		const element = readMore.current.querySelector('.read-more-container');
+		if (showLess) {
+			element.style.maxHeight = `${height - 22.5}px`;
+		} else {
+			element.style.maxHeight = `inherit`;
+		}
 		setShowLess(!showLess);
 	};
 
 	return (
-		<p className='read-more'>
-			{showReadmore ? <>{showLess ? `${textFormated.slice(0, length)}...` : textFormated}</> : textFormated}
+		<div className='read-more' ref={readMore}>
+			<p
+				className='read-more-container'
+				dangerouslySetInnerHTML={{
+					__html: text,
+				}}
+			></p>
 			{showReadmore && (
 				<button className='read-more__btn' onClick={handleShow}>
-					{showLess ? 'Xem Thêm' : 'Thu gọn'}
+					{showLess ? 'Thu gọn' : 'Xem thêm'}
 				</button>
 			)}
-		</p>
+		</div>
 	);
 };
 
 ReadMore.propTypes = {
 	text: PropTypes.string.isRequired,
-	length: PropTypes.number,
+	height: PropTypes.number.isRequired,
 };
 
 export default ReadMore;

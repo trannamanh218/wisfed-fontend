@@ -433,10 +433,8 @@ function Post({
 	};
 
 	const handleViewPostDetail = () => {
-		if (
-			!window.location.pathname.includes('/detail-feed/') &&
-			!window.location.pathname.includes('/book/detail/')
-		) {
+		const excludePaths = ['/detail-feed/', '/book/detail/', '/review/'];
+		if (!excludePaths.some(path => window.location.pathname.includes(path))) {
 			if (postData.minipostId) {
 				navigate(`/detail-feed/mini-post/${postData.minipostId}`);
 			} else if (postData.groupPostId) {

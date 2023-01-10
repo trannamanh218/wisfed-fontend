@@ -25,20 +25,7 @@ function MainConfirmMyBook({ setErrorLoadPage }) {
 	const navigate = useNavigate();
 	const { bookInfo, errorFetch } = useFetchBookDetail(bookId);
 	const userInfo = useSelector(state => state.auth.userInfo);
-	const [textLength, setTextLength] = useState(450);
 	const [checked, setChecked] = useState(false);
-
-	useEffect(() => {
-		if (window.innerWidth <= 820) {
-			setTextLength(320);
-		} else if (window.innerWidth <= 1024) {
-			setTextLength(690);
-		} else if (window.innerWidth <= 1280) {
-			setTextLength(600);
-		} else {
-			setTextLength(635);
-		}
-	}, []);
 
 	useEffect(() => {
 		if (errorFetch || (bookInfo && bookInfo.isDeleted)) {
@@ -173,7 +160,7 @@ function MainConfirmMyBook({ setErrorLoadPage }) {
 								)}
 							</div>
 							<div className='main-confirm-my-book__description'>
-								<ReadMore text={bookInfo.description} length={textLength} />
+								<ReadMore text={bookInfo.description} height={200} />
 							</div>
 						</div>
 					</div>
