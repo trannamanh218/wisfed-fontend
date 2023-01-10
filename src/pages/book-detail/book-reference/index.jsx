@@ -253,7 +253,7 @@ const BookReference = ({ bookInfo, handleGetBookDetail }) => {
 										className='dualColumn-item'
 										key={index}
 										style={{ cursor: 'pointer' }}
-										onClick={() => navigate(`/category/detail/${item.id}`)}
+										onClick={() => navigate(RouteLink.categoryDetail(item.id, item.name))}
 									>
 										<span className='dualColumn-item__title'>{item.name}</span>
 										<span className='dualColumn-item__number'>{item.numberBooks} cuốn</span>

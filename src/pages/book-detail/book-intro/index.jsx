@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useState, useEffect, useRef } from 'react';
+import { useRef } from 'react';
 import shareImg from 'assets/images/alert-circle-fill.png';
 import facebookImg from 'assets/images/facebook.png';
 import StatusButton from 'components/status-button';
@@ -9,17 +9,13 @@ import ReactRating from 'shared/react-rating';
 import ReadMore from 'shared/read-more';
 import './book-intro.scss';
 import _ from 'lodash';
-import { convertToPlainString } from 'helpers/Common';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { FacebookShareButton } from 'react-share';
 import Storage from 'helpers/Storage';
 import { checkUserLogin } from 'reducers/redux-utils/auth';
-import classNames from 'classnames';
 
 const BookIntro = ({ bookInfo, listRatingStar }) => {
-	const [textLength, setTextLength] = useState(500);
-
 	const userInfo = useSelector(state => state.auth.userInfo);
 	const reviewsNumber = useSelector(state => state.book.currentBookReviewsNumber);
 
@@ -27,18 +23,6 @@ const BookIntro = ({ bookInfo, listRatingStar }) => {
 	const dispatch = useDispatch();
 
 	const urlShare = useRef(`${window.location.hostname + window.location.pathname}`);
-
-	useEffect(() => {
-		if (window.innerWidth <= 768) {
-			setTextLength(280);
-		} else if (window.innerWidth <= 820) {
-			setTextLength(320);
-		} else if (window.innerWidth <= 1024) {
-			setTextLength(380);
-		} else if (window.innerWidth <= 1280) {
-			setTextLength(400);
-		}
-	}, []);
 
 	const handleClick = () => {
 		if (location.pathname !== '/' || location.pathname !== '/home') {
@@ -110,10 +94,7 @@ const BookIntro = ({ bookInfo, listRatingStar }) => {
 					</div>
 
 					<div className='book-intro__description'>
-						<ReadMore
-							text={convertToPlainString(bookInfo.description) || 'Chưa cập nhật'}
-							length={textLength}
-						/>
+						<ReadMore text={bookInfo.description || 'Chưa cập nhật'} height={179} />
 					</div>
 				</div>
 				<div onClick={handleShareFaceBook} className='book-intro__action'>

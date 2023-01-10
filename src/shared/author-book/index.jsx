@@ -106,14 +106,10 @@ const AuthorBook = ({
 				localStorage.setItem('result', JSON.stringify(saveLocalSearch.slice(0, 8)));
 			}
 		}
-		if (data.id && data.name) {
-			navigate(RouteLink.bookDetail(data.id, data.name));
-		} else if (data.info) {
+		if (data.info) {
 			navigate(RouteLink.bookDetail(data.info.id, data.info.name));
-		} else if (data.book) {
-			navigate(RouteLink.bookDetail(data.book.id, data.book.name));
 		} else {
-			navigate(`/book/detail/${data.info?.id || data.bookId || data.id}`);
+			navigate(RouteLink.bookDetail(data.id, data.name));
 		}
 	};
 
