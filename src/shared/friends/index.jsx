@@ -272,7 +272,16 @@ const FriendsItem = ({
 					/>
 
 					<div className='myfriends__star'>
-						<div className='myfriends__star__name'>
+						<div
+							className='myfriends__star__name'
+							title={
+								data.userTwo?.fullName
+									? data.userTwo?.fullName
+									: data.fullName
+									? data.fullName
+									: data.firstName + ' ' + data.lastName
+							}
+						>
 							{data.userTwo?.fullName
 								? data.userTwo?.fullName
 								: data.fullName
@@ -302,7 +311,19 @@ const FriendsItem = ({
 						onError={e => e.target.setAttribute('src', `${defaultAvatar}`)}
 					/>
 					<div className='myfriends__star'>
-						<div className='myfriends__star__name'>
+						<div
+							className='myfriends__star__name'
+							title={
+								data.userOne.fullName ? (
+									data.userOne.fullName
+								) : (
+									<>
+										<span>{data.userOne.firstName}</span>&nbsp;
+										<span>{data.userOne.lastName}</span>
+									</>
+								)
+							}
+						>
 							{data.userOne.fullName ? (
 								data.userOne.fullName
 							) : (
@@ -334,7 +355,10 @@ const FriendsItem = ({
 						onError={e => e.target.setAttribute('src', `${defaultAvatar}`)}
 					/>
 					<div className='myfriends__star'>
-						<div className='myfriends__star__name'>
+						<div
+							className='myfriends__star__name'
+							title={data.fullName ? data.fullName : data.firstName + data.lastName}
+						>
 							{data.fullName ? (
 								data.fullName
 							) : (
