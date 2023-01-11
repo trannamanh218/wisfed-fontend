@@ -43,6 +43,7 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 	const [mentionUsersArray, setMentionUsersArray] = useState([]);
 	const [readMore, setReadMore] = useState(false);
 	const [moveElement, setMoveElement] = useState(false);
+	const [hasMore, setHasMore] = useState(false);
 
 	const urlToDirect = useRef('');
 	const initialContent = useRef('');
@@ -178,7 +179,32 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 				}
 			};
 		}
+
+		if (cmtContent.current) {
+			if (
+				cmtContent.current.children.length > 2 ||
+				postData?.message?.replace(/(<([^>]+)>)/gi, '').length > 114 ||
+				postData.content?.replace(/(<([^>]+)>)/gi, '').length > 114
+			) {
+				setHasMore(true);
+				cmtContent.current.classList.add('view-less');
+			} else {
+				setHasMore(false);
+			}
+		}
 	}, [dataProp]);
+
+	useEffect(() => {
+		if (cmtContent.current) {
+			if (readMore) {
+				cmtContent.current.classList.remove('view-less');
+				cmtContent.current.classList.add('view-more');
+			} else {
+				cmtContent.current.classList.remove('view-more');
+				cmtContent.current.classList.add('view-less');
+			}
+		}
+	}, [readMore]);
 
 	// không xóa
 	// 	const handleAddEventClickToHashtagTags = useCallback(() => {
@@ -245,34 +271,34 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 
 	const generateContent = content => {
 		// if (content.match(urlRegex) || content.match(hashtagRegex)) { // k xóa
-		if (content.match(urlRegex)) {
-			const newContent = content.replace(urlRegex, data => {
+		let newContent = content.replace(/(<p><br><\/p>)+/g, '');
+
+		if (newContent.match(urlRegex)) {
+			newContent = newContent.replace(urlRegex, data => {
 				return `<a class="url-class" data-url=${data}>${
 					data.length <= 50 ? data : data.slice(0, 50) + '...'
 				}</a>`;
 			});
-
-			// không xóa
-			// .replace(hashtagRegex, data => {
-			// 	const newData = data
-			// 		.normalize('NFD')
-			// 		.replace(/[\u0300-\u036f]/g, '')
-			// 		.replace(/đ/g, 'd')
-			// 		.replace(/Đ/g, 'D');
-			// 	if (postData.groupId) {
-			// 		return `<a class="hashtag-class" data-hashtag-navigate="/hashtag-group/${
-			// 			postData.groupId
-			// 		}/${newData.slice(1)}">${newData}</a>`;
-			// 	} else {
-			// 		return `<a class="hashtag-class" data-hashtag-navigate="/hashtag/${newData.slice(
-			// 			1
-			// 		)}">${newData}</a>`;
-			// 	}
-			// });
-			return newContent;
-		} else {
-			return content;
 		}
+
+		// không xóa
+		// .replace(hashtagRegex, data => {
+		// 	const newData = data
+		// 		.normalize('NFD')
+		// 		.replace(/[\u0300-\u036f]/g, '')
+		// 		.replace(/đ/g, 'd')
+		// 		.replace(/Đ/g, 'D');
+		// 	if (postData.groupId) {
+		// 		return `<a class="hashtag-class" data-hashtag-navigate="/hashtag-group/${
+		// 			postData.groupId
+		// 		}/${newData.slice(1)}">${newData}</a>`;
+		// 	} else {
+		// 		return `<a class="hashtag-class" data-hashtag-navigate="/hashtag/${newData.slice(
+		// 			1
+		// 		)}">${newData}</a>`;
+		// 	}
+		// });
+		return newContent;
 	};
 
 	const handleViewPostDetail = () => {
@@ -405,13 +431,13 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 											__html: generateContent(data.content),
 										}}
 									></p>
-									{data.content?.replace(/(<([^>]+)>)/gi, '').length > 150 && (
-										<span
+									{hasMore && (
+										<p
 											className='comment__content__readMore'
 											onClick={() => setReadMore(!readMore)}
 										>
 											{readMore ? 'Rút gọn' : 'Xem thêm'}
-										</span>
+										</p>
 									)}
 								</div>
 							)}

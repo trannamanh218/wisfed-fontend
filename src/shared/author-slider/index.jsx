@@ -32,7 +32,10 @@ const AuthorSlider = ({ list, title, className, size = 'sm', inUpload = false })
 										name={item.fullName || item.lastName || item.firstName || 'Không xác định'}
 										size={size}
 									/>
-									<p className='author-slider__item__creator'>
+									<p
+										className='author-slider__item__creator'
+										title={item.fullName || item.lastName || item.firstName || 'Không xác định'}
+									>
 										{item.fullName || item.lastName || item.firstName || 'Không xác định'}
 									</p>
 								</div>

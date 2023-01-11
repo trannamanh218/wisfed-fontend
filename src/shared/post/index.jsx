@@ -96,6 +96,7 @@ function Post({
 	const [showDeleteFeedModal, setShowDeleteFeedModal] = useState(false);
 	const [showModalCreatePost, setShowModalCreatePost] = useState(false);
 	const [isEditPost, setIsEditPost] = useState(false);
+	const [hasMore, setHasMore] = useState(false);
 
 	const { ref: settingsRef, isVisible: isSettingsVisible, setIsVisible: setSettingsVisible } = useVisible(false);
 
@@ -106,6 +107,7 @@ function Post({
 	const doneGetPostData = useRef(false);
 	const isLikeTemp = useRef(postInformations.isLike);
 	const urlToDirect = useRef('');
+	const postContentRef = useRef(null);
 
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
@@ -183,7 +185,32 @@ function Post({
 				dispatch(handleCheckIfMentionFromGroup(null));
 			}
 		}
+
+		if (postContentRef.current) {
+			if (
+				postContentRef.current.children.length > 10 ||
+				postData?.message?.replace(/(<([^>]+)>)/gi, '').length > 650 ||
+				postData.content?.replace(/(<([^>]+)>)/gi, '').length > 650
+			) {
+				setHasMore(true);
+				postContentRef.current.classList.add('view-less');
+			} else {
+				setHasMore(false);
+			}
+		}
 	}, [postData]);
+
+	useEffect(() => {
+		if (postContentRef.current) {
+			if (readMore) {
+				postContentRef.current.classList.remove('view-less');
+				postContentRef.current.classList.add('view-more');
+			} else {
+				postContentRef.current.classList.remove('view-more');
+				postContentRef.current.classList.add('view-less');
+			}
+		}
+	}, [readMore]);
 
 	// Thay đổi lại danh sách comment sau khi đã xóa một comment
 	useEffect(() => {
@@ -351,8 +378,9 @@ function Post({
 	};
 
 	const generateContent = content => {
-		if (content.match(urlRegex) || content.match(hashtagRegex)) {
-			const newContent = content
+		let newContent = content.replace(/(<p><br><\/p>)+/g, '');
+		if (newContent.match(urlRegex) || newContent.match(hashtagRegex)) {
+			newContent = newContent
 				.replace(urlRegex, data => {
 					return `<a class="url-class" data-url=${data}>${
 						data.length <= 50 ? data : data.slice(0, 50) + '...'
@@ -374,10 +402,8 @@ function Post({
 						)}">${newData}</a>`;
 					}
 				});
-			return newContent;
-		} else {
-			return content;
 		}
+		return newContent;
 	};
 
 	const handleChangeOrderMiniComments = async paramAPI => {
@@ -617,13 +643,13 @@ function Post({
 			{(postData.message || postData.content) && (
 				<div className='post__content-wrapper'>
 					<div
-						className={readMore ? 'post__content--readmore' : 'post__content'}
+						className='post__content'
 						dangerouslySetInnerHTML={{
 							__html: generateContent(postData.message || postData.content),
 						}}
+						ref={postContentRef}
 					></div>
-					{(postData?.message?.replace(/(<([^>]+)>)/gi, '').length > 500 ||
-						postData.content?.replace(/(<([^>]+)>)/gi, '').length > 500) && (
+					{hasMore && (
 						<div className='read-more-post' onClick={() => setReadMore(!readMore)}>
 							{readMore ? 'Rút gọn' : 'Xem thêm'}
 						</div>
