@@ -76,6 +76,7 @@ const BookIntro = ({ bookInfo, listRatingStar }) => {
 											<span className='verified' onClick={() => onClickAuthorName(author)}>
 												{author.authorName}
 											</span>
+											{author.verify && <CircleCheckIcon className='book-intro__check' />}
 											{index + 1 < bookInfo.authors.length && ', '}
 										</span>
 									))}
@@ -83,8 +84,6 @@ const BookIntro = ({ bookInfo, listRatingStar }) => {
 							) : (
 								'Chưa cập nhật tác giả'
 							)}
-
-							{bookInfo.verify && <CircleCheckIcon className='book-intro__check' />}
 						</div>
 						<div className='book-intro__stars'>
 							<ReactRating readonly={true} initialRating={listRatingStar?.avg} />
