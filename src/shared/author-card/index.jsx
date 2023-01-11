@@ -11,16 +11,8 @@ import { checkUserLogin } from 'reducers/redux-utils/auth';
 import { useDispatch } from 'react-redux';
 
 const AuthorCard = ({ direction, size, item, checkAuthors }) => {
-	const [follow, setFollow] = useState(0);
-
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
-
-	useEffect(() => {
-		if (item?.numberFollowing >= 0 || item?.countFollow >= 0 || item?.userCounting?.follower >= 0) {
-			setFollow(item?.numberFollowing || item?.countFollow || item?.userCounting?.follower);
-		}
-	}, [item]);
 
 	return (
 		<div className='author-card'>
@@ -29,8 +21,8 @@ const AuthorCard = ({ direction, size, item, checkAuthors }) => {
 				<div className='author-card__info'>
 					<h5>{item.fullName || `${item.firstName} ${item.lastName}`}</h5>
 					<p className='author-card__subtitle'>
-						{follow} người theo dõi,{' '}
-						{item?.numFriends || item?.countFriend || item.userCounting?.friend || 0} bạn bè
+						{item?.numberFollowing || item?.countFollow || item?.userCounting?.follower || 0} người theo
+						dõi, {item?.numFriends || item?.countFriend || item.userCounting?.friend || 0} bạn bè
 					</p>
 					{checkAuthors && item?.bookAuthor.length > 0 && (
 						<>
