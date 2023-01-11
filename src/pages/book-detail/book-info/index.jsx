@@ -106,7 +106,9 @@ const BookInfo = ({ bookInfo }) => {
 					<div className='book-info__general-information__block'>
 						<div className='book-info__general-information__item'>{bookInfo?.publisher?.name}</div>
 						<div className='book-info__general-information__item'>{bookInfo?.page}</div>
-						<div className='book-info__general-information__item'>{bookInfo?.paperSize}</div>
+						<div className='book-info__general-information__item'>
+							{bookInfo?.paperSize || 'Chưa có dữ liệu'}
+						</div>
 						<div className='book-info__general-information__item'>{bookInfo?.isbn}</div>
 						<div className='book-info__general-information__item'>
 							{renderPublisherDate(bookInfo.publishDate)}
