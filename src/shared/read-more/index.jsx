@@ -32,12 +32,12 @@ const ReadMore = ({ text, height }) => {
 
 	return (
 		<div className='read-more' ref={readMore}>
-			<p
+			<div
 				className='read-more-container'
 				dangerouslySetInnerHTML={{
 					__html: text,
 				}}
-			></p>
+			></div>
 			{showReadmore && (
 				<button className='read-more__btn' onClick={handleShow}>
 					{showLess ? 'Thu gọn' : 'Xem thêm'}

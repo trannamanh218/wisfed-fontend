@@ -6,11 +6,12 @@
 	text-align: justify;
 
 	&__btn {
-		margin-left: 5px;
 		color: $blue;
-		float: right;
+		&:hover {
+			text-decoration: underline;
+		}
 	}
-	> p {
+	> div {
 		overflow-y: hidden;
 	}
 }
