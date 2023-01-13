@@ -15,21 +15,32 @@ import { useFetchBookDetail } from 'api/book.hooks';
 import { NotificationError } from 'helpers/Error';
 import PropTypes from 'prop-types';
 import RouteLink from 'helpers/RouteLink';
+import { handleSaveConfirmAuthorData } from 'reducers/redux-utils/book';
 
 function MainConfirmMyBook({ setErrorLoadPage }) {
 	const [images, setImages] = useState([]);
 	const [status, setStatus] = useState('');
+	const [validated, setValidated] = useState(false);
 
 	const dispatch = useDispatch();
 	const { bookId } = useParams();
 	const navigate = useNavigate();
 	const { bookInfo, errorFetch } = useFetchBookDetail(bookId);
 	const userInfo = useSelector(state => state.auth.userInfo);
+	const { confirmAuthorData } = useSelector(state => state.book);
 	const [checked, setChecked] = useState(false);
 
 	useEffect(() => {
 		if (errorFetch || (bookInfo && bookInfo.isDeleted)) {
 			setErrorLoadPage(true);
+		}
+
+		// Kiểm tra xem bạn đã xác thực sách này hay chưa
+		if (!_.isEmpty(bookInfo) && Array.isArray(bookInfo.authors) && bookInfo.authors.length > 0) {
+			const found = bookInfo.authors.find(item => item.authorId === userInfo.id);
+			if (found && found.verify === true) {
+				setValidated(true);
+			}
 		}
 	}, [errorFetch, bookInfo]);
 
@@ -38,6 +49,17 @@ function MainConfirmMyBook({ setErrorLoadPage }) {
 			getCopyrightsData();
 		}
 	}, [userInfo]);
+
+	useEffect(() => {
+		// Nếu không có dữ liệu redux thì không cho truy cập màn này
+		if (_.isEmpty(confirmAuthorData)) {
+			navigate(-1);
+		}
+		// Xóa dữ liệu redux khi thoát khỏi màn này
+		return () => {
+			dispatch(handleSaveConfirmAuthorData({}));
+		};
+	}, []);
 
 	const getCopyrightsData = async () => {
 		try {
@@ -94,6 +116,7 @@ function MainConfirmMyBook({ setErrorLoadPage }) {
 				'phone': '',
 				'address': userInfo.address || '',
 				'status': 'pending',
+				'authorId': String(confirmAuthorData.authorId),
 			};
 			const creatBookCopyrightsResponse = await dispatch(creatBookCopyrights(dataCopyrights)).unwrap();
 			if (creatBookCopyrightsResponse) {
@@ -132,13 +155,13 @@ function MainConfirmMyBook({ setErrorLoadPage }) {
 						<div className='main-confirm-my-book__image'>
 							<BookThumbnail source={bookInfo.frontBookCover || bookInfo.images[0]} size='lg' />
 							<div className='main-confirm-my-book__check'>
-								{status === 'pending' ? (
-									<span>Đang chờ xác thực</span>
-								) : (
+								{validated ? (
 									<>
 										<CheckIcon />
 										<span>Sách của tôi</span>
 									</>
+								) : (
+									<span>Đang chờ xác thực</span>
 								)}
 							</div>
 						</div>
@@ -154,7 +177,7 @@ function MainConfirmMyBook({ setErrorLoadPage }) {
 							<div className='main-confirm-my-book__author-name'>
 								<Flag />
 								{bookInfo.authors.length > 0 ? (
-									<span>Tác giả {bookInfo.authors[0].authorName}</span>
+									<span>Tác giả {confirmAuthorData.authorName}</span>
 								) : (
 									'Chưa có tác giả'
 								)}
@@ -209,10 +232,10 @@ function MainConfirmMyBook({ setErrorLoadPage }) {
 							<button
 								{...getRootProps({
 									className: classNames('main-confirm-my-book__confirm__upload-images', {
-										'disable': status,
+										'disable': validated,
 									}),
 								})}
-								disabled={status ? true : false}
+								disabled={validated ? true : false}
 							>
 								<input {...getInputProps()} />
 								<Attach />
@@ -255,7 +278,7 @@ function MainConfirmMyBook({ setErrorLoadPage }) {
 
 							<button
 								className={`main-confirm-my-book__confirm__submit ${
-									(!checked || !images.length) && 'disabled-btn'
+									(validated || !images.length || !checked) && 'disabled-btn'
 								}`}
 								onClick={submitConfirm}
 							>

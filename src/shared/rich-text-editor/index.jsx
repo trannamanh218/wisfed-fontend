@@ -41,6 +41,7 @@ function RichTextEditor({
 	replyingCommentId,
 	clickReply,
 	initialContent,
+	toggleResetText,
 }) {
 	// generate initial mentions data functions
 	const getIndicesOfMentions = (str, searchStr) => {
@@ -112,6 +113,14 @@ function RichTextEditor({
 	const editorDataState = createMentionEntities(contentData, mentionUsersArr);
 
 	const [editorState, setEditorState] = useState(editorDataState);
+
+	const [clearTextClicked, setClearTextClicked] = useState(false);
+
+	useEffect(() => {
+		toggleResetText && setClearTextClicked(true);
+		clearTextClicked && setEditorState(() => EditorState.createEmpty());
+	}, [toggleResetText, clearTextClicked]);
+
 	const [open, setOpen] = useState(false);
 	const [suggestions, setSuggestions] = useState([]);
 	const [{ plugins, MentionSuggestions }] = useState(() => {
@@ -390,6 +399,7 @@ RichTextEditor.defaultProps = {
 	commentLv1Id: undefined,
 	replyingCommentId: -1,
 	initialContent: '',
+	toggleResetText: false,
 };
 
 RichTextEditor.propTypes = {
@@ -411,6 +421,7 @@ RichTextEditor.propTypes = {
 	offsetKey: PropTypes.any,
 	children: PropTypes.any,
 	initialContent: PropTypes.string,
+	toggleResetText: PropTypes.bool,
 };
 
 export default memo(RichTextEditor);

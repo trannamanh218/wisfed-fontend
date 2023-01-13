@@ -2,8 +2,9 @@
 import { Pencil } from 'components/svg';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
+import RichTextEditor from 'shared/rich-text-editor';
 
-function TextareaType({ textareaValue, editStatus, textareaRef, updateInputValue, cancelEdit, enableEdit }) {
+function TextareaType({ textareaValue, editStatus, updateInputValue, cancelEdit, enableEdit }) {
 	return (
 		<div className='form-field-group'>
 			<label className='form-field-label'>Giới thiệu</label>
@@ -14,19 +15,22 @@ function TextareaType({ textareaValue, editStatus, textareaRef, updateInputValue
 			>
 				{editStatus ? (
 					<div className='form-field--custom'>
-						<textarea
-							ref={textareaRef}
-							className='form-field-textarea'
-							placeholder='Nhập lời giới thiệu bản thân'
-							value={textareaValue}
-							onChange={e => updateInputValue(e, 'edit-descriptions')}
-						/>
+						<div className='form-field-textarea'>
+							<RichTextEditor
+								placeholder='Nhập lời giới thiệu bản thân'
+								setContent={value => updateInputValue(value, 'edit-descriptions')}
+								initialContent={textareaValue || ''}
+							/>
+						</div>
 					</div>
 				) : (
 					<>
 						{textareaValue ? (
 							<div className='form-field--custom'>
-								<div className='form-field-textarea'>{textareaValue}</div>
+								<div
+									className='form-field-textarea'
+									dangerouslySetInnerHTML={{ __html: textareaValue }}
+								></div>
 							</div>
 						) : (
 							<div className='form-field'>
@@ -55,7 +59,6 @@ function TextareaType({ textareaValue, editStatus, textareaRef, updateInputValue
 TextareaType.propTypes = {
 	textareaValue: PropTypes.string,
 	editStatus: PropTypes.bool,
-	textareaRef: PropTypes.object,
 	updateInputValue: PropTypes.func,
 	cancelEdit: PropTypes.func,
 	enableEdit: PropTypes.func,

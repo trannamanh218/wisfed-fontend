@@ -14,6 +14,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { FacebookShareButton } from 'react-share';
 import Storage from 'helpers/Storage';
 import { checkUserLogin } from 'reducers/redux-utils/auth';
+import { handleSaveConfirmAuthorData } from 'reducers/redux-utils/book';
 
 const BookIntro = ({ bookInfo, listRatingStar }) => {
 	const userInfo = useSelector(state => state.auth.userInfo);
@@ -40,9 +41,16 @@ const BookIntro = ({ bookInfo, listRatingStar }) => {
 
 	const onClickAuthorName = author => {
 		if (!_.isEmpty(userInfo)) {
+			// Nếu tác giả đã được xác thực thì sang màn cá nhân, không thì sang màn xác thực
 			if (author.verify) {
 				navigate(`/profile/${author.authorId}`);
 			} else {
+				dispatch(
+					handleSaveConfirmAuthorData({
+						authorId: author.authorId,
+						authorName: author.authorName,
+					})
+				);
 				navigate(`/confirm-my-book/${bookInfo.id}`);
 			}
 		} else {

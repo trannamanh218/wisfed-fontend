@@ -255,7 +255,10 @@ const InforTab = ({ userInfo, currentTab }) => {
 								<div className='form-field-group'>
 									<label className='form-field-label'>Giới thiệu</label>
 									{userInfo.descriptions ? (
-										<div className='form-field-textarea'>{userInfo.descriptions}</div>
+										<div
+											className='form-field-textarea'
+											dangerouslySetInnerHTML={{ __html: userInfo.descriptions }}
+										></div>
 									) : (
 										<div className='form-field'>
 											<div className='form-field__no-data'>Chưa có dữ liệu</div>
