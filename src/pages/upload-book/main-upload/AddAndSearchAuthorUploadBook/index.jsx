@@ -26,8 +26,9 @@ function AddAndSearchAuthorUploadBook({
 	const dispatch = useDispatch();
 
 	const addAuthor = author => {
-		if (authors.filter(authorAdded => authorAdded.id === author.id).length > 0) {
-			removeAuthor(author.id);
+		const foundAddItem = authors.find(authorAdded => authorAdded.id === author.id);
+		if (foundAddItem) {
+			removeAuthor(authors.indexOf(foundAddItem));
 		} else {
 			const authorArrayTemp = [...authors];
 			authorArrayTemp.push(author);
@@ -40,10 +41,9 @@ function AddAndSearchAuthorUploadBook({
 		}
 	};
 
-	const removeAuthor = authorId => {
+	const removeAuthor = paramIndex => {
 		const authorArr = [...authors];
-		const index = authorArr.findIndex(item => item.id === authorId);
-		authorArr.splice(index, 1);
+		authorArr.splice(paramIndex, 1);
 		setAuthors(authorArr);
 	};
 

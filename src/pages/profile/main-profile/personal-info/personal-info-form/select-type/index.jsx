@@ -33,8 +33,9 @@ function SelectType({ dataAdded, setDataAdded, editStatus, cancelEdit, enableEdi
 	};
 
 	const addCategory = category => {
-		if (dataAdded.filter(categoryAdded => categoryAdded.id === category.id).length > 0) {
-			removeCategory(category.id);
+		const foundAddItem = dataAdded.find(item => item.id === category.id);
+		if (foundAddItem) {
+			removeCategory(dataAdded.indexOf(foundAddItem));
 		} else {
 			const categoryArrayTemp = [...dataAdded];
 			categoryArrayTemp.push(category);
@@ -47,10 +48,9 @@ function SelectType({ dataAdded, setDataAdded, editStatus, cancelEdit, enableEdi
 		}
 	};
 
-	const removeCategory = categoryId => {
+	const removeCategory = paramIndex => {
 		const categoryArr = [...dataAdded];
-		const index = categoryArr.findIndex(item => item.id === categoryId);
-		categoryArr.splice(index, 1);
+		categoryArr.splice(paramIndex, 1);
 		setDataAdded(categoryArr);
 	};
 
