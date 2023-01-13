@@ -84,6 +84,7 @@ export default function MainUpload() {
 		setLanguage('');
 		setResetSelect(!resetSelect);
 		setState(initialState);
+		setDescription('');
 		setToggleResetDescription(!toggleResetDescription);
 	};
 

@@ -61,7 +61,7 @@ const QuotesTab = ({ currentTab }) => {
 			callApiStart.current = 10;
 			getQuoteListDataFirstTime();
 		}
-	}, [currentOption, currentTab, directionSort, propertySort]);
+	}, [currentOption, currentTab, directionSort, propertySort, bookId]);
 
 	const getQuoteListDataFirstTime = async () => {
 		try {
