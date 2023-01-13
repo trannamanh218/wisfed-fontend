@@ -233,6 +233,7 @@ const bookSlice = createSlice({
 		currentBookReviewsNumber: 0,
 		directToQuoteTabOfBookDetail: false,
 		refreshRatingData: false,
+		confirmAuthorData: {},
 	},
 	reducers: {
 		updateBookForCreatePost: (state, action) => {
@@ -246,6 +247,9 @@ const bookSlice = createSlice({
 		},
 		handleRefreshRatingData: state => {
 			state.refreshRatingData = !state.refreshRatingData;
+		},
+		handleSaveConfirmAuthorData: (state, action) => {
+			state.confirmAuthorData = action.payload;
 		},
 	},
 	extraReducers: {
@@ -270,6 +274,7 @@ export const {
 	handleDirectToQuoteTabOfBookDetail,
 	updateBookForCreatePost,
 	handleRefreshRatingData,
+	handleSaveConfirmAuthorData,
 } = bookSlice.actions;
 
 const book = bookSlice.reducer;
