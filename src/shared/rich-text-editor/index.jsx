@@ -129,17 +129,6 @@ function RichTextEditor({
 	const dispatch = useDispatch();
 
 	useEffect(() => {
-		if (editor.current) {
-			setTimeout(() => {
-				editor.current.blur();
-			}, 10);
-			setTimeout(() => {
-				editor.current.focus();
-			}, 50);
-		}
-	}, []);
-
-	useEffect(() => {
 		if (replyingCommentId === commentLv1Id) {
 			if (mentionUsersArr.length) {
 				const dataState = createMentionEntities(mentionUsersArr[0].name, mentionUsersArr);
