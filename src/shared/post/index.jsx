@@ -188,30 +188,15 @@ function Post({
 		}
 
 		if (postContentRef.current) {
-			if (
-				postContentRef.current.children.length > 10 ||
-				postData?.message?.replace(/(<([^>]+)>)/gi, '').length > 650 ||
-				postData.content?.replace(/(<([^>]+)>)/gi, '').length > 650
-			) {
+			// check text clamped when use webkit-box
+			const isTextClamped = elm => elm.scrollHeight > elm.clientHeight;
+			if (isTextClamped(postContentRef.current)) {
 				setHasMore(true);
-				postContentRef.current.classList.add('view-less');
 			} else {
 				setHasMore(false);
 			}
 		}
 	}, [postData]);
-
-	useEffect(() => {
-		if (postContentRef.current) {
-			if (readMore) {
-				postContentRef.current.classList.remove('view-less');
-				postContentRef.current.classList.add('view-more');
-			} else {
-				postContentRef.current.classList.remove('view-more');
-				postContentRef.current.classList.add('view-less');
-			}
-		}
-	}, [readMore]);
 
 	// Thay đổi lại danh sách comment sau khi đã xóa một comment
 	useEffect(() => {
@@ -642,7 +627,9 @@ function Post({
 			{(postData.message || postData.content) && (
 				<div className='post__content-wrapper'>
 					<div
-						className='post__content'
+						className={classNames('post__content', {
+							'view-less': readMore === false,
+						})}
 						dangerouslySetInnerHTML={{
 							__html: generateContent(postData.message || postData.content),
 						}}

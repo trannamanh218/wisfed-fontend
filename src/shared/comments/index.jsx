@@ -181,30 +181,15 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 		}
 
 		if (cmtContent.current) {
-			if (
-				cmtContent.current.children.length > 2 ||
-				postData?.message?.replace(/(<([^>]+)>)/gi, '').length > 114 ||
-				postData.content?.replace(/(<([^>]+)>)/gi, '').length > 114
-			) {
+			// check text clamped when use webkit-box
+			const isTextClamped = elm => elm.scrollHeight > elm.clientHeight;
+			if (isTextClamped(cmtContent.current)) {
 				setHasMore(true);
-				cmtContent.current.classList.add('view-less');
 			} else {
 				setHasMore(false);
 			}
 		}
 	}, [dataProp]);
-
-	useEffect(() => {
-		if (cmtContent.current) {
-			if (readMore) {
-				cmtContent.current.classList.remove('view-less');
-				cmtContent.current.classList.add('view-more');
-			} else {
-				cmtContent.current.classList.remove('view-more');
-				cmtContent.current.classList.add('view-less');
-			}
-		}
-	}, [readMore]);
 
 	// không xóa
 	// 	const handleAddEventClickToHashtagTags = useCallback(() => {
@@ -425,7 +410,9 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 							{data?.content && (
 								<div className='box-comment__content'>
 									<p
-										className={readMore ? '' : 'comment__content'}
+										className={classNames('comment__content', {
+											'view-less': readMore === false,
+										})}
 										ref={cmtContent}
 										dangerouslySetInnerHTML={{
 											__html: generateContent(data.content),

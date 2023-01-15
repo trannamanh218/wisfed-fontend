@@ -192,3 +192,6 @@ export const removeBookFromSeriesAPI = id => `/api/v1/series/deleteBook/${id}`;
 
 // publisher
 export const getPublishersAPI = `/api/v1/publishers`;
+
+// get list contact by social media
+export const getlistContactByGg = code => `/api/v1/auth/getContacts?code=${code}`;

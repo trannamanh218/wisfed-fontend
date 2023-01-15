@@ -9,7 +9,7 @@ import { checkTokenResetPassword, handleDataToResetPassword } from 'reducers/red
 import { getCheckJwt } from 'reducers/redux-utils/auth';
 import { NotificationError } from 'helpers/Error';
 
-export default function Direct() {
+export default function DirectPageDefault() {
 	const search = useSearchParams();
 	const newToken = search[0].get('token');
 	const navigate = useNavigate();
