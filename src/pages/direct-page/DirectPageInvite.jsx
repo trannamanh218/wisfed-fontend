@@ -14,7 +14,6 @@ export default function DirectPageInvite() {
 
 		try {
 			const response = await dispatch(getListContactGoogle(code)).unwrap();
-			console.log(response);
 		} catch (error) {
 			NotificationError(error);
 		}

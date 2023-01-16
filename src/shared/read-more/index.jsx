@@ -10,8 +10,6 @@ const ReadMore = ({ text, height }) => {
 
 	const readMore = useRef(null);
 
-	console.log(text);
-
 	useEffect(() => {
 		if (readMore.current) {
 			if (readMore.current.offsetHeight - height > 0) {
