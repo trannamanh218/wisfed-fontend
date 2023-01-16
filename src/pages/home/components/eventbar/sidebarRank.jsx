@@ -55,7 +55,12 @@ export default function SidebarRank() {
 						<div className='top__user__ranks__two__title'>
 							{top3followedUsersByWeek[1] && (
 								<>
-									<p>
+									<p
+										title={
+											top3followedUsersByWeek[1].fullName ||
+											`${top3followedUsersByWeek[1].firstName}  ${top3followedUsersByWeek[1].lastName}`
+										}
+									>
 										{top3followedUsersByWeek[1].fullName ||
 											`${top3followedUsersByWeek[1].firstName}  ${top3followedUsersByWeek[1].lastName}`}
 									</p>
@@ -78,7 +83,12 @@ export default function SidebarRank() {
 						<div className='top__user__ranks__one__title'>
 							{top3followedUsersByWeek[0] && (
 								<>
-									<p>
+									<p
+										title={
+											top3followedUsersByWeek[0].fullName ||
+											`${top3followedUsersByWeek[0].firstName}  ${top3followedUsersByWeek[0].lastName}`
+										}
+									>
 										{top3followedUsersByWeek[0].fullName ||
 											`${top3followedUsersByWeek[0].firstName}  ${top3followedUsersByWeek[0].lastName}`}
 									</p>
@@ -98,7 +108,12 @@ export default function SidebarRank() {
 						<div className='top__user__ranks__two__title'>
 							{top3followedUsersByWeek[2] && (
 								<>
-									<p>
+									<p
+										title={
+											top3followedUsersByWeek[2].fullName ||
+											`${top3followedUsersByWeek[2].firstName}  ${top3followedUsersByWeek[2].lastName}`
+										}
+									>
 										{top3followedUsersByWeek[2].fullName ||
 											`${top3followedUsersByWeek[2].firstName}  ${top3followedUsersByWeek[2].lastName}`}{' '}
 									</p>

@@ -20,6 +20,10 @@
 			font-weight: 600;
 			line-height: 1.5;
 			cursor: pointer;
+			display: -webkit-box;
+			-webkit-box-orient: vertical;
+			-webkit-line-clamp: 2;
+			overflow: hidden;
 		}
 
 		span {

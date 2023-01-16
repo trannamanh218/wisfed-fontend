@@ -43,6 +43,7 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 	const [mentionUsersArray, setMentionUsersArray] = useState([]);
 	const [readMore, setReadMore] = useState(false);
 	const [moveElement, setMoveElement] = useState(false);
+	const [hasMore, setHasMore] = useState(false);
 
 	const urlToDirect = useRef('');
 	const initialContent = useRef('');
@@ -178,6 +179,16 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 				}
 			};
 		}
+
+		if (cmtContent.current) {
+			// check text clamped when use webkit-box
+			const isTextClamped = elm => elm.scrollHeight > elm.clientHeight;
+			if (isTextClamped(cmtContent.current)) {
+				setHasMore(true);
+			} else {
+				setHasMore(false);
+			}
+		}
 	}, [dataProp]);
 
 	// không xóa
@@ -245,34 +256,34 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 
 	const generateContent = content => {
 		// if (content.match(urlRegex) || content.match(hashtagRegex)) { // k xóa
-		if (content.match(urlRegex)) {
-			const newContent = content.replace(urlRegex, data => {
+		let newContent = content.replace(/(<p><br><\/p>)+/g, '');
+
+		if (newContent.match(urlRegex)) {
+			newContent = newContent.replace(urlRegex, data => {
 				return `<a class="url-class" data-url=${data}>${
 					data.length <= 50 ? data : data.slice(0, 50) + '...'
 				}</a>`;
 			});
-
-			// không xóa
-			// .replace(hashtagRegex, data => {
-			// 	const newData = data
-			// 		.normalize('NFD')
-			// 		.replace(/[\u0300-\u036f]/g, '')
-			// 		.replace(/đ/g, 'd')
-			// 		.replace(/Đ/g, 'D');
-			// 	if (postData.groupId) {
-			// 		return `<a class="hashtag-class" data-hashtag-navigate="/hashtag-group/${
-			// 			postData.groupId
-			// 		}/${newData.slice(1)}">${newData}</a>`;
-			// 	} else {
-			// 		return `<a class="hashtag-class" data-hashtag-navigate="/hashtag/${newData.slice(
-			// 			1
-			// 		)}">${newData}</a>`;
-			// 	}
-			// });
-			return newContent;
-		} else {
-			return content;
 		}
+
+		// không xóa
+		// .replace(hashtagRegex, data => {
+		// 	const newData = data
+		// 		.normalize('NFD')
+		// 		.replace(/[\u0300-\u036f]/g, '')
+		// 		.replace(/đ/g, 'd')
+		// 		.replace(/Đ/g, 'D');
+		// 	if (postData.groupId) {
+		// 		return `<a class="hashtag-class" data-hashtag-navigate="/hashtag-group/${
+		// 			postData.groupId
+		// 		}/${newData.slice(1)}">${newData}</a>`;
+		// 	} else {
+		// 		return `<a class="hashtag-class" data-hashtag-navigate="/hashtag/${newData.slice(
+		// 			1
+		// 		)}">${newData}</a>`;
+		// 	}
+		// });
+		return newContent;
 	};
 
 	const handleViewPostDetail = () => {
@@ -399,19 +410,21 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 							{data?.content && (
 								<div className='box-comment__content'>
 									<p
-										className={readMore ? '' : 'comment__content'}
+										className={classNames('comment__content', {
+											'view-less': readMore === false,
+										})}
 										ref={cmtContent}
 										dangerouslySetInnerHTML={{
 											__html: generateContent(data.content),
 										}}
 									></p>
-									{data.content?.replace(/(<([^>]+)>)/gi, '').length > 150 && (
-										<span
+									{hasMore && (
+										<p
 											className='comment__content__readMore'
 											onClick={() => setReadMore(!readMore)}
 										>
 											{readMore ? 'Rút gọn' : 'Xem thêm'}
-										</span>
+										</p>
 									)}
 								</div>
 							)}

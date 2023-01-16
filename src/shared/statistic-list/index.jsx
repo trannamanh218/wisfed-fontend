@@ -8,7 +8,7 @@ const StatisticList = props => {
 
 	return (
 		<div className={classNames('statistic', { [`${className}`]: className })}>
-			<h4 className={`statistic-title ${isBackground ? 'custom' : ''}`}>{title}</h4>
+			<h2 className={`statistic-title ${isBackground ? 'custom' : ''}`}>{title}</h2>
 			<DualColumn
 				list={list}
 				isBackground={isBackground}

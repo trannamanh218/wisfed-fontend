@@ -111,16 +111,19 @@
 	}
 
 	.post__content-wrapper {
-		z-index: 2;
 		margin-bottom: 20px;
-		.post__content,
-		.post__content--readmore {
-			font-size: 0.94rem;
-			line-height: 1.5rem;
+		.post__content {
+			font-size: 15px;
+			line-height: 1.6em;
 			color: #4e4b66;
 			word-break: break-word;
-			max-height: 171px;
 			overflow: hidden;
+			&.view-less {
+				display: -webkit-box;
+				-webkit-box-orient: vertical;
+				-webkit-line-clamp: 10;
+			}
+
 			a {
 				width: fit-content;
 				overflow: hidden;
@@ -131,6 +134,7 @@
 				}
 			}
 		}
+
 		.read-more-post {
 			cursor: pointer;
 			margin-top: 8px;
@@ -140,10 +144,6 @@
 			&:hover {
 				text-decoration: underline;
 			}
-		}
-
-		.post__content--readmore {
-			max-height: fit-content;
 		}
 	}
 

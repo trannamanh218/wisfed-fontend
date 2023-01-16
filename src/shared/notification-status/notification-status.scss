@@ -31,7 +31,8 @@
 		}
 
 		.notification-status__main-content {
-			flex: 1;
+			flex-grow: 1;
+			width: 50%;
 		}
 
 		.notification-status__main-content__message {
@@ -40,7 +41,7 @@
 			line-height: 24px;
 			display: -webkit-box;
 			-webkit-box-orient: vertical;
-			-webkit-line-clamp: 3;
+			-webkit-line-clamp: 2;
 			overflow: hidden;
 			span {
 				font-weight: 600;

@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { uploadImageAPI, uploadMultipleImageAPI, bookCopyrightsAPI } from 'constants/apiURL';
+import { uploadImageAPI, uploadMultipleImageAPI, bookCopyrightsAPI, getlistContactByGg } from 'constants/apiURL';
 import Request from 'helpers/Request';
 
 export const uploadImage = createAsyncThunk('common/uploadImage', async (dataUpload, { rejectWithValue }) => {
@@ -31,7 +31,7 @@ export const creatBookCopyrights = createAsyncThunk(
 			const data = res.data;
 			return data;
 		} catch (err) {
-			const error = err.response.message;
+			const error = JSON.parse(err.response);
 			return rejectWithValue(error);
 		}
 	}
@@ -43,10 +43,23 @@ export const getListCopyrights = createAsyncThunk('common/getListCopyrights', as
 		const data = res.data;
 		return data;
 	} catch (err) {
-		const error = err.response.message;
+		const error = JSON.parse(err.response);
 		return rejectWithValue(error);
 	}
 });
+
+export const getListContactGoogle = createAsyncThunk(
+	'common/get list contact google',
+	async (code, { rejectWithValue }) => {
+		try {
+			const res = await Request.makeGet(getlistContactByGg(code));
+			return res.data;
+		} catch (err) {
+			const error = JSON.parse(err.response);
+			return rejectWithValue(error);
+		}
+	}
+);
 
 const commonSlice = createSlice({
 	name: 'common',

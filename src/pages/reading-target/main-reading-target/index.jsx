@@ -112,28 +112,28 @@ const MainReadingTarget = ({ setErrorLoadPage }) => {
 		const newData = newArr.booksRead || newArr;
 		return newData.length ? (
 			newData.map((item, index) => (
-				<div key={index}>
-					<div className='book-row' key={item.id}>
-						<div className='book-row__container'>
-							<Link onClick={e => handleNavigateToBookDetail(e, item)} to='/'>
-								<BookThumbnail size='sm' source={item?.book?.frontBookCover || item.book?.images[0]} />
-							</Link>
-						</div>
-						<div className='book-row__container'>
-							<Link
-								onClick={e => handleNavigateToBookDetail(e, item)}
-								to='/'
-								className='book-name'
-								title={item.book.name}
-							>
-								{item.book.name}
-							</Link>
-						</div>
-						<div className='book-row__container author-name'>{generateAuthorName(item?.book.authors)}</div>
-						<div className='book-row__container'>{moment(item?.createdAt).format('DD/MM/YYYY')}</div>
-						<div className='book-row__container'>{moment(item.startRead).format('DD/MM/YYYY')}</div>
-						<div className='book-row__container'>{moment(item.endRead).format('DD/MM/YYYY')}</div>
+				<div className='book-row' key={index}>
+					<div className='book-row__container'>
+						<Link onClick={e => handleNavigateToBookDetail(e, item)} to='/'>
+							<BookThumbnail size='sm' source={item?.book?.frontBookCover || item.book?.images[0]} />
+						</Link>
 					</div>
+					<div className='book-row__container'>
+						<Link
+							onClick={e => handleNavigateToBookDetail(e, item)}
+							to='/'
+							className='book-name'
+							title={item.book.name}
+						>
+							{item.book.name}
+						</Link>
+					</div>
+					<div className='book-row__container'>
+						<p className='author-name'>{generateAuthorName(item?.book.authors)}</p>
+					</div>
+					<div className='book-row__container'>{moment(item?.createdAt).format('DD/MM/YYYY')}</div>
+					<div className='book-row__container'>{moment(item.startRead).format('DD/MM/YYYY')}</div>
+					<div className='book-row__container'>{moment(item.endRead).format('DD/MM/YYYY')}</div>
 				</div>
 			))
 		) : (

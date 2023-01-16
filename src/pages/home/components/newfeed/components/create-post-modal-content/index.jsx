@@ -767,7 +767,7 @@ function CreatePostModalContent({
 			} else {
 				if (params.bookId) {
 					// initialProgress.current = params.progress;
-					if (params.msg && params.progress > 0) {
+					if (params.msg && params.progress > 0 && !location.pathname.includes('group')) {
 						// if (isEditPost) {
 						// 	if (initialProgress.current === 0) {
 						// 		handleCreateReview(params);
