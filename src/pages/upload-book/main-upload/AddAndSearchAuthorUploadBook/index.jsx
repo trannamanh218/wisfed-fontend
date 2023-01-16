@@ -86,12 +86,14 @@ function AddAndSearchAuthorUploadBook({
 			</label>
 			<AddAndSearchItems
 				itemAddedList={authors}
+				setItemList={setAuthors}
 				itemSearchedList={authorSearchedList}
 				addItem={addAuthor}
 				removeItem={removeAuthor}
 				getDataFinish={getDataFinish}
 				searchItem={searchAuthor}
 				inputItemValue={inputAuthorValue}
+				setInputItemValue={setInputAuthorValue}
 				itemInputContainer={authorInputContainer}
 				itemInputWrapper={authorInputWrapper}
 				itemInput={authorInput}

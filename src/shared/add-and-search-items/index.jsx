@@ -13,6 +13,7 @@ function AddAndSearchItems({
 	getDataFinish,
 	searchItem,
 	inputItemValue,
+	setInputItemValue,
 	itemInputContainer,
 	itemInputWrapper,
 	itemInput,
@@ -21,6 +22,7 @@ function AddAndSearchItems({
 	hasMoreEllipsis,
 	acceptValueText,
 	autoFocus,
+	setItemList,
 }) {
 	const [firstTimeFocus, setFirstTimeFocus] = useState(false);
 	const [show, setShow] = useState(true);
@@ -60,7 +62,10 @@ function AddAndSearchItems({
 	};
 
 	const onClickAddNewItem = () => {
-		setShow(false);
+		const cloneArr = [...itemAddedList];
+		cloneArr.push({ fullName: inputItemValue });
+		setItemList(cloneArr);
+		setInputItemValue('');
 	};
 
 	return (
@@ -145,7 +150,6 @@ function AddAndSearchItems({
 									{acceptValueText && (
 										<span
 											className='add-and-search-categories__type-new'
-											// onClick={() => setShow(false)}
 											onClick={onClickAddNewItem}
 										>
 											(Nhập tên mới?)
@@ -166,6 +170,8 @@ AddAndSearchItems.defaultProps = {
 	hasMoreEllipsis: false,
 	acceptValueText: false,
 	autoFocus: false,
+	setItemList: () => {},
+	setInputItemValue: () => {},
 };
 
 AddAndSearchItems.propTypes = {
@@ -184,6 +190,8 @@ AddAndSearchItems.propTypes = {
 	hasMoreEllipsis: PropTypes.bool,
 	acceptValueText: PropTypes.bool,
 	autoFocus: PropTypes.bool,
+	setItemList: PropTypes.func,
+	setInputItemValue: PropTypes.func,
 };
 
 export default AddAndSearchItems;
