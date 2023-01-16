@@ -50,6 +50,7 @@ const MainCategoryDetail = ({ setErrorLoadPage }) => {
 	const [sortValue, setSortValue] = useState('like');
 	const [sortDirection, setSortDirection] = useState('DESC');
 	const [sortValueTemp, setSortValueTemp] = useState('default');
+	const [fetchingIsLike, setFetchingIsLike] = useState(false);
 
 	const callApiStart = useRef(8);
 	const callApiPerPage = useRef(8);
@@ -77,12 +78,6 @@ const MainCategoryDetail = ({ setErrorLoadPage }) => {
 	];
 
 	useEffect(() => {
-		if (!_.isEmpty(categoryInfoRedux) && categoryInfoRedux.id === Number(id)) {
-			setCategoryInfo(categoryInfoRedux);
-		} else {
-			getCategoryInfoFnc();
-		}
-		setFilter('[]');
 		if (!_.isEmpty(categoryInfoRedux) && categoryInfoRedux.id === Number(id)) {
 			setCategoryInfo(categoryInfoRedux);
 		} else {
@@ -134,7 +129,7 @@ const MainCategoryDetail = ({ setErrorLoadPage }) => {
 		if (!Storage.getAccessToken()) {
 			dispatch(checkUserLogin(true));
 		} else {
-			setIsLike(!isLike);
+			setFetchingIsLike(true);
 			handleCallLikeAndUnlikeCategoryApi(!isLike);
 		}
 	};
@@ -160,8 +155,11 @@ const MainCategoryDetail = ({ setErrorLoadPage }) => {
 						favoriteCategory: favoriteCategoryList,
 					};
 					await dispatch(editUserInfo(params)).unwrap();
+					setIsLike(prev => !prev);
 				} catch (err) {
 					NotificationError(err);
+				} finally {
+					setFetchingIsLike(false);
 				}
 			}
 		}, 1000),
@@ -337,6 +335,7 @@ const MainCategoryDetail = ({ setErrorLoadPage }) => {
 									className={classNames('btn-like', { 'active': isLike })}
 									isOutline={true}
 									onClick={handleLikeCategory}
+									disabled={fetchingIsLike}
 								>
 									<span className='heart-icon'>
 										<Heart />
