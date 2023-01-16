@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { Feather, Pencil, TrashIcon } from 'components/svg';
+import { Feather, Pencil, TrashIcon, Lock } from 'components/svg';
 import { calculateDurationTime } from 'helpers/Common';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
@@ -63,6 +63,7 @@ import { useHookUpdateCommentsAfterDelete } from 'api/comment.hook';
 import { blockAndAllowScroll } from 'api/blockAndAllowScroll.hook';
 import { deleteMiniGroupPost } from 'reducers/redux-utils/group';
 import RouteLink from 'helpers/RouteLink';
+import PostNotAvailable from 'shared/post-not-available';
 
 const verbShareArray = [
 	POST_VERB_SHARE,
@@ -711,14 +712,38 @@ function Post({
 			)}
 			{verbShareArray.indexOf(postData.verb) !== -1 && (
 				<div className='create-post-modal-content__main__share-container'>
-					{postData.verb === POST_VERB_SHARE && <PostShare postData={postData} directUrl={directUrl} />}
+					{postData.verb === POST_VERB_SHARE && (
+						<>
+							{postData.sharePost.isDeleted ? (
+								<PostNotAvailable />
+							) : (
+								<PostShare postData={postData} directUrl={directUrl} />
+							)}
+						</>
+					)}
 					{postData.verb === QUOTE_VERB_SHARE && <QuoteCard data={postData.sharePost} isShare={true} />}
-					{postData.verb === GROUP_POST_VERB_SHARE && <PostShare postData={postData} directUrl={directUrl} />}
+					{postData.verb === GROUP_POST_VERB_SHARE && (
+						<>
+							{postData.sharePost.isDeleted ? (
+								<PostNotAvailable />
+							) : (
+								<PostShare postData={postData} directUrl={directUrl} />
+							)}
+						</>
+					)}
 					{(postData.verb === TOP_BOOK_VERB_SHARE || postData.verb === MY_BOOK_VERB_SHARE) && (
 						<AuthorBook data={postData} inPost={true} />
 					)}
 					{postData.verb === TOP_QUOTE_VERB_SHARE && <QuoteCard data={postData.info} isShare={true} />}
-					{postData.verb === REVIEW_VERB_SHARE && <PostShare postData={postData} directUrl={directUrl} />}
+					{postData.verb === REVIEW_VERB_SHARE && (
+						<>
+							{postData.sharePost.isDeleted ? (
+								<PostNotAvailable />
+							) : (
+								<PostShare postData={postData} directUrl={directUrl} />
+							)}
+						</>
+					)}
 				</div>
 			)}
 			{postData.verb === TOP_USER_VERB_SHARE && <ShareUsers postData={postData} />}
