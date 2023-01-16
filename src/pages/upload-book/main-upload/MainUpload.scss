@@ -120,20 +120,23 @@
 			}
 
 			.txtarea {
-				textarea {
-					width: 100%;
-					padding: 0.75rem 1rem;
-					background-color: inherit;
-					resize: none;
-					outline: none;
-					border: none;
-					border-radius: 12px;
-					background-color: #f7f7fc;
-					font-weight: 500;
-					font-size: 15px;
-					line-height: 24px;
-					&::-webkit-scrollbar {
-						display: none;
+				width: 100%;
+				padding: 0.75rem 1rem;
+				background-color: inherit;
+				resize: none;
+				outline: none;
+				border: none;
+				border-radius: 12px;
+				background-color: #f7f7fc;
+				font-weight: 500;
+				font-size: 15px;
+				line-height: 24px;
+				&::-webkit-scrollbar {
+					display: none;
+				}
+				.public-DraftEditor-content {
+					> div {
+						min-height: 200px;
 					}
 				}
 			}

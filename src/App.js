@@ -17,7 +17,7 @@ import BooksAuthor from 'pages/books-author';
 import Category from 'pages/category';
 import CategoryDetail from 'pages/category-detail';
 import ChooseTopic from 'pages/choose-topic';
-import Direct from 'pages/direct-page/DirectPageDefault';
+import DirectPageDefault from 'pages/direct-page/DirectPageDefault';
 import ConfirmMyBook from 'pages/confirm-my-book';
 import ForgetPassWordComponent from 'pages/foget-password/component';
 import AdminCreateNewPassword from 'pages/foget-password/component-admin/CreateNewPasswordAdmin';
@@ -170,8 +170,8 @@ function App({ children }) {
 				<Route path='/forget-password' element={<ForgetPassWordComponent />} />
 				<Route path='/create-newpassword-admin' element={<AdminCreateNewPassword />} />
 				<Route path='/choose-topic' element={<ChooseTopic />} />
-				<Route path='/direct' element={<Direct />} />
-				<Route path='/direct/login' element={<Direct />} />
+				<Route path='/direct' element={<DirectPageDefault />} />
+				<Route path='/direct/login' element={<DirectPageDefault />} />
 				<Route path='/api/v1/auth/direct' element={<DirectPageInvite />} />
 				<Route path='/reading-summary/:userId' element={<ReadingSummary />} />
 				<Route path='/reading-target/:userId' element={<ReadingTarget />} />

@@ -474,6 +474,21 @@ $wallpaper-height: 350px;
 	}
 }
 
+.personal-info-form {
+	.form-field-textarea {
+		.public-DraftEditorPlaceholder-root {
+			.public-DraftEditorPlaceholder-inner {
+				height: auto;
+			}
+		}
+		.public-DraftEditor-content {
+			> div {
+				min-height: 150px;
+			}
+		}
+	}
+}
+
 .form-field__no-data {
 	font-size: 15px;
 	height: 57px;

@@ -48,7 +48,6 @@ const PersonalInfoForm = ({ userData, toggleModal }) => {
 	const [showModalDeleteSocialMedia, setShowModalDeleteSocialMedia] = useState(false);
 	const [userNameInputError, setUserNameInputError] = useState(false);
 
-	const textareaRef = useRef(null);
 	const userFirstNameRef = useRef(null);
 	const userAddressRef = useRef(null);
 	const userWorksRef = useRef(null);
@@ -170,9 +169,7 @@ const PersonalInfoForm = ({ userData, toggleModal }) => {
 		} else if (option === 'edit-works') {
 			setUserWorks(e.target.value);
 		} else if (option === 'edit-descriptions') {
-			setUserDescriptions(e.target.value);
-			textareaRef.current.style.height = '96px';
-			textareaRef.current.style.height = textareaRef.current.scrollHeight + 'px';
+			setUserDescriptions(e);
 		} else if (option === 'edit-high-school') {
 			setUserHighschool(e.target.value);
 		} else if (option === 'edit-university') {
@@ -181,12 +178,6 @@ const PersonalInfoForm = ({ userData, toggleModal }) => {
 			setUserInterest(e.target.value);
 		}
 	};
-
-	useEffect(() => {
-		if (textareaRef.current) {
-			textareaRef.current.style.height = textareaRef.current.scrollHeight + 'px';
-		}
-	}, [textareaRef.current]);
 
 	const enableEdit = option => {
 		if (option === 'name-editting') {
@@ -319,10 +310,6 @@ const PersonalInfoForm = ({ userData, toggleModal }) => {
 			userAddressRef.current.focus();
 		} else if (userWorksRef.current && fieldEditting === 'works-editting') {
 			userWorksRef.current.focus();
-		} else if (textareaRef.current && fieldEditting === 'descriptions-editting') {
-			const end = textareaRef.current.value.length;
-			textareaRef.current.setSelectionRange(end, end);
-			textareaRef.current.focus();
 		} else if (userSocialsMediaRef.current && fieldEditting === 'socials-editting') {
 			userSocialsMediaRef.current.focus();
 		} else if (userHighSchoolRef.current && fieldEditting === 'high-school-editting') {
@@ -531,7 +518,6 @@ const PersonalInfoForm = ({ userData, toggleModal }) => {
 			<TextareaType
 				textareaValue={userDescriptions}
 				editStatus={editDescriptions}
-				textareaRef={textareaRef}
 				updateInputValue={updateInputValue}
 				cancelEdit={cancelEdit}
 				enableEdit={enableEdit}

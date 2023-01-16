@@ -23,6 +23,7 @@ const AddAndSearchAuthorUploadBook = lazy(() => import('./AddAndSearchAuthorUplo
 const AddAndSearchCategoriesUploadBook = lazy(() => import('./AddAndSearchCategoriesUploadBook'));
 const AddAndSearchPublisherUploadBook = lazy(() => import('./AddAndSearchPublisherUploadBook'));
 import BackButton from 'shared/back-button';
+import RichTextEditor from 'shared/rich-text-editor';
 
 export default function MainUpload() {
 	const navigate = useNavigate();
@@ -38,6 +39,8 @@ export default function MainUpload() {
 	const [publisher, setPublisher] = useState([]);
 	const [language, setLanguage] = useState('');
 	const [series, setSeries] = useState({});
+	const [description, setDescription] = useState('');
+	const [toggleResetDescription, setToggleResetDescription] = useState(false);
 
 	const [resetSelect, setResetSelect] = useState(false);
 	const [buttonActive, setButtonActive] = useState(false);
@@ -54,10 +57,10 @@ export default function MainUpload() {
 		originalName: '',
 		isbn: '',
 		page: '',
-		description: '',
+		paperSize: '',
 	};
 
-	const [{ name, subName, originalName, isbn, page, description }, setState] = useState(initialState);
+	const [{ name, subName, originalName, isbn, page, paperSize }, setState] = useState(initialState);
 
 	const onChange = e => {
 		const { name, value } = e.target;
@@ -81,6 +84,8 @@ export default function MainUpload() {
 		setLanguage('');
 		setResetSelect(!resetSelect);
 		setState(initialState);
+		setDescription('');
+		setToggleResetDescription(!toggleResetDescription);
 	};
 
 	const [showModalSeries, setShowModalSeries] = useState(false);
@@ -188,6 +193,7 @@ export default function MainUpload() {
 			isbn: isbn,
 			publishDate: dataDate,
 			page: Number(page),
+			paperSize: paperSize,
 			language: language,
 			description: description,
 			categoryIds: categoryIds,
@@ -414,6 +420,16 @@ export default function MainUpload() {
 									resetSelect={resetSelect}
 								/>
 							</div>
+							<div className='inp-book-col'>
+								<label>Khổ sách</label>
+								<input
+									className='input input--non-border'
+									placeholder='Khổ sách'
+									value={paperSize}
+									name='paperSize'
+									onChange={onChange}
+								></input>
+							</div>
 						</div>
 					</div>
 
@@ -450,7 +466,7 @@ export default function MainUpload() {
 							Mô tả<span className='upload-text-danger'>*</span>
 						</label>
 						<div className='txtarea'>
-							<textarea rows={9} value={description} name='description' onChange={onChange} />
+							<RichTextEditor setContent={setDescription} toggleResetText={toggleResetDescription} />
 						</div>
 					</div>
 					<div className='inp-book-row'>
