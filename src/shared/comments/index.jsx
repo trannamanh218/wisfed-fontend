@@ -181,11 +181,10 @@ const Comment = ({ dataProp, handleReply, postData, commentLv1Id, type }) => {
 		}
 
 		if (cmtContent.current) {
-			if (
-				cmtContent.current.children.length > 2 ||
-				postData?.message?.replace(/(<([^>]+)>)/gi, '').length > 114 ||
-				postData.content?.replace(/(<([^>]+)>)/gi, '').length > 114
-			) {
+			const cssObj = window.getComputedStyle(cmtContent.current, null);
+			let bgColor = cssObj.getPropertyValue('line-height');
+			console.log(bgColor);
+			if (bgColor > 2) {
 				setHasMore(true);
 				cmtContent.current.classList.add('view-less');
 			} else {

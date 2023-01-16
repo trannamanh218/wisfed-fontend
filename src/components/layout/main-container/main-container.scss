@@ -5,12 +5,12 @@
 	display: flex;
 	justify-content: space-between;
 	overflow: hidden;
+	gap: 25px;
 
 	.mainContainer__main {
 		padding: 40px 0;
 		max-width: 936px;
-		width: 65%;
-		flex-grow: 1;
+		width: 72%;
 	}
 
 	.mainContainer__sidebar-wrapper {
@@ -25,7 +25,7 @@
 			overflow-x: hidden;
 			overflow-y: scroll;
 			overscroll-behavior: contain;
-			padding: 40px 14px 40px 0;
+			padding: 40px 22px 40px 0;
 
 			&::-webkit-scrollbar {
 				width: 4px;
@@ -53,12 +53,6 @@
 @media only screen and (max-width: 1366px) {
 	.mainContainer {
 		padding: 0 38px 0 56px;
-	}
-}
-
-@media only screen and (max-width: 1280px) {
-	.mainContainer {
-		padding: 0 22px 0 40px;
 	}
 }
 
