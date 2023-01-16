@@ -61,21 +61,23 @@
 		margin-bottom: 1rem;
 		font-size: 1rem;
 		font-weight: 400;
+		display: flex;
+		align-items: center;
 		.verified {
 			cursor: pointer;
 			&:hover {
 				text-decoration: underline;
 			}
 		}
+		.book-intro__author__name {
+			display: flex;
+			align-items: center;
+			margin-left: 4px;
+		}
 	}
 
 	&__check {
-		width: 20px;
-		height: 20px;
-		fill: $success;
-		path {
-			color: $white;
-		}
+		margin-left: 4px;
 	}
 
 	&__stars {
