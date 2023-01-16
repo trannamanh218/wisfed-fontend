@@ -195,8 +195,9 @@ function SettingsGroup({ handleChange, data, fetchData }) {
 	};
 
 	const addCategory = category => {
-		if (categoryAddedList.filter(categoryAdded => categoryAdded.id === category.id).length > 0) {
-			removeCategory(category.id);
+		const foundAddItem = categoryAddedList.find(item => item.id === category.id);
+		if (foundAddItem) {
+			removeCategory(categoryAddedList.indexOf(foundAddItem));
 		} else {
 			const categoryArrayTemp = [...categoryAddedList];
 			categoryArrayTemp.push(category);
@@ -209,10 +210,9 @@ function SettingsGroup({ handleChange, data, fetchData }) {
 		}
 	};
 
-	const removeCategory = categoryId => {
+	const removeCategory = paramIndex => {
 		const categoryArr = [...categoryAddedList];
-		const index = categoryArr.findIndex(item => item.id === categoryId);
-		categoryArr.splice(index, 1);
+		categoryArr.splice(paramIndex, 1);
 		setCategoryAddedList(categoryArr);
 	};
 
@@ -229,8 +229,9 @@ function SettingsGroup({ handleChange, data, fetchData }) {
 	};
 
 	const addAuthor = author => {
-		if (authorAddedList.filter(authorAdded => authorAdded.id === author.id).length > 0) {
-			removeAuthor(author.id);
+		const foundAddItem = authorAddedList.find(item => item.id === author.id);
+		if (foundAddItem) {
+			removeAuthor(authorAddedList.indexOf(foundAddItem));
 		} else {
 			if (data.groupType === 'author' && authorAddedList.length >= 5) {
 				toast.warning('Chỉ được chọn tối đa 5 tác giả');
@@ -247,10 +248,9 @@ function SettingsGroup({ handleChange, data, fetchData }) {
 		}
 	};
 
-	const removeAuthor = authorId => {
+	const removeAuthor = paramIndex => {
 		const authorArr = [...authorAddedList];
-		const index = authorArr.findIndex(item => item.id === authorId);
-		authorArr.splice(index, 1);
+		authorArr.splice(paramIndex, 1);
 		setAuthorAddedList(authorArr);
 	};
 
@@ -267,8 +267,9 @@ function SettingsGroup({ handleChange, data, fetchData }) {
 	};
 
 	const addBook = book => {
-		if (bookAddedList.filter(bookAdded => bookAdded.id === book.id).length > 0) {
-			removeBook(book.id);
+		const foundAddItem = bookAddedList.find(item => item.id === book.id);
+		if (foundAddItem) {
+			removeBook(bookAddedList.indexOf(foundAddItem));
 		} else {
 			const bookArrayTemp = [...bookAddedList];
 			bookArrayTemp.push(book);
@@ -281,10 +282,9 @@ function SettingsGroup({ handleChange, data, fetchData }) {
 		}
 	};
 
-	const removeBook = bookId => {
+	const removeBook = paramIndex => {
 		const bookArr = [...bookAddedList];
-		const index = bookArr.findIndex(item => item.id === bookId);
-		bookArr.splice(index, 1);
+		bookArr.splice(paramIndex, 1);
 		setBookAddedList(bookArr);
 	};
 

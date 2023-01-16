@@ -25,8 +25,9 @@ function AddAndSearchPublisherUploadBook({
 	const dispatch = useDispatch();
 
 	const addPublisher = publisher => {
-		if (publisherAddedList.filter(publisherAdded => publisherAdded.id === publisher.id).length > 0) {
-			removePublisher(publisher.id);
+		const foundAddItem = publisherAddedList.find(item => item.id === publisher.id);
+		if (foundAddItem) {
+			removePublisher(publisherAddedList.indexOf(foundAddItem));
 		} else {
 			if (publisherAddedList.length < maxAddedValue) {
 				const publisherArrayTemp = [...publisherAddedList];
@@ -43,10 +44,9 @@ function AddAndSearchPublisherUploadBook({
 		}
 	};
 
-	const removePublisher = publisherId => {
+	const removePublisher = paramIndex => {
 		const publisherArr = [...publisherAddedList];
-		const index = publisherArr.findIndex(item => item.id === publisherId);
-		publisherArr.splice(index, 1);
+		publisherArr.splice(paramIndex, 1);
 		setPublisher(publisherArr);
 	};
 

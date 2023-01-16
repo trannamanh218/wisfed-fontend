@@ -25,8 +25,9 @@ function AddAndSearchCategoriesUploadBook({
 	const dispatch = useDispatch();
 
 	const addCategory = category => {
-		if (categoryAddedList.filter(categoryAdded => categoryAdded.id === category.id).length > 0) {
-			removeCategory(category.id);
+		const foundAddItem = categoryAddedList.find(item => item.id === category.id);
+		if (foundAddItem) {
+			removeCategory(categoryAddedList.indexOf(foundAddItem));
 		} else {
 			if (categoryAddedList.length < maxAddedValue) {
 				const categoryArrayTemp = [...categoryAddedList];
@@ -43,10 +44,9 @@ function AddAndSearchCategoriesUploadBook({
 		}
 	};
 
-	const removeCategory = categoryId => {
+	const removeCategory = paramIndex => {
 		const categoryArr = [...categoryAddedList];
-		const index = categoryArr.findIndex(item => item.id === categoryId);
-		categoryArr.splice(index, 1);
+		categoryArr.splice(paramIndex, 1);
 		setCategoryAddedList(categoryArr);
 	};
 

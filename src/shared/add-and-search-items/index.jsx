@@ -13,6 +13,7 @@ function AddAndSearchItems({
 	getDataFinish,
 	searchItem,
 	inputItemValue,
+	setInputItemValue,
 	itemInputContainer,
 	itemInputWrapper,
 	itemInput,
@@ -21,16 +22,10 @@ function AddAndSearchItems({
 	hasMoreEllipsis,
 	acceptValueText,
 	autoFocus,
+	setItemList,
 }) {
 	const [firstTimeFocus, setFirstTimeFocus] = useState(false);
 	const [show, setShow] = useState(true);
-
-	const focusInput = () => {
-		if (itemInput.current) {
-			itemInput.current.focus();
-			setFirstTimeFocus(true);
-		}
-	};
 
 	useEffect(() => {
 		if (itemInput.current && firstTimeFocus) {
@@ -59,6 +54,20 @@ function AddAndSearchItems({
 		}
 	}, [inputItemValue]);
 
+	const focusInput = () => {
+		if (itemInput.current) {
+			itemInput.current.focus();
+			setFirstTimeFocus(true);
+		}
+	};
+
+	const onClickAddNewItem = () => {
+		const cloneArr = [...itemAddedList];
+		cloneArr.push({ fullName: inputItemValue });
+		setItemList(cloneArr);
+		setInputItemValue('');
+	};
+
 	return (
 		<div className='add-and-search-categories'>
 			<div
@@ -69,10 +78,10 @@ function AddAndSearchItems({
 			>
 				{itemAddedList.length > 0 ? (
 					<div className='add-and-search-categories__categories-added'>
-						{itemAddedList.map(item => (
-							<div key={item.id} className='add-and-search-categories__categories-added__item'>
+						{itemAddedList.map((item, index) => (
+							<div key={index} className='add-and-search-categories__categories-added__item'>
 								<div>{item.name || item.fullName || item.firstName + ' ' + item.lastName}</div>
-								<button onClick={() => removeItem(item.id)}>
+								<button onClick={() => removeItem(index)}>
 									<CloseX />
 								</button>
 							</div>
@@ -141,7 +150,7 @@ function AddAndSearchItems({
 									{acceptValueText && (
 										<span
 											className='add-and-search-categories__type-new'
-											onClick={() => setShow(false)}
+											onClick={onClickAddNewItem}
 										>
 											(Nhập tên mới?)
 										</span>
@@ -161,6 +170,8 @@ AddAndSearchItems.defaultProps = {
 	hasMoreEllipsis: false,
 	acceptValueText: false,
 	autoFocus: false,
+	setItemList: () => {},
+	setInputItemValue: () => {},
 };
 
 AddAndSearchItems.propTypes = {
@@ -179,6 +190,8 @@ AddAndSearchItems.propTypes = {
 	hasMoreEllipsis: PropTypes.bool,
 	acceptValueText: PropTypes.bool,
 	autoFocus: PropTypes.bool,
+	setItemList: PropTypes.func,
+	setInputItemValue: PropTypes.func,
 };
 
 export default AddAndSearchItems;

@@ -176,8 +176,9 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 	};
 
 	const addCategory = category => {
-		if (categoryAddedList.filter(categoryAdded => categoryAdded.id === category.id).length > 0) {
-			removeCategory(category.id);
+		const foundAddItem = categoryAddedList.find(item => item.id === category.id);
+		if (foundAddItem) {
+			removeCategory(categoryAddedList.indexOf(foundAddItem));
 		} else {
 			const categoryArrayTemp = [...categoryAddedList];
 			if (categoryArrayTemp.length < limitedValue.current) {
@@ -197,10 +198,9 @@ function CreatQuotesModal({ hideCreatQuotesModal }) {
 		}
 	};
 
-	const removeCategory = categoryId => {
+	const removeCategory = paramIndex => {
 		const categoryArr = [...categoryAddedList];
-		const index = categoryArr.findIndex(item => item.id === categoryId);
-		categoryArr.splice(index, 1);
+		categoryArr.splice(paramIndex, 1);
 		setCategoryAddedList(categoryArr);
 	};
 
