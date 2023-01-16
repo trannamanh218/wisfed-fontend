@@ -141,18 +141,32 @@ export default function MainUpload() {
 
 		// Tạo danh sách tác giả
 		const authorsArr = authors.map(item => {
-			return {
-				'isUser': true,
-				'authorId': item.id,
-			};
+			if (item.id) {
+				return {
+					isUser: true,
+					authorId: item.id,
+				};
+			} else {
+				return {
+					isUser: false,
+					authorName: item.fullName,
+				};
+			}
 		});
 
 		// Tạo danh sách dịch giả
 		const translatorsArr = translators.map(item => {
-			return {
-				'isUser': true,
-				'translatorId': item.id,
-			};
+			if (item.id) {
+				return {
+					isUser: true,
+					translatorId: item.id,
+				};
+			} else {
+				return {
+					isUser: false,
+					translatorName: item.fullName,
+				};
+			}
 		});
 
 		const imgSrc = await uploadImageFile(image);
@@ -169,26 +183,8 @@ export default function MainUpload() {
 			name: name,
 			subName: subName,
 			originalName: originalName,
-			authors:
-				authorsArr.length > 0
-					? authorsArr
-					: [
-							{
-								isUser: false,
-								authorName: inputAuthorValue,
-							},
-					  ],
-			translators:
-				!translatorsArr.length && !inputTranslatorValue
-					? []
-					: translatorsArr.length > 0
-					? translatorsArr
-					: [
-							{
-								isUser: false,
-								translatorName: inputTranslatorValue,
-							},
-					  ],
+			authors: authorsArr,
+			translators: translatorsArr,
 			publisherId: publisher[0].id,
 			isbn: isbn,
 			publishDate: dataDate,
