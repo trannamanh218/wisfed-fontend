@@ -2,12 +2,15 @@ import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import './read-more.scss';
 import { useRef } from 'react';
+import { urlRegex, hashtagRegex } from 'constants';
 
 const ReadMore = ({ text, height }) => {
 	const [showLess, setShowLess] = useState(false);
 	const [showReadmore, setShowReadmore] = useState(false);
 
 	const readMore = useRef(null);
+
+	console.log(text);
 
 	useEffect(() => {
 		if (readMore.current) {
@@ -19,6 +22,18 @@ const ReadMore = ({ text, height }) => {
 			// 22.5 là chiều cao của read-more__btn
 		}
 	}, [height]);
+
+	const generateContent = content => {
+		let newContent = content.replace(/(<p><br><\/p>)+/g, '');
+		if (newContent.match(urlRegex) || newContent.match(hashtagRegex)) {
+			newContent = newContent.replace(urlRegex, data => {
+				return `<a class="url-class" data-url=${data}>${
+					data.length <= 50 ? data : data.slice(0, 50) + '...'
+				}</a>`;
+			});
+		}
+		return newContent;
+	};
 
 	const handleShow = () => {
 		const element = readMore.current.querySelector('.read-more-container');
@@ -35,7 +50,7 @@ const ReadMore = ({ text, height }) => {
 			<div
 				className='read-more-container'
 				dangerouslySetInnerHTML={{
-					__html: text,
+					__html: generateContent(text),
 				}}
 			></div>
 			{showReadmore && (

@@ -236,17 +236,17 @@
 @media only screen and (max-width: 1280px) {
 	.header {
 		&__search {
-			margin-left: 40px;
+			margin-left: 20px;
 		}
 
 		&__nav {
 			gap: 36px;
 			padding: 0 16px;
-			margin-left: 52px;
+			margin-left: 32px;
 		}
 
 		&__userInfo {
-			margin-left: 4rem;
+			margin-left: 20px;
 		}
 	}
 }
