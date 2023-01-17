@@ -1,0 +1,29 @@
+@import 'src/scss/abstracts/_variables.scss';
+
+.post-not-available {
+	padding: 1.25rem;
+	background-color: white;
+	border-radius: 0.6em;
+	display: flex;
+	gap: 1em;
+
+	img {
+		width: 36px;
+		height: fit-content;
+	}
+
+	.post-not-available__text {
+		.post-not-available__text-bold {
+			font-weight: 700;
+			font-size: 0.95rem;
+			margin-bottom: 4px;
+			color: $ash;
+		}
+
+		.post-not-available__text-normal {
+			font-size: 0.82rem;
+			line-height: 1.5;
+			color: $ash-label;
+		}
+	}
+}

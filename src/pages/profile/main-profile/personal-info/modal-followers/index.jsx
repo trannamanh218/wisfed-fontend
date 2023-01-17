@@ -15,6 +15,7 @@ import _ from 'lodash';
 import { useRef } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import LoadingIndicator from 'shared/loading-indicator';
+import { formatNumbers } from 'constants';
 
 const ModalFollowers = ({ modalFollower, setModalFollower, userInfoDetail }) => {
 	const { userInfo } = useSelector(state => state.auth);
@@ -143,11 +144,11 @@ const ModalFollowers = ({ modalFollower, setModalFollower, userInfoDetail }) => 
 													{!_.isEmpty(item?.dataCounting) && (
 														<p className='author-card__subtitle'>
 															{item?.dataCounting?.follower > 0
-																? item?.dataCounting?.follower
+																? formatNumbers(item?.dataCounting?.follower)
 																: 0}{' '}
 															người theo dõi,{' '}
 															{item?.dataCounting?.friend > 0
-																? item?.dataCounting?.friend
+																? formatNumbers(item?.dataCounting?.friend)
 																: 0}{' '}
 															bạn bè
 														</p>

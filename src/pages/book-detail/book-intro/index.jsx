@@ -3,7 +3,7 @@ import { useRef } from 'react';
 import shareImg from 'assets/images/alert-circle-fill.png';
 import facebookImg from 'assets/images/facebook.png';
 import StatusButton from 'components/status-button';
-import { CircleCheckIcon } from 'components/svg';
+import { CircleCheckFullFill } from 'components/svg';
 import BookThumbnail from 'shared/book-thumbnail';
 import ReactRating from 'shared/react-rating';
 import ReadMore from 'shared/read-more';
@@ -78,13 +78,13 @@ const BookIntro = ({ bookInfo, listRatingStar }) => {
 						<div className='book-intro__author'>
 							{Array.isArray(bookInfo.authors) && bookInfo.authors.length > 0 ? (
 								<>
-									Bởi{' '}
+									Bởi
 									{bookInfo.authors.map((author, index) => (
-										<span key={index}>
+										<span key={index} className='book-intro__author__name'>
 											<span className='verified' onClick={() => onClickAuthorName(author)}>
 												{author.authorName}
 											</span>
-											{author.verify && <CircleCheckIcon className='book-intro__check' />}
+											{author.verify && <CircleCheckFullFill className='book-intro__check' />}
 											{index + 1 < bookInfo.authors.length && ', '}
 										</span>
 									))}

@@ -23,6 +23,7 @@ import PropTypes from 'prop-types';
 import backgroundImageDefault from 'assets/images/background-profile.png';
 import { updateUserInfo } from 'reducers/redux-utils/auth';
 import { useNavigate } from 'react-router-dom';
+import { formatNumbers } from 'constants';
 
 const PersonalInfo = ({ currentUserInfo, setCurrentTab }) => {
 	const { ref: settingsRef, isVisible: isSettingsVisible, setIsVisible: setSettingsVisible } = useVisible(false);
@@ -213,7 +214,9 @@ const PersonalInfo = ({ currentUserInfo, setCurrentTab }) => {
 								}}
 								className='personal-info__item'
 							>
-								<span className='number'>{currentUserInfo.posts > 0 ? currentUserInfo.posts : 0}</span>
+								<span className='number'>
+									{currentUserInfo.posts > 0 ? formatNumbers(currentUserInfo.posts) : 0}
+								</span>
 								<span>Bài viết</span>
 							</li>
 							<li
@@ -223,7 +226,7 @@ const PersonalInfo = ({ currentUserInfo, setCurrentTab }) => {
 								className='personal-info__item'
 							>
 								<span className='number'>
-									{currentUserInfo.follower > 0 ? currentUserInfo.follower : 0}
+									{currentUserInfo.follower > 0 ? formatNumbers(currentUserInfo.follower) : 0}
 								</span>
 								<span>Người theo dõi</span>
 							</li>
@@ -242,7 +245,7 @@ const PersonalInfo = ({ currentUserInfo, setCurrentTab }) => {
 								className='personal-info__item'
 							>
 								<span className='number'>
-									{currentUserInfo.following > 0 ? currentUserInfo.following : 0}
+									{currentUserInfo.following > 0 ? formatNumbers(currentUserInfo.following) : 0}
 								</span>
 								<span>Đang theo dõi</span>
 							</li>
@@ -260,15 +263,18 @@ const PersonalInfo = ({ currentUserInfo, setCurrentTab }) => {
 								className='personal-info__item'
 							>
 								<span className='number'>
-									{currentUserInfo.friends > 0 ? currentUserInfo.friends : 0}
+									{currentUserInfo.friends > 0 ? formatNumbers(currentUserInfo.friends) : 0}
 								</span>
 								<span>
 									Bạn bè
 									{currentUserInfo.id !== userInfo.id ? (
 										<span>
 											{' '}
-											({currentUserInfo.mutualFriends > 0 ? currentUserInfo.mutualFriends : 0} bạn
-											chung)
+											(
+											{currentUserInfo.mutualFriends > 0
+												? formatNumbers(currentUserInfo.mutualFriends)
+												: 0}{' '}
+											bạn chung)
 										</span>
 									) : null}
 								</span>

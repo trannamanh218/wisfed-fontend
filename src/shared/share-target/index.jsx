@@ -12,7 +12,9 @@ function ShareTarget({ postData, inPost = false }) {
 
 	useEffect(() => {
 		if (inPost) {
-			const percentTemp = ((postData?.sharePost.current / postData?.sharePost.target) * 100).toFixed();
+			const percentTemp = (
+				(postData?.sharePost.current || postData?.currentRead || 0 / postData?.sharePost.target) * 100
+			).toFixed();
 			if (percentTemp > 100) {
 				setPercent(100);
 			} else {

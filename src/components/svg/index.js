@@ -85,6 +85,7 @@ import { ReactComponent as Hamburger } from 'assets/icons/Hamburger.svg';
 import { ReactComponent as PlusIcon } from 'assets/icons/action-plus.svg';
 import { ReactComponent as TrashIcon } from 'assets/icons/trash-icon.svg';
 import { ReactComponent as Bell } from 'assets/icons/bell.svg';
+import { ReactComponent as CircleCheckFullFill } from 'assets/icons/circle-check-full-fill.svg';
 
 export {
 	CrowSmall,
@@ -174,4 +175,5 @@ export {
 	PlusIcon,
 	TrashIcon,
 	Bell,
+	CircleCheckFullFill,
 };
