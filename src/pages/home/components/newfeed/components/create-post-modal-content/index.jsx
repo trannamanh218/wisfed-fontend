@@ -628,7 +628,7 @@ function CreatePostModalContent({
 		// book, author , topic is required
 		setStatus(STATUS_LOADING);
 		try {
-			if (postDataShare && !_.isEmpty(postDataShare)) {
+			if (postDataShare && !_.isEmpty(postDataShare) && !postDataShare.sharePost.isDeleted) {
 				if (isEditPost) {
 					await dispatch(handleEditPost(params)).unwrap();
 				} else {
@@ -1054,7 +1054,7 @@ function CreatePostModalContent({
 											? `  được like nhiều nhất thuộc ${
 													postDataShare.categoryName
 											  } theo ${handleTime()} `
-											: `  được like nhiều nhất theo ${handleTime()} `}
+											: `  được like nhiều nhất theo ${handleTime()}`}
 									</span>
 									<IconRanks />
 								</div>
@@ -1083,7 +1083,7 @@ function CreatePostModalContent({
 									<span className='number__title__rank'># Sách của tôi làm tác giả</span>
 								</div>
 							)}
-							{!_.isEmpty(postDataShare) && (
+							{!_.isEmpty(postDataShare) && !postDataShare.sharePost.isDeleted && (
 								<div
 									className={
 										postDataShare.verb !== GROWTH_CHART_VERB_SHARE &&
