@@ -67,7 +67,7 @@ function ManageJoin({ handleChange }) {
 						<div className='member-item__info'>
 							<img
 								src='https://play-lh.googleusercontent.com/NIUu0OgXQO4nU-ugWTv6yNy92u9wQFFfwvlWOsCIG-tPYBagOZdpyrJCxfHULI_eeGI'
-								alt=''
+								alt='image'
 							/>
 							<div className='member-item__text'>
 								<span>Hoàng Thiên Quân </span>
@@ -87,7 +87,7 @@ function ManageJoin({ handleChange }) {
 						<div className='member-item__info'>
 							<img
 								src='https://play-lh.googleusercontent.com/NIUu0OgXQO4nU-ugWTv6yNy92u9wQFFfwvlWOsCIG-tPYBagOZdpyrJCxfHULI_eeGI'
-								alt=''
+								alt='image'
 							/>
 							<div className='member-item__text'>
 								<span>Hoàng Thiên Quân </span>
@@ -107,7 +107,7 @@ function ManageJoin({ handleChange }) {
 						<div className='member-item__info'>
 							<img
 								src='https://play-lh.googleusercontent.com/NIUu0OgXQO4nU-ugWTv6yNy92u9wQFFfwvlWOsCIG-tPYBagOZdpyrJCxfHULI_eeGI'
-								alt=''
+								alt='image'
 							/>
 							<div className='member-item__text'>
 								<span>Hoàng Thiên Quân </span>
@@ -127,7 +127,7 @@ function ManageJoin({ handleChange }) {
 						<div className='member-item__info'>
 							<img
 								src='https://play-lh.googleusercontent.com/NIUu0OgXQO4nU-ugWTv6yNy92u9wQFFfwvlWOsCIG-tPYBagOZdpyrJCxfHULI_eeGI'
-								alt=''
+								alt='image'
 							/>
 							<div className='member-item__text'>
 								<span>Hoàng Thiên Quân </span>
@@ -147,7 +147,7 @@ function ManageJoin({ handleChange }) {
 						<div className='member-item__info'>
 							<img
 								src='https://play-lh.googleusercontent.com/NIUu0OgXQO4nU-ugWTv6yNy92u9wQFFfwvlWOsCIG-tPYBagOZdpyrJCxfHULI_eeGI'
-								alt=''
+								alt='image'
 							/>
 							<div className='member-item__text'>
 								<span>Hoàng Thiên Quân </span>
@@ -167,7 +167,7 @@ function ManageJoin({ handleChange }) {
 						<div className='member-item__info'>
 							<img
 								src='https://play-lh.googleusercontent.com/NIUu0OgXQO4nU-ugWTv6yNy92u9wQFFfwvlWOsCIG-tPYBagOZdpyrJCxfHULI_eeGI'
-								alt=''
+								alt='image'
 							/>
 							<div className='member-item__text'>
 								<span>Hoàng Thiên Quân </span>

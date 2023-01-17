@@ -162,7 +162,7 @@ const BookReference = ({ bookInfo, handleGetBookDetail }) => {
 												<div className='wants-to-read__thumbnail'>
 													<img
 														src={item.frontBookCover || item.images[0] || bookImage}
-														alt=''
+														alt='image'
 													/>
 												</div>
 											</Link>

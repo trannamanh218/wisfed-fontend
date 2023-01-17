@@ -16,7 +16,7 @@ const PopupQuestion = ({ handleClose }) => {
 			<div className='popup-question__name-group'>
 				<img
 					src='https://play-lh.googleusercontent.com/NIUu0OgXQO4nU-ugWTv6yNy92u9wQFFfwvlWOsCIG-tPYBagOZdpyrJCxfHULI_eeGI'
-					alt=''
+					alt='image'
 				/>
 				<div className='popup-question__name-group-text'>
 					<div>Đọc sách cùng Shadow</div>

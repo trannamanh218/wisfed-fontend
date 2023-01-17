@@ -6,7 +6,7 @@ const ItemInviteFriend = () => {
 			<div className='friend-item'>
 				<img
 					src='https://play-lh.googleusercontent.com/NIUu0OgXQO4nU-ugWTv6yNy92u9wQFFfwvlWOsCIG-tPYBagOZdpyrJCxfHULI_eeGI'
-					alt=''
+					alt='image'
 				/>
 				<label htmlFor='1'>Hoàng Thiên Quân</label>
 				<input type='checkbox' id='1' />

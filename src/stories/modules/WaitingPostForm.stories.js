@@ -6,7 +6,7 @@ const PostItem = () => {
 				<div className='post-item-waitting__header'>
 					<img
 						src='https://play-lh.googleusercontent.com/NIUu0OgXQO4nU-ugWTv6yNy92u9wQFFfwvlWOsCIG-tPYBagOZdpyrJCxfHULI_eeGI'
-						alt=''
+						alt='image'
 					/>
 					<div className='post-item-waitting__header-content'>
 						<span>Shadow</span>

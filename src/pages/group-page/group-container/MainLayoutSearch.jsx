@@ -135,7 +135,7 @@ const MainLayoutSearch = ({ valueGroupSearch, filterSearch }) => {
 												<img
 													src={item.avatar}
 													onError={e => e.target.setAttribute('src', defaultAvatar)}
-													alt=''
+													alt='image'
 												/>
 											</Link>
 											<div className='item-group__text'>

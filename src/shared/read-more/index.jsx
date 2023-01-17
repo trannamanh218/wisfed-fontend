@@ -1,25 +1,27 @@
 import { useState, useEffect } from 'react';
+import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import './read-more.scss';
 import { useRef } from 'react';
 import { urlRegex, hashtagRegex } from 'constants';
 
-const ReadMore = ({ text, height }) => {
-	const [showLess, setShowLess] = useState(false);
-	const [showReadmore, setShowReadmore] = useState(false);
+const ReadMore = ({ text }) => {
+	const [hasMore, setHasMore] = useState(false);
+	const [readMore, setReadMore] = useState(false);
 
-	const readMore = useRef(null);
+	const postContentRef = useRef(null);
 
 	useEffect(() => {
-		if (readMore.current) {
-			if (readMore.current.offsetHeight - height > 0) {
-				setShowReadmore(true);
+		if (postContentRef.current) {
+			// check text clamped when use webkit-box
+			const isTextClamped = elm => elm.scrollHeight > elm.clientHeight;
+			if (isTextClamped(postContentRef.current)) {
+				setHasMore(true);
+			} else {
+				setHasMore(false);
 			}
-			const element = readMore.current.querySelector('.read-more-container');
-			element.style.maxHeight = `${height - 22.5}px`;
-			// 22.5 là chiều cao của read-more__btn
 		}
-	}, [height]);
+	}, [text]);
 
 	const generateContent = content => {
 		let newContent = content.replace(/(<p><br><\/p>)+/g, '');
@@ -33,28 +35,21 @@ const ReadMore = ({ text, height }) => {
 		return newContent;
 	};
 
-	const handleShow = () => {
-		const element = readMore.current.querySelector('.read-more-container');
-		if (showLess) {
-			element.style.maxHeight = `${height - 22.5}px`;
-		} else {
-			element.style.maxHeight = `inherit`;
-		}
-		setShowLess(!showLess);
-	};
-
 	return (
-		<div className='read-more' ref={readMore}>
+		<div className='read-more'>
 			<div
-				className='read-more-container'
+				ref={postContentRef}
+				className={classNames('post__content', {
+					'view-less': readMore === false,
+				})}
 				dangerouslySetInnerHTML={{
 					__html: generateContent(text),
 				}}
 			></div>
-			{showReadmore && (
-				<button className='read-more__btn' onClick={handleShow}>
-					{showLess ? 'Thu gọn' : 'Xem thêm'}
-				</button>
+			{hasMore && (
+				<div className='read-more-post' onClick={() => setReadMore(!readMore)}>
+					{readMore ? 'Rút gọn' : 'Xem thêm'}
+				</div>
 			)}
 		</div>
 	);
@@ -62,7 +57,6 @@ const ReadMore = ({ text, height }) => {
 
 ReadMore.propTypes = {
 	text: PropTypes.string.isRequired,
-	height: PropTypes.number.isRequired,
 };
 
 export default ReadMore;

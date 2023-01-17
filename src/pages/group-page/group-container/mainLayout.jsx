@@ -160,7 +160,7 @@ const MainLayout = ({ listMyGroup, listAdminMyGroup }) => {
 													<img
 														src={item.avatar}
 														onError={e => e.target.setAttribute('src', defaultAvatar)}
-														alt=''
+														alt='image'
 														onClick={() => goToGroupDetail(item)}
 														style={{ cursor: 'pointer' }}
 													/>

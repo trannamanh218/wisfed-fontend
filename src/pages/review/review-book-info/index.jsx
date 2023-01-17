@@ -46,7 +46,7 @@ const ReviewBookInfo = ({ bookInfo }) => {
 				</div>
 
 				<div className='review-book-info__description'>
-					<ReadMore text={bookInfo.description} height={200} />
+					<ReadMore text={bookInfo.description} />
 				</div>
 			</div>
 		</div>
