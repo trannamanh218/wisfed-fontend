@@ -101,7 +101,7 @@ const BookIntro = ({ bookInfo, listRatingStar }) => {
 					</div>
 
 					<div className='book-intro__description'>
-						<ReadMore text={bookInfo.description || 'Chưa cập nhật'} height={179} />
+						<ReadMore text={bookInfo.description || 'Chưa cập nhật'} />
 					</div>
 				</div>
 				<div onClick={handleShareFaceBook} className='book-intro__action'>

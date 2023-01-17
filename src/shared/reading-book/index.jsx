@@ -9,6 +9,7 @@ import _ from 'lodash';
 import CreatePostModalContent from 'pages/home/components/newfeed/components/create-post-modal-content';
 import { blockAndAllowScroll } from 'api/blockAndAllowScroll.hook';
 import RouteLink from 'helpers/RouteLink';
+import bookImage from 'assets/images/default-book.png';
 
 function ReadingBook({ bookData }) {
 	const [percent, setPercent] = useState(0);
@@ -62,6 +63,7 @@ function ReadingBook({ bookData }) {
 										? bookData.images[0]
 										: ''
 								}
+								onError={e => e.target.setAttribute('src', `${bookImage}`)}
 								alt='image'
 							/>
 						</div>

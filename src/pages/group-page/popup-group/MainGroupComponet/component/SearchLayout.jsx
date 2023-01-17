@@ -83,7 +83,7 @@ function SearchLayout({ dataGroup }) {
 											<img
 												src={item.avatarImage ? item.avatarImage : defaultAvatar}
 												onError={e => e.target.setAttribute('src', defaultAvatar)}
-												alt=''
+												alt='image'
 											/>
 											<div className='member-item__text'>
 												<span>{item?.firstName + ' ' + item?.lastName || item.fullName}</span>

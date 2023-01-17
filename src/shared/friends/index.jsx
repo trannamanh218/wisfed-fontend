@@ -267,7 +267,7 @@ const FriendsItem = ({
 					<img
 						className='myfriends__layout__img'
 						src={data.userTwo?.avatarImage || data?.avatarImage || defaultAvatar}
-						alt=''
+						alt='image'
 						onError={e => e.target.setAttribute('src', `${defaultAvatar}`)}
 					/>
 
@@ -307,7 +307,7 @@ const FriendsItem = ({
 					<img
 						className='myfriends__layout__img'
 						src={data.userOne.avatarImage ? data.userOne.avatarImage : defaultAvatar}
-						alt=''
+						alt='image'
 						onError={e => e.target.setAttribute('src', `${defaultAvatar}`)}
 					/>
 					<div className='myfriends__star'>
@@ -351,7 +351,7 @@ const FriendsItem = ({
 					<img
 						className='myfriends__layout__img'
 						src={data.avatarImage ? data.avatarImage : defaultAvatar}
-						alt=''
+						alt='image'
 						onError={e => e.target.setAttribute('src', `${defaultAvatar}`)}
 					/>
 					<div className='myfriends__star'>

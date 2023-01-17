@@ -4,7 +4,7 @@ import { calculateDurationTime } from 'helpers/Common';
 import _ from 'lodash';
 import './posts-Share.scss';
 import PropTypes from 'prop-types';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import GridImage from 'shared/grid-image';
 import PostBook from 'shared/post-book';
 import UserAvatar from 'shared/user-avatar';
@@ -25,12 +25,14 @@ import RouteLink from 'helpers/RouteLink';
 
 const PostShare = ({ postData, inCreatePost, directUrl }) => {
 	const [videoId, setVideoId] = useState('');
-
 	const [showModalOthers, setShowModalOthers] = useState(false);
+	const [hasMore, setHasMore] = useState(false);
 
 	const handleCloseModalOthers = () => setShowModalOthers(false);
 	const handleShowModalOthers = () => setShowModalOthers(true);
 	const [readMore, setReadMore] = useState(false);
+
+	const postContentRef = useRef(null);
 
 	const navigate = useNavigate();
 
@@ -130,6 +132,16 @@ const PostShare = ({ postData, inCreatePost, directUrl }) => {
 			const match = postData.sharePost.preview.url.match(regExp);
 			if (match && match[2].length === 11) {
 				setVideoId(match[2]);
+			}
+		}
+
+		if (postContentRef.current) {
+			// check text clamped when use webkit-box
+			const isTextClamped = elm => elm.scrollHeight > elm.clientHeight;
+			if (isTextClamped(postContentRef.current)) {
+				setHasMore(true);
+			} else {
+				setHasMore(false);
 			}
 		}
 	}, [postData]);
@@ -283,12 +295,15 @@ const PostShare = ({ postData, inCreatePost, directUrl }) => {
 			{postData.sharePost?.message && (
 				<div className='post__content-wrapper'>
 					<div
-						className={readMore ? 'post__content--readmore' : 'post__content'}
+						className={classNames('post__content', {
+							'view-less': readMore === false,
+						})}
 						dangerouslySetInnerHTML={{
 							__html: generateContent(postData.sharePost.message),
 						}}
+						ref={postContentRef}
 					></div>
-					{postData?.sharePost?.message?.length > 500 && _.isEmpty(postData?.sharePost?.preview) && (
+					{hasMore && (
 						<div className='read-more-post' onClick={() => setReadMore(!readMore)}>
 							{readMore ? 'Rút gọn' : 'Xem thêm'}
 						</div>

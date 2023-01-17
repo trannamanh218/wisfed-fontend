@@ -5,13 +5,27 @@
 	line-height: 1.5;
 	text-align: justify;
 
-	&__btn {
-		color: $blue;
+	.post__content {
+		font-size: 15px;
+		line-height: 1.6em;
+		color: #4e4b66;
+		word-break: break-word;
+		overflow: hidden;
+		&.view-less {
+			display: -webkit-box;
+			-webkit-box-orient: vertical;
+			-webkit-line-clamp: 2;
+		}
+	}
+
+	.read-more-post {
+		cursor: pointer;
+		margin-top: 8px;
+		font-weight: 600;
+		font-size: 15px;
+		width: fit-content;
 		&:hover {
 			text-decoration: underline;
 		}
-	}
-	> div {
-		overflow-y: hidden;
 	}
 }

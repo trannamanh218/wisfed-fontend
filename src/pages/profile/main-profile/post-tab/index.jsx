@@ -24,6 +24,8 @@ function PostTab({ currentTab }) {
 
 	const callApiStart = useRef(0);
 	const callApiPerPage = useRef(5);
+	// const isPostDeleted = useRef(false);
+	// const isGetDataFirstTime = useRef(true);
 
 	useEffect(() => {
 		if (currentTab === 'post') {
@@ -35,7 +37,7 @@ function PostTab({ currentTab }) {
 	}, [userId, isNewPost]);
 
 	useEffect(() => {
-		if (!postList.length > 0 && currentTab === 'post') {
+		if (!postList.length && currentTab === 'post') {
 			getPostListByUser();
 		}
 	}, [postList, currentTab]);
@@ -51,16 +53,18 @@ function PostTab({ currentTab }) {
 				userId: userId,
 			};
 			const posts = await dispatch(getPostsByUser(data)).unwrap();
-			if (posts.length > 0) {
-				callApiStart.current += callApiPerPage.current;
-				setPostList(postList.concat(posts));
-			} else {
+			setPostList(postList.concat(posts));
+			if (posts.length < callApiPerPage.current) {
 				setHasMore(false);
+			} else {
+				callApiStart.current += callApiPerPage.current;
 			}
 		} catch (err) {
 			NotificationError(err);
 		} finally {
 			setLoading(false);
+			// isPostDeleted.current = false;
+			// isGetDataFirstTime.current = false;
 		}
 	};
 
@@ -70,10 +74,10 @@ function PostTab({ currentTab }) {
 
 	const handleUpdatePostArrWhenDeleted = itemMinipostId => {
 		const index = postList.findIndex(item => item.id === itemMinipostId);
-		const newItem = { ...postList[index], isDeleted: true };
-		const newArr = [...postList];
-		newArr[index] = { ...newItem };
-		setPostList(newArr);
+		postList.splice(index, 1);
+		const cloneArr = [...postList];
+		setPostList(cloneArr);
+		// onChangeNewPost();
 	};
 
 	return (

@@ -206,7 +206,7 @@ function MyGroup() {
 																					defaultAvatar
 																				)
 																			}
-																			alt=''
+																			alt='image'
 																		/>
 																	</Link>
 																	<div className='item-group__text'>

@@ -281,7 +281,7 @@ const PersonalInfo = ({ currentUserInfo, setCurrentTab }) => {
 								/>
 							)}
 						</ul>
-						{currentUserInfo.descriptions && <ReadMore text={currentUserInfo.descriptions} height={200} />}
+						{currentUserInfo.descriptions && <ReadMore text={currentUserInfo.descriptions} />}
 					</div>
 				</div>
 			</div>

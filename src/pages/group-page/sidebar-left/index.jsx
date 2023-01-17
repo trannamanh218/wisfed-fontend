@@ -88,7 +88,7 @@ const LeftSidebarGroup = ({ handleChange, data, member, onClickSeeMore }) => {
 												<img
 													src={item.avatarImage ? item.avatarImage : defaultAvatar}
 													onError={e => e.target.setAttribute('src', defaultAvatar)}
-													alt=''
+													alt='image'
 												/>
 											</Link>
 											<div className='people-item__text'>
@@ -124,7 +124,7 @@ const LeftSidebarGroup = ({ handleChange, data, member, onClickSeeMore }) => {
 													<img
 														src={item.avatarImage ? item.avatarImage : defaultAvatar}
 														onError={e => e.target.setAttribute('src', defaultAvatar)}
-														alt=''
+														alt='image'
 													/>
 												</Link>
 												<div className='people-item__text'>
@@ -164,7 +164,7 @@ const LeftSidebarGroup = ({ handleChange, data, member, onClickSeeMore }) => {
 												<img
 													src={item.avatarImage ? item.avatarImage : defaultAvatar}
 													onError={e => e.target.setAttribute('src', defaultAvatar)}
-													alt=''
+													alt='image'
 												/>
 											</Link>
 											<div className='people-item__text'>
