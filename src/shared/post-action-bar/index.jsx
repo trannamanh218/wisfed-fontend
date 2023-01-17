@@ -264,10 +264,13 @@ const PostActionBar = ({ postData, handleLikeAction }) => {
 				<CommentSvg />
 				<div className='post-action-bar__title'>{postData.comment || null} Bình luận</div>
 			</div>
-			<div onClick={handleShare} className='post-action-bar__item'>
-				<Share />
-				<div className='post-action-bar__title'>{postData.share || null} Chia sẻ</div>
-			</div>
+			{!postData.sharePost?.isDeleted && (
+				<div onClick={handleShare} className='post-action-bar__item'>
+					<Share />
+					<div className='post-action-bar__title'>{postData.share || null} Chia sẻ</div>
+				</div>
+			)}
+
 			{location.pathname.includes('book/detail') && (
 				<div onClick={handleDirectToReview} className='post-action-bar__item'>
 					<Eye />
