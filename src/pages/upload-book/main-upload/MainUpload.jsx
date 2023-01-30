@@ -116,7 +116,7 @@ export default function MainUpload() {
 					body: { bookIds: [Number(bookCreatedId)] },
 				};
 
-				await handleAddBookToSeries(paramsForAddBookToSeries);
+				await handleAddBookToSeries(paramsForAddBookToSeries).unwrap();
 			}
 
 			// Xử lý hiển thị kết quả
