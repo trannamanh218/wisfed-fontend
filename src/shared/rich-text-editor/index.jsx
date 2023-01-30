@@ -42,6 +42,7 @@ function RichTextEditor({
 	clickReply,
 	initialContent,
 	toggleResetText,
+	toggleMoveFocusToEnd,
 }) {
 	// generate initial mentions data functions
 	const getIndicesOfMentions = (str, searchStr) => {
@@ -115,6 +116,14 @@ function RichTextEditor({
 	const [editorState, setEditorState] = useState(editorDataState);
 
 	const [clearTextClicked, setClearTextClicked] = useState(false);
+
+	useEffect(() => {
+		if (toggleMoveFocusToEnd !== null) {
+			setTimeout(() => {
+				setEditorState(EditorState.moveFocusToEnd(editorState));
+			}, 200);
+		}
+	}, [toggleMoveFocusToEnd]);
 
 	useEffect(() => {
 		toggleResetText && setClearTextClicked(true);
@@ -389,6 +398,7 @@ RichTextEditor.defaultProps = {
 	replyingCommentId: -1,
 	initialContent: '',
 	toggleResetText: false,
+	toggleMoveFocusToEnd: null,
 };
 
 RichTextEditor.propTypes = {
@@ -411,6 +421,7 @@ RichTextEditor.propTypes = {
 	children: PropTypes.any,
 	initialContent: PropTypes.string,
 	toggleResetText: PropTypes.bool,
+	toggleMoveFocusToEnd: PropTypes.any,
 };
 
 export default memo(RichTextEditor);
