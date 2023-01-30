@@ -1,6 +1,7 @@
 @import 'src/scss/abstracts/_variables.scss';
 
 .post-tab {
+	min-height: 350px;
 	margin-top: 0.5px;
 	position: relative;
 	background-color: $secondary;
