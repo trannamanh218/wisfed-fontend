@@ -124,6 +124,7 @@ function CreatePostModalContent({
 	const [hashtagsAdded, setHashtagsAdded] = useState([]);
 	const [optionListState, setOptionListState] = useState([]);
 	const [modalShow, setModalShow] = useState(false);
+	const [toggleMoveFocusToEnd, setToggleMoveFocusToEnd] = useState(null);
 
 	const createPostModalContainer = useRef(null);
 	// const initialProgress = useRef(null);
@@ -969,6 +970,11 @@ function CreatePostModalContent({
 	};
 
 	const handleCancel = () => {
+		if (toggleMoveFocusToEnd === null) {
+			setToggleMoveFocusToEnd(false);
+		} else {
+			setToggleMoveFocusToEnd(prev => !prev);
+		}
 		setModalShow(false);
 	};
 
@@ -1039,6 +1045,7 @@ function CreatePostModalContent({
 								hasMentionsUser={false}
 								hasUrl={hasUrl}
 								initialContent={dataEditMiniPost?.message}
+								toggleMoveFocusToEnd={toggleMoveFocusToEnd}
 							/>
 							<TaggedList taggedData={taggedData} removeTaggedItem={removeTaggedItem} type='addAuthor' />
 							<TaggedList
