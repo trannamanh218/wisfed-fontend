@@ -7,7 +7,7 @@
 		border-bottom-right-radius: 16px;
 		border-bottom-left-radius: 16px;
 		overflow: hidden;
-		min-height: 300px;
+		min-height: 200px;
 		.active {
 			border-radius: 0;
 		}
@@ -19,6 +19,12 @@
 		}
 		&.post-tab-active {
 			padding: 0;
+		}
+		.loading-indicator {
+			margin-top: 30px;
+		}
+		.bookcase {
+			padding-top: 40px;
 		}
 	}
 
