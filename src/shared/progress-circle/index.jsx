@@ -6,11 +6,20 @@ import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
+import { useState, useEffect } from 'react';
 
 const ProgressBarCircle = ({ booksReadYear }) => {
 	const { userId } = useParams();
 	const { userInfo } = useSelector(state => state.auth);
 	const idCSS = 'library';
+
+	const [itemBooksReadYear, setItemBooksReadYear] = useState();
+
+	useEffect(() => {
+		const currentReadYear = new Date().getFullYear();
+		const itemBooksReadYear = booksReadYear.find(item => item.year === currentReadYear);
+		setItemBooksReadYear(itemBooksReadYear);
+	}, [booksReadYear]);
 
 	const SVG = () => {
 		const gradientTransform = `rotate(90)`;
@@ -25,6 +34,7 @@ const ProgressBarCircle = ({ booksReadYear }) => {
 			</svg>
 		);
 	};
+
 	const renderLinearProgressBar = item => {
 		let percent = 0;
 		if (item.booksReadCount >= item.numberBook) {
@@ -39,33 +49,31 @@ const ProgressBarCircle = ({ booksReadYear }) => {
 
 	return (
 		<>
-			{!_.isEmpty(booksReadYear) && (
+			{!_.isEmpty(itemBooksReadYear) && (
 				<div>
 					<div className='progress__circle__title'>Mục tiêu đọc sách</div>
 					<div className='progress__circle__container'>
-						{booksReadYear.map(item => (
-							<div key={item.id}>
-								<CircularProgressbarWithChildren
-									strokeWidth={4}
-									value={renderLinearProgressBar(item)}
-									text={`${item.booksReadCount || 0}/${item.numberBook}`}
-									styles={{
-										path: { stroke: `url(#${idCSS})`, height: '100%' },
-									}}
-								/>
-								<div className='progress__circle__container__title'>
-									Số cuốn sách đọc trong năm {item.year}
-								</div>
-								{SVG()}
-								<Link
-									to={`/reading-target/${userId || userInfo?.id}`}
-									style={{ 'cursor': 'pointer', 'marginTop': '15px' }}
-									className='sidebar__view-more-btn--blue'
-								>
-									Xem chi tiết
-								</Link>
+						<div>
+							<CircularProgressbarWithChildren
+								strokeWidth={4}
+								value={renderLinearProgressBar(itemBooksReadYear)}
+								text={`${itemBooksReadYear.booksReadCount || 0}/${itemBooksReadYear.numberBook}`}
+								styles={{
+									path: { stroke: `url(#${idCSS})`, height: '100%' },
+								}}
+							/>
+							<div className='progress__circle__container__title'>
+								Số cuốn sách đọc trong năm {itemBooksReadYear.year}
 							</div>
-						))}
+							{SVG()}
+							<Link
+								to={`/reading-target/${userId || userInfo?.id}`}
+								style={{ 'cursor': 'pointer', 'marginTop': '15px' }}
+								className='sidebar__view-more-btn--blue'
+							>
+								Xem chi tiết
+							</Link>
+						</div>
 					</div>
 				</div>
 			)}

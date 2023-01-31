@@ -78,6 +78,7 @@ function Bookcase({ currentUserInfo, currentTab }) {
 			} else {
 				setReadBooks(haveReadResponse[0].books);
 			}
+			setLoading(false);
 		} catch (err) {
 			NotificationError(err);
 		}
