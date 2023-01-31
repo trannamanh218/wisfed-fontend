@@ -17,6 +17,7 @@
 			height: 100%;
 			object-fit: cover;
 			border-radius: 8px;
+			cursor: pointer;
 		}
 	}
 
@@ -34,5 +35,9 @@
 		line-height: 24px;
 		font-weight: 600;
 		color: $ash-body;
+	}
+
+	h5 {
+		cursor: pointer;
 	}
 }

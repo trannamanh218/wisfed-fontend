@@ -103,7 +103,7 @@ const ConnectButtons = ({ direction, item }) => {
 				NotificationError(err);
 			}
 		}, 700),
-		[]
+		[item]
 	);
 
 	const handleRenderButtonFriend = () => {

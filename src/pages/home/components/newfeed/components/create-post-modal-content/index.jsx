@@ -341,6 +341,13 @@ function CreatePostModalContent({
 	}, [urlAdded]);
 
 	useEffect(() => {
+		// Ngăn người dùng tải lại trang khi đang tạo bài viết
+		window.onbeforeunload = function () {
+			if (content) {
+				return '';
+			}
+		};
+
 		// generate hashtags added
 		const hashtagsTemp = content?.match(hashtagRegex);
 		if (hashtagsTemp) {
