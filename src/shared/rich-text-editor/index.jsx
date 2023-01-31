@@ -161,7 +161,7 @@ function RichTextEditor({
 		}
 	}, [clickReply]);
 
-	// refresh editor
+	// refresh comment editor
 	useEffect(() => {
 		if (content && hasMentionsUser && editor !== null) {
 			setEditorState(EditorState.createEmpty());

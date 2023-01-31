@@ -77,16 +77,10 @@ const PageTab = () => {
 				while (n--) {
 					u8arr[n] = bstr.charCodeAt(n);
 				}
-				//----------------------------------------------------------------------
-				// const resizedImage = await resizeImage(u8arr, 500, 500);
-				// console.log('img', resizedImage);
-				//----------------------------------------------------------------------
 
-				const imageUploadedData = new File([u8arr], 'charts.png', { type: mime });
+				// convert to file
+				const imageUploadedData = new File([u8arr], 'charts.png', { type: 'image/png' });
 				const imgUploadder = [imageUploadedData];
-				//----------------------------------------------------------------------
-				// console.log('ok', imgUploadder);
-				//----------------------------------------------------------------------
 
 				if (imageUploadedData) {
 					setLoading(false);
@@ -104,32 +98,6 @@ const PageTab = () => {
 			}
 		}
 	}, [getAreaPng, currentOption]);
-
-	//----------------------------------------------------------------------
-	// 	async function resizeImage(uint8Arr, width, height) {
-	// 		const image = new Image();
-	// 		const canvas = document.createElement('canvas');
-	// 		const ctx = canvas.getContext('2d');
-	//
-	// 		return new Promise((resolve, reject) => {
-	// 			image.onload = function () {
-	// 				canvas.width = width;
-	// 				canvas.height = height;
-	// 				ctx.drawImage(image, 0, 0, width, height);
-	// 				resolve(
-	// 					new Uint8Array(
-	// 						canvas
-	// 							.toDataURL()
-	// 							.split(',')[1]
-	// 							.split('')
-	// 							.map(char => char.charCodeAt(0))
-	// 					)
-	// 				);
-	// 			};
-	// 			image.src = URL.createObjectURL(new Blob([uint8Arr]));
-	// 		});
-	// 	}
-	//----------------------------------------------------------------------
 
 	const onChangeOption = item => {
 		setCurrentOption(item);

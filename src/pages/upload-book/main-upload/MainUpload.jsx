@@ -18,7 +18,7 @@ import classNames from 'classnames';
 import _ from 'lodash';
 import Circle from 'shared/loading/circle';
 import { blockInvalidChar } from 'constants';
-const ModalSeries = lazy(() => import('shared/modal-series/ModalSeries'));
+// const ModalSeries = lazy(() => import('shared/modal-series/ModalSeries')); // k xóa
 const AddAndSearchAuthorUploadBook = lazy(() => import('./AddAndSearchAuthorUploadBook'));
 const AddAndSearchCategoriesUploadBook = lazy(() => import('./AddAndSearchCategoriesUploadBook'));
 const AddAndSearchPublisherUploadBook = lazy(() => import('./AddAndSearchPublisherUploadBook'));
@@ -30,7 +30,7 @@ export default function MainUpload() {
 
 	const [publishDate, setPublishDate] = useState(null);
 	const dispatch = useDispatch();
-	const { userInfo } = useSelector(state => state.auth);
+	// const { userInfo } = useSelector(state => state.auth); // k xóa
 
 	const [image, setImage] = useState(null);
 	const [categoryAddedList, setCategoryAddedList] = useState([]);
@@ -41,10 +41,11 @@ export default function MainUpload() {
 	const [series, setSeries] = useState({});
 	const [description, setDescription] = useState('');
 	const [toggleResetDescription, setToggleResetDescription] = useState(false);
+	// const [showModalSeries, setShowModalSeries] = useState(false); // k xóa
 
 	const [resetSelect, setResetSelect] = useState(false);
 	const [buttonActive, setButtonActive] = useState(false);
-	const [temporarySeries, setTemporarySeries] = useState({});
+	// const [temporarySeries, setTemporarySeries] = useState({});
 
 	const [inputAuthorValue, setInputAuthorValue] = useState('');
 	const [inputTranslatorValue, setInputTranslatorValue] = useState('');
@@ -72,7 +73,7 @@ export default function MainUpload() {
 	const clearState = () => {
 		setImage('');
 		setPublishDate(null);
-		setTemporarySeries({});
+		// setTemporarySeries({}); // k xóa
 		setInputAuthorValue('');
 		setAuthors([]);
 		setInputTranslatorValue('');
@@ -88,9 +89,8 @@ export default function MainUpload() {
 		setToggleResetDescription(!toggleResetDescription);
 	};
 
-	const [showModalSeries, setShowModalSeries] = useState(false);
-	const handleCloseModalSeries = () => setShowModalSeries(false);
-	const handleShowModalSeries = () => setShowModalSeries(true);
+	// const handleCloseModalSeries = () => setShowModalSeries(false);
+	// const handleShowModalSeries = () => setShowModalSeries(true);
 
 	const listLanguages = [
 		{ value: 'vn', name: 'Việt Nam' },
@@ -199,10 +199,11 @@ export default function MainUpload() {
 		handleCreateBook(bookInfo);
 	};
 
-	const onClickCancelSeries = () => {
-		setSeries({});
-		setTemporarySeries({});
-	};
+	// k xóa
+	// const onClickCancelSeries = () => {
+	// 	setSeries({});
+	// 	setTemporarySeries({});
+	// };
 
 	useEffect(() => {
 		if (
@@ -429,7 +430,8 @@ export default function MainUpload() {
 						</div>
 					</div>
 
-					{(userInfo?.role === 'tecinus' || userInfo?.role === 'author') && (
+					{/* k xóa */}
+					{/* {(userInfo?.role === 'tecinus' || userInfo?.role === 'author') && (
 						<div className='inp-book inp-series' style={{ position: 'relative' }}>
 							<label>Sê-ri</label>
 							<input
@@ -455,7 +457,7 @@ export default function MainUpload() {
 								/>
 							</div>
 						</div>
-					)}
+					)} */}
 
 					<div className='inp-book'>
 						<label>
