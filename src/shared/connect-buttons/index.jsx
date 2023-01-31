@@ -103,7 +103,7 @@ const ConnectButtons = ({ direction, item }) => {
 				NotificationError(err);
 			}
 		}, 700),
-		[]
+		[item]
 	);
 
 	const handleRenderButtonFriend = () => {
@@ -152,7 +152,7 @@ const ConnectButtons = ({ direction, item }) => {
 	const toggleModal = () => {
 		setShowModalUnfriends(!showModalUnfriends);
 	};
-
+	console.log(item);
 	return (
 		<div className={`connect-buttons ${direction}`}>
 			{handleRenderButtonFriend()}
