@@ -41,7 +41,7 @@
 			}
 		}
 		.book-intro__description {
-			min-height: 50%;
+			min-height: 40%;
 		}
 	}
 
@@ -58,7 +58,7 @@
 	}
 
 	&__author {
-		margin-bottom: 1rem;
+		margin-bottom: 12px;
 		font-size: 1rem;
 		font-weight: 400;
 		display: flex;
@@ -84,7 +84,7 @@
 		display: flex;
 		align-items: center;
 		gap: 0.56rem;
-		margin-bottom: 1rem;
+		margin-bottom: 12px;
 		span {
 			font-size: 0.825rem;
 			font-weight: 600;
@@ -138,7 +138,10 @@
 		&.view-less {
 			display: -webkit-box;
 			-webkit-box-orient: vertical;
-			-webkit-line-clamp: 6;
+			-webkit-line-clamp: 5;
 		}
+	}
+	.read-more-post {
+		margin-top: 3px;
 	}
 }
