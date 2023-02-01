@@ -341,13 +341,6 @@ function CreatePostModalContent({
 	}, [urlAdded]);
 
 	useEffect(() => {
-		// Ngăn người dùng tải lại trang khi đang tạo bài viết
-		window.onbeforeunload = function () {
-			if (content) {
-				return '';
-			}
-		};
-
 		// generate hashtags added
 		const hashtagsTemp = content?.match(hashtagRegex);
 		if (hashtagsTemp) {
@@ -363,12 +356,24 @@ function CreatePostModalContent({
 			setHashtagsAdded([]);
 		}
 
+		const alertUser = e => {
+			if (content) {
+				e.preventDefault();
+				e.returnValue = '';
+			}
+		};
+
 		// add event click when turn off modal
 		createPostModalContainer.current.addEventListener('mousedown', handleHideCreatePost);
+
+		// Ngăn người dùng tải lại trang khi đang tạo bài viết
+		window.addEventListener('beforeunload', alertUser);
 		return () => {
 			if (createPostModalContainer.current) {
 				createPostModalContainer.current.removeEventListener('mousedown', handleHideCreatePost);
 			}
+
+			window.removeEventListener('beforeunload', alertUser);
 		};
 	}, [content]);
 
