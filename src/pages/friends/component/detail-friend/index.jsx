@@ -22,7 +22,7 @@ import { getTopUser } from 'reducers/redux-utils/ranks';
 const DetailFriend = () => {
 	const location = useLocation();
 	const { userInfo } = useSelector(state => state.auth);
-	const [getListFollowings, setGetListFollowings] = useState([]);
+	const [listFollowings, setListFollowings] = useState([]);
 	const suggestions = location.pathname === '/friends/suggestions';
 	const recommend = location.pathname === '/friends/recommend';
 	const invitation = location.pathname === '/friends/invitation';
@@ -105,7 +105,7 @@ const DetailFriend = () => {
 		};
 		try {
 			const data = await dispatch(getRecommendFriend(params)).unwrap();
-			setGetListFollowings(data);
+			setListFollowings(data);
 			setListRecommendFriend(data);
 		} catch (err) {
 			NotificationError(err);
@@ -120,30 +120,30 @@ const DetailFriend = () => {
 				if (following) {
 					if (inputSearch.length > 0) {
 						const following = await dispatch(getListFollowing({ userId, ...query })).unwrap();
-						setGetListFollowings(following.rows);
+						setListFollowings(following.rows);
 					} else {
 						const following = await dispatch(getListFollowing({ userId })).unwrap();
-						setGetListFollowings(following.rows);
+						setListFollowings(following.rows);
 					}
 				} else if (follower) {
 					if (inputSearch.length > 0) {
 						const follower = await dispatch(getListFollowrs({ userId, ...query })).unwrap();
-						setGetListFollowings(follower.rows);
+						setListFollowings(follower.rows);
 					} else {
 						const follower = await dispatch(getListFollowrs({ userId })).unwrap();
-						setGetListFollowings(follower.rows);
+						setListFollowings(follower.rows);
 					}
 				} else if (invitation) {
 					if (inputSearch.length > 0) {
 						const friendReq = await dispatch(getListReqFriendsToMe({ ...query })).unwrap();
-						setGetListFollowings(friendReq.rows);
+						setListFollowings(friendReq.rows);
 					} else {
 						const friendReq = await dispatch(getListReqFriendsToMe()).unwrap();
-						setGetListFollowings(friendReq.rows);
+						setListFollowings(friendReq.rows);
 					}
 				} else if (suggestions) {
 					if (inputSearch.length > 0) {
-						setGetListFollowings(
+						setListFollowings(
 							listFriendSuggest.filter(item => {
 								const fullName = item.firstName + ' ' + item.lastName;
 								return fullName.toLowerCase().includes(inputSearch.toLowerCase());
@@ -163,12 +163,12 @@ const DetailFriend = () => {
 							}, []);
 							const newListNotFriend = newList.filter(item => item.relation !== 'friend');
 							setListFriendSuggest(newListNotFriend);
-							setGetListFollowings(newListNotFriend);
+							setListFollowings(newListNotFriend);
 						});
 					}
 				} else if (getRecommendFriendData) {
 					if (inputSearch.length > 0) {
-						setGetListFollowings(
+						setListFollowings(
 							listRecommendFriend.filter(item => {
 								const fullName = item.firstName + ' ' + item.lastName;
 								return fullName.toLowerCase().includes(inputSearch.toLowerCase());
@@ -229,17 +229,15 @@ const DetailFriend = () => {
 
 	const renderLength = () => {
 		if (following || follower || invitation || suggestions || recommend) {
-			return getListFollowings.length ? getListFollowings.length : 0;
+			return listFollowings.length ? listFollowings.length : 0;
 		}
 	};
 
 	const renderListMap = () => {
 		if (following || follower || invitation || suggestions || recommend) {
 			return (
-				getListFollowings.length > 0 &&
-				getListFollowings.map(item => (
-					<FriendsItem key={item.id} data={item} getMyListFriendReq={getListFollowings} />
-				))
+				listFollowings.length > 0 &&
+				listFollowings.map(item => <FriendsItem key={item.id} data={item} listFriendReq={listFollowings} />)
 			);
 		}
 	};

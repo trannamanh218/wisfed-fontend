@@ -341,13 +341,6 @@ function CreatePostModalContent({
 	}, [urlAdded]);
 
 	useEffect(() => {
-		// Ngăn người dùng tải lại trang khi đang tạo bài viết
-		window.onbeforeunload = function () {
-			if (content) {
-				return '';
-			}
-		};
-
 		// generate hashtags added
 		const hashtagsTemp = content?.match(hashtagRegex);
 		if (hashtagsTemp) {
@@ -363,12 +356,24 @@ function CreatePostModalContent({
 			setHashtagsAdded([]);
 		}
 
+		const alertUser = e => {
+			if (content) {
+				e.preventDefault();
+				e.returnValue = '';
+			}
+		};
+
 		// add event click when turn off modal
 		createPostModalContainer.current.addEventListener('mousedown', handleHideCreatePost);
+
+		// Ngăn người dùng tải lại trang khi đang tạo bài viết
+		window.addEventListener('beforeunload', alertUser);
 		return () => {
 			if (createPostModalContainer.current) {
 				createPostModalContainer.current.removeEventListener('mousedown', handleHideCreatePost);
 			}
+
+			window.removeEventListener('beforeunload', alertUser);
 		};
 	}, [content]);
 
@@ -885,11 +890,6 @@ function CreatePostModalContent({
 					if (content) {
 						isActive = true;
 					}
-				}
-				if (taggedData.addBook.status === 'reading') {
-					if (progressInputValue > 0) {
-						isActive = true;
-					}
 				} else {
 					isActive = true;
 				}
@@ -926,6 +926,17 @@ function CreatePostModalContent({
 			setShowMainModal(false);
 		}
 	}, [showSubModal]);
+
+	useEffect(() => {
+		// Đưa con trỏ về cuối khi bấm Chỉnh sửa bài viết
+		if (isEditPost) {
+			if (toggleMoveFocusToEnd === null) {
+				setToggleMoveFocusToEnd(false);
+			} else {
+				setToggleMoveFocusToEnd(prev => !prev);
+			}
+		}
+	}, [isEditPost]);
 
 	const handleTime = () => {
 		switch (postDataShare.by) {
