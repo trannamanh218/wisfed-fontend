@@ -890,11 +890,6 @@ function CreatePostModalContent({
 					if (content) {
 						isActive = true;
 					}
-				}
-				if (taggedData.addBook.status === 'reading') {
-					if (progressInputValue > 0) {
-						isActive = true;
-					}
 				} else {
 					isActive = true;
 				}
