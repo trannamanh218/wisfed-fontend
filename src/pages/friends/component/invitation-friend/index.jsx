@@ -10,7 +10,7 @@ import LoadingIndicator from 'shared/loading-indicator';
 
 const InvitationFriend = ({ activeTabs }) => {
 	const { userInfo } = useSelector(state => state.auth);
-	const [getMyListFriendReq, setGetMyListFriendReq] = useState([]);
+	const [listFriendReq, setGetMyListFriendReq] = useState([]);
 	const [isLoading, setIsLoading] = useState(true);
 	const dispatch = useDispatch();
 
@@ -37,7 +37,7 @@ const InvitationFriend = ({ activeTabs }) => {
 				<LoadingIndicator />
 			) : (
 				<div className='myfriends__container'>
-					{getMyListFriendReq.length > 0 ? (
+					{listFriendReq.length > 0 ? (
 						<>
 							<div className='myfriends__container__content'>
 								<div className='myfriends__title__addfriend'>Lời mời kết bạn</div>
@@ -46,12 +46,12 @@ const InvitationFriend = ({ activeTabs }) => {
 								</Link>
 							</div>
 							<div className='myfriends__layout__container'>
-								{getMyListFriendReq.map(item => (
+								{listFriendReq.map(item => (
 									<FriendsItem
 										key={item.id}
 										data={item}
 										keyTabs={activeTabs}
-										getMyListFriendReq={getMyListFriendReq}
+										listFriendReq={listFriendReq}
 									/>
 								))}
 							</div>

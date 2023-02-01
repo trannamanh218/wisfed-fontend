@@ -2,7 +2,6 @@ import { NotificationError } from 'helpers/Error';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { changeToggleFollows } from 'reducers/redux-utils/friends';
 import { getTopUser } from 'reducers/redux-utils/ranks';
 import { getRecommendFriend } from 'reducers/redux-utils/user';
 import FriendsItem from 'shared/friends';
@@ -67,7 +66,6 @@ const SuggestFriend = ({ activeTabs }) => {
 		try {
 			const data = await dispatch(getRecommendFriend(params)).unwrap();
 			setListRecommendFriend(data);
-			dispatch(changeToggleFollows(''));
 		} catch (err) {
 			NotificationError(err);
 		}
@@ -108,7 +106,7 @@ const SuggestFriend = ({ activeTabs }) => {
 					<>
 						{list.length > 0 ? (
 							list.map(item => (
-								<FriendsItem key={item.id} data={item} keyTabs={activeTabs} getListSuggest={list} />
+								<FriendsItem key={item.id} data={item} keyTabs={activeTabs} listSuggest={list} />
 							))
 						) : (
 							<p style={{ textAlign: 'center' }}>Không có dữ liệu</p>

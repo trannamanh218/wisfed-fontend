@@ -13,19 +13,11 @@ import {
 import { NotificationError } from 'helpers/Error';
 import { useDispatch } from 'react-redux';
 import { useState } from 'react';
-import { changeToggleFollows } from 'reducers/redux-utils/friends';
 import ModalUnFriend from 'pages/friends/component/modalUnFriends';
 import { Link } from 'react-router-dom';
+import { useEffect } from 'react';
 
-const FriendsItem = ({
-	data,
-	keyTabs,
-	getListFollower,
-	getMyListFriendReq,
-	getListFollowings,
-	getListSuggest,
-	type,
-}) => {
+const FriendsItem = ({ data, keyTabs, listFollower, listFriendReq, listFollowings, listSuggest, type }) => {
 	const dispatch = useDispatch();
 	const invitation = location.pathname === '/friends/invitation';
 	const following = location.pathname === '/friends/following';
@@ -40,22 +32,27 @@ const FriendsItem = ({
 	const [toggleAcceptButton, setToggleAcceptButton] = useState(true);
 	const [showModalUnfriends, setShowModalUnfriends] = useState(false);
 
+	const [isFollow, setIsFollow] = useState(false);
+	// const [isFriend, setIsFriend] = useState(false);
+
+	useEffect(() => {
+		data.isFollow ? setIsFollow(true) : setIsFollow(false);
+	}, []);
+
 	const handleModalUnFriend = () => {
 		setShowModalUnfriends(true);
 	};
 
 	const handleUnfriend = () => {
+		// console.log(data);
 		setShowModalUnfriends(false);
 		try {
-			if (getListFollower) {
+			if (listFollower) {
 				dispatch(unFriendRequest(data.userOne.id));
-				dispatch(changeToggleFollows(data.userTwo.id));
-			} else if (getMyListFriendReq || getListFollowings) {
+			} else if (listFriendReq || listFollowings) {
 				dispatch(unFriendRequest(data.userTwo.id));
-				dispatch(changeToggleFollows(data.userTwo.id));
 			} else {
 				dispatch(unFriendRequest(data.id));
-				dispatch(changeToggleFollows(data.id));
 			}
 			setUnFriend(false);
 			setToggleAddFriend(false);
@@ -66,18 +63,17 @@ const FriendsItem = ({
 
 	const handleUnFollow = () => {
 		try {
-			if (getListFollower) {
+			if (listFollower) {
 				dispatch(unFollower(data.userOne.id)).unwrap();
-				dispatch(changeToggleFollows(data.userOne.id));
-			} else if (getMyListFriendReq || getListFollowings) {
+			} else if (listFriendReq || listFollowings) {
 				dispatch(unFollower(data.userTwo.id)).unwrap();
-				dispatch(changeToggleFollows(data.userTwo.id));
 			} else {
 				dispatch(unFollower(data.id)).unwrap();
-				dispatch(changeToggleFollows(data.id));
 			}
 			setToggleAddFollow(true);
 			setToggleUnFollow(false);
+
+			setIsFollow(false);
 		} catch (err) {
 			NotificationError(err);
 		}
@@ -85,43 +81,40 @@ const FriendsItem = ({
 
 	const handleAddFollow = () => {
 		try {
-			if (getListFollower) {
+			if (listFollower) {
 				dispatch(addFollower({ userId: data.userOne.id }));
-				dispatch(changeToggleFollows(data.userOne.id));
-			} else if (getMyListFriendReq || getListFollowings) {
+			} else if (listFriendReq || listFollowings) {
 				dispatch(addFollower({ userId: data.id })).unwrap();
-				dispatch(changeToggleFollows(data.userTwo.id));
 			} else {
 				dispatch(addFollower({ userId: data.id }));
-				dispatch(changeToggleFollows(data.id));
 			}
 			setToggleAddFollow(false);
 			setToggleUnFollow(true);
+
+			setIsFollow(true);
 		} catch (err) {
 			NotificationError(err);
 		}
 	};
 
 	const handleAddFriends = () => {
+		// console.log(data);
 		try {
-			if (getListFollower || getListFollowings) {
+			if (listFollower || listFollowings) {
 				const param = {
 					userId: data.userOne.id,
 				};
 				dispatch(makeFriendRequest(param)).unwrap();
-				dispatch(changeToggleFollows(data.userTwo.id));
-			} else if (getMyListFriendReq || getListFollowings) {
+			} else if (listFriendReq || listFollowings) {
 				const param = {
 					userId: data.id,
 				};
 				dispatch(makeFriendRequest(param)).unwrap();
-				dispatch(changeToggleFollows(data.userTwo.id));
 			} else {
 				const param = {
 					userId: data.id,
 				};
 				dispatch(makeFriendRequest(param)).unwrap();
-				dispatch(changeToggleFollows(data.id));
 			}
 			setTogglePendingFriend(false);
 			handleAddFollow();
@@ -176,7 +169,7 @@ const FriendsItem = ({
 
 	const buttonFollow = () => {
 		return (
-			<Button onClick={handleAddFollow} className='myfriends__button' isOutline={true} name='friend'>
+			<Button onClick={handleAddFollow} className='myfriends__button' isOutline name='friend'>
 				<span className='myfriends__button__content'>Theo dõi</span>
 			</Button>
 		);
@@ -184,7 +177,7 @@ const FriendsItem = ({
 
 	const buttonUnfollow = () => {
 		return (
-			<Button onClick={handleUnFollow} className='myfriends__button' isOutline={true} name='friend'>
+			<Button onClick={handleUnFollow} className='myfriends__button' isOutline name='friend'>
 				<span className='myfriends__button__content'>Bỏ theo dõi</span>
 			</Button>
 		);
@@ -227,37 +220,39 @@ const FriendsItem = ({
 	};
 
 	const renderButtonFollow = () => {
-		if (keyTabs === 'friend') {
-			if (data.isFollow) {
-				return toggleUnFollow ? buttonUnfollow() : buttonFollow();
-			} else {
-				return toggleAddFollow ? buttonFollow() : buttonUnfollow();
-			}
-		} else if (keyTabs === 'follow' || following || follower) {
-			if (data.isFollow) {
-				return toggleUnFollow ? buttonUnfollow() : buttonFollow();
-			} else {
-				if ((toggleAddFollow && getListFollower) || follower) {
-					return toggleAddFollow ? buttonFollow() : buttonUnfollow();
-				} else {
-					return toggleAddFollow ? buttonUnfollow() : buttonFollow();
-				}
-			}
-		} else if (keyTabs === 'suggest' || suggestions || recommend) {
-			if (data.isFollow) {
-				return toggleUnFollow ? buttonUnfollow() : buttonFollow();
-			} else {
-				if ((toggleUnFollow && getListSuggest) || suggestions) {
-					return toggleAddFollow ? buttonFollow() : buttonUnfollow();
-				} else {
-					return toggleAddFollow ? buttonFollow() : buttonUnfollow();
-				}
-			}
-		} else if (keyTabs === 'addfriend' || invitation) {
-			return toggleAddFollow ? buttonFollow() : buttonUnfollow();
-		} else {
-			return buttonFollow();
-		}
+		return isFollow ? buttonUnfollow() : buttonFollow();
+
+		// if (keyTabs === 'friend') {
+		// 	if (data.isFollow) {
+		// 		return toggleUnFollow ? buttonUnfollow() : buttonFollow();
+		// 	} else {
+		// 		return toggleAddFollow ? buttonFollow() : buttonUnfollow();
+		// 	}
+		// } else if (keyTabs === 'follow' || following || follower) {
+		// 	if (data.isFollow) {
+		// 		return toggleUnFollow ? buttonUnfollow() : buttonFollow();
+		// 	} else {
+		// 		if ((toggleAddFollow && listFollower) || follower) {
+		// 			return toggleAddFollow ? buttonFollow() : buttonUnfollow();
+		// 		} else {
+		// 			return toggleAddFollow ? buttonUnfollow() : buttonFollow();
+		// 		}
+		// 	}
+		// } else if (keyTabs === 'suggest' || suggestions || recommend) {
+		// 	if (data.isFollow) {
+		// 		return toggleUnFollow ? buttonUnfollow() : buttonFollow();
+		// 	} else {
+		// 		if ((toggleUnFollow && listSuggest) || suggestions) {
+		// 			return toggleAddFollow ? buttonFollow() : buttonUnfollow();
+		// 		} else {
+		// 			return toggleAddFollow ? buttonFollow() : buttonUnfollow();
+		// 		}
+		// 	}
+		// } else if (keyTabs === 'addfriend' || invitation) {
+		// 	return toggleAddFollow ? buttonFollow() : buttonUnfollow();
+		// } else {
+		// 	return buttonFollow();
+		// }
 	};
 
 	const renderDisplay = () => {
@@ -386,12 +381,12 @@ const FriendsItem = ({
 		if (keyTabs === 'friend') {
 			return unFriend && renderFriend();
 		} else if (keyTabs === 'follow' || following || follower) {
-			if (getListFollower || follower) {
+			if (listFollower || follower) {
 				return renderFollowerDisplay();
 			}
 			return toggleUnFollow && renderDisplay();
 		} else if (keyTabs === 'addfriend' || invitation) {
-			if (getMyListFriendReq) {
+			if (listFriendReq) {
 				return renderFollowerDisplay();
 			}
 			return renderDisplay();
@@ -421,10 +416,10 @@ const FriendsItem = ({
 FriendsItem.propTypes = {
 	data: PropTypes.object,
 	keyTabs: PropTypes.string,
-	getListFollower: PropTypes.array,
-	getMyListFriendReq: PropTypes.array,
-	getListFollowings: PropTypes.array,
-	getListSuggest: PropTypes.array,
+	listFollower: PropTypes.array,
+	listFriendReq: PropTypes.array,
+	listFollowings: PropTypes.array,
+	listSuggest: PropTypes.array,
 	getListRecommends: PropTypes.array,
 	type: PropTypes.string,
 };
