@@ -357,17 +357,17 @@ function CreatePostModalContent({
 		}
 
 		const alertUser = e => {
-			if (content) {
-				e.preventDefault();
-				e.returnValue = '';
-			}
+			e.preventDefault();
+			e.returnValue = '';
 		};
 
 		// add event click when turn off modal
 		createPostModalContainer.current.addEventListener('mousedown', handleHideCreatePost);
 
 		// Ngăn người dùng tải lại trang khi đang tạo bài viết
-		window.addEventListener('beforeunload', alertUser);
+		if (content) {
+			window.addEventListener('beforeunload', alertUser);
+		}
 		return () => {
 			if (createPostModalContainer.current) {
 				createPostModalContainer.current.removeEventListener('mousedown', handleHideCreatePost);
