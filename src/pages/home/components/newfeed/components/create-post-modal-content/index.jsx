@@ -927,6 +927,17 @@ function CreatePostModalContent({
 		}
 	}, [showSubModal]);
 
+	useEffect(() => {
+		// Đưa con trỏ về cuối khi bấm Chỉnh sửa bài viết
+		if (isEditPost) {
+			if (toggleMoveFocusToEnd === null) {
+				setToggleMoveFocusToEnd(false);
+			} else {
+				setToggleMoveFocusToEnd(prev => !prev);
+			}
+		}
+	}, [isEditPost]);
+
 	const handleTime = () => {
 		switch (postDataShare.by) {
 			case 'week':
