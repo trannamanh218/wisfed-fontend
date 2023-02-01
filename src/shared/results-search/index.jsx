@@ -105,6 +105,7 @@ const ResultSearch = ({ valueInputSearch, resultSearch, setIsShow }) => {
 										src={item?.frontBookCover || item?.images[0] || bookImage}
 										className='result__search__img'
 										onError={e => e.target.setAttribute('src', `${bookImage}`)}
+										alt='image'
 									/>
 								</div>
 								<div className='result__search__name'>{item.name}</div>
@@ -119,6 +120,7 @@ const ResultSearch = ({ valueInputSearch, resultSearch, setIsShow }) => {
 										src={item?.avatarImage || defaultAvatar}
 										className='result__search__img'
 										onError={e => e.target.setAttribute('src', defaultAvatar)}
+										alt='image'
 									/>
 								</div>
 								<div className='result__search__name'>

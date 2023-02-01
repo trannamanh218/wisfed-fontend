@@ -59,7 +59,7 @@ const AddSeriesForm = ({ updateSeries }) => {
 
 	return (
 		<div className='modal-series__body__button' onClick={addSeries}>
-			<img src={Add} />
+			<img src={Add} alt='iamge' />
 			<span>Thêm tên sê-ri</span>
 		</div>
 	);

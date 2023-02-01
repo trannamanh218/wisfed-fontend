@@ -101,7 +101,7 @@ function Register() {
 			)}
 			<div className='register__body'>
 				<div className='register__body-img'>
-					<img src={ImgRegister} />
+					<img src={ImgRegister} alt='image' />
 				</div>
 				<div className='register__form'>
 					<div className='register__box'>

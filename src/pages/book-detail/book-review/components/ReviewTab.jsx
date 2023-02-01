@@ -252,7 +252,7 @@ const ReviewTab = ({ currentTab }) => {
 	return (
 		<div className='review-tab'>
 			<div className='search-review' onClick={() => handleReview()}>
-				<img className='search-review__icon' src={searchreview} />
+				<img className='search-review__icon' src={searchreview} alt='img' />
 				<div className='search-review__input'>Bạn review cuốn sách này thế nào</div>
 			</div>
 			<FilterPane

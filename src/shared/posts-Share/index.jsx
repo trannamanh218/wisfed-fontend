@@ -104,6 +104,7 @@ const PostShare = ({ postData, inCreatePost, directUrl }) => {
 												className='modal-tagged-others__avatar'
 												src={item.users.avatarImage || defaultAvatar}
 												onError={e => e.target.setAttribute('src', defaultAvatar)}
+												alt='image'
 											></img>
 											<span
 												onClick={() => onClickUserInModalOthers(item)}
@@ -270,7 +271,7 @@ const PostShare = ({ postData, inCreatePost, directUrl }) => {
 								<div className='post__user-status__subtitle'>
 									{postData.sharePost.isUpdateProgress && (
 										<>
-											<img src={vector} />
+											<img src={vector} alt='image' />
 											<span style={{ marginRight: '12px', marginLeft: '5px' }}>
 												Cập nhật tiến độ đọc sách
 											</span>

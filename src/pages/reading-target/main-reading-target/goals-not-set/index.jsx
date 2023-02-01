@@ -92,7 +92,7 @@ const GoalsNotSetYet = ({ userInfo }) => {
 					</button>
 				</div>
 			</div>
-			<img style={{ marginTop: '60px' }} src={Frame} alt='' />
+			<img style={{ marginTop: '60px' }} src={Frame} alt='img' />
 		</>
 	);
 };
