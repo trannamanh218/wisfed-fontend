@@ -7,7 +7,7 @@ import moment from 'moment';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { saveDataShare } from 'reducers/redux-utils/post';
 import BookThumbnail from 'shared/book-thumbnail';
 import { useModal } from 'shared/hooks';
@@ -20,7 +20,6 @@ import GoalsNotSetYet from './goals-not-set';
 import './main-reading-target.scss';
 import CreatePostModalContent from 'pages/home/components/newfeed/components/create-post-modal-content';
 import { blockAndAllowScroll } from 'api/blockAndAllowScroll.hook';
-import { navigate } from '@storybook/addon-links';
 import RouteLink from 'helpers/RouteLink';
 
 const MainReadingTarget = ({ setErrorLoadPage }) => {
@@ -34,6 +33,7 @@ const MainReadingTarget = ({ setErrorLoadPage }) => {
 	const [showModalCreatePost, setShowModalCreatePost] = useState(false);
 
 	const dispatch = useDispatch();
+	const navigate = useNavigate();
 
 	const { booksReadYear, year, status } = useFetchTargetReading(userId, modalOpen);
 
@@ -103,9 +103,8 @@ const MainReadingTarget = ({ setErrorLoadPage }) => {
 		}
 	};
 
-	const handleNavigateToBookDetail = (e, item) => {
-		e.preventDefault();
-		navigate(RouteLink.bookDetail.apply(item.book.id, item.book.name));
+	const handleNavigateToBookDetail = item => {
+		navigate(RouteLink.bookDetail(item.book.id, item.book.name));
 	};
 
 	const handleRenderUseSearch = newArr => {
@@ -114,19 +113,21 @@ const MainReadingTarget = ({ setErrorLoadPage }) => {
 			newData.map((item, index) => (
 				<div className='book-row' key={index}>
 					<div className='book-row__container'>
-						<Link onClick={e => handleNavigateToBookDetail(e, item)} to='/'>
-							<BookThumbnail size='sm' source={item?.book?.frontBookCover || item.book?.images[0]} />
-						</Link>
+						<BookThumbnail
+							size='sm'
+							source={item?.book?.frontBookCover || item.book?.images[0]}
+							handleClick={() => handleNavigateToBookDetail(item)}
+						/>
 					</div>
 					<div className='book-row__container'>
-						<Link
-							onClick={e => handleNavigateToBookDetail(e, item)}
-							to='/'
+						<span
+							role='button'
+							onClick={() => handleNavigateToBookDetail(item)}
 							className='book-name'
 							title={item.book.name}
 						>
 							{item.book.name}
-						</Link>
+						</span>
 					</div>
 					<div className='book-row__container'>
 						<p className='author-name'>{generateAuthorName(item?.book.authors)}</p>
