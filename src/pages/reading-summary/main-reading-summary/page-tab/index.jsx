@@ -78,8 +78,10 @@ const PageTab = () => {
 					u8arr[n] = bstr.charCodeAt(n);
 				}
 
-				const imageUploadedData = new File([u8arr], 'charts.png', { type: mime });
+				// convert to file
+				const imageUploadedData = new File([u8arr], 'charts.png', { type: 'image/png' });
 				const imgUploadder = [imageUploadedData];
+
 				if (imageUploadedData) {
 					setLoading(false);
 					const dataToShare = {

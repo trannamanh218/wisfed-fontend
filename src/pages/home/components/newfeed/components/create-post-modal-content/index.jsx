@@ -537,13 +537,13 @@ function CreatePostModalContent({
 				const imgStringArr = imagesUpload.filter(item => typeof item === 'string');
 				const fileImageArr = imagesUpload.filter(item => typeof item !== 'string');
 				const imagesUploaded = await dispatch(uploadMultiFile(fileImageArr)).unwrap();
-				const imgSrc = imagesUploaded.map(item => item.streamPath.medium);
+				const imgSrc = imagesUploaded.map(item => item.streamPath.default);
 				const imgArr = imgStringArr.concat(imgSrc);
 				params.image = imgArr;
 			} else {
 				try {
 					const imagesUploaded = await dispatch(uploadMultiFile(imagesUpload)).unwrap();
-					params.image = imagesUploaded.map(item => item.streamPath.medium);
+					params.image = imagesUploaded.map(item => item.streamPath.default);
 				} catch {
 					const customId = 'custom-id-CreatePostModalContent-generateData';
 					toast.error('Đăng ảnh không thành công', { toastId: customId });
@@ -641,7 +641,7 @@ function CreatePostModalContent({
 		// book, author , topic is required
 		setStatus(STATUS_LOADING);
 		try {
-			if (postDataShare && !_.isEmpty(postDataShare) && !postDataShare.sharePost.isDeleted) {
+			if (postDataShare && !_.isEmpty(postDataShare) && !postDataShare?.sharePost?.isDeleted) {
 				if (isEditPost) {
 					await dispatch(handleEditPost(params)).unwrap();
 				} else {
@@ -1097,7 +1097,7 @@ function CreatePostModalContent({
 									<span className='number__title__rank'># Sách của tôi làm tác giả</span>
 								</div>
 							)}
-							{!_.isEmpty(postDataShare) && !postDataShare.sharePost.isDeleted && (
+							{!_.isEmpty(postDataShare) && !postDataShare?.sharePost?.isDeleted && (
 								<div
 									className={
 										postDataShare.verb !== GROWTH_CHART_VERB_SHARE &&

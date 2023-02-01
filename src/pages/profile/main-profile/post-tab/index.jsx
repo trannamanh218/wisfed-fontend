@@ -22,14 +22,12 @@ function PostTab({ currentTab }) {
 	const dispatch = useDispatch();
 	const { userInfo } = useSelector(state => state.auth);
 
-	const callApiStart = useRef(0);
+	const callApiStart = useRef(5);
 	const callApiPerPage = useRef(5);
-	// const isPostDeleted = useRef(false);
-	// const isGetDataFirstTime = useRef(true);
 
 	useEffect(() => {
 		if (currentTab === 'post') {
-			callApiStart.current = 0;
+			callApiStart.current = 5;
 			setLoading(true);
 			setHasMore(true);
 			setPostList([]);
@@ -37,10 +35,32 @@ function PostTab({ currentTab }) {
 	}, [userId, isNewPost]);
 
 	useEffect(() => {
-		if (!postList.length && currentTab === 'post') {
-			getPostListByUser();
+		if (!postList.length && currentTab === 'post' && hasMore) {
+			getPostListByUserFirstTime();
 		}
 	}, [postList, currentTab]);
+
+	const getPostListByUserFirstTime = async () => {
+		try {
+			const data = {
+				params: {
+					start: 0,
+					limit: callApiPerPage.current,
+					sort: JSON.stringify([{ property: 'createdAt', direction: 'DESC' }]),
+				},
+				userId: userId,
+			};
+			const posts = await dispatch(getPostsByUser(data)).unwrap();
+			setPostList(posts);
+			if (posts.length < callApiPerPage.current) {
+				setHasMore(false);
+			}
+		} catch (err) {
+			NotificationError(err);
+		} finally {
+			setLoading(false);
+		}
+	};
 
 	const getPostListByUser = async () => {
 		try {
@@ -63,8 +83,6 @@ function PostTab({ currentTab }) {
 			NotificationError(err);
 		} finally {
 			setLoading(false);
-			// isPostDeleted.current = false;
-			// isGetDataFirstTime.current = false;
 		}
 	};
 
@@ -77,7 +95,6 @@ function PostTab({ currentTab }) {
 		postList.splice(index, 1);
 		const cloneArr = [...postList];
 		setPostList(cloneArr);
-		// onChangeNewPost();
 	};
 
 	return (
@@ -108,7 +125,7 @@ function PostTab({ currentTab }) {
 							})}
 						</InfiniteScroll>
 					) : (
-						<p className='post-data__blank'>Không có bài viết nào</p>
+						<p className='post-data__blank'>{!hasMore ? 'Không có bài viết nào' : <LoadingIndicator />}</p>
 					)}
 				</>
 			)}

@@ -1,9 +1,16 @@
 .ranks__container {
 	width: 55%;
 	margin: auto;
-	padding-top: 47px;
+	padding: 47px 0;
 	font-family: 'Montserrat';
 	font-style: normal;
+
+	.tab-content {
+		padding-bottom: 0;
+		border-bottom-left-radius: 16px;
+		border-bottom-right-radius: 16px;
+	}
+
 	.ranks__container__header {
 		display: flex;
 		align-items: center;
