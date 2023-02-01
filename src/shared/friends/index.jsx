@@ -26,14 +26,12 @@ const FriendsItem = ({ data, keyTabs, listFollower, listFriendReq, listFollowing
 	const recommend = location.pathname === '/friends/recommend';
 	const [unFriend, setUnFriend] = useState(true);
 	const [toggleUnFollow, setToggleUnFollow] = useState(true);
-	const [toggleAddFollow, setToggleAddFollow] = useState(true);
 	const [toggleAddFriend, setToggleAddFriend] = useState(true);
 	const [togglePendingFriend, setTogglePendingFriend] = useState(true);
 	const [toggleAcceptButton, setToggleAcceptButton] = useState(true);
 	const [showModalUnfriends, setShowModalUnfriends] = useState(false);
 
 	const [isFollow, setIsFollow] = useState(false);
-	// const [isFriend, setIsFriend] = useState(false);
 
 	useEffect(() => {
 		data.isFollow ? setIsFollow(true) : setIsFollow(false);
@@ -44,7 +42,6 @@ const FriendsItem = ({ data, keyTabs, listFollower, listFriendReq, listFollowing
 	};
 
 	const handleUnfriend = () => {
-		// console.log(data);
 		setShowModalUnfriends(false);
 		try {
 			if (listFollower) {
@@ -61,16 +58,14 @@ const FriendsItem = ({ data, keyTabs, listFollower, listFriendReq, listFollowing
 		}
 	};
 
-	const handleUnFollow = () => {
+	const handleUnFollow = async () => {
 		try {
-			if (listFollower) {
-				dispatch(unFollower(data.userOne.id)).unwrap();
-			} else if (listFriendReq || listFollowings) {
-				dispatch(unFollower(data.userTwo.id)).unwrap();
+			if (data.userOne) {
+				await dispatch(unFollower(data.userOne.id)).unwrap();
 			} else {
-				dispatch(unFollower(data.id)).unwrap();
+				await dispatch(unFollower(data.id)).unwrap();
 			}
-			setToggleAddFollow(true);
+
 			setToggleUnFollow(false);
 
 			setIsFollow(false);
@@ -79,16 +74,14 @@ const FriendsItem = ({ data, keyTabs, listFollower, listFriendReq, listFollowing
 		}
 	};
 
-	const handleAddFollow = () => {
+	const handleAddFollow = async () => {
 		try {
-			if (listFollower) {
-				dispatch(addFollower({ userId: data.userOne.id }));
-			} else if (listFriendReq || listFollowings) {
-				dispatch(addFollower({ userId: data.id })).unwrap();
+			if (data.userOne) {
+				await dispatch(addFollower({ userId: data.userOne.id })).unwrap();
 			} else {
-				dispatch(addFollower({ userId: data.id }));
+				await dispatch(addFollower({ userId: data.id })).unwrap();
 			}
-			setToggleAddFollow(false);
+
 			setToggleUnFollow(true);
 
 			setIsFollow(true);
@@ -98,7 +91,6 @@ const FriendsItem = ({ data, keyTabs, listFollower, listFriendReq, listFollowing
 	};
 
 	const handleAddFriends = () => {
-		// console.log(data);
 		try {
 			if (listFollower || listFollowings) {
 				const param = {
@@ -117,7 +109,8 @@ const FriendsItem = ({ data, keyTabs, listFollower, listFriendReq, listFollowing
 				dispatch(makeFriendRequest(param)).unwrap();
 			}
 			setTogglePendingFriend(false);
-			handleAddFollow();
+
+			setIsFollow(true);
 		} catch (err) {
 			NotificationError(err);
 		}
@@ -221,38 +214,6 @@ const FriendsItem = ({ data, keyTabs, listFollower, listFriendReq, listFollowing
 
 	const renderButtonFollow = () => {
 		return isFollow ? buttonUnfollow() : buttonFollow();
-
-		// if (keyTabs === 'friend') {
-		// 	if (data.isFollow) {
-		// 		return toggleUnFollow ? buttonUnfollow() : buttonFollow();
-		// 	} else {
-		// 		return toggleAddFollow ? buttonFollow() : buttonUnfollow();
-		// 	}
-		// } else if (keyTabs === 'follow' || following || follower) {
-		// 	if (data.isFollow) {
-		// 		return toggleUnFollow ? buttonUnfollow() : buttonFollow();
-		// 	} else {
-		// 		if ((toggleAddFollow && listFollower) || follower) {
-		// 			return toggleAddFollow ? buttonFollow() : buttonUnfollow();
-		// 		} else {
-		// 			return toggleAddFollow ? buttonUnfollow() : buttonFollow();
-		// 		}
-		// 	}
-		// } else if (keyTabs === 'suggest' || suggestions || recommend) {
-		// 	if (data.isFollow) {
-		// 		return toggleUnFollow ? buttonUnfollow() : buttonFollow();
-		// 	} else {
-		// 		if ((toggleUnFollow && listSuggest) || suggestions) {
-		// 			return toggleAddFollow ? buttonFollow() : buttonUnfollow();
-		// 		} else {
-		// 			return toggleAddFollow ? buttonFollow() : buttonUnfollow();
-		// 		}
-		// 	}
-		// } else if (keyTabs === 'addfriend' || invitation) {
-		// 	return toggleAddFollow ? buttonFollow() : buttonUnfollow();
-		// } else {
-		// 	return buttonFollow();
-		// }
 	};
 
 	const renderDisplay = () => {
