@@ -157,10 +157,9 @@ const StatusButton = ({ className, bookData, inCreatePost, bookStatus }) => {
 		if (!inCreatePost) {
 			setFetchStatus(true);
 			try {
+				const customId = 'custom-id-status-button-success';
 				if (currentStatus !== initalStatus.current) {
 					updateStatusBook();
-					const customId = 'custom-id-status-button-success';
-					toast.success('Chuyển giá sách thành công', { toastId: customId });
 					initalStatus.current = currentStatus;
 				}
 				handleAddAndRemoveBook();
@@ -168,6 +167,7 @@ const StatusButton = ({ className, bookData, inCreatePost, bookStatus }) => {
 					dispatch(updateMyAllLibraryRedux());
 				}, 500);
 				dispatch(updateBookForCreatePost({ ...bookData, status: currentStatus }));
+				toast.success('Chuyển giá sách thành công', { toastId: customId });
 				setShowModalCreatePost(true);
 			} catch (err) {
 				NotificationError(err);
