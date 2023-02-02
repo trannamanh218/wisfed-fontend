@@ -1,7 +1,7 @@
-import { Fragment, useState, useEffect, useRef, useCallback } from 'react';
+import { lazy, useState, useEffect, useRef, useCallback, Suspense } from 'react';
 import FilterPane from 'shared/filter-pane';
 import SearchField from 'shared/search-field';
-import Post from 'shared/post';
+const Post = lazy(() => import('shared/post'));
 import FitlerOptions from 'shared/filter-options';
 import {
 	getReviewsBook,
@@ -296,10 +296,10 @@ const ReviewTab = ({ currentTab }) => {
 								{reviewList.map(item => {
 									if (!item.isDeleted) {
 										return (
-											<Fragment key={`post-${item.id}`}>
+											<Suspense key={`post-${item.id}`} fallback={<></>}>
 												<Post postInformations={item} type={REVIEW_TYPE} />
 												<hr />
-											</Fragment>
+											</Suspense>
 										);
 									}
 								})}

@@ -1,9 +1,8 @@
-// import { Configure } from 'components/svg';
-import { useState, useRef, useEffect } from 'react';
-import Post from 'shared/post';
+import { useState, useRef, useEffect, lazy, Suspense } from 'react';
+const Post = lazy(() => import('shared/post'));
 import CreatePost from './components/create-post';
 import './newfeed.scss';
-// import ModalfilterHome from './components/modal-filter-home';
+// import ModalfilterHome from './components/modal-filter-home'; Không xóa
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { getActivityList } from 'reducers/redux-utils/activity';
 import { useDispatch, useSelector } from 'react-redux';
@@ -20,15 +19,15 @@ const NewFeed = () => {
 
 	const dispatch = useDispatch();
 
-	const callApiStart = useRef(10);
-	const callApiPerPage = useRef(10);
+	const callApiStart = useRef(5);
+	const callApiPerPage = useRef(5);
 
 	const onChangeNewPost = () => {
 		setIsNewPost(!isNewPost);
 	};
 
 	useEffect(async () => {
-		callApiStart.current = 10;
+		callApiStart.current = 5;
 		getPostListFirstTime();
 	}, [isNewPost, refreshNewfeed]);
 
@@ -99,12 +98,13 @@ const NewFeed = () => {
 							{postList.map((item, index) => {
 								if (!item.isDeleted) {
 									return (
-										<Post
-											key={index}
-											postInformations={item}
-											type={item.verb === 'groupPost' ? GROUP_TYPE : POST_TYPE}
-											handleUpdatePostArrWhenDeleted={handleUpdatePostArrWhenDeleted}
-										/>
+										<Suspense key={index} fallback={<></>}>
+											<Post
+												postInformations={item}
+												type={item.verb === 'groupPost' ? GROUP_TYPE : POST_TYPE}
+												handleUpdatePostArrWhenDeleted={handleUpdatePostArrWhenDeleted}
+											/>
+										</Suspense>
 									);
 								}
 							})}

@@ -201,6 +201,10 @@
 			background-color: #e0af7e;
 		}
 	}
+
+	.react-datepicker-popper {
+		z-index: 2;
+	}
 }
 
 .inp-book-row {

@@ -1,7 +1,7 @@
 // import { useFetchInfiniateActivities } from 'api/activity.hooks';
 import NormalContainer from 'components/layout/normal-container';
 import _ from 'lodash';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, lazy, Suspense } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import BackButton from 'shared/back-button';
@@ -10,7 +10,7 @@ import './review.scss';
 import { getReviewsBook } from 'reducers/redux-utils/book';
 import { getBookDetail } from 'reducers/redux-utils/book';
 import { getUserDetail } from 'reducers/redux-utils/user';
-import Post from 'shared/post';
+const Post = lazy(() => import('shared/post'));
 import { REVIEW_TYPE } from 'constants/index';
 import { updateReviewIdFromNoti } from 'reducers/redux-utils/notification';
 import NotFound from 'pages/not-found';
@@ -118,10 +118,10 @@ const Review = () => {
 								listReview.map((item, index) => {
 									if (!item.isDeleted) {
 										return (
-											<div key={item.id}>
+											<Suspense key={item.id} fallback={<></>}>
 												<Post postInformations={item} type={REVIEW_TYPE} />
 												{listReview.length > 1 && index < listReview.length - 1 && <hr />}
-											</div>
+											</Suspense>
 										);
 									}
 								})

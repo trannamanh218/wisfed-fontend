@@ -1,10 +1,10 @@
 import PropTypes from 'prop-types';
-import { useState } from 'react';
+import { useState, Suspense, lazy } from 'react';
 import defaultAvatar from 'assets/icons/defaultLogoAvatar.svg';
 import { useDispatch } from 'react-redux';
 import { makeFriendRequest, addFollower, unFollower, unFriendRequest } from 'reducers/redux-utils/user';
 import { NotificationError } from 'helpers/Error';
-import Post from 'shared/post';
+const Post = lazy(() => import('shared/post'));
 import './search-group.scss';
 import _ from 'lodash';
 import ResultNotFound from 'pages/result/component/result-not-found';
@@ -149,7 +149,11 @@ function SearchLayout({ dataGroup }) {
 					)}
 					<div>
 						{dataGroup?.postData?.map((item, index) => {
-							return <Post key={index} postInformations={item} type={GROUP_TYPE} />;
+							return (
+								<Suspense key={index} fallback={<></>}>
+									<Post postInformations={item} type={GROUP_TYPE} />
+								</Suspense>
+							);
 						})}
 					</div>
 				</div>

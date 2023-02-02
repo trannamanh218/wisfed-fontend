@@ -117,22 +117,12 @@ const FriendsItem = ({ data, keyTabs, listFollower, listFriendReq, listFollowing
 	};
 
 	const handleReplyFriendReq = () => {
-		if (keyTabs === 'addfriend' || invitation) {
-			const params = { id: data.id, data: { reply: true } };
-			try {
-				setToggleAcceptButton(false);
-				dispatch(replyFriendRequest(params)).unwrap();
-			} catch (err) {
-				NotificationError(err);
-			}
-		} else {
-			const params = { id: data.friendRequest.id, data: { reply: true } };
-			try {
-				setToggleAcceptButton(false);
-				dispatch(replyFriendRequest(params)).unwrap();
-			} catch (err) {
-				NotificationError(err);
-			}
+		const params = { id: data.friendRequest?.id || data.id, data: { reply: true } };
+		try {
+			setToggleAcceptButton(false);
+			dispatch(replyFriendRequest(params)).unwrap();
+		} catch (err) {
+			NotificationError(err);
 		}
 	};
 
