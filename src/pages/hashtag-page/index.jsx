@@ -1,7 +1,7 @@
 import NormalContainer from 'components/layout/normal-container';
 import './hashtag-page.scss';
-import Post from 'shared/post';
-import { useEffect, useState, useRef } from 'react';
+const Post = lazy(() => import('shared/post'));
+import { useEffect, useState, useRef, Suspense, lazy } from 'react';
 import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { NotificationError } from 'helpers/Error';
@@ -138,12 +138,13 @@ export default function HashtagPage() {
 								{postList.map(post => {
 									if (!post.isDeleted) {
 										return (
-											<Post
-												key={post.id}
-												postInformations={post}
-												type={groupId ? GROUP_TYPE : POST_TYPE}
-												handleUpdatePostArrWhenDeleted={handleUpdatePostArrWhenDeleted}
-											/>
+											<Suspense key={post.id}>
+												<Post
+													postInformations={post}
+													type={groupId ? GROUP_TYPE : POST_TYPE}
+													handleUpdatePostArrWhenDeleted={handleUpdatePostArrWhenDeleted}
+												/>
+											</Suspense>
 										);
 									}
 								})}

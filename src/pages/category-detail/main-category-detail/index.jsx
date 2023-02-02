@@ -1,4 +1,4 @@
-import { Fragment, useCallback, useEffect, useState, useRef } from 'react';
+import { Suspense, lazy, useCallback, useEffect, useState, useRef } from 'react';
 import classNames from 'classnames';
 import { Heart } from 'components/svg';
 import _ from 'lodash';
@@ -8,7 +8,7 @@ import BookThumbnail from 'shared/book-thumbnail';
 import Button from 'shared/button';
 import CategoryGroup from 'shared/category-group';
 import FilterPane from 'shared/filter-pane';
-import Post from 'shared/post';
+const Post = lazy(() => import('shared/post'));
 import SearchField from 'shared/search-field';
 import './main-category-detail.scss';
 import SearchBook from './SearchBook';
@@ -434,13 +434,13 @@ const MainCategoryDetail = ({ setErrorLoadPage }) => {
 										loader={<LoadingIndicator />}
 									>
 										{postsByCategory.map(item => (
-											<Fragment key={item.id}>
+											<Suspense key={item.id}>
 												<Post
 													className='post__container--category'
 													postInformations={item}
 													type={POST_TYPE}
 												/>
-											</Fragment>
+											</Suspense>
 										))}
 									</InfiniteScroll>
 								</div>

@@ -1,5 +1,5 @@
-import { useState, useEffect, useRef, memo } from 'react';
-import Post from 'shared/post';
+import { useState, useEffect, useRef, memo, lazy, Suspense } from 'react';
+const Post = lazy(() => import('shared/post'));
 import './post-tab.scss';
 import { getPostsByUser } from 'reducers/redux-utils/post';
 import { useParams } from 'react-router-dom';
@@ -114,12 +114,13 @@ function PostTab({ currentTab }) {
 							{postList.map(item => {
 								if (!item.isDeleted) {
 									return (
-										<Post
-											key={item.id}
-											postInformations={item}
-											type={POST_TYPE}
-											handleUpdatePostArrWhenDeleted={handleUpdatePostArrWhenDeleted}
-										/>
+										<Suspense key={item.id}>
+											<Post
+												postInformations={item}
+												type={POST_TYPE}
+												handleUpdatePostArrWhenDeleted={handleUpdatePostArrWhenDeleted}
+											/>
+										</Suspense>
 									);
 								}
 							})}

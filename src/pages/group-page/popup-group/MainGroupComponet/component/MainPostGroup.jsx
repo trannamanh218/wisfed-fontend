@@ -1,8 +1,8 @@
 import CreatePost from 'pages/home/components/newfeed/components/create-post';
-import Post from 'shared/post';
+const Post = lazy(() => import('shared/post'));
 import './mainPostGroup.scss';
 import { getListPost } from 'reducers/redux-utils/group';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, Suspense, lazy } from 'react';
 import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { NotificationError } from 'helpers/Error';
@@ -10,7 +10,6 @@ import { GROUP_TYPE } from 'constants/index';
 import PropTypes from 'prop-types';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import LoadingIndicator from 'shared/loading-indicator';
-
 function MainPostGroup({ handleUpdate, show }) {
 	const [listPost, setListPost] = useState([]);
 	const [isNewPost, setIsNewPost] = useState(false);
@@ -100,12 +99,13 @@ function MainPostGroup({ handleUpdate, show }) {
 							{listPost.map((item, index) => {
 								if (!item.isDeleted) {
 									return (
-										<Post
-											key={index}
-											postInformations={item}
-											type={GROUP_TYPE}
-											handleUpdatePostArrWhenDeleted={handleUpdatePostArrWhenDeleted}
-										/>
+										<Suspense key={index}>
+											<Post
+												postInformations={item}
+												type={GROUP_TYPE}
+												handleUpdatePostArrWhenDeleted={handleUpdatePostArrWhenDeleted}
+											/>
+										</Suspense>
 									);
 								}
 							})}
