@@ -4,11 +4,12 @@ import _ from 'lodash';
 import { useEffect } from 'react';
 import 'react-datepicker/dist/react-datepicker.css';
 import { useDispatch, useSelector } from 'react-redux';
-import { Route, Routes, useLocation } from 'react-router-dom';
+import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import { checkLogin, getCheckJwt } from 'reducers/redux-utils/auth';
 import { changeKey } from 'reducers/redux-utils/forget-password';
 import { getAllLibraryList, setAllMyLibraryRedux } from 'reducers/redux-utils/library';
+
 import 'scss/main.scss';
 
 // pages and components
@@ -56,6 +57,7 @@ function App({ children }) {
 	const dispatch = useDispatch();
 	const updateMyLibrary = useSelector(state => state.library.updateMyLibrary);
 	const { routerLogin, userInfo } = useSelector(state => state.auth);
+	const navigate = useNavigate();
 
 	const location = useLocation();
 
@@ -71,7 +73,10 @@ function App({ children }) {
 		} else {
 			dispatch(checkLogin(false));
 		}
-	}, []);
+		if (window.location.pathname.includes('/shelves') && accsetToken === null) {
+			navigate('/login');
+		}
+	}, [location]);
 
 	useEffect(() => {
 		if (!_.isEmpty(userInfo)) {
