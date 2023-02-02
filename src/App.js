@@ -147,7 +147,6 @@ function App({ children }) {
 						<Route path='/quotes/hashtag/me/:hashtag' element={<QuotesByHashTag />} />
 					</>
 				)}
-
 				<Route path='/top100' element={<Ranks />} />
 				<Route path='/detail-feed/:type/:idPost' element={<DetailFeed />} />
 				<Route path='/books-author/:userId' element={<BooksAuthor />} />
@@ -179,9 +178,9 @@ function App({ children }) {
 				<Route path='/my-group' element={<MyGroup />} />
 				<Route path='/hashtag/:hashtag' element={<HashtagPage />} />
 				<Route path='/hashtag-group/:groupId/:hashtag' element={<HashtagPage />} />
+				<Route path='/group/:id' element={<Group />} />
 				<Route path='/' element={<Home />} />
 				<Route path='*' element={<NotFound />} />
-				<Route path='/group/:id' element={<Group />} />
 				{children}
 			</Routes>
 		</div>

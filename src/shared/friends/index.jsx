@@ -17,20 +17,20 @@ import ModalUnFriend from 'pages/friends/component/modalUnFriends';
 import { Link } from 'react-router-dom';
 import { useEffect } from 'react';
 
-const FriendsItem = ({ data, keyTabs, listFollower, listFriendReq, listFollowings, listSuggest, type }) => {
+const FriendsItem = ({ data, keyTabs, listFollower, listFriendReq, listFollowings, type }) => {
 	const dispatch = useDispatch();
 	const invitation = location.pathname === '/friends/invitation';
 	const following = location.pathname === '/friends/following';
 	const follower = location.pathname === '/friends/follower';
 	const suggestions = location.pathname === '/friends/suggestions';
 	const recommend = location.pathname === '/friends/recommend';
+
 	const [unFriend, setUnFriend] = useState(true);
 	const [toggleUnFollow, setToggleUnFollow] = useState(true);
 	const [toggleAddFriend, setToggleAddFriend] = useState(true);
 	const [togglePendingFriend, setTogglePendingFriend] = useState(true);
 	const [toggleAcceptButton, setToggleAcceptButton] = useState(true);
 	const [showModalUnfriends, setShowModalUnfriends] = useState(false);
-
 	const [isFollow, setIsFollow] = useState(false);
 
 	useEffect(() => {
@@ -370,7 +370,6 @@ FriendsItem.propTypes = {
 	listFollower: PropTypes.array,
 	listFriendReq: PropTypes.array,
 	listFollowings: PropTypes.array,
-	listSuggest: PropTypes.array,
 	getListRecommends: PropTypes.array,
 	type: PropTypes.string,
 };
