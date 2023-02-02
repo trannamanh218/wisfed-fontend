@@ -53,6 +53,8 @@ const FriendsItem = ({ data, keyTabs, listFollower, listFriendReq, listFollowing
 			}
 			setUnFriend(false);
 			setToggleAddFriend(false);
+
+			setIsFollow(false);
 		} catch (err) {
 			NotificationError(err);
 		}
