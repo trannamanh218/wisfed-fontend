@@ -23,6 +23,7 @@ import ModalCheckLogin from 'shared/modal-check-login';
 import { toast } from 'react-toastify';
 import CreatePostModalContent from 'pages/home/components/newfeed/components/create-post-modal-content';
 import { blockAndAllowScroll } from 'api/blockAndAllowScroll.hook';
+import { handleResetMyTargetReading, setMyTargetReading } from 'reducers/redux-utils/chart';
 
 const STATUS_BOOK_OBJ = {
 	reading: {
@@ -129,6 +130,8 @@ const StatusButton = ({ className, bookData, inCreatePost, bookStatus }) => {
 			if (!_.isEmpty(bookData)) {
 				const params = { bookId: bookData.id || bookData.bookId, type: currentStatus };
 				await dispatch(addBookToDefaultLibrary(params)).unwrap();
+				dispatch(setMyTargetReading([]));
+				dispatch(handleResetMyTargetReading());
 			}
 		} catch (err) {
 			NotificationError(err);
