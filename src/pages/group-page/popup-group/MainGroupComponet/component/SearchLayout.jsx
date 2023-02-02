@@ -150,7 +150,7 @@ function SearchLayout({ dataGroup }) {
 					<div>
 						{dataGroup?.postData?.map((item, index) => {
 							return (
-								<Suspense key={index}>
+								<Suspense key={index} fallback={<></>}>
 									<Post postInformations={item} type={GROUP_TYPE} />
 								</Suspense>
 							);

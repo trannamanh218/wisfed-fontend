@@ -98,7 +98,7 @@ const NewFeed = () => {
 							{postList.map((item, index) => {
 								if (!item.isDeleted) {
 									return (
-										<Suspense key={index}>
+										<Suspense key={index} fallback={<></>}>
 											<Post
 												postInformations={item}
 												type={item.verb === 'groupPost' ? GROUP_TYPE : POST_TYPE}

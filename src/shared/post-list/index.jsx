@@ -1,13 +1,13 @@
 import { REVIEW_TYPE } from 'constants/index';
 import PropTypes from 'prop-types';
-import { Suspense } from 'react';
+import { Suspense, lazy } from 'react';
 const Post = lazy(() => import('shared/post'));
 import './post-list.scss';
 
 const PostList = ({ list }) => {
 	if (list && list.length) {
 		return list.map((item, index) => (
-			<Suspense key={index}>
+			<Suspense key={index} fallback={<></>}>
 				<div className='post-container--custom'>
 					<Post postInformations={item} type={REVIEW_TYPE} />
 				</div>

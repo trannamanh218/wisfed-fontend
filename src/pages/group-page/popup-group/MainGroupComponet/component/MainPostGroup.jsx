@@ -1,8 +1,8 @@
 import CreatePost from 'pages/home/components/newfeed/components/create-post';
-const Post = lazy(() => import('shared/post'));
 import './mainPostGroup.scss';
 import { getListPost } from 'reducers/redux-utils/group';
 import { useEffect, useState, useRef, Suspense, lazy } from 'react';
+const Post = lazy(() => import('shared/post'));
 import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { NotificationError } from 'helpers/Error';
@@ -99,7 +99,7 @@ function MainPostGroup({ handleUpdate, show }) {
 							{listPost.map((item, index) => {
 								if (!item.isDeleted) {
 									return (
-										<Suspense key={index}>
+										<Suspense key={index} fallback={<></>}>
 											<Post
 												postInformations={item}
 												type={GROUP_TYPE}

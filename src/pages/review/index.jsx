@@ -118,7 +118,7 @@ const Review = () => {
 								listReview.map((item, index) => {
 									if (!item.isDeleted) {
 										return (
-											<Suspense key={item.id}>
+											<Suspense key={item.id} fallback={<></>}>
 												<Post postInformations={item} type={REVIEW_TYPE} />
 												{listReview.length > 1 && index < listReview.length - 1 && <hr />}
 											</Suspense>

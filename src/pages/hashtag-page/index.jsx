@@ -1,7 +1,7 @@
 import NormalContainer from 'components/layout/normal-container';
 import './hashtag-page.scss';
-const Post = lazy(() => import('shared/post'));
 import { useEffect, useState, useRef, Suspense, lazy } from 'react';
+const Post = lazy(() => import('shared/post'));
 import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { NotificationError } from 'helpers/Error';
@@ -138,7 +138,7 @@ export default function HashtagPage() {
 								{postList.map(post => {
 									if (!post.isDeleted) {
 										return (
-											<Suspense key={post.id}>
+											<Suspense key={post.id} fallback={<></>}>
 												<Post
 													postInformations={post}
 													type={groupId ? GROUP_TYPE : POST_TYPE}

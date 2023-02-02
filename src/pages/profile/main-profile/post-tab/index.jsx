@@ -114,7 +114,7 @@ function PostTab({ currentTab }) {
 							{postList.map(item => {
 								if (!item.isDeleted) {
 									return (
-										<Suspense key={item.id}>
+										<Suspense key={item.id} fallback={<></>}>
 											<Post
 												postInformations={item}
 												type={POST_TYPE}

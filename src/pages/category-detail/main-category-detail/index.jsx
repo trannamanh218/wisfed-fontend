@@ -434,7 +434,7 @@ const MainCategoryDetail = ({ setErrorLoadPage }) => {
 										loader={<LoadingIndicator />}
 									>
 										{postsByCategory.map(item => (
-											<Suspense key={item.id}>
+											<Suspense key={item.id} fallback={<></>}>
 												<Post
 													className='post__container--category'
 													postInformations={item}

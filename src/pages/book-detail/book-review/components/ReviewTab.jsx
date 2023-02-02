@@ -296,7 +296,7 @@ const ReviewTab = ({ currentTab }) => {
 								{reviewList.map(item => {
 									if (!item.isDeleted) {
 										return (
-											<Suspense key={`post-${item.id}`}>
+											<Suspense key={`post-${item.id}`} fallback={<></>}>
 												<Post postInformations={item} type={REVIEW_TYPE} />
 												<hr />
 											</Suspense>
