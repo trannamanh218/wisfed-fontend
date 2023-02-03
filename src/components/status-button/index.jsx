@@ -73,8 +73,7 @@ const StatusButton = ({ className, bookData, inCreatePost, bookStatus }) => {
 						item1.books.find(item2 => item2.bookId === bookData.id)
 					);
 					libraryContainCurrentBook = found?.defaultType;
-
-					setCurrentStatus(bookStatus);
+					setCurrentStatus(libraryContainCurrentBook);
 					initalStatus.current = libraryContainCurrentBook;
 				} else {
 					setCurrentStatus(STATUS_BOOK.wantToRead);
@@ -157,7 +156,6 @@ const StatusButton = ({ className, bookData, inCreatePost, bookStatus }) => {
 		if (!inCreatePost) {
 			setFetchStatus(true);
 			try {
-				const customId = 'custom-id-status-button-success';
 				if (currentStatus !== initalStatus.current) {
 					updateStatusBook();
 					initalStatus.current = currentStatus;
@@ -167,6 +165,7 @@ const StatusButton = ({ className, bookData, inCreatePost, bookStatus }) => {
 					dispatch(updateMyAllLibraryRedux());
 				}, 500);
 				dispatch(updateBookForCreatePost({ ...bookData, status: currentStatus }));
+				const customId = 'custom-id-status-button-success';
 				toast.success('Chuyển giá sách thành công', { toastId: customId });
 				setShowModalCreatePost(true);
 			} catch (err) {
