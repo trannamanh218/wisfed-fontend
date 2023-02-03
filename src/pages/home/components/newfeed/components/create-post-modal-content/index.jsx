@@ -908,7 +908,7 @@ function CreatePostModalContent({
 	};
 
 	const userRating = async () => {
-		const params = { star: valueStar, id: bookInfo.id || taggedData.addBook.id };
+		const params = { star: valueStar, id: taggedData.addBook.id };
 		if (valueStar) {
 			try {
 				await dispatch(ratingUser(params)).unwrap();
