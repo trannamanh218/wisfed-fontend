@@ -123,6 +123,7 @@ const FriendsItem = ({ data, keyTabs, listFollower, listFriendReq, listFollowing
 		try {
 			setToggleAcceptButton(false);
 			dispatch(replyFriendRequest(params)).unwrap();
+			setIsFollow(true);
 		} catch (err) {
 			NotificationError(err);
 		}
