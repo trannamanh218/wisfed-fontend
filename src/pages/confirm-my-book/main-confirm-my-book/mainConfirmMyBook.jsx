@@ -149,7 +149,7 @@ function MainConfirmMyBook({ setErrorLoadPage }) {
 						<div className='back-btn' onClick={handleNavigateToBookDetail}>
 							<BackArrow />
 						</div>
-						<span>Xác thực sách của tôi</span>
+						<span>Xác thực sách của tôi là tác giả hoặc dịch giả</span>
 					</div>
 					<div className='main-confirm-my-book__book-info'>
 						<div className='main-confirm-my-book__image'>

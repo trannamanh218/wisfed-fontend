@@ -47,8 +47,7 @@
 	color: $ash;
 	display: -webkit-box;
 	-webkit-box-orient: vertical;
-	-webkit-line-clamp: 1;
-	text-overflow: ellipsis;
+	-webkit-line-clamp: 2;
 	overflow: hidden;
 }
 
@@ -62,6 +61,11 @@
 
 .main-confirm-my-book__description {
 	margin-top: 16px;
+	.post__content {
+		&.view-less {
+			-webkit-line-clamp: 5;
+		}
+	}
 }
 
 .main-confirm-my-book__check {
