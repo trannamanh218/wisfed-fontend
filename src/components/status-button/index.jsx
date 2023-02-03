@@ -23,6 +23,7 @@ import ModalCheckLogin from 'shared/modal-check-login';
 import { toast } from 'react-toastify';
 import CreatePostModalContent from 'pages/home/components/newfeed/components/create-post-modal-content';
 import { blockAndAllowScroll } from 'api/blockAndAllowScroll.hook';
+import { handleResetMyTargetReading, setMyTargetReading } from 'reducers/redux-utils/chart';
 
 const STATUS_BOOK_OBJ = {
 	reading: {
@@ -72,8 +73,7 @@ const StatusButton = ({ className, bookData, inCreatePost, bookStatus }) => {
 						item1.books.find(item2 => item2.bookId === bookData.id)
 					);
 					libraryContainCurrentBook = found?.defaultType;
-
-					setCurrentStatus(bookStatus);
+					setCurrentStatus(libraryContainCurrentBook);
 					initalStatus.current = libraryContainCurrentBook;
 				} else {
 					setCurrentStatus(STATUS_BOOK.wantToRead);
@@ -129,6 +129,8 @@ const StatusButton = ({ className, bookData, inCreatePost, bookStatus }) => {
 			if (!_.isEmpty(bookData)) {
 				const params = { bookId: bookData.id || bookData.bookId, type: currentStatus };
 				await dispatch(addBookToDefaultLibrary(params)).unwrap();
+				dispatch(setMyTargetReading([]));
+				dispatch(handleResetMyTargetReading());
 			}
 		} catch (err) {
 			NotificationError(err);
@@ -156,8 +158,6 @@ const StatusButton = ({ className, bookData, inCreatePost, bookStatus }) => {
 			try {
 				if (currentStatus !== initalStatus.current) {
 					updateStatusBook();
-					const customId = 'custom-id-status-button-success';
-					toast.success('Chuyển giá sách thành công', { toastId: customId });
 					initalStatus.current = currentStatus;
 				}
 				handleAddAndRemoveBook();
@@ -165,6 +165,8 @@ const StatusButton = ({ className, bookData, inCreatePost, bookStatus }) => {
 					dispatch(updateMyAllLibraryRedux());
 				}, 500);
 				dispatch(updateBookForCreatePost({ ...bookData, status: currentStatus }));
+				const customId = 'custom-id-status-button-success';
+				toast.success('Chuyển giá sách thành công', { toastId: customId });
 				setShowModalCreatePost(true);
 			} catch (err) {
 				NotificationError(err);

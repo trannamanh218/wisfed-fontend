@@ -575,7 +575,7 @@ function Post({
 								{/* Hiển thị ngày giờ chính xác khi hover  */}
 								<ShowTime dataTime={postData.time || postData.createdAt} />
 							</div>
-							<img src={vector} />
+							<img src={vector} alt='iamge' />
 							<>
 								{postData.book && (
 									<div className='post__user-status__subtitle'>

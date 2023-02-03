@@ -284,7 +284,7 @@ function MainGroupComponent({
 					<div className='group-name__member'>
 						{data.isPublic && (
 							<div className='groupPublic'>
-								<img src={vector} />
+								<img src={vector} alt='image' />
 								<span>Nhóm công khai</span>
 								<div className='imgPani'>
 									<div className='post__user-status__post-time-status__online-dot'></div>

@@ -74,6 +74,7 @@ export default function WithFriends({ data }) {
 											className='modal-tagged-others__avatar'
 											src={item.users.avatarImage || defaultAvatar}
 											onError={e => e.target.setAttribute('src', defaultAvatar)}
+											alt='image'
 										></img>
 										<span
 											onClick={() => onClickUserInModalOthers(item)}

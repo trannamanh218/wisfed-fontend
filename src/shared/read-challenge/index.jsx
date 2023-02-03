@@ -94,7 +94,7 @@ function ReadChallenge({ modalOpen, setModalOpen }) {
 			<div className='read-challenge__content'>
 				<div className='read-challenge__box'>
 					<div className='read-challenge__description'>Thử thách bản thân bạn để đọc nhiều sách hơn!</div>
-					<img style={{ marginBottom: '24px', width: '100%' }} src={readChallengeImg} alt='' />
+					<img style={{ marginBottom: '24px', width: '100%' }} src={readChallengeImg} alt='image' />
 					<div className='read-challenge__input'>
 						<button
 							data-testid='read-challenge__decrease-btn'

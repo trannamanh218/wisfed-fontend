@@ -28,7 +28,7 @@ function ForgetPassWordComponent() {
 			<div className='forget__body--wrapper'>
 				<div className='forget__body'>
 					<div className='forget__form__img'>
-						<img src={ImgForget} alt='' />
+						<img src={ImgForget} alt='img' />
 					</div>
 					{key ? <CreateNewPasswordForm /> : <ForgetpasswordFormComponent />}
 				</div>

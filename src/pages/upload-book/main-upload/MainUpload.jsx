@@ -194,6 +194,7 @@ export default function MainUpload() {
 			description: description,
 			categoryIds: categoryIds,
 			tags: [],
+			series: [],
 		};
 
 		handleCreateBook(bookInfo);

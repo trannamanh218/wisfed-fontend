@@ -123,7 +123,7 @@ export default function SidebarRank() {
 						</div>
 					</div>
 				</div>
-				<img src={RankBarImage} alt='' />
+				<img src={RankBarImage} alt='image' />
 			</div>
 		</div>
 	);
