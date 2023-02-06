@@ -1,12 +1,12 @@
-import Slider from 'react-slick';
-import PropTypes from 'prop-types';
-import BookThumbnail from 'shared/book-thumbnail';
-import arrowNext from 'assets/images/arrow-chevron-forward.png';
 import arrowPrev from 'assets/images/arrow-chevron-back.png';
-import './book-slider.scss';
-import classNames from 'classnames';
-import { memo } from 'react';
+import arrowNext from 'assets/images/arrow-chevron-forward.png';
 import pencil from 'assets/images/pencil.png';
+import classNames from 'classnames';
+import PropTypes from 'prop-types';
+import { memo, useEffect, useRef, useState } from 'react';
+import Slider from 'react-slick';
+import BookThumbnail from 'shared/book-thumbnail';
+import './book-slider.scss';
 
 const BookSlider = ({
 	list,
@@ -21,7 +21,28 @@ const BookSlider = ({
 	editSeriesRole,
 	...rest
 }) => {
-	const settingSlider = settings(inCategory, inCategoryDetail, inResult);
+	const [slidesToShow, setSlidesToShow] = useState(2);
+
+	const sliderContentElement = useRef(null);
+
+	useEffect(() => {
+		handleResize();
+
+		window.addEventListener('resize', handleResize);
+
+		return () => {
+			window.removeEventListener('resize', handleResize);
+		};
+	}, []);
+
+	const handleResize = () => {
+		if (sliderContentElement.current) {
+			const sliderWidth = sliderContentElement.current.offsetWidth;
+			const itemWidth = sliderContentElement.current.querySelector('.book-thumbnail').offsetWidth;
+
+			setSlidesToShow(Math.floor(sliderWidth / itemWidth));
+		}
+	};
 
 	return (
 		<div className='main'>
@@ -31,7 +52,7 @@ const BookSlider = ({
 						{title}
 
 						{/* Dùng trong book-detail */}
-						{editSeriesRole ? (
+						{editSeriesRole && (
 							<img
 								className='edit-name__pencil'
 								src={pencil}
@@ -39,14 +60,28 @@ const BookSlider = ({
 								title='Chỉnh sửa'
 								onClick={handleShowModalSeries}
 							/>
-						) : (
-							''
 						)}
 					</h2>
 
-					<div className='book-slider__content'>
+					<div className='book-slider__content' ref={sliderContentElement}>
 						{list?.length > 2 ? (
-							<Slider {...settingSlider}>
+							<Slider
+								{...{
+									dots: false,
+									speed: 600,
+									slidesToShow: slidesToShow,
+									slidesToScroll: slidesToShow >= 4 ? 2 : 1,
+									initialSlide: 0,
+									infinite: inCategoryDetail ? false : true,
+									lazyLoad: false,
+									autoplay: false,
+									swipeToSlide: true,
+									variableWidth: inCategory || inResult ? false : true,
+									touchMove: true,
+									nextArrow: <SlideNextBtn />,
+									prevArrow: <SlidePrevBtn />,
+								}}
+							>
 								{list.map((item, index) => (
 									<BookThumbnail
 										key={index}
@@ -99,82 +134,6 @@ function SlidePrevBtn({ className, style, onClick }) {
 			<img src={arrowPrev} alt='arrow-icon' />
 		</div>
 	);
-}
-
-function settings(inCategory, inCategoryDetail, inResult) {
-	return {
-		dots: false,
-		speed: 600,
-		slidesToShow: inCategory || inResult ? 4 : 1,
-		slidesToScroll: 2,
-		initialSlide: 0,
-		infinite: inCategoryDetail ? false : true,
-		lazyLoad: false,
-		autoplay: false,
-		swipeToSlide: true,
-		variableWidth: inCategory || inResult ? false : true,
-		touchMove: true,
-		nextArrow: <SlideNextBtn />,
-		prevArrow: <SlidePrevBtn />,
-		responsive: [
-			{
-				breakpoint: 1281,
-				settings: {
-					slidesToShow: inCategory ? 3 : 1,
-					slidesToScroll: 1,
-				},
-			},
-			{
-				breakpoint: 1025,
-				settings: {
-					slidesToShow: inCategory ? 4 : inResult ? 4 : 1,
-					slidesToScroll: 1,
-				},
-			},
-			{
-				breakpoint: 992,
-				settings: {
-					slidesToShow: inCategory ? 3 : inResult ? 4 : 2,
-					slidesToScroll: 1,
-				},
-			},
-			{
-				breakpoint: 821,
-				settings: {
-					slidesToShow: inCategory ? 3 : inResult ? 3 : 2,
-					slidesToScroll: 1,
-				},
-			},
-			{
-				breakpoint: 769,
-				settings: {
-					slidesToShow: inCategory ? 3 : inResult ? 3 : 2,
-					slidesToScroll: 2,
-				},
-			},
-			{
-				breakpoint: 576,
-				settings: {
-					slidesToShow: 2,
-					slidesToScroll: 2,
-				},
-			},
-			{
-				breakpoint: 420,
-				settings: {
-					slidesToShow: 1,
-					slidesToScroll: 1,
-				},
-			},
-			{
-				breakpoint: 320,
-				settings: {
-					slidesToShow: 1,
-					slidesToScroll: 1,
-				},
-			},
-		],
-	};
 }
 
 BookSlider.defaultProps = {

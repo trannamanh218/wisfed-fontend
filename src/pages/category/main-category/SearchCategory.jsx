@@ -31,6 +31,7 @@ const SearchCategory = ({
 									data={category}
 									handleViewBookDetail={handleViewBookDetail}
 									handleViewCategoryDetail={handleViewCategoryDetail}
+									inCategory
 								/>
 							);
 						}
