@@ -17,8 +17,8 @@ import { Link } from 'react-router-dom';
 import { useFetchAuthorBooks } from 'api/book.hooks';
 const ModalSeries = lazy(() => import('shared/modal-series/ModalSeries'));
 import { getListBookBySeries } from 'reducers/redux-utils/series';
-import bookImage from 'assets/images/default-book.png';
-import pencil from 'assets/images/pencil.png';
+// import bookImage from 'assets/images/default-book.png';
+// import pencil from 'assets/images/pencil.png';
 
 const BookReference = ({ bookInfo, handleGetBookDetail }) => {
 	const [status, setStatus] = useState(STATUS_IDLE);
@@ -208,16 +208,14 @@ const BookReference = ({ bookInfo, handleGetBookDetail }) => {
 				)}
 			</Suspense>
 
-			{(userInfo.role === 'tecinus' || userInfo.role === 'author') && !bookInfo.series ? (
+			{/* {(userInfo.role === 'tecinus' || userInfo.role === 'author') && !bookInfo.series && (
 				<div className='book-reference__add-to-series'>
 					<span>Series</span>
 					<button className='sidebar__view-more-btn--blue' onClick={handleShowModalSeries}>
 						Thêm sê-ri
 					</button>
 				</div>
-			) : (
-				''
-			)}
+			)} */}
 
 			<div className='book-reference__highlight__post'>
 				<h4>Bài viết nổi bật</h4>
