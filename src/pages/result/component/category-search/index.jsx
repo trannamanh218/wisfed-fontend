@@ -112,6 +112,7 @@ const CategorySearch = ({ value, searchResultInput, activeKeyDefault, updateBook
 									handleViewBookDetail={handleViewBookDetail}
 									handleViewCategoryDetail={handleViewCategoryDetail}
 									inResult={true}
+									inCategory
 								/>
 							))}
 						</InfiniteScroll>

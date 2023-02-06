@@ -1,7 +1,6 @@
 import BookSlider from 'shared/book-slider';
 import PropTypes from 'prop-types';
 import './category-group.scss';
-import BookThumbnail from 'shared/book-thumbnail';
 
 const CategoryGroup = ({
 	data,
@@ -17,47 +16,24 @@ const CategoryGroup = ({
 		<>
 			{list.length > 0 && (
 				<div className='category-group'>
-					<>
-						{list.length < 4 ? (
-							<>
-								<h3>{title}</h3>
-								<div className='category-group__none-slider'>
-									{list.map(item => (
-										<BookThumbnail
-											key={item.id}
-											{...item}
-											data={item}
-											source={item.source}
-											name={item.name}
-											size='lg'
-											handleClick={handleViewBookDetail}
-										/>
-									))}
-								</div>
-							</>
-						) : (
-							<>
-								<BookSlider
-									className='category-group__slider'
-									title={title}
-									list={list}
-									size='lg'
-									handleViewBookDetail={handleViewBookDetail}
-									inCategory={inCategory}
-									inCategoryDetail={inCategoryDetail}
-									inResult={inResult}
-								/>
-							</>
-						)}
-						<button
-							className='category-group__link'
-							onClick={() => {
-								handleViewCategoryDetail(data);
-							}}
-						>
-							Xem tất cả
-						</button>
-					</>
+					<BookSlider
+						className='category-group__slider'
+						title={title}
+						list={list}
+						size='lg'
+						handleViewBookDetail={handleViewBookDetail}
+						inCategory={inCategory}
+						inCategoryDetail={inCategoryDetail}
+						inResult={inResult}
+					/>
+					<button
+						className='category-group__link'
+						onClick={() => {
+							handleViewCategoryDetail(data);
+						}}
+					>
+						Xem tất cả
+					</button>
 				</div>
 			)}
 		</>
