@@ -58,7 +58,11 @@ const BookSlider = ({
 	const handleResize = () => {
 		const sliderWidth = sliderContentElement.current.offsetWidth;
 		const itemWidth = sliderContentElement.current.querySelector('.book-thumbnail').offsetWidth;
-		setSlidesToShow(Math.floor(sliderWidth / itemWidth));
+		if (Math.floor(sliderWidth / itemWidth) > 4) {
+			setSlidesToShow(4);
+		} else {
+			setSlidesToShow(Math.floor(sliderWidth / itemWidth));
+		}
 	};
 
 	return (
