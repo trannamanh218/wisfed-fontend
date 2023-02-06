@@ -134,7 +134,7 @@ const BookReference = ({ bookInfo, handleGetBookDetail }) => {
 				)}
 
 				{/* Phần hiển thị series */}
-				{bookInfo.series ? (
+				{/* {bookInfo.series ? (
 					<>
 						{listBookOfSeries.length < 3 ? (
 							<>
@@ -183,7 +183,7 @@ const BookReference = ({ bookInfo, handleGetBookDetail }) => {
 					</>
 				) : (
 					''
-				)}
+				)} */}
 
 				{/* Modal thêm series */}
 				<ModalSeries

@@ -9,7 +9,6 @@
 
 .book-slider {
 	.book-thumbnail {
-		margin-right: 16px;
 		border: 1px solid $ash-line;
 	}
 
@@ -37,11 +36,12 @@
 			background-color: rgba(20, 20, 43, 0.7) !important;
 		}
 	}
-}
 
-.book-show {
-	display: flex;
-	gap: 10px;
+	&__content {
+		&__item {
+			margin-right: 16px;
+		}
+	}
 }
 
 @media only screen and (max-width: 992px) {

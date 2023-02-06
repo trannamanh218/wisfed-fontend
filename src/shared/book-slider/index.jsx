@@ -25,23 +25,40 @@ const BookSlider = ({
 
 	const sliderContentElement = useRef(null);
 
+	const settingSlider = settings(inCategory, inCategoryDetail, inResult);
+
 	useEffect(() => {
-		handleResize();
-
-		window.addEventListener('resize', handleResize);
-
-		return () => {
-			window.removeEventListener('resize', handleResize);
-		};
+		if (sliderContentElement.current) {
+			handleResize();
+			window.addEventListener('resize', handleResize);
+			return () => {
+				window.removeEventListener('resize', handleResize);
+			};
+		}
 	}, []);
 
-	const handleResize = () => {
-		if (sliderContentElement.current) {
-			const sliderWidth = sliderContentElement.current.offsetWidth;
-			const itemWidth = sliderContentElement.current.querySelector('.book-thumbnail').offsetWidth;
+	function settings(inCategory, inCategoryDetail, inResult) {
+		return {
+			dots: false,
+			speed: 600,
+			slidesToShow: slidesToShow,
+			slidesToScroll: slidesToShow >= 4 ? 2 : 1,
+			initialSlide: 0,
+			infinite: inCategoryDetail ? false : true,
+			lazyLoad: false,
+			autoplay: false,
+			swipeToSlide: true,
+			variableWidth: inCategory || inResult ? false : true,
+			touchMove: true,
+			nextArrow: <SlideNextBtn />,
+			prevArrow: <SlidePrevBtn />,
+		};
+	}
 
-			setSlidesToShow(Math.floor(sliderWidth / itemWidth));
-		}
+	const handleResize = () => {
+		const sliderWidth = sliderContentElement.current.offsetWidth;
+		const itemWidth = sliderContentElement.current.querySelector('.book-thumbnail').offsetWidth;
+		setSlidesToShow(Math.floor(sliderWidth / itemWidth));
 	};
 
 	return (
@@ -64,24 +81,24 @@ const BookSlider = ({
 					</h2>
 
 					<div className='book-slider__content' ref={sliderContentElement}>
-						{list?.length > 2 ? (
-							<Slider
-								{...{
-									dots: false,
-									speed: 600,
-									slidesToShow: slidesToShow,
-									slidesToScroll: slidesToShow >= 4 ? 2 : 1,
-									initialSlide: 0,
-									infinite: inCategoryDetail ? false : true,
-									lazyLoad: false,
-									autoplay: false,
-									swipeToSlide: true,
-									variableWidth: inCategory || inResult ? false : true,
-									touchMove: true,
-									nextArrow: <SlideNextBtn />,
-									prevArrow: <SlidePrevBtn />,
-								}}
-							>
+						{list?.length > slidesToShow ? (
+							<Slider {...settingSlider}>
+								{list.map((item, index) => (
+									<div key={index} className='book-slider__content__item'>
+										<BookThumbnail
+											{...item}
+											data={item}
+											source={item.source}
+											name={item.name}
+											size={size}
+											{...rest}
+											handleClick={handleViewBookDetail}
+										/>
+									</div>
+								))}
+							</Slider>
+						) : (
+							<div style={{ display: `grid`, gridTemplateColumns: `repeat(${slidesToShow}, 1fr)` }}>
 								{list.map((item, index) => (
 									<BookThumbnail
 										key={index}
@@ -93,23 +110,6 @@ const BookSlider = ({
 										{...rest}
 										handleClick={handleViewBookDetail}
 									/>
-								))}
-							</Slider>
-						) : (
-							<div className='book-show'>
-								{list.map((item, index) => (
-									<div key={index}>
-										<BookThumbnail
-											key={index}
-											{...item}
-											data={item}
-											source={item.source}
-											name={item.name}
-											size={size}
-											{...rest}
-											handleClick={handleViewBookDetail}
-										/>
-									</div>
 								))}
 							</div>
 						)}

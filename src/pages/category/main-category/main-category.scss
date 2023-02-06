@@ -15,9 +15,9 @@
 	.book-thumbnail {
 		border: 1px solid $ash-line;
 		img {
+			transition: transform 0.2s ease-out;
 			&:hover {
 				transform: scale(1.1);
-				transition: all 0.2s ease-out;
 			}
 		}
 	}
