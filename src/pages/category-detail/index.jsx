@@ -21,9 +21,10 @@ const CategoryDetail = () => {
 		try {
 			await dispatch(getCategoryDetail(data.id)).unwrap();
 			navigate(RouteLink.categoryDetail(data.id, data.name));
-			setIsFetching(false);
 		} catch (err) {
 			NotificationError(err);
+		} finally {
+			setIsFetching(false);
 		}
 	};
 

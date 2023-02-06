@@ -52,14 +52,14 @@ function MainConfirmMyBook({ setErrorLoadPage }) {
 
 	useEffect(() => {
 		// Nếu không có dữ liệu redux thì không cho truy cập màn này
-		if (_.isEmpty(confirmAuthorData)) {
-			navigate(-1);
+		if (_.isEmpty(confirmAuthorData) && !_.isEmpty(bookInfo)) {
+			handleNavigateToBookDetail();
 		}
 		// Xóa dữ liệu redux khi thoát khỏi màn này
 		return () => {
 			dispatch(handleSaveConfirmAuthorData({}));
 		};
-	}, []);
+	}, [bookInfo]);
 
 	const getCopyrightsData = async () => {
 		try {
