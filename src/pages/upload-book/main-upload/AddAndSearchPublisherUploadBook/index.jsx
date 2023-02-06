@@ -53,7 +53,10 @@ function AddAndSearchPublisherUploadBook({
 	const getSuggestionForCreatQuotes = async input => {
 		try {
 			const params = {
-				filter: JSON.stringify([{ operator: 'search', value: input, property: 'name' }]),
+				filter: JSON.stringify([
+					{ operator: 'search', value: input, property: 'name' },
+					{ operator: 'eq', value: false, property: 'isDeleted' },
+				]),
 			};
 			const data = await dispatch(getPublishers(params)).unwrap();
 			setPublisherSearchedList(data.rows);
