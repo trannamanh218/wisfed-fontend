@@ -372,7 +372,7 @@ const MainCategoryDetail = ({ setErrorLoadPage }) => {
 												title='Đọc nhiều nhất tuần này'
 												handleViewBookDetail={handleViewBookDetail}
 												handleViewCategoryDetail={handleViewTopBooksOfWeek}
-												inCategoryDetail={true}
+												inCategoryDetail
 											/>
 										)}
 

@@ -100,7 +100,17 @@ const BookSlider = ({
 								))}
 							</Slider>
 						) : (
-							<div style={{ display: `grid`, gridTemplateColumns: `repeat(${slidesToShow}, 1fr)` }}>
+							<div
+								style={
+									inCategoryDetail
+										? {
+												display: `grid`,
+												gridTemplateColumns: `repeat(auto-fit, minmax(200px, 1fr))`,
+												gridRowGap: `16px`,
+										  }
+										: { display: `grid`, gridTemplateColumns: `repeat(${slidesToShow}, 1fr)` }
+								}
+							>
 								{list.map((item, index) => (
 									<BookThumbnail
 										key={index}
