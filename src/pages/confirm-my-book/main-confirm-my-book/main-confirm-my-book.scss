@@ -64,6 +64,7 @@
 	.post__content {
 		&.view-less {
 			-webkit-line-clamp: 5;
+			max-height: 7.4em;
 		}
 	}
 }

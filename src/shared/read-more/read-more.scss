@@ -2,22 +2,22 @@
 
 .read-more {
 	font-size: 15px;
-	line-height: 1.5;
 	text-align: justify;
 
 	.post__content {
 		font-size: 15px;
-		line-height: 1.6em;
+		line-height: 1.5em;
 		color: #4e4b66;
 		word-break: break-word;
 		overflow: hidden;
+		display: block;
+
 		&.view-less {
+			max-height: 2.9em;
 			display: -webkit-box;
-			-webkit-box-orient: vertical;
 			-webkit-line-clamp: 2;
-		}
-		p {
-			display: inline;
+			-webkit-box-orient: vertical;
+			text-overflow: ellipsis;
 		}
 	}
 
@@ -26,6 +26,7 @@
 		margin-top: 8px;
 		font-weight: 600;
 		font-size: 15px;
+		line-height: 1.5em;
 		width: fit-content;
 		&:hover {
 			text-decoration: underline;

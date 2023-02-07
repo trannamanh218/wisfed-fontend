@@ -55,12 +55,16 @@ function BookDetail() {
 	return (
 		<>
 			<Helmet>
-				<meta name='description' content={seoDescription} />
+				<title>{bookInformation.seo_title}</title>
+				<meta
+					name='description'
+					content={bookInformation?.seo_description ? bookInformation.seo_description : seoDescription}
+				/>
 				<meta name='keywords' content='wisfeed, mạng xã hội, mang xa hoi, sách, sach, chia sẻ, chia se' />
 				<meta name='news_keywords' content='wisfeed, mạng xã hội, mang xa hoi, sách, sach, chia sẻ, chia se' />
 				<meta property='og:type' content='article' />
-				<meta property='og:title' content={bookInformation.name} />
-				<meta property='og:description' content={seoDescription} />
+				<meta property='og:title' content={bookInformation.seo_title} />
+				<meta property='og:description' content={bookInformation.seo_description || seoDescription} />
 				<meta property='og:image' content={seoImage} />
 			</Helmet>
 			{bookStatus === STATUS_LOADING ? (
