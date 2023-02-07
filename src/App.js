@@ -73,10 +73,7 @@ function App({ children }) {
 		} else {
 			dispatch(checkLogin(false));
 		}
-		if (window.location.pathname.includes('/shelves') && accsetToken === null) {
-			navigate('/login');
-		}
-	}, [location]);
+	}, []);
 
 	useEffect(() => {
 		if (!_.isEmpty(userInfo)) {
@@ -98,6 +95,11 @@ function App({ children }) {
 		if (location.pathname !== '/forget-password/') {
 			dispatch(changeKey(false));
 		}
+
+		const accsetToken = Storage.getAccessToken();
+		if (window.location.pathname.includes('/shelves') && accsetToken === null) {
+			navigate('/login');
+		}
 	}, [location]);
 
 	const renderHeader = () => {
@@ -109,12 +111,13 @@ function App({ children }) {
 			'/choose-topic',
 			'/api/v1/auth/direct',
 		];
-		if (!excludePaths.some(path => location.pathname.includes(path)))
+		if (!excludePaths.some(path => location.pathname.includes(path))) {
 			return (
 				<div style={{ margin: 'auto', maxWidth: '1440px' }}>
 					<Header />
 				</div>
 			);
+		}
 	};
 
 	const allowScroll = () => {

@@ -139,7 +139,6 @@ function CreatePostModalContent({
 
 	const {
 		auth: { userInfo },
-		book: { bookInfo },
 	} = useSelector(state => state);
 
 	const myAllLibraryReduxDefault = useSelector(state => state.library.myAllLibrary).default;

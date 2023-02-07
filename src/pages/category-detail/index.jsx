@@ -1,6 +1,6 @@
 import MainContainer from 'components/layout/main-container';
 import RouteLink from 'helpers/RouteLink';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { getCategoryDetail } from 'reducers/redux-utils/category';
