@@ -34,7 +34,6 @@ const MainShelves = ({ allLibraryList, shelveGroupName, isMyShelves, handleViewB
 	const [totalPage, setTotalPage] = useState(0);
 	const [isShowPublic, setIsShowPublic] = useState(true);
 	const [isDisabledBtnStatus, setIsDisabledBtnStatus] = useState(false);
-	const [libraryList, setLibraryList] = useState([]);
 
 	const itemsPerPage = useRef(16).current;
 
@@ -42,14 +41,7 @@ const MainShelves = ({ allLibraryList, shelveGroupName, isMyShelves, handleViewB
 	const dispatch = useDispatch();
 	const { defaultLibraryRedux } = useSelector(state => state.library);
 
-	// const libraryList = !_.isEmpty(allLibraryList) ? [DEFAULT_LIBRARY].concat(allLibraryList) : [];
-
-	useEffect(() => {
-		!_.isEmpty(allLibraryList) &&
-			setLibraryList(
-				[DEFAULT_LIBRARY].concat(allLibraryList.filter(item => (isMyShelves ? item : item.display)))
-			);
-	}, [isMyShelves, userId]);
+	const libraryList = !_.isEmpty(allLibraryList) ? [DEFAULT_LIBRARY].concat(allLibraryList) : [];
 
 	useEffect(() => {
 		if (!_.isEmpty(defaultLibraryRedux)) {
