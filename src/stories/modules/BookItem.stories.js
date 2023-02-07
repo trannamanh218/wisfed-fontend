@@ -29,7 +29,7 @@ MyBook.args = {
 		rating: 4,
 		isPublic: true,
 	},
-	isMyShelve: true,
+	isMyShelves: true,
 };
 
 export const PeopleBook = Template.bind({});
@@ -41,5 +41,5 @@ PeopleBook.args = {
 		rating: 4,
 		isPublic: true,
 	},
-	isMyShelve: false,
+	isMyShelves: false,
 };

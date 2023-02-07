@@ -4,7 +4,12 @@ import PropTypes from 'prop-types';
 import { useCallback, useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { getAllBookInLirary, getListBookLibrary, handleSetDefaultLibrary } from 'reducers/redux-utils/library';
+import {
+	getAllBooksInLibraries,
+	getListBookLibrary,
+	handleSetDefaultLibrary,
+	updateLibrary,
+} from 'reducers/redux-utils/library';
 import PaginationGroup from 'shared/pagination-group';
 import SearchField from 'shared/search-field';
 import SelectBox from 'shared/select-box';
@@ -13,10 +18,13 @@ import SearchBook from './SearchBook';
 import './main-shelves.scss';
 import LoadingIndicator from 'shared/loading-indicator';
 import { NotificationError } from 'helpers/Error';
+import Button from 'shared/button';
+import EyeIcon from 'shared/eye-icon';
+import { toast } from 'react-toastify';
 
 const DEFAULT_LIBRARY = { value: 'all', title: 'Tất cả', id: 'all' };
 
-const MainShelves = ({ allLibraryList, shelveGroupName, isMyShelve, handleViewBookDetail, setRenderNotFound }) => {
+const MainShelves = ({ allLibraryList, shelveGroupName, isMyShelves, handleViewBookDetail, setRenderNotFound }) => {
 	const [currentBooks, setCurrentBooks] = useState([]);
 	const [currentLibrary, setCurrentLibrary] = useState({});
 	const [filter, setFilter] = useState('[]');
@@ -24,6 +32,9 @@ const MainShelves = ({ allLibraryList, shelveGroupName, isMyShelve, handleViewBo
 	const [currentPage, setCurrentPage] = useState(0);
 	const [isLoading, setIsLoading] = useState(true);
 	const [totalPage, setTotalPage] = useState(0);
+	const [isShowPublic, setIsShowPublic] = useState(true);
+	const [isDisabledBtnStatus, setIsDisabledBtnStatus] = useState(false);
+	const [libraryList, setLibraryList] = useState([]);
 
 	const itemsPerPage = useRef(16).current;
 
@@ -31,7 +42,35 @@ const MainShelves = ({ allLibraryList, shelveGroupName, isMyShelve, handleViewBo
 	const dispatch = useDispatch();
 	const { defaultLibraryRedux } = useSelector(state => state.library);
 
-	const libraryList = !_.isEmpty(allLibraryList) ? [DEFAULT_LIBRARY].concat(allLibraryList) : [];
+	// const libraryList = !_.isEmpty(allLibraryList) ? [DEFAULT_LIBRARY].concat(allLibraryList) : [];
+
+	useEffect(() => {
+		!_.isEmpty(allLibraryList) &&
+			setLibraryList(
+				[DEFAULT_LIBRARY].concat(allLibraryList.filter(item => (isMyShelves ? item : item.display)))
+			);
+	}, [isMyShelves, userId]);
+
+	useEffect(() => {
+		if (!_.isEmpty(defaultLibraryRedux)) {
+			setCurrentLibrary(defaultLibraryRedux);
+		} else {
+			setCurrentLibrary(DEFAULT_LIBRARY);
+		}
+	}, [defaultLibraryRedux]);
+
+	useEffect(() => {
+		if (!_.isEmpty(currentLibrary)) {
+			getBooksInCurrentLibrary();
+			setIsShowPublic(currentLibrary.display);
+		}
+	}, [currentLibrary, userId, filter, currentPage]);
+
+	useEffect(() => {
+		return () => {
+			dispatch(handleSetDefaultLibrary({}));
+		};
+	}, []);
 
 	const getBooksInCurrentLibrary = async () => {
 		setIsLoading(true);
@@ -39,7 +78,7 @@ const MainShelves = ({ allLibraryList, shelveGroupName, isMyShelve, handleViewBo
 		try {
 			let data = { rows: [], count: 0 };
 			if (currentLibrary.value === 'all') {
-				data = await dispatch(getAllBookInLirary({ id: userId, ...query })).unwrap();
+				data = await dispatch(getAllBooksInLibraries({ id: userId, ...query })).unwrap();
 			} else {
 				data = await dispatch(getListBookLibrary({ id: currentLibrary.id, ...query })).unwrap();
 			}
@@ -87,102 +126,110 @@ const MainShelves = ({ allLibraryList, shelveGroupName, isMyShelve, handleViewBo
 		getBooksInCurrentLibrary();
 	}, [currentBooks]);
 
-	useEffect(() => {
-		if (!_.isEmpty(defaultLibraryRedux)) {
-			setCurrentLibrary(defaultLibraryRedux);
-		} else {
-			setCurrentLibrary(DEFAULT_LIBRARY);
+	const onChangePublic = async () => {
+		setIsDisabledBtnStatus(true);
+		try {
+			const params = {
+				id: currentLibrary.id,
+				data: {
+					display: !isShowPublic,
+				},
+			};
+			await dispatch(updateLibrary(params)).unwrap();
+			setIsShowPublic(!isShowPublic);
+			toast.success('Đổi trạng thái tủ sách thành công', { toastId: 'update-status-library' });
+		} catch (err) {
+			NotificationError(err);
+		} finally {
+			setTimeout(() => setIsDisabledBtnStatus(false), 3500);
 		}
-	}, [defaultLibraryRedux]);
-
-	useEffect(() => {
-		if (!_.isEmpty(currentLibrary)) {
-			getBooksInCurrentLibrary();
-		}
-	}, [currentLibrary, userId, filter, currentPage]);
-
-	useEffect(() => {
-		return () => {
-			dispatch(handleSetDefaultLibrary({}));
-		};
-	}, []);
+	};
 
 	return (
-		<>
-			<div className='main-shelves'>
-				<div className='main-shelves__header'>
-					<h4>{shelveGroupName}</h4>
-					<SearchField
-						placeholder='Tìm kiếm sách'
-						className='main-shelves__search'
-						handleChange={handleSearch}
-						value={inputSearch}
-					/>
-				</div>
-				<div className='main-shelves__pane'>
-					<>
-						<div className='main-shelves__filters'>
-							<SelectBox
-								name='library'
-								list={libraryList}
-								defaultOption={currentLibrary}
-								onChangeOption={onChangeLibrary}
-							/>
-						</div>
-
-						{isLoading ? (
-							<LoadingIndicator />
-						) : (
-							<>
-								{isMyShelve !== undefined && (
-									<>
-										{filter !== '[]' ? (
-											<SearchBook
-												inputSearch={inputSearch}
-												list={currentBooks}
-												isMyShelve={isMyShelve}
-												handleUpdateBookList={handleUpdateBookList}
-												handleViewBookDetail={handleViewBookDetail}
-											/>
-										) : (
-											<Shelf
-												list={currentBooks}
-												isMyShelve={isMyShelve}
-												handleUpdateBookList={handleUpdateBookList}
-												handleViewBookDetail={handleViewBookDetail}
-												shelveGroupName={shelveGroupName}
-											/>
-										)}
-
-										{totalPage > 1 && (
-											<PaginationGroup
-												totalPage={totalPage}
-												currentPage={currentPage + 1}
-												changePage={changePage}
-											/>
-										)}
-									</>
-								)}
-							</>
-						)}
-					</>
-				</div>
+		<div className='main-shelves'>
+			<div className='main-shelves__header'>
+				<h4>{shelveGroupName}</h4>
+				<SearchField
+					placeholder='Tìm kiếm sách'
+					className='main-shelves__search'
+					handleChange={handleSearch}
+					value={inputSearch}
+				/>
 			</div>
-		</>
+			<div className='main-shelves__pane'>
+				<>
+					<div className='main-shelves__filters'>
+						<SelectBox
+							name='library'
+							list={libraryList}
+							defaultOption={currentLibrary}
+							onChangeOption={onChangeLibrary}
+						/>
+						{currentLibrary.id !== 'all' && (
+							<Button
+								onClick={onChangePublic}
+								className='main-shelves__pane__public-btn'
+								isOutline
+								disabled={isDisabledBtnStatus}
+							>
+								<EyeIcon isPublic={isShowPublic} />
+								{isShowPublic ? 'C' : 'Không c'}ông khai
+							</Button>
+						)}
+					</div>
+
+					{isLoading ? (
+						<LoadingIndicator />
+					) : (
+						<>
+							{isMyShelves !== undefined && (
+								<>
+									{filter !== '[]' ? (
+										<SearchBook
+											inputSearch={inputSearch}
+											list={currentBooks}
+											isMyShelves={isMyShelves}
+											handleUpdateBookList={handleUpdateBookList}
+											handleViewBookDetail={handleViewBookDetail}
+										/>
+									) : (
+										<Shelf
+											list={currentBooks}
+											isMyShelves={isMyShelves}
+											handleUpdateBookList={handleUpdateBookList}
+											handleViewBookDetail={handleViewBookDetail}
+											shelveGroupName={shelveGroupName}
+										/>
+									)}
+
+									{totalPage > 1 && (
+										<PaginationGroup
+											totalPage={totalPage}
+											currentPage={currentPage + 1}
+											changePage={changePage}
+										/>
+									)}
+								</>
+							)}
+						</>
+					)}
+				</>
+			</div>
+		</div>
 	);
 };
 
 MainShelves.defaultProps = {
 	allLibraryList: [],
 	shelveGroupName: '',
-	isMyShelve: true,
+	isMyShelves: true,
 	setRenderNotFound: () => {},
 };
 
 MainShelves.propTypes = {
 	allLibraryList: PropTypes.array,
 	shelveGroupName: PropTypes.string,
-	isMyShelve: PropTypes.bool,
+	isMyShelves: PropTypes.bool,
 	handleViewBookDetail: PropTypes.func,
 	setRenderNotFound: PropTypes.func,
 };

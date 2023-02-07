@@ -10,6 +10,7 @@ import {
 	allLibraryListAPI,
 	removeAllBookAPI,
 	removeBookFromLibraryAPI,
+	libraryDetailAPI,
 } from 'constants/apiURL';
 import Request from 'helpers/Request';
 
@@ -62,8 +63,8 @@ export const addBookToDefaultLibrary = createAsyncThunk(
 	}
 );
 
-export const getAllBookInLirary = createAsyncThunk(
-	'library/getAllBookInLibrary',
+export const getAllBooksInLibraries = createAsyncThunk(
+	'library/getAllBooksInLibraries',
 	async (params, { rejectWithValue }) => {
 		const { id, ...data } = params;
 		if (id) {
@@ -138,6 +139,17 @@ export const checkBookInLibraries = createAsyncThunk('library/checkBookInLibrari
 	try {
 		const response = await Request.makeGet(checkBookLibraryAPI(id));
 		return response.data.rows;
+	} catch (err) {
+		const error = JSON.parse(err.response);
+		return rejectWithValue(error);
+	}
+});
+
+export const updateLibrary = createAsyncThunk('library/updateLibrary', async (params, { rejectWithValue }) => {
+	const { id, data } = params;
+	try {
+		const response = await Request.makePatch(libraryDetailAPI(id), data);
+		return response.data;
 	} catch (err) {
 		const error = JSON.parse(err.response);
 		return rejectWithValue(error);

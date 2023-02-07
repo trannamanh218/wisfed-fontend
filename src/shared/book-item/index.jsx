@@ -9,7 +9,7 @@ import './book-item.scss';
 import _ from 'lodash';
 import classNames from 'classnames';
 
-const BookItem = ({ data, handleViewBookDetail, isMyShelve, handleUpdateBookList }) => {
+const BookItem = ({ data, handleViewBookDetail, isMyShelves, handleUpdateBookList }) => {
 	// const [isPublic, setIsPublic] = useState(data.isPublic);
 
 	const bookOverlay = useRef(null);
@@ -20,7 +20,7 @@ const BookItem = ({ data, handleViewBookDetail, isMyShelve, handleUpdateBookList
 	// };
 
 	const renderOverlay = () => {
-		if (isMyShelve) {
+		if (isMyShelves) {
 			return (
 				<>
 					<SettingMore bookData={data} handleUpdateBookList={handleUpdateBookList} />
@@ -44,7 +44,7 @@ const BookItem = ({ data, handleViewBookDetail, isMyShelve, handleUpdateBookList
 		<div className='book-item' onClick={viewBookDetail} ref={bookItemContainer}>
 			<div className='book-item__container'>
 				<BookThumbnail size='lg' {...data} />
-				<div className={classNames('book-item__overlay', { 'position': !isMyShelve })} ref={bookOverlay}>
+				<div className={classNames('book-item__overlay', { 'position': !isMyShelves })} ref={bookOverlay}>
 					{renderOverlay()}
 				</div>
 			</div>
@@ -73,7 +73,7 @@ BookItem.defaultProps = {
 		rating: 4,
 		isPublic: true,
 	},
-	isMyShelve: false,
+	isMyShelves: false,
 	handleViewBookDetail: () => {},
 	handleUpdateBookList: () => {},
 };
@@ -88,7 +88,7 @@ BookItem.propTypes = {
 		isPublic: PropTypes.bool,
 		id: PropTypes.number,
 	}),
-	isMyShelve: PropTypes.bool,
+	isMyShelves: PropTypes.bool,
 	handleViewBookDetail: PropTypes.func,
 	handleUpdateBookList: PropTypes.func,
 };

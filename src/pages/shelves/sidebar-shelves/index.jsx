@@ -14,7 +14,7 @@ import RenderProgress from 'shared/render-progress';
 import StatisticList from 'shared/statistic-list';
 import './sidebar-shelves.scss';
 
-const SidebarShelves = ({ shelveGroupName, isMyShelve, handleViewBookDetail, allLibrary }) => {
+const SidebarShelves = ({ shelveGroupName, isMyShelves, handleViewBookDetail, allLibrary }) => {
 	const { userId } = useParams();
 	const { booksReadYear } = useFetchTargetReading(userId);
 	const { booksAuthor } = useFetchAuthorBooks(userId);
@@ -25,14 +25,14 @@ const SidebarShelves = ({ shelveGroupName, isMyShelve, handleViewBookDetail, all
 	);
 
 	const handleRenderTargetReading = useCallback(() => {
-		if (isMyShelve) {
+		if (isMyShelves) {
 			return <RenderProgress userIdParams={userId} />;
 		} else {
 			if (booksReadYear.length > 0) {
 				return <ProgressBarCircle booksReadYear={booksReadYear} />;
 			}
 		}
-	}, [isMyShelve]);
+	}, [isMyShelves]);
 
 	return (
 		<div className='sidebar-shelves'>
@@ -55,7 +55,7 @@ const SidebarShelves = ({ shelveGroupName, isMyShelve, handleViewBookDetail, all
 				<div className='my-compose'>
 					<BookSlider
 						className='book-reference__slider'
-						title={isMyShelve ? 'Sách tôi là tác giả' : `Sách của ${shelveGroupName}`}
+						title={isMyShelves ? 'Sách tôi là tác giả' : `Sách của ${shelveGroupName}`}
 						list={booksAuthor}
 						handleViewBookDetail={handleViewBookDetail}
 					/>
@@ -71,14 +71,14 @@ const SidebarShelves = ({ shelveGroupName, isMyShelve, handleViewBookDetail, all
 };
 
 SidebarShelves.defaultProps = {
-	isMyShelve: true,
+	isMyShelves: true,
 	shelveGroupName: 'tôi',
 	handleViewBookDetail: () => {},
 	allLibrary: {},
 };
 
 SidebarShelves.propTypes = {
-	isMyShelve: PropTypes.bool,
+	isMyShelves: PropTypes.bool,
 	shelveGroupName: PropTypes.string,
 	handleViewBookDetail: PropTypes.func,
 	allLibrary: PropTypes.object,

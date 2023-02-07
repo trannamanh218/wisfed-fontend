@@ -50,7 +50,7 @@ const BookShelves = () => {
 						<MainShelves
 							allLibraryList={allLibraryList}
 							shelveGroupName={`Tủ sách của ${shelveGroupName}`}
-							isMyShelve={isMine}
+							isMyShelves={isMine}
 							handleViewBookDetail={handleViewBookDetail}
 							setRenderNotFound={setRenderNotFound}
 						/>
@@ -58,7 +58,7 @@ const BookShelves = () => {
 					right={
 						<SidebarShelves
 							shelveGroupName={shelveGroupName}
-							isMyShelve={isMine}
+							isMyShelves={isMine}
 							handleViewBookDetail={handleViewBookDetail}
 							allLibrary={allLibrary}
 						/>

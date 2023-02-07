@@ -57,12 +57,10 @@ const BookSlider = ({
 
 	const handleResize = () => {
 		const sliderWidth = sliderContentElement.current.offsetWidth,
-			itemWidth = sliderContentElement.current.querySelector('.book-thumbnail').offsetWidth;
-		if (Math.floor(sliderWidth / itemWidth) > 4) {
-			setSlidesToShow(4);
-		} else if (sliderWidth > 0) {
-			setSlidesToShow(Math.floor(sliderWidth / itemWidth));
-		}
+			itemWidth =
+				sliderContentElement.current.querySelector('.book-thumbnail').offsetWidth + (inCategory ? 0 : 16);
+		// 16 là 16px margin right, chỉ ở inCategory thì mới nén chặt lại cho đẹp nên bỏ qua 16px
+		setSlidesToShow(Math.floor(sliderWidth / itemWidth));
 	};
 
 	return (

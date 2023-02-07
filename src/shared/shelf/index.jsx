@@ -5,7 +5,7 @@ import { memo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
-const Shelf = ({ list, isMyShelve, handleUpdateBookList, handleViewBookDetail, shelveGroupName }) => {
+const Shelf = ({ list, isMyShelves, handleUpdateBookList, handleViewBookDetail, shelveGroupName }) => {
 	const navigate = useNavigate();
 
 	const { userId } = useParams();
@@ -20,7 +20,7 @@ const Shelf = ({ list, isMyShelve, handleUpdateBookList, handleViewBookDetail, s
 						key={item.id}
 						{...item}
 						data={item}
-						isMyShelve={isMyShelve}
+						isMyShelves={isMyShelves}
 						handleViewBookDetail={handleViewBookDetail}
 						handleUpdateBookList={handleUpdateBookList}
 					/>
@@ -46,14 +46,14 @@ const Shelf = ({ list, isMyShelve, handleUpdateBookList, handleViewBookDetail, s
 
 Shelf.defaultProps = {
 	list: [],
-	isMyShelve: false,
+	isMyShelves: false,
 	handleViewBookDetail: () => {},
 	handleUpdateBookList: () => {},
 };
 
 Shelf.propTypes = {
 	list: PropTypes.array,
-	isMyShelve: PropTypes.bool,
+	isMyShelves: PropTypes.bool,
 	handleUpdateBookList: PropTypes.func,
 	handleViewBookDetail: PropTypes.func,
 	shelveGroupName: PropTypes.string,

@@ -4,7 +4,7 @@ import lookupBackground from 'assets/images/lookup-bg1.png';
 import './main-shelves.scss';
 
 const SearchBook = props => {
-	const { list, inputSearch, isMyShelve, handleUpdateBookList, handleViewBookDetail } = props;
+	const { list, inputSearch, isMyShelves, handleUpdateBookList, handleViewBookDetail } = props;
 
 	if (list && list.length) {
 		return (
@@ -12,7 +12,7 @@ const SearchBook = props => {
 				<h4>{`Kết quả tìm kiếm "${inputSearch}"`}</h4>
 				<Shelf
 					list={list}
-					isMyShelve={isMyShelve}
+					isMyShelves={isMyShelves}
 					handleUpdateBookList={handleUpdateBookList}
 					handleViewBookDetail={handleViewBookDetail}
 				/>
@@ -32,7 +32,7 @@ const SearchBook = props => {
 SearchBook.defaultProps = {
 	list: [],
 	inputSearch: '',
-	isMyShelve: false,
+	isMyShelves: false,
 	handleViewBookDetail: () => {},
 	handleUpdateBookList: () => {},
 };
@@ -40,7 +40,7 @@ SearchBook.defaultProps = {
 SearchBook.propTypes = {
 	list: PropTypes.array,
 	inputSearch: PropTypes.string,
-	isMyShelve: PropTypes.bool,
+	isMyShelves: PropTypes.bool,
 	handleUpdateBookList: PropTypes.func,
 	handleViewBookDetail: PropTypes.func,
 };

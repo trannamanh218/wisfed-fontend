@@ -23,6 +23,20 @@
 		.select-box__list {
 			max-height: 156px;
 		}
+
+		&__public-btn {
+			color: #4e4b66;
+			border-color: #d9dbe9;
+			padding-left: 8px;
+			padding-right: 7px;
+			&:hover {
+				background-color: #d9dbe9;
+				border-color: #d9dbe9;
+			}
+			svg {
+				margin-right: 12px;
+			}
+		}
 	}
 
 	&__filters {
