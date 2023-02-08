@@ -14,7 +14,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { FacebookShareButton } from 'react-share';
 import Storage from 'helpers/Storage';
 import { checkUserLogin } from 'reducers/redux-utils/auth';
-import { handleSaveConfirmAuthorData } from 'reducers/redux-utils/book';
+import { handleSaveConfirmUserData } from 'reducers/redux-utils/book';
 
 const BookIntro = ({ bookInfo, listRatingStar }) => {
 	const userInfo = useSelector(state => state.auth.userInfo);
@@ -39,19 +39,20 @@ const BookIntro = ({ bookInfo, listRatingStar }) => {
 		}
 	};
 
-	const onClickAuthorName = author => {
+	const onClickUserName = (userData, role) => {
 		if (!_.isEmpty(userInfo)) {
 			// Nếu tác giả đã được xác thực thì sang màn cá nhân, không thì sang màn xác thực
-			if (author.verify) {
-				navigate(`/profile/${author.authorId}`);
+			if (userData.verify) {
+				navigate(`/profile/${userData.authorId}`);
 			} else {
 				dispatch(
-					handleSaveConfirmAuthorData({
-						authorId: author.authorId,
-						authorName: author.authorName,
+					handleSaveConfirmUserData({
+						userId: userData.authorId ? userData.authorId : userData.translatorId,
+						userName: userData.authorName ? userData.authorName : userData.translatorName,
+						role: role,
 					})
 				);
-				navigate(`/confirm-my-book/${bookInfo.id}`);
+				navigate(`/confirm-my-book/${bookInfo.id}/`);
 			}
 		} else {
 			dispatch(checkUserLogin(true));
@@ -81,7 +82,10 @@ const BookIntro = ({ bookInfo, listRatingStar }) => {
 									Bởi
 									{bookInfo.authors.map((author, index) => (
 										<span key={index} className='book-intro__author__name'>
-											<span className='verified' onClick={() => onClickAuthorName(author)}>
+											<span
+												className='verified'
+												onClick={() => onClickUserName(author, 'author')}
+											>
 												{author.authorName}
 											</span>
 											{author.verify && <CircleCheckFullFill className='book-intro__check' />}
@@ -93,6 +97,25 @@ const BookIntro = ({ bookInfo, listRatingStar }) => {
 								'Chưa cập nhật tác giả'
 							)}
 						</div>
+
+						{Array.isArray(bookInfo.translators) && bookInfo.translators.length > 0 && (
+							<div className='book-intro__author'>
+								Dịch giả
+								{bookInfo.translators.map((translators, index) => (
+									<span key={index} className='book-intro__author__name'>
+										<span
+											className='verified'
+											onClick={() => onClickUserName(translators, 'translator')}
+										>
+											{translators.translatorName}
+										</span>
+										{/* {author.verify && <CircleCheckFullFill className='book-intro__check' />} */}
+										{index + 1 < bookInfo.translators.length && ', '}
+									</span>
+								))}
+							</div>
+						)}
+
 						<div className='book-intro__stars'>
 							<ReactRating readonly={true} initialRating={listRatingStar?.avg} />
 							{listRatingStar?.count > 0 && <span>({listRatingStar.count})</span>}

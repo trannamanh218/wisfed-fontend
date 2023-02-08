@@ -248,7 +248,7 @@ const bookSlice = createSlice({
 		handleRefreshRatingData: state => {
 			state.refreshRatingData = !state.refreshRatingData;
 		},
-		handleSaveConfirmAuthorData: (state, action) => {
+		handleSaveConfirmUserData: (state, action) => {
 			state.confirmAuthorData = action.payload;
 		},
 	},
@@ -274,7 +274,7 @@ export const {
 	handleDirectToQuoteTabOfBookDetail,
 	updateBookForCreatePost,
 	handleRefreshRatingData,
-	handleSaveConfirmAuthorData,
+	handleSaveConfirmUserData,
 } = bookSlice.actions;
 
 const book = bookSlice.reducer;

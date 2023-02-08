@@ -38,6 +38,8 @@ export const bookAPI = '/api/v1/books';
 export const bookDetailAPI = id => `/api/v1/books/${id}`;
 export const bookElasticSearchAPI = '/api/v1/books/search';
 export const bookCopyrightsAPI = '/api/v1/bookCopyrights';
+export const bookCopyrightsAuthorAPI = id => `/api/v1/bookCopyrights/${id}/request`;
+export const bookCopyrightsTranslatorAPI = id => `/api/v1/bookCopyrights/${id}/requestTranslator`;
 export const bookReviewAPI = '/api/v1/reviews';
 export const listReviewByBookIdAPI = bookId => `/api/v1/reviews/listReviewBook/${bookId}`;
 export const listCommentsReviewAPI = reviewId => `/api/v1/reviews/listCommentReview/${reviewId}`;

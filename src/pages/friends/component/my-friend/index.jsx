@@ -10,7 +10,7 @@ import { generateQuery } from 'helpers/Common';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import LoadingIndicator from 'shared/loading-indicator';
 import { BASE_URL } from 'constants';
-import { FaceBookIcon, GmailIcon } from 'components/svg';
+import { CheckIcon, FaceBookIcon, GmailIcon } from 'components/svg';
 
 const MyFriends = ({ activeTabs, inputSearch, filter, handleActiveTabs }) => {
 	const callApiStart = useRef(0);
@@ -22,6 +22,7 @@ const MyFriends = ({ activeTabs, inputSearch, filter, handleActiveTabs }) => {
 	const [toggleCallAPI, setToggleCallAPI] = useState(true);
 	const [isLoading, setIsLoading] = useState(true);
 	const [listFriendCount, setListFriendcount] = useState(0);
+	const [iconCheck, setIconCheck] = useState(false);
 
 	useEffect(() => {
 		callApiStart.current = 0;
@@ -56,6 +57,12 @@ const MyFriends = ({ activeTabs, inputSearch, filter, handleActiveTabs }) => {
 		getListFriendData();
 	}, [userInfo, filter, toggleCallAPI]);
 
+	const saveClipboard = () => {
+		const linkShareCode = document.querySelector('.invite-friends__by-id__code').innerHTML;
+		navigator.clipboard.writeText(linkShareCode);
+		setIconCheck(true);
+	};
+
 	return (
 		<>
 			{isLoading ? (
@@ -65,8 +72,17 @@ const MyFriends = ({ activeTabs, inputSearch, filter, handleActiveTabs }) => {
 					<div className='invite-friends-wrapper'>
 						<div className='invite-friends__title'>Mời bạn bè</div>
 						<div className='invite-friends__by-id'>
-							<span className='invite-friends__by-id__code'>1b4ade47-d03b-4a7a-98ea-27abd8f15a85</span>
-							<button className='invite-friends__by-id__copy-code-btn'>Sao chép ID</button>
+							<span className='invite-friends__by-id__code'>
+								https://beta.wisfeed.com/register?refCode={userInfo.id}
+							</span>
+							<button className='invite-friends__by-id__copy-code-btn' onClick={saveClipboard}>
+								{iconCheck && (
+									<span className='iconCheck__copy__link'>
+										<CheckIcon />
+									</span>
+								)}
+								Sao chép ID
+							</button>
 						</div>
 						<div className='invite-friends__by-external-link'>
 							<div className='invite-friends__by-external-link__text'>Hoặc mời bạn bè trên</div>

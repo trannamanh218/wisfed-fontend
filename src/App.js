@@ -65,8 +65,10 @@ function App({ children }) {
 	const { body } = safeDocument;
 	const html = safeDocument.documentElement;
 
+	const dataInvite = JSON.parse(localStorage.getItem('dataInvite'));
+	const accsetToken = Storage.getAccessToken();
+
 	useEffect(async () => {
-		const accsetToken = Storage.getAccessToken();
 		if (accsetToken) {
 			dispatch(checkLogin(true));
 			await dispatch(getCheckJwt()).unwrap();
@@ -74,6 +76,16 @@ function App({ children }) {
 			dispatch(checkLogin(false));
 		}
 	}, []);
+
+	useEffect(async () => {
+		if (dataInvite && !_.isEmpty(userInfo) && userInfo.id === dataInvite.invitee) {
+			const params = {
+				invitedBy: dataInvite.inviter,
+			};
+			await dispatch(getCheckJwt(params)).unwrap();
+			localStorage.removeItem('dataInvite');
+		}
+	}, [dataInvite, userInfo]);
 
 	useEffect(() => {
 		if (!_.isEmpty(userInfo)) {

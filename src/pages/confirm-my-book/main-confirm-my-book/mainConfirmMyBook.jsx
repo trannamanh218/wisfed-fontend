@@ -7,7 +7,12 @@ import { useDropzone } from 'react-dropzone';
 import _ from 'lodash';
 import { useCallback, useEffect, useState } from 'react';
 import classNames from 'classnames';
-import { uploadMultiFile, creatBookCopyrights, getListCopyrights } from 'reducers/redux-utils/common';
+import {
+	uploadMultiFile,
+	getListCopyrights,
+	creatBookCopyrightsTranslator,
+	creatBookCopyrightsAuthor,
+} from 'reducers/redux-utils/common';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { useParams, useNavigate } from 'react-router-dom';
@@ -15,7 +20,6 @@ import { useFetchBookDetail } from 'api/book.hooks';
 import { NotificationError } from 'helpers/Error';
 import PropTypes from 'prop-types';
 import RouteLink from 'helpers/RouteLink';
-import { handleSaveConfirmAuthorData } from 'reducers/redux-utils/book';
 
 function MainConfirmMyBook({ setErrorLoadPage }) {
 	const [images, setImages] = useState([]);
@@ -55,10 +59,6 @@ function MainConfirmMyBook({ setErrorLoadPage }) {
 		if (_.isEmpty(confirmAuthorData) && !_.isEmpty(bookInfo)) {
 			handleNavigateToBookDetail();
 		}
-		// Xóa dữ liệu redux khi thoát khỏi màn này
-		return () => {
-			dispatch(handleSaveConfirmAuthorData({}));
-		};
 	}, [bookInfo]);
 
 	const getCopyrightsData = async () => {
@@ -109,16 +109,31 @@ function MainConfirmMyBook({ setErrorLoadPage }) {
 			const imagesUploadedData = await dispatch(uploadMultiFile(data)).unwrap();
 			const imagesUploaded = [];
 			imagesUploadedData.forEach(item => imagesUploaded.push(item.streamPath.default));
-			const dataCopyrights = {
-				'bookId': Number(bookId),
-				'content': '',
-				'documents': imagesUploaded,
-				'phone': '',
-				'address': userInfo.address || '',
-				'status': 'pending',
-				'authorId': String(confirmAuthorData.authorId),
-			};
-			const creatBookCopyrightsResponse = await dispatch(creatBookCopyrights(dataCopyrights)).unwrap();
+			let creatBookCopyrightsResponse = '';
+
+			if (confirmAuthorData.role === 'author') {
+				const dataCopyrights = {
+					'bookId': bookId,
+					'content': '',
+					'documents': imagesUploaded,
+					'phone': '',
+					'address': userInfo.address || '',
+					'status': 'pending',
+					'authorId': confirmAuthorData.userId,
+				};
+				creatBookCopyrightsResponse = await dispatch(creatBookCopyrightsAuthor(dataCopyrights)).unwrap();
+			} else {
+				const dataCopyrights = {
+					'bookId': bookId,
+					'content': '',
+					'documents': imagesUploaded,
+					'phone': '',
+					'address': userInfo.address || '',
+					'status': 'pending',
+					'translatorId': confirmAuthorData.userId,
+				};
+				creatBookCopyrightsResponse = await dispatch(creatBookCopyrightsTranslator(dataCopyrights)).unwrap();
+			}
 			if (creatBookCopyrightsResponse) {
 				const customId = 'custom-id-MainConfirmMyBook-success';
 				toast.success('Gửi Yêu cầu thành công', { toastId: customId });
@@ -149,7 +164,9 @@ function MainConfirmMyBook({ setErrorLoadPage }) {
 						<div className='back-btn' onClick={handleNavigateToBookDetail}>
 							<BackArrow />
 						</div>
-						<span>Xác thực sách của tôi là tác giả hoặc dịch giả</span>
+						<span>
+							Xác thực sách của tôi là {confirmAuthorData.role === 'author' ? 'tác giả' : 'dịch giả'}
+						</span>
 					</div>
 					<div className='main-confirm-my-book__book-info'>
 						<div className='main-confirm-my-book__image'>
