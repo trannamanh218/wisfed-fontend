@@ -43,7 +43,7 @@ const BookIntro = ({ bookInfo, listRatingStar }) => {
 		if (!_.isEmpty(userInfo)) {
 			// Nếu tác giả đã được xác thực thì sang màn cá nhân, không thì sang màn xác thực
 			if (userData.verify) {
-				navigate(`/profile/${userData.authorId}`);
+				navigate(`/profile/${userData.authorId || userData.translatorId}`);
 			} else {
 				dispatch(
 					handleSaveConfirmUserData({
