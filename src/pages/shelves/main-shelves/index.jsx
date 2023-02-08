@@ -40,6 +40,7 @@ const MainShelves = ({ allLibraryList, shelveGroupName, isMyShelves, handleViewB
 	const { userId } = useParams();
 	const dispatch = useDispatch();
 	const { defaultLibraryRedux } = useSelector(state => state.library);
+	const { userInfo } = useSelector(state => state.auth);
 
 	const libraryList = !_.isEmpty(allLibraryList) ? [DEFAULT_LIBRARY].concat(allLibraryList) : [];
 
@@ -157,7 +158,7 @@ const MainShelves = ({ allLibraryList, shelveGroupName, isMyShelves, handleViewB
 							defaultOption={currentLibrary}
 							onChangeOption={onChangeLibrary}
 						/>
-						{currentLibrary.id !== 'all' && (
+						{currentLibrary.id !== 'all' && userId === userInfo.id && (
 							<Button
 								onClick={onChangePublic}
 								className='main-shelves__pane__public-btn'
