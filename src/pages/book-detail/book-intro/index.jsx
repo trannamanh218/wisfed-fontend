@@ -43,7 +43,7 @@ const BookIntro = ({ bookInfo, listRatingStar }) => {
 		if (!_.isEmpty(userInfo)) {
 			// Nếu tác giả đã được xác thực thì sang màn cá nhân, không thì sang màn xác thực
 			if (userData.verify) {
-				navigate(`/profile/${userData.authorId}`);
+				navigate(`/profile/${userData.authorId || userData.translatorId}`);
 			} else {
 				dispatch(
 					handleSaveConfirmUserData({
@@ -109,7 +109,7 @@ const BookIntro = ({ bookInfo, listRatingStar }) => {
 										>
 											{translators.translatorName}
 										</span>
-										{/* {author.verify && <CircleCheckFullFill className='book-intro__check' />} */}
+										{translators.verify && <CircleCheckFullFill className='book-intro__check' />}
 										{index + 1 < bookInfo.translators.length && ', '}
 									</span>
 								))}
@@ -124,7 +124,10 @@ const BookIntro = ({ bookInfo, listRatingStar }) => {
 					</div>
 
 					<div className='book-intro__description'>
-						<ReadMore text={bookInfo.description || 'Chưa cập nhật'} />
+						<ReadMore
+							text={bookInfo.description || 'Chưa cập nhật'}
+							readMoreTranslators={bookInfo?.translators.length ? true : false}
+						/>
 					</div>
 				</div>
 				<div onClick={handleShareFaceBook} className='book-intro__action'>
