@@ -1,6 +1,6 @@
 import MainContainer from 'components/layout/main-container';
 import NotFound from 'pages/not-found';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import MainReadingSummary from './main-reading-summary';
 import SidebarReadingSummary from './sidebar-reading-summary';
 
