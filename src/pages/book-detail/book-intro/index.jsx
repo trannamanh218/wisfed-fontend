@@ -109,7 +109,7 @@ const BookIntro = ({ bookInfo, listRatingStar }) => {
 										>
 											{translators.translatorName}
 										</span>
-										{/* {author.verify && <CircleCheckFullFill className='book-intro__check' />} */}
+										{translators.verify && <CircleCheckFullFill className='book-intro__check' />}
 										{index + 1 < bookInfo.translators.length && ', '}
 									</span>
 								))}
