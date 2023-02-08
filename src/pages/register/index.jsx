@@ -10,12 +10,14 @@ import { useDispatch } from 'react-redux';
 import ModalLogin from 'pages/login/element/ModalLogin';
 import { register } from 'reducers/redux-utils/auth';
 import Circle from 'shared/loading/circle';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import Storage from 'helpers/Storage';
 import EyeIcon from 'shared/eye-icon';
 
 function Register() {
 	const dispatch = useDispatch();
+	const search = useSearchParams();
+	const userId = search[0].get('refCode');
 	const [showImagePopover, setShowImagePopover] = useState(false);
 	const [isShow, setIsShow] = useState(false);
 	const [dataModal, setDataModal] = useState({});
@@ -38,7 +40,7 @@ function Register() {
 				setIsLoading(true);
 				const infoUser = await dispatch(register(newData)).unwrap();
 				if (infoUser) {
-					const newdata = {
+					const dataModal = {
 						title: 'Tạo tài khoản',
 						title2: 'thành công',
 						isShowIcon: true,
@@ -47,9 +49,18 @@ function Register() {
 						pathname: '/login',
 					};
 					setIsLoading(false);
-					setDataModal(newdata);
+					setDataModal(dataModal);
 					setIsShow(true);
 					localStorage.setItem('registerEmailFill', newData.email);
+
+					// lưu id của ng đc mời và người mời xuống local
+					if (userId) {
+						const dataInvite = JSON.stringify({
+							invitee: infoUser.data.id,
+							inviter: userId,
+						});
+						localStorage.setItem('dataInvite', dataInvite);
+					}
 				}
 			} catch (err) {
 				setIsLoading(false);

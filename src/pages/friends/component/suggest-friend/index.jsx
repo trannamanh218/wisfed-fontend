@@ -88,7 +88,7 @@ const SuggestFriend = ({ activeTabs }) => {
 			setIsLoading(false);
 		});
 		getRecommendFriendData();
-	}, [changeFollow, dispatch]);
+	}, [changeFollow]);
 
 	return (
 		<div className='myfriends__container'>

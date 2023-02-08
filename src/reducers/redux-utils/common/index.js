@@ -1,5 +1,12 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { uploadImageAPI, uploadMultipleImageAPI, bookCopyrightsAPI, getlistContactByGg } from 'constants/apiURL';
+import {
+	uploadImageAPI,
+	uploadMultipleImageAPI,
+	bookCopyrightsAPI,
+	getlistContactByGg,
+	bookCopyrightsTranslatorAPI,
+	bookCopyrightsAuthorAPI,
+} from 'constants/apiURL';
 import Request from 'helpers/Request';
 
 export const uploadImage = createAsyncThunk('common/uploadImage', async (dataUpload, { rejectWithValue }) => {
@@ -28,6 +35,34 @@ export const creatBookCopyrights = createAsyncThunk(
 	async (dataCopyrights, { rejectWithValue }) => {
 		try {
 			const res = await Request.makePost(bookCopyrightsAPI, dataCopyrights);
+			const data = res.data;
+			return data;
+		} catch (err) {
+			const error = JSON.parse(err.response);
+			return rejectWithValue(error);
+		}
+	}
+);
+
+export const creatBookCopyrightsAuthor = createAsyncThunk(
+	'common/creatBookCopyrightsTranslator',
+	async (dataCopyrights, { rejectWithValue }) => {
+		try {
+			const res = await Request.makePost(bookCopyrightsAuthorAPI(dataCopyrights?.bookId), dataCopyrights);
+			const data = res.data;
+			return data;
+		} catch (err) {
+			const error = JSON.parse(err.response);
+			return rejectWithValue(error);
+		}
+	}
+);
+
+export const creatBookCopyrightsTranslator = createAsyncThunk(
+	'common/creatBookCopyrightsTranslator',
+	async (dataCopyrights, { rejectWithValue }) => {
+		try {
+			const res = await Request.makePost(bookCopyrightsTranslatorAPI(dataCopyrights?.bookId), dataCopyrights);
 			const data = res.data;
 			return data;
 		} catch (err) {
