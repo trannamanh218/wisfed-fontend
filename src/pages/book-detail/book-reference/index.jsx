@@ -111,7 +111,7 @@ const BookReference = ({ bookInfo, handleGetBookDetail }) => {
 	};
 
 	const directNewUrl = () => {
-		window.open('https://www.tecinus.vn');
+		window.open('https://www.facebook.com/groups/nghiendocvaviet');
 	};
 
 	const handleNavigateToBookDetail = (e, item) => {
@@ -221,18 +221,42 @@ const BookReference = ({ bookInfo, handleGetBookDetail }) => {
 				<h4>Bài viết nổi bật</h4>
 				<div className='card card-link'>
 					<ul className='card-link__list'>
-						<li className='card-link__item'>
-							<span>Cuốn sách fefefegegeegxuất sắc nhất về nuôi dạy con năm 2021</span>
-						</li>
-						<li className='card-link__item'>
-							<span>Cuốn sách fefefegegeegxuất sắc nhất về nuôi dạy con năm 2021</span>
-						</li>
-						<li className='card-link__item'>
-							<span>Cuốn sách fefefegegeegxuất sắc nhất về nuôi dạy con năm 2021</span>
-						</li>
-						<li className='card-link__item'>
-							<span>Cuốn sách fefefegegeegxuất sắc nhất về nuôi dạy con năm 2021</span>
-						</li>
+						<a
+							className='card-link__item'
+							href='https://www.facebook.com/groups/nghiendocvaviet/posts/6486879541340493/'
+							target='_blank'
+							rel='noreferrer'
+							title='REVIEW CHÚC MỘT NGÀY TỐT LÀNH - CUỐN SÁCH ĐÁNG YÊU, ĐÁNG NGẪM'
+						>
+							REVIEW CHÚC MỘT NGÀY TỐT LÀNH - CUỐN SÁCH ĐÁNG YÊU, ĐÁNG NGẪM
+						</a>
+						<a
+							className='card-link__item'
+							href='https://www.facebook.com/groups/nghiendocvaviet/posts/6473526966009084/'
+							target='_blank'
+							rel='noreferrer'
+							title='BỐN ĐIỂM QUAN TRỌNG KHI NÓI TRƯỚC ĐÁM ĐÔNG'
+						>
+							BỐN ĐIỂM QUAN TRỌNG KHI NÓI TRƯỚC ĐÁM ĐÔNG
+						</a>
+						<a
+							className='card-link__item'
+							href='https://www.facebook.com/groups/nghiendocvaviet/posts/6477151115646669/'
+							target='_blank'
+							rel='noreferrer'
+							title='VƯỢT QUA SỰ TRÌ HOÃN, DỄ HAY KHÓ?'
+						>
+							VƯỢT QUA SỰ TRÌ HOÃN, DỄ HAY KHÓ?
+						</a>
+						<a
+							className='card-link__item'
+							href='https://www.facebook.com/groups/nghiendocvaviet/posts/6469520223076425/'
+							target='_blank'
+							rel='noreferrer'
+							title='MỘT TÁCH TRÀ THIỀN – TĨNH TẠI TRƯỚC NHỮNG THAY ĐỔI QUANH MÌNH'
+						>
+							MỘT TÁCH TRÀ THIỀN – TĨNH TẠI TRƯỚC NHỮNG THAY ĐỔI QUANH MÌNH
+						</a>
 					</ul>
 				</div>
 				<button className='sidebar__view-more-btn--blue' onClick={directNewUrl}>

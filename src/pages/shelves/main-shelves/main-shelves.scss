@@ -25,17 +25,17 @@
 		}
 
 		&__public-btn {
-			color: black;
+			color: $ash-body;
 			border-color: #d9dbe9;
 			padding-left: 8px;
 			padding-right: 7px;
 			&:hover {
-				color: black;
+				color: $ash-body;
 				background-color: $primary-light;
 				border-color: transparent;
 			}
 			&:disabled {
-				color: black;
+				color: $ash-body;
 			}
 			svg {
 				margin-right: 12px;
