@@ -5,10 +5,9 @@ import './read-more.scss';
 import { useRef } from 'react';
 import { urlRegex, hashtagRegex } from 'constants';
 
-const ReadMore = ({ text }) => {
+const ReadMore = ({ text, readMoreTranslators }) => {
 	const [hasMore, setHasMore] = useState(false);
 	const [readMore, setReadMore] = useState(false);
-
 	const postContentRef = useRef(null);
 
 	useEffect(() => {
@@ -40,7 +39,8 @@ const ReadMore = ({ text }) => {
 			<div
 				ref={postContentRef}
 				className={classNames('post__content', {
-					'view-less': readMore === false,
+					'view-less': !readMore && !readMoreTranslators,
+					'view-less-translators': !readMore && readMoreTranslators,
 				})}
 				dangerouslySetInnerHTML={{
 					__html: generateContent(text),
@@ -55,8 +55,13 @@ const ReadMore = ({ text }) => {
 	);
 };
 
+ReadMore.defaultProp = {
+	readMoreTranslators: false,
+};
+
 ReadMore.propTypes = {
 	text: PropTypes.string.isRequired,
+	readMoreTranslators: PropTypes.bool,
 };
 
 export default ReadMore;

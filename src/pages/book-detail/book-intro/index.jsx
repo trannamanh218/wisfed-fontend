@@ -124,7 +124,10 @@ const BookIntro = ({ bookInfo, listRatingStar }) => {
 					</div>
 
 					<div className='book-intro__description'>
-						<ReadMore text={bookInfo.description || 'Chưa cập nhật'} />
+						<ReadMore
+							text={bookInfo.description || 'Chưa cập nhật'}
+							readMoreTranslators={bookInfo?.translators.length ? true : false}
+						/>
 					</div>
 				</div>
 				<div onClick={handleShareFaceBook} className='book-intro__action'>
