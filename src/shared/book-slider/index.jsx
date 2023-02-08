@@ -35,7 +35,7 @@ const BookSlider = ({
 				window.removeEventListener('resize', handleResize);
 			};
 		}
-	}, []);
+	});
 
 	function settings(inCategory, inCategoryDetail, inResult) {
 		return {
@@ -48,7 +48,7 @@ const BookSlider = ({
 			lazyLoad: false,
 			autoplay: false,
 			swipeToSlide: true,
-			variableWidth: inCategory || inResult ? false : true,
+			variableWidth: inCategory || inResult || inCategoryDetail ? false : true,
 			touchMove: true,
 			nextArrow: <SlideNextBtn />,
 			prevArrow: <SlidePrevBtn />,
@@ -58,8 +58,9 @@ const BookSlider = ({
 	const handleResize = () => {
 		const sliderWidth = sliderContentElement.current.offsetWidth,
 			itemWidth =
-				sliderContentElement.current.querySelector('.book-thumbnail').offsetWidth + (inCategory ? 0 : 16);
-		// 16 là 16px margin right, chỉ ở inCategory thì mới nén chặt lại cho đẹp nên bỏ qua 16px
+				sliderContentElement.current.querySelector('.book-thumbnail').offsetWidth +
+				(inCategory || inCategoryDetail ? 0 : 16);
+		// 16 là 16px margin right
 		const result = Math.floor(sliderWidth / itemWidth);
 		if (!isNaN(result) && result > 0) {
 			setSlidesToShow(result);
@@ -104,15 +105,10 @@ const BookSlider = ({
 							</Slider>
 						) : (
 							<div
-								style={
-									inCategoryDetail
-										? {
-												display: `grid`,
-												gridTemplateColumns: `repeat(auto-fit, minmax(200px, 1fr))`,
-												gridRowGap: `16px`,
-										  }
-										: { display: `grid`, gridTemplateColumns: `repeat(${slidesToShow}, 1fr)` }
-								}
+								style={{
+									display: `grid`,
+									gridTemplateColumns: `repeat(${slidesToShow}, 1fr)`,
+								}}
 							>
 								{list.map((item, index) => (
 									<BookThumbnail

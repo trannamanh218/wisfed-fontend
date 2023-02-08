@@ -1,4 +1,4 @@
-import { Suspense, lazy, useCallback, useEffect, useState, useRef } from 'react';
+import { Suspense, lazy, useCallback, useEffect, useState, useRef, useLayoutEffect } from 'react';
 import classNames from 'classnames';
 import { Heart } from 'components/svg';
 import _ from 'lodash';
@@ -52,6 +52,9 @@ const MainCategoryDetail = ({ setErrorLoadPage }) => {
 	const [sortValueTemp, setSortValueTemp] = useState('default');
 	const [fetchingIsLike, setFetchingIsLike] = useState(false);
 
+	const [afterRendered, setAfterRendered] = useState(false);
+	const [slidesToShow, setSlidesToShow] = useState(2);
+
 	const callApiStart = useRef(8);
 	const callApiPerPage = useRef(8);
 	const callApiStartGetPosts = useRef(10);
@@ -76,6 +79,7 @@ const MainCategoryDetail = ({ setErrorLoadPage }) => {
 			title: 'Cũ nhất',
 		},
 	];
+	const container = document.querySelector('.main-category-detail__allbook');
 
 	useEffect(() => {
 		if (!_.isEmpty(categoryInfoRedux) && categoryInfoRedux.id === Number(id)) {
@@ -105,6 +109,24 @@ const MainCategoryDetail = ({ setErrorLoadPage }) => {
 		callApiStartGetPosts.current = 10;
 		handleGetPostsByCategoryFirstTime();
 	}, [userInfo, id, sortDirection, sortValue]);
+
+	useEffect(() => {
+		window.addEventListener('resize', handleResize);
+		handleResize();
+		return () => {
+			window.removeEventListener('resize', handleResize);
+		};
+	});
+
+	const handleResize = () => {
+		const container = document.querySelector('.main-category-detail__allbook');
+		const containerWidth = container?.offsetWidth,
+			itemWidth = 200;
+		const result = Math.floor(containerWidth / itemWidth);
+		if (!isNaN(result) && result > 0) {
+			setSlidesToShow(result);
+		}
+	};
 
 	const getCategoryInfoFnc = async () => {
 		try {
@@ -385,7 +407,14 @@ const MainCategoryDetail = ({ setErrorLoadPage }) => {
 															categoryInfo.name ? categoryInfo.name.toLowerCase() : ''
 														} " (${categoryInfo.numberBooks})`}
 													</h3>
-													<div className='books'>
+													<div
+														className='books'
+														style={{
+															display: `grid`,
+															gridTemplateColumns: `repeat(${slidesToShow}, 1fr)`,
+															gridRowGap: '16px',
+														}}
+													>
 														{bookList.map((item, index) => (
 															<BookThumbnail
 																key={index}
