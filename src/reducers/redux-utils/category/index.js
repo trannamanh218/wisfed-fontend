@@ -85,6 +85,9 @@ const categorySlice = createSlice({
 		updateAllCategoryData: (state, action) => {
 			state.categoriesData = action.payload;
 		},
+		updateCategoryInfoIsLike: (state, action) => {
+			state.categoryInfo = { ...state.categoryInfo, isFavorite: action.payload };
+		},
 	},
 	extraReducers: {
 		[getCategoryDetail.pending]: state => {
@@ -103,5 +106,5 @@ const categorySlice = createSlice({
 });
 
 const category = categorySlice.reducer;
-export const { updateAllCategoryData } = categorySlice.actions;
+export const { updateAllCategoryData, updateCategoryInfoIsLike } = categorySlice.actions;
 export default category;

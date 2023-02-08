@@ -17,7 +17,7 @@ import { Modal, ModalBody } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { editUserInfo } from 'reducers/redux-utils/user';
 import { NotificationError } from 'helpers/Error';
-import { getListBookByCategory, getPostsByCategory } from 'reducers/redux-utils/category';
+import { getListBookByCategory, getPostsByCategory, updateCategoryInfoIsLike } from 'reducers/redux-utils/category';
 import caretIcon from 'assets/images/caret.png';
 import { getBookDetail } from 'reducers/redux-utils/book';
 import RouteLink from 'helpers/RouteLink';
@@ -156,6 +156,7 @@ const MainCategoryDetail = ({ setErrorLoadPage }) => {
 					};
 					await dispatch(editUserInfo(params)).unwrap();
 					setIsLike(prev => !prev);
+					dispatch(updateCategoryInfoIsLike(!isLike));
 				} catch (err) {
 					NotificationError(err);
 				} finally {
