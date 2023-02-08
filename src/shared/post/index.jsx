@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { Feather, Pencil, TrashIcon, Lock } from 'components/svg';
+import { Feather, Pencil, TrashIcon, CloseX, IconRanks } from 'components/svg';
 import { calculateDurationTime } from 'helpers/Common';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
@@ -8,7 +8,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { updateReactionActivity, updateReactionActivityGroup } from 'reducers/redux-utils/activity';
 import { createComment, createCommentGroup, setDataDeleteCmt } from 'reducers/redux-utils/comment';
 import { Modal, ModalBody } from 'react-bootstrap';
-import { CloseX } from 'components/svg';
 import CommentEditor from 'shared/comment-editor';
 import GridImage from 'shared/grid-image';
 import PostActionBar from 'shared/post-action-bar';
@@ -42,7 +41,6 @@ import {
 	hashtagRegex,
 	BASE_URL,
 } from 'constants';
-import { IconRanks } from 'components/svg';
 import AuthorBook from 'shared/author-book';
 import Storage from 'helpers/Storage';
 import { checkUserLogin } from 'reducers/redux-utils/auth';

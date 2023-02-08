@@ -34,12 +34,10 @@
 			text-overflow: ellipsis;
 			overflow: hidden;
 			cursor: pointer;
-			span {
-				font-size: 13px;
-				font-weight: 600;
-				line-height: 22px;
-				color: #4e4b66;
-			}
+			font-size: 13px;
+			font-weight: 600;
+			line-height: 22px;
+			color: #4e4b66;
 		}
 	}
 	.edit-name__pencil {
