@@ -130,11 +130,11 @@ const MainShelves = ({ allLibraryList, shelveGroupName, isMyShelves, handleViewB
 			};
 			await dispatch(updateLibrary(params)).unwrap();
 			setIsShowPublic(!isShowPublic);
-			toast.success('Đổi trạng thái tủ sách thành công', { toastId: 'update-status-library' });
+			toast.success('Đổi trạng thái tủ sách thành công');
 		} catch (err) {
 			NotificationError(err);
 		} finally {
-			setTimeout(() => setIsDisabledBtnStatus(false), 3500);
+			setTimeout(() => setIsDisabledBtnStatus(false), 2000);
 		}
 	};
 

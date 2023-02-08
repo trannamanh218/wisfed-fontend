@@ -25,16 +25,17 @@
 		}
 
 		&__public-btn {
-			color: #4e4b66;
+			color: black;
 			border-color: #d9dbe9;
 			padding-left: 8px;
 			padding-right: 7px;
 			&:hover {
-				background-color: #d9dbe9;
-				border-color: #d9dbe9;
+				color: black;
+				background-color: $primary-light;
+				border-color: transparent;
 			}
 			&:disabled {
-				color: #4e4b66;
+				color: black;
 			}
 			svg {
 				margin-right: 12px;
