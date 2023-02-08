@@ -51,9 +51,7 @@ const MainCategoryDetail = ({ setErrorLoadPage }) => {
 	const [sortDirection, setSortDirection] = useState('DESC');
 	const [sortValueTemp, setSortValueTemp] = useState('default');
 	const [fetchingIsLike, setFetchingIsLike] = useState(false);
-
-	const [afterRendered, setAfterRendered] = useState(false);
-	const [slidesToShow, setSlidesToShow] = useState(2);
+	const [slidesToShow, setSlidesToShow] = useState(4);
 
 	const callApiStart = useRef(8);
 	const callApiPerPage = useRef(8);
@@ -79,7 +77,6 @@ const MainCategoryDetail = ({ setErrorLoadPage }) => {
 			title: 'Cũ nhất',
 		},
 	];
-	const container = document.querySelector('.main-category-detail__allbook');
 
 	useEffect(() => {
 		if (!_.isEmpty(categoryInfoRedux) && categoryInfoRedux.id === Number(id)) {
