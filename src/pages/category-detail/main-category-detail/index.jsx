@@ -370,7 +370,10 @@ const MainCategoryDetail = ({ setErrorLoadPage }) => {
 						</div>
 
 						{categoryInfo.description && (
-							<p className='main-category-detail__intro'>{categoryInfo.description}</p>
+							<p
+								className='main-category-detail__intro'
+								dangerouslySetInnerHTML={{ __html: categoryInfo.description }}
+							></p>
 						)}
 
 						<div className='main-category-detail__container'>
