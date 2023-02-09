@@ -200,6 +200,18 @@ function RichTextEditor({
 		setMentionUsersArr(newArr);
 	}, [editorState]);
 
+	// move focus to end when Chỉnh sửa bài viết
+	useEffect(() => {
+		if (initialContent) {
+			setTimeout(() => {
+				editor.current.blur();
+			}, 10);
+			setTimeout(() => {
+				editor.current.focus();
+			}, 150);
+		}
+	}, []);
+
 	// decorator hashtags draft-js
 	const hashtagStrategy = (contentBlock, callback) => {
 		if (commentLv1Id === undefined) {
