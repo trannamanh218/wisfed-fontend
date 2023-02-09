@@ -1,35 +1,39 @@
-import { Suspense, lazy, useCallback, useEffect, useState, useRef, useLayoutEffect } from 'react';
+import caretIcon from 'assets/images/caret.png';
 import classNames from 'classnames';
 import { Heart } from 'components/svg';
+import { POST_TYPE } from 'constants/index';
+import { NotificationError } from 'helpers/Error';
+import RouteLink from 'helpers/RouteLink';
+import Storage from 'helpers/Storage';
 import _ from 'lodash';
+import PropTypes from 'prop-types';
+import { lazy, Suspense, useCallback, useEffect, useRef, useState } from 'react';
+import { Modal, ModalBody } from 'react-bootstrap';
+import InfiniteScroll from 'react-infinite-scroll-component';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
+import { checkUserLogin } from 'reducers/redux-utils/auth';
+import { getBookDetail } from 'reducers/redux-utils/book';
+import {
+	getCategoryDetail,
+	getFavoriteCategories,
+	getListBookByCategory,
+	getPostsByCategory,
+	updateCategoryInfoIsLike,
+} from 'reducers/redux-utils/category';
+import { editUserInfo } from 'reducers/redux-utils/user';
 import BackButton from 'shared/back-button';
 import BookThumbnail from 'shared/book-thumbnail';
 import Button from 'shared/button';
 import CategoryGroup from 'shared/category-group';
 import FilterPane from 'shared/filter-pane';
-const Post = lazy(() => import('shared/post'));
+import FormCheckGroup from 'shared/form-check-group';
+import LoadingIndicator from 'shared/loading-indicator';
+import Circle from 'shared/loading/circle';
 import SearchField from 'shared/search-field';
 import './main-category-detail.scss';
 import SearchBook from './SearchBook';
-import PropTypes from 'prop-types';
-import { Modal, ModalBody } from 'react-bootstrap';
-import { useDispatch, useSelector } from 'react-redux';
-import { editUserInfo } from 'reducers/redux-utils/user';
-import { NotificationError } from 'helpers/Error';
-import { getListBookByCategory, getPostsByCategory, updateCategoryInfoIsLike } from 'reducers/redux-utils/category';
-import caretIcon from 'assets/images/caret.png';
-import { getBookDetail } from 'reducers/redux-utils/book';
-import RouteLink from 'helpers/RouteLink';
-import Circle from 'shared/loading/circle';
-import LoadingIndicator from 'shared/loading-indicator';
-import InfiniteScroll from 'react-infinite-scroll-component';
-import FormCheckGroup from 'shared/form-check-group';
-import { getFavoriteCategories } from 'reducers/redux-utils/category';
-import { POST_TYPE } from 'constants/index';
-import { getCategoryDetail } from 'reducers/redux-utils/category';
-import { checkUserLogin } from 'reducers/redux-utils/auth';
-import Storage from 'helpers/Storage';
+const Post = lazy(() => import('shared/post'));
 
 const MainCategoryDetail = ({ setErrorLoadPage }) => {
 	const { id } = useParams();
@@ -51,9 +55,7 @@ const MainCategoryDetail = ({ setErrorLoadPage }) => {
 	const [sortDirection, setSortDirection] = useState('DESC');
 	const [sortValueTemp, setSortValueTemp] = useState('default');
 	const [fetchingIsLike, setFetchingIsLike] = useState(false);
-
-	const [afterRendered, setAfterRendered] = useState(false);
-	const [slidesToShow, setSlidesToShow] = useState(2);
+	const [slidesToShow, setSlidesToShow] = useState(4);
 
 	const callApiStart = useRef(8);
 	const callApiPerPage = useRef(8);
@@ -79,7 +81,6 @@ const MainCategoryDetail = ({ setErrorLoadPage }) => {
 			title: 'Cũ nhất',
 		},
 	];
-	const container = document.querySelector('.main-category-detail__allbook');
 
 	useEffect(() => {
 		if (!_.isEmpty(categoryInfoRedux) && categoryInfoRedux.id === Number(id)) {
@@ -369,7 +370,10 @@ const MainCategoryDetail = ({ setErrorLoadPage }) => {
 						</div>
 
 						{categoryInfo.description && (
-							<p className='main-category-detail__intro'>{categoryInfo.description}</p>
+							<p
+								className='main-category-detail__intro'
+								dangerouslySetInnerHTML={{ __html: categoryInfo.description }}
+							></p>
 						)}
 
 						<div className='main-category-detail__container'>
