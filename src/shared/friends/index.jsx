@@ -1,21 +1,20 @@
-import Button from 'shared/button';
-import PropTypes from 'prop-types';
-import './friends.scss';
-import { Subtract } from 'components/svg';
 import defaultAvatar from 'assets/icons/defaultLogoAvatar.svg';
+import { Subtract } from 'components/svg';
+import { NotificationError } from 'helpers/Error';
+import ModalUnFriend from 'pages/friends/component/modalUnFriends';
+import PropTypes from 'prop-types';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 import {
-	makeFriendRequest,
 	addFollower,
-	unFollower,
+	makeFriendRequest,
 	replyFriendRequest,
+	unFollower,
 	unFriendRequest,
 } from 'reducers/redux-utils/user';
-import { NotificationError } from 'helpers/Error';
-import { useDispatch } from 'react-redux';
-import { useState } from 'react';
-import ModalUnFriend from 'pages/friends/component/modalUnFriends';
-import { Link } from 'react-router-dom';
-import { useEffect } from 'react';
+import Button from 'shared/button';
+import './friends.scss';
 
 const FriendsItem = ({ data, keyTabs, listFollower, listFriendReq, listFollowings, type }) => {
 	const dispatch = useDispatch();
@@ -32,8 +31,21 @@ const FriendsItem = ({ data, keyTabs, listFollower, listFriendReq, listFollowing
 	const [toggleAcceptButton, setToggleAcceptButton] = useState(true);
 	const [showModalUnfriends, setShowModalUnfriends] = useState(false);
 	const [isFollow, setIsFollow] = useState(false);
+	const [dataUserId, setDataUserId] = useState(data.id);
+
+	const { userInfo } = useSelector(state => state.auth);
 
 	useEffect(() => {
+		if (data.userOne) {
+			if (data.userOne.id !== userInfo.id) {
+				setDataUserId(data.userOne.id);
+			} else {
+				setDataUserId(data.userTwo.id);
+			}
+		} else {
+			setDataUserId(data.id);
+		}
+
 		data.isFollow ? setIsFollow(true) : setIsFollow(false);
 	}, []);
 
@@ -41,19 +53,12 @@ const FriendsItem = ({ data, keyTabs, listFollower, listFriendReq, listFollowing
 		setShowModalUnfriends(true);
 	};
 
-	const handleUnfriend = () => {
+	const handleUnfriend = async () => {
 		setShowModalUnfriends(false);
 		try {
-			if (listFollower) {
-				dispatch(unFriendRequest(data.userOne.id));
-			} else if (listFriendReq || listFollowings) {
-				dispatch(unFriendRequest(data.userTwo.id));
-			} else {
-				dispatch(unFriendRequest(data.id));
-			}
+			await dispatch(unFriendRequest(dataUserId)).unwrap();
 			setUnFriend(false);
 			setToggleAddFriend(false);
-
 			setIsFollow(false);
 		} catch (err) {
 			NotificationError(err);
@@ -62,14 +67,8 @@ const FriendsItem = ({ data, keyTabs, listFollower, listFriendReq, listFollowing
 
 	const handleUnFollow = async () => {
 		try {
-			if (data.userOne) {
-				await dispatch(unFollower(data.userOne.id)).unwrap();
-			} else {
-				await dispatch(unFollower(data.id)).unwrap();
-			}
-
+			await dispatch(unFollower(dataUserId)).unwrap();
 			setToggleUnFollow(false);
-
 			setIsFollow(false);
 		} catch (err) {
 			NotificationError(err);
@@ -78,40 +77,18 @@ const FriendsItem = ({ data, keyTabs, listFollower, listFriendReq, listFollowing
 
 	const handleAddFollow = async () => {
 		try {
-			if (data.userOne) {
-				await dispatch(addFollower({ userId: data.userOne.id })).unwrap();
-			} else {
-				await dispatch(addFollower({ userId: data.id })).unwrap();
-			}
-
+			await dispatch(addFollower({ userId: dataUserId })).unwrap();
 			setToggleUnFollow(true);
-
 			setIsFollow(true);
 		} catch (err) {
 			NotificationError(err);
 		}
 	};
 
-	const handleAddFriends = () => {
+	const handleAddFriends = async () => {
 		try {
-			if (listFollower || listFollowings) {
-				const param = {
-					userId: data.userOne.id,
-				};
-				dispatch(makeFriendRequest(param)).unwrap();
-			} else if (listFriendReq || listFollowings) {
-				const param = {
-					userId: data.id,
-				};
-				dispatch(makeFriendRequest(param)).unwrap();
-			} else {
-				const param = {
-					userId: data.id,
-				};
-				dispatch(makeFriendRequest(param)).unwrap();
-			}
+			await dispatch(makeFriendRequest({ userId: dataUserId })).unwrap();
 			setTogglePendingFriend(false);
-
 			setIsFollow(true);
 		} catch (err) {
 			NotificationError(err);

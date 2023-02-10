@@ -1,27 +1,26 @@
+import defaultAvatar from 'assets/icons/defaultLogoAvatar.svg';
+import Play from 'assets/images/play.png';
 import classNames from 'classnames';
-import { Feather, IconRanks } from 'components/svg';
+import { Feather, IconRanks, WorldNet } from 'components/svg';
+import { GROUP_POST_VERB_SHARE, hashtagRegex, READ_TARGET_VERB_SHARE, urlRegex } from 'constants/index';
 import { calculateDurationTime } from 'helpers/Common';
+import RouteLink from 'helpers/RouteLink';
 import _ from 'lodash';
-import './posts-Share.scss';
+import ShareUsers from 'pages/home/components/newfeed/components/modal-share-users';
 import PropTypes from 'prop-types';
-import { useState, useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { Modal } from 'react-bootstrap';
+import { Link, useNavigate } from 'react-router-dom';
+import AuthorBook from 'shared/author-book';
 import GridImage from 'shared/grid-image';
 import PostBook from 'shared/post-book';
-import UserAvatar from 'shared/user-avatar';
 import PreviewLink from 'shared/preview-link/PreviewLink';
-import ReactRating from 'shared/react-rating';
-import { Link, useNavigate } from 'react-router-dom';
-import Play from 'assets/images/play.png';
-import { GROUP_POST_VERB_SHARE, READ_TARGET_VERB_SHARE, urlRegex, hashtagRegex } from 'constants/index';
-import { Modal } from 'react-bootstrap';
-import vector from 'assets/images/Vector.png';
-import defaultAvatar from 'assets/icons/defaultLogoAvatar.svg';
-import ShowTime from 'shared/showTimeOfPostWhenHover/showTime';
-import ShareUsers from 'pages/home/components/newfeed/components/modal-share-users';
-import AuthorBook from 'shared/author-book';
 import QuoteCard from 'shared/quote-card';
+import ReactRating from 'shared/react-rating';
 import ShareTarget from 'shared/share-target';
-import RouteLink from 'helpers/RouteLink';
+import ShowTime from 'shared/showTimeOfPostWhenHover/showTime';
+import UserAvatar from 'shared/user-avatar';
+import './posts-Share.scss';
 
 const PostShare = ({ postData, inCreatePost, directUrl }) => {
 	const [videoId, setVideoId] = useState('');
@@ -271,7 +270,9 @@ const PostShare = ({ postData, inCreatePost, directUrl }) => {
 								<div className='post__user-status__subtitle'>
 									{postData.sharePost.isUpdateProgress && (
 										<>
-											<img src={vector} alt='image' />
+											<div className='post__user-status__subtitle__svg'>
+												<WorldNet />
+											</div>
 											<span style={{ marginRight: '12px', marginLeft: '5px' }}>
 												Cập nhật tiến độ đọc sách
 											</span>

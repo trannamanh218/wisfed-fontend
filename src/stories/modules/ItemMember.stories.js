@@ -32,7 +32,7 @@ const ItemMembers = () => {
 				<div className='people-item'>
 					<img
 						src='https://play-lh.googleusercontent.com/NIUu0OgXQO4nU-ugWTv6yNy92u9wQFFfwvlWOsCIG-tPYBagOZdpyrJCxfHULI_eeGI'
-						alt='iamge'
+						alt='image'
 					/>
 					<div className='people-item__text'>
 						<span>Shadow</span>
@@ -50,7 +50,7 @@ const ItemMember = () => {
 				<div className='people-item'>
 					<img
 						src='https://play-lh.googleusercontent.com/NIUu0OgXQO4nU-ugWTv6yNy92u9wQFFfwvlWOsCIG-tPYBagOZdpyrJCxfHULI_eeGI'
-						alt='iamge'
+						alt='image'
 					/>
 					<div className='people-item__text'>
 						<span>Shadow</span>
