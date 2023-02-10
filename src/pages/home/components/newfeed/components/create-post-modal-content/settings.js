@@ -30,8 +30,8 @@ export const setting = {
 	],
 	shareModeList: [
 		{ value: 'public', title: 'Mọi người', icon: <WorldNet /> },
-		{ value: 'friends', title: 'Bạn bè', icon: <GroupIcon className='group-icon-svg' /> },
-		{ value: 'followers', title: 'Người Follow', icon: <PodCast /> },
+		// { value: 'friends', title: 'Bạn bè', icon: <GroupIcon className='group-icon-svg' /> },
+		// { value: 'followers', title: 'Người Follow', icon: <PodCast /> },
 		{ value: 'private', title: 'Chỉ mình tôi', icon: <Lock /> },
 	],
 };

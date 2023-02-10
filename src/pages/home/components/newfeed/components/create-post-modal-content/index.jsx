@@ -67,7 +67,7 @@ import {
 	POST_VERB,
 } from 'constants';
 import './style.scss';
-// import ShareModeComponent from './ShareModeComponent';
+import ShareModeComponent from './ShareModeComponent';
 import { handleResetMyTargetReading, setMyTargetReading } from 'reducers/redux-utils/chart';
 import { handleSetImageToShare } from 'reducers/redux-utils/chart';
 import DirectLinkALertModal from 'shared/direct-link-alert-modal';
@@ -100,7 +100,7 @@ function CreatePostModalContent({
 	setIsEdit,
 	handleUpdateMiniPost,
 }) {
-	// const [shareMode, setShareMode] = useState({ value: 'public', title: 'Mọi người', icon: <WorldNet /> }); // k xóa
+	const [shareMode, setShareMode] = useState({ value: 'public', title: 'Mọi người', icon: <WorldNet /> }); // k xóa
 	const [showMainModal, setShowMainModal] = useState(true);
 	const [taggedData, setTaggedData] = useState({
 		'addBook': {},
@@ -1047,11 +1047,11 @@ function CreatePostModalContent({
 										withFriends(taggedData.addFriends)}
 								</p>
 								{/* k xóa ShareModeComponent */}
-								{/* <ShareModeComponent
+								<ShareModeComponent
 									list={shareModeList}
 									shareMode={shareMode}
 									setShareMode={setShareMode}
-								/> */}
+								/>
 							</div>
 						</div>
 						<div className='create-post-modal-content__main__body__text-field-edit-wrapper'>
@@ -1254,7 +1254,7 @@ function CreatePostModalContent({
 					/>
 				</div>
 				<DirectLinkALertModal
-					className={'creat-post-modal-content__modal-confirm'}
+					className='create-post-modal-content__modal-confirm'
 					modalShow={modalShow}
 					handleAccept={handleAccept}
 					handleCancel={handleCancel}
