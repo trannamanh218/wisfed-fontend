@@ -178,7 +178,6 @@ const ConnectButtonsFollower = ({ direction, item, isFollower }) => {
 						toggleModal={toggleModal}
 						handleUnfriend={handleUnfriend}
 						data={item}
-						isFollower={isFollower}
 					/>
 				</>
 			)}

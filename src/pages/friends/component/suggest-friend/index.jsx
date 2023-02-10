@@ -105,9 +105,7 @@ const SuggestFriend = ({ activeTabs }) => {
 				) : (
 					<>
 						{list.length > 0 ? (
-							list.map(item => (
-								<FriendsItem key={item.id} data={item} keyTabs={activeTabs} listSuggest={list} />
-							))
+							list.map(item => <FriendsItem key={item.id} data={item} keyTabs={activeTabs} />)
 						) : (
 							<p style={{ textAlign: 'center' }}>Không có dữ liệu</p>
 						)}
@@ -129,12 +127,7 @@ const SuggestFriend = ({ activeTabs }) => {
 					<>
 						{listRecommendFriend.length > 0 ? (
 							listRecommendFriend.map(item => (
-								<FriendsItem
-									key={item.id}
-									data={item}
-									keyTabs={activeTabs}
-									getListRecommend={listRecommendFriend}
-								/>
+								<FriendsItem key={item.id} data={item} keyTabs={activeTabs} />
 							))
 						) : (
 							<p style={{ textAlign: 'center' }}>Không có dữ liệu</p>

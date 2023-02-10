@@ -235,10 +235,7 @@ const DetailFriend = () => {
 
 	const renderListMap = () => {
 		if (following || follower || invitation || suggestions || recommend) {
-			return (
-				listFollowings.length > 0 &&
-				listFollowings.map(item => <FriendsItem key={item.id} data={item} listFriendReq={listFollowings} />)
-			);
+			return listFollowings.length > 0 && listFollowings.map(item => <FriendsItem key={item.id} data={item} />);
 		}
 	};
 

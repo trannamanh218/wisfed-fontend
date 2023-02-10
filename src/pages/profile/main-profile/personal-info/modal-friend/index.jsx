@@ -22,7 +22,7 @@ const ModalFriend = ({ setModalFriend, modalFriend, userInfoDetail }) => {
 	const [filter, setFilter] = useState('[]');
 
 	const callApiStart = useRef(0);
-	const callApiPerPage = useRef(3);
+	const callApiPerPage = useRef(10);
 
 	const dispatch = useDispatch();
 	const { userId } = useParams();
