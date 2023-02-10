@@ -90,7 +90,6 @@
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		margin: 0 22px;
 		.myfriends__title__addfriend {
 			font-weight: 700;
 			font-size: 24px;
@@ -105,7 +104,6 @@
 		line-height: 32px;
 		color: #2d2c42;
 		letter-spacing: 1px;
-		margin: 0 22px;
 	}
 	.myfriends__title__all {
 		font-weight: 500;
@@ -122,8 +120,8 @@
 	}
 	.myfriends__layout__container {
 		display: flex;
-		gap: 15px;
-		margin: 28px 10px;
+		gap: 24px;
+		margin: 28px 1px;
 		flex-wrap: wrap;
 		.myfriends__layout {
 			max-width: 200px;

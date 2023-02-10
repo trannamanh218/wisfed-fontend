@@ -120,26 +120,26 @@ const DetailFriend = () => {
 				if (following) {
 					if (inputSearch.length > 0) {
 						const following = await dispatch(getListFollowing({ userId, ...query })).unwrap();
-						setListFollowings(following.rows);
+						setListFollowings(following);
 					} else {
 						const following = await dispatch(getListFollowing({ userId })).unwrap();
-						setListFollowings(following.rows);
+						setListFollowings(following);
 					}
 				} else if (follower) {
 					if (inputSearch.length > 0) {
 						const follower = await dispatch(getListFollowrs({ userId, ...query })).unwrap();
-						setListFollowings(follower.rows);
+						setListFollowings(follower);
 					} else {
 						const follower = await dispatch(getListFollowrs({ userId })).unwrap();
-						setListFollowings(follower.rows);
+						setListFollowings(follower);
 					}
 				} else if (invitation) {
 					if (inputSearch.length > 0) {
 						const friendReq = await dispatch(getListReqFriendsToMe({ ...query })).unwrap();
-						setListFollowings(friendReq.rows);
+						setListFollowings(friendReq);
 					} else {
 						const friendReq = await dispatch(getListReqFriendsToMe()).unwrap();
-						setListFollowings(friendReq.rows);
+						setListFollowings(friendReq);
 					}
 				} else if (suggestions) {
 					if (inputSearch.length > 0) {
@@ -227,17 +227,26 @@ const DetailFriend = () => {
 		}
 	};
 
-	const renderLength = () => {
-		if (following || follower || invitation || suggestions || recommend) {
+	const renderCount = () => {
+		if (suggestions || recommend) {
 			return listFollowings.length ? listFollowings.length : 0;
+		} else if (following || follower || invitation || recommend) {
+			return listFollowings.count ? listFollowings.count : 0;
 		}
 	};
 
 	const renderListMap = () => {
-		if (following || follower || invitation || suggestions || recommend) {
+		if (suggestions || recommend) {
 			return (
 				listFollowings.length > 0 &&
 				listFollowings.map(item => <FriendsItem key={item.id} data={item} listFriendReq={listFollowings} />)
+			);
+		} else if (following || follower || invitation) {
+			return (
+				listFollowings.count > 0 &&
+				listFollowings.rows.map(item => (
+					<FriendsItem key={item.id} data={item} listFriendReq={listFollowings.rows} />
+				))
 			);
 		}
 	};
@@ -268,7 +277,7 @@ const DetailFriend = () => {
 				<div className='myfriends__container'>
 					<div className='myfriends__container__content'>
 						<div className='myfriends__title__addfriend'>
-							{renderLength()} {renderTitleContainer()}
+							{renderCount()} {renderTitleContainer()}
 						</div>
 					</div>
 					<div className='myfriends__layout__container'>{renderListMap()}</div>

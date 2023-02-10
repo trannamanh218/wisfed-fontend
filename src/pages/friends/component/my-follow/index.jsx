@@ -20,14 +20,14 @@ const MyFollow = ({ activeTabs }) => {
 		const param = {
 			userId: userInfo.id,
 			start: 0,
-			limit: 10,
+			limit: 6,
 		};
 		try {
 			const following = await dispatch(getListFollowing(param)).unwrap();
 			const follower = await dispatch(getListFollowrs(param)).unwrap();
 
-			setListFollowings(following.rows);
-			setListFollower(follower.rows);
+			setListFollowings(following);
+			setListFollower(follower);
 		} catch (err) {
 			NotificationError(err);
 		} finally {
@@ -47,21 +47,21 @@ const MyFollow = ({ activeTabs }) => {
 				<div className='myfriends__container'>
 					<div className='myfriends__container__content'>
 						<div className='myfriends__title__addfriend'>
-							({listFollower.length}) người theo dõi {userInfo.fullName}{' '}
+							({listFollower.count}) người theo dõi {userInfo.fullName}{' '}
 						</div>
 						<Link to={'/friends/follower'} className='myfriends__title__all'>
 							Xem tất cả
 						</Link>
 					</div>
 					<div className='myfriends__layout__container'>
-						{listFollower.length > 0 ? (
+						{listFollower.rows.length > 0 ? (
 							<>
-								{listFollower.map(item => (
+								{listFollower.rows.map(item => (
 									<FriendsItem
 										key={item.id}
 										data={item}
 										keyTabs={activeTabs}
-										listFollower={listFollower}
+										listFollower={listFollower.rows}
 										type='following'
 									/>
 								))}
@@ -73,21 +73,21 @@ const MyFollow = ({ activeTabs }) => {
 					<div className='myfriends__line'></div>
 					<div className='myfriends__container__content'>
 						<div className='myfriends__title__addfriend'>
-							({listFollowings.length}) Người {userInfo.fullName} đang theo dõi
+							({listFollowings.count}) Người {userInfo.fullName} đang theo dõi
 						</div>
 						<Link to={'/friends/following'} className='myfriends__title__all'>
 							Xem tất cả
 						</Link>
 					</div>
 					<div className='myfriends__layout__container'>
-						{listFollowings.length > 0 ? (
+						{listFollowings.rows.length > 0 ? (
 							<>
-								{listFollowings.map(item => (
+								{listFollowings.rows.map(item => (
 									<FriendsItem
 										key={item.id}
 										data={item}
 										keyTabs={activeTabs}
-										listFollowings={listFollowings}
+										listFollowings={listFollowings.rows}
 									/>
 								))}
 							</>
