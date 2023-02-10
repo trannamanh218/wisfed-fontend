@@ -39,7 +39,6 @@ import {
 	REVIEW_VERB_SHARE,
 	urlRegex,
 	hashtagRegex,
-	BASE_URL,
 } from 'constants';
 import AuthorBook from 'shared/author-book';
 import Storage from 'helpers/Storage';
@@ -226,7 +225,7 @@ function Post({
 			urlFormated = `https://${url}`;
 		}
 
-		if (urlFormated.includes(BASE_URL)) {
+		if (urlFormated.includes(location.href)) {
 			const domain = new URL(urlFormated);
 			navigate(domain.pathname);
 		} else {

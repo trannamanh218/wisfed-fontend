@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 import BookInfo from './book-info';
 import BookReference from './book-reference';
 import Circle from 'shared/loading/circle';
-import { STATUS_LOADING, BASE_URL } from 'constants';
+import { STATUS_LOADING } from 'constants';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getBookDetail } from 'reducers/redux-utils/book';
@@ -48,7 +48,7 @@ function BookDetail() {
 		if (!_.isEmpty(bookInformation)) {
 			const newDescription = strippedHTMLTags(bookInformation.description).slice(0, 300);
 			setSeoDescription(newDescription);
-			setSeoImage(`${BASE_URL}${bookInformation.frontBookCover}`);
+			setSeoImage(`${location.href}${bookInformation.frontBookCover}`);
 		}
 	}, [bookInformation]);
 

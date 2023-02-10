@@ -73,7 +73,7 @@ const MyFriends = ({ activeTabs, inputSearch, filter, handleActiveTabs }) => {
 						<div className='invite-friends__title'>Mời bạn bè</div>
 						<div className='invite-friends__by-id'>
 							<span className='invite-friends__by-id__code'>
-								{BASE_URL}/register?refCode={userInfo.id}
+								{location.href}register?refCode={userInfo.id}
 							</span>
 							<button className='invite-friends__by-id__copy-code-btn' onClick={saveClipboard}>
 								{iconCheck && (
