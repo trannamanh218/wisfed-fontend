@@ -252,6 +252,10 @@
 			width: 16px;
 			height: 16px;
 		}
+
+		.show-time + svg {
+			stroke-opacity: 0.5;
+		}
 	}
 
 	&__subtitle {
@@ -265,6 +269,12 @@
 
 		.react-rating-container {
 			margin-left: 1rem;
+		}
+
+		&__svg {
+			svg {
+				stroke-opacity: 0.5;
+			}
 		}
 	}
 }

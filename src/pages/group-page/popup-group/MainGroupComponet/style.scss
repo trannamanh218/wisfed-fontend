@@ -277,9 +277,8 @@
 }
 .groupPublic {
 	display: flex;
-	& img {
-		width: 18px;
-		height: 18px;
+	& svg {
+		stroke-opacity: 0.5;
 		margin-top: 3px;
 	}
 	& span {

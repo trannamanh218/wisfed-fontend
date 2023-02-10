@@ -118,7 +118,7 @@ const GroupSearch = ({ value, searchResultInput, activeKeyDefault, updateBooks }
 												<img
 													src={item.avatar || DefaultImageGroup}
 													className='group__search__img'
-													alt='iamge'
+													alt='image'
 												/>
 											</button>
 										</Link>

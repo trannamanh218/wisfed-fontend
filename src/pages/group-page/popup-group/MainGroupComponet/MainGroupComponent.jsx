@@ -6,7 +6,15 @@ import IntroGroup from './component/introGroup';
 import MainPostGroup from './component/MainPostGroup';
 import MemberGroup from './component/MemberGroup';
 import './style.scss';
-import { ActionPlusGroup, CloseIconX, DropdownGroup, IconCheck, LogInCircle, LogOutGroup } from 'components/svg';
+import {
+	ActionPlusGroup,
+	CloseIconX,
+	DropdownGroup,
+	IconCheck,
+	LogInCircle,
+	LogOutGroup,
+	WorldNet,
+} from 'components/svg';
 import SettingsGroup from './AminSettings/SettingsGroup';
 // import SettingsQuestions from './AminSettings/SettingsQuestions'; // k xóa
 // import ManageJoin from './AminSettings/ManageJoin'; // k xóa
@@ -37,7 +45,6 @@ import { uploadImage } from 'reducers/redux-utils/common';
 import camera from 'assets/images/camera.png';
 import { useRef } from 'react';
 import { toast } from 'react-toastify';
-import vector from 'assets/images/Vector.png';
 import LoadingIndicator from 'shared/loading-indicator';
 import Storage from 'helpers/Storage';
 import { checkUserLogin } from 'reducers/redux-utils/auth';
@@ -284,7 +291,7 @@ function MainGroupComponent({
 					<div className='group-name__member'>
 						{data.isPublic && (
 							<div className='groupPublic'>
-								<img src={vector} alt='image' />
+								<WorldNet />
 								<span>Nhóm công khai</span>
 								<div className='imgPani'>
 									<div className='post__user-status__post-time-status__online-dot'></div>

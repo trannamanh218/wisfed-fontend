@@ -48,7 +48,6 @@ import ShareUsers from 'pages/home/components/newfeed/components/modal-share-use
 import ShareTarget from 'shared/share-target';
 import { handleMentionCommentId, handleCheckIfMentionFromGroup } from 'reducers/redux-utils/notification';
 import { getMiniPostComments, getGroupPostComments, deleteMiniPost } from 'reducers/redux-utils/post';
-import vector from 'assets/images/Vector.png';
 import SeeMoreComments from 'shared/see-more-comments/SeeMoreComments';
 import { toast } from 'react-toastify';
 import DirectLinkALertModal from 'shared/direct-link-alert-modal';
@@ -62,6 +61,7 @@ import { blockAndAllowScroll } from 'api/blockAndAllowScroll.hook';
 import { deleteMiniGroupPost } from 'reducers/redux-utils/group';
 import RouteLink from 'helpers/RouteLink';
 import PostNotAvailable from 'shared/post-not-available';
+import { setting } from 'pages/home/components/newfeed/components/create-post-modal-content/settings';
 
 const verbShareArray = [
 	POST_VERB_SHARE,
@@ -99,6 +99,7 @@ function Post({
 	const [hasMore, setHasMore] = useState(false);
 
 	const { ref: settingsRef, isVisible: isSettingsVisible, setIsVisible: setSettingsVisible } = useVisible(false);
+	const { shareModeList } = setting;
 
 	const { userInfo } = useSelector(state => state.auth);
 	const isJoinedGroup = useSelector(state => state.group.isJoinedGroup);
@@ -573,7 +574,9 @@ function Post({
 								{/* Hiển thị ngày giờ chính xác khi hover  */}
 								<ShowTime dataTime={postData.time || postData.createdAt} />
 							</div>
-							<img src={vector} alt='iamge' />
+							{postData.isPrivate
+								? shareModeList.find(item => item.value === 'private').icon
+								: shareModeList.find(item => item.value === 'public').icon}
 							<>
 								{postData.book && (
 									<div className='post__user-status__subtitle'>

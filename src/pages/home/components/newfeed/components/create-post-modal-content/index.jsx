@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { CloseX, Image, IconRanks, WorldNet } from 'components/svg'; // k xóa WorldNet
+import { CloseX, Image, IconRanks } from 'components/svg';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { useEffect, useState, useRef } from 'react';
@@ -100,7 +100,9 @@ function CreatePostModalContent({
 	setIsEdit,
 	handleUpdateMiniPost,
 }) {
-	const [shareMode, setShareMode] = useState({ value: 'public', title: 'Mọi người', icon: <WorldNet /> }); // k xóa
+	const { optionList, shareModeList } = setting;
+
+	const [shareMode, setShareMode] = useState(shareModeList[0]); // k xóa
 	const [showMainModal, setShowMainModal] = useState(true);
 	const [taggedData, setTaggedData] = useState({
 		'addBook': {},
@@ -128,6 +130,7 @@ function CreatePostModalContent({
 
 	const createPostModalContainer = useRef(null);
 	// const initialProgress = useRef(null);
+	const previousFriendsTagged = useRef([]);
 
 	const dispatch = useDispatch();
 	const location = useLocation();
@@ -144,8 +147,6 @@ function CreatePostModalContent({
 	const myAllLibraryReduxDefault = useSelector(state => state.library.myAllLibrary).default;
 
 	const { id } = useParams();
-
-	const { optionList, shareModeList } = setting; // k xóa shareModeList
 
 	useEffect(() => {
 		const textFieldEdit = document.querySelector('.create-post-modal-content__main__body__text-field-edit-wrapper');
@@ -383,6 +384,19 @@ function CreatePostModalContent({
 		}
 	}, [modalShow]);
 
+	// Tắt gắn thẻ bạn bè nếu để chỉ mình tôi
+	useEffect(() => {
+		const cloneObj = { ...taggedData };
+		if (shareMode.value === 'private') {
+			previousFriendsTagged.current = cloneObj.addFriends;
+			cloneObj.addFriends = [];
+			setTaggedData(cloneObj);
+		} else {
+			cloneObj.addFriends = previousFriendsTagged.current;
+			setTaggedData(cloneObj);
+		}
+	}, [shareMode]);
+
 	// handle turn off modal
 	const hideCreatePostModal = () => {
 		dispatch(saveDataShare({}));
@@ -529,6 +543,7 @@ function CreatePostModalContent({
 			preview: urlPreviewData,
 			tags: hashtagsAdded,
 			progress: progressInputValue ? progressInputValue : null,
+			isPrivate: shareMode.value === 'private' ? true : false,
 		};
 
 		if (imagesUpload.length) {
@@ -1194,6 +1209,7 @@ function CreatePostModalContent({
 									postDataShare={postDataShare}
 									isEditPost={isEditPost}
 									dataEditMiniPost={dataEditMiniPost}
+									shareMode={shareMode}
 								/>
 								<span
 									className={classNames(
