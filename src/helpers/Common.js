@@ -58,7 +58,7 @@ export const calculateDurationTime = date => {
 	} else if (duration < secondsPerThreeDays) {
 		return ` Khoảng ${Math.floor(duration / 86400)}  ngày trước`;
 	} else {
-		return `${dayAndMonth}${year != currentYear ? ', ' + year + ', ' : ''} lúc ${hourAndMinute}`;
+		return `${dayAndMonth}${year != currentYear ? ', ' + year : ''} lúc ${hourAndMinute}`;
 	}
 };
 

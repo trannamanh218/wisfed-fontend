@@ -504,12 +504,9 @@ function CreatePostModalContent({
 					if (option.value === 'addFriends' || listData.length < limitedValue) {
 						listData.push(data);
 					} else {
-						const customId = 'custom-id-handleAddToPost-addAuthor';
 						toast.warning(
 							`Chỉ được chọn tối đa ${limitedValue} ${limitedOption()} trong 1 lần tạo bài viết`,
-							{
-								toastId: customId,
-							}
+							{ toastId: 'custom-id-handleAddToPost-addAuthor' }
 						);
 					}
 				}
@@ -1276,8 +1273,8 @@ function CreatePostModalContent({
 					handleAccept={handleAccept}
 					handleCancel={handleCancel}
 					message={message}
-					yesBtnMsg={'Có'}
-					noBtnMsg={'Không'}
+					yesBtnMsg='Có'
+					noBtnMsg='Không'
 					centered={false}
 				/>
 			</div>
