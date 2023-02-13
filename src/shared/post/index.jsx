@@ -363,9 +363,9 @@ function Post({
 	};
 
 	const generateContent = content => {
-		let newContent = content.replace(/(<p><br><\/p>)+/g, '');
-		if (newContent.match(urlRegex) || newContent.match(hashtagRegex)) {
-			newContent = newContent
+		let newContent = content;
+		if (content.match(urlRegex) || content.match(hashtagRegex)) {
+			newContent = content
 				.replace(urlRegex, data => {
 					return `<a class="url-class" data-url=${data}>${
 						data.length <= 50 ? data : data.slice(0, 50) + '...'

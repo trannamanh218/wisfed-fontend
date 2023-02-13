@@ -205,6 +205,7 @@ function CreatePostModalContent({
 					}
 				}
 				setProgressInputValue(dataEditMiniPost?.book?.progress);
+
 				if (dataEditMiniPost.msg) {
 					setContent(dataEditMiniPost.msg);
 				}
@@ -535,7 +536,7 @@ function CreatePostModalContent({
 
 	const generateData = async () => {
 		const params = {
-			msg: content,
+			msg: content.replace(/<p><br><\/p>(?:\s*<p><br><\/p>)*/g, '<p><br></p>'),
 			mentionsUser: [],
 			mentionsAuthor: [],
 			mentionsCategory: [],
