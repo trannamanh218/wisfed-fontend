@@ -18,7 +18,7 @@ const InvitationFriend = ({ activeTabs }) => {
 		try {
 			if (!_.isEmpty(userInfo)) {
 				const friendList = await dispatch(getListReqFriendsToMe()).unwrap();
-				setGetMyListFriendReq(friendList.rows);
+				setGetMyListFriendReq(friendList);
 			}
 		} catch (err) {
 			NotificationError(err);
@@ -37,17 +37,24 @@ const InvitationFriend = ({ activeTabs }) => {
 				<LoadingIndicator />
 			) : (
 				<div className='myfriends__container'>
-					{listFriendReq.length > 0 ? (
+					{listFriendReq.count > 0 ? (
 						<>
 							<div className='myfriends__container__content'>
-								<div className='myfriends__title__addfriend'>Lời mời kết bạn</div>
+								<div className='myfriends__title__addfriend'>
+									({listFriendReq.count})Lời mời kết bạn
+								</div>
 								<Link to={'/friends/invitation'} className='myfriends__title__all'>
 									Xem tất cả
 								</Link>
 							</div>
 							<div className='myfriends__layout__container'>
-								{listFriendReq.map(item => (
-									<FriendsItem key={item.id} data={item} keyTabs={activeTabs} />
+								{listFriendReq.rows.map(item => (
+									<FriendsItem
+										key={item.id}
+										data={item}
+										keyTabs={activeTabs}
+										listFriendReq={listFriendReq.rows}
+									/>
 								))}
 							</div>
 						</>
