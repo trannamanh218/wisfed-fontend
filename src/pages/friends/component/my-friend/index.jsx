@@ -14,7 +14,7 @@ import { CheckIcon, FaceBookIcon, GmailIcon } from 'components/svg';
 
 const MyFriends = ({ activeTabs, inputSearch, filter, handleActiveTabs }) => {
 	const callApiStart = useRef(0);
-	const callApiPerPage = useRef(9);
+	const callApiPerPage = useRef(6);
 	const { userInfo } = useSelector(state => state.auth);
 	const dispatch = useDispatch();
 	const [getMyListFriend, setGetMyListFriend] = useState([]);
@@ -34,6 +34,7 @@ const MyFriends = ({ activeTabs, inputSearch, filter, handleActiveTabs }) => {
 		const query = generateQuery(callApiStart.current, callApiPerPage.current, inputSearch.length > 0 ? filter : '');
 
 		const userId = userInfo.id;
+
 		try {
 			setHasMore(true);
 			if (!_.isEmpty(userInfo)) {
@@ -73,7 +74,7 @@ const MyFriends = ({ activeTabs, inputSearch, filter, handleActiveTabs }) => {
 						<div className='invite-friends__title'>Mời bạn bè</div>
 						<div className='invite-friends__by-id'>
 							<span className='invite-friends__by-id__code'>
-								https://beta.wisfeed.com/register?refCode={userInfo.id}
+								{location.href}register?refCode={userInfo.id}
 							</span>
 							<button className='invite-friends__by-id__copy-code-btn' onClick={saveClipboard}>
 								{iconCheck && (

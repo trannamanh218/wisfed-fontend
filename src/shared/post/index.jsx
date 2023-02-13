@@ -39,7 +39,6 @@ import {
 	REVIEW_VERB_SHARE,
 	urlRegex,
 	hashtagRegex,
-	BASE_URL,
 } from 'constants';
 import AuthorBook from 'shared/author-book';
 import Storage from 'helpers/Storage';
@@ -227,7 +226,7 @@ function Post({
 			urlFormated = `https://${url}`;
 		}
 
-		if (urlFormated.includes(BASE_URL)) {
+		if (urlFormated.includes(location.href)) {
 			const domain = new URL(urlFormated);
 			navigate(domain.pathname);
 		} else {
@@ -364,9 +363,9 @@ function Post({
 	};
 
 	const generateContent = content => {
-		let newContent = content.replace(/(<p><br><\/p>)+/g, '');
-		if (newContent.match(urlRegex) || newContent.match(hashtagRegex)) {
-			newContent = newContent
+		let newContent = content;
+		if (content.match(urlRegex) || content.match(hashtagRegex)) {
+			newContent = content
 				.replace(urlRegex, data => {
 					return `<a class="url-class" data-url=${data}>${
 						data.length <= 50 ? data : data.slice(0, 50) + '...'

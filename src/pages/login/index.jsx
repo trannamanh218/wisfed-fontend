@@ -105,24 +105,20 @@ function Login() {
 					<ModalLogin data={dataModal} handleClose={handleClose} />
 				</div>
 			)}
-			<div>
-				<div className='login__header'>
-					<Link to='/'>
-						<img src={Logo} alt='logo' />
-					</Link>
-				</div>
-				<div className='login__body'>
-					<div>
-						<span className='login__body-text1'>
-							Khám phá mạng xã hội chia sẻ sách và sáng tạo nội dung đầu tiên tại Việt Nam
-						</span>
+			<div className='login__up-block'>
+				<div>
+					<div className='login__header'>
+						<Link to='/'>
+							<img src={Logo} alt='logo' />
+						</Link>
 					</div>
-					<div>
-						<span className='login__body-text2'>
-							You're in the right place. Tell us what titles <br />
-							or genres you've enjoyed in the past, and <br /> we'll give you surprisingly insightful
-							<br /> recommendations.
-						</span>
+					<div className='login__body'>
+						<div className='login__body-text1'>
+							Wisfeed - Mạng xã hội sách và chia sẻ tri thức đầu tiên tại Việt Nam
+						</div>
+						<div className='login__body-text2'>
+							Nơi giúp bạn kết nối, chia sẻ và khẳng định bản thân bằng trí tuệ
+						</div>
 					</div>
 				</div>
 				<div className='login__footer'>
@@ -148,9 +144,7 @@ function Login() {
 				</a>
 				<hr style={{ opacity: '0.05' }} />
 				<div>
-					<div>
-						<span className='login__form-title'>Đăng nhập tài khoản Wisfeed</span>
-					</div>
+					<span className='login__form-title'>Đăng nhập tài khoản Wisfeed</span>
 					<form onSubmit={formik.handleSubmit}>
 						<div
 							className={classNames('login__form__field', {
