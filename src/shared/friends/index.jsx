@@ -30,7 +30,7 @@ const FriendsItem = ({ data, keyTabs }) => {
 	const [showModalUnfriends, setShowModalUnfriends] = useState(false);
 	const [isFollow, setIsFollow] = useState(false);
 
-	const [dataUser, setDataUser] = useState({});
+	const [dataUser, setDataUser] = useState(data);
 
 	const { userInfo } = useSelector(state => state.auth);
 
@@ -41,11 +41,9 @@ const FriendsItem = ({ data, keyTabs }) => {
 			} else {
 				setDataUser(data.userTwo);
 			}
-		} else {
-			setDataUser(data);
 		}
 
-		data.isFollow ? setIsFollow(true) : setIsFollow(false);
+		data.isFollow && setIsFollow(true);
 	}, []);
 
 	const handleModalUnFriend = () => {
