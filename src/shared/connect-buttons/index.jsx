@@ -143,7 +143,7 @@ const ConnectButtons = ({ direction, item }) => {
 		}
 
 		return (
-			<Button className='connect-button' isOutline={true} onClick={handleFollowAndUnfollow}>
+			<Button className='connect-button' isOutline onClick={handleFollowAndUnfollow}>
 				<span className='connect-button__content'>{contentBtn}</span>
 			</Button>
 		);

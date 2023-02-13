@@ -1,5 +1,5 @@
 import { Add } from 'components/svg';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Button from 'shared/button';
 import PropTypes from 'prop-types';
 import { makeFriendRequest, addFollower, unFollower, unFriendRequest } from 'reducers/redux-utils/user';
@@ -10,44 +10,29 @@ import ModalUnFriend from 'pages/friends/component/modalUnFriends';
 const ConnectButtonsFollower = ({ direction, item, isFollower }) => {
 	const dispatch = useDispatch();
 	const [unFriend, setUnFriend] = useState(true);
-	const [toggleUnFollow, setToggleUnFollow] = useState(true);
-	const [toggleAddFollow, setToggleAddFollow] = useState(true);
 	const [togglePendingFriend, setTogglePendingFriend] = useState(true);
 	const [showModalUnfriends, setShowModalUnfriends] = useState(false);
 
-	const buttonUnFollow = () => {
-		return (
-			<Button className='connect-button follow' name='friend' onClick={handleUnFollow}>
-				<span className='connect-button__content follow'>Bỏ theo dõi </span>
-			</Button>
-		);
-	};
+	const [isFollow, setIsFollow] = useState(false);
+	const [userId, setUserId] = useState(item.userIdOne);
 
-	const buttonAddFollow = () => {
-		return (
-			<Button className=' connect-button follow' name='friend' onClick={handleFollow}>
-				<span className='connect-button__content follow'>Theo dõi </span>
-			</Button>
-		);
-	};
+	useEffect(() => {
+		item.isFollow && setIsFollow(true);
+		!isFollower && setUserId(item.userIdTwo);
+	}, []);
 
 	const buttonAddFriend = () => {
 		return (
 			<Button className='connect-button' isOutline={true} onClick={handleAddFriend}>
 				<Add className='connect-button__icon' />
-
 				<span className='connect-button__content'>Kết bạn</span>
 			</Button>
 		);
 	};
 
-	const handleModalUnFriend = () => {
-		setShowModalUnfriends(true);
-	};
-
 	const buttonUnFriend = () => {
 		return (
-			<Button className='connect-button' isOutline={true} onClick={handleModalUnFriend}>
+			<Button className='connect-button' isOutline={true} onClick={() => setShowModalUnfriends(true)}>
 				<span className='connect-button__content'>─&nbsp;&nbsp; Hủy kết bạn</span>
 			</Button>
 		);
@@ -62,93 +47,42 @@ const ConnectButtonsFollower = ({ direction, item, isFollower }) => {
 	};
 
 	const handleAddFriend = () => {
-		if (isFollower) {
-			try {
-				const param = {
-					userId: item.userIdOne,
-				};
-				dispatch(makeFriendRequest(param)).unwrap();
-				setTogglePendingFriend(false);
-			} catch (err) {
-				NotificationError(err);
-			}
-		} else {
-			try {
-				const param = {
-					userId: item.userIdTwo,
-				};
-				dispatch(makeFriendRequest(param)).unwrap();
-				setTogglePendingFriend(false);
-			} catch (err) {
-				NotificationError(err);
-			}
+		try {
+			const param = {
+				userId: userId,
+			};
+			dispatch(makeFriendRequest(param)).unwrap();
+			setTogglePendingFriend(false);
+		} catch (err) {
+			NotificationError(err);
 		}
 	};
 
 	const handleUnfriend = () => {
 		setShowModalUnfriends(false);
-		if (isFollower) {
-			try {
-				dispatch(unFriendRequest(item.userIdOne)).unwrap();
-				setUnFriend(false);
-			} catch (err) {
-				NotificationError(err);
-			}
-		} else {
-			try {
-				dispatch(unFriendRequest(item.userIdTwo)).unwrap();
-				setUnFriend(false);
-			} catch (err) {
-				NotificationError(err);
-			}
+		try {
+			dispatch(unFriendRequest(userId)).unwrap();
+			setUnFriend(false);
+		} catch (err) {
+			NotificationError(err);
 		}
 	};
 
-	const handleFollow = () => {
-		if (isFollower) {
-			try {
-				dispatch(addFollower({ userId: item.userIdOne }));
-				setToggleAddFollow(false);
-				setToggleUnFollow(true);
-			} catch (err) {
-				NotificationError(err);
-			}
-		} else {
-			try {
-				dispatch(addFollower({ userId: item.userIdTwo }));
-				setToggleAddFollow(false);
-				setToggleUnFollow(true);
-			} catch (err) {
-				NotificationError(err);
-			}
+	const handleFollow = async () => {
+		try {
+			await dispatch(addFollower({ userId: userId })).unwrap();
+			setIsFollow(true);
+		} catch (err) {
+			NotificationError(err);
 		}
 	};
 
-	const handleUnFollow = () => {
-		if (isFollower) {
-			try {
-				dispatch(unFollower(item.userIdOne)).unwrap();
-				setToggleAddFollow(true);
-				setToggleUnFollow(false);
-			} catch (err) {
-				NotificationError(err);
-			}
-		} else {
-			try {
-				dispatch(unFollower(item.userIdTwo)).unwrap();
-				setToggleAddFollow(true);
-				setToggleUnFollow(false);
-			} catch (err) {
-				NotificationError(err);
-			}
-		}
-	};
-
-	const handleRenderButtonFollow = () => {
-		if (item.isFollow) {
-			return toggleUnFollow ? buttonUnFollow() : buttonAddFollow();
-		} else {
-			return toggleAddFollow ? buttonAddFollow() : buttonUnFollow();
+	const handleUnFollow = async () => {
+		try {
+			await dispatch(unFollower(userId)).unwrap();
+			setIsFollow(false);
+		} catch (err) {
+			NotificationError(err);
 		}
 	};
 
@@ -162,23 +96,23 @@ const ConnectButtonsFollower = ({ direction, item, isFollower }) => {
 		}
 	};
 
-	const toggleModal = () => {
-		setShowModalUnfriends(!showModalUnfriends);
-	};
-
 	return (
 		<div className={`connect-buttons ${direction}`}>
 			{item.relation !== 'isMe' && (
 				<>
-					{' '}
-					{handleRenderButtonFollow()}
+					<Button
+						onClick={isFollow ? handleUnFollow : handleFollow}
+						className='connect-button follow'
+						name='friend'
+					>
+						<span className='connect-button__content follow'>{isFollow ? 'Bỏ theo dõi' : 'Theo dõi'}</span>
+					</Button>
 					{handleRenderButtonFriend()}
 					<ModalUnFriend
 						showModalUnfriends={showModalUnfriends}
-						toggleModal={toggleModal}
+						toggleModal={() => setShowModalUnfriends(!showModalUnfriends)}
 						handleUnfriend={handleUnfriend}
 						data={item}
-						isFollower={isFollower}
 					/>
 				</>
 			)}

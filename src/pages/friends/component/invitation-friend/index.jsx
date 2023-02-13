@@ -47,12 +47,7 @@ const InvitationFriend = ({ activeTabs }) => {
 							</div>
 							<div className='myfriends__layout__container'>
 								{listFriendReq.map(item => (
-									<FriendsItem
-										key={item.id}
-										data={item}
-										keyTabs={activeTabs}
-										listFriendReq={listFriendReq}
-									/>
+									<FriendsItem key={item.id} data={item} keyTabs={activeTabs} />
 								))}
 							</div>
 						</>

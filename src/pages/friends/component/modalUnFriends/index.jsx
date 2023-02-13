@@ -3,19 +3,27 @@ import PropTypes from 'prop-types';
 import { Modal } from 'react-bootstrap';
 import './modalUnfriend.scss';
 import Button from 'shared/button';
+import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 
-const ModalUnFriend = ({ showModalUnfriends, toggleModal, handleUnfriend, data, type, isFollower }) => {
-	const renderName = () => {
-		if (isFollower || type === 'following') {
-			return data?.userOne?.fullName;
+const ModalUnFriend = ({ showModalUnfriends, toggleModal, handleUnfriend, data }) => {
+	const [dataUser, setDataUser] = useState({});
+	const { userInfo } = useSelector(state => state.auth);
+
+	useEffect(() => {
+		if (data.userOne) {
+			if (data.userOne.id !== userInfo.id) {
+				setDataUser(data.userOne);
+			} else {
+				setDataUser(data.userTwo);
+			}
 		} else {
-			return (
-				data?.userTwo?.fullName ||
-				data?.userOne?.fullName ||
-				data?.fullName ||
-				data?.firstName + ' ' + data?.lastName
-			);
+			setDataUser(data);
 		}
+	}, [data]);
+
+	const renderName = () => {
+		return dataUser.fullName || dataUser.firstName + ' ' + dataUser.lastName;
 	};
 
 	return (
@@ -54,8 +62,6 @@ ModalUnFriend.propTypes = {
 	data: PropTypes.object,
 	toggleModal: PropTypes.func,
 	showModalUnfriends: PropTypes.bool,
-	type: PropTypes.string,
-	isFollower: PropTypes.bool,
 };
 
 export default ModalUnFriend;

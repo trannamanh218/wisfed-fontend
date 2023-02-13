@@ -16,7 +16,7 @@ import {
 import Button from 'shared/button';
 import './friends.scss';
 
-const FriendsItem = ({ data, keyTabs, listFollower, listFriendReq, listFollowings, type }) => {
+const FriendsItem = ({ data, keyTabs }) => {
 	const dispatch = useDispatch();
 	const invitation = location.pathname === '/friends/invitation';
 	const following = location.pathname === '/friends/following';
@@ -24,29 +24,26 @@ const FriendsItem = ({ data, keyTabs, listFollower, listFriendReq, listFollowing
 	const suggestions = location.pathname === '/friends/suggestions';
 	const recommend = location.pathname === '/friends/recommend';
 
-	const [unFriend, setUnFriend] = useState(true);
-	const [toggleUnFollow, setToggleUnFollow] = useState(true);
 	const [toggleAddFriend, setToggleAddFriend] = useState(true);
 	const [togglePendingFriend, setTogglePendingFriend] = useState(true);
 	const [toggleAcceptButton, setToggleAcceptButton] = useState(true);
 	const [showModalUnfriends, setShowModalUnfriends] = useState(false);
 	const [isFollow, setIsFollow] = useState(false);
-	const [dataUserId, setDataUserId] = useState(data.id);
+
+	const [dataUser, setDataUser] = useState(data);
 
 	const { userInfo } = useSelector(state => state.auth);
 
 	useEffect(() => {
 		if (data.userOne) {
 			if (data.userOne.id !== userInfo.id) {
-				setDataUserId(data.userOne.id);
+				setDataUser(data.userOne);
 			} else {
-				setDataUserId(data.userTwo.id);
+				setDataUser(data.userTwo);
 			}
-		} else {
-			setDataUserId(data.id);
 		}
 
-		data.isFollow ? setIsFollow(true) : setIsFollow(false);
+		data.isFollow && setIsFollow(true);
 	}, []);
 
 	const handleModalUnFriend = () => {
@@ -56,8 +53,7 @@ const FriendsItem = ({ data, keyTabs, listFollower, listFriendReq, listFollowing
 	const handleUnfriend = async () => {
 		setShowModalUnfriends(false);
 		try {
-			await dispatch(unFriendRequest(dataUserId)).unwrap();
-			setUnFriend(false);
+			await dispatch(unFriendRequest(dataUser.id)).unwrap();
 			setToggleAddFriend(false);
 			setIsFollow(false);
 		} catch (err) {
@@ -67,8 +63,7 @@ const FriendsItem = ({ data, keyTabs, listFollower, listFriendReq, listFollowing
 
 	const handleUnFollow = async () => {
 		try {
-			await dispatch(unFollower(dataUserId)).unwrap();
-			setToggleUnFollow(false);
+			await dispatch(unFollower(dataUser.id)).unwrap();
 			setIsFollow(false);
 		} catch (err) {
 			NotificationError(err);
@@ -77,8 +72,7 @@ const FriendsItem = ({ data, keyTabs, listFollower, listFriendReq, listFollowing
 
 	const handleAddFollow = async () => {
 		try {
-			await dispatch(addFollower({ userId: dataUserId })).unwrap();
-			setToggleUnFollow(true);
+			await dispatch(addFollower({ userId: dataUser.id })).unwrap();
 			setIsFollow(true);
 		} catch (err) {
 			NotificationError(err);
@@ -87,7 +81,7 @@ const FriendsItem = ({ data, keyTabs, listFollower, listFriendReq, listFollowing
 
 	const handleAddFriends = async () => {
 		try {
-			await dispatch(makeFriendRequest({ userId: dataUserId })).unwrap();
+			await dispatch(makeFriendRequest({ userId: dataUser.id })).unwrap();
 			setTogglePendingFriend(false);
 			setIsFollow(true);
 		} catch (err) {
@@ -130,22 +124,6 @@ const FriendsItem = ({ data, keyTabs, listFollower, listFriendReq, listFollowing
 		);
 	};
 
-	const buttonFollow = () => {
-		return (
-			<Button onClick={handleAddFollow} className='myfriends__button' isOutline name='friend'>
-				<span className='myfriends__button__content'>Theo dõi</span>
-			</Button>
-		);
-	};
-
-	const buttonUnfollow = () => {
-		return (
-			<Button onClick={handleUnFollow} className='myfriends__button' isOutline name='friend'>
-				<span className='myfriends__button__content'>Bỏ theo dõi</span>
-			</Button>
-		);
-	};
-
 	const buttonAcceptfriend = () => {
 		return (
 			<Button onClick={handleReplyFriendReq} className='myfriends__button' isOutline={false} name='friend'>
@@ -182,164 +160,49 @@ const FriendsItem = ({ data, keyTabs, listFollower, listFriendReq, listFollowing
 		}
 	};
 
-	const renderButtonFollow = () => {
-		return isFollow ? buttonUnfollow() : buttonFollow();
-	};
-
-	const renderDisplay = () => {
-		return (
-			<div className='myfriends__layout'>
-				<Link to={`/profile/${data.userTwo?.id || data.id}`}>
-					<img
-						className='myfriends__layout__img'
-						src={data.userTwo?.avatarImage || data?.avatarImage || defaultAvatar}
-						alt='image'
-						onError={e => e.target.setAttribute('src', `${defaultAvatar}`)}
-					/>
-
-					<div className='myfriends__star'>
-						<div
-							className='myfriends__star__name'
-							title={
-								data.userTwo?.fullName
-									? data.userTwo?.fullName
-									: data.fullName
-									? data.fullName
-									: data.firstName + ' ' + data.lastName
-							}
-						>
-							{data.userTwo?.fullName
-								? data.userTwo?.fullName
-								: data.fullName
-								? data.fullName
-								: data.firstName + ' ' + data.lastName}
-						</div>
-						{data.isStar && <Subtract />}
-					</div>
-				</Link>
-
-				<div className='myfriends__button__container'>
-					{renderButtonFriends()}
-					{renderButtonFollow()}
-				</div>
-			</div>
-		);
-	};
-
-	const renderFollowerDisplay = () => {
-		return (
-			<div className='myfriends__layout'>
-				<Link to={`/profile/${data.userOne.id}`}>
-					<img
-						className='myfriends__layout__img'
-						src={data.userOne.avatarImage ? data.userOne.avatarImage : defaultAvatar}
-						alt='image'
-						onError={e => e.target.setAttribute('src', `${defaultAvatar}`)}
-					/>
-					<div className='myfriends__star'>
-						<div
-							className='myfriends__star__name'
-							title={
-								data.userOne.fullName ? (
-									data.userOne.fullName
-								) : (
-									<>
-										<span>{data.userOne.firstName}</span>&nbsp;
-										<span>{data.userOne.lastName}</span>
-									</>
-								)
-							}
-						>
-							{data.userOne.fullName ? (
-								data.userOne.fullName
-							) : (
-								<>
-									<span>{data.userOne.firstName}</span>&nbsp;
-									<span>{data.userOne.lastName}</span>
-								</>
-							)}
-						</div>
-						{data.isStar && <Subtract />}
-					</div>
-				</Link>
-				<div className='myfriends__button__container'>
-					{renderButtonFriends()}
-					{renderButtonFollow()}
-				</div>
-			</div>
-		);
-	};
-
-	const renderFriend = () => {
-		return (
-			<div className='myfriends__layout'>
-				<Link to={`/profile/${data.id}`}>
-					<img
-						className='myfriends__layout__img'
-						src={data.avatarImage ? data.avatarImage : defaultAvatar}
-						alt='image'
-						onError={e => e.target.setAttribute('src', `${defaultAvatar}`)}
-					/>
-					<div className='myfriends__star'>
-						<div
-							className='myfriends__star__name'
-							title={data.fullName ? data.fullName : data.firstName + data.lastName}
-						>
-							{data.fullName ? (
-								data.fullName
-							) : (
-								<>
-									<span>{data.firstName}</span>&nbsp;
-									<span>{data.lastName}</span>
-								</>
-							)}
-						</div>
-						{data.isStar && <Subtract />}
-					</div>
-					{data.mutualFriend > 0 && (
-						<div className='myFriend__mutualFriend'>({data.mutualFriend} bạn chung)</div>
-					)}
-				</Link>
-				<div className='myfriends__button__container'>
-					{renderButtonFriends()}
-					{renderButtonFollow()}
-				</div>
-			</div>
-		);
-	};
-
-	const handleRenderDisplay = () => {
-		if (keyTabs === 'friend') {
-			return unFriend && renderFriend();
-		} else if (keyTabs === 'follow' || following || follower) {
-			if (listFollower || follower) {
-				return renderFollowerDisplay();
-			}
-			return toggleUnFollow && renderDisplay();
-		} else if (keyTabs === 'addfriend' || invitation) {
-			if (listFriendReq) {
-				return renderFollowerDisplay();
-			}
-			return renderDisplay();
-		} else {
-			return renderDisplay();
-		}
-	};
-
-	const toggleModal = () => {
-		setShowModalUnfriends(!showModalUnfriends);
-	};
-
 	return (
 		<>
 			<ModalUnFriend
 				showModalUnfriends={showModalUnfriends}
-				toggleModal={toggleModal}
+				toggleModal={() => setShowModalUnfriends(!showModalUnfriends)}
 				handleUnfriend={handleUnfriend}
-				data={data}
-				type={type}
+				data={dataUser}
 			/>
-			{handleRenderDisplay()}
+			<div className='myfriends__layout'>
+				<Link to={`/profile/${dataUser.id}`}>
+					<img
+						className='myfriends__layout__img'
+						src={dataUser.avatarImage || defaultAvatar}
+						alt='image'
+						onError={e => e.target.setAttribute('src', `${defaultAvatar}`)}
+					/>
+
+					<div className='myfriends__star'>
+						<div
+							className='myfriends__star__name'
+							title={dataUser.fullName || dataUser.firstName + ' ' + dataUser.lastName}
+						>
+							{dataUser.fullName || dataUser.firstName + ' ' + dataUser.lastName}
+						</div>
+						{data.isStar && <Subtract />}
+					</div>
+					{keyTabs === 'friend' && data.mutualFriend > 0 && (
+						<div className='myFriend__mutualFriend'>({data.mutualFriend} bạn chung)</div>
+					)}
+				</Link>
+
+				<div className='myfriends__button__container'>
+					{renderButtonFriends()}
+					<Button
+						onClick={isFollow ? handleUnFollow : handleAddFollow}
+						className='myfriends__button'
+						isOutline
+						name='friend'
+					>
+						<span className='myfriends__button__content'>{isFollow ? 'Bỏ theo dõi' : 'Theo dõi'}</span>
+					</Button>
+				</div>
+			</div>
 		</>
 	);
 };
@@ -347,10 +210,5 @@ const FriendsItem = ({ data, keyTabs, listFollower, listFriendReq, listFollowing
 FriendsItem.propTypes = {
 	data: PropTypes.object,
 	keyTabs: PropTypes.string,
-	listFollower: PropTypes.array,
-	listFriendReq: PropTypes.array,
-	listFollowings: PropTypes.array,
-	getListRecommends: PropTypes.array,
-	type: PropTypes.string,
 };
 export default FriendsItem;

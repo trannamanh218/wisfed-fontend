@@ -57,13 +57,7 @@ const MyFollow = ({ activeTabs }) => {
 						{listFollower.length > 0 ? (
 							<>
 								{listFollower.map(item => (
-									<FriendsItem
-										key={item.id}
-										data={item}
-										keyTabs={activeTabs}
-										listFollower={listFollower}
-										type='following'
-									/>
+									<FriendsItem key={item.id} data={item} keyTabs={activeTabs} />
 								))}
 							</>
 						) : (
@@ -83,12 +77,7 @@ const MyFollow = ({ activeTabs }) => {
 						{listFollowings.length > 0 ? (
 							<>
 								{listFollowings.map(item => (
-									<FriendsItem
-										key={item.id}
-										data={item}
-										keyTabs={activeTabs}
-										listFollowings={listFollowings}
-									/>
+									<FriendsItem key={item.id} data={item} keyTabs={activeTabs} />
 								))}
 							</>
 						) : (

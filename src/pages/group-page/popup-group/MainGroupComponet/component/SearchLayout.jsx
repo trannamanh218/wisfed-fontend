@@ -72,7 +72,6 @@ function SearchLayout({ dataGroup }) {
 					<ResultNotFound />
 				</div>
 			) : (
-				// </div>
 				<div className='search-group__container'>
 					{!_.isEmpty(dataGroup?.usersData) && (
 						<div className='searh-group__member'>
