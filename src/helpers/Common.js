@@ -44,6 +44,11 @@ export const calculateDurationTime = date => {
 	const secondsPerDay = secondsPerHour * 24;
 	const secondsPerThreeDays = secondsPerDay * 3;
 
+	const dayAndMonth = moment(start).format('DD MMM');
+	const year = moment(start).format('YYYY');
+	const hourAndMinute = moment(start).format('HH:mm');
+	const currentYear = end.getFullYear();
+
 	if (duration < secondsPerMinute) {
 		return 'Vừa xong';
 	} else if (duration < secondsPerHour) {
@@ -53,7 +58,7 @@ export const calculateDurationTime = date => {
 	} else if (duration < secondsPerThreeDays) {
 		return ` Khoảng ${Math.floor(duration / 86400)}  ngày trước`;
 	} else {
-		return `${moment(start).format('DD MMM')} lúc ${moment(start).format('HH:mm')}`;
+		return `${dayAndMonth}${year != currentYear ? ', ' + year + ', ' : ''} lúc ${hourAndMinute}`;
 	}
 };
 
