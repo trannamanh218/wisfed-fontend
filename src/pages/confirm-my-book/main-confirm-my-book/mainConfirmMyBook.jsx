@@ -194,7 +194,10 @@ function MainConfirmMyBook({ setErrorLoadPage }) {
 							<div className='main-confirm-my-book__author-name'>
 								<Flag />
 								{bookInfo.authors.length > 0 ? (
-									<span>Tác giả {confirmAuthorData.authorName}</span>
+									<span>
+										{confirmAuthorData.role === 'author' ? 'Tác giả' : 'Dịch giả'}:{' '}
+										{confirmAuthorData.userName}
+									</span>
 								) : (
 									'Chưa có tác giả'
 								)}
