@@ -214,19 +214,6 @@ function CreatePostModalContent({
 		}
 	}, [modalShow]);
 
-	// Tắt gắn thẻ bạn bè nếu để chỉ mình tôi
-	useEffect(() => {
-		const cloneObj = { ...taggedData };
-		if (shareMode.value === 'private') {
-			previousFriendsTagged.current = cloneObj.addFriends;
-			cloneObj.addFriends = [];
-			setTaggedData(cloneObj);
-		} else {
-			cloneObj.addFriends = previousFriendsTagged.current;
-			setTaggedData(cloneObj);
-		}
-	}, [shareMode]);
-
 	useEffect(() => {
 		if (!_.isEmpty(taggedData.addBook)) {
 			if (!_.isEmpty(bookForCreatePost) && taggedData.addBook.status === 'read') {
@@ -308,6 +295,7 @@ function CreatePostModalContent({
 					objTemp['addFriends'] = editUsers;
 				}
 				setTaggedData(objTemp);
+				console.log(objTemp);
 				if (dataEditMiniPost?.image) {
 					setImagesUpload([...dataEditMiniPost.image]);
 					if (dataEditMiniPost?.image.length > 0) {
@@ -428,6 +416,20 @@ function CreatePostModalContent({
 			}
 		}
 	}, []);
+
+	const onChangeShareMode = value => {
+		setShareMode(value);
+		// Tắt gắn thẻ bạn bè nếu để chỉ mình tôi
+		const cloneObj = { ...taggedData };
+		if (value === 'private') {
+			previousFriendsTagged.current = cloneObj.addFriends;
+			cloneObj.addFriends = [];
+			setTaggedData(cloneObj);
+		} else {
+			cloneObj.addFriends = previousFriendsTagged.current;
+			setTaggedData(cloneObj);
+		}
+	};
 
 	// handle turn off modal
 	const hideCreatePostModal = () => {
@@ -1061,7 +1063,7 @@ function CreatePostModalContent({
 								<ShareModeComponent
 									list={shareModeList}
 									shareMode={shareMode}
-									setShareMode={setShareMode}
+									setShareMode={onChangeShareMode}
 								/>
 							</div>
 						</div>
