@@ -149,6 +149,103 @@ function CreatePostModalContent({
 	const { id } = useParams();
 
 	useEffect(() => {
+		if (!_.isEmpty(bookForCreatePost)) {
+			const newData = { ...taggedData };
+			const pages = { read: bookForCreatePost.page, reading: '', wantToRead: '' };
+			newData.addBook = { ...bookForCreatePost, progress: pages[bookForCreatePost.status] };
+			setTaggedData(newData);
+			setShowUpload(false);
+		}
+	}, [bookForCreatePost]);
+
+	useEffect(() => {
+		if (urlAdded) {
+			if (!_.isEqual(urlAdded, oldUrlAdded)) {
+				setHasUrl(true);
+				getPreviewUrlFnc(urlAdded);
+			}
+		} else {
+			setHasUrl(false);
+		}
+		setOldUrlAdded(urlAdded);
+	}, [urlAdded]);
+
+	useEffect(() => {
+		// generate hashtags added
+		const hashtagsTemp = content?.match(hashtagRegex);
+		if (hashtagsTemp) {
+			const hashtagsFormated = hashtagsTemp.map(item =>
+				item
+					.normalize('NFD')
+					.replace(/[\u0300-\u036f]/g, '')
+					.replace(/đ/g, 'd')
+					.replace(/Đ/g, 'D')
+			);
+			setHashtagsAdded(hashtagsFormated);
+		} else {
+			setHashtagsAdded([]);
+		}
+
+		const alertUser = e => {
+			e.preventDefault();
+			e.returnValue = '';
+		};
+
+		// add event click when turn off modal
+		createPostModalContainer.current.addEventListener('mousedown', handleHideCreatePost);
+
+		// Ngăn người dùng tải lại trang khi đang tạo bài viết
+		if (content) {
+			window.addEventListener('beforeunload', alertUser);
+		}
+		return () => {
+			if (createPostModalContainer.current) {
+				createPostModalContainer.current.removeEventListener('mousedown', handleHideCreatePost);
+			}
+
+			window.removeEventListener('beforeunload', alertUser);
+		};
+	}, [content]);
+
+	useEffect(() => {
+		if (modalShow) {
+			const modalBackground = document.querySelector('.modal-backdrop');
+			modalBackground.style.backgroundColor = 'transparent';
+		}
+	}, [modalShow]);
+
+	useEffect(() => {
+		if (!_.isEmpty(taggedData.addBook)) {
+			if (!_.isEmpty(bookForCreatePost) && taggedData.addBook.status === 'read') {
+				setProgressInputValue(taggedData.addBook.page);
+			} else {
+				setProgressInputValue(parseInt(taggedData.addBook.progress));
+			}
+		}
+	}, [taggedData]);
+
+	useEffect(() => {
+		checkActive();
+	}, [showMainModal, content, progressInputValue, imagesUpload, taggedData.addAuthor, taggedData.addCategory]);
+
+	useEffect(() => {
+		if (showSubModal) {
+			setShowMainModal(false);
+		}
+	}, [showSubModal]);
+
+	useEffect(() => {
+		// Đưa con trỏ về cuối khi bấm Chỉnh sửa bài viết
+		if (isEditPost) {
+			if (toggleMoveFocusToEnd === null) {
+				setToggleMoveFocusToEnd(false);
+			} else {
+				setToggleMoveFocusToEnd(prev => !prev);
+			}
+		}
+	}, [isEditPost]);
+
+	useEffect(() => {
 		const textFieldEdit = document.querySelector('.create-post-modal-content__main__body__text-field-edit-wrapper');
 		const editor = textFieldEdit.querySelector('.public-DraftEditor-content');
 		if (editor) {
@@ -319,76 +416,11 @@ function CreatePostModalContent({
 		}
 	}, []);
 
-	useEffect(() => {
-		if (!_.isEmpty(bookForCreatePost)) {
-			const newData = { ...taggedData };
-			const pages = { read: bookForCreatePost.page, reading: '', wantToRead: '' };
-			newData.addBook = { ...bookForCreatePost, progress: pages[bookForCreatePost.status] };
-			setTaggedData(newData);
-			setShowUpload(false);
-		}
-	}, [bookForCreatePost]);
-
-	useEffect(() => {
-		if (urlAdded) {
-			if (!_.isEqual(urlAdded, oldUrlAdded)) {
-				setHasUrl(true);
-				getPreviewUrlFnc(urlAdded);
-			}
-		} else {
-			setHasUrl(false);
-		}
-		setOldUrlAdded(urlAdded);
-	}, [urlAdded]);
-
-	useEffect(() => {
-		// generate hashtags added
-		const hashtagsTemp = content?.match(hashtagRegex);
-		if (hashtagsTemp) {
-			const hashtagsFormated = hashtagsTemp.map(item =>
-				item
-					.normalize('NFD')
-					.replace(/[\u0300-\u036f]/g, '')
-					.replace(/đ/g, 'd')
-					.replace(/Đ/g, 'D')
-			);
-			setHashtagsAdded(hashtagsFormated);
-		} else {
-			setHashtagsAdded([]);
-		}
-
-		const alertUser = e => {
-			e.preventDefault();
-			e.returnValue = '';
-		};
-
-		// add event click when turn off modal
-		createPostModalContainer.current.addEventListener('mousedown', handleHideCreatePost);
-
-		// Ngăn người dùng tải lại trang khi đang tạo bài viết
-		if (content) {
-			window.addEventListener('beforeunload', alertUser);
-		}
-		return () => {
-			if (createPostModalContainer.current) {
-				createPostModalContainer.current.removeEventListener('mousedown', handleHideCreatePost);
-			}
-
-			window.removeEventListener('beforeunload', alertUser);
-		};
-	}, [content]);
-
-	useEffect(() => {
-		if (modalShow) {
-			const modalBackground = document.querySelector('.modal-backdrop');
-			modalBackground.style.backgroundColor = 'transparent';
-		}
-	}, [modalShow]);
-
-	// Tắt gắn thẻ bạn bè nếu để chỉ mình tôi
-	useEffect(() => {
+	const onChangeShareMode = value => {
+		setShareMode(value);
+		// Tắt gắn thẻ bạn bè nếu để chỉ mình tôi
 		const cloneObj = { ...taggedData };
-		if (shareMode.value === 'private') {
+		if (value === 'private') {
 			previousFriendsTagged.current = cloneObj.addFriends;
 			cloneObj.addFriends = [];
 			setTaggedData(cloneObj);
@@ -396,7 +428,7 @@ function CreatePostModalContent({
 			cloneObj.addFriends = previousFriendsTagged.current;
 			setTaggedData(cloneObj);
 		}
-	}, [shareMode]);
+	};
 
 	// handle turn off modal
 	const hideCreatePostModal = () => {
@@ -424,7 +456,6 @@ function CreatePostModalContent({
 			handleClose();
 		}
 	};
-	//-----------------------------------------------------------------------
 
 	const getPreviewUrlFnc = async url => {
 		if (url) {
@@ -493,8 +524,8 @@ function CreatePostModalContent({
 		}
 	};
 
-	const limitedValue = 5;
 	const handleAddToPost = data => {
+		const limitedValue = 5;
 		const newData = { ...taggedData };
 		if (option.value === 'addAuthor' || option.value === 'addFriends' || option.value === 'addCategory') {
 			const listData = [...taggedData[option.value]];
@@ -504,12 +535,9 @@ function CreatePostModalContent({
 					if (option.value === 'addFriends' || listData.length < limitedValue) {
 						listData.push(data);
 					} else {
-						const customId = 'custom-id-handleAddToPost-addAuthor';
 						toast.warning(
 							`Chỉ được chọn tối đa ${limitedValue} ${limitedOption()} trong 1 lần tạo bài viết`,
-							{
-								toastId: customId,
-							}
+							{ toastId: 'custom-id-handleAddToPost-addAuthor' }
 						);
 					}
 				}
@@ -879,20 +907,6 @@ function CreatePostModalContent({
 		}
 	};
 
-	useEffect(() => {
-		if (!_.isEmpty(taggedData.addBook)) {
-			if (!_.isEmpty(bookForCreatePost) && taggedData.addBook.status === 'read') {
-				setProgressInputValue(taggedData.addBook.page);
-			} else {
-				setProgressInputValue(parseInt(taggedData.addBook.progress));
-			}
-		}
-	}, [taggedData]);
-
-	useEffect(() => {
-		checkActive();
-	}, [showMainModal, content, progressInputValue, imagesUpload, taggedData.addAuthor, taggedData.addCategory]);
-
 	const checkActive = () => {
 		let isActive = false;
 		if (!_.isEmpty(taggedData.addBook)) {
@@ -935,23 +949,6 @@ function CreatePostModalContent({
 			}
 		}
 	};
-
-	useEffect(() => {
-		if (showSubModal) {
-			setShowMainModal(false);
-		}
-	}, [showSubModal]);
-
-	useEffect(() => {
-		// Đưa con trỏ về cuối khi bấm Chỉnh sửa bài viết
-		if (isEditPost) {
-			if (toggleMoveFocusToEnd === null) {
-				setToggleMoveFocusToEnd(false);
-			} else {
-				setToggleMoveFocusToEnd(prev => !prev);
-			}
-		}
-	}, [isEditPost]);
 
 	const handleTime = () => {
 		switch (postDataShare.by) {
@@ -996,7 +993,6 @@ function CreatePostModalContent({
 		}
 	};
 
-	//----------------------------------------------------------------------
 	const handleAccept = () => {
 		setModalShow(false);
 		hideCreatePostModal();
@@ -1066,7 +1062,7 @@ function CreatePostModalContent({
 								<ShareModeComponent
 									list={shareModeList}
 									shareMode={shareMode}
-									setShareMode={setShareMode}
+									setShareMode={onChangeShareMode}
 								/>
 							</div>
 						</div>
@@ -1276,8 +1272,8 @@ function CreatePostModalContent({
 					handleAccept={handleAccept}
 					handleCancel={handleCancel}
 					message={message}
-					yesBtnMsg={'Có'}
-					noBtnMsg={'Không'}
+					yesBtnMsg='Có'
+					noBtnMsg='Không'
 					centered={false}
 				/>
 			</div>

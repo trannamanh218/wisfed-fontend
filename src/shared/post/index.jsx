@@ -19,7 +19,6 @@ import { NotificationError } from 'helpers/Error';
 import ReactRating from 'shared/react-rating';
 import { Link, useNavigate } from 'react-router-dom';
 import { createCommentReview } from 'reducers/redux-utils/book';
-import Comment from 'shared/comments';
 import QuoteCard from 'shared/quote-card';
 import PostShare from 'shared/posts-Share';
 import Play from 'assets/images/play.png';
@@ -61,6 +60,7 @@ import { deleteMiniGroupPost } from 'reducers/redux-utils/group';
 import RouteLink from 'helpers/RouteLink';
 import PostNotAvailable from 'shared/post-not-available';
 import { setting } from 'pages/home/components/newfeed/components/create-post-modal-content/settings';
+import CommentsList from './CommentsList';
 
 const verbShareArray = [
 	POST_VERB_SHARE,
@@ -787,120 +787,37 @@ function Post({
 							{/* Comment mention đặt trên đầu  */}
 							{firstPlaceComment && firstPlaceComment?.length > 0 && (
 								<>
-									{firstPlaceComment.map(comment => (
-										<div key={comment.id}>
-											<Comment
-												commentLv1Id={comment.id}
-												dataProp={comment}
-												postData={postData}
-												handleReply={handleReply}
-												type={type}
-											/>
-											<div className='comment-reply-container'>
-												{comment.reply && !!comment.reply?.length && (
-													<>
-														{showReplyArrayState.includes(comment.id) ? (
-															<div className='reply-comment-item'>
-																{comment.reply?.map(commentChild => (
-																	<div key={commentChild.id}>
-																		<Comment
-																			commentLv1Id={comment.id}
-																			dataProp={commentChild}
-																			postData={postData}
-																			handleReply={handleReply}
-																			type={type}
-																		/>
-																	</div>
-																))}
-															</div>
-														) : (
-															<div
-																className='reply-see-more'
-																onClick={() => onClickSeeMoreReply(comment.id)}
-															>
-																Xem phản hồi
-															</div>
-														)}
-													</>
-												)}
-												<CommentEditor
-													onCreateComment={() => onCreateComment(comment.id)}
-													className={classNames(
-														`reply-comment-editor reply-comment-${comment.id}`,
-														{
-															'show': comment.id === replyingCommentId,
-														}
-													)}
-													mentionUsersArr={mentionUsersArr}
-													commentLv1Id={comment.id}
-													replyingCommentId={replyingCommentId}
-													clickReply={clickReply.current}
-													setMentionUsersArr={setMentionUsersArr}
-												/>
-											</div>
-										</div>
-									))}
+									<CommentsList
+										data={firstPlaceComment}
+										postData={postData}
+										handleReply={handleReply}
+										type={type}
+										showReplyArrayState={showReplyArrayState}
+										onClickSeeMoreReply={onClickSeeMoreReply}
+										onCreateComment={onCreateComment}
+										mentionUsersArr={mentionUsersArr}
+										setMentionUsersArr={setMentionUsersArr}
+										clickReply={clickReply}
+										replyingCommentId={replyingCommentId}
+									/>
 								</>
 							)}
 							{/* các bình luận ngoại trừ firstPlaceComment */}
 							{postData.usersComments && postData.usersComments?.length > 0 && (
 								<>
-									{postData.usersComments
-										.filter(x => x.id !== firstPlaceCommentId)
-										.map(comment => (
-											<div key={comment.id}>
-												<Comment
-													commentLv1Id={comment.id}
-													dataProp={comment}
-													postData={postData}
-													handleReply={handleReply}
-													type={type}
-												/>
-
-												<div className='comment-reply-container'>
-													{comment.reply && !!comment.reply?.length && (
-														<>
-															{showReplyArrayState.includes(comment.id) ? (
-																<div className='reply-comment-item'>
-																	{comment.reply?.map(commentChild => (
-																		<div key={commentChild.id}>
-																			<Comment
-																				commentLv1Id={comment.id}
-																				dataProp={commentChild}
-																				postData={postData}
-																				handleReply={handleReply}
-																				type={type}
-																			/>
-																		</div>
-																	))}
-																</div>
-															) : (
-																<div
-																	className='reply-see-more'
-																	onClick={() => onClickSeeMoreReply(comment.id)}
-																>
-																	Xem phản hồi
-																</div>
-															)}
-														</>
-													)}
-													<CommentEditor
-														onCreateComment={onCreateComment}
-														className={classNames(
-															`reply-comment-editor reply-comment-${comment.id}`,
-															{
-																'show': comment.id === replyingCommentId,
-															}
-														)}
-														mentionUsersArr={mentionUsersArr}
-														commentLv1Id={comment.id}
-														replyingCommentId={replyingCommentId}
-														clickReply={clickReply.current}
-														setMentionUsersArr={setMentionUsersArr}
-													/>
-												</div>
-											</div>
-										))}
+									<CommentsList
+										data={postData.usersComments.filter(x => x.id !== firstPlaceCommentId)}
+										postData={postData}
+										handleReply={handleReply}
+										type={type}
+										showReplyArrayState={showReplyArrayState}
+										onClickSeeMoreReply={onClickSeeMoreReply}
+										onCreateComment={onCreateComment}
+										mentionUsersArr={mentionUsersArr}
+										setMentionUsersArr={setMentionUsersArr}
+										clickReply={clickReply}
+										replyingCommentId={replyingCommentId}
+									/>
 								</>
 							)}
 						</>
@@ -909,62 +826,19 @@ function Post({
 						<>
 							{postData.usersComments && postData.usersComments?.length > 0 && (
 								<>
-									{postData.usersComments.map(
-										(comment, index) =>
-											index === postData.usersComments.length - 1 && (
-												<div key={comment.id}>
-													<Comment
-														commentLv1Id={comment.id}
-														dataProp={comment}
-														postData={postData}
-														handleReply={handleReply}
-														type={type}
-													/>
-													<div className='comment-reply-container'>
-														{comment.reply && !!comment.reply?.length && (
-															<>
-																{showReplyArrayState.includes(comment.id) ? (
-																	<div className='reply-comment-item'>
-																		{comment.reply.map(commentChild => (
-																			<div key={commentChild.id}>
-																				<Comment
-																					commentLv1Id={comment.id}
-																					dataProp={commentChild}
-																					postData={postData}
-																					handleReply={handleReply}
-																					type={type}
-																				/>
-																			</div>
-																		))}
-																	</div>
-																) : (
-																	<div
-																		className='reply-see-more'
-																		onClick={() => onClickSeeMoreReply(comment.id)}
-																	>
-																		Xem phản hồi
-																	</div>
-																)}
-															</>
-														)}
-														<CommentEditor
-															onCreateComment={onCreateComment}
-															className={classNames(
-																`reply-comment-editor reply-comment-${comment.id}`,
-																{
-																	'show': comment.id === replyingCommentId,
-																}
-															)}
-															mentionUsersArr={mentionUsersArr}
-															commentLv1Id={comment.id}
-															replyingCommentId={replyingCommentId}
-															clickReply={clickReply.current}
-															setMentionUsersArr={setMentionUsersArr}
-														/>
-													</div>
-												</div>
-											)
-									)}
+									<CommentsList
+										data={[postData.usersComments.at(-1)]}
+										postData={postData}
+										handleReply={handleReply}
+										type={type}
+										showReplyArrayState={showReplyArrayState}
+										onClickSeeMoreReply={onClickSeeMoreReply}
+										onCreateComment={onCreateComment}
+										mentionUsersArr={mentionUsersArr}
+										setMentionUsersArr={setMentionUsersArr}
+										clickReply={clickReply}
+										replyingCommentId={replyingCommentId}
+									/>
 								</>
 							)}
 						</>
@@ -975,56 +849,19 @@ function Post({
 				<>
 					{postData.usersComments && postData.usersComments?.length > 0 && (
 						<>
-							{postData.usersComments.map(comment => (
-								<div key={comment.id}>
-									<Comment
-										commentLv1Id={comment.id}
-										dataProp={comment}
-										postData={postData}
-										handleReply={handleReply}
-										type={type}
-									/>
-									<div className='comment-reply-container'>
-										{comment.reply && !!comment.reply?.length && (
-											<>
-												{showReplyArrayState.includes(comment.id) ? (
-													<>
-														{comment.reply?.map(commentChild => (
-															<div key={commentChild.id}>
-																<Comment
-																	commentLv1Id={comment.id}
-																	dataProp={commentChild}
-																	postData={postData}
-																	handleReply={handleReply}
-																	type={type}
-																/>
-															</div>
-														))}
-													</>
-												) : (
-													<div
-														className='reply-see-more'
-														onClick={() => onClickSeeMoreReply(comment.id)}
-													>
-														Xem phản hồi
-													</div>
-												)}
-											</>
-										)}
-										<CommentEditor
-											onCreateComment={onCreateComment}
-											className={classNames(`reply-comment-editor reply-comment-${comment.id}`, {
-												'show': comment.id === replyingCommentId,
-											})}
-											mentionUsersArr={mentionUsersArr}
-											commentLv1Id={comment.id}
-											replyingCommentId={replyingCommentId}
-											clickReply={clickReply.current}
-											setMentionUsersArr={setMentionUsersArr}
-										/>
-									</div>
-								</div>
-							))}
+							<CommentsList
+								data={postData.usersComments}
+								postData={postData}
+								handleReply={handleReply}
+								type={type}
+								showReplyArrayState={showReplyArrayState}
+								onClickSeeMoreReply={onClickSeeMoreReply}
+								onCreateComment={onCreateComment}
+								mentionUsersArr={mentionUsersArr}
+								setMentionUsersArr={setMentionUsersArr}
+								clickReply={clickReply}
+								replyingCommentId={replyingCommentId}
+							/>
 						</>
 					)}
 				</>

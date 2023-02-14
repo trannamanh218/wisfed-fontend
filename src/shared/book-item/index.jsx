@@ -87,6 +87,8 @@ BookItem.propTypes = {
 		rating: PropTypes.number,
 		isPublic: PropTypes.bool,
 		id: PropTypes.number,
+		status: PropTypes.object,
+		avgRating: PropTypes.number,
 	}),
 	isMyShelves: PropTypes.bool,
 	handleViewBookDetail: PropTypes.func,

@@ -51,6 +51,7 @@ import ModalCheckLogin from 'shared/modal-check-login';
 import QuotesByHashTag from 'pages/quotes-by-hashtag/QuotesByHashTag';
 import Header from 'components/header';
 import DirectPageInvite from 'pages/direct-page/DirectPageInvite';
+import { Helmet } from 'react-helmet';
 
 function App({ children }) {
 	const dispatch = useDispatch();
@@ -139,8 +140,19 @@ function App({ children }) {
 		body.style.paddingRight = '';
 	};
 
+	const renderHelmet = () => {
+		if (!['/book/detail/', '/confirm-my-book/'].some(path => location.pathname.includes(path))) {
+			return (
+				<Helmet>
+					<title>Wisfeed - Mạng xã hội chia sẻ đọc sách</title>
+				</Helmet>
+			);
+		}
+	};
+
 	return (
 		<div>
+			{renderHelmet()}
 			<ToastContainer
 				position='top-center'
 				autoClose={2500}
