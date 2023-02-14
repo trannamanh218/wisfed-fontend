@@ -295,7 +295,6 @@ function CreatePostModalContent({
 					objTemp['addFriends'] = editUsers;
 				}
 				setTaggedData(objTemp);
-				console.log(objTemp);
 				if (dataEditMiniPost?.image) {
 					setImagesUpload([...dataEditMiniPost.image]);
 					if (dataEditMiniPost?.image.length > 0) {
