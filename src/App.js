@@ -9,7 +9,6 @@ import { ToastContainer } from 'react-toastify';
 import { checkLogin, getCheckJwt } from 'reducers/redux-utils/auth';
 import { changeKey } from 'reducers/redux-utils/forget-password';
 import { getAllLibraryList, setAllMyLibraryRedux } from 'reducers/redux-utils/library';
-
 import 'scss/main.scss';
 
 // pages and components

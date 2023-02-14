@@ -46,7 +46,7 @@ function BookDetail() {
 
 	useEffect(() => {
 		if (!_.isEmpty(bookInformation)) {
-			const newDescription = strippedHTMLTags(bookInformation.description).slice(0, 300);
+			const newDescription = strippedHTMLTags(bookInformation.description).slice(0, 76);
 			setSeoDescription(newDescription);
 			setSeoImage(`${location.href}${bookInformation.frontBookCover}`);
 		}
@@ -57,8 +57,6 @@ function BookDetail() {
 			<Helmet>
 				<title>{bookInformation.seo_title || bookInformation.name}</title>
 				<meta name='description' content={bookInformation.seo_description || seoDescription} />
-				<meta name='keywords' content='wisfeed, mạng xã hội, mang xa hoi, sách, sach, chia sẻ, chia se' />
-				<meta name='news_keywords' content='wisfeed, mạng xã hội, mang xa hoi, sách, sach, chia sẻ, chia se' />
 				<meta property='og:type' content='article' />
 				<meta property='og:title' content={bookInformation.seo_title || bookInformation.name} />
 				<meta property='og:description' content={bookInformation.seo_description || seoDescription} />

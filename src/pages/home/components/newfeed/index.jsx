@@ -1,5 +1,5 @@
-import { useState, useRef, useEffect, lazy, Suspense } from 'react';
-const Post = lazy(() => import('shared/post'));
+import { useState, useRef, useEffect } from 'react';
+import Post from 'shared/post';
 import CreatePost from './components/create-post';
 import './newfeed.scss';
 // import ModalfilterHome from './components/modal-filter-home'; Không xóa
@@ -71,9 +71,8 @@ const NewFeed = () => {
 
 	const handleUpdatePostArrWhenDeleted = itemMinipostId => {
 		const index = postList.findIndex(item => item.id === itemMinipostId);
-		const newItem = { ...postList[index], isDeleted: true };
 		const newArr = [...postList];
-		newArr[index] = { ...newItem };
+		newArr.splice(index, 1);
 		setPostList(newArr);
 	};
 
@@ -95,19 +94,14 @@ const NewFeed = () => {
 							hasMore={hasMore}
 							loader={<LoadingIndicator />}
 						>
-							{postList.map((item, index) => {
-								if (!item.isDeleted) {
-									return (
-										<Suspense key={index} fallback={<></>}>
-											<Post
-												postInformations={item}
-												type={item.verb === 'groupPost' ? GROUP_TYPE : POST_TYPE}
-												handleUpdatePostArrWhenDeleted={handleUpdatePostArrWhenDeleted}
-											/>
-										</Suspense>
-									);
-								}
-							})}
+							{postList.map((item, index) => (
+								<Post
+									key={index}
+									postInformations={item}
+									type={item.verb === 'groupPost' ? GROUP_TYPE : POST_TYPE}
+									handleUpdatePostArrWhenDeleted={handleUpdatePostArrWhenDeleted}
+								/>
+							))}
 						</InfiniteScroll>
 					)}
 				</>
