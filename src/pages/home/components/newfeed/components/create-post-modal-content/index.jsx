@@ -941,7 +941,7 @@ function CreatePostModalContent({
 		if (valueStar) {
 			try {
 				await dispatch(ratingUser(params)).unwrap();
-				if (window.location.pathname.includes('/book/detail/')) {
+				if (location.pathname.includes('/book/detail/')) {
 					dispatch(handleRefreshRatingData());
 				}
 			} catch (err) {
