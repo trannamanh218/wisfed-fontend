@@ -232,7 +232,7 @@ function RichTextEditor({
 		return (
 			<span
 				style={{
-					color: '#5e93c5',
+					color: '#0576F0',
 				}}
 				data-offset-key={offsetKey}
 			>
