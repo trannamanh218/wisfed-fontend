@@ -82,7 +82,7 @@ const MyFriends = ({ activeTabs, inputSearch, filter, handleActiveTabs }) => {
 										<CheckIcon />
 									</span>
 								)}
-								Sao chép ID
+								Sao chép
 							</button>
 						</div>
 						<div className='invite-friends__by-external-link'>
