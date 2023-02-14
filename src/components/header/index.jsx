@@ -344,15 +344,17 @@ const Header = () => {
 					>
 						<Bell className='header__nav__icon' />
 					</div>
-					{modalNoti && (
-						<div onMouseOver={() => setNotiPopover(false)} onMouseLeave={() => setNotiPopover(true)}>
-							<NotificationModal setModalNoti={setModalNoti} buttonModal={buttonModal} />
-						</div>
-					)}
 					<span className={classNames('header__nav__item--hover', { 'hide': !notiPopover })}>Thông báo</span>
 				</li>
 			</ul>
-
+			{modalNoti && (
+				<NotificationModal
+					setModalNoti={setModalNoti}
+					buttonModal={buttonModal}
+					onMouseOver={() => setNotiPopover(false)}
+					onMouseLeave={() => setNotiPopover(true)}
+				/>
+			)}
 			<div className='header__userInfo' ref={userOptions}>
 				<div className='header__avatar' onClick={tollgleModaleInfoUser}>
 					<img

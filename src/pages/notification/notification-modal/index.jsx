@@ -17,7 +17,7 @@ import LoadingTimeLine from 'shared/loading-timeline';
 import { getListReqFriendsToMe } from 'reducers/redux-utils/user';
 import NotificationStatus from 'shared/notification-status';
 
-const NotificationModal = ({ setModalNoti, buttonModal }) => {
+const NotificationModal = ({ setModalNoti, buttonModal, onMouseOver, onMouseLeave }) => {
 	const [currentTab, setCurrentTab] = useState('all');
 	const [isLoading, setIsLoading] = useState(true);
 	const [notificationsList, setNotificationsList] = useState([]);
@@ -208,7 +208,7 @@ const NotificationModal = ({ setModalNoti, buttonModal }) => {
 	};
 
 	return (
-		<div className='notification-modal' ref={notifymodal}>
+		<div className='notification-modal' ref={notifymodal} onMouseOver={onMouseOver} onMouseLeave={onMouseLeave}>
 			<div className='notification-modal__header'>Thông báo</div>
 			<Tabs
 				onSelect={eventKey => setCurrentTab(eventKey)}
@@ -333,6 +333,8 @@ const NotificationModal = ({ setModalNoti, buttonModal }) => {
 NotificationModal.propTypes = {
 	setModalNoti: PropTypes.func,
 	buttonModal: PropTypes.object,
+	onMouseOver: PropTypes.func,
+	onMouseLeave: PropTypes.func,
 };
 
 export default NotificationModal;
