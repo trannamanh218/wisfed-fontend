@@ -6,7 +6,12 @@ const ShareModeComponent = ({ list, shareMode, setShareMode }) => {
 	const { ref: showRef, isVisible: show, setIsVisible: setShow } = useVisible(false);
 
 	return (
-		<div className='create-post-modal-content__main__body__user-info__share-mode-container' ref={showRef}>
+		<div
+			className={classNames('create-post-modal-content__main__body__user-info__share-mode-container', {
+				'disabled': window.location.pathname.includes('/group/'),
+			})}
+			ref={showRef}
+		>
 			<div
 				className='create-post-modal-content__main__body__user-info__share-mode'
 				onClick={() => setShow(!show)}
@@ -14,9 +19,11 @@ const ShareModeComponent = ({ list, shareMode, setShareMode }) => {
 				<div className='create-post-modal-content__main__body__user-info__share-mode__selected'>
 					{shareMode.icon}
 					<span>{shareMode.title}</span>
-					<div>
-						<i className='fas fa-caret-down'></i>
-					</div>
+					{!window.location.pathname.includes('group') && (
+						<div>
+							<i className='fas fa-caret-down'></i>
+						</div>
+					)}
 				</div>
 				<div
 					className={classNames('create-post-modal-content__main__body__user-info__share-mode__list', {
